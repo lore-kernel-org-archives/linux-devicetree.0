@@ -2,239 +2,256 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0499CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 00:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515B2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 01:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1002065C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 00:40:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gJj9coh6"
+	by mail.kernel.org (Postfix) with ESMTP id 22BA3206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 01:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725841AbgFBAkb (ORCPT
+        id S1725804AbgFBBZ7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 1 Jun 2020 20:40:31 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:27579 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgFBAka (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 1 Jun 2020 20:40:30 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200602004026epoutp0106c2da24802c960c032d8624ab358ef8~UkzWQeIi00201402014epoutp01R
-        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 00:40:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200602004026epoutp0106c2da24802c960c032d8624ab358ef8~UkzWQeIi00201402014epoutp01R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591058426;
-        bh=l7Rt2o0kdGFSHg652UR00dk3txaeJfZo5NnrTQMvqxo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=gJj9coh6awcsQkoqAELBkvQeXN2qULTHKxQIHoaQrBVnbOTyk6W4EbyYac+yraDQl
-         ZhTb5qeOTQTcD2cjR4ytbypdvA279sC5w+ntPLTKXbba6LF6zA/FkOOojEYGGX/2Es
-         WlE6Xbxh0Ox41zGg2WARmxiHpatzuWOhbEoG8PfE=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200602004024epcas1p3b679346e48f5aa7e23e8400b1dd819c5~UkzUURw6t0448404484epcas1p31;
-        Tue,  2 Jun 2020 00:40:24 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49bY9L3MNNzMqYl0; Tue,  2 Jun
-        2020 00:40:22 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C6.29.18978.5FF95DE5; Tue,  2 Jun 2020 09:40:22 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200602004019epcas1p47250832e03ece66e322e82a72c007a50~UkzPoLCtc1010210102epcas1p4Y;
-        Tue,  2 Jun 2020 00:40:19 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200602004019epsmtrp2e14e1aa156221eb93e89340e05c762fa~UkzPnLpqO3205032050epsmtrp2m;
-        Tue,  2 Jun 2020 00:40:19 +0000 (GMT)
-X-AuditID: b6c32a35-b8298a8000004a22-4d-5ed59ff551f9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B8.D6.08382.3FF95DE5; Tue,  2 Jun 2020 09:40:19 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200602004019epsmtip1bb2424a547cb17f1ede6c058213b29ab~UkzPWeK8N1039010390epsmtip1W;
-        Tue,  2 Jun 2020 00:40:19 +0000 (GMT)
-Subject: Re: [RFC PATCH v5 3/6] PM / devfreq: exynos-bus: Add registration
- of interconnect child device
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Chanwoo Choi <chanwoo@kernel.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <7a3840c7-fbfb-112e-46b6-97871da710e8@samsung.com>
-Date:   Tue, 2 Jun 2020 09:50:52 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <8a977716-9e0e-5daf-fb22-32d943da42e5@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNJsWRmVeSWpSXmKPExsWy7bCmvu63+VfjDCa/ZbK4P6+V0WLjjPWs
-        FhNvXGGxmH/kHKvFla/v2Sym793EZjHp/gQWi/PnN7BbbHp8jdXi8q45bBYzzu9jslh75C67
-        xe3GFWwWrXuPsFscftPOajFj8ks2BwGPTas62TzuXNvD5nG/+ziTx+Yl9R59W1YxenzeJBfA
-        FpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0t5JC
-        WWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0L10vOT/XytDAwMgUqDAh
-        O+PNm6tsBZ9kK9ofT2BrYFwo1sXIySEhYCLxqaefqYuRi0NIYAejxNxT91kgnE+MEscb9jFC
-        ON8YJR69W8kK0zL303R2iMReRontry9BOe8ZJeb/XsICUiUskClx/PQSdhBbRCBE4vWk52BF
-        zAJ/WSR2bp/ABJJgE9CS2P/iBhuIzS+gKHH1x2NGEJtXwE7i7uo7YHEWARWJC8dXg9WLCoRJ
-        nNzWAlUjKHFy5hOwZZwC9hLHljSCLWMWEJe49WQ+E4QtL7H97RxmkMUSAi84JLbe/gz1g4vE
-        zcvtzBC2sMSr41vYIWwpic/v9rJB2NUSK08eYYNo7mCU2LL/AlSzscT+pZOBNnAAbdCUWL9L
-        HyKsKLHz91xGiMV8Eu++9rCClEgI8Ep0tAlBlChLXH5wlwnClpRY3N7JNoFRaRaSd2YheWEW
-        khdmISxbwMiyilEstaA4Nz212LDAEDm+NzGCU7WW6Q7GiW8/6B1iZOJgPMQowcGsJMI7Wf1S
-        nBBvSmJlVWpRfnxRaU5q8SFGU2AAT2SWEk3OB2aLvJJ4Q1MjY2NjCxNDM1NDQyVxXnGZC3FC
-        AumJJanZqakFqUUwfUwcnFINTLbBh1+I7El+ds0187/OSh/nw4fTnV3isjb9M56ov/V06Tyt
-        /Srcjxe7PXp+SeSP3d7JJqW3Ds+52+V2hS9w0+WGD7H+HbudH17+s3dtRnXvtjcrY6dcWqUj
-        IMHYW9/afePmJRYePVMnEetNe2fabgqTZp9zU3aTd5HrjNlVDy6xPJwufWTrV2sn3Xml7IkL
-        Vx3Nmluz2bXP6R+X/Oy9wtXWW3e1MR1boXixoKNZR/anw/tTdalfGiPmPm96yi7j+m36Q7Hk
-        hTrPO5YIH44t3mQ0O2TK1T2X9zQUORT2udlZr8ytdandosoar3L5csys8/d/HNRS2Ww9zbtf
-        09Bni3b91kVnCk9fUJ2923CWjYQSS3FGoqEWc1FxIgABFdu7XgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRyHec85OzuOZkdX+WpluqJQ0DKi3iJbkcgyk8CILNCWHW85nTte
-        us5kiTVTTEvXqC1rdpl0O167TMHNIrpYpmnlDSfpdGZoSh+Sao7Abw//3/N8+lO4Zy3hQyWn
-        ZTLKNFmqmBQQ9Raxb9CUoTN23Ztz3qhfnw/QY+1DHrrU3UEgg/UdD3VMT5CowsyRqLS/hEBt
-        bY/4iLN94qGPT6+RSNvWhKH71l4++pp3l0T5ZisfWRwFPKQts5PbaSlnukBKez49J6X9hS8x
-        aY0xV1pcawLSKc53L3lQsPUok5qczSjXbjssSHI4OknF5PLjBbYS8iyoXKIBbhSkN8DrkxV8
-        DRBQnvQzAL8XDvJcgzcs/9CKawD1j0XQYmFdzjiART063OmI6GRoPz/EczqL6H3wkT3I6eD0
-        HwKaLxeQrsCMwVl1NekMSDoQNo90z/FC2h92/rIBJwvpbbC3umfuTtCr4PuX1ZiTF9P74ROj
-        DXM5HvDV1SHCyW60BL4w5vGdjNNr4G99O+5iL/hlyIC5eAVsGL+GlwCRbl6um5fo5iW6eckN
-        QJiAN6Ng5YlyNkQRksbkBLMyOZuVlhgcny7nwNxjAwMaQYPpR3ALwCjQAiCFixcJy9a0x3oK
-        j8pOnGSU6XHKrFSGbQFLKULsJezOqIz1pBNlmcwxhlEwyv8rRrn5nMWyYnzdf87mZE8HDElU
-        vR91htUJGRHm28YZR1DnU35cs6S1URNadcTEQXXTer2ttMrv8CE8PWhHTeEMYuI4/YX6zbwJ
-        hzHibSjaI6uMMH8bjF4e9brIT7FK0hUQrg6LSvpyCn+x4OZbibAsJaFq1v/G7ZV2tnx4JFxt
-        1PRppx01Z7b+iB8sAltyJ1lVnSXX2/p8tH7ZncHuBdordTE7x6yjXSknjCP6i5FhIl2D6QEz
-        c7m1Xe1WSrhj0fYy+UpuuL0GnzyiqmWLBQfGbg2oKnw59Nl6XTWzb1Oke3x0TN/A6RzxQK1H
-        ZlXHRq+87F2i9+nS77sP5htSYqPu6cUEmyQLCcSVrOwvgP7u6UcDAAA=
-X-CMS-MailID: 20200602004019epcas1p47250832e03ece66e322e82a72c007a50
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200529163225eucas1p1cfb2233c869dcc3dab84b754bbce17b6
-References: <CGME20200529163225eucas1p1cfb2233c869dcc3dab84b754bbce17b6@eucas1p1.samsung.com>
-        <20200529163200.18031-1-s.nawrocki@samsung.com>
-        <20200529163200.18031-4-s.nawrocki@samsung.com>
-        <CAGTfZH1KC=jpQ5GXNtEf1cn7+WqXJdqbbVKmpxr8Snh4GEy8bA@mail.gmail.com>
-        <8a977716-9e0e-5daf-fb22-32d943da42e5@samsung.com>
+        Mon, 1 Jun 2020 21:25:59 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:53224 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbgFBBZ7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 1 Jun 2020 21:25:59 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE2171A09DE;
+        Tue,  2 Jun 2020 03:25:55 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EF7431A09CF;
+        Tue,  2 Jun 2020 03:25:51 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EE13240285;
+        Tue,  2 Jun 2020 09:25:46 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        hongtao.jia@nxp.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3] dt-bindings: thermal: Convert qoriq to json-schema
+Date:   Tue,  2 Jun 2020 09:15:32 +0800
+Message-Id: <1591060532-14727-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Convert the qoriq thermal binding to DT schema format using json-schema
 
-On 6/1/20 7:04 PM, Sylwester Nawrocki wrote:
-> Cc: Rob, devicetree ML
-> 
-> On 31.05.2020 01:57, Chanwoo Choi wrote:
->> On Sat, May 30, 2020 at 1:33 AM Sylwester Nawrocki
->> <s.nawrocki@samsung.com> wrote:
->>>
->>> This patch adds registration of a child platform device for the exynos
->>> interconnect driver. It is assumed that the interconnect provider will
->>> only be needed when #interconnect-cells property is present in the bus
->>> DT node, hence the child device will be created only when such a property
->>> is present.
->>>
->>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->>>
->>> Changes for v5:
->>>  - new patch.
->>> ---
->>>  drivers/devfreq/exynos-bus.c | 17 +++++++++++++++++
->>>  1 file changed, 17 insertions(+)
->>>
->>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->>> index 8fa8eb5..856e37d 100644
->>> --- a/drivers/devfreq/exynos-bus.c
->>> +++ b/drivers/devfreq/exynos-bus.c
->>> @@ -24,6 +24,7 @@
->>>
->>>  struct exynos_bus {
->>>         struct device *dev;
->>> +       struct platform_device *icc_pdev;
->>>
->>>         struct devfreq *devfreq;
->>>         struct devfreq_event_dev **edev;
->>> @@ -156,6 +157,8 @@ static void exynos_bus_exit(struct device *dev)
->>>         if (ret < 0)
->>>                 dev_warn(dev, "failed to disable the devfreq-event devices\n");
->>>
->>> +       platform_device_unregister(bus->icc_pdev);
->>> +
->>>         dev_pm_opp_of_remove_table(dev);
->>>         clk_disable_unprepare(bus->clk);
->>>         if (bus->opp_table) {
->>> @@ -168,6 +171,8 @@ static void exynos_bus_passive_exit(struct device *dev)
->>>  {
->>>         struct exynos_bus *bus = dev_get_drvdata(dev);
->>>
->>> +       platform_device_unregister(bus->icc_pdev);
->>> +
->>>         dev_pm_opp_of_remove_table(dev);
->>>         clk_disable_unprepare(bus->clk);
->>>  }
->>> @@ -431,6 +436,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>         if (ret < 0)
->>>                 goto err;
->>>
->>> +       /* Create child platform device for the interconnect provider */
->>> +       if (of_get_property(dev->of_node, "#interconnect-cells", NULL)) {
->>> +                   bus->icc_pdev = platform_device_register_data(
->>> +                                               dev, "exynos-generic-icc",
->>> +                                               PLATFORM_DEVID_AUTO, NULL, 0);
->>> +
->>> +                   if (IS_ERR(bus->icc_pdev)) {
->>> +                           ret = PTR_ERR(bus->icc_pdev);
->>> +                           goto err;
->>> +                   }
->>> +       }
->>> +
->>>         max_state = bus->devfreq->profile->max_state;
->>>         min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
->>>         max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
->>> --
->>> 2.7.4
->>>
->>
->> It looks like very similar like the registering the interconnect
->> device of imx-bus.c
->> and I already reviewed and agreed this approach.
->>
->> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->>
->> nitpick: IMHO, I think that 'exynos-icc' is proper and simple without
->> 'generic' word.
->> If we need to add new icc compatible int the future, we will add
->> 'exynosXXXX-icc' new compatible.
->> But, I'm not forcing it. just opinion. Anyway, I agree this approach.
-> 
-> Thanks for review. I will change the name to exynos-icc in next version, 
-> as I commented at other patch, it is not part of any DT binding, 
-> it is just for device/driver matching between devfreq and interconnect.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- correct maintainer's email address.
+---
+ .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
+ .../devicetree/bindings/thermal/qoriq-thermal.yaml | 112 +++++++++++++++++++++
+ 2 files changed, 112 insertions(+), 71 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
 
-Thanks. I have not any objection to use either 'exynos-generic-icc' 
-or 'exynos-icc'. It is just my opinion. And on next version,
-please add linux-pm mailing list to Cc.
-
+diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+deleted file mode 100644
+index 28f2cba..0000000
+--- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
++++ /dev/null
+@@ -1,71 +0,0 @@
+-* Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
+-
+-Required properties:
+-- compatible : Must include "fsl,qoriq-tmu" or "fsl,imx8mq-tmu". The
+-	version of the device is determined by the TMU IP Block Revision
+-	Register (IPBRR0) at offset 0x0BF8.
+-	Table of correspondences between IPBRR0 values and example  chips:
+-		Value           Device
+-		----------      -----
+-		0x01900102      T1040
+-- reg : Address range of TMU registers.
+-- interrupts : Contains the interrupt for TMU.
+-- fsl,tmu-range : The values to be programmed into TTRnCR, as specified by
+-	the SoC reference manual. The first cell is TTR0CR, the second is
+-	TTR1CR, etc.
+-- fsl,tmu-calibration : A list of cell pairs containing temperature
+-	calibration data, as specified by the SoC reference manual.
+-	The first cell of each pair is the value to be written to TTCFGR,
+-	and the second is the value to be written to TSCFGR.
+-- #thermal-sensor-cells : Must be 1. The sensor specifier is the monitoring
+-	site ID, and represents the "n" in TRITSRn and TRATSRn.
+-
+-Optional property:
+-- little-endian : If present, the TMU registers are little endian. If absent,
+-	the default is big endian.
+-- clocks : the clock for clocking the TMU silicon.
+-
+-Example:
+-
+-tmu@f0000 {
+-	compatible = "fsl,qoriq-tmu";
+-	reg = <0xf0000 0x1000>;
+-	interrupts = <18 2 0 0>;
+-	fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
+-	fsl,tmu-calibration = <0x00000000 0x00000025
+-			       0x00000001 0x00000028
+-			       0x00000002 0x0000002d
+-			       0x00000003 0x00000031
+-			       0x00000004 0x00000036
+-			       0x00000005 0x0000003a
+-			       0x00000006 0x00000040
+-			       0x00000007 0x00000044
+-			       0x00000008 0x0000004a
+-			       0x00000009 0x0000004f
+-			       0x0000000a 0x00000054
+-
+-			       0x00010000 0x0000000d
+-			       0x00010001 0x00000013
+-			       0x00010002 0x00000019
+-			       0x00010003 0x0000001f
+-			       0x00010004 0x00000025
+-			       0x00010005 0x0000002d
+-			       0x00010006 0x00000033
+-			       0x00010007 0x00000043
+-			       0x00010008 0x0000004b
+-			       0x00010009 0x00000053
+-
+-			       0x00020000 0x00000010
+-			       0x00020001 0x00000017
+-			       0x00020002 0x0000001f
+-			       0x00020003 0x00000029
+-			       0x00020004 0x00000031
+-			       0x00020005 0x0000003c
+-			       0x00020006 0x00000042
+-			       0x00020007 0x0000004d
+-			       0x00020008 0x00000056
+-
+-			       0x00030000 0x00000012
+-			       0x00030001 0x0000001d>;
+-	#thermal-sensor-cells = <1>;
+-};
+diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+new file mode 100644
+index 0000000..4bc344a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
+@@ -0,0 +1,112 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/qoriq-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
++
++maintainers:
++  - Hongtao Jia <hongtao.jia@nxp.com>
++
++properties:
++  compatible:
++    description: |
++      The version of the device is determined by the TMU IP Block Revision
++      Register (IPBRR0) at offset 0x0BF8.
++      Table of correspondences between IPBRR0 values and example chips:
++            Value           Device
++            ----------      -----
++            0x01900102      T1040
++    enum:
++      - fsl,qoriq-tmu
++      - fsl,imx8mq-tmu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  fsl,tmu-range:
++    $ref: '/schemas/types.yaml#/definitions/uint32-array'
++    description: |
++      The values to be programmed into TTRnCR, as specified by the SoC
++      reference manual. The first cell is TTR0CR, the second is TTR1CR, etc.
++    maxItems: 4
++
++  fsl,tmu-calibration:
++    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
++    description: |
++      A list of cell pairs containing temperature calibration data, as
++      specified by the SoC reference manual. The first cell of each pair
++      is the value to be written to TTCFGR, and the second is the value
++      to be written to TSCFGR.
++    items:
++      items:
++        - description: value for TTCFGR
++        - description: value for TSCFGR
++    minItems: 1
++    maxItems: 64
++
++  little-endian:
++    description: |
++      boolean, if present, the TMU registers are little endian. If absent,
++      the default is big endian.
++    type: boolean
++
++  clocks:
++    maxItems: 1
++
++  "#thermal-sensor-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - fsl,tmu-range
++  - fsl,tmu-calibration
++  - '#thermal-sensor-cells'
++
++examples:
++  - |
++    tmu@f0000 {
++        compatible = "fsl,qoriq-tmu";
++        reg = <0xf0000 0x1000>;
++        interrupts = <18 2 0 0>;
++        fsl,tmu-range = <0x000a0000 0x00090026 0x0008004a 0x0001006a>;
++        fsl,tmu-calibration = <0x00000000 0x00000025>,
++                              <0x00000001 0x00000028>,
++                              <0x00000002 0x0000002d>,
++                              <0x00000003 0x00000031>,
++                              <0x00000004 0x00000036>,
++                              <0x00000005 0x0000003a>,
++                              <0x00000006 0x00000040>,
++                              <0x00000007 0x00000044>,
++                              <0x00000008 0x0000004a>,
++                              <0x00000009 0x0000004f>,
++                              <0x0000000a 0x00000054>,
++                              <0x00010000 0x0000000d>,
++                              <0x00010001 0x00000013>,
++                              <0x00010002 0x00000019>,
++                              <0x00010003 0x0000001f>,
++                              <0x00010004 0x00000025>,
++                              <0x00010005 0x0000002d>,
++                              <0x00010006 0x00000033>,
++                              <0x00010007 0x00000043>,
++                              <0x00010008 0x0000004b>,
++                              <0x00010009 0x00000053>,
++                              <0x00020000 0x00000010>,
++                              <0x00020001 0x00000017>,
++                              <0x00020002 0x0000001f>,
++                              <0x00020003 0x00000029>,
++                              <0x00020004 0x00000031>,
++                              <0x00020005 0x0000003c>,
++                              <0x00020006 0x00000042>,
++                              <0x00020007 0x0000004d>,
++                              <0x00020008 0x00000056>,
++                              <0x00030000 0x00000012>,
++                              <0x00030001 0x0000001d>;
++        #thermal-sensor-cells = <1>;
++    };
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.7.4
+
