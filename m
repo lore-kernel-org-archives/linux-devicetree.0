@@ -2,172 +2,100 @@ Return-Path: <SRS0=mVKz=7P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93147C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8932DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700DF206A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:04:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="aIy8vP+K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ALBmZRsP"
+	by mail.kernel.org (Postfix) with ESMTP id 52A752074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  2 Jun 2020 11:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591097058;
+	bh=cT9jBHVPrWMrMhELAyl4RpjRekYb1zN8PMcuA/XN8LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OfgPRD3EDTnCAJtvD3q5+vDXYCdo6LJxGt2S/o8r954a93KQ4Izlah2kxUtljBo4M
+	 R2P2wt1c7DXXDLjl1c0c0nFRZ2cDUQzW6PwDI9GUPU747omJ5Wiasdoyo0RYQfLNoX
+	 r02gziHznkdK+AXChRK8TZLuMvOb4B6/O1jwvBjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgFBLEx (ORCPT
+        id S1725940AbgFBLYR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 07:04:53 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:43471 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726007AbgFBLEs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 07:04:48 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id EB8E4580358;
-        Tue,  2 Jun 2020 07:04:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 02 Jun 2020 07:04:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=7HHu7QfhHPpbXmDpTyynkqVQP/G
-        clpO7AEZNhrh18AI=; b=aIy8vP+KnWZJ7Wf1/SCoo6xVtD/CybIu+f41jnVDctk
-        mghK2ZoehPVR/pBqde7vP0EIuI09trWMcuDBV5yhQ0ruBKPsi1tvT2SvU2w7+nRJ
-        lYDb7rahyhtbta0Vz4UF7afYtPQuwvGdNQZxnsiqTgJ2lr6z9iWkHvI6hicVh615
-        ryawe7MLMKCYqZEnYAzx3dQWaNmCRPgk0bzU2b8Z6uXrGVMg0dduLlPUztqjp4r7
-        GGLIodDa0N/EU3pdjrQZ63y53q+3JkTjyaNmQloVFY6w/d4wqFNpHwN7K7BaX7VT
-        Nsl/HEOYUXQxfFXvoSrBmVqc2p8QMVP8YDXGFhiqb6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7HHu7Q
-        fhHPpbXmDpTyynkqVQP/GclpO7AEZNhrh18AI=; b=ALBmZRsP1UmYVWy5MGtSX/
-        yVQJSgV67x/vocs6vTLBI11RLGNu2ddAB4vBj9hTsw0bDRYjALwxL5H1nCp01vAw
-        PDhl76FpRx/wFK/Qp6xfesrGx3wBpGvpvJLQ5+ZFJ/kTO8GI3Fijy+6Q+kBEBY9T
-        MMszDb1OA2htuqQdYU3EMfKc68O+VWSG9vf9rhjVG+QVFhYmnpJOe1downiocJRr
-        ift3puUverNRaH3bvINmX0nQkK/N179dawyAJNS2L/ew7C2VTjxXI8kc2gq9oKWn
-        OxGtZPTr8k5QCj1GPsUcofcuCQtRML1lzycZ3GeHDwL8rnArwXKzQUou/gnMy7eg
-        ==
-X-ME-Sender: <xms:TDLWXvVzsNCTt5urJTCaPct8dQOyGp4jvMqZx4vP7MtXFq8mfIWxFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefjedgvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepheelgfehhfefiefgfeegteeuveeigffhffdvtdeuffffleekgeefudejfefh
-    veelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmnecukf
-    hppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:TDLWXnmZIQf_q2O5GHzhfmsRyX8opdaSiINEdBhnYs3ohpunkfczUA>
-    <xmx:TDLWXrZmHZoIiIAYPEyOEdi5d7gXXqaW4qH0LG6k8KTuGoZ7W4zh0A>
-    <xmx:TDLWXqWrd9F80PBtbW7KN9lv6aiumBHrs8RQVnmnC8uWl_p9bnKpLQ>
-    <xmx:TjLWXqj_kuI4y1vFcu1864cESgkisqX6bLB-F4M2AxdbEU0hfi2nPA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C46EF30624E4;
-        Tue,  2 Jun 2020 07:04:43 -0400 (EDT)
-Date:   Tue, 2 Jun 2020 13:04:42 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-Message-ID: <20200602110442.2ceuymhwuomvjj6i@gilmour>
-References: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
- <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
- <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
- <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
- <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
- <20200528073055.znutrhkryzu3grrl@gilmour.lan>
- <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
+        Tue, 2 Jun 2020 07:24:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgFBLYR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Jun 2020 07:24:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC1E420679;
+        Tue,  2 Jun 2020 11:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591097057;
+        bh=cT9jBHVPrWMrMhELAyl4RpjRekYb1zN8PMcuA/XN8LQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BVC09q5hW7vcrzboHRjSO9Gf/RhExlMs5DpXWTf317PpNiP7CE1z0YKs3Cz1bie8w
+         G+brqj8LBKrIczOjg9mFXIT+EACM4g0skbUsyb3q+qQZudIYlCjXDLrJKg1S6KR/db
+         rtgiw1i7RRzpRro5d88QhJvKZJPSv6lFx0fAqGjA=
+Date:   Tue, 2 Jun 2020 12:24:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v4 1/5] regulator: Allow regulators to verify enabled
+ during enable()
+Message-ID: <20200602112415.GD5684@sirena.org.uk>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5pdc5mmeqmvo6ueh"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u65IjBhB3TIa72Vp"
 Content-Disposition: inline
-In-Reply-To: <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
+In-Reply-To: <20200602100924.26256-2-sumit.semwal@linaro.org>
+X-Cookie: We are not a clone.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---5pdc5mmeqmvo6ueh
-Content-Type: text/plain; charset=utf-8
+--u65IjBhB3TIa72Vp
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Jun 02, 2020 at 03:39:20PM +0530, Sumit Semwal wrote:
 
-On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
-> Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=8828=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > Hi Daniel,
-> >
-> > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
-> > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> wro=
-te:
-> > > > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Ho=
-ng) if you
-> > > > want.
-> > >
-> > > That would be great, although given the potentially inconsistent
-> > > results we've been seeing so far it would be great if you could
-> > > additionally push a git branch somewhere.
-> > > That way we can have higher confidence that we are applying exactly
-> > > the same patches to the same base etc.
-> >
-> > So I sent a new iteration yesterday, and of course forgot to cc you... =
-Sorry for
-> > that.
-> >
-> > I've pushed my current branch here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log/?=
-h=3Drpi4-kms
->=20
-> Thanks to Maxime!
->=20
-> I have tried your repository on branch rpi4-kms.  The DRM VC4 is used!
-> But got some issues:
-> 1. Some weird error message in dmesg.  Not sure it is related, or not
-> [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
-> HDMI state machine clock
-> https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
+> +
+> +		if (time_remaining <= 0) {
+> +			rdev_err(rdev, "Enabled check failed.\n");
+> +			return -ETIMEDOUT;
 
-That's a deferred probing. The first time the HDMI driver is being
-probed, the firmware clock driver has not been probed yet. It's making
-another attempt later on, which succeeds.
+s/failed/timed out/
 
-> 2. The screen flashes suddenly sometimes.
->=20
-> 3. The higher resolutions, like 1920x1080 ... are lost after hot
-> re-plug HDMI cable (HDMI0)
+> + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
+> + *                          actually enabled, after enable() call
+> + *
 
-I'm not sure on how to exactly reproduce those issues (or what they are)
-though, can you expand on this?
+This comment needs updating to reflect the new implementation.
 
-Maxime
-
---5pdc5mmeqmvo6ueh
+--u65IjBhB3TIa72Vp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXtYySgAKCRDj7w1vZxhR
-xfUBAP46Th1pk7x3jxfXvrbbwj1VxBv4kbEOV1Bu98RJiU1LywD/RjzWHXndJXmh
-fEI26r6ziCy/1OpEIZxssHX9I6WnfQ4=
-=suuo
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7WNt4ACgkQJNaLcl1U
+h9DiUQf/U/9+5zRl543DKtlEGwWv5y2SJPMULJc6Fx4l4UJyMi2WV76AIJ3kpvhV
+3BK+XKeRUSM/EoHHrf7VTxN4pDu5GRqtKCXVmzN5jfl1LVgKNBNSapHtXt4rETbY
+sBqecGsBHjZIcMFvIMJG1I+ljMFCVBdSZus3/gJO6qnCW4y88HPQU9TEsu5HoO/X
+5PLcUd20oc1xFKeb/NDy3XZyx0KuBmV+8Ws66OspiXl24FaFaQAI+iFcsk+OTcir
+Fgi94kGsHJKCA48iMqy5ffkD3wIpQdPYqlQACMeeKU3G+T0g5KjHiYSBKucWoRum
+WVjSTeqiQwfaw0BGXWsykdtnnxHwEA==
+=sPJI
 -----END PGP SIGNATURE-----
 
---5pdc5mmeqmvo6ueh--
+--u65IjBhB3TIa72Vp--
