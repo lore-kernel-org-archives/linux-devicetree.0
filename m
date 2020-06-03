@@ -2,82 +2,115 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E22C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 21:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 22:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD513207ED
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 21:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373C0205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 22:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591221539;
-	bh=bG694Z1X/g0cz+3ydC7MrxJgPWTI9MNwlVNzgabAQpc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vuwO48wGFrq6sHeW60GqiDi9hCGkTgyPVSCPQVm6AiY5LOzZbJfok+uzrpJkJt04w
-	 ibcZzkPncqbpQ2BCI3rcMH77wt49jNbKhDASVtWSRG47AW8RxS1VHxxAjskexpTovC
-	 5281VqR/Ypr0lT2BQnLiNBFOQtjqzZO3QcWkMFO4=
+	s=default; t=1591222570;
+	bh=r19npDzC+Ssaq2Cs4gM6tuDA7Zx3nL9QN4vmFx17BsM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AQvmg3oWY181RIQQDQXEuFtKoON95N5dJRJPOPsjRvc96N5eQxlLq3cHc0yC9dau7
+	 ruW12zSpHDqii7wvz/Mc+tT/Z2zo3EqS+Iif20v9g5Ke8eKmpZRhf0ZMP++G4kMxt6
+	 MQT6KegDsLtgCr0hjcBwUoGp6HRrDtr+rz4Xxs0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgFCV67 (ORCPT
+        id S1726693AbgFCWQJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 17:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCV66 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 17:58:58 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B13B207D0;
-        Wed,  3 Jun 2020 21:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591221538;
-        bh=bG694Z1X/g0cz+3ydC7MrxJgPWTI9MNwlVNzgabAQpc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C0EqvJxRgn7C7eJE3bee+mhegLwWCqMYruNH8EFYeZEpca1dUbur8vepANEmM4D2h
-         Xjfa15trH++Ax4rZS64DaIqUYDKByyESOIGISy0BT6CNSiRFo81FPMGiPXDclDvvZ2
-         ThXijie937+TXbsaITUeUsp7Ere4T98m/6Oow51g=
-Received: by mail-ot1-f45.google.com with SMTP id v17so3203363ote.0;
-        Wed, 03 Jun 2020 14:58:58 -0700 (PDT)
-X-Gm-Message-State: AOAM532l1N6ekbmW3yLyTEpt6/fNsO/21q6lzOXgvjkzKF4InNVzdPwW
-        Nx9Mj4Ls2/dyr+RcWByx34Y7AQ5kTtrU1S6KQg==
-X-Google-Smtp-Source: ABdhPJy4IsVGYDhLYERMjF2wCFHQWTVglTGafLNce+hvxMjpqsGUWZniKT8a62dbG+w21svvLRVjQYYO0Na2rx5zZUU=
-X-Received: by 2002:a05:6830:549:: with SMTP id l9mr1513425otb.129.1591221537765;
- Wed, 03 Jun 2020 14:58:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200528031549.13846-1-zhouyanjie@wanyeetech.com>
- <20200528031549.13846-4-zhouyanjie@wanyeetech.com> <20200529191431.GA2779176@bogus>
- <159078668338.69627.5841582436445900180@swboyd.mtv.corp.google.com>
-In-Reply-To: <159078668338.69627.5841582436445900180@swboyd.mtv.corp.google.com>
+        Wed, 3 Jun 2020 18:16:09 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44063 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgFCWQJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 18:16:09 -0400
+Received: by mail-il1-f194.google.com with SMTP id i1so2939133ils.11
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 15:16:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rMYc84n19+OGgtVn9II/5P6MMogBkCCeasm/Kp8sey8=;
+        b=HIyPONhh228lu6JlOzNPv39/yEj3zT5rtGIchS8TYNOHzBiRbfM8515ffNkapbPFbY
+         x1c1pEGv6tyaO8FlIrPLlzvaY4W2rZw+g5PshuElrPIq7vjwCteCPBx0aDAU83Y7AcZG
+         NCPMNOZW6p4Wb9/5AFQIITvgjScbHu8TdaXNqecG+7A/5jyKgRNYY6S1TBezkBB8dweK
+         4aGfpWXZUw6FXPlFOIpHkaxg5yZRuhtFwksMgAgphJ0NJ40RGr/XK12f9UOZy9EUwKYZ
+         f3Eg3uajH/y+/6mtPNqeqXlMYVMNrNpQePU1A75NywdgYclL6jzKEWWf18TJqrC/jfxz
+         9GwA==
+X-Gm-Message-State: AOAM533Y5j27J9/eub3ZdmKnBbA/2oVMLfwyJzEBMXmx7XmmvfcVvjuK
+        6iv/6vYBL7Xw98xAert3SA==
+X-Google-Smtp-Source: ABdhPJwHwIAVtxvUaysPu24YULecyerhtKCC4mVOZp+b8rP7kXwCis13n1FDg9z0ORHJNiIUJxrn7Q==
+X-Received: by 2002:a92:9ac7:: with SMTP id c68mr1553583ill.53.1591222567528;
+        Wed, 03 Jun 2020 15:16:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k18sm1406721ioj.54.2020.06.03.15.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 15:16:06 -0700 (PDT)
+Received: (nullmailer pid 1973472 invoked by uid 1000);
+        Wed, 03 Jun 2020 22:16:05 -0000
+Date:   Wed, 3 Jun 2020 16:16:05 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 3 Jun 2020 15:58:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKQgSsd4ZgLrSSZifpB=1eqdgr503YyrWB1qmECd0z4VQ@mail.gmail.com>
-Message-ID: <CAL_JsqKQgSsd4ZgLrSSZifpB=1eqdgr503YyrWB1qmECd0z4VQ@mail.gmail.com>
-Subject: Re: [PATCH v13 3/7] dt-bindings: clock: Add documentation for X1830 bindings.
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, zhenwenjin@gmail.com,
-        sernia.zhou@foxmail.com, Paul Cercueil <paul@crapouillou.net>,
-        dongsheng.qiu@ingenic.com, devicetree@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-mtd@lists.infradead.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Weinberger <richard@nod.at>,
+        Julien Su <juliensu@mxic.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v10 06/20] dt-bindings: mtd: Document nand-ecc-engine
+Message-ID: <20200603221605.GA1973010@bogus>
+References: <20200603175759.19948-1-miquel.raynal@bootlin.com>
+ <20200603175759.19948-7-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603175759.19948-7-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 3:11 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Rob Herring (2020-05-29 12:14:31)
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
->
-> Please apply to bindings tree Rob. The yaml conversion is in your tree.
+On Wed, 03 Jun 2020 19:57:45 +0200, Miquel Raynal wrote:
+> This property is needed to precisely point to the hardware ECC engine
+> to use when there are several of them available. Here, hardware also
+> refers to the on-die possibility.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../devicetree/bindings/mtd/nand-controller.yaml     | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
 
-Done.
 
-Rob
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/mtd/nand-controller.yaml:  while scanning for the next token
+found character that cannot start any token
+  in "<unicode string>", line 62, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mtd/nand-controller.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/mtd/nand-controller.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/nand-controller.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/mtd/nand-controller.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/nand-controller.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/mtd/nand-controller.yaml
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1303116
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
