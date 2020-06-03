@@ -2,101 +2,89 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9616C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 13:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6490C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 13:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2E120772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 13:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9622D207D5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 13:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591192699;
+	bh=tu0umueWXJQyn5GQ9x7J6/ozi3B9DZXrKnvEP3mbPZ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Uyaz1+F7kOFbUiR9AzePhsIOjcxPAef9Jm0Mtf7s90hqJ4O5B59iimAEirvQmBIDS
+	 L9wZZVsCN9gocq5VskpkVF3jBME874Uai3G7FHfdgFSG4pVsBZug9GtAb9ahIh9IXc
+	 clc04FHziR1vDwKgwBZoQPoJAzSQ9YVtuggU4Fyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgFCNwa (ORCPT
+        id S1725904AbgFCN6T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 09:52:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39042 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgFCNwa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 09:52:30 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 3 Jun 2020 09:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725833AbgFCN6S (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 09:58:18 -0400
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E7B002A3D89;
-        Wed,  3 Jun 2020 14:52:27 +0100 (BST)
-Date:   Wed, 3 Jun 2020 15:52:24 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Anton Vorontsov <anton@enomsg.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 10/10] dt-bindings: mtd: fsl-upm-nand: Deprecate
- chip-delay and fsl,upm-wait-flags
-Message-ID: <20200603155224.3baa35f9@collabora.com>
-In-Reply-To: <20200603134922.1352340-11-boris.brezillon@collabora.com>
-References: <20200603134922.1352340-1-boris.brezillon@collabora.com>
-        <20200603134922.1352340-11-boris.brezillon@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 009D2206C3;
+        Wed,  3 Jun 2020 13:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591192698;
+        bh=tu0umueWXJQyn5GQ9x7J6/ozi3B9DZXrKnvEP3mbPZ8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O70gpSkZOoGft8T1bS5TY9Jbdz76Kf5Mt6SGt9S8EnqWUsflObTwxpJ/hK4sb6MRn
+         hlTp7NepxexRQ8Al63nPu5yOpBgB9aXjcQNZ8RrOhQwWmKs9SrOjq+1Y28+eG2rYY3
+         gafQnzfISLUAT105yMle0QJHlXLafxE0TPuLycG4=
+Received: by mail-oo1-f48.google.com with SMTP id i9so517696ool.5;
+        Wed, 03 Jun 2020 06:58:17 -0700 (PDT)
+X-Gm-Message-State: AOAM533vlKmh1JX3/WGHtYmNVfxxgaXu8+C78i+bznHqMX2IV6cKqmmq
+        8gcBrzQCR8iurH6Unq+v+cm/iuUxN7sDOnPecw==
+X-Google-Smtp-Source: ABdhPJywJXOvUF7s+LNGI1f+bDTEKre/euKaSqdcytI1e+8skWqTrY7hVKw25RlHog2tMeKNuFsdPBRqXns2qKFWnCE=
+X-Received: by 2002:a4a:dc83:: with SMTP id g3mr88066oou.50.1591192697357;
+ Wed, 03 Jun 2020 06:58:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200527113039.5380-1-wsa+renesas@sang-engineering.com>
+ <20200529220228.GA3052199@bogus> <20200529230252.GA4798@kunai>
+In-Reply-To: <20200529230252.GA4798@kunai>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 3 Jun 2020 07:58:06 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+xOMnBQvUqG57StvE=tY1RiseAJmKsN=1LpPY43Ai1Xg@mail.gmail.com>
+Message-ID: <CAL_Jsq+xOMnBQvUqG57StvE=tY1RiseAJmKsN=1LpPY43Ai1Xg@mail.gmail.com>
+Subject: Re: [PATCH] i2c: add 'single-master' property to generic bindings
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org,
+        Laine Jaakko EXT <ext-jaakko.laine@vaisala.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-And I forgot to Cc the DT maintainer/ML on this one :-/
+On Fri, May 29, 2020 at 5:03 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> Hi Rob,
+>
+> thanks for the review!
+>
+> > Could you just have different timeouts for clearing stalled bus. You
+> > know quickly if 'single-master' is set, but have to wait longer if not?
+>
+> Timeouts are a difficult topic with I2C; there is no timeout defined.
+> However, if you want to start communictaing and don't have a 'bus idle'
+> condition, then the new property makes a difference. With
+> "single-master", we know the bus is stalled. With "multi-master" it
+> could be another master communicating.
+>
+> > Note that we need to add a bunch of these properties to dt-schema
+> > i2c-controller.yaml. I hadn't done that because I want to dual license
+> > in the process, but lots of folks have touched i2c.txt IIRC.
+>
+> What is your motivation for dual licensing?
 
-On Wed,  3 Jun 2020 15:49:22 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Non-GPL OS's use DT.
 
-> Those properties are no longer parsed by the driver which is being passed
-> those information by the core now. Let's deprecate them.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
->  Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> index fce4894f5a98..25f07c1f9e44 100644
-> --- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-> @@ -7,14 +7,16 @@ Required properties:
->  - fsl,upm-cmd-offset : UPM pattern offset for the command latch.
->  
->  Optional properties:
-> -- fsl,upm-wait-flags : add chip-dependent short delays after running the
-> -	UPM pattern (0x1), after writing a data byte (0x2) or after
-> -	writing out a buffer (0x4).
->  - fsl,upm-addr-line-cs-offsets : address offsets for multi-chip support.
->  	The corresponding address lines are used to select the chip.
->  - gpios : may specify optional GPIOs connected to the Ready-Not-Busy pins
->  	(R/B#). For multi-chip devices, "n" GPIO definitions are required
->  	according to the number of chips.
-> +
-> +Deprecated properties:
-> +- fsl,upm-wait-flags : add chip-dependent short delays after running the
-> +	UPM pattern (0x1), after writing a data byte (0x2) or after
-> +	writing out a buffer (0x4).
->  - chip-delay : chip dependent delay for transferring data from array to
->  	read registers (tR). Required if property "gpios" is not used
->  	(R/B# pins not connected).
-> @@ -52,8 +54,6 @@ upm@3,0 {
->  	fsl,upm-cmd-offset = <0x08>;
->  	/* Multi-chip NAND device */
->  	fsl,upm-addr-line-cs-offsets = <0x0 0x200>;
-> -	fsl,upm-wait-flags = <0x5>;
-> -	chip-delay = <25>; // in micro-seconds
->  
->  	nand@0 {
->  		#address-cells = <1>;
-
+Rob
