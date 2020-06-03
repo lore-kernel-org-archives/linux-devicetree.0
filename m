@@ -4,192 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 159D9C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE014C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3ADA205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16182068D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgFCJA6 (ORCPT
+        id S1725888AbgFCJLV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:00:58 -0400
-Received: from atl4mhfb03.myregisteredsite.com ([209.17.115.119]:38860 "EHLO
-        atl4mhfb03.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbgFCJA6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 05:00:58 -0400
-Received: from jax4mhob14.registeredsite.com (jax4mhob14.registeredsite.com [64.69.218.102])
-        by atl4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 05390tm7015817
-        for <devicetree@vger.kernel.org>; Wed, 3 Jun 2020 05:00:55 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.203])
-        by jax4mhob14.registeredsite.com (8.14.4/8.14.4) with ESMTP id 05390ro2062062
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <devicetree@vger.kernel.org>; Wed, 3 Jun 2020 05:00:53 -0400
-Received: (qmail 1338 invoked by uid 0); 3 Jun 2020 09:00:53 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 3 Jun 2020 09:00:53 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-usb@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, balbi@kernel.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] usb: dwc3: Add support for VBUS power control
-Date:   Wed,  3 Jun 2020 10:59:32 +0200
-Message-Id: <20200603085932.31746-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Wed, 3 Jun 2020 05:11:21 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:13487 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725355AbgFCJLV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 05:11:21 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jun 2020 14:40:19 +0530
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Jun 2020 14:39:51 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id 02D105046; Wed,  3 Jun 2020 14:39:50 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        sibis@codeaurora.org, matthias@chromium.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [PATCH V1 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+Date:   Wed,  3 Jun 2020 14:39:36 +0530
+Message-Id: <1591175376-2374-3-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
+References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Support VBUS power control using regulator framework. Enables the regulator
-while the port is in host mode.
+Add interconnect bandwidth scaling supported strings for qcom-sdhci
+controller.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../devicetree/bindings/usb/dwc3.txt          |  1 +
- drivers/usb/dwc3/core.c                       | 30 ++++++++++++++-----
- drivers/usb/dwc3/core.h                       |  4 +++
- drivers/usb/dwc3/drd.c                        |  6 ++--
- 4 files changed, 29 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 9946ff9ba735..56bc3f238e2d 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -37,6 +37,7 @@ Optional properties:
-  - phys: from the *Generic PHY* bindings
-  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
- 	or "usb3-phy".
-+ - vbus-supply: Regulator handle that provides the VBUS power.
-  - resets: set of phandle and reset specifier pairs
-  - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index edc17155cb2b..a9e58a301446 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -25,6 +25,7 @@
- #include <linux/of.h>
- #include <linux/acpi.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index b8e1d2b..3b602fd 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -54,6 +54,21 @@ Required properties:
+ - qcom,dll-config: Chipset and Platform specific value. Use this field to
+ 	specify the DLL_CONFIG register value as per Hardware Programming Guide.
  
- #include <linux/usb/ch9.h>
-@@ -112,6 +113,23 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
- 
-+void dwc3_set_vbus(struct dwc3 *dwc, bool enable)
-+{
-+	int ret;
++Optional Properties:
++* Following bus parameters are required for interconnect bandwidth scaling:
++- interconnects: Pairs of phandles and interconnect provider specifier
++		 to denote the edge source and destination ports of
++		 the interconnect path.
 +
-+	if (enable != dwc->vbus_reg_enabled) {
-+		if (enable)
-+			ret = regulator_enable(dwc->vbus_reg);
-+		else
-+			ret = regulator_disable(dwc->vbus_reg);
-+		if (!ret)
-+			dwc->vbus_reg_enabled = enable;
-+	}
++- interconnect-names: For sdhc, we have two main paths.
++		1. Data path : sdhc to ddr
++		2. Config path : cpu to sdhc
++		For Data interconnect path the name supposed to be
++		is "sdhc-ddr" and for config interconnect path it is
++		"cpu-sdhc".
++		Please refer to Documentation/devicetree/bindings/
++		interconnect/ for more details.
 +
-+	if (dwc->usb2_phy)
-+		otg_set_vbus(dwc->usb2_phy->otg, enable);
-+}
-+
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -164,8 +182,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 		if (ret) {
- 			dev_err(dwc->dev, "failed to initialize host\n");
- 		} else {
--			if (dwc->usb2_phy)
--				otg_set_vbus(dwc->usb2_phy->otg, true);
-+			dwc3_set_vbus(dwc, true);
- 			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 		}
-@@ -173,8 +190,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 	case DWC3_GCTL_PRTCAP_DEVICE:
- 		dwc3_event_buffers_setup(dwc);
+ Example:
  
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
+ 	sdhc_1: sdhci@f9824900 {
+@@ -71,6 +86,9 @@ Example:
  
-@@ -1183,8 +1199,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 	case USB_DR_MODE_PERIPHERAL:
- 		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+ 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+ 		clock-names = "core", "iface";
++		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
++				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
++		interconnect-names = "sdhc-ddr","cpu-sdhc";
  
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
- 
-@@ -1198,8 +1213,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 	case USB_DR_MODE_HOST:
- 		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, true);
-+		dwc3_set_vbus(dwc, true);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 4c171a8e215f..cee2574d7bf4 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1085,6 +1085,9 @@ struct dwc3 {
- 
- 	bool			phys_ready;
- 
-+	struct regulator	*vbus_reg;
-+	bool			vbus_reg_enabled;
-+
- 	struct ulpi		*ulpi;
- 	bool			ulpi_ready;
- 
-@@ -1397,6 +1400,7 @@ struct dwc3_gadget_ep_cmd_params {
- 
- /* prototypes */
- void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode);
-+void dwc3_set_vbus(struct dwc3 *dwc, bool enable);
- void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
- u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
- 
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 7db1ffc92bbd..45fdec2d128d 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -384,8 +384,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_idstatus)
- 		if (ret) {
- 			dev_err(dwc->dev, "failed to initialize host\n");
- 		} else {
--			if (dwc->usb2_phy)
--				otg_set_vbus(dwc->usb2_phy->otg, true);
-+			dwc3_set_vbus(dwc, true);
- 			if (dwc->usb2_generic_phy)
- 				phy_set_mode(dwc->usb2_generic_phy,
- 					     PHY_MODE_USB_HOST);
-@@ -398,8 +397,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_idstatus)
- 		dwc3_event_buffers_setup(dwc);
- 		spin_unlock_irqrestore(&dwc->lock, flags);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		if (dwc->usb2_generic_phy)
- 			phy_set_mode(dwc->usb2_generic_phy,
- 				     PHY_MODE_USB_DEVICE);
+ 		qcom,dll-config = <0x000f642c>;
+ 		qcom,ddr-config = <0x80040868>;
 -- 
-2.17.1
+1.9.1
 
