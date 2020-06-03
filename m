@@ -2,97 +2,124 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A9BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CEFC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 805F120734
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8065207D3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591216916;
+	bh=SwtQdzOor59+vXHd3f6F9lk8585uAp3wtylcBGqMqQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BRpOpeQAB0J2Zb3soFO3+Zt3w/VCWFhbNhMYdL37OIGzP/prDOGHZKvzbrNp+83yE
+	 UdqXoGGCUsSlVtVxMLeh922ucHiPcEImhQckq8GeuK+UyVwJz4N0CCn9eEgHZWQkvP
+	 pBjl4YHM3BJMks90jhKof9g2h6EZTAgL2eNaU3Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgFCUZ6 (ORCPT
+        id S1726087AbgFCUlu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:25:58 -0400
-Received: from sauhun.de ([88.99.104.3]:50126 "EHLO pokefinder.org"
+        Wed, 3 Jun 2020 16:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgFCUZ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:25:58 -0400
+        id S1725922AbgFCUlu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:41:50 -0400
 Received: from localhost (p5486cfa5.dip0.t-ipconnect.de [84.134.207.165])
-        by pokefinder.org (Postfix) with ESMTPSA id 116E32C1FE2;
-        Wed,  3 Jun 2020 22:25:55 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 22:25:53 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v14 0/3] i2c: npcm7xx: add NPCM i2c controller driver
-Message-ID: <20200603202553.GB7684@kunai>
-References: <20200527200820.47359-1-tali.perry1@gmail.com>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD0B2074B;
+        Wed,  3 Jun 2020 20:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591216909;
+        bh=SwtQdzOor59+vXHd3f6F9lk8585uAp3wtylcBGqMqQc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kO8cFCe0Q0Bfo2MKvweLEp18Up8QwwJUUfy0MLA+laQLkKmkeSp8Hs9F96LhDicLo
+         KkN0wFE4WPkjAVyTAoNUXcGBpqBt/3TVfieXaFgF8SfkixATeezzEOOwQzJE+dFslx
+         e5dDGjeVYpL9n6tZ9xCpzkQ3js43EwtVQPhDGIOM=
+Date:   Wed, 3 Jun 2020 22:41:46 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 22/28] dt-bindings: i2c: Convert i2c-pxa to json-schema
+Message-ID: <20200603204146.GB1347@ninjato>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-23-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
+        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
 Content-Disposition: inline
-In-Reply-To: <20200527200820.47359-1-tali.perry1@gmail.com>
+In-Reply-To: <20200317093922.20785-23-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---DBIVS5p969aUjpLe
+--4bRzO86E/ozDv8r1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 27, 2020 at 11:08:17PM +0300, Tali Perry wrote:
-> This patch set adds i2c controller support=20
-> for the Nuvoton NPCM Baseboard Management Controller (BMC).
+On Tue, Mar 17, 2020 at 10:39:16AM +0100, Lubomir Rintel wrote:
+> A conversion of the i2c-pxa binding to DT schema format using json-schema.
 >=20
-> NPCM7xx includes 16 I2C controllers. This driver operates the controller.
-> This module also includes a slave mode.
+> This also cleans ups some errors in the binding: The compatible string
+> description suggested that "mmp" in "mrvl,mmp-twsi" is to be substituted
+> with a processor model, which wouldn't be a right thing to do and indeed
+> nobody seems to have been doing that. There also was "Recommended
+> properties" section that included optional as well as mandatory
+> properties. Missing mandatory properties were added to the example.
 >=20
-> ---
-> v14 -> v13:
-> 	- Fix yaml example: add missing include.
-> 	- Replace all udelay to usleep_range, except one which is called from
-> 	  irq.
-> 	- Fix compilation error (module_platfrom_init conflict).
-> 	- debugfs counters always updated. Counting till max value,
-> 	  then stop counting.
-> 	- Rename bus-frequency to clock-frequency.
-> 	- Remove unused variables.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-I don't have time for a deeper review, but from what I can tell this
-driver is good to go and we can fix things incrementally from now on.
-
-Applied to for-next (will go into 5.8), thanks!
+Waiting for an ack from someone with DT-YAML experience here.
 
 
---DBIVS5p969aUjpLe
+--4bRzO86E/ozDv8r1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7YB1EACgkQFA3kzBSg
-KbZmVw//dD5ttj+RhzDcyUcRJ9NMb6dXctKo/EQYXzZfQlKOJqL36iVqKjy8rmFM
-S2F42QY95jaNRdUHEGaFzDazxEUhy7J+07z0XPHk1CrGUDBVVtRf28dsEAXS7UTm
-o8pq67KgL+rr4PcKVd92OnBF0Sdi5d6HlVYah9W7dlnR/crg95cd9JUdwn1THmFw
-/PEmw4XRnYk/+GC4D+hai+W/E86RPpMzCU9YbOCfgnTWC+L7b9W4hS3j9+xtv62V
-HD2GagLUGpBiKENxUSS0NJ7agC31Eea7gi9Gn5P8OfxYr4VtPSagnchKwCoohFbU
-EySi0qXRd5+hWMOjg2DcGqC8mo/FC2ZDSKlLYWiicTgyZjP4vkRpMHqqtwS9u+23
-EFQv0Gy+QjePWEJdjYHP+TxuKw0+2OqMfSr/mkB49sgcKe1Fd7EFlCJbnDmIoZc1
-loO0x9MGK9bl/hlVWUpTorkAJGJygdstxTVk9jFJAEFvUXz6ZNk7HKdb0yOqvZcu
-hRqp1nOCL3fSUjtNPfE3ovaEQBiJO/FcGPf4bSgKycnfeFEbnJy+lYhCvsTV6x6A
-fUy85pKXZad4b51OFi9Hgo+a59ocTopYQRPvAiTcD+e9x2WagmMJCdNjTFsKCUy0
-kprWATccn3TZJ3pSZpqlPX9FvP8u3mZOywM4WXtpX8xvT6qXqys=
-=fEJK
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7YCwoACgkQFA3kzBSg
+KbbJvBAAhOSQEJ8IukeodYEjHMpjA4Dcx5fvpBnGvrxXQBvSIOKYdNTW/I/RitM2
+80cJ6nuKvdFbdxDZkK4QjMuBSMmhi8AgafJmuAlBmEGItG7pElyjQ90070ISZDPD
+tVY9epZq/e8RtcYayajUN8saNIdDpvGNeEdFn6t7aLa5Sww2SpfgtkIlozOp44/6
+Tf/fjBd9Ml87SWjsIwW1f6w0dQiF3ib6oqWZXE8fxH8v6LUs8M0mE2hX23NjttP5
+/w8oAV3OqgVGMn/ydUOtmuLRzBqQ8ONO3+pG6h8lYAnPuh0ZGmpaV0RxigcJDGSd
+yTAob0lzrFXKSkQ6Kl0keFn8aC9F56OknDWMf3wm8OME85QCls7fzeAwZhEclyf5
+NrSyInNZq0xj1JQjIkagcWSmLyWu+e0Er09iVm5T/6eqUm6mElu8VpOVkiIrlI9e
+4FX7Yj8D1ucGJzgiLN8lYzUUXMl78Ym+U9Il5h3fOP/FKINTq2bvBKxjpmHIxbZb
+sBIZPdGdjNSwZ5wA4Cf01Wy0ghmMuKNVkV6IDFXmLIjszXAA3ZCX+kBFyDuHWir/
+TqkYPD+GYP6n9f+xFUlit6Kf3Pv6tXxVBnyWsS0k0LyB3dGTV9dp2d6MaA3IGP5n
+m78a0tAD4l4HN1oWcH/QNOUH5YV4ZdWonkhaHbJYZiCcjtRq+lE=
+=Qlp8
 -----END PGP SIGNATURE-----
 
---DBIVS5p969aUjpLe--
+--4bRzO86E/ozDv8r1--
