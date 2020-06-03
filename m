@@ -2,117 +2,657 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B5DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 00:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B7DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 00:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279EB2072F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 00:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4033F20734
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 00:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ucd+qihW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgFCADX (ORCPT
+        id S1726894AbgFCAEJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 2 Jun 2020 20:03:23 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57926 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgFCADX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 20:03:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0A4898030835;
-        Wed,  3 Jun 2020 00:03:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8X9nTlsCVJw4; Wed,  3 Jun 2020 03:03:20 +0300 (MSK)
-Date:   Wed, 3 Jun 2020 03:03:18 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
-Message-ID: <20200603000318.2xgizrgwauw2ywwu@mobilestation>
-References: <20200602100921.1155-1-Sergey.Semin@baikalelectronics.ru>
- <20200602100921.1155-7-Sergey.Semin@baikalelectronics.ru>
- <61afd4bd10ac644fa623e218f947328e@kernel.org>
+        Tue, 2 Jun 2020 20:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgFCAEJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 2 Jun 2020 20:04:09 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E6E4C08C5C0
+        for <devicetree@vger.kernel.org>; Tue,  2 Jun 2020 17:04:09 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 663F92A4;
+        Wed,  3 Jun 2020 02:04:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591142647;
+        bh=wLmTqG4ztJDP7AnSPlwWDcBrX6p6IYoKarHJ+lAddS0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ucd+qihWSE7XmnAXS7Cw46Z2netgzoWz/1LBdercX7fyOZDS74UemU+zPt/hCnMpG
+         9kLdaYO82yBfulcZ/FNkufdzWFZxk8eluuPfUmjPI7SAQJ7L/z1agVgXw7SdVDkdfm
+         R0KBFWd06D9XEnCrc5KhgbdKcXd2inBwcOQXxdLU=
+Date:   Wed, 3 Jun 2020 03:03:52 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        xuwei5@hisilicon.com, michal.simek@xilinx.com,
+        mcoquelin.stm32@gmail.com, marex@denx.de
+Subject: Re: [PATCH v3 4/4] dt-bindings: drm: bridge: adi,adv7511.txt:
+ convert to yaml
+Message-ID: <20200603000352.GU6547@pendragon.ideasonboard.com>
+References: <20200601063308.13045-1-ricardo.canuelo@collabora.com>
+ <20200601063308.13045-5-ricardo.canuelo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <61afd4bd10ac644fa623e218f947328e@kernel.org>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200601063308.13045-5-ricardo.canuelo@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 11:12:31AM +0100, Marc Zyngier wrote:
-> On 2020-06-02 11:09, Serge Semin wrote:
-> > Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip,
-> > MIPS
-> > GIC timer and MIPS CPS CPUidle drivers.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > ---
-> > 
-> > Changelog v3:
-> > - Keep the files list alphabetically ordered.
-> > - Add Thomas as the co-maintainer of the designated drivers.
-> > ---
-> >  MAINTAINERS | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2926327e4976..20532e0287d7 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11278,6 +11278,17 @@
-> > F:	arch/mips/configs/generic/board-boston.config
-> >  F:	drivers/clk/imgtec/clk-boston.c
-> >  F:	include/dt-bindings/clock/boston-clock.h
-> > 
-> > +MIPS CORE DRIVERS
-> > +M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > +M:	Serge Semin <fancer.lancer@gmail.com>
-> > +L:	linux-mips@vger.kernel.org
-> > +S:	Supported
-> > +F:	drivers/bus/mips_cdmm.c
-> > +F:	drivers/clocksource/mips-gic-timer.c
-> > +F:	drivers/cpuidle/cpuidle-cps.c
-> > +F:	drivers/irqchip/irq-mips-cpu.c
-> > +F:	drivers/irqchip/irq-mips-gic.c
-> > +
-> >  MIPS GENERIC PLATFORM
-> >  M:	Paul Burton <paulburton@kernel.org>
-> >  L:	linux-mips@vger.kernel.org
-> 
-> Acked-by: Marc Zyngier <maz@kernel.org>
-> 
-> I assume this will go via the MIPS tree.
+Hi Ricardo,
 
-Yes, I also think so. Though I suppose first we have to get acks from
-Rafael J. Wysocki (CPU IDLE) or Daniel Lezcano (CPU IDLE,
-CLOCKSOURCE/CLOCKEVENT) or Thomas Gleixner (CLOCKSOURCE, CLOCKEVENT)
-since we are going to maintain the drivers from the subsystems they
-support. Am I right?
+Thank you for the patch.
 
--Sergey
+On Mon, Jun 01, 2020 at 08:33:08AM +0200, Ricardo Cañuelo wrote:
+> Convert the ADV7511/11w/13/33/35 DT bindings to json-schema. The
+> original binding has been split into two files: adi,adv7511.yaml for
+> ADV7511/11W/13 and adi,adv7533.yaml for ADV7533/35.
+> 
+> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Great work :-)
+
+> ---
+>  .../bindings/display/bridge/adi,adv7511.txt   | 143 -----------
+>  .../bindings/display/bridge/adi,adv7511.yaml  | 231 ++++++++++++++++++
+>  .../bindings/display/bridge/adi,adv7533.yaml  | 175 +++++++++++++
+>  3 files changed, 406 insertions(+), 143 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
 > 
-> Thanks,
-> 
->         M.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> deleted file mode 100644
+> index 659523f538bf..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> +++ /dev/null
+> @@ -1,143 +0,0 @@
+> -Analog Devices ADV7511(W)/13/33/35 HDMI Encoders
+> -------------------------------------------------
+> -
+> -The ADV7511, ADV7511W, ADV7513, ADV7533 and ADV7535 are HDMI audio and video
+> -transmitters compatible with HDMI 1.4 and DVI 1.0. They support color space
+> -conversion, S/PDIF, CEC and HDCP. ADV7533/5 supports the DSI interface for input
+> -pixels, while the others support RGB interface.
+> -
+> -Required properties:
+> -
+> -- compatible: Should be one of:
+> -		"adi,adv7511"
+> -		"adi,adv7511w"
+> -		"adi,adv7513"
+> -		"adi,adv7533"
+> -		"adi,adv7535"
+> -
+> -- reg: I2C slave addresses
+> -  The ADV7511 internal registers are split into four pages exposed through
+> -  different I2C addresses, creating four register maps. Each map has it own
+> -  I2C address and acts as a standard slave device on the I2C bus. The main
+> -  address is mandatory, others are optional and revert to defaults if not
+> -  specified.
+> -
+> -
+> -The ADV7511 supports a large number of input data formats that differ by their
+> -color depth, color format, clock mode, bit justification and random
+> -arrangement of components on the data bus. The combination of the following
+> -properties describe the input and map directly to the video input tables of the
+> -ADV7511 datasheet that document all the supported combinations.
+> -
+> -- adi,input-depth: Number of bits per color component at the input (8, 10 or
+> -  12).
+> -- adi,input-colorspace: The input color space, one of "rgb", "yuv422" or
+> -  "yuv444".
+> -- adi,input-clock: The input clock type, one of "1x" (one clock cycle per
+> -  pixel), "2x" (two clock cycles per pixel), "ddr" (one clock cycle per pixel,
+> -  data driven on both edges).
+> -
+> -The following input format properties are required except in "rgb 1x" and
+> -"yuv444 1x" modes, in which case they must not be specified.
+> -
+> -- adi,input-style: The input components arrangement variant (1, 2 or 3), as
+> -  listed in the input format tables in the datasheet.
+> -- adi,input-justification: The input bit justification ("left", "evenly",
+> -  "right").
+> -
+> -- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
+> -- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
+> -- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
+> -- dvdd-3v-supply: A 3.3V supply that powers up the pin called DVDD_3V
+> -  on the chip.
+> -- bgvdd-supply: A 1.8V supply that powers up the BGVDD pin. This is
+> -  needed only for ADV7511.
+> -
+> -The following properties are required for ADV7533 and ADV7535:
+> -
+> -- adi,dsi-lanes: Number of DSI data lanes connected to the DSI host. It should
+> -  be one of 1, 2, 3 or 4.
+> -- a2vdd-supply: 1.8V supply that powers up the A2VDD pin on the chip.
+> -- v3p3-supply: A 3.3V supply that powers up the V3P3 pin on the chip.
+> -- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
+> -  either 1.2V or 1.8V for ADV7533 but only 1.8V for ADV7535.
+> -
+> -Optional properties:
+> -
+> -- interrupts: Specifier for the ADV7511 interrupt
+> -- pd-gpios: Specifier for the GPIO connected to the power down signal
+> -
+> -- adi,clock-delay: Video data clock delay relative to the pixel clock, in ps
+> -  (-1200 ps .. 1600 ps). Defaults to no delay.
+> -- adi,embedded-sync: The input uses synchronization signals embedded in the
+> -  data stream (similar to BT.656). Defaults to separate H/V synchronization
+> -  signals.
+> -- adi,disable-timing-generator: Only for ADV7533 and ADV7535. Disables the
+> -  internal timing generator. The chip will rely on the sync signals in the
+> -  DSI data lanes, rather than generate its own timings for HDMI output.
+> -- clocks: from common clock binding: reference to the CEC clock.
+> -- clock-names: from common clock binding: must be "cec".
+> -- reg-names : Names of maps with programmable addresses.
+> -	It can contain any map needing a non-default address.
+> -	Possible maps names are : "main", "edid", "cec", "packet"
+> -
+> -Required nodes:
+> -
+> -The ADV7511 has two video ports. Their connections are modelled using the OF
+> -graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> -
+> -- Video port 0 for the RGB, YUV or DSI input. In the case of ADV7533/5, the
+> -  remote endpoint phandle should be a reference to a valid mipi_dsi_host device
+> -  node.
+> -- Video port 1 for the HDMI output
+> -- Audio port 2 for the HDMI audio input
+> -
+> -
+> -Example
+> --------
+> -
+> -	adv7511w: hdmi@39 {
+> -		compatible = "adi,adv7511w";
+> -		/*
+> -		 * The EDID page will be accessible on address 0x66 on the I2C
+> -		 * bus. All other maps continue to use their default addresses.
+> -		 */
+> -		reg = <0x39>, <0x66>;
+> -		reg-names = "main", "edid";
+> -		interrupt-parent = <&gpio3>;
+> -		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
+> -		clocks = <&cec_clock>;
+> -		clock-names = "cec";
+> -
+> -		adi,input-depth = <8>;
+> -		adi,input-colorspace = "rgb";
+> -		adi,input-clock = "1x";
+> -		adi,input-style = <1>;
+> -		adi,input-justification = "evenly";
+> -
+> -		ports {
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -
+> -			port@0 {
+> -				reg = <0>;
+> -				adv7511w_in: endpoint {
+> -					remote-endpoint = <&dpi_out>;
+> -				};
+> -			};
+> -
+> -			port@1 {
+> -				reg = <1>;
+> -				adv7511_out: endpoint {
+> -					remote-endpoint = <&hdmi_connector_in>;
+> -				};
+> -			};
+> -
+> -			port@2 {
+> -				reg = <2>;
+> -				codec_endpoint: endpoint {
+> -					remote-endpoint = <&i2s0_cpu_endpoint>;
+> -				};
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
+> new file mode 100644
+> index 000000000000..71b344e812dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
+> @@ -0,0 +1,231 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/adi,adv7511.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADV7511/11W/13 HDMI Encoders
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  The ADV7511, ADV7511W and ADV7513 are HDMI audio and video
+> +  transmitters compatible with HDMI 1.4 and DVI 1.0. They support color
+> +  space conversion, S/PDIF, CEC and HDCP. The transmitter input is
+> +  parallel RGB or YUV data.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adv7511
+> +      - adi,adv7511w
+> +      - adi,adv7513
+> +
+> +  reg:
+> +    description: |
+> +      I2C slave addresses.
+> +
+> +      The ADV7511/11W/13 internal registers are split into four pages
+> +      exposed through different I2C addresses, creating four register
+> +      maps. Each map has it own I2C address and acts as a standard slave
+> +      device on the I2C bus. The main address is mandatory, others are
+> +      optional and revert to defaults if not specified.
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    description:
+> +      Names of maps with programmable addresses. It can contain any map
+> +      needing a non-default address.
+> +    minItems: 1
+> +    items:
+> +      - const: main
+> +      - const: edid
+> +      - const: cec
+> +      - const: packet
+> +
+> +  clocks:
+> +    description: Reference to the CEC clock.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: cec
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  pd-gpios:
+> +    description: GPIO connected to the power down signal.
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description: A 1.8V supply that powers up the AVDD pin.
+> +
+> +  dvdd-supply:
+> +    description: A 1.8V supply that powers up the DVDD pin.
+> +
+> +  pvdd-supply:
+> +    description: A 1.8V supply that powers up the PVDD pin.
+> +
+> +  dvdd-3v-supply:
+> +    description: A 3.3V supply that powers up the DVDD_3V pin.
+> +
+> +  bgvdd-supply:
+> +    description: A 1.8V supply that powers up the BGVDD pin.
+> +
+> +  adi,input-depth:
+> +    description: Number of bits per color component at the input.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 8, 10, 12 ]
+> +
+> +  adi,input-colorspace:
+> +    description: Input color space.
+> +    enum: [ rgb, yuv422, yuv444 ]
+> +
+> +  adi,input-clock:
+> +    description: |
+> +      Input clock type.
+> +        "1x": one clock cycle per pixel
+> +        "2x": two clock cycles per pixel
+> +        "dd": one clock cycle per pixel, data driven on both edges
+> +    enum: [ 1x, 2x, dd ]
+> +
+> +  adi,clock-delay:
+> +    description:
+> +      Video data clock delay relative to the pixel clock, in ps
+> +      (-1200ps .. 1600 ps).
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 0
+> +
+> +  adi,embedded-sync:
+> +    description:
+> +      If defined, the input uses synchronization signals embedded in the
+> +      data stream (similar to BT.656).
+> +    type: boolean
+> +
+> +  adi,input-style:
+> +    description:
+> +      Input components arrangement variant as listed in the input
+> +      format tables in the datasheet.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 1, 2, 3 ]
+> +
+> +  adi,input-justification:
+> +    description: Input bit justification.
+> +    enum: [ left, evenly, right ]
+> +
+> +  ports:
+> +    description:
+> +      The ADV7511(W)/13 has two video ports and one audio port. This node
+> +      models their connections as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +    type: object
+> +    properties:
+> +      port@0:
+> +        description: Video port for the RGB or YUV input.
+> +        type: object
+> +
+> +      port@1:
+> +        description: Video port for the HDMI output.
+> +        type: object
+> +
+> +      port@2:
+> +        description: Audio port for the HDMI output.
+> +        type: object
+> +
+> +# adi,input-colorspace and adi,input-clock are required except in
+> +# "rgb 1x" and "yuv444 1x" modes, in which case they must not be
+> +# specified.
+> +if:
+> +  not:
+> +    properties:
+> +      adi,input-colorspace:
+> +        contains:
+> +          enum: [ rgb, yuv444 ]
+> +      adi,input-clock:
+> +        contains:
+> +          const: 1x
+> +
+> +then:
+> +  required:
+> +    - adi,input-style
+> +    - adi,input-justification
+> +
+> +else:
+> +  properties:
+> +    adi,input-style: false
+> +    adi,input-justification: false
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ports
+> +  - adi,input-depth
+> +  - adi,input-colorspace
+> +  - adi,input-clock
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - pvdd-supply
+> +  - dvdd-3v-supply
+> +  - bgvdd-supply
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    adv7511w: hdmi@39 {
+> +        compatible = "adi,adv7511w";
+> +        /*
+> +         * The EDID page will be accessible on address 0x66 on the I2C
+> +         * bus. All other maps continue to use their default addresses.
+> +         */
+> +        reg = <0x39>, <0x66>;
+> +        reg-names = "main", "edid";
+> +        interrupt-parent = <&gpio3>;
+> +        interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
+> +        clocks = <&cec_clock>;
+> +        clock-names = "cec";
+> +        avdd-supply = <&v1v8>;
+> +        dvdd-supply = <&v1v8>;
+> +        pvdd-supply = <&v1v8>;
+> +        dvdd-3v-supply = <&v3v3>;
+> +        bgvdd-supply = <&v1v8>;
+> +
+> +        adi,input-depth = <8>;
+> +        adi,input-colorspace = "yuv422";
+> +        adi,input-clock = "1x";
+> +
+> +        adi,input-style = <3>;
+> +        adi,input-justification = "right";
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                reg = <0>;
+> +                adv7511w_in: endpoint {
+> +                    remote-endpoint = <&dpi_out>;
+> +                };
+> +            };
+> +
+> +            port@1 {
+> +                reg = <1>;
+> +                adv7511_out: endpoint {
+> +                    remote-endpoint = <&hdmi_connector_in>;
+> +                };
+> +            };
+> +
+> +            port@2 {
+> +                reg = <2>;
+> +                codec_endpoint: endpoint {
+> +                    remote-endpoint = <&i2s0_cpu_endpoint>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml b/Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
+> new file mode 100644
+> index 000000000000..18761f49e5fe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
+> @@ -0,0 +1,175 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/adi,adv7533.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADV7533/35 HDMI Encoders
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  The ADV7533 and ADV7535 are HDMI audio and video transmitters
+> +  compatible with HDMI 1.4 and DVI 1.0. They support color space
+> +  conversion, S/PDIF, CEC and HDCP. The transmitter input is MIPI DSI.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adv7533
+> +      - adi,adv7535
+> +
+> +  reg:
+> +    description: |
+> +      I2C slave addresses.
+> +
+> +      The ADV7533/35 internal registers are split into four pages
+> +      exposed through different I2C addresses, creating four register
+> +      maps. Each map has it own I2C address and acts as a standard slave
+> +      device on the I2C bus. The main address is mandatory, others are
+> +      optional and revert to defaults if not specified.
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    description:
+> +      Names of maps with programmable addresses. It can contain any map
+> +      needing a non-default address.
+> +    minItems: 1
+> +    items:
+> +      - const: main
+> +      - const: edid
+> +      - const: cec
+> +      - const: packet
+> +
+> +  clocks:
+> +    description: Reference to the CEC clock.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: cec
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  pd-gpios:
+> +    description: GPIO connected to the power down signal.
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description: A 1.8V supply that powers up the AVDD pin.
+> +
+> +  dvdd-supply:
+> +    description: A 1.8V supply that powers up the DVDD pin.
+> +
+> +  pvdd-supply:
+> +    description: A 1.8V supply that powers up the PVDD pin.
+> +
+> +  a2vdd-supply:
+> +    description: A 1.8V supply that powers up the A2VDD pin.
+> +
+> +  v3p3-supply:
+> +    description: A 3.3V supply that powers up the V3P3 pin.
+> +
+> +  v1p2-supply:
+> +    description:
+> +      A supply that powers up the V1P2 pin. It can be either 1.2V
+> +      or 1.8V for ADV7533 but only 1.8V for ADV7535.
+> +
+> +  adi,disable-timing-generator:
+> +    description:
+> +      Disables the internal timing generator. The chip will rely on the
+> +      sync signals in the DSI data lanes, rather than generating its own
+> +      timings for HDMI output.
+> +    type: boolean
+> +
+> +  adi,dsi-lanes:
+> +    description: Number of DSI data lanes connected to the DSI host.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 1, 2, 3, 4 ]
+> +
+> +  ports:
+> +    description:
+> +      The ADV7533/35 has two video ports and one audio port. This node
+> +      models their connections as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +    type: object
+> +    properties:
+> +      port@0:
+> +        description:
+> +          Video port for the DSI input. The remote endpoint phandle
+> +          should be a reference to a valid mipi_dsi_host_device.
+> +        type: object
+> +
+> +      port@1:
+> +        description: Video port for the HDMI output.
+> +        type: object
+> +
+> +      port@2:
+> +        description: Audio port for the HDMI output.
+> +        type: object
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ports
+> +  - adi,dsi-lanes
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - pvdd-supply
+> +  - a2vdd-supply
+> +  - v3p3-supply
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    adv7533: hdmi@39 {
+> +        compatible = "adi,adv7533";
+> +        /*
+> +         * The EDID page will be accessible on address 0x66 on the I2C
+> +         * bus. All other maps continue to use their default addresses.
+> +         */
+> +        reg = <0x39>, <0x66>;
+> +        reg-names = "main", "edid";
+> +        interrupt-parent = <&gpio3>;
+> +        interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
+> +        clocks = <&cec_clock>;
+> +        clock-names = "cec";
+> +        adi,dsi-lanes = <4>;
+> +        avdd-supply = <&v1v8>;
+> +        dvdd-supply = <&v1v8>;
+> +        pvdd-supply = <&v1v8>;
+> +        a2vdd-supply = <&v1v8>;
+> +        v3p3-supply = <&v3v3>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                reg = <0>;
+> +                adv7533_in: endpoint {
+> +                    remote-endpoint = <&dsi_out>;
+> +                };
+> +            };
+> +
+> +            port@1 {
+> +                reg = <1>;
+> +                adv7533_out: endpoint {
+> +                    remote-endpoint = <&hdmi_connector_in>;
+> +                };
+> +            };
+> +
+> +            port@2 {
+> +                reg = <2>;
+> +                codec_endpoint: endpoint {
+> +                    remote-endpoint = <&i2s0_cpu_endpoint>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
 > -- 
-> Jazz is not dead. It just smells funny...
+> 2.18.0
+> 
+
+-- 
+Regards,
+
+Laurent Pinchart
