@@ -2,223 +2,292 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1553EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD29CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E480F20772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591183377;
-	bh=ehvrNQX6FKPSKoJdIOQhPL6tv5lcYmRRF/iDa8/fY3A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YMbLxLQqzGTgE3mAQbqYyeINVGveY90Da4Y8FgAucBkjEBpOAutIuYabZCdzwFHaR
-	 09oa6y00f3galVUPllbDIh50JqmW7ifnEx2xjpWwA5KevtCyvkd9IjPhTRylsT14ls
-	 7ps5UTzyf3MWeHTPzJLBiE0cuOFQPA+3cMzmFq2Y=
+	by mail.kernel.org (Postfix) with ESMTP id BD79A20679
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:29:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiYRKNXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbgFCLW4 (ORCPT
+        id S1725855AbgFCL3t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbgFCLW4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:22:56 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10BBF20679;
-        Wed,  3 Jun 2020 11:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591183375;
-        bh=ehvrNQX6FKPSKoJdIOQhPL6tv5lcYmRRF/iDa8/fY3A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ynKH/9EW4Vbv+8Ojz1LiRoNZIcvkSWbouyA5BfTwx5gp5BZvof7dRxSb4HXOOlNKw
-         VduNFjgv0zIv3AckfNAF6bZazPaphHDprV77c74Xydh3NWvwjCDWmuzjimG7eN5jba
-         3nOmwuAei0WpdB6S+2yJHfhZBI/DKyYAPQ4iztPY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jgRTx-00HQWC-IY; Wed, 03 Jun 2020 12:22:53 +0100
+        Wed, 3 Jun 2020 07:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725833AbgFCL3s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 07:29:48 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC46C08C5C0;
+        Wed,  3 Jun 2020 04:29:48 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y18so726178plr.4;
+        Wed, 03 Jun 2020 04:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SYDjEnMgktBuo6DQ1R8FXp/4FpW7wh5KhHgaA/MCrC0=;
+        b=kiYRKNXTleel/idLEGZwK9UEaeJLEnR5m/VKB1rPaL47Lyah3lhtvoJ6Fbo/6xwr6r
+         aj6DJ1QrVIRXuz9eLzn+aqmIcvrk4Z1aUYmjJDY20gZ6JltKfzQmAH5/t8ALSfzsbITc
+         j+wY1PnYh+SZDsUCADDL4giBHXvWvdKee6dPnom0a4kuRLpKjR129MVb1S4EAMMfb06z
+         fklytk5YoIBI7Bw6zjTeGqgHxTZBNhElpM6k9BZXqJvfVUaBEgA/TcyiUS/Moyvkz/6o
+         s87fCtXg3kgAVI5q2EW0bUHS9m9YNzKK2N2icdzmZPwNNFSr4yF1FD1C9CppIpwDXqke
+         m8cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SYDjEnMgktBuo6DQ1R8FXp/4FpW7wh5KhHgaA/MCrC0=;
+        b=uoeSL0Yg67Iq1hql6rlUF6ESUEmHiceDKhwTtB1NNXmNGY3EuZp+BaDZMtgerhqXGL
+         wRSgnzkJAfr0lI7CGEmzDeZgPFhff3usY/HkK+hzKSwYIPKDvhRKDTLTY6de9pKgSHex
+         NXT38qJV9n0hm16in8JtZsGD5oFk+pIvzJ9oGObvZchS1S0xR+iFWrGP7xGoqA4PrhS7
+         qzN+ylr1W2vxyxnNg+Ggc0IakQP4GUGJ/wBdZ7meAHVrIZVpfR8oY2+eDtDz0uDkBd/T
+         6Atppxk8OwQvgBAodETuklmTRhfQ5/r9Vp3t0e23hD3AqL8alW1PrAskIlWWqaWoX3LX
+         HlYQ==
+X-Gm-Message-State: AOAM531OgWSHvej0V2URVM/p/fg5gQybjohFkeba+zDLkgGO+1Ss8mY7
+        63ykOlCH3aDVX/pPTr0MaKnolnjM+QFSRNiyarg=
+X-Google-Smtp-Source: ABdhPJwdso2nwPBvupIiAPgeIIBx0RbV4afBtdZXGJS6P6Gf51Z77H3U4cd6KGmw0Vzf1gImBRVZTGkAQRoBzZweINg=
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr29919248plt.18.1591183788151;
+ Wed, 03 Jun 2020 04:29:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 12:22:53 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+References: <20200603084441.33952-1-tomasz.duszynski@octakon.com> <20200603084441.33952-3-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200603084441.33952-3-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 3 Jun 2020 14:29:36 +0300
+Message-ID: <CAHp75VfF2KXS8NtPGqCRm3SA_pxz5-XmSSu7b_ytRP6TjaE5xw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] iio: chemical: scd30: add I2C interface driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-In-Reply-To: <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-03 09:54, Kunihiko Hayashi wrote:
-> The misc interrupts consisting of PME, AER, and Link event, is handled
-> by INTx handler, however, these interrupts should be also handled by
-> MSI handler.
-> 
-> This adds the function uniphier_pcie_misc_isr() that handles misc
-> intterupts, which is called from both INTx and MSI handlers.
+On Wed, Jun 3, 2020 at 11:47 AM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Add I2C interface driver for the SCD30 sensor.
+>
 
-interrupts
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> This function detects PME and AER interrupts with the status register,
-> and invoke PME and AER drivers related to INTx or MSI.
-> 
-> And this sets the mask for misc interrupts from INTx if MSI is enabled
-> and sets the mask for misc interrupts from MSI if MSI is disabled.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 > ---
->  drivers/pci/controller/dwc/pcie-uniphier.c | 53 
-> +++++++++++++++++++++++-------
->  1 file changed, 42 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c
-> b/drivers/pci/controller/dwc/pcie-uniphier.c
-> index a5401a0..a8dda39 100644
-> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -44,7 +44,9 @@
->  #define PCL_SYS_AUX_PWR_DET		BIT(8)
-> 
->  #define PCL_RCV_INT			0x8108
-> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
->  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
->  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
->  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
->  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie 
-> *pci)
-> 
->  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->  {
-> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-> +	u32 val;
+>  MAINTAINERS                      |   1 +
+>  drivers/iio/chemical/Kconfig     |  11 +++
+>  drivers/iio/chemical/Makefile    |   1 +
+>  drivers/iio/chemical/scd30_i2c.c | 139 +++++++++++++++++++++++++++++++
+>  4 files changed, 152 insertions(+)
+>  create mode 100644 drivers/iio/chemical/scd30_i2c.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 41a509cca6f1..13aed3473b7e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15142,6 +15142,7 @@ M:      Tomasz Duszynski <tomasz.duszynski@octakon.com>
+>  S:     Maintained
+>  F:     drivers/iio/chemical/scd30.h
+>  F:     drivers/iio/chemical/scd30_core.c
+> +F:     drivers/iio/chemical/scd30_i2c.c
+>
+>  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
+>  M:     Tomasz Duszynski <tduszyns@gmail.com>
+> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> index 99e852b67e55..970d34888c2e 100644
+> --- a/drivers/iio/chemical/Kconfig
+> +++ b/drivers/iio/chemical/Kconfig
+> @@ -96,6 +96,17 @@ config SCD30_CORE
+>           To compile this driver as a module, choose M here: the module will
+>           be called scd30_core.
+>
+> +config SCD30_I2C
+> +       tristate "SCD30 carbon dioxide sensor I2C driver"
+> +       depends on SCD30_CORE && I2C
+> +       select CRC8
+> +       help
+> +         Say Y here to build support for the Sensirion SCD30 I2C interface
+> +         driver.
 > +
-> +	val = PCL_RCV_INT_ALL_ENABLE;
-> +	if (pci_msi_enabled())
-> +		val |= PCL_RCV_INT_ALL_INT_MASK;
-> +	else
-> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called scd30_i2c.
 > +
-> +	writel(val, priv->base + PCL_RCV_INT);
->  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->  }
-> 
-> @@ -231,28 +241,48 @@ static const struct irq_domain_ops
-> uniphier_intx_domain_ops = {
->  	.map = uniphier_pcie_intx_map,
->  };
-> 
-> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
->  {
-> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> -	struct irq_chip *chip = irq_desc_get_chip(desc);
-> -	unsigned long reg;
-> -	u32 val, bit, virq;
-> +	u32 val, virq;
-> 
-> -	/* INT for debug */
->  	val = readl(priv->base + PCL_RCV_INT);
-> 
->  	if (val & PCL_CFG_BW_MGT_STATUS)
->  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>  config SENSIRION_SGP30
+>         tristate "Sensirion SGPxx gas sensors"
+>         depends on I2C
+> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> index c9804b041ecd..0966ca34e34b 100644
+> --- a/drivers/iio/chemical/Makefile
+> +++ b/drivers/iio/chemical/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_CCS811)          += ccs811.o
+>  obj-$(CONFIG_IAQCORE)          += ams-iaq-core.o
+>  obj-$(CONFIG_PMS7003) += pms7003.o
+>  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
+> +obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
+>  obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
+>  obj-$(CONFIG_SPS30) += sps30.o
+>  obj-$(CONFIG_VZ89X)            += vz89x.o
+> diff --git a/drivers/iio/chemical/scd30_i2c.c b/drivers/iio/chemical/scd30_i2c.c
+> new file mode 100644
+> index 000000000000..875892a070ee
+> --- /dev/null
+> +++ b/drivers/iio/chemical/scd30_i2c.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sensirion SCD30 carbon dioxide sensor i2c driver
+> + *
+> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> + *
+> + * I2C slave address: 0x61
+> + */
+> +#include <linux/crc8.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +#include <asm/unaligned.h>
 > +
->  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
-> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-> -		dev_dbg(pci->dev, "Root Error\n");
-> -	if (val & PCL_CFG_PME_MSI_STATUS)
-> -		dev_dbg(pci->dev, "PME Interrupt\n");
+> +#include "scd30.h"
 > +
-> +	if (pci_msi_enabled()) {
-
-This checks whether the kernel supports MSIs. Not that they are
-enabled in your controller. Is that really what you want to do?
-
-> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
-> +			dev_dbg(pci->dev, "Root Error Status\n");
-> +			virq = irq_linear_revmap(pp->irq_domain, 0);
-> +			generic_handle_irq(virq);
-> +		}
+> +#define SCD30_I2C_MAX_BUF_SIZE 18
+> +#define SCD30_I2C_CRC8_POLYNOMIAL 0x31
 > +
-> +		if (val & PCL_CFG_PME_MSI_STATUS) {
-> +			dev_dbg(pci->dev, "PME Interrupt\n");
-> +			virq = irq_linear_revmap(pp->irq_domain, 0);
-> +			generic_handle_irq(virq);
-> +		}
-
-These two cases do the exact same thing, calling the same interrupt.
-What is the point of dealing with them independently?
-
-> +	}
-> 
->  	writel(val, priv->base + PCL_RCV_INT);
+> +static u16 scd30_i2c_cmd_lookup_tbl[] = {
+> +       [CMD_START_MEAS] = 0x0010,
+> +       [CMD_STOP_MEAS] = 0x0104,
+> +       [CMD_MEAS_INTERVAL] = 0x4600,
+> +       [CMD_MEAS_READY] = 0x0202,
+> +       [CMD_READ_MEAS] = 0x0300,
+> +       [CMD_ASC] = 0x5306,
+> +       [CMD_FRC] = 0x5204,
+> +       [CMD_TEMP_OFFSET] = 0x5403,
+> +       [CMD_FW_VERSION] = 0xd100,
+> +       [CMD_RESET] = 0xd304,
+> +};
+> +
+> +DECLARE_CRC8_TABLE(scd30_i2c_crc8_tbl);
+> +
+> +static int scd30_i2c_xfer(struct scd30_state *state, char *txbuf, int txsize,
+> +                         char *rxbuf, int rxsize)
+> +{
+> +       struct i2c_client *client = to_i2c_client(state->dev);
+> +       int ret;
+> +
+> +       /*
+> +        * repeated start is not supported hence instead of sending two i2c
+> +        * messages in a row we send one by one
+> +        */
+> +       ret = i2c_master_send(client, txbuf, txsize);
+> +       if (ret < 0)
+> +               return ret;
+> +       if (ret != txsize)
+> +               return -EIO;
+> +
+> +       if (!rxbuf)
+> +               return 0;
+> +
+> +       ret = i2c_master_recv(client, rxbuf, rxsize);
+> +       if (ret < 0)
+> +               return ret;
+> +       if (ret != rxsize)
+> +               return -EIO;
+> +
+> +       return 0;
 > +}
 > +
-> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
+> +                            void *response, int size)
 > +{
-> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	unsigned long reg;
-> +	u32 val, bit, virq;
+> +       char buf[SCD30_I2C_MAX_BUF_SIZE];
+> +       char *rsp = response;
+> +       int i, ret;
+> +       char crc;
 > +
-> +	/* misc interrupt */
-> +	uniphier_pcie_misc_isr(pp);
+> +       put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
+> +       i = 2;
+> +
+> +       if (rsp) {
+> +               /* each two bytes are followed by a crc8 */
+> +               size += size / 2;
+> +       } else {
+> +               put_unaligned_be16(arg, buf + i);
+> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> +               i += 2;
+> +               buf[i] = crc;
+> +               i += 1;
+> +
+> +               /* commands below don't take an argument */
+> +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
+> +                       i -= 3;
+> +       }
+> +
+> +       ret = scd30_i2c_xfer(state, buf, i, buf, size);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* validate received data and strip off crc bytes */
+> +       for (i = 0; i < size; i += 3) {
+> +               crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
+> +               if (crc != buf[i + 2]) {
+> +                       dev_err(state->dev, "data integrity check failed\n");
+> +                       return -EIO;
+> +               }
+> +
+> +               *rsp++ = buf[i];
+> +               *rsp++ = buf[i + 1];
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int scd30_i2c_probe(struct i2c_client *client)
+> +{
+> +       if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+> +               return -EOPNOTSUPP;
+> +
+> +       crc8_populate_msb(scd30_i2c_crc8_tbl, SCD30_I2C_CRC8_POLYNOMIAL);
+> +
+> +       return scd30_probe(&client->dev, client->irq, client->name, NULL, scd30_i2c_command);
+> +}
+> +
+> +static const struct of_device_id scd30_i2c_of_match[] = {
+> +       { .compatible = "sensirion,scd30" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, scd30_i2c_of_match);
+> +
+> +static struct i2c_driver scd30_i2c_driver = {
+> +       .driver = {
+> +               .name = KBUILD_MODNAME,
+> +               .of_match_table = scd30_i2c_of_match,
+> +               .pm = &scd30_pm_ops,
+> +       },
+> +       .probe_new = scd30_i2c_probe,
+> +};
+> +module_i2c_driver(scd30_i2c_driver);
+> +
+> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
+> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor i2c driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.27.0
+>
 
-This is a chained handler called outside of a chained_irq_enter/exit
-block. It isn't acceptable.
 
-> 
->  	/* INTx */
->  	chained_irq_enter(chip, desc);
-> @@ -330,6 +360,7 @@ static int uniphier_pcie_host_init(struct pcie_port 
-> *pp)
-> 
->  static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
->  	.host_init = uniphier_pcie_host_init,
-> +	.msi_host_isr = uniphier_pcie_misc_isr,
->  };
-> 
->  static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
