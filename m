@@ -2,86 +2,73 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A99C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50A4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 097CA20738
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9770C206C3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591182729;
-	bh=YzOMemc162MmX21grMM2woz3galEvoPugqrE5a3TFD8=;
+	s=default; t=1591182910;
+	bh=DIzdZtES3weee8kFjADfjxp0jxzg8+EHuNSTFll5o64=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yUyLT/LePs4AvLUtR4EAsTzCawtzeAKA6i09PtqDznLnoJFpHHqu/qCfn/WVqL7yl
-	 1GpjA88sRW5p9lV8G3nLSXemosbreG1Sp/SNr8rvFXim3PQydGUVC1dHR+Qz3v+stP
-	 M+q+I/zUjt+OmrF6Xn8GcjhkXwnX6x8ukg668NWg=
+	b=RvFYg7VK0Ag6MAlru9G/3dNtyeR2JOcpa89Qgdde+2C6E/+/vyWWDCWnyX+Qz3dZ2
+	 42IjSrL8xFaVzaD9NnMtHYr7gA2SyLeXP59mLe6WR9tcdl8YPFCmNpsChzAe3pKpKe
+	 e32OsiZNPkvllU8/Gzw6UssrXfvqtpiVER53n+aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725917AbgFCLMI (ORCPT
+        id S1726013AbgFCLPG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57514 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 07:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgFCLMI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:12:08 -0400
+        id S1725882AbgFCLPG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:15:06 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57EA8206C3;
-        Wed,  3 Jun 2020 11:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 885C02067B;
+        Wed,  3 Jun 2020 11:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591182727;
-        bh=YzOMemc162MmX21grMM2woz3galEvoPugqrE5a3TFD8=;
+        s=default; t=1591182905;
+        bh=DIzdZtES3weee8kFjADfjxp0jxzg8+EHuNSTFll5o64=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VCecdmeYHrqT5gcinE0svjjnWovDvj6uzuTznngJAf93O0LV5n1J9DoWLJtEk9vv6
-         0JAbXLvW79Wb3/N+75QFT30BcC7kfKT3VMjSG/UnSS7QAUN3pVQpc6LlZXKzk03LyZ
-         ZetdVU8f9I1Kxws4imoEVWR93RtBzxSkFBKnQEO4=
+        b=dHtLL2bjjmWlybWqZVA7JugSObOSlVQlMOrxeXn8QK/b8Ox/RqzeafeE5m5ch1Izs
+         Tz1D7UKIVGzJUyx6siommZjcz7WJlmZrcScBIPFjDjjWJANJMLTnAV9K+k1W5XgjN2
+         DRGRpfciWQDzfqPiZ5dCG1Z2jQ8NYtIkuq4PJjPo=
 Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
         by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jgRJV-00HQNN-OT; Wed, 03 Jun 2020 12:12:05 +0100
+        id 1jgRMO-00HQQ8-22; Wed, 03 Jun 2020 12:15:04 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 12:12:05 +0100
+Date:   Wed, 03 Jun 2020 12:15:04 +0100
 From:   Marc Zyngier <maz@kernel.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Julius Werner <jwerner@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD?= =?UTF-8?Q?=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        mark.rutland@arm.com, Jose.Marinho@arm.com
-Subject: Re: Security Random Number Generator support
-In-Reply-To: <1591170857.19414.5.camel@mtkswgap22>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
- <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
- <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
- <1591169342.4878.9.camel@mtkswgap22>
- <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
- <1591170857.19414.5.camel@mtkswgap22>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 1/6] PCI: dwc: Add msi_host_isr() callback
+In-Reply-To: <1591174481-13975-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-2-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <e56f0f8da7fdc836e073a37c9baeda77@kernel.org>
+Message-ID: <95bb3ffbfab4923854e20266c6b0b098@kernel.org>
 X-Sender: maz@kernel.org
 X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: neal.liu@mediatek.com, jwerner@google.com, ardb@kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, Crystal.Guo@mediatek.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, Jose.Marinho@arm.com
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
@@ -89,39 +76,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-03 08:54, Neal Liu wrote:
-> On Wed, 2020-06-03 at 08:40 +0100, Marc Zyngier wrote:
->> On 2020-06-03 08:29, Neal Liu wrote:
-
-[...]
-
->> > Could you give us a hint how to make this SMC interface more generic in
->> > addition to my approach?
->> > There is no (easy) way to get platform-independent SMC function ID,
->> > which is why we encode it into device tree, and provide a generic
->> > driver. In this way, different devices can be mapped and then get
->> > different function ID internally.
->> 
->> The idea is simply to have *one* single ID that caters for all
->> implementations, just like we did for PSCI at the time. This
->> requires ARM to edict a standard, which is what I was referring
->> to above.
->> 
->> There is zero benefit in having a platform-dependent ID. It just
->> pointlessly increases complexity, and means we cannot use the RNG
->> before the firmware tables are available (yes, we need it that
->> early).
->> 
->>          M.
+On 2020-06-03 09:54, Kunihiko Hayashi wrote:
+> This adds msi_host_isr() callback function support to describe
+> SoC-dependent service triggered by MSI.
 > 
-> Do you know which ARM expert could edict this standard?
-> Or is there any chance that we can make one? And be reviewed by
-> maintainers?
+> For example, when AER interrupt is triggered by MSI, the callback 
+> function
+> reads SoC-dependent registers and detects that the interrupt is from 
+> AER,
+> and invoke AER interrupts related to MSI.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++----
+>  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 0a4a5aa..9b628a2 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -112,13 +112,13 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port 
+> *pp)
+>  static void dw_chained_msi_isr(struct irq_desc *desc)
+>  {
+>  	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	struct pcie_port *pp;
+> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+> 
+> -	chained_irq_enter(chip, desc);
+> +	if (pp->ops->msi_host_isr)
+> +		pp->ops->msi_host_isr(pp);
 
-Sudeep already mentioned Jose's effort to offer a standard.
-Hopefully he will *soon* be able to give us something that can be
-implemented everywhere (firmware, kernel, but also hypervisors),
-as the need exists across the whole stack.
+Why is this call outside of the enter/exit guards?
+Do you still need to execute the standard handler?
+
+> 
+> -	pp = irq_desc_get_handler_data(desc);
+> +	chained_irq_enter(chip, desc);
+>  	dw_handle_msi_irq(pp);
+> -
+>  	chained_irq_exit(chip, desc);
+>  }
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> b/drivers/pci/controller/dwc/pcie-designware.h
+> index 656e00f..e741967 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -170,6 +170,7 @@ struct dw_pcie_host_ops {
+>  	void (*scan_bus)(struct pcie_port *pp);
+>  	void (*set_num_vectors)(struct pcie_port *pp);
+>  	int (*msi_host_init)(struct pcie_port *pp);
+> +	void (*msi_host_isr)(struct pcie_port *pp);
+>  };
+> 
+>  struct pcie_port {
+
+Thanks,
 
          M.
 -- 
