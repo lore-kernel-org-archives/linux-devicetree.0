@@ -2,77 +2,84 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE6CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ED4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D3D2068D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6942C2068D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgFCJLZ (ORCPT
+        id S1726241AbgFCJPX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:11:25 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:13487 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725355AbgFCJLY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 05:11:24 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 03 Jun 2020 14:40:20 +0530
-Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 03 Jun 2020 14:39:50 +0530
-Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 0BBF85046; Wed,  3 Jun 2020 14:39:48 +0530 (IST)
-From:   Pradeep P V K <ppvk@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
-        sibis@codeaurora.org, matthias@chromium.org,
-        Pradeep P V K <ppvk@codeaurora.org>
-Subject: [PATCH V1 0/2] Add SDHC interconnect bandwidth scaling 
-Date:   Wed,  3 Jun 2020 14:39:34 +0530
-Message-Id: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 3 Jun 2020 05:15:23 -0400
+Received: from smtp.asem.it ([151.1.184.197]:54582 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgFCJPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:15:22 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000293951.MSG 
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 11:15:19 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 3 Jun
+ 2020 11:15:17 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 3 Jun 2020 11:15:17 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh@kernel.org>
+CC:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v1] dt-bindings: leds: fix macro names for pca955x
+Date:   Wed, 3 Jun 2020 11:15:16 +0200
+Message-ID: <20200603091516.31907-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090207.5ED76A26.004C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The documentation reports the wrong macro names
+related to the pca9532 instead of the pca955x
 
-Add interconnect bandwidths for SDHC driver using OPP framework that
-is required by SDHC driver based on the clock frequency and bus width
-of the card. Otherwise, the system clocks may run at minimum clock
-speed and thus affecting the performance.
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-This change is based on
-[1] [Patch v8] Introduce OPP bandwidth bindings
-(https://lkml.org/lkml/2020/5/12/493)
+v1: add "Acked-by: Rob Herring <robh@kernel.org>"
 
-[2] [Patch v3 09/17] mmc: sdhci-msm: Fix error handling
-for dev_pm_opp_of_add_table()
-(https://lkml.org/lkml/2020/5/5/491)
+ Documentation/devicetree/bindings/leds/leds-pca955x.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-[3] [RFC v6 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW
-scaling strings
-(https://lkml.org/lkml/2020/3/23/409)
-
-as there were no extra changes made on [3], retaining the Acked-by and
-Reviewed-by sign-off from [3].
-
-Pradeep P V K (2):
-  mmc: sdhci-msm: Add interconnect bandwidth scaling support
-  dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
-
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
- drivers/mmc/host/sdhci-msm.c                        | 16 ++++++++++++++++
- 2 files changed, 34 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+index 7984efb767b4..7a5830f8d5ab 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+@@ -26,9 +26,9 @@ LED sub-node properties:
+ 		from 0 to 15 for the pca9552
+ 		from 0 to  3 for the pca9553
+ - type: (optional) either
+-	PCA9532_TYPE_NONE
+-	PCA9532_TYPE_LED
+-	PCA9532_TYPE_GPIO
++	PCA955X_TYPE_NONE
++	PCA955X_TYPE_LED
++	PCA955X_TYPE_GPIO
+ 	see dt-bindings/leds/leds-pca955x.h (default to LED)
+ - label : (optional)
+ 	see Documentation/devicetree/bindings/leds/common.txt
 -- 
-1.9.1
+2.17.1
 
