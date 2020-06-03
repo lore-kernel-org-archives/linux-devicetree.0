@@ -2,110 +2,81 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3652DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 10:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FD9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E76F20734
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 10:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C952074B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 10:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgFCK1x (ORCPT
+        id S1725883AbgFCKhf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:27:53 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36130 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFCK1x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 06:27:53 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 53CE52A3AC2
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Emil Velikov <emil.l.velikov@gmail.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-Subject: Re: [Linux-stm32] [PATCH v8 08/10] drm: stm: dw-mipi-dsi: let the
- bridge handle the HW version check
-In-Reply-To: <CACvgo51QyzEa8LFpGq5zjYV-0TifQRtNh4WhMYy8jNtaswxd7Q@mail.gmail.com>
-References: <20200427081952.3536741-1-adrian.ratiu@collabora.com>
- <20200427081952.3536741-9-adrian.ratiu@collabora.com>
- <4acc09e8-0610-01f6-b18d-3ffc390c45a3@st.com>
- <87blm387vt.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
- <CACvgo51QyzEa8LFpGq5zjYV-0TifQRtNh4WhMYy8jNtaswxd7Q@mail.gmail.com>
-Date:   Wed, 03 Jun 2020 13:28:54 +0300
-Message-ID: <878sh48mu1.fsf@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+        Wed, 3 Jun 2020 06:37:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:43808 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725828AbgFCKhe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 06:37:34 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 40D181A0101;
+        Wed,  3 Jun 2020 12:37:33 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0588A1A00FE;
+        Wed,  3 Jun 2020 12:37:28 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 408FA40299;
+        Wed,  3 Jun 2020 18:37:21 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
+        broonie@kernel.org, ckeepax@opensource.cirrus.com,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/2] ASoC: bindings: wm8960: Add property for headphone detection
+Date:   Wed,  3 Jun 2020 18:26:52 +0800
+Message-Id: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 02 Jun 2020, Emil Velikov <emil.l.velikov@gmail.com> 
-wrote:
-> Hi Adrian, 
+Add two properties for headphone detection.
 
-Hi Email,
+wlf,hp-cfg: A list of headphone jack detect configuration register values
+wlf,gpio-cfg: A list of GPIO configuration register values
 
-> 
-> On Mon, 1 Jun 2020 at 10:14, Adrian Ratiu 
-> <adrian.ratiu@collabora.com> wrote: 
->> 
->> On Fri, 29 May 2020, Philippe CORNU <philippe.cornu@st.com> 
->> wrote: 
->> > Hi Adrian, and thank you very much for the patchset.  Thank 
->> > you also for having tested it on STM32F769 and STM32MP1. 
->> > Sorry for the late response, Yannick and I will review it as 
->> > soon as possible and we will keep you posted.  Note: Do not 
->> > hesitate to put us in copy for the next version 
->> > (philippe.cornu@st.com, yannick.fertre@st.com) Regards, 
->> > Philippe :-) 
->> 
->> Hi Philippe, 
->> 
->> Thank you very much for your previous and future STM testing, 
->> really appreciate it! I've CC'd Yannick until now but I'll also 
->> CC you sure :) 
->> 
->> It's been over a month since I posted v8 and I was just gearing 
->> up to address all feedback, rebase & retest to prepare v9 but 
->> I'll wait a little longer, no problem, it's no rush. 
->> 
-> Small idea, pardon for joining so late: 
-> 
-> Might be a good idea to add inline comment, why the clocks are 
-> disabled so late.  Effectively a 2 line version of the commit 
-> summary. 
-> 
-> Feel free to make that a separate/follow-up patch.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ Documentation/devicetree/bindings/sound/wm8960.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Thanks, I'll add the comment to this patch in v9.
+diff --git a/Documentation/devicetree/bindings/sound/wm8960.txt b/Documentation/devicetree/bindings/sound/wm8960.txt
+index 6d29ac3750ee..85d3b287108c 100644
+--- a/Documentation/devicetree/bindings/sound/wm8960.txt
++++ b/Documentation/devicetree/bindings/sound/wm8960.txt
+@@ -21,6 +21,17 @@ Optional properties:
+ 	enabled and disabled together with HP_L and HP_R pins in response to jack
+ 	detect events.
+ 
++  - wlf,hp-cfg: A list of headphone jack detect configuration register values.
++		The list must be 3 entries long.
++		hp-cfg[0]: HPSEL[1:0] of R48 (Additional Control 4).
++		hp-cfg[1]: {HPSWEN:HPSWPOL} of R24 (Additional Control 2).
++		hp-cfg[2]: {TOCLKSEL:TOEN} of R23 (Additional Control 1).
++
++  - wlf,gpio-cfg: A list of GPIO configuration register values.
++		  The list must be 2 entries long.
++		  gpio-cfg[0]: ALRCGPIO of R9 (Audio interface)
++		  gpio-cfg[1]: {GPIOPOL:GPIOSEL[2:0]} of R48 (Additional Control 4).
++
+ Example:
+ 
+ wm8960: codec@1a {
+-- 
+2.21.0
 
->
-> -Emil
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
