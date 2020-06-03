@@ -6,94 +6,101 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69928C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 18:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DC5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 18:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421E62053B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 18:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021232077D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 18:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgFCS2L (ORCPT
+        id S1726072AbgFCSb2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:28:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:36694 "EHLO foss.arm.com"
+        Wed, 3 Jun 2020 14:31:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:36738 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgFCS2L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:28:11 -0400
+        id S1725821AbgFCSb1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:31:27 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9DF931B;
-        Wed,  3 Jun 2020 11:28:10 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 022D931B;
+        Wed,  3 Jun 2020 11:31:27 -0700 (PDT)
 Received: from bogus (unknown [10.37.8.135])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9073D3F305;
-        Wed,  3 Jun 2020 11:28:08 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 19:28:05 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 948313F305;
+        Wed,  3 Jun 2020 11:31:23 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 19:31:20 +0100
 From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
         Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200603182805.GD23722@bogus>
+Message-ID: <20200603183120.GE23722@bogus>
 References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
  <20200519012927.GT2165@builder.lan>
+ <20200519034055.hfvifqz442yfduhg@vireshk-i7>
+ <CABb+yY30nmbBUzYG62xGEbrr7107h_Edyq3jKPheZAQ0Cvr9Yg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519012927.GT2165@builder.lan>
+In-Reply-To: <CABb+yY30nmbBUzYG62xGEbrr7107h_Edyq3jKPheZAQ0Cvr9Yg@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-Thanks for the details response.
-
-On Mon, May 18, 2020 at 06:29:27PM -0700, Bjorn Andersson wrote:
-> On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
->
-
-[...]
-
-I find this part nicely summarise your response.
-
-> > - With serialization, if we use only one channel as today at every
-> >   priority, if there are 5 requests to send signal to the receiver and
-> >   the dvfs request is the last one in queue (which may be called from
-> >   scheduler's hot path with fast switching), it unnecessarily needs to
-> >   wait for the first four transfers to finish due to the software
-> >   locking imposed by the mailbox framework. This adds additional delay,
-> >   maybe of few ms only, which isn't required by the hardware but just by
-> >   the software and few ms can be important in scheduler's hotpath.
+On Mon, May 18, 2020 at 11:05:03PM -0500, Jassi Brar wrote:
+> On Mon, May 18, 2020 at 10:40 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 > >
->
-> So these 5 requests, are they conveyed by the signals [1,2,3,4,5] or
-> [BIT(0), BIT(1), BIT(2), BIT(3), BIT(4)]?
->
+> > On 18-05-20, 18:29, Bjorn Andersson wrote:
+> > > On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
+> > > > This stuff has been doing rounds on the mailing list since several years
+> > > > now with no agreed conclusion by all the parties. And here is another
+> > > > attempt to get some feedback from everyone involved to close this once
+> > > > and for ever. Your comments will very much be appreciated.
+> > > >
+> > > > The ARM MHU is defined here in the TRM [1] for your reference, which
+> > > > states following:
+> > > >
+> > > >     "The MHU drives the signal using a 32-bit register, with all 32
+> > > >     bits logically ORed together. The MHU provides a set of
+> > > >     registers to enable software to set, clear, and check the status
+> > > >     of each of the bits of this register independently.  The use of
+> > > >     32 bits for each interrupt line enables software to provide more
+> > > >     information about the source of the interrupt. For example, each
+> > > >     bit of the register can be associated with a type of event that
+> > > >     can contribute to raising the interrupt."
+> > > >
+> > >
+> > > Does this mean that there are 32 different signals and they are all ORed
+> > > into the same interrupt line to trigger software action when something
+> > > happens?
+> > >
+> > > Or does it mean that this register is used to pass multi-bit information
+> > > and when any such information is passed an interrupt will be triggered?
+> > > If so, what does that information mean? How is it tied into other Linux
+> > > drivers/subsystems?
+> >
+> > I have started to believe the hardware is written badly at this point
+> > :)
+> >
+> H/W is actually fine :)   Its just that the driver is written to
+> _also_ support a platform (my original) that doesn't have shmem and
+> need to pass data via 32bit registers.
+> Frankly, I am not against the doorbell mode, I am against implementing
+> two modes in a driver. If it really helped (note the past tense) the
+> SCMI, we could implement the driver only in doorbell mode but
+> unfortunately SCMI would still be _broken_ for non-doorbell
+> controllers.
 
-Latter in this case. IMO it is platform choice on how to use it. It is
-equally possible to send 2^31 different signals. But the receiver must
-also interpret it in the *exact* same way. In this case, the receiver
-which is platform firmware interprets as individual bit signals.
-
-> In the first case you have to serialize things given that e.g. signal 1
-> immediately followed by 2 is indistinguishable from 3.
->
-
-Agree and we are not proposing to break that use case. It exists in the
-driver/binding today and will continue as is.
-
-> If you signals are single-bit notifications then you don't need any
-> serialization.
->
-
-Indeed, we are making use of that.
+Should be fine as the specification is designed to work with only shmem
+for any data transfer and mailbox is just a signal mechanism. I won't
+be too worried about that.
 
 --
 Regards,
