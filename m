@@ -2,306 +2,471 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF9BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E91AC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E530206C3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744CF20738
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="a77W+8o5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeCYn6pZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgFCLeo (ORCPT
+        id S1726146AbgFCLrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:34:44 -0400
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:52582
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbgFCLeo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 07:34:44 -0400
+        Wed, 3 Jun 2020 07:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgFCLrv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 07:47:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377CEC08C5C0;
+        Wed,  3 Jun 2020 04:47:50 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id y17so1999671wrn.11;
+        Wed, 03 Jun 2020 04:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ryPX3MFfe9iSndf/udF6YzbSmay8VgeL3G2M+KLYxdU=;
- b=a77W+8o5r4nnF4QfeTWEU/WdO8Rn33ZvRBlmcMwmAIgtY6Cvap3Sx+M+Zc0D8ALDk3NT2slLzRIMT1soH9EiJYE+8I4WrDPYWzi6yMjWGGW/v1ZhuTy6rJM/gHUbKXJOoiteXFDMkKRoAJsKs3qL2frB1oFZXQFmf+IkVxzRUTw=
-Received: from AM6P192CA0061.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::38)
- by AM6PR04MB4309.eurprd04.prod.outlook.com (2603:10a6:209:50::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Wed, 3 Jun
- 2020 11:34:37 +0000
-Received: from HE1EUR01FT013.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:209:82:cafe::2c) by AM6P192CA0061.outlook.office365.com
- (2603:10a6:209:82::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend
- Transport; Wed, 3 Jun 2020 11:34:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 40.68.112.65)
- smtp.mailfrom=topicproducts.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
- designates 40.68.112.65 as permitted sender) receiver=protection.outlook.com;
- client-ip=40.68.112.65; helo=westeu12-emailsignatures-cloud.codetwo.com;
-Received: from westeu12-emailsignatures-cloud.codetwo.com (40.68.112.65) by
- HE1EUR01FT013.mail.protection.outlook.com (10.152.0.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.17 via Frontend Transport; Wed, 3 Jun 2020 11:34:36 +0000
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com (104.47.6.52) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Wed, 03 Jun 2020 11:34:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XYr7eDBWcEQDrhi8DEeBlbgHbnTMCq0F9jhEagAk3n3nI9gNK8UsDaHHng3thNoXmKR0VK43dFhP6k+TiUDZtUZOMR1hDy7wjqKsVZs7EWrEsu7q35pi2dxDhhjUrBaMyi/uH2GD1/ZYDGHNSmNoNqJOSD+Fm/wHzvHant9UHfv/JFFN5WeqLDwMr4M3uNOL+7vNx1Jo9j6vnr1aD9UZZjv84R8+ep8QxhSYjzZNQ+uC35amMKFM8bxJmvZ8px1uhR5xgTTLeM4ZVHQp5iyi5H4vM7UgpGDWxcIvVuVH1h6gVYBVbkb1Wd0XDTSKJWPWHxrbyVltMOnpjqJkAFni2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hBg2pAhsqTEwrpg3SFI66C5g+6xaXOImnz9I/uxWnk4=;
- b=RFQimBdhVFxVfLp69IjHiTrxFG0fB62zZksoMlGxFTsozb9s5yFv+o+gRpFg4CDB9LunKFcxuZRAZYE0W8SJ2ELWDKBBe3YKcZsln+6CDCDutxWt8T6nTGchTrJiy6maBtASoFAsr0MMc0OSPQQC+BcniB3LhXWbMTFjKc1U5+D6PD96nFDM1VFXmjkb+n5hKAcT1khkaQ8JUOfgvdhZxeI0Z2LnujzVlRwpYPOQe8kfmId/b7GFydbMhOHzJ+WwgrSnlQKSfe8RwvTfVvPusPUnfhxFYbmVsZb4oSpgd4I31qNGQMKCL2WsxhMDjTQ02UdgjmMUGWJZzWp0U2OcTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
- dkim=pass header.d=topic.nl; arc=none
-Authentication-Results-Original: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
- by DB8PR04MB6715.eurprd04.prod.outlook.com (2603:10a6:10:10d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Wed, 3 Jun
- 2020 11:34:31 +0000
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::6cf6:7323:7395:eec9]) by DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::6cf6:7323:7395:eec9%7]) with mapi id 15.20.3045.024; Wed, 3 Jun 2020
- 11:34:31 +0000
-Subject: Re: [PATCH] usb: dwc3: Add support for VBUS power control
-To:     linux-usb@vger.kernel.org
-CC:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org, balbi@kernel.org
-References: <20200603085932.31746-1-mike.looijmans@topic.nl>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.4820e9d3-dc82-459a-873d-80ec5efbefff@emailsignatures365.codetwo.com>
- <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.7aa77c8d-2984-4b57-ac0e-a1a6c3a49faf@emailsignatures365.codetwo.com>
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-Organization: Topic
-Message-ID: <aabce60f-caca-9381-84ce-4c2fdbe1b307@topic.nl>
-Date:   Wed, 3 Jun 2020 13:34:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200603085932.31746-1-mike.looijmans@topic.nl>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-ClientProxiedBy: AM4PR07CA0009.eurprd07.prod.outlook.com
- (2603:10a6:205:1::22) To DB8PR04MB6523.eurprd04.prod.outlook.com
- (2603:10a6:10:10f::26)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8yyjDaO/b+3MP+LO9tztKOqPVt2nNrC78Gf79JCQ7+Q=;
+        b=KeCYn6pZ0rNcVLm/ig4zWsWuAgfgfQXMVxsAXloca2S4t0ni/U16pdte7iI4p9+enc
+         ueF7rOmdZkF1RYUKOB0g2GB2ks0IdCf38U8P31Hj9bRzJo4Z7xqQYY1Erq0YkPGTp46E
+         UqO7FvjNoFivV5wckAv3s+4m4zCDXuI/jA4gbphhtFm+CJLgxmGY1l9RMlDyxdJe5dvt
+         u1RAF7kAK+1QlwUb/+6ymiqbwOO7SR/3ixEMVUckzME13p/t9qIQWxmteo1E2jQcNTja
+         +ikb2TUA11aKTZtKZnYrV181naorK+4dG13FqSeXxVJxnbzqweTWDXWYgOqVNzRFlMIp
+         qAFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8yyjDaO/b+3MP+LO9tztKOqPVt2nNrC78Gf79JCQ7+Q=;
+        b=tQGEUX2bJgSk9stQA1zi7wGOwyZmuAMNE7jXvaodsYun+titb9tC/6jNnDI75szHGr
+         C4o1k1Kde+mtw/5OZgePJopM+MCIFGYL0Gjxh7kRklD2vGC+c+v+yTY0U50J2VO93bUQ
+         3DnIKk5exmxZygKW7gqLOEvBcd89dKOeCB+ababtzyrn0fwlQXjUIPhT8xT3TjWnya1L
+         LT2xasWlGKh7t1bwajJdSKYppGiKqEVq3hgdzAA2XmxQDdkx90SnCLy3oDv+brcdmTWd
+         Hm0Pb5pc7tV8U2C2KEqWdB1fHwa6b1uYFYueSWqG0FeOSYNUpyHmoxJIKDCBgDn1wJwK
+         4CFg==
+X-Gm-Message-State: AOAM531ryhY3IOR6sLaNhoIk4Fc8kAF/3QCzvsqQTfeZems8FA13Bv1D
+        XT/gxnUc1IDybBEoj5l1lO8QDcwnL8jbCQNcX0Q=
+X-Google-Smtp-Source: ABdhPJwflTwPXjA4P5HUTh5c02UfV6ZCBWlujr3brOF9xdM02IV42Q1K+6j53kRNVCVhPyAYFxlqt/xChpoL/73aNFc=
+X-Received: by 2002:adf:e588:: with SMTP id l8mr32932861wrm.255.1591184868713;
+ Wed, 03 Jun 2020 04:47:48 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.130] (83.128.90.119) by AM4PR07CA0009.eurprd07.prod.outlook.com (2603:10a6:205:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.8 via Frontend Transport; Wed, 3 Jun 2020 11:34:31 +0000
-X-Originating-IP: [83.128.90.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 80ff1ee3-b424-4f21-344e-08d807b2186a
-X-MS-TrafficTypeDiagnostic: DB8PR04MB6715:|AM6PR04MB4309:
-X-Microsoft-Antispam-PRVS: <AM6PR04MB430952E8B9BFEDCA85C486E296880@AM6PR04MB4309.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;OLM:6430;
-X-Forefront-PRVS: 04238CD941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: l50ZJC64rzJgewFlz+R06E5tBTPJfIuzFxhw5C2/kw/SbCJal7O/lwWlqkX9UguJNEalkAkRtvr56nF/BnJesR8iDNtAmNbO95UzaZr98gJiA1n1x4cKYt1rfSkHUeYAT4BFBy+Uth7AmOmL3oSIaoxUOZ3+5gXXWSNWWnjRc4qQrSJYi6gJz8Ik4Mp/4e6yaFa/u1MHujIsF8k/BT2KmEhJ1BOsjMtx3UJIQGWOZXslqS2u7yIeydPQAaqD38mQZdEUGGppkMbhQRvsxB9kPmn7r4scN8W1PMSNl2p36p05NEic1U5RVPzUw0W1OlgM+3IOq22lksZMiWa9vFn4M92e7IftxLdpVd4fh7TQgIl6zwI2nTlv4xwCbWPEsn1J
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(346002)(396003)(39840400004)(366004)(31696002)(66476007)(83170400001)(6916009)(8936002)(5660300002)(508600001)(52116002)(36756003)(36916002)(42882007)(6486002)(83380400001)(66556008)(956004)(44832011)(2616005)(66946007)(53546011)(2906002)(186003)(316002)(8676002)(16526019)(31686004)(4326008)(26005)(16576012)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: HwUMTz2VeqjD90x8VfRpjNllEzE42RuXLp7M2a6OygdlvoqzGqkibiTilyNVnLJPc0Fj5jqbWFXyB2UCCgnTJoqhyT20//mSgp834d0j9nGM4JP8wbss58hbRiPKzm6luYLNSEuZlJRcX/M/gLdqRtlo3PmKIx8wNZtHoDk/q/Fj7bFwk9hQg/a++ZR9cjEcayE04UKnqU2e2AXN4tejb0dAGFZfnnb9/32KRYDCz+uJ2Vy3G17kw6UUN1D7Y2qsCveDo4tGeIo8Tc0mQhUDY44JxP0dPSs+hJ/GvBxbd3BIROsgsmB0xmFnUMK03h5+UzsuGAR/BCtyDrjA5n1x4LsyacGCG6NO+7wOmLJZE+e/mLMbxzpKjEK9rTqUb/PJLTQn7+HO41274crI0YQH6UgK+JhBQ53WUPJKUmkkFFYsjkeGc4pOuaH6cVRbOA121v8XtdBrxSO1mSKoWK7PJoPSYBSb9T9SH1q/AnqpQu8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6715
-X-CodeTwo-MessageID: 6b9a321e-43fa-4cdd-9690-d7658a667e7e.20200603113434@westeu12-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: HE1EUR01FT013.eop-EUR01.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:40.68.112.65;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(39840400004)(396003)(46966005)(956004)(2616005)(7596003)(44832011)(7636003)(70206006)(31686004)(16526019)(70586007)(83380400001)(356005)(6486002)(186003)(26005)(83170400001)(36756003)(36916002)(31696002)(53546011)(82310400002)(8676002)(15974865002)(4326008)(47076004)(336012)(16576012)(508600001)(42882007)(6916009)(2906002)(5660300002)(316002)(8936002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 1eafad6a-5d04-4262-25d3-08d807b2152c
-X-Forefront-PRVS: 04238CD941
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v01bZtsMQSy6noWBXbNgtWObOxPiv+CJejUw5fIAGJsxD9ENdD1r4TqAD9DVFvfTjb6aSk7eyewa7BtnJBBkNb9zPl4BcCmh5+MP98/FvMg95w7jVlKcJP5GllwG0HYDFGzdf/gFGw9CvpJHyslCYmBsMkveX65CiXOjwSyO70+lIMDBEManu6XjqJTc/TYPsIWbhj4UaA1qYKgdBpuD6glnh4IJFGanCb7dZGLiuvCFKV3JqcN2eMRpRdnJYoO323xLJ/iJreaVCbLjpJLWQpyzOjm/u/KlTgYt3rFx01IhWyjR+uuJ+FbnRjbpEBZEkCgG5lOjEcgZFAL5iz4Kedwbv8iUylRsVsa2+WCszYF+kk1nlC74VYwMchM37Hq8wtfCFXAo4pog515y1tLAnbM6c3Rfja3Mug88ZuTcUTF9jDQUSN6azKizZPZDvJcCKlQNe6BblSraws+Tnmjg+vAJBTDCN+2GWy3+ZHoB/liCjtZc/ySduW+MJQohWbWK
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 11:34:36.5631
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80ff1ee3-b424-4f21-344e-08d807b2186a
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[40.68.112.65];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4309
+References: <20200521093805.64398-1-chenzhou10@huawei.com> <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
+ <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com> <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
+ <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com> <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
+ <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
+In-Reply-To: <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
+From:   Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Date:   Wed, 3 Jun 2020 17:17:12 +0530
+Message-ID: <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64 kdump
+To:     John Donnelly <john.p.donnelly@oracle.com>
+Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Simon Horman <horms@verge.net.au>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Baoquan He <bhe@redhat.com>, Will Deacon <will@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        guohanjun@huawei.com, James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        RuiRui Yang <dyoung@redhat.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Oh darn, the "devm_get_regulator..." call in probe got lost in the=20
-rebase+merge. I'll add that in v2.
+Hi Chen,
 
-
-
-Met vriendelijke groet / kind regards,=0A=
-=0A=
-Mike Looijmans=0A=
-System Expert=0A=
-=0A=
-=0A=
-TOPIC Embedded Products B.V.=0A=
-Materiaalweg 4, 5681 RJ Best=0A=
-The Netherlands=0A=
-=0A=
-T: +31 (0) 499 33 69 69=0A=
-E: mike.looijmans@topicproducts.com=0A=
-W: www.topicproducts.com=0A=
-=0A=
-Please consider the environment before printing this e-mail=0A=
-On 03-06-2020 10:59, Mike Looijmans wrote:
-> Support VBUS power control using regulator framework. Enables the regulat=
-or
-> while the port is in host mode.
+On Tue, Jun 2, 2020 at 8:12 PM John Donnelly <john.p.donnelly@oracle.com> w=
+rote:
 >
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> ---
->   .../devicetree/bindings/usb/dwc3.txt          |  1 +
->   drivers/usb/dwc3/core.c                       | 30 ++++++++++++++-----
->   drivers/usb/dwc3/core.h                       |  4 +++
->   drivers/usb/dwc3/drd.c                        |  6 ++--
->   4 files changed, 29 insertions(+), 12 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentati=
-on/devicetree/bindings/usb/dwc3.txt
-> index 9946ff9ba735..56bc3f238e2d 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -37,6 +37,7 @@ Optional properties:
->    - phys: from the *Generic PHY* bindings
->    - phy-names: from the *Generic PHY* bindings; supported names are "usb=
-2-phy"
->   	or "usb3-phy".
-> + - vbus-supply: Regulator handle that provides the VBUS power.
->    - resets: set of phandle and reset specifier pairs
->    - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW L=
-PM
->    - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index edc17155cb2b..a9e58a301446 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -25,6 +25,7 @@
->   #include <linux/of.h>
->   #include <linux/acpi.h>
->   #include <linux/pinctrl/consumer.h>
-> +#include <linux/regulator/consumer.h>
->   #include <linux/reset.h>
->  =20
->   #include <linux/usb/ch9.h>
-> @@ -112,6 +113,23 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
->   	dwc->current_dr_role =3D mode;
->   }
->  =20
-> +void dwc3_set_vbus(struct dwc3 *dwc, bool enable)
-> +{
-> +	int ret;
-> +
-> +	if (enable !=3D dwc->vbus_reg_enabled) {
-> +		if (enable)
-> +			ret =3D regulator_enable(dwc->vbus_reg);
-> +		else
-> +			ret =3D regulator_disable(dwc->vbus_reg);
-> +		if (!ret)
-> +			dwc->vbus_reg_enabled =3D enable;
-> +	}
-> +
-> +	if (dwc->usb2_phy)
-> +		otg_set_vbus(dwc->usb2_phy->otg, enable);
-> +}
-> +
->   static void __dwc3_set_mode(struct work_struct *work)
->   {
->   	struct dwc3 *dwc =3D work_to_dwc(work);
-> @@ -164,8 +182,7 @@ static void __dwc3_set_mode(struct work_struct *work)
->   		if (ret) {
->   			dev_err(dwc->dev, "failed to initialize host\n");
->   		} else {
-> -			if (dwc->usb2_phy)
-> -				otg_set_vbus(dwc->usb2_phy->otg, true);
-> +			dwc3_set_vbus(dwc, true);
->   			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
->   			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
->   		}
-> @@ -173,8 +190,7 @@ static void __dwc3_set_mode(struct work_struct *work)
->   	case DWC3_GCTL_PRTCAP_DEVICE:
->   		dwc3_event_buffers_setup(dwc);
->  =20
-> -		if (dwc->usb2_phy)
-> -			otg_set_vbus(dwc->usb2_phy->otg, false);
-> +		dwc3_set_vbus(dwc, false);
->   		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
->   		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
->  =20
-> @@ -1183,8 +1199,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
->   	case USB_DR_MODE_PERIPHERAL:
->   		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
->  =20
-> -		if (dwc->usb2_phy)
-> -			otg_set_vbus(dwc->usb2_phy->otg, false);
-> +		dwc3_set_vbus(dwc, false);
->   		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
->   		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
->  =20
-> @@ -1198,8 +1213,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
->   	case USB_DR_MODE_HOST:
->   		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
->  =20
-> -		if (dwc->usb2_phy)
-> -			otg_set_vbus(dwc->usb2_phy->otg, true);
-> +		dwc3_set_vbus(dwc, true);
->   		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
->   		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
->  =20
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 4c171a8e215f..cee2574d7bf4 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -1085,6 +1085,9 @@ struct dwc3 {
->  =20
->   	bool			phys_ready;
->  =20
-> +	struct regulator	*vbus_reg;
-> +	bool			vbus_reg_enabled;
-> +
->   	struct ulpi		*ulpi;
->   	bool			ulpi_ready;
->  =20
-> @@ -1397,6 +1400,7 @@ struct dwc3_gadget_ep_cmd_params {
->  =20
->   /* prototypes */
->   void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode);
-> +void dwc3_set_vbus(struct dwc3 *dwc, bool enable);
->   void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
->   u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
->  =20
-> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-> index 7db1ffc92bbd..45fdec2d128d 100644
-> --- a/drivers/usb/dwc3/drd.c
-> +++ b/drivers/usb/dwc3/drd.c
-> @@ -384,8 +384,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_id=
-status)
->   		if (ret) {
->   			dev_err(dwc->dev, "failed to initialize host\n");
->   		} else {
-> -			if (dwc->usb2_phy)
-> -				otg_set_vbus(dwc->usb2_phy->otg, true);
-> +			dwc3_set_vbus(dwc, true);
->   			if (dwc->usb2_generic_phy)
->   				phy_set_mode(dwc->usb2_generic_phy,
->   					     PHY_MODE_USB_HOST);
-> @@ -398,8 +397,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_id=
-status)
->   		dwc3_event_buffers_setup(dwc);
->   		spin_unlock_irqrestore(&dwc->lock, flags);
->  =20
-> -		if (dwc->usb2_phy)
-> -			otg_set_vbus(dwc->usb2_phy->otg, false);
-> +		dwc3_set_vbus(dwc, false);
->   		if (dwc->usb2_generic_phy)
->   			phy_set_mode(dwc->usb2_generic_phy,
->   				     PHY_MODE_USB_DEVICE);
+>
+> > On Jun 2, 2020, at 12:38 AM, Prabhakar Kushwaha <prabhakar.pkin@gmail.c=
+om> wrote:
+> >
+> > On Tue, Jun 2, 2020 at 3:29 AM John Donnelly <john.p.donnelly@oracle.co=
+m> wrote:
+> >>
+> >> Hi .  See below !
+> >>
+> >>> On Jun 1, 2020, at 4:02 PM, Bhupesh Sharma <bhsharma@redhat.com> wrot=
+e:
+> >>>
+> >>> Hi John,
+> >>>
+> >>> On Tue, Jun 2, 2020 at 1:01 AM John Donnelly <John.P.donnelly@oracle.=
+com> wrote:
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>>
+> >>>> On 6/1/20 7:02 AM, Prabhakar Kushwaha wrote:
+> >>>>> Hi Chen,
+> >>>>>
+> >>>>> On Thu, May 21, 2020 at 3:05 PM Chen Zhou <chenzhou10@huawei.com> w=
+rote:
+> >>>>>> This patch series enable reserving crashkernel above 4G in arm64.
+> >>>>>>
+> >>>>>> There are following issues in arm64 kdump:
+> >>>>>> 1. We use crashkernel=3DX to reserve crashkernel below 4G, which w=
+ill fail
+> >>>>>> when there is no enough low memory.
+> >>>>>> 2. Currently, crashkernel=3DY@X can be used to reserve crashkernel=
+ above 4G,
+> >>>>>> in this case, if swiotlb or DMA buffers are required, crash dump k=
+ernel
+> >>>>>> will boot failure because there is no low memory available for all=
+ocation.
+> >>>>>>
+> >>>>>> To solve these issues, introduce crashkernel=3DX,low to reserve sp=
+ecified
+> >>>>>> size low memory.
+> >>>>>> Crashkernel=3DX tries to reserve memory for the crash dump kernel =
+under
+> >>>>>> 4G. If crashkernel=3DY,low is specified simultaneously, reserve sp=
+cified
+> >>>>>> size low memory for crash kdump kernel devices firstly and then re=
+serve
+> >>>>>> memory above 4G.
+> >>>>>>
+> >>>>>> When crashkernel is reserved above 4G in memory, that is, crashker=
+nel=3DX,low
+> >>>>>> is specified simultaneously, kernel should reserve specified size =
+low memory
+> >>>>>> for crash dump kernel devices. So there may be two crash kernel re=
+gions, one
+> >>>>>> is below 4G, the other is above 4G.
+> >>>>>> In order to distinct from the high region and make no effect to th=
+e use of
+> >>>>>> kexec-tools, rename the low region as "Crash kernel (low)", and ad=
+d DT property
+> >>>>>> "linux,low-memory-range" to crash dump kernel's dtb to pass the lo=
+w region.
+> >>>>>>
+> >>>>>> Besides, we need to modify kexec-tools:
+> >>>>>> arm64: kdump: add another DT property to crash dump kernel's dtb(s=
+ee [1])
+> >>>>>>
+> >>>>>> The previous changes and discussions can be retrieved from:
+> >>>>>>
+> >>>>>> Changes since [v7]
+> >>>>>> - Move x86 CRASH_ALIGN to 2M
+> >>>>>> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
+> >>>>>> - Update Documentation/devicetree/bindings/chosen.txt
+> >>>>>> Add corresponding documentation to Documentation/devicetree/bindin=
+gs/chosen.txt suggested by Arnd.
+> >>>>>> - Add Tested-by from Jhon and pk
+> >>>>>>
+> >>>>>> Changes since [v6]
+> >>>>>> - Fix build errors reported by kbuild test robot.
+> >>>>>>
+> >>>>>> Changes since [v5]
+> >>>>>> - Move reserve_crashkernel_low() into kernel/crash_core.c.
+> >>>>>> - Delete crashkernel=3DX,high.
+> >>>>>> - Modify crashkernel=3DX,low.
+> >>>>>> If crashkernel=3DX,low is specified simultaneously, reserve spcifi=
+ed size low
+> >>>>>> memory for crash kdump kernel devices firstly and then reserve mem=
+ory above 4G.
+> >>>>>> In addition, rename crashk_low_res as "Crash kernel (low)" for arm=
+64, and then
+> >>>>>> pass to crash dump kernel by DT property "linux,low-memory-range".
+> >>>>>> - Update Documentation/admin-guide/kdump/kdump.rst.
+> >>>>>>
+> >>>>>> Changes since [v4]
+> >>>>>> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mi=
+ke.
+> >>>>>>
+> >>>>>> Changes since [v3]
+> >>>>>> - Add memblock_cap_memory_ranges back for multiple ranges.
+> >>>>>> - Fix some compiling warnings.
+> >>>>>>
+> >>>>>> Changes since [v2]
+> >>>>>> - Split patch "arm64: kdump: support reserving crashkernel above 4=
+G" as
+> >>>>>> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a s=
+eparate
+> >>>>>> patch.
+> >>>>>>
+> >>>>>> Changes since [v1]:
+> >>>>>> - Move common reserve_crashkernel_low() code into kernel/kexec_cor=
+e.c.
+> >>>>>> - Remove memblock_cap_memory_ranges() i added in v1 and implement =
+that
+> >>>>>> in fdt_enforce_memory_region().
+> >>>>>> There are at most two crash kernel regions, for two crash kernel r=
+egions
+> >>>>>> case, we cap the memory range [min(regs[*].start), max(regs[*].end=
+)]
+> >>>>>> and then remove the memory range in the middle.
+> >>>>>>
+> >>>>>> [1]: https://urldefense.com/v3/__http://lists.infradead.org/piperm=
+ail/kexec/2020-May/025128.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5AD=
+tdXvs3mPdP3KRVqALmvSK2VmCkIPIhsaxbvpn1uM1$
+> >>>>>> [v1]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/2/1=
+174__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkI=
+PIhsaxbt0xN9PE$
+> >>>>>> [v2]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/9/8=
+6__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkIPI=
+hsaxbub7yUQH$
+> >>>>>> [v3]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/9/3=
+06__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkIP=
+Ihsaxbnc4zPPV$
+> >>>>>> [v4]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/15/=
+273__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkI=
+PIhsaxbvsAsZLu$
+> >>>>>> [v5]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/5/6/1=
+360__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkI=
+PIhsaxbl24n-79$
+> >>>>>> [v6]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/8/30/=
+142__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCkI=
+PIhsaxbs7r8G2a$
+> >>>>>> [v7]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/12/23=
+/411__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2VmCk=
+IPIhsaxbiFUH90G$
+> >>>>>>
+> >>>>>> Chen Zhou (5):
+> >>>>>>  x86: kdump: move reserve_crashkernel_low() into crash_core.c
+> >>>>>>  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
+> >>>>>>  arm64: kdump: add memory for devices by DT property, low-memory-r=
+ange
+> >>>>>>  kdump: update Documentation about crashkernel on arm64
+> >>>>>>  dt-bindings: chosen: Document linux,low-memory-range for arm64 kd=
+ump
+> >>>>>>
+> >>>>> We are getting "warn_alloc" [1] warning during boot of kdump kernel
+> >>>>> with bootargs as [2] of primary kernel.
+> >>>>> This error observed on ThunderX2  ARM64 platform.
+> >>>>>
+> >>>>> It is observed with latest upstream tag (v5.7-rc3) with this patch =
+set
+> >>>>> and https://urldefense.com/v3/__https://lists.infradead.org/piperma=
+il/kexec/2020-May/025128.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADt=
+dXvs3mPdP3KRVqALmvSK2VmCkIPIhsaxbiIAAlzu$
+> >>>>> Also **without** this patch-set
+> >>>>> "https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kern=
+el/msg806882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KR=
+VqALmvSK2VmCkIPIhsaxbjC6ujMA$"
+> >>>>>
+> >>>>> This issue comes whenever crashkernel memory is reserved after 0xc0=
+00_0000.
+> >>>>> More details discussed earlier in
+> >>>>> https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kerne=
+l/msg806882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRV=
+qALmvSK2VmCkIPIhsaxbjC6ujMA$  without any
+> >>>>> solution
+> >>>>>
+> >>>>> This patch-set is expected to solve similar kind of issue.
+> >>>>> i.e. low memory is only targeted for DMA, swiotlb; So above mention=
+ed
+> >>>>> observation should be considered/fixed. .
+> >>>>>
+> >>>>> --pk
+> >>>>>
+> >>>>> [1]
+> >>>>> [   30.366695] DMI: Cavium Inc. Saber/Saber, BIOS
+> >>>>> TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/yyyy
+> >>>>> [   30.367696] NET: Registered protocol family 16
+> >>>>> [   30.369973] swapper/0: page allocation failure: order:6,
+> >>>>> mode:0x1(GFP_DMA), nodemask=3D(null),cpuset=3D/,mems_allowed=3D0
+> >>>>> [   30.369980] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc3+=
+ #121
+> >>>>> [   30.369981] Hardware name: Cavium Inc. Saber/Saber, BIOS
+> >>>>> TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/yyyy
+> >>>>> [   30.369984] Call trace:
+> >>>>> [   30.369989]  dump_backtrace+0x0/0x1f8
+> >>>>> [   30.369991]  show_stack+0x20/0x30
+> >>>>> [   30.369997]  dump_stack+0xc0/0x10c
+> >>>>> [   30.370001]  warn_alloc+0x10c/0x178
+> >>>>> [   30.370004]  __alloc_pages_slowpath.constprop.111+0xb10/0xb50
+> >>>>> [   30.370006]  __alloc_pages_nodemask+0x2b4/0x300
+> >>>>> [   30.370008]  alloc_page_interleave+0x24/0x98
+> >>>>> [   30.370011]  alloc_pages_current+0xe4/0x108
+> >>>>> [   30.370017]  dma_atomic_pool_init+0x44/0x1a4
+> >>>>> [   30.370020]  do_one_initcall+0x54/0x228
+> >>>>> [   30.370027]  kernel_init_freeable+0x228/0x2cc
+> >>>>> [   30.370031]  kernel_init+0x1c/0x110
+> >>>>> [   30.370034]  ret_from_fork+0x10/0x18
+> >>>>> [   30.370036] Mem-Info:
+> >>>>> [   30.370064] active_anon:0 inactive_anon:0 isolated_anon:0
+> >>>>> [   30.370064]  active_file:0 inactive_file:0 isolated_file:0
+> >>>>> [   30.370064]  unevictable:0 dirty:0 writeback:0 unstable:0
+> >>>>> [   30.370064]  slab_reclaimable:34 slab_unreclaimable:4438
+> >>>>> [   30.370064]  mapped:0 shmem:0 pagetables:14 bounce:0
+> >>>>> [   30.370064]  free:1537719 free_pcp:219 free_cma:0
+> >>>>> [   30.370070] Node 0 active_anon:0kB inactive_anon:0kB
+> >>>>> active_file:0kB inactive_file:0kB unevictable:0kB isolated(anon):0k=
+B
+> >>>>> isolated(file):0kB mapped:0kB dirty:0kB writeback:0kB shmem:0kB
+> >>>>> shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB writeback_tmp:0kB
+> >>>>> unstable:0kB all_unreclaimable? no
+> >>>>> [   30.370073] Node 1 active_anon:0kB inactive_anon:0kB
+> >>>>> active_file:0kB inactive_file:0kB unevictable:0kB isolated(anon):0k=
+B
+> >>>>> isolated(file):0kB mapped:0kB dirty:0kB writeback:0kB shmem:0kB
+> >>>>> shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB writeback_tmp:0kB
+> >>>>> unstable:0kB all_unreclaimable? no
+> >>>>> [   30.370079] Node 0 DMA free:0kB min:0kB low:0kB high:0kB
+> >>>>> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
+> >>>>> active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB
+> >>>>> present:128kB managed:0kB mlocked:0kB kernel_stack:0kB pagetables:0=
+kB
+> >>>>> bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+> >>>>> [   30.370084] lowmem_reserve[]: 0 250 6063 6063
+> >>>>> [   30.370090] Node 0 DMA32 free:256000kB min:408kB low:664kB
+> >>>>> high:920kB reserved_highatomic:0KB active_anon:0kB inactive_anon:0k=
+B
+> >>>>> active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB
+> >>>>> present:269700kB managed:256000kB mlocked:0kB kernel_stack:0kB
+> >>>>> pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+> >>>>> [   30.370094] lowmem_reserve[]: 0 0 5813 5813
+> >>>>> [   30.370100] Node 0 Normal free:5894876kB min:9552kB low:15504kB
+> >>>>> high:21456kB reserved_highatomic:0KB active_anon:0kB inactive_anon:=
+0kB
+> >>>>> active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB
+> >>>>> present:8388608kB managed:5953112kB mlocked:0kB kernel_stack:21672k=
+B
+> >>>>> pagetables:56kB bounce:0kB free_pcp:876kB local_pcp:176kB free_cma:=
+0kB
+> >>>>> [   30.370104] lowmem_reserve[]: 0 0 0 0
+> >>>>> [   30.370107] Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB
+> >>>>> 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 0kB
+> >>>>> [   30.370113] Node 0 DMA32: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128=
+kB
+> >>>>> 0*256kB 0*512kB 0*1024kB 1*2048kB (M) 62*4096kB (M) =3D 256000kB
+> >>>>> [   30.370119] Node 0 Normal: 2*4kB (M) 3*8kB (ME) 2*16kB (UE) 3*32=
+kB
+> >>>>> (UM) 1*64kB (U) 2*128kB (M) 2*256kB (ME) 3*512kB (ME) 3*1024kB (ME)
+> >>>>> 3*2048kB (UME) 1436*4096kB (M) =3D 5893600kB
+> >>>>> [   30.370129] Node 0 hugepages_total=3D0 hugepages_free=3D0
+> >>>>> hugepages_surp=3D0 hugepages_size=3D1048576kB
+> >>>>> [   30.370130] 0 total pagecache pages
+> >>>>> [   30.370132] 0 pages in swap cache
+> >>>>> [   30.370134] Swap cache stats: add 0, delete 0, find 0/0
+> >>>>> [   30.370135] Free swap  =3D 0kB
+> >>>>> [   30.370136] Total swap =3D 0kB
+> >>>>> [   30.370137] 2164609 pages RAM
+> >>>>> [   30.370139] 0 pages HighMem/MovableOnly
+> >>>>> [   30.370140] 612331 pages reserved
+> >>>>> [   30.370141] 0 pages hwpoisoned
+> >>>>> [   30.370143] DMA: failed to allocate 256 KiB pool for atomic
+> >>>>> coherent allocation
+> >>>>
+> >>>>
+> >>>> During my testing I saw the same error and Chen's  solution correcte=
+d it .
+> >>>
+> >>> Which combination you are using on your side? I am using Prabhakar's
+> >>> suggested environment and can reproduce the issue
+> >>> with or without Chen's crashkernel support above 4G patchset.
+> >>>
+> >>> I am also using a ThunderX2 platform with latest makedumpfile code an=
+d
+> >>> kexec-tools (with the suggested patch
+> >>> <https://urldefense.com/v3/__https://lists.infradead.org/pipermail/ke=
+xec/2020-May/025128.html__;!!GqivPVa7Brio!J6lUig58-Gw6TKZnEEYzEeSU36T-1SqlB=
+1kImU00xtX_lss5Tx-JbUmLE9TJC3foXBLg$ >).
+> >>>
+> >>> Thanks,
+> >>> Bhupesh
+> >>
+> >>
+> >> I did this activity 5 months ago and I have moved on to other activiti=
+es. My DMA failures were related to PCI devices that could not be enumerate=
+d because  low-DMA space was not  available when crashkernel was moved abov=
+e 4G; I don=E2=80=99t recall the exact platform.
+> >>
+> >>
+> >>
+> >> For this failure ,
+> >>
+> >>>>> DMA: failed to allocate 256 KiB pool for atomic
+> >>>>> coherent allocation
+> >>
+> >>
+> >> Is due to :
+> >>
+> >>
+> >> 3618082c
+> >> ("arm64 use both ZONE_DMA and ZONE_DMA32")
+> >>
+> >> With the introduction of ZONE_DMA to support the Raspberry DMA
+> >> region below 1G, the crashkernel is placed in the upper 4G
+> >> ZONE_DMA_32 region. Since the crashkernel does not have access
+> >> to the ZONE_DMA region, it prints out call trace during bootup.
+> >>
+> >> It is due to having this CONFIG item  ON  :
+> >>
+> >>
+> >> CONFIG_ZONE_DMA=3Dy
+> >>
+> >> Turning off ZONE_DMA fixes a issue and Raspberry PI 4 will
+> >> use the device tree to specify memory below 1G.
+> >>
+> >>
+> >
+> > Disabling ZONE_DMA is temporary solution.  We may need proper solution
+>
+>
+> Perhaps the Raspberry platform configuration dependencies need separated =
+ from =E2=80=9Cserver class=E2=80=9D Arm  equipment ?  Or auto-configured o=
+n boot ?  Consult an expert ;-)
+>
+>
+>
+> >
+> >> I would like to see Chen=E2=80=99s feature added , perhaps as EXPERIME=
+NTAL,  so we can get some configuration testing done on it.   It corrects h=
+aving a DMA zone in low memory while crash-kernel is above 4GB.  This has b=
+een going on for a year now.
+> >
+> > I will also like this patch to be added in Linux as early as possible.
+> >
+> > Issue mentioned by me happens with or without this patch.
+> >
+> > This patch-set can consider fixing because it uses low memory for DMA
+> > & swiotlb only.
+> > We can consider restricting crashkernel within the required range like =
+below
+> >
+> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > index 7f9e5a6dc48c..bd67b90d35bd 100644
+> > --- a/kernel/crash_core.c
+> > +++ b/kernel/crash_core.c
+> > @@ -354,7 +354,7 @@ int __init reserve_crashkernel_low(void)
+> >                        return 0;
+> >        }
+> >
+> > -       low_base =3D memblock_find_in_range(0, 1ULL << 32, low_size, CR=
+ASH_ALIGN);
+> > +       low_base =3D memblock_find_in_range(0,0xc0000000, low_size, CRA=
+SH_ALIGN);
+> >        if (!low_base) {
+> >                pr_err("Cannot reserve %ldMB crashkernel low memory,
+> > please try smaller size.\n",
+> >                       (unsigned long)(low_size >> 20));
+> >
+> >
+>
+>     I suspect  0xc0000000  would need to be a CONFIG item  and not hard-c=
+oded.
+>
 
+if you consider this as valid change,  can you please incorporate as
+part of your patch-set.
 
---=20
-Mike Looijmans
-
+--pk.
