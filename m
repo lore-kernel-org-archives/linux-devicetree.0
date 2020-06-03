@@ -2,416 +2,306 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9D8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF9BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B0320679
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E530206C3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTwrUdKt"
+	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="a77W+8o5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgFCLbb (ORCPT
+        id S1726061AbgFCLeo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 07:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725833AbgFCLba (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 07:31:30 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53FAC08C5C0;
-        Wed,  3 Jun 2020 04:31:30 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n2so711237pld.13;
-        Wed, 03 Jun 2020 04:31:30 -0700 (PDT)
+        Wed, 3 Jun 2020 07:34:44 -0400
+Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:52582
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725855AbgFCLeo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:34:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+xFlDvoG0AmfCW8wMKz/KMDzzf1YjObBJ8SSaeH+Sx0=;
-        b=bTwrUdKtsEx2sGVQqdprdHxxq4WAEk412NGMINUIVYkHkzkt/iaz2Uv7t1gR7ZK8xx
-         8QjbP7jF6Q4f5li0hIaYqathRyFQaiCFbjpeIUGdFqqhJiS/OyzLVDbiXKcwU/NvQIRp
-         RJZhhyV3Yny/0gc0bxKC6g3hFRPdfPiJC9TVmLmnVn8+ipZXYHrnlznoj7i6xdoERWVM
-         R08L6hrLsJAHzdKBxQOLykYg225t0Vp5mVoGlHkIVObKi6o8bCGVL3IUkCN58q6/yCMk
-         l81j9YQxzlDb0RcSwHrn/0eXgX7vNDNdYJLmQ26YnGWMAl1qmpyk0SI2n/zAtJ5kgOlD
-         1MIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+xFlDvoG0AmfCW8wMKz/KMDzzf1YjObBJ8SSaeH+Sx0=;
-        b=L/iOhf8ObJywAM6NOGlqrQtL8DM/UIhC6krB6m3ujfwsQzAUDZJzgNTiS2/3jo8r8Z
-         wMucFxjimEboGbuBG/vidmmanzl9gelHAhm6vKW/CU+Ixi9Udj/owu5iHJsHlAbA6/VM
-         Mbww1njq7mRhfrONuID/Rmw4cGMuajmZirARAkaLJQr2hzgZ8Lkbu6ApyYKEKwovKYNt
-         ELef27bRz3ydo4zYJYX1mJmfrielB6e+gSahN9aI7Gvc07wuwApMTnczfu9EuOvo0LEX
-         mN4M7voUcJFkwW6bt9Ojhv71e4+W+FhAlH29af+xUp6d8FTO+5XUCLFCbuxKPnC+KCij
-         Anqg==
-X-Gm-Message-State: AOAM531Y1noj/YIwqP0GveTv7UtTNSSkFgTOAYSUf+iBz78Ax7FO/pYl
-        jVT9gb9OdEoGtbOL4omffOXC2/Y2CElzRaGmpOI=
-X-Google-Smtp-Source: ABdhPJyD2KN/CrU9g5JWDifzcsEYdD16jlgXuo4/GzQA/4aABjLh/ffxbd9fUPOMVcEjCG2jeB/rrIAatf06jhKBIhw=
-X-Received: by 2002:a17:902:ea8a:: with SMTP id x10mr29376674plb.255.1591183890172;
- Wed, 03 Jun 2020 04:31:30 -0700 (PDT)
+ d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ryPX3MFfe9iSndf/udF6YzbSmay8VgeL3G2M+KLYxdU=;
+ b=a77W+8o5r4nnF4QfeTWEU/WdO8Rn33ZvRBlmcMwmAIgtY6Cvap3Sx+M+Zc0D8ALDk3NT2slLzRIMT1soH9EiJYE+8I4WrDPYWzi6yMjWGGW/v1ZhuTy6rJM/gHUbKXJOoiteXFDMkKRoAJsKs3qL2frB1oFZXQFmf+IkVxzRUTw=
+Received: from AM6P192CA0061.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::38)
+ by AM6PR04MB4309.eurprd04.prod.outlook.com (2603:10a6:209:50::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Wed, 3 Jun
+ 2020 11:34:37 +0000
+Received: from HE1EUR01FT013.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:209:82:cafe::2c) by AM6P192CA0061.outlook.office365.com
+ (2603:10a6:209:82::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend
+ Transport; Wed, 3 Jun 2020 11:34:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 40.68.112.65)
+ smtp.mailfrom=topicproducts.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
+ designates 40.68.112.65 as permitted sender) receiver=protection.outlook.com;
+ client-ip=40.68.112.65; helo=westeu12-emailsignatures-cloud.codetwo.com;
+Received: from westeu12-emailsignatures-cloud.codetwo.com (40.68.112.65) by
+ HE1EUR01FT013.mail.protection.outlook.com (10.152.0.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3045.17 via Frontend Transport; Wed, 3 Jun 2020 11:34:36 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (104.47.6.52) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Wed, 03 Jun 2020 11:34:34 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XYr7eDBWcEQDrhi8DEeBlbgHbnTMCq0F9jhEagAk3n3nI9gNK8UsDaHHng3thNoXmKR0VK43dFhP6k+TiUDZtUZOMR1hDy7wjqKsVZs7EWrEsu7q35pi2dxDhhjUrBaMyi/uH2GD1/ZYDGHNSmNoNqJOSD+Fm/wHzvHant9UHfv/JFFN5WeqLDwMr4M3uNOL+7vNx1Jo9j6vnr1aD9UZZjv84R8+ep8QxhSYjzZNQ+uC35amMKFM8bxJmvZ8px1uhR5xgTTLeM4ZVHQp5iyi5H4vM7UgpGDWxcIvVuVH1h6gVYBVbkb1Wd0XDTSKJWPWHxrbyVltMOnpjqJkAFni2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hBg2pAhsqTEwrpg3SFI66C5g+6xaXOImnz9I/uxWnk4=;
+ b=RFQimBdhVFxVfLp69IjHiTrxFG0fB62zZksoMlGxFTsozb9s5yFv+o+gRpFg4CDB9LunKFcxuZRAZYE0W8SJ2ELWDKBBe3YKcZsln+6CDCDutxWt8T6nTGchTrJiy6maBtASoFAsr0MMc0OSPQQC+BcniB3LhXWbMTFjKc1U5+D6PD96nFDM1VFXmjkb+n5hKAcT1khkaQ8JUOfgvdhZxeI0Z2LnujzVlRwpYPOQe8kfmId/b7GFydbMhOHzJ+WwgrSnlQKSfe8RwvTfVvPusPUnfhxFYbmVsZb4oSpgd4I31qNGQMKCL2WsxhMDjTQ02UdgjmMUGWJZzWp0U2OcTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
+ dkim=pass header.d=topic.nl; arc=none
+Authentication-Results-Original: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=topic.nl;
+Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
+ by DB8PR04MB6715.eurprd04.prod.outlook.com (2603:10a6:10:10d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.21; Wed, 3 Jun
+ 2020 11:34:31 +0000
+Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
+ ([fe80::6cf6:7323:7395:eec9]) by DB8PR04MB6523.eurprd04.prod.outlook.com
+ ([fe80::6cf6:7323:7395:eec9%7]) with mapi id 15.20.3045.024; Wed, 3 Jun 2020
+ 11:34:31 +0000
+Subject: Re: [PATCH] usb: dwc3: Add support for VBUS power control
+To:     linux-usb@vger.kernel.org
+CC:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org, balbi@kernel.org
+References: <20200603085932.31746-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.4820e9d3-dc82-459a-873d-80ec5efbefff@emailsignatures365.codetwo.com>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.7aa77c8d-2984-4b57-ac0e-a1a6c3a49faf@emailsignatures365.codetwo.com>
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+Organization: Topic
+Message-ID: <aabce60f-caca-9381-84ce-4c2fdbe1b307@topic.nl>
+Date:   Wed, 3 Jun 2020 13:34:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200603085932.31746-1-mike.looijmans@topic.nl>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-ClientProxiedBy: AM4PR07CA0009.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::22) To DB8PR04MB6523.eurprd04.prod.outlook.com
+ (2603:10a6:10:10f::26)
 MIME-Version: 1.0
-References: <20200603084441.33952-1-tomasz.duszynski@octakon.com> <20200603084441.33952-4-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200603084441.33952-4-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 3 Jun 2020 14:31:18 +0300
-Message-ID: <CAHp75Vcs6+NtY8OPX_gTAa_7fpqH6=3LCfaxJ=6gu0LGRqcBUA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] iio: chemical: scd30: add serial interface driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.130] (83.128.90.119) by AM4PR07CA0009.eurprd07.prod.outlook.com (2603:10a6:205:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.8 via Frontend Transport; Wed, 3 Jun 2020 11:34:31 +0000
+X-Originating-IP: [83.128.90.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 80ff1ee3-b424-4f21-344e-08d807b2186a
+X-MS-TrafficTypeDiagnostic: DB8PR04MB6715:|AM6PR04MB4309:
+X-Microsoft-Antispam-PRVS: <AM6PR04MB430952E8B9BFEDCA85C486E296880@AM6PR04MB4309.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;OLM:6430;
+X-Forefront-PRVS: 04238CD941
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: l50ZJC64rzJgewFlz+R06E5tBTPJfIuzFxhw5C2/kw/SbCJal7O/lwWlqkX9UguJNEalkAkRtvr56nF/BnJesR8iDNtAmNbO95UzaZr98gJiA1n1x4cKYt1rfSkHUeYAT4BFBy+Uth7AmOmL3oSIaoxUOZ3+5gXXWSNWWnjRc4qQrSJYi6gJz8Ik4Mp/4e6yaFa/u1MHujIsF8k/BT2KmEhJ1BOsjMtx3UJIQGWOZXslqS2u7yIeydPQAaqD38mQZdEUGGppkMbhQRvsxB9kPmn7r4scN8W1PMSNl2p36p05NEic1U5RVPzUw0W1OlgM+3IOq22lksZMiWa9vFn4M92e7IftxLdpVd4fh7TQgIl6zwI2nTlv4xwCbWPEsn1J
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(346002)(396003)(39840400004)(366004)(31696002)(66476007)(83170400001)(6916009)(8936002)(5660300002)(508600001)(52116002)(36756003)(36916002)(42882007)(6486002)(83380400001)(66556008)(956004)(44832011)(2616005)(66946007)(53546011)(2906002)(186003)(316002)(8676002)(16526019)(31686004)(4326008)(26005)(16576012)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: HwUMTz2VeqjD90x8VfRpjNllEzE42RuXLp7M2a6OygdlvoqzGqkibiTilyNVnLJPc0Fj5jqbWFXyB2UCCgnTJoqhyT20//mSgp834d0j9nGM4JP8wbss58hbRiPKzm6luYLNSEuZlJRcX/M/gLdqRtlo3PmKIx8wNZtHoDk/q/Fj7bFwk9hQg/a++ZR9cjEcayE04UKnqU2e2AXN4tejb0dAGFZfnnb9/32KRYDCz+uJ2Vy3G17kw6UUN1D7Y2qsCveDo4tGeIo8Tc0mQhUDY44JxP0dPSs+hJ/GvBxbd3BIROsgsmB0xmFnUMK03h5+UzsuGAR/BCtyDrjA5n1x4LsyacGCG6NO+7wOmLJZE+e/mLMbxzpKjEK9rTqUb/PJLTQn7+HO41274crI0YQH6UgK+JhBQ53WUPJKUmkkFFYsjkeGc4pOuaH6cVRbOA121v8XtdBrxSO1mSKoWK7PJoPSYBSb9T9SH1q/AnqpQu8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6715
+X-CodeTwo-MessageID: 6b9a321e-43fa-4cdd-9690-d7658a667e7e.20200603113434@westeu12-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: HE1EUR01FT013.eop-EUR01.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:40.68.112.65;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(39840400004)(396003)(46966005)(956004)(2616005)(7596003)(44832011)(7636003)(70206006)(31686004)(16526019)(70586007)(83380400001)(356005)(6486002)(186003)(26005)(83170400001)(36756003)(36916002)(31696002)(53546011)(82310400002)(8676002)(15974865002)(4326008)(47076004)(336012)(16576012)(508600001)(42882007)(6916009)(2906002)(5660300002)(316002)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 1eafad6a-5d04-4262-25d3-08d807b2152c
+X-Forefront-PRVS: 04238CD941
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: v01bZtsMQSy6noWBXbNgtWObOxPiv+CJejUw5fIAGJsxD9ENdD1r4TqAD9DVFvfTjb6aSk7eyewa7BtnJBBkNb9zPl4BcCmh5+MP98/FvMg95w7jVlKcJP5GllwG0HYDFGzdf/gFGw9CvpJHyslCYmBsMkveX65CiXOjwSyO70+lIMDBEManu6XjqJTc/TYPsIWbhj4UaA1qYKgdBpuD6glnh4IJFGanCb7dZGLiuvCFKV3JqcN2eMRpRdnJYoO323xLJ/iJreaVCbLjpJLWQpyzOjm/u/KlTgYt3rFx01IhWyjR+uuJ+FbnRjbpEBZEkCgG5lOjEcgZFAL5iz4Kedwbv8iUylRsVsa2+WCszYF+kk1nlC74VYwMchM37Hq8wtfCFXAo4pog515y1tLAnbM6c3Rfja3Mug88ZuTcUTF9jDQUSN6azKizZPZDvJcCKlQNe6BblSraws+Tnmjg+vAJBTDCN+2GWy3+ZHoB/liCjtZc/ySduW+MJQohWbWK
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2020 11:34:36.5631
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80ff1ee3-b424-4f21-344e-08d807b2186a
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[40.68.112.65];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4309
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 11:47 AM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
+Oh darn, the "devm_get_regulator..." call in probe got lost in the=20
+rebase+merge. I'll add that in v2.
+
+
+
+Met vriendelijke groet / kind regards,=0A=
+=0A=
+Mike Looijmans=0A=
+System Expert=0A=
+=0A=
+=0A=
+TOPIC Embedded Products B.V.=0A=
+Materiaalweg 4, 5681 RJ Best=0A=
+The Netherlands=0A=
+=0A=
+T: +31 (0) 499 33 69 69=0A=
+E: mike.looijmans@topicproducts.com=0A=
+W: www.topicproducts.com=0A=
+=0A=
+Please consider the environment before printing this e-mail=0A=
+On 03-06-2020 10:59, Mike Looijmans wrote:
+> Support VBUS power control using regulator framework. Enables the regulat=
+or
+> while the port is in host mode.
 >
-> Add serial interface driver for the SCD30 sensor.
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
->  MAINTAINERS                         |   1 +
->  drivers/iio/chemical/Kconfig        |  11 ++
->  drivers/iio/chemical/Makefile       |   1 +
->  drivers/iio/chemical/scd30_serial.c | 263 ++++++++++++++++++++++++++++
->  4 files changed, 276 insertions(+)
->  create mode 100644 drivers/iio/chemical/scd30_serial.c
+>   .../devicetree/bindings/usb/dwc3.txt          |  1 +
+>   drivers/usb/dwc3/core.c                       | 30 ++++++++++++++-----
+>   drivers/usb/dwc3/core.h                       |  4 +++
+>   drivers/usb/dwc3/drd.c                        |  6 ++--
+>   4 files changed, 29 insertions(+), 12 deletions(-)
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 13aed3473b7e..5db4b446c8ba 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15143,6 +15143,7 @@ S:      Maintained
->  F:     drivers/iio/chemical/scd30.h
->  F:     drivers/iio/chemical/scd30_core.c
->  F:     drivers/iio/chemical/scd30_i2c.c
-> +F:     drivers/iio/chemical/scd30_serial.c
->
->  SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
->  M:     Tomasz Duszynski <tduszyns@gmail.com>
-> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-> index 970d34888c2e..10bb431bc3ce 100644
-> --- a/drivers/iio/chemical/Kconfig
-> +++ b/drivers/iio/chemical/Kconfig
-> @@ -107,6 +107,17 @@ config SCD30_I2C
->           To compile this driver as a module, choose M here: the module will
->           be called scd30_i2c.
->
-> +config SCD30_SERIAL
-> +       tristate "SCD30 carbon dioxide sensor serial driver"
-> +       depends on SCD30_CORE && SERIAL_DEV_BUS
-> +       select CRC16
-> +       help
-> +         Say Y here to build support for the Sensirion SCD30 serial interface
-> +         driver.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called scd30_serial.
-> +
->  config SENSIRION_SGP30
->         tristate "Sensirion SGPxx gas sensors"
->         depends on I2C
-> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-> index 0966ca34e34b..fef63dd5bf92 100644
-> --- a/drivers/iio/chemical/Makefile
-> +++ b/drivers/iio/chemical/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_IAQCORE)         += ams-iaq-core.o
->  obj-$(CONFIG_PMS7003) += pms7003.o
->  obj-$(CONFIG_SCD30_CORE) += scd30_core.o
->  obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
-> +obj-$(CONFIG_SCD30_SERIAL) += scd30_serial.o
->  obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
->  obj-$(CONFIG_SPS30) += sps30.o
->  obj-$(CONFIG_VZ89X)            += vz89x.o
-> diff --git a/drivers/iio/chemical/scd30_serial.c b/drivers/iio/chemical/scd30_serial.c
-> new file mode 100644
-> index 000000000000..06f85eb1a4dd
-> --- /dev/null
-> +++ b/drivers/iio/chemical/scd30_serial.c
-> @@ -0,0 +1,263 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Sensirion SCD30 carbon dioxide sensor serial driver
-> + *
-> + * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> + */
-> +#include <linux/crc16.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/property.h>
-> +#include <linux/serdev.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +#include <asm/unaligned.h>
-> +
-> +#include "scd30.h"
-> +
-> +#define SCD30_SERDEV_ADDR 0x61
-> +#define SCD30_SERDEV_WRITE 0x06
-> +#define SCD30_SERDEV_READ 0x03
-> +#define SCD30_SERDEV_MAX_BUF_SIZE 17
-> +#define SCD30_SERDEV_RX_HEADER_SIZE 3
-> +#define SCD30_SERDEV_CRC_SIZE 2
-> +#define SCD30_SERDEV_TIMEOUT msecs_to_jiffies(200)
-> +
-> +struct scd30_serdev_priv {
-> +       struct completion meas_ready;
-> +       char *buf;
-> +       int num_expected;
-> +       int num;
-> +};
-> +
-> +static u16 scd30_serdev_cmd_lookup_tbl[] = {
-> +       [CMD_START_MEAS] = 0x0036,
-> +       [CMD_STOP_MEAS] = 0x0037,
-> +       [CMD_MEAS_INTERVAL] = 0x0025,
-> +       [CMD_MEAS_READY] = 0x0027,
-> +       [CMD_READ_MEAS] = 0x0028,
-> +       [CMD_ASC] = 0x003a,
-> +       [CMD_FRC] = 0x0039,
-> +       [CMD_TEMP_OFFSET] = 0x003b,
-> +       [CMD_FW_VERSION] = 0x0020,
-> +       [CMD_RESET] = 0x0034,
-> +};
-> +
-> +static u16 scd30_serdev_calc_crc(const char *buf, int size)
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentati=
+on/devicetree/bindings/usb/dwc3.txt
+> index 9946ff9ba735..56bc3f238e2d 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -37,6 +37,7 @@ Optional properties:
+>    - phys: from the *Generic PHY* bindings
+>    - phy-names: from the *Generic PHY* bindings; supported names are "usb=
+2-phy"
+>   	or "usb3-phy".
+> + - vbus-supply: Regulator handle that provides the VBUS power.
+>    - resets: set of phandle and reset specifier pairs
+>    - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW L=
+PM
+>    - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index edc17155cb2b..a9e58a301446 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/of.h>
+>   #include <linux/acpi.h>
+>   #include <linux/pinctrl/consumer.h>
+> +#include <linux/regulator/consumer.h>
+>   #include <linux/reset.h>
+>  =20
+>   #include <linux/usb/ch9.h>
+> @@ -112,6 +113,23 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
+>   	dwc->current_dr_role =3D mode;
+>   }
+>  =20
+> +void dwc3_set_vbus(struct dwc3 *dwc, bool enable)
 > +{
-> +       return crc16(0xffff, buf, size);
+> +	int ret;
+> +
+> +	if (enable !=3D dwc->vbus_reg_enabled) {
+> +		if (enable)
+> +			ret =3D regulator_enable(dwc->vbus_reg);
+> +		else
+> +			ret =3D regulator_disable(dwc->vbus_reg);
+> +		if (!ret)
+> +			dwc->vbus_reg_enabled =3D enable;
+> +	}
+> +
+> +	if (dwc->usb2_phy)
+> +		otg_set_vbus(dwc->usb2_phy->otg, enable);
 > +}
 > +
-> +static int scd30_serdev_xfer(struct scd30_state *state, char *txbuf, int txsize,
-> +                            char *rxbuf, int rxsize)
-> +{
-> +       struct serdev_device *serdev = to_serdev_device(state->dev);
-> +       struct scd30_serdev_priv *priv = state->priv;
-> +       int ret;
+>   static void __dwc3_set_mode(struct work_struct *work)
+>   {
+>   	struct dwc3 *dwc =3D work_to_dwc(work);
+> @@ -164,8 +182,7 @@ static void __dwc3_set_mode(struct work_struct *work)
+>   		if (ret) {
+>   			dev_err(dwc->dev, "failed to initialize host\n");
+>   		} else {
+> -			if (dwc->usb2_phy)
+> -				otg_set_vbus(dwc->usb2_phy->otg, true);
+> +			dwc3_set_vbus(dwc, true);
+>   			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+>   			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
+>   		}
+> @@ -173,8 +190,7 @@ static void __dwc3_set_mode(struct work_struct *work)
+>   	case DWC3_GCTL_PRTCAP_DEVICE:
+>   		dwc3_event_buffers_setup(dwc);
+>  =20
+> -		if (dwc->usb2_phy)
+> -			otg_set_vbus(dwc->usb2_phy->otg, false);
+> +		dwc3_set_vbus(dwc, false);
+>   		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
+>   		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
+>  =20
+> @@ -1183,8 +1199,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
+>   	case USB_DR_MODE_PERIPHERAL:
+>   		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+>  =20
+> -		if (dwc->usb2_phy)
+> -			otg_set_vbus(dwc->usb2_phy->otg, false);
+> +		dwc3_set_vbus(dwc, false);
+>   		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
+>   		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
+>  =20
+> @@ -1198,8 +1213,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
+>   	case USB_DR_MODE_HOST:
+>   		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+>  =20
+> -		if (dwc->usb2_phy)
+> -			otg_set_vbus(dwc->usb2_phy->otg, true);
+> +		dwc3_set_vbus(dwc, true);
+>   		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+>   		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
+>  =20
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 4c171a8e215f..cee2574d7bf4 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -1085,6 +1085,9 @@ struct dwc3 {
+>  =20
+>   	bool			phys_ready;
+>  =20
+> +	struct regulator	*vbus_reg;
+> +	bool			vbus_reg_enabled;
 > +
-> +       priv->buf = rxbuf;
-> +       priv->num_expected = rxsize;
-> +       priv->num = 0;
-> +
-> +       ret = serdev_device_write(serdev, txbuf, txsize, SCD30_SERDEV_TIMEOUT);
-> +       if (ret < 0)
-> +               return ret;
-> +       if (ret != txsize)
-> +               return -EIO;
-> +
-> +       ret = wait_for_completion_interruptible_timeout(&priv->meas_ready, SCD30_SERDEV_TIMEOUT);
-> +       if (ret < 0)
-> +               return ret;
-> +       if (!ret)
-> +               return -ETIMEDOUT;
-> +
-> +       return 0;
-> +}
-> +
-> +static int scd30_serdev_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
-> +                               void *response, int size)
-> +{
-> +       /*
-> +        * Communication over serial line is based on modbus protocol (or rather
-> +        * its variation called modbus over serial to be precise). Upon
-> +        * receiving a request device should reply with response.
-> +        *
-> +        * Frame below represents a request message. Each field takes
-> +        * exactly one byte.
-> +        *
-> +        * +------+------+-----+-----+-------+-------+-----+-----+
-> +        * | dev  | op   | reg | reg | byte1 | byte0 | crc | crc |
-> +        * | addr | code | msb | lsb |       |       | lsb | msb |
-> +        * +------+------+-----+-----+-------+-------+-----+-----+
-> +        *
-> +        * The message device replies with depends on the 'op code' field from
-> +        * the request. In case it was set to SCD30_SERDEV_WRITE sensor should
-> +        * reply with unchanged request. Otherwise 'op code' was set to
-> +        * SCD30_SERDEV_READ and response looks like the one below. As with
-> +        * request, each field takes one byte.
-> +        *
-> +        * +------+------+--------+-------+-----+-------+-----+-----+
-> +        * | dev  | op   | num of | byte0 | ... | byteN | crc | crc |
-> +        * | addr | code | bytes  |       |     |       | lsb | msb |
-> +        * +------+------+--------+-------+-----+-------+-----+-----+
-> +        */
-> +       char txbuf[SCD30_SERDEV_MAX_BUF_SIZE] = { SCD30_SERDEV_ADDR },
-> +            rxbuf[SCD30_SERDEV_MAX_BUF_SIZE];
-> +       int ret, rxsize, txsize = 2;
-> +       char *rsp = response;
-> +       u16 crc;
-> +
-> +       put_unaligned_be16(scd30_serdev_cmd_lookup_tbl[cmd], txbuf + txsize);
-> +       txsize += 2;
-> +
-> +       if (rsp) {
-> +               txbuf[1] = SCD30_SERDEV_READ;
-> +               if (cmd == CMD_READ_MEAS)
-> +                       /* number of u16 words to read */
-> +                       put_unaligned_be16(size / 2, txbuf + txsize);
-> +               else
-> +                       put_unaligned_be16(0x0001, txbuf + txsize);
-> +               txsize += 2;
-> +               crc = scd30_serdev_calc_crc(txbuf, txsize);
-> +               put_unaligned_le16(crc, txbuf + txsize);
-> +               txsize += 2;
-> +               rxsize = SCD30_SERDEV_RX_HEADER_SIZE + size + SCD30_SERDEV_CRC_SIZE;
-> +       } else {
-> +               if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
-> +                       arg = 0x0001;
-> +
-> +               txbuf[1] = SCD30_SERDEV_WRITE;
-> +               put_unaligned_be16(arg, txbuf + txsize);
-> +               txsize += 2;
-> +               crc = scd30_serdev_calc_crc(txbuf, txsize);
-> +               put_unaligned_le16(crc, txbuf + txsize);
-> +               txsize += 2;
-> +               rxsize = txsize;
-> +       }
-> +
-> +       ret = scd30_serdev_xfer(state, txbuf, txsize, rxbuf, rxsize);
-> +       if (ret)
-> +               return ret;
-> +
-> +       switch (txbuf[1]) {
-> +       case SCD30_SERDEV_WRITE:
-> +               if (memcmp(txbuf, rxbuf, txsize)) {
-> +                       dev_err(state->dev, "wrong message received\n");
-> +                       return -EIO;
-> +               }
-> +               break;
-> +       case SCD30_SERDEV_READ:
-> +               if (rxbuf[2] != (rxsize - SCD30_SERDEV_RX_HEADER_SIZE - SCD30_SERDEV_CRC_SIZE)) {
-> +                       dev_err(state->dev, "received data size does not match header\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               rxsize -= SCD30_SERDEV_CRC_SIZE;
-> +               crc = get_unaligned_le16(rxbuf + rxsize);
-> +               if (crc != scd30_serdev_calc_crc(rxbuf, rxsize)) {
-> +                       dev_err(state->dev, "data integrity check failed\n");
-> +                       return -EIO;
-> +               }
-> +
-> +               rxsize -= SCD30_SERDEV_RX_HEADER_SIZE;
-> +               memcpy(rsp, rxbuf + SCD30_SERDEV_RX_HEADER_SIZE, rxsize);
-> +               break;
-> +       default:
-> +               dev_err(state->dev, "received unknown op code\n");
-> +               return -EIO;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int scd30_serdev_receive_buf(struct serdev_device *serdev,
-> +                                   const unsigned char *buf, size_t size)
-> +{
-> +       struct iio_dev *indio_dev = dev_get_drvdata(&serdev->dev);
-> +       struct scd30_serdev_priv *priv;
-> +       struct scd30_state *state;
-> +       int num;
-> +
-> +       if (!indio_dev)
-> +               return 0;
-> +
-> +       state = iio_priv(indio_dev);
-> +       priv = state->priv;
-> +
-> +       /* just in case sensor puts some unexpected bytes on the bus */
-> +       if (!priv->buf)
-> +               return 0;
-> +
-> +       if (priv->num + size >= priv->num_expected)
-> +               num = priv->num_expected - priv->num;
-> +       else
-> +               num = size;
-> +
-> +       memcpy(priv->buf + priv->num, buf, num);
-> +       priv->num += num;
-> +
-> +       if (priv->num == priv->num_expected) {
-> +               priv->buf = NULL;
-> +               complete(&priv->meas_ready);
-> +       }
-> +
-> +       return num;
-> +}
-> +
-> +static const struct serdev_device_ops scd30_serdev_ops = {
-> +       .receive_buf = scd30_serdev_receive_buf,
-> +       .write_wakeup = serdev_device_write_wakeup,
-> +};
-> +
-> +static int scd30_serdev_probe(struct serdev_device *serdev)
-> +{
-> +       struct device *dev = &serdev->dev;
-> +       struct scd30_serdev_priv *priv;
-> +       int irq, ret;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       init_completion(&priv->meas_ready);
-> +       serdev_device_set_client_ops(serdev, &scd30_serdev_ops);
-> +
-> +       ret = devm_serdev_device_open(dev, serdev);
-> +       if (ret)
-> +               return ret;
-> +
-> +       serdev_device_set_baudrate(serdev, 19200);
-> +       serdev_device_set_flow_control(serdev, false);
-> +
-> +       ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
-> +       if (ret)
-> +               return ret;
-> +
-> +       irq = fwnode_irq_get(dev_fwnode(dev), 0);
-> +
-> +       return scd30_probe(dev, irq, KBUILD_MODNAME, priv, scd30_serdev_command);
-> +}
-> +
-> +static const struct of_device_id scd30_serdev_of_match[] = {
-> +       { .compatible = "sensirion,scd30" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, scd30_serdev_of_match);
-> +
-> +static struct serdev_device_driver scd30_serdev_driver = {
-> +       .driver = {
-> +               .name = KBUILD_MODNAME,
-> +               .of_match_table = scd30_serdev_of_match,
-> +               .pm = &scd30_pm_ops,
-> +       },
-> +       .probe = scd30_serdev_probe,
-> +};
-> +module_serdev_device_driver(scd30_serdev_driver);
-> +
-> +MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
-> +MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor serial driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.27.0
->
+>   	struct ulpi		*ulpi;
+>   	bool			ulpi_ready;
+>  =20
+> @@ -1397,6 +1400,7 @@ struct dwc3_gadget_ep_cmd_params {
+>  =20
+>   /* prototypes */
+>   void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode);
+> +void dwc3_set_vbus(struct dwc3 *dwc, bool enable);
+>   void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
+>   u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
+>  =20
+> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+> index 7db1ffc92bbd..45fdec2d128d 100644
+> --- a/drivers/usb/dwc3/drd.c
+> +++ b/drivers/usb/dwc3/drd.c
+> @@ -384,8 +384,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_id=
+status)
+>   		if (ret) {
+>   			dev_err(dwc->dev, "failed to initialize host\n");
+>   		} else {
+> -			if (dwc->usb2_phy)
+> -				otg_set_vbus(dwc->usb2_phy->otg, true);
+> +			dwc3_set_vbus(dwc, true);
+>   			if (dwc->usb2_generic_phy)
+>   				phy_set_mode(dwc->usb2_generic_phy,
+>   					     PHY_MODE_USB_HOST);
+> @@ -398,8 +397,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_id=
+status)
+>   		dwc3_event_buffers_setup(dwc);
+>   		spin_unlock_irqrestore(&dwc->lock, flags);
+>  =20
+> -		if (dwc->usb2_phy)
+> -			otg_set_vbus(dwc->usb2_phy->otg, false);
+> +		dwc3_set_vbus(dwc, false);
+>   		if (dwc->usb2_generic_phy)
+>   			phy_set_mode(dwc->usb2_generic_phy,
+>   				     PHY_MODE_USB_DEVICE);
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+--=20
+Mike Looijmans
+
