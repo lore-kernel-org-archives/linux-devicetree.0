@@ -2,84 +2,95 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7063C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67ADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4602077D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8173320734
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 09:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgFCJol (ORCPT
+        id S1726334AbgFCJsz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:44:41 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:42018 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725854AbgFCJok (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 05:44:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1363638|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0250509-0.000374926-0.974574;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=14;RT=14;SR=0;TI=W4_5899425_DEFAULT_0AC2668F_1591177476445_o7001c856;
-Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0AC2668F_1591177476445_o7001c856]) by e01l07394.eu6 at Wed, 03 Jun 2020 17:44:36 +0800
-Date:   Wed, 03 Jun 2020 17:44:36 +0800
-From:   "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-To:     "Maxime Ripard" <maxime@cerno.tech>
-Cc:     "wens" <wens@csie.org>, "robh+dt" <robh+dt@kernel.org>,
-        "mturquette" <mturquette@baylibre.com>, "sboyd" <sboyd@kernel.org>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
-        "tiny.windzz" <tiny.windzz@gmail.com>,
-        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-        "devicetree" <devicetree@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "linux-clk" <linux-clk@vger.kernel.org>,
-        "linux-gpio" <linux-gpio@vger.kernel.org>
-Reply-To: "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-Message-ID: <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
-Subject: =?UTF-8?B?5Zue5aSN77yaW1BBVENIIDIvNF0gcGluY3RybDogc3VueGk6IGFkZCBzdXBwb3J0IGZvciB0?=
-  =?UTF-8?B?aGUgQWxsd2lubmVyIEExMDAgcGluIGNvbnRyb2xsZXI=?=
-X-Mailer: [Alimail-Mailagent revision 4][W4_5899425][DEFAULT][Chrome]
+        Wed, 3 Jun 2020 05:48:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:59252 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbgFCJsz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:48:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B576831B;
+        Wed,  3 Jun 2020 02:48:54 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EE943F305;
+        Wed,  3 Jun 2020 02:48:51 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 10:48:40 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Julius Werner <jwerner@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jose Marinho <Jose.Marinho@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Crystal Guo =?utf-8?B?KOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Security Random Number Generator support
+Message-ID: <20200603094829.GA7259@bogus>
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+ <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+ <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
+ <1591169342.4878.9.camel@mtkswgap22>
+ <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
+ <1591170857.19414.5.camel@mtkswgap22>
 MIME-Version: 1.0
-References: <20200522030743.10204-1-frank@allwinnertech.com> <20200522030743.10204-3-frank@allwinnertech.com>,<20200522152803.twvfvuhd6ztunvll@gilmour.lan>
-In-Reply-To: <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
-x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591170857.19414.5.camel@mtkswgap22>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pj4gKyBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oRiwgMCksCj4+ICsgIFNVTlhJX0ZVTkNU
-SU9OKDB4MCwgImdwaW9faW4iKSwKPj4gKyAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQi
-KSwKPj4gKyAgU1VOWElfRlVOQ1RJT04oMHgyLCAibW1jMCIpLCAgLyogRDEgKi8KPj4gKyAgU1VO
-WElfRlVOQ1RJT04oMHgzLCAianRhZyIpLCAgLyogTVMxICovCj4+ICsgIFNVTlhJX0ZVTkNUSU9O
-KDB4NCwgImp0YWciKSwgIC8qIE1TX0dQVSAqLwo+Cj5XZSBzaG91bGQgdXNlIGFub3RoZXIgbmFt
-ZSBoZXJlLCBzaW5jZSB0aGUgY29kZSB3aWxsIGp1c3QgcGljayB0aGUgZmlyc3Qgb25lIGFuZAo+
-aWdub3JlIHRoZSBzZWNvbmQuIFdoYXQgYWJvdXQganRhZy1ncHU/CgpUaGUgdW5kZXJzY29yZXMg
-YXJlIHVzZWQgaW4gZnJvbnQsIHNvIGNoYW5naW5nIGl0IHRvIGp0YWdfZ3B1IG1heSBiZSBtb3Jl
-IGNvbnNpc3RlbnQuCgo+PiArIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihCLCA3KSwKPj4g
-KyAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+PiArICBTVU5YSV9GVU5DVElPTigw
-eDEsICJncGlvX291dCIpLAo+PiArICBTVU5YSV9GVU5DVElPTigweDIsICJzcGRpZiIpLCAgLyog
-RElOICovCj4+ICsgIFNVTlhJX0ZVTkNUSU9OKDB4MywgImkyczAiKSwgIC8qIERPVVQwICovCj4+
-ICsgIFNVTlhJX0ZVTkNUSU9OKDB4NCwgImkyczAiKSwgIC8qIERJTjEgKi8KPgo+SSBndWVzcyB0
-aGUgc2Vjb25kIG9uZSB3b3VsZCBiZSBpMnMxPwoKTm8sIGVhY2ggaTJzIG1heSBoYXZlIG1hbnkg
-aW5wdXRzIGFuZCBvdXRwdXRzLiAKCiBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oSCwgMTkp
-LAogICAgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwKICAgICAgICAgICAgICBTVU5Y
-SV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAogICAgICAgICAgICAgIFNVTlhJX0ZVTkNUSU9O
-KDB4MiwgImNpcjAiKSwgICAgICAgICAgLyogSU4gKi8KICAgICAgICAgICAgICBTVU5YSV9GVU5D
-VElPTigweDMsICJpMnMzX2RvdXQzIiksICAgICAgIC8qIERPVVQzICovCiAgICAgICAgICAgICAg
-U1VOWElfRlVOQ1RJT04oMHg0LCAiaTJzM19kaW4zIiksICAgICAgIC8qIERJTjMgKi8KICAgICAg
-ICAgICAgICBTVU5YSV9GVU5DVElPTigweDUsICJsZWRjIiksCiAgICAgICAgICAgICAgU1VOWElf
-RlVOQ1RJT05fSVJRX0JBTksoMHg2LCA2LCAxOSkpLAoKQ29uc2lkZXJpbmcgdGhhdCB0aGUgc2Ft
-ZSBwaW4gaGFzIG11bHRpcGxlIHNhbWUgZnVuY3Rpb25zLCAKc28gYWRkIGEgc3VmZml4LCBsaWtl
-IGkyczNfZG91dDMgYW5kIGkyczNfZGluMz8gICAKCk9yIHNwZWNpZnkgbXV4c2VsIGluIHRoZSBk
-ZXZpY2UgdHJlZSBtYXkgYmUgYW5vdGhlciBzb2x1dGlvbi4KCj4+ICsgU1VOWElfUElOKFNVTlhJ
-X1BJTkNUUkxfUElOKEgsIDIpLAo+PiArICBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiks
-Cj4+ICsgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+ICsgIFNVTlhJX0ZVTkNU
-SU9OKDB4MiwgImkyYzEiKSwgIC8qIFNDSyAqLwo+PiArICBTVU5YSV9GVU5DVElPTigweDMsICJj
-cHUiKSwgIC8qIENVUl9XICovCj4KPldoYXQgaXMgImNwdSIgc3VwcG9zZWQgdG8gYmU/CgpBcyBm
-YXIgYXMgSSBrbm93LCB0aGlzIGlzIGEgZnVuY3Rpb24gdGhhdCBoYXMgbmV2ZXIgYmVlbiB1c2Vk
-LgpUaGUgaGFyZHdhcmUgZ3V5IHNhaWQgdGhhdCBpdCBjYW4gYmUgdXNlZCB0byBjb250cm9sIHRo
-ZSBDUFUgdG8gcmVkdWNlIHRoZSBjdXJyZW50LgoKVGh4LApZYW5ndGFv
++ Jose
+
+On Wed, Jun 03, 2020 at 03:54:17PM +0800, Neal Liu wrote:
+> On Wed, 2020-06-03 at 08:40 +0100, Marc Zyngier wrote:
+
+[...]
+
+> > The idea is simply to have *one* single ID that caters for all
+> > implementations, just like we did for PSCI at the time. This
+> > requires ARM to edict a standard, which is what I was referring
+> > to above.
+> >
+> > There is zero benefit in having a platform-dependent ID. It just
+> > pointlessly increases complexity, and means we cannot use the RNG
+> > before the firmware tables are available (yes, we need it that
+> > early).
+> >
+>
+> Do you know which ARM expert could edict this standard?
+> Or is there any chance that we can make one? And be reviewed by
+> maintainers?
+>
+
+Jose Marinho is working on the spec, may be he has more updates on the
+timeline.
+
+--
+Regards,
+Sudeep
