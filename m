@@ -2,128 +2,127 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66220C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 10:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A99C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D04520679
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 10:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097CA20738
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 11:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591182729;
+	bh=YzOMemc162MmX21grMM2woz3galEvoPugqrE5a3TFD8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yUyLT/LePs4AvLUtR4EAsTzCawtzeAKA6i09PtqDznLnoJFpHHqu/qCfn/WVqL7yl
+	 1GpjA88sRW5p9lV8G3nLSXemosbreG1Sp/SNr8rvFXim3PQydGUVC1dHR+Qz3v+stP
+	 M+q+I/zUjt+OmrF6Xn8GcjhkXwnX6x8ukg668NWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgFCKhh (ORCPT
+        id S1725917AbgFCLMI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:37:37 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:53340 "EHLO inva021.nxp.com"
+        Wed, 3 Jun 2020 07:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725859AbgFCKhg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:37:36 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 77BD5200E03;
-        Wed,  3 Jun 2020 12:37:34 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D04F200DFE;
-        Wed,  3 Jun 2020 12:37:29 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 80710402B1;
-        Wed,  3 Jun 2020 18:37:22 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com,
-        broonie@kernel.org, ckeepax@opensource.cirrus.com,
-        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
-        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/2] ASoC: wm8960: Support headphone jack detection function
-Date:   Wed,  3 Jun 2020 18:26:53 +0800
-Message-Id: <1591180013-12416-2-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725833AbgFCLMI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 07:12:08 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57EA8206C3;
+        Wed,  3 Jun 2020 11:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591182727;
+        bh=YzOMemc162MmX21grMM2woz3galEvoPugqrE5a3TFD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VCecdmeYHrqT5gcinE0svjjnWovDvj6uzuTznngJAf93O0LV5n1J9DoWLJtEk9vv6
+         0JAbXLvW79Wb3/N+75QFT30BcC7kfKT3VMjSG/UnSS7QAUN3pVQpc6LlZXKzk03LyZ
+         ZetdVU8f9I1Kxws4imoEVWR93RtBzxSkFBKnQEO4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jgRJV-00HQNN-OT; Wed, 03 Jun 2020 12:12:05 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Jun 2020 12:12:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Julius Werner <jwerner@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD?= =?UTF-8?Q?=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        mark.rutland@arm.com, Jose.Marinho@arm.com
+Subject: Re: Security Random Number Generator support
+In-Reply-To: <1591170857.19414.5.camel@mtkswgap22>
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+ <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+ <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
+ <1591169342.4878.9.camel@mtkswgap22>
+ <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
+ <1591170857.19414.5.camel@mtkswgap22>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <e56f0f8da7fdc836e073a37c9baeda77@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: neal.liu@mediatek.com, jwerner@google.com, ardb@kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, Crystal.Guo@mediatek.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, Jose.Marinho@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add two platform variables for headphone jack detection.
-"hp_cfg" is for configuration of heaphone jack detection.
-"gpio_cfg" is for configuration of gpio, the gpio is used
-for plug & unplug interrupt on SoC.
+On 2020-06-03 08:54, Neal Liu wrote:
+> On Wed, 2020-06-03 at 08:40 +0100, Marc Zyngier wrote:
+>> On 2020-06-03 08:29, Neal Liu wrote:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- include/sound/wm8960.h    | 17 +++++++++++++++++
- sound/soc/codecs/wm8960.c | 20 ++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+[...]
 
-diff --git a/include/sound/wm8960.h b/include/sound/wm8960.h
-index d22e84805025..275fd5b201ce 100644
---- a/include/sound/wm8960.h
-+++ b/include/sound/wm8960.h
-@@ -16,6 +16,23 @@ struct wm8960_data {
- 	bool capless;  /* Headphone outputs configured in capless mode */
- 
- 	bool shared_lrclk;  /* DAC and ADC LRCLKs are wired together */
-+
-+	/*
-+	 * Setup for headphone detection
-+	 *
-+	 * hp_cfg[0]: HPSEL[1:0] of R48 (Additional Control 4)
-+	 * hp_cfg[1]: {HPSWEN:HPSWPOL} of R24 (Additional Control 2).
-+	 * hp_cfg[2]: {TOCLKSEL:TOEN} of R23 (Additional Control 1).
-+	 */
-+	u32 hp_cfg[3];
-+
-+	/*
-+	 * Setup for gpio configuration
-+	 *
-+	 * gpio_cfg[0]: ALRCGPIO of R9 (Audio interface)
-+	 * gpio_cfg[1]: {GPIOPOL:GPIOSEL[2:0]} of R48 (Additional Control 4).
-+	 */
-+	u32 gpio_cfg[2];
- };
- 
- #endif
-diff --git a/sound/soc/codecs/wm8960.c b/sound/soc/codecs/wm8960.c
-index 6cf0f6612bda..2f7f0493144a 100644
---- a/sound/soc/codecs/wm8960.c
-+++ b/sound/soc/codecs/wm8960.c
-@@ -1389,6 +1389,12 @@ static void wm8960_set_pdata_from_of(struct i2c_client *i2c,
- 
- 	if (of_property_read_bool(np, "wlf,shared-lrclk"))
- 		pdata->shared_lrclk = true;
-+
-+	of_property_read_u32_array(np, "wlf,gpio-cfg", pdata->gpio_cfg,
-+				   ARRAY_SIZE(pdata->gpio_cfg));
-+
-+	of_property_read_u32_array(np, "wlf,hp-cfg", pdata->hp_cfg,
-+				   ARRAY_SIZE(pdata->hp_cfg));
- }
- 
- static int wm8960_i2c_probe(struct i2c_client *i2c,
-@@ -1446,6 +1452,20 @@ static int wm8960_i2c_probe(struct i2c_client *i2c,
- 	regmap_update_bits(wm8960->regmap, WM8960_LOUT2, 0x100, 0x100);
- 	regmap_update_bits(wm8960->regmap, WM8960_ROUT2, 0x100, 0x100);
- 
-+	/* ADCLRC pin configured as GPIO. */
-+	regmap_update_bits(wm8960->regmap, WM8960_IFACE2, 1 << 6,
-+			   wm8960->pdata.gpio_cfg[0] << 6);
-+	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL4, 0xF << 4,
-+			   wm8960->pdata.gpio_cfg[1] << 4);
-+
-+	/* Enable headphone jack detect */
-+	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL4, 3 << 2,
-+			   wm8960->pdata.hp_cfg[0] << 2);
-+	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL2, 3 << 5,
-+			   wm8960->pdata.hp_cfg[1] << 5);
-+	regmap_update_bits(wm8960->regmap, WM8960_ADDCTL1, 3,
-+			   wm8960->pdata.hp_cfg[2]);
-+
- 	i2c_set_clientdata(i2c, wm8960);
- 
- 	ret = devm_snd_soc_register_component(&i2c->dev,
+>> > Could you give us a hint how to make this SMC interface more generic in
+>> > addition to my approach?
+>> > There is no (easy) way to get platform-independent SMC function ID,
+>> > which is why we encode it into device tree, and provide a generic
+>> > driver. In this way, different devices can be mapped and then get
+>> > different function ID internally.
+>> 
+>> The idea is simply to have *one* single ID that caters for all
+>> implementations, just like we did for PSCI at the time. This
+>> requires ARM to edict a standard, which is what I was referring
+>> to above.
+>> 
+>> There is zero benefit in having a platform-dependent ID. It just
+>> pointlessly increases complexity, and means we cannot use the RNG
+>> before the firmware tables are available (yes, we need it that
+>> early).
+>> 
+>>          M.
+> 
+> Do you know which ARM expert could edict this standard?
+> Or is there any chance that we can make one? And be reviewed by
+> maintainers?
+
+Sudeep already mentioned Jose's effort to offer a standard.
+Hopefully he will *soon* be able to give us something that can be
+implemented everywhere (firmware, kernel, but also hypervisors),
+as the need exists across the whole stack.
+
+         M.
 -- 
-2.21.0
-
+Jazz is not dead. It just smells funny...
