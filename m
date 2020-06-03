@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46736C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 17:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1181C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 17:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3294520734
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 17:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC94206A2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 17:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgFCR6j (ORCPT
+        id S1726345AbgFCR6n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:58:39 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:47603 "EHLO
+        Wed, 3 Jun 2020 13:58:43 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:38191 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgFCR6j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 13:58:39 -0400
+        with ESMTP id S1726332AbgFCR6n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 13:58:43 -0400
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A67AE240004;
-        Wed,  3 Jun 2020 17:58:35 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 110A124000D;
+        Wed,  3 Jun 2020 17:58:38 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
@@ -37,9 +37,9 @@ Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
         Mark Rutland <mark.rutland@arm.com>,
         <devicetree@vger.kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v10 17/20] mtd: rawnand: Use the ECC framework OOB layouts
-Date:   Wed,  3 Jun 2020 19:57:56 +0200
-Message-Id: <20200603175759.19948-18-miquel.raynal@bootlin.com>
+Subject: [PATCH v10 19/20] mtd: rawnand: Use the ECC framework user input parsing bits
+Date:   Wed,  3 Jun 2020 19:57:58 +0200
+Message-Id: <20200603175759.19948-20-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200603175759.19948-1-miquel.raynal@bootlin.com>
 References: <20200603175759.19948-1-miquel.raynal@bootlin.com>
@@ -51,353 +51,264 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-No need to have our own in the raw NAND core.
+Many helpers are generic to all NAND chips, they should not be
+raw-NAND specific, so use the generic ones.
+
+To avoid moving all the raw NAND core "history" into the generic NAND
+layer, we keep a part of this parsing in the raw NAND core to ensure
+backward compatibility.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/nand/raw/arasan-nand-controller.c |   2 +-
- drivers/mtd/nand/raw/atmel/nand-controller.c  |   2 +-
- drivers/mtd/nand/raw/davinci_nand.c           |   3 +-
- .../mtd/nand/raw/ingenic/ingenic_nand_drv.c   |   6 +-
- drivers/mtd/nand/raw/nand_base.c              | 171 +-----------------
- drivers/mtd/nand/raw/nand_toshiba.c           |   2 +-
- drivers/mtd/nand/raw/vf610_nfc.c              |   2 +-
- include/linux/mtd/rawnand.h                   |   4 +-
- 8 files changed, 16 insertions(+), 176 deletions(-)
+ drivers/mtd/nand/raw/nand_base.c | 144 +++++++++++++++----------------
+ include/linux/mtd/rawnand.h      |  12 ---
+ 2 files changed, 71 insertions(+), 85 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/arasan-nand-controller.c b/drivers/mtd/nand/raw/arasan-nand-controller.c
-index a0b5c539ca73..6fe61393bd26 100644
---- a/drivers/mtd/nand/raw/arasan-nand-controller.c
-+++ b/drivers/mtd/nand/raw/arasan-nand-controller.c
-@@ -980,7 +980,7 @@ static int anfc_init_hw_ecc_controller(struct arasan_nfc *nfc,
- 		return -EINVAL;
- 	}
- 
--	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+	mtd_set_ooblayout(mtd, nand_get_large_page_ooblayout());
- 
- 	ecc->steps = mtd->writesize / ecc->size;
- 	ecc->algo = NAND_ECC_ALGO_BCH;
-diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index 3fba91d7991a..08df7f23b859 100644
---- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-+++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-@@ -1108,7 +1108,7 @@ static int atmel_nand_pmecc_init(struct nand_chip *chip)
- 
- 	chip->options |= NAND_NO_SUBPAGE_WRITE;
- 
--	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+	mtd_set_ooblayout(mtd, nand_get_large_page_ooblayout());
- 
- 	return 0;
- }
-diff --git a/drivers/mtd/nand/raw/davinci_nand.c b/drivers/mtd/nand/raw/davinci_nand.c
-index 58966a9706b1..427f320fb79b 100644
---- a/drivers/mtd/nand/raw/davinci_nand.c
-+++ b/drivers/mtd/nand/raw/davinci_nand.c
-@@ -645,7 +645,8 @@ static int davinci_nand_attach_chip(struct nand_chip *chip)
- 				mtd_set_ooblayout(mtd,
- 						  &hwecc4_small_ooblayout_ops);
- 			} else if (chunks == 4 || chunks == 8) {
--				mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+				mtd_set_ooblayout(mtd,
-+						  nand_get_large_page_ooblayout());
- 				info->chip.ecc.read_page = nand_davinci_read_page_hwecc_oob_first;
- 			} else {
- 				return -EIO;
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-index 70309f18124c..0e9d426fe4f2 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-@@ -243,8 +243,10 @@ static int ingenic_nand_attach_chip(struct nand_chip *chip)
- 	/* For legacy reasons we use a different layout on the qi,lb60 board. */
- 	if (of_machine_is_compatible("qi,lb60"))
- 		mtd_set_ooblayout(mtd, &qi_lb60_ooblayout_ops);
--	else
-+	else if (nfc->soc_info->oob_layout)
- 		mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
-+	else
-+		mtd_set_ooblayout(mtd, nand_get_large_page_ooblayout());
- 
- 	return 0;
- }
-@@ -532,7 +534,6 @@ static const struct jz_soc_info jz4740_soc_info = {
- 	.data_offset = 0x00000000,
- 	.cmd_offset = 0x00008000,
- 	.addr_offset = 0x00010000,
--	.oob_layout = &nand_ooblayout_lp_ops,
- };
- 
- static const struct jz_soc_info jz4725b_soc_info = {
-@@ -546,7 +547,6 @@ static const struct jz_soc_info jz4780_soc_info = {
- 	.data_offset = 0x00000000,
- 	.cmd_offset = 0x00400000,
- 	.addr_offset = 0x00800000,
--	.oob_layout = &nand_ooblayout_lp_ops,
- };
- 
- static const struct of_device_id ingenic_nand_dt_match[] = {
 diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index aea78642d722..d3e1fc944179 100644
+index c69d60f791d0..53e07f25ae65 100644
 --- a/drivers/mtd/nand/raw/nand_base.c
 +++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -46,166 +46,6 @@
- 
- #include "internals.h"
- 
--/* Define default oob placement schemes for large and small page devices */
--static int nand_ooblayout_ecc_sp(struct mtd_info *mtd, int section,
--				 struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section > 1)
--		return -ERANGE;
--
--	if (!section) {
--		oobregion->offset = 0;
--		if (mtd->oobsize == 16)
--			oobregion->length = 4;
--		else
--			oobregion->length = 3;
--	} else {
--		if (mtd->oobsize == 8)
--			return -ERANGE;
--
--		oobregion->offset = 6;
--		oobregion->length = ecc->total - 4;
--	}
--
--	return 0;
--}
--
--static int nand_ooblayout_free_sp(struct mtd_info *mtd, int section,
--				  struct mtd_oob_region *oobregion)
--{
--	if (section > 1)
--		return -ERANGE;
--
--	if (mtd->oobsize == 16) {
--		if (section)
--			return -ERANGE;
--
--		oobregion->length = 8;
--		oobregion->offset = 8;
--	} else {
--		oobregion->length = 2;
--		if (!section)
--			oobregion->offset = 3;
--		else
--			oobregion->offset = 6;
--	}
--
--	return 0;
--}
--
--const struct mtd_ooblayout_ops nand_ooblayout_sp_ops = {
--	.ecc = nand_ooblayout_ecc_sp,
--	.free = nand_ooblayout_free_sp,
--};
--EXPORT_SYMBOL_GPL(nand_ooblayout_sp_ops);
--
--static int nand_ooblayout_ecc_lp(struct mtd_info *mtd, int section,
--				 struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section || !ecc->total)
--		return -ERANGE;
--
--	oobregion->length = ecc->total;
--	oobregion->offset = mtd->oobsize - oobregion->length;
--
--	return 0;
--}
--
--static int nand_ooblayout_free_lp(struct mtd_info *mtd, int section,
--				  struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section)
--		return -ERANGE;
--
--	oobregion->length = mtd->oobsize - ecc->total - 2;
--	oobregion->offset = 2;
--
--	return 0;
--}
--
--const struct mtd_ooblayout_ops nand_ooblayout_lp_ops = {
--	.ecc = nand_ooblayout_ecc_lp,
--	.free = nand_ooblayout_free_lp,
--};
--EXPORT_SYMBOL_GPL(nand_ooblayout_lp_ops);
--
--/*
-- * Support the old "large page" layout used for 1-bit Hamming ECC where ECC
-- * are placed at a fixed offset.
-- */
--static int nand_ooblayout_ecc_lp_hamming(struct mtd_info *mtd, int section,
--					 struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--
--	if (section)
--		return -ERANGE;
--
--	switch (mtd->oobsize) {
--	case 64:
--		oobregion->offset = 40;
--		break;
--	case 128:
--		oobregion->offset = 80;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	oobregion->length = ecc->total;
--	if (oobregion->offset + oobregion->length > mtd->oobsize)
--		return -ERANGE;
--
--	return 0;
--}
--
--static int nand_ooblayout_free_lp_hamming(struct mtd_info *mtd, int section,
--					  struct mtd_oob_region *oobregion)
--{
--	struct nand_chip *chip = mtd_to_nand(mtd);
--	struct nand_ecc_ctrl *ecc = &chip->ecc;
--	int ecc_offset = 0;
--
--	if (section < 0 || section > 1)
--		return -ERANGE;
--
--	switch (mtd->oobsize) {
--	case 64:
--		ecc_offset = 40;
--		break;
--	case 128:
--		ecc_offset = 80;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	if (section == 0) {
--		oobregion->offset = 2;
--		oobregion->length = ecc_offset - 2;
--	} else {
--		oobregion->offset = ecc_offset + ecc->total;
--		oobregion->length = mtd->oobsize - oobregion->offset;
--	}
--
--	return 0;
--}
--
--static const struct mtd_ooblayout_ops nand_ooblayout_lp_hamming_ops = {
--	.ecc = nand_ooblayout_ecc_lp_hamming,
--	.free = nand_ooblayout_free_lp_hamming,
--};
--
- static int nand_pairing_dist3_get_info(struct mtd_info *mtd, int page,
- 				       struct mtd_pairing_info *info)
- {
-@@ -5349,7 +5189,7 @@ static int nand_set_ecc_soft_ops(struct nand_chip *chip)
- 				return -EINVAL;
- 			}
- 
--			mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+			mtd_set_ooblayout(mtd, nand_get_large_page_ooblayout());
- 
- 		}
- 
-@@ -5358,7 +5198,7 @@ static int nand_set_ecc_soft_ops(struct nand_chip *chip)
- 		 * used, otherwise we don't know how many bytes can really be
- 		 * used.
- 		 */
--		if (mtd->ooblayout == &nand_ooblayout_lp_ops &&
-+		if (mtd->ooblayout == nand_get_large_page_ooblayout() &&
- 		    ecc->options & NAND_ECC_MAXIMIZE) {
- 			int steps, bytes;
- 
-@@ -5760,11 +5600,12 @@ static int nand_scan_tail(struct nand_chip *chip)
- 		switch (mtd->oobsize) {
- 		case 8:
- 		case 16:
--			mtd_set_ooblayout(mtd, &nand_ooblayout_sp_ops);
-+			mtd_set_ooblayout(mtd, nand_get_small_page_ooblayout());
- 			break;
- 		case 64:
- 		case 128:
--			mtd_set_ooblayout(mtd, &nand_ooblayout_lp_hamming_ops);
-+			mtd_set_ooblayout(mtd,
-+					  nand_get_large_page_hamming_ooblayout());
- 			break;
- 		default:
- 			/*
-@@ -5776,7 +5617,7 @@ static int nand_scan_tail(struct nand_chip *chip)
- 			 */
- 			if (ecc->engine_type == NAND_ECC_ENGINE_TYPE_NONE) {
- 				mtd_set_ooblayout(mtd,
--						&nand_ooblayout_lp_ops);
-+						  nand_get_large_page_ooblayout());
- 				break;
- 			}
- 
-diff --git a/drivers/mtd/nand/raw/nand_toshiba.c b/drivers/mtd/nand/raw/nand_toshiba.c
-index 5d3434587f25..7a3c2b16ff93 100644
---- a/drivers/mtd/nand/raw/nand_toshiba.c
-+++ b/drivers/mtd/nand/raw/nand_toshiba.c
-@@ -140,7 +140,7 @@ static void toshiba_nand_benand_init(struct nand_chip *chip)
- 
- 	chip->options |= NAND_SUBPAGE_READ;
- 
--	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+	mtd_set_ooblayout(mtd, nand_get_large_page_ooblayout());
+@@ -4854,18 +4854,27 @@ static int nand_detect(struct nand_chip *chip, struct nand_flash_dev *type)
+ 	return ret;
  }
  
- static void toshiba_nand_decode_id(struct nand_chip *chip)
-diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
-index 8ee2c1f539c4..50dc0c93140c 100644
---- a/drivers/mtd/nand/raw/vf610_nfc.c
-+++ b/drivers/mtd/nand/raw/vf610_nfc.c
-@@ -779,7 +779,7 @@ static int vf610_nfc_attach_chip(struct nand_chip *chip)
- 		mtd->oobsize = 64;
+-static const char * const nand_ecc_modes[] = {
+-	[NAND_ECC_NONE]		= "none",
+-	[NAND_ECC_SOFT]		= "soft",
+-	[NAND_ECC_HW]		= "hw",
+-	[NAND_ECC_HW_SYNDROME]	= "hw_syndrome",
+-	[NAND_ECC_ON_DIE]	= "on-die",
+-};
+-
+ static enum nand_ecc_engine_type
+-of_get_nand_ecc_engine_type(struct device_node *np)
++of_get_rawnand_ecc_engine_type_legacy(struct device_node *np)
+ {
+-	enum nand_ecc_mode eng_type;
++	enum nand_ecc_legacy_mode {
++		NAND_ECC_INVALID,
++		NAND_ECC_NONE,
++		NAND_ECC_SOFT,
++		NAND_ECC_SOFT_BCH,
++		NAND_ECC_HW,
++		NAND_ECC_HW_SYNDROME,
++		NAND_ECC_ON_DIE,
++	};
++	const char * const nand_ecc_legacy_modes[] = {
++		[NAND_ECC_NONE]		= "none",
++		[NAND_ECC_SOFT]		= "soft",
++		[NAND_ECC_SOFT_BCH]	= "soft_bch",
++		[NAND_ECC_HW]		= "hw",
++		[NAND_ECC_HW_SYNDROME]	= "hw_syndrome",
++		[NAND_ECC_ON_DIE]	= "on-die",
++	};
++	enum nand_ecc_legacy_mode eng_type;
+ 	const char *pm;
+ 	int err;
  
- 	/* Use default large page ECC layout defined in NAND core */
--	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
-+	mtd_set_ooblayout(mtd, nand_get_large_page_ooblayout());
- 	if (chip->ecc.strength == 32) {
- 		nfc->ecc_mode = ECC_60_BYTE;
- 		chip->ecc.bytes = 60;
+@@ -4874,12 +4883,13 @@ of_get_nand_ecc_engine_type(struct device_node *np)
+ 		return NAND_ECC_ENGINE_TYPE_INVALID;
+ 
+ 	for (eng_type = NAND_ECC_NONE;
+-	     eng_type < ARRAY_SIZE(nand_ecc_modes); eng_type++) {
+-		if (!strcasecmp(pm, nand_ecc_modes[eng_type])) {
++	     eng_type < ARRAY_SIZE(nand_ecc_legacy_modes); eng_type++) {
++		if (!strcasecmp(pm, nand_ecc_legacy_modes[eng_type])) {
+ 			switch (eng_type) {
+ 			case NAND_ECC_NONE:
+ 				return NAND_ECC_ENGINE_TYPE_NONE;
+ 			case NAND_ECC_SOFT:
++			case NAND_ECC_SOFT_BCH:
+ 				return NAND_ECC_ENGINE_TYPE_SOFT;
+ 			case NAND_ECC_HW:
+ 			case NAND_ECC_HW_SYNDROME:
+@@ -4892,43 +4902,29 @@ of_get_nand_ecc_engine_type(struct device_node *np)
+ 		}
+ 	}
+ 
+-	/*
+-	 * For backward compatibility we support few obsoleted values that don't
+-	 * have their mappings into the nand_ecc_engine_providers enum anymore
+-	 * (they were merged with other enums).
+-	 */
+-	if (!strcasecmp(pm, "soft_bch"))
+-		return NAND_ECC_ENGINE_TYPE_SOFT;
+-
+ 	return NAND_ECC_ENGINE_TYPE_INVALID;
+ }
+ 
+-static const char * const nand_ecc_algos[] = {
+-	[NAND_ECC_ALGO_HAMMING]	= "hamming",
+-	[NAND_ECC_ALGO_BCH]	= "bch",
+-	[NAND_ECC_ALGO_RS]	= "rs",
+-};
+-
+-static enum nand_ecc_algo of_get_nand_ecc_algo(struct device_node *np)
++enum nand_ecc_placement
++of_get_rawnand_ecc_placement_legacy(struct device_node *np)
+ {
+-	enum nand_ecc_algo ecc_algo;
+ 	const char *pm;
+ 	int err;
+ 
+-	err = of_property_read_string(np, "nand-ecc-algo", &pm);
++	err = of_property_read_string(np, "nand-ecc-mode", &pm);
+ 	if (!err) {
+-		for (ecc_algo = NAND_ECC_ALGO_HAMMING;
+-		     ecc_algo < ARRAY_SIZE(nand_ecc_algos);
+-		     ecc_algo++) {
+-			if (!strcasecmp(pm, nand_ecc_algos[ecc_algo]))
+-				return ecc_algo;
+-		}
++		if (!strcasecmp(pm, "hw_syndrome"))
++			return NAND_ECC_PLACEMENT_INTERLEAVED;
+ 	}
+ 
+-	/*
+-	 * For backward compatibility we also read "nand-ecc-mode" checking
+-	 * for some obsoleted values that were specifying ECC algorithm.
+-	 */
++	return NAND_ECC_PLACEMENT_UNKNOWN;
++}
++
++static enum nand_ecc_algo of_get_rawnand_ecc_algo_legacy(struct device_node *np)
++{
++	const char *pm;
++	int err;
++
+ 	err = of_property_read_string(np, "nand-ecc-mode", &pm);
+ 	if (!err) {
+ 		if (!strcasecmp(pm, "soft"))
+@@ -4940,22 +4936,19 @@ static enum nand_ecc_algo of_get_nand_ecc_algo(struct device_node *np)
+ 	return NAND_ECC_ALGO_UNKNOWN;
+ }
+ 
+-static int of_get_nand_ecc_step_size(struct device_node *np)
++static void of_get_nand_ecc_legacy_user_config(struct nand_chip *chip)
+ {
+-	int ret;
+-	u32 val;
++	struct device_node *dn = nand_get_flash_node(chip);
++	struct nand_ecc_props *user_conf = &chip->base.ecc.user_conf;
+ 
+-	ret = of_property_read_u32(np, "nand-ecc-step-size", &val);
+-	return ret ? ret : val;
+-}
++	if (user_conf->engine_type != NAND_ECC_ENGINE_TYPE_INVALID)
++		user_conf->engine_type = of_get_rawnand_ecc_engine_type_legacy(dn);
+ 
+-static int of_get_nand_ecc_strength(struct device_node *np)
+-{
+-	int ret;
+-	u32 val;
++	if (user_conf->algo != NAND_ECC_ALGO_UNKNOWN)
++		user_conf->algo = of_get_rawnand_ecc_algo_legacy(dn);
+ 
+-	ret = of_property_read_u32(np, "nand-ecc-strength", &val);
+-	return ret ? ret : val;
++	if (user_conf->placement != NAND_ECC_PLACEMENT_UNKNOWN)
++		user_conf->placement = of_get_rawnand_ecc_placement_legacy(dn);
+ }
+ 
+ static int of_get_nand_bus_width(struct device_node *np)
+@@ -4979,12 +4972,10 @@ static bool of_get_nand_on_flash_bbt(struct device_node *np)
+ 	return of_property_read_bool(np, "nand-on-flash-bbt");
+ }
+ 
+-static int nand_dt_init(struct nand_chip *chip)
++static int rawnand_dt_init(struct nand_chip *chip)
+ {
++	struct nand_device *nand = mtd_to_nanddev(nand_to_mtd(chip));
+ 	struct device_node *dn = nand_get_flash_node(chip);
+-	enum nand_ecc_engine_type ecc_type;
+-	enum nand_ecc_algo ecc_algo;
+-	int ecc_strength, ecc_step;
+ 
+ 	if (!dn)
+ 		return 0;
+@@ -4998,26 +4989,33 @@ static int nand_dt_init(struct nand_chip *chip)
+ 	if (of_get_nand_on_flash_bbt(dn))
+ 		chip->bbt_options |= NAND_BBT_USE_FLASH;
+ 
+-	ecc_type = of_get_nand_ecc_engine_type(dn);
+-	ecc_algo = of_get_nand_ecc_algo(dn);
+-	ecc_strength = of_get_nand_ecc_strength(dn);
+-	ecc_step = of_get_nand_ecc_step_size(dn);
+-
+-	if (ecc_type != NAND_ECC_ENGINE_TYPE_INVALID)
+-		chip->ecc.engine_type = ecc_type;
+-
+-	if (ecc_algo != NAND_ECC_ALGO_UNKNOWN)
+-		chip->ecc.algo = ecc_algo;
+-
+-	if (ecc_strength >= 0)
+-		chip->ecc.strength = ecc_strength;
+-
+-	if (ecc_step > 0)
+-		chip->ecc.size = ecc_step;
+-
+ 	if (of_property_read_bool(dn, "nand-ecc-maximize"))
+ 		chip->ecc.options |= NAND_ECC_MAXIMIZE;
+ 
++	of_get_nand_ecc_user_config(nand);
++	of_get_nand_ecc_legacy_user_config(chip);
++
++	/*
++	 * If neither the user nor the NAND controller have requested a specific
++	 * ECC engine type, we will default to NAND_ECC_ENGINE_TYPE_ON_HOST.
++	 */
++	nand->ecc.defaults.engine_type = NAND_ECC_ENGINE_TYPE_ON_HOST;
++
++	/*
++	 * Use the user requested engine type, unless there is none, in this
++	 * case default to the NAND controller choice, otherwise fallback to
++	 * the raw NAND default one.
++	 */
++	if (nand->ecc.user_conf.engine_type != NAND_ECC_ENGINE_TYPE_INVALID)
++		chip->ecc.engine_type = nand->ecc.user_conf.engine_type;
++	if (chip->ecc.engine_type == NAND_ECC_ENGINE_TYPE_INVALID)
++		chip->ecc.engine_type = nand->ecc.defaults.engine_type;
++
++	chip->ecc.placement = nand->ecc.user_conf.placement;
++	chip->ecc.algo = nand->ecc.user_conf.algo;
++	chip->ecc.strength = nand->ecc.user_conf.strength;
++	chip->ecc.size = nand->ecc.user_conf.step_size;
++
+ 	return 0;
+ }
+ 
+@@ -5054,7 +5052,7 @@ static int nand_scan_ident(struct nand_chip *chip, unsigned int maxchips,
+ 	/* Enforce the right timings for reset/detection */
+ 	onfi_fill_data_interface(chip, NAND_SDR_IFACE, 0);
+ 
+-	ret = nand_dt_init(chip);
++	ret = rawnand_dt_init(chip);
+ 	if (ret)
+ 		return ret;
+ 
 diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-index 8f7f1cce3b4b..af02eb07207e 100644
+index af02eb07207e..66f69a1d27a5 100644
 --- a/include/linux/mtd/rawnand.h
 +++ b/include/linux/mtd/rawnand.h
-@@ -14,6 +14,7 @@
- #define __LINUX_MTD_RAWNAND_H
+@@ -81,18 +81,6 @@ struct nand_chip;
  
- #include <linux/mtd/mtd.h>
-+#include <linux/mtd/nand.h>
- #include <linux/mtd/flashchip.h>
- #include <linux/mtd/bbm.h>
- #include <linux/mtd/jedec.h>
-@@ -1159,9 +1160,6 @@ struct nand_chip {
- 	int (*unlock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
- };
+ #define NAND_DATA_IFACE_CHECK_ONLY	-1
  
--extern const struct mtd_ooblayout_ops nand_ooblayout_sp_ops;
--extern const struct mtd_ooblayout_ops nand_ooblayout_lp_ops;
+-/*
+- * Constants for ECC_MODES
+- */
+-enum nand_ecc_mode {
+-	NAND_ECC_INVALID,
+-	NAND_ECC_NONE,
+-	NAND_ECC_SOFT,
+-	NAND_ECC_HW,
+-	NAND_ECC_HW_SYNDROME,
+-	NAND_ECC_ON_DIE,
+-};
 -
- static inline struct nand_chip *mtd_to_nand(struct mtd_info *mtd)
- {
- 	return container_of(mtd, struct nand_chip, base.mtd);
+ /*
+  * Constants for Hardware ECC
+  */
 -- 
 2.20.1
 
