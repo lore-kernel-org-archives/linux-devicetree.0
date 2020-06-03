@@ -6,121 +6,84 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43A7C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 08:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C8DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 08:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE65520674
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 08:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2897C2074B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 08:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgFCIrN (ORCPT
+        id S1725943AbgFCIyu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:47:13 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:50943 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbgFCIrM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 04:47:12 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.146.85])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 98A625521DD4;
-        Wed,  3 Jun 2020 10:47:09 +0200 (CEST)
-Received: from localhost.localdomain (34.103.240.102) by DAG2EX1.emp2.local
- (172.16.2.11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 3 Jun 2020
- 10:47:08 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     <linux-iio@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <jic23@kernel.org>,
-        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH v4 0/4] Add support for SCD30 sensor
-Date:   Wed, 3 Jun 2020 10:44:37 +0200
-Message-ID: <20200603084441.33952-1-tomasz.duszynski@octakon.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [34.103.240.102]
-X-ClientProxiedBy: DAG3EX1.emp2.local (172.16.2.21) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 7173389781879446551
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudefledgtdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvffufffkofgggfgtihesthekredtredttdenucfhrhhomhepvfhomhgrshiiucffuhhsiiihnhhskhhiuceothhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehtdeggfekuddvkeehgeeggffhhfetkeeltedvkedvtdevuedtteeufeeuheeiteenucfkpheptddrtddrtddrtddpfeegrddutdefrddvgedtrddutddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
+        Wed, 3 Jun 2020 04:54:50 -0400
+Received: from mx.socionext.com ([202.248.49.38]:18827 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFCIyu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:54:50 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 03 Jun 2020 17:54:49 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 3D560180BCB;
+        Wed,  3 Jun 2020 17:54:49 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 3 Jun 2020 17:54:49 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id ADA091A12AD;
+        Wed,  3 Jun 2020 17:54:48 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller
+Date:   Wed,  3 Jun 2020 17:54:35 +0900
+Message-Id: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Following series adds support for Sensirion SCD30 sensor module capable of
-measuring carbon dioxide, temperature and relative humidity. CO2 measurements
-base on NDIR principle while temperature and relative humidity are measured by
-the on board SHT31. As for sensor communication, both I2C and serial interfaces
-are supported.
+This series adds some features for UniPhier PCIe host controller.
 
-v4:
-* improve formatting
-* improve error handling readability
-* fix message validity check on serial write
+- Add support for PME and AER invoked by MSI interrupt
+- Add iATU register view support for PCIe version >= 4.80
+- Add an error message when failing to get phy driver
 
-v3:
-* simplify code by scaling temperature & humidity in _read_meas()
-* update realbits in scan types
-* s/adjecent/adjacent
-* drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
-  output channel
-* rework locking in _read_raw
-* fix endianess problem on BE machine
-* align timestamp properly before pushing to buffers
-* explain why interrupt gets disabled after registration
-* add trigger validation
-* drop SCALE for temperature and humidity channel as they are processed
-* register action which stops measuring after starting measurements
-* spit generic calibration attr into two doing specific things
-* add comment explaining why priv in struct scd30_state is for
-* rename node in binding example to co2-sensor
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
-v2:
-* move asm/byteorder.h towards the bottom of include list
-* make channel address names in enum more specific
-* add postfixes to defines and extra comments
-* drop unneeded i2c include from scd30 header
-* break generic command sending function into specialized options
-* expose automatic calibration and forced calibration via the same attr
-* use SAMP_FREQ to set frequency instead of meas_interval attr
-* use CALISCALE to set pressure compensation instead of pressure_comp attr
-* use CALIBBIAS to set temperature offset instead of temp_offset attr
-* fix order in MAINTAINERS
-* drop attribute allowing one to reset sensor
-* as we have dt probing drop board file based probing (i2c_device_id)
-* merge patches touching related files
-* use fwnode API to retrieve interrupt from dt
-* fix interrupt-parent spelling
-* change binding license
-* drop supply from required property
+Changes since v2:
+- Avoid printing phy error message in case of EPROBE_DEFER
+- Fix iATU register mapping method
+- dt-bindings: Add Acked-by: line
+- Fix typos in commit messages
+- Use devm_platform_ioremap_resource_byname()
 
-Tomasz Duszynski (4):
-  iio: chemical: scd30: add core driver
-  iio: chemical: scd30: add I2C interface driver
-  iio: chemical: scd30: add serial interface driver
-  dt-bindings: iio: scd30: add device binding file
+Changes since v1:
+- Add check if struct resource is NULL
+- Fix warning in the type of dev_err() argument
 
- Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
- .../iio/chemical/sensirion,scd30.yaml         |  68 ++
- MAINTAINERS                                   |   9 +
- drivers/iio/chemical/Kconfig                  |  33 +
- drivers/iio/chemical/Makefile                 |   3 +
- drivers/iio/chemical/scd30.h                  |  78 ++
- drivers/iio/chemical/scd30_core.c             | 761 ++++++++++++++++++
- drivers/iio/chemical/scd30_i2c.c              | 139 ++++
- drivers/iio/chemical/scd30_serial.c           | 263 ++++++
- 9 files changed, 1388 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
- create mode 100644 drivers/iio/chemical/scd30.h
- create mode 100644 drivers/iio/chemical/scd30_core.c
- create mode 100644 drivers/iio/chemical/scd30_i2c.c
- create mode 100644 drivers/iio/chemical/scd30_serial.c
+Kunihiko Hayashi (6):
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: uniphier: Add iATU register support
+  PCI: uniphier: Add error message when failed to get phy
+  PCI: uniphier: Use devm_platform_ioremap_resource_byname()
 
---
-2.27.0
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  8 +--
+ drivers/pci/controller/dwc/pcie-designware.h       |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 69 +++++++++++++++++-----
+ 4 files changed, 60 insertions(+), 19 deletions(-)
+
+-- 
+2.7.4
 
