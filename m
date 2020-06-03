@@ -2,67 +2,112 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A1DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 19:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEF9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 738962074B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 19:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831DF2077D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbgFCTzD (ORCPT
+        id S1726096AbgFCUDv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 15:55:03 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:36702 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCTzC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 15:55:02 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id C641E80566;
-        Wed,  3 Jun 2020 21:54:59 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 21:54:58 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Liu Ying <victor.liu@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for KOE
- TX26D202VM0BWA panel
-Message-ID: <20200603195458.GA79364@ravnborg.org>
-References: <1590991880-24273-1-git-send-email-victor.liu@nxp.com>
- <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
- <20200602205653.GC56418@ravnborg.org>
- <CACvgo52fdrjp_-Q-mB1AYtNuKcQ722mvTOFsjWaXc139rjD58Q@mail.gmail.com>
+        Wed, 3 Jun 2020 16:03:51 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45917 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725821AbgFCUDv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 16:03:51 -0400
+Received: from [78.134.115.170] (port=37458 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jgZc3-005dPA-Q3; Wed, 03 Jun 2020 22:03:47 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Axel Lin <axel.lin@ingics.com>
+Subject: [RFC 2/4] regulator: lp87565: dt: remove duplicated section
+Date:   Wed,  3 Jun 2020 22:03:17 +0200
+Message-Id: <20200603200319.16184-3-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200603200319.16184-1-luca@lucaceresoli.net>
+References: <20200603200319.16184-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACvgo52fdrjp_-Q-mB1AYtNuKcQ722mvTOFsjWaXc139rjD58Q@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=UwS8wxYxj5kew1OWHm4A:9 a=CjuIK1q_8ugA:10
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Emil.
+The "Required properties:" section is copied verbatim for each of the two
+supported chips. In preparation to add a new chip variant make it a common
+section and keep the two examples to differentiate between the two chips.
 
-> >
-> > I expect to have some hours for linux work friday or saturday, but no
-> > promises...
-> >
-> Don't worry - once the DT maintainers ack 1/2, I'll merge the series.
-If it is in alphabetical order then we are good to go.
-For such simple patches we do not need DT maintainer ack.
-You can add my: r-b then you are fully covered.
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ .../devicetree/bindings/mfd/lp87565.txt       | 21 ++++---------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-	Sam
-> 
-> -Emil
+diff --git a/Documentation/devicetree/bindings/mfd/lp87565.txt b/Documentation/devicetree/bindings/mfd/lp87565.txt
+index 41671e0dc26b..b75ae23a1ef3 100644
+--- a/Documentation/devicetree/bindings/mfd/lp87565.txt
++++ b/Documentation/devicetree/bindings/mfd/lp87565.txt
+@@ -1,7 +1,7 @@
+ TI LP87565 PMIC MFD driver
+ 
+ Required properties:
+-  - compatible:	"ti,lp87565", "ti,lp87565-q1"
++  - compatible:		one of "ti,lp87565", "ti,lp87565-q1", "ti,lp87561-q1"
+   - reg:		I2C slave address.
+   - gpio-controller:	Marks the device node as a GPIO Controller.
+   - #gpio-cells:	Should be two.  The first cell is the pin number and
+@@ -10,7 +10,8 @@ Required properties:
+   - xxx-in-supply:	Phandle to parent supply node of each regulator
+ 			populated under regulators node. xxx should match
+ 			the supply_name populated in driver.
+-Example:
++
++Example for the TI LP87565-Q1 PMIC (dual 2-phase output configuration):
+ 
+ lp87565_pmic: pmic@60 {
+ 	compatible = "ti,lp87565-q1";
+@@ -42,21 +43,7 @@ lp87565_pmic: pmic@60 {
+ 	};
+ };
+ 
+-TI LP87561 PMIC:
+-
+-This is a single output 4-phase regulator configuration
+-
+-Required properties:
+-  - compatible:	"ti,lp87561-q1"
+-  - reg:		I2C slave address.
+-  - gpio-controller:	Marks the device node as a GPIO Controller.
+-  - #gpio-cells:	Should be two.  The first cell is the pin number and
+-			the second cell is used to specify flags.
+-			See ../gpio/gpio.txt for more information.
+-  - xxx-in-supply:	Phandle to parent supply node of each regulator
+-			populated under regulators node. xxx should match
+-			the supply_name populated in driver.
+-Example:
++Example for the TI LP87561 PMIC (single 4-phase output configuration):
+ 
+ lp87561_pmic: pmic@62 {
+ 	compatible = "ti,lp87561-q1";
+-- 
+2.27.0
+
