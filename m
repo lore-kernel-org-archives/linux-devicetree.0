@@ -2,95 +2,97 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D1EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A9BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 225752074B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805F120734
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgFCUEF (ORCPT
+        id S1726084AbgFCUZ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:04:05 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58062 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726088AbgFCUDv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 16:03:51 -0400
-Received: from [78.134.115.170] (port=37458 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jgZc4-005dPA-Nm; Wed, 03 Jun 2020 22:03:48 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Axel Lin <axel.lin@ingics.com>
-Subject: [RFC 4/4] regulator: lp87565: add LP87524-Q1 variant
-Date:   Wed,  3 Jun 2020 22:03:19 +0200
-Message-Id: <20200603200319.16184-5-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200603200319.16184-1-luca@lucaceresoli.net>
-References: <20200603200319.16184-1-luca@lucaceresoli.net>
+        Wed, 3 Jun 2020 16:25:58 -0400
+Received: from sauhun.de ([88.99.104.3]:50126 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbgFCUZ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 16:25:58 -0400
+Received: from localhost (p5486cfa5.dip0.t-ipconnect.de [84.134.207.165])
+        by pokefinder.org (Postfix) with ESMTPSA id 116E32C1FE2;
+        Wed,  3 Jun 2020 22:25:55 +0200 (CEST)
+Date:   Wed, 3 Jun 2020 22:25:53 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v14 0/3] i2c: npcm7xx: add NPCM i2c controller driver
+Message-ID: <20200603202553.GB7684@kunai>
+References: <20200527200820.47359-1-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
+Content-Disposition: inline
+In-Reply-To: <20200527200820.47359-1-tali.perry1@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the LP87524B/J/P-Q1 Four 4-MHz Buck Converter. This is a
-variant of the LP87565 having 4 single-phase outputs and up to 10 A of
-total output current.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- drivers/mfd/lp87565.c       | 4 ++++
- include/linux/mfd/lp87565.h | 1 +
- 2 files changed, 5 insertions(+)
+--DBIVS5p969aUjpLe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mfd/lp87565.c b/drivers/mfd/lp87565.c
-index 4a5c8ade4ae0..cc1072927f6d 100644
---- a/drivers/mfd/lp87565.c
-+++ b/drivers/mfd/lp87565.c
-@@ -26,6 +26,10 @@ static const struct mfd_cell lp87565_cells[] = {
- 
- static const struct of_device_id of_lp87565_match_table[] = {
- 	{ .compatible = "ti,lp87565", },
-+	{
-+		.compatible = "ti,lp87524-q1",
-+		.data = (void *)LP87565_DEVICE_TYPE_LP87524_Q1,
-+	},
- 	{
- 		.compatible = "ti,lp87565-q1",
- 		.data = (void *)LP87565_DEVICE_TYPE_LP87565_Q1,
-diff --git a/include/linux/mfd/lp87565.h b/include/linux/mfd/lp87565.h
-index ce965354bbad..ad240f2d0d3f 100644
---- a/include/linux/mfd/lp87565.h
-+++ b/include/linux/mfd/lp87565.h
-@@ -14,6 +14,7 @@
- 
- enum lp87565_device_type {
- 	LP87565_DEVICE_TYPE_UNKNOWN	= 0,
-+	LP87565_DEVICE_TYPE_LP87524_Q1,
- 	LP87565_DEVICE_TYPE_LP87561_Q1,
- 	LP87565_DEVICE_TYPE_LP87565_Q1,
- };
--- 
-2.27.0
+On Wed, May 27, 2020 at 11:08:17PM +0300, Tali Perry wrote:
+> This patch set adds i2c controller support=20
+> for the Nuvoton NPCM Baseboard Management Controller (BMC).
+>=20
+> NPCM7xx includes 16 I2C controllers. This driver operates the controller.
+> This module also includes a slave mode.
+>=20
+> ---
+> v14 -> v13:
+> 	- Fix yaml example: add missing include.
+> 	- Replace all udelay to usleep_range, except one which is called from
+> 	  irq.
+> 	- Fix compilation error (module_platfrom_init conflict).
+> 	- debugfs counters always updated. Counting till max value,
+> 	  then stop counting.
+> 	- Rename bus-frequency to clock-frequency.
+> 	- Remove unused variables.
 
+I don't have time for a deeper review, but from what I can tell this
+driver is good to go and we can fix things incrementally from now on.
+
+Applied to for-next (will go into 5.8), thanks!
+
+
+--DBIVS5p969aUjpLe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7YB1EACgkQFA3kzBSg
+KbZmVw//dD5ttj+RhzDcyUcRJ9NMb6dXctKo/EQYXzZfQlKOJqL36iVqKjy8rmFM
+S2F42QY95jaNRdUHEGaFzDazxEUhy7J+07z0XPHk1CrGUDBVVtRf28dsEAXS7UTm
+o8pq67KgL+rr4PcKVd92OnBF0Sdi5d6HlVYah9W7dlnR/crg95cd9JUdwn1THmFw
+/PEmw4XRnYk/+GC4D+hai+W/E86RPpMzCU9YbOCfgnTWC+L7b9W4hS3j9+xtv62V
+HD2GagLUGpBiKENxUSS0NJ7agC31Eea7gi9Gn5P8OfxYr4VtPSagnchKwCoohFbU
+EySi0qXRd5+hWMOjg2DcGqC8mo/FC2ZDSKlLYWiicTgyZjP4vkRpMHqqtwS9u+23
+EFQv0Gy+QjePWEJdjYHP+TxuKw0+2OqMfSr/mkB49sgcKe1Fd7EFlCJbnDmIoZc1
+loO0x9MGK9bl/hlVWUpTorkAJGJygdstxTVk9jFJAEFvUXz6ZNk7HKdb0yOqvZcu
+hRqp1nOCL3fSUjtNPfE3ovaEQBiJO/FcGPf4bSgKycnfeFEbnJy+lYhCvsTV6x6A
+fUy85pKXZad4b51OFi9Hgo+a59ocTopYQRPvAiTcD+e9x2WagmMJCdNjTFsKCUy0
+kprWATccn3TZJ3pSZpqlPX9FvP8u3mZOywM4WXtpX8xvT6qXqys=
+=fEJK
+-----END PGP SIGNATURE-----
+
+--DBIVS5p969aUjpLe--
