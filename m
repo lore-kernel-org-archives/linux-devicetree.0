@@ -2,120 +2,176 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4A1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 07:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982BBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 07:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476582067B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 07:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743AC207DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 07:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rsiYpbdr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BaA7HqoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725867AbgFCH3H (ORCPT
+        id S1725937AbgFCHjF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 03:29:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:6641 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725810AbgFCH3H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 03:29:07 -0400
-X-UUID: 46bdbf9e4142415ea62346d624dd87a7-20200603
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uxJ/OyZIhvn8jO7euhdxxdoo6BqLiSJM0zglxbBqOos=;
-        b=rsiYpbdrvrTKk8pW+Ygso90z2A10JD7TpaJ9wdg6yWauTg7OT4Hw6IgcOEpu9vtFhCjL64pw7yMgy2sMrsE8tK5quGWduMsZI+iGlpkM0KyiC0grLkG+7Aq2sOQ2Dqodeo/S/GdP4dGfcFQZX2HhNDZkkobZQerRHTMBp+aW4Ik=;
-X-UUID: 46bdbf9e4142415ea62346d624dd87a7-20200603
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 526761993; Wed, 03 Jun 2020 15:29:03 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 3 Jun 2020 15:29:02 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 3 Jun 2020 15:29:01 +0800
-Message-ID: <1591169342.4878.9.camel@mtkswgap22>
-Subject: Re: Security Random Number Generator support
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Marc Zyngier <maz@misterjones.org>,
-        Julius Werner <jwerner@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>, "Rob Herring" <robh+dt@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 3 Jun 2020 15:29:02 +0800
-In-Reply-To: <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-         <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-         <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 3 Jun 2020 03:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgFCHjE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 03:39:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE22C05BD1E
+        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 00:39:03 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f5so902005wmh.2
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 00:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hLQ9Ov0eKr85gKa7olFwe6f0SlVLYGl5nrVG5b+LzPg=;
+        b=BaA7HqoJAJJh2tIRtyNtCnJJ+ARabjO7t5qWHkwfey6v8O/bYqibUoJb7g2lNYfNoZ
+         ifRC05Pi1fFsLS0xec3/ZwWH5HsiqKmSLEV1fLmRpATey18HMYDmWin9n3Lkz4IawUOQ
+         xlEYpZp5UmMhs18ikzeusxNZVkL8Zx3ToEbKvsz7PW6G3ARdQwBq0YY+pC+k6oMkgPG9
+         WS33Jb4rH9VdYT1yaXMb7+k5Kf1kqlPXl8+BOa8wlHnCW3navM5sN6dA2DpyHeZobAy9
+         jaGeJhzWEgaTqAFNlLtfzmz/6tmkY5sIGP7K7i1KqYqmIFqvLzdVzqj+ASM+V0Ps5U09
+         v7mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hLQ9Ov0eKr85gKa7olFwe6f0SlVLYGl5nrVG5b+LzPg=;
+        b=QBsBvL8H/1UX4GfLZhRetg5Z68H6NWcf294Kfl47J0Ku9CklF7um7eG/34a6HvbKoK
+         tO7GFkUhFtjihcoFAAdtqdyjWEaEjjMFNzSzEJAwND0fveKjIm6wH3TO78yVHvWxh5dX
+         pXlt4RFhooQgTrmTSYBDljQyRzrCK8y1HIuxPAguuUThL7nyACXQO0MDcovnQns52Z1T
+         FyM1MI+pN21gDapOpAEC6XMUCe75gtcPogVvMFMirMisCpQsAbzvqUJqVJH2k2PcTxN/
+         FGeLFVlBe64dMbKtHWwp2MnWcFdgCrUfmIV1/EWL6rZMXSczAodrVETETd2iTMaMgbP5
+         +JAA==
+X-Gm-Message-State: AOAM531FRadx6VuuWT+dWfPDiZpgeQh1T+O13RA2TB7bHD+aL7G/X1VF
+        5CUGI7LNmBy3XXWv4m6EHmvgMg==
+X-Google-Smtp-Source: ABdhPJx2CVWTxoCwkjfPm8H6OgQs2Q+1IKumvn68jhcLFzJkSHw/NXJvs00yy3+6Xok2VEhmklRBbQ==
+X-Received: by 2002:a1c:5a0b:: with SMTP id o11mr7245089wmb.74.1591169941832;
+        Wed, 03 Jun 2020 00:39:01 -0700 (PDT)
+Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
+        by smtp.gmail.com with ESMTPSA id t129sm1796108wmf.41.2020.06.03.00.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 00:39:01 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 09:38:51 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "felix.kuehling@amd.com" <felix.kuehling@amd.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v7 21/24] iommu/arm-smmu-v3: Add stall support for
+ platform devices
+Message-ID: <20200603073851.GA3198@myrica>
+References: <20200519175502.2504091-1-jean-philippe@linaro.org>
+ <20200519175502.2504091-22-jean-philippe@linaro.org>
+ <4741b6c45d1a43b69041ecb5ce0be0d5@huawei.com>
+ <20200602093836.GA1029680@myrica>
+ <1517c4d97b5849e6b6d32e7d7ed35289@huawei.com>
+ <20200602114611.GB1029680@myrica>
+ <c165fe41230f49baba991f1a416a4739@huawei.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c165fe41230f49baba991f1a416a4739@huawei.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTAyIGF0IDIxOjAyICswODAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+
-IE9uIDIwMjAtMDYtMDIgMTM6MTQsIEFyZCBCaWVzaGV1dmVsIHdyb3RlOg0KPiA+IE9uIFR1ZSwg
-MiBKdW4gMjAyMCBhdCAxMDoxNSwgTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4gd3Jv
-dGU6DQo+ID4+IA0KPiA+PiBUaGVzZSBwYXRjaCBzZXJpZXMgaW50cm9kdWNlIGEgc2VjdXJpdHkg
-cmFuZG9tIG51bWJlciBnZW5lcmF0b3INCj4gPj4gd2hpY2ggcHJvdmlkZXMgYSBnZW5lcmljIGlu
-dGVyZmFjZSB0byBnZXQgaGFyZHdhcmUgcm5kIGZyb20gU2VjdXJlDQo+ID4+IHN0YXRlLiBUaGUg
-U2VjdXJlIHN0YXRlIGNhbiBiZSBBcm0gVHJ1c3RlZCBGaXJtd2FyZShBVEYpLCBUcnVzdGVkDQo+
-ID4+IEV4ZWN1dGlvbiBFbnZpcm9ubWVudChURUUpLCBvciBldmVuIEVMMiBoeXBlcnZpc29yLg0K
-PiA+PiANCj4gPj4gUGF0Y2ggIzEuLjIgYWRkcyBzZWMtcm5nIGtlcm5lbCBkcml2ZXIgZm9yIFRy
-dXN0em9uZSBiYXNlZCBTb0NzLg0KPiA+PiBGb3Igc2VjdXJpdHkgYXdhcmVuZXNzIFNvQ3Mgb24g
-QVJNdjggd2l0aCBUcnVzdFpvbmUgZW5hYmxlZCwNCj4gPj4gcGVyaXBoZXJhbHMgbGlrZSBlbnRy
-b3B5IHNvdXJjZXMgaXMgbm90IGFjY2Vzc2libGUgZnJvbSBub3JtYWwgd29ybGQNCj4gPj4gKGxp
-bnV4KSBhbmQgcmF0aGVyIGFjY2Vzc2libGUgZnJvbSBzZWN1cmUgd29ybGQgKEhZUC9BVEYvVEVF
-KSBvbmx5Lg0KPiA+PiBUaGlzIGRyaXZlciBhaW1zIHRvIHByb3ZpZGUgYSBnZW5lcmljIGludGVy
-ZmFjZSB0byBBcm0gVHJ1c3RlZA0KPiA+PiBGaXJtd2FyZSBvciBIeXBlcnZpc29yIHJuZyBzZXJ2
-aWNlLg0KPiA+PiANCj4gPj4gDQo+ID4+IGNoYW5nZXMgc2luY2UgdjE6DQo+ID4+IC0gcmVuYW1l
-IG10Njd4eC1ybmcgdG8gbXRrLXNlYy1ybmcgc2luY2UgYWxsIE1lZGlhVGVrIEFSTXY4IFNvQ3Mg
-Y2FuIA0KPiA+PiByZXVzZQ0KPiA+PiAgIHRoaXMgZHJpdmVyLg0KPiA+PiAgIC0gcmVmaW5lIGNv
-ZGluZyBzdHlsZSBhbmQgdW5uZWNlc3NhcnkgY2hlY2suDQo+ID4+IA0KPiA+PiAgIGNoYW5nZXMg
-c2luY2UgdjI6DQo+ID4+ICAgLSByZW1vdmUgdW51c2VkIGNvbW1lbnRzLg0KPiA+PiAgIC0gcmVt
-b3ZlIHJlZHVuZGFudCB2YXJpYWJsZS4NCj4gPj4gDQo+ID4+ICAgY2hhbmdlcyBzaW5jZSB2MzoN
-Cj4gPj4gICAtIGFkZCBkdC1iaW5kaW5ncyBmb3IgTWVkaWFUZWsgcm5nIHdpdGggVHJ1c3Rab25l
-IGVuYWJsZWQuDQo+ID4+ICAgLSByZXZpc2UgSFdSTkcgU01DIGNhbGwgZmlkLg0KPiA+PiANCj4g
-Pj4gICBjaGFuZ2VzIHNpbmNlIHY0Og0KPiA+PiAgIC0gbW92ZSBiaW5kaW5ncyB0byB0aGUgYXJt
-L2Zpcm13YXJlIGRpcmVjdG9yeS4NCj4gPj4gICAtIHJldmlzZSBkcml2ZXIgaW5pdCBmbG93IHRv
-IGNoZWNrIG1vcmUgcHJvcGVydHkuDQo+ID4+IA0KPiA+PiAgIGNoYW5nZXMgc2luY2UgdjU6DQo+
-ID4+ICAgLSByZWZhY3RvciB0byBtb3JlIGdlbmVyaWMgc2VjdXJpdHkgcm5nIGRyaXZlciB3aGlj
-aA0KPiA+PiAgICAgaXMgbm90IHBsYXRmb3JtIHNwZWNpZmljLg0KPiA+PiANCj4gPj4gKioqIEJM
-VVJCIEhFUkUgKioqDQo+ID4+IA0KPiA+PiBOZWFsIExpdSAoMik6DQo+ID4+ICAgZHQtYmluZGlu
-Z3M6IHJuZzogYWRkIGJpbmRpbmdzIGZvciBzZWMtcm5nDQo+ID4+ICAgaHdybmc6IGFkZCBzZWMt
-cm5nIGRyaXZlcg0KPiA+PiANCj4gPiANCj4gPiBUaGVyZSBpcyBubyByZWFzb24gdG8gbW9kZWwg
-YSBTTUMgY2FsbCBhcyBhIGRyaXZlciwgYW5kIHJlcHJlc2VudCBpdA0KPiA+IHZpYSBhIERUIG5v
-ZGUgbGlrZSB0aGlzLg0KPiANCj4gKzEuDQo+IA0KPiA+IEl0IHdvdWxkIGJlIG11Y2ggYmV0dGVy
-IGlmIHRoaXMgU01DIGludGVyZmFjZSBpcyBtYWRlIHRydWx5IGdlbmVyaWMsDQo+ID4gYW5kIHdp
-cmVkIGludG8gdGhlIGFyY2hfZ2V0X3JhbmRvbSgpIGludGVyZmFjZSwgd2hpY2ggY2FuIGJlIHVz
-ZWQgbXVjaA0KPiA+IGVhcmxpZXIuDQo+IA0KPiBXYXNuJ3QgdGhlcmUgYSBwbGFuIHRvIHN0YW5k
-YXJkaXplIGEgU01DIGNhbGwgdG8gcnVsZSB0aGVtIGFsbD8NCj4gDQo+ICAgICAgICAgIE0uDQoN
-CkNvdWxkIHlvdSBnaXZlIHVzIGEgaGludCBob3cgdG8gbWFrZSB0aGlzIFNNQyBpbnRlcmZhY2Ug
-bW9yZSBnZW5lcmljIGluDQphZGRpdGlvbiB0byBteSBhcHByb2FjaD8NClRoZXJlIGlzIG5vIChl
-YXN5KSB3YXkgdG8gZ2V0IHBsYXRmb3JtLWluZGVwZW5kZW50IFNNQyBmdW5jdGlvbiBJRCwNCndo
-aWNoIGlzIHdoeSB3ZSBlbmNvZGUgaXQgaW50byBkZXZpY2UgdHJlZSwgYW5kIHByb3ZpZGUgYSBn
-ZW5lcmljDQpkcml2ZXIuIEluIHRoaXMgd2F5LCBkaWZmZXJlbnQgZGV2aWNlcyBjYW4gYmUgbWFw
-cGVkIGFuZCB0aGVuIGdldA0KZGlmZmVyZW50IGZ1bmN0aW9uIElEIGludGVybmFsbHkuDQoNCg0K
+On Tue, Jun 02, 2020 at 12:12:30PM +0000, Shameerali Kolothum Thodi wrote:
+> > > > > > +		if (ssid_valid)
+> > > > > > +			flt->prm.flags |=
+> > > > IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+> > > > >
+> > > > > Do we need to set this for STALL mode only support? I had an issue
+> > > > > with this being set on a vSVA POC based on our D06 zip
+> > > > > device(which is a "fake " pci dev that supports STALL mode but no
+> > > > > PRI). The issue is, CMDQ_OP_RESUME doesn't have any ssid or SSV
+> > > > > params and works on sid
+> > > > and stag only.
+> > > >
+> > > > I don't understand the problem, arm_smmu_page_response() doesn't set
+> > > > SSID or SSV when sending a CMDQ_OP_RESUME. Could you detail the flow
+> > > > of a stall event and RESUME command in your prototype?  Are you
+> > > > getting issues with the host driver or the guest driver?
+> > >
+> > > The issue is on the host side iommu_page_response(). The flow is
+> > > something like below.
+> > >
+> > > Stall: Host:-
+> > >
+> > > arm_smmu_handle_evt()
+> > >   iommu_report_device_fault()
+> > >     vfio_pci_iommu_dev_fault_handler()
+> > >
+> > > Stall: Qemu:-
+> > >
+> > > vfio_dma_fault_notifier_handler()
+> > >   inject_faults()
+> > >     smmuv3_inject_faults()
+> > >
+> > > Stall: Guest:-
+> > >
+> > > arm_smmu_handle_evt()
+> > >   iommu_report_device_fault()
+> > >     iommu_queue_iopf
+> > >   ...
+> > >   iopf_handle_group()
+> > >     iopf_handle_single()
+> > >       handle_mm_fault()
+> > >         iopf_complete()
+> > >            iommu_page_response()
+> > >              arm_smmu_page_response()
+> > >                arm_smmu_cmdq_issue_cmd(CMDQ_OP_RESUME)
+> > >
+> > > Resume: Qemu:-
+> > >
+> > > smmuv3_cmdq_consume(SMMU_CMD_RESUME)
+> > >   smmuv3_notify_page_resp()
+> > >     vfio:ioctl(page_response)  --> struct iommu_page_response is filled
+> > >                              with only version, grpid and code.
+> > >
+> > > Resume: Host:-
+> > >   ioctl(page_response)
+> > >     iommu_page_response()  --> fails as the pending req has PASID_VALID
+> > flag
+> > >                              set and it checks for a match.
+> > 
+> > I believe the fix needs to be here. It's also wrong for PRI since not all PCIe
+> > endpoint require a PASID in the page response. Could you try the attached
+> > patch?
+> 
+> Going through the patch, yes, that will definitely fix the issue. But isn't it better if
+> the request itself indicate whether it expects a response msg with a valid pasid or
+> not? The response msg can come from userspace as well(vSVA) and if for some reason
+> doesn't set it for a req that expects pasid then it should be an error, right? In the temp
+> fix I had, I introduced another flag to indicate the endpoint has PRI support or not and
+> used that to verify the pasid requirement. But for the PRI case you mentioned 
+> above, not sure it is easy to get that information or not. May be I am complicating things
+> here :)
 
+No you're right, we shouldn't send back malformed responses to the SMMU. I
+suppose we can store a flag "PASID required" in the fault and check that
+against the response. If we have to discard the guest's response, then we
+can either fake a response (abort the stall) right away, or wait for the
+response timeout to kick, which will do the same.
+
+Thanks,
+Jean
