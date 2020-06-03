@@ -2,27 +2,28 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9511CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D1EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 765C32074B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225752074B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgFCUDv (ORCPT
+        id S1726342AbgFCUEF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:03:51 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:37842 "EHLO
+        Wed, 3 Jun 2020 16:04:05 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58062 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725922AbgFCUDv (ORCPT
+        by vger.kernel.org with ESMTP id S1726088AbgFCUDv (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 16:03:51 -0400
 Received: from [78.134.115.170] (port=37458 helo=melee.fritz.box)
         by hostingweb31.netsons.net with esmtpa (Exim 4.93)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1jgZc2-005dPA-O7; Wed, 03 Jun 2020 22:03:46 +0200
+        id 1jgZc4-005dPA-Nm; Wed, 03 Jun 2020 22:03:48 +0200
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>
@@ -30,10 +31,12 @@ Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
         Axel Lin <axel.lin@ingics.com>
-Subject: [RFC 0/4] regulator: lp87565: ignore ENx pins and add LP87524-Q1
-Date:   Wed,  3 Jun 2020 22:03:15 +0200
-Message-Id: <20200603200319.16184-1-luca@lucaceresoli.net>
+Subject: [RFC 4/4] regulator: lp87565: add LP87524-Q1 variant
+Date:   Wed,  3 Jun 2020 22:03:19 +0200
+Message-Id: <20200603200319.16184-5-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200603200319.16184-1-luca@lucaceresoli.net>
+References: <20200603200319.16184-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -51,31 +54,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Add support for the LP87524B/J/P-Q1 Four 4-MHz Buck Converter. This is a
+variant of the LP87565 having 4 single-phase outputs and up to 10 A of
+total output current.
 
-the first patch in this series is a small but significant variation in how
-the lp87565 driver enables the output rails, allow the kernel to always
-know when it is enabling an output. However it can change existing
-behaviour (depending on the hardware setup) and thus it should be carefully
-evaluated.
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ drivers/mfd/lp87565.c       | 4 ++++
+ include/linux/mfd/lp87565.h | 1 +
+ 2 files changed, 5 insertions(+)
 
-The following patches are a fairly straightforward addition of a new chip
-variant along with some DT bindings cleanup.
-
-Luca
-
-Luca Ceresoli (4):
-  regulator: lp87565: enable voltage regardless of ENx pin
-  regulator: lp87565: dt: remove duplicated section
-  regulator: lp87565: dt: add LP87524-Q1 variant
-  regulator: lp87565: add LP87524-Q1 variant
-
- .../devicetree/bindings/mfd/lp87565.txt       | 66 ++++++++++++++-----
- drivers/mfd/lp87565.c                         |  4 ++
- drivers/regulator/lp87565-regulator.c         | 21 +++++-
- include/linux/mfd/lp87565.h                   |  1 +
- 4 files changed, 73 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/mfd/lp87565.c b/drivers/mfd/lp87565.c
+index 4a5c8ade4ae0..cc1072927f6d 100644
+--- a/drivers/mfd/lp87565.c
++++ b/drivers/mfd/lp87565.c
+@@ -26,6 +26,10 @@ static const struct mfd_cell lp87565_cells[] = {
+ 
+ static const struct of_device_id of_lp87565_match_table[] = {
+ 	{ .compatible = "ti,lp87565", },
++	{
++		.compatible = "ti,lp87524-q1",
++		.data = (void *)LP87565_DEVICE_TYPE_LP87524_Q1,
++	},
+ 	{
+ 		.compatible = "ti,lp87565-q1",
+ 		.data = (void *)LP87565_DEVICE_TYPE_LP87565_Q1,
+diff --git a/include/linux/mfd/lp87565.h b/include/linux/mfd/lp87565.h
+index ce965354bbad..ad240f2d0d3f 100644
+--- a/include/linux/mfd/lp87565.h
++++ b/include/linux/mfd/lp87565.h
+@@ -14,6 +14,7 @@
+ 
+ enum lp87565_device_type {
+ 	LP87565_DEVICE_TYPE_UNKNOWN	= 0,
++	LP87565_DEVICE_TYPE_LP87524_Q1,
+ 	LP87565_DEVICE_TYPE_LP87561_Q1,
+ 	LP87565_DEVICE_TYPE_LP87565_Q1,
+ };
 -- 
 2.27.0
 
