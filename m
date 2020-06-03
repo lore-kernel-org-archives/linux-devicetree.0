@@ -2,124 +2,82 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CEFC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E22C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 21:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8065207D3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 20:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD513207ED
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 21:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591216916;
-	bh=SwtQdzOor59+vXHd3f6F9lk8585uAp3wtylcBGqMqQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BRpOpeQAB0J2Zb3soFO3+Zt3w/VCWFhbNhMYdL37OIGzP/prDOGHZKvzbrNp+83yE
-	 UdqXoGGCUsSlVtVxMLeh922ucHiPcEImhQckq8GeuK+UyVwJz4N0CCn9eEgHZWQkvP
-	 pBjl4YHM3BJMks90jhKof9g2h6EZTAgL2eNaU3Qw=
+	s=default; t=1591221539;
+	bh=bG694Z1X/g0cz+3ydC7MrxJgPWTI9MNwlVNzgabAQpc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vuwO48wGFrq6sHeW60GqiDi9hCGkTgyPVSCPQVm6AiY5LOzZbJfok+uzrpJkJt04w
+	 ibcZzkPncqbpQ2BCI3rcMH77wt49jNbKhDASVtWSRG47AW8RxS1VHxxAjskexpTovC
+	 5281VqR/Ypr0lT2BQnLiNBFOQtjqzZO3QcWkMFO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgFCUlu (ORCPT
+        id S1726558AbgFCV67 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 16:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37318 "EHLO mail.kernel.org"
+        Wed, 3 Jun 2020 17:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgFCUlu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 16:41:50 -0400
-Received: from localhost (p5486cfa5.dip0.t-ipconnect.de [84.134.207.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725922AbgFCV66 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 17:58:58 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FD0B2074B;
-        Wed,  3 Jun 2020 20:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B13B207D0;
+        Wed,  3 Jun 2020 21:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591216909;
-        bh=SwtQdzOor59+vXHd3f6F9lk8585uAp3wtylcBGqMqQc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kO8cFCe0Q0Bfo2MKvweLEp18Up8QwwJUUfy0MLA+laQLkKmkeSp8Hs9F96LhDicLo
-         KkN0wFE4WPkjAVyTAoNUXcGBpqBt/3TVfieXaFgF8SfkixATeezzEOOwQzJE+dFslx
-         e5dDGjeVYpL9n6tZ9xCpzkQ3js43EwtVQPhDGIOM=
-Date:   Wed, 3 Jun 2020 22:41:46 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 22/28] dt-bindings: i2c: Convert i2c-pxa to json-schema
-Message-ID: <20200603204146.GB1347@ninjato>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-23-lkundrak@v3.sk>
+        s=default; t=1591221538;
+        bh=bG694Z1X/g0cz+3ydC7MrxJgPWTI9MNwlVNzgabAQpc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C0EqvJxRgn7C7eJE3bee+mhegLwWCqMYruNH8EFYeZEpca1dUbur8vepANEmM4D2h
+         Xjfa15trH++Ax4rZS64DaIqUYDKByyESOIGISy0BT6CNSiRFo81FPMGiPXDclDvvZ2
+         ThXijie937+TXbsaITUeUsp7Ere4T98m/6Oow51g=
+Received: by mail-ot1-f45.google.com with SMTP id v17so3203363ote.0;
+        Wed, 03 Jun 2020 14:58:58 -0700 (PDT)
+X-Gm-Message-State: AOAM532l1N6ekbmW3yLyTEpt6/fNsO/21q6lzOXgvjkzKF4InNVzdPwW
+        Nx9Mj4Ls2/dyr+RcWByx34Y7AQ5kTtrU1S6KQg==
+X-Google-Smtp-Source: ABdhPJy4IsVGYDhLYERMjF2wCFHQWTVglTGafLNce+hvxMjpqsGUWZniKT8a62dbG+w21svvLRVjQYYO0Na2rx5zZUU=
+X-Received: by 2002:a05:6830:549:: with SMTP id l9mr1513425otb.129.1591221537765;
+ Wed, 03 Jun 2020 14:58:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
-Content-Disposition: inline
-In-Reply-To: <20200317093922.20785-23-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200528031549.13846-1-zhouyanjie@wanyeetech.com>
+ <20200528031549.13846-4-zhouyanjie@wanyeetech.com> <20200529191431.GA2779176@bogus>
+ <159078668338.69627.5841582436445900180@swboyd.mtv.corp.google.com>
+In-Reply-To: <159078668338.69627.5841582436445900180@swboyd.mtv.corp.google.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 3 Jun 2020 15:58:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKQgSsd4ZgLrSSZifpB=1eqdgr503YyrWB1qmECd0z4VQ@mail.gmail.com>
+Message-ID: <CAL_JsqKQgSsd4ZgLrSSZifpB=1eqdgr503YyrWB1qmECd0z4VQ@mail.gmail.com>
+Subject: Re: [PATCH v13 3/7] dt-bindings: clock: Add documentation for X1830 bindings.
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, zhenwenjin@gmail.com,
+        sernia.zhou@foxmail.com, Paul Cercueil <paul@crapouillou.net>,
+        dongsheng.qiu@ingenic.com, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, May 29, 2020 at 3:11 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Rob Herring (2020-05-29 12:14:31)
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+>
+> Please apply to bindings tree Rob. The yaml conversion is in your tree.
 
---4bRzO86E/ozDv8r1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Done.
 
-On Tue, Mar 17, 2020 at 10:39:16AM +0100, Lubomir Rintel wrote:
-> A conversion of the i2c-pxa binding to DT schema format using json-schema.
->=20
-> This also cleans ups some errors in the binding: The compatible string
-> description suggested that "mmp" in "mrvl,mmp-twsi" is to be substituted
-> with a processor model, which wouldn't be a right thing to do and indeed
-> nobody seems to have been doing that. There also was "Recommended
-> properties" section that included optional as well as mandatory
-> properties. Missing mandatory properties were added to the example.
->=20
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
-Waiting for an ack from someone with DT-YAML experience here.
-
-
---4bRzO86E/ozDv8r1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7YCwoACgkQFA3kzBSg
-KbbJvBAAhOSQEJ8IukeodYEjHMpjA4Dcx5fvpBnGvrxXQBvSIOKYdNTW/I/RitM2
-80cJ6nuKvdFbdxDZkK4QjMuBSMmhi8AgafJmuAlBmEGItG7pElyjQ90070ISZDPD
-tVY9epZq/e8RtcYayajUN8saNIdDpvGNeEdFn6t7aLa5Sww2SpfgtkIlozOp44/6
-Tf/fjBd9Ml87SWjsIwW1f6w0dQiF3ib6oqWZXE8fxH8v6LUs8M0mE2hX23NjttP5
-/w8oAV3OqgVGMn/ydUOtmuLRzBqQ8ONO3+pG6h8lYAnPuh0ZGmpaV0RxigcJDGSd
-yTAob0lzrFXKSkQ6Kl0keFn8aC9F56OknDWMf3wm8OME85QCls7fzeAwZhEclyf5
-NrSyInNZq0xj1JQjIkagcWSmLyWu+e0Er09iVm5T/6eqUm6mElu8VpOVkiIrlI9e
-4FX7Yj8D1ucGJzgiLN8lYzUUXMl78Ym+U9Il5h3fOP/FKINTq2bvBKxjpmHIxbZb
-sBIZPdGdjNSwZ5wA4Cf01Wy0ghmMuKNVkV6IDFXmLIjszXAA3ZCX+kBFyDuHWir/
-TqkYPD+GYP6n9f+xFUlit6Kf3Pv6tXxVBnyWsS0k0LyB3dGTV9dp2d6MaA3IGP5n
-m78a0tAD4l4HN1oWcH/QNOUH5YV4ZdWonkhaHbJYZiCcjtRq+lE=
-=Qlp8
------END PGP SIGNATURE-----
-
---4bRzO86E/ozDv8r1--
+Rob
