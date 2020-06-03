@@ -2,101 +2,142 @@ Return-Path: <SRS0=VnZl=7Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6ECC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 05:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394C0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 05:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122ED2065C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 05:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104E12072F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  3 Jun 2020 05:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591162322;
-	bh=jcNjRebtGEGF7OHTOpZIQrFoXxBn7By/a9J0O9eUj+Y=;
-	h=In-Reply-To:References:Subject:From:To:Date:List-ID:From;
-	b=EMSvpSbuahuOJdHDxtrkp9ZV077YgMRNTa9AgpA4fWh1XtFoPBKmRWyce7Ddd/WP7
-	 6ZitmfCl/6gJYC0x5Ckhzf/mFjX8JOgHLqiT4d5qcyCevnU/RWENrklLoIJGa+4c3v
-	 dtQldHHe90xeLJ8kXTV/TVL1jpuuUAhfUa+wSf1E=
+	s=default; t=1591163257;
+	bh=4hV9zOYAwa5fZBm9b4fk80V+8YQ7iTXLIK7Ol3mlm5w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Wh5j+FCNnmcgYLZgbt+9pJ70L7lQj9+/ru3xk6lgt+r2fG3l+rAFybHOqLInwff6A
+	 rJm1qlyqtPM80HdPrtQ0yNG+cXpMORhxZIAaTo+8NuUxSxGErevSjWm79QooSxLIuI
+	 pn5vtFxXUPqHAD/RRUTCBMhzP82mythQVyFbg4es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbgFCFb6 (ORCPT
+        id S1725823AbgFCFrg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 01:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgFCFb6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 01:31:58 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8C72065C;
-        Wed,  3 Jun 2020 05:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591162317;
-        bh=jcNjRebtGEGF7OHTOpZIQrFoXxBn7By/a9J0O9eUj+Y=;
-        h=In-Reply-To:References:Subject:From:To:Date:From;
-        b=wAMWMMwCHBjbm/o3TC6OfFpQGJsCZZb5Q9kmmX2Jftvzfx2A0ID7ocYrScjo2smV8
-         TWNvBd/0LvLPifoc7OZqyCevCDo/BVuUISmHRDUV7cM/3QtHO9PEGnebkvZiRI44kf
-         875TE2CDZ3ATQ94tpu/lkC2eilbj5HPgA1y0DV2U=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 3 Jun 2020 01:47:36 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:22069 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbgFCFrg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 01:47:36 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 0535lMin010013;
+        Wed, 3 Jun 2020 14:47:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0535lMin010013
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1591163243;
+        bh=1AYS32C3X7KLeQC7IXtA1bYPOaxXAdUOtphNneA3Mng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=l+YThKbP4i71CVKFXx++1rr8RpKprqz6eJ2pJLVk/P8Vll7uPgGUsBMzyQ5TKdYVP
+         bMN8ct6flLq1OfD1Sw8fdPLz1JPSATUAeGZQAnsg4x+h9klAYuhxltn0Nhj2Cogy5y
+         tXwBY7/7NeCzCx42Aj8HnyVuBRUcRuKn9lSUqj3pbjyiArls1RgXj2MiTriWZu4Zmj
+         cMdQofmNdl/U5sBHLXTpHjcD+wkUJ06K09ksgf3V80eZExy+MXO7+POzDF03gVzMEU
+         fHh98g/WF8XaksX9bjmOtm03rZcMDRjiVARglI6Kb1jyaCi+WwCs9mqcT5+0DmdOj8
+         G+HJmhSJ/miBg==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id t132so424745vst.2;
+        Tue, 02 Jun 2020 22:47:22 -0700 (PDT)
+X-Gm-Message-State: AOAM5314sO2waBPFqnOAthNFZOc4rDtrdgUmrkP+cVkTXyPxzUFrzglC
+        ZBpYfUJTZQccgkDX98PYIrENxRdMHGn+eokVVyQ=
+X-Google-Smtp-Source: ABdhPJw3ZQPVgzhisg7jE9+Mh/ssKPFT64P4ZAuQnK4DGUGQnuZQ9wHxr+7wxPPNzzCQUFb4k1+BM+DQXq0O+BJQUyI=
+X-Received: by 2002:a67:6383:: with SMTP id x125mr110672vsb.54.1591163241712;
+ Tue, 02 Jun 2020 22:47:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4266555a-5e4f-4340-1b3c-487a70805751@codeaurora.org>
-References: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org> <1590582292-13314-5-git-send-email-sivaprak@codeaurora.org> <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com> <824cd7bb-0971-d387-4b78-75c36ddf2f66@codeaurora.org> <159104019638.69627.9161269856470136421@swboyd.mtv.corp.google.com> <4266555a-5e4f-4340-1b3c-487a70805751@codeaurora.org>
-Subject: Re: [PATCH V6 4/5] clk: qcom: Add ipq6018 apss clock controller
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Tue, 02 Jun 2020 22:31:56 -0700
-Message-ID: <159116231690.69627.14045441534011952150@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200325095326.10875-1-geert+renesas@glider.be>
+In-Reply-To: <20200325095326.10875-1-geert+renesas@glider.be>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 3 Jun 2020 14:46:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARm_EdKTeZj6FUtNnL5oZypPw1mZtcNu7Az86fKjMF24A@mail.gmail.com>
+Message-ID: <CAK7LNARm_EdKTeZj6FUtNnL5oZypPw1mZtcNu7Az86fKjMF24A@mail.gmail.com>
+Subject: Re: [PATCH] h8300: dts: Fix /chosen:stdout-path
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        DTML <devicetree@vger.kernel.org>,
+        "moderated list:H8/300 ARCHITECTURE" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sivaprakash Murugesan (2020-06-02 03:47:20)
->=20
-> On 6/2/2020 1:06 AM, Stephen Boyd wrote:
-> > Quoting Sivaprakash Murugesan (2020-06-01 05:41:15)
-> >> On 5/28/2020 7:29 AM, Stephen Boyd wrote:
-> >>> Quoting Sivaprakash Murugesan (2020-05-27 05:24:51)
-> >>>> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss=
--ipq6018.c
-> >>>> new file mode 100644
-> >>>> index 0000000..004f7e1
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/clk/qcom/apss-ipq6018.c
-> >>>> @@ -0,0 +1,106 @@
-> >>>> +       P_XO,
-> >>>> +       P_APSS_PLL_EARLY,
-> >>>> +};
-> >>>> +
-> >>>> +static const struct clk_parent_data parents_apcs_alias0_clk_src[] =
-=3D {
-> >>>> +       { .fw_name =3D "xo" },
-> >>>> +       { .fw_name =3D "pll" },
-> >>> This pll clk is not described in the binding. Please add it there.
-> >> Sorry I did not get this, this PLL is not directly defined in this
-> >> driver and it comes
-> >>
-> >> from dts. do you still want to describe it in binding?
-> >>
-> > Yes, there should be a clock-names property for "pll" and a clocks
-> > property in the binding document. I didn't see that.
->=20
-> These are defined in
->=20
-> https://lkml.org/lkml/2020/5/27/658and
->=20
-> https://lkml.org/lkml/2020/5/27/659
->=20
-> it has been defined as part of mailbox binding, since this driver does
->=20
-> not have a dts node and it is child of apcs mailbox driver.
->=20
+On Wed, Mar 25, 2020 at 6:53 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+>     arch/h8300/boot/dts/h8s_sim.dts:11.3-25: Warning (chosen_node_stdout_path): /chosen:stdout-path: property is not a string
+>     arch/h8300/boot/dts/h8300h_sim.dts:11.3-25: Warning (chosen_node_stdout_path): /chosen:stdout-path: property is not a string
+>
+> Drop the angle brackets to fix this.
+>
+> A similar fix was already applied to arch/h8300/boot/dts/edosk2674.dts
+> in commit 780ffcd51cb28717 ("h8300: register address fix").
+>
+> Fixes: 38d6bded13084d50 ("h8300: devicetree source")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Ah alright. Sounds good.
+
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+
+
+Unfortunately, h8300 maintainer is not responding...
+
+How to get this in?
+
+Perhaps, Rob can pick this up?
+
+
+Thanks.
+
+
+
+
+
+
+> ---
+>  arch/h8300/boot/dts/h8300h_sim.dts | 2 +-
+>  arch/h8300/boot/dts/h8s_sim.dts    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/h8300/boot/dts/h8300h_sim.dts b/arch/h8300/boot/dts/h8300h_sim.dts
+> index 595398b9d0180a80..e1d4d9b7f6b40c04 100644
+> --- a/arch/h8300/boot/dts/h8300h_sim.dts
+> +++ b/arch/h8300/boot/dts/h8300h_sim.dts
+> @@ -8,7 +8,7 @@
+>
+>         chosen {
+>                 bootargs = "earlyprintk=h8300-sim";
+> -               stdout-path = <&sci0>;
+> +               stdout-path = &sci0;
+>         };
+>         aliases {
+>                 serial0 = &sci0;
+> diff --git a/arch/h8300/boot/dts/h8s_sim.dts b/arch/h8300/boot/dts/h8s_sim.dts
+> index 932cc3c5a81bcdd2..4848e40e607ecc1d 100644
+> --- a/arch/h8300/boot/dts/h8s_sim.dts
+> +++ b/arch/h8300/boot/dts/h8s_sim.dts
+> @@ -8,7 +8,7 @@
+>
+>         chosen {
+>                 bootargs = "earlyprintk=h8300-sim";
+> -               stdout-path = <&sci0>;
+> +               stdout-path = &sci0;
+>         };
+>         aliases {
+>                 serial0 = &sci0;
+> --
+> 2.17.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
