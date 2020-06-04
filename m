@@ -2,75 +2,114 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C611C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E51C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A48206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591287949;
-	bh=SJ0H+1p4mGGW0MR1ySEfCnOGQPdtXMwoEr8HGD6As50=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fmPRZoXoU780kWKZh8e/neztRfn28lK5y2Qcp3/XZUJo6sazX1jksATktI6yjEdHV
-	 hXr66mjIjO7JISPnLD/dytsKvqjU8yxqv05u2NKmXHWNFyTkE81ixVyVKIZnvOdI8B
-	 u3PeRLbJnOz/WFLVjJkYRJ0URgtmb+BjN6tASG5s=
+	by mail.kernel.org (Postfix) with ESMTP id 16D74206DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dY6XwrVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgFDQZs (ORCPT
+        id S1729595AbgFDQ2N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbgFDQZs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:25:48 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B7E3206DC;
-        Thu,  4 Jun 2020 16:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591287947;
-        bh=SJ0H+1p4mGGW0MR1ySEfCnOGQPdtXMwoEr8HGD6As50=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gPrq6cAdAFdx+P5K0305bzPqaFLATYeSUP6i6KlfgTMpovG/xJ9zzmui4PFAN5qn3
-         uEcDHGg0SIDZDcgMygDablg1oQ+2VSDSpttIMblWNFIrVy4J2l0jOTkzv5dikGlpgI
-         t3oYIF9erfN/QMu7jChMtYJFyod2mmZss/SSPTPM=
-Date:   Thu, 4 Jun 2020 09:25:45 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
- configuration
-Message-ID: <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200604111410.17918-5-dmurphy@ti.com>
-References: <20200604111410.17918-1-dmurphy@ti.com>
-        <20200604111410.17918-5-dmurphy@ti.com>
+        Thu, 4 Jun 2020 12:28:13 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51464 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729587AbgFDQ2N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 12:28:13 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054GS89Q024981;
+        Thu, 4 Jun 2020 11:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591288088;
+        bh=DbIrDosprZ370hynC/ymJXxIAmAhJt0icaNJ5m1eOQA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dY6XwrVtZSv+9Lsb308s6ra0dpmeHoiygHRlNpcF4bGk8PQhTFrhaEUjkERoztxMh
+         JDSqDS2AIJ4aU3zJfFoG/lopTh9DA+xQ7cI/lyBFl6ZptGQO6VPYnxM1tghxK6Gyq6
+         WLhHV4UmbuWDJCs8kNPZ45ORMFnTxgbUg1Qw5GhU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054GS84Z057086
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 11:28:08 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 11:28:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 11:28:07 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054GS7rp108958;
+        Thu, 4 Jun 2020 11:28:07 -0500
+Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-4-dmurphy@ti.com> <20200527135848.GB5011@amd>
+ <d22658c2-07e2-74e6-dc2b-4b64fd9789dd@ti.com>
+ <20200531190625.GA30537@duo.ucw.cz>
+ <c03ce8da-0895-2e1f-0a4c-2b3d9fae8d4d@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <06bb7ff7-0a41-f29f-ba2f-9cb041b5cdc7@ti.com>
+Date:   Thu, 4 Jun 2020 11:28:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c03ce8da-0895-2e1f-0a4c-2b3d9fae8d4d@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote:
-> Add RGMII internal delay configuration for Rx and Tx.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Jacek
 
-Hi Dan, please make sure W=3D1 C=3D1 build is clean:
+On 6/1/20 4:34 AM, Jacek Anaszewski wrote:
+> Hi Pavel and Dan,
+>
+> On 5/31/20 9:06 PM, Pavel Machek wrote:
+>> Hi!
+>>
+>>>>> +          There can only be one instance of the ti,led-bank
+>>>>> +          property for each device node.  This is a required node 
+>>>>> is the LED
+>>>>> +          modules are to be backed.
+>>>> I don't understand the second sentence. Pretty sure it is not valid
+>>>> english.
+>>>
+>>>
+>>> If I make these changes is this still viable for 5.8 or would you 
+>>> then go
+>>> into 5.9?
+>>
+>> It really depends if we get -rc8 or not, and if you'll need to do any
+>> changes to C code or not...
+>
+> I think that we need to simmer such a big extension of the LED
+> subsystem for a whole cycle in linux-next, especially taking into
+> account addition of new sysfs interface, that is bit quirky.
+>
+> Effectively 5.8 seems to not have been viable since few weeks.
+>
+After thinking about this for a while I would actually think to have 
+this in 5.9.
 
-drivers/net/phy/dp83869.c:103:18: warning: =C3=A2=E2=82=AC=CB=9Cdp83869_int=
-ernal_delay=C3=A2=E2=82=AC=E2=84=A2 defined but not used [-Wunused-const-va=
-riable=3D]
-  103 | static const int dp83869_internal_delay[] =3D {250, 500, 750, 1000,=
- 1250, 1500,
-      |                  ^~~~~~~~~~~~~~~~~~~~~~
+Either 5.7 or 5.8 will be the 2020 LTS and such a new interface would be 
+best suited for intermediate stable releases that get EOL'd faster.
 
-Also net-next is closed right now, you can post RFCs but normal patches
-should be deferred until after net-next reopens.
+This way we don't have to back port bug fixes for 2 years.
+
+Dan
+
