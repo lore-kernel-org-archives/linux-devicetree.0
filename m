@@ -2,130 +2,93 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9EEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE152065C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591261851;
-	bh=QaKe1TsH6wrSFWbihlFTG5OTysVrqRRyCfA9MzPON7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AFfQ4FGPedQR4YhpKLvzY4j1GALHUw0PzMi0PIskN4C23GY2V51m3QMLSrzCO8DzS
-	 C1hK8h5vHemURjD7pxDDUSjNjoTNWzx5QjH5+/3FYTJawSddr77okHd1CZTJIRhGYa
-	 Kd0Ghbyx+6F6xT3+Vj6Emebtrp09eL5ynVSxXAPE=
+	by mail.kernel.org (Postfix) with ESMTP id 3F75520738
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgFDJKu (ORCPT
+        id S1726775AbgFDJU6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 05:20:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:42272 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgFDJKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:10:50 -0400
-Received: from localhost (unknown [122.179.53.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1B92074B;
-        Thu,  4 Jun 2020 09:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591261849;
-        bh=QaKe1TsH6wrSFWbihlFTG5OTysVrqRRyCfA9MzPON7M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yClpMraXFsG+LZLsBnngyqUnrug81PyT78qbDuIRcAfdAQ/4cJXtUAWYVz/E71IZP
-         mTWILWxnSjdkO/6Xo5Wo9uFtMREtlWJv2i3jNSgo/Fe0pOhxq4qdn8RZxBzTNg425O
-         Yd6BHEJhww7qzisVXQ5hkYObgZHQ2NupoJN4srsU=
-Date:   Thu, 4 Jun 2020 14:40:44 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        id S1726444AbgFDJU6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:20:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91DBC55D;
+        Thu,  4 Jun 2020 02:20:57 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B4FA3F6CF;
+        Thu,  4 Jun 2020 02:20:55 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 10:20:52 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@linaro.org, linaro-kernel@lists.linaro.org
-Subject: Re: [PATCH 1/7] arm64: dts: qcom: pm8009: Add base dts file
-Message-ID: <20200604091044.GF3521@vkoul-mobl>
-References: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200604092052.GD8814@bogus>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200528192005.GA494874@bogus>
+ <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
+ <20200603180435.GB23722@bogus>
+ <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
+In-Reply-To: <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 04-06-20, 03:43, Dmitry Baryshkov wrote:
-> Add base DTS file for pm8009 along with GPIOs and power-on nodes.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8009.dtsi | 40 ++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8009.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8009.dtsi b/arch/arm64/boot/dts/qcom/pm8009.dtsi
-> new file mode 100644
-> index 000000000000..9f3e19b5bd00
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pm8009.dtsi
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2019, Linaro Limited
+On Wed, Jun 03, 2020 at 01:32:42PM -0500, Jassi Brar wrote:
+> On Wed, Jun 3, 2020 at 1:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Fri, May 29, 2020 at 09:37:58AM +0530, Viresh Kumar wrote:
+> > > On 28-05-20, 13:20, Rob Herring wrote:
+> > > > Whether Linux
+> > > > requires serializing mailbox accesses is a separate issue. On that side,
+> > > > it seems silly to not allow driving the h/w in the most efficient way
+> > > > possible.
+> > >
+> > > That's exactly what we are trying to say. The hardware allows us to
+> > > write all 32 bits in parallel, without any hardware issues, why
+> > > shouldn't we do that ? The delay (which Sudeep will find out, he is
+> > > facing issues with hardware access because of lockdown right now)
+> >
+> > OK, I was able to access the setup today. I couldn't reach a point
+> > where I can do measurements as the system just became unusable with
+> > one physical channel instead of 2 virtual channels as in my patches.
+> >
+> > My test was simple. Switch to schedutil and read sensors periodically
+> > via sysfs.
+> >
+> >  arm-scmi firmware:scmi: message for 1 is not expected!
+> >
+> This sounds like you are not serialising requests on a shared channel.
+> Can you please also share the patch?
 
-We are in 2020 :)
+OK, I did try with a small patch initially and then realised we must hit
+issue with mainline as is. Tried and the behaviour is exact same. All
+I did is removed my patches and use bit[0] as the signal. It doesn't
+matter as writes to the register are now serialised. Oh, the above
+message comes when OS times out in advance while firmware continues to
+process the old request and respond.
 
-> + */
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
+The trace I sent gives much better view of what's going on.
 
-DO you need these headers for base patch, we should add them when adding
-uses of this file
-
-> +#include <dt-bindings/spmi/spmi.h>
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-
-This one too
-
-> +
-> +&spmi_bus {
-> +	pmic@a {
-> +		compatible = "qcom,pm8009", "qcom,spmi-pmic";
-> +		reg = <0xa SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		power-on@800 {
-> +			compatible = "qcom,pm8916-pon";
-> +			reg = <0x0800>;
-> +		};
-> +
-> +		pm8009_gpios: gpio@c000 {
-> +			compatible = "qcom,pm8005-gpio";
-> +			reg = <0xc000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +	};
-> +
-> +	pmic@b {
-> +		compatible = "qcom,pm8009", "qcom,spmi-pmic";
-> +		reg = <0xb SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +};
-> -- 
-> 2.26.2
-
--- 
-~Vinod
+--
+Regards,
+Sudeep
