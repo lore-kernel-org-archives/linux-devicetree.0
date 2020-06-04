@@ -2,178 +2,74 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B853C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5DAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75FC820772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SwblQzt1"
+	by mail.kernel.org (Postfix) with ESMTP id 4EAEE20738
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgFDBxV (ORCPT
+        id S1726109AbgFDB7w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgFDBxU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:20 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7461C08C5C1
-        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:19 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w90so3942718qtd.8
-        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M/aBGpswVv6maZErzhj2cA/GWvid14/WP8iAXA5RYds=;
-        b=SwblQzt1kdFZTiYHtpL/Nk56Df7+NKanGfHYdrba6r5nkmLI2W+4j5HEJoqExqwKQA
-         +/+svgVr/wuzXCmJxU453OMsaz5fIgO9/jvlV8ZKpzaPiHy/VPR0l3iazpjoO14TWH1A
-         6o3LT0+BWDZT992O3QbToU8Yi1jG/koloy93t98E3/Babcre2hUoY4fww4BEMapbYBbc
-         RmHxca4z8bvbm6jV8UQIplrDSxG18wG65ATDlxg0K31fHy2THw+ZlZdphSS4CQVIklzk
-         m4IUARo673EJE+w6BuiQLuDqABDL5f8E4KpDgpZwvtbd8KS4A87qHPav/CQnG6dp2TSX
-         SIeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=M/aBGpswVv6maZErzhj2cA/GWvid14/WP8iAXA5RYds=;
-        b=LUMdimzYtN6epPbIWeHAJtCy8vqPpoTKwy2S+tnUM4KqHGbCrCuzqKwCx5Ziin43UJ
-         77ym9ta4aWxW/eINF+hT7BjtMGEh53ctY79bUluZ9bxV2CsR3NhVkL8cJFM/YAiNZd/L
-         FFUTNSHjbT1nSc7ofHl6mA7rh9+uj+DF7CecG8YT1xpSJNExR2+8Cavbgf3dnIZp43Dy
-         trFlUUheUkiuPYC4334CIc7462ckxsDeedTfCUGatpWtkq+W188jRf/uHIbk3UR24TNa
-         XG28ryRnge+zjmvuh5QmP0HdjRuK/puVHWJ4dM6zsJ3B3tAKz5QgzoNwgPjGZrjW5bDE
-         bWww==
-X-Gm-Message-State: AOAM531EdGpokJHyvPF4q8rlujCSMf1E8iLLH2jzsN11fdIatJZ57X1Z
-        JT9AHkMDvlznzCEFaQ9SRqFf+w==
-X-Google-Smtp-Source: ABdhPJxU4I7156wWSx5mqMyLRAIQwcHPNU2/djok6WgOiwwRGEOWvkEwUL42FKnhamdNogtdPGEMfQ==
-X-Received: by 2002:ac8:108b:: with SMTP id a11mr2337950qtj.173.1591235598781;
-        Wed, 03 Jun 2020 18:53:18 -0700 (PDT)
-Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 18:53:18 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh@kernel.org
-Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/6] Introduce Power domain based warming device driver
-Date:   Wed,  3 Jun 2020 21:53:11 -0400
-Message-Id: <20200604015317.31389-1-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 3 Jun 2020 21:59:52 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45278 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbgFDB7w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:59:52 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F1E431A0191;
+        Thu,  4 Jun 2020 03:59:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B6F1C1A016E;
+        Thu,  4 Jun 2020 03:59:45 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04E88402B0;
+        Thu,  4 Jun 2020 09:59:38 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux@rempel-privat.de, wolfram@the-dreams.de,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 0/3] Convert i.MX/MXS I2C/LPI2C binding doc to json-schema
+Date:   Thu,  4 Jun 2020 09:49:15 +0800
+Message-Id: <1591235358-15516-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Certain resources modeled as a generic power domain in linux kernel can be
-used to warm up the SoC (mx power domain on sdm845) if the temperature
-falls below certain threshold. These power domains can be considered as
-thermal warming devices.  (opposite of thermal cooling devices).
+Coverts i.MX/MXS I2C/LPI2C binding doc to json-schema, some examples are too old,
+update them based on latest DT file, also add more compatible based on supported SoCs.
 
-In kernel, these warming devices can be modeled as a thermal cooling
-device. Since linux kernel today has no instance of a resource modeled as
-a power domain acting as a thermal warming device, a generic power domain
-based thermal warming device driver that can be used pan-Socs is the
-approach taken in this patch series. Since thermal warming devices can be
-thought of as the mirror opposite of thermal cooling devices, this patch
-series re-uses thermal cooling device framework. To use these power
-domains as warming devices require further tweaks in the thermal framework
-which are out of scope of this patch series. These tweaks have been posted
-as a separate series[1].
+Compated to V1, this patch series adds "additionalProperties: false" for each
+binding doc.
 
-The first patch in this series extends the genpd framework to export out
-the performance states of a power domain so that when a power domain is
-modeled as a cooling device, the number of possible states and current
-state of the cooling device can be retrieved from the genpd framework.
+Anson Huang (3):
+  dt-bindings: i2c: Convert imx lpi2c to json-schema
+  dt-bindings: i2c: Convert mxs i2c to json-schema
+  dt-bindings: i2c: Convert imx i2c to json-schema
 
-The second patch implements the newly added genpd callback for Qualcomm
-RPMH power domain driver which hosts the mx power domain.
-
-The third patch introduces a new cooling device register API that allows
-a parent to be specified for the cooling device.
-
-The fourth patch introduces the generic power domain warming device
-driver.
-
-The fifth patch extends Qualcomm RPMh power controller driver to register
-mx power domain as a thermal warming device in the kernel.
-
-The sixth patch describes the dt binding extensions for mx power domain to
-be a thermal warming device.
-
-The seventh patch introduces the DT entreis for sdm845 to register mx
-power domain as a thermal warming device.
-
-v1->v2:
-	- Rename the patch series from "qcom: Model RPMH power domains as
-	  thermal cooling devices" to "Introduce Power domain based
-	  thermal warming devices" as it is more appropriate.
-	- Introduce a new patch(patch 3) describing the dt-bindings for
-	  generic power domain warming device.
-	- Patch specific changes mentioned in respective patches.
-
-v2->v3:
-	- Changed power domain warming device from a virtual device node
-	  entry in DT to being a subnode of power domain controller
-	  binding following Rob's review comments.
-	- Implemented Ulf's review comments.
-	- The changes above introduced two new patches (patch 3 and 4)
-v3->v4:
-	- Dropped late_init hook in cooling device ops. Instead introduced
-	  a new cooling device register API that allows to define a parent
-	  for the cooling device.
-	- Patch specific changes mentioned in respective patches. 
-
-v4->v5:
-	- Dropped the patch that introduced the cooling device register
-	  API with parent as per review comments from Ulf. 
-	- Patch specific changes mentioned in respective patches.
-
-v5->v6:
-	- Rebased to latest kernel
-	- Few other fixes identified in the review process mentioned in
-	  respective patches
-
-1. https://lkml.org/lkml/2019/9/18/1180
-
-Thara Gopinath (6):
-  PM/Domains: Add support for retrieving genpd performance states
-    information
-  soc: qcom: rpmhpd: Introduce function to retrieve power domain
-    performance state count
-  thermal: Add generic power domain warming device driver.
-  soc: qcom: Extend RPMh power controller driver to register warming
-    devices.
-  dt-bindings: power: Extend RPMh power controller binding to describe
-    thermal warming device
-  arm64: dts: qcom: Indicate rpmhpd hosts a power domain that can be
-    used as a warming device.
-
- .../devicetree/bindings/power/qcom,rpmpd.yaml |   3 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |   1 +
- drivers/base/power/domain.c                   |  37 ++++
- drivers/soc/qcom/rpmhpd.c                     |  25 ++-
- drivers/thermal/Kconfig                       |  10 ++
- drivers/thermal/Makefile                      |   4 +
- drivers/thermal/pd_warming.c                  | 169 ++++++++++++++++++
- include/linux/pd_warming.h                    |  29 +++
- include/linux/pm_domain.h                     |  13 ++
- 9 files changed, 290 insertions(+), 1 deletion(-)
- create mode 100644 drivers/thermal/pd_warming.c
- create mode 100644 include/linux/pd_warming.h
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      |  20 ----
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml     |  47 ++++++++
+ Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ---------
+ Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 119 +++++++++++++++++++++
+ Documentation/devicetree/bindings/i2c/i2c-mxs.txt  |  25 -----
+ Documentation/devicetree/bindings/i2c/i2c-mxs.yaml |  55 ++++++++++
+ 6 files changed, 221 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
 
 -- 
-2.20.1
+2.7.4
 
