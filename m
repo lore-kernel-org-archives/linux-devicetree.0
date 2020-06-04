@@ -2,109 +2,116 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EA5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AEE207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FD22072E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QYcyKHpr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ib7Wc1Gn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgFDQi0 (ORCPT
+        id S1729909AbgFDQkT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:38:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52488 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbgFDQi0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 12:38:26 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054GcKHF027568;
-        Thu, 4 Jun 2020 11:38:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591288700;
-        bh=vJwfnPNsDW10qGjBVrg/CcyYGe7pIosmHJH5uBXXtM8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QYcyKHprrCdougNHZgK9/S9X65VMDx3mo+KqQHXacswEaFCEjv/nFI3Q3nciMwkVo
-         SxdzOP6FRRZ7oPIXwcqnwsY6Ddnh+yRYSX9VSXdnLD8GWCUIyl71Mdat3J+2aL1YSy
-         GadSGYh8lW40j79lDcjJ6K2QUDLpMTAkrfvbw1ak=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054GcKs4071393
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 11:38:20 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
- 2020 11:38:20 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Jun 2020 11:38:20 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054GcJ1c055968;
-        Thu, 4 Jun 2020 11:38:19 -0500
-Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200604111410.17918-1-dmurphy@ti.com>
- <20200604111410.17918-5-dmurphy@ti.com>
- <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
-Date:   Thu, 4 Jun 2020 11:38:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 12:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729657AbgFDQkT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 12:40:19 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D251C08C5C0;
+        Thu,  4 Jun 2020 09:40:19 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 5so1420863pjd.0;
+        Thu, 04 Jun 2020 09:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A3i1Y/uWZjvOKPJmr6UpXk+ssrbNL04u8CPNIJtcrUM=;
+        b=Ib7Wc1GnX3qN2AImWV6NMbcrCTmw3Q2G02/8t7+ZAdbp5pnq9zar82fav50SR9V44Z
+         bHjAdfvge/2orXyJV5wgsojwuGWWeM8BgfXjl8HSXxmLvi+1qEokqYWq7UmS1fhwRdLr
+         elmkEava9W0hOtXbWzHrlRGI17+TdRAKuAL94+RbdHYU3oQBIM8UkNzUBmPd6WOV1QpC
+         OxLxBZeLEdsfu+h1pDPd9m26bbqadt8vw+l3N2zfGSLoVqLR0QfzZ/inWMB6FTkxcD33
+         WalkNDwcneAwdvMp+8b6LeV/4ICyRepKs/T5hOcVuQFGKLaH3ok60zkF8ci34OXkMZYT
+         1B/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A3i1Y/uWZjvOKPJmr6UpXk+ssrbNL04u8CPNIJtcrUM=;
+        b=bGWV9GVGhYXXtpHeaGORX5GFm4vdiX4VQ/ynERJhX6t43q2J4ezNlZEIplpxqJSjhm
+         MeCynOvWNeJFHhlJP4u7/VlVtzRYqVDREXA/SmlYWv30Z4ZhbIu55FL/VjX4PoKxUhac
+         7svMPQD2yMYWrWiatv4Bd1FwZiMD6h7RWLq4zw8vHAYxdGa0y2MSzK/KWaxlXKuG616K
+         +Qb5impTU7Ag5pMVXeaCagzmyR7CAkd4RHqyano+4CRWu0peoi5Ub8+l+BGQ7QvDweBX
+         I2LhLYNa+xkixinB12fJHFnqYNenl8v2kNKMqLzpZW1HW6nO01qlzRiB7Nefqp28JdP9
+         GdGQ==
+X-Gm-Message-State: AOAM533yiivvByCAZnAUMswxsodNH4Tfngu+1spVOO+uXDy0GqwRZ3+1
+        4RnLBWY0IVS6CoMRi8rLios=
+X-Google-Smtp-Source: ABdhPJwHCqIPELRZMH+m8w5zHxSff7d/Jnxr6zWedksxAa4bE5qv/P/51TM6EZ2sLGPMS2V0vMUnJA==
+X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr7093309pjb.4.1591288818763;
+        Thu, 04 Jun 2020 09:40:18 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j8sm5807508pjw.11.2020.06.04.09.40.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 09:40:16 -0700 (PDT)
+Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
+ strings
+To:     Lukas Wunner <lukas@wunner.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-3-f.fainelli@gmail.com>
+ <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <15c3995e-87de-0f2b-3424-5dd698b181d3@gmail.com>
+Date:   Thu, 4 Jun 2020 09:40:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jakub
 
-On 6/4/20 11:25 AM, Jakub Kicinski wrote:
-> On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote:
->> Add RGMII internal delay configuration for Rx and Tx.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> Hi Dan, please make sure W=1 C=1 build is clean:
->
-> drivers/net/phy/dp83869.c:103:18: warning: â€˜dp83869_internal_delayâ€™ defined but not used [-Wunused-const-variable=]
->    103 | static const int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500,
->        |                  ^~~~~~~~~~~~~~~~~~~~~~
 
-I built with W=1 and C=1 and did not see this warning.
+On 6/3/2020 9:20 PM, Lukas Wunner wrote:
+> On Wed, Jun 03, 2020 at 08:46:54PM -0700, Florian Fainelli wrote:
+>> The BCM2711 SoC features 5 SPI controllers which all share the same
+>> interrupt line, the SPI driver needs to support interrupt sharing,
+>> therefore use the chip specific compatible string to help with that.
+> 
+> You're saying above that the 5 controllers all share the interrupt
+> but below you're only changing the compatible string of 4 controllers.
+> 
+> So I assume spi0 still has its own interrupt and only the additional
+> 4 controllers present on the BCM2711/BCM7211 share their interrupt?
 
-What defconfig are you using?
-
-Can you check if CONFIG_OF_MDIO is set or not?  That would be the only 
-way that warning would come up.
-
-> Also net-next is closed right now, you can post RFCs but normal patches
-> should be deferred until after net-next reopens.
-
-I know net-next is closed.
-
-I pinged David M when it was open about what is meant by "new" patches 
-in the net-dev FAQ.  So I figured I would send the patches to see what 
-the response was.
-
-To me these are not new they are in process patches.  My understand is 
-New is v1 patchesets.
-
-But now I have the answer.
-
-Dan
-
+Correct, there are 5 instances, but only the 4 that were added for 2711
+actually share the interrupt line, I will correct that in the next patch
+version.
+-- 
+Florian
