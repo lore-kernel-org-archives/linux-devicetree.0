@@ -3,100 +3,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1929C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C921CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A95D2074B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FB02067B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591309447;
-	bh=TDOL76JWf1f6r/ZxeYlblYP7A4HnYRE4P8DKoRVJg6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RSFAOnFtzmp6Pd8ldt2nxHWVbAw6RYp4TqTgFsFAFe2jlgWdWnmGBvSkjX0VBJzoJ
-	 HvTInpfNZLae9nXTDk+0FTw/6I9jZeK/ZPWcgNG6Tzmo8tXqFxzVaGFVAO0ARGCt1w
-	 fxSb9CwQ77aPpy4XBfaTBoFSJ+9JkX7xmO9IrBd4=
+	s=default; t=1591310125;
+	bh=MEOgu/bZys0u6+e1umJ8QePVm2Ua1OaSBE4AWlWpoQg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=o3KJLPvW5s7I5/bNjxjpHdlr5uE6hwOvURgyokvysFZBNbjuU70yHjJQ4Hn3Ua+HS
+	 nM/E4tkljFaD0DBww3aSgUYDd5FlUwkm5SZLN+L9YDIeiHHfOiQ/840cu5VEWh8X9G
+	 QJ9EMfM0rmKaU96mlw/ytsY/CdcHcwx04cIWEx9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgFDWYH (ORCPT
+        id S1726350AbgFDWfY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:24:07 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36284 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgFDWYG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:24:06 -0400
-Received: by mail-il1-f194.google.com with SMTP id a13so7698061ilh.3;
-        Thu, 04 Jun 2020 15:24:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9twZbcOiLW0yLQJYmRVs4qavY+XNMKpL9WdtifUyAH0=;
-        b=TgdDvg0VrcfpXjBomNyWCWb1ONF6TzjqCI0Ws8m6eOmOIAk//kt/DQxOcopsv3UL/5
-         P18spWE5Rc0WrAeZHJvo8Y4UMwWTaSdpLLtzwe7KupCOE5rWJtw0JftZd5qKXMkLUdlJ
-         tZmZYW6Ig/0wl557FVzv4w4YTsBgsxKoM/M4L7lsrXfxR9kG5DW8/ogm9t+i6LWlKQgN
-         /O3dimuXx0DyhuYUshJ6ZtXTAQrLESxBdUYOTMr+U0HYslCbGdIrgo/SneKLiiOnGEFN
-         zH1lm3RB+xJgnRn6L0l82k24BK+/0IyWOC6a1v1vBWRQD8LBrezLAfBrdqUf4F2NKI51
-         3QFQ==
-X-Gm-Message-State: AOAM533n2rBTilxdEM4PtuZe+2CbsUEjuDkfaMNFa/LUMEg94Ncmz/ky
-        6OA5RDvlJuJ7lKWH4iHtrw==
-X-Google-Smtp-Source: ABdhPJw4Iafe1pMJfz84rEJOIVETUZQAgI9tRhEJzB4YXRVgrQvOWSYePNiqSlZkykkFuA1ew6Sl1w==
-X-Received: by 2002:a92:b001:: with SMTP id x1mr5480753ilh.18.1591309445557;
-        Thu, 04 Jun 2020 15:24:05 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p5sm2004317ilg.88.2020.06.04.15.24.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 15:24:04 -0700 (PDT)
-Received: (nullmailer pid 4153174 invoked by uid 1000);
-        Thu, 04 Jun 2020 22:24:02 -0000
-Date:   Thu, 4 Jun 2020 16:24:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Xin Ji <xji@analogixsemi.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jonas Karlman <jonas@kwiboo.se>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        dri-devel@lists.freedesktop.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Sheng Pan <span@analogixsemi.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH v12 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
- transmitter DT schema
-Message-ID: <20200604222402.GA4153046@bogus>
-References: <cover.1591253353.git.xji@analogixsemi.com>
- <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
+        Thu, 4 Jun 2020 18:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgFDWfY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 18:35:24 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC44E207D0;
+        Thu,  4 Jun 2020 22:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591310123;
+        bh=MEOgu/bZys0u6+e1umJ8QePVm2Ua1OaSBE4AWlWpoQg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BE/cimWL1fxy2xDBjfBdbGWHjejXHv+zobgC3vWXLf6g7cBqxIYp6OPWSRKn7npbJ
+         AkT21BNXT/LHUigkFl2RnBEMRGlAANYhXzWc4tt8o+Gf0EAUynRaZ3JODmdMKkOJVx
+         uoEojIOOqAiv5F77Uw0elTvUl2yfo/mq3UB7+LtI=
+Received: by mail-ot1-f46.google.com with SMTP id k15so6093932otp.8;
+        Thu, 04 Jun 2020 15:35:23 -0700 (PDT)
+X-Gm-Message-State: AOAM533sD7BiCgStOWpO0B0JHbb9tvyL2rS9UB3QOJwAqlOccH2WQptD
+        MdcRGZ3QPI8kPk832RrvS4T+R9/Wi1RhQd1atQ==
+X-Google-Smtp-Source: ABdhPJzkQ0ECUGnTkq9aILlT8NpeEXpYUdHrewIf+FkntnjfP0WzjzXVahCaByGUnjlH4byjrUqVIMhUJuUYcnWRjxs=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr5557846ots.192.1591310123034;
+ Thu, 04 Jun 2020 15:35:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
+References: <20200526164652.2331-1-dmurphy@ti.com> <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus> <20200527133948.GA5011@amd>
+ <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
+ <20200602200436.GA6535@amd> <CAL_JsqLaycpi4EtXK-7GV49fm0GbPmPsrNwz2WSBFFO_zdQG0Q@mail.gmail.com>
+ <20200604125111.GA7222@duo.ucw.cz>
+In-Reply-To: <20200604125111.GA7222@duo.ucw.cz>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 4 Jun 2020 16:35:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
+Message-ID: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings documention
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        devicetree@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 04 Jun 2020 15:56:36 +0800, Xin Ji wrote:
-> anx7625: MIPI to DP transmitter DT schema
-> 
-> Signed-off-by: Xin Ji <xji@analogixsemi.com>
-> ---
->  .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
-> 
+On Thu, Jun 4, 2020 at 6:51 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Tue 2020-06-02 15:44:32, Rob Herring wrote:
+> > On Tue, Jun 2, 2020 at 2:04 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > On Wed 2020-05-27 08:35:06, Rob Herring wrote:
+> > > > On Wed, May 27, 2020 at 7:39 AM Pavel Machek <pavel@ucw.cz> wrote:
+> > > > >
+> > > > > Hi!
+> > > > >
+> > > > > Thanks for reviews!
+> > > > >
+> > > > > > > +additionalProperties: false
+> > > > > > > +...
+> > > > > > > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> > > > > >
+> > > > > > This isn't a binding file. Belongs in another patch.
+> > > > >
+> > > > > These constants are directly related to the binding. It makes sense to
+> > > > > go in one patch...
+> > > >
+> > > > Yes, the header does go in this patch, but kernel subsystem files do not.
+> > > >
+> > > > Part of the reason for separating is we generate a DT only repository
+> > > > which filters out all the kernel code. Ideally this is just filtering
+> > > > out commits and the commit messages still make sens
+> > >
+> > > Well, but the patch can't be split like that. Otherwise we risk null
+> > > pointer dereferences when one part is applied but not the second one.
+> >
+> > There's no risk because you are supposed to apply both patches. I
+> > don't apply binding patches that are a part of a series like this.
+>
+> Yes, this is always guaranteed to happen, because "git bisect"
+> understand patch series. Oh, wait.
 
+What!? If the binding patch with the header comes first, how would
+bisect build the driver change without the header?
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+> Patches are supposed to be correct on their own. If your repository
+> filtering can not handle that, you need to fix that...
 
-If a tag was not added on purpose, please state why and what changed.
+I'm just asking you to follow the process that *everyone* else is
+following and works. It's not really about the repository filtering.
+That doesn't care. A binding ABI is defined by the schema and any
+defines it has. That is the logical unit that stands on its own.
 
+Rob
