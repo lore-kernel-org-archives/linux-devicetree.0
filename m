@@ -2,140 +2,157 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6F8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A762067B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuyxW+la"
+	by mail.kernel.org (Postfix) with ESMTP id BA3422067B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591310430;
+	bh=ptcsxwZQPV7H3RurRqMNggQRlk0a8nJXWzh3Vwtimvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IhPIcnk25rSFU5GuQN9wl03MP4bMmYkyQ619Ofer3asWgqMXBuM0fTgBnYPJjcJUX
+	 xjGewz0Pz/S6vBhvj6blYn+HxO+vnfKOMPpm1NuPpqwZH1L+forFhpAhdC05vp8eSQ
+	 YrH3EQtCoXapsPY7AeD6gCZITfCTJgAcGHu6IJCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgFDWiG (ORCPT
+        id S1728361AbgFDWka (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:38:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728041AbgFDWiG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:38:06 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CC6C08C5C0;
-        Thu,  4 Jun 2020 15:38:05 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l27so7864517ejc.1;
-        Thu, 04 Jun 2020 15:38:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=J2WkUUsQWWdvfrqknuQ/1gKN6QCcS4GghlCaLSIsdOo=;
-        b=RuyxW+laDxCnFYdR1DSXhWFe9hmsy8MmUSdRx7gfOV6BZ+PMG5eQgBYvvoBr0o1jP/
-         CO6j6LmHfPfV+jhXz1DA4YWO6fcyXlNkdlDftOWUlHsR3EcW0Wh2XztTXzS1brB5I4gg
-         9kqC0/qyII4ZCAECfmMt/etXcLCLHNHoEwIDP/+LeL2CDITbKaO+iHjyZ8vWUNXxeuqU
-         fCP8+DEIM1lgadkYtB+ZzJGAZIBpVBzfIItCjBQlqAqDlsfb+ccx4dOpRjICJUq0n0Zo
-         D5UO4Bjioy72L8N2YlHdnoShFWrJckHERD867Y15pK90KDu2HTUPl8J2x04GQMZxqEnx
-         4VFw==
+        Thu, 4 Jun 2020 18:40:30 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46814 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgFDWk3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:40:29 -0400
+Received: by mail-il1-f194.google.com with SMTP id h3so7678882ilh.13;
+        Thu, 04 Jun 2020 15:40:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=J2WkUUsQWWdvfrqknuQ/1gKN6QCcS4GghlCaLSIsdOo=;
-        b=H/ucAbMxowtHsHLXn06vgDBTsi1MnJyW5EpqEZcx4w2nqEvbSptmqqz/rmjj7VpOjU
-         ytaFu335oL+KwvVpsRkqm2jyef0a9X5vakzu8/4dP+OgXszI17+H3GVFq8sU5qONM7R6
-         //aCuVuaJ2G52zC/VdFZ+9v8hnlX2XR5Tjwo/VslX0+Wwq3djZK55OEa6rWzek7bHJed
-         BAamd6PyO3K221bC3POHwaxDczEAGLHhK5AMwtbOzv10/HqovPHIr9MTjfuXjKSM31cy
-         Pn1d4svjp2ww07oJD7o7+sj+/owK4JSGcsnJEanJKMHMSq7Yo7izY3ygs/8nSErCD8++
-         gZ/g==
-X-Gm-Message-State: AOAM5331+v6Q6ftj/97hPwdD2n6vJBePFHdo8vxg1ApTjVtkkUgn0S5x
-        V2GL/U/i6XNh+5cj0SsR8MP3tRXMDxaozwcwFkM=
-X-Google-Smtp-Source: ABdhPJy8WeQEeGlX2fHb6Mjbksvzlj+mlQnkk4tVXm4iXU9l4tIyCo0wa1lKiM2g3B0MnY9NvJLP/hcUOZzCFijeBIE=
-X-Received: by 2002:a17:906:7696:: with SMTP id o22mr5604826ejm.245.1591310284494;
- Thu, 04 Jun 2020 15:38:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QSWJtBAUksQhYjVR4MqtPJiG9vZ0QWl17k304282+yo=;
+        b=nOMuXFccSwTQbDtjhyHRtBosOpzmpFrlcodz/o8tmbmvEWMD0GAmUNnI9zqfSKZxZQ
+         GvCet3wJPlQpe14Se+tYZhI8BQ54uSijNf2qMHynHUBlDZibin05A8QEr2R+hoOemST6
+         +yiWyN72x4YlE4Pue61g/PBimwoABudL6IiXUPfPgvUF/VLl+gMKD60yCo3j+Pl/24K+
+         RJwRaIwrC0D/N4uk1TAnimPJDMCv8+CGMLLuuaGnhiXr4Q1+JGA58h4ZPRoxYl5gVd8v
+         2fU2ANiyBCV0n/8oE20FrjhR6XyG8C2Np71pmr7E6EouvW2t5gOZqtkIYDNzM1xjGpLv
+         no5g==
+X-Gm-Message-State: AOAM531sHEyS8ChPgfCnw+//J/JfK3dwFW9t+aZ6bNUEAlzVWJvvophe
+        XZ1hWTXqmU6ReXXvWxXr5A==
+X-Google-Smtp-Source: ABdhPJxSU/8J1NfPj12uv47E8987Ap2yupPj3T/Vh7G4ZPwcM0DtSmCtJunelRjPYxjuO0JY+H/r7A==
+X-Received: by 2002:a05:6e02:4a7:: with SMTP id e7mr6028078ils.180.1591310428449;
+        Thu, 04 Jun 2020 15:40:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id p15sm2014072ilj.15.2020.06.04.15.40.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 15:40:27 -0700 (PDT)
+Received: (nullmailer pid 4174434 invoked by uid 1000);
+        Thu, 04 Jun 2020 22:40:26 -0000
+Date:   Thu, 4 Jun 2020 16:40:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v26 01/15] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200604224026.GA4153787@bogus>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-2-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20200604205710.3167-1-jcrouse@codeaurora.org> <20200604205710.3167-7-jcrouse@codeaurora.org>
- <CAF6AEGt4N5+0h0fkrO7m6KD3VMXkdoFyhN5Nz72DcMjoHX6XWA@mail.gmail.com> <20200604220216.GA12322@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200604220216.GA12322@jcrouse1-lnx.qualcomm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 4 Jun 2020 15:38:28 -0700
-Message-ID: <CAF6AEGssC5ZJKh3oMR6fFRJwZvWLy4YjE2anvq5sDmPB_ikv0Q@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v7 6/6] arm6: dts: qcom: sm845: Set the
- compatible string for the GPU SMMU
-To:     Rob Clark <robdclark@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604120504.32425-2-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 3:02 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Thu, Jun 04, 2020 at 02:27:21PM -0700, Rob Clark wrote:
-> > On Thu, Jun 4, 2020 at 1:57 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> > >
-> > > Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
-> > > split pagetables.
-> > >
-> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > ---
-> > >
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index 8eb5a31346d2..8b15cd74e9ba 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -3556,7 +3556,7 @@
-> > >                 };
-> > >
-> > >                 adreno_smmu: iommu@5040000 {
-> > > -                       compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
-> > > +                       compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
-> >
-> > Should this be something like:
-> >
-> >    compatible = "qcom,adreno-smmu", "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
-> >
-> > so that new dtb still works with old kernel?
->
-> As far as I know qcom,sdm845-smmu-v2 never was actually used unless we were
-> doing the parsing trick somewhere.
+On Thu, Jun 04, 2020 at 07:04:50AM -0500, Dan Murphy wrote:
+> Add DT bindings for the LEDs multicolor class framework.
+> Add multicolor ID to the color ID list for device tree bindings.
+> 
+> CC: Rob Herring <robh@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/leds/leds-class-multicolor.yaml  | 39 +++++++++++++++++++
+>  include/dt-bindings/leds/common.h             |  3 +-
+>  2 files changed, 41 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> new file mode 100644
+> index 000000000000..6cab2a1405e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common properties for the multicolor LED class.
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  Bindings for multi color LEDs show how to describe current outputs of
+> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
+> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
+> +  modules. This is achieved by adding multi-led nodes layer to the
+> +  monochrome LED bindings.
+> +  The nodes and properties defined in this document are unique to the multicolor
+> +  LED class.  Common LED nodes and properties are inherited from the common.txt
+> +  within this documentation directory.
+> +
+> +patternProperties:
+> +  "^multi-led@([0-9a-f])$":
+> +    type: object
+> +    description: Represents the LEDs that are to be grouped.
+> +    properties:
+> +      #allOf:
+> +        #- $ref: "common.yaml#"
 
-I *think* it has a use queued up for v5.8 for the
-select-direct-mapping stuff?  I'm not 100% sure of the status of that
-off the top of my head.
+Why is this commented out? Other than it is wrong. Uncommented, this 
+would be defining a DT property called 'allOf'.
 
-BR,
--R
+You can drop 'allOf' now. '$ref' should be at the level of 'properties'.
 
-> Jordan
->
-> > >                         reg = <0 0x5040000 0 0x10000>;
-> > >                         #iommu-cells = <1>;
-> > >                         #global-interrupts = <2>;
-> > > --
-> > > 2.17.1
-> > >
-> > > _______________________________________________
-> > > Freedreno mailing list
-> > > Freedreno@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/freedreno
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> +
+> +      color:
+> +        $ref: /schemas/types.yaml#definitions/uint32
+
+common.yaml already defines the type, so drop this.
+
+> +        const: 8  # LED_COLOR_ID_MULTI
+> +        description: |
+> +          For multicolor LED support this property should be defined as
+> +          LED_COLOR_ID_MULTI which can be found in include/linux/leds/common.h.
+> +
+> +    required:
+> +      - color
+> +...
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index 0ce7dfc00dcb..a463ce6a8794 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -30,7 +30,8 @@
+>  #define LED_COLOR_ID_VIOLET	5
+>  #define LED_COLOR_ID_YELLOW	6
+>  #define LED_COLOR_ID_IR		7
+> -#define LED_COLOR_ID_MAX	8
+> +#define LED_COLOR_ID_MULTI	8
+> +#define LED_COLOR_ID_MAX	9
+>  
+>  /* Standard LED functions */
+>  /* Keyboard LEDs, usually it would be input4::capslock etc. */
+> -- 
+> 2.26.2
+> 
