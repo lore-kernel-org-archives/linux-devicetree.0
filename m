@@ -2,157 +2,161 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AAFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3422067B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591310430;
-	bh=ptcsxwZQPV7H3RurRqMNggQRlk0a8nJXWzh3Vwtimvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IhPIcnk25rSFU5GuQN9wl03MP4bMmYkyQ619Ofer3asWgqMXBuM0fTgBnYPJjcJUX
-	 xjGewz0Pz/S6vBhvj6blYn+HxO+vnfKOMPpm1NuPpqwZH1L+forFhpAhdC05vp8eSQ
-	 YrH3EQtCoXapsPY7AeD6gCZITfCTJgAcGHu6IJCw=
+	by mail.kernel.org (Postfix) with ESMTP id 9066B206A2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CSRdMUaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgFDWka (ORCPT
+        id S1726221AbgFDWrz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:40:30 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46814 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgFDWk3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:40:29 -0400
-Received: by mail-il1-f194.google.com with SMTP id h3so7678882ilh.13;
-        Thu, 04 Jun 2020 15:40:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QSWJtBAUksQhYjVR4MqtPJiG9vZ0QWl17k304282+yo=;
-        b=nOMuXFccSwTQbDtjhyHRtBosOpzmpFrlcodz/o8tmbmvEWMD0GAmUNnI9zqfSKZxZQ
-         GvCet3wJPlQpe14Se+tYZhI8BQ54uSijNf2qMHynHUBlDZibin05A8QEr2R+hoOemST6
-         +yiWyN72x4YlE4Pue61g/PBimwoABudL6IiXUPfPgvUF/VLl+gMKD60yCo3j+Pl/24K+
-         RJwRaIwrC0D/N4uk1TAnimPJDMCv8+CGMLLuuaGnhiXr4Q1+JGA58h4ZPRoxYl5gVd8v
-         2fU2ANiyBCV0n/8oE20FrjhR6XyG8C2Np71pmr7E6EouvW2t5gOZqtkIYDNzM1xjGpLv
-         no5g==
-X-Gm-Message-State: AOAM531sHEyS8ChPgfCnw+//J/JfK3dwFW9t+aZ6bNUEAlzVWJvvophe
-        XZ1hWTXqmU6ReXXvWxXr5A==
-X-Google-Smtp-Source: ABdhPJxSU/8J1NfPj12uv47E8987Ap2yupPj3T/Vh7G4ZPwcM0DtSmCtJunelRjPYxjuO0JY+H/r7A==
-X-Received: by 2002:a05:6e02:4a7:: with SMTP id e7mr6028078ils.180.1591310428449;
-        Thu, 04 Jun 2020 15:40:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p15sm2014072ilj.15.2020.06.04.15.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 15:40:27 -0700 (PDT)
-Received: (nullmailer pid 4174434 invoked by uid 1000);
-        Thu, 04 Jun 2020 22:40:26 -0000
-Date:   Thu, 4 Jun 2020 16:40:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v26 01/15] dt: bindings: Add multicolor class dt bindings
- documention
-Message-ID: <20200604224026.GA4153787@bogus>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-2-dmurphy@ti.com>
+        Thu, 4 Jun 2020 18:47:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:20772 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgFDWrx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 18:47:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591310872; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=vYicqcQtLpsFLKWIXbvT0Lj5cAG7ilgk3go40nubi1w=; b=CSRdMUaI1/6bACZP07N2X8jTkeBjHa4DNPmEQhGZne8izHW5SYI+mH6IkGiddHoqrNnKIwEW
+ IbhDgDe6TSpLlQGuAcPt5SyZEn9BFkDHiqekMksGAgDI5rUDMiH4zL9GV6fuSRiy63DYV1wE
+ /MmtBBO7q17Nahm+R7bPLUeGdBg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5ed97a0744a25e00525812cd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 22:47:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CBC0DC43391; Thu,  4 Jun 2020 22:47:34 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D628C433C6;
+        Thu,  4 Jun 2020 22:47:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6D628C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 4 Jun 2020 16:47:29 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [PATCH v7 6/6] arm6: dts: qcom: sm845: Set the
+ compatible string for the GPU SMMU
+Message-ID: <20200604224729.GB12322@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+References: <20200604205710.3167-1-jcrouse@codeaurora.org>
+ <20200604205710.3167-7-jcrouse@codeaurora.org>
+ <CAF6AEGt4N5+0h0fkrO7m6KD3VMXkdoFyhN5Nz72DcMjoHX6XWA@mail.gmail.com>
+ <20200604220216.GA12322@jcrouse1-lnx.qualcomm.com>
+ <CAF6AEGssC5ZJKh3oMR6fFRJwZvWLy4YjE2anvq5sDmPB_ikv0Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604120504.32425-2-dmurphy@ti.com>
+In-Reply-To: <CAF6AEGssC5ZJKh3oMR6fFRJwZvWLy4YjE2anvq5sDmPB_ikv0Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:04:50AM -0500, Dan Murphy wrote:
-> Add DT bindings for the LEDs multicolor class framework.
-> Add multicolor ID to the color ID list for device tree bindings.
+On Thu, Jun 04, 2020 at 03:38:28PM -0700, Rob Clark wrote:
+> On Thu, Jun 4, 2020 at 3:02 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> >
+> > On Thu, Jun 04, 2020 at 02:27:21PM -0700, Rob Clark wrote:
+> > > On Thu, Jun 4, 2020 at 1:57 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> > > >
+> > > > Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+> > > > split pagetables.
+> > > >
+> > > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > > ---
+> > > >
+> > > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > index 8eb5a31346d2..8b15cd74e9ba 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > @@ -3556,7 +3556,7 @@
+> > > >                 };
+> > > >
+> > > >                 adreno_smmu: iommu@5040000 {
+> > > > -                       compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+> > > > +                       compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
+> > >
+> > > Should this be something like:
+> > >
+> > >    compatible = "qcom,adreno-smmu", "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+> > >
+> > > so that new dtb still works with old kernel?
+> >
+> > As far as I know qcom,sdm845-smmu-v2 never was actually used unless we were
+> > doing the parsing trick somewhere.
 > 
-> CC: Rob Herring <robh@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/leds/leds-class-multicolor.yaml  | 39 +++++++++++++++++++
->  include/dt-bindings/leds/common.h             |  3 +-
->  2 files changed, 41 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> I *think* it has a use queued up for v5.8 for the
+> select-direct-mapping stuff?  I'm not 100% sure of the status of that
+> off the top of my head.
+
+That uses the compatible string of the consumer device.  I can add
+it back in but I didn't think we needed to complicate the bindings any more if
+we didn't have to.
+
+Jordan
+
+> BR,
+> -R
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> new file mode 100644
-> index 000000000000..6cab2a1405e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common properties for the multicolor LED class.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  Bindings for multi color LEDs show how to describe current outputs of
-> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-> +  modules. This is achieved by adding multi-led nodes layer to the
-> +  monochrome LED bindings.
-> +  The nodes and properties defined in this document are unique to the multicolor
-> +  LED class.  Common LED nodes and properties are inherited from the common.txt
-> +  within this documentation directory.
-> +
-> +patternProperties:
-> +  "^multi-led@([0-9a-f])$":
-> +    type: object
-> +    description: Represents the LEDs that are to be grouped.
-> +    properties:
-> +      #allOf:
-> +        #- $ref: "common.yaml#"
+> > Jordan
+> >
+> > > >                         reg = <0 0x5040000 0 0x10000>;
+> > > >                         #iommu-cells = <1>;
+> > > >                         #global-interrupts = <2>;
+> > > > --
+> > > > 2.17.1
+> > > >
+> > > > _______________________________________________
+> > > > Freedreno mailing list
+> > > > Freedreno@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/freedreno
+> > > _______________________________________________
+> > > Freedreno mailing list
+> > > Freedreno@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/freedreno
+> >
+> > --
+> > The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> > a Linux Foundation Collaborative Project
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
-Why is this commented out? Other than it is wrong. Uncommented, this 
-would be defining a DT property called 'allOf'.
-
-You can drop 'allOf' now. '$ref' should be at the level of 'properties'.
-
-> +
-> +      color:
-> +        $ref: /schemas/types.yaml#definitions/uint32
-
-common.yaml already defines the type, so drop this.
-
-> +        const: 8  # LED_COLOR_ID_MULTI
-> +        description: |
-> +          For multicolor LED support this property should be defined as
-> +          LED_COLOR_ID_MULTI which can be found in include/linux/leds/common.h.
-> +
-> +    required:
-> +      - color
-> +...
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-> index 0ce7dfc00dcb..a463ce6a8794 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -30,7 +30,8 @@
->  #define LED_COLOR_ID_VIOLET	5
->  #define LED_COLOR_ID_YELLOW	6
->  #define LED_COLOR_ID_IR		7
-> -#define LED_COLOR_ID_MAX	8
-> +#define LED_COLOR_ID_MULTI	8
-> +#define LED_COLOR_ID_MAX	9
->  
->  /* Standard LED functions */
->  /* Keyboard LEDs, usually it would be input4::capslock etc. */
-> -- 
-> 2.26.2
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
