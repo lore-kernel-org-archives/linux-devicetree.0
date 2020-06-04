@@ -2,118 +2,141 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA36C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 15:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F633C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 15:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4782206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 15:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591285709;
-	bh=1Mv07Aauq/rZnpEpLfTWEgK7rGkDSSF3+UeXd/UsARs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dNvdTX+aDhO19R21nBLfyJPV48XiWnYjOm+zIhR4kU/7q1rieJfAWp4cxoMago5Ev
-	 Hay80FBqbAkj6cjSQWFMKZTC+6FBGTSQ2mFg7qxP3LwmK2uvD62TQYTlYnRWP9Lf3j
-	 c+Lwk4sBZ5Fi0AmaQtqoOqM/hUYW4XdyzC07oupc=
+	by mail.kernel.org (Postfix) with ESMTP id 7DF9A207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 15:58:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o2sza3EQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgFDPs3 (ORCPT
+        id S1729625AbgFDP6e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:48:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729302AbgFDPs2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:48:28 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBA082065C;
-        Thu,  4 Jun 2020 15:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591285708;
-        bh=1Mv07Aauq/rZnpEpLfTWEgK7rGkDSSF3+UeXd/UsARs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eZeH1PpKKkarbufO7IK4JjaKzNOlUxbqMcnNnpXq0xOUT/JPphDwhYIi7XNNUqt8J
-         ud/KnBJcYHZHlXpedTJZl2FBBWd25SPgPdDA22r1TI8x7i1LBL98RV809que/QlAq2
-         QrtGJzWp1PHdymtvsJ6uKqHodNKsvy9WsefSkP3U=
-Date:   Thu, 4 Jun 2020 16:48:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
-        agx@sigxcpu.org, angus@akkea.ca, devicetree@vger.kernel.org,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] arm64: dts: Add a device tree for the Librem 5
- phone
-Message-ID: <20200604154825.GG6644@sirena.org.uk>
-References: <20200604084756.586-1-martin.kepplinger@puri.sm>
+        Thu, 4 Jun 2020 11:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729302AbgFDP6e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 11:58:34 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BF1C08C5C1
+        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 08:58:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so2358622plk.1
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 08:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=06qJ6cVTAC2pzO5b4lUgwr6Obth7V4o6CCI1s1HWoM8=;
+        b=o2sza3EQSLRpzYpN/X7lDFGDRPvpEz9QvrHcKU9aufszRXcw9xjtiCVookzX0NuO71
+         I4RJ/AyC+4SHMIN4ZUu5Ar0q/0/iCsnmH6Y5QzXW3Cw+fDMhflNHieI603MW4ow4WAp+
+         VI/wtC5hGyhYPIfwR4gM9TDTe6lIPx8PwfUCn+Kbj31paIPXMHKJRw0sHbWQ3ikvpfbz
+         cuOKYz5cxAZYnA0xyd6ersRU9IxJuH9pJQuA5gIiWqgfiOO+XGJK8wWWnAQJn9Rd5Pkv
+         LYMJjBcKuS98wj3YXnK7tez4VcVLdO1FPfq16IifN3SQNjW8yoz3mNkHPkn4NWshCiRN
+         Eq6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=06qJ6cVTAC2pzO5b4lUgwr6Obth7V4o6CCI1s1HWoM8=;
+        b=mQJtPOdEdgBIjtRgM46/R9SAlHk/wN3pqCLw7DXHlLXL97tg8vRe0IPA+/66yssY/a
+         rTb/nGcJqyRJBe68Q1+UIeN+5ev74/jrtNAwruU1xqvY4DnZ0hSvMGBnUK4DiuMuAVqu
+         qoQOM1Bjxmk5tYtPCcDKxdOGP0QZ7UcZidBlG75tKEYodseld2MxdlIcNlDOOiiiIq/l
+         CpT9+9AYmdQjWEuK9cW9uWsqY+zYaj8KioUIFpKdvd5DTwJY4jcF/eL+ojmc1UL40ahG
+         rMr2EiaUGV0+nN5BpSHSOqHCMMDxWh4TNxTubUa/cSi0GULkOgU9uxTjqdKCOz1tJl+n
+         FLSQ==
+X-Gm-Message-State: AOAM532Kutu7QUYNYQ/wd29mrDsGrjrfVSUnyf32X25OWmn5w7ImnB61
+        h8hNW6N89vkXEngPYWpTet7E
+X-Google-Smtp-Source: ABdhPJyBwhHPj0fPhtcHnXiEtDj84r5PWyFiNtW5durTy+YJ+7hFi+XbAAHDjmE/3/Hwpe99teUIkQ==
+X-Received: by 2002:a17:90a:64c9:: with SMTP id i9mr6902073pjm.135.1591286313848;
+        Thu, 04 Jun 2020 08:58:33 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6211:4cea:c404:4d38:8396:d1ee])
+        by smtp.gmail.com with ESMTPSA id r1sm4410185pgb.37.2020.06.04.08.58.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jun 2020 08:58:32 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 21:28:25 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
+ dts
+Message-ID: <20200604155825.GI16719@Mani-XPS-13-9360>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200604135221.GH16719@Mani-XPS-13-9360>
+ <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Zrag5V6pnZGjLKiw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604084756.586-1-martin.kepplinger@puri.sm>
-X-Cookie: VMS version 2.0 ==>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Jun 04, 2020 at 10:06:19AM -0400, Jonathan Marek wrote:
+> On 6/4/20 9:52 AM, Manivannan Sadhasivam wrote:
+> > Hi,
+> > 
+> > On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
+> > > Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+> > > 
+> > 
+> > I've tested this series on an SM8250 based board and able to get Type C (USB0)
+> > working. There are also couple of Type A ports (USB1) on that board behind a
+> > USB hub. It is probing fine but I don't see any activity while connecting a
+> > USB device. Will continue to debug and once I get them working, I'll add my
+> > Tested-by tag.
+> > 
+> 
+> HDK865 also has a couple Type A ports, I am using them with devices already
+> plugged in during boot and I haven't hit a problem like that, but I think
+> I've seen the same issue when hotplugging. IIRC the behavior was a bit
+> weird, like plugging a device in the Type A port (USB1) nothing would
+> happen, but unplugging/replugging the type C port (USB0) would cause the
+> Type A port device to start working..
+> 
+> Have you tried with the devices already plugged in before booting?
+> 
 
---Zrag5V6pnZGjLKiw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Tried it but no luck :/ Also plugging and removing Type C doesn't make any
+difference.
 
-On Thu, Jun 04, 2020 at 10:47:55AM +0200, Martin Kepplinger wrote:
+Thanks,
+Mani
 
-> +	reg_audio_pwr_en: regulator-audio-pwr-en {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_audiopwr>;
-> +		regulator-name = "AUDIO_PWR_EN";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	reg_aud_1v8: regulator-audio-1v8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "AUD_1V8";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&reg_audio_pwr_en>;
-> +	};
-
-This looks broken - a combination of the structure, lack of any
-references to reg_audio_pwr_en and the naming suggests that you have one
-regulator here for a supply called AUD_1V8 which has a GPIO controlling
-the enable.  I can't figure out any reason for reg_audio_pwr_en.
-
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "wm8962";
-
-You might want to put a more user friendly display name here (eg, one
-mentioning Librem 5) - some UIs will show this string to users.
-
---Zrag5V6pnZGjLKiw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ZF8kACgkQJNaLcl1U
-h9B2Rgf7BcAVHZFT0owBWhK+fsuc1IONX1cr5wau8snfBGsvoTLt0uLdGZ0Xb7fK
-chYq/o+LSEBfkk7TQUWexT10FtKKf2m3ovnVk3XsfQK5nVrN4QWrysBZYZ61pBh7
-7+oyR1tGi4JzMNmWbULl3PDgZxO8r42g25+6y+Hk99JuPE3Q19Q3/PKZ5bO+aMKt
-Y5I3FydJnqY1TTnFd1+Yf4HDzrZ9twsSJXfoIHu72UBxevdtqh1hEMfbtWAEs2VR
-Z01WVWsDZ1mynb9t96pTReMHgtPCIZn22nZICp9opnxGXKUIDX5HkSa+wyc+mRX2
-NhsPyyuKiRgje3l+8vfCi2DlaUFtNw==
-=JEWW
------END PGP SIGNATURE-----
-
---Zrag5V6pnZGjLKiw--
+> > Thanks,
+> > Mani
+> > 
+> > > Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+> > > few changes. Notably, the HDK865 dts has regulator config changed a bit based
+> > > on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+> > > 
+> > > Jonathan Marek (6):
+> > >    arm64: dts: qcom: sm8150: add apps_smmu node
+> > >    arm64: dts: qcom: sm8250: add apps_smmu node
+> > >    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+> > >    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+> > >    arm64: dts: qcom: add sm8150 hdk dts
+> > >    arm64: dts: qcom: add sm8250 hdk dts
+> > > 
+> > >   arch/arm64/boot/dts/qcom/Makefile       |   2 +
+> > >   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+> > >   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
+> > >   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
+> > >   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
+> > >   5 files changed, 1384 insertions(+)
+> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> > > 
+> > > -- 
+> > > 2.26.1
+> > > 
