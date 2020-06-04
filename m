@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0198EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC40C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D354220772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9924620772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gvkwNtLe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+JVXvVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgFDBxq (ORCPT
+        id S1728036AbgFDBxu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49180 "EHLO
+        Wed, 3 Jun 2020 21:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFDBx1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:27 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE65C08C5C1
-        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:27 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id j32so3932611qte.10
-        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:27 -0700 (PDT)
+        with ESMTP id S1728005AbgFDBxX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:23 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A7CC08C5C2
+        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:23 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id j32so3932511qte.10
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Tud9p3zmcof67j7J04w2IZJcscMQG/mxzuG6n3catS0=;
-        b=gvkwNtLeDcKfmolxt47SKJqNLrx96FuiXBbqhr6yL6pkbk+6eAfUdi7Ls635NAFRis
-         1ZRTZoZVrji9WfctgIUCfoTMINNQPtGir1JDuraItDR4TWZbcbMtU2S0+2fwUELd77Wy
-         bXiEYvBqgPMT4Dc1VEEruvyYf+4RPQtWGwAmPQfnJJOWKuWyT2CpsESBkiwsT0Xj/q5h
-         8+de2RsSZmYinEoYcQcEs9UVRYEozaOh+kuah0oajP4qQlqj8s5sh57asM+LRqT4MmOM
-         G6DkmlqR928RXVNYALs88O1fJBmUerCcuQM7UsK1zK4qxp8y+hMBAYlEPNTA6+pafGZd
-         o6Fg==
+        bh=Ol8M2KCtVTfhjIudQ80yoAA541E23GCrsvIpBzMufk8=;
+        b=g+JVXvVEhHBGXKk2wAZGtNuoP1FYpvjvUuC5MOwY3es9FBBcxhVq6st1ofsoIOh7+e
+         2eFVCjT62+hMAWz2US1Slf0/Wzf6zyrhKXZ7XXrIwxVYhhLty0DDItF+ZpBm5FB4Eqon
+         7uv+DEl4e5steUBdILty/uqHIbznxb8XXwua4wBLyTUX1Ln0ENC4YgiE7rXkPKrqw/U+
+         oYXNL+FC6xTjKapLxYXEgp9prko8EXbVw4RR7+kADWkJgyS/CfIvgcU4mIYg+ez2B4jR
+         ouIkuZGdHNwOWxpM8m4GtThiXkCxZTYLikuEoLjVRopgs8ZAqm6hkSFQj1UNuSzaG9r4
+         hCkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Tud9p3zmcof67j7J04w2IZJcscMQG/mxzuG6n3catS0=;
-        b=beyPdarV5hi9gj9Uj/ztH87BtSF0MBLDVBIgMGjqNrncDx5PQ7vBsFelLSPhTx5yU7
-         r7LFrPqpkDK1Nbop/zrPdIwa+FfQXHL2vvPmdjhBmle2rmmIwx6ut+T681ITuDOFFDQ0
-         qyuiODltTIAHls4c1qa2ZL1QIXI4UokLQbNhskJi6+HEiXT/upLlaE1CSEi0mLNrNk0j
-         yxIT8DJzDsg0clPsPikeY/FFwpxQNkyCN65pApoxDQ3cR2YQHHIjcfV89vxOht7/e53T
-         gMRmKkv8ZXCCbJjxLlLKIsZQ/gqvvzss5Ka0xJ3LYsr5SCNvepkB4XyCFER4lHqm6Cli
-         ywIg==
-X-Gm-Message-State: AOAM5335eXl6YyenVo5Tda86F2EIt/sBRmMMVmCyix9PlmBWT9jr38gA
-        swVJk7jKgsfokOk4UQfDcv5sqQ==
-X-Google-Smtp-Source: ABdhPJwZSZlwdqbh/tvDoU4z1M6L05Pn97ctupdyClOzsDYxbB7M2fC/4WCBKJ4VDhth6SO/kz7aGA==
-X-Received: by 2002:aed:2237:: with SMTP id n52mr2160281qtc.83.1591235606250;
-        Wed, 03 Jun 2020 18:53:26 -0700 (PDT)
+        bh=Ol8M2KCtVTfhjIudQ80yoAA541E23GCrsvIpBzMufk8=;
+        b=gkQ73/PcM+zm1VfVrIo5VMvoj8oS2M3pZyftBWW3T3Bczy6hfrgc/kmVe14u4JEVA0
+         O974OzVOXdiW48IyRSXOPpLDZp4HlvHGIqgj5brk+92jWz4dCVKyAOon6PXPjIV+CY7u
+         9bXpENNGa2Jd+o9KVwlqQZhI4XftClvNthpsvfPRs6mrBdMr12rsxy9ch2fs8QTnMXBq
+         f8qiK2mY2oEF1qaLFsUm0+6sFvES+KMK4SgF3ZVNuFWyWLWudhNIeU/CXBoiC8WBW0CN
+         3tU0IynUUy6B1hZZZmdpFJPEUeUL/8ItuRf/iYwfEZQqVHRUWR/Glz9kXHItN8GuX8re
+         LQGw==
+X-Gm-Message-State: AOAM533GqAEZ7KJWIT7DuevKfigY7O7h3K1xImrG2QuOTu9ZID9YqZJj
+        LGRmLBMzJDChsOmH/VZu03nWuA==
+X-Google-Smtp-Source: ABdhPJwV+BvFStA1v5/UAqO4fihvZU5fJ58FDImcRujQQp1tu0wGpU2ow31ZMbF7tSXu0JwSuJkq6A==
+X-Received: by 2002:ac8:2bc1:: with SMTP id n1mr2332050qtn.382.1591235602521;
+        Wed, 03 Jun 2020 18:53:22 -0700 (PDT)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.23
+        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 18:53:24 -0700 (PDT)
+        Wed, 03 Jun 2020 18:53:21 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -66,9 +66,9 @@ Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
         rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/6] soc: qcom: Extend RPMh power controller driver to register warming devices.
-Date:   Wed,  3 Jun 2020 21:53:15 -0400
-Message-Id: <20200604015317.31389-5-thara.gopinath@linaro.org>
+Subject: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve power domain performance state count
+Date:   Wed,  3 Jun 2020 21:53:13 -0400
+Message-Id: <20200604015317.31389-3-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200604015317.31389-1-thara.gopinath@linaro.org>
 References: <20200604015317.31389-1-thara.gopinath@linaro.org>
@@ -79,83 +79,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RPMh power control hosts power domains that can be used as
-thermal warming devices. Register these power domains
-with the generic power domain warming device thermal framework.
+Populate .get_performance_state_count in genpd ops to retrieve the count of
+performance states supported by a rpmh power domain.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-
-v3->v4:
-	- Introduce a boolean value is_warming_dev in rpmhpd structure to
-	  indicate if a generic power domain can be used as a warming
-	  device or not.With this change, device tree no longer has to
-	  specify which power domain inside the rpmh power domain provider
-	  is a warming device.
-	- Move registering of warming devices into a late initcall to
-	  ensure that warming devices are registered after thermal
-	  framework is initialized.
-
-v5->v6:
-	- Moved back registering of warming devices into probe since
-	  Bjorn pointed out that now the driver can be initialized as
-	  as a module, late_initcall will not work. Thermal framework
-	  takes care of binding a cooling device to a thermal zone even
-	  if the cooling device is registered before the thermal framework
-	  is initialized.
-
- drivers/soc/qcom/rpmhpd.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/soc/qcom/rpmhpd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index a9c597143525..29e1eb4d11af 100644
+index e72426221a69..a9c597143525 100644
 --- a/drivers/soc/qcom/rpmhpd.c
 +++ b/drivers/soc/qcom/rpmhpd.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_opp.h>
-+#include <linux/pd_warming.h>
- #include <soc/qcom/cmd-db.h>
- #include <soc/qcom/rpmh.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
-@@ -49,6 +50,7 @@ struct rpmhpd {
- 	bool		enabled;
- 	const char	*res_name;
- 	u32		addr;
-+	bool		is_warming_dev;
- };
- 
- struct rpmhpd_desc {
-@@ -90,6 +92,7 @@ static struct rpmhpd sdm845_mx = {
- 	.pd = { .name = "mx", },
- 	.peer = &sdm845_mx_ao,
- 	.res_name = "mx.lvl",
-+	.is_warming_dev = true,
- };
- 
- static struct rpmhpd sdm845_mx_ao = {
-@@ -472,7 +475,19 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 					       &rpmhpds[i]->pd);
- 	}
- 
--	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
-+	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (!of_find_property(dev->of_node, "#cooling-cells", NULL))
-+		return 0;
-+
-+	for (i = 0; i < num_pds; i++)
-+		if (rpmhpds[i]->is_warming_dev)
-+			of_pd_warming_register(rpmhpds[i]->dev, i);
-+
-+	return 0;
+@@ -362,6 +362,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
+ 	return dev_pm_opp_get_level(opp);
  }
  
- static struct platform_driver rpmhpd_driver = {
++static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
++{
++	struct rpmhpd *pd = domain_to_rpmhpd(domain);
++
++	return pd->level_count;
++}
++
+ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+ {
+ 	int i;
+@@ -450,6 +457,7 @@ static int rpmhpd_probe(struct platform_device *pdev)
+ 		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
+ 		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
+ 		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
++		rpmhpds[i]->pd.get_performance_state_count = rpmhpd_performance_states_count;
+ 		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
+ 
+ 		data->domains[i] = &rpmhpds[i]->pd;
 -- 
 2.20.1
 
