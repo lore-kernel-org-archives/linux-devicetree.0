@@ -2,282 +2,174 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEA5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 17:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2343BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 17:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB6F208A7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A19207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 17:55:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SLpT8Yn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgFDR0N (ORCPT
+        id S1730348AbgFDRze (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:26:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39414 "EHLO mx2.suse.de"
+        Thu, 4 Jun 2020 13:55:34 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:16374 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730014AbgFDR0N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:26:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D195FAFBB;
-        Thu,  4 Jun 2020 17:26:13 +0000 (UTC)
-Message-ID: <faacbc33174e77500e04e609a654c5810045cb42.camel@suse.de>
-Subject: Re: [PATCH v3 004/105] clk: bcm: Add BCM2711 DVP driver
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Thu, 04 Jun 2020 19:26:07 +0200
-In-Reply-To: <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
-         <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lPBuLBa/wxwh1MLkx6OO"
-User-Agent: Evolution 3.36.2 
+        id S1730362AbgFDRzd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 13:55:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591293332; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cGUSPwlMUHRfiWfesyQZg293NYiUtljPfBJhJ+fEDbI=;
+ b=SLpT8Yn9wqhZWVOFdQABd5y21npcljBdlO8+yI0wbW2EZhZiK30R4YvzIjcKkXSXAXyAfqxL
+ ndaC3gibUY6uw73ZKepaJY0aalLMEzydDgrZt6NtcRJ2eYYO3u8d9PXIMceDK9fTFBK456pO
+ 8gupXmBVEyPkZYFu4/OYhrwwILQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ed93586cb04586933c78aa2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 17:55:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 239A4C433A0; Thu,  4 Jun 2020 17:55:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A102C433CA;
+        Thu,  4 Jun 2020 17:55:16 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 04 Jun 2020 23:25:16 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     ppvk@codeaurora.org
+Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH V1 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
+ support
+In-Reply-To: <8865e3b00fce4f28264b60cd498fcf02@codeaurora.org>
+References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
+ <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
+ <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
+ <8865e3b00fce4f28264b60cd498fcf02@codeaurora.org>
+Message-ID: <8cb639bf099b02ee4db271b28b49367f@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020-06-04 16:43, ppvk@codeaurora.org wrote:
+> Hi Sibi,
+> 
+> Thanks for the review!!
+> 
+> On 2020-06-03 17:22, Sibi Sankar wrote:
+>> Hey Pradeep,
+>> Thanks for the patch.
+>> 
+>> On 2020-06-03 14:39, Pradeep P V K wrote:
+>>> Interconnect bandwidth scaling support is now added as a
+>>> part of OPP [1]. So, make sure interconnect driver is ready
+>>> before handling interconnect scaling.
+>>> 
+>>> This change is based on
+>>> [1] [Patch v8] Introduce OPP bandwidth bindings
+>>> (https://lkml.org/lkml/2020/5/12/493)
+>>> 
+>>> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+>>> for dev_pm_opp_of_add_table()
+>>> (https://lkml.org/lkml/2020/5/5/491)
+>>> 
+>>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>>> ---
+>>>  drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>> 
+>>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>>> b/drivers/mmc/host/sdhci-msm.c
+>>> index b277dd7..bf95484 100644
+>>> --- a/drivers/mmc/host/sdhci-msm.c
+>>> +++ b/drivers/mmc/host/sdhci-msm.c
+>>> @@ -14,6 +14,7 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/iopoll.h>
+>>>  #include <linux/regulator/consumer.h>
+>>> +#include <linux/interconnect.h>
+>>> 
+>>>  #include "sdhci-pltfm.h"
+>>>  #include "cqhci.h"
+>>> @@ -1999,6 +2000,7 @@ static int sdhci_msm_probe(struct 
+>>> platform_device *pdev)
+>>>  	struct sdhci_pltfm_host *pltfm_host;
+>>>  	struct sdhci_msm_host *msm_host;
+>>>  	struct clk *clk;
+>>> +	struct icc_path *sdhc_path;
+>>>  	int ret;
+>>>  	u16 host_version, core_minor;
+>>>  	u32 core_version, config;
+>>> @@ -2070,6 +2072,20 @@ static int sdhci_msm_probe(struct 
+>>> platform_device *pdev)
+>>>  	}
+>>>  	msm_host->bulk_clks[0].clk = clk;
+>>> 
+>>> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+>>> +	 * scaling before registering the device for OPP.
+>>> +	 */
+>>> +	sdhc_path = of_icc_get(&pdev->dev, NULL);
+>>> +	ret = PTR_ERR_OR_ZERO(sdhc_path);
+>>> +	if (ret) {
+>>> +		if (ret == -EPROBE_DEFER)
+>>> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
+>>> +		else
+>>> +			dev_err(&pdev->dev, "failed to get icc path:%d\n", ret);
+>>> +		goto bus_clk_disable;
+>>> +	}
+>>> +	icc_put(sdhc_path);
+>> 
+>> ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
+>> 
+>> since there are multiple paths
+>> described in the bindings you
+>> should use ^^ instead and you
+>> can drop temporary path as well.
+>> 
+> Ok. of_icc_get() used above is only to test if ICC driver is ready or
+> not. I'm not
+> really using the multiple paths here. Anyhow i will use
+> dev_pm_opp_of_find_icc_paths()
+> to get rid of some extra lines of code.
 
---=-lPBuLBa/wxwh1MLkx6OO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Using dev_pm_opp_of_find_icc_paths
+with NULL passed acts as a way of
+validating all the paths specified
+in the device and also validates if
+the opp-table has bw related bindings
+as well.
 
-Hi Maxime,
+> 
+>>> +
+>>>  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>>>  	if (IS_ERR(msm_host->opp_table)) {
+>>>  		ret = PTR_ERR(msm_host->opp_table);
 
-On Wed, 2020-05-27 at 17:47 +0200, Maxime Ripard wrote:
-> The HDMI block has a block that controls clocks and reset signals to the
-> HDMI0 and HDMI1 controllers.
-
-Why not having two separate drivers?
-
-> Let's expose that through a clock driver implementing a clock and reset
-> provider.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/clk/bcm/Kconfig           |  11 +++-
->  drivers/clk/bcm/Makefile          |   1 +-
->  drivers/clk/bcm/clk-bcm2711-dvp.c | 127 +++++++++++++++++++++++++++++++-
->  3 files changed, 139 insertions(+)
->  create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
->=20
-> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> index 8c83977a7dc4..784f12c72365 100644
-> --- a/drivers/clk/bcm/Kconfig
-> +++ b/drivers/clk/bcm/Kconfig
-> @@ -1,4 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config CLK_BCM2711_DVP
-> +	tristate "Broadcom BCM2711 DVP support"
-> +	depends on ARCH_BCM2835 ||COMPILE_TEST
-> +	depends on COMMON_CLK
-> +	default ARCH_BCM2835
-> +	select RESET_SIMPLE
-> +	help
-> +	  Enable common clock framework support for the Broadcom BCM2711
-> +	  DVP Controller.
-> +
->  config CLK_BCM2835
->  	bool "Broadcom BCM2835 clock support"
->  	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> index 0070ddf6cdd2..2c1349062147 100644
-> --- a/drivers/clk/bcm/Makefile
-> +++ b/drivers/clk/bcm/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-kona-setup.o
->  obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm281xx.o
->  obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm21664.o
->  obj-$(CONFIG_COMMON_CLK_IPROC)	+=3D clk-iproc-armpll.o clk-iproc-pll.o
-> clk-iproc-asiu.o
-> +obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2711-dvp.o
->  obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2835.o
->  obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2835-aux.o
->  obj-$(CONFIG_CLK_RASPBERRYPI)	+=3D clk-raspberrypi.o
-> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2=
-711-
-> dvp.c
-> new file mode 100644
-> index 000000000000..c1c4b5857d32
-> --- /dev/null
-> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright 2020 Cerno
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/reset/reset-simple.h>
-> +
-> +#define DVP_HT_RPI_SW_INIT	0x04
-> +#define DVP_HT_RPI_MISC_CONFIG	0x08
-> +
-> +#define NR_CLOCKS	2
-> +#define NR_RESETS	6
-> +
-> +struct clk_dvp {
-> +	struct clk_hw_onecell_data	*data;
-> +	struct reset_simple_data	reset;
-> +};
-> +
-> +static const struct clk_parent_data clk_dvp_parent =3D {
-> +	.index	=3D 0,
-> +};
-> +
-> +static int clk_dvp_probe(struct platform_device *pdev)
-> +{
-> +	struct clk_hw_onecell_data *data;
-> +	struct resource *res;
-> +	struct clk_dvp *dvp;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-> +	if (!dvp)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, dvp);
-> +
-> +	dvp->data =3D devm_kzalloc(&pdev->dev,
-> +				 struct_size(dvp->data, hws, NR_CLOCKS),
-> +				 GFP_KERNEL);
-> +	if (!dvp->data)
-> +		return -ENOMEM;
-> +	data =3D dvp->data;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base =3D devm_ioremap_resource(&pdev->dev, res);
-
-I think the cool function to use these days is
-devm_platform_get_and_ioremap_resource().
-
-Regards,
-Nicolas
-
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	dvp->reset.rcdev.owner =3D THIS_MODULE;
-> +	dvp->reset.rcdev.nr_resets =3D NR_RESETS;
-> +	dvp->reset.rcdev.ops =3D &reset_simple_ops;
-> +	dvp->reset.rcdev.of_node =3D pdev->dev.of_node;
-> +	dvp->reset.membase =3D base + DVP_HT_RPI_SW_INIT;
-> +	spin_lock_init(&dvp->reset.lock);
-> +
-> +	ret =3D reset_controller_register(&dvp->reset.rcdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data->hws[0] =3D clk_hw_register_gate_parent_data(&pdev->dev,
-> +							"hdmi0-108MHz",
-> +							&clk_dvp_parent, 0,
-> +							base +
-> DVP_HT_RPI_MISC_CONFIG, 3,
-> +							CLK_GATE_SET_TO_DISABLE,
-> +							&dvp->reset.lock);
-> +	if (IS_ERR(data->hws[0])) {
-> +		ret =3D PTR_ERR(data->hws[0]);
-> +		goto unregister_reset;
-> +	}
-> +
-> +	data->hws[1] =3D clk_hw_register_gate_parent_data(&pdev->dev,
-> +							"hdmi1-108MHz",
-> +							&clk_dvp_parent, 0,
-> +							base +
-> DVP_HT_RPI_MISC_CONFIG, 4,
-> +							CLK_GATE_SET_TO_DISABLE,
-> +							&dvp->reset.lock);
-> +	if (IS_ERR(data->hws[1])) {
-> +		ret =3D PTR_ERR(data->hws[1]);
-> +		goto unregister_clk0;
-> +	}
-> +
-> +	data->num =3D NR_CLOCKS;
-> +	ret =3D of_clk_add_hw_provider(pdev->dev.of_node, of_clk_hw_onecell_get=
-,
-
-> +				     data);
-> +	if (ret)
-> +		goto unregister_clk1;
-> +
-> +	return 0;
-> +
-> +unregister_clk1:
-> +	clk_hw_unregister_gate(data->hws[1]);
-> +
-> +unregister_clk0:
-> +	clk_hw_unregister_gate(data->hws[0]);
-> +
-> +unregister_reset:
-> +	reset_controller_unregister(&dvp->reset.rcdev);
-> +	return ret;
-> +};
-> +
-> +static int clk_dvp_remove(struct platform_device *pdev)
-> +{
-> +	struct clk_dvp *dvp =3D platform_get_drvdata(pdev);
-> +	struct clk_hw_onecell_data *data =3D dvp->data;
-> +
-> +	clk_hw_unregister_gate(data->hws[1]);
-> +	clk_hw_unregister_gate(data->hws[0]);
-> +	reset_controller_unregister(&dvp->reset.rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id clk_dvp_dt_ids[] =3D {
-> +	{ .compatible =3D "brcm,brcm2711-dvp", },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver clk_dvp_driver =3D {
-> +	.probe	=3D clk_dvp_probe,
-> +	.remove	=3D clk_dvp_remove,
-> +	.driver	=3D {
-> +		.name		=3D "brcm2711-dvp",
-> +		.of_match_table	=3D clk_dvp_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(clk_dvp_driver);
-
-
---=-lPBuLBa/wxwh1MLkx6OO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7ZLq8ACgkQlfZmHno8
-x/6woAf9He9cZYeL4fiweKGtSwB5ZNhTx7awC6UNWL/E+YIzVoDuIb+gqe31BkE0
-ooZ7fIEybz0SXP6sqWm7V813jg7Mgsn93NXZlK5aHQ3avRB4uLse4NcASz7b5gTu
-ZtXxL7ULQdBpGlACncdzzq+JlvrkiNy54a3AvZdCjy4u6RewoPrLU5+yWYNC15LF
-LQn1NOv4Hq3llEIgpO9cDva7YESfGnsJRHLvGceayptvAjMaLagzsc43C0rltyJ6
-2QYjBT7duCsYtA20CZ9WCBwL10hgU7Uenwb9bo2XA7+7ZTP4R/fAx6NAe+nVnQSX
-l916sTFCkkBnPd5rMvnk+TeZ3DPUqg==
-=ShOF
------END PGP SIGNATURE-----
-
---=-lPBuLBa/wxwh1MLkx6OO--
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
