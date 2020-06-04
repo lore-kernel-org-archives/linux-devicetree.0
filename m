@@ -2,79 +2,88 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CF8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB88206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8A7207D5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:08:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GhDXYv0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgFDI7h (ORCPT
+        id S1728316AbgFDJIG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:59:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:41778 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728261AbgFDI7f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:59:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4748F55D;
-        Thu,  4 Jun 2020 01:59:35 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DC643F6CF;
-        Thu,  4 Jun 2020 01:59:33 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 09:59:31 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm: dts: vexpress: Move mcc node back into motherboard
- node
-Message-ID: <20200604085931.GB8814@bogus>
-References: <20200603194614.GA187107@roeck-us.net>
+        Thu, 4 Jun 2020 05:08:06 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:9358 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728089AbgFDJIG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 05:08:06 -0400
+X-UUID: bd92d45f2c9547689140db1286055b84-20200604
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=uB/eaRDqLP8g/98zHxi4C86lzCa4pVEjbzjzQz34ezU=;
+        b=GhDXYv0JXpN4BRm5PyXMn3/qRML3rWD4RAr2xbx42uPrLUaUVGchfB6i5ZnhjpDKb6n7j/P1nNkotxDCr3A4h2MDq4iuCBAOb2OmyhoIs/1FCV3Ca7tfo0rBrEwVvYivkV7n2TnP3FOYroGODF8zzDh0gVvAJyagDcjiQs1iEis=;
+X-UUID: bd92d45f2c9547689140db1286055b84-20200604
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 236665714; Thu, 04 Jun 2020 17:08:04 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 4 Jun 2020 17:08:01 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 4 Jun 2020 17:07:59 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
+        Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH RESEND v9 01/18] media: platform: Improve subscribe event flow for bug fixing
+Date:   Thu, 4 Jun 2020 17:05:36 +0800
+Message-ID: <20200604090553.10861-3-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200604090553.10861-1-xia.jiang@mediatek.com>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603194614.GA187107@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 12:46:14PM -0700, Guenter Roeck wrote:
-> On Wed, Jun 03, 2020 at 05:22:37PM +0100, Andre Przywara wrote:
-> > Commit 	d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
-> > out of bus node") moved the "mcc" DT node into the root node, because
-> > it does not have any children using "reg" properties, so does violate
-> > some dtc checks about "simple-bus" nodes.
-> > However this broke the vexpress config-bus code, which walks up the
-> > device tree to find the first node with an "arm,vexpress,site" property.
-> > This gave the wrong result (matching the root node instead of the
-> > motherboard node), so broke the clocks and some other devices for
-> > VExpress boards.
-> > 
-> > Move the whole node back into its original position. This re-introduces
-> > the dtc warning, but is conceptually the right thing to do. The dtc
-> > warning seems to be overzealous here, there are discussions on fixing or
-> > relaxing this check instead.
-> > 
-> > Fixes: 	d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices out of bus node")
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> 
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
-> 
+TGV0IHY0bDJfY3RybF9zdWJzY3JpYmVfZXZlbnQoKSBkbyB0aGUgam9iIGZvciBvdGhlciB0eXBl
+cyBleGNlcHQNClY0TDJfRVZFTlRfU09VUkNFX0NIQU5HRS4NCg0KUmV2aWV3ZWQtYnk6IFRvbWFz
+eiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhp
+YS5qaWFuZ0BtZWRpYXRlay5jb20+DQotLS0NCnY5OiBubyBjaGFuZ2VzDQotLS0NCiBkcml2ZXJz
+L21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYyB8IDQgKystLQ0KIDEgZmls
+ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
+YS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYyBiL2RyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQppbmRleCBmODJhODFh
+M2JkZWUuLjRhZDRhNGIzMGEwZSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+bXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQorKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210
+ay1qcGVnL210a19qcGVnX2NvcmUuYw0KQEAgLTQ0Niw5ICs0NDYsOSBAQCBzdGF0aWMgaW50IG10
+a19qcGVnX3N1YnNjcmliZV9ldmVudChzdHJ1Y3QgdjRsMl9maCAqZmgsDQogCXN3aXRjaCAoc3Vi
+LT50eXBlKSB7DQogCWNhc2UgVjRMMl9FVkVOVF9TT1VSQ0VfQ0hBTkdFOg0KIAkJcmV0dXJuIHY0
+bDJfc3JjX2NoYW5nZV9ldmVudF9zdWJzY3JpYmUoZmgsIHN1Yik7DQotCWRlZmF1bHQ6DQotCQly
+ZXR1cm4gLUVJTlZBTDsNCiAJfQ0KKw0KKwlyZXR1cm4gdjRsMl9jdHJsX3N1YnNjcmliZV9ldmVu
+dChmaCwgc3ViKTsNCiB9DQogDQogc3RhdGljIGludCBtdGtfanBlZ19nX3NlbGVjdGlvbihzdHJ1
+Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwNCi0tIA0KMi4xOC4wDQo=
 
-Thanks, I have added your Reported-by along with this. By the way, this
-email seem to have broken the link. Initially thought b4 is getting
-confused, but checked the lore.kernel.org too to confirm.
-
--- 
-Regards,
-Sudeep
