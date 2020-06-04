@@ -2,157 +2,278 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA15C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DFCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7802206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D1D2067B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:25:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="K6ZtQpeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFDIKm (ORCPT
+        id S1726837AbgFDIZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:10:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:22184 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbgFDIKm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:10:42 -0400
-IronPort-SDR: k2PffX4gI4onnC2BwLanvyM4Ds9H/j71SzOyGLlu/2QUZWL0jcTDkNYu99ywLTs7TD24WXHA13
- pmgNmi9O39XA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 01:10:39 -0700
-IronPort-SDR: CbG8SA9IhTmLTH3EL+wOoj7Z+e/tx6p7eh+kvesL/bCsdRHwoUHbG9MoFKrrpylBG1+ENZXDTC
- ZYuSLrwBrVXA==
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="294250715"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 01:10:34 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id D771F20859; Thu,  4 Jun 2020 11:10:32 +0300 (EEST)
-Date:   Thu, 4 Jun 2020 11:10:32 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V6, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-Message-ID: <20200604081032.GG16711@paasikivi.fi.intel.com>
-References: <20200518132731.20855-1-dongchun.zhu@mediatek.com>
- <20200518132731.20855-3-dongchun.zhu@mediatek.com>
- <20200521195113.GC14214@chromium.org>
- <1590139561.8804.390.camel@mhfsdcap03>
- <CAAFQd5CCsT_oM9aij_imV+NABzByi94RmCj97Dx0Tk3S0WDsTg@mail.gmail.com>
- <1590570089.8804.453.camel@mhfsdcap03>
- <CAAFQd5Dgboh8om68546ADELX3g-0y40rdBxY+H3WsX5xAD1_FQ@mail.gmail.com>
- <1591238018.8804.555.camel@mhfsdcap03>
+        Thu, 4 Jun 2020 04:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgFDIZp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 04:25:45 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D78C03E96D
+        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 01:25:45 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id e11so132440ilr.4
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 01:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pYTZrpSKlWCZUeqd3ax0K9GSnrfHbHtF3YVJtTd8P+o=;
+        b=K6ZtQpeA/zQnn8J3gX+PNc1yI1bFeCE+1P458t4Ym1FDFiUe+2EPOQO6wVFD3IqJ13
+         rpydnvh5hcCjSNneskf4+dUoIHd66wJmJuwLLl2BUGqfmB2HRxhlIo6JiY2gO9bqjwSW
+         F804EhlS9vEMkkZ4I88yB61a8drL/w5ihSeME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pYTZrpSKlWCZUeqd3ax0K9GSnrfHbHtF3YVJtTd8P+o=;
+        b=eBJDOH7Q8XTNL1WvuFshMpTtZK6oRpJtt0nys3dwzv7xSfbqP5++2ljXBz2dSenpHA
+         VwKIJO5+1ihO3oSbVEtqqrlsA6dG36Xz8tjkibhQKjnsTC8aFaSSO4XZH1SwPXXvAWrj
+         SQ+AU0rwRHiqLFefiLbjcs5qEtpo+BBVX7+74QZPwFUkerXEvTYjExBW/M1GXqL6a7Ej
+         A1M+2WAUx1bsrXUl+wMCctQWSW0Hbk+0HjFNtWVaME3qC56g9aqfFbYg3WNcObhueve+
+         4PYtkpdIbsWOow/tXaeGTXAkFxMGD08mHmpKYd396Mon5wYmvyXdtvIJ0NpOvKbwUx/Z
+         Z4SQ==
+X-Gm-Message-State: AOAM532zLenPx6O2c2qNAVBkCtdUWIYU3xlKPMayzsNftOG7/YdFbxSX
+        XEvuEyBEr+plm5KTcXPIy2BcdZgqHnwSy9OZKLioBw==
+X-Google-Smtp-Source: ABdhPJy0GM4pMzZ+MACjE8TaKCx8RxW5rMNL2jOetcGVz6m34HluiBrK++u4C5BQy9VmWVJWYvkuJzEJgQ8DT/2NQio=
+X-Received: by 2002:a92:280b:: with SMTP id l11mr2866348ilf.179.1591259144636;
+ Thu, 04 Jun 2020 01:25:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591238018.8804.555.camel@mhfsdcap03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200527182545.3859622-0-mholenko@antmicro.com>
+ <20200527182545.3859622-5-mholenko@antmicro.com> <CAPk366TMTGR7cchQa9YYWviQ04-Xko4D8mG+mywyThGVMQ+3dQ@mail.gmail.com>
+ <20200604075716.GA358281@kroah.com>
+In-Reply-To: <20200604075716.GA358281@kroah.com>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Thu, 4 Jun 2020 10:25:34 +0200
+Message-ID: <CAPk366Tjp156Rtz6YFoQGxp=-s=Q_b3sLj+khqooEBFN0Yo5Aw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] drivers/tty/serial: add LiteUART driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gabriel L. Somlo" <gsomlo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:33:38AM +0800, Dongchun Zhu wrote:
-> Hi Tomasz,
-> 
-> On Mon, 2020-06-01 at 20:47 +0200, Tomasz Figa wrote:
-> > On Wed, May 27, 2020 at 11:03 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+On Thu, Jun 4, 2020 at 9:57 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 04, 2020 at 09:16:25AM +0200, Mateusz Holenko wrote:
+> > On Wed, May 27, 2020 at 6:27 PM Mateusz Holenko <mholenko@antmicro.com>=
+ wrote:
 > > >
-> > > Hi Tomasz,
+> > > From: Filip Kokosinski <fkokosinski@antmicro.com>
 > > >
-> > > On Mon, 2020-05-25 at 13:45 +0200, Tomasz Figa wrote:
-> > > > On Fri, May 22, 2020 at 11:27 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> > > > >
-> > > > > Hi Tomasz,
-> > > > >
-> > > > > Thanks for the review. My replies are as below.
-> > > > >
-> > > > > On Thu, 2020-05-21 at 19:51 +0000, Tomasz Figa wrote:
-> > > > > > Hi Dongchun, Sakari,
-> > > > > >
-> > > > > > On Mon, May 18, 2020 at 09:27:31PM +0800, Dongchun Zhu wrote:
-> > > > [snip]
-> > > > > > > +   pm_runtime_enable(dev);
-> > > > > > > +   if (!pm_runtime_enabled(dev)) {
-> > > > > > > +           ret = dw9768_runtime_resume(dev);
-> > > > > > > +           if (ret < 0) {
-> > > > > > > +                   dev_err(dev, "failed to power on: %d\n", ret);
-> > > > > > > +                   goto entity_cleanup;
-> > > > > > > +           }
-> > > > > > > +   }
-> > > > > > > +
-> > > > > > > +   ret = v4l2_async_register_subdev(&dw9768->sd);
-> > > > > > > +   if (ret < 0)
-> > > > > > > +           goto entity_cleanup;
-> > > > > > > +
-> > > > > > > +   return 0;
-> > > > > > > +
-> > > > > > > +entity_cleanup:
-> > > > > >
-> > > > > > Need to power off if the code above powered on.
-> > > > > >
-> > > > >
-> > > > > Thanks for the reminder.
-> > > > > If there is something wrong with runtime PM, actuator is to be powered
-> > > > > on via dw9768_runtime_resume() API.
-> > > > > When actuator sub-device is powered on completely and async registered
-> > > > > successfully, we shall power off it afterwards.
-> > > > >
-> > > >
-> > > > The code above calls dw9768_runtime_resume() if
-> > > > !pm_runtime_enabled(dev), but the clean-up code below the
-> > > > entity_cleanup label doesn't have the corresponding
-> > > > dw9768_runtime_suspend() call.
-> > > >
+> > > This commit adds driver for the FPGA-based LiteUART serial controller
+> > > from LiteX SoC builder.
 > > >
-> > > Did you mean the 'entity_cleanup' after v4l2_async_register_subdev()?
-> > 
-> > Yes.
-> > 
-> > > Actually I made some changes for OV02A V9, according to this comment.
-> > > Could you help review that change? Thanks.
-> > 
-> > Sure, I will take a look.
-> > 
-> 
-> Thanks.
-> Sorry, I just wanna make sure the change is okay for next release.
-> May we use the check like OV02A V9 did?
-> ret = v4l2_async_register_subdev(&dw9768->sd);
-> if (ret < 0) {
-> 	if (!pm_runtime_enabled(dev))
-> 		dw9768_runtime_suspend(dev);
+> > > The current implementation supports LiteUART configured
+> > > for 32 bit data width and 8 bit CSR bus width.
+> > >
+> > > It does not support IRQ.
+> > >
+> > > Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
+> > > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v6:
+> > >     - LiteUART ports now stored in xArray
+> > >     - removed PORT_LITEUART
+> > >     - fixed formatting
+> > >     - removed some unnecessary defines
+> > >
+> > >     No changes in v5.
+> > >
+> > >     Changes in v4:
+> > >     - fixed copyright header
+> > >     - removed a wrong dependency on UARTLITE from Kconfig
+> > >     - added a dependency on LITEX_SOC_CONTROLLER to LITEUART in Kconf=
+ig
+> > >
+> > >     Changes in v3:
+> > >     - aliases made optional
+> > >     - used litex_get_reg/litex_set_reg functions instead of macros
+> > >     - SERIAL_LITEUART_NR_PORTS renamed to SERIAL_LITEUART_MAX_PORTS
+> > >     - PORT_LITEUART changed from 122 to 123
+> > >     - added dependency on LITEX_SOC_CONTROLLER
+> > >     - patch number changed from 4 to 5
+> > >
+> > >     No changes in v2.
+> > >
+> > >  MAINTAINERS                   |   1 +
+> > >  drivers/tty/serial/Kconfig    |  31 +++
+> > >  drivers/tty/serial/Makefile   |   1 +
+> > >  drivers/tty/serial/liteuart.c | 404 ++++++++++++++++++++++++++++++++=
+++
+> > >  4 files changed, 437 insertions(+)
+> > >  create mode 100644 drivers/tty/serial/liteuart.c
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 51d2d6a61fb0..d855fe807833 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -9846,6 +9846,7 @@ M:        Mateusz Holenko <mholenko@antmicro.co=
+m>
+> > >  S:     Maintained
+> > >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
+> > >  F:     drivers/soc/litex/litex_soc_ctrl.c
+> > > +F:     drivers/tty/serial/liteuart.c
+> > >  F:     include/linux/litex.h
+> > >
+> > >  LIVE PATCHING
+> > > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> > > index adf9e80e7dc9..17aaf0afb27a 100644
+> > > --- a/drivers/tty/serial/Kconfig
+> > > +++ b/drivers/tty/serial/Kconfig
+> > > @@ -1562,6 +1562,37 @@ config SERIAL_MILBEAUT_USIO_CONSOLE
+> > >           receives all kernel messages and warnings and which allows =
+logins in
+> > >           single user mode).
+> > >
+> > > +config SERIAL_LITEUART
+> > > +       tristate "LiteUART serial port support"
+> > > +       depends on HAS_IOMEM
+> > > +       depends on OF || COMPILE_TEST
+> > > +       depends on LITEX_SOC_CONTROLLER
+> > > +       select SERIAL_CORE
+> > > +       help
+> > > +         This driver is for the FPGA-based LiteUART serial controlle=
+r from LiteX
+> > > +         SoC builder.
+> > > +
+> > > +         Say 'Y' here if you wish to use the LiteUART serial control=
+ler.
+> > > +         Otherwise, say 'N'.
+> > > +
+> > > +config SERIAL_LITEUART_MAX_PORTS
+> > > +       int "Maximum number of LiteUART ports"
+> > > +       depends on SERIAL_LITEUART
+> > > +       default "1"
+> > > +       help
+> > > +         Set this to the maximum number of serial ports you want the=
+ driver
+> > > +         to support.
+> > > +
+> > > +config SERIAL_LITEUART_CONSOLE
+> > > +       bool "LiteUART serial port console support"
+> > > +       depends on SERIAL_LITEUART=3Dy
+> > > +       select SERIAL_CORE_CONSOLE
+> > > +       help
+> > > +         Say 'Y' here if you wish to use the FPGA-based LiteUART ser=
+ial controller
+> > > +         from LiteX SoC builder as the system console (the system co=
+nsole is the
+> > > +         device which receives all kernel messages and warnings and =
+which allows
+> > > +         logins in single user mode). Otherwise, say 'N'.
+> > > +
+> > >  endmenu
+> > >
+> > >  config SERIAL_MCTRL_GPIO
+> > > diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefil=
+e
+> > > index d056ee6cca33..9f8ba419ff3b 100644
+> > > --- a/drivers/tty/serial/Makefile
+> > > +++ b/drivers/tty/serial/Makefile
+> > > @@ -89,6 +89,7 @@ obj-$(CONFIG_SERIAL_OWL)      +=3D owl-uart.o
+> > >  obj-$(CONFIG_SERIAL_RDA)       +=3D rda-uart.o
+> > >  obj-$(CONFIG_SERIAL_MILBEAUT_USIO) +=3D milbeaut_usio.o
+> > >  obj-$(CONFIG_SERIAL_SIFIVE)    +=3D sifive.o
+> > > +obj-$(CONFIG_SERIAL_LITEUART) +=3D liteuart.o
+> > >
+> > >  # GPIOLIB helpers for modem control lines
+> > >  obj-$(CONFIG_SERIAL_MCTRL_GPIO)        +=3D serial_mctrl_gpio.o
+> > > diff --git a/drivers/tty/serial/liteuart.c b/drivers/tty/serial/liteu=
+art.c
+> > > new file mode 100644
+> > > index 000000000000..22b7612c13ca
+> > > --- /dev/null
+> > > +++ b/drivers/tty/serial/liteuart.c
+> > > @@ -0,0 +1,404 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * LiteUART serial controller (LiteX) Driver
+> > > + *
+> > > + * Copyright (C) 2019-2020 Antmicro <www.antmicro.com>
+> > > + */
+> > > +
+> > > +#include <linux/console.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/of_platform.h>
+> > > +#include <linux/serial.h>
+> > > +#include <linux/serial_core.h>
+> > > +#include <linux/timer.h>
+> > > +#include <linux/tty_flip.h>
+> > > +#include <linux/litex.h>
+> > > +#include <linux/xarray.h>
+> >
+> > kbuild test robot reported problems with this patch, namely: implicit
+> > declaration of function 'kzalloc'
+> > This is caused by the missing include directive. When I was testing it
+> > I must have missed the warning, but the compilation succeeded and the
+> > resulting binary worked fine on HW (LiteX/mor1kx platform).
+> > The fix is a simple one-liner, adding a new include:
+> >
+> > +#include <linux/slab.h>
+> >
+> > Since this is a very small fix and does not modify the actual code of
+> > the driver I want to wait for more feedback on all patches in the
+> > series before resubmitting, in order to limit traffic on the list.
+> > Or should I generate the next version and resend the whole patchset
+> > with this single fix, as otherwise it won't be reviewed at all?
+>
+> Please fix up and resend.  We can't do anything until after 5.8-rc1 is
+> out anyway...
+>
+> thanks,
+>
+> greg k-h
 
-Please do this part where you're jumping to, if possible.
+Sure, thanks for the prompt response!
 
-> 	goto entity_cleanup;
-> }
-> 
+Best,
+Mateusz Ho=C5=82enko
 
--- 
-Sakari Ailus
+
+--=20
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
