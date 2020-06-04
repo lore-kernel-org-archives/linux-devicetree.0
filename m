@@ -2,181 +2,124 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ADEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC603C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CECC2075B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591303641;
-	bh=KFodmG5dxLwi01xoHP3XvvFF9k/ifovAv20CD/RAbqo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SszGwZzna7lO3EFyQ1Te/VPnLkcI6oySeDIUXroKvuNCjd2tkUCmLrQqG5/Z+KJUU
-	 mzGn7vKhp+ZZdXUORG3oUYygt4bpeZ2M559P6/IPLrG3xduYGYg/m6l9eUz/v09fkU
-	 xbkAwqD39ncssZHeZ5UAoEhpceKFoi/YG29CX3EI=
+	by mail.kernel.org (Postfix) with ESMTP id 9C519207F9
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oMACUeDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgFDUrU (ORCPT
+        id S1726946AbgFDU5v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbgFDUrP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:47:15 -0400
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        Thu, 4 Jun 2020 16:57:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40895 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729912AbgFDU5s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:57:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591304268; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=tGegCLreeE39fZph91CzCOdnJ3ipf0nuM1nQAi/8hPE=; b=oMACUeDLsFbdyO8ysIC8t4JQ9NoARg70dS3IzfZclb4siDdCGiutUcR+H9hxgJlHY/WtblYs
+ za/ack7q6rp61NeprvKANvi3I+EuO+1fjaZKs2jL2DvZauAM2Oz6XrwahBH+ZaNbo2jNU5+B
+ i6G9h55Xk786qJA0VuK1CUdFrzU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5ed9602f27386861268584d3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 20:57:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 98CEAC433B7; Thu,  4 Jun 2020 20:57:17 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91390207F9;
-        Thu,  4 Jun 2020 20:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591303633;
-        bh=KFodmG5dxLwi01xoHP3XvvFF9k/ifovAv20CD/RAbqo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=k7PE0miyDMbeR8z6yic0GzwJHBc4BnWOuy+uL5PUFHy26zjLx2c7DrAUiWE/dVFDH
-         7HEjNWZWuIzljvHpDgOzFd1//3dVtoLjgsJiP49dP3iJaDk1Ue8EzPwNL0p3YWhvgb
-         /IYet3YsBRn9V4Ll3IT9POl3Aw+S19y36dNyj1yg=
-Received: by mail-oo1-f54.google.com with SMTP id h7so1512372ooc.9;
-        Thu, 04 Jun 2020 13:47:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533liRkyXqGM0J69dbeBl7mUs6bAkO4SaRXaIZnhx/x8s+qHGJUz
-        JiLTBwRY0vz7fyiFKK7H4QOQ/OgfVmq3F0eJTQ==
-X-Google-Smtp-Source: ABdhPJwwaaT3W3YLSJDqZR+blejzcilkUVb+CLjXx9zxnhQgu0H5S8pzGVf0fGb0K342AwgdZ/YgUMdqmCyiyHTPhzI=
-X-Received: by 2002:a4a:2c88:: with SMTP id o130mr5106020ooo.81.1591303632915;
- Thu, 04 Jun 2020 13:47:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200519224151.2074597-1-lkundrak@v3.sk> <20200519224151.2074597-13-lkundrak@v3.sk>
-In-Reply-To: <20200519224151.2074597-13-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 4 Jun 2020 14:47:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJxP8-0amAEW7-zB_QRvXSmmTfgMDj7UOuDX-6z9me0Hw@mail.gmail.com>
-Message-ID: <CAL_JsqJxP8-0amAEW7-zB_QRvXSmmTfgMDj7UOuDX-6z9me0Hw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] dt-bindings: clock: Add Marvell MMP Audio Clock
- Controller binding
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ECAA0C433CB;
+        Thu,  4 Jun 2020 20:57:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ECAA0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     freedreno@lists.freedesktop.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sean Paul <sean@poorly.run>, Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/6] iommu/arm-smmu: Enable split pagetable support
+Date:   Thu,  4 Jun 2020 14:57:04 -0600
+Message-Id: <20200604205710.3167-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 19, 2020 at 4:42 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> This describes the bindings for a controller that generates master and bit
-> clocks for the I2S interface.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
->
-> ---
-> Changes since v1:
-> - Fix commit message wording
-> - Define MMP2_CLK_AUDIO_NR_CLKS
-> - Make clock ids start at 0, not 1
-> - Fix dt-bindings/clock/marvell,mmp2-audio.h file name
-> - Rename node from "clocks" to "clock-controller"
->
->  .../clock/marvell,mmp2-audio-clock.yaml       | 74 +++++++++++++++++++
->  .../dt-bindings/clock/marvell,mmp2-audio.h    | 10 +++
->  2 files changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
->  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-> new file mode 100644
-> index 000000000000..ab6e82d1d3a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/marvell,mmp2-audio-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell MMP2 Audio Clock Controller
-> +
-> +maintainers:
-> +  - Lubomir Rintel <lkundrak@v3.sk>
-> +
-> +description: |
-> +  The audio clock controller generates and supplies the clocks to the audio
-> +  codec.
-> +
-> +  Each clock is assigned an identifier and client nodes use this identifier
-> +  to specify the clock which they consume.
-> +
-> +  All these identifiers could be found in
-> +  <dt-bindings/clock/marvell,mmp2-audio.h>.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - marvell,mmp2-audio-clock
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Audio subsystem clock
-> +      - description: The crystal oscillator clock
-> +      - description: First I2S clock
-> +      - description: Second I2S clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: audio
-> +      - const: vctcxo
-> +      - const: i2s0
-> +      - const: i2s1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/marvell,mmp2-audio.h>
-> +    #include <dt-bindings/power/marvell,mmp2.h>
-> +
-> +    clock-controller@d42a0c30 {
-> +      compatible = "marvell,mmp2-audio-clock";
-> +      reg = <0xd42a0c30 0x10>;
-> +      clock-names = "audio", "vctcxo", "i2s0", "i2s1";
-> +      clocks = <&soc_clocks MMP2_CLK_AUDIO>,
-> +               <&soc_clocks MMP2_CLK_VCTCXO>,
-> +               <&soc_clocks MMP2_CLK_I2S0>,
-> +               <&soc_clocks MMP2_CLK_I2S1>;
+Another iteration of the split-pagetable support for arm-smmu and the Adreno GPU
+SMMU. After email discussions [1] we opted to make a arm-smmu implementation for
+specifically for the Adreno GPU and use that to enable split pagetable support
+and later other implementation specific bits that we need.
 
-This now breaks linux-next. I think the above defines are missing
-their include.
+On the hardware side this is very close to the same code from before [2] only
+the TTBR1 quirk is turned on by the implementation and not a domain attribute.
+In drm/msm we use the returned size of the aperture as a clue to let us know
+which virtual address space we should use for global memory objects.
 
-My testing wasn't happy either because it couldn't find
-marvell,mmp2.h. I guess that's somewhere in linux-next and now we're
-on to the secondary issue. Once that's fixed, then the schema checks
-will actually run (hint: make sure they pass).
+There are two open items that you should be aware of. First, in the
+implementation specific code we have to check the compatible string of the
+device so that we only enable TTBR1 for the GPU (SID 0) and not the GMU (SID 4).
+I went back and forth trying to decide if I wanted to use the compatbile string
+or the SID as the filter and settled on the compatible string but I could be
+talked out of it.
 
-Please get this fixed or revert before it is sent to Linus. Maybe we
-can have an rc1 without the schema broken.
+The other open item is that in drm/msm the hardware only uses 49 bits of the
+address space but arm-smmu expects the address to be sign extended all the way
+to 64 bits. This isn't a problem normally unless you look at the hardware
+registers that contain a IOVA and then the upper bits will be zero. I opted to
+restrict the internal drm/msm IOVA range to only 49 bits and then sign extend
+right before calling iommu_map / iommu_unmap. This is a bit wonky but I thought
+that matching the hardware would be less confusing when debugging a hang.
 
-Rob
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-May/044537.html
+[2] https://patchwork.kernel.org/patch/11482591/
+
+
+Jordan Crouse (6):
+  iommu/arm-smmu: Pass io-pgtable config to implementation specific
+    function
+  iommu/arm-smmu: Add support for split pagetables
+  dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+  iommu/arm-smmu: Add implementation for the adreno GPU SMMU
+  drm/msm: Set the global virtual address range from the IOMMU domain
+  arm6: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |  4 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 13 ++++++-
+ drivers/gpu/drm/msm/msm_iommu.c               |  7 ++++
+ drivers/iommu/arm-smmu-impl.c                 |  6 ++-
+ drivers/iommu/arm-smmu-qcom.c                 | 38 ++++++++++++++++++-
+ drivers/iommu/arm-smmu.c                      | 32 +++++++++++-----
+ drivers/iommu/arm-smmu.h                      | 29 ++++++++++----
+ 8 files changed, 108 insertions(+), 23 deletions(-)
+
+-- 
+2.17.1
+
