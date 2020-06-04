@@ -2,124 +2,217 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FA5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C005C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2832D2067B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181812075B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ctMItyku"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="DfIDgntu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgFDUeV (ORCPT
+        id S1729855AbgFDUkS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53638 "EHLO
+        Thu, 4 Jun 2020 16:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgFDUeV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:34:21 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC80FC08C5C1
-        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 13:34:20 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id s192so1693347vkh.3
-        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 13:34:20 -0700 (PDT)
+        with ESMTP id S1729828AbgFDUkS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:40:18 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CABDC08C5C0
+        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 13:40:18 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id s88so1734937pjb.5
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 13:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QccmPOAwdRsqU+gseuKb7TceQ37JHCZ0c4E7yU4KiQA=;
-        b=ctMItykuizT2FjCtlj3c7yeA8hejo1Eu0YvNGbgfHWNvUAZmSu1iqvjTuxpl6Rm/XM
-         /bOQT4clHDMwkaa7CQpWJ+/aULE1pYzv7SNXe1g+1d4Jvdus2Zf/u2kDn//UPtypAuEw
-         ce+XSToUwc8hZkd4Z5GjQqIAIMzFGI0iD70BY=
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sSwds6Mehfdl4NuqZWFemzPG2moYmBqluiH61i1DVVs=;
+        b=DfIDgntuJl5g51HnSaY62dK/6YhbXj8X8+YJ6rmu3TSDzKHAN/2lW3imL53i8yFWk6
+         iDQbDGHhZBmL2FzkSCdMYjXwtTn6HKYiVOrUqIlfXMzgf7d2uEfcRZSjhuO0KeVwyGxL
+         HroFlPslvCldax5Aq3QMb9v8/j3s9Sj6KmCwBWx00oniLLIlMV9UL99BOcHZWntJoPHt
+         PdcTPI0FTj3t9qC83vCnFTNvaU5pgOxIz2Gqrf+tT86bdkfeTzdsVIeAlHWpZhCvxYza
+         U/ucwBwbpy9Wc32v7ejOGHWwKWMdQ4JzCkcuKvczhFwXtQjnWy45PtkYsDXX3UdcxAh7
+         Iwsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QccmPOAwdRsqU+gseuKb7TceQ37JHCZ0c4E7yU4KiQA=;
-        b=J+gSVDRt883qmhDf/JWnf2vjJgd/zgyBC4BBqsV6gSpSeP3iJYyK/ZxyAvWYMi+4E7
-         yUHJ9EgwoJK4J0NQzS2QbhNmfJBQmS8ABuN7zjjILqc9iQJKe7LPeKbcRd/deN8DQcui
-         3/diOqOHuikxLIG/B8P+1BfzQItQ67TP03NbhT3zdh4e1qFDZ37PrbaxvpueDqVRNGCA
-         39lFSTpglS2QZ1IUoDy78QuVX06uYQBvIKKQ1AdPeMY8dZZGPcrJbS36CFgzCnqZR4OO
-         24gap573PSpT3rtohwaD7LIS0mdrqFdqeO55piiiY5exGAVpVtbDwtF1icas0g9MfDcN
-         V9dw==
-X-Gm-Message-State: AOAM533u/ZCzjo92TCtpK/aTtOQ1aFLq+uiHFxlrxRk3buDu11Wr2lYV
-        eA2RqCVSgC8KCfFKnF704+pSUsTCWC8=
-X-Google-Smtp-Source: ABdhPJxCGMQTwbESfry/b+Yno+MkBRxwz+ayG/C3TlS6wXyfvcF6M1YU1Xwx5PZxcMFhjYQYCNjR8Q==
-X-Received: by 2002:a1f:2d58:: with SMTP id t85mr3192291vkt.100.1591302859393;
-        Thu, 04 Jun 2020 13:34:19 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id r128sm843193vkf.48.2020.06.04.13.34.17
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 13:34:18 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id k13so4314554vsm.13
-        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 13:34:17 -0700 (PDT)
-X-Received: by 2002:a67:8881:: with SMTP id k123mr5087675vsd.198.1591302857244;
- Thu, 04 Jun 2020 13:34:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 4 Jun 2020 13:34:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V7ce7EGqJh6aga4yH3NqdgXMHBe=EOONtcd2LFDX75_A@mail.gmail.com>
-Message-ID: <CAD=FV=V7ce7EGqJh6aga4yH3NqdgXMHBe=EOONtcd2LFDX75_A@mail.gmail.com>
-Subject: Re: [PATCH v6] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=sSwds6Mehfdl4NuqZWFemzPG2moYmBqluiH61i1DVVs=;
+        b=twcuHx8TaHIKLtemTSQY5zpB++k2VrYZ9Y0byvafvFh6Ba+9/TjYGcMbf9lkyn+mqW
+         mWljptFY3IvDhok8Sk87lER5pRNWSBNqQiu6UKNgFyeZz52w6ElOZxHZeQ4Hxoa4tJFe
+         Eo7PwnvSpPczdWg/x8nmbneePqnkYkD9q8OJEXXzrc0fB4Qah+qPbro768dUqUmASil2
+         XU+/+HZ4N7aCB8mqUxY2hyxBT5hdEQ905i8RnMwS1mJoN0URGEB1Bnoun9NitvW80CTN
+         bLI3c6n7fCZdClEvnW6Y7LIKyck5gL2l/zAq9kltwz2hVF2E4lvWHLEjKUGdkty10VxX
+         n98A==
+X-Gm-Message-State: AOAM532yE/mysDwpaBa2yP25sCjJqQhtCXpjOaQlgSegyl8quK2JjJ3C
+        B9/tS3moOlOODtj008LRnnLRRA==
+X-Google-Smtp-Source: ABdhPJyEO+B4REHxl9bA1UQTuNCX9YLrasiTTCNpbKpwy1NuHpMqc4or97YOkoZxgWeBU20CRjL5Lg==
+X-Received: by 2002:a17:902:6b49:: with SMTP id g9mr6448631plt.66.1591303217628;
+        Thu, 04 Jun 2020 13:40:17 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id 3sm5192023pfe.85.2020.06.04.13.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 13:40:17 -0700 (PDT)
+Date:   Thu, 04 Jun 2020 13:40:17 -0700 (PDT)
+X-Google-Original-Date: Thu, 04 Jun 2020 13:26:30 PDT (-0700)
+Subject:     Re: [PATCH 1/5] RISC-V: Add mechanism to provide custom IPI operations
+In-Reply-To: <20200521134544.816918-2-anup.patel@wdc.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        robh+dt@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        anup@brainfault.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Anup Patel <Anup.Patel@wdc.com>
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Message-ID: <mhng-b031fd3d-c966-4973-a94d-3307d11b44d5@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Jun 4, 2020 at 6:20 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+On Thu, 21 May 2020 06:45:40 PDT (-0700), Anup Patel wrote:
+> We add mechanism to set custom IPI operations so that CLINT driver
+> from drivers directory can provide custom IPI operations.
 >
-> -#ifdef CONFIG_PM
-> -static int msm_runtime_suspend(struct device *dev)
-> +#ifdef CONFIG_PM_SLEEP
-> +static int msm_pm_suspend(struct device *dev)
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/include/asm/smp.h | 11 ++++++++
+>  arch/riscv/kernel/smp.c      | 52 ++++++++++++++++++++++++------------
+>  arch/riscv/kernel/smpboot.c  |  3 +--
+>  3 files changed, 47 insertions(+), 19 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+> index 40bb1c15a731..ad0601260cb1 100644
+> --- a/arch/riscv/include/asm/smp.h
+> +++ b/arch/riscv/include/asm/smp.h
+> @@ -40,6 +40,17 @@ void arch_send_call_function_single_ipi(int cpu);
+>  int riscv_hartid_to_cpuid(int hartid);
+>  void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
+>
+> +struct riscv_ipi_ops {
+> +	void (*ipi_inject)(const unsigned long *hart_mask);
+> +	void (*ipi_clear)(void);
+> +};
+> +
+> +/* Set custom IPI operations */
+> +void riscv_set_ipi_ops(struct riscv_ipi_ops *ops);
+> +
+> +/* Clear IPI for current CPU */
+> +void riscv_clear_ipi(void);
+> +
+>  /*
+>   * Obtains the hart ID of the currently executing task.  This relies on
+>   * THREAD_INFO_IN_TASK, but we define that unconditionally.
+> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+> index b1d4f452f843..8375cc5970f6 100644
+> --- a/arch/riscv/kernel/smp.c
+> +++ b/arch/riscv/kernel/smp.c
+> @@ -84,6 +84,35 @@ static void ipi_stop(void)
+>  		wait_for_interrupt();
+>  }
+>
+> +#if IS_ENABLED(CONFIG_RISCV_SBI)
+> +static void clear_ipi(void)
+> +{
+> +	csr_clear(CSR_IP, IE_SIE);
+> +}
+> +
+> +static struct riscv_ipi_ops sbi_ipi_ops = {
+> +	.ipi_inject = sbi_send_ipi,
+> +	.ipi_clear = clear_ipi,
+> +};
+> +
+> +static struct riscv_ipi_ops *ipi_ops = &sbi_ipi_ops;
+> +#else
+> +static struct riscv_ipi_ops *ipi_ops;
+> +#endif
+> +
+> +void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
+> +{
+> +	ipi_ops = ops;
+> +}
+> +EXPORT_SYMBOL_GPL(riscv_set_ipi_ops);
+> +
+> +void riscv_clear_ipi(void)
+> +{
+> +	if (ipi_ops)
+> +		ipi_ops->ipi_clear();
+> +}
+> +EXPORT_SYMBOL_GPL(riscv_clear_ipi);
+
+There should at least be a warning on SMP systems when an ipi_ops hasn't been
+set, as otherwise the system will just hang.
+
+> +
+>  static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
 >  {
-> -       struct drm_device *ddev = dev_get_drvdata(dev);
-> -       struct msm_drm_private *priv = ddev->dev_private;
-> -       struct msm_mdss *mdss = priv->mdss;
+>  	struct cpumask hartid_mask;
+> @@ -95,10 +124,9 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
+>  	smp_mb__after_atomic();
 >
-
-nit: remove blank line at the start of this function
-
->  static const struct dev_pm_ops msm_pm_ops = {
->         SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
->         SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
-> +       .prepare = msm_pm_prepare,
-> +       .complete = msm_pm_complete,
-
-Presumably you will get a compile failure if someone compiles without
-CONFIG_PM_SLEEP since msm_pm_prepare() and msm_pm_complete() won't be
-defined but you refer to them unconditionally.  Probably the best
-solution is to just add "__maybe_unused" to your prepare/complete
-function and then always define them.
-
-
-I can't say I've thought through every corner case but at least this
-change no longer raises alarm bells in my mind when I look at it.  ;-)
- If it works for you and nobody else has objections then it seems good
-enough and we can always make more improvements later.  Feel free to
-add my Reviewed-by tag when my nit is fixed and you make sure it
-compiles even if CONFIG_PM_SLEEP isn't defined.
-
--Doug
+>  	riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
+> -	if (IS_ENABLED(CONFIG_RISCV_SBI))
+> -		sbi_send_ipi(cpumask_bits(&hartid_mask));
+> -	else
+> -		clint_send_ipi_mask(mask);
+> +
+> +	if (ipi_ops)
+> +		ipi_ops->ipi_inject(cpumask_bits(&hartid_mask));
+>  }
+>
+>  static void send_ipi_single(int cpu, enum ipi_message_type op)
+> @@ -109,18 +137,8 @@ static void send_ipi_single(int cpu, enum ipi_message_type op)
+>  	set_bit(op, &ipi_data[cpu].bits);
+>  	smp_mb__after_atomic();
+>
+> -	if (IS_ENABLED(CONFIG_RISCV_SBI))
+> -		sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
+> -	else
+> -		clint_send_ipi_single(hartid);
+> -}
+> -
+> -static inline void clear_ipi(void)
+> -{
+> -	if (IS_ENABLED(CONFIG_RISCV_SBI))
+> -		csr_clear(CSR_IP, IE_SIE);
+> -	else
+> -		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
+> +	if (ipi_ops)
+> +		ipi_ops->ipi_inject(cpumask_bits(cpumask_of(hartid)));
+>  }
+>
+>  void handle_IPI(struct pt_regs *regs)
+> @@ -131,7 +149,7 @@ void handle_IPI(struct pt_regs *regs)
+>
+>  	irq_enter();
+>
+> -	clear_ipi();
+> +	riscv_clear_ipi();
+>
+>  	while (true) {
+>  		unsigned long ops;
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index 4e9922790f6e..5fe849791bf0 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -147,8 +147,7 @@ asmlinkage __visible void smp_callin(void)
+>  {
+>  	struct mm_struct *mm = &init_mm;
+>
+> -	if (!IS_ENABLED(CONFIG_RISCV_SBI))
+> -		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
+> +	riscv_clear_ipi();
+>
+>  	/* All kernel threads share the same mm context.  */
+>  	mmgrab(mm);
