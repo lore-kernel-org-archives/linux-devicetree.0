@@ -6,93 +6,91 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB8FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1929C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1DEF206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A95D2074B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591309395;
-	bh=XKk62AWx+65Qmd/r12udXYE4TJMz7b7cLmFVemruhWg=;
+	s=default; t=1591309447;
+	bh=TDOL76JWf1f6r/ZxeYlblYP7A4HnYRE4P8DKoRVJg6c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J6u4MCRvSfD+zHX+VgEntE4loNutqRpSdG2xmP3sVzoKCW47LnmVqlZBmKJSiec7K
-	 E9dyq+5eeU/vP6J5qi2J+tA04daAM0pKEvmfq0KOHohRyhn6r7vyMqGmx2qOG07xLC
-	 lACx7T5SsFMc6b8K+RYzBwBAsms7ABCPCWBJ3P98=
+	b=RSFAOnFtzmp6Pd8ldt2nxHWVbAw6RYp4TqTgFsFAFe2jlgWdWnmGBvSkjX0VBJzoJ
+	 HvTInpfNZLae9nXTDk+0FTw/6I9jZeK/ZPWcgNG6Tzmo8tXqFxzVaGFVAO0ARGCt1w
+	 fxSb9CwQ77aPpy4XBfaTBoFSJ+9JkX7xmO9IrBd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgFDWXP (ORCPT
+        id S1727960AbgFDWYH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:23:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40712 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgFDWXO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:23:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id q8so8154411iow.7;
-        Thu, 04 Jun 2020 15:23:14 -0700 (PDT)
+        Thu, 4 Jun 2020 18:24:07 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36284 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgFDWYG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:24:06 -0400
+Received: by mail-il1-f194.google.com with SMTP id a13so7698061ilh.3;
+        Thu, 04 Jun 2020 15:24:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=8n1ml5PEUVdbXeAwFS38cbuqEwnnmmDCmubjqkKfwRU=;
-        b=KRG/+sQCaE+2ygYN4lBL5jMqeGiw1kOQR6QPK1xFk+Z1nytTLBk3iGgtwoQLxxCeK1
-         tC/IihOgRB7NDD+FxWuyH5rKR0JGxNmp+Md1vMiJg8kQspW1HgHoEXZTz8Qbr4gnQg4A
-         cSlx+nMPsphxH8l0FuyWIhbEiBh4tPrE6Kya7pfoEhOb/EB3XkB7c3myE87SzEFSrSyK
-         dd9bP2591OXoBIr07n6EM6GLj5S27Nv4/DHmx8FheHrW6IS6VUp1gInTnRr0pTmBgk6L
-         +bndm2Jm7HRIYQOlMqwO2gSB018I201Qw+8/m82DvzMDqeNTPLY+YgqM2H6OrPF/7E+U
-         fmSA==
-X-Gm-Message-State: AOAM530lLZkCFMT2BCLozgRJNrxHrHeb6VzgvYQAK3y7AvZf1eK16DkZ
-        mQDY2pEfmciOTksrBJcDXQ==
-X-Google-Smtp-Source: ABdhPJzKPNv71wCvaiJlPwIdg9InlDA/KS8LEZRO8xjpPMq3wbHc7c9Gx/NeNCcR4s81LqHK05++Rg==
-X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr6033750iot.44.1591309393781;
-        Thu, 04 Jun 2020 15:23:13 -0700 (PDT)
+        bh=9twZbcOiLW0yLQJYmRVs4qavY+XNMKpL9WdtifUyAH0=;
+        b=TgdDvg0VrcfpXjBomNyWCWb1ONF6TzjqCI0Ws8m6eOmOIAk//kt/DQxOcopsv3UL/5
+         P18spWE5Rc0WrAeZHJvo8Y4UMwWTaSdpLLtzwe7KupCOE5rWJtw0JftZd5qKXMkLUdlJ
+         tZmZYW6Ig/0wl557FVzv4w4YTsBgsxKoM/M4L7lsrXfxR9kG5DW8/ogm9t+i6LWlKQgN
+         /O3dimuXx0DyhuYUshJ6ZtXTAQrLESxBdUYOTMr+U0HYslCbGdIrgo/SneKLiiOnGEFN
+         zH1lm3RB+xJgnRn6L0l82k24BK+/0IyWOC6a1v1vBWRQD8LBrezLAfBrdqUf4F2NKI51
+         3QFQ==
+X-Gm-Message-State: AOAM533n2rBTilxdEM4PtuZe+2CbsUEjuDkfaMNFa/LUMEg94Ncmz/ky
+        6OA5RDvlJuJ7lKWH4iHtrw==
+X-Google-Smtp-Source: ABdhPJw4Iafe1pMJfz84rEJOIVETUZQAgI9tRhEJzB4YXRVgrQvOWSYePNiqSlZkykkFuA1ew6Sl1w==
+X-Received: by 2002:a92:b001:: with SMTP id x1mr5480753ilh.18.1591309445557;
+        Thu, 04 Jun 2020 15:24:05 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id c20sm431897iot.33.2020.06.04.15.23.11
+        by smtp.gmail.com with ESMTPSA id p5sm2004317ilg.88.2020.06.04.15.24.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 15:23:12 -0700 (PDT)
-Received: (nullmailer pid 4151873 invoked by uid 1000);
-        Thu, 04 Jun 2020 22:23:11 -0000
-Date:   Thu, 4 Jun 2020 16:23:11 -0600
+        Thu, 04 Jun 2020 15:24:04 -0700 (PDT)
+Received: (nullmailer pid 4153174 invoked by uid 1000);
+        Thu, 04 Jun 2020 22:24:02 -0000
+Date:   Thu, 4 Jun 2020 16:24:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        linux-kernel@vger.kernel.org, Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>,
-        devicetree@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>
-Subject: Re: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
- documentation
-Message-ID: <20200604222311.GA4151468@bogus>
-References: <20200604073256.25702-1-joyce.ooi@intel.com>
- <20200604073256.25702-11-joyce.ooi@intel.com>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jonas Karlman <jonas@kwiboo.se>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: [PATCH v12 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter DT schema
+Message-ID: <20200604222402.GA4153046@bogus>
+References: <cover.1591253353.git.xji@analogixsemi.com>
+ <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604073256.25702-11-joyce.ooi@intel.com>
+In-Reply-To: <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 04 Jun 2020 15:32:56 +0800, Ooi, Joyce wrote:
-> From: Dalon Westergreen <dalon.westergreen@intel.com>
+On Thu, 04 Jun 2020 15:56:36 +0800, Xin Ji wrote:
+> anx7625: MIPI to DP transmitter DT schema
 > 
-> Update devicetree bindings documentation to include msgdma
-> prefetcher and ptp bindings.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
 > ---
-> v2: no change
-> v3: no change
-> ---
->  .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
->  1 file changed, 84 insertions(+), 19 deletions(-)
+>  .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
 > 
 
 
