@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B80C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE70C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548AC20738
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D2D20738
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PSKnA+A3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TTHUNmNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgFDBxc (ORCPT
+        id S1728014AbgFDBx2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
+        Wed, 3 Jun 2020 21:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgFDBx3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:29 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1823C08C5C9
-        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:28 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w90so3942977qtd.8
-        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:28 -0700 (PDT)
+        with ESMTP id S1728009AbgFDBxX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:23 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D4BC03E96D
+        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:22 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q8so4469489qkm.12
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cx1RfItm8P+5zdZthMwhmTFP4jusIpmaSOa4M7MTCuw=;
-        b=PSKnA+A32FTYGNyVZ3JCedIaquwwdMV72TXnPo6jQ5OtwjCTbqy4v+cayuXvcEV+h3
-         zdwZeJ8nrs6vtj5J4AFvYymjLdeGkrP7+DzUYcHY3H5dq429Gd+ioqTgp2GB256edagr
-         sin0Mxjm1Ra82p1Ny8wMEEm/SuvoitD95Xr3cZVdoYK+AVezR0e+1Prav2RMCe6iU/4N
-         j1wM0QWac4RMmJtIRdAVp7wUCmO68mfJzJrebTnWL+k6lvZzFmAdxWU+7SulimOiLd9C
-         Jh18p/7qP8dlgFw5GljRiy5MWLAyuGZylM0Pb46DCNgWAaP4u1VrXQ8eo0cUk++O30yp
-         R+hA==
+        bh=OXFBxnWXYnn/70SvWtr9K2MHoufkLsFwRRiIi6zZBfk=;
+        b=TTHUNmNTBK6ssrGE4vNIHuoGl36/IKA184BiSEt8dXIB0bXbrx0XulkgtaLviqMvuW
+         tiIHAKyJPYZreacCzAGf8kljq9QG3N1PG/bNUFHp6FKanpARhYnd1lj2lOa6FWJptBym
+         L3dMIgXoBnK89BgeVPpe8GHacwrkCx5LaXP0Aq0Xj0HBxajAOPuALcf5U/FjaB+Z1voT
+         vf9KlCpD5m6T105XsMMrDnc2eE2+NRpCmzy6IkeydAUxAPeb6uqYMzZgBWZcU5IkBZgX
+         EYrGk3+RyAqITb8mgfYGzzvQrK11Ct5wGRbMIFnMdg3+5dZJ1/4HOLZ606IzJqO/iePB
+         GkYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cx1RfItm8P+5zdZthMwhmTFP4jusIpmaSOa4M7MTCuw=;
-        b=bGWes21GYezcX1ceUHGw6u7XOAm3HBOXSZe+YY7r+mLSQYn2GagHfvNiOuZZmBMaRY
-         7X/RIA3OYEE4jMirYq7Uen9sVF2ssVA1+B4VUeIPxtJs3B/tJkrOytemyyAh46aKzvvm
-         u3z5XRLk95FO5xQN0eJdgzxE5RKfPBEsVxoUX1vSa+wjjYHjO07lLq4t26nVwwvid2oT
-         80mIf8Un9rX+ROm+e30qK4vfeWF4+ej4yfitIo57MvplwvZJNo6g8l8annq6PYfMj+47
-         PNDuCxh9PCOkwxyJL9iSIo5NaBLae1Wl405dqGE34Umt50B9P2Nwj2a9dstPRap0hq8U
-         ciIg==
-X-Gm-Message-State: AOAM532Adb4dY72Mm1mWq82a+6o0cJqCL4ciuCmChiZpQJHLk/pr9wRo
-        Sv73Co4oFDKl1oynD3wC82yxaA==
-X-Google-Smtp-Source: ABdhPJzFuQ11RGaUFX9ez2ZUYVbvhFKr+5CSf9niClZmUapncKEZa/DruY85eifIRSadG1SF4IIQrg==
-X-Received: by 2002:ac8:450a:: with SMTP id q10mr2274459qtn.328.1591235608210;
-        Wed, 03 Jun 2020 18:53:28 -0700 (PDT)
+        bh=OXFBxnWXYnn/70SvWtr9K2MHoufkLsFwRRiIi6zZBfk=;
+        b=sumyWyJCkulDQ8jPcnvfYhu/kfrmb7NHQBZklNWEGN/52a8mShkNEt+TQRpmvMpoAy
+         CgTKdWl/TdPpAuJdKnE0kyfTg+9oixDPWfeapiXTi2uMi4V2U4wXsl82JOnGgI2AdKbW
+         gbc6dphtUhOXaWrf+uASRnsBE2VvsRwZ5bhXn45Clf9KSUvZM18Jojci/LI5Ol+a7pHm
+         ABWHtFD4ixlG0JMsRF1kw9o/VjYxEre1v+vnHuY5MTqleUZEivm8sz/I1sxMeqZoOfE3
+         SnV9VeqiFAVWWAA6feUo03Mlh4Bj1lfOtFcuQ911XtnanTU/Ziezom5CuEm3RQfiq6dr
+         62hg==
+X-Gm-Message-State: AOAM531Ef7BPYtpyjRM9208T/PquGHsAY975QcdGWLVHzZTsKPR5u7xf
+        /Zn2/e9QaE8e52PVZsz09MMGDg==
+X-Google-Smtp-Source: ABdhPJxtYPvU4sjsI6bm1cB56yIjkZm4HSRbup9Y6NQzxcUlyQ8iJvQmJ9f/YKDFoggQ1o/Vl5DgyA==
+X-Received: by 2002:a05:620a:15a5:: with SMTP id f5mr2710795qkk.9.1591235601365;
+        Wed, 03 Jun 2020 18:53:21 -0700 (PDT)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.27
+        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 18:53:27 -0700 (PDT)
+        Wed, 03 Jun 2020 18:53:19 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -66,9 +66,9 @@ Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
         rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 6/6] arm64: dts: qcom: Indicate rpmhpd hosts a power domain that can be used as a warming device.
-Date:   Wed,  3 Jun 2020 21:53:17 -0400
-Message-Id: <20200604015317.31389-7-thara.gopinath@linaro.org>
+Subject: [PATCH v6 1/6] PM/Domains: Add support for retrieving genpd performance states information
+Date:   Wed,  3 Jun 2020 21:53:12 -0400
+Message-Id: <20200604015317.31389-2-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200604015317.31389-1-thara.gopinath@linaro.org>
 References: <20200604015317.31389-1-thara.gopinath@linaro.org>
@@ -79,35 +79,118 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RPMh hosts mx power domain that can be used to warm up the SoC.  Indicate
-this by using #cooling-cells property.
+Add two new APIs in the genpd framework, dev_pm_genpd_get_performance_state
+to return the current performance state of a power domain and
+dev_pm_genpd_performance_state_count to return the total number of
+performance states supported by a power domain. Since the genpd framework
+does not maintain a count of number of performance states supported by a
+power domain, introduce a new callback(.get_performance_state_count) that
+can be used to retrieve this information from power domain drivers.
+
+These APIs are added to aid the implementation of a power domain as a
+warming device. Linux kernel cooling device framework(into which warming
+device can be plugged in) requires during initialization to be provided
+with the maximum number of states that can be supported. When a power
+domain acts as a warming device, the max state is the max number of
+perfomrance states supported by the power domain. The cooling device
+framework implements API to retrieve the current state of the cooling
+device. This in turn translates to the current performance state of the
+power domain.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
+ drivers/base/power/domain.c | 37 +++++++++++++++++++++++++++++++++++++
+ include/linux/pm_domain.h   | 13 +++++++++++++
+ 2 files changed, 50 insertions(+)
 
-v3->v4:
-	- Removed subnode to indicate that mx power domain is a warming
-	  device. Instead #cooling-cells is used as a power domain
-	  provider property to indicate if the provider hosts a power
-	  domain that can be used as a warming device.
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31346d2..dcc3bcd16b68 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3854,6 +3854,7 @@
- 			rpmhpd: power-controller {
- 				compatible = "qcom,sdm845-rpmhpd";
- 				#power-domain-cells = <1>;
-+				#cooling-cells = <2>;
- 				operating-points-v2 = <&rpmhpd_opp_table>;
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 0a01df608849..88f8773cabe7 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -408,6 +408,43 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_genpd_set_performance_state);
  
- 				rpmhpd_opp_table: opp-table {
++int dev_pm_genpd_get_performance_state(struct device *dev)
++{
++	struct generic_pm_domain *genpd;
++	unsigned int state;
++
++	genpd = dev_to_genpd_safe(dev);
++	if (IS_ERR(genpd))
++		return -ENODEV;
++
++	genpd_lock(genpd);
++	state = genpd->performance_state;
++	genpd_unlock(genpd);
++
++	return state;
++}
++EXPORT_SYMBOL_GPL(dev_pm_genpd_get_performance_state);
++
++int dev_pm_genpd_performance_state_count(struct device *dev)
++{
++	struct generic_pm_domain *genpd;
++	int count;
++
++	genpd = dev_to_genpd_safe(dev);
++	if (IS_ERR(genpd))
++		return -ENODEV;
++
++	if (unlikely(!genpd->get_performance_state_count))
++		return -EINVAL;
++
++	genpd_lock(genpd);
++	count = genpd->get_performance_state_count(genpd);
++	genpd_unlock(genpd);
++
++	return count;
++}
++EXPORT_SYMBOL_GPL(dev_pm_genpd_performance_state_count);
++
+ static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
+ {
+ 	unsigned int state_idx = genpd->state_idx;
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index 9ec78ee53652..7d415350380f 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -117,6 +117,7 @@ struct generic_pm_domain {
+ 						 struct dev_pm_opp *opp);
+ 	int (*set_performance_state)(struct generic_pm_domain *genpd,
+ 				     unsigned int state);
++	int (*get_performance_state_count)(struct generic_pm_domain *genpd);
+ 	struct gpd_dev_ops dev_ops;
+ 	s64 max_off_time_ns;	/* Maximum allowed "suspended" time. */
+ 	bool max_off_time_changed;
+@@ -204,6 +205,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		  struct dev_power_governor *gov, bool is_off);
+ int pm_genpd_remove(struct generic_pm_domain *genpd);
+ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
++int dev_pm_genpd_get_performance_state(struct device *dev);
++int dev_pm_genpd_performance_state_count(struct device *dev);
+ 
+ extern struct dev_power_governor simple_qos_governor;
+ extern struct dev_power_governor pm_domain_always_on_gov;
+@@ -251,6 +254,16 @@ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int dev_pm_genpd_get_performance_state(struct device *dev)
++{
++	return -ENOTSUPP;
++}
++
++static inline int dev_pm_genpd_performance_state_count(struct device *dev)
++{
++	return -ENOTSUPP;
++}
++
+ #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
+ #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
+ #endif
 -- 
 2.20.1
 
