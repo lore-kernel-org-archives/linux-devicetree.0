@@ -2,120 +2,126 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89156C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623D1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6271220772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4160120772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPBIKgZS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2i4foXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgFDNw2 (ORCPT
+        id S1728717AbgFDNyN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47676 "EHLO
+        Thu, 4 Jun 2020 09:54:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728703AbgFDNw2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 09:52:28 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F2DC08C5C1
-        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 06:52:28 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so2204405plo.7
-        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 06:52:28 -0700 (PDT)
+        with ESMTP id S1728679AbgFDNyM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 09:54:12 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93563C08C5C0;
+        Thu,  4 Jun 2020 06:54:12 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id x93so4759346ede.9;
+        Thu, 04 Jun 2020 06:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=jr8wZhb4pJx8qPThUyDrXbZlabia3tw2g3YFZ6NyZow=;
-        b=jPBIKgZSirOHvo7kMZ0JfAaDehKwnWbELDWidWKWB5maI6NK6rhB2zMh53/7rBREOu
-         s/zaHev2o0vRWlK3IOjAmysDxCqk9E5uFAleswG4QlT9Ue/FYDa1kZYaqMFsl4iMSY0o
-         STdElnXYJmLrmCqd/S7cdFT3vpW5cYGf+/JRB8Ob3TqJ0TMWmU8UnXcQ+CH1C76oHyzG
-         Bbp526YQCO0aen0iL99tdv2LBgB6oK9RALZrPXCSFuFOXzVACHIfFS6vCXAjuepwrTM5
-         4Fci5DqEvzcZCnmBH2bbzzffJkrMjpLJta4pILt5wxPNpwVEKNcRDyPcDd3iIax9lMWS
-         TDOw==
+        bh=CfoH+dzxq6WF2tRiVmflAMFqoQOaRQWQsTk3x8AbDNM=;
+        b=K2i4foXxpYkjDeRunVQUsQHbferp6YJjO3/34mwZQ5PQAJTVLHMqsd548LxynjTCXi
+         GZa8qpOm/9oUQ6fJgJMHDbBXZqPpi8yRQL5UDM3w0m0Rh1V47q+6KgcWDzDolVybGEmM
+         qwZ+7ggcNpGoa+JK2kmCC10SY0hqA468A35o8l47RUxDiO8BxxxoZxDVmYrzR1dyHVQ8
+         LVajGPn78YZR8NlUcly/Ap+jh5xICRebZdrXSyI8ryIPHI1I1bS35uouuCRcYrsh2IgC
+         opoCuNCdujxrLCdpjaFmvImH2iokR2GME1NM24xYVM0zzfzPf8TVx6IekYHmgDxcrDRh
+         5+1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jr8wZhb4pJx8qPThUyDrXbZlabia3tw2g3YFZ6NyZow=;
-        b=a7AHnNGpnwro6lMTIYFYP4N2ofq6bh61Eby25w3EuvSqWyskanpxdmAyxzVOpN+ETo
-         N1e1tWDToQxbOgXs6gM2v9uSPcdTTNCrszw7UbSKSL8PPkxFxQvJPvsl5+pzUuQBqV7Z
-         ktXK0CQAYBuv3feH0j0Y0KhxJ/SWpJc+2eXEcmPUfgQQC/HqERpzKAItitL3VOkSmTKF
-         udyJwmaJ8oz1uLGrYRfh0RY+JUtl4rTStcec28SGmJH66O1Mdh2Z0tsPbFYY50SWXLPM
-         mdumfIJUebO8HbxUViTuxDZ8CXQX+ItHDZemCgSRjZGCErecFH2hvD729uyvmgvzLi00
-         mWEA==
-X-Gm-Message-State: AOAM530ZVCtTfW7Tbs/Y5Xm/ZGqWdjsMfMjqZluzYJJXuE7KyXMw1OnL
-        kw2mz0JlwGA+8YKxV8qahdJr
-X-Google-Smtp-Source: ABdhPJx5jGzTevHPTJSqrq4bsJ72Yh4odpGq73L+WtB0R5X8do+vglg5O1igVJiUAcqCO9OuAPuPtA==
-X-Received: by 2002:a17:90a:6344:: with SMTP id v4mr5731999pjs.27.1591278747907;
-        Thu, 04 Jun 2020 06:52:27 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6211:4cea:c404:4d38:8396:d1ee])
-        by smtp.gmail.com with ESMTPSA id b29sm4745683pff.176.2020.06.04.06.52.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jun 2020 06:52:26 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 19:22:21 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
- dts
-Message-ID: <20200604135221.GH16719@Mani-XPS-13-9360>
-References: <20200524023815.21789-1-jonathan@marek.ca>
+        bh=CfoH+dzxq6WF2tRiVmflAMFqoQOaRQWQsTk3x8AbDNM=;
+        b=b7UxqFl40DAeCqrXHJFDpqzNK+7F4fdP77bYBT5zgYDP63nfZUBU/inUrOQEw9GCYV
+         bH7qW/K1SWtGt9l/l/PcXVYPNPQ35jy6H711juoQR/xdwvTXfnTPDYhXVF3+nbKn4pQP
+         zTJNNiZkTQI2p/rxxYy+N4bltBwEfFlunLp063GurOhVrMRCPrY+Ka+bxfhEh1lqghDa
+         1qjpb0VTdQe88XZV0cps6YmfGlEgFWKkVB0Js8UbQ+8jMtjzXyFbHyrsU8WbFyC8d/0A
+         PRV4WeO658y0fL5w9fQwWUS+AMxRvw5s1W7Y/Xz78YkJPwOaSHlfZEEWbGWFboIlWP3z
+         tVdQ==
+X-Gm-Message-State: AOAM532f1qzAxlage+GHijTfT5QlTvCXgVFD9QmMkHkTeIJQJiiq3VQF
+        3EF3zMeoRpoi5uPAsqlhaVIsGPZS
+X-Google-Smtp-Source: ABdhPJwGAM5wYCsr8ydd5hwq5zkFZ0IBTFbhHPuqkMguJsBhL3lZeFTSwuJnex5HZJd/xl2WFoOfBA==
+X-Received: by 2002:a05:6402:3078:: with SMTP id bs24mr4387995edb.284.1591278851298;
+        Thu, 04 Jun 2020 06:54:11 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id q12sm2167511ejt.106.2020.06.04.06.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 06:54:10 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 15:54:09 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/8] usb: gadget: tegra-xudc: Add vbus_draw support
+Message-ID: <20200604135409.GA1138399@ulmo>
+References: <1589437363-16727-1-git-send-email-nkristam@nvidia.com>
+ <1589437363-16727-3-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
 Content-Disposition: inline
-In-Reply-To: <20200524023815.21789-1-jonathan@marek.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1589437363-16727-3-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
-> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
-> 
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've tested this series on an SM8250 based board and able to get Type C (USB0)
-working. There are also couple of Type A ports (USB1) on that board behind a
-USB hub. It is probing fine but I don't see any activity while connecting a
-USB device. Will continue to debug and once I get them working, I'll add my
-Tested-by tag.
+On Thu, May 14, 2020 at 11:52:37AM +0530, Nagarjuna Kristam wrote:
+> Register vbus_draw to gadget ops and update corresponding vbus
+> draw current to usb_phy.
+>=20
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> ---
+> V3:
+>  - Propogated usb_phy->set_power error to vbus_draw caller.
+> ---
+> V2:
+>  - Patch re-based.
+> ---
+>  drivers/usb/gadget/udc/tegra-xudc.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 
-Thanks,
-Mani
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
-> few changes. Notably, the HDK865 dts has regulator config changed a bit based
-> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
-> 
-> Jonathan Marek (6):
->   arm64: dts: qcom: sm8150: add apps_smmu node
->   arm64: dts: qcom: sm8250: add apps_smmu node
->   arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
->   arm64: dts: qcom: sm8250: Add USB and PHY device nodes
->   arm64: dts: qcom: add sm8150 hdk dts
->   arm64: dts: qcom: add sm8250 hdk dts
-> 
->  arch/arm64/boot/dts/qcom/Makefile       |   2 +
->  arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
->  arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
->  5 files changed, 1384 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
-> 
-> -- 
-> 2.26.1
-> 
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7Y/P0ACgkQ3SOs138+
+s6FGuBAAh726xRnA8AgpFzFY6CK2cnfLe1wgMCL1lGWrqaJVAlJXxLvRFu27AwyJ
+E24tlump5oS44vr63gxbJeCb6cxL46GS5w76IviVfMsQaCNFvzVKLa8xzZe8G01y
+XCRzmMitVXO6oQEkTtI2cd6mzXYC9UHTcGQBSf1ZrA2HiiEWjphbV4i4A3xCLijJ
+hxa4Ft3nnXUcDkJRpwPZgDBXWCkNA0jxtnImIIFJ72qQa3/Xphunoe8R+pH9C96+
+GqeIZxULrEEwsa+EdjTpa2zgcICxEHf+9bPqGKdN4Swg2fm+oCXerJVjbJz+KyD3
+qutHM6kSZEjCWH4TAgB29eUsjoQYBJZTkYDFHr89ZlD4zqYLYXvNpy2S+A56m4wC
+Q/fRVE09PNweckEasggSi5t6Lt53ffsIH8PtTGITf3C4iKG/0BYbCUYDaU569rkO
+gWs5RvNFHSXK9p38k593Eq9Xb4eyGnLc10D/Sa/IXb37BLB76TnzBqMqABMctXul
+j5sFYkYzJZuD22eUmReer+wvt78u2gDaew6kx7Vz5Bceoe9Mz3lqjj9djNORzdY2
+8nSGxGDuNxZOwRLd0iv3lg/8VqlVfz5iRZXVKNBqFOPk7QLgkp6M4+JebNMaolHy
+TB41eCaCzhkjN+UBHrhHTxKJ8RHPcvuiJ2xEfzSYbmumZo/q2MU=
+=Zn9i
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
