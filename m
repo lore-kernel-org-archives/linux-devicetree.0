@@ -2,129 +2,124 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1035BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FA5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E404B2067B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2832D2067B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wKDoW0ax"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ctMItyku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbgFDU1s (ORCPT
+        id S1729348AbgFDUeV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:27:48 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49544 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgFDU1s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:27:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054KRead089425;
-        Thu, 4 Jun 2020 15:27:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591302460;
-        bh=N+QJzUFxIrA5/MuRXT6M2TS2TtMFDYT1CkUkUKyL2nU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wKDoW0axSiLqJ/3p1Y1FMpNfJBXHSmXvlTIXVBMhohSyAZ0nwUFtYWXkSp921FGmW
-         X12njTBRLnsnK1ZZQnfcQR1rw08Gv8JUz8a+PFJ4eX4SQW3R6eqjNmjSbfA4lHVJxU
-         t8p36EM92491GlrWIaIWvGOicyeLBb7VDz2FkjSo=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054KReI6123953
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 15:27:40 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
- 2020 15:27:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Jun 2020 15:27:40 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054KReJw121027;
-        Thu, 4 Jun 2020 15:27:40 -0500
-Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200604111410.17918-1-dmurphy@ti.com>
- <20200604111410.17918-5-dmurphy@ti.com>
- <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
- <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <8a844e26-3a5a-ac61-1c4a-e60fbebf6341@ti.com>
-Date:   Thu, 4 Jun 2020 15:27:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 16:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729073AbgFDUeV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:34:21 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC80FC08C5C1
+        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 13:34:20 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id s192so1693347vkh.3
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 13:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QccmPOAwdRsqU+gseuKb7TceQ37JHCZ0c4E7yU4KiQA=;
+        b=ctMItykuizT2FjCtlj3c7yeA8hejo1Eu0YvNGbgfHWNvUAZmSu1iqvjTuxpl6Rm/XM
+         /bOQT4clHDMwkaa7CQpWJ+/aULE1pYzv7SNXe1g+1d4Jvdus2Zf/u2kDn//UPtypAuEw
+         ce+XSToUwc8hZkd4Z5GjQqIAIMzFGI0iD70BY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QccmPOAwdRsqU+gseuKb7TceQ37JHCZ0c4E7yU4KiQA=;
+        b=J+gSVDRt883qmhDf/JWnf2vjJgd/zgyBC4BBqsV6gSpSeP3iJYyK/ZxyAvWYMi+4E7
+         yUHJ9EgwoJK4J0NQzS2QbhNmfJBQmS8ABuN7zjjILqc9iQJKe7LPeKbcRd/deN8DQcui
+         3/diOqOHuikxLIG/B8P+1BfzQItQ67TP03NbhT3zdh4e1qFDZ37PrbaxvpueDqVRNGCA
+         39lFSTpglS2QZ1IUoDy78QuVX06uYQBvIKKQ1AdPeMY8dZZGPcrJbS36CFgzCnqZR4OO
+         24gap573PSpT3rtohwaD7LIS0mdrqFdqeO55piiiY5exGAVpVtbDwtF1icas0g9MfDcN
+         V9dw==
+X-Gm-Message-State: AOAM533u/ZCzjo92TCtpK/aTtOQ1aFLq+uiHFxlrxRk3buDu11Wr2lYV
+        eA2RqCVSgC8KCfFKnF704+pSUsTCWC8=
+X-Google-Smtp-Source: ABdhPJxCGMQTwbESfry/b+Yno+MkBRxwz+ayG/C3TlS6wXyfvcF6M1YU1Xwx5PZxcMFhjYQYCNjR8Q==
+X-Received: by 2002:a1f:2d58:: with SMTP id t85mr3192291vkt.100.1591302859393;
+        Thu, 04 Jun 2020 13:34:19 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id r128sm843193vkf.48.2020.06.04.13.34.17
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 13:34:18 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id k13so4314554vsm.13
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 13:34:17 -0700 (PDT)
+X-Received: by 2002:a67:8881:: with SMTP id k123mr5087675vsd.198.1591302857244;
+ Thu, 04 Jun 2020 13:34:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 4 Jun 2020 13:34:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V7ce7EGqJh6aga4yH3NqdgXMHBe=EOONtcd2LFDX75_A@mail.gmail.com>
+Message-ID: <CAD=FV=V7ce7EGqJh6aga4yH3NqdgXMHBe=EOONtcd2LFDX75_A@mail.gmail.com>
+Subject: Re: [PATCH v6] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jakub
+Hi,
 
-On 6/4/20 11:48 AM, Jakub Kicinski wrote:
-> On Thu, 4 Jun 2020 11:38:14 -0500 Dan Murphy wrote:
->> Jakub
->>
->> On 6/4/20 11:25 AM, Jakub Kicinski wrote:
->>> On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote:
->>>> Add RGMII internal delay configuration for Rx and Tx.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> Hi Dan, please make sure W=1 C=1 build is clean:
->>>
->>> drivers/net/phy/dp83869.c:103:18: warning: â€˜dp83869_internal_delayâ€™ defined but not used [-Wunused-const-variable=]
->>>     103 | static const int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500,
->>>         |                  ^~~~~~~~~~~~~~~~~~~~~~
->> I built with W=1 and C=1 and did not see this warning.
->>
->> What defconfig are you using?
-> allmodconfig with gcc-10
+On Thu, Jun 4, 2020 at 6:20 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
 >
->> Can you check if CONFIG_OF_MDIO is set or not?  That would be the only
->> way that warning would come up.
-> Hm. I don't have the config from this particular build but just running
-> allmodconfig makes it CONFIG_OF_MDIO=m
-
-OK that makes sense then.  That is an existing bug that shows up because 
-of this.
-
-#ifdef CONFIG_OF_MDIO
-
-So the addition of the array exposed an existing issue.
-
-That bug fix can go to net then.
->>> Also net-next is closed right now, you can post RFCs but normal patches
->>> should be deferred until after net-next reopens.
->> I know net-next is closed.
->>
->> I pinged David M when it was open about what is meant by "new" patches
->> in the net-dev FAQ.  So I figured I would send the patches to see what
->> the response was.
->>
->> To me these are not new they are in process patches.  My understand is
->> New is v1 patchesets.
->>
->> But now I have the answer.
-> Oh sorry, I may be wrong in this case, I haven't tracked this series.
+> -#ifdef CONFIG_PM
+> -static int msm_runtime_suspend(struct device *dev)
+> +#ifdef CONFIG_PM_SLEEP
+> +static int msm_pm_suspend(struct device *dev)
+>  {
+> -       struct drm_device *ddev = dev_get_drvdata(dev);
+> -       struct msm_drm_private *priv = ddev->dev_private;
+> -       struct msm_mdss *mdss = priv->mdss;
 >
-It says v6 in $subject.
 
-But still you may be correct I don't know
+nit: remove blank line at the start of this function
 
-Dan
+>  static const struct dev_pm_ops msm_pm_ops = {
+>         SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
+>         SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
+> +       .prepare = msm_pm_prepare,
+> +       .complete = msm_pm_complete,
 
+Presumably you will get a compile failure if someone compiles without
+CONFIG_PM_SLEEP since msm_pm_prepare() and msm_pm_complete() won't be
+defined but you refer to them unconditionally.  Probably the best
+solution is to just add "__maybe_unused" to your prepare/complete
+function and then always define them.
+
+
+I can't say I've thought through every corner case but at least this
+change no longer raises alarm bells in my mind when I look at it.  ;-)
+ If it works for you and nobody else has objections then it seems good
+enough and we can always make more improvements later.  Feel free to
+add my Reviewed-by tag when my nit is fixed and you make sure it
+compiles even if CONFIG_PM_SLEEP isn't defined.
+
+-Doug
