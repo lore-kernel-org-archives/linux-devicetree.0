@@ -2,62 +2,62 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC40C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B853C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9924620772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FC820772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+JVXvVE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SwblQzt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgFDBxu (ORCPT
+        id S1727982AbgFDBxV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
+        Wed, 3 Jun 2020 21:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgFDBxX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:23 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A7CC08C5C2
-        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:23 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id j32so3932511qte.10
-        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:23 -0700 (PDT)
+        with ESMTP id S1726422AbgFDBxU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 3 Jun 2020 21:53:20 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7461C08C5C1
+        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 18:53:19 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w90so3942718qtd.8
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 18:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ol8M2KCtVTfhjIudQ80yoAA541E23GCrsvIpBzMufk8=;
-        b=g+JVXvVEhHBGXKk2wAZGtNuoP1FYpvjvUuC5MOwY3es9FBBcxhVq6st1ofsoIOh7+e
-         2eFVCjT62+hMAWz2US1Slf0/Wzf6zyrhKXZ7XXrIwxVYhhLty0DDItF+ZpBm5FB4Eqon
-         7uv+DEl4e5steUBdILty/uqHIbznxb8XXwua4wBLyTUX1Ln0ENC4YgiE7rXkPKrqw/U+
-         oYXNL+FC6xTjKapLxYXEgp9prko8EXbVw4RR7+kADWkJgyS/CfIvgcU4mIYg+ez2B4jR
-         ouIkuZGdHNwOWxpM8m4GtThiXkCxZTYLikuEoLjVRopgs8ZAqm6hkSFQj1UNuSzaG9r4
-         hCkQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M/aBGpswVv6maZErzhj2cA/GWvid14/WP8iAXA5RYds=;
+        b=SwblQzt1kdFZTiYHtpL/Nk56Df7+NKanGfHYdrba6r5nkmLI2W+4j5HEJoqExqwKQA
+         +/+svgVr/wuzXCmJxU453OMsaz5fIgO9/jvlV8ZKpzaPiHy/VPR0l3iazpjoO14TWH1A
+         6o3LT0+BWDZT992O3QbToU8Yi1jG/koloy93t98E3/Babcre2hUoY4fww4BEMapbYBbc
+         RmHxca4z8bvbm6jV8UQIplrDSxG18wG65ATDlxg0K31fHy2THw+ZlZdphSS4CQVIklzk
+         m4IUARo673EJE+w6BuiQLuDqABDL5f8E4KpDgpZwvtbd8KS4A87qHPav/CQnG6dp2TSX
+         SIeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ol8M2KCtVTfhjIudQ80yoAA541E23GCrsvIpBzMufk8=;
-        b=gkQ73/PcM+zm1VfVrIo5VMvoj8oS2M3pZyftBWW3T3Bczy6hfrgc/kmVe14u4JEVA0
-         O974OzVOXdiW48IyRSXOPpLDZp4HlvHGIqgj5brk+92jWz4dCVKyAOon6PXPjIV+CY7u
-         9bXpENNGa2Jd+o9KVwlqQZhI4XftClvNthpsvfPRs6mrBdMr12rsxy9ch2fs8QTnMXBq
-         f8qiK2mY2oEF1qaLFsUm0+6sFvES+KMK4SgF3ZVNuFWyWLWudhNIeU/CXBoiC8WBW0CN
-         3tU0IynUUy6B1hZZZmdpFJPEUeUL/8ItuRf/iYwfEZQqVHRUWR/Glz9kXHItN8GuX8re
-         LQGw==
-X-Gm-Message-State: AOAM533GqAEZ7KJWIT7DuevKfigY7O7h3K1xImrG2QuOTu9ZID9YqZJj
-        LGRmLBMzJDChsOmH/VZu03nWuA==
-X-Google-Smtp-Source: ABdhPJwV+BvFStA1v5/UAqO4fihvZU5fJ58FDImcRujQQp1tu0wGpU2ow31ZMbF7tSXu0JwSuJkq6A==
-X-Received: by 2002:ac8:2bc1:: with SMTP id n1mr2332050qtn.382.1591235602521;
-        Wed, 03 Jun 2020 18:53:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M/aBGpswVv6maZErzhj2cA/GWvid14/WP8iAXA5RYds=;
+        b=LUMdimzYtN6epPbIWeHAJtCy8vqPpoTKwy2S+tnUM4KqHGbCrCuzqKwCx5Ziin43UJ
+         77ym9ta4aWxW/eINF+hT7BjtMGEh53ctY79bUluZ9bxV2CsR3NhVkL8cJFM/YAiNZd/L
+         FFUTNSHjbT1nSc7ofHl6mA7rh9+uj+DF7CecG8YT1xpSJNExR2+8Cavbgf3dnIZp43Dy
+         trFlUUheUkiuPYC4334CIc7462ckxsDeedTfCUGatpWtkq+W188jRf/uHIbk3UR24TNa
+         XG28ryRnge+zjmvuh5QmP0HdjRuK/puVHWJ4dM6zsJ3B3tAKz5QgzoNwgPjGZrjW5bDE
+         bWww==
+X-Gm-Message-State: AOAM531EdGpokJHyvPF4q8rlujCSMf1E8iLLH2jzsN11fdIatJZ57X1Z
+        JT9AHkMDvlznzCEFaQ9SRqFf+w==
+X-Google-Smtp-Source: ABdhPJxU4I7156wWSx5mqMyLRAIQwcHPNU2/djok6WgOiwwRGEOWvkEwUL42FKnhamdNogtdPGEMfQ==
+X-Received: by 2002:ac8:108b:: with SMTP id a11mr2337950qtj.173.1591235598781;
+        Wed, 03 Jun 2020 18:53:18 -0700 (PDT)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.21
+        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 18:53:21 -0700 (PDT)
+        Wed, 03 Jun 2020 18:53:18 -0700 (PDT)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -66,12 +66,10 @@ Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
         rjw@rjwysocki.net, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve power domain performance state count
-Date:   Wed,  3 Jun 2020 21:53:13 -0400
-Message-Id: <20200604015317.31389-3-thara.gopinath@linaro.org>
+Subject: [PATCH v6 0/6] Introduce Power domain based warming device driver
+Date:   Wed,  3 Jun 2020 21:53:11 -0400
+Message-Id: <20200604015317.31389-1-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200604015317.31389-1-thara.gopinath@linaro.org>
-References: <20200604015317.31389-1-thara.gopinath@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,41 +77,103 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Populate .get_performance_state_count in genpd ops to retrieve the count of
-performance states supported by a rpmh power domain.
+Certain resources modeled as a generic power domain in linux kernel can be
+used to warm up the SoC (mx power domain on sdm845) if the temperature
+falls below certain threshold. These power domains can be considered as
+thermal warming devices.  (opposite of thermal cooling devices).
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/soc/qcom/rpmhpd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+In kernel, these warming devices can be modeled as a thermal cooling
+device. Since linux kernel today has no instance of a resource modeled as
+a power domain acting as a thermal warming device, a generic power domain
+based thermal warming device driver that can be used pan-Socs is the
+approach taken in this patch series. Since thermal warming devices can be
+thought of as the mirror opposite of thermal cooling devices, this patch
+series re-uses thermal cooling device framework. To use these power
+domains as warming devices require further tweaks in the thermal framework
+which are out of scope of this patch series. These tweaks have been posted
+as a separate series[1].
 
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index e72426221a69..a9c597143525 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -362,6 +362,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
- 	return dev_pm_opp_get_level(opp);
- }
- 
-+static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
-+{
-+	struct rpmhpd *pd = domain_to_rpmhpd(domain);
-+
-+	return pd->level_count;
-+}
-+
- static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
- {
- 	int i;
-@@ -450,6 +457,7 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
- 		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
- 		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
-+		rpmhpds[i]->pd.get_performance_state_count = rpmhpd_performance_states_count;
- 		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
- 
- 		data->domains[i] = &rpmhpds[i]->pd;
+The first patch in this series extends the genpd framework to export out
+the performance states of a power domain so that when a power domain is
+modeled as a cooling device, the number of possible states and current
+state of the cooling device can be retrieved from the genpd framework.
+
+The second patch implements the newly added genpd callback for Qualcomm
+RPMH power domain driver which hosts the mx power domain.
+
+The third patch introduces a new cooling device register API that allows
+a parent to be specified for the cooling device.
+
+The fourth patch introduces the generic power domain warming device
+driver.
+
+The fifth patch extends Qualcomm RPMh power controller driver to register
+mx power domain as a thermal warming device in the kernel.
+
+The sixth patch describes the dt binding extensions for mx power domain to
+be a thermal warming device.
+
+The seventh patch introduces the DT entreis for sdm845 to register mx
+power domain as a thermal warming device.
+
+v1->v2:
+	- Rename the patch series from "qcom: Model RPMH power domains as
+	  thermal cooling devices" to "Introduce Power domain based
+	  thermal warming devices" as it is more appropriate.
+	- Introduce a new patch(patch 3) describing the dt-bindings for
+	  generic power domain warming device.
+	- Patch specific changes mentioned in respective patches.
+
+v2->v3:
+	- Changed power domain warming device from a virtual device node
+	  entry in DT to being a subnode of power domain controller
+	  binding following Rob's review comments.
+	- Implemented Ulf's review comments.
+	- The changes above introduced two new patches (patch 3 and 4)
+v3->v4:
+	- Dropped late_init hook in cooling device ops. Instead introduced
+	  a new cooling device register API that allows to define a parent
+	  for the cooling device.
+	- Patch specific changes mentioned in respective patches. 
+
+v4->v5:
+	- Dropped the patch that introduced the cooling device register
+	  API with parent as per review comments from Ulf. 
+	- Patch specific changes mentioned in respective patches.
+
+v5->v6:
+	- Rebased to latest kernel
+	- Few other fixes identified in the review process mentioned in
+	  respective patches
+
+1. https://lkml.org/lkml/2019/9/18/1180
+
+Thara Gopinath (6):
+  PM/Domains: Add support for retrieving genpd performance states
+    information
+  soc: qcom: rpmhpd: Introduce function to retrieve power domain
+    performance state count
+  thermal: Add generic power domain warming device driver.
+  soc: qcom: Extend RPMh power controller driver to register warming
+    devices.
+  dt-bindings: power: Extend RPMh power controller binding to describe
+    thermal warming device
+  arm64: dts: qcom: Indicate rpmhpd hosts a power domain that can be
+    used as a warming device.
+
+ .../devicetree/bindings/power/qcom,rpmpd.yaml |   3 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   1 +
+ drivers/base/power/domain.c                   |  37 ++++
+ drivers/soc/qcom/rpmhpd.c                     |  25 ++-
+ drivers/thermal/Kconfig                       |  10 ++
+ drivers/thermal/Makefile                      |   4 +
+ drivers/thermal/pd_warming.c                  | 169 ++++++++++++++++++
+ include/linux/pd_warming.h                    |  29 +++
+ include/linux/pm_domain.h                     |  13 ++
+ 9 files changed, 290 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/thermal/pd_warming.c
+ create mode 100644 include/linux/pd_warming.h
+
 -- 
 2.20.1
 
