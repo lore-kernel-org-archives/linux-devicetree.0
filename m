@@ -2,125 +2,91 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1848EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 23:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BD2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 23:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2816207ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 23:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A247207F9
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 23:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591312089;
-	bh=/h+HNDvr9yYtXCzEgPATtWxNm3cQ7KYrQLb+bdeLQ78=;
+	s=default; t=1591312170;
+	bh=ju7I8/jpn1UKWVLRaXaAz89LCpYKS9P3icMd7WMxgUQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uvSrpUZhv0mgUkb+AU4xJOviU4pjE4+rJ1tJdh7vFoi2ifQ+06nPoO8FK3NMAxeLy
-	 9lHSvWqTrrnLyrx088OZ8ncFEbdddHNLtZP4WGDNxAtQaCRDVsQDqUpM9jXDPe7xaE
-	 8p1pvV5HkpZ7gMd33eiwyaqM1x2JqFQ1L0NoMqnY=
+	b=hCluNRpINsBNW66OtGH/LVd25KkxWbQUKH5Q2VNCmK9XMRaE08CP9tfnL9E+vQAxK
+	 qL28tKB9wTmzjg2vdW0/9OW2tyUv55z8aMpbyx1GNiAIqJkviaCqXRf79NDGUVcpei
+	 lOl1iKEeHNpQ5MHAARToZyndpyW6NjKZyQd411Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725497AbgFDXIJ (ORCPT
+        id S1725926AbgFDXJ3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:08:09 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45150 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgFDXIJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 19:08:09 -0400
-Received: by mail-il1-f196.google.com with SMTP id 9so7720546ilg.12
-        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 16:08:07 -0700 (PDT)
+        Thu, 4 Jun 2020 19:09:29 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45026 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbgFDXJ3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 19:09:29 -0400
+Received: by mail-il1-f195.google.com with SMTP id i1so6559016ils.11
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 16:09:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jRy2xtFWKNlAqAVXEHvJHfSiEZWhYR4CV8B2YeBv94Q=;
-        b=TA64C9W/dWvZk5NCvTkAAlPP8qKUeEwlcOLvk7ecnKUoEwSKTnuK8VKWuCxS+b2QpN
-         Zl8rteESRz4IDDc7C1dy2t9N1hsimPm60DR+hbMlCooVSgcpW9lYFQlkUlskP0WtB+8t
-         8Sozpy2BCivhMe8yHeh56NfEnARdQOkMVhF4yD2p+c7Ead0Eoi+hSIWd81xpr8dqSZns
-         a5U2aE93w2QbuE8Ne6TVl68TSTP5p381sljSTYsmtzWK6Atc/obsgdrR6nooXbXPo6T3
-         ZSkl3OpZX9mSpdPHWbzBlchPZQpzGBr3j6lZSahiuUPy1hopJyDwRs9tK0N2E8kG8AxT
-         Xa6g==
-X-Gm-Message-State: AOAM530xugoX65i0Plo+iDa77A71et7mmLSzcLi1zyGJLiHqefnYx1CC
-        yGeI4f9TvfuobPajVQEjlw==
-X-Google-Smtp-Source: ABdhPJxBwqg2KjhkMQTT+Bjb8yKCzHP3CMKvZqePsJSASFJh55N1HQlDha382TaJKKuPgN6f4WReOQ==
-X-Received: by 2002:a92:7901:: with SMTP id u1mr6285248ilc.52.1591312086941;
-        Thu, 04 Jun 2020 16:08:06 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yYPBulhrt5+j3gZ6UOPsWCTsIiSD9443w1u0FFugCwI=;
+        b=K9LeB/xq+UhZ4tgzNmKTBeCq9m/iN/yKg1vILOzXvnN+k+iNVfNIPgSstzH1KvosA8
+         GzRCtOpdTncZCNyTyi1xtbOii1LHm2HdQuEOVRnM4lK0ptcltVlmXLLW8lewpjuVOiR7
+         DxhRSXA+KjXiy/0ePH8ZwFtHr+nY2HyCYkF7CCnJ3yXGbnhY0sqBuUj81xtuYNTmNx7Y
+         QqOXYUe9EGy2kxUqlH3ZSi70pIaMb0jej6ztHnmTVYgYPBD/7PI1D5G/stxSpWo/FxYw
+         Rw24hzmlxODZynk+cYjyI15Rw+gMInjcrFxRmt5QUkbK+MCnzEIl+aVe/XXLPe5ax/nK
+         SnIw==
+X-Gm-Message-State: AOAM532zeVKvkMvIYL5lBtmkJqUvO3HfcJD9jeH3piKn0qHUBJafbeba
+        cLLhgIBKWSs/q55K+dA2lQ==
+X-Google-Smtp-Source: ABdhPJz0xvfJ6BAoe8r3FFbzotTCpm3rEqCy3dakyBL+n5Px5TUd4cVn4xkeEp1XOa2Kt3yYWNYdPw==
+X-Received: by 2002:a92:d984:: with SMTP id r4mr6136951iln.302.1591312168185;
+        Thu, 04 Jun 2020 16:09:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id z16sm2022433ilz.64.2020.06.04.16.08.05
+        by smtp.gmail.com with ESMTPSA id v20sm2168407ilc.1.2020.06.04.16.09.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 16:08:05 -0700 (PDT)
-Received: (nullmailer pid 17414 invoked by uid 1000);
-        Thu, 04 Jun 2020 23:08:04 -0000
-Date:   Thu, 4 Jun 2020 17:08:04 -0600
+        Thu, 04 Jun 2020 16:09:27 -0700 (PDT)
+Received: (nullmailer pid 19307 invoked by uid 1000);
+        Thu, 04 Jun 2020 23:09:26 -0000
+Date:   Thu, 4 Jun 2020 17:09:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        linux-mtd@lists.infradead.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Julien Su <juliensu@mxic.com.tw>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 07/20] dt-bindings: mtd: Document boolean NAND ECC
- properties
-Message-ID: <20200604230804.GA13821@bogus>
-References: <20200603175759.19948-1-miquel.raynal@bootlin.com>
- <20200603175759.19948-8-miquel.raynal@bootlin.com>
+To:     Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     marex@denx.de, kernel@collabora.com, michal.simek@xilinx.com,
+        laurent.pinchart@ideasonboard.com, xuwei5@hisilicon.com,
+        robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] dt-bindings: drm: bridge: adi, adv7511.txt:
+ convert to yaml
+Message-ID: <20200604230926.GA19232@bogus>
+References: <20200601063308.13045-1-ricardo.canuelo@collabora.com>
+ <20200601063308.13045-5-ricardo.canuelo@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200603175759.19948-8-miquel.raynal@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200601063308.13045-5-ricardo.canuelo@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 07:57:46PM +0200, Miquel Raynal wrote:
-> Document nand-use-soft-ecc-engine and nand-no-ecc-engine properties.
-> The former is here to force software correction, the latter prevents
-> any correction to happen.
+On Mon, 01 Jun 2020 08:33:08 +0200, Ricardo Cañuelo wrote:
+> Convert the ADV7511/11w/13/33/35 DT bindings to json-schema. The
+> original binding has been split into two files: adi,adv7511.yaml for
+> ADV7511/11W/13 and adi,adv7533.yaml for ADV7533/35.
 > 
-> These properties (along with nand-ecc-engine) are supposed to be more
-> accurate than the current nand-ecc-modes wich is very misleading and
-> very often people think it is mandatory while the core should be
-> relied upon to decide which correction to handle.
-> 
-> nand-ecc-mode was already inacurate, but it becomes totally
-> problematic with setups where there are several hardware engines.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 > ---
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../bindings/display/bridge/adi,adv7511.txt   | 143 -----------
+>  .../bindings/display/bridge/adi,adv7511.yaml  | 231 ++++++++++++++++++
+>  .../bindings/display/bridge/adi,adv7533.yaml  | 175 +++++++++++++
+>  3 files changed, 406 insertions(+), 143 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7511.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7533.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> index 0969d2e6720b..a3750978ebb8 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -68,6 +68,12 @@ patternProperties:
->            3/ The ECC engine is external, in this case the phandle should
->            reference the specific ECC engine node.
->  
-> +      nand-use-soft-ecc-engine: true
-> +        description: Use a software ECC engine.
 
-Humm, I'm surprised this is valid YAML. nand-use-soft-ecc-engine can't 
-be both a boolean and a map (aka schema, aka dict).
-
-nand-use-soft-ecc-engine:
-  type: boolean
-  description: ...
-
-> +
-> +      nand-no-ecc-engine: true
-> +        description: Do not use any ECC correction.
-> +
->        nand-ecc-placement:
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/string
-> -- 
-> 2.20.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
