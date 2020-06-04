@@ -2,127 +2,132 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5A3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 11:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85087C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1954520663
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 11:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6127020738
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u30nQGQE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DTUTUMKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgFDLvt (ORCPT
+        id S1728198AbgFDMEl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:51:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26939 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgFDLvt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:51:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591271508; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=bJinhFvWxnf+eU1IFeVuAszNfdJOANQSSFIQK1+0I34=;
- b=u30nQGQE65CuZQGxiGuA0IvRCPg95jynJfzf2U64ROGK+qaz7AAvQY9bSPx3I6NRhPOE48nd
- EB9Wk9YBW2/JGVOVFadFF6ZHUwKugANOivo0WLM5RyofXQu75kX8fjRVAtkK1ZhiHd5qfAuU
- O2HLf4AI4x27PHJDQ6qX/ZRSrEQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5ed8e05476fccbb4c8043ee4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 11:51:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 21AF9C4339C; Thu,  4 Jun 2020 11:51:47 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8C2E8C43387;
-        Thu,  4 Jun 2020 11:51:46 +0000 (UTC)
+        Thu, 4 Jun 2020 08:04:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48770 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgFDMEl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 08:04:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C4a9Z086454;
+        Thu, 4 Jun 2020 07:04:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591272276;
+        bh=nnUHfuhIWwZ11cEfZZZuz86wJU3xA23f/562Xl1x8YU=;
+        h=From:To:CC:Subject:Date;
+        b=DTUTUMKUBJYPK1UFHXWZlla8TwDZcArzcYJyeZtfrhGPMdUVN7n4uQ6fAG/tHpXsM
+         i3qjMR0Q4WLfg1vxcAeTnB7zjqtQDba7FQjgwyj+ObpBE7nnpPCs24AP82wDrC9vWb
+         /zuJoMvXFwE/BMSO4Il6bOZNABOKRexZZ32S1VUo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054C4aOt034240
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 07:04:36 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 07:04:36 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 07:04:36 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C4aAS025386;
+        Thu, 4 Jun 2020 07:04:36 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v26 00/15] Multicolor Framework v25
+Date:   Thu, 4 Jun 2020 07:04:15 -0500
+Message-ID: <20200604120430.32366-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 04 Jun 2020 17:21:46 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@linaro.org, linaro-kernel@lists.linaro.org,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: sm8250: add watchdog device
-In-Reply-To: <20200604113544.GF16719@Mani-XPS-13-9360>
-References: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
- <20200604004331.669936-7-dmitry.baryshkov@linaro.org>
- <1a23cf8a6386e8b78c52199bdcde9b5e@codeaurora.org>
- <20200604113544.GF16719@Mani-XPS-13-9360>
-Message-ID: <f1cb759c2a70981ba8903dc1141349fe@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-04 17:05, Manivannan Sadhasivam wrote:
-> On Thu, Jun 04, 2020 at 04:37:01PM +0530, Sai Prakash Ranjan wrote:
->> On 2020-06-04 06:13, Dmitry Baryshkov wrote:
->> > Add on-SoC watchdog device node.
->> >
->> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> > ---
->> >  arch/arm64/boot/dts/qcom/sm8250.dtsi | 6 ++++++
->> >  1 file changed, 6 insertions(+)
->> >
->> > diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > index 972d8e04c8a2..f1641c6fe203 100644
->> > --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > @@ -1662,6 +1662,12 @@ config {
->> >  			};
->> >  		};
->> >
->> > +		watchdog@17c10000 {
->> > +			compatible = "qcom,apss-wdt-sm8250", "qcom,kpss-wdt";
->> 
->> Need to add this compatible to bindings.
->> 
-> 
-> I did look into this but the binding says,
-> "compatible : shall contain only one of the following"
-> 
-> So clearly the fallback is not going to work and there is no need to 
-> add a
-> dedicated compatible in the driver. The binding is not in the YAML 
-> format to
-> be validated but still... Other option is to convert the binding to 
-> YAML and
-> make the compatibles listed as 'enum' and 'const' elements 
-> appropriately.
-> 
+Hello
 
-I already converted the bindings to YAML and added the missing 
-compatibles for
-other SoCs[1] . I thought it was already merged since Rob has already 
-reviewed
-them, but seems like it was missed. Bjorn, can you please take it?
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-[1] https://lore.kernel.org/patchwork/cover/1192757/
+Dan
 
-Thanks,
-Sai
+
+Dan Murphy (15):
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt-bindings: leds: Convert leds-lp55xx to yaml
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix checkpatch file permissions issues
+  leds: lp5523: Fix checkpatch issues in the code
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  34 +
+ .../bindings/leds/leds-class-multicolor.yaml  |  39 +
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 136 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 -----
+ .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  88 ++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  24 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 210 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 778 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 212 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 25 files changed, 1989 insertions(+), 355 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.26.2
+
