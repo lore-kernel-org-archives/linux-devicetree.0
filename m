@@ -2,87 +2,67 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73771C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D1C2074B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F90206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 08:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgFDIw1 (ORCPT
+        id S1728213AbgFDI4o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:52:27 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45530 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726664AbgFDIw1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 04:52:27 -0400
-Received: from [37.160.65.106] (port=1522 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jglbs-0002R5-4Q; Thu, 04 Jun 2020 10:52:24 +0200
-Subject: Re: [RFC 4/4] regulator: lp87565: add LP87524-Q1 variant
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Keerthy <j-keerthy@ti.com>, Axel Lin <axel.lin@ingics.com>
-References: <20200603200319.16184-1-luca@lucaceresoli.net>
- <20200603200319.16184-5-luca@lucaceresoli.net> <20200604064435.GR3714@dell>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <38652a93-304c-2d3f-c700-594f1ad57903@lucaceresoli.net>
-Date:   Thu, 4 Jun 2020 10:52:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200604064435.GR3714@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Thu, 4 Jun 2020 04:56:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:41730 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728089AbgFDI4o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 04:56:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5404055D;
+        Thu,  4 Jun 2020 01:56:44 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1261C3F6CF;
+        Thu,  4 Jun 2020 01:56:42 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Andre Przywara <andre.przywara@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm: dts: vexpress: Move mcc node back into motherboard node
+Date:   Thu,  4 Jun 2020 09:56:31 +0100
+Message-Id: <159126075826.16785.4183160239670270692.b4-ty@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200603162237.16319-1-andre.przywara@arm.com>
+References: <20200603162237.16319-1-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+On Wed, 3 Jun 2020 17:22:37 +0100, Andre Przywara wrote:
+> Commit 	d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+> out of bus node") moved the "mcc" DT node into the root node, because
+> it does not have any children using "reg" properties, so does violate
+> some dtc checks about "simple-bus" nodes.
+> However this broke the vexpress config-bus code, which walks up the
+> device tree to find the first node with an "arm,vexpress,site" property.
+> This gave the wrong result (matching the root node instead of the
+> motherboard node), so broke the clocks and some other devices for
+> VExpress boards.
+> 
+> [...]
 
-On 04/06/20 08:44, Lee Jones wrote:
-> On Wed, 03 Jun 2020, Luca Ceresoli wrote:
-> 
->> Add support for the LP87524B/J/P-Q1 Four 4-MHz Buck Converter. This is a
->> variant of the LP87565 having 4 single-phase outputs and up to 10 A of
->> total output current.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> ---
->>  drivers/mfd/lp87565.c       | 4 ++++
->>  include/linux/mfd/lp87565.h | 1 +
-> 
-> Again, this is an MFD patch.  Please change the subject line.
+Applied to sudeep.holla/linux (for-next/juno), thanks!
 
-Right.
+[1/1] arm: dts: vexpress: Move mcc node back into motherboard node
+      https://git.kernel.org/sudeep.holla/c/8a8cd9a910
 
->>  2 files changed, 5 insertions(+)
-> 
-> Once changed, please re-submit with my:
-> 
-> For my own reference (apply this as-is to your sign-off block):
-> 
->   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+--
+Regards,
+Sudeep
 
-Good, thank you.
--- 
-Luca
