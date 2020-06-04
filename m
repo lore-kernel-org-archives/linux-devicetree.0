@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 02:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DF9C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 02:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB76820738
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 02:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C50820772
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 02:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgFDB74 (ORCPT
+        id S1726370AbgFDB7y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:59:56 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:45348 "EHLO inva020.nxp.com"
+        Wed, 3 Jun 2020 21:59:54 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45312 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725973AbgFDB74 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:59:56 -0400
+        id S1726011AbgFDB7y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:59:54 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 750191A016E;
-        Thu,  4 Jun 2020 03:59:53 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3723F1A10CF;
+        Thu,  4 Jun 2020 03:59:52 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 370931A018E;
-        Thu,  4 Jun 2020 03:59:48 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EFA041A0192;
+        Thu,  4 Jun 2020 03:59:46 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 75899402A5;
-        Thu,  4 Jun 2020 09:59:41 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3D881402B3;
+        Thu,  4 Jun 2020 09:59:40 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -35,9 +36,9 @@ To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
         linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/3] dt-bindings: i2c: Convert mxs i2c to json-schema
-Date:   Thu,  4 Jun 2020 09:49:17 +0800
-Message-Id: <1591235358-15516-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/3] dt-bindings: i2c: Convert imx lpi2c to json-schema
+Date:   Thu,  4 Jun 2020 09:49:16 +0800
+Message-Id: <1591235358-15516-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591235358-15516-1-git-send-email-Anson.Huang@nxp.com>
 References: <1591235358-15516-1-git-send-email-Anson.Huang@nxp.com>
@@ -47,72 +48,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the MXS I2C binding to DT schema format using json-schema
+Convert the i.MX LPI2C binding to DT schema format using json-schema
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 Changes since V1:
 	- add "additionalProperties: false".
 ---
- Documentation/devicetree/bindings/i2c/i2c-mxs.txt  | 25 ----------
- Documentation/devicetree/bindings/i2c/i2c-mxs.yaml | 55 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      | 20 ---------
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml     | 47 ++++++++++++++++++++++
+ 2 files changed, 47 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mxs.txt b/Documentation/devicetree/bindings/i2c/i2c-mxs.txt
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
 deleted file mode 100644
-index 4e1c8ac..0000000
---- a/Documentation/devicetree/bindings/i2c/i2c-mxs.txt
+index f0c072f..0000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
 +++ /dev/null
-@@ -1,25 +0,0 @@
--* Freescale MXS Inter IC (I2C) Controller
+@@ -1,20 +0,0 @@
+-* Freescale Low Power Inter IC (LPI2C) for i.MX
 -
 -Required properties:
--- compatible: Should be "fsl,<chip>-i2c"
--- reg: Should contain registers location and length
--- interrupts: Should contain ERROR interrupt number
--- clock-frequency: Desired I2C bus clock frequency in Hz.
--                   Only 100000Hz and 400000Hz modes are supported.
--- dmas: DMA specifier, consisting of a phandle to DMA controller node
--  and I2C DMA channel ID.
--  Refer to dma.txt and fsl-mxs-dma.txt for details.
--- dma-names: Must be "rx-tx".
+-- compatible :
+-  - "fsl,imx7ulp-lpi2c" for LPI2C compatible with the one integrated on i.MX7ULP soc
+-  - "fsl,imx8qxp-lpi2c" for LPI2C compatible with the one integrated on i.MX8QXP soc
+-  - "fsl,imx8qm-lpi2c" for LPI2C compatible with the one integrated on i.MX8QM soc
+-- reg : address and length of the lpi2c master registers
+-- interrupts : lpi2c interrupt
+-- clocks : lpi2c clock specifier
 -
 -Examples:
 -
--i2c0: i2c@80058000 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--	compatible = "fsl,imx28-i2c";
--	reg = <0x80058000 2000>;
--	interrupts = <111>;
--	clock-frequency = <100000>;
--	dmas = <&dma_apbx 6>;
--	dma-names = "rx-tx";
+-lpi2c7: lpi2c7@40a50000 {
+-	compatible = "fsl,imx7ulp-lpi2c";
+-	reg = <0x40A50000 0x10000>;
+-	interrupt-parent = <&intc>;
+-	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks IMX7ULP_CLK_LPI2C7>;
 -};
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml b/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
 new file mode 100644
-index 0000000..3bc14bb
+index 0000000..ac0bc5d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
-@@ -0,0 +1,55 @@
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+@@ -0,0 +1,47 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/i2c/i2c-mxs.yaml#
++$id: http://devicetree.org/schemas/i2c/i2c-imx-lpi2c.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale MXS Inter IC (I2C) Controller
++title: Freescale Low Power Inter IC (LPI2C) for i.MX
 +
 +maintainers:
-+  - Shawn Guo <shawn.guo@linaro.org>
++  - Anson Huang <Anson.Huang@nxp.com>
 +
 +properties:
 +  compatible:
 +    enum:
-+      - fsl,imx23-i2c
-+      - fsl,imx28-i2c
++      - fsl,imx7ulp-lpi2c
++      - fsl,imx8qxp-lpi2c
++      - fsl,imx8qm-lpi2c
 +
 +  reg:
 +    maxItems: 1
@@ -120,37 +117,28 @@ index 0000000..3bc14bb
 +  interrupts:
 +    maxItems: 1
 +
-+  clock-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Desired I2C bus clock frequency in Hz, only 100000Hz and 400000Hz
-+      modes are supported.
-+    default: 100000
-+
-+  dmas:
++  clocks:
 +    maxItems: 1
-+
-+  dma-names:
-+    const: rx-tx
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - dmas
-+  - dma-names
++  - clocks
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    i2c@80058000 {
-+        compatible = "fsl,imx28-i2c";
-+        reg = <0x80058000 2000>;
-+        interrupts = <111>;
-+        clock-frequency = <100000>;
-+        dmas = <&dma_apbx 6>;
-+        dma-names = "rx-tx";
++    #include <dt-bindings/clock/imx7ulp-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    lpi2c7@40a50000 {
++        compatible = "fsl,imx7ulp-lpi2c";
++        reg = <0x40A50000 0x10000>;
++        interrupt-parent = <&intc>;
++        interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX7ULP_CLK_LPI2C7>;
 +    };
 -- 
 2.7.4
