@@ -2,245 +2,206 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FFAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBE2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB1820738
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA89207DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591277873;
+	bh=R78c8kSIeCH+8zefp0d/jSCDkdfqbN44t3yjAp+DSPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cqIys8e+xXrCFCW18nSe9gSA9VyNlfbMiz9bdo/25eCdFcT88AOpcnV92ntvRR340
+	 9Uk8gClIchOD8Ju56EdoJwrofwx5UkYh5yjnnpXseGS2MaAaSpyILBywP/73AOJ5m4
+	 g+EPrB6Yikg/b3evfIzFmR/CHElZpnUF7qtGT4Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgFDNUr (ORCPT
+        id S1728447AbgFDNhw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:20:47 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55827 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728055AbgFDNUr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 09:20:47 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Jun 2020 18:50:05 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Jun 2020 18:49:41 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 55AFD49A8; Thu,  4 Jun 2020 18:49:40 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH v6] drm/msm/dpu: ensure device suspend happens during PM sleep
-Date:   Thu,  4 Jun 2020 18:49:35 +0530
-Message-Id: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 4 Jun 2020 09:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728323AbgFDNhw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:37:52 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC6A5206E6;
+        Thu,  4 Jun 2020 13:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591277871;
+        bh=R78c8kSIeCH+8zefp0d/jSCDkdfqbN44t3yjAp+DSPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C/7uMmH2K7OUr7TOT6iHWDXXbvzSO7p1Arxd9WcxBnBs4qQgkybJaBpvRrPXvRfaZ
+         Y88ealtNzAIPbze4JCmM9Op4yQFRTtzgiz1TqDhSU6oBtb62XbJ8gZJ2wAQfKXEmS+
+         ieOc45W44uGVW62cmU+GiyvLIzJ1hDQnrBSQd8zk=
+Date:   Thu, 4 Jun 2020 14:37:46 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        tabba@google.com, qwandor@google.com, ardb@kernel.org
+Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
+Message-ID: <20200604133746.GA2951@willie-the-truck>
+References: <20200601094512.50509-1-sudeep.holla@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601094512.50509-1-sudeep.holla@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"The PM core always increments the runtime usage counter
-before calling the ->suspend() callback and decrements it
-after calling the ->resume() callback"
+Hi Sudeep, [+Fuad, Andrew and Ard]
 
-DPU and DSI are managed as runtime devices. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend was not getting called
-and it kept the clocks on which resulted in target not
-entering into XO shutdown.
+(To other interested readers: if you haven't seen it, the FF-A spec is here:
+ https://static.docs.arm.com/den0077/a/DEN0077A_PSA_Firmware_Framework_Arm_v8-A_1.0_EAC.pdf
+ since this discussion makes no sense without that, and a tiny bit of sense
+ with it. It used to be called "SPCI" but it was recently renamed.)
 
-Add changes to force suspend on runtime devices during pm sleep.
+On Mon, Jun 01, 2020 at 10:45:09AM +0100, Sudeep Holla wrote:
+> Sorry for posting in the middle of merge window and I must have done
+> this last week itself. This is not the driver I had thought about posting
+> last week. After I started cleaning up and looking at Will's KVM prototype[1]
+> for PSA FF-A (previously known as SPCI),
 
-Changes in v1:
- - Remove unnecessary checks in the function
-    _dpu_kms_disable_dpu (Rob Clark).
+Yes, I need to do the Big Rename at some point. Joy.
 
-Changes in v2:
- - Avoid using suspend_late to reset the usagecount
-   as suspend_late might not be called during suspend
-   call failures (Doug).
+> I got more doubts on alignment and dropped huge chunk of interface APIs in
+> the driver in order to keep it simple, and get aligned more with that
+> prototype and avoid scanning lots of code unnecessary.
 
-Changes in v3:
- - Use force suspend instead of managing device usage_count
-   via runtime put and get API's to trigger callbacks (Doug).
+You also dropped most of the code, so this doesn't really do anything in
+its current form ;)
 
-Changes in v4:
- - Check the return values of pm_runtime_force_suspend and
-   pm_runtime_force_resume API's and pass appropriately (Doug).
+> Here are few things to clarify:
+> 
+> 1. DT bindings
+> ---------------
+> 	I was initially against adding bindings for Tx/Rx buffers for
+> 	partitions. As per the spec, an endpoint could allocate the
+> 	buffer pair and use the FFA_RXTX_MAP interface to map it with the
+> 	Hypervisor(KVM here). However looking at the prototype and also
+> 	I remember you mentioning that it is not possible to manage buffers
+> 	in that way. Please confirm if you plan to add the buffer details
+> 	fetcthing them through ioctls in KVM and adding them to VM DT nodes
+> 	in KVM userspace. I will update the bindings accordingly.
 
-Changes in v5:
- - With v4 patch, test cycle has uncovered issues in device resume.
+I think it's useful to have a mode of operation where the hypervisor
+allocates the RX/TX buffers and advertises them in the DT. However, we
+can always add this later, so there's no need to have it in the binding
+from the start. Best start as simple as possible, I reckon.
 
-   On bubs: cmd tx failures were seen as SW is sending panel off
-   commands when the dsi resources are turned off.
+Setting the static RX/TX buffer allocation aside, why is a DT node needed
+at all for the case where Linux is running purely as an FF-A client? I
+thought everything should be discoverable via FFA_VERSION, FFA_FEATURES,
+FFA_PARTITION_INFO_GET and FFA_ID_GET? That should mean we can get away
+without a binding at all for the client case.
 
-   Upon suspend, DRM driver will issue a NULL composition to the
-   dpu, followed by turning off all the HW blocks.
+> 2. Driver
+> ---------
+> a. Support for multiple partitions in a VM
+> ------------------------------------------
+> 	I am not sure if there is need for supporting multiple partitions
+> 	within a VM. It should be possible to do so as I expect to create
+> 	device for each partition entry under arm-psa-ffa devicetree node.
+> 	However, I don't want to assume something that will never be a
+> 	usecase. However I don't think this will change must of the
+> 	abstraction as we need to keep the interface API implementation
+> 	separate to support different partitions on various platforms.
 
-   v5 changes will serialize the NULL commit and resource unwinding
-   by handling them under PM prepare and PM complete phases there by
-   ensuring that clks are on when panel off commands are being
-   processed.
+I think Ard has a case for something like this, where a VM actually consists
+of multiple partitions so that S-EL0 services can be provided from NS-EL0.
+However, he probably wants that for a dynamically created VM, so we'd
+need a way to instantiate an FFA namespace for the VM. Maybe that can be
+done entirely in userspace by the VMM...
 
-Changes in v6:
-- Use drm_mode_config_helper_suspend/resume() instead of legacy API
-  drm_atomic_helper_suspend/resume() (Doug).
+> b. SMCCC interface
+> ------------------
+> 	This is something I messed up completely while trying to add
+> 	support for SMCCC v1.2. It now supports x0-x17 as parameter
+> 	registers(input) and return registers(output). I started simple
+> 	with x0-x7 as both input and output as PSA FF-A needs that at
+> 	most. But extending to x0-x17 then became with messy in my
+> 	implementation. That's the reason I dropped it completely
+> 	here and thought of checking it first.
+> 
+> 	Do we need to extend the optimisations that were done to handle
+> 	ARCH_WORKAROUND_{1,2}. Or should be just use a version with x0-x7
+> 	as both input and ouput. Hyper-V guys need full x0-x17 support.
+> 
+> 	I need some guidance as what is the approach preferred ?
 
-  Trigger runtime callbacks from the suspend/resume call to turn
-  off the resources.
+I think we can start off with x0-x7 and extend if later if we need to.
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  2 +
- drivers/gpu/drm/msm/dsi/dsi.c           |  2 +
- drivers/gpu/drm/msm/msm_drv.c           | 67 ++++++++++++++++-----------------
- 3 files changed, 37 insertions(+), 34 deletions(-)
+> 3. Partitions
+> -------------
+> 	I am not sure if we have a full define partition that we plan to
+> 	push upstream. Without one, we can have a sample/example partition
+> 	to test all the interface APIs, but is that fine with respect to
+> 	what we want upstream ? Any other thoughts that helps to test the
+> 	driver ?
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..b886d9d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
- 
- static const struct dev_pm_ops dpu_pm_ops = {
- 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static const struct of_device_id dpu_dt_match[] = {
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 55ea4bc2..62704885 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
- 
- static const struct dev_pm_ops dsi_pm_ops = {
- 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static struct platform_driver dsi_driver = {
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7d985f8..da42ff7 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1035,75 +1035,74 @@ static int msm_ioctl_submitqueue_close(struct drm_device *dev, void *data,
- 	.patchlevel         = MSM_VERSION_PATCHLEVEL,
- };
- 
--#ifdef CONFIG_PM_SLEEP
--static int msm_pm_suspend(struct device *dev)
-+#ifdef CONFIG_PM
-+static int msm_runtime_suspend(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
-+	struct msm_mdss *mdss = priv->mdss;
- 
--	if (WARN_ON(priv->pm_state))
--		drm_atomic_state_put(priv->pm_state);
-+	DBG("");
- 
--	priv->pm_state = drm_atomic_helper_suspend(ddev);
--	if (IS_ERR(priv->pm_state)) {
--		int ret = PTR_ERR(priv->pm_state);
--		DRM_ERROR("Failed to suspend dpu, %d\n", ret);
--		return ret;
--	}
-+	if (mdss && mdss->funcs)
-+		return mdss->funcs->disable(mdss);
- 
- 	return 0;
- }
- 
--static int msm_pm_resume(struct device *dev)
-+static int msm_runtime_resume(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
--	int ret;
-+	struct msm_mdss *mdss = priv->mdss;
- 
--	if (WARN_ON(!priv->pm_state))
--		return -ENOENT;
-+	DBG("");
- 
--	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
--	if (!ret)
--		priv->pm_state = NULL;
-+	if (mdss && mdss->funcs)
-+		return mdss->funcs->enable(mdss);
- 
--	return ret;
-+	return 0;
- }
- #endif
- 
--#ifdef CONFIG_PM
--static int msm_runtime_suspend(struct device *dev)
-+#ifdef CONFIG_PM_SLEEP
-+static int msm_pm_suspend(struct device *dev)
- {
--	struct drm_device *ddev = dev_get_drvdata(dev);
--	struct msm_drm_private *priv = ddev->dev_private;
--	struct msm_mdss *mdss = priv->mdss;
- 
--	DBG("");
-+	if (pm_runtime_suspended(dev))
-+		return 0;
- 
--	if (mdss && mdss->funcs)
--		return mdss->funcs->disable(mdss);
-+	return msm_runtime_suspend(dev);
-+}
- 
--	return 0;
-+static int msm_pm_resume(struct device *dev)
-+{
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	return msm_runtime_resume(dev);
- }
- 
--static int msm_runtime_resume(struct device *dev)
-+static int msm_pm_prepare(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
--	struct msm_drm_private *priv = ddev->dev_private;
--	struct msm_mdss *mdss = priv->mdss;
- 
--	DBG("");
-+	return drm_mode_config_helper_suspend(ddev);
-+}
- 
--	if (mdss && mdss->funcs)
--		return mdss->funcs->enable(mdss);
-+static void msm_pm_complete(struct device *dev)
-+{
-+	struct drm_device *ddev = dev_get_drvdata(dev);
- 
--	return 0;
-+	drm_mode_config_helper_resume(ddev);
- }
- #endif
- 
- static const struct dev_pm_ops msm_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
- 	SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
-+	.prepare = msm_pm_prepare,
-+	.complete = msm_pm_complete,
- };
- 
- /*
--- 
-1.9.1
+I think that's the best you can do for now. We can probably help with
+testing as our stuff gets off the ground.
 
+> Sorry for long email and too many questions, but I thought it is easier
+> this way to begin with than throwing huge code implementing loads of APIs
+> with no users(expect example partition) especially that I am posting this
+> during merge window.
+
+No problem. Maybe it would help if I described roughly what we were thinking
+of doing for KVM (this is open for discussion, of course):
+
+ 1. Describe KVM-managed partitions in the DT, along the lines of [1]
+ 2. Expose each partition as a file to userspace. E.g.:
+
+    /dev/spci/:
+
+	self
+	e3a48fa5-dc54-4a8b-898b-bdc4dfeeb7b8
+	49f65057-d002-4ae2-b4ee-d31c7940a13d
+
+    Here, self would be a symlink to the host uuid. The host uuid file
+    would implement FFA_MEM operations using an ioctl(), so you could,
+    for example, share a user buffer with multiple partitions by issuing
+    a MEM_SHARE ioctl() on self, passing the fds for the borrower partitions
+    as arguments. Messaging would be implemented as ioctl()s on the
+    partition uuid files themselves.
+
+ 3. We'll need some (all?) of these patches to unmap memory from the host
+    when necessary:
+
+    https://lwn.net/Articles/821215/
+
+    (for nVHE, we'll have a stage-2 for the host so we can unmap there as
+    well)
+
+For communicating with partitions that are not managed by KVM (e.g. trusted
+applications), it's not clear to me how much of that will be handled in
+kernel or user. I think it would still be worth exposing the partitions as
+files, but perhaps having them root only or just returning -EPERM for the
+ioctl() if a kernel driver has claimed the partition as its own? Ideally,
+FF-A would allow us to transition some of the Trusted OS interfacing code
+out to userspace, but I don't know how realistic that is.
+
+Anyway, to enable this, I think we need a clear separation in the kernel
+between the FF-A code and the users: KVM will want to expose things as
+above, but if drivers need to use this stuff as well then they can plug in
+as additional users and we don't have to worry about tripping over the
+RX/TX buffers etc.
+
+What do you think, and do you reckon you can spin a cut-down driver that
+implements the common part of the logic (since I know you've written much
+of this code already)?
+
+Cheers,
+
+Will
+
+[1] https://android-kvm.googlesource.com/linux/+/8632a5723ef106017c4ab57e95d9ce7630d35522%5E%21/#F0
