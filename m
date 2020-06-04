@@ -2,135 +2,138 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BEBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DC4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F9D2063A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="0zF8Eb4b"
+	by mail.kernel.org (Postfix) with ESMTP id 43654207DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgFDOF6 (ORCPT
+        id S1728887AbgFDO1M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgFDOF6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 10:05:58 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A332C08C5C1
-        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 07:05:58 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id j32so5254249qte.10
-        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 07:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8sTKDbykwSlqjkc+QQmVX/X4H1PKxc/T5zBXz+JcQBI=;
-        b=0zF8Eb4bzqjSQB/lXrUh6ciNSD06d4VkHxDnGB9I9PRnBTdSdoTaI78MJdidAbYZLN
-         90+rt5zRH779ALPQJJCzVb1Ny+rM83PeeuAuZ8IH7J/90XGQtvpOARZ+bI5yeOr1RnKa
-         xZFGJDxuAqJ3cxi86mTjWpWU8vwM/r+/nlsEzavKea6eJKLh86N3TRI4+2kCwaXnFbBL
-         sf0O3Y+bpgpM94qprDv/uGproOOOzeawK5K/dAu/aR6PV98q/8+XvHX26m/UpIpdxSUs
-         j1D1GxHlaUFtDhts3cHotFF0HTNwxRWgg54CuY1tAjKoxIc4MdX+0yfu+6kjhpjJDTbD
-         iVJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8sTKDbykwSlqjkc+QQmVX/X4H1PKxc/T5zBXz+JcQBI=;
-        b=LkNSH2YN/f5+nmcPWDLKylpaAi+jOt3UFHq+ojanNYDkVEBmUhK6C/13kqTZCaJIwk
-         Mt0sgsHwohE0SRs1NYtS1J3LkObroOS2K9q76EN7d3WAXcS0XU55SyTWaQilnc/We//6
-         ILEN1FYikdTo1BUpdO9aB2Z2cFqgOxe3/C8lfBL1roMy3Rd5kXQT3fj9DaVlmIKEiOnR
-         gPCtzWR7lrbc93X+h2KIqSBIcaYi33+y/4ZjcLpse5kdxapl4JHmjzP4jFTs9uKs3imt
-         UTd1jRkmA1Xqldl2izVf2yLZM7Vmkt2JyB1GG1UuJ8yC7sdLdCBYFzUbeVrxErjKJro7
-         isiw==
-X-Gm-Message-State: AOAM533w7Qf2PG2ug8BQz8hJyBxi84oMAK3Yq9ouWSbb3tsJRk1Gzc1c
-        27Go5tLsl0NtnMX/bMhiDV/e6w==
-X-Google-Smtp-Source: ABdhPJzrJDtfNSIRHrOMEPgMIwuC/tuoH7MjyfBdTb+ve5SQxe7mPvfxhLprOToDNg8rbqcLcPQdCw==
-X-Received: by 2002:ac8:518c:: with SMTP id c12mr4646131qtn.108.1591279557400;
-        Thu, 04 Jun 2020 07:05:57 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id c16sm4446863qko.100.2020.06.04.07.05.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 07:05:56 -0700 (PDT)
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
- dts
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200604135221.GH16719@Mani-XPS-13-9360>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
-Date:   Thu, 4 Jun 2020 10:06:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 4 Jun 2020 10:27:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:45180 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728496AbgFDO1M (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:27:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC7EA2B;
+        Thu,  4 Jun 2020 07:27:11 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 384F03F305;
+        Thu,  4 Jun 2020 07:27:09 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 15:27:03 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH 06/12] of/iommu: Make of_map_rid() PCI agnostic
+Message-ID: <20200604142703.GA476@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200521130008.8266-7-lorenzo.pieralisi@arm.com>
+ <CAL_JsqK5aiEMAZpqgTmrOq=HPRSFEoQWJrpR2YA0hziEtLMwrg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200604135221.GH16719@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK5aiEMAZpqgTmrOq=HPRSFEoQWJrpR2YA0hziEtLMwrg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/4/20 9:52 AM, Manivannan Sadhasivam wrote:
-> Hi,
+On Thu, May 21, 2020 at 04:47:19PM -0600, Rob Herring wrote:
+> On Thu, May 21, 2020 at 7:00 AM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > There is nothing PCI specific (other than the RID - requester ID)
+> > in the of_map_rid() implementation, so the same function can be
+> > reused for input/output IDs mapping for other busses just as well.
+> >
+> > Rename the RID instances/names to a generic "id" tag and provide
+> > an of_map_rid() wrapper function so that we can leave the existing
+> > (and legitimate) callers unchanged.
 > 
-> On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
->> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
->>
-> 
-> I've tested this series on an SM8250 based board and able to get Type C (USB0)
-> working. There are also couple of Type A ports (USB1) on that board behind a
-> USB hub. It is probing fine but I don't see any activity while connecting a
-> USB device. Will continue to debug and once I get them working, I'll add my
-> Tested-by tag.
-> 
+> It's not all that clear to a casual observer that RID is a PCI thing,
+> so I don't know that keeping it buys much. And there's only 3 callers.
 
-HDK865 also has a couple Type A ports, I am using them with devices 
-already plugged in during boot and I haven't hit a problem like that, 
-but I think I've seen the same issue when hotplugging. IIRC the behavior 
-was a bit weird, like plugging a device in the Type A port (USB1) 
-nothing would happen, but unplugging/replugging the type C port (USB0) 
-would cause the Type A port device to start working..
+Yes I agree - I think we can remove the _rid interface.
 
-Have you tried with the devices already plugged in before booting?
-
-> Thanks,
-> Mani
+> > No functionality change intended.
+> >
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/iommu/of_iommu.c |  2 +-
+> >  drivers/of/base.c        | 42 ++++++++++++++++++++--------------------
+> >  include/linux/of.h       | 17 +++++++++++++++-
+> >  3 files changed, 38 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> > index 20738aacac89..ad96b87137d6 100644
+> > --- a/drivers/iommu/of_iommu.c
+> > +++ b/drivers/iommu/of_iommu.c
+> > @@ -145,7 +145,7 @@ static int of_fsl_mc_iommu_init(struct fsl_mc_device *mc_dev,
+> >         struct of_phandle_args iommu_spec = { .args_count = 1 };
+> >         int err;
+> >
+> > -       err = of_map_rid(master_np, mc_dev->icid, "iommu-map",
+> > +       err = of_map_id(master_np, mc_dev->icid, "iommu-map",
 > 
->> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
->> few changes. Notably, the HDK865 dts has regulator config changed a bit based
->> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
->>
->> Jonathan Marek (6):
->>    arm64: dts: qcom: sm8150: add apps_smmu node
->>    arm64: dts: qcom: sm8250: add apps_smmu node
->>    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
->>    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
->>    arm64: dts: qcom: add sm8150 hdk dts
->>    arm64: dts: qcom: add sm8250 hdk dts
->>
->>   arch/arm64/boot/dts/qcom/Makefile       |   2 +
->>   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
->>   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
->>   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
->>   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
->>   5 files changed, 1384 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
->>   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
->>
->> -- 
->> 2.26.1
->>
+> I'm not sure this is an improvement because I'd refactor this function
+> and of_pci_iommu_init() into a single function:
+> 
+> of_bus_iommu_init(struct device *dev, struct device_node *np, u32 id)
+> 
+> Then of_pci_iommu_init() becomes:
+> 
+> of_pci_iommu_init()
+> {
+>   return of_bus_iommu_init(info->dev, info->np, alias);
+> }
+> 
+> And replace of_fsl_mc_iommu_init call with:
+> err = of_bus_iommu_init(dev, master_np, to_fsl_mc_device(dev)->icid);
+
+I will follow up on this on patch 7.
+
+> >                          "iommu-map-mask", &iommu_spec.np,
+> >                          iommu_spec.args);
+> >         if (err)
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index ae03b1218b06..e000e17bd602 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -2201,15 +2201,15 @@ int of_find_last_cache_level(unsigned int cpu)
+> >  }
+> >
+> >  /**
+> > - * of_map_rid - Translate a requester ID through a downstream mapping.
+> > + * of_map_id - Translate a requester ID through a downstream mapping.
+> 
+> Still a requester ID?
+
+Fixed, thanks.
+
+Lorenzo
