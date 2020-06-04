@@ -2,141 +2,150 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F633C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 15:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862D6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF9A207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 15:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F188207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 16:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o2sza3EQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vr/I6zf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgFDP6e (ORCPT
+        id S1729629AbgFDQFu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39042 "EHLO
+        Thu, 4 Jun 2020 12:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbgFDP6e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 11:58:34 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BF1C08C5C1
-        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 08:58:34 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n9so2358622plk.1
-        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 08:58:34 -0700 (PDT)
+        with ESMTP id S1726026AbgFDQFu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 12:05:50 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF0BC08C5C0;
+        Thu,  4 Jun 2020 09:05:50 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i12so1311929pju.3;
+        Thu, 04 Jun 2020 09:05:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=06qJ6cVTAC2pzO5b4lUgwr6Obth7V4o6CCI1s1HWoM8=;
-        b=o2sza3EQSLRpzYpN/X7lDFGDRPvpEz9QvrHcKU9aufszRXcw9xjtiCVookzX0NuO71
-         I4RJ/AyC+4SHMIN4ZUu5Ar0q/0/iCsnmH6Y5QzXW3Cw+fDMhflNHieI603MW4ow4WAp+
-         VI/wtC5hGyhYPIfwR4gM9TDTe6lIPx8PwfUCn+Kbj31paIPXMHKJRw0sHbWQ3ikvpfbz
-         cuOKYz5cxAZYnA0xyd6ersRU9IxJuH9pJQuA5gIiWqgfiOO+XGJK8wWWnAQJn9Rd5Pkv
-         LYMJjBcKuS98wj3YXnK7tez4VcVLdO1FPfq16IifN3SQNjW8yoz3mNkHPkn4NWshCiRN
-         Eq6w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HAWfVJ/MMzDDKipytKTsDnZ0G7qcc8KGtxLvXJOdNtk=;
+        b=Vr/I6zf9wpjvEwDaJRBX1+2aezi8wRyFreAa10APW8X1OHOEJVUF5Q7ARa3lfsQxV5
+         PonhEHPXMbOZ92Hv3xwguR8YsivIs6B6pm4J5X1yPTPMefCXweIlZEILCdduTmW+yxyw
+         OhnEBT4jsdV70Qrr/oA/Ze0IpOOH9DdR2SA5hFnhkya/j7r/2psfkWCwVhcqQIt/xwQy
+         shgoaSohosf7QXYHzM2Sp3IzNFwxzNG2HrlEmLya+hN+YPiSKSe2J76DTQQC9iYlPsjv
+         N7o0wJbseIrr7hrSLutCvvD3KwHNTA/MPX1Ln8fg20ENbh/0qci1FwGRVgYfXf/irWnd
+         uUeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=06qJ6cVTAC2pzO5b4lUgwr6Obth7V4o6CCI1s1HWoM8=;
-        b=mQJtPOdEdgBIjtRgM46/R9SAlHk/wN3pqCLw7DXHlLXL97tg8vRe0IPA+/66yssY/a
-         rTb/nGcJqyRJBe68Q1+UIeN+5ev74/jrtNAwruU1xqvY4DnZ0hSvMGBnUK4DiuMuAVqu
-         qoQOM1Bjxmk5tYtPCcDKxdOGP0QZ7UcZidBlG75tKEYodseld2MxdlIcNlDOOiiiIq/l
-         CpT9+9AYmdQjWEuK9cW9uWsqY+zYaj8KioUIFpKdvd5DTwJY4jcF/eL+ojmc1UL40ahG
-         rMr2EiaUGV0+nN5BpSHSOqHCMMDxWh4TNxTubUa/cSi0GULkOgU9uxTjqdKCOz1tJl+n
-         FLSQ==
-X-Gm-Message-State: AOAM532Kutu7QUYNYQ/wd29mrDsGrjrfVSUnyf32X25OWmn5w7ImnB61
-        h8hNW6N89vkXEngPYWpTet7E
-X-Google-Smtp-Source: ABdhPJyBwhHPj0fPhtcHnXiEtDj84r5PWyFiNtW5durTy+YJ+7hFi+XbAAHDjmE/3/Hwpe99teUIkQ==
-X-Received: by 2002:a17:90a:64c9:: with SMTP id i9mr6902073pjm.135.1591286313848;
-        Thu, 04 Jun 2020 08:58:33 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6211:4cea:c404:4d38:8396:d1ee])
-        by smtp.gmail.com with ESMTPSA id r1sm4410185pgb.37.2020.06.04.08.58.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jun 2020 08:58:32 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 21:28:25 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HAWfVJ/MMzDDKipytKTsDnZ0G7qcc8KGtxLvXJOdNtk=;
+        b=KXLP2vJl/fBSDRxvPujOop52zkcrCnQu4buv448yjXQJZ6alvaj4MoGWYBFWpljZSy
+         +I2uT1214BZ0h6Xm+yr7tg3rOZbnbkIZ0Rhl0FkffL9SXNY9Tyb0nu1DGrABJl2N7FV8
+         4RNNkZpsnrk5cFJ9GgOSQOQ2Ln5f2s3oj9Vg/a5VRXW137E1O0quLAjc1kqsRykoAf2L
+         gmQpTZAy60aeWS55kvQ98njQ9A+xWPYeHfh3W62yqaB9VRB36KdjIq6lyz0+/4ErUI8A
+         1DGsWwjG0pBl0+/ESv4AEA/Qkw0GELaxyloIBDJaVZz5BGCeUcYD3pXmhBjXsAutiF6m
+         2tGg==
+X-Gm-Message-State: AOAM532NjU0I5ExazNOQXGtNEvVtDAMdJancwdvnNbSYn/s9Icdxb3Hg
+        sxUzi7BlZCloEvakxtAFiDc=
+X-Google-Smtp-Source: ABdhPJzDmXwGbLzqmN4JtHAm4tslIFeo872mF9VRUt+Ly23GpPsGhckeyoYK7qV6BFeOQmVssm8UQQ==
+X-Received: by 2002:a17:90a:5806:: with SMTP id h6mr7122674pji.66.1591286749669;
+        Thu, 04 Jun 2020 09:05:49 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id n8sm5559105pjq.49.2020.06.04.09.05.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 09:05:48 -0700 (PDT)
+Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
+To:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
- dts
-Message-ID: <20200604155825.GI16719@Mani-XPS-13-9360>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200604135221.GH16719@Mani-XPS-13-9360>
- <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-4-f.fainelli@gmail.com>
+ <20200604123220.GD6644@sirena.org.uk>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <21772111-fa1f-7a50-aa92-e44b09cff4eb@gmail.com>
+Date:   Thu, 4 Jun 2020 09:05:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200604123220.GD6644@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:06:19AM -0400, Jonathan Marek wrote:
-> On 6/4/20 9:52 AM, Manivannan Sadhasivam wrote:
-> > Hi,
-> > 
-> > On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
-> > > Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
-> > > 
-> > 
-> > I've tested this series on an SM8250 based board and able to get Type C (USB0)
-> > working. There are also couple of Type A ports (USB1) on that board behind a
-> > USB hub. It is probing fine but I don't see any activity while connecting a
-> > USB device. Will continue to debug and once I get them working, I'll add my
-> > Tested-by tag.
-> > 
-> 
-> HDK865 also has a couple Type A ports, I am using them with devices already
-> plugged in during boot and I haven't hit a problem like that, but I think
-> I've seen the same issue when hotplugging. IIRC the behavior was a bit
-> weird, like plugging a device in the Type A port (USB1) nothing would
-> happen, but unplugging/replugging the type C port (USB0) would cause the
-> Type A port device to start working..
-> 
-> Have you tried with the devices already plugged in before booting?
-> 
 
-Tried it but no luck :/ Also plugging and removing Type C doesn't make any
-difference.
 
-Thanks,
-Mani
+On 6/4/2020 5:32 AM, Mark Brown wrote:
+> On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
+>> The SPI controller found in the BCM2711 and BCM7211 SoCs is instantiated
+>> 5 times, with all instances sharing the same interrupt line. We
+>> specifically match the two compatible strings here to determine whether
+>> it is necessary to request the interrupt with the IRQF_SHARED flag and
+>> to use an appropriate interrupt handler capable of returning IRQ_NONE.
+> 
+>> For the BCM2835 case which is deemed performance critical, there is no
+>> overhead since a dedicated handler that does not assume sharing is used.
+> 
+> This feels hacky - it's essentially using the compatible string to set a
+> boolean flag which isn't really about the IP but rather the platform
+> integration.  It might cause problems if we do end up having to quirk
+> this version of the IP for some other reason.
 
-> > Thanks,
-> > Mani
-> > 
-> > > Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
-> > > few changes. Notably, the HDK865 dts has regulator config changed a bit based
-> > > on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
-> > > 
-> > > Jonathan Marek (6):
-> > >    arm64: dts: qcom: sm8150: add apps_smmu node
-> > >    arm64: dts: qcom: sm8250: add apps_smmu node
-> > >    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
-> > >    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
-> > >    arm64: dts: qcom: add sm8150 hdk dts
-> > >    arm64: dts: qcom: add sm8250 hdk dts
-> > > 
-> > >   arch/arm64/boot/dts/qcom/Makefile       |   2 +
-> > >   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
-> > >   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
-> > >   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
-> > >   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
-> > >   5 files changed, 1384 insertions(+)
-> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
-> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
-> > > 
-> > > -- 
-> > > 2.26.1
-> > > 
+I am not sure why it would be a problem, when you describe a piece of
+hardware with Device Tree, even with the IP block being strictly the
+same, its very integration into a new SoC (with details like shared
+interrupt lines) do warrant a different compatible string. Maybe this is
+more of a philosophical question.
+
+> I'm also looking at the
+> code and wondering if the overhead of checking to see if the interrupt
+> is flagged is really that severe, it's just a check to see if a bit is
+> set in a register which we already read so should be a couple of
+> instructions (which disassembly seems to confirm).  It *is* overhead so
+> there's some value in it, I'm just surprised that it's such a hot path
+> especially with a reasonably deep FIFO like this device has.
+
+If it was up to me, we would just add the check on BCM2835_SPI_CS_INTR
+not being set and return IRQ_NONE and be done with it. I appreciate that
+Lukas has spent some tremendous amount of time working on this
+controller driver and he has a sensitivity for performance.
+
+> 
+> I guess ideally genirq would provide a way to figure out if an interrupt
+> is actually shared in the present system, and better yet we'd have a way
+> for drivers to say they aren't using the interrupt ATM, but that might
+> be more effort than it's really worth.  If this is needed and there's no
+> better way of figuring out if the interrupt is really shared then I'd
+> suggest a boolean flag rather than a compatible string, it's still a
+> hack but it's less likely to store up trouble for the future.
+
+Instead of counting the number of SPI devices we culd request the
+interrupt first with flags = IRQF_PROBE_SHARED, if this works, good we
+have a single SPI master enabled, if it returns -EBUSY, try again with
+flags = IRQF_SHARED and set-up the bcm2835_spi_sh_interrupt interrupt
+handler to manage the sharing.
+
+This would not require DT changes, which is probably better anyway.
+-- 
+Florian
