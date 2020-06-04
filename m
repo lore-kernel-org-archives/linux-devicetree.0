@@ -2,118 +2,140 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C921CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6F8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3FB02067B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591310125;
-	bh=MEOgu/bZys0u6+e1umJ8QePVm2Ua1OaSBE4AWlWpoQg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o3KJLPvW5s7I5/bNjxjpHdlr5uE6hwOvURgyokvysFZBNbjuU70yHjJQ4Hn3Ua+HS
-	 nM/E4tkljFaD0DBww3aSgUYDd5FlUwkm5SZLN+L9YDIeiHHfOiQ/840cu5VEWh8X9G
-	 QJ9EMfM0rmKaU96mlw/ytsY/CdcHcwx04cIWEx9c=
+	by mail.kernel.org (Postfix) with ESMTP id 71A762067B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 22:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuyxW+la"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgFDWfY (ORCPT
+        id S1728241AbgFDWiG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgFDWfY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:35:24 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC44E207D0;
-        Thu,  4 Jun 2020 22:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591310123;
-        bh=MEOgu/bZys0u6+e1umJ8QePVm2Ua1OaSBE4AWlWpoQg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BE/cimWL1fxy2xDBjfBdbGWHjejXHv+zobgC3vWXLf6g7cBqxIYp6OPWSRKn7npbJ
-         AkT21BNXT/LHUigkFl2RnBEMRGlAANYhXzWc4tt8o+Gf0EAUynRaZ3JODmdMKkOJVx
-         uoEojIOOqAiv5F77Uw0elTvUl2yfo/mq3UB7+LtI=
-Received: by mail-ot1-f46.google.com with SMTP id k15so6093932otp.8;
-        Thu, 04 Jun 2020 15:35:23 -0700 (PDT)
-X-Gm-Message-State: AOAM533sD7BiCgStOWpO0B0JHbb9tvyL2rS9UB3QOJwAqlOccH2WQptD
-        MdcRGZ3QPI8kPk832RrvS4T+R9/Wi1RhQd1atQ==
-X-Google-Smtp-Source: ABdhPJzkQ0ECUGnTkq9aILlT8NpeEXpYUdHrewIf+FkntnjfP0WzjzXVahCaByGUnjlH4byjrUqVIMhUJuUYcnWRjxs=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr5557846ots.192.1591310123034;
- Thu, 04 Jun 2020 15:35:23 -0700 (PDT)
+        Thu, 4 Jun 2020 18:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728041AbgFDWiG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 18:38:06 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CC6C08C5C0;
+        Thu,  4 Jun 2020 15:38:05 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l27so7864517ejc.1;
+        Thu, 04 Jun 2020 15:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=J2WkUUsQWWdvfrqknuQ/1gKN6QCcS4GghlCaLSIsdOo=;
+        b=RuyxW+laDxCnFYdR1DSXhWFe9hmsy8MmUSdRx7gfOV6BZ+PMG5eQgBYvvoBr0o1jP/
+         CO6j6LmHfPfV+jhXz1DA4YWO6fcyXlNkdlDftOWUlHsR3EcW0Wh2XztTXzS1brB5I4gg
+         9kqC0/qyII4ZCAECfmMt/etXcLCLHNHoEwIDP/+LeL2CDITbKaO+iHjyZ8vWUNXxeuqU
+         fCP8+DEIM1lgadkYtB+ZzJGAZIBpVBzfIItCjBQlqAqDlsfb+ccx4dOpRjICJUq0n0Zo
+         D5UO4Bjioy72L8N2YlHdnoShFWrJckHERD867Y15pK90KDu2HTUPl8J2x04GQMZxqEnx
+         4VFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=J2WkUUsQWWdvfrqknuQ/1gKN6QCcS4GghlCaLSIsdOo=;
+        b=H/ucAbMxowtHsHLXn06vgDBTsi1MnJyW5EpqEZcx4w2nqEvbSptmqqz/rmjj7VpOjU
+         ytaFu335oL+KwvVpsRkqm2jyef0a9X5vakzu8/4dP+OgXszI17+H3GVFq8sU5qONM7R6
+         //aCuVuaJ2G52zC/VdFZ+9v8hnlX2XR5Tjwo/VslX0+Wwq3djZK55OEa6rWzek7bHJed
+         BAamd6PyO3K221bC3POHwaxDczEAGLHhK5AMwtbOzv10/HqovPHIr9MTjfuXjKSM31cy
+         Pn1d4svjp2ww07oJD7o7+sj+/owK4JSGcsnJEanJKMHMSq7Yo7izY3ygs/8nSErCD8++
+         gZ/g==
+X-Gm-Message-State: AOAM5331+v6Q6ftj/97hPwdD2n6vJBePFHdo8vxg1ApTjVtkkUgn0S5x
+        V2GL/U/i6XNh+5cj0SsR8MP3tRXMDxaozwcwFkM=
+X-Google-Smtp-Source: ABdhPJy8WeQEeGlX2fHb6Mjbksvzlj+mlQnkk4tVXm4iXU9l4tIyCo0wa1lKiM2g3B0MnY9NvJLP/hcUOZzCFijeBIE=
+X-Received: by 2002:a17:906:7696:: with SMTP id o22mr5604826ejm.245.1591310284494;
+ Thu, 04 Jun 2020 15:38:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526164652.2331-1-dmurphy@ti.com> <20200526164652.2331-2-dmurphy@ti.com>
- <20200527014902.GA859634@bogus> <20200527133948.GA5011@amd>
- <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
- <20200602200436.GA6535@amd> <CAL_JsqLaycpi4EtXK-7GV49fm0GbPmPsrNwz2WSBFFO_zdQG0Q@mail.gmail.com>
- <20200604125111.GA7222@duo.ucw.cz>
-In-Reply-To: <20200604125111.GA7222@duo.ucw.cz>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 4 Jun 2020 16:35:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
-Message-ID: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
-Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings documention
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        devicetree@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200604205710.3167-1-jcrouse@codeaurora.org> <20200604205710.3167-7-jcrouse@codeaurora.org>
+ <CAF6AEGt4N5+0h0fkrO7m6KD3VMXkdoFyhN5Nz72DcMjoHX6XWA@mail.gmail.com> <20200604220216.GA12322@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200604220216.GA12322@jcrouse1-lnx.qualcomm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 4 Jun 2020 15:38:28 -0700
+Message-ID: <CAF6AEGssC5ZJKh3oMR6fFRJwZvWLy4YjE2anvq5sDmPB_ikv0Q@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v7 6/6] arm6: dts: qcom: sm845: Set the
+ compatible string for the GPU SMMU
+To:     Rob Clark <robdclark@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 6:51 AM Pavel Machek <pavel@ucw.cz> wrote:
+On Thu, Jun 4, 2020 at 3:02 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> On Tue 2020-06-02 15:44:32, Rob Herring wrote:
-> > On Tue, Jun 2, 2020 at 2:04 PM Pavel Machek <pavel@ucw.cz> wrote:
+> On Thu, Jun 04, 2020 at 02:27:21PM -0700, Rob Clark wrote:
+> > On Thu, Jun 4, 2020 at 1:57 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 > > >
-> > > On Wed 2020-05-27 08:35:06, Rob Herring wrote:
-> > > > On Wed, May 27, 2020 at 7:39 AM Pavel Machek <pavel@ucw.cz> wrote:
-> > > > >
-> > > > > Hi!
-> > > > >
-> > > > > Thanks for reviews!
-> > > > >
-> > > > > > > +additionalProperties: false
-> > > > > > > +...
-> > > > > > > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> > > > > >
-> > > > > > This isn't a binding file. Belongs in another patch.
-> > > > >
-> > > > > These constants are directly related to the binding. It makes sense to
-> > > > > go in one patch...
-> > > >
-> > > > Yes, the header does go in this patch, but kernel subsystem files do not.
-> > > >
-> > > > Part of the reason for separating is we generate a DT only repository
-> > > > which filters out all the kernel code. Ideally this is just filtering
-> > > > out commits and the commit messages still make sens
+> > > Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+> > > split pagetables.
 > > >
-> > > Well, but the patch can't be split like that. Otherwise we risk null
-> > > pointer dereferences when one part is applied but not the second one.
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> > >
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index 8eb5a31346d2..8b15cd74e9ba 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -3556,7 +3556,7 @@
+> > >                 };
+> > >
+> > >                 adreno_smmu: iommu@5040000 {
+> > > -                       compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+> > > +                       compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
 > >
-> > There's no risk because you are supposed to apply both patches. I
-> > don't apply binding patches that are a part of a series like this.
+> > Should this be something like:
+> >
+> >    compatible = "qcom,adreno-smmu", "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+> >
+> > so that new dtb still works with old kernel?
 >
-> Yes, this is always guaranteed to happen, because "git bisect"
-> understand patch series. Oh, wait.
+> As far as I know qcom,sdm845-smmu-v2 never was actually used unless we were
+> doing the parsing trick somewhere.
 
-What!? If the binding patch with the header comes first, how would
-bisect build the driver change without the header?
+I *think* it has a use queued up for v5.8 for the
+select-direct-mapping stuff?  I'm not 100% sure of the status of that
+off the top of my head.
 
-> Patches are supposed to be correct on their own. If your repository
-> filtering can not handle that, you need to fix that...
+BR,
+-R
 
-I'm just asking you to follow the process that *everyone* else is
-following and works. It's not really about the repository filtering.
-That doesn't care. A binding ABI is defined by the schema and any
-defines it has. That is the logical unit that stands on its own.
-
-Rob
+> Jordan
+>
+> > >                         reg = <0 0x5040000 0 0x10000>;
+> > >                         #iommu-cells = <1>;
+> > >                         #global-interrupts = <2>;
+> > > --
+> > > 2.17.1
+> > >
+> > > _______________________________________________
+> > > Freedreno mailing list
+> > > Freedreno@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/freedreno
+> > _______________________________________________
+> > Freedreno mailing list
+> > Freedreno@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
