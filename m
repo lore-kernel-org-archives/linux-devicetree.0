@@ -2,163 +2,129 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53806C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1035BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E8A207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E404B2067B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0R04DBd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wKDoW0ax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgFDUZD (ORCPT
+        id S1729698AbgFDU1s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgFDUZD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:25:03 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15E1C08C5C0;
-        Thu,  4 Jun 2020 13:25:01 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t18so7517033wru.6;
-        Thu, 04 Jun 2020 13:25:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kk92pwYJ8IKxem/FhLo1PGHOIRMohDuIFS2c8njRHHI=;
-        b=b0R04DBdQzKUkFz3auHl3/33aB8QKHOVW4ieezufx6qQ6fTGBGrN/jtvhl7mbb7FER
-         HCuQ78GCrJNMAB3SsvsoZEQWMMEFU15unhzkbtXKC1cw+SvTCdRFEFXqm6kb2pqGGvhm
-         acKwZyXm+VLjO1hOnPESdZ7rc4hVZ5W3AYXkesQqduDJOdfx/dd6cDIZVQkMnu3sc+v2
-         SpPs5qHe9ndiPh0toGy7mbT+ygxwUA6vANu6SnKQQi084MrjVFig6ORzDKSuzLDJRgew
-         Thicol+gjUGeMLM3dykVd8ktmrJ6Ov96MkqfP+yDx9N++dGKDzCaEav0DfLLfb/ZMHlv
-         dDuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kk92pwYJ8IKxem/FhLo1PGHOIRMohDuIFS2c8njRHHI=;
-        b=nE1K+ioukWbXDCEsVi8xx4RrS3PWMhLVhKozpeX2OrUPo3TPnERgExT5h2X7F0+q+B
-         VEGnuFfsfW6+GF9tT7Eiq7Y5aomVFeI2Ud+CagcLUE1CCen8fBxpz4Foi7todKOi6zBf
-         USRwuaIQ44vR9TNXmNlpXObBUSdNdlmBAs6/iaJNZHO119GUPM66A6uHc6n7cZRvDMfX
-         k1+UDMSkYlqPXNlC9hE48DqRfIdJFOEoddPElEyFl+nbYgCMY+3er3jqTu/nJT69tlIZ
-         PgGWu512sZJ6L2DnY5diYzDA73oG7ifSqYxvzGTX5bSm0EfYJKlGP1FjRg7VAjTuVknx
-         dgrg==
-X-Gm-Message-State: AOAM531k9Zo5GDCfkGzZQ8YvnxVPU56AZy/hLio1bdK82LP9saz9wd3/
-        I0FFJo+NADnzuUlIVHSgfPI=
-X-Google-Smtp-Source: ABdhPJzB8OlXyKXA79AKVZis7NyP04IisboWQ1Cd1jz0jQqqDmOACm2MkLcPS90Phps9g64nMrhXFg==
-X-Received: by 2002:a5d:46d0:: with SMTP id g16mr6560334wrs.229.1591302300380;
-        Thu, 04 Jun 2020 13:25:00 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id c5sm10129201wrb.72.2020.06.04.13.24.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 13:24:59 -0700 (PDT)
-Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-4-f.fainelli@gmail.com>
- <20200604123220.GD6644@sirena.org.uk>
- <21772111-fa1f-7a50-aa92-e44b09cff4eb@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <8c8d6007-e4c6-8484-9d40-3b679842be27@gmail.com>
-Date:   Thu, 4 Jun 2020 13:24:54 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        Thu, 4 Jun 2020 16:27:48 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49544 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgFDU1s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 16:27:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054KRead089425;
+        Thu, 4 Jun 2020 15:27:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591302460;
+        bh=N+QJzUFxIrA5/MuRXT6M2TS2TtMFDYT1CkUkUKyL2nU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wKDoW0axSiLqJ/3p1Y1FMpNfJBXHSmXvlTIXVBMhohSyAZ0nwUFtYWXkSp921FGmW
+         X12njTBRLnsnK1ZZQnfcQR1rw08Gv8JUz8a+PFJ4eX4SQW3R6eqjNmjSbfA4lHVJxU
+         t8p36EM92491GlrWIaIWvGOicyeLBb7VDz2FkjSo=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054KReI6123953
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 15:27:40 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 15:27:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 15:27:40 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054KReJw121027;
+        Thu, 4 Jun 2020 15:27:40 -0500
+Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200604111410.17918-1-dmurphy@ti.com>
+ <20200604111410.17918-5-dmurphy@ti.com>
+ <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
+ <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <8a844e26-3a5a-ac61-1c4a-e60fbebf6341@ti.com>
+Date:   Thu, 4 Jun 2020 15:27:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <21772111-fa1f-7a50-aa92-e44b09cff4eb@gmail.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Jakub
 
+On 6/4/20 11:48 AM, Jakub Kicinski wrote:
+> On Thu, 4 Jun 2020 11:38:14 -0500 Dan Murphy wrote:
+>> Jakub
+>>
+>> On 6/4/20 11:25 AM, Jakub Kicinski wrote:
+>>> On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote:
+>>>> Add RGMII internal delay configuration for Rx and Tx.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> Hi Dan, please make sure W=1 C=1 build is clean:
+>>>
+>>> drivers/net/phy/dp83869.c:103:18: warning: â€˜dp83869_internal_delayâ€™ defined but not used [-Wunused-const-variable=]
+>>>     103 | static const int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500,
+>>>         |                  ^~~~~~~~~~~~~~~~~~~~~~
+>> I built with W=1 and C=1 and did not see this warning.
+>>
+>> What defconfig are you using?
+> allmodconfig with gcc-10
+>
+>> Can you check if CONFIG_OF_MDIO is set or not?  That would be the only
+>> way that warning would come up.
+> Hm. I don't have the config from this particular build but just running
+> allmodconfig makes it CONFIG_OF_MDIO=m
 
-On 6/4/2020 9:05 AM, Florian Fainelli wrote:
-> 
-> 
-> On 6/4/2020 5:32 AM, Mark Brown wrote:
->> On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
->>> The SPI controller found in the BCM2711 and BCM7211 SoCs is instantiated
->>> 5 times, with all instances sharing the same interrupt line. We
->>> specifically match the two compatible strings here to determine whether
->>> it is necessary to request the interrupt with the IRQF_SHARED flag and
->>> to use an appropriate interrupt handler capable of returning IRQ_NONE.
->>
->>> For the BCM2835 case which is deemed performance critical, there is no
->>> overhead since a dedicated handler that does not assume sharing is used.
->>
->> This feels hacky - it's essentially using the compatible string to set a
->> boolean flag which isn't really about the IP but rather the platform
->> integration.  It might cause problems if we do end up having to quirk
->> this version of the IP for some other reason.
-> 
-> I am not sure why it would be a problem, when you describe a piece of
-> hardware with Device Tree, even with the IP block being strictly the
-> same, its very integration into a new SoC (with details like shared
-> interrupt lines) do warrant a different compatible string. Maybe this is
-> more of a philosophical question.
-> 
->> I'm also looking at the
->> code and wondering if the overhead of checking to see if the interrupt
->> is flagged is really that severe, it's just a check to see if a bit is
->> set in a register which we already read so should be a couple of
->> instructions (which disassembly seems to confirm).  It *is* overhead so
->> there's some value in it, I'm just surprised that it's such a hot path
->> especially with a reasonably deep FIFO like this device has.
-> 
-> If it was up to me, we would just add the check on BCM2835_SPI_CS_INTR
-> not being set and return IRQ_NONE and be done with it. I appreciate that
-> Lukas has spent some tremendous amount of time working on this
-> controller driver and he has a sensitivity for performance.
-> 
->>
->> I guess ideally genirq would provide a way to figure out if an interrupt
->> is actually shared in the present system, and better yet we'd have a way
->> for drivers to say they aren't using the interrupt ATM, but that might
->> be more effort than it's really worth.  If this is needed and there's no
->> better way of figuring out if the interrupt is really shared then I'd
->> suggest a boolean flag rather than a compatible string, it's still a
->> hack but it's less likely to store up trouble for the future.
-> 
-> Instead of counting the number of SPI devices we culd request the
-> interrupt first with flags = IRQF_PROBE_SHARED, if this works, good we
-> have a single SPI master enabled, if it returns -EBUSY, try again with
-> flags = IRQF_SHARED and set-up the bcm2835_spi_sh_interrupt interrupt
-> handler to manage the sharing.
-> 
-> This would not require DT changes, which is probably better anyway.
-Unfortunately this does not work.. The first time we probe the driver we
-need to set an interrupt handler that is capable of handling a shared
-interrupt. When we probe for subsequent times, we can use the -EBUSY
-return code to know that we are in a shared interrupt context, however,
-it is too late to change the first controller interrupt handler.
+OK that makes sense then.  That is an existing bug that shows up because 
+of this.
 
-So we do need to know for the first time we install the interrupt
-handler whether we will be in a shared situation or not, I cannot think
-of any solution other than counting the number of available DT nodes
-with the "brcm,bcm2835-spi" compatible string.
--- 
-Florian
+#ifdef CONFIG_OF_MDIO
+
+So the addition of the array exposed an existing issue.
+
+That bug fix can go to net then.
+>>> Also net-next is closed right now, you can post RFCs but normal patches
+>>> should be deferred until after net-next reopens.
+>> I know net-next is closed.
+>>
+>> I pinged David M when it was open about what is meant by "new" patches
+>> in the net-dev FAQ.  So I figured I would send the patches to see what
+>> the response was.
+>>
+>> To me these are not new they are in process patches.  My understand is
+>> New is v1 patchesets.
+>>
+>> But now I have the answer.
+> Oh sorry, I may be wrong in this case, I haven't tracked this series.
+>
+It says v6 in $subject.
+
+But still you may be correct I don't know
+
+Dan
+
