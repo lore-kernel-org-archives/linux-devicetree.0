@@ -2,63 +2,63 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34280C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 06:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1D2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 06:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA9D2077D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 06:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E9E2072E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 06:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYYE+woU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oufxK46S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgFDGJB (ORCPT
+        id S1726883AbgFDGJy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:09:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
+        Thu, 4 Jun 2020 02:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgFDGJB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 02:09:01 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1934C05BD1E
-        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 23:09:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y17so1762596plb.8
-        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 23:09:00 -0700 (PDT)
+        with ESMTP id S1726802AbgFDGJy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 02:09:54 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E69C03E96D
+        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 23:09:53 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so1782249plk.1
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 23:09:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pmFDoKX5wz/mBcFrTGX9SIAeZsye0K07CGwAnpg7u7g=;
-        b=bYYE+woUoYsdCiappu46pprNhNhbH9gIlFZYY3fFb6uLbL0bKTfEV5aMN0VcOXP6Mx
-         mq82B8KBPk1hskT6GmjRevQJnJ/tVmMrdHs9ROdYR38OF78ZKadXFbS0uxMSTfbxU2le
-         Y254RUQFW7GjtQPmf81soFIQU7RseTLddpAqzWTA6qEd+iawQBZ/TplQHHDLDOVflSVw
-         nSRgu8ab9vMs4pjXFk/cb44Pv+ZIaNsKOljxZKD+Szp7SWhRddDQpwr9oTbcnaPjMcDd
-         CynXnMtIgX8UUXsqHZLRs72MPXoj/TzrtpL1uIlrBylr4Zf4GhDz9REIfCyaSSq7nmX6
-         xEOg==
+        bh=caQqv9S8b8cCOYSCHeKAinsXoZMFcS096zEYFbBlNgA=;
+        b=oufxK46SCdMr2NwRRhoFlgS903NCFRlcGP6HCu94kPp3Y8TzL7Gs6xueBEQJP9FWBC
+         RjsEXvENgRz1B47jcl6M1AYyjMKfDn+qtuEwRelzCikbSpQ12fYrdXMJN5Xm0SCPM9xE
+         NckZFul9iPmRNKlYTe1mZpLTM9tChjpbW53Jqp51O1uRF40g1l3rPROHRrKohsSwa3Rd
+         RivOapi1wIMCbnfpqgHEs8j0q5o+u0vmAzCYEDg3Hx/y3sHmmI21m78uALjMnye74ZmE
+         FiSFEnVm1SW1CQWz4A/8EpUXI/y90K4wfBw8INb8os9bSS1bq1XsyNbibC8+kLJeA5Tb
+         ABVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pmFDoKX5wz/mBcFrTGX9SIAeZsye0K07CGwAnpg7u7g=;
-        b=T6s0lzSJXhUQ+Jdfe/8SOff6G+4+tx6jtVY9zkColvgMNtR6tpMR2rnEbVKvYjxnsO
-         YMnvJfIuR9j8tx1AtP2xbwCHjZD9u9rkIjZqS8q33dag9t5OFAc6/hsAfNIHiV1ucHez
-         pZUwhdUS7U9asbJiI/KyDjuqPCHQVJ5OiXFHhAOFlHhCAVYQATESe1yMMIYcwNAWhPeC
-         HDK01SgbDTBWrlHxFW2CbskMa2BJGHhDlpdJdYWlfDOOyGeYEl92A9SdJ4nwpC5ZJw7F
-         3gxp2Qyo2J4zxXJtufa4o2FHUKZv+0AxZ1dLOUIZvkScwScdv5+gRPpkgqyX9ZnQOtJ4
-         pp/g==
-X-Gm-Message-State: AOAM531EUQ8+Mg35W5j4zC25EQUcHO3Op5vaRc8+1dorhoyTzA/h9OUO
-        zT229iskEF2/XZzKrz/luOGB
-X-Google-Smtp-Source: ABdhPJxZZH4d3iwIiFJA9lcpV6nsEWxGD9GsfPdXjNbA7cZNj3hHPYEI+DWiR1ltututcddPqpxK6A==
-X-Received: by 2002:a63:2257:: with SMTP id t23mr2865507pgm.245.1591250940259;
-        Wed, 03 Jun 2020 23:09:00 -0700 (PDT)
+        bh=caQqv9S8b8cCOYSCHeKAinsXoZMFcS096zEYFbBlNgA=;
+        b=s8NgmarZSP0sTJu2O+I71CGpXnlUD7ROskX0dizwO0SDYfihq2LDKua0GaaOiml9F8
+         7hp9Wnmczct59j1YPa6jx15aoUclo3teFAeujlqJ0RCf23li1dZJqckHLdCf1KDgJlBg
+         yfz2oU3f3zc58Tdf5YopgMPBXsK2XtTpURjNNHethC67Ncsf8BW9ehAuILIGE+COOSmq
+         E085oe0GlXa5a8Wtu3EUVTvkjw7xLvS9EEHwnu1boEmbaIyt/PjPyUPzHe2nSeQMQlEy
+         MBzJNPeJh/UF59zjcJWp7omCmFjfB700tPnP6ePaF+ThoeROU7MSKoou/e0eTPXaBET2
+         8Tgw==
+X-Gm-Message-State: AOAM533RByMqeMIr5ea9tFPeEoFun7FfYCc/2XP0SYuWdftHUAOgLeLc
+        ef/0sADOt5em6S6qJi6ph1qTYZ/tvg==
+X-Google-Smtp-Source: ABdhPJxnjnbt2tgWfRunhBGV1HDUgmUd9z0HDkHgXt/Qzbmh7wYmlGEyPaZQXYYUFcnVYb+28/eoXA==
+X-Received: by 2002:a17:90a:20a2:: with SMTP id f31mr4379257pjg.34.1591250992468;
+        Wed, 03 Jun 2020 23:09:52 -0700 (PDT)
 Received: from Mani-XPS-13-9360 ([2409:4072:6e90:f3d4:c404:4d38:8396:d1ee])
-        by smtp.gmail.com with ESMTPSA id 145sm3423898pfa.53.2020.06.03.23.08.55
+        by smtp.gmail.com with ESMTPSA id e127sm3469337pfe.45.2020.06.03.23.09.47
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jun 2020 23:08:59 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 11:38:52 +0530
+        Wed, 03 Jun 2020 23:09:51 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 11:39:44 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -66,83 +66,47 @@ Cc:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         patches@linaro.org, linaro-kernel@lists.linaro.org
-Subject: Re: [PATCH 1/7] arm64: dts: qcom: pm8009: Add base dts file
-Message-ID: <20200604060852.GD16719@Mani-XPS-13-9360>
+Subject: Re: [PATCH 6/7] arm64: dts: qcom: pm8150: enable rtc device
+Message-ID: <20200604060944.GE16719@Mani-XPS-13-9360>
 References: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
+ <20200604004331.669936-6-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20200604004331.669936-6-dmitry.baryshkov@linaro.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:43:25AM +0300, Dmitry Baryshkov wrote:
-> Add base DTS file for pm8009 along with GPIOs and power-on nodes.
+On Thu, Jun 04, 2020 at 03:43:30AM +0300, Dmitry Baryshkov wrote:
+> Enable rtc device provided by the pmic.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8009.dtsi | 40 ++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8009.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8009.dtsi b/arch/arm64/boot/dts/qcom/pm8009.dtsi
-> new file mode 100644
-> index 000000000000..9f3e19b5bd00
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pm8009.dtsi
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2019, Linaro Limited
 
-2020
-
-> + */
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-
-Sort includes alphabetically.
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
 Mani
 
-> +
-> +&spmi_bus {
-> +	pmic@a {
-> +		compatible = "qcom,pm8009", "qcom,spmi-pmic";
-> +		reg = <0xa SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		power-on@800 {
-> +			compatible = "qcom,pm8916-pon";
-> +			reg = <0x0800>;
-> +		};
-> +
-> +		pm8009_gpios: gpio@c000 {
-> +			compatible = "qcom,pm8005-gpio";
-> +			reg = <0xc000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +	};
-> +
-> +	pmic@b {
-> +		compatible = "qcom,pm8009", "qcom,spmi-pmic";
-> +		reg = <0xb SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +};
+> ---
+>  arch/arm64/boot/dts/qcom/pm8150.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+> index fee2db42f4cb..762fb902db81 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
+> @@ -71,8 +71,6 @@ rtc@6000 {
+>  			reg = <0x6000>;
+>  			reg-names = "rtc", "alarm";
+>  			interrupts = <0x0 0x61 0x1 IRQ_TYPE_NONE>;
+> -
+> -			status = "disabled";
+>  		};
+>  
+>  		pm8150_gpios: gpio@c000 {
 > -- 
 > 2.26.2
 > 
