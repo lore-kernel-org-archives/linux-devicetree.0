@@ -2,116 +2,135 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F01AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BEBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58B94207F5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591279515;
-	bh=Epk5WMtzALPNz+dltu72WrLGhF9VGMjphVrnc6COsEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iZkpoIfE7mLnk1XllNzgMJA+i2EuqYKEl3nLGfiF9IzhYANNUIG4jNwJ1vCT1BHT5
-	 4UQypJ/ahTpLVQiSJs/6hBS8MiowrKtKC7ZU/gTatkYtTpi0Ii5Ip5fJW51Adw0wPe
-	 uL6e02j0cvc/8Wm2z8slHradydykFYyAoMZLiXgc=
+	by mail.kernel.org (Postfix) with ESMTP id 42F9D2063A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="0zF8Eb4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgFDOFO (ORCPT
+        id S1728761AbgFDOF6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgFDOFO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:05:14 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791F820738;
-        Thu,  4 Jun 2020 14:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591279514;
-        bh=Epk5WMtzALPNz+dltu72WrLGhF9VGMjphVrnc6COsEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sf7Hy+B1x7rYiLFDGpZcfyrckIXZn5Y1kIlUFPDPjdiiOSqQtrTMcxXb0oGyI9iLn
-         8jCUl4YlcOzZKOCauoNq2XeYV6TUrG/h8/TnYezlbVFMIHtNSI9OXb0L7C8W5p2kFL
-         tL+4fGnqSSpZVdGYrCnig3VUHI1yScvIB2HDtq+4=
-Date:   Thu, 4 Jun 2020 15:05:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Thu, 4 Jun 2020 10:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728682AbgFDOF6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 10:05:58 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A332C08C5C1
+        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 07:05:58 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id j32so5254249qte.10
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 07:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8sTKDbykwSlqjkc+QQmVX/X4H1PKxc/T5zBXz+JcQBI=;
+        b=0zF8Eb4bzqjSQB/lXrUh6ciNSD06d4VkHxDnGB9I9PRnBTdSdoTaI78MJdidAbYZLN
+         90+rt5zRH779ALPQJJCzVb1Ny+rM83PeeuAuZ8IH7J/90XGQtvpOARZ+bI5yeOr1RnKa
+         xZFGJDxuAqJ3cxi86mTjWpWU8vwM/r+/nlsEzavKea6eJKLh86N3TRI4+2kCwaXnFbBL
+         sf0O3Y+bpgpM94qprDv/uGproOOOzeawK5K/dAu/aR6PV98q/8+XvHX26m/UpIpdxSUs
+         j1D1GxHlaUFtDhts3cHotFF0HTNwxRWgg54CuY1tAjKoxIc4MdX+0yfu+6kjhpjJDTbD
+         iVJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8sTKDbykwSlqjkc+QQmVX/X4H1PKxc/T5zBXz+JcQBI=;
+        b=LkNSH2YN/f5+nmcPWDLKylpaAi+jOt3UFHq+ojanNYDkVEBmUhK6C/13kqTZCaJIwk
+         Mt0sgsHwohE0SRs1NYtS1J3LkObroOS2K9q76EN7d3WAXcS0XU55SyTWaQilnc/We//6
+         ILEN1FYikdTo1BUpdO9aB2Z2cFqgOxe3/C8lfBL1roMy3Rd5kXQT3fj9DaVlmIKEiOnR
+         gPCtzWR7lrbc93X+h2KIqSBIcaYi33+y/4ZjcLpse5kdxapl4JHmjzP4jFTs9uKs3imt
+         UTd1jRkmA1Xqldl2izVf2yLZM7Vmkt2JyB1GG1UuJ8yC7sdLdCBYFzUbeVrxErjKJro7
+         isiw==
+X-Gm-Message-State: AOAM533w7Qf2PG2ug8BQz8hJyBxi84oMAK3Yq9ouWSbb3tsJRk1Gzc1c
+        27Go5tLsl0NtnMX/bMhiDV/e6w==
+X-Google-Smtp-Source: ABdhPJzrJDtfNSIRHrOMEPgMIwuC/tuoH7MjyfBdTb+ve5SQxe7mPvfxhLprOToDNg8rbqcLcPQdCw==
+X-Received: by 2002:ac8:518c:: with SMTP id c12mr4646131qtn.108.1591279557400;
+        Thu, 04 Jun 2020 07:05:57 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id c16sm4446863qko.100.2020.06.04.07.05.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 07:05:56 -0700 (PDT)
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
+ dts
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
- strings
-Message-ID: <20200604140511.GF6644@sirena.org.uk>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-3-f.fainelli@gmail.com>
- <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
- <20200604111325.GC6644@sirena.org.uk>
- <20200604112112.b3k4wrftckndscu6@wunner.de>
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200604135221.GH16719@Mani-XPS-13-9360>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
+Date:   Thu, 4 Jun 2020 10:06:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
-Content-Disposition: inline
-In-Reply-To: <20200604112112.b3k4wrftckndscu6@wunner.de>
-X-Cookie: VMS version 2.0 ==>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200604135221.GH16719@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 6/4/20 9:52 AM, Manivannan Sadhasivam wrote:
+> Hi,
+> 
+> On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
+>> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+>>
+> 
+> I've tested this series on an SM8250 based board and able to get Type C (USB0)
+> working. There are also couple of Type A ports (USB1) on that board behind a
+> USB hub. It is probing fine but I don't see any activity while connecting a
+> USB device. Will continue to debug and once I get them working, I'll add my
+> Tested-by tag.
+> 
 
---Zi0sgQQBxRFxMTsj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+HDK865 also has a couple Type A ports, I am using them with devices 
+already plugged in during boot and I haven't hit a problem like that, 
+but I think I've seen the same issue when hotplugging. IIRC the behavior 
+was a bit weird, like plugging a device in the Type A port (USB1) 
+nothing would happen, but unplugging/replugging the type C port (USB0) 
+would cause the Type A port device to start working..
 
-On Thu, Jun 04, 2020 at 01:21:12PM +0200, Lukas Wunner wrote:
-> On Thu, Jun 04, 2020 at 12:13:25PM +0100, Mark Brown wrote:
+Have you tried with the devices already plugged in before booting?
 
-> > Regardless of what's going on with the interrupts the compatible string
-> > should reflect the IP version so unless for some reason someone taped
-> > out two different versions of the IP it seems odd that the compatible
-> > strings would vary within a given SoC.
-
-> Hm.  I guess it may be possible to search the DT for other devices
-> sharing the same interrupt line and thereby determine whether
-> IRQF_SHARED is necessary.  The helper to perform this search could
-> live in drivers/of/irq.c as I imagine it might be useful in general.
-
-That's another option, yeah - it'd be DT specific but it seems neater
-than a property and much more tractable than trying to dance around
-doing this in genirq (where we'd end up with callbacks when the second
-device registers or something else horrible).
-
---Zi0sgQQBxRFxMTsj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y/5YACgkQJNaLcl1U
-h9DPAwf/UjD04C156SRCI5cTBUUAOg/X61gumN+fuyVQkAPs8CeP4cmV4HjtuXG2
-9LOnl4/Bdq17EjTvWg6+HAQvBa7i0pwE8ppy8gqcGiNqq+dn5+n9ZpcLvDea0tLX
-h2jq4LUfR3X3OgnTILP69XeLpk/ePNcpFTRij3YMnGqoa8VnlXiqP45YLEgVp0LK
-RHlYDfzgBy1NxyxckRk+emfSKseAHtWQjUz4P2zvyKUXl/tqW+Lwc/fGlfE3QfFu
-Eo1q4X4V2DuX83TzbvM8VXdJ/Lu0V05gyeYoEcQU+7j8MGno+JpLRX9C2J6uXwG+
-edz4Gd9KdV/56AJOMrKWO0i8BPznbQ==
-=DHOU
------END PGP SIGNATURE-----
-
---Zi0sgQQBxRFxMTsj--
+> Thanks,
+> Mani
+> 
+>> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+>> few changes. Notably, the HDK865 dts has regulator config changed a bit based
+>> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+>>
+>> Jonathan Marek (6):
+>>    arm64: dts: qcom: sm8150: add apps_smmu node
+>>    arm64: dts: qcom: sm8250: add apps_smmu node
+>>    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+>>    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+>>    arm64: dts: qcom: add sm8150 hdk dts
+>>    arm64: dts: qcom: add sm8250 hdk dts
+>>
+>>   arch/arm64/boot/dts/qcom/Makefile       |   2 +
+>>   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+>>   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
+>>   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
+>>   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
+>>   5 files changed, 1384 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+>>   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+>>
+>> -- 
+>> 2.26.1
+>>
