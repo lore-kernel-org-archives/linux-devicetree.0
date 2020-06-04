@@ -5,76 +5,79 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5406CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21519C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E2E20772
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B67207DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5OLUKPF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iT6orcQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgFDN4K (ORCPT
+        id S1728740AbgFDN6u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
+        Thu, 4 Jun 2020 09:58:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbgFDN4J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 09:56:09 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC85BC08C5C0;
-        Thu,  4 Jun 2020 06:56:09 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id k8so4795520edq.4;
-        Thu, 04 Jun 2020 06:56:09 -0700 (PDT)
+        with ESMTP id S1728337AbgFDN6u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 09:58:50 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A577C08C5C0;
+        Thu,  4 Jun 2020 06:58:50 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id o26so4819804edq.0;
+        Thu, 04 Jun 2020 06:58:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=xt+qXlJ/w/CHGInS8iFF4yNL9YX64MPwrfuBL7dI4q4=;
-        b=N5OLUKPFgcli+zUSxnqsncN7jxB9gjk3ZCEvyN1giZvfYm1xVPt+tNEhB5WcBaFFGe
-         yT+tzW8k5Mw4yUZKUMuiKI7dBoXD0zq25WalgyKkg1yFmvFX0I/aixQZClKmUxBvM4V3
-         UxW/K0z+V0aKWOcAKpKaMGwDuvG9yfsFPlB+bbnv4sL0c9x1MGFSZxKcahEZRR6OEKEU
-         R7rSE8O6T9UQd0lbN5M5uE6ebqzM73Nfh4J1bX9cdPfCX1v0BxrV6vEThzMGFuwmn/Bt
-         QiNfukXkp1APXxATxv7HQvCoYLdql3DzQ7QQN/lLQ5JGSzL64c5VEeWARepWQHlgjg5k
-         10UA==
+        bh=3qC5bBE2TNzOj1a5qZ4ztpSJPzwogmBB/9SPnd42iqo=;
+        b=iT6orcQpn/Zi9wQ2jD0Zv6Ejjxgz46upF6pdzB8ylmJX5eM/yc1F7rzfJ77zsa3h6+
+         9+gSoxRgJ88r5eHycx4vpD6wv5Kgk68jXO2c679Qn11EMfJw9PsEkNMI88NBPV002slG
+         uJR2RVM0GH1wDx5EiO7DjUBGJWaKHdhAAlE7GDE31zlEd6eXFqqP/30ikBJ1/MvZMmrC
+         qwV5HOS2W8BbBaK8f1z7zHZVVw2c/RxCbQ6yBKiYrnEBIeSTZXooB5JWsM++eT6hxwFl
+         /la/P/dLY9kocRmiWWtTjD0k8qk8GsRG9b/BplEUVihPlWXZ19MIb9HK3YdAGoAXjaF9
+         jXDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xt+qXlJ/w/CHGInS8iFF4yNL9YX64MPwrfuBL7dI4q4=;
-        b=I9cxQOpCewh2IZbo1by6McABJ0DCLrQhfGImtguxX9Ae3I/h8yEqv4O/r/BUxYlMsp
-         ohDdnSw+tIBEVs07i43dXqSr07LDiFWhTAGXpR4iGEXZNX5mi5YeFvBADcD/EBbfv/3b
-         RFOtTbKtK04js9+l20RtVPLQufsbdAgLyJC4yLlCDyl4iCMefMACZR8QnHh4kNAbWl2X
-         qK7bTAQ7q1YDqwK1SuU/LDug2bgNbtirJuFEALzYs/i0xtpJqOc3UUoqTFMCvmF8jJIb
-         Sejw48Fku2bQSJl1K5oe5Uifj6D0gfgffw1V7QqCBYAK1TVRQf3yKkENQYcALD9IlCL2
-         PALQ==
-X-Gm-Message-State: AOAM530lBJ7wDYJErD9nbpSjAbUtb++IeovFlRg7g9XwG5mhqz6gq+eR
-        vHZGzdHakPoaLZv4u8VdVqs=
-X-Google-Smtp-Source: ABdhPJzw1NIuAeA/NKqB3LPilD16ORfGsYt3arn8mpO186HyKfuiNhGudCWjjzj61bIU1fjludSbeA==
-X-Received: by 2002:aa7:d6d0:: with SMTP id x16mr4542349edr.175.1591278968447;
-        Thu, 04 Jun 2020 06:56:08 -0700 (PDT)
+        bh=3qC5bBE2TNzOj1a5qZ4ztpSJPzwogmBB/9SPnd42iqo=;
+        b=frUUtv0XWPxN0RCeTYRXgDfjtxB4l+z1v4tm9Q3n3XTBDAmEY5m+/yTxBV4zkVYBCo
+         yPoFGpwUk3iC5qdnosyGTEQVIB9y/DNOZgTeOd/irLcbA4IHakQ+gvlhmZhEENq3nxFq
+         pNLMXF9fSCNgPAYGcGAsflZ6+6ctIXuKb8IlkLNyFkpsXbjcU35j5X2XqCEvHIuWqr6E
+         pj57ZWucjYCQnsG5JufcC6ob+BmsjC151bRlsjKT3zuSYcrhfUp1Lbg8FdGxMuyZYPcr
+         6glWfBBfn2+uRcz+rtbMmUSpG4CQ2DYq/iktL6y7r6TpeCpcoQYJSKr4NNBlXikPRhSH
+         DhNg==
+X-Gm-Message-State: AOAM530pkynx6vf+jmHuLsA8oR3hTjKNHGTIkyeIrhUGgfnLYB947ZJR
+        SH5QJHEl53GSFOKtH3i0aQ8=
+X-Google-Smtp-Source: ABdhPJznfDDx1LlyjwF9qSl9ZNsDXsrN8tt512tci2tZybQ3b4FkTErmLxkpVRFdHyfSZnNaDP1Oag==
+X-Received: by 2002:a05:6402:149:: with SMTP id s9mr4288851edu.375.1591279128550;
+        Thu, 04 Jun 2020 06:58:48 -0700 (PDT)
 Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id kt10sm2217467ejb.54.2020.06.04.06.56.06
+        by smtp.gmail.com with ESMTPSA id kt10sm2221923ejb.54.2020.06.04.06.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 06:56:07 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 15:56:06 +0200
+        Thu, 04 Jun 2020 06:58:47 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 15:58:46 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Nagarjuna Kristam <nkristam@nvidia.com>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 6/8] phy: tegra: xusb: Add support for charger detect
-Message-ID: <20200604135606.GC1138399@ulmo>
+Subject: Re: [PATCH V3 5/8] phy: tegra: xusb: Add soc ops API to enable UTMI
+ PAD protection
+Message-ID: <20200604135846.GD1138399@ulmo>
 References: <1589437363-16727-1-git-send-email-nkristam@nvidia.com>
- <1589437363-16727-7-git-send-email-nkristam@nvidia.com>
+ <1589437363-16727-6-git-send-email-nkristam@nvidia.com>
+ <db698a53-c5f6-d03f-edf0-f4fb38963e1f@ti.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
+        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
 Content-Disposition: inline
-In-Reply-To: <1589437363-16727-7-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <db698a53-c5f6-d03f-edf0-f4fb38963e1f@ti.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -82,58 +85,46 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---4jXrM3lyYWu4nBt5
+--3Gf/FFewwPeBMqCJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 14, 2020 at 11:52:41AM +0530, Nagarjuna Kristam wrote:
-> Perform charger-detect operation if corresponding dt property is enabled.
-> Update usb-phy with the detected charger state and max current values.
-> Register charger-detect API's of usb-phy to provide needed functionalitie=
-s.
+On Mon, May 18, 2020 at 05:54:03PM +0530, Kishon Vijay Abraham I wrote:
+> Thierry,
 >=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
-> V3:
->  - Allighed functions and its arguments.
->  - replaced spaced by tabs for MACRO definition allignments.
->  - Unified primary and secondary charger detect API's.
->  - Used readl_poll_timeout instead of while loop condition check for regi=
-ster.
->  - Fixed other comments as per inputs from Thierry.
-> ---
-> V2:
->  - Patch re-based.
-> ---
->  drivers/phy/tegra/Makefile |   2 +-
->  drivers/phy/tegra/cd.c     | 283 +++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/phy/tegra/xusb.c   |  80 +++++++++++++
->  drivers/phy/tegra/xusb.h   |   7 ++
->  4 files changed, 371 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/phy/tegra/cd.c
+> On 5/14/2020 11:52 AM, Nagarjuna Kristam wrote:
+> > When USB charger is enabled, UTMI PAD needs to be protected according
+> > to the direction and current level. Add support for the same on Tegra210
+> > and Tegra186.
+> >=20
+> > Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+>=20
+> Can you give your Acked by for pending patches in this series?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+I went through these patches one more time and I think they're all good
+now. I've acked the ones that didn't have my Acked-by yet.
 
---4jXrM3lyYWu4nBt5
+Thierry
+
+--3Gf/FFewwPeBMqCJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7Y/XYACgkQ3SOs138+
-s6F9wA//c1AJ3FHM0Hd0rv+zsl52J25fXL900vW2xXJen+Y78K4WsUeU0DrOVWLL
-Jb1uuFoKiiGvOfRKIPK986xWqECWMz9E/dz7GTgsngBiu5db3Ndc3gPBYDu2FfNu
-B4ZV5yY11shrWHNxahITTivyGfJLOtCFQh18BjhJOjJ5vLwlj/FWdvWVMY7s+rbU
-0mURwNp7bHTajE+mKN58eY3AxY6RZ8+083I3hWXW3TreGxCMvVVNFRB1D8+Mk+X1
-nvwWziAugYRnlLMt5L2vvEeiPDiQjbzGqfP6vxgRXZrEL/TLoQK2MC3c6v3ZQYsY
-9ms7ZmQUTAHh4omhYJPaldWPYTQ95Dqw5lAHEaers7MkqPSGOedfLBsINCtBt6f1
-iwJY6YOkAG9q8adHZN8RWTtdirqOhLH2o29RUCqD5vv9Oqg9zhrF+bJHQmwOJix8
-+Rs8KwndDSwuEuR8KF646FgLJH5LOODFMSLl7cB0/N+MRLehAfn/ItuwtujDXGln
-EIwpS3rd45U5rslitfsr3J491GFJyF8dEeUTnNFJjRUoOR8vSKYo0ckDLwLY5xHc
-yl/ufE2sFqLcAuU/9T8yxTGElnyQ1B18Og5QwZYUtE5BnzF22r3jbWc3TkmOXtTI
-yCKcLMH0fWkTb0tA3JLq6ps09ATBjQbv3koCi6hmcLfnh04NvFY=
-=+q6H
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7Y/hYACgkQ3SOs138+
+s6HnyA/9Fj2LLU1HqZfshnRjI3aQgaPbxFFuL1xOjZMMWSLk0qZ9BkE+knzQ9/c2
+G0EfbsP+Z0tp3HFRK37yT6YL2xNwciVYEQow+y0TMzwVCQdBY+ChdcL4M7Da/iNp
+VjJsEsmp7kWn2AApkN3CqZsrtYp+rzWTFoh7DPZfJr1Ny21gKaa7CHI72b/PXYoS
+sNnJvHwYBYZ9KofaSKteV+LyueAMuOxvQHA8CTWP9qgG5rpPb9n3lbv0D6BGOjSP
+xbt2Q1I5mxrTOVkpUpTjXDpVKglC3TCwUC9FLkDHOrfzjoF3pJFG1x97EuU2aH5Y
+E2xbIA7kSniYH+ZtxlL6f+iYmWqFyNsm6H6dWF3m/j5sryhLzwoa3KYSCdH2QSoc
+L/sW43agd+HcUKsHKk0mH1K1cVgGO2grnTQdSwbNRn8tlhchy0gikuCM1Ecs3Ehc
+bfSRDHVsV75gQtOxavNEdKfIwz9ExOKGolDsazpgLJ32c57lwGLHHGxPTmI5PmTo
+NgwrE40zXoC5fG3XuWg/Iel3zXvUZSHn/rfk+d41wZXN2CpDjESOkK+RTiSeherg
+UHYPTk5jGBFw9WVZFImkI+791yWp8cWpJej73wKj3bhoCcFpIXgFvV7R+iKvPxkp
+WqFTPpsaCZVq1WB2vzCxKhiYe1U6IuN+uhvNaoCCKFtZiq1NI1g=
+=91er
 -----END PGP SIGNATURE-----
 
---4jXrM3lyYWu4nBt5--
+--3Gf/FFewwPeBMqCJ--
