@@ -2,145 +2,75 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8EBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017BAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A80B7206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mwLZKPh7"
+	by mail.kernel.org (Postfix) with ESMTP id CCE15206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 13:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgFDMxE (ORCPT
+        id S1728116AbgFDNNJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:53:04 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:33675 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbgFDMxD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 08:53:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591275183; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=UilGVd2ttjxQPEcdx/6oswso/Q+mDT7PvsGJQ1Zjvlo=;
- b=mwLZKPh7uW4D+xRdDKf/YmqSGS+79+1uRxr9QrbcuIq5SCflv78Ufaxnw6s8kcx/1IDcWCQ8
- cvePKEINvHxxk0dJB6YPcdLnTFdrjPKD4OMhZbuIUe1rhMRuOqSgYxb+JyuCs0JYTbTnDK8Z
- 95dmTkN7t9a9RE/CBKyh+yAVw/4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5ed8eea744a25e005204157a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 12:52:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 649FAC43395; Thu,  4 Jun 2020 12:52:54 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE466C433C6;
-        Thu,  4 Jun 2020 12:52:53 +0000 (UTC)
+        Thu, 4 Jun 2020 09:13:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:44350 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbgFDNNJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:13:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0C4B30E;
+        Thu,  4 Jun 2020 06:13:08 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43A053F305;
+        Thu,  4 Jun 2020 06:13:07 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 14:13:04 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>, Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm: dts: vexpress: Move mcc node back into motherboard
+ node
+Message-ID: <20200604131304.GC12397@bogus>
+References: <20200603162237.16319-1-andre.przywara@arm.com>
+ <159126075826.16785.4183160239670270692.b4-ty@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 04 Jun 2020 18:22:53 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@linaro.org, linaro-kernel@lists.linaro.org,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: sm8250: add watchdog device
-In-Reply-To: <20200604122259.GG16719@Mani-XPS-13-9360>
-References: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
- <20200604004331.669936-7-dmitry.baryshkov@linaro.org>
- <1a23cf8a6386e8b78c52199bdcde9b5e@codeaurora.org>
- <20200604113544.GF16719@Mani-XPS-13-9360>
- <f1cb759c2a70981ba8903dc1141349fe@codeaurora.org>
- <20200604122259.GG16719@Mani-XPS-13-9360>
-Message-ID: <47f338033abbf1470963d0a9e77d4449@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159126075826.16785.4183160239670270692.b4-ty@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-04 17:52, Manivannan Sadhasivam wrote:
-> On Thu, Jun 04, 2020 at 05:21:46PM +0530, Sai Prakash Ranjan wrote:
->> On 2020-06-04 17:05, Manivannan Sadhasivam wrote:
->> > On Thu, Jun 04, 2020 at 04:37:01PM +0530, Sai Prakash Ranjan wrote:
->> > > On 2020-06-04 06:13, Dmitry Baryshkov wrote:
->> > > > Add on-SoC watchdog device node.
->> > > >
->> > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> > > > ---
->> > > >  arch/arm64/boot/dts/qcom/sm8250.dtsi | 6 ++++++
->> > > >  1 file changed, 6 insertions(+)
->> > > >
->> > > > diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > > > b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > > > index 972d8e04c8a2..f1641c6fe203 100644
->> > > > --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > > > +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->> > > > @@ -1662,6 +1662,12 @@ config {
->> > > >  			};
->> > > >  		};
->> > > >
->> > > > +		watchdog@17c10000 {
->> > > > +			compatible = "qcom,apss-wdt-sm8250", "qcom,kpss-wdt";
->> > >
->> > > Need to add this compatible to bindings.
->> > >
->> >
->> > I did look into this but the binding says,
->> > "compatible : shall contain only one of the following"
->> >
->> > So clearly the fallback is not going to work and there is no need to add
->> > a
->> > dedicated compatible in the driver. The binding is not in the YAML
->> > format to
->> > be validated but still... Other option is to convert the binding to YAML
->> > and
->> > make the compatibles listed as 'enum' and 'const' elements
->> > appropriately.
->> >
->> 
->> I already converted the bindings to YAML and added the missing 
->> compatibles
->> for
->> other SoCs[1] .
+On Thu, Jun 04, 2020 at 09:56:31AM +0100, Sudeep Holla wrote:
+> On Wed, 3 Jun 2020 17:22:37 +0100, Andre Przywara wrote:
+> > Commit 	d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices
+> > out of bus node") moved the "mcc" DT node into the root node, because
+> > it does not have any children using "reg" properties, so does violate
+> > some dtc checks about "simple-bus" nodes.
+> > However this broke the vexpress config-bus code, which walks up the
+> > device tree to find the first node with an "arm,vexpress,site" property.
+> > This gave the wrong result (matching the root node instead of the
+> > motherboard node), so broke the clocks and some other devices for
+> > VExpress boards.
+> > 
+> > [...]
 > 
-> Ah, okay. I didn't find it in linux-next. Anyway, for adding
-> "qcom,apss-wdt-sm8250" compatible, we need to group the compatibles 
-> wisely
-> using 'enum' and 'const'.
+> Applied to sudeep.holla/linux (for-next/juno), thanks!
 > 
+> [1/1] arm: dts: vexpress: Move mcc node back into motherboard node
+>       https://git.kernel.org/sudeep.holla/c/8a8cd9a910
 
-Yes.
+Had to fix the 'Fixes' tag based on the report from linux-next, so updated to:
 
->> I thought it was already merged since Rob has already
->> reviewed
->> them, but seems like it was missed. Bjorn, can you please take it?
->> 
-> 
-> Perhaps for v5.9...
-> 
+https://git.kernel.org/sudeep.holla/c/38ac46002d1d
 
-Sure, no problem.
-
-Thanks,
-Sai
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+--
+Regards,
+Sudeep
