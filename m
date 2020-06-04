@@ -6,55 +6,67 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D4EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 11:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32982C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5344A206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 11:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FED9207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591268883;
-	bh=eTEAmGjGSlWnzcnOKFQiS8dTWRfxZH+7OAjcn0kr0Kg=;
+	s=default; t=1591269209;
+	bh=Nbi1Vwcd5pL6Yj4orLCRo0b8veuEtH1O87IQWqOBnuw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fbQvTI9FXB+nrKRr653ZyPc1bf7MDukzOjBTqHqwF92wqiTYfdy+210VtB1XKpMiH
-	 MXlrrQlnxGINpvcPvEf853KPdvhRUYSo1lvXhK61I5bepG0pJSgJ5vNOnNkob7DswS
-	 EHs1qWEJKdgPTkH5Vul6KCxvDVJ1GYVafrv9rkQc=
+	b=D+cjGf+0M8KqBwoeCtcw2ksyVcKVnX6uajqPkmAzL9J7nHJQxN98Ar5E+hmGUhomk
+	 0WNZWKUyf32xXoFESuw8FRWcxA444Y6UfNewmWyW5eD0yT2gPEJcnQN3fH/wesTIwL
+	 a+NXF4BsIR35c2VXp0kUm/vEEHM1VDUon/0vJsgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgFDLIC (ORCPT
+        id S1726062AbgFDLN2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:08:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55482 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 07:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgFDLIC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:08:02 -0400
+        id S1725904AbgFDLN2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 07:13:28 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F86206A2;
-        Thu,  4 Jun 2020 11:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3429A206A2;
+        Thu,  4 Jun 2020 11:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591268882;
-        bh=eTEAmGjGSlWnzcnOKFQiS8dTWRfxZH+7OAjcn0kr0Kg=;
+        s=default; t=1591269207;
+        bh=Nbi1Vwcd5pL6Yj4orLCRo0b8veuEtH1O87IQWqOBnuw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qw4fDdykcM50sBDnvZFz8ujTWO5HHLehn4Pmqojr1ydXIt2SB2pdJj1zT159eiqaM
-         sP2m9cOaVOMotCa+rhYSyhv83SF7VEsBGip5og8J1/pyUZZ410mFI9nRAblA+dPdtd
-         tqSuRBURSWWQ6ev2UT2GZ5QMEqzEv96nOwXPP8vY=
-Date:   Thu, 4 Jun 2020 12:07:59 +0100
+        b=QgWPc37BTO8K8KgGK1UajZ4b1MCZp4/zWB7ShZWgSgr3nnMQE0L8sIsE/S0nbnzO9
+         lrtYt89a2iu+JABD68eS4UqgsyTh/wUvkBWpj0b++mqrOOKdpoabFEnSaaEV4A8b0+
+         t0TNMpIQtA+hTVfAFtQJ+iUK8E4prnVk+GlFKm1o=
+Date:   Thu, 4 Jun 2020 12:13:25 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Axel Lin <axel.lin@ingics.com>
-Subject: Re: [RFC 1/4] regulator: lp87565: enable voltage regardless of ENx
- pin
-Message-ID: <20200604110759.GB6644@sirena.org.uk>
-References: <20200603200319.16184-1-luca@lucaceresoli.net>
- <20200603200319.16184-2-luca@lucaceresoli.net>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
+ strings
+Message-ID: <20200604111325.GC6644@sirena.org.uk>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-3-f.fainelli@gmail.com>
+ <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
+        protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
 Content-Disposition: inline
-In-Reply-To: <20200603200319.16184-2-luca@lucaceresoli.net>
+In-Reply-To: <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
 X-Cookie: VMS version 2.0 ==>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -63,41 +75,40 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---Pd0ReVV5GZGQvF3a
+--H8ygTp4AXg6deix2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 03, 2020 at 10:03:16PM +0200, Luca Ceresoli wrote:
+On Thu, Jun 04, 2020 at 06:20:38AM +0200, Lukas Wunner wrote:
+> On Wed, Jun 03, 2020 at 08:46:54PM -0700, Florian Fainelli wrote:
+> > The BCM2711 SoC features 5 SPI controllers which all share the same
+> > interrupt line, the SPI driver needs to support interrupt sharing,
+> > therefore use the chip specific compatible string to help with that.
 
-> I suspect the only solution that allows to configure the EN_PIN_CTRLn bits
-> correctly in all the possible hardware setups would be to tell in device
-> tree / board info whether each enable pin is connected or not (which is a
-> hardware _fact_) and which ENx pin should control which regulator output
-> (which is a policy). But it would make this simple driver considerably more
-> complex.
+> You're saying above that the 5 controllers all share the interrupt
+> but below you're only changing the compatible string of 4 controllers.
 
-> Any suggestion about the correct way to handle this situation would be
-> greatly appreciated.
+> So I assume spi0 still has its own interrupt and only the additional
+> 4 controllers present on the BCM2711/BCM7211 share their interrupt?
 
-We can tell if we've got a software controlled GPIO connected, if we
-have then we should ensure that it continues to take effect.  That
-should just be a single register write at startup from the sounds of it.
-Otherwise yeah, just ignoring that there's a possibility of a GPIO we
-don't know about seems sensible.
+Regardless of what's going on with the interrupts the compatible string
+should reflect the IP version so unless for some reason someone taped
+out two different versions of the IP it seems odd that the compatible
+strings would vary within a given SoC.
 
---Pd0ReVV5GZGQvF3a
+--H8ygTp4AXg6deix2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y1g8ACgkQJNaLcl1U
-h9DAGAf/TXyd1JDYoZwYOO3EMr8gkAhvnwUOVgd59xjYbnKmd4YfOuZn8VYjIbP3
-C10/tz9k4n4WCg9PtBmUAIrE6tdV0Uj5ZNyhRd51GV+khJrvkq5jLWSyywqZ0jja
-hHz7Mbolyr5irTqEkU0kq9ls/O/S5eZjEVRbnfnPuBNlrGifTq52LjMpn3cFW6EF
-wnhGuYmk9vuhtX+CFl7qDzAi2MI2JNpdlYrN28pCqUYe12F1s4Ot1XL7DVbtxp/9
-6XmFB3ZwUS3h4MuC/+tbn9Q7itTTRefqVZjldvin5LbE1lRKvpsxWS8TBATGpNtH
-XqBWCXprfS/vHMESAwnoUbpcvLoN1w==
-=Ur0E
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y11QACgkQJNaLcl1U
+h9BJoQf9E2n8uWIZEAGBfspqHbovoYPVluN+kh7+8y5BKxaA1Wz41xV3hGzU3Wzl
+gEH2zebNk9eIG8IUALFCgrMLhlRBwBVV5D4LB5dVMvuwNWDeJOUs3cgBVuI8cd83
++avoXuMxBVRfhlC6JnUGrqHFPwpdBrcmfOK51jkDqZfoLdlm/ICsnWQBJPsfYTE1
+iunoxY5P1vldrejYbghjoIn5OgtfDDV52cH68De5WX9srhWs8pwI+ZyXNmwuHt7d
+FStC87OY8PDFPkpoF3wpmfF2BQPpzbn/b//Hyco7fg+NUJ+hMFNynSn+tcp5fgYB
+R1ryNcVXhixXytOvVz7v7fBb8AtCxw==
+=gHMp
 -----END PGP SIGNATURE-----
 
---Pd0ReVV5GZGQvF3a--
+--H8ygTp4AXg6deix2--
