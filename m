@@ -2,88 +2,130 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FCCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BE5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E237F2065C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dT7KrX0S"
+	by mail.kernel.org (Postfix) with ESMTP id 3FE152065C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591261851;
+	bh=QaKe1TsH6wrSFWbihlFTG5OTysVrqRRyCfA9MzPON7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AFfQ4FGPedQR4YhpKLvzY4j1GALHUw0PzMi0PIskN4C23GY2V51m3QMLSrzCO8DzS
+	 C1hK8h5vHemURjD7pxDDUSjNjoTNWzx5QjH5+/3FYTJawSddr77okHd1CZTJIRhGYa
+	 Kd0Ghbyx+6F6xT3+Vj6Emebtrp09eL5ynVSxXAPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgFDJJ4 (ORCPT
+        id S1726612AbgFDJKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:09:56 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:61454 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727860AbgFDJIK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 05:08:10 -0400
-X-UUID: 57fb4a88a63b4c98a9b02f197d6c89ad-20200604
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Gfwa+HEA1Fp8IFUeQUFuA37/N+o4Grdg0TxloGU3uxw=;
-        b=dT7KrX0SKbNJTYNtt/O5ZdG/pUNbT5rTUIhTc09kACmXmT2mkW/+Gx16f8hIDXhnGFPD8EOrK4K7Dt+dsUP5qUKBRq/Ebntn3RVlWk/CPnDV7P7iLD9PSNAh6ST1WyfCzAPn0CH1P4ltj7dyRFoIBaFmzx8rM4ZIkVhv+5m1mR8=;
-X-UUID: 57fb4a88a63b4c98a9b02f197d6c89ad-20200604
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1500253143; Thu, 04 Jun 2020 17:08:05 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 4 Jun 2020 17:08:02 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jun 2020 17:08:00 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thu, 4 Jun 2020 05:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbgFDJKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:10:50 -0400
+Received: from localhost (unknown [122.179.53.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1B92074B;
+        Thu,  4 Jun 2020 09:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591261849;
+        bh=QaKe1TsH6wrSFWbihlFTG5OTysVrqRRyCfA9MzPON7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yClpMraXFsG+LZLsBnngyqUnrug81PyT78qbDuIRcAfdAQ/4cJXtUAWYVz/E71IZP
+         mTWILWxnSjdkO/6Xo5Wo9uFtMREtlWJv2i3jNSgo/Fe0pOhxq4qdn8RZxBzTNg425O
+         Yd6BHEJhww7qzisVXQ5hkYObgZHQ2NupoJN4srsU=
+Date:   Thu, 4 Jun 2020 14:40:44 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
-        Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH RESEND v9 02/18] media: platform: Improve queue set up flow for bug fixing
-Date:   Thu, 4 Jun 2020 17:05:37 +0800
-Message-ID: <20200604090553.10861-4-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200604090553.10861-1-xia.jiang@mediatek.com>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        patches@linaro.org, linaro-kernel@lists.linaro.org
+Subject: Re: [PATCH 1/7] arm64: dts: qcom: pm8009: Add base dts file
+Message-ID: <20200604091044.GF3521@vkoul-mobl>
+References: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604004331.669936-1-dmitry.baryshkov@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIGNoZWNraW5nIGNyZWF0ZWQgYnVmZmVyIHNpemUgZm9sbG93IGluIG10a19qcGVnX3F1ZXVl
-X3NldHVwKCkuDQoNClJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3Jn
-Pg0KU2lnbmVkLW9mZi1ieTogWGlhIEppYW5nIDx4aWEuamlhbmdAbWVkaWF0ZWsuY29tPg0KLS0t
-DQp2OTogbm8gY2hhbmdlcw0KLS0tDQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9t
-dGtfanBlZ19jb3JlLmMgfCA3ICsrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
-KCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19q
-cGVnX2NvcmUuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29y
-ZS5jDQppbmRleCA0YWQ0YTRiMzBhMGUuLjY3YTAyMmQwNGRmNyAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQorKysgYi9kcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KQEAgLTU3MSw2ICs1NzEs
-MTMgQEAgc3RhdGljIGludCBtdGtfanBlZ19xdWV1ZV9zZXR1cChzdHJ1Y3QgdmIyX3F1ZXVlICpx
-LA0KIAlpZiAoIXFfZGF0YSkNCiAJCXJldHVybiAtRUlOVkFMOw0KIA0KKwlpZiAoKm51bV9wbGFu
-ZXMpIHsNCisJCWZvciAoaSA9IDA7IGkgPCAqbnVtX3BsYW5lczsgaSsrKQ0KKwkJCWlmIChzaXpl
-c1tpXSA8IHFfZGF0YS0+c2l6ZWltYWdlW2ldKQ0KKwkJCQlyZXR1cm4gLUVJTlZBTDsNCisJCXJl
-dHVybiAwOw0KKwl9DQorDQogCSpudW1fcGxhbmVzID0gcV9kYXRhLT5mbXQtPmNvbHBsYW5lczsN
-CiAJZm9yIChpID0gMDsgaSA8IHFfZGF0YS0+Zm10LT5jb2xwbGFuZXM7IGkrKykgew0KIAkJc2l6
-ZXNbaV0gPSBxX2RhdGEtPnNpemVpbWFnZVtpXTsNCi0tIA0KMi4xOC4wDQo=
+On 04-06-20, 03:43, Dmitry Baryshkov wrote:
+> Add base DTS file for pm8009 along with GPIOs and power-on nodes.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8009.dtsi | 40 ++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8009.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8009.dtsi b/arch/arm64/boot/dts/qcom/pm8009.dtsi
+> new file mode 100644
+> index 000000000000..9f3e19b5bd00
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/pm8009.dtsi
+> @@ -0,0 +1,40 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2019, Linaro Limited
 
+We are in 2020 :)
+
+> + */
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+
+DO you need these headers for base patch, we should add them when adding
+uses of this file
+
+> +#include <dt-bindings/spmi/spmi.h>
+> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
+
+This one too
+
+> +
+> +&spmi_bus {
+> +	pmic@a {
+> +		compatible = "qcom,pm8009", "qcom,spmi-pmic";
+> +		reg = <0xa SPMI_USID>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		power-on@800 {
+> +			compatible = "qcom,pm8916-pon";
+> +			reg = <0x0800>;
+> +		};
+> +
+> +		pm8009_gpios: gpio@c000 {
+> +			compatible = "qcom,pm8005-gpio";
+> +			reg = <0xc000>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+> +	pmic@b {
+> +		compatible = "qcom,pm8009", "qcom,spmi-pmic";
+> +		reg = <0xb SPMI_USID>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +	};
+> +};
+> -- 
+> 2.26.2
+
+-- 
+~Vinod
