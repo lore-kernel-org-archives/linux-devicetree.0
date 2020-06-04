@@ -2,228 +2,130 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA5DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 07:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E67CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAEFA206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 07:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28ACD207D3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SIWTnYeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgFDHfx (ORCPT
+        id S1726422AbgFDHim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:35:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:55371 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbgFDHfw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:35:52 -0400
-IronPort-SDR: mXgekkB7/QtL43pmrAmAlC2CtKXb5dY1kT+3zBh9yBociOLMIN7MWavLmCtocb1TVRMGBryXxI
- obrTVdAi2KJA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 00:35:52 -0700
-IronPort-SDR: MpM2vR06GngxuZ0CSIlxVAkc5FDQfTyV4Bpq12ZqxVIyLzGocEA1p4YfKRZKRITE18/vf7CTzj
- jD0HH3E6dIpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="348021785"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by orsmga001.jf.intel.com with ESMTP; 04 Jun 2020 00:35:49 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 10/10] net: eth: altera: update devicetree bindings documentation
-Date:   Thu,  4 Jun 2020 15:32:56 +0800
-Message-Id: <20200604073256.25702-11-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200604073256.25702-1-joyce.ooi@intel.com>
-References: <20200604073256.25702-1-joyce.ooi@intel.com>
+        Thu, 4 Jun 2020 03:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgFDHim (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 03:38:42 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BEEC05BD1E;
+        Thu,  4 Jun 2020 00:38:42 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B661A29B;
+        Thu,  4 Jun 2020 09:38:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591256317;
+        bh=Ia+q/Q+BfL6tHkvCBFgK10jhset8KFeCNrnvPfoBk6o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SIWTnYeZ0/5gCWJqKEDGMMICDb2Q5FP8/+6+lMgm1XppsiWoorRuIQ36s2kiIpWid
+         1UOECcAivjKfGd3yuvYTH3SPR05Vy1k5CuMW3xHQIJxheqaPcTbpSgDblqDEKXHjcQ
+         cGV+uESgypZ58Vn7x77BJYNoHFFSCbr3860AfxBM=
+Date:   Thu, 4 Jun 2020 10:38:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 3/3] drm/bridge: Introduce LT9611 DSI to HDMI bridge
+Message-ID: <20200604073820.GB5828@pendragon.ideasonboard.com>
+References: <20200513100533.42996-1-vkoul@kernel.org>
+ <20200513100533.42996-4-vkoul@kernel.org>
+ <20200528015205.GE4670@pendragon.ideasonboard.com>
+ <20200604072548.GE3521@vkoul-mobl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200604072548.GE3521@vkoul-mobl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
+Hi Vinod,
 
-Update devicetree bindings documentation to include msgdma
-prefetcher and ptp bindings.
+On Thu, Jun 04, 2020 at 12:55:48PM +0530, Vinod Koul wrote:
+> On 28-05-20, 04:52, Laurent Pinchart wrote:
+> 
+> > > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
+> > > +				enum drm_bridge_attach_flags flags)
+> > > +{
+> > > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
+> > > +	int ret;
+> > > +
+> > > +	dev_dbg(lt9611->dev, "bridge attach\n");
+> > 
+> > 
+> > Connector creation in bridge drivers is deprecated. Please at least add
+> 
+> Okay what is the right way for connector creation? I can add support for
+> that.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
----
-v2: no change
-v3: no change
----
- .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
- 1 file changed, 84 insertions(+), 19 deletions(-)
+Historically bridge drivers have created connectors. With support for
+bridge chaining, this approach was considered not to scale. For
+instance, I have a board where the SoC has an internal LVDS encoder, and
+the board itself has an LVDS-to-DPI decoder followed by a DPI-to-HDMI
+encoder. All three components are supported by bridge drivers, and only
+the last one should create a connector. Furthermore, different
+operations of the connector may be implemented by different bridges, for
+instance with one bridge connected to the DDC lines to read EDID, and
+another bridge connected to the HPD line to detect hotplug.
 
-diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
-index 0b7d4d3758ea..2f2d12603907 100644
---- a/Documentation/devicetree/bindings/net/altera_tse.txt
-+++ b/Documentation/devicetree/bindings/net/altera_tse.txt
-@@ -2,53 +2,86 @@
- 
- Required properties:
- - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
--		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
-+		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
-+		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
-+		implementations.
- 		ALTR is supported for legacy device trees, but is deprecated.
- 		altr should be used for all new designs.
- - reg: Address and length of the register set for the device. It contains
-   the information of registers in the same order as described by reg-names
- - reg-names: Should contain the reg names
--  "control_port": MAC configuration space region
--  "tx_csr":       xDMA Tx dispatcher control and status space region
--  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
--  "rx_csr" :      xDMA Rx dispatcher control and status space region
--  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
--  "rx_resp":      MSGDMA Rx dispatcher response space region
--  "s1":		  SGDMA descriptor memory
- - interrupts: Should contain the TSE interrupts and it's mode.
- - interrupt-names: Should contain the interrupt names
--  "rx_irq":       xDMA Rx dispatcher interrupt
--  "tx_irq":       xDMA Tx dispatcher interrupt
-+  "rx_irq":       DMA Rx dispatcher interrupt
-+  "tx_irq":       DMA Tx dispatcher interrupt
- - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
- - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
- - phy-mode: See ethernet.txt in the same directory.
- - phy-handle: See ethernet.txt in the same directory.
- - phy-addr: See ethernet.txt in the same directory. A configuration should
- 		include phy-handle or phy-addr.
--- altr,has-supplementary-unicast:
--		If present, TSE supports additional unicast addresses.
--		Otherwise additional unicast addresses are not supported.
--- altr,has-hash-multicast-filter:
--		If present, TSE supports a hash based multicast filter.
--		Otherwise, hash-based multicast filtering is not supported.
--
- - mdio device tree subnode: When the TSE has a phy connected to its local
- 		mdio, there must be device tree subnode with the following
- 		required properties:
--
- 	- compatible: Must be "altr,tse-mdio".
- 	- #address-cells: Must be <1>.
- 	- #size-cells: Must be <0>.
- 
- 	For each phy on the mdio bus, there must be a node with the following
- 	fields:
--
- 	- reg: phy id used to communicate to phy.
- 	- device_type: Must be "ethernet-phy".
- 
- The MAC address will be determined using the optional properties defined in
- ethernet.txt.
- 
-+- altr,has-supplementary-unicast:
-+		If present, TSE supports additional unicast addresses.
-+		Otherwise additional unicast addresses are not supported.
-+- altr,has-hash-multicast-filter:
-+		If present, TSE supports a hash based multicast filter.
-+		Otherwise, hash-based multicast filtering is not supported.
-+- altr,has-ptp:
-+		If present, TSE supports 1588 timestamping.  Currently only
-+		supported with the msgdma prefetcher.
-+- altr,tx-poll-cnt:
-+		Optional cycle count for Tx prefetcher to poll descriptor
-+		list.  If not present, defaults to 128, which at 125MHz is
-+		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-+- altr,rx-poll-cnt:
-+		Optional cycle count for Tx prefetcher to poll descriptor
-+		list.  If not present, defaults to 128, which at 125MHz is
-+		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-+
-+Required registers by compatibility string:
-+ - "altr,tse-1.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"s1":		DMA descriptor memory
-+
-+ - "altr,tse-msgdma-1.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"tx_desc":      DMA Tx dispatcher descriptor space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"rx_desc":      DMA Rx dispatcher descriptor space region
-+	"rx_resp":      DMA Rx dispatcher response space region
-+
-+ - "altr,tse-msgdma-2.0"
-+	"control_port": MAC configuration space region
-+	"tx_csr":       DMA Tx dispatcher control and status space region
-+	"tx_pref":      DMA Tx prefetcher configuration space region
-+	"rx_csr" :      DMA Rx dispatcher control and status space region
-+	"rx_pref":      DMA Rx prefetcher configuration space region
-+	"tod_ctrl":     Time of Day Control register only required when
-+			timestamping support is enabled.  Timestamping is
-+			only supported with the msgdma-2.0 implementation.
-+
-+Optional properties:
-+- local-mac-address: See ethernet.txt in the same directory.
-+- max-frame-size: See ethernet.txt in the same directory.
-+
- Example:
- 
- 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
-@@ -86,6 +119,11 @@ Example:
- 				device_type = "ethernet-phy";
- 			};
- 
-+			phy2: ethernet-phy@2 {
-+				reg = <0x2>;
-+				device_type = "ethernet-phy";
-+			};
-+
- 		};
- 	};
- 
-@@ -111,3 +149,30 @@ Example:
- 		altr,has-hash-multicast-filter;
- 		phy-handle = <&phy1>;
- 	};
-+
-+
-+	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
-+		compatible = "altr,tse-msgdma-2.0";
-+		reg = 	<0x00000001 0x00002000 0x00000400>,
-+			<0x00000001 0x00002400 0x00000020>,
-+			<0x00000001 0x00002420 0x00000020>,
-+			<0x00000001 0x00002440 0x00000020>,
-+			<0x00000001 0x00002460 0x00000020>,
-+			<0x00000001 0x00002480 0x00000040>;
-+		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 45 4>, <0 44 4>;
-+		interrupt-names = "rx_irq", "tx_irq";
-+		rx-fifo-depth = <2048>;
-+		tx-fifo-depth = <2048>;
-+		address-bits = <48>;
-+		max-frame-size = <1500>;
-+		local-mac-address = [ 00 00 00 00 00 00 ];
-+		phy-mode = "sgmii";
-+		altr,has-supplementary-unicast;
-+		altr,has-hash-multicast-filter;
-+		altr,has-ptp;
-+		altr,tx-poll-cnt = <128>;
-+		altr,rx-poll-cnt = <32>;
-+		phy-handle = <&phy2>;
-+	};
+To support these systems, we have deprecated connector creation in
+bridges, in favour of implementing new bridge callback functions for
+connector-related operations (see .get_modes(), .get_edid() and
+.detect() in struct drm_bridge_funcs). With this new model, each bridge
+implements the operations it supports, and the display controller driver
+binds the bridges together to create a connector that delegates the
+connector operations to the appropriate bridge. A helper function,
+drm_bridge_connector_init(), can be used to automate that.
+
+To transition to this model, we require all new bridge to at least
+optionally support disabling connector creation (as requested by the
+DRM_BRIDGE_ATTACH_NO_CONNECTOR), and implement the drm_bridge_funcs
+functions related to connector operations. Existing bridges are also
+converted to the new model. Once all bridges used by a display
+controller support the new model, the display controller is then
+converted to use DRM_BRIDGE_ATTACH_NO_CONNECTOR and
+drm_bridge_connector_init() (or implement the latter manually if the
+helper doesn't support all the display controller's needs). Once all
+display controllers using a bridge have been converted to the new model,
+support for creating a connector (the !DRM_BRIDGE_ATTACH_NO_CONNECTOR
+case) is removed from the bridge driver. Finally, once everybody will
+use the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag, we will simply drop it.
+
+> > support for the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag, to make connector
+> > creation optional. Ideally the !DRM_BRIDGE_ATTACH_NO_CONNECTOR case
+> 
+> will add that
+> 
+> > should not be implemented at all. This will require the display
+> > controller driver to use DRM_BRIDGE_ATTACH_NO_CONNECTOR. Which display
+> > controller(s) do you use this driver with ?
+> 
+> I am using with msm display driver, this was tested on dragon-board
+> db845c board.
+
 -- 
-2.13.0
+Regards,
 
+Laurent Pinchart
