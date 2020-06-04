@@ -2,105 +2,96 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADCDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 05:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1022C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 05:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40E4207D3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 05:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61FD2077D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 05:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="lauG1FI+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NDjhzTvc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hvXrEv5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgFDFvA (ORCPT
+        id S1726905AbgFDF7J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 01:51:00 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:42181 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725959AbgFDFu7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 01:50:59 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9B06E5C0097;
-        Thu,  4 Jun 2020 01:50:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 04 Jun 2020 01:50:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=CTralpIdYxIiZtqvW6bRThjsFf
-        dOktVXY3Izef1+RCc=; b=lauG1FI+bcF0kd6b78sqb0nBEZBBQVqiaFdII3fjW7
-        9eo3eI4HuxfHTXyxs7Ra/OqBNNcMFXoy6D8KI6T+v44yQvQxJMTU5dLSLX3PNVWh
-        hlwge95O7QIYiCcBeYv2nGVzIHSqUM+7+1SHgr4RpypGp8o+DFFcNM6c3wo7cScp
-        rD/fFXzA/4UaiTBoTaBo1rWOIZqWTvWw3/FyVbc7zys+W+gd25xVjDH11VvfrwlD
-        U5tH76RnfX+ZGIohW0E9TxsEC+L0nltdhjFOC75qY3qpVBQUJJFKZs8VLOIPIErl
-        yvpcnCJJQDshUu23nQemyAEi+OEHGASHTW9ExLPFlYGA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CTralpIdYxIiZtqvW
-        6bRThjsFfdOktVXY3Izef1+RCc=; b=NDjhzTvc7/DuH6HLYp0B1A+dvIIF4WkZK
-        pwFBnXL3YM0kbymaTQIVrM+piiivUSDytZ8pLVDsQJCe3J9PujUgTEoMB3eAm1LG
-        d5OcftRBsPbeokLPuzloseCvClRfKJtbYqWBGH1Dg0Lhv/cWfrOPteQbU2g6iRhw
-        x2LOxPoycpP7LCvhAvRexEhBMKf93W5FtA33X1QYMnqVIFZLAFTBb/CEX+xhzZq/
-        KjHmbfZ04Qn/lsz6X9I1R+889TJZNe6Uhh5iW0X3rLOjabQ6TBI2M7TVzLcF2a8n
-        CCjUVciB4gTKpsESUHHjtirn8vYCOnYGgcr1E9QLbw9AiTWL1eQ2g==
-X-ME-Sender: <xms:wovYXiiuDokiKrqfkFEAgg1hcJRPWfwxfOdb1kJcTy8_CExXPQ48MA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegtddgkeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomhepffgrnhhnhicunfhinhcuoegurghnnhihsehkughrrghgtdhnrdgu
-    vghvqeenucggtffrrghtthgvrhhnpefhiefhgfelgfdufedvudelvdefvdefgfeiueeufe
-    egteffudekgefhvedtieefteenucfkphepjeefrddvvdehrdegrddufeeknecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggrnhhnhieskhgurh
-    grghdtnhdruggvvh
-X-ME-Proxy: <xmx:wovYXjAzjhDln3rsuUa_99wvYQDqmmcuFSAC_U22KdJVRUVSEAQckw>
-    <xmx:wovYXqFDKZYSsXiB11qCh3zPDdfQeE3ppoyQvfsuXm5duFLJflEApA>
-    <xmx:wovYXrTdoz01oiRKiuZJpNKWEgxbOr6rDTb2a69jLcxvuPy8jFvQPw>
-    <xmx:wovYXoprLaslCBaFLnbntHPxCi_3zVeyQQJSyXzdibZTsN2-3mmwqQ>
-Received: from pinwheel.hsd1.wa.comcast.net (c-73-225-4-138.hsd1.wa.comcast.net [73.225.4.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 95CC13060F09;
-        Thu,  4 Jun 2020 01:50:57 -0400 (EDT)
-From:   Danny Lin <danny@kdrag0n.dev>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Danny Lin <danny@kdrag0n.dev>
-Subject: [PATCH 1/1] of: reserved_mem: Fix typo in the too-many-regions message
-Date:   Wed,  3 Jun 2020 22:49:00 -0700
-Message-Id: <20200604054900.200317-1-danny@kdrag0n.dev>
-X-Mailer: git-send-email 2.26.2
+        Thu, 4 Jun 2020 01:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbgFDF7G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 01:59:06 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8615AC03E96E
+        for <devicetree@vger.kernel.org>; Wed,  3 Jun 2020 22:59:06 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id g12so1742615pll.10
+        for <devicetree@vger.kernel.org>; Wed, 03 Jun 2020 22:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tUUk7gLCC9sr5iPcgp8jkdDPE9W39BQTP/3fVTPj3aI=;
+        b=hvXrEv5fPtwYgH6i9ONHo+JyteLKKi6xTABhIoSPnsADZSv0IfYCEC+3KK3FEhdA6I
+         +uVPzmYOMuGF5eVAr+Md2FOKA+tjv2TIpfg63YgAjO5KK26egHr5jktwW1NLhesaWYkL
+         Y3jGzqiy5H1UOkhNK3R/Oxt+rdxk7tYSRa6bYZyUMJTaDMnN5OgfYLk8LT5UXZ1fjWLR
+         F3qWUoPX8mvZAWwUDFVdXnhImSux43HOy4cwQR+yPAQkV49/EC7HEu9GV7WBsgXq1FDF
+         nJcjWn/STN/cDe+Zyen7yPQQoIHVyIz0ng/GVnrwb7UllE799CYOteKSShEIv/JymoBm
+         QbEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tUUk7gLCC9sr5iPcgp8jkdDPE9W39BQTP/3fVTPj3aI=;
+        b=MEhllfD0QZnuFqYpsyYAI8/WUXCft8eXQEloompIxjDln5DZyv6lFXMztFOjFsMZqB
+         900KbFtBrMzNItaiim9TGpXdbVIdurLnmrd0+cRGc+8rcAkpdfEdD8jX4RnLCkIbW9PH
+         glPn6jeOjsNbasjqEsl7Bs6JWE+Qpl0sgHUtDYFlw+peHtOMLdbyYH67W8WSCydVyaTf
+         NYm7Rl57aGyE2qQMeXrPIduOOPBwBfItCJ8Jl0kHa8nCQqY+h5AjG+y4Rt82Mt/rLver
+         hmKa54kSzOpFooJYJVHdgnuQv6ZeBNISEdHUPO64x9ofnHQQDUlvPmV6mq7m7aciKDVo
+         2Viw==
+X-Gm-Message-State: AOAM531Qf690n8filjatZx9J2HoZeWESh9pbhqVn7wcHrc+t/QET49IL
+        aQ/QL7vMX7WcDdNHPwO040pd+IrRaZg=
+X-Google-Smtp-Source: ABdhPJzeh7kob7ogWckMzO3sBJuBrbSbZ4YSjxaUNcIH/bi/7Ii6yzULiplFHNYkFJS3fY1lPDS7/Q==
+X-Received: by 2002:a17:90a:8a98:: with SMTP id x24mr4038244pjn.103.1591250346020;
+        Wed, 03 Jun 2020 22:59:06 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id m2sm4153047pjk.52.2020.06.03.22.59.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jun 2020 22:59:05 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 11:29:03 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200604055903.ycvu6qfnlwgkh52a@vireshk-i7>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200528192005.GA494874@bogus>
+ <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
+ <20200603180435.GB23722@bogus>
+ <20200603181743.GC23722@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603181743.GC23722@bogus>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Minor fix for a missing preposition in the error message that appears
-when there are too many reserved memory regions for the allocated array
-to store.
+On 03-06-20, 19:17, Sudeep Holla wrote:
+> I just realised that we have the timing info in the traces and you will
+> observe the sensor readings take something in order of 100us to 500-600us
+> or even more based on which sensor is being read. While we have 100us
+> timeout for cpufreq opp set.
 
-Signed-off-by: Danny Lin <danny@kdrag0n.dev>
----
- drivers/of/of_reserved_mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Which timeout from opp core are you talking about ?
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 1a84bc0d5fa8..e648904347a0 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -54,7 +54,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
- 
- 	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
--		pr_err("not enough space all defined regions.\n");
-+		pr_err("not enough space for all defined regions.\n");
- 		return;
- 	}
- 
 -- 
-2.26.2
-
+viresh
