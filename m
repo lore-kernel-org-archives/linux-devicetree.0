@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1CFC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E345C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03CE207D5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211F520829
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kA//v0Fd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f489fTzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgFDMGv (ORCPT
+        id S1728498AbgFDMGa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:06:51 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49402 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbgFDMGt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 08:06:49 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C6kjc130387;
-        Thu, 4 Jun 2020 07:06:46 -0500
+        Thu, 4 Jun 2020 08:06:30 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58328 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbgFDMG3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Jun 2020 08:06:29 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C6PjZ052271;
+        Thu, 4 Jun 2020 07:06:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591272406;
-        bh=9rbi449bFmHQundQ8dlXaifDs/ndof179QCH2fsw94w=;
+        s=ti-com-17Q1; t=1591272386;
+        bh=wCZ4MMAr4l2mgIibN19UwQ6B7f7fRNfZT+ZnfSiiaXc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kA//v0FdssKbUunMm0VpxtsmmejHuqp6WClh6Iqy643LCABB9wrTsu07kfZ8H4deF
-         TKdwnLkQ2NGHJeX96gWBdHvKr9lfD1xuHUYsf1Sv6Exdn55KacVdK9xi7XSn5nKj9D
-         Q63tPHIQlNriDFP+uTFetiX2hKlGA+O+BiJOiZwM=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054C6kFq124136
+        b=f489fTzMb02hLsORDXFt425oHTtrRYs/aqkaCwLyY6wcKOkhSBrhXvErKswChUa4N
+         VBgzFvNQLTi+Kz6JVlBgR0+zZt0CeFlKN8/kTqSxGqdnUkPU3Is+IKAdJrusjo6szi
+         Wj6efSa6tVcHIa0vPbMOeXFqs9dmWej/R6+3Xi60=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054C6P7w054681
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 07:06:46 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 4 Jun 2020 07:06:25 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
- 2020 07:06:46 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 07:06:25 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Jun 2020 07:06:46 -0500
+ Frontend Transport; Thu, 4 Jun 2020 07:06:25 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6kYo085450;
-        Thu, 4 Jun 2020 07:06:46 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6PfJ017103;
+        Thu, 4 Jun 2020 07:06:25 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v26 14/15] leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
-Date:   Thu, 4 Jun 2020 07:05:03 -0500
-Message-ID: <20200604120504.32425-15-dmurphy@ti.com>
+Subject: [PATCH v26 10/15] leds: lp55xx: Convert LED class registration to devm_*
+Date:   Thu, 4 Jun 2020 07:04:59 -0500
+Message-ID: <20200604120504.32425-11-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200604120504.32425-1-dmurphy@ti.com>
 References: <20200604120504.32425-1-dmurphy@ti.com>
@@ -66,102 +66,211 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix the checkpatch warnings for the use of the file permission macros.
-In converting the file permissions to the DEVICE_ATTR_XX macros the
-call back function names needed to be updated within the code.
+Convert the LED class registration calls to the LED devm_*
+registration calls.
 
-This means that the lp55xx_ needed to be dropped in the name to keep in
-harmony with the ABI documentation.
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
 Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/leds-lp55xx-common.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/leds/leds-lp5521.c        |  9 +++------
+ drivers/leds/leds-lp5523.c        |  9 +++------
+ drivers/leds/leds-lp5562.c        |  9 +++------
+ drivers/leds/leds-lp55xx-common.c | 15 +--------------
+ drivers/leds/leds-lp55xx-common.h |  2 --
+ drivers/leds/leds-lp8501.c        |  9 +++------
+ 6 files changed, 13 insertions(+), 40 deletions(-)
 
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6f0272249dc8..6d2163c0f625 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -541,19 +541,17 @@ static int lp5521_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -566,7 +564,6 @@ static int lp5521_remove(struct i2c_client *client)
+ 
+ 	lp5521_stop_all_engines(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index d0b931a136b9..15e7051392f5 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -908,19 +908,17 @@ static int lp5523_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -933,7 +931,6 @@ static int lp5523_remove(struct i2c_client *client)
+ 
+ 	lp5523_stop_all_engines(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
+diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
+index edb57c42e8b1..1c94422408b0 100644
+--- a/drivers/leds/leds-lp5562.c
++++ b/drivers/leds/leds-lp5562.c
+@@ -554,19 +554,17 @@ static int lp5562_probe(struct i2c_client *client,
+ 
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
+ 
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
+ 
+ 	return 0;
+ 
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -580,7 +578,6 @@ static int lp5562_remove(struct i2c_client *client)
+ 	lp5562_stop_engine(chip);
+ 
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
+ 
+ 	return 0;
 diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index d33564aef563..59c3234ba1d7 100644
+index 44ced02b49f9..882ef39e4965 100644
 --- a/drivers/leds/leds-lp55xx-common.c
 +++ b/drivers/leds/leds-lp55xx-common.c
-@@ -83,7 +83,7 @@ static int lp55xx_post_init_device(struct lp55xx_chip *chip)
- 	return cfg->post_init_device(chip);
- }
+@@ -181,7 +181,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
+ 		led->cdev.name = name;
+ 	}
  
--static ssize_t lp55xx_show_current(struct device *dev,
-+static ssize_t led_current_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
+-	ret = led_classdev_register(dev, &led->cdev);
++	ret = devm_led_classdev_register(dev, &led->cdev);
+ 	if (ret) {
+ 		dev_err(dev, "led register err: %d\n", ret);
+ 		return ret;
+@@ -490,23 +490,10 @@ int lp55xx_register_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
+ 	return 0;
+ 
+ err_init_led:
+-	lp55xx_unregister_leds(led, chip);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(lp55xx_register_leds);
+ 
+-void lp55xx_unregister_leds(struct lp55xx_led *led, struct lp55xx_chip *chip)
+-{
+-	int i;
+-	struct lp55xx_led *each;
+-
+-	for (i = 0; i < chip->num_leds; i++) {
+-		each = led + i;
+-		led_classdev_unregister(&each->cdev);
+-	}
+-}
+-EXPORT_SYMBOL_GPL(lp55xx_unregister_leds);
+-
+ int lp55xx_register_sysfs(struct lp55xx_chip *chip)
  {
-@@ -92,7 +92,7 @@ static ssize_t lp55xx_show_current(struct device *dev,
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
- }
+ 	struct device *dev = &chip->cl->dev;
+diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
+index 783ed5103ce5..b9b1041e8143 100644
+--- a/drivers/leds/leds-lp55xx-common.h
++++ b/drivers/leds/leds-lp55xx-common.h
+@@ -189,8 +189,6 @@ extern void lp55xx_deinit_device(struct lp55xx_chip *chip);
+ /* common LED class device functions */
+ extern int lp55xx_register_leds(struct lp55xx_led *led,
+ 				struct lp55xx_chip *chip);
+-extern void lp55xx_unregister_leds(struct lp55xx_led *led,
+-				struct lp55xx_chip *chip);
  
--static ssize_t lp55xx_store_current(struct device *dev,
-+static ssize_t led_current_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -116,7 +116,7 @@ static ssize_t lp55xx_store_current(struct device *dev,
- 	return len;
- }
+ /* common device attributes functions */
+ extern int lp55xx_register_sysfs(struct lp55xx_chip *chip);
+diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
+index 2638dbf0e8ac..a58019cdb8c3 100644
+--- a/drivers/leds/leds-lp8501.c
++++ b/drivers/leds/leds-lp8501.c
+@@ -344,19 +344,17 @@ static int lp8501_probe(struct i2c_client *client,
  
--static ssize_t lp55xx_show_max_current(struct device *dev,
-+static ssize_t max_current_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -125,9 +125,8 @@ static ssize_t lp55xx_show_max_current(struct device *dev,
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
- }
+ 	ret = lp55xx_register_leds(led, chip);
+ 	if (ret)
+-		goto err_register_leds;
++		goto err_out;
  
--static DEVICE_ATTR(led_current, S_IRUGO | S_IWUSR, lp55xx_show_current,
--		lp55xx_store_current);
--static DEVICE_ATTR(max_current, S_IRUGO , lp55xx_show_max_current, NULL);
-+static DEVICE_ATTR_RW(led_current);
-+static DEVICE_ATTR_RO(max_current);
+ 	ret = lp55xx_register_sysfs(chip);
+ 	if (ret) {
+ 		dev_err(&client->dev, "registering sysfs failed\n");
+-		goto err_register_sysfs;
++		goto err_out;
+ 	}
  
- static struct attribute *lp55xx_led_attrs[] = {
- 	&dev_attr_led_current.attr,
-@@ -271,7 +270,7 @@ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
- 				GFP_KERNEL, chip, lp55xx_firmware_loaded);
- }
+ 	return 0;
  
--static ssize_t lp55xx_show_engine_select(struct device *dev,
-+static ssize_t select_engine_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -281,7 +280,7 @@ static ssize_t lp55xx_show_engine_select(struct device *dev,
- 	return sprintf(buf, "%d\n", chip->engine_idx);
- }
+-err_register_sysfs:
+-	lp55xx_unregister_leds(led, chip);
+-err_register_leds:
++err_out:
+ 	lp55xx_deinit_device(chip);
+ err_init:
+ 	return ret;
+@@ -369,7 +367,6 @@ static int lp8501_remove(struct i2c_client *client)
  
--static ssize_t lp55xx_store_engine_select(struct device *dev,
-+static ssize_t select_engine_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -323,7 +322,7 @@ static inline void lp55xx_run_engine(struct lp55xx_chip *chip, bool start)
- 		chip->cfg->run_engine(chip, start);
- }
+ 	lp8501_stop_engine(chip);
+ 	lp55xx_unregister_sysfs(chip);
+-	lp55xx_unregister_leds(led, chip);
+ 	lp55xx_deinit_device(chip);
  
--static ssize_t lp55xx_store_engine_run(struct device *dev,
-+static ssize_t run_engine_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -348,9 +347,8 @@ static ssize_t lp55xx_store_engine_run(struct device *dev,
- 	return len;
- }
- 
--static DEVICE_ATTR(select_engine, S_IRUGO | S_IWUSR,
--		   lp55xx_show_engine_select, lp55xx_store_engine_select);
--static DEVICE_ATTR(run_engine, S_IWUSR, NULL, lp55xx_store_engine_run);
-+static DEVICE_ATTR_RW(select_engine);
-+static DEVICE_ATTR_WO(run_engine);
- 
- static struct attribute *lp55xx_engine_attributes[] = {
- 	&dev_attr_select_engine.attr,
+ 	return 0;
 -- 
 2.26.2
 
