@@ -2,282 +2,112 @@ Return-Path: <SRS0=QtGe=7R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8D4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7482BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB55220738
-	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D129206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgFDJ00 (ORCPT
+        id S1727893AbgFDJnR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:26:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:29530 "EHLO mga02.intel.com"
+        Thu, 4 Jun 2020 05:43:17 -0400
+Received: from mx.socionext.com ([202.248.49.38]:32538 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgFDJ0Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:26:25 -0400
-IronPort-SDR: 4sZ/FVOfvZ6LGBAKoE00XPVc546n01l/sEZZlbX0KtFjX+BGHHI025QDQg0jJwWVJzWD5RHw0o
- WH9R3ajpBl1g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 02:26:23 -0700
-IronPort-SDR: iLMKRTyDd8MVlIqZB/DE1RmSK17qEEbhZRbs5822lFW5LgFqxmRaxZHWG0EQzqEY7MNrRM1Tfr
- irPv5g4QKiTQ==
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="294269374"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 02:26:18 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id C931820859; Thu,  4 Jun 2020 12:26:16 +0300 (EEST)
-Date:   Thu, 4 Jun 2020 12:26:16 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V9, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-Message-ID: <20200604092616.GJ16711@paasikivi.fi.intel.com>
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
- <20200523084103.31276-3-dongchun.zhu@mediatek.com>
- <1591236845.8804.547.camel@mhfsdcap03>
+        id S1726299AbgFDJnR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:43:17 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 04 Jun 2020 18:43:14 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4CA2318009F;
+        Thu,  4 Jun 2020 18:43:14 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 4 Jun 2020 18:43:14 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id E9F061A01BB;
+        Thu,  4 Jun 2020 18:43:12 +0900 (JST)
+Received: from [10.213.31.56] (unknown [10.213.31.56])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 3637F12041F;
+        Thu,  4 Jun 2020 18:43:12 +0900 (JST)
+Subject: Re: [PATCH v3 1/6] PCI: dwc: Add msi_host_isr() callback
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-2-git-send-email-hayashi.kunihiko@socionext.com>
+ <95bb3ffbfab4923854e20266c6b0b098@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <6926b2da-5d00-b582-7d25-a8a0d7014570@socionext.com>
+Date:   Thu, 4 Jun 2020 18:43:11 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591236845.8804.547.camel@mhfsdcap03>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <95bb3ffbfab4923854e20266c6b0b098@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dongchun,
+Hi Marc,
 
-On Thu, Jun 04, 2020 at 10:14:05AM +0800, Dongchun Zhu wrote:
-> Hi Tomasz, Sakari, and sirs,
+On 2020/06/03 20:15, Marc Zyngier wrote:
+> On 2020-06-03 09:54, Kunihiko Hayashi wrote:
+>> This adds msi_host_isr() callback function support to describe
+>> SoC-dependent service triggered by MSI.
+>>
+>> For example, when AER interrupt is triggered by MSI, the callback function
+>> reads SoC-dependent registers and detects that the interrupt is from AER,
+>> and invoke AER interrupts related to MSI.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++----
+>>  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>>  2 files changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index 0a4a5aa..9b628a2 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -112,13 +112,13 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>>  static void dw_chained_msi_isr(struct irq_desc *desc)
+>>  {
+>>      struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -    struct pcie_port *pp;
+>> +    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>
+>> -    chained_irq_enter(chip, desc);
+>> +    if (pp->ops->msi_host_isr)
+>> +        pp->ops->msi_host_isr(pp);
 > 
-> Could anyone help to review this patch?
-> 
-> On Sat, 2020-05-23 at 16:41 +0800, Dongchun Zhu wrote:
-> > Add a V4L2 sub-device driver for OV02A10 image sensor.
-> > 
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > ---
-> >  MAINTAINERS                 |    1 +
-> >  drivers/media/i2c/Kconfig   |   13 +
-> >  drivers/media/i2c/Makefile  |    1 +
-> >  drivers/media/i2c/ov02a10.c | 1025 +++++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 1040 insertions(+)
-> >  create mode 100644 drivers/media/i2c/ov02a10.c
-> > 
-> 
-> [snip]
-> 
-> > +static int ov02a10_probe(struct i2c_client *client)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct ov02a10 *ov02a10;
-> > +	unsigned int rotation;
-> > +	unsigned int clock_lane_tx_speed;
-> > +	unsigned int i;
-> > +	int ret;
-> > +
-> > +	ov02a10 = devm_kzalloc(dev, sizeof(*ov02a10), GFP_KERNEL);
-> > +	if (!ov02a10)
-> > +		return -ENOMEM;
-> > +
-> > +	ret = ov02a10_check_hwcfg(dev, ov02a10);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to check HW configuration: %d", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	v4l2_i2c_subdev_init(&ov02a10->subdev, client, &ov02a10_subdev_ops);
-> > +	ov02a10->mipi_clock_tx_speed = OV02A10_MIPI_TX_SPEED_DEFAULT;
-> > +	ov02a10->fmt.code = MEDIA_BUS_FMT_SBGGR10_1X10;
-> > +
-> > +	/* Optional indication of physical rotation of sensor */
-> > +	ret = fwnode_property_read_u32(dev_fwnode(dev), "rotation", &rotation);
-> > +	if (!ret && rotation == 180) {
-> > +		ov02a10->upside_down = true;
-> > +		ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
-> > +	}
-> > +
-> > +	/* Optional indication of mipi TX speed */
-> > +	ret = fwnode_property_read_u32(dev_fwnode(dev), "ovti,mipi-tx-speed",
-> > +				       &clock_lane_tx_speed);
-> > +
-> > +	if (!ret)
-> > +		ov02a10->mipi_clock_tx_speed = clock_lane_tx_speed;
-> > +
-> > +	/* Get system clock (eclk) */
-> > +	ov02a10->eclk = devm_clk_get(dev, "eclk");
-> > +	if (IS_ERR(ov02a10->eclk)) {
-> > +		ret = PTR_ERR(ov02a10->eclk);
-> > +		dev_err(dev, "failed to get eclk %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency",
-> > +				       &ov02a10->eclk_freq);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to get eclk frequency\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = clk_set_rate(ov02a10->eclk, ov02a10->eclk_freq);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to set eclk frequency (24MHz)\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	if (clk_get_rate(ov02a10->eclk) != OV02A10_ECLK_FREQ) {
-> > +		dev_warn(dev, "wrong eclk frequency %d Hz, expected: %d Hz\n",
-> > +			 ov02a10->eclk_freq, OV02A10_ECLK_FREQ);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ov02a10->pd_gpio = devm_gpiod_get(dev, "powerdown", GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(ov02a10->pd_gpio)) {
-> > +		ret = PTR_ERR(ov02a10->pd_gpio);
-> > +		dev_err(dev, "failed to get powerdown-gpios %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ov02a10->n_rst_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> > +	if (IS_ERR(ov02a10->n_rst_gpio)) {
-> > +		ret = PTR_ERR(ov02a10->n_rst_gpio);
-> > +		dev_err(dev, "failed to get reset-gpios %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(ov02a10_supply_names); i++)
-> > +		ov02a10->supplies[i].supply = ov02a10_supply_names[i];
-> > +
-> > +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov02a10_supply_names),
-> > +				      ov02a10->supplies);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to get regulators\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	mutex_init(&ov02a10->mutex);
-> > +	ov02a10->cur_mode = &supported_modes[0];
-> > +	ret = ov02a10_initialize_controls(ov02a10);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to initialize controls\n");
-> > +		goto err_destroy_mutex;
-> > +	}
-> > +
-> > +	ov02a10->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> > +	ov02a10->subdev.entity.ops = &ov02a10_subdev_entity_ops;
-> > +	ov02a10->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> > +	ov02a10->pad.flags = MEDIA_PAD_FL_SOURCE;
-> > +	ret = media_entity_pads_init(&ov02a10->subdev.entity, 1, &ov02a10->pad);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "failed to init entity pads: %d", ret);
-> > +		goto err_free_handler;
-> > +	}
-> > +
-> > +	pm_runtime_enable(dev);
-> > +	if (!pm_runtime_enabled(dev)) {
-> > +		ret = ov02a10_power_on(dev);
-> > +		if (ret < 0) {
-> > +			dev_err(dev, "failed to power on: %d\n", ret);
-> > +			goto err_free_handler;
-> > +		}
-> > +	}
-> > +
-> > +	ret = v4l2_async_register_subdev(&ov02a10->subdev);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to register V4L2 subdev: %d", ret);
-> > +		if (!pm_runtime_enabled(dev))
-> > +			ov02a10_power_off(dev);
+> Why is this call outside of the enter/exit guards?
+> Do you still need to execute the standard handler?
 
-This should be moved to error handling section below.
+I assume that the msi_host_isr() contains chained interrupts in
+the second patch and no need to treat as the standard handler,
+so this should be called in the guards.
+I'll move this call to the top of dw_chained_msi_isr().
 
-> > +		goto err_clean_entity;
-> > +	}
-> 
-> Tomasz, Sakari, is this ok?
-> or coding like this:
-> 
-> ret = v4l2_async_register_subdev(&ov02a10->subdev);
-> if (!pm_runtime_enabled(dev))
-> 	ov02a10_power_off(dev);
-> if (ret) {
-> 	dev_err(dev, "failed to register V4L2 subdev: %d", ret);
-> 	goto err_clean_entity;
-> }
-> 
-> What's your opinions about the change?
+Thank you,
 
-This turns power off if runtime PM is disabled. I'd keep it as-is, as it'd
-require re-implementing what runtime PM is used for now --- and that's not
-a sensor driver's job.
-
-> 
-> > +
-> > +	return 0;
-> > +
-> > +err_clean_entity:
-> > +	media_entity_cleanup(&ov02a10->subdev.entity);
-> > +err_free_handler:
-> > +	v4l2_ctrl_handler_free(ov02a10->subdev.ctrl_handler);
-> > +err_destroy_mutex:
-> > +	mutex_destroy(&ov02a10->mutex);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int ov02a10_remove(struct i2c_client *client)
-> > +{
-> > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> > +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > +
-> > +	v4l2_async_unregister_subdev(sd);
-> > +	media_entity_cleanup(&sd->entity);
-> > +	v4l2_ctrl_handler_free(sd->ctrl_handler);
-> > +	pm_runtime_disable(&client->dev);
-> > +	if (!pm_runtime_status_suspended(&client->dev))
-> > +		ov02a10_power_off(&client->dev);
-> > +	pm_runtime_set_suspended(&client->dev);
-> > +	mutex_destroy(&ov02a10->mutex);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id ov02a10_of_match[] = {
-> > +	{ .compatible = "ovti,ov02a10" },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ov02a10_of_match);
-> > +
-> > +static struct i2c_driver ov02a10_i2c_driver = {
-> > +	.driver = {
-> > +		.name = "ov02a10",
-> > +		.pm = &ov02a10_pm_ops,
-> > +		.of_match_table = ov02a10_of_match,
-> > +	},
-> > +	.probe_new	= &ov02a10_probe,
-> > +	.remove		= &ov02a10_remove,
-> > +};
-> > +
-> > +module_i2c_driver(ov02a10_i2c_driver);
-> > +
-> > +MODULE_AUTHOR("Dongchun Zhu <dongchun.zhu@mediatek.com>");
-> > +MODULE_DESCRIPTION("OmniVision OV02A10 sensor driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +
-> 
-
--- 
-Sakari Ailus
+---
+Best Regards
+Kunihiko Hayashi
