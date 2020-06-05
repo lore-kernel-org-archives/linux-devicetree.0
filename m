@@ -2,215 +2,89 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C268C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAE3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 189742077D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7A0207ED
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:18:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="vTxrPVq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgFESLI (ORCPT
+        id S1726288AbgFESSE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:11:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47988 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgFESLG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:11:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2843AF48;
-        Fri,  5 Jun 2020 18:11:07 +0000 (UTC)
-Message-ID: <977dd9ba222d8c513b09743da5cb53fd14bfd9a0.camel@suse.de>
-Subject: Re: [PATCH v3 004/105] clk: bcm: Add BCM2711 DVP driver
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     devicetree@vger.kernel.org, Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 05 Jun 2020 20:11:01 +0200
-In-Reply-To: <20200605174329.hf5d6oulmcewzw63@gilmour.lan>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
-         <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-         <faacbc33174e77500e04e609a654c5810045cb42.camel@suse.de>
-         <20200605174329.hf5d6oulmcewzw63@gilmour.lan>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+FKCCfaEGN1+KOjI+Hug"
-User-Agent: Evolution 3.36.2 
+        Fri, 5 Jun 2020 14:18:04 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:35417 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgFESSD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 14:18:03 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CB0A122FEB;
+        Fri,  5 Jun 2020 20:17:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591381080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZQrvFc+JfRqJrBZHhTycEUPJ1czO+KGCEWzplfdwq6c=;
+        b=vTxrPVq7pwVzE9K+7xVF8maUzd1Hx1QtGuBVG62RAkkKjnyiRqh+YnQ+r4CAiE/XqWFkXn
+        jHE8MEGzEv3DgzZGP8Tonrvze71RaVmch6aNEnZwsBRYAEylZ3cCVe+s7C2uVzXtps72J8
+        0KLiMnUZz6+snc/Vk6MWgY9lmuzGKCY=
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 20:17:59 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
+In-Reply-To: <20200605084915.GE3714@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-6-michael@walle.cc> <20200605084915.GE3714@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am 2020-06-05 10:49, schrieb Lee Jones:
+[..]
+>> +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip 
+>> *chip)
+>> +{
+>> +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
+>> +}
+> 
+> Why not save yourself the trouble and just:
+> 
+>   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
 
---=-+FKCCfaEGN1+KOjI+Hug
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Is there a reason why not a single pwm driver uses something like that?
 
-On Fri, 2020-06-05 at 19:43 +0200, Maxime Ripard wrote:
-> Hi Nicolas,
->=20
-> On Thu, Jun 04, 2020 at 07:26:07PM +0200, Nicolas Saenz Julienne wrote:
-> > On Wed, 2020-05-27 at 17:47 +0200, Maxime Ripard wrote:
-> > > The HDMI block has a block that controls clocks and reset signals to =
-the
-> > > HDMI0 and HDMI1 controllers.
-> >=20
-> > Why not having two separate drivers?
->=20
-> They share the same address space, so it wouldn't really make sense to
-> split it into two drivers and an MFD, especially when the clock/reset
-> association is fairly common.
-
-Fair enough.
-
->=20
-> > > Let's expose that through a clock driver implementing a clock and res=
-et
-> > > provider.
-> > >=20
-> > > Cc: Michael Turquette <mturquette@baylibre.com>
-> > > Cc: Stephen Boyd <sboyd@kernel.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: linux-clk@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > ---
-> > >  drivers/clk/bcm/Kconfig           |  11 +++-
-> > >  drivers/clk/bcm/Makefile          |   1 +-
-> > >  drivers/clk/bcm/clk-bcm2711-dvp.c | 127 ++++++++++++++++++++++++++++=
-+++-
-> > >  3 files changed, 139 insertions(+)
-> > >  create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
-> > >=20
-> > > diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> > > index 8c83977a7dc4..784f12c72365 100644
-> > > --- a/drivers/clk/bcm/Kconfig
-> > > +++ b/drivers/clk/bcm/Kconfig
-> > > @@ -1,4 +1,15 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > +
-> > > +config CLK_BCM2711_DVP
-> > > +	tristate "Broadcom BCM2711 DVP support"
-> > > +	depends on ARCH_BCM2835 ||COMPILE_TEST
-> > > +	depends on COMMON_CLK
-> > > +	default ARCH_BCM2835
-> > > +	select RESET_SIMPLE
-> > > +	help
-> > > +	  Enable common clock framework support for the Broadcom BCM2711
-> > > +	  DVP Controller.
-> > > +
-> > >  config CLK_BCM2835
-> > >  	bool "Broadcom BCM2835 clock support"
-> > >  	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-> > > diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> > > index 0070ddf6cdd2..2c1349062147 100644
-> > > --- a/drivers/clk/bcm/Makefile
-> > > +++ b/drivers/clk/bcm/Makefile
-> > > @@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-kona-setup.o
-> > >  obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm281xx.o
-> > >  obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm21664.o
-> > >  obj-$(CONFIG_COMMON_CLK_IPROC)	+=3D clk-iproc-armpll.o clk-iproc-pll=
-.o
-> > > clk-iproc-asiu.o
-> > > +obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2711-dvp.o
-> > >  obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2835.o
-> > >  obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2835-aux.o
-> > >  obj-$(CONFIG_CLK_RASPBERRYPI)	+=3D clk-raspberrypi.o
-> > > diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-
-> > > bcm2711-
-> > > dvp.c
-> > > new file mode 100644
-> > > index 000000000000..c1c4b5857d32
-> > > --- /dev/null
-> > > +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-> > > @@ -0,0 +1,127 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +// Copyright 2020 Cerno
-> > > +
-> > > +#include <linux/clk-provider.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/reset-controller.h>
-> > > +#include <linux/reset/reset-simple.h>
-> > > +
-> > > +#define DVP_HT_RPI_SW_INIT	0x04
-> > > +#define DVP_HT_RPI_MISC_CONFIG	0x08
-> > > +
-> > > +#define NR_CLOCKS	2
-> > > +#define NR_RESETS	6
-> > > +
-> > > +struct clk_dvp {
-> > > +	struct clk_hw_onecell_data	*data;
-> > > +	struct reset_simple_data	reset;
-> > > +};
-> > > +
-> > > +static const struct clk_parent_data clk_dvp_parent =3D {
-> > > +	.index	=3D 0,
-> > > +};
-> > > +
-> > > +static int clk_dvp_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct clk_hw_onecell_data *data;
-> > > +	struct resource *res;
-> > > +	struct clk_dvp *dvp;
-> > > +	void __iomem *base;
-> > > +	int ret;
-> > > +
-> > > +	dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-> > > +	if (!dvp)
-> > > +		return -ENOMEM;
-> > > +	platform_set_drvdata(pdev, dvp);
-> > > +
-> > > +	dvp->data =3D devm_kzalloc(&pdev->dev,
-> > > +				 struct_size(dvp->data, hws, NR_CLOCKS),
-> > > +				 GFP_KERNEL);
-> > > +	if (!dvp->data)
-> > > +		return -ENOMEM;
-> > > +	data =3D dvp->data;
-> > > +
-> > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	base =3D devm_ioremap_resource(&pdev->dev, res);
-> >=20
-> > I think the cool function to use these days is
-> > devm_platform_get_and_ioremap_resource().
->=20
-> i'll change it, thanks!
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Regards,
-Nicolas
-
-
---=-+FKCCfaEGN1+KOjI+Hug
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7airUACgkQlfZmHno8
-x/6RAwgAoMvooAyRe7S9Zeth+KfsqdhHw7fSaIfcyW+1B1hAhY9U35yLYXdM9MqY
-aYWnkeHuMN+ic3frCKcxnR4ySNuiDgvYl9jFOhaEZZePo7dnVoLVrOTaMBs421SQ
-0+roDhCtWXx2tUMKkNLK7w7YRMyDrHP0xFO0+3gFV0k4dD4bBQYwTpT7Yz9k6Big
-wDDlyAeh+Tj5UlMZ7ADJx4Du6nPMDk0P/urKo0AyrnegExOBwlDLKDInRHZg5+G8
-VzgHMoQylpyo3hTBHpSYv2ZXtk3MwvJHi22o42gDzKSfsy6xCrI+/FxdJ+JFmd5i
-Eb0zIV6tEQZNERBn5IILIGn3CWeKzA==
-=i89s
------END PGP SIGNATURE-----
-
---=-+FKCCfaEGN1+KOjI+Hug--
-
+-michael
