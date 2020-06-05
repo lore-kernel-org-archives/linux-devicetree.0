@@ -2,168 +2,143 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3EDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0756C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D062065C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93A1206A2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgFEMqq (ORCPT
+        id S1726465AbgFEMwF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:46:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39855 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726499AbgFEMqq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:46:46 -0400
-IronPort-SDR: +rPeI5uZh0OMljZuxl/TdFc7ZIRmLmLmX911sCr55Hb+7EG2AS8LdwoqghjBWlzW4T55Rd3gnc
- UXbgTnpooerQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 05:46:45 -0700
-IronPort-SDR: r/oJX8fhNmc8e/bISoUrjyeoU9guHWxK+HVaeG11SzZWS7YbfeGTMiJ95UKT4qtI63FTHd0jO8
- yFEOq6VRqCWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="269755373"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 05 Jun 2020 05:46:41 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jhBkB-00B1rI-FV; Fri, 05 Jun 2020 15:46:43 +0300
-Date:   Fri, 5 Jun 2020 15:46:43 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V7, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-Message-ID: <20200605124643.GG2428291@smile.fi.intel.com>
-References: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
- <20200605105412.18813-3-dongchun.zhu@mediatek.com>
+        Fri, 5 Jun 2020 08:52:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37986 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEMwE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 08:52:04 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c194so8108722oig.5;
+        Fri, 05 Jun 2020 05:52:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0l1qYzvXi/GO1NNvXjYET+2paPoc72Q4SdiakMSrAJE=;
+        b=NMiI0cxm3L5FK+XtkUqxfkfr16nI8LXlr6zv2XNGDXyMN5Rt1ttn0qhKXMEMtCpiIR
+         rvZZcqwQrQvaDVA2S1v2j1fvnG9+Qaxw40pcFFaFh/ERXgX5g9gOyw271xfoCNDQYy+l
+         CESBmJzj9C63rBx73CiXDS7QcW5TBOp4TFb274Byvj4DD01yLc6V3MVoGZa8Omgu4B86
+         Yv0lZ2KtbUceWzGjeq3vHYbw5kmV7pCNWrfPAw9UudKFtGSuqHarOOEC1EJMTTV+eJbf
+         GJefnoOypP8BsxzQWnWtC60fu9aVf4BXrD1EsfyPVjeosA2JNIYiqK1CzGf+bjeLVdPY
+         0Q0A==
+X-Gm-Message-State: AOAM530GlO5HQszfC6hPJUihsZSTy/zUCqltYggG3mFdx+k/oRH+8kEF
+        glM1aXIsqJrqs0swTMnhpGkt1Ab/sY9I3CoQZBgYok5Z
+X-Google-Smtp-Source: ABdhPJytYGDFbxN/XEq2VGE23sTUMKtd1U9+zTazCFQWHGPrv/2hO4eOc8uC8OCmgaeeBGlB90o3SnUqaReY8OrFTNk=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr1815274oia.54.1591361523495;
+ Fri, 05 Jun 2020 05:52:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605105412.18813-3-dongchun.zhu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 5 Jun 2020 14:51:52 +0200
+Message-ID: <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
+ iWave G21D-Q7 board based on RZ/G1H
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 06:54:12PM +0800, Dongchun Zhu wrote:
-> Add a V4L2 sub-device driver for DW9768 voice coil motor, providing
-> control to set the desired focus via IIC serial interface.
+Hi Prabhakar,
 
-...
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-> +config VIDEO_DW9768
-> +	tristate "DW9768 lens voice coil support"
-> +	depends on I2C && VIDEO_V4L2
-
-No compile test?
-
-> +	depends on PM
-
-This is very strange dependency for ordinary driver.
-
-> +	select MEDIA_CONTROLLER
-> +	select VIDEO_V4L2_SUBDEV_API
-> +	select V4L2_FWNODE
-
-...
-
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> @@ -0,0 +1,37 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * DW9768 requires waiting time (delay time) of t_OPR after power-up,
-> + * or in the case of PD reset taking place.
+> + * Device Tree Source for the iWave-RZ/G1H Qseven board
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
 > + */
-> +#define DW9768_T_OPR_US				1000
-> +#define DW9768_Tvib_MS_BASE10			(64 - 1)
-> +#define DW9768_AAC_MODE_DEFAULT			2
-
-> +#define DW9768_AAC_TIME_DEFAULT			0x20
-
-Hex? Why not decimal?
-
-> +#define DW9768_CLOCK_PRE_SCALE_DEFAULT		1
-
-...
-
-> +static int dw9768_mod_reg(struct dw9768 *dw9768, u8 reg, u8 mask, u8 val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> +	int ret;
 > +
-> +	ret = i2c_smbus_read_byte_data(client, reg);
-> +	if (ret < 0)
-> +		return ret;
+> +/dts-v1/;
+> +#include "r8a7742-iwg21m.dtsi"
 > +
-
-> +	val = ((unsigned char)ret & ~mask) | (val & mask);
-
-This cast is weird.
-
+> +/ {
+> +       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> +       compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
 > +
-> +	return i2c_smbus_write_byte_data(client, reg, val);
-> +}
-
-...
-
-> +			dev_err(&client->dev, "%s I2C failure: %d",
-> +				__func__, ret);
-
-One line?
-
-...
-
-> +static int dw9768_release(struct dw9768 *dw9768)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> +	u32 move_delay_us = dw9768_cal_move_delay(dw9768->aac_mode,
-> +						  dw9768->clock_presc,
-> +						  dw9768->aac_timing) / 100;
-> +	int ret, val;
+> +       aliases {
+> +               serial2 = &scifa2;
+> +       };
 > +
-> +	val = round_down(dw9768->focus->val, DW9768_MOVE_STEPS);
-> +	for ( ; val >= 0; val -= DW9768_MOVE_STEPS) {
-> +		ret = dw9768_set_dac(dw9768, val);
-> +		if (ret) {
-> +			dev_err(&client->dev, "I2C write fail: %d", ret);
-> +			return ret;
-> +		}
-> +		usleep_range(move_delay_us, move_delay_us + 1000);
-> +	}
+> +       chosen {
+> +               bootargs = "ignore_loglevel root=/dev/mmcblk0p1 rw rootwait";
+> +               stdout-path = "serial2:115200n8";
+> +       };
+> +};
+> +
+> +&pfc {
+> +       scifa2_pins: scifa2 {
+> +               groups = "scifa2_data_c";
 
+Upon second look, I think this group is wrong.  While labeled SCIFA2 in
+the SOM schematics, these signals seem to be connected to a debugging
+interface.
 
-It will look more naturally in the multiplier kind of value.
+The real UART2 seems to be present on the camera daughter board.  Those
+signals are labeled "SCIFA2" in the camera board schematics, but "SCIF2"
+in the SOM schematics.  This is OK, as "scif2_data" and "scifa2_data"
+share the same pins, so you can choose either SCIF2 or SCIFA2 to drive
+them.
 
-	unsigned int steps = DIV_ROUND_UP(...);
+If I'm right, please change the group, and move all serial2 descriptions
+to the camera board DTS.
 
-	while (steps--) {
-		...(..., steps * ..._MOVE_STEPS);
-		...
-	}
+> +               function = "scifa2";
+> +       };
+> +};
+> +
+> +&scifa2 {
+> +       pinctrl-0 = <&scifa2_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +};
 
-but double check arithmetics.
+Gr{oetje,eeting}s,
 
-> +	return 0;
-> +}
-
-
-Also it seems we need to have writex_poll_timeout() implementation (see
-iopoll.h).
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
