@@ -2,144 +2,87 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517A6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E35C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB35207ED
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18C9207D3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="HWlIvo8G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="EDGj7zDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgFER5L (ORCPT
+        id S1726590AbgFESIh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55186 "EHLO
+        Fri, 5 Jun 2020 14:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgFER5L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 13:57:11 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB20DC08C5C2
-        for <devicetree@vger.kernel.org>; Fri,  5 Jun 2020 10:57:10 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id c11so12841353ljn.2
-        for <devicetree@vger.kernel.org>; Fri, 05 Jun 2020 10:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YYnGgbB/yUYHLwRnIgeOB2yfvVDg5PB29KwRpcC2gN4=;
-        b=HWlIvo8Gx/GfSgNGX7LbvmwrB8R2/UprUCF6ZpGdTm5eFaUvsIhs/YyhRxIi6C0Bgu
-         eKvjCs9vk7Z007hp+pg8+29RTakK0BG4LfZ6KfTBUENIJULV/m/bqBnWIrwsUs1JUM8/
-         1/NGt2NwWfaMLuXqDXVe3Io4BwZBxhMbAeR1RevZ7FRe6WgNb1P0/6bzp39+eac5SSI0
-         IJ2t/onuc/NeLjFksiSRP+9/3pOoJpsXpFqF1xvY2lFz/Ngtj3zgOT8AEn6f/pRSyZwx
-         xSg9J8jx/18GSu+o8jK2uEzV4XTjjcqiZW53KhDmRBA/9Xatc7A9DzNlyF1ysAUOFHM0
-         xEvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YYnGgbB/yUYHLwRnIgeOB2yfvVDg5PB29KwRpcC2gN4=;
-        b=FCyDOP5hKibCB7r8aYgjElGbHpW4xL78W2uqA/ZgTNqw+bTVt71bcKBsMe0mGn/3Nn
-         2S1btGbUOpOso1OIWTKEInOzOrGTpau5CBAaOsjGvjA+qN4Nyka3Kdx+L3r0xG4mvQZP
-         2wfqItusBmQjRYyVlvGHXM3HsGzXubuk9qXlAgtFND4J/ScYOhyf1d+jeVO6CfIaOsuc
-         RQmgxWS1McdMmHUdoJwdqL9uAZUh10rFSnUz8ml9kC/LsHstXgS9YLzd50kHsKBpIe1t
-         TVAVKyDQ9Zv60deVbV6a57F+j9dTqM/+YckGgBfk7xhmLigY2tJ0pOMK/O5K5eHWpBPP
-         1a3Q==
-X-Gm-Message-State: AOAM530Psxrq7iw73lBwFaz6lQK2wiI3bYowYFAt/fZ7kgn664AZt+Tn
-        HFLHM3qfQiq7/0lzTZ5BkzbzuoBoDi3V0WilcH+Hqg==
-X-Google-Smtp-Source: ABdhPJz1QchXGicuq/e4UbyBXjj2+Lh2IaK3OLii9lagU/34toEvTJek1PSUAitdFBhMHfD0XxPR6jfp824v8PIIWqE=
-X-Received: by 2002:a2e:8705:: with SMTP id m5mr5176522lji.269.1591379829143;
- Fri, 05 Jun 2020 10:57:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Fri, 5 Jun 2020 10:56:58 -0700
-Message-ID: <CADaigPUOJMwR0y6CjVpu5+nPAvejbCvEQNLEC+EKq9haBaQynw@mail.gmail.com>
-Subject: Re: [PATCH v3 004/105] clk: bcm: Add BCM2711 DVP driver
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        with ESMTP id S1726077AbgFESIg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 14:08:36 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20426C08C5C2;
+        Fri,  5 Jun 2020 11:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=qOWKSN6fy8i1wsii+C9kQcUD/H3uhG0+JUSv3RW0hT8=; b=EDGj7zDa0TosrsbOciky1SiUJp
+        hH5AbltKRt7XwbyothGG3DvtRN5/x8PcufbF4rTxO1RvJkDXpt5juFNR0pgzaRqAtBvK6KYRlAHm7
+        Kx30rPWd7H71ZMLfPQfuyY+rxZOI1hF0TfFQd403uzctnlHu86hrmm5oE40bqaIhfohWWfVt+KmT7
+        Utv38QoYMznVK1t/o2+p+iZLlB9JDc6t6r3U1UHQNoytKfdF7BaToc1aWs7nbZbcb5Mak6uraC29h
+        2aP++vY/IOw78Vnqbum7SqfKF+pEWeXs9cl29thqP4VaVLMDx0mAmGDVE5wF50NSiJGKEJpTIfNcO
+        lhTQpTkw==;
+Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
+        by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jhGlZ-00037H-Ea; Fri, 05 Jun 2020 19:08:29 +0100
+Date:   Fri, 5 Jun 2020 19:08:24 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 0/2] net: dsa: qca8k: Add SGMII configuration options
+Message-ID: <cover.1591380105.git.noodles@earth.li>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 8:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The HDMI block has a block that controls clocks and reset signals to the
-> HDMI0 and HDMI1 controllers.
->
-> Let's expose that through a clock driver implementing a clock and reset
-> provider.
->
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/clk/bcm/Kconfig           |  11 +++-
->  drivers/clk/bcm/Makefile          |   1 +-
->  drivers/clk/bcm/clk-bcm2711-dvp.c | 127 +++++++++++++++++++++++++++++++-
->  3 files changed, 139 insertions(+)
->  create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
->
-> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> index 8c83977a7dc4..784f12c72365 100644
-> --- a/drivers/clk/bcm/Kconfig
-> +++ b/drivers/clk/bcm/Kconfig
-> @@ -1,4 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config CLK_BCM2711_DVP
-> +       tristate "Broadcom BCM2711 DVP support"
-> +       depends on ARCH_BCM2835 ||COMPILE_TEST
-> +       depends on COMMON_CLK
-> +       default ARCH_BCM2835
-> +       select RESET_SIMPLE
-> +       help
-> +         Enable common clock framework support for the Broadcom BCM2711
-> +         DVP Controller.
-> +
->  config CLK_BCM2835
->         bool "Broadcom BCM2835 clock support"
->         depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> index 0070ddf6cdd2..2c1349062147 100644
-> --- a/drivers/clk/bcm/Makefile
-> +++ b/drivers/clk/bcm/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)      += clk-kona-setup.o
->  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm281xx.o
->  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm21664.o
->  obj-$(CONFIG_COMMON_CLK_IPROC) += clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
-> +obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2711-dvp.o
->  obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2835.o
->  obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2835-aux.o
->  obj-$(CONFIG_CLK_RASPBERRYPI)  += clk-raspberrypi.o
+This pair of patches adds some SGMII device tree configuration options
+for the QCA8K switch driver, and the associated documentation.
 
-I do think that single driver is the right model here, but I noticed
-that you're not using your new CONFIG_ symbol.  With that fixed, r-b
-from me.
+At present the driver does no configuration of the SGMII port, even if
+it is selected. These changes allow configuration of how it is connected
+up (i.e. connected to an external phy, or to a CPU, or to an SFP cage)
+as well as allowing for autonegotiation to be disabled and a delay
+configured.
 
-(though I'd also recommend devm_platform_get_and_ioremap_resource and
-devm_reset_controller_register())
+Tested on a MikroTik RB3011; the second switch is connected to the CPU
+via SGMII.
+
+Jonathan McDowell (2):
+  dt-bindings: net: dsa: qca8k: document SGMII properties
+  net: dsa: qca8k: introduce SGMII configuration options
+
+ .../devicetree/bindings/net/dsa/qca8k.txt     |  4 ++
+ drivers/net/dsa/qca8k.c                       | 44 ++++++++++++++++++-
+ drivers/net/dsa/qca8k.h                       | 12 +++++
+ 3 files changed, 59 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
+
