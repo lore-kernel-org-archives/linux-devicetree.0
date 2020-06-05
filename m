@@ -2,183 +2,153 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2969CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 21:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE3AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 22:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0808A2065C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 21:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A01820772
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 22:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Uyub99ds"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWoLOs1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgFEV1W (ORCPT
+        id S1726033AbgFEWEv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:27:22 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:38460 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728487AbgFEV1V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 17:27:21 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id D240E30CFDD;
-        Fri,  5 Jun 2020 14:27:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com D240E30CFDD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1591392439;
-        bh=xHVmdwrtES336ZD/pMaNwdQn2MdfztoEcmaxMbZqWYc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uyub99dsEdwI3bm001CAosFYB7VHqYJSwTs3D9Bu3gDQfJu8N8cYpJ3qkkgz8Bsyd
-         TngJkLzHslJ6/JVUOaHS8/ekpLJv9hasoRE9DRKMkwgEOXGRgINEFqwjmxXotxeRD1
-         uguzld5lcIOMQ+9DRTE1FWX/5MBncshksix+j6Is=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4DB53140069;
-        Fri,  5 Jun 2020 14:27:18 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Fri, 5 Jun 2020 18:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgFEWEv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 18:04:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C08C08C5C2;
+        Fri,  5 Jun 2020 15:04:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id p5so11159707wrw.9;
+        Fri, 05 Jun 2020 15:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4obgiWJMjzopugCNtxoiM9Fhsn1z9LnA6SizhmkTt9g=;
+        b=oWoLOs1DYFcKnc8iyzbCZ5ZjmvwzsLAT0uIZzcGnirqHov3z6YGwjUGZSTtIs7Y8Rg
+         8xMoBSEI1DJHKhJu5l/4DyyYhmVYPtrPxGF8cidtj/AY1sx/rUmFNeqb6uhmNwyP9IKK
+         JLPa/uJZkImCV+PcqI0o8T8pHZQ74MxP+TYPEtsKScM/B6AGX6ocLuSxmazHCdCPqxBH
+         YKZQBoGBMLFLh6YbYGxROSRKqOmtbLRj0aI4EpP+VwyIxNqxnB7bO6Xe4di9FQCV5imO
+         fzTaYt/G66Z68LK/oltgGYC0EIj+e3eiMPpBQR/V0pd6dPfEv3sjVEZ0cw2C9Bsmeoy3
+         TEyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4obgiWJMjzopugCNtxoiM9Fhsn1z9LnA6SizhmkTt9g=;
+        b=li7UTBKe+b8qZx59wGmN87GkugFnblDLkzshtUjN6RKS7dRN/VRsM5FxLFZnmhG9rk
+         t8wCMVeXuu4iupwrrHu/aKwJqwsxrGlAyJzW2btPE5WypiovNKPRKNLcyz7qF12yV1iW
+         dtAblmMgWvXkvDzxtMnvy7n9WRa3zkhRmbmB0XBhd1ZFIZgCrxXM6oWWwJwMABALDvt/
+         c35vHawQPne/C3cyW5WPf3NJEpkI+yprGOva5aES/cvyXpalY/ICHgpuQFPO/E1ld5K2
+         FR6tuZaI44UapWyWgiXEQ12x5VibsycbO4f/8xnFQv50GBjf9v3q8aL++1eRQRwKYgOY
+         QhHQ==
+X-Gm-Message-State: AOAM530hO+wsMxJfiAmBcRa25p2fgZQf2Bkv9UKyMEq0PNgezJkrH2F5
+        qY/0I8TuXcmtEBKXREI2lSA=
+X-Google-Smtp-Source: ABdhPJwJjWSx6RXx3ecmtFnocQfoqBGkAO9vSi2BfvV03xiJ7JhGCPlV2aEFgXx7veXxm5wOr3U6nw==
+X-Received: by 2002:adf:8b0c:: with SMTP id n12mr12594963wra.340.1591394689565;
+        Fri, 05 Jun 2020 15:04:49 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a1sm13205415wmd.28.2020.06.05.15.04.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 15:04:48 -0700 (PDT)
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>, lukas@wunner.de
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 03/12] dt-bindings: PCI: Add bindings for more Brcmstb chips
-Date:   Fri,  5 Jun 2020 17:26:43 -0400
-Message-Id: <20200605212706.7361-4-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200605212706.7361-1-james.quinlan@broadcom.com>
-References: <20200605212706.7361-1-james.quinlan@broadcom.com>
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+ <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+ <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
+Date:   Fri, 5 Jun 2020 15:04:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
 
-- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
-  7211 (STB version of RPi4).
-- add new property 'brcm,scb-sizes'
-- add new property 'resets'
-- add new property 'reset-names' for 7216 only
-- allow 'ranges' and 'dma-ranges' to have more than one item and update
-  the example to show this.
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- .../bindings/pci/brcm,stb-pcie.yaml           | 58 ++++++++++++++++---
- 1 file changed, 51 insertions(+), 7 deletions(-)
+On 6/5/2020 7:41 AM, Robin Murphy wrote:
+> On 2020-06-05 14:46, Robin Murphy wrote:
+>> On 2020-06-05 14:20, Mark Brown wrote:
+>>> On Fri, Jun 05, 2020 at 12:34:36PM +0100, Robin Murphy wrote:
+>>>> On 2020-06-04 22:28, Florian Fainelli wrote:
+>>>
+>>>>> For the BCM2835 case which is deemed performance critical, we would
+>>>>> like
+>>>>> to continue using an interrupt handler which does not have the extra
+>>>>> comparison on BCM2835_SPI_CS_INTR.
+>>>
+>>>> FWIW, if I'm reading the patch correctly, then with sensible codegen
+>>>> that
+>>>> "overhead" should amount to a bit test on a live register plus a
+>>>> not-taken
+>>>> conditional branch - according to the 1176 TRM that should add up to a
+>>>> whopping 2 cycles. If that's really significant then I'd have to wonder
+>>>> whether you want to be at the mercy of the whole generic IRQ stack
+>>>> at all,
+>>>> and should perhaps consider using FIQ instead.
+>>>
+>>> Yes, and indeed the compiler does seem to manage that.  It *is* non-zero
+>>> overhead though.
+>>
+>> True, but so's the existing level of pointer-chasing indirection that
+>> with some straightforward refactoring could be taken right out of the
+>> critical path and confined to just the conditional complete() call.
+>> That's the kind of thing leaving me unconvinced that this is code
+>> where every single cycle counts ;)
+> 
+> Ha, and in fact having checked a build out of curiosity, this patch
+> as-is actually stands to make things considerably worse. At least with
+> GCC 8.3 and bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't
+> get inlined, which means bcm2835_spi_interrupt() pushes/pops a stack
+> frame and makes an out-of-line call to bcm2835_spi_interrupt_common(),
+> resulting in massively *more* work than the extra two instructions of
+> simply inlining the test.
+> 
+> So yes, the overhead of inlining the test vs. the alternative is indeed
+> non-zero. It's just also negative :D
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 8680a0f86c5a..4a012d77513f 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
- maintainers:
-   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
- 
--allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
--
- properties:
-   compatible:
--    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-+    items:
-+      - enum:
-+          - brcm,bcm2711-pcie # The Raspberry Pi 4
-+          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-+          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-+          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-+          - brcm,bcm7445-pcie # Broadcom 7445 Arm
- 
-   reg:
-     maxItems: 1
-@@ -34,10 +37,12 @@ properties:
-       - const: msi
- 
-   ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 4
- 
-   dma-ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 6
- 
-   clocks:
-     maxItems: 1
-@@ -58,8 +63,33 @@ properties:
- 
-   aspm-no-l0s: true
- 
-+  resets:
-+    description: for "brcm,bcm7216-pcie", must be a valid reset
-+      phandle pointing to the RESCAL reset controller provider node.
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+  reset-names:
-+    items:
-+      - const: rescal
-+
-+  brcm,scb-sizes:
-+    description: u64 giving the 64bit PCIe memory
-+      viewport size of a memory controller.  There may be up to
-+      three controllers, and each size must be a power of two
-+      with a size greater or equal to the amount of memory the
-+      controller supports.  Note that each memory controller
-+      may have two component regions -- base and extended -- so
-+      this information cannot be deduced from the dma-ranges.
-+
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint64-array
-+      - items:
-+          minItems: 1
-+          maxItems: 3
-+
- required:
-   - reg
-+  - ranges
-   - dma-ranges
-   - "#interrupt-cells"
-   - interrupts
-@@ -68,6 +98,18 @@ required:
-   - interrupt-map
-   - msi-controller
- 
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm7216-pcie
-+    then:
-+      required:
-+        - resets
-+        - reset-names
-+
- unevaluatedProperties: false
- 
- examples:
-@@ -93,7 +135,9 @@ examples:
-                     msi-parent = <&pcie0>;
-                     msi-controller;
-                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
--                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
-+                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-                     brcm,enable-ssc;
-+                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
-             };
-     };
+Is it reliable across compiler versions if we use __always_inline?
+
+The only other alternative that I can think of is using a static key to
+eliminate the test for the single controller case. This feels highly
+over engineered, but if that proves more reliable and gets everybody
+their cookie, why not.
+
+Lukas, do you have any way to test with the conditional being present
+that the performance or latency does not suffer so much that it becomes
+unacceptable for your use cases?
 -- 
-2.17.1
-
+Florian
