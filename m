@@ -2,115 +2,183 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC282C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF37207F7
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3112081A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIrhYQ/I"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="QYOVtlB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgFEGbH (ORCPT
+        id S1726062AbgFEGgr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgFEGbH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 02:31:07 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0C0C08C5C2;
-        Thu,  4 Jun 2020 23:31:07 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id o5so9046758iow.8;
-        Thu, 04 Jun 2020 23:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AwDhq08cjD5JqZTeO0Y9UdSU2XkQsUbpJ8EXCL/HMHE=;
-        b=hIrhYQ/Ib+LMc/lM8TkkboBA43CJMvk8zLm4ZNrhrhhPe44AThnqI1MtOmXnBLUo6b
-         W91iiSy/AvYKOUOfr5GNwDxO1RwGoglhDLE+fWDlIP53CSNTE0YwTQxk+1wK2sTtzLR8
-         Krxss4eKSQo8FWkgEAaXX8heaJnqfCIJNY7rVT2Wt9GpTGcz5L5Q4yMgkHr84bdLs8gu
-         gNOz6oy6QOtm6JuIVM2hBvCf6+8hrK2mNd2SMrY74C24UAzF9z85HCwp4pb7r+/rmyUW
-         1XDRD+nIE8Ik1NuLKByDtAHKujMdUKMsNwylY39JqoW5nGa6gkn8lylg5AeirjcRmRAw
-         QjJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AwDhq08cjD5JqZTeO0Y9UdSU2XkQsUbpJ8EXCL/HMHE=;
-        b=l6XpFN5oxMkld0/HjgriP9cc9Zo4io9SPkHITPWPTdh4PbBzh0qQEegnetmo+CWMS7
-         V4AJkHL6rktbaNUemDxlcF/LlPUhHmJI6fEE/FFoh/KK93Nm/HkrS3qcl7GOxk425zhH
-         kRxOkoLbMW2t1u+5BzLg+MfufpFT1u/6Jo5cVAVWklbwZRbtt+A58HdrRSLmST268eBy
-         Ud1K7qtnWy6CYHUT8L1uxAZ9fJuZ4v0t6g3zvq4mM0DJhyKzyZOkhSvX6fOLxGzLhDZM
-         tj198RvoH6hN9w0eHOPzhRQLJOD1iCSqHzVqLO5XXjAZoUIM3Lpunqh8ytxCUJs8eLuL
-         hP4w==
-X-Gm-Message-State: AOAM531zzADrY2wI5Xt3BPL+sVQPb2pMB9yzIvBEGqRdFPMxQGL6QdOt
-        LW0KCedQLgnoUrTlJKXH+Dg9jptkJIRH6pxxOg0=
-X-Google-Smtp-Source: ABdhPJwfxG2xuH353FOlKdoATjIRdV+1mkAMbDgGbPrRb2tsKonvfuPWxT4EOWzLvMycv3HDOoS7PqnFNKbNhrJLhKI=
-X-Received: by 2002:a5d:8958:: with SMTP id b24mr7266854iot.53.1591338665743;
- Thu, 04 Jun 2020 23:31:05 -0700 (PDT)
+        Fri, 5 Jun 2020 02:36:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60820 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgFEGgr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 5 Jun 2020 02:36:47 -0400
+IronPort-SDR: d7ckQZGBK6ARJaOgyvemrRoVpiDkO+W5MIqqyYOgzMcxow9ri4sjMXwHf2yUg3PT/LSPEOWCX0
+ LcbomDW6UzwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 23:36:46 -0700
+IronPort-SDR: TXA1OSg/gf9Ggbb0Lk1H5U2fuXPLgicKdO6MwxsvyNza6YhEaIienQNHlw5xRWF/CHBUgbBlBW
+ m2c1lmNyd7Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,475,1583222400"; 
+   d="scan'208";a="257950045"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Jun 2020 23:36:46 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 4 Jun 2020 23:36:45 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 4 Jun 2020 23:36:45 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 4 Jun 2020 23:36:45 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 4 Jun 2020 23:36:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZF6IYp2VuNSNTIXQMCEZM2C9HaQm7XG8GKnaa9hcUohbTB65PFa875ql5O7VoOnOVowqS8DM3Syv2dmnhiAOzKqmuR3HOQ/63bMr2sxiOm28/qDhNivIz2mGvkIZ2exDfMs6zS1x0IWLZ9TO2//3KAPL5Rqg8QaMZ/r8CVM7igoZSPzkQ390PnpI2JDXNWcuTxpO1yB3rpFE37CJcnJuIAbfcgsRbNx/yHwaYoH2YWHMUGCv4cNB/oHAZxgKIPfZ+a2f+2hRDBucSduZulQK8Szh8lSY6fKQKYM+CFDDuVajVg42Hl65d0PET6TgrhU2ylyMFWAmrHhV6sYIVNp/YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bt6igjb9YpZy4lfUbuKwdkSyqn2SH3AHUOe06JV9j50=;
+ b=Hsj2Vj50gzQOL/0cF515jxLwH68lHoone1Jyi7goXLioQjEWZj+p83leXreoaK27oTc7GAxQudEs+4DhOMDeeTUU7rlB8a8g6CtoCI9bwlGwV9XEaTes59gJCmbVacace8OqFJUL4fLWktIL6TX+JubWLFRJ+o8+VSKxHidfLPya52nJawYF6JPlJLRZtfe+Os075ZkEVBBXjnLWkc8/c/rzGRsKFMV16WoruOTJRi4BBvxpzqO4yNRQWa/9BkiKwBqaOfsnlZrDPj4ydbQ83f72CcE9IFxdX5p44TuRYhGoFFku+QroNrnzgoYjt8iWDdw+DwPY+HIrzmPheMoBpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bt6igjb9YpZy4lfUbuKwdkSyqn2SH3AHUOe06JV9j50=;
+ b=QYOVtlB1kArdwpay5raNnbRevJZEAuPEofdBRsqQkvaWwheUm9Wk+xdiwYZsR/pT/wxn6L9oepnPDitJAAj+YMrRCRa2L9FhUhQNxuSmfHLclnQiDYDnJgsnaNChko5FwaajzLF4D/9ugDYivQImSbg4EZPuQ8M2lyxA2Cxx7QQ=
+Received: from BN6PR11MB1939.namprd11.prod.outlook.com (2603:10b6:404:ff::18)
+ by BN6PR11MB1747.namprd11.prod.outlook.com (2603:10b6:404:102::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 5 Jun
+ 2020 06:36:42 +0000
+Received: from BN6PR11MB1939.namprd11.prod.outlook.com
+ ([fe80::28d8:4c35:7dcb:4e20]) by BN6PR11MB1939.namprd11.prod.outlook.com
+ ([fe80::28d8:4c35:7dcb:4e20%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
+ 06:36:42 +0000
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "See, Chin Liang" <chin.liang.see@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
+        "Westergreen, Dalon" <dalon.westergreen@intel.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        "Tan, Ley Foon" <ley.foon.tan@intel.com>
+Subject: RE: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
+ documentation
+Thread-Topic: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
+ documentation
+Thread-Index: AQHWOkLNBKZdtzZwnESIhu+vAPDAqqjJCPCAgAB7o1A=
+Date:   Fri, 5 Jun 2020 06:36:42 +0000
+Message-ID: <BN6PR11MB1939E6BAE4121A5D0340BAB0F2860@BN6PR11MB1939.namprd11.prod.outlook.com>
+References: <20200604073256.25702-1-joyce.ooi@intel.com>
+ <20200604073256.25702-11-joyce.ooi@intel.com>
+ <20200604222311.GA4151468@bogus>
+In-Reply-To: <20200604222311.GA4151468@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [42.189.134.147]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 83a29671-bb51-4d02-0cae-08d8091acf8f
+x-ms-traffictypediagnostic: BN6PR11MB1747:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR11MB1747C996D78838FED7B30D54F2860@BN6PR11MB1747.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0425A67DEF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Eu/gJaCoO9o41Hv1InbCbU2FB5lqDdU92QRTd4rpwJ+7ecMzB4CpiJuHbyYnREyunaArDgLFXC60fPQCKL5PRefmIyU6M97JKPEfTcn+ePGxGnEU5pUq2FyDMbXG5B0pB+fbtK5wBHZt8N+/XQy2pKATKZBDYr+A/UbXGG3AppUHvRHHQYe0vOyERunhHilEpsme60gAREuhd2B7GW2RomBG0UQ/qyLsC4tDrqcuLiNQFAQHt66rG3/GFb9kPpMCgBnP6aLwNlFPRoa6QcSLRflhPEtl7Gd2YTw65TnXEnGZMEZO2o29NzLaNaN3X4j+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB1939.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(39860400002)(376002)(366004)(396003)(4326008)(186003)(478600001)(6506007)(66946007)(26005)(33656002)(66476007)(15650500001)(2906002)(53546011)(5660300002)(83380400001)(52536014)(8676002)(316002)(54906003)(71200400001)(66556008)(55016002)(86362001)(64756008)(66446008)(6916009)(7696005)(8936002)(9686003)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MJIVCkqdjQSv9kwEJ9LWEfpJsrQWAleaU4/qAWr2llhRe0i9vgaoQ0AMXMQ6yXkO0IFXV+mukIAaujYfbqxAx/TQZ62gbyvtX/PJ+QUELGHXdU6Am43X2XzzkZCl4z0oNr9TQhv2B21fI/e4LFZraqwJd9WE+zARzFkof+BYy74ctgK/LNnSNMwTEGCsn4dC7045icx/youCZDZiTUzWgkZiINXoELTzzI0ZYAsxTRYTMYdoLx7LR/tgJZRwawlijLaBANfTAq32GJmojECYYG5J/9O61XfxZSBl6MRe4FIe82JLDCa/sa8+JK74VQzW4tsHHee3qMnP1+v4RiyAU052wglKbr5PAszHcfSqsxMrssUc/DM86bWurFPtHaMsN2H8nFiXh5pt/5KrmYN5/AU5qFP73fXbfJJRvMAyT4y6WlUc/jmxwoNN8gZK3h/Zf8bOe4wDH/7VHTsRJnKZ3p6J3uQa0XaLnyip+FWn9Bn+ehlwuuZJOO9W/9oRuVU8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus> <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
- <20200603180435.GB23722@bogus> <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
- <20200604092052.GD8814@bogus> <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
- <20200605045645.GD12397@bogus>
-In-Reply-To: <20200605045645.GD12397@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 5 Jun 2020 01:30:54 -0500
-Message-ID: <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83a29671-bb51-4d02-0cae-08d8091acf8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2020 06:36:42.7354
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9FTttcEEAZpE4goQU0wg0VmzHh7FjmoXWONT/LoRsJ4LA9pcCeArwikiq797wpGrslWXnBQ7lPvfgd5DM8YmzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1747
+X-OriginatorOrg: intel.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 11:56 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Friday, June 5, 2020 6:23 AM
+> To: Ooi, Joyce <joyce.ooi@intel.com>
+> Cc: David S . Miller <davem@davemloft.net>; Jakub Kicinski
+> <kuba@kernel.org>; Thor Thayer <thor.thayer@linux.intel.com>;
+> netdev@vger.kernel.org; Rob Herring <robh+dt@kernel.org>; See, Chin
+> Liang <chin.liang.see@intel.com>; linux-kernel@vger.kernel.org; Nguyen,
+> Dinh <dinh.nguyen@intel.com>; Westergreen, Dalon
+> <dalon.westergreen@intel.com>; devicetree@vger.kernel.org; Dalon
+> Westergreen <dalon.westergreen@linux.intel.com>; Tan, Ley Foon
+> <ley.foon.tan@intel.com>
+> Subject: Re: [PATCH v3 10/10] net: eth: altera: update devicetree binding=
+s
+> documentation
+>=20
+> On Thu, 04 Jun 2020 15:32:56 +0800, Ooi, Joyce wrote:
+> > From: Dalon Westergreen <dalon.westergreen@intel.com>
+> >
+> > Update devicetree bindings documentation to include msgdma prefetcher
+> > and ptp bindings.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> > Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> > ---
+> > v2: no change
+> > v3: no change
+> > ---
+> >  .../devicetree/bindings/net/altera_tse.txt         | 103
+> +++++++++++++++++----
+> >  1 file changed, 84 insertions(+), 19 deletions(-)
+> >
+>=20
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions.
+> However, there's no need to repost patches *only* to add the tags. The
+> upstream maintainer will do that for acks received on the version they ap=
+ply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
 
->
-> > >>     bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
-> > >>      <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
-> > >
-> > Here another request is started before the first is finished.
->
-> Ah, the prints are when the client requested. It is not when the mailbox
-> started it. So this just indicates the beginning of the transfer from the
-> client.
->
-There maybe condition on a sensor read to finish within 1ms, but there
-is no condition for the read to _start_ at this very moment (usually
-there are sleeps in the path to sensor requests).
+Noted, will do that next time.
 
-> > If you want this to work you have to serialise access to the single
-> > physical channel and/or run the remote firmware in asynchronous mode -
-> > that is, the firmware ack the bit as soon as it sees and starts
-> > working in the background, so that we return in ~3usec always, while
-> > the data returns whenever it is ready.
->
-> Yes it does that for few requests like DVFS while it uses synchronous
-> mode for few others. While ideally I agree everything in asynchronous
-> most is better, I don't know there may be reasons for such design.
->
-The reason is that, if the firmware works asynchronously, every call
-would return in ~3usec and you won't think you need virtual channels.
-
-You have shared only 'bad' log without serialising access. Please
-share log after serialising access to the channel and the 'good' log
-with virtual channels.  That should put the topic to rest.
-
-thanks.
