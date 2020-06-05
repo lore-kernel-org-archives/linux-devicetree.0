@@ -2,169 +2,103 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687B9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 14:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49178C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466D8206DC
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 14:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mDSEArvG"
+	by mail.kernel.org (Postfix) with ESMTP id 307692070B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgFEOjx (ORCPT
+        id S1728165AbgFEOll (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:39:53 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:54213 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727944AbgFEOjx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 10:39:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591367992; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KTWUDLwRGa0tY+A1+UTpe+rQGvhwB5yp5lNO+CrBQH4=;
- b=mDSEArvGk72WbXhvlVkrOl8+/sweM5gXjem3dcFtlqHNIFKKHB/X2Ou1fcvT7FnZuSmwr/Zs
- F/Yn12k8OZEdrjMEfPQ8gN/f+dLJ6h7dXCJvny0kfx7Q1vjHboFaHuP4cNPU+Bzdz+48gbD9
- 3ISqe32zxNMYqpQVC2skNMZnOKQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5eda593646d39fc0a28680c9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 14:39:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 13945C43387; Fri,  5 Jun 2020 14:39:50 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 91E91C433CA;
-        Fri,  5 Jun 2020 14:39:49 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 20:09:49 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Cc:     Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 5 Jun 2020 10:41:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:56820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728223AbgFEOlk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:41:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7949331B;
+        Fri,  5 Jun 2020 07:41:39 -0700 (PDT)
+Received: from [10.57.10.23] (unknown [10.57.10.23])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77DA73F305;
+        Fri,  5 Jun 2020 07:41:32 -0700 (PDT)
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
-In-Reply-To: <CAP71WjwjZgD=msK_2W8eBBk6axZ_uMNurEm9F76u6aHscXPf9Q@mail.gmail.com>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-2-jonathan@marek.ca>
- <20200529025246.GV279327@builder.lan>
- <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
- <20200529031520.GA1799770@builder.lan>
- <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
- <8cf134f0-381f-7765-2496-e5abd77f3087@marek.ca>
- <e9800dbb6531c9b57a855f41f68753bd@codeaurora.org>
- <CAP71WjwjZgD=msK_2W8eBBk6axZ_uMNurEm9F76u6aHscXPf9Q@mail.gmail.com>
-Message-ID: <81a9d07c0c8d76abf0ef734963788884@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+ <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+Message-ID: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+Date:   Fri, 5 Jun 2020 15:41:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nico,
-
-On 2020-06-05 20:01, Nicolas Dechesne wrote:
-> On Fri, Jun 5, 2020 at 4:14 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> On 2020-06-05 19:40, Jonathan Marek wrote:
->> > On 6/5/20 10:03 AM, Sai Prakash Ranjan wrote:
->> >> On 2020-05-29 08:45, Bjorn Andersson wrote:
->> >>> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
->> >>>
->> >>>>
->> >>>>
->> >>>> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
->> >>>> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
->> >>>> >
->> >>>> > > Add the apps_smmu node for sm8150. Note that adding the iommus field for
->> >>>> > > UFS is required because initializing the iommu removes the bypass mapping
->> >>>> > > that created by the bootloader.
->> >>>> > >
->> >>>> >
->> >>>> > Unrelated to the patch itself; how do you disable the splash screen on
->> >>>> > 8150? "fastboot oem select-display-panel none" doesn't seem to work for
->> >>>> > me on the MTP - and hence this would prevent my device from booting.
->> >>>> >
->> >>>> > Thanks,
->> >>>> > Bjorn
->> >>>> >
->> >>>>
->> >>>> I don't have a MTP, but on HDK855, "fastboot oem
->> >>>> select-display-panel none"
->> >>>> combined with setting the physical switch to HDMI mode (which
->> >>>> switches off
->> >>>> the 1440x2560 panel) gets it to not setup the display at all (just
->> >>>> the
->> >>>> fastboot command isn't enough).
->> >>>>
->> >>>
->> >>> Okay, I don't think we have anything equivalent on the MTP, but good
->> >>> to
->> >>> know.
->> >>>
->> >>
->> >> Actually I tried out this in SM8150 MTP and it works fine for me,
->> >>
->> >> "fastboot set_active a; fastboot set_active b; fastboot set_active a;
->> >> fastboot oem select-display-panel none; fastboot reboot bootloader;
->> >> fastboot boot boot-sm8150.img"
->> >>
->> >> Also I need to switch slots everytime like above, otherwise I always
->> >> see some error
->> >> while loading the boot image.
->> >>
->> >
->> > What is the error? If it is "FAILED (remote: Failed to
->> > load/authenticate boot image: Load Error)" then flashing/erasing
->> > boot_a will make it go away ("fastboot erase boot_a") for the next 6
->> > or so "failed" boots.
->> >
->> 
->> Yes this exact error.
+On 2020-06-05 14:46, Robin Murphy wrote:
+> On 2020-06-05 14:20, Mark Brown wrote:
+>> On Fri, Jun 05, 2020 at 12:34:36PM +0100, Robin Murphy wrote:
+>>> On 2020-06-04 22:28, Florian Fainelli wrote:
+>>
+>>>> For the BCM2835 case which is deemed performance critical, we would 
+>>>> like
+>>>> to continue using an interrupt handler which does not have the extra
+>>>> comparison on BCM2835_SPI_CS_INTR.
+>>
+>>> FWIW, if I'm reading the patch correctly, then with sensible codegen 
+>>> that
+>>> "overhead" should amount to a bit test on a live register plus a 
+>>> not-taken
+>>> conditional branch - according to the 1176 TRM that should add up to a
+>>> whopping 2 cycles. If that's really significant then I'd have to wonder
+>>> whether you want to be at the mercy of the whole generic IRQ stack at 
+>>> all,
+>>> and should perhaps consider using FIQ instead.
+>>
+>> Yes, and indeed the compiler does seem to manage that.  It *is* non-zero
+>> overhead though.
 > 
-> The bootloader maintains a 'boot status' in one of the partition
-> attributes. After a certain amount of 'failed' boot , it will switch
-> to the other boot partition. It's the same thing on RB3/DB845c. In our
-> release for DB845c, we are patching the bootloader so that this
-> behavior is bypassed. On typical 'product' there is a user space
-> application that will come and set the partition attribute to indicate
-> the boot was successful.
-> 
-> For the record, this is the patch we use on 845c:
-> https://git.linaro.org/landing-teams/working/qualcomm/abl.git/commit/?h=release/LE.UM.2.3.7-09200-sda845.0&id=e3dc60213234ed626161a568ba587ddac63c5158
-> 
-> rebuilding EDK2/ABL requires access to signing tools.. so it might not
-> be possible for everyone. but in case you can, it should be
-> straightforward to reuse this patch.
-> 
+> True, but so's the existing level of pointer-chasing indirection that 
+> with some straightforward refactoring could be taken right out of the 
+> critical path and confined to just the conditional complete() call. 
+> That's the kind of thing leaving me unconvinced that this is code where 
+> every single cycle counts ;)
 
-Thank you for these details and the patch, it's very useful.
-I do have access to ABL code and the signing tools and can build one.
+Ha, and in fact having checked a build out of curiosity, this patch 
+as-is actually stands to make things considerably worse. At least with 
+GCC 8.3 and bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't 
+get inlined, which means bcm2835_spi_interrupt() pushes/pops a stack 
+frame and makes an out-of-line call to bcm2835_spi_interrupt_common(), 
+resulting in massively *more* work than the extra two instructions of 
+simply inlining the test.
 
-Thanks,
-Sai
+So yes, the overhead of inlining the test vs. the alternative is indeed 
+non-zero. It's just also negative :D
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Robin.
