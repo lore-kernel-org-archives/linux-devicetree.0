@@ -2,150 +2,263 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EF8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 11:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2B3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 11:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB6C206E6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 11:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BAF2075B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 11:44:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jHLkiLyb"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QgLHTFjr";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lgHT0kGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgFELlF (ORCPT
+        id S1726363AbgFELov (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:41:05 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28141 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726314AbgFELlE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 07:41:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591357264; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=lyPYOzLX8Vuo1M7AG9NpLi25wODcB0QLRhTvvaOQYkg=;
- b=jHLkiLybzRrnx0sW09Mm7rY/qe0+X4Y+CPUSWIv4PhHONByb66qE4OXxKUhNZNeA9oOCNz0G
- 21lJz4fmowd42g3Q54n+lexrUXV7zGvYO57wWd9JjYAUNvSsWRVv4+NGIG4pC6I5UQNJK9eo
- wgdeWiDNU1VNP9m5FncFKCYCNdo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5eda2f4127386861269869b0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 11:40:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8C5FCC433CA; Fri,  5 Jun 2020 11:40:48 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 5 Jun 2020 07:44:51 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:34866 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726324AbgFELou (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 07:44:50 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6338C433C6;
-        Fri,  5 Jun 2020 11:40:47 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2533BC00F6;
+        Fri,  5 Jun 2020 11:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591357489; bh=EqmiL1TxsyHleZ7xVM/LUMz5VEKgzPz0h84k9ItYDng=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=QgLHTFjrHaW4W/jna6jwDF13KiAXREEhJVKfM7uyyQ/xZQu6QqrF5OpPTNVEk05Jo
+         XwuMAtzK7Gaff7NqG5mDqYOo/ksMggAjQcMHe+tFW61Gmpg+JyzkBmm/7I8Enn0Ss0
+         6ok5/MOxHxGESK1RQSn/kiFh/bgLzjszvOR16Ra4xahRRim+Jsay4XMQj3Nx8XcMBK
+         +SzlOUa+U0I7o43eaH8Khos6Cmp7vlt9AfLyOQLnNaIa0dNSXvmaU5PgR50GN0S3VR
+         5vvUQ7vagKN4QBqhQinpZEXibE2sV+6M857Gxtv0eumUXWoaRY0sDdkglwSM4c1gia
+         XmymcxZ52nmrg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 6D4AEA0083;
+        Fri,  5 Jun 2020 11:44:48 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 5 Jun 2020 04:44:42 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Fri, 5 Jun 2020 04:44:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D+TfbI1YUQcrOv6ODCeQTzsyj4Z1oyw0ZmWESjxNUt1wurIaLJNLRh1lMJ5zJQN7Ysmm4IUR21fxD0G6aTucr5sQ5dPx5JonwGENd6LCUWb3R9O4cEhI7V6mmjYFHKEEKTojga8kSE+gptRXcAdDwOYRSNITtn4I17KbF8ig7q2I2he65T1rekAvSKzDMizAHITBNLhWlz27j9IHqfQ96vcITu4b4ky7qYxEiDiPQ776ZiC3sMncVUe39pcBvIehL75gbh784qYF5Cks5flcZhuEslE1hXRZG3iYuuAPKypsdAikBGJ780yeFmludJMBRUX7ZpT87AP4izeQ1sDdKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fx5TIw44tXbiGcgWiaRbuxhKOlDV5YT2l6e/mHMmp9o=;
+ b=GuHSN1/WtLAPEfxvDEE2SXB5kviunSsRTzfp+NnCBUg31MCDNR43hkhzLcHdvcRc70Oh4N6hDASA967KpT1pwYtT8ii1oudi1Jf0N2zAcBmGgk9l9jzjPnXRWC2jp6jYf37g9wo/F3QxQp+6BkcIMAvVqPyopCZehraiDkf7zdNv0tGgD9ELzlnDX5BPLlwpJA5tQ03B/p10fYZnPldwNicy/C5RdLX+YdJIOTJ8iWK6uT56M5G8sVn1IBMM8tn1seWf8X7WTKVWmM9D0rlYA9wXji+zn8W4EjnnkADvC2I+hM6PXoMw3m5iSI7Vya7Fcxp7hoon49OuYyygBJvFHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fx5TIw44tXbiGcgWiaRbuxhKOlDV5YT2l6e/mHMmp9o=;
+ b=lgHT0kGY5H0JVEd3lT1b6yY7jiNxhGUQdzF31Ih3+XSWTfyjuCewuZROL0JoKp2vcAcWvUjVciMH82fAU02ftTgAQOadG+13SOCSldBVBGjUUVmWM2K6j1VfGchsBF60/Ot0hpwj6uEnQsx4paSe+ObxSvBbNj8hSaRXlfbFYY8=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3066.22; Fri, 5 Jun 2020 11:44:40 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::f533:4c74:1224:cd32%5]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
+ 11:44:40 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: RE: [PATCH v4 1/6] PCI: dwc: Add msi_host_isr() callback
+Thread-Topic: [PATCH v4 1/6] PCI: dwc: Add msi_host_isr() callback
+Thread-Index: AQHWOx4AlrbiAQ9vZEe9+DWySdFhK6jJ5w+A
+Date:   Fri, 5 Jun 2020 11:44:40 +0000
+Message-ID: <DM5PR12MB1276F04A7F5D2F58E2AD6475DA860@DM5PR12MB1276.namprd12.prod.outlook.com>
+References: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591350276-15816-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1591350276-15816-2-git-send-email-hayashi.kunihiko@socionext.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWVmNDIzYTIwLWE3MjEtMTFlYS05OGJhLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxlZjQyM2EyMi1hNzIxLTExZWEtOThiYS1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjIwNjAiIHQ9IjEzMjM1ODMxMDc4ODE5?=
+ =?us-ascii?Q?NTM2OSIgaD0id2xxam82dERSTmtVQ09CL1pnc2kxenpOWlRFPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFB?=
+ =?us-ascii?Q?cDVKbXhManZXQVg4dXp1aEtqM05GZnk3TzZFcVBjMFVPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFFbU1la3dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: socionext.com; dkim=none (message not signed)
+ header.d=none;socionext.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ebdb1470-4fcd-4ee0-045e-08d80945d548
+x-ms-traffictypediagnostic: DM5PR12MB1337:
+x-microsoft-antispam-prvs: <DM5PR12MB13371F7C031D0ACB62681E09DA860@DM5PR12MB1337.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0425A67DEF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NgtcBjnHWJ4i0YuawxJnQrs5YkB4on/QIzbKwWiFXEklvWpVmJBceBF58DirIEPztmOJgX4eJuojtdfDbxtXcSTOwQ1pKeQH0Xw8VUj13J2fUH99Srnr2UIYhoF7YOth1oKTbqQ7pzoPrdc8zIgPDJ8ZNHWL2grN1XjqdRuXaBRMTjF1EFwhD2k1i5Onp2Gdo4KGbPmE7VHL+Pa7I0EYN0POTVYyyBnnu5Nd0ed+Zny1eehSigr3he5l+16oAtnAqjj0FFVWKXknAz8n+QuCq2r2U8cy2gGg04Nf2xreHxTyV1BsqH/TMM1z0JlbjK0r
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(376002)(396003)(346002)(366004)(26005)(5660300002)(478600001)(76116006)(6506007)(53546011)(8936002)(8676002)(2906002)(186003)(7696005)(66476007)(66446008)(66946007)(64756008)(33656002)(71200400001)(7416002)(66556008)(86362001)(83380400001)(54906003)(4326008)(316002)(9686003)(52536014)(110136005)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: fKBaE5SODdnqNTK+aBT3IXtSuN67GynedWKO8+5F/6S6jrgNHjJVF5JDPctv5dtJgVF3e0Q8N81VqFCkxzdHVZu0YARuqRbNZD4Et84Tgm7Ze7CILeJCcH50qsDgxbM+SL0GQBNWuKppq+HmDNk5ll+vr0aVPLQoJuvy+qii+W39yE/7DzqjLLh4EdTcw67umwM0+MCOyjmpc+DQ4AGynz96VZR21U5YKedvVVj89ZqaGcU6imcL4Q1OsMZjmzjpNsoNghQpA65zXE3aTthMnTRgv/plbBbJ87Vy4JS1+DY9Q2k3m0UPKM/Cg+1M9nAweCOTdSQCq0Y+Qkojib2jpx4gRB9q3CfJvWtNu7RwmKrQ7/omjjnQ9XUFpXwd59+MQPUl01h44y90iJg3d8JDLSt4q2tYIUUmm5aNspRJrEdg2HWnQCJuWrCykUCRZt4FF2lONR9WDCiNHE2hxuqe3U3e4jEBpDifoGCwusQvSJ9vvakvdaIqEqsSX68kI2oT
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 17:10:47 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
-        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH=C2=A0V3_1/2=5D_mmc=3A_sdhci-msm=3A_Add_?=
- =?UTF-8?Q?interconnect_bandwidth_scaling_support?=
-In-Reply-To: <1591349427-27004-2-git-send-email-ppvk@codeaurora.org>
-References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
- <1591349427-27004-1-git-send-email-ppvk@codeaurora.org>
- <1591349427-27004-2-git-send-email-ppvk@codeaurora.org>
-Message-ID: <8b2808215a09871bfccccb72cfa01e60@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebdb1470-4fcd-4ee0-045e-08d80945d548
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2020 11:44:40.7455
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5Pcz0vU9qiOxZOOXLb/hpd0YAdlNNhQjuQkOcsTbq1bRWSk9PUkGmGfJaU4pubLQcYpRICQC/ld7g43RmLE7Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1337
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Pradeep,
-Thanks for the patch.
+On Fri, Jun 5, 2020 at 10:44:31, Kunihiko Hayashi=20
+<hayashi.kunihiko@socionext.com> wrote:
 
-On 2020-06-05 15:00, Pradeep P V K wrote:
-> Interconnect bandwidth scaling support is now added as a
-> part of OPP [1]. So, make sure interconnect driver is ready
-
-can you please replace driver with paths
-instead?
-
-> before handling interconnect scaling.
-> 
-> This change is based on
-> [1] [Patch v8] Introduce OPP bandwidth bindings
-> (https://lkml.org/lkml/2020/5/12/493)
-> 
-> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
-> for dev_pm_opp_of_add_table()
-> (https://lkml.org/lkml/2020/5/5/491)
-
-sry didn't notice ^^ earlier
-you might want to place these
-comments and dependencies similar
-to the following patch.
-https://patchwork.kernel.org/patch/11573903/
-
-> 
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> This adds msi_host_isr() callback function support to describe
+> SoC-dependent service triggered by MSI.
+>=20
+> For example, when AER interrupt is triggered by MSI, the callback functio=
+n
+> reads SoC-dependent registers and detects that the interrupt is from AER,
+> and invoke AER interrupts related to MSI.
+>=20
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  drivers/mmc/host/sdhci-msm.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c 
-> b/drivers/mmc/host/sdhci-msm.c
-> index b277dd7..a945e84 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/interconnect.h>
-> 
->  #include "sdhci-pltfm.h"
->  #include "cqhci.h"
-> @@ -2070,6 +2071,13 @@ static int sdhci_msm_probe(struct 
-> platform_device *pdev)
->  	}
->  	msm_host->bulk_clks[0].clk = clk;
-> 
-> +	/* Make sure that ICC driver is ready for interconnect bandwdith
-
-typo /s/bandwdith/bandwidth
-
-> +	 * scaling before registering the device for OPP.
-> +	 */
-
-/* Check for optional interconnect paths */
-Maybe using ^^ would suffice since
-that's what we are actually doing
-
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-
-> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
-> +	if (ret)
-> +		goto bus_clk_disable;
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 +++
+>  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>  2 files changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
+pci/controller/dwc/pcie-designware-host.c
+> index 0a4a5aa..026edb1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -83,6 +83,9 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>  	u32 status, num_ctrls;
+>  	irqreturn_t ret =3D IRQ_NONE;
+> =20
+> +	if (pp->ops->msi_host_isr)
+> +		pp->ops->msi_host_isr(pp);
 > +
->  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
->  	if (IS_ERR(msm_host->opp_table)) {
->  		ret = PTR_ERR(msm_host->opp_table);
+>  	num_ctrls =3D pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> =20
+>  	for (i =3D 0; i < num_ctrls; i++) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/c=
+ontroller/dwc/pcie-designware.h
+> index 656e00f..e741967 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -170,6 +170,7 @@ struct dw_pcie_host_ops {
+>  	void (*scan_bus)(struct pcie_port *pp);
+>  	void (*set_num_vectors)(struct pcie_port *pp);
+>  	int (*msi_host_init)(struct pcie_port *pp);
+> +	void (*msi_host_isr)(struct pcie_port *pp);
+>  };
+> =20
+>  struct pcie_port {
+> --=20
+> 2.7.4
 
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
+
