@@ -2,138 +2,142 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B6FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65BCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA7FF2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FA1207ED
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 06:13:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZSzwOxeV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wl7PqVYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgFEGFN (ORCPT
+        id S1725962AbgFEGNz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:05:13 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:38939 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbgFEGFN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 02:05:13 -0400
-X-UUID: b13683df1aa74d8aad688b4045fa9b7e-20200605
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NswnMBEYCB0ATqA+z8ftWgQH27FC9O8GRg7nuiNH9lw=;
-        b=ZSzwOxeVGLQC7llW/m8kKGil0p405CRXv6I+Jnt87x1FcQ82xIa3bertIlbSbQ5BIJoss4Po7WE3XpSo++lUYqXueEkRpyyPj5mSnuzz+UbQkNgFMc3UVx+dDqAtTcdD21pKtK9FPuhq9HAd9PqUYGOMcHHFrz66GGj7qBfLCMY=;
-X-UUID: b13683df1aa74d8aad688b4045fa9b7e-20200605
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1904687962; Fri, 05 Jun 2020 14:05:08 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 5 Jun
- 2020 14:05:07 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 5 Jun 2020 14:05:04 +0800
-Message-ID: <1591336981.31802.3.camel@mhfsdcap03>
-Subject: Re: [PATCH v8 05/14] media: platform: Improve power on and power
- off flow
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Fri, 5 Jun 2020 02:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgFEGNy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 02:13:54 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28EDBC08C5C4
+        for <devicetree@vger.kernel.org>; Thu,  4 Jun 2020 23:13:54 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y20so134430wmi.2
+        for <devicetree@vger.kernel.org>; Thu, 04 Jun 2020 23:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yJN2wMTqdmW9Ywj7bcdohdTeZTeJk5SGvJLUrYv99yE=;
+        b=Wl7PqVYB0NgnKYSjXlz5tRPX5NANomxtDkglcbdjvQsRL+/sWEI5cyjRwbLQ+T/mKJ
+         M6Sc4l0Tp0CYqkIM19DWwsyrML2uNkCQzaRdzWEBO4IX78Xj83hqcyrFBi5p0KwQPyyt
+         sKWZhOFZNlEuvbmA8Y7NjXu1NFVModaASoCqeRUiyrCpwF/jDRi5bccIxaSnkUwrc3AE
+         ZUNS+K/7hVqJYlegt7KZSLfRDBX3qMf8IC9CV9c30saGPnT3D1XpB/ptPF5HrUbitr0g
+         QNFtDsD0FRNBDII5Aim6NI2sruSlz3pIyjo6iBcdTBciWCFeOQEA2YSBgxmU2gAXaS5Q
+         HrCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yJN2wMTqdmW9Ywj7bcdohdTeZTeJk5SGvJLUrYv99yE=;
+        b=j+PrcmFX6xUpq9oR9mWH4+j91P0aL06JcQU20ubHPMFlhlV3BpHutdDDpAUh7n2OqX
+         +8mWb0v4dITg1ghJGkVTQ5yph4xeIAfCIpb95imERO09B0YpME8iEjuMD46XLoBIdmtv
+         VK7ltSYbS0wRilvNKyZm7ILM0IqRs5aUHzhMFmUyhSs0lAVUSUvlwK0Ls2rKvmL6SqhS
+         P9rkP8Y0Kg9PGMAMgVGaGcTfu/JklYCrlRolvE4vvGXKlcgOiqPMYeN4ff63QDyurNTw
+         oOcEaYXav/fCP/iMvgxgKypsUTbKOyCsc+oc7JnbPVQTyK0ps0SYrTFBBTKsGFBCnwUE
+         6Y7Q==
+X-Gm-Message-State: AOAM532I1nbGr8EdEMhpA83iSr0OAAY5jCpS8bPBXtm4aHUS9qLp9PrY
+        Nl02DoSV3lcqvPcUuSDBzmatfUMUgDA=
+X-Google-Smtp-Source: ABdhPJwf5S2OwPHZvteiT4PVJdXt+ehvT08EuJ6eK2OP2Atm5I/Xbi4JETpWh90BOmkczgotX4Fl6Q==
+X-Received: by 2002:a1c:7dd5:: with SMTP id y204mr963235wmc.182.1591337632738;
+        Thu, 04 Jun 2020 23:13:52 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id x186sm9871815wmg.8.2020.06.04.23.13.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 23:13:51 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 07:13:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>
-Date:   Fri, 5 Jun 2020 14:03:01 +0800
-In-Reply-To: <20200521152253.GE209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
-         <20200403094033.8288-6-xia.jiang@mediatek.com>
-         <20200521152253.GE209565@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 00/11] Add support for Kontron sl28cpld
+Message-ID: <20200605061350.GC3714@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D4D85237458B3F37009A20C7C482D59AA2A1276C3CD07436513B69A34E50B8692000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604211039.12689-1-michael@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTIxIGF0IDE1OjIyICswMDAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
-SGkgWGlhLA0KPiANCj4gT24gRnJpLCBBcHIgMDMsIDIwMjAgYXQgMDU6NDA6MjRQTSArMDgwMCwg
-WGlhIEppYW5nIHdyb3RlOg0KPiA+IENhbGwgcG1fcnVudGltZV9nZXRfc3luYygpIGJlZm9yZSBz
-dGFydGluZyBhIGZyYW1lIGFuZCB0aGVuDQo+ID4gcG1fcnVudGltZV9wdXQoKSBhZnRlciBjb21w
-bGV0aW5nIGl0LiBUaGlzIGNhbiBzYXZlIHBvd2VyIGZvciB0aGUgdGltZQ0KPiA+IGJldHdlZW4g
-cHJvY2Vzc2luZyB0d28gZnJhbWVzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYSBKaWFu
-ZyA8eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL21lZGlhL3BsYXRm
-b3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYyAgIHwgMjcgKysrKystLS0tLS0tLS0tLS0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkNCj4g
-PiANCj4gDQo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLiBQbGVhc2Ugc2VlIG15IGNvbW1lbnRz
-IGlubGluZS4NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRr
-LWpwZWcvbXRrX2pwZWdfY29yZS5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9t
-dGtfanBlZ19jb3JlLmMNCj4gPiBpbmRleCBhNTM2ZmE5NWIzZDYuLmRkNWNhZGQxMDFlZiAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2Nv
-cmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdf
-Y29yZS5jDQo+ID4gQEAgLTcxMCwyMyArNzEwLDYgQEAgc3RhdGljIHN0cnVjdCB2YjJfdjRsMl9i
-dWZmZXIgKm10a19qcGVnX2J1Zl9yZW1vdmUoc3RydWN0IG10a19qcGVnX2N0eCAqY3R4LA0KPiA+
-ICAJCXJldHVybiB2NGwyX20ybV9kc3RfYnVmX3JlbW92ZShjdHgtPmZoLm0ybV9jdHgpOw0KPiA+
-ICB9DQo+ID4gIA0KPiA+IC1zdGF0aWMgaW50IG10a19qcGVnX3N0YXJ0X3N0cmVhbWluZyhzdHJ1
-Y3QgdmIyX3F1ZXVlICpxLCB1bnNpZ25lZCBpbnQgY291bnQpDQo+ID4gLXsNCj4gPiAtCXN0cnVj
-dCBtdGtfanBlZ19jdHggKmN0eCA9IHZiMl9nZXRfZHJ2X3ByaXYocSk7DQo+ID4gLQlzdHJ1Y3Qg
-dmIyX3Y0bDJfYnVmZmVyICp2YjsNCj4gPiAtCWludCByZXQgPSAwOw0KPiA+IC0NCj4gPiAtCXJl
-dCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoY3R4LT5qcGVnLT5kZXYpOw0KPiA+IC0JaWYgKHJldCA8
-IDApDQo+ID4gLQkJZ290byBlcnI7DQo+ID4gLQ0KPiA+IC0JcmV0dXJuIDA7DQo+ID4gLWVycjoN
-Cj4gPiAtCXdoaWxlICgodmIgPSBtdGtfanBlZ19idWZfcmVtb3ZlKGN0eCwgcS0+dHlwZSkpKQ0K
-PiA+IC0JCXY0bDJfbTJtX2J1Zl9kb25lKHZiLCBWQjJfQlVGX1NUQVRFX1FVRVVFRCk7DQo+ID4g
-LQlyZXR1cm4gcmV0Ow0KPiA+IC19DQo+ID4gLQ0KPiA+ICBzdGF0aWMgdm9pZCBtdGtfanBlZ19z
-dG9wX3N0cmVhbWluZyhzdHJ1Y3QgdmIyX3F1ZXVlICpxKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qg
-bXRrX2pwZWdfY3R4ICpjdHggPSB2YjJfZ2V0X2Rydl9wcml2KHEpOw0KPiA+IEBAIC03NTEsOCAr
-NzM0LDYgQEAgc3RhdGljIHZvaWQgbXRrX2pwZWdfc3RvcF9zdHJlYW1pbmcoc3RydWN0IHZiMl9x
-dWV1ZSAqcSkNCj4gPiAgDQo+ID4gIAl3aGlsZSAoKHZiID0gbXRrX2pwZWdfYnVmX3JlbW92ZShj
-dHgsIHEtPnR5cGUpKSkNCj4gPiAgCQl2NGwyX20ybV9idWZfZG9uZSh2YiwgVkIyX0JVRl9TVEFU
-RV9FUlJPUik7DQo+ID4gLQ0KPiA+IC0JcG1fcnVudGltZV9wdXRfc3luYyhjdHgtPmpwZWctPmRl
-dik7DQo+ID4gIH0NCj4gPiAgDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdmIyX29wcyBtdGtf
-anBlZ19xb3BzID0gew0KPiA+IEBAIC03NjEsNyArNzQyLDYgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCB2YjJfb3BzIG10a19qcGVnX3FvcHMgPSB7DQo+ID4gIAkuYnVmX3F1ZXVlICAgICAgICAgID0g
-bXRrX2pwZWdfYnVmX3F1ZXVlLA0KPiA+ICAJLndhaXRfcHJlcGFyZSAgICAgICA9IHZiMl9vcHNf
-d2FpdF9wcmVwYXJlLA0KPiA+ICAJLndhaXRfZmluaXNoICAgICAgICA9IHZiMl9vcHNfd2FpdF9m
-aW5pc2gsDQo+ID4gLQkuc3RhcnRfc3RyZWFtaW5nICAgID0gbXRrX2pwZWdfc3RhcnRfc3RyZWFt
-aW5nLA0KPiA+ICAJLnN0b3Bfc3RyZWFtaW5nICAgICA9IG10a19qcGVnX3N0b3Bfc3RyZWFtaW5n
-LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiBAQCAtODEyLDcgKzc5Miw3IEBAIHN0YXRpYyB2b2lkIG10
-a19qcGVnX2RldmljZV9ydW4odm9pZCAqcHJpdikNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19zcmNf
-YnVmICpqcGVnX3NyY19idWY7DQo+ID4gIAlzdHJ1Y3QgbXRrX2pwZWdfYnMgYnM7DQo+ID4gIAlz
-dHJ1Y3QgbXRrX2pwZWdfZmIgZmI7DQo+ID4gLQlpbnQgaTsNCj4gPiArCWludCBpLCByZXQ7DQo+
-ID4gIA0KPiA+ICAJc3JjX2J1ZiA9IHY0bDJfbTJtX25leHRfc3JjX2J1ZihjdHgtPmZoLm0ybV9j
-dHgpOw0KPiA+ICAJZHN0X2J1ZiA9IHY0bDJfbTJtX25leHRfZHN0X2J1ZihjdHgtPmZoLm0ybV9j
-dHgpOw0KPiA+IEBAIC04MzIsNiArODEyLDEwIEBAIHN0YXRpYyB2b2lkIG10a19qcGVnX2Rldmlj
-ZV9ydW4odm9pZCAqcHJpdikNCj4gPiAgCQlyZXR1cm47DQo+ID4gIAl9DQo+ID4gIA0KPiA+ICsJ
-cmV0ID0gcG1fcnVudGltZV9nZXRfc3luYyhqcGVnLT5kZXYpOw0KPiA+ICsJaWYgKHJldCA8IDAp
-DQo+ID4gKwkJZ290byBkZWNfZW5kOw0KPiA+ICsNCj4gPiAgCW10a19qcGVnX3NldF9kZWNfc3Jj
-KGN0eCwgJnNyY19idWYtPnZiMl9idWYsICZicyk7DQo+ID4gIAlpZiAobXRrX2pwZWdfc2V0X2Rl
-Y19kc3QoY3R4LCAmanBlZ19zcmNfYnVmLT5kZWNfcGFyYW0sICZkc3RfYnVmLT52YjJfYnVmLCAm
-ZmIpKQ0KPiA+ICAJCWdvdG8gZGVjX2VuZDsNCj4gPiBAQCAtOTU3LDYgKzk0MSw3IEBAIHN0YXRp
-YyBpcnFyZXR1cm5fdCBtdGtfanBlZ19kZWNfaXJxKGludCBpcnEsIHZvaWQgKnByaXYpDQo+ID4g
-IAl2NGwyX20ybV9idWZfZG9uZShzcmNfYnVmLCBidWZfc3RhdGUpOw0KPiA+ICAJdjRsMl9tMm1f
-YnVmX2RvbmUoZHN0X2J1ZiwgYnVmX3N0YXRlKTsNCj4gPiAgCXY0bDJfbTJtX2pvYl9maW5pc2go
-anBlZy0+bTJtX2RldiwgY3R4LT5maC5tMm1fY3R4KTsNCj4gPiArCXBtX3J1bnRpbWVfcHV0X3N5
-bmMoY3R4LT5qcGVnLT5kZXYpOw0KPiANCj4gVGhlIF9zeW5jIHZhcmlhbnQgZXhwbGljaXRseSB3
-YWl0cyB1bnRpbCB0aGUgYXN5bmNocm9ub3VzIFBNIG9wZXJhdGlvbg0KPiBjb21wbGV0ZXMuIFRo
-aXMgaXMgdXN1YWxseSB1bmRlc2lyZWQsIGJlY2F1c2UgdGhlIENQVSBzdGF5cyBibG9ja2VkIGZv
-cg0KPiBubyBnb29kIHJlYXNvbi4gSW4gdGhpcyBjb250ZXh0IGl0IGlzIGFjdHVhbGx5IGEgYnVn
-LCBiZWNhdXNlIHRoaXMgaXMgYW4NCj4gaW50ZXJydXB0IGhhbmRsZXIgYW5kIGl0J3Mgbm90IGFs
-bG93ZWQgdG8gc2xlZXAuIEkgd29uZGVyIHdoeSB0aGlzDQo+IGFjdHVhbGx5IGRpZG4ndCBjcmFz
-aCBpbiB5b3VyIHRlc3RpbmcuIFBsZWFzZSBjaGFuZ2UgdG8gdGhlIHJlZ3VsYXINCj4gcG1fcnVu
-dGltZV9wdXQoKS4NCkRvbmUuDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KDQo=
+On Thu, 04 Jun 2020, Michael Walle wrote:
 
+> The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+> monitoring and an interrupt controller. For now this controller is used on
+> the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+> might also be used on other boards in the future. The individual blocks
+> (like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+> then instantiates different (or multiple of the same) blocks. It also
+> provides the register layout so it might be updated in the future without a
+> device tree change; and support other boards with a different layout or
+> functionalities.
+> 
+> See also [1] for more information.
+> 
+> This is my first take of a MFD driver. I don't know whether the subsystem
+> maintainers should only be CCed on the patches which affect the subsystem
+> or on all patches for this series. I've chosen the latter so you can get a
+> more complete picture.
+
+You chose wisely. :)
+
+> [1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+> 
+> Changes since v3:
+>  - use of_platform_populate() to populate internal devices using the
+>    internal register offsets as unit-addresses
+>  - because we don't use mfd_cells anymore, we cannot use IORESOURCE_REG,
+>    but instead parse the reg property in each individual driver
+>  - dropped the following patches because they were already merged:
+>      gpiolib: Introduce gpiochip_irqchip_add_domain()
+>      gpio: add a reusable generic gpio_chip using regmap
+>  - dropped the following patches because they are no longer needed:
+>      include/linux/ioport.h: add helper to define REG resource constructs
+>      mfd: mfd-core: Don't overwrite the dma_mask of the child device
+>      mfd: mfd-core: match device tree node against reg property
+>  - rephrase commit messages, as suggested by Thomas Gleixner
+
+It's great to have this changelog overview.
+
+However it's equally, if not arguably more important to have a more
+fine grained changelog in each of the patches, usually placed between
+the '---' and the diff stat.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
