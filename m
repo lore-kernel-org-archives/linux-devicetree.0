@@ -2,106 +2,107 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B64AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D622C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B7F20772
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591354369;
-	bh=XeO7tDwju/KKDj9cqR21WNubY9Btw3JqGz5Uwz9OKbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bCpuiJZ8xoIDsn9Oih+Q/uK5JHiqLtmEqh+kVLSjb+KpnmraTAOHlB1eo+Mgv7YBh
-	 9cS/TJmKu94k7GR91J5zBSYgujWwEgD5AV7mZ4aw11UuALDMZuV5T/6YI+5qqqjGmL
-	 crsgx+eiEA6Kw6EI5wf59WmNg395JNXU/50gFGrU=
+	by mail.kernel.org (Postfix) with ESMTP id EA6CC206E6
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:56:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bydpq7m6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgFEKwp (ORCPT
+        id S1726791AbgFEK4Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgFEKwp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:52:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EC742067B;
-        Fri,  5 Jun 2020 10:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591354364;
-        bh=XeO7tDwju/KKDj9cqR21WNubY9Btw3JqGz5Uwz9OKbw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qe1KvqeoJ3GrXMBQtdvkR44KDnjq5QKYn/VkETjh2pBcVx3ZDQGOGTARRoku3uwLi
-         6LBFG2SquriXQ72zOOFCUuEAKpxBeOHmb6PimnlerU7in2u8Ye3UqEa+6FtQY+N9st
-         TeEXUeHueqXJCRLpRNCxWK0yCG0yKubP6sMjgSzU=
-Date:   Fri, 5 Jun 2020 11:52:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200605105242.GD5413@sirena.org.uk>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <f728f55fe6266718b5041b6f3b1864a673991129.camel@suse.de>
+        Fri, 5 Jun 2020 06:56:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:6959 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726507AbgFEK4Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 06:56:24 -0400
+X-UUID: 6b189767abc54e5e8cd9283870a18f2d-20200605
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=RDATlCMt7JAqD+s3CrHj64evnMGc2HkPNIFyTmwdTd4=;
+        b=bydpq7m6/IV+fpJlBB24jPrmNyLK5ps2k5juGN/wZpfUOpHqAX9+kohzL3Q2JTkVociC55b5aFU9vA8wrFpTvXo6pZiX//9SUF3F6X0qPk2eGEhkDOwwkHdmsI30O2xSCq7NPnm4cQoz9OU+rKYgcVixYfT0RXB6ols+lM+K9Es=;
+X-UUID: 6b189767abc54e5e8cd9283870a18f2d-20200605
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1896889789; Fri, 05 Jun 2020 18:56:21 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 5 Jun 2020 18:56:18 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 5 Jun 2020 18:56:15 +0800
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <mchehab@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>,
+        <dongchun.zhu@mediatek.com>
+Subject: [V7, 0/2] media: i2c: Add support for DW9768 VCM driver
+Date:   Fri, 5 Jun 2020 18:54:10 +0800
+Message-ID: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
+X-Mailer: git-send-email 2.9.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="MAH+hnPXVZWQ5cD/"
-Content-Disposition: inline
-In-Reply-To: <f728f55fe6266718b5041b6f3b1864a673991129.camel@suse.de>
-X-Cookie: Air is water with holes in it.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+SGVsbG8sDQoNClRoaXMgc2VyaWVzIGFkZHMgRFQgYmluZGluZ3MgYW5kIFY0TDIgc3ViLWRldmlj
+ZSBkcml2ZXIgZm9yIERvbmd3b29uJ3MgRFc5NzY4LA0Kd2hpY2ggaXMgYSAxMC1iaXQgREFDIHdp
+dGggMTAwbUEgb3V0cHV0IGN1cnJlbnQgc2luayBjYXBhYmlsaXR5Lg0KDQpUaGUgZHJpdmVyIGNv
+bnRyb2xzIHRoZSBwb3NpdGlvbiB3aXRoIDEwLWJpdCBEQUMgZGF0YSBEWzk6MF0gYW5kIHNlcGVy
+YXRlcw0KdHdvIDgtYml0IHJlZ2lzdGVycyB0byBjb250cm9sIHRoZSBWQ00gcG9zaXRpb24gYXMg
+YmVsb3dzLg0KREFDX01TQjogRFs5OjhdKEFERFI6IDB4MDMpOg0KICAgICArLS0tKy0tLSstLS0r
+LS0tKy0tLSstLS0rLS0tKy0tLSsNCiAgICAgfC0tLXwtLS18LS0tfC0tLXwtLS18LS0tfEQwOXxE
+MDh8DQogICAgICstLS0rLS0tKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tKw0KREFDX0xTQjogRFs3
+OjBdKEFERFI6IDB4MDQpOg0KICAgICArLS0tKy0tLSstLS0rLS0tKy0tLSstLS0rLS0tKy0tLSsN
+CiAgICAgfEQwN3xEMDZ8RDA1fEQwNHxEMDN8RDAyfEQwMXxEMDB8DQogICAgICstLS0rLS0tKy0t
+LSstLS0rLS0tKy0tLSstLS0rLS0tKw0KDQpUaGlzIGRyaXZlciBzdXBwb3J0czoNCiAtIHNldCBE
+Vzk3NjggdG8gc3RhbmRieSBtb2RlIG9uY2Ugc3VzcGVuZCBhbmQgdHVybiBpdCBiYWNrIHRvIGFj
+dGl2ZSBpZiByZXN1bWUNCiAtIHNldCB0aGUgZGVzaXJlZCBmb2N1cyB2aWEgVjRMMl9DSURfRk9D
+VVNfQUJTT0xVVEUgY3RybA0KDQpQcmV2aW91cyB2ZXJzaW9ucyBvZiB0aGlzIHBhdGNoLXNldCBj
+YW4gYmUgZm91bmQgaGVyZToNCnY2OiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1tZWRp
+YS8yMDIwMDUxODEzMjczMS4yMDg1NS0xLWRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20vDQp2NTog
+aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtbWVkaWEvMjAyMDA1MDIxNjE3MjcuMzA0NjMt
+MS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KdjQ6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
+L2xpbnV4LW1lZGlhLzIwMjAwMzMwMTIzNjM0LjM2My0xLWRvbmdjaHVuLnpodUBtZWRpYXRlay5j
+b20vDQp2MzogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtbWVkaWEvMjAyMDAyMjgxNTU5
+NTguMjA2NTctMS1kb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tLw0KdjI6IGh0dHBzOi8vbG9yZS5r
+ZXJuZWwub3JnL2xpbnV4LW1lZGlhLzIwMTkwOTA1MDcyMTQyLjE0NjA2LTEtZG9uZ2NodW4uemh1
+QG1lZGlhdGVrLmNvbS8NCnYxOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1tZWRpYS8y
+MDE5MDcwODEwMDY0MS4yNzAyLTEtZG9uZ2NodW4uemh1QG1lZGlhdGVrLmNvbS8NCg0KTWFpbmx5
+IGNoYW5nZXMgb2YgdjcgYXJlIGFkZHJlc3NpbmcgY29tbWVudHMgZnJvbSBSb2IsIFNha2FyaSwg
+VG9tYXN6Lg0KQ29tcGFyZWQgdG8gdjY6DQogLSBSZWZpbmUgRFQgYmluZGluZ3MNCiAtIFVzZSBp
+MmNfc21idXNfcmVhZF9ieXRlX2RhdGEoKSBkaXJlY3RseSB0byByZXBsYWNlIG9mIGR3OTc2OF9y
+ZWFkX3NtYnVzKCkNCiAtIENhbGN1bGF0ZSBvcGVyYXRpb24gdGltZSBiYXNlZCBvbiB0aGUgY29u
+ZmlndXJlZCBib2FyZC1zcGVjaWZpYyBEVCBzZXR0aW5ncw0KIC0gQWJzdHJhY3QgYXN5bmMgcmVn
+aXN0ZXIgZXJyb3IgaGFuZGxpbmcgY2FzZQ0KIC0gRml4IG90aGVyIHJldmlldyBjb21tZW50cyBp
+biB2Ng0KDQpQbGVhc2UgcmV2aWV3Lg0KVGhhbmtzLg0KDQpEb25nY2h1biBaaHUgKDIpOg0KICBt
+ZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiBpMmM6IERvY3VtZW50IERXOTc2OCBiaW5kaW5ncw0K
+ICBtZWRpYTogaTJjOiBkdzk3Njg6IEFkZCBEVzk3NjggVkNNIGRyaXZlcg0KDQogLi4uL2JpbmRp
+bmdzL21lZGlhL2kyYy9kb25nd29vbixkdzk3NjgueWFtbCAgICAgICAgfCAxMDAgKysrKw0KIE1B
+SU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4ICsN
+CiBkcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+MyArDQogZHJpdmVycy9tZWRpYS9pMmMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDEgKw0KIGRyaXZlcnMvbWVkaWEvaTJjL2R3OTc2OC5jICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgNTY2ICsrKysrKysrKysrKysrKysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgNjg4IGlu
+c2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL2kyYy9kb25nd29vbixkdzk3NjgueWFtbA0KIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL21lZGlhL2kyYy9kdzk3NjguYw0KDQotLSANCjIuOS4yDQo=
 
---MAH+hnPXVZWQ5cD/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jun 05, 2020 at 10:46:57AM +0200, Nicolas Saenz Julienne wrote:
-
-> > -static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
-> > +static inline irqreturn_t bcm2835_spi_interrupt_common(struct spi_controller
-> > *ctlr,
-> > +						       u32 cs)
-
-> Keep in mind the new 100 character limit.
-
-That's more about stopping people doing awful contortions to shut
-checkpatch up than saying that it's a particularly good idea to lengthen
-lines.
-
---MAH+hnPXVZWQ5cD/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7aI/kACgkQJNaLcl1U
-h9BVmQf/W9KSnmOIyYg8dG9v7/Nw5sW+8xZrwv7u3lUTml6tEdkKhOHIetp1TWoR
-QSQkErpuKwkAquozYTfN67RuBNaHMOQLYKCLlqXiX7ZLXdZrLJOczzClOy71/Cn4
-bTPXoYID265sBbycA3+v/fXd9ZtjXs8a2hhnl3XJLTpVJCgGcfz8guY9gxfLvxIN
-gYwHRQO6m7/QvpCZSW8TjeFJfbsYbgLTv8QVSD49zG9y7PkZsdZ5BH4Qq8JU/Qw8
-KBJIlMPBi30TKFmIz5ZF0jyEDizUKoI1GLESuBkugr7Vy2xvOGBsgh3XT+YnBJWY
-xtaHN3xC6DFvqASDSztVTnCOsNSmvg==
-=wEcm
------END PGP SIGNATURE-----
-
---MAH+hnPXVZWQ5cD/--
