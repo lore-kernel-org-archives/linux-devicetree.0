@@ -2,302 +2,234 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46414C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 09:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFBAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BABE207D0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 09:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="fyfCGcab"
+	by mail.kernel.org (Postfix) with ESMTP id 3351A20899
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgFEJvb (ORCPT
+        id S1726324AbgFEKGX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:51:31 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:39483 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgFEJvb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 05:51:31 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 390392304C;
-        Fri,  5 Jun 2020 11:51:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591350685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+rGovv/Tm21fPTQNNhJm5pWTIw+9W6X3Bz7Lc/tr8rQ=;
-        b=fyfCGcabpdPEHsy7K1DFEm+ItvckBg8BQ6ve307uqns5b76jbVY4udCeIehsF3XDTIj9af
-        U73XPujXSdYcfZka6IMsd9+SSJ8k6zRGw+wreg1JDIe330xDGXLmUo9f79fdHSMKw8Uofv
-        wVI2ui8pfJSRQ8s51pfnBoFUbiMJmwE=
+        Fri, 5 Jun 2020 06:06:23 -0400
+Received: from segapp02.wistron.com ([103.200.3.19]:51683 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726444AbgFEKGV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 06:06:21 -0400
+Received: from EXCHAPP02.whq.wistron (unverified [10.37.38.25]) by 
+    TWNHUMSW4.wistron.com (Clearswift SMTPRS 5.6.0) with ESMTP id 
+    <Tdf9212466fc0a816729a0@TWNHUMSW4.wistron.com>; Fri, 5 Jun 2020 
+    18:06:18 +0800
+Received: from EXCHAPP03.whq.wistron (10.37.38.26) by EXCHAPP02.whq.wistron 
+    (10.37.38.25) with Microsoft SMTP Server 
+    (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 
+    15.1.1913.5; Fri, 5 Jun 2020 18:06:17 +0800
+Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP03.whq.wistron 
+    (10.37.38.26) with Microsoft SMTP Server id 15.1.1913.5 via Frontend 
+    Transport; Fri, 5 Jun 2020 18:06:17 +0800
+From:   Ben Pai <Ben_Pai@wistron.com>
+To:     <joel@jms.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <claire_ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
+Subject: [PATCH v1 1/2] ARM: dts: aspeed: mihawk: IO expander uses TCA9554
+ driver
+Date:   Fri, 5 Jun 2020 18:06:14 +0800
+Message-ID: <20200605100614.14726-1-Ben_Pai@wistron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
+X-TM-SNTS-SMTP:     046AADC4E7378F668BD1404E8B899BEBBB327568BE24F0CF5C33F311765E568B2000:8
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 11:51:24 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     broonie@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <20200605065709.GD3714@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc> <20200605065709.GD3714@dell>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <ccbafa481fda09146d36f1c220c5a44d@walle.cc>
-X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+Set smbus_en of IO expander to 1 in order to be able to read sensor.
 
-thanks for the review.
+Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 112 ++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-Am 2020-06-05 08:57, schrieb Lee Jones:
-> Mark, what do you think?
-> 
-> On Thu, 04 Jun 2020, Michael Walle wrote:
-> 
->> Add the core support for the board management controller found on the
->> SMARC-sAL28 board. It consists of the following functions:
->>  - watchdog
->>  - GPIO controller
->>  - PWM controller
->>  - fan sensor
->>  - interrupt controller
->> 
->> At the moment, this controller is used on the Kontron SMARC-sAL28 
->> board.
->> 
->> Please note that the MFD driver is defined as bool in the Kconfig
->> because the next patch will add interrupt support.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  drivers/mfd/Kconfig    | 19 ++++++++++
->>  drivers/mfd/Makefile   |  2 ++
->>  drivers/mfd/sl28cpld.c | 79 
->> ++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 100 insertions(+)
->>  create mode 100644 drivers/mfd/sl28cpld.c
->> 
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 4f8b73d92df3..5c0cd514d197 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -2109,5 +2109,24 @@ config SGI_MFD_IOC3
->>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
->>  	  then say Y. Otherwise say N.
->> 
->> +config MFD_SL28CPLD
->> +	bool "Kontron sl28 core driver"
-> 
-> "Kontron SL28 Core Driver"
-
-ok
-
-> 
->> +	depends on I2C=y
->> +	depends on OF
->> +	select REGMAP_I2C
->> +	select MFD_CORE
->> +	help
->> +	  This option enables support for the board management controller
->> +	  found on the Kontron sl28 CPLD. You have to select individual
-> 
-> I can't find any reference to the "Kontron sl28 CPLD" online.
-> 
-> Is there a datasheet?
-
-Unfortunately not.
-
->> +	  functions, such as watchdog, GPIO, etc, under the corresponding 
->> menus
->> +	  in order to enable them.
->> +
->> +	  Currently supported boards are:
->> +
->> +		Kontron SMARC-sAL28
->> +
->> +	  To compile this driver as a module, choose M here: the module will 
->> be
->> +	  called sl28cpld.
->> +
->>  endmenu
->>  endif
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 9367a92f795a..be59fb40aa28 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -264,3 +264,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
->>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->> 
->>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
->> +
->> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
->> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
->> new file mode 100644
->> index 000000000000..a23194bb6efa
->> --- /dev/null
->> +++ b/drivers/mfd/sl28cpld.c
->> @@ -0,0 +1,79 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * MFD core for the sl28cpld.
-> 
-> Ideally this would match the Kconfig subject line.
-
-ok
-
-> 
->> + * Copyright 2019 Kontron Europe GmbH
-> 
-> This is out of date.
-
-ok
-
->> + */
->> +
->> +#include <linux/i2c.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/regmap.h>
->> +
->> +#define SL28CPLD_VERSION	0x03
->> +#define SL28CPLD_MIN_REQ_VERSION 14
->> +
->> +struct sl28cpld {
->> +	struct device *dev;
->> +	struct regmap *regmap;
->> +};
-> 
-> Why do you need this structure?
-
-see below
-
->> +static const struct regmap_config sl28cpld_regmap_config = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +	.reg_stride = 1,
->> +};
->> +
->> +static int sl28cpld_probe(struct i2c_client *i2c)
->> +{
->> +	struct sl28cpld *sl28cpld;
->> +	struct device *dev = &i2c->dev;
->> +	unsigned int cpld_version;
->> +	int ret;
->> +
->> +	sl28cpld = devm_kzalloc(dev, sizeof(*sl28cpld), GFP_KERNEL);
->> +	if (!sl28cpld)
->> +		return -ENOMEM;
->> +
->> +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, 
->> &sl28cpld_regmap_config);
->> +	if (IS_ERR(sl28cpld->regmap))
->> +		return PTR_ERR(sl28cpld->regmap);
-> 
-> This is now a shared memory allocator and not an MFD at all.
-> 
-> I'm clamping down on these type of drivers!
-> 
-> Please find a better way to accomplish this.
-> 
-> Potentially using "simple-mfd" and "simple-regmap".
-> 
-> The former already exists and does what you want.  The latter doesn't
-> yet exist, but could solve your and lots of other contributor's
-> issues.
-
-Mh, the former doesn't provide a regmap, correct? Most MMIO drivers 
-won't
-need it, but this is an I2C device. So yes, I could come up with a
-"simple-regmap" proposal. I guess that should go into drivers/mfd/ 
-because
-it is more than just adding one line, i.e. you would have to configure 
-the
-regmap and its different interfaces.
-
-But how would you model that version check below for example? (Not that 
-I'm
-very keen of it.)
-
-> 
-> Heck maybe I'll implement it myself if this keeps happening.
-> 
->> +	ret = regmap_read(sl28cpld->regmap, SL28CPLD_VERSION, 
->> &cpld_version);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (cpld_version < SL28CPLD_MIN_REQ_VERSION) {
->> +		dev_err(dev, "unsupported CPLD version %d\n", cpld_version);
->> +		return -ENODEV;
->> +	}
->> +
->> +	sl28cpld->dev = dev;
->> +	i2c_set_clientdata(i2c, sl28cpld);
-> 
-> If the struct definition is in here, how do you use it elsewhere?
-
-I wanted to store the regmap somewhere, but because there are no users, 
-I'll
-drop that.
-
->> +	dev_info(dev, "successfully probed. CPLD version %d\n", 
->> cpld_version);
->> +
->> +	return devm_of_platform_populate(&i2c->dev);
->> +}
->> +
->> +static const struct of_device_id sl28cpld_of_match[] = {
->> +	{ .compatible = "kontron,sl28cpld-r1", },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, sl28cpld_of_match);
->> +
->> +static struct i2c_driver sl28cpld_driver = {
->> +	.probe_new = sl28cpld_probe,
->> +	.driver = {
->> +		.name = "sl28cpld",
->> +		.of_match_table = of_match_ptr(sl28cpld_of_match),
->> +	},
->> +};
->> +module_i2c_driver(sl28cpld_driver);
->> +
->> +MODULE_DESCRIPTION("sl28cpld MFD Core Driver");
->> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
->> +MODULE_LICENSE("GPL");
-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+index eac6ed2bbc67..25ffe65fbdc0 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+@@ -820,12 +820,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus0 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus0";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux232: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus1 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus1";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux233: i2c@2 {
+@@ -855,12 +883,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus2 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus2";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux236: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus3 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus3";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux237: i2c@2 {
+@@ -909,12 +965,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus4 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus4";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux240: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus5 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus5";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux241: i2c@2 {
+@@ -944,12 +1028,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus6 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus6";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux244: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus7 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus7";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux245: i2c@2 {
 -- 
--michael
+2.17.1
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+This email contains confidential or legally privileged information and is for the sole use of its intended recipient. 
+Any unauthorized review, use, copying or distribution of this email or the content of this email is strictly prohibited.
+If you are not the intended recipient, you may reply to the sender and should delete this e-mail immediately.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
