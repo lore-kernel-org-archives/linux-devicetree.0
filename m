@@ -2,558 +2,259 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEECC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 08:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C1BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 08:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D000C2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 08:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996DB20772
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 08:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Orors8Un"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725986AbgFEIVu (ORCPT
+        id S1726072AbgFEIpy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:21:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55290 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgFEIVt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:21:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3E9C6AD18;
-        Fri,  5 Jun 2020 08:21:48 +0000 (UTC)
-Message-ID: <1829b2969f722f19d9afcc913c5054887ca72578.camel@suse.de>
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     John Donnelly <John.P.donnelly@oracle.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     chenzhou <chenzhou10@huawei.com>,
-        Simon Horman <horms@verge.net.au>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        guohanjun@huawei.com,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Prabhakar Kushwaha <prabhakar.pkin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        RuiRui Yang <dyoung@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 05 Jun 2020 10:21:41 +0200
-In-Reply-To: <de6c7c59-89d2-5b2e-d7ba-50403c4bcaf2@oracle.com>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
-         <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
-         <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com>
-         <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
-         <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com>
-         <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
-         <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
-         <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
-         <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
-         <8E0D45DC-12BF-437D-A342-03E974D9C6D4@oracle.com>
-         <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
-         <751bbe2512628ff38002db33ce02af051d080cd2.camel@suse.de>
-         <de6c7c59-89d2-5b2e-d7ba-50403c4bcaf2@oracle.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-uSOtOi+SJ+bMj8a3VO+u"
-User-Agent: Evolution 3.36.2 
+        Fri, 5 Jun 2020 04:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgFEIpw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 04:45:52 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD82C08C5C3
+        for <devicetree@vger.kernel.org>; Fri,  5 Jun 2020 01:45:51 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id z3so2029667vka.10
+        for <devicetree@vger.kernel.org>; Fri, 05 Jun 2020 01:45:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+jBFtxmml2UF+SqNxby8rCTJfROuy18HbtkfW0zgYb0=;
+        b=Orors8UnFs80EJIYP/KDavj+8S/RsPvJBh7SCISTksRVf7f4rAH/P560wXs2u/J6az
+         pLlDexOhDBMkt79w0+ofS3+f4xcnBuNUhq+c++wVjsKLE1jc5jzPMaU0ntxEv+VzpJOW
+         vf8JZ3z/GSdXQ73Dm2tMH7Uo3c+Gq7BR3tCL+JQ+cN4dWgw5MjGAhxYtxejR0Prd6iY+
+         6ZZkJcm1wr02Z6nmkyy0QuByc8wAJurm3MPsvINFpfalEBb4ZT0kmHOLA4rt4yqs3noY
+         8LqBEZLRANgp5WuxTDJkI3EjW/LX6Dr9+1sGkp9NrHS5iOhMpbnO8xzAXaW0orSU4N+3
+         p7ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+jBFtxmml2UF+SqNxby8rCTJfROuy18HbtkfW0zgYb0=;
+        b=aOqhMZ2QDENf8xtz1ZSh25pt4sWmm/J2GPmAffmOBO1wHR4m7hKw/zPTSX5QBQaeD7
+         7klfJEU5SEKI3VtmSyx5SuWXg7+N+efkknJVG8V/df+tA9L7IibFw4s/S/Marv//ATBd
+         trWCIrIUlv68zrXleufzyBxLWMbk92SSxnTWhoGjv99Hsv477pyDIiUxGqa5Fk9VlG6h
+         EUhNdr5IUz7vC021XqNVHP6EykeFdF572qVI8Fob/ISooYh3mj2eypuR2NX48YrqMzGF
+         LO+sxP158S2c0gY9IdD6+0TtqOzrJGdLyWlquO0ah3og7jGrlNtUp5e/1H/ks78vixzK
+         GJpQ==
+X-Gm-Message-State: AOAM530LJv1SnKqwSDiQS+9wsOLHQ6ZteZ+aMRO2Z9PGEZgmKh//dZsd
+        0glmvnyadvPuxX++U+ddghQ2fIXKvI0QiqBgNdSQjQ==
+X-Google-Smtp-Source: ABdhPJzmvRHbvh3nZTnE3simXC96ekcS+Ch2AtnIE3Svbty3w/cPWX4iVpb084QbaBYoV7z9md14B6vaSVk2SSa/NyY=
+X-Received: by 2002:a1f:cf03:: with SMTP id f3mr6271662vkg.72.1591346749358;
+ Fri, 05 Jun 2020 01:45:49 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
+ <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+ <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
+ <20200526102018.kznh6aglpkqlp6en@gilmour.lan> <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+ <20200527091335.7wc3uy67lbz7j4di@gilmour.lan> <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
+ <20200528073055.znutrhkryzu3grrl@gilmour.lan> <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
+ <20200602110442.2ceuymhwuomvjj6i@gilmour>
+In-Reply-To: <20200602110442.2ceuymhwuomvjj6i@gilmour>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Fri, 5 Jun 2020 16:44:51 +0800
+Message-ID: <CAPpJ_eePgLxO5URB3V5aeNMvBHOp+vXrW=+6SnVt4mB9J8oR+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=882=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:04=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
+> > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=8828=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Daniel,
+> > >
+> > > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
+> > > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> w=
+rote:
+> > > > > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-=
+Hong) if you
+> > > > > want.
+> > > >
+> > > > That would be great, although given the potentially inconsistent
+> > > > results we've been seeing so far it would be great if you could
+> > > > additionally push a git branch somewhere.
+> > > > That way we can have higher confidence that we are applying exactly
+> > > > the same patches to the same base etc.
+> > >
+> > > So I sent a new iteration yesterday, and of course forgot to cc you..=
+. Sorry for
+> > > that.
+> > >
+> > > I've pushed my current branch here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log=
+/?h=3Drpi4-kms
+> >
+> > Thanks to Maxime!
+> >
+> > I have tried your repository on branch rpi4-kms.  The DRM VC4 is used!
+> > But got some issues:
+> > 1. Some weird error message in dmesg.  Not sure it is related, or not
+> > [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
+> > HDMI state machine clock
+> > https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
+>
+> That's a deferred probing. The first time the HDMI driver is being
+> probed, the firmware clock driver has not been probed yet. It's making
+> another attempt later on, which succeeds.
+>
+> > 2. The screen flashes suddenly sometimes.
 
---=-uSOtOi+SJ+bMj8a3VO+u
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I append drm.debug=3D0x3 to boot command.  Whenever, the screen flashes,
+I notice the logs like this:
 
-On Thu, 2020-06-04 at 21:26 -0500, John Donnelly wrote:
-> On 6/4/20 12:01 PM, Nicolas Saenz Julienne wrote:
-> > On Thu, 2020-06-04 at 01:17 +0530, Bhupesh Sharma wrote:
-> > > Hi All,
-> > >=20
-> > > On Wed, Jun 3, 2020 at 9:03 PM John Donnelly <john.p.donnelly@oracle.=
-com>
-> > > wrote:
-> > > > > On Jun 3, 2020, at 8:20 AM, chenzhou <chenzhou10@huawei.com> wrot=
-e:
-> > > > >=20
-> > > > > Hi,
-> > > > >=20
-> > > > >=20
-> > > > > On 2020/6/3 19:47, Prabhakar Kushwaha wrote:
-> > > > > > Hi Chen,
-> > > > > >=20
-> > > > > > On Tue, Jun 2, 2020 at 8:12 PM John Donnelly <
-> > > > > > john.p.donnelly@oracle.com
-> > > > > > > wrote:
-> > > > > > >=20
-> > > > > > > > On Jun 2, 2020, at 12:38 AM, Prabhakar Kushwaha <
-> > > > > > > > prabhakar.pkin@gmail.com> wrote:
-> > > > > > > >=20
-> > > > > > > > On Tue, Jun 2, 2020 at 3:29 AM John Donnelly <
-> > > > > > > > john.p.donnelly@oracle.com> wrote:
-> > > > > > > > > Hi .  See below !
-> > > > > > > > >=20
-> > > > > > > > > > On Jun 1, 2020, at 4:02 PM, Bhupesh Sharma <
-> > > > > > > > > > bhsharma@redhat.com>
-> > > > > > > > > > wrote:
-> > > > > > > > > >=20
-> > > > > > > > > > Hi John,
-> > > > > > > > > >=20
-> > > > > > > > > > On Tue, Jun 2, 2020 at 1:01 AM John Donnelly <
-> > > > > > > > > > John.P.donnelly@oracle.com> wrote:
-> > > > > > > > > > > Hi,
-> > > > > > > > > > >=20
-> > > > > > > > > > >=20
-> > > > > > > > > > > On 6/1/20 7:02 AM, Prabhakar Kushwaha wrote:
-> > > > > > > > > > > > Hi Chen,
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > On Thu, May 21, 2020 at 3:05 PM Chen Zhou <
-> > > > > > > > > > > > chenzhou10@huawei.com> wrote:
-> > > > > > > > > > > > > This patch series enable reserving crashkernel ab=
-ove
-> > > > > > > > > > > > > 4G in
-> > > > > > > > > > > > > arm64.
-> > > > > > > > > > > > >=20
-> > > > > > > > > > > > > There are following issues in arm64 kdump:
-> > > > > > > > > > > > > 1. We use crashkernel=3DX to reserve crashkernel =
-below
-> > > > > > > > > > > > > 4G,
-> > > > > > > > > > > > > which will fail
-> > > > > > > > > > > > > when there is no enough low memory.
-> > > > > > > > > > > > > 2. Currently, crashkernel=3DY@X can be used to re=
-serve
-> > > > > > > > > > > > > crashkernel above 4G,
-> > > > > > > > > > > > > in this case, if swiotlb or DMA buffers are requi=
-red,
-> > > > > > > > > > > > > crash dump kernel
-> > > > > > > > > > > > > will boot failure because there is no low memory
-> > > > > > > > > > > > > available
-> > > > > > > > > > > > > for allocation.
-> > > > > > > > > > > > >=20
-> > > > > > > > > > > > We are getting "warn_alloc" [1] warning during boot=
- of
-> > > > > > > > > > > > kdump
-> > > > > > > > > > > > kernel
-> > > > > > > > > > > > with bootargs as [2] of primary kernel.
-> > > > > > > > > > > > This error observed on ThunderX2  ARM64 platform.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > It is observed with latest upstream tag (v5.7-rc3) =
-with
-> > > > > > > > > > > > this
-> > > > > > > > > > > > patch set
-> > > > > > > > > > > > and
-> > > > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://lists.infradead.org/pipermail/kexec/202=
-0-May/025128.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KR=
-VqALmvSK2VmCkIPIhsaxbiIAAlzu$
-> > > > > > > > > > > > Also **without** this patch-set
-> > > > > > > > > > > > "
-> > > > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kernel/msg806=
-882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2=
-VmCkIPIhsaxbjC6ujMA$
-> > > > > > > > > > > > "
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > This issue comes whenever crashkernel memory is res=
-erved
-> > > > > > > > > > > > after 0xc000_0000.
-> > > > > > > > > > > > More details discussed earlier in
-> > > > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kernel/msg806=
-882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2=
-VmCkIPIhsaxbjC6ujMA$
-> >    without
-> > > > > > > > > > > > any
-> > > > > > > > > > > > solution
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > This patch-set is expected to solve similar kind of
-> > > > > > > > > > > > issue.
-> > > > > > > > > > > > i.e. low memory is only targeted for DMA, swiotlb; =
-So
-> > > > > > > > > > > > above
-> > > > > > > > > > > > mentioned
-> > > > > > > > > > > > observation should be considered/fixed. .
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > --pk
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > [1]
-> > > > > > > > > > > > [   30.366695] DMI: Cavium Inc. Saber/Saber, BIOS
-> > > > > > > > > > > > TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/=
-yyyy
-> > > > > > > > > > > > [   30.367696] NET: Registered protocol family 16
-> > > > > > > > > > > > [   30.369973] swapper/0: page allocation failure:
-> > > > > > > > > > > > order:6,
-> > > > > > > > > > > > mode:0x1(GFP_DMA),
-> > > > > > > > > > > > nodemask=3D(null),cpuset=3D/,mems_allowed=3D0
-> > > > > > > > > > > > [   30.369980] CPU: 0 PID: 1 Comm: swapper/0 Not ta=
-inted
-> > > > > > > > > > > > 5.7.0-rc3+ #121
-> > > > > > > > > > > > [   30.369981] Hardware name: Cavium Inc. Saber/Sab=
-er,
-> > > > > > > > > > > > BIOS
-> > > > > > > > > > > > TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/=
-yyyy
-> > > > > > > > > > > > [   30.369984] Call trace:
-> > > > > > > > > > > > [   30.369989]  dump_backtrace+0x0/0x1f8
-> > > > > > > > > > > > [   30.369991]  show_stack+0x20/0x30
-> > > > > > > > > > > > [   30.369997]  dump_stack+0xc0/0x10c
-> > > > > > > > > > > > [   30.370001]  warn_alloc+0x10c/0x178
-> > > > > > > > > > > > [   30.370004]  __alloc_pages_slowpath.constprop.11=
-1+0xb
-> > > > > > > > > > > > 10/0
-> > > > > > > > > > > > xb50
-> > > > > > > > > > > > [   30.370006]  __alloc_pages_nodemask+0x2b4/0x300
-> > > > > > > > > > > > [   30.370008]  alloc_page_interleave+0x24/0x98
-> > > > > > > > > > > > [   30.370011]  alloc_pages_current+0xe4/0x108
-> > > > > > > > > > > > [   30.370017]  dma_atomic_pool_init+0x44/0x1a4
-> > > > > > > > > > > > [   30.370020]  do_one_initcall+0x54/0x228
-> > > > > > > > > > > > [   30.370027]  kernel_init_freeable+0x228/0x2cc
-> > > > > > > > > > > > [   30.370031]  kernel_init+0x1c/0x110
-> > > > > > > > > > > > [   30.370034]  ret_from_fork+0x10/0x18
-> > > > > > > > > > > > [   30.370036] Mem-Info:
-> > > > > > > > > > > > [   30.370064] active_anon:0 inactive_anon:0
-> > > > > > > > > > > > isolated_anon:0
-> > > > > > > > > > > > [   30.370064]  active_file:0 inactive_file:0
-> > > > > > > > > > > > isolated_file:0
-> > > > > > > > > > > > [   30.370064]  unevictable:0 dirty:0 writeback:0
-> > > > > > > > > > > > unstable:0
-> > > > > > > > > > > > [   30.370064]  slab_reclaimable:34
-> > > > > > > > > > > > slab_unreclaimable:4438
-> > > > > > > > > > > > [   30.370064]  mapped:0 shmem:0 pagetables:14 boun=
-ce:0
-> > > > > > > > > > > > [   30.370064]  free:1537719 free_pcp:219 free_cma:=
-0
-> > > > > > > > > > > > [   30.370070] Node 0 active_anon:0kB inactive_anon=
-:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > isolated(anon):0kB
-> > > > > > > > > > > > isolated(file):0kB mapped:0kB dirty:0kB writeback:0=
-kB
-> > > > > > > > > > > > shmem:0kB
-> > > > > > > > > > > > shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB
-> > > > > > > > > > > > writeback_tmp:0kB
-> > > > > > > > > > > > unstable:0kB all_unreclaimable? no
-> > > > > > > > > > > > [   30.370073] Node 1 active_anon:0kB inactive_anon=
-:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > isolated(anon):0kB
-> > > > > > > > > > > > isolated(file):0kB mapped:0kB dirty:0kB writeback:0=
-kB
-> > > > > > > > > > > > shmem:0kB
-> > > > > > > > > > > > shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB
-> > > > > > > > > > > > writeback_tmp:0kB
-> > > > > > > > > > > > unstable:0kB all_unreclaimable? no
-> > > > > > > > > > > > [   30.370079] Node 0 DMA free:0kB min:0kB low:0kB
-> > > > > > > > > > > > high:0kB
-> > > > > > > > > > > > reserved_highatomic:0KB active_anon:0kB
-> > > > > > > > > > > > inactive_anon:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > writepending:0kB
-> > > > > > > > > > > > present:128kB managed:0kB mlocked:0kB kernel_stack:=
-0kB
-> > > > > > > > > > > > pagetables:0kB
-> > > > > > > > > > > > bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
-> > > > > > > > > > > > [   30.370084] lowmem_reserve[]: 0 250 6063 6063
-> > > > > > > > > > > > [   30.370090] Node 0 DMA32 free:256000kB min:408kB
-> > > > > > > > > > > > low:664kB
-> > > > > > > > > > > > high:920kB reserved_highatomic:0KB active_anon:0kB
-> > > > > > > > > > > > inactive_anon:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > writepending:0kB
-> > > > > > > > > > > > present:269700kB managed:256000kB mlocked:0kB
-> > > > > > > > > > > > kernel_stack:0kB
-> > > > > > > > > > > > pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0k=
-B
-> > > > > > > > > > > > free_cma:0kB
-> > > > > > > > > > > > [   30.370094] lowmem_reserve[]: 0 0 5813 5813
-> > > > > > > > > > > > [   30.370100] Node 0 Normal free:5894876kB min:955=
-2kB
-> > > > > > > > > > > > low:15504kB
-> > > > > > > > > > > > high:21456kB reserved_highatomic:0KB active_anon:0k=
-B
-> > > > > > > > > > > > inactive_anon:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > writepending:0kB
-> > > > > > > > > > > > present:8388608kB managed:5953112kB mlocked:0kB
-> > > > > > > > > > > > kernel_stack:21672kB
-> > > > > > > > > > > > pagetables:56kB bounce:0kB free_pcp:876kB
-> > > > > > > > > > > > local_pcp:176kB
-> > > > > > > > > > > > free_cma:0kB
-> > > > > > > > > > > > [   30.370104] lowmem_reserve[]: 0 0 0 0
-> > > > > > > > > > > > [   30.370107] Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32k=
-B
-> > > > > > > > > > > > 0*64kB
-> > > > > > > > > > > > 0*128kB
-> > > > > > > > > > > > 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 0kB
-> > > > > > > > > > > > [   30.370113] Node 0 DMA32: 0*4kB 0*8kB 0*16kB 0*3=
-2kB
-> > > > > > > > > > > > 0*64kB 0*128kB
-> > > > > > > > > > > > 0*256kB 0*512kB 0*1024kB 1*2048kB (M) 62*4096kB (M)=
- =3D
-> > > > > > > > > > > > 256000kB
-> > > > > > > > > > > > [   30.370119] Node 0 Normal: 2*4kB (M) 3*8kB (ME)
-> > > > > > > > > > > > 2*16kB
-> > > > > > > > > > > > (UE) 3*32kB
-> > > > > > > > > > > > (UM) 1*64kB (U) 2*128kB (M) 2*256kB (ME) 3*512kB (M=
-E)
-> > > > > > > > > > > > 3*1024kB (ME)
-> > > > > > > > > > > > 3*2048kB (UME) 1436*4096kB (M) =3D 5893600kB
-> > > > > > > > > > > > [   30.370129] Node 0 hugepages_total=3D0 hugepages=
-_free=3D0
-> > > > > > > > > > > > hugepages_surp=3D0 hugepages_size=3D1048576kB
-> > > > > > > > > > > > [   30.370130] 0 total pagecache pages
-> > > > > > > > > > > > [   30.370132] 0 pages in swap cache
-> > > > > > > > > > > > [   30.370134] Swap cache stats: add 0, delete 0, f=
-ind
-> > > > > > > > > > > > 0/0
-> > > > > > > > > > > > [   30.370135] Free swap  =3D 0kB
-> > > > > > > > > > > > [   30.370136] Total swap =3D 0kB
-> > > > > > > > > > > > [   30.370137] 2164609 pages RAM
-> > > > > > > > > > > > [   30.370139] 0 pages HighMem/MovableOnly
-> > > > > > > > > > > > [   30.370140] 612331 pages reserved
-> > > > > > > > > > > > [   30.370141] 0 pages hwpoisoned
-> > > > > > > > > > > > [   30.370143] DMA: failed to allocate 256 KiB pool=
- for
-> > > > > > > > > > > > atomic
-> > > > > > > > > > > > coherent allocation
-> > > > > > > > > > > During my testing I saw the same error and
-> > > > > > > > > > > Chen's  solution
-> > > > > > > > > > > corrected it .
-> > > > > > > > > > Which combination you are using on your side? I am usin=
-g
-> > > > > > > > > > Prabhakar's
-> > > > > > > > > > suggested environment and can reproduce the issue
-> > > > > > > > > > with or without Chen's crashkernel support above 4G
-> > > > > > > > > > patchset.
-> > > > > > > > > >=20
-> > > > > > > > > > I am also using a ThunderX2 platform with latest
-> > > > > > > > > > makedumpfile
-> > > > > > > > > > code and
-> > > > > > > > > > kexec-tools (with the suggested patch
-> > > > > > > > > > <
-> > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://lists.infradead.org/pipermail/kexec/202=
-0-May/025128.html__;!!GqivPVa7Brio!J6lUig58-Gw6TKZnEEYzEeSU36T-1SqlB1kImU00=
-xtX_lss5Tx-JbUmLE9TJC3foXBLg$
-> > > > > > > > > > > ).
-> > > > > > > > > > Thanks,
-> > > > > > > > > > Bhupesh
-> > > > > > > > > I did this activity 5 months ago and I have moved on to o=
-ther
-> > > > > > > > > activities. My DMA failures were related to PCI devices t=
-hat
-> > > > > > > > > could
-> > > > > > > > > not be enumerated because  low-DMA space was not  availab=
-le
-> > > > > > > > > when
-> > > > > > > > > crashkernel was moved above 4G; I don=E2=80=99t recall th=
-e exact
-> > > > > > > > > platform.
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > For this failure ,
-> > > > > > > > >=20
-> > > > > > > > > > > > DMA: failed to allocate 256 KiB pool for atomic
-> > > > > > > > > > > > coherent allocation
-> > > > > > > > > Is due to :
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > 3618082c
-> > > > > > > > > ("arm64 use both ZONE_DMA and ZONE_DMA32")
-> > > > > > > > >=20
-> > > > > > > > > With the introduction of ZONE_DMA to support the Raspberr=
-y DMA
-> > > > > > > > > region below 1G, the crashkernel is placed in the upper 4=
-G
-> > > > > > > > > ZONE_DMA_32 region. Since the crashkernel does not have a=
-ccess
-> > > > > > > > > to the ZONE_DMA region, it prints out call trace during
-> > > > > > > > > bootup.
-> > > > > > > > >=20
-> > > > > > > > > It is due to having this CONFIG item  ON  :
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > CONFIG_ZONE_DMA=3Dy
-> > > > > > > > >=20
-> > > > > > > > > Turning off ZONE_DMA fixes a issue and Raspberry PI 4 wil=
-l
-> > > > > > > > > use the device tree to specify memory below 1G.
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > Disabling ZONE_DMA is temporary solution.  We may need prop=
-er
-> > > > > > > > solution
-> > > > > > > Perhaps the Raspberry platform configuration dependencies nee=
-d
-> > > > > > > separated  from =E2=80=9Cserver class=E2=80=9D Arm  equipment=
- ?  Or auto-
-> > > > > > > configured on
-> > > > > > > boot ?  Consult an expert ;-)
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > > > > I would like to see Chen=E2=80=99s feature added , perhap=
-s as
-> > > > > > > > > EXPERIMENTAL,  so we can get some configuration testing d=
-one
-> > > > > > > > > on
-> > > > > > > > > it.   It corrects having a DMA zone in low memory while c=
-rash-
-> > > > > > > > > kernel is above 4GB.  This has been going on for a year n=
-ow.
-> > > > > > > > I will also like this patch to be added in Linux as early a=
-s
-> > > > > > > > possible.
-> > > > > > > >=20
-> > > > > > > > Issue mentioned by me happens with or without this patch.
-> > > > > > > >=20
-> > > > > > > > This patch-set can consider fixing because it uses low memo=
-ry
-> > > > > > > > for
-> > > > > > > > DMA
-> > > > > > > > & swiotlb only.
-> > > > > > > > We can consider restricting crashkernel within the required
-> > > > > > > > range
-> > > > > > > > like below
-> > > > > > > >=20
-> > > > > > > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > > > > > > > index 7f9e5a6dc48c..bd67b90d35bd 100644
-> > > > > > > > --- a/kernel/crash_core.c
-> > > > > > > > +++ b/kernel/crash_core.c
-> > > > > > > > @@ -354,7 +354,7 @@ int __init reserve_crashkernel_low(void=
-)
-> > > > > > > >                        return 0;
-> > > > > > > >        }
-> > > > > > > >=20
-> > > > > > > > -       low_base =3D memblock_find_in_range(0, 1ULL << 32,
-> > > > > > > > low_size,
-> > > > > > > > CRASH_ALIGN);
-> > > > > > > > +       low_base =3D memblock_find_in_range(0,0xc0000000,
-> > > > > > > > low_size,
-> > > > > > > > CRASH_ALIGN);
-> > > > > > > >        if (!low_base) {
-> > > > > > > >                pr_err("Cannot reserve %ldMB crashkernel low
-> > > > > > > > memory,
-> > > > > > > > please try smaller size.\n",
-> > > > > > > >                       (unsigned long)(low_size >> 20));
-> > > > > > > >=20
-> > > > > > > >=20
-> > > > > > >     I suspect  0xc0000000  would need to be a CONFIG item  an=
-d not
-> > > > > > > hard-coded.
-> > > > > > >=20
-> > > > > > if you consider this as valid change,  can you please incorpora=
-te as
-> > > > > > part of your patch-set.
-> > > > > After commit 1a8e1cef7 ("arm64: use both ZONE_DMA and ZONE_DMA32"=
-)=EF=BC=8Cthe
-> > > > > 0-
-> > > > > 4G memory is splited
-> > > > > to DMA [mem 0x0000000000000000-0x000000003fffffff] and DMA32 [mem
-> > > > > 0x0000000040000000-0x00000000ffffffff] on arm64.
-> > > > >=20
-> > > > >  From the above discussion, on your platform, the low crashkernel=
- fall
-> > > > > in
-> > > > > DMA32 region, but your environment needs to access DMA
-> > > > > region, so there is the call trace.
-> > > > >=20
-> > > > > I have a question, why do you choose 0xc0000000 here?
-> > > > >=20
-> > > > > Besides, this is common code, we also need to consider about x86.
-> > > > >=20
-> > > >   + nsaenzjulienne@suse.de
-> > Thanks for adding me to the conversation, and sorry for the headaches.
-> >=20
-> > > >    Exactly .  This is why it needs to be a CONFIG option for  Raspb=
-erry
-> > > > ..,  or device tree option.
-> > > >=20
-> > > >=20
-> > > >    We could revert 1a8e1cef7 since it broke  Arm kdump too.
-> > > Well, unfortunately the patch for commit 1a8e1cef7603 ("arm64: use
-> > > both ZONE_DMA and ZONE_DMA32") was not Cc'ed to the kexec mailing
-> > > list, thus we couldn't get many eyes on it for a thorough review from
-> > > kexec/kdump p-o-v.
-> > >=20
-> > > Also we historically never had distinction in common arch code on the
-> > > basis of the intended end use-case: embedded, server or automotive, s=
-o
-> > > I am not sure introducing a Raspberry specific CONFIG option would be
-> > > a good idea.
-> > +1
-> >=20
-> >  From the distros perspective it's very important to keep a single kern=
-el
-> > image.
-> >=20
-> > > So, rather than reverting the patch, we can look at addressing the
-> > > same properly this time - especially from a kdump p-o-v.
-> > > This issue has been reported by some Red Hat arm64 partners with
-> > > upstream kernel also and as we have noticed in the past as well,
-> > > hardcoding the placement of the crashkernel base address (unless the
-> > > base address is specified by a crashkernel=3DX@Y like bootargs) is al=
-so
-> > > not a portable suggestion.
-> > >=20
-> > > I am working on a possible fix and will have more updates on the same
-> > > in a day-or-two.
-> > Please keep me in the loop, we've also had issues pointing to this repo=
-rted
-> > by
-> > SUSE partners. I can do some testing both on the RPi4 and on big server=
-s
-> > that
-> > need huge crashkernel sizes.
-> >=20
-> > Regards,
-> > Nicolas
-> >=20
-> Hi Nicolas,
->=20
->=20
-> You want want to review this topic with the various email threads . It=
-=20
-> has been a long journey.
+Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
+Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
+Jun 01 15:22:40 endless kernel: [drm:drm_vblank_enable] enabling
+vblank on crtc 3, ret: 0
+Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+9 (2)
+Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+4 (1)
+Jun 01 15:22:40 endless kernel: [drm:vblank_disable_fn] disabling
+vblank on crtc 3
+Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200,
+auth=3D1, DRM_IOCTL_MODE_CURSOR
+Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200,
+auth=3D1, DRM_IOCTL_MODE_CURSOR2
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 159 (1)
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 154 (1)
+Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
+Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
+Jun 01 15:22:42 endless kernel: [drm:drm_vblank_enable] enabling
+vblank on crtc 3, ret: 0
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+9 (2)
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+4 (2)
 
-Will do, thanks!
+Here is the full log
+https://gist.github.com/starnight/85d641819839eddc7a55ca7173990a56
 
-Regards,
-Nicolas
+> > 3. The higher resolutions, like 1920x1080 ... are lost after hot
+> > re-plug HDMI cable (HDMI0)
 
+I should explain this in more detail.  Here are the steps to reproduce
+this issue:
+1. Before unplug the HDMI cable from HDMI0 port.
+$ xrandr
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
+HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x
+axis y axis) 521mm x 293mm
+   1920x1080     60.00*+  50.00    59.94
+   1920x1080i    60.00    50.00    59.94
+   1680x1050     59.88
+   1280x1024     75.02    60.02
+   1440x900      59.90
+   1280x960      60.00
+   1152x864      75.00
+   1280x720      60.00    50.00    59.94
+   1440x576      50.00
+   1024x768      75.03    70.07    60.00
+   1440x480      60.00    59.94
+   832x624       74.55
+   800x600       72.19    75.00    60.32    56.25
+   720x576       50.00
+   720x480       60.00    59.94
+   640x480       75.00    72.81    66.67    60.00    59.94
+   720x400       70.08
+HDMI-2 disconnected (normal left inverted right x axis y axis)
 
---=-uSOtOi+SJ+bMj8a3VO+u
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+2. Unplug the HDMI cable from HDMI0 port.
+3. Plug the HDMI cable to **HDMI1** port.
+$ xrandr
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
+HDMI-1 disconnected (normal left inverted right x axis y axis)
+HDMI-2 connected primary 1920x1080+0+0 (normal left inverted right x
+axis y axis) 521mm x 293mm
+   1920x1080     60.00*+  50.00    59.94
+   1920x1080i    60.00    50.00    59.94
+   1680x1050     59.88
+   1280x1024     75.02    60.02
+   1440x900      59.90
+   1280x960      60.00
+   1152x864      75.00
+   1280x720      60.00    50.00    59.94
+   1440x576      50.00
+   1024x768      75.03    70.07    60.00
+   1440x480      60.00    59.94
+   832x624       74.55
+   800x600       72.19    75.00    60.32    56.25
+   720x576       50.00
+   720x480       60.00    59.94
+   640x480       75.00    72.81    66.67    60.00    59.94
+   720x400       70.08
 
------BEGIN PGP SIGNATURE-----
+4. Unplug the HDMI cable from **HDMI1** port.
+5. Plug the HDMI cable back to HDMI0 port.
+$ xrandr
+Screen 0: minimum 320 x 200, current 1368 x 768, maximum 2048 x 2048
+HDMI-1 connected primary 1368x768+0+0 (normal left inverted right x
+axis y axis) 0mm x 0mm
+   1368x768      59.88*
+   1360x768      59.80
+   1280x800      59.81
+   1152x864      60.00
+   1280x720      59.86
+   1024x768      60.00
+   1024x576      59.90
+   960x540       59.63
+   800x600       60.32
+   800x450       59.82
+   700x450       59.88
+   640x480       59.94
+   684x384       59.88    59.85
+   680x384       59.80    59.96
+   640x400       59.88    59.98
+   576x432       60.06
+   640x360       59.86    59.83
+   512x384       60.00
+   512x288       60.00    59.92
+   480x270       59.63    59.82
+   400x300       60.32
+   320x240       60.05
+HDMI-2 disconnected (normal left inverted right x axis y axis)
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aAJUACgkQlfZmHno8
-x/7P3Af9GriSLNLwiJ6mP1Wz3FaQS9zrZv1y2ipqBNijUzySFEw/OPyV7MWduvCR
-H7ugjhSe0VsKQO8aPgskNyE2Fk+WQ7BgPInJLfE50/KPcvoEy32pUzXEtCMnBOVA
-gfjuKHBo10OGv2ytQgTGLdr7y1n/J1vsSpJqZm0rQ18zu4kTqJKKo86iI1+MgKEk
-S2UawOQxOiKIdHZ5iVHI/kdPkCwTrqxx0fkNhcpyDUuIHaMe0IyAX9FK3u4BJIfp
-DObetzAJ95AIzZYSsMNZuNPH3BqgX0pg05F5TFUN7B0AsmsyNcWHNSsTYP9ZATBJ
-aTRJe5xO6wYuhCBugrhRu5QDlQwBQg==
-=ezKH
------END PGP SIGNATURE-----
+Jian-Hong Pan
 
---=-uSOtOi+SJ+bMj8a3VO+u--
-
+> I'm not sure on how to exactly reproduce those issues (or what they are)
+> though, can you expand on this?
+>
+> Maxime
