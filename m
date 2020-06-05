@@ -2,249 +2,203 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F364DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 13:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088B3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 13:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55842070B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 13:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD08920663
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 13:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="BaYt+8sL"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SNXabU7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgFENVi (ORCPT
+        id S1726980AbgFENcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbgFENVi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 09:21:38 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1EDC08C5C2
-        for <devicetree@vger.kernel.org>; Fri,  5 Jun 2020 06:21:37 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n23so11714110ljh.7
-        for <devicetree@vger.kernel.org>; Fri, 05 Jun 2020 06:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=npO6Xx111vYtSO61NgRog+dLyg7Zh/nU9iarUcpFEzo=;
-        b=BaYt+8sLySFAo/AJdgsrU0i42aIMZuELEwCmtWYbAkMOR9MT3sfPHT/goQGqDX6u9N
-         ujgFLYkOs9lnYHNPrnDmPviKxyRhPa3wAdfpzpnokUOr1nHduLp37/2VCzS3UewtTaH+
-         9YMKCz069P3CEmOhLRACg8jpPvk5+zUFMjxup8UhoF4l4LxUCqslQAa/yzA42uZL4Iap
-         UCKtjFnTdCgaSl2OunhW7CRgW/4nggaMlTMU+Tv0sgQj0L7CU+vPSDAX72XtnM7vIQxy
-         Z9ihme+PD83mLeflboO9MDhhXmVoJvfUaR5RKNYqFubacLwfIrj+sKnDnQSXNYzo07n0
-         Wz9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=npO6Xx111vYtSO61NgRog+dLyg7Zh/nU9iarUcpFEzo=;
-        b=E8A9e040wxU8C/02cShoz8moeJ/YG6GQXoHL2nN1pOecaJuKXYe9I5ifZV6hJPocM1
-         yN+j2UQyXRWi9B6FQLLgM40YPb45lqKsaVhICAG6itIPW5MRI26uMR2n/crliA603+J+
-         1bXRP4UgW5d++J5PMo7PLDdWTfBdWxSZQr4tpzS572+adSchG7d5XXxcaFjO6ZbaMVK5
-         9onFUcbsmEiAwpAJa5xzHqX/1Ncj10SYjno96oMr9tkt64kjd+FVOXbpoud4X5Rw3/nR
-         kxIZpnvTzMMHjpL0rVYNWk+CNcqK7QS5LxFRa7fkSDLc725XBiQRIC7CSUv8SXmP3UFn
-         nVPQ==
-X-Gm-Message-State: AOAM531AcT/RJXYVmgvMg/MzPKzf9ru6/n2004kQPMWuW9MQeURvzFUr
-        kMUnAHtcH/YyjoRdVwOf5Gcqwg==
-X-Google-Smtp-Source: ABdhPJwCA5uqky+cVncXQ8y6SrBtfMTJs/nFlEH5EUPIWrkmswBKE9ncxkN1e4NHB18RN/s6Wrsj1g==
-X-Received: by 2002:a2e:9e87:: with SMTP id f7mr1210036ljk.44.1591363295925;
-        Fri, 05 Jun 2020 06:21:35 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id x69sm920805lff.19.2020.06.05.06.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 06:21:34 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 15:21:34 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-rza1-irqc: Convert to
- json-schema
-Message-ID: <20200605132134.GA385628@oden.dyn.berto.se>
-References: <20200528132853.1751-1-geert+renesas@glider.be>
+        Fri, 5 Jun 2020 09:32:31 -0400
+Received: from mail-eopbgr60069.outbound.protection.outlook.com ([40.107.6.69]:7894
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726844AbgFENca (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:32:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=btFjvx2yXZ5BB1PcqdBt3n+kHCeICp6N1nG585vJmYLChb/yrVbH96OzJpgEGPIRgbDXLqdKf0ea11RJy/e9S0/yQ3OmyrUNQRmeIbG/pmsGDVoorFbQbTdtg+qk98k+Xlkc519/3m3snTfAm9FiSCWLodEwrkn/+YhIBYIdVQysDgVIueaaB9RRFkTJxs1W2kVl7+oTcpYSxwtJcdvImsOgn/9a55HyUy/LD8GmllySEBl7zhDZ1WEQDmWyV2PnV5XvNj/yX8ArIr4Ndd1kcDVgdikQod/DbHOKpKYik2oLLROibGiYnbGCziUP9VdHLFcfFhGTyaclt5zS5f6PlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdIr+yXh54OxuXDi8O3W+Ykd5tFiQiZLLoXyHsE8RJw=;
+ b=DhPRI/7eInbzBud4se20JRY8/I0N4B6Qy5AVM5VBIWe9ek3MyC1SKSFuYfToYZZdSrymo3+eiAgQ+Dx7ciy7F//Z5E8rH4lSpuJwLd4VbshNoy9GacRg/+/V+0ZMUuPgDCHyPNZLxseMulCxxsKkdjhU9H0IzxyHKgp6zP3/ig1vh8AHbwqxMafOD5P0DPfmO8WbnbS9SEeppedL8ZRxWyuU9OlE7/e7gvwssX2TFmG0R7Wh3TeYtW7M4jIfxwy1SjdcqYYRmJse9fYvwehysfM/P296su4B3zUoDBS4IMwTeE7lRdSHOG7hO4SgdWVCadqGx7i5ktaDLr00h2OibA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdIr+yXh54OxuXDi8O3W+Ykd5tFiQiZLLoXyHsE8RJw=;
+ b=SNXabU7jwAbFRSIuCRQtLn61i4PP0uneGaZj+FeQUaVmmfgMPfZ84QNXViD6/DoVyTvT+s/OSZQ8VebmTMpUegdjh7TJ+iCDvMLdLzUdqLqU0Zj9aYzJK2/vbbhYdebgoXnGM8AsfRiTLI5P73acThNTluplDs9pNevHrJdqRF8=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Fri, 5 Jun
+ 2020 13:32:25 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
+ 13:32:24 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
+Subject: [PATCH v9 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Date:   Sat,  6 Jun 2020 05:32:21 +0800
+Message-Id: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0048.apcprd02.prod.outlook.com
+ (2603:1096:3:18::36) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200528132853.1751-1-geert+renesas@glider.be>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0048.apcprd02.prod.outlook.com (2603:1096:3:18::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.20 via Frontend Transport; Fri, 5 Jun 2020 13:32:19 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0d9264ec-d495-43df-bb20-08d80954e1e9
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6702:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB670251626171F5ADB562EC3089860@VE1PR04MB6702.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0425A67DEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZGupSpJnibd1bjcM4+XCaxvP4vidPvwhgtiee2PlrMJ7DXzqkQr0gj05APofMYr4jHaRlts6glQHYjNAE8hOoj1WXMrU3mtCO8xt9FPvYfPV9HPu5fI3ncDMs7vfnmZ9g2lseuSRz+faBDxXUjTixzNmNY7q+bx96B87KM33LI5ds9jcKhH/+iTE0ER8t52gauxiARxDugnf1Au6l2cnSU/BpHxjW79Glx7T56plqgeyzwCt6Wo2rJOHdVY9cMj7O1H1zcjhnoCCiKwrIU2iYPZWZbtQcSgVae7B3ZgLtNVTDdu5a26/sXXi4rhM1xIXG+CCEjzGovx5z5aAi0XSh78r3B2UTDe9EI4oIDbmeY14fVaHDpBewEkErjRR5+v3sK6Jadcj6xn+BJEXfM/2NBnk+b72LM76Gai2MkVuC3fRhMFH+TUSrqmBCjj8OeMV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(6486002)(52116002)(2906002)(316002)(4326008)(6506007)(966005)(5660300002)(26005)(66946007)(2616005)(956004)(478600001)(66556008)(186003)(8676002)(16526019)(7416002)(6512007)(6666004)(36756003)(8936002)(83380400001)(86362001)(66476007)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pGL1e60C0NJWemTbto+1Ga2ISH4gyVOcWHcdpXU1R5uvrB20z4ihnZfhGHJ9U5SF5hYEiiDdmO30RZATkqB2vXyGgJIXQSYGrwvRHOTShvtBTGCC45qzuKQTLSEqm7ZFgG1gdP78Cz62GR1pQfwgf7wlMa2LpEOhAuRWmerp+bPMnifeGg8NJPcqd/jz5hGTijMp5AXxquP2kwqk+AxptqEWh763z3/Q4mt2vI07pSD1DcBCX6fH1VVr0/Wnb8/TTuz1BcJ7C5CzG96nGbg6XzrUm622alY+Dc2npYFQe06qEGD8GcglmnCkexPQyMaR2wnSAM+2vZSdIBkdUinSoJNH7RptW+NJqh8hPV1ziiWpXO+Okq70iy5dKGafstJ47SeHVlIp9ib6Ym7/nRDRTzv1dCftbnVE+mMmz+c6sLd9zF4tKDa+KNPDuWCmeZbezCpzZWu4VfWHBlKRgUQOgp14NZ0rlOG0qZMaPXMlUTM=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d9264ec-d495-43df-bb20-08d80954e1e9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 13:32:24.7617
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zAEwBi4CkJcr1omf4iSh7RHKkLrC6aWD9sRKe4NvVFQOM1hh69eZhf0EjtMfEHXUsDvimUG37t9SkjgMOzb7kA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6702
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+transfer to be send twice in DMA mode. Please get more information from:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+new sdma ram script which works in XCH  mode as PIO inside sdma instead
+of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+exist on all legacy i.mx6/7 soc family before i.mx6ul.
+NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+or not.
+The first two reverted patches should be the same issue, though, it
+seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+have the chance to test this patch set if could fix their issues.
+Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+on i.mx8mm because the event id is zero.
 
-Thanks for your work.
+PS:
+   Please get sdma firmware from below linux-firmware and copy it to your
+local rootfs /lib/firmware/imx/sdma.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-On 2020-05-28 15:28:53 +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas RZ/A1 Interrupt Controller Device Tree binding
-> documentation to json-schema.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+v2:
+  1.Add commit log for reverted patches.
+  2.Add comment for 'ecspi_fixed' in sdma driver.
+  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+    rather than remove.
+v3:
+  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+    Correct dts related dts patch in v2.
+  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+    in spi-imx driver to state ERR009165 fixed or not.
+  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+    errata workaroud, thus improve performance as possible.
+v4:
+  1.Add Ack tag from Mark and Vinod
+  2.Remove checking 'event_id1' zero as 'event_id0'.
+v5:
+  1.Add the last patch for compatible with the current uart driver which
+    using rom script, so both uart ram script and rom script supported
+    in latest firmware, by default uart rom script used. UART driver
+    will be broken without this patch.
+v6:
+  1.Resend after rebase the latest next branch.
+  2.Remove below No.13~No.15 patches of v5 because they were mergered.
+  	ARM: dts: imx6ul: add dma support on ecspi
+  	ARM: dts: imx6sll: correct sdma compatible
+  	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+  3.Revert "dmaengine: imx-sdma: fix context cache" since
+    'context_loaded' removed.
+v7:
+  1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix context
+    cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma: refine
+    to load context only once" so that no building waring during comes out
+    during bisect.
+  2.Address Sascha's comments, including eliminating any i.mx6sx in this
+    series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and taking
+    care SMC bit for PIO.
+  3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
+   'spi: imx: add new i.mx6ul compatible name in binding doc'
+v8:
+  1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and merge
+    it into 04/13 of v7
+  2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for no any
+    ecspi function broken even if sdma firmware not updated.
+  3.merge 'tx.dst_maxburst' changes in the two continous patches into one
+    patch to avoid confusion.
+  4.fix typo 'duplicated'.
+v9:
+  1. add "spi: imx: add dma_sync_sg_for_device after fallback from dma"
+     to fix the potential issue brought by commit bcd8e7761ec9("spi: imx:
+     fallback to PIO if dma setup failure") which is the only one patch
+     of v8 merged. Thanks Matthias for reporting:
+     https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Robin Gong (14):
+  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+  Revert "dmaengine: imx-sdma: refine to load context only once"
+  dmaengine: imx-sdma: remove duplicated sdma_load_context
+  spi: imx: fallback to PIO if dma setup failure
+  spi: imx: add dma_sync_sg_for_device after fallback from dma
+  dmaengine: imx-sdma: add mcu_2_ecspi script
+  spi: imx: fix ERR009165
+  spi: imx: remove ERR009165 workaround on i.mx6ul
+  spi: imx: add new i.mx6ul compatible name in binding doc
+  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+  dma: imx-sdma: add i.mx6ul compatible name
+  dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+  dmaengine: imx-sdma: add uart rom script
 
-> ---
-> Validation depends on "[PATCH dt-schema] Fix interrupt controllers with
-> interrupt-map".
-> http://lore.kernel.org/r/20200528132323.30288-1-geert+renesas@glider.be
-> ---
->  .../renesas,rza1-irqc.txt                     | 43 ----------
->  .../renesas,rza1-irqc.yaml                    | 80 +++++++++++++++++++
->  2 files changed, 80 insertions(+), 43 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> deleted file mode 100644
-> index 727b7e4cd6e01110..0000000000000000
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> +++ /dev/null
-> @@ -1,43 +0,0 @@
-> -DT bindings for the Renesas RZ/A1 Interrupt Controller
-> -
-> -The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-> -RZ/A1 and RZ/A2 SoCs:
-> -  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-> -    interrupts,
-> -  - NMI edge select.
-> -
-> -Required properties:
-> -  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-> -		fallback.
-> -		Examples with soctypes are:
-> -		  - "renesas,r7s72100-irqc" (RZ/A1H)
-> -		  - "renesas,r7s9210-irqc" (RZ/A2M)
-> -  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-> -				 in interrupts.txt in this directory)
-> -  - #address-cells: Must be zero
-> -  - interrupt-controller: Marks the device as an interrupt controller
-> -  - reg: Base address and length of the memory resource used by the interrupt
-> -         controller
-> -  - interrupt-map: Specifies the mapping from external interrupts to GIC
-> -		   interrupts
-> -  - interrupt-map-mask: Must be <7 0>
-> -
-> -Example:
-> -
-> -	irqc: interrupt-controller@fcfef800 {
-> -		compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
-> -		#interrupt-cells = <2>;
-> -		#address-cells = <0>;
-> -		interrupt-controller;
-> -		reg = <0xfcfef800 0x6>;
-> -		interrupt-map =
-> -			<0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> -			<1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> -			<2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> -			<3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> -			<4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> -			<5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> -			<6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> -			<7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> -		interrupt-map-mask = <7 0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
-> new file mode 100644
-> index 0000000000000000..755cdfabfcd06c85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/renesas,rza1-irqc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/A1 Interrupt Controller
-> +
-> +maintainers:
-> +  - Chris Brandt <chris.brandt@renesas.com>
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +
-> +description: |
-> +  The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas RZ/A1 and
-> +  RZ/A2 SoCs:
-> +    - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI interrupts,
-> +    - NMI edge select.
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,r7s72100-irqc # RZ/A1H
-> +          - renesas,r7s9210-irqc  # RZ/A2M
-> +      - const: renesas,rza1-irqc
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  '#address-cells':
-> +    const: 0
-> +
-> +  interrupt-controller: true
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-map:
-> +    maxItems: 8
-> +    description: Specifies the mapping from external interrupts to GIC interrupts.
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - const: 7
-> +      - const: 0
-> +
-> +required:
-> +  - compatible
-> +  - '#interrupt-cells'
-> +  - '#address-cells'
-> +  - interrupt-controller
-> +  - reg
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    irqc: interrupt-controller@fcfef800 {
-> +            compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
-> +            #interrupt-cells = <2>;
-> +            #address-cells = <0>;
-> +            interrupt-controller;
-> +            reg = <0xfcfef800 0x6>;
-> +            interrupt-map =
-> +                    <0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +                    <7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-map-mask = <7 0>;
-> +    };
-> -- 
-> 2.17.1
-> 
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   1 +
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |   1 +
+ arch/arm/boot/dts/imx6q.dtsi                       |   2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   8 +-
+ drivers/dma/imx-sdma.c                             |  67 ++++++++-----
+ drivers/spi/spi-imx.c                              | 104 ++++++++++++++++++---
+ include/linux/platform_data/dma-imx-sdma.h         |   8 +-
+ 7 files changed, 147 insertions(+), 44 deletions(-)
 
 -- 
-Regards,
-Niklas Söderlund
+2.7.4
+
