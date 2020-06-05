@@ -2,98 +2,135 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 19:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53A8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 20:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3CE207D3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 19:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7F2207F7
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 20:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="HOJquxRk"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="OuBQyumV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgFETGA (ORCPT
+        id S1728243AbgFEUHk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:06:00 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:15639 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgFETGA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 15:06:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1591383958;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=uG+xyzcgFcPs8d4qfzghhlZ8ma9xNU5sLA5RgBUV1Kk=;
-        b=HOJquxRkl2HtaGSHiX79zLza50/q3/XLF4SMobsE0dBhyRvD7kwlqlSWth3Y9N5ckn
-        s60ci2uwtyCsZNgA1oGuX8EOpEhvWmFhe0S0Mj/PEeSO7XPqgIaAQCz84jpHg4n9nnwl
-        8cvHvIriuV0TYa5zGIxocJBG+sQEM/pkxLNTxglVidjt3uTqJnr0/OxkG/Tk+40YWc45
-        kKeK2NgWU2I0NLzn9uv+rDFeJ+JWs3xpW8430DPmauhzEJro+Ns7XBEVqSyCovfxxfgP
-        MRkuCRh4duCoCEXThdtEc691YB9ooV79ie9IBnwkbcRvvTqTRjibjqvQ1b0Hh6dMx0nh
-        qzoQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6IlKY="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.9.1 DYNA|AUTH)
-        with ESMTPSA id U0b5f2w55IxqKmE
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 5 Jun 2020 20:59:52 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/4] arm64: dts: qcom: msm8916: Set #address-cells for lpass
-Date:   Fri,  5 Jun 2020 20:59:13 +0200
-Message-Id: <20200605185916.318494-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.26.2
+        Fri, 5 Jun 2020 16:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbgFEUHk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 16:07:40 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86799C08C5C3;
+        Fri,  5 Jun 2020 13:07:39 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C7B7222FEB;
+        Fri,  5 Jun 2020 22:07:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591387657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A4yi/Grhaf0w4jjGNDMnsTZ5HJKkIfL4Ymq6vlFIb8I=;
+        b=OuBQyumVx9fvWq152YNCm2zk5nOR6UzVoQFWmfvSoHap0daT70FokziRiSbd6uS36mmPq6
+        G+e8cV1FzWm9bwj7zpeF8fVaVmGgJnv9KD/GT5DtDfSlaIe9MSW8xvNitMyQkuNc0sFibr
+        gIo1iXnMpABriffMl0K69T6+nevu00I=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 22:07:36 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200605105026.GC5413@sirena.org.uk>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc> <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As of commit 4ff028f6c108 ("ASoC: qcom: lpass-cpu: Make I2S SD lines
-configurable"), lpass now supports children nodes to configure the
-MI2S SD lines to use for one of the I2S ports. For example:
+Hi,
 
-lpass@7708000 {
-	dai@3 {
-		reg = <MI2S_QUATERNARY>;
-		qcom,playback-sd-lines = <1>;
-	};
-};
+Am 2020-06-05 12:50, schrieb Mark Brown:
+> On Fri, Jun 05, 2020 at 07:57:09AM +0100, Lee Jones wrote:
+>> On Thu, 04 Jun 2020, Michael Walle wrote:
+> 
+>> > +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, &sl28cpld_regmap_config);
+>> > +	if (IS_ERR(sl28cpld->regmap))
+>> > +		return PTR_ERR(sl28cpld->regmap);
+> 
+>> This is now a shared memory allocator and not an MFD at all.
+> 
+>> I'm clamping down on these type of drivers!
+> 
+>> Please find a better way to accomplish this.
+> 
+> What is the concern with this?  Looking at the patch I'm guessing the
+> concern would be that the driver isn't instantiating any MFD children
+> and instead requiring them to be put in the DT?
+> 
+>> Potentially using "simple-mfd" and "simple-regmap".
+> 
+>> The former already exists and does what you want.  The latter doesn't
+>> yet exist, but could solve your and lots of other contributor's
+>> issues.
+> 
+> I have no idea what you are thinking of when you say "simple-regmap" so
+> it is difficult to comment.
 
-The "reg" property refers to the DAI number in this case,
-so we need to set #address-cells and #size-cells appropriately
-to avoid DTC warnings.
+I guess, Lee is suggesting to be able to create a regmap instance via
+device tree (and populate its child nodes?). Like
+   compatible = "syscon", "simple-mfd";
+but for any regmap, not just MMIO.
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+But, there is more in my driver:
+  (1) there is a version check
+  (2) there is another function for which there is no suitable linux
+      subsystem I'm aware of and thus which I'd like to us sysfs
+      attributes for: This controller supports 16 non-volatile
+      configuration bits. (this is still TBD)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 32bd140ac9fd..b0f9cfaba1ed 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -700,6 +700,9 @@ lpass: lpass@7708000 {
- 			interrupt-names = "lpass-irq-lpaif";
- 			reg = <0x07708000 0x10000>;
- 			reg-names = "lpass-lpaif";
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
-                 lpass_codec: codec{
+I don't see what is different between this driver and for example the
+gateworks-gsc.c. Just that mine doesn't use a global register set, but
+local offsets and a base for each component. From a hardware
+perspective its one device behind an I2C address providing different
+functions across multiple driver subsystems.
+
+Actually, I've tried to remove the devm_of_platform_populate() and
+instead added the "simple-mfd" to my mfd node:
+  compatible = "kontron,sl28cpld-r1", "simple-mfd";
+
+I guess that doesn't work because the device is below the i2c bus?
+
 -- 
-2.26.2
-
+-michael
