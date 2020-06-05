@@ -2,115 +2,131 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E926C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 15:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D6EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF19207D3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 15:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591370862;
-	bh=cwE6lN0oRc3R/lRo7XRlwrgGSlMb3orxHCcOBwJlZXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cheRVYEjRo9qnsDxpw+7YAWQNK37Q9j6YZKsSQMHd+Ps3l1WqMJDDCd33oC2NgWj/
-	 CvyLxc1gcUqFmU7B6MRbp8keM8eaClFYoKsrGFF0wJfwAfVBlobdpWP0YpLLwar8Fp
-	 QrA4/Sx4B8N2WJGqvDSteQ4JenkO0ScInOYdrVes=
+	by mail.kernel.org (Postfix) with ESMTP id DF2442074B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkFNdaGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgFEP1m (ORCPT
+        id S1727940AbgFEPnH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgFEP1m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:27:42 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7F722075B;
-        Fri,  5 Jun 2020 15:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591370861;
-        bh=cwE6lN0oRc3R/lRo7XRlwrgGSlMb3orxHCcOBwJlZXA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q5Jmn118NsrWlHCB8CdqciMyPXagQuykia3JVFkCcJCzYTmb1v3C3l6d+WqCBuuxg
-         X2D0lPfLpPM/iw1FJuKwWoyG8o5jVxndq+h3q1ezTpdrSa4BM+BkILAyqPPcR3NN9X
-         0xR/4sbzqBqkW8UAQT5sfhnTNG3o1kdFnjP9RbwA=
-Date:   Fri, 5 Jun 2020 16:27:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200605152739.GH5413@sirena.org.uk>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+        Fri, 5 Jun 2020 11:43:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgFEPnH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 11:43:07 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05314C08C5C2;
+        Fri,  5 Jun 2020 08:43:07 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id l6so10061134ilo.2;
+        Fri, 05 Jun 2020 08:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G2GB2U7+brpU97z7quDVcgXAtK4rM5dz6gG/Wy3Olog=;
+        b=HkFNdaGSceLzbEKT8WldzvKrDeIBzoGGsKRPbyGQrKzhnWdYN2yeXulRIa/JJ8HUEr
+         CFoSm/iRg7jQHZ2V/ngd+jE8nj9KOUxe5CNBw9JUkE1fHNfxD069FCGB4RfVCjEvNsWh
+         PjSOLaP/dRj/yR6/NBAERl/1/3eo/0/lJw0A0OWZtSbdUB70ZfDMpbuT6zn7FIpi/B5Y
+         lg1IaEvHJJ8TIW2pLpfA1H2ACK2cPLfo2Qg1f6e02cs88tId5vsuQ48t3JoACPMTtfVt
+         64GxYPEisVuelP9nLvlZm2OafdGRadzYJ0Ndr+YJ/8WFcKHvGkXOMCW8tELOnijN5WhA
+         dY5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G2GB2U7+brpU97z7quDVcgXAtK4rM5dz6gG/Wy3Olog=;
+        b=U/30kHikC1glc75jrxj6htBiPEMcGNjoQ78Y17oQ42X0zwCuQw+REE5mZQNgjag4Wu
+         NkgPJFQW6fhYP1cjAaGYtvfuI54slhy95I3NS72rXjwnmONZ2I9a00ilezP4lB8tcU4B
+         MU1FlumbxYMpFsmxXo81gw0mLQPdNtV6nV2zPBbepvcHaaF2GB+LpxweD6qhhFiW3uTt
+         ar1QNJ522faPaEXvhZKSV1LDq5rtNn00tCXax7yL9Ox+4J8V4oEe1gltU4CRhCeSM09g
+         5oC1hjHvIV/w/pqv+v+8HADw/n/5Mkv4pkLzNfmvp4BddLMCqPCGU8et7fpr4wZSHiA5
+         /o4g==
+X-Gm-Message-State: AOAM5312vKoha9tk5tY01osRgLD4PaT+CUCEKv8rOuHTjbV/63JoxULt
+        qvk3QrxwVkLrk9voY84xojjuVU7gmbvvenKtOqI=
+X-Google-Smtp-Source: ABdhPJzJW5O3DzxX9JUEp0Fq7vO1ZexlwSsEZ5rkVUXSutg5q4mvTIgBUytu0r9dtgLLVLmvp7RCv3/Wi3VyOKOvz8I=
+X-Received: by 2002:a92:5e52:: with SMTP id s79mr8217845ilb.33.1591371785844;
+ Fri, 05 Jun 2020 08:43:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AqCDj3hiknadvR6t"
-Content-Disposition: inline
-In-Reply-To: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
-X-Cookie: Air is water with holes in it.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200528192005.GA494874@bogus> <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
+ <20200603180435.GB23722@bogus> <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
+ <20200604092052.GD8814@bogus> <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
+ <20200605045645.GD12397@bogus> <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
+ <20200605085830.GA32372@bogus>
+In-Reply-To: <20200605085830.GA32372@bogus>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Fri, 5 Jun 2020 10:42:54 -0500
+Message-ID: <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Jun 5, 2020 at 3:58 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> > > > >>     bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
+> > > > >>      <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
+> > > > >
+> > > > Here another request is started before the first is finished.
+> > >
+> > > Ah, the prints are when the client requested. It is not when the mailbox
+> > > started it. So this just indicates the beginning of the transfer from the
+> > > client.
+> > >
+> > There maybe condition on a sensor read to finish within 1ms, but there
+> > is no condition for the read to _start_ at this very moment (usually
+> > there are sleeps in the path to sensor requests).
+> >
+>
+> Again I wasn't clear. The trace logs are at the point just before calling
+> mbox_send_messages. So any delay in sensor drivers won't get include. It
+> is after the point sensor driver request to read the value and before we
+> send the request via mailbox.
+>
+No, you were clear, I wasn't. Let me try again.
 
---AqCDj3hiknadvR6t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since origin upto scmi_xfer, there can be many forms of sleep like
+schedule/mutexlock etc.... think of some userspace triggering sensor
+or dvfs operation. Linux does not provide real-time guarantees. Even
+if remote (scmi) firmware guarantee RT response, it makes sense to
+timeout a response only after the _request is on the bus_  and not
+when you submit a request to the api (unless you serialise it).
+IOW, start the timeout from  mbox_client.tx_prepare()  when the
+message actually gets on the bus.
 
-On Fri, Jun 05, 2020 at 03:41:27PM +0100, Robin Murphy wrote:
 
-> Ha, and in fact having checked a build out of curiosity, this patch as-is
-> actually stands to make things considerably worse. At least with GCC 8.3 and
-> bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't get inlined, which
-> means bcm2835_spi_interrupt() pushes/pops a stack frame and makes an
-> out-of-line call to bcm2835_spi_interrupt_common(), resulting in massively
-> *more* work than the extra two instructions of simply inlining the test.
+> > You have shared only 'bad' log without serialising access. Please
+> > share log after serialising access to the channel and the 'good' log
+> > with virtual channels.  That should put the topic to rest.
+> >
+>
+> I didn't realise that, sorry for missing that earlier. Attached both
+> now, thanks for asking.
+>
+Interesting logs !  The time taken to complete _successful_ requests
+are arguably better in bad_trace ... there are many <10usec responses
+in bad_trace, while the fastest response in good_trace is  53usec.
+And the requests that 'fail/timeout' are purely the result of not
+serialising them or checkout for timeout at wrong place as explained
+above.
 
-Whichever compiler I was using (clang-11 probably) did manage to inline
-the tail call so it really was the two instructions but yeah, in general
-this approach is going to be fragile.
-
-> So yes, the overhead of inlining the test vs. the alternative is indeed
-> non-zero. It's just also negative :D
-
-And variable!
-
---AqCDj3hiknadvR6t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7aZGoACgkQJNaLcl1U
-h9AX6gf7Bm5ytifNBvydJuvs4NzgM67Urhjfzt+XzOq9aPGD/YyTV42HNCmGAqGy
-SK5nGgR0rYbNixHVpe8BR8sR7ouoD+RplUaa6HByo8h538lDdtImQw5mxOM7jSqj
-YqJQrm1hwA4Exl+b3ko3Ec3LfHP8Z+IPS0pbuhibX42asNbhDsUc7dKMVGOPsA0m
-M06K9koGLwc5XEs7+4ylBVfqhTKIQSiHeg8K1TJ3VQEFBqOCBoURI0TLPUPo3PYV
-vg5NvWtlPqYwBj/gWm4+jdTPM2Ru10LTa+jU3KnroOtJSBil2tErrvKb31iWGgS5
-ECVrLTGILzwbt5Gq0ojVE1LsJVSmqg==
-=/uNB
------END PGP SIGNATURE-----
-
---AqCDj3hiknadvR6t--
+thanks.
