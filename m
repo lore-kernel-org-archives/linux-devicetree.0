@@ -2,133 +2,102 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F45C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036F9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83D2F2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0Tl0XWL"
+	by mail.kernel.org (Postfix) with ESMTP id D71C02075B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726507AbgFEMGr (ORCPT
+        id S1726441AbgFEMLV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgFEMGr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 08:06:47 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30175C08C5C2;
-        Fri,  5 Jun 2020 05:06:47 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m1so5087439pgk.1;
-        Fri, 05 Jun 2020 05:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tg2EERYeGqRpBqYybMZ9XMQjf0DjL2pwtOCU5se6BJ8=;
-        b=n0Tl0XWLTlt+ec1Ce3+UyjsRVYhekGd2rIJCCsUGrX0inZZIrW8Og57IIHkVPMIdSS
-         u2/jhU1iS1KrEVZPT4pBgmgs/JkArzGh3Q48Mf3w/Ujrz260alNvIp543RyaaFSV4qBD
-         dJmJwkwootDjm8pJ5RlB41X92cs19NbKJd+H7LRJZ6h6iYUo9o37qwc6mQzgqLzwrDMI
-         FdlPjBFRXcK98KZCzWyAOcuuRfoe6SN00oED5RqU1I4Jh4rHt3Nt/FAy/e+EEpzvYPqa
-         DRgb3VM8DmAfSwGBO0+sXRNxpQjywc8NcMHQpNlIQAQlaP3xgzra2NXDxUSDLu9PyQD4
-         oEMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tg2EERYeGqRpBqYybMZ9XMQjf0DjL2pwtOCU5se6BJ8=;
-        b=YXPooyLHB0Cm8pD001k6Ik8NIXb1x8AahmyJ62LBDUnxWhpRwIjwQ5furPqmgB1frr
-         d/qwFYzyPBO9FzIyuh1pPbm0PoqPMXLXklsbPF4j1CTiZ0pNEmr/BIT678nQQDm2oZue
-         r2qHdZg8aw2tPgBb4l9W6O/JW/Mkdj28oGZZnPt0HLiX0qh/Xmxn7N+7YoSSRtXDExXs
-         2ebBZTQw4ugWygH8DOatE+r7e4fqwsu5wHphPcOTADdQwE5QRWaHSBK2jy+VS7zlno6H
-         JzpDoYshFZB8iK4vaskVyveDSPUMV5vbuIpaacaJ/HAmXAGKIIxJuR8eQvArwciysIxL
-         60dw==
-X-Gm-Message-State: AOAM533m0CFq8N3ptniMOJ6JDB6nqoWxvdrvjSBRTvW5kK7zquCMjpdk
-        qPct5rB54VEnaCsP/qCbh8TpQbxpUhkjSN+giMw=
-X-Google-Smtp-Source: ABdhPJxvhp+S0ILJ9P3oJuQGbD3SgEjJ+VvYOPiQ2EEF2EeVita727gg2YseqMdm5hdUfsulh7j3lVjYD8g1pnc9qAg=
-X-Received: by 2002:a63:545a:: with SMTP id e26mr9043326pgm.4.1591358806690;
- Fri, 05 Jun 2020 05:06:46 -0700 (PDT)
+        Fri, 5 Jun 2020 08:11:21 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48862 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgFEMLU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 08:11:20 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 3A9011C0BD2; Fri,  5 Jun 2020 14:11:19 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 14:11:18 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        devicetree@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200605121118.GC31680@duo.ucw.cz>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus>
+ <20200527133948.GA5011@amd>
+ <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
+ <20200602200436.GA6535@amd>
+ <CAL_JsqLaycpi4EtXK-7GV49fm0GbPmPsrNwz2WSBFFO_zdQG0Q@mail.gmail.com>
+ <20200604125111.GA7222@duo.ucw.cz>
+ <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-8-michael@walle.cc>
-In-Reply-To: <20200604211039.12689-8-michael@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 15:06:35 +0300
-Message-ID: <CAHp75Vd00VeL94S=U77NCm9-WNF6ZLAn4U9oUSov1R1QU4DjDg@mail.gmail.com>
-Subject: Re: [PATCH v4 07/11] hwmon: add support for the sl28cpld hardware
- monitoring controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
->
-> Add support for the hardware monitoring controller of the sl28cpld board
-> management controller. This driver is part of a multi-function device.
 
-...
-
-> +#include <linux/of_device.h>
-
-mod_devicetable.h ?
-
-...
+--i7F3eY7HS/tUJxUd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-> +       hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +                               "sl28cpld_hwmon", hwmon,
-> +                               &sl28cpld_hwmon_chip_info, NULL);
-> +       if (IS_ERR(hwmon_dev)) {
-> +               dev_err(&pdev->dev, "failed to register as hwmon device");
+> > > There's no risk because you are supposed to apply both patches. I
+> > > don't apply binding patches that are a part of a series like this.
+> >
+> > Yes, this is always guaranteed to happen, because "git bisect"
+> > understand patch series. Oh, wait.
+>=20
+> What!? If the binding patch with the header comes first, how would
+> bisect build the driver change without the header?
 
-> +               return PTR_ERR(hwmon_dev);
-> +       }
-> +
-> +       return 0;
+The driver is already in tree, and includes array of strings. When you
+change the define, you need to update the array, too, because you
+don't want to have invalid value in there.
 
-PTR_ERR_OR_ZERO() ?
+> > Patches are supposed to be correct on their own. If your repository
+> > filtering can not handle that, you need to fix that...
+>=20
+> I'm just asking you to follow the process that *everyone* else is
+> following and works. It's not really about the repository filtering.
+> That doesn't care. A binding ABI is defined by the schema and any
+> defines it has. That is the logical unit that stands on its own.
 
-...
+It does not work in this case.
 
-> +static const struct of_device_id sl28cpld_hwmon_of_match[] = {
-> +       { .compatible = "kontron,sl28cpld-fan" },
+Best regards,
 
-> +       {},
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-No comma.
+--i7F3eY7HS/tUJxUd
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +};
+-----BEGIN PGP SIGNATURE-----
 
--- 
-With Best Regards,
-Andy Shevchenko
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXto2ZgAKCRAw5/Bqldv6
+8rBGAKCkPxiODKIJjKg68MpWT85olQkZqACgqZJOnmhVx7xwFXtkwTDiHMAe8mM=
+=vUEk
+-----END PGP SIGNATURE-----
+
+--i7F3eY7HS/tUJxUd--
