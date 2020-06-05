@@ -2,76 +2,140 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB751C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 15:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F8BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A00E52074B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 15:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C91206DC
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 16:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g39gSyKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgFEPs3 (ORCPT
+        id S1725962AbgFEQE6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:48:29 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:39794 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgFEPs3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 11:48:29 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id B341320033;
-        Fri,  5 Jun 2020 17:48:27 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 17:48:26 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Liu Ying <victor.liu@nxp.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for KOE
- TX26D202VM0BWA panel
-Message-ID: <20200605154826.GB207594@ravnborg.org>
-References: <1590991880-24273-1-git-send-email-victor.liu@nxp.com>
- <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
+        Fri, 5 Jun 2020 12:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgFEQE6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 12:04:58 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466ACC08C5C2;
+        Fri,  5 Jun 2020 09:04:58 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q24so2907422pjd.1;
+        Fri, 05 Jun 2020 09:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=73E7RcoyD6PaDcTNS+l4UhJfaffhxVQRNwIljXNBTnY=;
+        b=g39gSyKSZ6nFdS355NhJxXV7kRDPp92lfjop20jdOKudJotgA9Ley+ZJhs/ANJc3uk
+         pDCQVLIAa3R1hAHTcDHOkQVw60cQN9Ez9VJjAavkzRmNoiMdOQLPyY4Yjn4K/DTONTKD
+         RYpMjFy9eNrbO9NyUCQgWrii1EJkZEVv7LB8hG9G8/vTy94NRCaXNplr42FN0BbFoyiN
+         eEy0gT7M5xNAUK0eulmJqkSnqL/pT5dYN/TjacCb/49FFpdjtd1KSTS3mn7WOaYvKU4o
+         pRXg2LkXyORq06y5fGWS0NLv0VFPeVDB77y3Q+7LdyS1tru4TjQ7nhL8PR+qo4VfKptJ
+         BSwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=73E7RcoyD6PaDcTNS+l4UhJfaffhxVQRNwIljXNBTnY=;
+        b=mtene7sWzMnvCc54kfZayBCZAPHYQJZw1K7ZvcyOKuvkXTxpivBhrbhxaeoD6EiruA
+         2zgWDeyK8+dftriUWxNi4Q4y1FccrOFfPk3N2FgcFpjpr1xLkXr2uidU8h0lnaLou7gf
+         uHrTleQ+tIgxouyvqfbt+ag2uUeKlZ6uNQjAS7gti3v97+3HArr0+RPSHaH56mbFjxFH
+         xVMxIP90dkxVVEW44PeG+k5FmDheSkX+BNPgeRo4Cchdf3yA22MX/MimNVrrP9nfRFMM
+         uoU/d/rayHBf1yfKZKwVnDOiOfY0iFsHY+BkNQc34m5Ii3q/q3XN8dt0ZHcIK+Jjk7u+
+         WugQ==
+X-Gm-Message-State: AOAM530mXgYskB7GiM4ReieDyKGN2MXhBtyAkTe0LZV9jAfW+zSMNgbL
+        i481U2+UTbVHrU6FKDkiyiTGij4Btr85msIyDyQZ1CkRisY=
+X-Google-Smtp-Source: ABdhPJzPaq665EFE1ksqX24DQEG6g0+cqU1LKgTTLqD7rhez7XPSsEjdUlhj39QWiyrEeqMUme8o/zQYAwiDdMDxHs8=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr3950020pjq.228.1591373097587;
+ Fri, 05 Jun 2020 09:04:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACvgo50UOby-xV_OYmM55VUXUbwLxK-q6bs2FoS_FuwB9ChYJg@mail.gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=S1NEfQAhQLroaEqAo4oA:9
-        a=CjuIK1q_8ugA:10
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-5-michael@walle.cc>
+ <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
+ <8f042c2442852c29519c381833f3d289@walle.cc> <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
+ <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net> <20200605140911.GO2428291@smile.fi.intel.com>
+ <20200605150542.GA254229@roeck-us.net>
+In-Reply-To: <20200605150542.GA254229@roeck-us.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 19:04:45 +0300
+Message-ID: <CAHp75VduUG=XkvyZwdZDNqBh3KE67MWZWgqBN67fN6StAa469w@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Michael Walle <michael@walle.cc>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Emil.
+On Fri, Jun 5, 2020 at 6:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> On Fri, Jun 05, 2020 at 05:09:11PM +0300, Andy Shevchenko wrote:
+> > On Fri, Jun 05, 2020 at 06:52:00AM -0700, Guenter Roeck wrote:
+> > > On 6/5/20 3:50 AM, Andy Shevchenko wrote:
+> > > > On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
+> > > >> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
+> > > >>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+> >
+> > ...
+> >
+> > > >>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> > > >>>> +module_param(nowayout, bool, 0);
+> > > >>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
+> > > >>>> (default="
+> > > >>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
+> > > >>>> ")");
+> > > >>>> +
+> > > >>>> +static int timeout;
+> > > >>>> +module_param(timeout, int, 0);
+> > > >>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
+> > > >>>
+> > > >>> Guenter ACKed this, but I'm wondering why we still need module
+> > > >>> parameters...
+> > > >>
+> > > >> How would a user change the nowayout or the timeout? For the latter
+> > > >> there is
+> > > >> a device tree entry, but thats not easy changable by the user.
+> > > >
+> > > > Yes, it's more question to VIm and Guenter than to you.
+> > > >
+> > >
+> > > Has support for providing module parameters with the kernel command line
+> > > been discontinued/deprecated, or did it run out of favor ? Sorry if I
+> > > missed that.
+> >
+> > Latter according to Greg KH. One of the (plenty) examples [1].
+> >
+> > [1]: https://www.mail-archive.com/driverdev-devel@linuxdriverproject.org/msg96495.html
+> >
+> What is the suggested replacement ?
 
-> > +               .width = 217,
-> > +               .height = 136,
-> > +       },
-> > +       .delay = {
-> > +               .prepare = 1000,
-> > +               .enable = 1000,
-> > +               .unprepare = 1000,
-> > +               .disable = 1000,
-> Ouch 1s for each delay is huge. Nevertheless it matches the specs so,
-> the series is:
-> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-> 
-> Sam, Thierry I assume you'll merge the series. Let me know if I should
-> pick it up.
+In some mails he suggested to use sysfs.
 
-I went ahead and applied both patches to drm-misc-next.
-They are now pushed out.
-
-	Sam
-
-> 
-> -Emil
+-- 
+With Best Regards,
+Andy Shevchenko
