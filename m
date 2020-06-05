@@ -2,163 +2,159 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E16C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70DDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47AEB2053B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976A4207D8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 10:09:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="YOz7DoaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgFEKGc (ORCPT
+        id S1726291AbgFEKJW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:06:32 -0400
-Received: from segapp02.wistron.com ([103.200.3.19]:51703 "EHLO
-        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726296AbgFEKGc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 06:06:32 -0400
-Received: from EXCHAPP04.whq.wistron (unverified [10.37.38.27]) by 
-    TWNHUMSW4.wistron.com (Clearswift SMTPRS 5.6.0) with ESMTP id 
-    <Tdf921276e5c0a816729a0@TWNHUMSW4.wistron.com>; Fri, 5 Jun 2020 
-    18:06:30 +0800
-Received: from EXCHAPP03.whq.wistron (10.37.38.26) by EXCHAPP04.whq.wistron 
-    (10.37.38.27) with Microsoft SMTP Server 
-    (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 
-    15.1.1913.5; Fri, 5 Jun 2020 18:06:29 +0800
-Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP03.whq.wistron 
-    (10.37.38.26) with Microsoft SMTP Server id 15.1.1913.5 via Frontend 
-    Transport; Fri, 5 Jun 2020 18:06:29 +0800
-From:   Ben Pai <Ben_Pai@wistron.com>
-To:     <joel@jms.id.au>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     <claire_ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
-Subject: [PATCH v1 2/2] ARM: dts: aspeed: mihawk: Add 8 tmp401 thermal sensor
-Date:   Fri, 5 Jun 2020 18:06:28 +0800
-Message-ID: <20200605100628.14807-1-Ben_Pai@wistron.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 5 Jun 2020 06:09:22 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:33177 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFEKJT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 06:09:19 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C88EF22EE4;
+        Fri,  5 Jun 2020 12:09:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591351756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MsgwKzto2IoOJjvjTzGrigwCXuk4v4Z5kvEN1IzyNVY=;
+        b=YOz7DoaZopOBIiCVRhTaDmoHMSotqFUD1klTT5xzP/DYKwRApaTqVpxiFqUj62wQlkCeso
+        rmShm/jyM0iW0HJQFp/yx0Rrr4/4YkFrd+I1dZGiEUATTJIfds6yt2ig9EK80aeePTx5yV
+        JdQmMvjA6eyQ/Ls2P9eum9CkF6m0QN0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-X-TM-SNTS-SMTP:     DDB9BC0458D24F053680539219F4C8D39E075093F38EDD5C6560CD8C1B8894672000:8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 12:09:15 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
----
- arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 40 +++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Hi Andy,
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-index 25ffe65fbdc0..5bf1f13dda3b 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-@@ -834,6 +834,11 @@
- 					line-name = "smbus0";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus9_mux232: i2c@1 {
-@@ -854,6 +859,11 @@
- 					line-name = "smbus1";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus9_mux233: i2c@2 {
-@@ -897,6 +907,11 @@
- 					line-name = "smbus2";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus9_mux236: i2c@1 {
-@@ -917,6 +932,11 @@
- 					line-name = "smbus3";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus9_mux237: i2c@2 {
-@@ -979,6 +999,11 @@
- 					line-name = "smbus4";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux240: i2c@1 {
-@@ -999,6 +1024,11 @@
- 					line-name = "smbus5";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux241: i2c@2 {
-@@ -1042,6 +1072,11 @@
- 					line-name = "smbus6";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux244: i2c@1 {
-@@ -1062,6 +1097,11 @@
- 					line-name = "smbus7";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux245: i2c@2 {
+Am 2020-06-05 10:01, schrieb Andy Shevchenko:
+> On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Add the core support for the board management controller found on the
+>> SMARC-sAL28 board. It consists of the following functions:
+>>  - watchdog
+>>  - GPIO controller
+>>  - PWM controller
+>>  - fan sensor
+>>  - interrupt controller
+>> 
+>> At the moment, this controller is used on the Kontron SMARC-sAL28 
+>> board.
+>> 
+>> Please note that the MFD driver is defined as bool in the Kconfig
+>> because the next patch will add interrupt support.
+> 
+> ...
+> 
+>> +config MFD_SL28CPLD
+>> +       bool "Kontron sl28 core driver"
+>> +       depends on I2C=y
+> 
+> Why not module?
+
+There are users of the interupt lines provided by the interrupt 
+controller.
+For example, the gpio-button driver. If this is compiled into the kernel
+(which it is by default in the arm64 defconfig), probing will fail 
+because
+the interrupt is not found. Is there a better way for that? I guess the 
+same
+is true for the GPIO driver.
+
+> 
+>> +       depends on OF
+> 
+> I didn't find an evidence this is needed.
+
+see below.
+
+> 
+> No Compile Test?
+
+ok
+
+>> +       select REGMAP_I2C
+>> +       select MFD_CORE
+> 
+> ...
+> 
+>> +#include <linux/of_platform.h>
+> 
+> No evidence of user of this.
+> I think you meant mod_devicetable.h.
+
+devm_of_platform_populate(), so I need CONFIG_OF, too right?
+
+
+>> +static struct i2c_driver sl28cpld_driver = {
+>> +       .probe_new = sl28cpld_probe,
+>> +       .driver = {
+>> +               .name = "sl28cpld",
+>> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
+> 
+> Drop of_match_ptr(). It has a little sense in this context (depends 
+> OF).
+> It will have a little sense even if you drop depends OF b/c you will
+> introduce a compiler warning.
+
+ok
+
+> 
+>> +       },
+>> +};
+
 -- 
-2.17.1
-
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------
-This email contains confidential or legally privileged information and is for the sole use of its intended recipient. 
-Any unauthorized review, use, copying or distribution of this email or the content of this email is strictly prohibited.
-If you are not the intended recipient, you may reply to the sender and should delete this e-mail immediately.
----------------------------------------------------------------------------------------------------------------------------------------------------------------
+-michael
