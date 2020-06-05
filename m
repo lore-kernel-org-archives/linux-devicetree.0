@@ -2,215 +2,168 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA17C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3EDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4407D2065C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ppjkq+9s"
+	by mail.kernel.org (Postfix) with ESMTP id 13D062065C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 12:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgFEMm6 (ORCPT
+        id S1726557AbgFEMqq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgFEMm6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 08:42:58 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2623C08C5C2;
-        Fri,  5 Jun 2020 05:42:57 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3389822FEC;
-        Fri,  5 Jun 2020 14:42:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591360973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V/2TzxsPSlfyINNO8TTfnGs1HicX0u51iSKBI+ftYOE=;
-        b=ppjkq+9sTLA7e0BVJjM/uHM60R+cDCBYYMmhqDwQNcUvU9b7+pKRcr03C7m5x0zjrB3ziF
-        YWsz9DFPvrHEqnF8RKJ1y+mHfSEf3iFURJD8DMeRu/20zVMLDC7Y4IGTLAjYc4Il/lkiaE
-        DPx5ggCjNo0+Q9tyOM36Ky+mQkjuEFI=
+        Fri, 5 Jun 2020 08:46:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39855 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726499AbgFEMqq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:46:46 -0400
+IronPort-SDR: +rPeI5uZh0OMljZuxl/TdFc7ZIRmLmLmX911sCr55Hb+7EG2AS8LdwoqghjBWlzW4T55Rd3gnc
+ UXbgTnpooerQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 05:46:45 -0700
+IronPort-SDR: r/oJX8fhNmc8e/bISoUrjyeoU9guHWxK+HVaeG11SzZWS7YbfeGTMiJ95UKT4qtI63FTHd0jO8
+ yFEOq6VRqCWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
+   d="scan'208";a="269755373"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 05 Jun 2020 05:46:41 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jhBkB-00B1rI-FV; Fri, 05 Jun 2020 15:46:43 +0300
+Date:   Fri, 5 Jun 2020 15:46:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
+        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V7, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+Message-ID: <20200605124643.GG2428291@smile.fi.intel.com>
+References: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
+ <20200605105412.18813-3-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 14:42:53 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO
- controller
-In-Reply-To: <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-7-michael@walle.cc>
- <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <216db3154b46bd80202873df055bb3f3@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605105412.18813-3-dongchun.zhu@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-06-05 14:00, schrieb Andy Shevchenko:
-> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
-> 
->> Add support for the GPIO controller of the sl28 board management
->> controller. This driver is part of a multi-function device.
->> 
->> A controller has 8 lines. There are three different flavors:
->> full-featured GPIO with interrupt support, input-only and output-only.
-> 
-> ...
-> 
->> +#include <linux/of_device.h>
-> 
-> I think also not needed.
-> But wait...
-> 
->> +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev), 
->> regmap,
-> 
-> It seems regmap needs to be converted to use fwnode.
+On Fri, Jun 05, 2020 at 06:54:12PM +0800, Dongchun Zhu wrote:
+> Add a V4L2 sub-device driver for DW9768 voice coil motor, providing
+> control to set the desired focus via IIC serial interface.
 
-Mhh, this _np functions was actually part of this series in the
-beginning.
+...
 
->> +                                          irq, IRQF_SHARED | 
->> IRQF_ONESHOT, 0,
->> +                                          irq_chip, &gpio->irq_data);
-> 
-> ...
-> 
->> +       if (!pdev->dev.parent)
->> +               return -ENODEV;
-> 
-> Are we expecting to get shot into foot? I mean why we need this check?
+> +config VIDEO_DW9768
+> +	tristate "DW9768 lens voice coil support"
+> +	depends on I2C && VIDEO_V4L2
 
-Can we be sure, that we always have a parent node? You are the first
-which complains about this ;) There were some other comments to move
-this to the beginning of the function.
+No compile test?
 
-> 
->> +       dev_id = platform_get_device_id(pdev);
->> +       if (dev_id)
->> +               type = dev_id->driver_data;
-> 
-> Oh, no. In new code we don't need this. We have facilities to provide
-> platform data in a form of fwnode.
+> +	depends on PM
 
-Ok I'll look into that.
+This is very strange dependency for ordinary driver.
 
-But I already have a question, so there are of_property_read_xx(), which
-seems to be the old functions, then there is device_property_read_xx() 
-and
-fwnode_property_read_xx(). What is the difference between the latter 
-two?
+> +	select MEDIA_CONTROLLER
+> +	select VIDEO_V4L2_SUBDEV_API
+> +	select V4L2_FWNODE
 
-> 
->> +       else
->> +               type = 
->> (uintptr_t)of_device_get_match_data(&pdev->dev);
-> 
-> So does this. device_get_match_data().
-ok
+...
 
-> 
->> +       if (!type)
->> +               return -ENODEV;
-> 
-> ...
-> 
->> +       if (irq_support &&
-> 
-> Why do you need this flag? Can't simple IRQ number be sufficient?
+> +/*
+> + * DW9768 requires waiting time (delay time) of t_OPR after power-up,
+> + * or in the case of PD reset taking place.
+> + */
+> +#define DW9768_T_OPR_US				1000
+> +#define DW9768_Tvib_MS_BASE10			(64 - 1)
+> +#define DW9768_AAC_MODE_DEFAULT			2
 
-I want to make sure, the is no misconfiguration. Eg. only GPIO
-flavors which has irq_support set, have the additional interrupt
-registers.
+> +#define DW9768_AAC_TIME_DEFAULT			0x20
 
-> 
->> +           device_property_read_bool(&pdev->dev, 
->> "interrupt-controller")) {
->> +               irq = platform_get_irq(pdev, 0);
->> +               if (irq < 0)
->> +                       return irq;
->> +
->> +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
->> +                                            base, irq);
->> +               if (ret)
->> +                       return ret;
->> +
->> +               config.irq_domain = 
->> regmap_irq_get_domain(gpio->irq_data);
->> +       }
-> 
-> ...
-> 
->> +static const struct of_device_id sl28cpld_gpio_of_match[] = {
-> 
->> +       { .compatible = "kontron,sl28cpld-gpio",
->> +         .data = (void *)SL28CPLD_GPIO },
->> +       { .compatible = "kontron,sl28cpld-gpi",
->> +         .data = (void *)SL28CPLD_GPI },
->> +       { .compatible = "kontron,sl28cpld-gpo",
->> +         .data = (void *)SL28CPLD_GPO },
-> 
-> All above can be twice less LOCs.
+Hex? Why not decimal?
 
-They are longer than 80 chars. Or do I miss something?
+> +#define DW9768_CLOCK_PRE_SCALE_DEFAULT		1
 
-> 
->> +       {},
-> 
-> No comma.
+...
 
-ok
+> +static int dw9768_mod_reg(struct dw9768 *dw9768, u8 reg, u8 mask, u8 val)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_byte_data(client, reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
 
->> +};
-> 
-> 
-> ...
-> 
->> +               .name = KBUILD_MODNAME,
-> 
-> This actually not good idea in long term. File name can change and 
-> break an ABI.
+> +	val = ((unsigned char)ret & ~mask) | (val & mask);
 
-Ahh an explanation, why this is bad. Ok makes sense, although to be 
-fair,
-.id_table should be used for the driver name matching. I'm not sure if
-this is used somewhere else, though.
+This cast is weird.
 
+> +
+> +	return i2c_smbus_write_byte_data(client, reg, val);
+> +}
+
+...
+
+> +			dev_err(&client->dev, "%s I2C failure: %d",
+> +				__func__, ret);
+
+One line?
+
+...
+
+> +static int dw9768_release(struct dw9768 *dw9768)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
+> +	u32 move_delay_us = dw9768_cal_move_delay(dw9768->aac_mode,
+> +						  dw9768->clock_presc,
+> +						  dw9768->aac_timing) / 100;
+> +	int ret, val;
+> +
+> +	val = round_down(dw9768->focus->val, DW9768_MOVE_STEPS);
+> +	for ( ; val >= 0; val -= DW9768_MOVE_STEPS) {
+> +		ret = dw9768_set_dac(dw9768, val);
+> +		if (ret) {
+> +			dev_err(&client->dev, "I2C write fail: %d", ret);
+> +			return ret;
+> +		}
+> +		usleep_range(move_delay_us, move_delay_us + 1000);
+> +	}
+
+
+It will look more naturally in the multiplier kind of value.
+
+	unsigned int steps = DIV_ROUND_UP(...);
+
+	while (steps--) {
+		...(..., steps * ..._MOVE_STEPS);
+		...
+	}
+
+but double check arithmetics.
+
+> +	return 0;
+> +}
+
+
+Also it seems we need to have writex_poll_timeout() implementation (see
+iopoll.h).
 
 -- 
--michael
+With Best Regards,
+Andy Shevchenko
+
+
