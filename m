@@ -2,200 +2,175 @@ Return-Path: <SRS0=PVp5=7S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D93C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B2FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 19:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1454420835
-	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 18:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEFB2065C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  5 Jun 2020 19:05:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="j0Eus+/W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFJHWNkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFESo4 (ORCPT
+        id S1728016AbgFETFQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:44:56 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:54305 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgFESo4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 14:44:56 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D4F3122FEB;
-        Fri,  5 Jun 2020 20:44:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591382693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YRXENm/x2WRLoyAXS0BfjnJoOn+fwaDtXQJ9FoOZsLA=;
-        b=j0Eus+/W8QMEAKZ/SsmQb0kD+m3/XjNNl0Ufda7uFq9odKfuAWBB0W5v8SY60Q1bF9vcpo
-        3dLqeh4xxOffGdO2kS4EOmwn50MCn0MU8NYl8Kzc+MvIKFbpci3tRwsSDkQdqSIrU3phYb
-        jaddnH0/bDjBanv1kCnlJbG0xT/VxY0=
+        Fri, 5 Jun 2020 15:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgFETFP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Jun 2020 15:05:15 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80161C08C5C2;
+        Fri,  5 Jun 2020 12:05:15 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id v26so1164977oof.7;
+        Fri, 05 Jun 2020 12:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qs9QY5b17T4Lq7hXEjIEKo/PvUm237YC2CaO1E2diG8=;
+        b=VFJHWNkvJmJX90giuV61jQ7kiccmFLdEVVLKXu4PxdWYurrYFYiz8lZuwxQWZ0n7Wc
+         yqhbt4czbepmBIz1HVMw2BU/xHofgVZYcZm0m0aVuYOen8J93WMKJpwRqnhpQwseb4iP
+         nTFIBviunhhNqVx4bUpLna4pcFh6INqif/J0SF3SC+uoE8WFCRj2qscO9r/1vfsmztE3
+         o7wjoeaB2YtJa4j9v5pgS8XhcZUXkTN99tYl0TCs6fCTmvGrocK2Mq38lJW1pjm8rDWH
+         UN4rar2FhGwgjKTcGmzkuz1GVOX1F7W+0aC+6XQe/gtufZf02nh1NDaa2YE7hsg6x5mN
+         130w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qs9QY5b17T4Lq7hXEjIEKo/PvUm237YC2CaO1E2diG8=;
+        b=TldVy0fnyLJPvGIiWrUizTZ9+bIIuaPwSkDB8wesOC2zE+HWvyT8R3/28vcFIQriM5
+         y1gvwowYvkDK/nqgXiWJNdmszB6z48do0/PXmuPmfhe6r7G4tKsA6CsPxrTO6S/oO8e7
+         xQWCBBuZScLEoc617x7ZL3S0lVortx88gdzFwG8jMOM31fnHpsvox2hjSOqUGoKIXtXd
+         QxPmP7SMiZcS+OfGoKl+/KXb1H8AyQbhj+XxpQNU8AMtOhbT2xs//V8NwgXPfqB/MEQc
+         LgeXS3qYUPTauw81bSvhQMHEXGQO1Xl2RxaSJUjm3fZKPCba1DLTSCtsXEWkMO7aHk9n
+         LL5g==
+X-Gm-Message-State: AOAM532x30ZhCouE1J8abR888VZie9+WiJSR+1xL3uXZdSLsP2DBjsn0
+        iGjX5OG13egn2NvM1TMd9o3fSl6hwWYNvLCz0Kw=
+X-Google-Smtp-Source: ABdhPJzW6MwzWQBJS+ULgHeL/swNJlQvIM9FQrimswHIkx7+3vzQXKk44yBXf+5Rg347qSGB5Q2c1/W7jwgGKQuIKYI=
+X-Received: by 2002:a4a:98c7:: with SMTP id b7mr8842755ooj.42.1591383914796;
+ Fri, 05 Jun 2020 12:05:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 20:44:52 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 5 Jun 2020 20:04:48 +0100
+Message-ID: <CA+V-a8skA0Gf+bnWJA_TaVsX2uLCrdGqVkZnioW0X0XULVeDrg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
+ iWave G21D-Q7 board based on RZ/G1H
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO
- controller
-In-Reply-To: <20200605131525.GK2428291@smile.fi.intel.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-7-michael@walle.cc>
- <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
- <216db3154b46bd80202873df055bb3f3@walle.cc>
- <20200605131525.GK2428291@smile.fi.intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <bf587fc3f907d58609a0ea3d65cd5b37@walle.cc>
-X-Sender: michael@walle.cc
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-06-05 15:15, schrieb Andy Shevchenko:
-> On Fri, Jun 05, 2020 at 02:42:53PM +0200, Michael Walle wrote:
->> Am 2020-06-05 14:00, schrieb Andy Shevchenko:
->> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
-> 
->> > > +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev),
->> > > regmap,
->> >
->> > It seems regmap needs to be converted to use fwnode.
->> 
->> Mhh, this _np functions was actually part of this series in the
->> beginning.
-> 
-> Then, please, make them fwnode aware rather than OF centric.
+Hi Geert,
 
-ok
+On Fri, Jun 5, 2020 at 1:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > @@ -0,0 +1,37 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the iWave-RZ/G1H Qseven board
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "r8a7742-iwg21m.dtsi"
+> > +
+> > +/ {
+> > +       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> > +       compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
+> > +
+> > +       aliases {
+> > +               serial2 = &scifa2;
+> > +       };
+> > +
+> > +       chosen {
+> > +               bootargs = "ignore_loglevel root=/dev/mmcblk0p1 rw rootwait";
+> > +               stdout-path = "serial2:115200n8";
+> > +       };
+> > +};
+> > +
+> > +&pfc {
+> > +       scifa2_pins: scifa2 {
+> > +               groups = "scifa2_data_c";
+>
+> Upon second look, I think this group is wrong.  While labeled SCIFA2 in
+> the SOM schematics, these signals seem to be connected to a debugging
+> interface.
+>
+> The real UART2 seems to be present on the camera daughter board.  Those
+> signals are labeled "SCIFA2" in the camera board schematics, but "SCIF2"
+> in the SOM schematics.  This is OK, as "scif2_data" and "scifa2_data"
+> share the same pins, so you can choose either SCIF2 or SCIFA2 to drive
+> them.
+>
+> If I'm right, please change the group, and move all serial2 descriptions
+> to the camera board DTS.
+>
+I took a closer look at the schematics, SCIFA2 is connected to the
+debug interface similarly on G1M where SCIF0 is connected to the debug
+interface.
 
-> 
->> > > IRQF_ONESHOT, 0,
->> > > +                                          irq_chip, &gpio->irq_data);
-> 
-> ...
-> 
->> > > +       dev_id = platform_get_device_id(pdev);
->> > > +       if (dev_id)
->> > > +               type = dev_id->driver_data;
->> >
->> > Oh, no. In new code we don't need this. We have facilities to provide
->> > platform data in a form of fwnode.
->> 
->> Ok I'll look into that.
->> 
->> But I already have a question, so there are of_property_read_xx(), 
->> which
->> seems to be the old functions, then there is device_property_read_xx() 
->> and
->> fwnode_property_read_xx(). What is the difference between the latter 
->> two?
-> 
-> It's easy. device_*() requires struct device to be established for 
-> this, so,
-> operates only against devices, while the fwnode_*() operates on pure 
-> data which
-> might or might not be related to any devices. If you understand OF 
-> examples
-> better, consider device node vs. child of such node.
+I will send the user guide privately which should clarify the serial
+interfaces on the board.
 
-Ahh thanks, got it.
+Cheers,
+--Prabhakar
 
-> 
-> ...
-> 
->> > > +       if (irq_support &&
->> >
->> > Why do you need this flag? Can't simple IRQ number be sufficient?
->> 
->> I want to make sure, the is no misconfiguration. Eg. only GPIO
->> flavors which has irq_support set, have the additional interrupt
->> registers.
-> 
-> In gpio-dwapb, for example, we simple check two things: a) hardware 
-> limitation
-> (if IRQ is assigned to a proper port) and b) if there is any IRQ comes 
-> from DT,
-> ACPI, etc.
 
-I can't follow you here. irq_support is like your (a); or the
-"pp->idx == 0" in your example.
-
->> > > +           device_property_read_bool(&pdev->dev,
->> > > "interrupt-controller")) {
->> > > +               irq = platform_get_irq(pdev, 0);
->> > > +               if (irq < 0)
->> > > +                       return irq;
->> > > +
->> > > +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
->> > > +                                            base, irq);
->> > > +               if (ret)
->> > > +                       return ret;
->> > > +
->> > > +               config.irq_domain =
->> > > regmap_irq_get_domain(gpio->irq_data);
->> > > +       }
-> 
-> ...
-> 
->> > > +       { .compatible = "kontron,sl28cpld-gpio",
->> > > +         .data = (void *)SL28CPLD_GPIO },
->> > > +       { .compatible = "kontron,sl28cpld-gpi",
->> > > +         .data = (void *)SL28CPLD_GPI },
->> > > +       { .compatible = "kontron,sl28cpld-gpo",
->> > > +         .data = (void *)SL28CPLD_GPO },
->> >
->> > All above can be twice less LOCs.
->> 
->> They are longer than 80 chars. Or do I miss something?
-> 
-> We have 100 :-)
-
-oh come on, since 6 days *g*
-
->> > > +               .name = KBUILD_MODNAME,
->> >
->> > This actually not good idea in long term. File name can change and break
->> > an ABI.
->> 
->> Ahh an explanation, why this is bad. Ok makes sense, although to be 
->> fair,
->> .id_table should be used for the driver name matching. I'm not sure if
->> this is used somewhere else, though.
-> 
-> I saw in my practice chain of renames for a driver. Now, if somebody
-> somewhere would like to instantiate a platform driver by its name...
-> Oops, ABI breakage.
-> 
-> And of course using platform data for such device makes less sense.
-
-i just removed the id_table from all drivers anyways.
-
--michael
+> > +               function = "scifa2";
+> > +       };
+> > +};
+> > +
+> > +&scifa2 {
+> > +       pinctrl-0 = <&scifa2_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       status = "okay";
+> > +};
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
