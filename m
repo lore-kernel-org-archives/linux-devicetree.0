@@ -2,202 +2,135 @@ Return-Path: <SRS0=StSA=7T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E8AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 17:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208D3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 19:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C4D20760
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 17:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5ABF20663
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 19:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ev0M7hLQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSGIPCGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgFFRqO (ORCPT
+        id S1728400AbgFFT7m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 6 Jun 2020 13:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        Sat, 6 Jun 2020 15:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727890AbgFFRqN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 13:46:13 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D7BC08C5C2
-        for <devicetree@vger.kernel.org>; Sat,  6 Jun 2020 10:46:11 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id k7so1055256ooo.12
-        for <devicetree@vger.kernel.org>; Sat, 06 Jun 2020 10:46:11 -0700 (PDT)
+        with ESMTP id S1728229AbgFFT7l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 15:59:41 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B64C03E96A;
+        Sat,  6 Jun 2020 12:59:41 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id k11so13896714ejr.9;
+        Sat, 06 Jun 2020 12:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9FTx+jphm/lLacI7W/EoGrspqF//hnRGVpfw1BWx6hc=;
-        b=Ev0M7hLQ9ENXb2BTvaz91PCbx1fqgPBPdFIwc+1xGai2U3y+hqIN4H6zdTxZkFhsOx
-         YZDoYfDoJjFNElquYws3h/m1BbMLPMkFCp84lwo5AgmzGNowfxDRlHF6AwCwEGhB8t6P
-         qA3mmUZKcG78fwWRIRzsiuBr6L6z4MmVybJ5jX7WhnGUhcL9kh1acfGpsBP9gdZ5P1Q6
-         rBB2bfYAWrEt/HJsVtun2yYpyjhFxkTjA2BRqxxy5NAwVqz5luPdWqtg2N3q11BKsyOH
-         GRFQWcIcZzbTiy0+nRfiz/4UGBjuYPtFTQEg6wD8p6+S3x11lqzADQTTesQv1wUp/dBl
-         Wh4w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n5XWxTbu49klTKh2OV1xwSrup891qcSS3M98k2q6wzs=;
+        b=bSGIPCGFYpQplqdBDclrszoeF5pyhcx6S+wIRfcQu/G4/SFH80rDHzkwmphCDZ6UFO
+         m01JiC8oKBG8tGDEVHlbV2efJOLblFM+rMVn7GwbM8XdnGHflCJtCXR3OSjy3HegQ/4A
+         Jsqn0+nmWUDhqmAuZoX/p749Bint1svFLDUaDQarA8WSiddXJgj+lwJJP3siqfhp5v51
+         FaRKnlAV9GmiZVG/CpeRJ8FEkMnIN9HKeeTZMq5rj4UP2Rvr2KWGLEN2M9XgyErxch7G
+         UtY+oinumc93T8wm2lD1niYj7yivi6oTUEG7fM5Quz68ah0BY8NOc1MWAqVGIT7iM26B
+         +UTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9FTx+jphm/lLacI7W/EoGrspqF//hnRGVpfw1BWx6hc=;
-        b=CkH1XzqoRUsauEuKZFtCRK/Nn6CRrfPK6u+C0TYu7xXRzI82qqPspO6vSaTNV9EDAr
-         seEo652IAUn0NZmda81l+OYAr8hqNzZVZEZySfmdeAv0aCE5y/0s+vzHSsF1nTWEBeh2
-         1vIul0U0gYKdpc6eDEWLL66vDLVsY165BDCxIo8NMvZ8nhueNtAfZafzza83bQUQvgvK
-         0cyplh9uhOPLkHBDG24hqM9wFRjO/ruA5jJDPdq0QitIejT+pYF5Op3V57ioZ9qLukYe
-         muj8DRDSTXCzZvDORu75huKAkDU1VN/zLIrZOfQX848ZSTNwG4XeY0Lyi01RumqpG8Pt
-         i/eg==
-X-Gm-Message-State: AOAM530pPN2NdD19yaEQU4fKoG9bndho6MTXiacubt2HnssciePNugpz
-        sFSFohCMadlV4q/Nu9ZDHvsHqaPooSlV0I4pV3LNLQ==
-X-Google-Smtp-Source: ABdhPJxy4ZsnRRjBwanalABT43t4/eoN4tc25jTOSNzsJ5z6HV+MW9CMyrLY1sAN87Wp24jHgw+InkK1qpcJXM338ho=
-X-Received: by 2002:a4a:7ac2:: with SMTP id a185mr12223320ooc.84.1591465570614;
- Sat, 06 Jun 2020 10:46:10 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n5XWxTbu49klTKh2OV1xwSrup891qcSS3M98k2q6wzs=;
+        b=buZOWWJc/h2oYzO/oDX8oh6gzvgX2d0ofX5NkqPl9sS6xZ1TW6FVvZAHwrlz2hyblc
+         fnf6qtJrjQy/DAA//a/1BjcYm0PT+lGU6RxevQPkztxaznuflKK27VJdNPa3g6xpgTsg
+         fEcCZ33IrhWS0REorZEAi3DtNXT+ogBEQh3K9xhCp+LWKm3LJ5Pfp9ksKGXVYz7K8thZ
+         /WSfrVxeW/+bn/ffDUFYRepv2szIxl6U+8C+Qz4J+psvSvJIrHf0QEtA65WFERWCgcqy
+         /EpvTZ0hhpGeVGJMDjRvWIjn9XTX4FnuelulAkdn6z8fe1v+o57rtTjpZzNwYWI+MUXD
+         RtbQ==
+X-Gm-Message-State: AOAM530ur93Rk8ld3PXRlXXU3vEDAvJvLm2R32bfTue1UPeiu2a72GV7
+        ceP6DWjyQWkG2yDnpacy+BGLxtXL
+X-Google-Smtp-Source: ABdhPJwXMA7ZLUaMLk1avqpZMTY4TtEV3VlReQVsStdY4Z2Tyn0cFunI//SB1V20iNokJijzxpQZfg==
+X-Received: by 2002:a17:907:4096:: with SMTP id nm6mr14445477ejb.4.1591473579565;
+        Sat, 06 Jun 2020 12:59:39 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:e442:880b:6e2c:2ebd? ([2a01:110f:b59:fd00:e442:880b:6e2c:2ebd])
+        by smtp.gmail.com with ESMTPSA id cd17sm6726607ejb.115.2020.06.06.12.59.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 Jun 2020 12:59:38 -0700 (PDT)
+Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
+Cc:     devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-4-dmurphy@ti.com> <20200606155324.GA21130@amd>
+ <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
+Date:   Sat, 6 Jun 2020 21:59:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200606003552.247693-1-saravanak@google.com> <20200606003552.247693-3-saravanak@google.com>
-In-Reply-To: <20200606003552.247693-3-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Sat, 6 Jun 2020 10:45:34 -0700
-Message-ID: <CAGETcx-yGztpfATAYRRwPD87uLmYPN53bt146=NTc-+qYzh8Ng@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] of: property: Improve cycle detection when one of
- the devices is never added
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, John Stultz <john.stultz@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 5:36 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Consider this example where -> means LHS device is a consumer of RHS
-> device and indentation represents "child of" of the previous device.
->
-> Device A -> Device C
->
-> Device B -> Device A
->         Device C
->
-> Without this commit:
-> 1. Device A is added.
-> 2. Device A is added to waiting for supplier list (Device C)
-> 3. Device B is added
-> 4. Device B is linked as a consumer to Device A
-> 5. Device A doesn't probe because it's waiting for Device C to be added.
-> 6. Device B doesn't probe because Device A hasn't probed.
-> 7. Device C will never be added because it's parent hasn't probed.
->
-> So, Device A, B and C will be in a probe/add deadlock.
->
-> This commit detects this scenario and stops trying to create a device
-> link between Device A and Device C since doing so would create a cycle:
-> Device A -> Devic C -(parent)-> Device B -> Device A.
->
-> With this commit:
-> 1. Device A is added.
-> 3. Device B is added
-> 4. Device B is linked as a consumer to Device A
-> 5. Device A probes.
-> 6. Device B probes because Device A has probed.
-> 7. Device C is added and probed.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 44 +++++++++++++++++++++++++++++++++++++------
->  1 file changed, 38 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 1f2086f4e7ce..7eebe21274a4 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1014,6 +1014,20 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
->         return false;
->  }
->
-> +static struct device *of_get_next_parent_dev(struct device_node *np)
-> +{
-> +       struct device *dev = NULL;
-> +
-> +       of_node_get(np);
-> +       do {
-> +               np = of_get_next_parent(np);
-> +               if (np)
-> +                       dev = get_dev_from_fwnode(&np->fwnode);
-> +       } while (np && !dev);
-> +       of_node_put(np);
-> +       return dev;
-> +}
-> +
->  /**
->   * of_link_to_phandle - Add device link to supplier from supplier phandle
->   * @dev: consumer device
-> @@ -1035,10 +1049,9 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
->  static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
->                               u32 dl_flags)
->  {
-> -       struct device *sup_dev;
-> +       struct device *sup_dev, *sup_par_dev;
->         int ret = 0;
->         struct device_node *tmp_np = sup_np;
-> -       int is_populated;
->
->         of_node_get(sup_np);
->         /*
-> @@ -1075,16 +1088,35 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
->                 return -EINVAL;
->         }
->         sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-> -       is_populated = of_node_check_flag(sup_np, OF_POPULATED);
-> -       of_node_put(sup_np);
-> -       if (!sup_dev && is_populated) {
-> +       if (!sup_dev && of_node_check_flag(sup_np, OF_POPULATED)) {
->                 /* Early device without struct device. */
->                 dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
->                         sup_np);
-> +               of_node_put(sup_np);
->                 return -ENODEV;
->         } else if (!sup_dev) {
-> -               return -EAGAIN;
-> +               sup_par_dev = of_get_next_parent_dev(sup_np);
-> +               of_node_put(sup_np);
-> +
-> +               /*
-> +                * DL_FLAG_SYNC_STATE_ONLY doesn't block probing, so cycle
-> +                * detection isn't necessary and shouldn't be done.
-> +                */
-> +               if (dl_flags & DL_FLAG_SYNC_STATE_ONLY)
-> +                       return -EAGAIN;
+Dan,
 
-I need to put_device(sup_par_dev) before I return here and at other places
-below. I'll send a v2 later to fix this.
+On 6/6/20 6:39 PM, Dan Murphy wrote:
+> Pavek
+> 
+> Thanks for the review
+> 
+> On 6/6/20 10:53 AM, Pavel Machek wrote:
+>> Hi!
+>>
+>>> Introduce a multicolor class that groups colored LEDs
+>>> within a LED node.
+>>>
+>>> The multi color class groups monochrome LEDs and allows controlling two
+>>> aspects of the final combined color: hue and lightness. The former is
+>>> controlled via the intensity file and the latter is controlled
+>>> via brightness file.
+>>>
+>>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
+>>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>> new file mode 100644
+[...]
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -9533,6 +9533,14 @@ F:    Documentation/devicetree/bindings/leds/
+>>>   F:    drivers/leds/
+>>>   F:    include/linux/leds.h
+>>> +LED MULTICOLOR FRAMEWORK
+>>> +M:    Dan Murphy <dmurphy@ti.com>
+>>> +L:    linux-leds@vger.kernel.org
+>> I'd like to be mentioned here, too. "M: Pavel Machek
+>> <pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
+>> file update through a LED tree. Should definitely go to separate
+>> patch.
+> 
+> Oh definitely.  I thought it was implied that you and Jacek are both 
+> Maintainers as well.
+> 
+> I will add you but will wait to see if Jacek wants to be added.
 
+Actually I don't think that we need to add this separate entry
+for LED multicolor class. This is still under LED subsystem,
+and I didn't add anything for LED class flash.
 
--Saravana
+> I will separate this out and make it a separate patch
 
-> +
-> +               /*
-> +                * If devices haven't been created for any of the ancestors, we
-> +                * can't check for cycles. So let's try again later.
-> +                */
-> +               if (!sup_par_dev)
-> +                       return -EAGAIN;
-> +
-> +               /* Cyclic dependency detected, don't try to link */
-> +               if (device_is_dependent(dev, sup_par_dev))
-> +                       return -EINVAL;
->         }
-> +       of_node_put(sup_np);
->         if (!device_link_add(dev, sup_dev, dl_flags))
->                 ret = -EINVAL;
->         put_device(sup_dev);
-> --
-> 2.27.0.278.ge193c7cf3a9-goog
->
+-- 
+Best regards,
+Jacek Anaszewski
