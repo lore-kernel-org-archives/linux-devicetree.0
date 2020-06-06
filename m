@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7AAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 10:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6817C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 10:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3CC2073E
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 10:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF06C2073E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 10:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgFFKzO (ORCPT
+        id S1728739AbgFFKzR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 6 Jun 2020 06:55:14 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:6992 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725831AbgFFKzN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 06:55:13 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 06 Jun 2020 03:55:13 -0700
+        Sat, 6 Jun 2020 06:55:17 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:60628 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728721AbgFFKzQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 06:55:16 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 06 Jun 2020 03:55:14 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 06 Jun 2020 03:55:10 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 06 Jun 2020 03:55:10 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 1ECD9217D6; Sat,  6 Jun 2020 16:25:09 +0530 (IST)
+        id DFD762124A; Sat,  6 Jun 2020 16:25:08 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         sivaprak@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V7 3/4] clk: qcom: Add DT bindings for ipq6018 apss clock controller
-Date:   Sat,  6 Jun 2020 16:25:06 +0530
-Message-Id: <1591440907-20021-4-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V7 1/4] dt-bindings: clock: add ipq6018 a53 pll compatible
+Date:   Sat,  6 Jun 2020 16:25:04 +0530
+Message-Id: <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org>
 References: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org>
@@ -42,32 +42,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt-binding for ipq6018 apss clock controller
+cpus on ipq6018 are clocked by a53 pll, add device compatible for a53
+pll found on ipq6018 devices.
 
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- include/dt-bindings/clock/qcom,apss-ipq.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
+[V7]
+ * Addressed minor review comment from Rob
+ .../devicetree/bindings/clock/qcom,a53pll.yaml         | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/dt-bindings/clock/qcom,apss-ipq.h b/include/dt-bindings/clock/qcom,apss-ipq.h
-new file mode 100644
-index 0000000..77b6e05
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,apss-ipq.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
+diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+index 20d2638..3161fab 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+@@ -15,6 +15,7 @@ description:
+ 
+ properties:
+   compatible:
++    const: qcom,ipq6018-a53pll
+     const: qcom,msm8916-a53pll
+ 
+   reg:
+@@ -23,6 +24,14 @@ properties:
+   '#clock-cells':
+     const: 0
+ 
++  clocks:
++    items:
++      - description: board XO clock
 +
-+#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
-+#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
++  clock-names:
++    items:
++      - const: xo
 +
-+#define APCS_ALIAS0_CLK_SRC			0
-+#define APCS_ALIAS0_CORE_CLK			1
-+
-+#endif
+ required:
+   - compatible
+   - reg
+@@ -38,3 +47,12 @@ examples:
+         reg = <0xb016000 0x40>;
+         #clock-cells = <0>;
+     };
++  #Example 2 - A53 PLL found on IPQ6018 devices
++  - |
++    a53pll_ipq: clock-controller@b116000 {
++        compatible = "qcom,ipq6018-a53pll";
++        reg = <0x0b116000 0x40>;
++        #clock-cells = <0>;
++        clocks = <&xo>;
++        clock-names = "xo";
++    };
 -- 
 2.7.4
 
