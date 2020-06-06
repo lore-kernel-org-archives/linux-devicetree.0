@@ -2,125 +2,162 @@ Return-Path: <SRS0=StSA=7T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC76C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 15:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D668FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 15:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B402207BC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 15:22:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XvMG291f"
+	by mail.kernel.org (Postfix) with ESMTP id BF6BD2073E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 15:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgFFPWE (ORCPT
+        id S1728840AbgFFPx1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 6 Jun 2020 11:22:04 -0400
-Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:14305
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728931AbgFFPWB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 6 Jun 2020 11:22:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nRive39exi3DNqD0lI1gU+GVrnOMlKZ7taTlUkHLxBM7d0xdF8qE8B7n7qzLTVK+V84HeQaHqqYVwkOkUmC7Shmx54+iKHlaujOePA+yDOX9M9soTJ5zimTVXtJBh8envVWMWQiJph3Ph7InTO/x1wY3LykDCYCnlTN6/2U2/QEL48Ktx3vobS3eGW25nG9hnYQ5ZcTfQaRrD7jD+hOMvj2c8cbv9va1xtYaBqA6BmPoci5ojmfcwjsED5KspbEtwy0y82VgaTW4qfY8KVw8Dd8g95qJ1JRjnh2BW5q327ZH17V3VLZI3Mu1zk7VI61ShsKa5TowiL/b7sTX+1Bdzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jxJdGqHBF995O2koMhPVubVtg1S3gV8z8tbdE75gTs=;
- b=bcTspyPhkio+fc43HE7IGWAG8B1u10hhY2HovpZJwqvHDzX+A/9yLJ2osHVhvSjWAx9QxSP3KNoFILzUe1vlXxk74T9lATLVtIuFH+3xXl1mx9PNlGmMbJX2tf3uHJ9Ho1q7v9NaM9DYw9GVU+cQ5j3MxlR4GTOg1BbVYcgmDCLjb+WOSCbPj+HjP1HKN2yA7nhdMmE51eBbUcofKWiKz0jDES1JNj3lh3k/fzkvKe4fi2usB/CYP0YbQjVmXeF08Lq3hBSxBYgBXg5aLw0dXM7To6h1kOEP8q9o2n/FTfVO7plZPxtTGJ6DOEJyLZBjPsSwWjWrm4DiLg8yXUIPRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jxJdGqHBF995O2koMhPVubVtg1S3gV8z8tbdE75gTs=;
- b=XvMG291fNMcJOFJhqU1fUzADPcyCYc/aeGlI2LC6/ZWSDzgsfz94KoVtRCZE5FEuxyC65rDBN9KqfgUbEQF+7ysnNgE47NHZLHE1yAhYn3fMDNXXcgt+xbf8Gn3LiHrEikeSPRq0TaGSQwFd0Kwz6VgDclFesrFBMBx4C1U16w8=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6429.eurprd04.prod.outlook.com (2603:10a6:803:11a::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Sat, 6 Jun
- 2020 15:21:57 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Sat, 6 Jun 2020
- 15:21:57 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: [PATCH v9 RESEND 09/13] spi: imx: add new i.mx6ul compatible name in binding doc
-Date:   Sun,  7 Jun 2020 07:21:13 +0800
-Message-Id: <1591485677-20533-10-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0184.apcprd04.prod.outlook.com
- (2603:1096:4:14::22) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Sat, 6 Jun 2020 11:53:27 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59560 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbgFFPx1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 11:53:27 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2C2871C0C0B; Sat,  6 Jun 2020 17:53:25 +0200 (CEST)
+Date:   Sat, 6 Jun 2020 17:53:24 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
+ definition
+Message-ID: <20200606155324.GA21130@amd>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-4-dmurphy@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR04CA0184.apcprd04.prod.outlook.com (2603:1096:4:14::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.18 via Frontend Transport; Sat, 6 Jun 2020 15:21:51 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 65f0362d-a0b1-493d-661b-08d80a2d59be
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6429:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB6429349E15AD3E005E574A6589870@VE1PR04MB6429.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-Forefront-PRVS: 04267075BD
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i7BVn1rkWizCuvL1nmTF1brDK7eMsvpfBEQAkOY2RJ/2GUkplh+QrN6kx5voC7iANWS2lRJcBuKXTdWYeiDBr0k5C5frUqoUXym8zirvxQPxUfRJ5ZTQvAA0R9SKAXe3KZsrEqmqsDhMotnJuJGtBl/YAcjBaAdHCSDkOJBN7WJ6qJySIg1NMJm3WnU8dkdqzohkcvBe+Ug+t4yk+/p0l7VhdxdW2kigCINrPlrp0DyIcX3it0UmQ6v1B6q0AxhjbeYNIkikVGU4Afkp2ClfRbQGYRX5YEwN5X3BIJ5f2VeWjZmPTUDW7eK7ziEC2Wl7D2CLaeaaPQ/toA97A/jmGVfU0Ru9J2nN7+Y/QOMT0tsOzvlNZwGBeWZmNLnF2tJn
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(66946007)(52116002)(6512007)(66476007)(66556008)(6506007)(186003)(7416002)(16526019)(26005)(2906002)(86362001)(8936002)(956004)(8676002)(2616005)(6486002)(6666004)(316002)(4326008)(36756003)(478600001)(5660300002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: P1F1V/A8yP+FLkfJio612spREaNZeADwYYLLfgR4+CCIxldkKipXuGbRXGeQ2pIxUaayy3oH2O+qg8R2lHHIk10KjUMH8OsHhF7Qpxhda4UYYUDjJIuhSx3FpVFiUnQHVShexpnyeQCwtT40JecbnwhO41AlIyTeFbpuNEq86+Wsz0OsCML8tS/kvdxYKZNJJAXs8C4a3HBWcuwcMw9hVlHhUaAviawvZhV2UsLCdseEAyxs3JVSQ5e3/Ld5uEpTN4w63Ar4BxA7zoxHPJLbfmVHKpG50kGvoN4FyZminn9PAjLqZbkEVEW2fW+uTaOLpiUFScqrqm0J45ycW4ouL9axB71NoVsHruU2PNCb7LrJoeDCtK4yrPz9EAP+MsCtSORi3JOjqBoOlST3gtMiN0FONSWB7Zf3na2wezy1CF3GGzAEDUU4eBap1QzdTLSI9xSZwrt43OBoAdsh8yuh5BOlU35iNn0EsVRZmLOgeIw=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65f0362d-a0b1-493d-661b-08d80a2d59be
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2020 15:21:57.1829
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WMW4ipcjwkdeFTTE3dNelobgJaYRYALH9uApFLofhnjh7WYt9unxVA0PpWKkn+zRk0LWPz8WI1Vau26Gm/tCIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6429
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Content-Disposition: inline
+In-Reply-To: <20200604120504.32425-4-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
- 1 file changed, 1 insertion(+)
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 33bc58f..0a529ba 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -10,6 +10,7 @@ Required properties:
-   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
-+  - "fsl,imx6ul-ecspi" for SPI compatible with the one integrated on i.MX6UL and later Soc
-   - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
-   - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
-   - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
--- 
-2.7.4
+Hi!
 
+> Introduce a multicolor class that groups colored LEDs
+> within a LED node.
+>=20
+> The multi color class groups monochrome LEDs and allows controlling two
+> aspects of the final combined color: hue and lightness. The former is
+> controlled via the intensity file and the latter is controlled
+> via brightness file.
+>=20
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Docum=
+entation/ABI/testing/sysfs-class-led-multicolor
+> new file mode 100644
+> index 000000000000..7d33a82a4b07
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+> @@ -0,0 +1,34 @@
+> +What:		/sys/class/leds/<led>/brightness
+> +Date:		March 2020
+> +KernelVersion:	5.8
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		Writing to this file will update all LEDs within the group to a
+> +		calculated percentage of what each color LED intensity is set
+> +		to. The percentage is calculated for each grouped LED via the
+> +		equation below:
+
+> +		led_brightness =3D brightness * multi_intensity/max_brightness
+> +
+> +		For additional details please refer to
+> +		Documentation/leds/leds-class-multicolor.rst.
+> +
+> +		The value of the color is from 0 to
+> +		/sys/class/leds/<led>/max_brightness.
+
+It is not too clear to me what "color" means here.
+
+It would be worth mentioning that this is single integer.
+
+> +What:		/sys/class/leds/<led>/multi_index
+> +Date:		March 2020
+> +KernelVersion:	5.8
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read
+> +		The multi_index array, when read, will output the LED colors
+> +		by name as they are indexed in the multi_intensity file.
+
+This should specify that it is array of strings.
+
+> +What:		/sys/class/leds/<led>/multi_intensity
+> +Date:		March 2020
+> +KernelVersion:	5.8
+> +Contact:	Dan Murphy <dmurphy@ti.com>
+> +Description:	read/write
+> +		Intensity level for the LED color within the array.
+> +		The intensities for each color must be entered based on the
+> +		multi_index array.
+
+I'd mention here that it is array of integers, and what the maximum
+values are.
+
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9533,6 +9533,14 @@ F:	Documentation/devicetree/bindings/leds/
+>  F:	drivers/leds/
+>  F:	include/linux/leds.h
+> =20
+> +LED MULTICOLOR FRAMEWORK
+> +M:	Dan Murphy <dmurphy@ti.com>
+> +L:	linux-leds@vger.kernel.org
+
+I'd like to be mentioned here, too. "M: Pavel Machek
+<pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
+file update through a LED tree. Should definitely go to separate
+patch.
+
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 9cdc4cfc5d11..fe7d90d4fa23 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+>  	  for the flash related features of a LED device. It can be built
+>  	  as a module.
+> =20
+> +config LEDS_CLASS_MULTI_COLOR
+> +	tristate "LED MultiColor LED Class Support"
+
+"LED MultiColor Class Support"
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7bu/QACgkQMOfwapXb+vIzgQCfSrppct2w8jufcl83cYjriW8p
+LL4An0F9azcmyG2TDnmsc9jyN8wb+0mg
+=atC2
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
