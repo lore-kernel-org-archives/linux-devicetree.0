@@ -2,168 +2,133 @@ Return-Path: <SRS0=StSA=7T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F125C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 10:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0441FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 12:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A56D207F7
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 10:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8F32074B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 12:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591445424;
+	bh=x13fs/6KS0cWSGq1U/x/o31ECWkqjkZ1frqthqMPDmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gXkexAqAlEViOX27qS5qzVIhmDTwhqR/L+7ueIcmutQFKWk3TNDOpyUArtxpJpX4Z
+	 p9TdSeSNOBzf7ssTd5+YRMymRsKmU7YcbLLOage8l8DU3TfMjo0MSGubjvBwQ48W8p
+	 zvXmlYCLoxZBkexxqUwjIh0IZfQYsTbKmHYgOsUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgFFK7t (ORCPT
+        id S1728727AbgFFMKX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 6 Jun 2020 06:59:49 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:42528 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728726AbgFFK7h (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 06:59:37 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 06 Jun 2020 03:59:37 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 06 Jun 2020 03:59:34 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 0C061217DA; Sat,  6 Jun 2020 16:29:32 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, sivaprak@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2 3/3] mailbox: qcom: Add ipq6018 apcs compatible
-Date:   Sat,  6 Jun 2020 16:29:31 +0530
-Message-Id: <1591441171-20341-4-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591441171-20341-1-git-send-email-sivaprak@codeaurora.org>
-References: <1591441171-20341-1-git-send-email-sivaprak@codeaurora.org>
+        Sat, 6 Jun 2020 08:10:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43242 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgFFMKX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 08:10:23 -0400
+X-Greylist: delayed 1382 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Jun 2020 08:10:20 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q1hE1By2w6tdlelWUzgDL9pNEpalt4sHuIMqHFjQjp8=; b=k3fx9IKijx/wg1gi89wPskkRj
+        qSJnkyjDFkHUduWjPiD4PsWrnb2+RVPaizPta11NotezqIsLn1oxzVSNvnszEdO6FARP/jF+sntaC
+        MnUHGVN+Z24JRtKvk6f3h4BeEZnju966pPcxiFNt+ga2Sbf/VPisLqymd8KuYebH1Wqlw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1jhXHh-0004Y4-Ov; Sat, 06 Jun 2020 11:46:45 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 3343CD06634; Sat,  6 Jun 2020 12:46:45 +0100 (BST)
+Date:   Sat, 6 Jun 2020 12:46:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200606114645.GB2055@sirena.org.uk>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
+Content-Disposition: inline
+In-Reply-To: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+X-Cookie: You do not have mail.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Qualcomm ipq6018 has apcs block, add compatible for the same.
-Also, the apcs provides a clock controller functionality similar
-to msm8916 but the clock driver is different.
 
-Create a child platform device based on the apcs compatible for the
-clock controller functionality.
+--PmA2V3Z32TCmWXqI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
-[V2]
- * created a new structur for driver data.
- * re-arranged compatible strings in sorted order
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 61 +++++++++++++++++++++++----------
- 1 file changed, 43 insertions(+), 18 deletions(-)
+On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> Am 2020-06-05 12:50, schrieb Mark Brown:
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index eeebafd..cec34f0 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -24,6 +24,35 @@ struct qcom_apcs_ipc {
- 	struct platform_device *clk;
- };
- 
-+struct qcom_apcs_ipc_data {
-+	int offset;
-+	char *clk_name;
-+};
-+
-+static const struct qcom_apcs_ipc_data ipq6018_apcs_data = {
-+	.offset = 8, .clk_name = "qcom,apss-ipq6018-clk"
-+};
-+
-+static const struct qcom_apcs_ipc_data ipq8074_apcs_data = {
-+	.offset = 8, .clk_name = NULL
-+};
-+
-+static const struct qcom_apcs_ipc_data msm8916_apcs_data = {
-+	.offset = 8, .clk_name = "qcom-apcs-msm8916-clk"
-+};
-+
-+static const struct qcom_apcs_ipc_data msm8996_apcs_data = {
-+	.offset = 16, .clk_name = NULL
-+};
-+
-+static const struct qcom_apcs_ipc_data msm8998_apcs_data = {
-+	.offset = 8, .clk_name = NULL
-+};
-+
-+static const struct qcom_apcs_ipc_data apps_shared_apcs_data = {
-+	.offset = 12, .clk_name = NULL
-+};
-+
- static const struct regmap_config apcs_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -48,17 +77,12 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
- static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- {
- 	struct qcom_apcs_ipc *apcs;
-+	const struct qcom_apcs_ipc_data *apcs_data;
- 	struct regmap *regmap;
- 	struct resource *res;
--	unsigned long offset;
- 	void __iomem *base;
- 	unsigned long i;
- 	int ret;
--	const struct of_device_id apcs_clk_match_table[] = {
--		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
--		{ .compatible = "qcom,qcs404-apcs-apps-global", },
--		{}
--	};
- 
- 	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
- 	if (!apcs)
-@@ -73,10 +97,10 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	offset = (unsigned long)of_device_get_match_data(&pdev->dev);
-+	apcs_data = of_device_get_match_data(&pdev->dev);
- 
- 	apcs->regmap = regmap;
--	apcs->offset = offset;
-+	apcs->offset = apcs_data->offset;
- 
- 	/* Initialize channel identifiers */
- 	for (i = 0; i < ARRAY_SIZE(apcs->mbox_chans); i++)
-@@ -93,9 +117,9 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
-+	if (apcs_data->clk_name) {
- 		apcs->clk = platform_device_register_data(&pdev->dev,
--							  "qcom-apcs-msm8916-clk",
-+							  apcs_data->clk_name,
- 							  PLATFORM_DEVID_NONE,
- 							  NULL, 0);
- 		if (IS_ERR(apcs->clk))
-@@ -119,14 +143,15 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
- 
- /* .data is the offset of the ipc register within the global block */
- static const struct of_device_id qcom_apcs_ipc_of_match[] = {
--	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = (void *)8 },
--	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
--	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
--	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
--	{ .compatible = "qcom,sc7180-apss-shared", .data = (void *)12 },
--	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
--	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
--	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = (void *)8 },
-+	{ .compatible = "qcom,ipq6018-apcs-apps-global", .data = &ipq6018_apcs_data },
-+	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = &ipq8074_apcs_data },
-+	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = &msm8916_apcs_data },
-+	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = &msm8996_apcs_data },
-+	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = &msm8998_apcs_data },
-+	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = &msm8916_apcs_data },
-+	{ .compatible = "qcom,sc7180-apss-shared", .data = &apps_shared_apcs_data },
-+	{ .compatible = "qcom,sdm845-apss-shared", .data = &apps_shared_apcs_data },
-+	{ .compatible = "qcom,sm8150-apss-shared", .data = &apps_shared_apcs_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
--- 
-2.7.4
+> > I have no idea what you are thinking of when you say "simple-regmap" so
+> > it is difficult to comment.
 
+> I guess, Lee is suggesting to be able to create a regmap instance via
+> device tree (and populate its child nodes?). Like
+>   compatible = "syscon", "simple-mfd";
+> but for any regmap, not just MMIO.
+
+I don't understand why this would be anything separate to
+simple-mfd.
+
+> But, there is more in my driver:
+>  (1) there is a version check
+>  (2) there is another function for which there is no suitable linux
+>      subsystem I'm aware of and thus which I'd like to us sysfs
+>      attributes for: This controller supports 16 non-volatile
+>      configuration bits. (this is still TBD)
+
+TBH I'd also say that the enumeration of the subdevices for this
+device should be in the device rather than the DT, they don't
+seem to be things that exist outside of this one device.
+
+--PmA2V3Z32TCmWXqI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7bgiQACgkQJNaLcl1U
+h9CJwAf9GDLvYJzqBwwJ8Wam2ddh4vI4HhG+7om7V0rPbtc+8urivLRpsn4PzyP2
+VEDJVR0PhbtQTX11tUL9oNelTz+H+JHuuGMFCWP/DbbHsTKucuhkpelUnW17FukC
+sr8O5n3D6en4l8bj6vsfjqysrIAtZWKk+xStpf8bQ9Zu9rczpbIGa2XK6r10w27Y
+jcr5C4pQfl7DlyEwdfOw22i+q+dbBuPGPd/zk/7iRp8QzvmHjE9MCr20JO3s0cuO
+4wwwbMMyNZAe2HjD1IOyVfJ42Yhd+Yf+IkgSShozuk03IuU1HEWpHTyV36pXBdvs
+N4lga9r/upJOfAP2iW7qqtIdU4NzZA==
+=M9Xv
+-----END PGP SIGNATURE-----
+
+--PmA2V3Z32TCmWXqI--
