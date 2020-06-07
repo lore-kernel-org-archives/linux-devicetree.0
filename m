@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084BDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6387EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6A8120814
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C2920760
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZosR1+S0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEQ8UVkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgFGS6E (ORCPT
+        id S1730171AbgFGS6c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
+        Sun, 7 Jun 2020 14:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729924AbgFGS6B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:58:01 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA22C08C5C8;
-        Sun,  7 Jun 2020 11:58:00 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 202so8873515lfe.5;
-        Sun, 07 Jun 2020 11:58:00 -0700 (PDT)
+        with ESMTP id S1728965AbgFGS5x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:57:53 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEFADC061A0E;
+        Sun,  7 Jun 2020 11:57:52 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so8119355ljv.5;
+        Sun, 07 Jun 2020 11:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+LVvE0OiYzwk9TxoGPobpgcZWVTviUfu3oOilcfUerI=;
-        b=ZosR1+S0wKnlNEWsZTicNwlJhxuVimCvmhd6fMtIiwenhy6LfBHPOfMCtwfYHiF2Rq
-         g7KJxTKDT4P4RiLnVM/NF58FpJXbdfJd8BmQPAMynQYVvohifi3n3ZNwyfDSioMmtDCu
-         M/3UNKyfD5nUNiCScokDeE8pBqaRDWdV8HBdGp4Y77PZ6GPV4/XrkY8Nnsp0UIUkilZY
-         yBNcBmrMn29f9RlpZeOQ/H4sGyBJUGdJfmshdxVS4wdd+nOwl/LZvVxgAV6Cx8yt7oCq
-         xAOyID17SplV0mqFeu7mLt5qtvkICv+ApHcgTvqK2yAzLFWNMtTxPQAbXKHIZDGaZD21
-         /0xQ==
+        bh=2FWL4m/VvTzCnby3H7z+0WC/QAPekJVOtv1G/JGRyfU=;
+        b=lEQ8UVklwBZX3PXUJEKVKloYVSlhpfqTKCM2RYyMrSu2WFsviuZRN4mnw1vh54Bma/
+         Pm84MDaTBVEYVyeOJCx1EiHSq/PJd8IWNKjG8ETQiZHOQebQGVTADRrWneQV8KBG+uv1
+         /C/ayXIuTxd99QPwSJIFmH3ahl8BYkprGuq9bo2G7fmjF8WwGdGtJujS5dTn5D+GSsf6
+         Jq065O8RWXAGIhVIjt7uvg0H+r5nuh68+UiIKMH2v6VL+AGhVWA+VZQf8beDOKhD9E6q
+         mC4VuOzeF+HMo8imxMB8XqiKHsWdR+DDBO79WhS1VWzz32ifKEVb6Wq3XJ4VEXL7c/Dp
+         PZ+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+LVvE0OiYzwk9TxoGPobpgcZWVTviUfu3oOilcfUerI=;
-        b=kaVtxa9aClXlCx8EEdDS6gc1iQs+ZLuolaxHc8dMiJvaXM/i1THaY7370tQ/Q1jedv
-         g1P5uY+eIQo0DXH/PG0aA1vn9vgNAQkQWxFepRHnvTWaTsHEabyvcgmWi1Kn3+JTnlzc
-         6ElTp/ThPP90GzjCk4+NlaiLq2Vd7xpCqhrDvhS2qvRe6376Q27AeTkxiAEnGtJzSob6
-         cfl4ess7FxBIa3BrgMFtbv0kko2bgBTpOiBGb0d8PLeGYqXtIMHdqYkKK8RufUu+2rje
-         ybNTadsiJAACens5S/7JzBZaw2oYuqvL1KRkqPRjUbzyxJGtLqyypHVFw1FvhpOkBLHl
-         7BTg==
-X-Gm-Message-State: AOAM531kG7D46Qx+SBjDCS2dBVVSKkhlih4ATy9bXD+mBBzAFiv5H30s
-        L/yLQlyNVbIxrqYUJlpqLrs=
-X-Google-Smtp-Source: ABdhPJyjL9RxG3zPWpDaCfdXCkAaGiFQCA2lwegcUltZjdvev6ZW0rEtS9TYECcHb3oTiqV/xIye8w==
-X-Received: by 2002:ac2:4471:: with SMTP id y17mr10734107lfl.178.1591556279356;
-        Sun, 07 Jun 2020 11:57:59 -0700 (PDT)
+        bh=2FWL4m/VvTzCnby3H7z+0WC/QAPekJVOtv1G/JGRyfU=;
+        b=rDuCOJpZdXXTxiVUHvrbTj2tLC8z7pvg+mtGqByhEUTPTUlp6KvdJLTduECu03aO0a
+         Rxh3qYe84ZLqM94ybAfHaHJhujFkX8rZDxWcxXO5AILkI7v21qmN97KSJwSTfDj1I2ZB
+         S7PZebru3zBTP3TfC2G2D/NRP5qvljfZpyu2PIiKAd0RMpWUZacwMa2Uy/hw3qIQbErq
+         R95EoenxTY5v8UjEPx/COOx+KACyF+MzN+59EJZzC0ggsQRsQhmx4pGnS9rJyOUdsWZL
+         7lCKjU2hzLmdcBwNTIiIi/WQgfs/WCQ6FD5x2UnwZi3dF11IkZt2EZVH1sTx+9+egjRB
+         09VA==
+X-Gm-Message-State: AOAM533mTUhMAsJitr9TiM0qOudnl2/JKk+lUn/SQJZC+UR1OofvRXMz
+        tDDSrJRh2P/0n3g5L5zXP4g=
+X-Google-Smtp-Source: ABdhPJwD98GttckIkFwB4hNnZe/iTbpUVrOLxqSXn8Xq5av99HLdI8/LRLOBgo7G+mBE/dYMb8kgLw==
+X-Received: by 2002:a2e:145e:: with SMTP id 30mr9869151lju.205.1591556271418;
+        Sun, 07 Jun 2020 11:57:51 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.58
+        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 11:57:58 -0700 (PDT)
+        Sun, 07 Jun 2020 11:57:50 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v3 37/39] drm/tegra: dc: Extend debug stats with total number of events
-Date:   Sun,  7 Jun 2020 21:55:28 +0300
-Message-Id: <20200607185530.18113-38-digetx@gmail.com>
+Subject: [PATCH v3 31/39] memory: tegra20-emc: Register as interconnect provider
+Date:   Sun,  7 Jun 2020 21:55:22 +0300
+Message-Id: <20200607185530.18113-32-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200607185530.18113-1-digetx@gmail.com>
 References: <20200607185530.18113-1-digetx@gmail.com>
@@ -88,86 +88,161 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It's useful to know the total number of underflow events and currently
-the debug stats are getting reset each time CRTC is being disabled. Let's
-account the overall number of events that doesn't get reset.
+Now memory controller is a memory interconnection provider. This allows us
+to use interconnect API in order to change memory configuration.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/dc.c | 10 ++++++++++
- drivers/gpu/drm/tegra/dc.h |  5 +++++
- 2 files changed, 15 insertions(+)
+ drivers/memory/tegra/tegra20-emc.c | 115 +++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 48dad375b470..6a5a017e37d5 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -1616,6 +1616,11 @@ static int tegra_dc_show_stats(struct seq_file *s, void *data)
- 	seq_printf(s, "underflow: %lu\n", dc->stats.underflow);
- 	seq_printf(s, "overflow: %lu\n", dc->stats.overflow);
+diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+index 8d1967f4b4aa..2281bf9b784b 100644
+--- a/drivers/memory/tegra/tegra20-emc.c
++++ b/drivers/memory/tegra/tegra20-emc.c
+@@ -9,6 +9,7 @@
+ #include <linux/clk/tegra.h>
+ #include <linux/debugfs.h>
+ #include <linux/err.h>
++#include <linux/interconnect-provider.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+@@ -148,6 +149,7 @@ struct emc_timing {
+ struct tegra_emc {
+ 	struct device *dev;
+ 	struct notifier_block clk_nb;
++	struct icc_provider provider;
+ 	struct clk *clk;
+ 	void __iomem *regs;
  
-+	seq_printf(s, "frames total: %lu\n", dc->stats.frames_total);
-+	seq_printf(s, "vblank total: %lu\n", dc->stats.vblank_total);
-+	seq_printf(s, "underflow total: %lu\n", dc->stats.underflow_total);
-+	seq_printf(s, "overflow total: %lu\n", dc->stats.overflow_total);
-+
- 	return 0;
+@@ -661,6 +663,112 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
+ 			    emc, &tegra_emc_debug_max_rate_fops);
  }
  
-@@ -2178,6 +2183,7 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		/*
- 		dev_dbg(dc->dev, "%s(): frame end\n", __func__);
- 		*/
-+		dc->stats.frames_total++;
- 		dc->stats.frames++;
- 	}
- 
-@@ -2186,6 +2192,7 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		dev_dbg(dc->dev, "%s(): vertical blank\n", __func__);
- 		*/
- 		drm_crtc_handle_vblank(&dc->base);
-+		dc->stats.vblank_total++;
- 		dc->stats.vblank++;
- 	}
- 
-@@ -2193,6 +2200,7 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		/*
- 		dev_dbg(dc->dev, "%s(): underflow\n", __func__);
- 		*/
-+		dc->stats.underflow_total++;
- 		dc->stats.underflow++;
- 	}
- 
-@@ -2200,11 +2208,13 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		/*
- 		dev_dbg(dc->dev, "%s(): overflow\n", __func__);
- 		*/
-+		dc->stats.overflow_total++;
- 		dc->stats.overflow++;
- 	}
- 
- 	if (status & HEAD_UF_INT) {
- 		dev_dbg_ratelimited(dc->dev, "%s(): head underflow\n", __func__);
-+		dc->stats.underflow_total++;
- 		dc->stats.underflow++;
- 	}
- 
-diff --git a/drivers/gpu/drm/tegra/dc.h b/drivers/gpu/drm/tegra/dc.h
-index 3a0ff57c5169..3eb4eddc2288 100644
---- a/drivers/gpu/drm/tegra/dc.h
-+++ b/drivers/gpu/drm/tegra/dc.h
-@@ -41,6 +41,11 @@ struct tegra_dc_stats {
- 	unsigned long vblank;
- 	unsigned long underflow;
- 	unsigned long overflow;
++static inline struct tegra_emc *
++to_tegra_emc_provider(struct icc_provider *provider)
++{
++	return container_of(provider, struct tegra_emc, provider);
++}
 +
-+	unsigned long frames_total;
-+	unsigned long vblank_total;
-+	unsigned long underflow_total;
-+	unsigned long overflow_total;
- };
++static struct icc_node *
++emc_of_icc_xlate(struct of_phandle_args *spec, void *data)
++{
++	struct icc_provider *provider = data;
++	struct icc_node *node;
++
++	/* External Memory is the only possible ICC route */
++	list_for_each_entry(node, &provider->nodes, node_list) {
++		if (node->id == TEGRA_ICC_EMEM)
++			return node;
++	}
++
++	return ERR_PTR(-EINVAL);
++}
++
++static int emc_icc_set(struct icc_node *src, struct icc_node *dst)
++{
++	struct tegra_emc *emc = to_tegra_emc_provider(dst->provider);
++	unsigned long long rate = icc_units_to_bps(dst->avg_bw);
++	unsigned int dram_data_bus_width_bytes = 4;
++	unsigned int ddr = 2;
++	int err;
++
++	do_div(rate, ddr * dram_data_bus_width_bytes);
++	rate = min_t(u64, rate, U32_MAX);
++
++	err = clk_set_min_rate(emc->clk, rate);
++	if (err)
++		return err;
++
++	err = clk_set_rate(emc->clk, rate);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++static int emc_icc_aggregate(struct icc_node *node,
++			     u32 tag, u32 avg_bw, u32 peak_bw,
++			     u32 *agg_avg, u32 *agg_peak)
++{
++	*agg_avg = min((u64)avg_bw + (*agg_avg), (u64)U32_MAX);
++	*agg_peak = max(*agg_peak, peak_bw);
++
++	return 0;
++}
++
++static int tegra_emc_interconnect_init(struct tegra_emc *emc)
++{
++	struct icc_node *node;
++	int err;
++
++	/* older device-trees don't have interconnect properties */
++	if (!of_find_property(emc->dev->of_node, "#interconnect-cells", NULL))
++		return 0;
++
++	emc->provider.dev = emc->dev;
++	emc->provider.set = emc_icc_set;
++	emc->provider.data = &emc->provider;
++	emc->provider.xlate = emc_of_icc_xlate;
++	emc->provider.aggregate = emc_icc_aggregate;
++
++	err = icc_provider_add(&emc->provider);
++	if (err)
++		return err;
++
++	/* create External Memory Controller node */
++	node = icc_node_create(TEGRA_ICC_EMC);
++	err = PTR_ERR_OR_ZERO(node);
++	if (err)
++		goto del_provider;
++
++	node->name = "External Memory Controller";
++	icc_node_add(node, &emc->provider);
++
++	/* link External Memory Controller to External Memory (DRAM) */
++	err = icc_link_create(node, TEGRA_ICC_EMEM);
++	if (err)
++		goto remove_nodes;
++
++	/* create External Memory node */
++	node = icc_node_create(TEGRA_ICC_EMEM);
++	err = PTR_ERR_OR_ZERO(node);
++	if (err)
++		goto remove_nodes;
++
++	node->name = "External Memory (DRAM)";
++	icc_node_add(node, &emc->provider);
++
++	return 0;
++
++remove_nodes:
++	icc_nodes_remove(&emc->provider);
++
++del_provider:
++	icc_provider_del(&emc->provider);
++
++	return err;
++}
++
+ static int tegra_emc_init_mc_timings(struct tegra_emc *emc)
+ {
+ 	struct tegra_mc_timing *timing;
+@@ -767,6 +875,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, emc);
+ 	tegra_emc_debugfs_init(emc);
  
- struct tegra_windowgroup_soc {
++	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
++		err = tegra_emc_interconnect_init(emc);
++		if (err)
++			dev_err(&pdev->dev, "failed to initialize ICC: %d\n",
++				err);
++	}
++
+ 	/*
+ 	 * Don't allow the kernel module to be unloaded. Unloading adds some
+ 	 * extra complexity which doesn't really worth the effort in a case of
 -- 
 2.26.0
 
