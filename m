@@ -2,465 +2,266 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED38EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 01:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF859C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 04:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE23D20760
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 01:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF62A206A5
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 04:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QQtwU5pZ"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="CtfasOda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgFGBkQ (ORCPT
+        id S1725997AbgFGEOQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 6 Jun 2020 21:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
+        Sun, 7 Jun 2020 00:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbgFGBkP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 21:40:15 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140C1C08C5C2;
-        Sat,  6 Jun 2020 18:40:15 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 750FF2C9;
-        Sun,  7 Jun 2020 03:40:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591494013;
-        bh=6Xgbk/4JyNR7IV40beR+8QbmppCvxn7CRtSLxoewefQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QQtwU5pZyk65wiUpGLLo1p39nci7yh+tX4TECTUL6yu2X2NTmqcgARAnVX3hGCjrJ
-         jFphTlIXNMSj0RIqbfxort7lnteFva0E2YnLmD0bWsl6zsdUDoBTLUHkhRxRu3H3Y7
-         oB7k8Pjlh3M8E8XguC5fS1pfB+KQlnhxlaGghVGk=
-Date:   Sun, 7 Jun 2020 04:39:54 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vishal Sagar <vsagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v14 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Message-ID: <20200607013954.GY7339@pendragon.ideasonboard.com>
-References: <1590587839-129558-1-git-send-email-vishal.sagar@xilinx.com>
- <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
- <20200527161140.GF6171@pendragon.ideasonboard.com>
- <DM6PR02MB6876427592203524D810D338A78E0@DM6PR02MB6876.namprd02.prod.outlook.com>
+        with ESMTP id S1725785AbgFGEOP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 00:14:15 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D400DC08C5C2
+        for <devicetree@vger.kernel.org>; Sat,  6 Jun 2020 21:14:13 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q25so13138142wmj.0
+        for <devicetree@vger.kernel.org>; Sat, 06 Jun 2020 21:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XVc4yhBjX64RmWB7JPsVL5b7vYsNR1j+6MV6XcBMtDw=;
+        b=CtfasOdaLXASDTrfjslQSlb2cqhb29HcfYBxMM5gwUNZwgYhjFVOJJt3EsqsRRj8Mq
+         MPsUtDcpnNJR0Lf2iFnRRD0haPlkB0y2BDkNmMA3zxG+nHPLIiLLMsosbxi8SYy3mOjQ
+         SINXa/N2/2XmgVa8M1cuIZqX1q9TQ+1hdr+Qxoyl+O7U2sM9PfYNmbnk5KUhIXG1wRm9
+         N6HVew6cfN66BUbc6+MqB98EHNkB1KPb8G7BhL7d4jaq251q+IX1fMMosOyuy5PA1O6a
+         /D6k6s+0y7JYtMzhpsDI8BvoHN3LKwNA8abau/aFJaUjfYMHtWhFZWMwFUmOp/7xhWS9
+         Xqeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XVc4yhBjX64RmWB7JPsVL5b7vYsNR1j+6MV6XcBMtDw=;
+        b=ft7gwZjCwrHZF/jp0z4FTH1Xuri56F/aq0+hc4Z2cOljXY3feft3Aq1/Q38DcV+6dJ
+         TSDWcMZHDYqFhZ988aYeAWP1qFj/6wPGer6u0dO1yQl7q9z4w6UM/I7SFM98SdEdj0Lh
+         mxFADIo4wHxiuv+lg0kONKMRZKBjjHomgoY98m/I/Ioaf14h1QpALcFgmpR0al8humy0
+         2PY2Sm2RsCMbrOtnOwMVQcnPGghSJn8AshZyThmWY32fNAkLYzkxrS41E0B9lUvXVTC2
+         qumbezuf8J/nuvseRX1sSzB3GzqjiYbueQWYIAtZKyqkNOloTyDVGPVerg3/Cnb/52hD
+         FCTg==
+X-Gm-Message-State: AOAM532+hgWFQUrQItYfyG3YjXkUNZ0XoNlXy1IsiEsGh+17Q7m856Tp
+        1kX2I8Pnx9BgttFlQPmx7+mV4EFkVgnnxdrjxp69Mg==
+X-Google-Smtp-Source: ABdhPJychvNagwd9pRSBrMuYZSEdRL4y5AjtJjKM/sVc4PCGcM28zvbKJvFO+RX1RbUql0gkNv/GYaFg/b988AIlbrY=
+X-Received: by 2002:a1c:1b17:: with SMTP id b23mr9875982wmb.3.1591503251213;
+ Sat, 06 Jun 2020 21:14:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <DM6PR02MB6876427592203524D810D338A78E0@DM6PR02MB6876.namprd02.prod.outlook.com>
+References: <20200521134544.816918-3-anup.patel@wdc.com> <mhng-f2e4aecb-a19b-4d20-9a48-9640bd9d264d@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-f2e4aecb-a19b-4d20-9a48-9640bd9d264d@palmerdabbelt-glaptop1>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Sun, 7 Jun 2020 09:43:59 +0530
+Message-ID: <CAAhSdy1yUWoQ_YYi=XdAO79EVQxvTHR87FuBmq477opaaTveuw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] RISC-V: Remove CLINT related code
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vishal,
+On Fri, Jun 5, 2020 at 2:10 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Thu, 21 May 2020 06:45:41 PDT (-0700), Anup Patel wrote:
+> > We will be having separate CLINT timer driver which will also
+> > provide CLINT based IPI operations so let's remove CLINT related
+> > code from arch/riscv directory.
+>
+> This will leave the system unbootable, which breaks bisecting.
 
-On Thu, May 28, 2020 at 07:25:12AM +0000, Vishal Sagar wrote:
-> On Wednesday, May 27, 2020 9:42 PM, Laurent Pinchart wrote:
-> > On Wed, May 27, 2020 at 07:27:18PM +0530, Vishal Sagar wrote:
-> > > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
-> > >
-> > > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller,
-> > > a D-PHY in Rx mode and a Video Format Bridge.
-> > >
-> > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > ---
-> > > v14
-> > > - Removed xlnx,csi-pxl-format from required properties
-> > > - Added dependency of xlnx,csi-pxl-format on xlnx,vfb
-> > > - End the yaml file with ...
-> > > - Added Reviewed by Laurent
-> > >
-> > > v13
-> > > - Based on Laurent's suggestions
-> > > - Fixed the datatypes values as minimum and maximum
-> > > - condition added for en-vcx property
-> > >
-> > > v12
-> > > - Moved to yaml format
-> > > - Update CSI-2 and D-PHY
-> > > - Mention that bindings for D-PHY not here
-> > > - reset -> video-reset
-> > >
-> > > v11
-> > > - Modify compatible string from 4.0 to 5.0
-> > >
-> > > v10
-> > > - No changes
-> > >
-> > > v9
-> > > - Fix xlnx,vfb description.
-> > > - s/Optional/Required endpoint property.
-> > > - Move data-lanes description from Ports to endpoint property section.
-> > >
-> > > v8
-> > > - Added reset-gpios optional property to assert video_aresetn
-> > >
-> > > v7
-> > > - Removed the control name from dt bindings
-> > > - Updated the example dt node name to csi2rx
-> > >
-> > > v6
-> > > - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as
-> > > suggested by Luca
-> > > - Added reviewed by Rob Herring
-> > >
-> > > v5
-> > > - Incorporated comments by Luca Cersoli
-> > > - Removed DPHY clock from description and example
-> > > - Removed bayer pattern from device tree MIPI CSI IP
-> > >   doesn't deal with bayer pattern.
-> > >
-> > > v4
-> > > - Added reviewed by Hyun Kwon
-> > >
-> > > v3
-> > > - removed interrupt parent as suggested by Rob
-> > > - removed dphy clock
-> > > - moved vfb to optional properties
-> > > - Added required and optional port properties section
-> > > - Added endpoint property section
-> > >
-> > > v2
-> > > - updated the compatible string to latest version supported
-> > > - removed DPHY related parameters
-> > > - added CSI v2.0 related property (including VCX for supporting upto 16
-> > >   virtual channels).
-> > > - modified csi-pxl-format from string to unsigned int type where the value
-> > >   is as per the CSI specification
-> > > - Defined port 0 and port 1 as sink and source ports.
-> > > - Removed max-lanes property as suggested by Rob and Sakari
-> > >
-> > >  .../bindings/media/xilinx/xlnx,csi2rxss.yaml       | 237
-> > +++++++++++++++++++++
-> > >  1 file changed, 237 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
-> > > b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
-> > > new file mode 100644
-> > > index 0000000..2282231
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yam
-> > > +++ l
-> > > @@ -0,0 +1,237 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,csi2rxss.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Xilinx MIPI CSI-2 Receiver Subsystem
-> > > +
-> > > +maintainers:
-> > > +  - Vishal Sagar <vishal.sagar@xilinx.com>
-> > > +
-> > > +description: |
-> > > +  The Xilinx MIPI CSI-2 Receiver Subsystem is used to capture MIPI
-> > > +CSI-2
-> > > +  traffic from compliant camera sensors and send the output as AXI4
-> > > +Stream
-> > > +  video data for image processing.
-> > > +  The subsystem consists of a MIPI D-PHY in slave mode which captures
-> > > +the
-> > > +  data packets. This is passed along the MIPI CSI-2 Rx IP which
-> > > +extracts the
-> > > +  packet data. The optional Video Format Bridge (VFB) converts this
-> > > +data to
-> > > +  AXI4 Stream video data.
-> > > +  For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver
-> > Subsystem.
-> > > +  Please note that this bindings includes only the MIPI CSI-2 Rx
-> > > +controller
-> > > +  and Video Format Bridge and not D-PHY.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - enum:
-> > > +        - xlnx,mipi-csi2-rx-subsystem-5.0
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    description: List of clock specifiers
-> > > +    items:
-> > > +      - description: AXI Lite clock
-> > > +      - description: Video clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: lite_aclk
-> > > +      - const: video_aclk
-> > > +
-> > > +  xlnx,csi-pxl-format:
-> > > +    description: |
-> > > +      This denotes the CSI Data type selected in hw design.
-> > > +      Packets other than this data type (except for RAW8 and
-> > > +      User defined data types) will be filtered out.
-> > > +      Possible values are as below -
-> > > +      0x1e - YUV4228B
-> > > +      0x1f - YUV42210B
-> > > +      0x20 - RGB444
-> > > +      0x21 - RGB555
-> > > +      0x22 - RGB565
-> > > +      0x23 - RGB666
-> > > +      0x24 - RGB888
-> > > +      0x28 - RAW6
-> > > +      0x29 - RAW7
-> > > +      0x2a - RAW8
-> > > +      0x2b - RAW10
-> > > +      0x2c - RAW12
-> > > +      0x2d - RAW14
-> > > +      0x2e - RAW16
-> > > +      0x2f - RAW20
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - anyOf:
-> > > +        - minimum: 0x1e
-> > > +        - maximum: 0x24
-> > > +        - minimum: 0x28
-> > > +        - maximum: 0x2f
-> > > +
-> > > +  xlnx,vfb:
-> > > +    type: boolean
-> > > +    description: Present when Video Format Bridge is enabled in IP
-> > > + configuration
-> > > +
-> > > +  xlnx,en-csi-v2-0:
-> > > +    type: boolean
-> > > +    description: Present if CSI v2 is enabled in IP configuration.
-> > > +
-> > > +  xlnx,en-vcx:
-> > > +    type: boolean
-> > > +    description: |
-> > > +      When present, there are maximum 16 virtual channels, else only 4.
-> > > +
-> > > +  xlnx,en-active-lanes:
-> > > +    type: boolean
-> > > +    description: |
-> > > +      Present if the number of active lanes can be re-configured at
-> > > +      runtime in the Protocol Configuration Register. Otherwise all lanes,
-> > > +      as set in IP configuration, are always active.
-> > > +
-> > > +  video-reset-gpios:
-> > > +    description: Optional specifier for a GPIO that asserts video_aresetn.
-> > > +    maxItems: 1
-> > > +
-> > > +  ports:
-> > > +    type: object
-> > > +
-> > > +    properties:
-> > > +      port@0:
-> > > +        type: object
-> > > +        description: |
-> > > +          Input / sink port node, single endpoint describing the
-> > > +          CSI-2 transmitter.
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            const: 0
-> > > +
-> > > +          endpoint:
-> > > +            type: object
-> > > +
-> > > +            properties:
-> > > +
-> > > +              data-lanes:
-> > > +                description: |
-> > > +                  This is required only in the sink port 0 endpoint which
-> > > +                  connects to MIPI CSI-2 source like sensor.
-> > > +                  The possible values are -
-> > > +                  1       - For 1 lane enabled in IP.
-> > > +                  1 2     - For 2 lanes enabled in IP.
-> > > +                  1 2 3   - For 3 lanes enabled in IP.
-> > > +                  1 2 3 4 - For 4 lanes enabled in IP.
-> > > +                items:
-> > > +                  - const: 1
-> > > +                  - const: 2
-> > > +                  - const: 3
-> > > +                  - const: 4
-> > > +
-> > > +              remote-endpoint: true
-> > > +
-> > > +            required:
-> > > +              - data-lanes
-> > > +              - remote-endpoint
-> > > +
-> > > +            additionalProperties: false
-> > > +
-> > > +        additionalProperties: false
-> > > +
-> > > +      port@1:
-> > > +        type: object
-> > > +        description: |
-> > > +          Output / source port node, endpoint describing modules
-> > > +          connected the CSI-2 receiver.
-> > > +
-> > > +        properties:
-> > > +
-> > > +          reg:
-> > > +            const: 1
-> > > +
-> > > +          endpoint:
-> > > +            type: object
-> > > +
-> > > +            properties:
-> > > +
-> > > +              remote-endpoint: true
-> > > +
-> > > +            required:
-> > > +              - remote-endpoint
-> > > +
-> > > +            additionalProperties: false
-> > > +
-> > > +        additionalProperties: false
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - ports
-> > > +
-> > > +allOf:
-> > > +  - if:
-> > > +    required:
-> > > +      - xlnx,vfb
-> > > +    then:
-> > > +      required:
-> > > +        - xlnx,csi-pxl-format
-> > > +    else:
-> > > +      properties:
-> > > +        xlnx,csi-pxl-format: false
-> > > +
-> > > +  - if:
-> > > +    not:
-> > > +      required:
-> > > +        - xlnx,en-csi-v2-0
-> > > +    then:
-> > > +      properties:
-> > > +        xlnx,en-vcx: false
-> > 
-> > There's an indentation problem here, it should be
-> > 
-> > allOf:
-> >   - if:
-> >       required:
-> >         - xlnx,vfb
-> >     then:
-> >       required:
-> >         - xlnx,csi-pxl-format
-> >     else:
-> >       properties:
-> >         xlnx,csi-pxl-format: false
-> > 
-> >   - if:
-> >       not:
-> >         required:
-> >           - xlnx,en-csi-v2-0
-> >     then:
-> >       properties:
-> >         xlnx,en-vcx: false
-> > 
-> > Have you run the bindings checks ?
-> > 
-> > make
-> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/xilinx/xlnx,csi
-> > 2rxss.yaml dt_binding_check
-> > 
-> > It would have caught the issue.
-> > 
-> 
-> By mistake the incorrect patch was sent. Apologies for this.
-> 
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +    xcsi2rxss_1: csi2rx@a0020000 {
-> > > +        compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
-> > > +        reg = <0x0 0xa0020000 0x0 0x10000>;
-> > 
-> > I think I mentioned in a previous review that this should be
-> > 
-> >         reg = <0xa0020000 0x10000>;
-> > 
-> > even if it doesn't match what the real values, as dt_binding_check compiles
-> > the examples in the context of a bus that has #address-cells = <1> and #size-
-> > cells = <1>.
-> > 
-> > I can fix these when applying the patches to my tree if that's OK with you, and
-> > send a pull request.
-> 
-> Yes that is fine. Thanks!
+This only affects the NoMMU kernel where userspace FPDPIC work
+is still in-progress so NoMMU kernel is anyway not 100% complete
+without upstreamed userspace support.
 
-I've sent the pull request, the code should be merged in v5.9.
+Are you suggesting to squash PATCH2, PATCH3, and PATCH4 for
+preserving bistability ?
 
-> > > +        interrupt-parent = <&gic>;
-> > > +        interrupts = <0 95 4>;
-> > > +        xlnx,csi-pxl-format = <0x2a>;
-> > > +        xlnx,vfb;
-> > > +        xlnx,en-active-lanes;
-> > > +        xlnx,en-csi-v2-0;
-> > > +        xlnx,en-vcx;
-> > > +        clock-names = "lite_aclk", "video_aclk";
-> > > +        clocks = <&misc_clk_0>, <&misc_clk_1>;
-> > > +        video-reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
-> > > +
-> > > +        ports {
-> > > +            #address-cells = <1>;
-> > > +            #size-cells = <0>;
-> > > +
-> > > +            port@0 {
-> > > +                /* Sink port */
-> > > +                reg = <0>;
-> > > +                csiss_in: endpoint {
-> > > +                    data-lanes = <1 2 3 4>;
-> > > +                    /* MIPI CSI-2 Camera handle */
-> > > +                    remote-endpoint = <&camera_out>;
-> > > +                };
-> > > +            };
-> > > +            port@1 {
-> > > +                /* Source port */
-> > > +                reg = <1>;
-> > > +                csiss_out: endpoint {
-> > > +                    remote-endpoint = <&vproc_in>;
-> > > +                };
-> > > +            };
-> > > +        };
-> > > +    };
-> > > +...
-
--- 
 Regards,
+Anup
 
-Laurent Pinchart
+
+>
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > ---
+> >  arch/riscv/include/asm/clint.h | 39 ------------------------------
+> >  arch/riscv/kernel/Makefile     |  2 +-
+> >  arch/riscv/kernel/clint.c      | 44 ----------------------------------
+> >  arch/riscv/kernel/setup.c      |  2 --
+> >  arch/riscv/kernel/smp.c        |  1 -
+> >  arch/riscv/kernel/smpboot.c    |  1 -
+> >  6 files changed, 1 insertion(+), 88 deletions(-)
+> >  delete mode 100644 arch/riscv/include/asm/clint.h
+> >  delete mode 100644 arch/riscv/kernel/clint.c
+> >
+> > diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
+> > deleted file mode 100644
+> > index a279b17a6aad..000000000000
+> > --- a/arch/riscv/include/asm/clint.h
+> > +++ /dev/null
+> > @@ -1,39 +0,0 @@
+> > -/* SPDX-License-Identifier: GPL-2.0 */
+> > -#ifndef _ASM_RISCV_CLINT_H
+> > -#define _ASM_RISCV_CLINT_H 1
+> > -
+> > -#include <linux/io.h>
+> > -#include <linux/smp.h>
+> > -
+> > -#ifdef CONFIG_RISCV_M_MODE
+> > -extern u32 __iomem *clint_ipi_base;
+> > -
+> > -void clint_init_boot_cpu(void);
+> > -
+> > -static inline void clint_send_ipi_single(unsigned long hartid)
+> > -{
+> > -     writel(1, clint_ipi_base + hartid);
+> > -}
+> > -
+> > -static inline void clint_send_ipi_mask(const struct cpumask *mask)
+> > -{
+> > -     int cpu;
+> > -
+> > -     for_each_cpu(cpu, mask)
+> > -             clint_send_ipi_single(cpuid_to_hartid_map(cpu));
+> > -}
+> > -
+> > -static inline void clint_clear_ipi(unsigned long hartid)
+> > -{
+> > -     writel(0, clint_ipi_base + hartid);
+> > -}
+> > -#else /* CONFIG_RISCV_M_MODE */
+> > -#define clint_init_boot_cpu()        do { } while (0)
+> > -
+> > -/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
+> > -void clint_send_ipi_single(unsigned long hartid);
+> > -void clint_send_ipi_mask(const struct cpumask *hartid_mask);
+> > -void clint_clear_ipi(unsigned long hartid);
+> > -#endif /* CONFIG_RISCV_M_MODE */
+> > -
+> > -#endif /* _ASM_RISCV_CLINT_H */
+> > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> > index d8bbd3207100..529cda705cfe 100644
+> > --- a/arch/riscv/kernel/Makefile
+> > +++ b/arch/riscv/kernel/Makefile
+> > @@ -31,7 +31,7 @@ obj-y       += cacheinfo.o
+> >  obj-y        += patch.o
+> >  obj-$(CONFIG_MMU) += vdso.o vdso/
+> >
+> > -obj-$(CONFIG_RISCV_M_MODE)   += clint.o traps_misaligned.o
+> > +obj-$(CONFIG_RISCV_M_MODE)   += traps_misaligned.o
+> >  obj-$(CONFIG_FPU)            += fpu.o
+> >  obj-$(CONFIG_SMP)            += smpboot.o
+> >  obj-$(CONFIG_SMP)            += smp.o
+> > diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
+> > deleted file mode 100644
+> > index 3647980d14c3..000000000000
+> > --- a/arch/riscv/kernel/clint.c
+> > +++ /dev/null
+> > @@ -1,44 +0,0 @@
+> > -// SPDX-License-Identifier: GPL-2.0
+> > -/*
+> > - * Copyright (c) 2019 Christoph Hellwig.
+> > - */
+> > -
+> > -#include <linux/io.h>
+> > -#include <linux/of_address.h>
+> > -#include <linux/types.h>
+> > -#include <asm/clint.h>
+> > -#include <asm/csr.h>
+> > -#include <asm/timex.h>
+> > -#include <asm/smp.h>
+> > -
+> > -/*
+> > - * This is the layout used by the SiFive clint, which is also shared by the qemu
+> > - * virt platform, and the Kendryte KD210 at least.
+> > - */
+> > -#define CLINT_IPI_OFF                0
+> > -#define CLINT_TIME_CMP_OFF   0x4000
+> > -#define CLINT_TIME_VAL_OFF   0xbff8
+> > -
+> > -u32 __iomem *clint_ipi_base;
+> > -
+> > -void clint_init_boot_cpu(void)
+> > -{
+> > -     struct device_node *np;
+> > -     void __iomem *base;
+> > -
+> > -     np = of_find_compatible_node(NULL, NULL, "riscv,clint0");
+> > -     if (!np) {
+> > -             panic("clint not found");
+> > -             return;
+> > -     }
+> > -
+> > -     base = of_iomap(np, 0);
+> > -     if (!base)
+> > -             panic("could not map CLINT");
+> > -
+> > -     clint_ipi_base = base + CLINT_IPI_OFF;
+> > -     riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
+> > -     riscv_time_val = base + CLINT_TIME_VAL_OFF;
+> > -
+> > -     clint_clear_ipi(boot_cpu_hartid);
+> > -}
+> > diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> > index 145128a7e560..b07a583bf53b 100644
+> > --- a/arch/riscv/kernel/setup.c
+> > +++ b/arch/riscv/kernel/setup.c
+> > @@ -18,7 +18,6 @@
+> >  #include <linux/swiotlb.h>
+> >  #include <linux/smp.h>
+> >
+> > -#include <asm/clint.h>
+> >  #include <asm/cpu_ops.h>
+> >  #include <asm/setup.h>
+> >  #include <asm/sections.h>
+> > @@ -76,7 +75,6 @@ void __init setup_arch(char **cmdline_p)
+> >       setup_bootmem();
+> >       paging_init();
+> >       unflatten_device_tree();
+> > -     clint_init_boot_cpu();
+> >
+> >  #ifdef CONFIG_SWIOTLB
+> >       swiotlb_init(1);
+> > diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+> > index 8375cc5970f6..8a23f1eb5400 100644
+> > --- a/arch/riscv/kernel/smp.c
+> > +++ b/arch/riscv/kernel/smp.c
+> > @@ -17,7 +17,6 @@
+> >  #include <linux/seq_file.h>
+> >  #include <linux/delay.h>
+> >
+> > -#include <asm/clint.h>
+> >  #include <asm/sbi.h>
+> >  #include <asm/tlbflush.h>
+> >  #include <asm/cacheflush.h>
+> > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> > index 5fe849791bf0..a6cfa9842d4b 100644
+> > --- a/arch/riscv/kernel/smpboot.c
+> > +++ b/arch/riscv/kernel/smpboot.c
+> > @@ -24,7 +24,6 @@
+> >  #include <linux/of.h>
+> >  #include <linux/sched/task_stack.h>
+> >  #include <linux/sched/mm.h>
+> > -#include <asm/clint.h>
+> >  #include <asm/cpu_ops.h>
+> >  #include <asm/irq.h>
+> >  #include <asm/mmu_context.h>
