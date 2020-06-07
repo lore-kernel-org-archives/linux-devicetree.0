@@ -2,130 +2,155 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96378C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 16:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B759C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 16:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 702DA20663
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 16:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D800A2073B
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 16:29:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEH/Y385"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LUXGwL3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgFGQTW (ORCPT
+        id S1726844AbgFGQ3E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 12:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        Sun, 7 Jun 2020 12:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgFGQTV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 12:19:21 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5C3C08C5C3;
-        Sun,  7 Jun 2020 09:19:20 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g7so10581858oti.13;
-        Sun, 07 Jun 2020 09:19:20 -0700 (PDT)
+        with ESMTP id S1726571AbgFGQ3D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 12:29:03 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEFFC08C5C4
+        for <devicetree@vger.kernel.org>; Sun,  7 Jun 2020 09:29:01 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 9so7850752ljv.5
+        for <devicetree@vger.kernel.org>; Sun, 07 Jun 2020 09:29:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yvqqjpz8FLcRLU/Z9njJcbhcfbr9e0dc02EzTHwAy1c=;
-        b=iEH/Y385SAxjITQMr8HP6Wy6Hqk3IVEl0k0mOtOrSYN4kiCc5fEAOGT6WaLlr0EmXn
-         O+/GTitiKZgOruElL6myxHULmun0D9L825Qd2l9FygrLwX67fNU+EH1XL+nf99hXcqdA
-         1thSwFV0DhZXjc3UpY/8DEJFf0A9OAk05SaaUHoNv6bsBPwBR5mn8h9YSeR/XeR+HNKP
-         7Y9yVDledNcXcU5zXMh2U4WWnrGPgT7RYOPZh8vMsDkas/IjjFKu+Wwu0oNqzSNfocLz
-         dADCf5a/On4iU+684qR9FyZWVjmtphhp2S4FnzRZR4XKVHJrHPAMMI8Xj8TpzsqJ9QI8
-         wZsA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SDnYXucB/LSHUufMk2Ofpom5Zz/vAp/Zvuags38mkj0=;
+        b=LUXGwL3l/HX8TeZThQeEY+13PnXuHCDIzawEBI6FI/0zIedKDScQO+7/2cJAr9HEg8
+         EvixNwHhauJGQ5uCzq5BOCa4l0cTICCsahpSdZwMVkHyGOLlpDEqO0zWM76ITextJ7ls
+         f9Jsg5dCQ1m3QB0yTCZjEM82l/x3msou677n0K4af49n2LSBXVASO5JmUsTsmLiyiyRn
+         m+YipNV+zGNqiw7APctRfeIxLWbmAwrax5c4B3jGtbs16wBTqb/c7RsjALLHhnsv55DI
+         gjs8ms7uFZK3T6dQ1nF836z1SSKP85fZOsq9Vl8T5t3+5gVAAPkwZ5NgWYS8khYQvu3N
+         AIJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yvqqjpz8FLcRLU/Z9njJcbhcfbr9e0dc02EzTHwAy1c=;
-        b=Sy4JRJOWT1CQHkz8X8FCEOrqM0AD2cPbdKzH+2wS/2/01LGZnCP8ybhUhOIJbgz9Zg
-         gO254MnyIIP2jFQBDU+c6M7aOmnGi7aqCueglOGjFQXj+cSazEawJszt3BHfnuPRyCkQ
-         SbaoPqm8ksPY5t/KZjp8tFdfATKOZZmCP4skVAwS4Te9moyq+f9RfKKHQucIFWI4cUnI
-         DozkmHmP0HYs3PaT6gbtmf5W8WD8uxdEQ4sbyuqR3tRK7heiXLznTL2Zz/y9r1jBgEJj
-         XgW6szmTpEPYoPg9kGdG2OWahCJcZUwKIJcOY3Zdhhf6Ce5yN2E78X0d2+OsY4LBl98a
-         jQew==
-X-Gm-Message-State: AOAM530HMLzGn6l2HJkg0RkfJADxRJL3qWUM1a3v2CUxC8C+uuPGa/75
-        oRJUeJP+zLcL9d4fKCw5cSJOQFh7q0fHtrUtPf0=
-X-Google-Smtp-Source: ABdhPJxuHXTvZ3k3Ejp2FG8p1vqAlKmRauM/Mz6q1l4gsB1emJvN1QNRTSYIVujyIJIu1/s6/WCTLJeKNnikSdQFjaE=
-X-Received: by 2002:a05:6830:1d47:: with SMTP id p7mr9694409oth.43.1591546759531;
- Sun, 07 Jun 2020 09:19:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SDnYXucB/LSHUufMk2Ofpom5Zz/vAp/Zvuags38mkj0=;
+        b=I2yyEVEpp9z76wJWeca8PqaszvBKnPgFZV5ctuGi3HGlAQnTEBvEulFSL2r/nINMHl
+         0lmhSkxLRbEajsj7L9CwZMo5o6m8JQ7DvPdG/N6ErV1gnfLYDLhofk08+udTB3qIvlLQ
+         srlfBqYbiZHhdwdS5yegsy4FV2FGj3p32AphxGSaa99IONs0joGx/Byksd/+FwD/HAPW
+         UTeIeR808xY3JliLnAK1BCC5QjgHmnEJGjdAamRQg53NR/njR8vH9JakO+C4g6kkCHv/
+         CH2ZPvDsh+SsbeSxb4gRG6pwrosbs6jZmXLiVyEoOTWH9GrMe3+OqthQVwm+iLBQsEjO
+         s+qw==
+X-Gm-Message-State: AOAM530DGu9rp6b6waUIz3OzM1btSDo4zMfjC5SfLQlQBETNq1AwaBnL
+        LKQy8YWMZLW7tGNq6Bqa0fZYwg==
+X-Google-Smtp-Source: ABdhPJx+oJFdPJtFNfuI5ow+pcnkgNEOTaUpNnvqEtGllOQlnYFDW1G410GXbhRIGbOisaHH/5tmEA==
+X-Received: by 2002:a2e:97d8:: with SMTP id m24mr4215270ljj.166.1591547339856;
+        Sun, 07 Jun 2020 09:28:59 -0700 (PDT)
+Received: from [192.168.118.216] (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
+        by smtp.gmail.com with ESMTPSA id y16sm3046383ljm.19.2020.06.07.09.28.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 09:28:58 -0700 (PDT)
+Subject: Re: [PATCH v3 08/10] media: i2c: imx290: Add support to enumerate all
+ frame sizes
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
+ <20200524192505.20682-9-andrey.konovalov@linaro.org>
+ <20200526091716.GJ8214@valkosipuli.retiisi.org.uk>
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+Message-ID: <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
+Date:   Sun, 7 Jun 2020 19:28:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1590586141-21006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdX+M+k-JRy1Ps=hRZR=mSuexSQbJ0+Cw1337uO6nak_qQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdX+M+k-JRy1Ps=hRZR=mSuexSQbJ0+Cw1337uO6nak_qQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sun, 7 Jun 2020 17:18:53 +0100
-Message-ID: <CA+V-a8vDVa0DSX_XT=NsmBta4O=v0p_Nn9M5x9N7gw_zc0yoyg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: r8a7742-iwg21d-q7-dbcm-ca: Add device tree for
- camera DB
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200526091716.GJ8214@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Sakari,
 
-Thank you for the review.
+Thank you for the review!
 
-On Fri, Jun 5, 2020 at 1:27 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, May 27, 2020 at 3:29 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Add support for the camera daughter board which is connected to
-> > iWave's RZ/G1H Qseven carrier board. Also enable ttySC[0135] and
-> > ethernet1 interfaces.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
->
-> > +&scifb1 {
-> > +       pinctrl-0 = <&scifb1_pins>;
-> > +       pinctrl-names = "default";
-> > +       status = "okay";
->
-> Before I queue this in renesas-devel for v5.9, I have on question:
-> As this port carries RTS/CTS signals, perhaps you want to add
->
->     rts-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
->     cts-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
->
-Aaha the user manual mentioned RTS/CTS wasn't connected, but I tested
-this with the above which disproves the Doc. Shall I post it as a
-separate patch or post a v2 including it.
+On 26.05.2020 12:17, Sakari Ailus wrote:
+> Hi Andrey,
+> 
+> On Sun, May 24, 2020 at 10:25:03PM +0300, Andrey Konovalov wrote:
+>> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>
+>> Add support to enumerate all frame sizes supported by IMX290. This is
+>> required for using with userspace tools such as libcamera.
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+>> ---
+>>   drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+>> index 6e70ff22bc5f..88850f3b1427 100644
+>> --- a/drivers/media/i2c/imx290.c
+>> +++ b/drivers/media/i2c/imx290.c
+>> @@ -471,6 +471,25 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
+>>   	return 0;
+>>   }
+>>   
+>> +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
+>> +				  struct v4l2_subdev_pad_config *cfg,
+>> +				  struct v4l2_subdev_frame_size_enum *fse)
+>> +{
+>> +	if ((fse->code != imx290_formats[0].code) &&
+>> +	    (fse->code != imx290_formats[1].code))
+>> +		return -EINVAL;
+> 
+> Please skip the modes that do not have the code specified by the user. They
+> should not be enumerated here.
 
-Cheers,
---Prabhakar
+I've double checked this part of the code, and it doesn't seem to need changes.
+The reason is that for the both codes the set of the modes and the frame sizes is
+exactly the same. And the fse->code check above just guards against the codes not
+supported by the driver at all.
 
-> ?
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Thanks,
+Andrey
+
+>> +
+>> +	if (fse->index >= ARRAY_SIZE(imx290_modes))
+>> +		return -EINVAL;
+>> +
+>> +	fse->min_width = imx290_modes[fse->index].width;
+>> +	fse->max_width = imx290_modes[fse->index].width;
+>> +	fse->min_height = imx290_modes[fse->index].height;
+>> +	fse->max_height = imx290_modes[fse->index].height;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int imx290_get_fmt(struct v4l2_subdev *sd,
+>>   			  struct v4l2_subdev_pad_config *cfg,
+>>   			  struct v4l2_subdev_format *fmt)
+>> @@ -850,6 +869,7 @@ static const struct v4l2_subdev_video_ops imx290_video_ops = {
+>>   static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
+>>   	.init_cfg = imx290_entity_init_cfg,
+>>   	.enum_mbus_code = imx290_enum_mbus_code,
+>> +	.enum_frame_size = imx290_enum_frame_size,
+>>   	.get_fmt = imx290_get_fmt,
+>>   	.set_fmt = imx290_set_fmt,
+>>   };
+> 
