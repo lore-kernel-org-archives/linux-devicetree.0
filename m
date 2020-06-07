@@ -1,136 +1,466 @@
-Return-Path: <SRS0=StSA=7T=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208D3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 19:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED38EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 01:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5ABF20663
-	for <linux-devicetree@archiver.kernel.org>; Sat,  6 Jun 2020 19:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE23D20760
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 01:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSGIPCGF"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QQtwU5pZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgFFT7m (ORCPT
+        id S1728904AbgFGBkQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 6 Jun 2020 15:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
+        Sat, 6 Jun 2020 21:40:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgFFT7l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 15:59:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B64C03E96A;
-        Sat,  6 Jun 2020 12:59:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id k11so13896714ejr.9;
-        Sat, 06 Jun 2020 12:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n5XWxTbu49klTKh2OV1xwSrup891qcSS3M98k2q6wzs=;
-        b=bSGIPCGFYpQplqdBDclrszoeF5pyhcx6S+wIRfcQu/G4/SFH80rDHzkwmphCDZ6UFO
-         m01JiC8oKBG8tGDEVHlbV2efJOLblFM+rMVn7GwbM8XdnGHflCJtCXR3OSjy3HegQ/4A
-         Jsqn0+nmWUDhqmAuZoX/p749Bint1svFLDUaDQarA8WSiddXJgj+lwJJP3siqfhp5v51
-         FaRKnlAV9GmiZVG/CpeRJ8FEkMnIN9HKeeTZMq5rj4UP2Rvr2KWGLEN2M9XgyErxch7G
-         UtY+oinumc93T8wm2lD1niYj7yivi6oTUEG7fM5Quz68ah0BY8NOc1MWAqVGIT7iM26B
-         +UTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n5XWxTbu49klTKh2OV1xwSrup891qcSS3M98k2q6wzs=;
-        b=buZOWWJc/h2oYzO/oDX8oh6gzvgX2d0ofX5NkqPl9sS6xZ1TW6FVvZAHwrlz2hyblc
-         fnf6qtJrjQy/DAA//a/1BjcYm0PT+lGU6RxevQPkztxaznuflKK27VJdNPa3g6xpgTsg
-         fEcCZ33IrhWS0REorZEAi3DtNXT+ogBEQh3K9xhCp+LWKm3LJ5Pfp9ksKGXVYz7K8thZ
-         /WSfrVxeW/+bn/ffDUFYRepv2szIxl6U+8C+Qz4J+psvSvJIrHf0QEtA65WFERWCgcqy
-         /EpvTZ0hhpGeVGJMDjRvWIjn9XTX4FnuelulAkdn6z8fe1v+o57rtTjpZzNwYWI+MUXD
-         RtbQ==
-X-Gm-Message-State: AOAM530ur93Rk8ld3PXRlXXU3vEDAvJvLm2R32bfTue1UPeiu2a72GV7
-        ceP6DWjyQWkG2yDnpacy+BGLxtXL
-X-Google-Smtp-Source: ABdhPJwXMA7ZLUaMLk1avqpZMTY4TtEV3VlReQVsStdY4Z2Tyn0cFunI//SB1V20iNokJijzxpQZfg==
-X-Received: by 2002:a17:907:4096:: with SMTP id nm6mr14445477ejb.4.1591473579565;
-        Sat, 06 Jun 2020 12:59:39 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:e442:880b:6e2c:2ebd? ([2a01:110f:b59:fd00:e442:880b:6e2c:2ebd])
-        by smtp.gmail.com with ESMTPSA id cd17sm6726607ejb.115.2020.06.06.12.59.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2020 12:59:38 -0700 (PDT)
-Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
- definition
-To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-4-dmurphy@ti.com> <20200606155324.GA21130@amd>
- <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
-Date:   Sat, 6 Jun 2020 21:59:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        with ESMTP id S1728883AbgFGBkP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 6 Jun 2020 21:40:15 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140C1C08C5C2;
+        Sat,  6 Jun 2020 18:40:15 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 750FF2C9;
+        Sun,  7 Jun 2020 03:40:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591494013;
+        bh=6Xgbk/4JyNR7IV40beR+8QbmppCvxn7CRtSLxoewefQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QQtwU5pZyk65wiUpGLLo1p39nci7yh+tX4TECTUL6yu2X2NTmqcgARAnVX3hGCjrJ
+         jFphTlIXNMSj0RIqbfxort7lnteFva0E2YnLmD0bWsl6zsdUDoBTLUHkhRxRu3H3Y7
+         oB7k8Pjlh3M8E8XguC5fS1pfB+KQlnhxlaGghVGk=
+Date:   Sun, 7 Jun 2020 04:39:54 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vsagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v14 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20200607013954.GY7339@pendragon.ideasonboard.com>
+References: <1590587839-129558-1-git-send-email-vishal.sagar@xilinx.com>
+ <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
+ <20200527161140.GF6171@pendragon.ideasonboard.com>
+ <DM6PR02MB6876427592203524D810D338A78E0@DM6PR02MB6876.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <DM6PR02MB6876427592203524D810D338A78E0@DM6PR02MB6876.namprd02.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dan,
+Hi Vishal,
 
-On 6/6/20 6:39 PM, Dan Murphy wrote:
-> Pavek
+On Thu, May 28, 2020 at 07:25:12AM +0000, Vishal Sagar wrote:
+> On Wednesday, May 27, 2020 9:42 PM, Laurent Pinchart wrote:
+> > On Wed, May 27, 2020 at 07:27:18PM +0530, Vishal Sagar wrote:
+> > > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> > >
+> > > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller,
+> > > a D-PHY in Rx mode and a Video Format Bridge.
+> > >
+> > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > ---
+> > > v14
+> > > - Removed xlnx,csi-pxl-format from required properties
+> > > - Added dependency of xlnx,csi-pxl-format on xlnx,vfb
+> > > - End the yaml file with ...
+> > > - Added Reviewed by Laurent
+> > >
+> > > v13
+> > > - Based on Laurent's suggestions
+> > > - Fixed the datatypes values as minimum and maximum
+> > > - condition added for en-vcx property
+> > >
+> > > v12
+> > > - Moved to yaml format
+> > > - Update CSI-2 and D-PHY
+> > > - Mention that bindings for D-PHY not here
+> > > - reset -> video-reset
+> > >
+> > > v11
+> > > - Modify compatible string from 4.0 to 5.0
+> > >
+> > > v10
+> > > - No changes
+> > >
+> > > v9
+> > > - Fix xlnx,vfb description.
+> > > - s/Optional/Required endpoint property.
+> > > - Move data-lanes description from Ports to endpoint property section.
+> > >
+> > > v8
+> > > - Added reset-gpios optional property to assert video_aresetn
+> > >
+> > > v7
+> > > - Removed the control name from dt bindings
+> > > - Updated the example dt node name to csi2rx
+> > >
+> > > v6
+> > > - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as
+> > > suggested by Luca
+> > > - Added reviewed by Rob Herring
+> > >
+> > > v5
+> > > - Incorporated comments by Luca Cersoli
+> > > - Removed DPHY clock from description and example
+> > > - Removed bayer pattern from device tree MIPI CSI IP
+> > >   doesn't deal with bayer pattern.
+> > >
+> > > v4
+> > > - Added reviewed by Hyun Kwon
+> > >
+> > > v3
+> > > - removed interrupt parent as suggested by Rob
+> > > - removed dphy clock
+> > > - moved vfb to optional properties
+> > > - Added required and optional port properties section
+> > > - Added endpoint property section
+> > >
+> > > v2
+> > > - updated the compatible string to latest version supported
+> > > - removed DPHY related parameters
+> > > - added CSI v2.0 related property (including VCX for supporting upto 16
+> > >   virtual channels).
+> > > - modified csi-pxl-format from string to unsigned int type where the value
+> > >   is as per the CSI specification
+> > > - Defined port 0 and port 1 as sink and source ports.
+> > > - Removed max-lanes property as suggested by Rob and Sakari
+> > >
+> > >  .../bindings/media/xilinx/xlnx,csi2rxss.yaml       | 237
+> > +++++++++++++++++++++
+> > >  1 file changed, 237 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> > > b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> > > new file mode 100644
+> > > index 0000000..2282231
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yam
+> > > +++ l
+> > > @@ -0,0 +1,237 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,csi2rxss.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Xilinx MIPI CSI-2 Receiver Subsystem
+> > > +
+> > > +maintainers:
+> > > +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> > > +
+> > > +description: |
+> > > +  The Xilinx MIPI CSI-2 Receiver Subsystem is used to capture MIPI
+> > > +CSI-2
+> > > +  traffic from compliant camera sensors and send the output as AXI4
+> > > +Stream
+> > > +  video data for image processing.
+> > > +  The subsystem consists of a MIPI D-PHY in slave mode which captures
+> > > +the
+> > > +  data packets. This is passed along the MIPI CSI-2 Rx IP which
+> > > +extracts the
+> > > +  packet data. The optional Video Format Bridge (VFB) converts this
+> > > +data to
+> > > +  AXI4 Stream video data.
+> > > +  For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver
+> > Subsystem.
+> > > +  Please note that this bindings includes only the MIPI CSI-2 Rx
+> > > +controller
+> > > +  and Video Format Bridge and not D-PHY.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +        - xlnx,mipi-csi2-rx-subsystem-5.0
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    description: List of clock specifiers
+> > > +    items:
+> > > +      - description: AXI Lite clock
+> > > +      - description: Video clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: lite_aclk
+> > > +      - const: video_aclk
+> > > +
+> > > +  xlnx,csi-pxl-format:
+> > > +    description: |
+> > > +      This denotes the CSI Data type selected in hw design.
+> > > +      Packets other than this data type (except for RAW8 and
+> > > +      User defined data types) will be filtered out.
+> > > +      Possible values are as below -
+> > > +      0x1e - YUV4228B
+> > > +      0x1f - YUV42210B
+> > > +      0x20 - RGB444
+> > > +      0x21 - RGB555
+> > > +      0x22 - RGB565
+> > > +      0x23 - RGB666
+> > > +      0x24 - RGB888
+> > > +      0x28 - RAW6
+> > > +      0x29 - RAW7
+> > > +      0x2a - RAW8
+> > > +      0x2b - RAW10
+> > > +      0x2c - RAW12
+> > > +      0x2d - RAW14
+> > > +      0x2e - RAW16
+> > > +      0x2f - RAW20
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - anyOf:
+> > > +        - minimum: 0x1e
+> > > +        - maximum: 0x24
+> > > +        - minimum: 0x28
+> > > +        - maximum: 0x2f
+> > > +
+> > > +  xlnx,vfb:
+> > > +    type: boolean
+> > > +    description: Present when Video Format Bridge is enabled in IP
+> > > + configuration
+> > > +
+> > > +  xlnx,en-csi-v2-0:
+> > > +    type: boolean
+> > > +    description: Present if CSI v2 is enabled in IP configuration.
+> > > +
+> > > +  xlnx,en-vcx:
+> > > +    type: boolean
+> > > +    description: |
+> > > +      When present, there are maximum 16 virtual channels, else only 4.
+> > > +
+> > > +  xlnx,en-active-lanes:
+> > > +    type: boolean
+> > > +    description: |
+> > > +      Present if the number of active lanes can be re-configured at
+> > > +      runtime in the Protocol Configuration Register. Otherwise all lanes,
+> > > +      as set in IP configuration, are always active.
+> > > +
+> > > +  video-reset-gpios:
+> > > +    description: Optional specifier for a GPIO that asserts video_aresetn.
+> > > +    maxItems: 1
+> > > +
+> > > +  ports:
+> > > +    type: object
+> > > +
+> > > +    properties:
+> > > +      port@0:
+> > > +        type: object
+> > > +        description: |
+> > > +          Input / sink port node, single endpoint describing the
+> > > +          CSI-2 transmitter.
+> > > +
+> > > +        properties:
+> > > +          reg:
+> > > +            const: 0
+> > > +
+> > > +          endpoint:
+> > > +            type: object
+> > > +
+> > > +            properties:
+> > > +
+> > > +              data-lanes:
+> > > +                description: |
+> > > +                  This is required only in the sink port 0 endpoint which
+> > > +                  connects to MIPI CSI-2 source like sensor.
+> > > +                  The possible values are -
+> > > +                  1       - For 1 lane enabled in IP.
+> > > +                  1 2     - For 2 lanes enabled in IP.
+> > > +                  1 2 3   - For 3 lanes enabled in IP.
+> > > +                  1 2 3 4 - For 4 lanes enabled in IP.
+> > > +                items:
+> > > +                  - const: 1
+> > > +                  - const: 2
+> > > +                  - const: 3
+> > > +                  - const: 4
+> > > +
+> > > +              remote-endpoint: true
+> > > +
+> > > +            required:
+> > > +              - data-lanes
+> > > +              - remote-endpoint
+> > > +
+> > > +            additionalProperties: false
+> > > +
+> > > +        additionalProperties: false
+> > > +
+> > > +      port@1:
+> > > +        type: object
+> > > +        description: |
+> > > +          Output / source port node, endpoint describing modules
+> > > +          connected the CSI-2 receiver.
+> > > +
+> > > +        properties:
+> > > +
+> > > +          reg:
+> > > +            const: 1
+> > > +
+> > > +          endpoint:
+> > > +            type: object
+> > > +
+> > > +            properties:
+> > > +
+> > > +              remote-endpoint: true
+> > > +
+> > > +            required:
+> > > +              - remote-endpoint
+> > > +
+> > > +            additionalProperties: false
+> > > +
+> > > +        additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - ports
+> > > +
+> > > +allOf:
+> > > +  - if:
+> > > +    required:
+> > > +      - xlnx,vfb
+> > > +    then:
+> > > +      required:
+> > > +        - xlnx,csi-pxl-format
+> > > +    else:
+> > > +      properties:
+> > > +        xlnx,csi-pxl-format: false
+> > > +
+> > > +  - if:
+> > > +    not:
+> > > +      required:
+> > > +        - xlnx,en-csi-v2-0
+> > > +    then:
+> > > +      properties:
+> > > +        xlnx,en-vcx: false
+> > 
+> > There's an indentation problem here, it should be
+> > 
+> > allOf:
+> >   - if:
+> >       required:
+> >         - xlnx,vfb
+> >     then:
+> >       required:
+> >         - xlnx,csi-pxl-format
+> >     else:
+> >       properties:
+> >         xlnx,csi-pxl-format: false
+> > 
+> >   - if:
+> >       not:
+> >         required:
+> >           - xlnx,en-csi-v2-0
+> >     then:
+> >       properties:
+> >         xlnx,en-vcx: false
+> > 
+> > Have you run the bindings checks ?
+> > 
+> > make
+> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/xilinx/xlnx,csi
+> > 2rxss.yaml dt_binding_check
+> > 
+> > It would have caught the issue.
+> > 
 > 
-> Thanks for the review
+> By mistake the incorrect patch was sent. Apologies for this.
 > 
-> On 6/6/20 10:53 AM, Pavel Machek wrote:
->> Hi!
->>
->>> Introduce a multicolor class that groups colored LEDs
->>> within a LED node.
->>>
->>> The multi color class groups monochrome LEDs and allows controlling two
->>> aspects of the final combined color: hue and lightness. The former is
->>> controlled via the intensity file and the latter is controlled
->>> via brightness file.
->>>
->>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
->>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> new file mode 100644
-[...]
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -9533,6 +9533,14 @@ F:    Documentation/devicetree/bindings/leds/
->>>   F:    drivers/leds/
->>>   F:    include/linux/leds.h
->>> +LED MULTICOLOR FRAMEWORK
->>> +M:    Dan Murphy <dmurphy@ti.com>
->>> +L:    linux-leds@vger.kernel.org
->> I'd like to be mentioned here, too. "M: Pavel Machek
->> <pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
->> file update through a LED tree. Should definitely go to separate
->> patch.
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    xcsi2rxss_1: csi2rx@a0020000 {
+> > > +        compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
+> > > +        reg = <0x0 0xa0020000 0x0 0x10000>;
+> > 
+> > I think I mentioned in a previous review that this should be
+> > 
+> >         reg = <0xa0020000 0x10000>;
+> > 
+> > even if it doesn't match what the real values, as dt_binding_check compiles
+> > the examples in the context of a bus that has #address-cells = <1> and #size-
+> > cells = <1>.
+> > 
+> > I can fix these when applying the patches to my tree if that's OK with you, and
+> > send a pull request.
 > 
-> Oh definitely.  I thought it was implied that you and Jacek are both 
-> Maintainers as well.
-> 
-> I will add you but will wait to see if Jacek wants to be added.
+> Yes that is fine. Thanks!
 
-Actually I don't think that we need to add this separate entry
-for LED multicolor class. This is still under LED subsystem,
-and I didn't add anything for LED class flash.
+I've sent the pull request, the code should be merged in v5.9.
 
-> I will separate this out and make it a separate patch
+> > > +        interrupt-parent = <&gic>;
+> > > +        interrupts = <0 95 4>;
+> > > +        xlnx,csi-pxl-format = <0x2a>;
+> > > +        xlnx,vfb;
+> > > +        xlnx,en-active-lanes;
+> > > +        xlnx,en-csi-v2-0;
+> > > +        xlnx,en-vcx;
+> > > +        clock-names = "lite_aclk", "video_aclk";
+> > > +        clocks = <&misc_clk_0>, <&misc_clk_1>;
+> > > +        video-reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
+> > > +
+> > > +        ports {
+> > > +            #address-cells = <1>;
+> > > +            #size-cells = <0>;
+> > > +
+> > > +            port@0 {
+> > > +                /* Sink port */
+> > > +                reg = <0>;
+> > > +                csiss_in: endpoint {
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    /* MIPI CSI-2 Camera handle */
+> > > +                    remote-endpoint = <&camera_out>;
+> > > +                };
+> > > +            };
+> > > +            port@1 {
+> > > +                /* Source port */
+> > > +                reg = <1>;
+> > > +                csiss_out: endpoint {
+> > > +                    remote-endpoint = <&vproc_in>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
 
 -- 
-Best regards,
-Jacek Anaszewski
+Regards,
+
+Laurent Pinchart
