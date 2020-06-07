@@ -2,125 +2,94 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E018C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 19:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277EFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 20:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F06922067B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 19:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8BE207ED
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 20:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVzKPShw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxGqwPhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgFGTAj (ORCPT
+        id S1727794AbgFGUpN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 15:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
+        Sun, 7 Jun 2020 16:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728033AbgFGS5P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:57:15 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A00C08C5C3;
-        Sun,  7 Jun 2020 11:57:14 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z9so17736691ljh.13;
-        Sun, 07 Jun 2020 11:57:14 -0700 (PDT)
+        with ESMTP id S1726093AbgFGUpM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 16:45:12 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC37C08C5C3;
+        Sun,  7 Jun 2020 13:45:12 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id i25so1762811iog.0;
+        Sun, 07 Jun 2020 13:45:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GpFtIVnKnNndfebpkGzqwkaxd/wyRN7pW9EKTYyaD+o=;
-        b=dVzKPShw4KgOD+DsB7SciXodU7w9VUVFbPFuBaWR1s1z0scCvNhSx+hpw7DAJwTx/O
-         YXrQ3c7MVoaaRHpVLS7AvmJvyu/ZpsNv0KE89n0nu0ifIdn9S7AruNCHTTpTzT33pB6U
-         Ka4/FclAqOgc6eMWkhNE2AefzhqucIaXMO8JtuxQZC6PM/6fmHERV+dTjkKyTnBEUZ4P
-         WXfUE3bmKN7JQF+8kpAnyMy9DpCKvYHxvacGsSaMssAinTqBr6DnxGfYTw+Rb43NX8/X
-         CH6zbNCCOfnGM54v56VMS5BzpkU8HArHeCfU6yGw/GtdGDo+XW3kYwyA1/suXSHcuQCD
-         6/tQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k/YnB5fzP1XicKiRcAe2Q8LuxjHO0CMYG9cBtnOKMh4=;
+        b=GxGqwPhkkOGRxOBl7vka/S+zbKecUhkFDra1dJfBpBqCyWgA47XutunWnavtjHUHM6
+         WoYPyQSIKvsbcMWJJDjIhJOvGhItrkPo/ml6UedBAtjjJeOisKgKVmglPgY+ye0MUQJK
+         4QEMRMiFAA21c4zgetYQ0b+Jz4ZD7Dtc1L1PZpZXx4yKmcGpbESP/4BLG5K8P8Ue+WKI
+         q/+1Gy0NG7V9wpvE7HGX6FU2ih2pnWv8QNHJl6CfRWLz/EEg7Kb8iNgVjTGQTwmr7O7C
+         xQ53yO8+6NXnq6meoVOEd9yRkIV/vl6XeZKCWczaZgE+roIXjLECAkXnF+zgfLv5PmN2
+         yVnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GpFtIVnKnNndfebpkGzqwkaxd/wyRN7pW9EKTYyaD+o=;
-        b=YmqlOILiKcSaCkOynOCukg1KjWLk4XNlL3LLsmRbqHcBfXP8vv/LROaH6LtHln+6tQ
-         HMdS+J+s0war6ARCVr2XSp5hI5u1duEdWdVWR+cpZj7EP6FtHtKbljDVKoHbzewR9I/R
-         +t+LZ4Lf30PktW+EEN2cVWvVzNXrcBkbjt+uLmQ/nkb2xdGts6lkyX9bcJ9tTbqyIS7R
-         zEY8oOcugm97RXf+BpQ/KPEY2vDioSXdMk/YyPrjz2oQCGOoYQ6Ag62WJx1J3XUgdCUu
-         0Vr+Seu06DGHmcl0/cExrKl4Bou4ofa1qQMhzbAFtw24QBhEod3vdk9YFMpWIulXKRIn
-         ePig==
-X-Gm-Message-State: AOAM530Cc7frTCiNV2x5b96rL/3PWQ80PAD3srV5w7IQxC3tjKoGnq1j
-        8eT5laBHjv1XWsTvnkBHX1s=
-X-Google-Smtp-Source: ABdhPJx9HQOg7T9G9DNZloItTqEpDE+zxBogAZlWstcxnU5tM6I+j0lUX/A4nl13lbKimVaBTwXU5g==
-X-Received: by 2002:a2e:6f13:: with SMTP id k19mr10267726ljc.364.1591556233270;
-        Sun, 07 Jun 2020 11:57:13 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 11:57:12 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v3 03/39] clk: tegra: Export Tegra20 EMC kernel symbols
-Date:   Sun,  7 Jun 2020 21:54:54 +0300
-Message-Id: <20200607185530.18113-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200607185530.18113-1-digetx@gmail.com>
-References: <20200607185530.18113-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k/YnB5fzP1XicKiRcAe2Q8LuxjHO0CMYG9cBtnOKMh4=;
+        b=SnvsJY0k37Ur7FYa9chKvSk0V+78jweUCsmvicf9R6MAb2Mk6CH0TFFImhrsLWAyvn
+         FBgKtqkeyOsXtzp5ReLAjmXmKAV8gyifGquWv3bKaSLK+Ms0zLkI2OIW9fMYfkPd6eoa
+         4TnU5GK2INt3GbZz5irbQEnbcEHhWsKFCH6Dw7ZT1Ng8EqktX68LErUhVBpGxHyOiTL7
+         qNEmj8nBvQmbbzs1gdD3XorCxBi73iCR1OK/AvCQNfTnfJObfnEg7SfQyArVMzAY4nRe
+         xo1AVDs4/Jnhbmj9djSKYG892Bzvzss98jyw0l1shcwfavL2YB/xZACJlQa3ibF8ACSO
+         7+lA==
+X-Gm-Message-State: AOAM532l7xtupFCHuLiYg0PNshchaJBLRRZolKCbP61mOGEGM00P5xXa
+        rbgcxAk7eStqeL6KcQHcfbsrgzD53hbba4Em6FHHP8vB
+X-Google-Smtp-Source: ABdhPJx8YH0LXzFYGcRU9BI+IR83rM6pbwtkKlIoHSeUClRsZq3D2mgrW0vUmYRP3mkH6A0GPwzANQOxW3Syq3lOEDU=
+X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr18232285iov.80.1591562711809;
+ Sun, 07 Jun 2020 13:45:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1591441171-20341-1-git-send-email-sivaprak@codeaurora.org> <1591441171-20341-4-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <1591441171-20341-4-git-send-email-sivaprak@codeaurora.org>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Sun, 7 Jun 2020 15:45:00 -0500
+Message-ID: <CABb+yY2HhHSbP7UX_r1bGgpxzQKfC9aS8r9nxX5AOt8ENG5ACQ@mail.gmail.com>
+Subject: Re: [PATCH V2 3/3] mailbox: qcom: Add ipq6018 apcs compatible
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We're going to modularize Tegra EMC drivers and some of the EMC clk driver
-symbols need to be exported, let's export them.
+On Sat, Jun 6, 2020 at 5:59 AM Sivaprakash Murugesan
+<sivaprak@codeaurora.org> wrote:
+>
+> The Qualcomm ipq6018 has apcs block, add compatible for the same.
+> Also, the apcs provides a clock controller functionality similar
+> to msm8916 but the clock driver is different.
+>
+> Create a child platform device based on the apcs compatible for the
+> clock controller functionality.
+>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V2]
+>  * created a new structur for driver data.
+>  * re-arranged compatible strings in sorted order
+>
+Please break this into two patches, first reorganise and then add new
+ipq6018 of_match.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-tegra20-emc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
-index 03bf0009a33c..dd74b8543bf1 100644
---- a/drivers/clk/tegra/clk-tegra20-emc.c
-+++ b/drivers/clk/tegra/clk-tegra20-emc.c
-@@ -13,6 +13,7 @@
- #include <linux/clk-provider.h>
- #include <linux/clk/tegra.h>
- #include <linux/err.h>
-+#include <linux/export.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-@@ -235,6 +236,7 @@ void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
- 		emc->cb_arg = cb_arg;
- 	}
- }
-+EXPORT_SYMBOL_GPL(tegra20_clk_set_emc_round_callback);
- 
- bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw)
- {
-@@ -291,3 +293,4 @@ int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(tegra20_clk_prepare_emc_mc_same_freq);
--- 
-2.26.0
-
+thanks.
