@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7824DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD42C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE7420760
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7872074B
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NzIgNQKU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpeCLlYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgFGS5c (ORCPT
+        id S1728725AbgFGS7t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:57:32 -0400
+        Sun, 7 Jun 2020 14:59:49 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728299AbgFGS53 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:57:29 -0400
+        with ESMTP id S1728540AbgFGS5c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:57:32 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28B4C061A0E;
-        Sun,  7 Jun 2020 11:57:28 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so17748049ljc.8;
-        Sun, 07 Jun 2020 11:57:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5A7C061A0E;
+        Sun,  7 Jun 2020 11:57:32 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z9so17737181ljh.13;
+        Sun, 07 Jun 2020 11:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qWLmy17GC8FK7PHSQ8U9gnOM1EaYpHMCshqC+sIXbKQ=;
-        b=NzIgNQKUOvSmdiStp+r13m7kYNJlX1EmKxR4cZmq4oNGkqloMlbFKVFpDLgfP82fUV
-         IhiyVO5OD1OovrqeCa6sDsfRtqgJbzr+b6A1eOqRxF0AyEkX6KCr1I6xswHAYru0mgXX
-         1/i+SzrSuIZTOQiZhV7d7AVHBVfmi2/+V0BULy8JuRjo+LlxBdr5xaOPVsiyeyxkS/VJ
-         MvHmTGYhQ179yNwdI+hBdfO+Fu/JYplHKRjR3kl9W3HC8A5++P+cb3cJfWQLnAhTwMUt
-         ZLNNyE0OGq76kY0dt+nnxUhi5rkhfiY1hffSAKrRs3wPAlPB1c6WjxuGrsIL2Fu2yBT1
-         PGvQ==
+        bh=061hlrRfunwkyZki3oWiaKmN7ev2U21u3B6yt3cimTc=;
+        b=OpeCLlYVr3IRPV2bWVGeZGoM/AcV5A0pdWEKydgN/1uX4UBx4HRNJyI65ktEmJN67Y
+         U+upq4RGVxvRV1fPu3I4yvBa0omogL/IXYDm/kVNOeIJ9UnIrnMT/9RSfu2Qg+aP2BuS
+         rL9JvCGvgrtRGYYnSQv28MPXPPFz4CIxrOl31hBUgVagyt3F59onvYlhKTeREiCBvLnG
+         htgLq7n9SV+LgHR3+chUjMZVFCd+NzBJj9LYzKD21Cn60rNJzB9gItbsV+OMoFzIyr+B
+         pomvyTmtSZfEqRu/1Kc2UW7k+MRV5pKHVum2Ch8QAjw68aGtVG1TMUxNb7byOwAuLf6W
+         eiDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qWLmy17GC8FK7PHSQ8U9gnOM1EaYpHMCshqC+sIXbKQ=;
-        b=MrgSGI5RsbgEk+zK90I951RkIRYAREmd8PuI7exaV4tponSsYUG5gssPhKTgX5bqJI
-         Vs5rv3w2jvveduiRioybJXT2+ix3QuGn2fpOpxn5NT+agTPkXq3lJ/pa9KNZtj3Eb+2+
-         VEZcvhL5nOa5cBDwJuRhHSUga4YcLeXXRI2Y7u0JjNGB42FRqYWE6PI3MLHqGtL9Kn0z
-         s9a7S5yzjGJWUXJTkVtQLDBH3PVlWT+2/hCVDZf+xm5PVugNtNSW3yt5pV2LD2Bhj9CE
-         1eRme3LWrB2FSHsDld5KkSYH8IEcrkSw3MW6AevuqK1tFbEHHULt2r1ENbY1f/Mbr66g
-         zYKg==
-X-Gm-Message-State: AOAM530olg8Q+pTKyP2/h3ygz0ItyT3lRuwl/D8nXRV+xjziIjhr3gI+
-        uxod4X/tm1wGfjvvyscusp0=
-X-Google-Smtp-Source: ABdhPJyk0rp2rmqT73OdLJlnWEpSNMMKaseG7J5aRmaZI7drexJ4GbV3PH0/DQWpuVTXz3D5k+jv5A==
-X-Received: by 2002:a05:651c:1207:: with SMTP id i7mr9321217lja.86.1591556247059;
-        Sun, 07 Jun 2020 11:57:27 -0700 (PDT)
+        bh=061hlrRfunwkyZki3oWiaKmN7ev2U21u3B6yt3cimTc=;
+        b=FW9ZJ6Tu/GWrq3woU5KvLGxSckt3kaFvJ7U6tBF9GLiWuQQGETzxgBa1yYsuiIFOOD
+         I2+17IinjtNiOi1IESkMsXNyZZCQ+l5OgcVpVSkRM16UZ0AeKQ4YVN6MlHiGTGGk7a14
+         CFAXE+7FAtmTHB5LT9n5ERVbFcgvAy1bhZLZt9rf0O8t4ZJIlx4cm24S+bVaLsuB013L
+         HMS+6N9P6LQ8h73NwjowjUIkHvJ9XUY0N6cuwVWQ/VFOvyju7s2zJFTLPjJSMktT6hz4
+         VljmQoyVdyEXVwIZeKEhDmRl3zZpMd3m/Vq0Njpq3NrcyRktVY+74NB+42wVriPPlw8F
+         WMLA==
+X-Gm-Message-State: AOAM533dMyVyPdrmUENRZDf9wyo7Yb31kmt7YwfeSibt9QtInATsZbee
+        ioQB9dmwjQ5KjuJn0P1zNCM=
+X-Google-Smtp-Source: ABdhPJz7379nhczt27dgiUBvJO9L0ly/gGz6aROzdQPsGh2iExP9kIqzL5tstRWYuiTHNaiqba385Q==
+X-Received: by 2002:a2e:9987:: with SMTP id w7mr8917913lji.215.1591556250974;
+        Sun, 07 Jun 2020 11:57:30 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.25
+        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 11:57:26 -0700 (PDT)
+        Sun, 07 Jun 2020 11:57:30 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v3 13/39] PM / devfreq: tegra30: Use MC timings for building OPP table
-Date:   Sun,  7 Jun 2020 21:55:04 +0300
-Message-Id: <20200607185530.18113-14-digetx@gmail.com>
+Subject: [PATCH v3 16/39] PM / devfreq: tegra20: Adjust clocks conversion ratio and polling interval
+Date:   Sun,  7 Jun 2020 21:55:07 +0300
+Message-Id: <20200607185530.18113-17-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200607185530.18113-1-digetx@gmail.com>
 References: <20200607185530.18113-1-digetx@gmail.com>
@@ -88,178 +88,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The clk_round_rate() won't be usable for building OPP table once
-interconnect support will be added to the EMC driver because that CLK API
-function limits the rounded rate based on the clk rate that is imposed by
-active clk-users, and thus, the rounding won't work as expected if
-interconnect will set the minimum EMC clock rate before devfreq driver is
-loaded. The struct tegra_mc contains memory timings which could be used by
-the devfreq driver for building up OPP table instead of rounding clock
-rate, this patch implements this idea.
+The current conversion ratio results in a higher frequency than needed,
+that is not very actual now since the Display Controller driver got
+support for memory bandwidth management and hence memory frequency can
+go lower now without bad consequences. Since memory freq now goes to a
+lower rates, the responsiveness of interactive applications become worse
+due to a quite high polling interval value that is currently set to 500ms.
+Changing polling interval to 30ms results in a good responsiveness of the
+system.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 98 ++++++++++++++++++++++---------
- 1 file changed, 70 insertions(+), 28 deletions(-)
+ drivers/devfreq/tegra20-devfreq.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 423dd35c95b3..13f93c6038ab 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -19,6 +19,8 @@
- #include <linux/reset.h>
- #include <linux/workqueue.h>
+diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+index 249d0dc44f6c..7cdea4ba38f7 100644
+--- a/drivers/devfreq/tegra20-devfreq.c
++++ b/drivers/devfreq/tegra20-devfreq.c
+@@ -79,16 +79,12 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
  
-+#include <soc/tegra/mc.h>
-+
- #include "governor.h"
+ 	/*
+ 	 * EMC_COUNT returns number of memory events, that number is lower
+-	 * than the number of clocks. Conversion ratio of 1/8 results in a
+-	 * bit higher bandwidth than actually needed, it is good enough for
+-	 * the time being because drivers don't support requesting minimum
+-	 * needed memory bandwidth yet.
+-	 *
+-	 * TODO: adjust the ratio value once relevant drivers will support
+-	 * memory bandwidth management.
++	 * than the number of total EMC clocks over the sampling period.
++	 * The clocks number is converted to maximum possible number of
++	 * memory events using the ratio of 1/4.
+ 	 */
+ 	stat->busy_time = readl_relaxed(tegra->regs + MC_STAT_EMC_COUNT);
+-	stat->total_time = readl_relaxed(tegra->regs + MC_STAT_EMC_CLOCKS) / 8;
++	stat->total_time = readl_relaxed(tegra->regs + MC_STAT_EMC_CLOCKS) / 4;
+ 	stat->current_frequency = clk_get_rate(tegra->emc_clock);
  
- #define ACTMON_GLB_STATUS					0x0
-@@ -153,6 +155,18 @@ struct tegra_devfreq_device {
- 	unsigned long target_freq;
- };
- 
-+struct tegra_devfreq_soc_data {
-+	const char *mc_compatible;
-+};
-+
-+static const struct tegra_devfreq_soc_data tegra30_soc = {
-+	.mc_compatible = "nvidia,tegra30-mc",
-+};
-+
-+static const struct tegra_devfreq_soc_data tegra124_soc = {
-+	.mc_compatible = "nvidia,tegra124-mc",
-+};
-+
- struct tegra_devfreq {
- 	struct devfreq		*devfreq;
- 
-@@ -771,15 +785,44 @@ static struct devfreq_governor tegra_devfreq_governor = {
- 	.interrupt_driven = true,
- };
- 
-+static struct tegra_mc *tegra_get_memory_controller(const char *compatible)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	struct tegra_mc *mc;
-+
-+	np = of_find_compatible_node(NULL, NULL, compatible);
-+	if (!np)
-+		return ERR_PTR(-ENOENT);
-+
-+	pdev = of_find_device_by_node(np);
-+	of_node_put(np);
-+	if (!pdev)
-+		return ERR_PTR(-ENODEV);
-+
-+	mc = platform_get_drvdata(pdev);
-+	if (!mc)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return mc;
-+}
-+
- static int tegra_devfreq_probe(struct platform_device *pdev)
- {
-+	const struct tegra_devfreq_soc_data *soc_data;
- 	struct tegra_devfreq_device *dev;
- 	struct tegra_devfreq *tegra;
- 	struct devfreq *devfreq;
-+	struct tegra_mc *mc;
- 	unsigned int i;
--	long rate;
- 	int err;
- 
-+	soc_data = of_device_get_match_data(&pdev->dev);
-+
-+	mc = tegra_get_memory_controller(soc_data->mc_compatible);
-+	if (IS_ERR(mc))
-+		return PTR_ERR(mc);
-+
- 	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
- 	if (!tegra)
- 		return -ENOMEM;
-@@ -825,6 +868,30 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	if (!mc->num_timings) {
-+		tegra->max_freq = clk_get_rate(tegra->clock) / KHZ;
-+
-+		err = dev_pm_opp_add(&pdev->dev, tegra->max_freq, 0);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-+			return err;
-+		}
-+	}
-+
-+	for (i = 0; i < mc->num_timings; i++) {
-+		/*
-+		 * Memory Controller timings are sorted in ascending clock
-+		 * rate order, so the last timing will be the max freq.
-+		 */
-+		tegra->max_freq = mc->timings[i].rate / KHZ;
-+
-+		err = dev_pm_opp_add(&pdev->dev, tegra->max_freq, 0);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-+			goto remove_opps;
-+		}
-+	}
-+
- 	reset_control_assert(tegra->reset);
- 
- 	err = clk_prepare_enable(tegra->clock);
-@@ -836,37 +903,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 
- 	reset_control_deassert(tegra->reset);
- 
--	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
--	if (rate < 0) {
--		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
--		return rate;
--	}
--
--	tegra->max_freq = rate / KHZ;
--
- 	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
- 		dev = tegra->devices + i;
- 		dev->config = actmon_device_configs + i;
- 		dev->regs = tegra->regs + dev->config->offset;
- 	}
- 
--	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
--		rate = clk_round_rate(tegra->emc_clock, rate);
--
--		if (rate < 0) {
--			dev_err(&pdev->dev,
--				"Failed to round clock rate: %ld\n", rate);
--			err = rate;
--			goto remove_opps;
--		}
--
--		err = dev_pm_opp_add(&pdev->dev, rate / KHZ, 0);
--		if (err) {
--			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
--			goto remove_opps;
--		}
--	}
--
- 	platform_set_drvdata(pdev, tegra);
- 
- 	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
-@@ -921,8 +963,8 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
+ 	writel_relaxed(EMC_GATHER_CLEAR, tegra->regs + MC_STAT_CONTROL);
+@@ -98,7 +94,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
  }
  
- static const struct of_device_id tegra_devfreq_of_match[] = {
--	{ .compatible = "nvidia,tegra30-actmon" },
--	{ .compatible = "nvidia,tegra124-actmon" },
-+	{ .compatible = "nvidia,tegra30-actmon",  .data = &tegra30_soc, },
-+	{ .compatible = "nvidia,tegra124-actmon", .data = &tegra124_soc, },
- 	{ },
+ static struct devfreq_dev_profile tegra_devfreq_profile = {
+-	.polling_ms	= 500,
++	.polling_ms	= 30,
+ 	.target		= tegra_devfreq_target,
+ 	.get_dev_status	= tegra_devfreq_get_dev_status,
  };
- 
 -- 
 2.26.0
 
