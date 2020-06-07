@@ -2,150 +2,219 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED5DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 14:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CA3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAF120774
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 14:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC4E2067B
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5k/BpkW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdzL/B/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgFGOpz (ORCPT
+        id S1726692AbgFGPnp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 10:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46068 "EHLO
+        Sun, 7 Jun 2020 11:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgFGOpV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 10:45:21 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E86EC08C5C4;
-        Sun,  7 Jun 2020 07:45:21 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x18so838764lji.1;
-        Sun, 07 Jun 2020 07:45:21 -0700 (PDT)
+        with ESMTP id S1726595AbgFGPno (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 11:43:44 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C83EC08C5C3;
+        Sun,  7 Jun 2020 08:43:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 82so8683622lfh.2;
+        Sun, 07 Jun 2020 08:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FBWrwuGDYKLF1vOWbwPhfzrgLBpIGQxKlTKbvNiY2ss=;
-        b=h5k/BpkWLZlZJyeH4iWB7dTj3NqUreNyP4nokCg0nqCnreEhjJQ37Mb8Uyr62J10p0
-         ZU/5EGzD1sXYrsRf2HNkMVl0jB/FsKYbGJ6nbHKOnnKde7WCrBFaSnISynVP/2+NbqWO
-         wNBmkRJiX1pcXaHm9KH0CqNZjCslESM2m61q16NXhNQk/SFK0zlPz9FvvOiXtj484lWR
-         AkEw0kLHgKN5p12imeG+ZpziGh47a/8VjAh+E2vsq7Y1D759p2pBODb+Sxt1wF3Kgsfl
-         H6dKsrTJqF61qLsasH/KT5zhL8/LkCQi2sQ4NAe4jD4vqpSjsBP7jLMsxKhUtFUda78Y
-         RGmg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yf0dEFF4gM5Mo+qgJBi/+O4Rqtdvpn0aIjyyfWdfUss=;
+        b=rdzL/B/NTFMDcIyE9x46i8/VP8ZDtvuQnZzv/NqEyasF4oS+AQhHpkYn79LedVrjjC
+         15yA0ihyRuJEmtMbMxZp1kt19pW8LhQABL+en/a9rXu/TbQlPISORQcSVizV5D5KcbOW
+         CEOfG9UbPhUFt9zruPyPMcrbWVSnGI83ynIKo1HoQC/1jnGL3bXAWpTu2R99QU3NBiLr
+         lARgTlQbWIXW8GlNuhFGHbcDHRu1HJUejsAOU2HW9DmzScflzF3Vy8aYjWoDISH6lsCm
+         SyECbnyD3n0m543Dou54ALQdeXoaCqa3cQ/Y+r2nZBntXyDzFaTqnRtbcjWklK5AFL/I
+         p0mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FBWrwuGDYKLF1vOWbwPhfzrgLBpIGQxKlTKbvNiY2ss=;
-        b=g8Jk/68Iig6WoALRiAXQv3wNmbGKXCw2I8dnaO+pFgCzhceLtx1zPtaayeVwAHPBEd
-         YGji49DOilAUg2ppCdsu63x/jrG0A6zEjgB2jLpoi+6FkH9rd4QQIJKG5drOnyf3FRr1
-         OXFGvld6x4lds7emAGbgjTLEaEoxIGscaTp+hYnpaUv8k4tLi8dpCdEYz4AWVSjN26Ct
-         ScH2n56rnLYhX2ejh2p7SWnIroZ1y/uLRquZ0Y/uhXP3J7ZpqT1aAEyj8hzakey82mmg
-         BI9Lyg2zPnWe7cu85+dwCzaR+gu6kuhuxIPhgInjC4hmak4qX9ae21wQSpRefSsgdeSE
-         8PNQ==
-X-Gm-Message-State: AOAM532Sz31eSESMcMWR+POuNzdnAUMR52oCBq6GycbhGzhzzhbOFHGA
-        oz3JfVYn29MsDbuK4j/TU18=
-X-Google-Smtp-Source: ABdhPJwduQ6Mg5XXVMUnf5kjLG+sCaJFsEsnZP6qobIVMm1rtA3asW69nA6EPCERg0uVYiLDxboYsg==
-X-Received: by 2002:a2e:8747:: with SMTP id q7mr8329350ljj.459.1591541119855;
-        Sun, 07 Jun 2020 07:45:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yf0dEFF4gM5Mo+qgJBi/+O4Rqtdvpn0aIjyyfWdfUss=;
+        b=n8epqCWJ/pP70IztNx2vW/PN7sgYfCJMtGpSbPlu8NOX4BDeNoNzG/ME4QyixuHvrz
+         libQIbmiOUmgtbP5P0l+AGIswkRRamz3AqPg5xZZ3K5pfTZGjA5JB0feoRrH28GxSe1Q
+         vi45K1YbrkaYweRQp0mJrdCLssSS9fXHsg2t0o5KAoqJM4zzq/hqfwkgcAznokfm1zSJ
+         QG+4u4bo0OVI4C6tyOkhw7ZJTdEwHZJ7Eib54F+sm5FxpItgsoMPCuYUHPSZIo6kO/tz
+         3ybNof0gQwytsX7qRnx1sU5GgeLfdiiVrVsbtUB4OVOdrsrIUsM+BtjGxqaj5SQBzfDN
+         u+RA==
+X-Gm-Message-State: AOAM531RoRCjxlPbVFYg1ajgdJqZqSdqMtu8cIDKnSMihMHc2jJ2J6/a
+        GIAFnbQU4lXL9pJJjKj2RfjAJuDI
+X-Google-Smtp-Source: ABdhPJzUFS4Eb6QJjqYM34BQpqAHEVGYG+dflN+FllMgiuCmXhJcw89AsXRT7c9Xq71ZT+TpfeU01w==
+X-Received: by 2002:ac2:54b4:: with SMTP id w20mr10350572lfk.48.1591544622724;
+        Sun, 07 Jun 2020 08:43:42 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id g24sm4059724lfh.90.2020.06.07.07.45.18
+        by smtp.gmail.com with ESMTPSA id a7sm3592234lfm.4.2020.06.07.08.43.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 07:45:19 -0700 (PDT)
+        Sun, 07 Jun 2020 08:43:41 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Heidelberg <david@ixit.cz>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>
-Subject: [PATCH v2 3/9] power: supply: Support battery temperature device-tree properties
-Date:   Sun,  7 Jun 2020 17:41:07 +0300
-Message-Id: <20200607144113.10202-4-digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        Zack Pearsall <zpearsall@yahoo.com>
+Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7 devices
+Date:   Sun,  7 Jun 2020 18:43:21 +0300
+Message-Id: <20200607154327.18589-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200607144113.10202-1-digetx@gmail.com>
-References: <20200607144113.10202-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The generic battery temperature properties are already supported by the
-power-supply core. Let's support parsing of the common battery temperature
-properties from a device-tree.
+Hello,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/power/supply/power_supply_core.c | 18 ++++++++++++++++++
- include/linux/power_supply.h             |  6 ++++++
- 2 files changed, 24 insertions(+)
+This series introduces upstream kernel support for Acer Iconia Tab A500
+and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
+in advance.
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 02b37fe6061c..8b54a5a107d7 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -579,6 +579,12 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 	info->charge_term_current_ua         = -EINVAL;
- 	info->constant_charge_current_max_ua = -EINVAL;
- 	info->constant_charge_voltage_max_uv = -EINVAL;
-+	info->temp_ambient_alert_min         = INT_MIN;
-+	info->temp_ambient_alert_max         = INT_MAX;
-+	info->temp_alert_min                 = INT_MIN;
-+	info->temp_alert_max                 = INT_MAX;
-+	info->temp_min                       = INT_MIN;
-+	info->temp_max                       = INT_MAX;
- 	info->factory_internal_resistance_uohm  = -EINVAL;
- 	info->resist_table = NULL;
- 
-@@ -638,6 +644,18 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 			     &info->constant_charge_voltage_max_uv);
- 	of_property_read_u32(battery_np, "factory-internal-resistance-micro-ohms",
- 			     &info->factory_internal_resistance_uohm);
-+	of_property_read_u32(battery_np, "temperature-ambient-min-alert-celsius",
-+			     &info->temp_ambient_alert_min);
-+	of_property_read_u32(battery_np, "temperature-ambient-max-alert-celsius",
-+			     &info->temp_ambient_alert_max);
-+	of_property_read_u32(battery_np, "temperature-min-alert-celsius",
-+			     &info->temp_alert_min);
-+	of_property_read_u32(battery_np, "temperature-max-alert-celsius",
-+			     &info->temp_alert_max);
-+	of_property_read_u32(battery_np, "temperature-min-celsius",
-+			     &info->temp_min);
-+	of_property_read_u32(battery_np, "temperature-max-celsius",
-+			     &info->temp_max);
- 
- 	len = of_property_count_u32_elems(battery_np, "ocv-capacity-celsius");
- 	if (len < 0 && len != -EINVAL) {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index ac1345a48ad0..31fcadd81d63 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -361,6 +361,12 @@ struct power_supply_battery_info {
- 	int constant_charge_voltage_max_uv; /* microVolts */
- 	int factory_internal_resistance_uohm;   /* microOhms */
- 	int ocv_temp[POWER_SUPPLY_OCV_TEMP_MAX];/* celsius */
-+	int temp_ambient_alert_min;             /* celsius */
-+	int temp_ambient_alert_max;             /* celsius */
-+	int temp_alert_min;                     /* celsius */
-+	int temp_alert_max;                     /* celsius */
-+	int temp_min;                           /* celsius */
-+	int temp_max;                           /* celsius */
- 	struct power_supply_battery_ocv_table *ocv_table[POWER_SUPPLY_OCV_TEMP_MAX];
- 	int ocv_table_size[POWER_SUPPLY_OCV_TEMP_MAX];
- 	struct power_supply_resistance_temp_table *resist_table;
+Changelog:
+
+v9: - Nexus 7 memory timings are moved out to a separate dtsi file to ease
+      reviewing of the device-trees since the sparse definition of the timings
+      within multiple DT files created some unnecessary confusion.
+      Thanks to Michał Mirosław for the suggestion.
+
+v8: - The eMMC voltage regulator is now marked as always-ON in all
+      device-trees because turned out that some bootloader versions have
+      assumption about the enabled regulator at a boot time. This fixes
+      machine hanging on a warm reboot, it's also matching the downstream
+      kernel regulator configuration.
+
+    - The core regulator of the Ti PMIC Nexus 7 variant is now limited
+      to a 1.35V, which is a more realistic limit than 1.5V that was borrowed
+      from the Cardhu device-tree. Now both Maxim and Ti variants have the
+      common limits.
+
+    - Added acks from Rob Herring.
+
+v7: - This version brings support for a Nexus 7 variant that uses Ti PMIC
+      instead of the Maxim PMIC. Previously we assumed that variant with
+      the Ti PMIC doesn't exist in a wild, but turned out that it was a
+      wrong assumption. In a result the device-trees are separated into
+      more DTSI pieces, which combined together form the final device-tree.
+      Thanks to Zack Pearsall for testing the Ti version!
+
+    - The camera voltage regulator is now preset to a correct 1.8v in the
+      Nexus 7 device-tree.
+
+v6: - Corrected PMIC's RTC alias in the DTs. Sometime ago I renamed the
+      PMIC's node to match the modern upstream styling, but forgot to change
+      the RTC alias. Now PMIC RTC alias uses node's handle instead of string.
+
+    - Removed "panel: " handle from device trees, which became unused after
+      v5 and I just missed to remove it.
+
+v5: - After spending some more time on adding LVDS encoder bridge support
+      to the Tegra DRM driver, I'm now having a second thought and agree
+      with Thierry Reding that in a longer run it should be better not to
+      mix old nvidia,panel with new output graph in device-tree. So the
+      nvidia,panel phandle is removed now in both A500 and Nexus 7 DTs.
+
+v4: - Corrected CPU's thermal zone on both A500 and Nexus 7, which
+      should use the remote thermal sensor (Tegra chip) instead of the
+      local ("skin" temperature).
+
+    - Added default PMIC pinmux state on Nexus 7, for completeness.
+
+    - Added PMIC cpu_pwr_req GPIO hog on Nexus 7, for completeness.
+
+    - Renamed thermal sensor node label to NCT72 on Nexus 7 to match the
+      actual hardware (NCT72 is compatible with NCT1008). For completeness.
+
+    - Added always-on USB AVDD regulator on Nexus 7, which is controlled by
+      the PMIC GPIO. For completeness.
+
+    - Added PMIC GPIO enable-control to the 3v3_sys regulator on Nexus 7,
+      for completeness.
+
+    - Added CONFIG_NAMESPACES, CONFIG_USER_NS, CONFIG_SECCOMP and
+      CONFIG_PINCTRL_MAX77620 to the tegra_defconfig. The first three
+      options are must-have for the modern userspace, the last is somewhat
+      actual now since the default PMIC pinmux state is added to the N7 DT.
+
+v3: - Improved device-tree node-names in accordance to review comments that
+      were made by Thierry Reding to v2.
+
+    - Corrected LVDS encoder powerdown-GPIO polarity on both A500 and Nexus 7
+      because I implemented the DRM bridges support in the Tegra DRM driver
+      and found that there was a mistake in the device-trees. The updated
+      polarity also matches the boards schematics. Now DRM bridges support
+      becomes mandatory since LVDS is getting disabled during of the encoder
+      driver probing. I'll send the DRM patch separately from this series.
+
+    - Replaced recently deprecated CONFIG_DRM_LVDS_ENCODER with the new
+      CONFIG_DRM_LVDS_CODEC in tegra_defconfig.
+
+    - Added more config options to tegra_defconfig, like pstore and thermal.
+
+    - Added atmel,cfg_name to the A500 DT, which is a new upcoming property
+      in 5.8+ that allows to specify the per-board hardware config file name.
+
+v2: - Corrected "volume down" key-label in the grouper's device-tree and
+      improved some other names in device-trees.
+
+    - Added optional (upcoming in 5.8+) VDD/AVDD regulators to the touchscreen
+      node in A500 device-tree.
+
+Dmitry Osipenko (6):
+  ARM: tegra: Add device-tree for Acer Iconia Tab A500
+  ARM: tegra: Add device-tree for ASUS Google Nexus 7
+  dt-bindings: Add vendor prefix for Acer Inc.
+  dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
+  dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+  ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
+
+ .../devicetree/bindings/arm/tegra.yaml        |   10 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ arch/arm/boot/dts/Makefile                    |    4 +
+ .../boot/dts/tegra20-acer-a500-picasso.dts    | 1458 +++++++++++++++
+ .../dts/tegra30-asus-nexus7-grouper-E1565.dts |    9 +
+ .../dts/tegra30-asus-nexus7-grouper-PM269.dts |    9 +
+ .../tegra30-asus-nexus7-grouper-common.dtsi   | 1249 +++++++++++++
+ ...egra30-asus-nexus7-grouper-maxim-pmic.dtsi |  188 ++
+ ...30-asus-nexus7-grouper-memory-timings.dtsi | 1565 +++++++++++++++++
+ .../tegra30-asus-nexus7-grouper-ti-pmic.dtsi  |  151 ++
+ .../boot/dts/tegra30-asus-nexus7-grouper.dtsi |  149 ++
+ .../dts/tegra30-asus-nexus7-tilapia-E1565.dts |    9 +
+ ...30-asus-nexus7-tilapia-memory-timings.dtsi |  325 ++++
+ .../boot/dts/tegra30-asus-nexus7-tilapia.dtsi |  235 +++
+ arch/arm/configs/tegra_defconfig              |   42 +
+ 15 files changed, 5405 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-E1565.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-PM269.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-maxim-pmic.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-memory-timings.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-ti-pmic.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-E1565.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-memory-timings.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dtsi
+
 -- 
 2.26.0
 
