@@ -2,257 +2,111 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B929C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49778C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F402074B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3029E20748
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgFGSA5 (ORCPT
+        id S1726818AbgFGSf3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:00:57 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:49423 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726830AbgFGSAp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:00:45 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.156.68])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id DA14D55D9B72;
-        Sun,  7 Jun 2020 20:00:42 +0200 (CEST)
-Received: from arch.lan (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 7 Jun 2020
- 20:00:36 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     <linux-iio@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <jic23@kernel.org>,
-        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH v5 2/4] iio: chemical: scd30: add I2C interface driver
-Date:   Sun, 7 Jun 2020 19:58:10 +0200
-Message-ID: <20200607175812.95777-3-tomasz.duszynski@octakon.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [89.70.180.118]
-X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 3119305694721235991
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudegledguddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffoggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhephedtgefgkeduvdekheeggefghffhteekleetvdekvddtveeutdetueefueehieetnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
+        Sun, 7 Jun 2020 14:35:29 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:50573 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726779AbgFGSf3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:35:29 -0400
+X-IronPort-AV: E=Sophos;i="5.73,485,1583161200"; 
+   d="scan'208";a="49036179"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 08 Jun 2020 03:35:27 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2C4BD40C7B88;
+        Mon,  8 Jun 2020 03:35:24 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/11] Add support for HiHope RZ/G2M[N] Rev.3.0/4.0
+Date:   Sun,  7 Jun 2020 19:34:35 +0100
+Message-Id: <1591554886-21725-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add I2C interface driver for the SCD30 sensor.
+Hi All,
 
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
----
- MAINTAINERS                      |   1 +
- drivers/iio/chemical/Kconfig     |  11 +++
- drivers/iio/chemical/Makefile    |   1 +
- drivers/iio/chemical/scd30_i2c.c | 139 +++++++++++++++++++++++++++++++
- 4 files changed, 152 insertions(+)
- create mode 100644 drivers/iio/chemical/scd30_i2c.c
+This patch series adds supports for HiHope RZ/G2M[N] Rev.3.0/4.0
+boards.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 41a509cca6f1..13aed3473b7e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15142,6 +15142,7 @@ M:	Tomasz Duszynski <tomasz.duszynski@octakon.com>
- S:	Maintained
- F:	drivers/iio/chemical/scd30.h
- F:	drivers/iio/chemical/scd30_core.c
-+F:	drivers/iio/chemical/scd30_i2c.c
- 
- SENSIRION SPS30 AIR POLLUTION SENSOR DRIVER
- M:	Tomasz Duszynski <tduszyns@gmail.com>
-diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-index 99e852b67e55..970d34888c2e 100644
---- a/drivers/iio/chemical/Kconfig
-+++ b/drivers/iio/chemical/Kconfig
-@@ -96,6 +96,17 @@ config SCD30_CORE
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called scd30_core.
- 
-+config SCD30_I2C
-+	tristate "SCD30 carbon dioxide sensor I2C driver"
-+	depends on SCD30_CORE && I2C
-+	select CRC8
-+	help
-+	  Say Y here to build support for the Sensirion SCD30 I2C interface
-+	  driver.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called scd30_i2c.
-+
- config SENSIRION_SGP30
- 	tristate "Sensirion SGPxx gas sensors"
- 	depends on I2C
-diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-index c9804b041ecd..0966ca34e34b 100644
---- a/drivers/iio/chemical/Makefile
-+++ b/drivers/iio/chemical/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_CCS811)		+= ccs811.o
- obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
- obj-$(CONFIG_PMS7003) += pms7003.o
- obj-$(CONFIG_SCD30_CORE) += scd30_core.o
-+obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
- obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
- obj-$(CONFIG_SPS30) += sps30.o
- obj-$(CONFIG_VZ89X)		+= vz89x.o
-diff --git a/drivers/iio/chemical/scd30_i2c.c b/drivers/iio/chemical/scd30_i2c.c
-new file mode 100644
-index 000000000000..875892a070ee
---- /dev/null
-+++ b/drivers/iio/chemical/scd30_i2c.c
-@@ -0,0 +1,139 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sensirion SCD30 carbon dioxide sensor i2c driver
-+ *
-+ * Copyright (c) 2020 Tomasz Duszynski <tomasz.duszynski@octakon.com>
-+ *
-+ * I2C slave address: 0x61
-+ */
-+#include <linux/crc8.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <asm/unaligned.h>
-+
-+#include "scd30.h"
-+
-+#define SCD30_I2C_MAX_BUF_SIZE 18
-+#define SCD30_I2C_CRC8_POLYNOMIAL 0x31
-+
-+static u16 scd30_i2c_cmd_lookup_tbl[] = {
-+	[CMD_START_MEAS] = 0x0010,
-+	[CMD_STOP_MEAS] = 0x0104,
-+	[CMD_MEAS_INTERVAL] = 0x4600,
-+	[CMD_MEAS_READY] = 0x0202,
-+	[CMD_READ_MEAS] = 0x0300,
-+	[CMD_ASC] = 0x5306,
-+	[CMD_FRC] = 0x5204,
-+	[CMD_TEMP_OFFSET] = 0x5403,
-+	[CMD_FW_VERSION] = 0xd100,
-+	[CMD_RESET] = 0xd304,
-+};
-+
-+DECLARE_CRC8_TABLE(scd30_i2c_crc8_tbl);
-+
-+static int scd30_i2c_xfer(struct scd30_state *state, char *txbuf, int txsize,
-+			  char *rxbuf, int rxsize)
-+{
-+	struct i2c_client *client = to_i2c_client(state->dev);
-+	int ret;
-+
-+	/*
-+	 * repeated start is not supported hence instead of sending two i2c
-+	 * messages in a row we send one by one
-+	 */
-+	ret = i2c_master_send(client, txbuf, txsize);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != txsize)
-+		return -EIO;
-+
-+	if (!rxbuf)
-+		return 0;
-+
-+	ret = i2c_master_recv(client, rxbuf, rxsize);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != rxsize)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int scd30_i2c_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
-+			     void *response, int size)
-+{
-+	char buf[SCD30_I2C_MAX_BUF_SIZE];
-+	char *rsp = response;
-+	int i, ret;
-+	char crc;
-+
-+	put_unaligned_be16(scd30_i2c_cmd_lookup_tbl[cmd], buf);
-+	i = 2;
-+
-+	if (rsp) {
-+		/* each two bytes are followed by a crc8 */
-+		size += size / 2;
-+	} else {
-+		put_unaligned_be16(arg, buf + i);
-+		crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-+		i += 2;
-+		buf[i] = crc;
-+		i += 1;
-+
-+		/* commands below don't take an argument */
-+		if ((cmd == CMD_STOP_MEAS) || (cmd == CMD_RESET))
-+			i -= 3;
-+	}
-+
-+	ret = scd30_i2c_xfer(state, buf, i, buf, size);
-+	if (ret)
-+		return ret;
-+
-+	/* validate received data and strip off crc bytes */
-+	for (i = 0; i < size; i += 3) {
-+		crc = crc8(scd30_i2c_crc8_tbl, buf + i, 2, CRC8_INIT_VALUE);
-+		if (crc != buf[i + 2]) {
-+			dev_err(state->dev, "data integrity check failed\n");
-+			return -EIO;
-+		}
-+
-+		*rsp++ = buf[i];
-+		*rsp++ = buf[i + 1];
-+	}
-+
-+	return 0;
-+}
-+
-+static int scd30_i2c_probe(struct i2c_client *client)
-+{
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -EOPNOTSUPP;
-+
-+	crc8_populate_msb(scd30_i2c_crc8_tbl, SCD30_I2C_CRC8_POLYNOMIAL);
-+
-+	return scd30_probe(&client->dev, client->irq, client->name, NULL, scd30_i2c_command);
-+}
-+
-+static const struct of_device_id scd30_i2c_of_match[] = {
-+	{ .compatible = "sensirion,scd30" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, scd30_i2c_of_match);
-+
-+static struct i2c_driver scd30_i2c_driver = {
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = scd30_i2c_of_match,
-+		.pm = &scd30_pm_ops,
-+	},
-+	.probe_new = scd30_i2c_probe,
-+};
-+module_i2c_driver(scd30_i2c_driver);
-+
-+MODULE_AUTHOR("Tomasz Duszynski <tomasz.duszynski@octakon.com>");
-+MODULE_DESCRIPTION("Sensirion SCD30 carbon dioxide sensor i2c driver");
-+MODULE_LICENSE("GPL v2");
+Patches are based on top of renesas-arm-dt-for-v5.9 branch [1].
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (11):
+  arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]: Rename
+    HiHope RZ/G2M boards
+  arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]: Rename HiHope RZ/G2N
+    boards
+  arm64: dts: renesas: hihope-common: Separate out Rev.2.0 specific into
+    hihope-common-rev2.dtsi file
+  arm64: dts: renesas: Add HiHope RZ/G2M[N] Rev.3.0/4.0 specific into
+    common file
+  arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 main board support
+  arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 sub board support
+  arm64: dts: renesas: hihope-rzg2-ex: Separate out lvds specific nodes
+    into common file
+  arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 board with
+    idk-1110wr display
+  arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 main board support
+  arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 sub board support
+  arm64: dts: renesas: Add HiHope RZ/G2N Rev2.0/3.0/4.0 board with
+    idk-1110wr display
+
+ arch/arm64/boot/dts/renesas/Makefile          |  17 ++-
+ .../boot/dts/renesas/hihope-common-rev2.dtsi  | 101 +++++++++++++
+ .../boot/dts/renesas/hihope-common-rev4.dtsi  | 143 ++++++++++++++++++
+ .../arm64/boot/dts/renesas/hihope-common.dtsi |  87 +----------
+ .../boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi |  52 +++++++
+ .../boot/dts/renesas/hihope-rzg2-ex.dtsi      |  37 -----
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts   |  43 +-----
+ .../dts/renesas/r8a774a1-hihope-rzg2m-ex.dts  |   6 +-
+ ...a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts |  15 ++
+ .../renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts |  19 +++
+ .../renesas/r8a774a1-hihope-rzg2m-rev2.dts    |  38 +++++
+ .../dts/renesas/r8a774a1-hihope-rzg2m.dts     |   5 +-
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi     |   2 +
+ .../r8a774b1-hihope-rzg2n-ex-idk-1110wr.dts   |  15 ++
+ .../dts/renesas/r8a774b1-hihope-rzg2n-ex.dts  |   6 +-
+ ...a774b1-hihope-rzg2n-rev2-ex-idk-1110wr.dts |  15 ++
+ .../renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts |  15 ++
+ .../renesas/r8a774b1-hihope-rzg2n-rev2.dts    |  42 +++++
+ .../dts/renesas/r8a774b1-hihope-rzg2n.dts     |   5 +-
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi     |   2 +
+ 20 files changed, 490 insertions(+), 175 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-common-rev4.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-ex-idk-1110wr.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex-idk-1110wr.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2-ex.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774b1-hihope-rzg2n-rev2.dts
+
 -- 
-2.27.0
+2.17.1
 
