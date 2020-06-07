@@ -2,94 +2,106 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277EFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 20:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53A5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 21:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8BE207ED
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 20:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41632075A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 21:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxGqwPhk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXUjmROc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgFGUpN (ORCPT
+        id S1727877AbgFGVsC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45492 "EHLO
+        Sun, 7 Jun 2020 17:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFGUpM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 16:45:12 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC37C08C5C3;
-        Sun,  7 Jun 2020 13:45:12 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i25so1762811iog.0;
-        Sun, 07 Jun 2020 13:45:12 -0700 (PDT)
+        with ESMTP id S1726093AbgFGVsC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 17:48:02 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00485C08C5C3;
+        Sun,  7 Jun 2020 14:48:01 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 202so9020321lfe.5;
+        Sun, 07 Jun 2020 14:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k/YnB5fzP1XicKiRcAe2Q8LuxjHO0CMYG9cBtnOKMh4=;
-        b=GxGqwPhkkOGRxOBl7vka/S+zbKecUhkFDra1dJfBpBqCyWgA47XutunWnavtjHUHM6
-         WoYPyQSIKvsbcMWJJDjIhJOvGhItrkPo/ml6UedBAtjjJeOisKgKVmglPgY+ye0MUQJK
-         4QEMRMiFAA21c4zgetYQ0b+Jz4ZD7Dtc1L1PZpZXx4yKmcGpbESP/4BLG5K8P8Ue+WKI
-         q/+1Gy0NG7V9wpvE7HGX6FU2ih2pnWv8QNHJl6CfRWLz/EEg7Kb8iNgVjTGQTwmr7O7C
-         xQ53yO8+6NXnq6meoVOEd9yRkIV/vl6XeZKCWczaZgE+roIXjLECAkXnF+zgfLv5PmN2
-         yVnQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ay8EHASwjhU1bjGhoJPlUWvuPWuHbO/3W1nJ49RR5ag=;
+        b=VXUjmROcDERX9tK85WWAf5vfiKHroxFpPZt28aMBYRGZJrksc/ZUrpeM9TsQMSJYhE
+         DCITogpNAOT9Fc+Gi+ICLkihzUbwLylqKb/dcK0HtK1cI+ZK0ifujYEBYE3Zm5T0bI7/
+         ndXyIvGU5qnUYWG7cgegvpLWugs08MGmrb1n9B+z4fvgrsP1ufvxgTT4i+A52SSOcCFI
+         UJcJC7/316SDrGbaTqwo+5Zb5uvFbANULzWL3G0apNvUCEde3IQKRFBLhyodvRGYgU2t
+         6PIVdLaYwdOjQR3mMPlA/+QkUOYQbs2wLgcTNhwK37jZoFCfK29uk5xOHFMGZwPwb5QA
+         iZiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k/YnB5fzP1XicKiRcAe2Q8LuxjHO0CMYG9cBtnOKMh4=;
-        b=SnvsJY0k37Ur7FYa9chKvSk0V+78jweUCsmvicf9R6MAb2Mk6CH0TFFImhrsLWAyvn
-         FBgKtqkeyOsXtzp5ReLAjmXmKAV8gyifGquWv3bKaSLK+Ms0zLkI2OIW9fMYfkPd6eoa
-         4TnU5GK2INt3GbZz5irbQEnbcEHhWsKFCH6Dw7ZT1Ng8EqktX68LErUhVBpGxHyOiTL7
-         qNEmj8nBvQmbbzs1gdD3XorCxBi73iCR1OK/AvCQNfTnfJObfnEg7SfQyArVMzAY4nRe
-         xo1AVDs4/Jnhbmj9djSKYG892Bzvzss98jyw0l1shcwfavL2YB/xZACJlQa3ibF8ACSO
-         7+lA==
-X-Gm-Message-State: AOAM532l7xtupFCHuLiYg0PNshchaJBLRRZolKCbP61mOGEGM00P5xXa
-        rbgcxAk7eStqeL6KcQHcfbsrgzD53hbba4Em6FHHP8vB
-X-Google-Smtp-Source: ABdhPJx8YH0LXzFYGcRU9BI+IR83rM6pbwtkKlIoHSeUClRsZq3D2mgrW0vUmYRP3mkH6A0GPwzANQOxW3Syq3lOEDU=
-X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr18232285iov.80.1591562711809;
- Sun, 07 Jun 2020 13:45:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591441171-20341-1-git-send-email-sivaprak@codeaurora.org> <1591441171-20341-4-git-send-email-sivaprak@codeaurora.org>
-In-Reply-To: <1591441171-20341-4-git-send-email-sivaprak@codeaurora.org>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Sun, 7 Jun 2020 15:45:00 -0500
-Message-ID: <CABb+yY2HhHSbP7UX_r1bGgpxzQKfC9aS8r9nxX5AOt8ENG5ACQ@mail.gmail.com>
-Subject: Re: [PATCH V2 3/3] mailbox: qcom: Add ipq6018 apcs compatible
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ay8EHASwjhU1bjGhoJPlUWvuPWuHbO/3W1nJ49RR5ag=;
+        b=W5rz3G/l5OYYyFZydriQ8JL9p7Bxh0TUT3GxldvWjcl7/+VlUjBNRAaCef2K/PdnMj
+         /p/QIfZmvF3f/jKTOYL1FkOqZMb3g+HLsCjkO/3I8p4le/Kr8i7nRpVKLPks4OtS14mt
+         W6AgT3PRV8nVpshjP9vW9pJPlhvTQ1dnCynXwIanjHn88yJC5JXHU7QoANi9CFW0TgVK
+         XggJMZ/r7UgDvVQu8/uh538KdPeKS3iZUs0Z1wBU5B04JhHZVbtDTdRDmCrbgf/dYoty
+         fpb6A/2rVY1QDf4zfp0M3XptUMXqeMtdnQ+YamUd6lI4F/zgMq7YGXUAJq+oV98ZXuIo
+         8nvw==
+X-Gm-Message-State: AOAM530l71D3tvMr+lUMOePkVo5latDLWtTxxX/neRMzZH9bP3dPormY
+        UZdRq65B4VHn6GU1w3kXgCtQx/uA
+X-Google-Smtp-Source: ABdhPJz+DegAGZHDYRJIlKVV0XxJ0lW/Q/FEgvkvROG5VVEspAJPGPKSKwJCvEcs43RZ2CG7mC0kdQ==
+X-Received: by 2002:a05:6512:3b6:: with SMTP id v22mr10767583lfp.97.1591566479992;
+        Sun, 07 Jun 2020 14:47:59 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u30sm3325110ljd.94.2020.06.07.14.47.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 14:47:59 -0700 (PDT)
+Subject: Re: [PATCH v3 31/39] memory: tegra20-emc: Register as interconnect
+ provider
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200607185530.18113-1-digetx@gmail.com>
+ <20200607185530.18113-32-digetx@gmail.com>
+Message-ID: <89b690be-d2fa-a679-5773-d5906a93ffcc@gmail.com>
+Date:   Mon, 8 Jun 2020 00:47:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200607185530.18113-32-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 6, 2020 at 5:59 AM Sivaprakash Murugesan
-<sivaprak@codeaurora.org> wrote:
->
-> The Qualcomm ipq6018 has apcs block, add compatible for the same.
-> Also, the apcs provides a clock controller functionality similar
-> to msm8916 but the clock driver is different.
->
-> Create a child platform device based on the apcs compatible for the
-> clock controller functionality.
->
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
-> [V2]
->  * created a new structur for driver data.
->  * re-arranged compatible strings in sorted order
->
-Please break this into two patches, first reorganise and then add new
-ipq6018 of_match.
+07.06.2020 21:55, Dmitry Osipenko пишет:
+...
+> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
+> +		err = tegra_emc_interconnect_init(emc);
+> +		if (err)
+> +			dev_err(&pdev->dev, "failed to initialize ICC: %d\n",
+> +				err);
+> +	}
 
-thanks.
+It just occurred to me that I completely forgot to remove the
+IS_ENABLED() and change Kconfig to properly set up the build dependency
+on interconnect. Will correct it in v4.
