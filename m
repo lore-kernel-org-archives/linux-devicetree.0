@@ -2,216 +2,247 @@ Return-Path: <SRS0=Te14=7U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E297EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5936C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6FD12074B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0832075A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  7 Jun 2020 18:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmQuxAaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgFGSl5 (ORCPT
+        id S1726780AbgFGS5L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:41:57 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:26544 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728055AbgFGSlz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:41:55 -0400
-X-IronPort-AV: E=Sophos;i="5.73,485,1583161200"; 
-   d="scan'208";a="49036333"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 08 Jun 2020 03:41:54 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9EAAC40CCFCF;
-        Mon,  8 Jun 2020 03:41:52 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 04/11] arm64: dts: renesas: Add HiHope RZ/G2M[N] Rev.3.0/4.0 specific into common file
-Date:   Sun,  7 Jun 2020 19:41:00 +0100
-Message-Id: <1591555267-21822-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 7 Jun 2020 14:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgFGS5L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Jun 2020 14:57:11 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF3DC061A0E;
+        Sun,  7 Jun 2020 11:57:10 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z206so8873359lfc.6;
+        Sun, 07 Jun 2020 11:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ae6a9nCDm2KzYQLj6wbd7HxqxcYRyF5nPSiaEUxKZM=;
+        b=BmQuxAaasHBCfu5Cl9o2r1W5xH5I+5bng3aYROK840m+XCGlvJ1+6Vvo9nfu1cBHOs
+         lUuiq8I2hFHzsLLEH0HSfdhq8LZNS76O6R9yHOe0IuY16jRkC+TVgQaozcS46lX3MYZF
+         5VJ/dqCSnXMXe4JZKNDQhezJMnXXYKEwoh6TZ5GrtMgipKtXCP2OoKyaG+Q6jLk7ZBZX
+         G9U6d2eACPvb0HW69qI/xQVqun3mXWWQRS851ZnYvGaNeytd/Rd37A5kUE2+yuDuC2Ow
+         cexL5stCsUS+5bA6Z3mGgugewTOeBPi+nHtgkoT2v0tJC+ThdcIme1DJYBiKQ52A8vAO
+         fwxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ae6a9nCDm2KzYQLj6wbd7HxqxcYRyF5nPSiaEUxKZM=;
+        b=mx9969GpW+gc/Fpn6ASISpZ8S+N4AN4P/Ads4FY6l2l5ZQhYa/+s8BOjpLFlbIbBGv
+         KGJF+yxon9XD+R3lMHQYogKDZ4T6JwOSxZtNJFQ3mhVyNMdOFHA/bNhjBZnit/piFeRX
+         K9rgSnUlDUhp7/pv14CgIv2UUH9+3z7SXmGWuiiOYHJAHzUJcU3NPcPmVrg2RLNnT+D0
+         pqP+Eu2MW1DXSkpF9vTzOe33d6goCMqNvDtdCqX1dock39gU4rNox43aJhD8lF+37jpA
+         S2LznLZCoZcOBElbodd0GQuEG5Rv9ehUbokiZJiFfaw9szr7BbhwCT/Z0eEpD6ZbH0U1
+         wqoQ==
+X-Gm-Message-State: AOAM531jN7acrjC5KnmojOL/6jXqdGcWlUlTmvcYiCLEoB8kp1mhiA/Z
+        2nsOTWbHT0HVIuN95xdL7vs=
+X-Google-Smtp-Source: ABdhPJzLz39/CsDmRrwQ7tGXw0tdzOPbr0gv8gV8MEvQX75D7DSbuFKApTaEfDuyTPBc9XubcZt2gw==
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr10710765lfn.77.1591556229117;
+        Sun, 07 Jun 2020 11:57:09 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 11:57:08 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 00/39] Introduce memory interconnect for NVIDIA Tegra SoCs
+Date:   Sun,  7 Jun 2020 21:54:51 +0300
+Message-Id: <20200607185530.18113-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rev.3.0 and Rev.4.0 are identical and can be identified by using GP5_19
-and GP5_21.
+Hello,
 
-	Rev		GP5_19	GP5_21
-	==============================
-	Rev.3.0		0	0
-	Rev.4.0		0	1
+This series brings initial support for memory interconnect to Tegra20 and
+Tegra30 SoCs.
 
-This patch creates hihope-common-rev4.dtsi file with
-Rev.3.0/4.0 specific changes for HopeRun HiHope RZ/G2M[N] boards.
+For the starter only display controllers are getting interconnect API
+support, others could be supported later on. The display controllers
+have the biggest demand for interconnect API right now because dynamic
+memory frequency scaling can't be done safely without taking into account
+bandwidth requirement from the displays.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- .../boot/dts/renesas/hihope-common-rev4.dtsi  | 143 ++++++++++++++++++
- 1 file changed, 143 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/hihope-common-rev4.dtsi
+Changelog:
 
-diff --git a/arch/arm64/boot/dts/renesas/hihope-common-rev4.dtsi b/arch/arm64/boot/dts/renesas/hihope-common-rev4.dtsi
-new file mode 100644
-index 000000000000..dbe715118f88
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/hihope-common-rev4.dtsi
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the HiHope RZ/G2[MN] Rev.3.0/4.0 main board
-+ * common parts
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	audio_clkout: audio-clkout {
-+		/*
-+		 * This is same as <&rcar_sound 0>
-+		 * but needed to avoid cs2000/rcar_sound probe dead-lock
-+		 */
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <12288000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led1 {
-+			gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led2 {
-+			gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led3 {
-+			gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led4 {
-+			gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	wlan_en_reg: regulator-wlan_en {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wlan-en-regulator";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <70000>;
-+
-+		gpio = <&gpio4 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	x1801_clk: x1801-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+};
-+
-+&hscif0 {
-+	bluetooth {
-+		compatible = "ti,wl1837-st";
-+		enable-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-0 = <&i2c2_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	cs2000: clk_multiplier@4f {
-+		#clock-cells = <0>;
-+		compatible = "cirrus,cs2000-cp";
-+		reg = <0x4f>;
-+		clocks = <&audio_clkout>, <&x1801_clk>;
-+		clock-names = "clk_in", "ref_clk";
-+
-+		assigned-clocks = <&cs2000>;
-+		assigned-clock-rates = <24576000>; /* 1/1 divide */
-+	};
-+};
-+
-+&pfc {
-+	i2c2_pins: i2c2 {
-+		groups = "i2c2_a";
-+		function = "i2c2";
-+	};
-+
-+	sound_clk_pins: sound_clk {
-+		groups = "audio_clk_a_a", "audio_clk_b_a", "audio_clkout_a";
-+		function = "audio_clk";
-+	};
-+
-+	sound_pins: sound {
-+		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
-+		function = "ssi";
-+	};
-+};
-+
-+&rcar_sound {
-+	pinctrl-0 = <&sound_pins &sound_clk_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	/* Single DAI */
-+	#sound-dai-cells = <0>;
-+
-+	/* audio_clkout0/1/2/3 */
-+	#clock-cells = <1>;
-+	clock-frequency = <12288000 11289600>;
-+
-+	/* update <audio_clk_b> to <cs2000> */
-+	clocks = <&cpg CPG_MOD 1005>,
-+		 <&cpg CPG_MOD 1006>, <&cpg CPG_MOD 1007>,
-+		 <&cpg CPG_MOD 1008>, <&cpg CPG_MOD 1009>,
-+		 <&cpg CPG_MOD 1010>, <&cpg CPG_MOD 1011>,
-+		 <&cpg CPG_MOD 1012>, <&cpg CPG_MOD 1013>,
-+		 <&cpg CPG_MOD 1014>, <&cpg CPG_MOD 1015>,
-+		 <&cpg CPG_MOD 1022>, <&cpg CPG_MOD 1023>,
-+		 <&cpg CPG_MOD 1024>, <&cpg CPG_MOD 1025>,
-+		 <&cpg CPG_MOD 1026>, <&cpg CPG_MOD 1027>,
-+		 <&cpg CPG_MOD 1028>, <&cpg CPG_MOD 1029>,
-+		 <&cpg CPG_MOD 1030>, <&cpg CPG_MOD 1031>,
-+		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
-+		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
-+		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
-+		 <&audio_clk_a>, <&cs2000>,
-+		 <&audio_clk_c>,
-+		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
-+
-+	rsnd_port: port {
-+		rsnd_endpoint: endpoint {
-+			remote-endpoint = <&dw_hdmi0_snd_in>;
-+
-+			dai-format = "i2s";
-+			bitclock-master = <&rsnd_endpoint>;
-+			frame-master = <&rsnd_endpoint>;
-+
-+			playback = <&ssi2>;
-+		};
-+	};
-+};
+v3: - Added acks from Rob Herring that were given to some of the v2 patches.
+
+    - Specified name of the TRM documentation chapter in the patch
+      "dt-bindings: host1x: Document new interconnect properties", which was
+      suggested by Rob Herring in the review comment to v2.
+
+    - Added patches that allow EMC drivers to be compiled as a loadable kernel
+      modules. This came up during of the v2 review when Georgi Djakov pointed
+      out that interconnect-core could be compiled as a kernel module. Please
+      note that the Tegra124 EMC driver is compile-tested only, I don't have
+      Tegra124 HW.
+
+    - In the review comment to [1] Stephen Boyd suggested that it will be
+      better not to make changes to clk API, which was needed in order to
+      avoid clashing of the interconnect driver with the devfreq in regards
+      to memory clk-rate rounding.
+
+      [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200330231617.17079-3-digetx@gmail.com/
+
+      Stephen Boyd suggested that instead we should provide OPP table via DT.
+      I tried to investigate whether this could be done and turned out
+      it's a bit complicated. Technically it should be doable, but:
+
+        1. For now we don't fully support voltage scaling of the CORE regulator
+           and so OPP table in the DT isn't really needed today. We can
+           generate table from the memory timings, which is what Tegra devfreq
+           drivers already do.
+
+        2. The OPP table should be defined in the DT for the Memory Controller
+           node and then its usage somehow should be shared by both interconnect
+           and devfreq drivers. It's not obvious what's the best way to do it.
+
+      So, it will be much better to postpone the DT OPP table addition
+      until these questions are resolved. We can infer OPPs from the
+      memory timings and we could get the memory rates from the memory
+      driver directly, avoiding the problems induced by the clk API usage.
+      This idea is implemented in v3, see these patches:
+
+        PM / devfreq: tegra20: Use MC timings for building OPP table
+        PM / devfreq: tegra30: Use MC timings for building OPP table
+
+v2: - Instead of a single dma-mem interconnect path, the paths are now
+      defined per memory client.
+
+    - The EMC provider now uses #interconnect-cells=<0>.
+
+    - Dropped Tegra124 because there is no enough information about how to
+      properly calculate required EMC clock rate for it and I don't have
+      hardware for testing. Somebody else will have to work on it.
+
+    - Moved interconnect providers code into drivers/memory/tegra/*.
+
+    - Added "Create tegra20-devfreq device" patch because interconnect
+      is not very usable without the devfreq memory auto-scaling since
+      memory freq will be fixed to the display's requirement.
+
+Artur Świgoń (1):
+  interconnect: Relax requirement in of_icc_get_from_provider()
+
+Dmitry Osipenko (38):
+  clk: Export clk_hw_reparent()
+  clk: tegra: Remove Memory Controller lock
+  clk: tegra: Export Tegra20 EMC kernel symbols
+  memory: tegra20-emc: Make driver modular
+  memory: tegra30-emc: Make driver modular
+  memory: tegra124-emc: Make driver modular
+  memory: tegra124-emc: Use devm_platform_ioremap_resource
+  soc/tegra: fuse: Export tegra_read_ram_code()
+  memory: tegra20-emc: Initialize MC timings
+  PM / devfreq: tegra20: Silence deferred probe error
+  PM / devfreq: tegra30: Silence deferred probe error
+  PM / devfreq: tegra20: Use MC timings for building OPP table
+  PM / devfreq: tegra30: Use MC timings for building OPP table
+  PM / devfreq: tegra20: Add error messages to tegra_devfreq_target()
+  PM / devfreq: tegra30: Add error messages to tegra_devfreq_target()
+  PM / devfreq: tegra20: Adjust clocks conversion ratio and polling
+    interval
+  PM / devfreq: tegra20: Relax Kconfig dependency
+  dt-bindings: memory: tegra20: mc: Document new interconnect property
+  dt-bindings: memory: tegra20: emc: Document new interconnect property
+  dt-bindings: memory: tegra30: mc: Document new interconnect property
+  dt-bindings: memory: tegra30: emc: Document new interconnect property
+  dt-bindings: host1x: Document new interconnect properties
+  dt-bindings: memory: tegra20: Add memory client IDs
+  dt-bindings: memory: tegra30: Add memory client IDs
+  ARM: tegra: Add interconnect properties to Tegra20 device-tree
+  ARM: tegra: Add interconnect properties to Tegra30 device-tree
+  memory: tegra: Register as interconnect provider
+  memory: tegra20-emc: Use devm_platform_ioremap_resource
+  memory: tegra20-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra20-emc: Register as interconnect provider
+  memory: tegra20-emc: Create tegra20-devfreq device
+  memory: tegra30-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra30-emc: Register as interconnect provider
+  drm/tegra: dc: Support memory bandwidth management
+  drm/tegra: dc: Tune up high priority request controls for Tegra20
+  drm/tegra: dc: Extend debug stats with total number of events
+  ARM: tegra: Enable interconnect API in tegra_defconfig
+  ARM: multi_v7_defconfig: Enable interconnect API
+
+ .../display/tegra/nvidia,tegra20-host1x.txt   |  68 +++++
+ .../memory-controllers/nvidia,tegra20-emc.txt |   2 +
+ .../memory-controllers/nvidia,tegra20-mc.txt  |   3 +
+ .../nvidia,tegra30-emc.yaml                   |   6 +
+ .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+ arch/arm/boot/dts/tegra20.dtsi                |  22 +-
+ arch/arm/boot/dts/tegra30.dtsi                |  23 +-
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ arch/arm/configs/tegra_defconfig              |   1 +
+ drivers/clk/clk.c                             |   1 +
+ drivers/clk/tegra/clk-divider.c               |   4 +-
+ drivers/clk/tegra/clk-tegra114.c              |   6 +-
+ drivers/clk/tegra/clk-tegra124-emc.c          |  63 ++--
+ drivers/clk/tegra/clk-tegra124.c              |   8 +-
+ drivers/clk/tegra/clk-tegra20-emc.c           |   3 +
+ drivers/clk/tegra/clk-tegra20.c               |   3 +-
+ drivers/clk/tegra/clk-tegra30.c               |   3 +-
+ drivers/clk/tegra/clk.h                       |  14 +-
+ drivers/devfreq/Kconfig                       |   2 +-
+ drivers/devfreq/tegra20-devfreq.c             |  52 ++--
+ drivers/devfreq/tegra30-devfreq.c             | 115 +++++--
+ drivers/gpu/drm/tegra/dc.c                    | 289 +++++++++++++++++-
+ drivers/gpu/drm/tegra/dc.h                    |  13 +
+ drivers/gpu/drm/tegra/drm.c                   |  19 ++
+ drivers/gpu/drm/tegra/plane.c                 |   1 +
+ drivers/gpu/drm/tegra/plane.h                 |   4 +-
+ drivers/interconnect/core.c                   |  11 +-
+ drivers/memory/tegra/Kconfig                  |   6 +-
+ drivers/memory/tegra/mc.c                     | 121 ++++++++
+ drivers/memory/tegra/mc.h                     |   8 +
+ drivers/memory/tegra/tegra124-emc.c           |  35 ++-
+ drivers/memory/tegra/tegra20-emc.c            | 219 +++++++++++--
+ drivers/memory/tegra/tegra30-emc.c            | 160 ++++++++--
+ drivers/soc/tegra/fuse/tegra-apbmisc.c        |   2 +
+ include/dt-bindings/memory/tegra20-mc.h       |  53 ++++
+ include/dt-bindings/memory/tegra30-mc.h       |  67 ++++
+ include/linux/clk/tegra.h                     |  11 +
+ include/soc/tegra/emc.h                       |  16 -
+ include/soc/tegra/mc.h                        |   3 +
+ 39 files changed, 1245 insertions(+), 198 deletions(-)
+ delete mode 100644 include/soc/tegra/emc.h
+
 -- 
-2.17.1
+2.26.0
 
