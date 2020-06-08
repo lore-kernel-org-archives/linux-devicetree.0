@@ -2,82 +2,67 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF07C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 13:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68931C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30626206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 13:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE51207ED
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgFHNuW (ORCPT
+        id S1729565AbgFHOL0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:50:22 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45804 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729674AbgFHNuV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 09:50:21 -0400
-Received: by mail-oi1-f194.google.com with SMTP id p70so15293947oic.12;
-        Mon, 08 Jun 2020 06:50:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LoBXZChFhFBHCAkIAQbE9ACXjpMIB+fC8bSF51f2aWc=;
-        b=Oi1JV+iOrC6Fz0vZtz9BnXQLvULm/VK9Zn12fvWo1ZfOLbKHXFz651IV7Se0j60b6b
-         e3oA2859K9ksf52g2x9v+FCvGbWNa4pFFwieXf8Mfjd5Lw2Qz7n4bzs0b3rGDHsKVEE3
-         +M+pdruzQIPjFNvP1FGn8mkpVzU13EKTxbTNdblvWWMFvKoS9F3GDrwaqIwbhXMYhqQd
-         2JGCHqDlFGNHJeQNHWKtQjnmIM9YDaAOsLxuhMlGqW7mgupIcxrZ7PMwNWK3wt73V6oo
-         vijEfM+B0cRCqXXu+gYv5cNW7NBN6ObZ+2lxp8GOqxxleqUqOM4KjbSXrUFUVD0fWmD3
-         6dLA==
-X-Gm-Message-State: AOAM5312+E3y7k+dEM5/6aD85V1km5Lm6HtG3Fim23+EAYRW6mQ7jO3w
-        UZ1sqwY2zTS+tnkNJHZlHjJdAGeTogDb16w/1f4=
-X-Google-Smtp-Source: ABdhPJxu+xASA+2ZNb44ekDJEVwU5qFhT7U9QCnbCegaQTenwVkQmEVG4N8NU8yCgqlmPa3KP9HE51+OyaTr6GMiSHs=
-X-Received: by 2002:a54:4006:: with SMTP id x6mr3364279oie.148.1591624221004;
- Mon, 08 Jun 2020 06:50:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591555267-21822-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jun 2020 15:50:09 +0200
-Message-ID: <CAMuHMdVjHdwpm62mephmGPtDrYOeQyP38PaQD2=SOYD6Xj5ZaQ@mail.gmail.com>
-Subject: Re: [PATCH 02/11] arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]:
- Rename HiHope RZ/G2N boards
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Jun 2020 10:11:26 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:32932 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729280AbgFHOL0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 10:11:26 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Jun 2020 07:11:25 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 08 Jun 2020 07:11:22 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 53DAA21801; Mon,  8 Jun 2020 19:41:21 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH V3 4/5] phy: qcom-qusb2: Add ipq8074 device compatible
+Date:   Mon,  8 Jun 2020 19:41:18 +0530
+Message-Id: <1591625479-4483-5-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
+References: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The existing DTS files for HiHope RZ/G2N boards are for Rev.2.0 version
-> so reflect the same for the DTS file names so that the existing naming
-> convention can be used for Rev.3.0/4.0 boards.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Add ipq8074 qusb2 device compatible for high speed usb support.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+index 393011a..557547d 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
++++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+@@ -810,6 +810,9 @@ static const struct phy_ops qusb2_phy_gen_ops = {
+ 
+ static const struct of_device_id qusb2_phy_of_match_table[] = {
+ 	{
++		.compatible	= "qcom,ipq8074-qusb2-phy",
++		.data		= &msm8996_phy_cfg,
++	}, {
+ 		.compatible	= "qcom,msm8996-qusb2-phy",
+ 		.data		= &msm8996_phy_cfg,
+ 	}, {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
