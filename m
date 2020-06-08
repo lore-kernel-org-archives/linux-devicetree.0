@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065E8C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853B1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6963206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57ED7206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663129;
-	bh=oeO3JbRNlXL4jdzpWTfG5jkpwsKeAcZJoppud5H82L0=;
+	s=default; t=1591663139;
+	bh=xM1ntgsRqTxDriNXGFqvuAhtnMxp+m2fLoum72+rqno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mBu2CSk6W4yLIH7hDtu17+EbyjKicfnv6/tLxfOmxQr0sHVixbEt1lycLvqnJ0g2g
-	 sUg3uOUCtFmORQnxL5VdLr2KCw0B0KZhY4y0QWABDe8neIX72qdjJ2+YJnj6cAWatR
-	 U83w/YDy58w4oPev/OprMJtIQvc5qiKkzdNDqmrM=
+	b=p5A5CC6Bn7hID+tRFFs7lpVX3Pk42caP8EtVCd7UUrmRtSuXIpJJYhdag7WgOv3jd
+	 OtijMhoOD3igIEmVoG7gfWnZVUskCNUfFNzIMEweIi6m1l/4rnnF9V8nJBGuKHXHkD
+	 0Mex0Kj08YjpgyTv9CQsku2k8oALcu5GOPGb/ufA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgFIAit (ORCPT
+        id S1728872AbgFHXN0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33320 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgFHXNb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:31 -0400
+        id S1729348AbgFHXNY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B24E521527;
-        Mon,  8 Jun 2020 23:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 570D3214F1;
+        Mon,  8 Jun 2020 23:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658011;
-        bh=oeO3JbRNlXL4jdzpWTfG5jkpwsKeAcZJoppud5H82L0=;
+        s=default; t=1591658004;
+        bh=xM1ntgsRqTxDriNXGFqvuAhtnMxp+m2fLoum72+rqno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZUjzrbr7MdhLg80t2akgpSvhK/nJRCvSms7yhenVHt2LgL0Jh9NIVzVlcsHoZ5Mu
-         YY4EuukTidnAteP0dS155WoD0EA+l43EVDczCzcsHZPP5T86xBGzhTi4nZmSA2YbUw
-         7GQXN2UmYWOAlpRVPCpumGmHyYQtx5T/BLNvYL14=
+        b=VpAl5rLgn6ZIR6an72xlLKjJQijn3He+rfjIXAEaFR95CSGXlMp/b+DQeJNiWT95T
+         o/qAwD7GKvt8sDnI4mnOBbT5cl3R+ZGYSEae4Jcmeo3NqFflm9++DTQXDLsIMlFc+u
+         kl5GdXvBAST8ilDiljhzKFyRmBbI17eyLeWuU+Zk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 066/606] dt-bindings: dma: fsl-edma: fix ls1028a-edma compatible
-Date:   Mon,  8 Jun 2020 19:03:11 -0400
-Message-Id: <20200608231211.3363633-66-sashal@kernel.org>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 060/606] arm64: dts: rockchip: Replace RK805 PMIC node name with "pmic" on rk3328 boards
+Date:   Mon,  8 Jun 2020 19:03:05 -0400
+Message-Id: <20200608231211.3363633-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,38 +60,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit d94a05f87327143f94f67dd256932163ac2bcd65 upstream.
+commit 83b994129fb4c18a8460fd395864a28740e5e7fb upstream.
 
-The bootloader will fix up the IOMMU entries only on nodes with the
-compatible "fsl,vf610-edma". Thus make this compatible string mandatory
-for the ls1028a-edma.
+In some board device tree files, "rk805" was used for the RK805 PMIC's
+node name. However the policy for device trees is that generic names
+should be used.
 
-While at it, fix the "fsl,fsl," typo.
+Replace the "rk805" node name with the generic "pmic" name.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new fsl,fsl,ls1028a-edma")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 1e28037ec88e ("arm64: dts: rockchip: add rk805 node for rk3328-evb")
+Fixes: 955bebde057e ("arm64: dts: rockchip: add rk3328-rock64 board")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://lore.kernel.org/r/20200327030414.5903-3-wens@kernel.org
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts    | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-index e77b08ebcd06..ee1754739b4b 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -10,7 +10,8 @@ Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
- 	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
--	- "fsl,fsl,ls1028a-edma" for eDMA used similar to that on Vybrid vf610 SoC
-+	- "fsl,ls1028a-edma" followed by "fsl,vf610-edma" for eDMA used on the
-+	  LS1028A SoC.
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index 49c4b96da3d4..6abc6f4a86cf 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -92,7 +92,7 @@ &gmac2phy {
+ &i2c1 {
+ 	status = "okay";
+ 
+-	rk805: rk805@18 {
++	rk805: pmic@18 {
+ 		compatible = "rockchip,rk805";
+ 		reg = <0x18>;
+ 		interrupt-parent = <&gpio2>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 62936b432f9a..304fad1a0b57 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -169,7 +169,7 @@ &hdmiphy {
+ &i2c1 {
+ 	status = "okay";
+ 
+-	rk805: rk805@18 {
++	rk805: pmic@18 {
+ 		compatible = "rockchip,rk805";
+ 		reg = <0x18>;
+ 		interrupt-parent = <&gpio2>;
 -- 
 2.25.1
 
