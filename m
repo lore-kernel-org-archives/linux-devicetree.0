@@ -2,106 +2,106 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F23C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE16C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EACB20814
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFCA2072F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0WRHvJzJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCco+UPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbgFHQIK (ORCPT
+        id S1730538AbgFHQdw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
+        Mon, 8 Jun 2020 12:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730357AbgFHQIK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 12:08:10 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB631C08C5C2;
-        Mon,  8 Jun 2020 09:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7VoRl6qQlPxAENq4swBjnhUVEexaLc0WppnAtA1JmcY=; b=0WRHvJzJToSgd8Xjgr1TW5lNh
-        f6sbLcPfQYlR930Di+98noAUh6OtZQe7W6tdF6mQgk3nI3Of8xrxCVr8ots3PjNSAuSaGxDPlB5+a
-        UZ3dzCTg/NReHWAwOA/J1G49dKJtwWy8u0XbEGN/XncsysEekP+B5WOP0+96wJ2SmnwIWBov2+QLY
-        PeEfH4tSH0f4AZfr8n16AhQaXDXP/8lpYc4QjE+MpNYTG5fygyCk4ISApJJ/VXtWutflbFMcbPhoB
-        WYDkjXyaopMoJI+WASx25CpQynsHz75ghL4IRBZmFlCn/uV1SkeUnMCGTxjsge7bQRG4NsdRY9ZhC
-        dOQyVdQhQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:51000)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jiKJf-0000c8-OJ; Mon, 08 Jun 2020 17:08:03 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jiKJd-0002CW-W7; Mon, 08 Jun 2020 17:08:02 +0100
-Date:   Mon, 8 Jun 2020 17:08:01 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Message-ID: <20200608160801.GO1551@shell.armlinux.org.uk>
-References: <20200608074716.9975-1-s.hauer@pengutronix.de>
+        with ESMTP id S1730568AbgFHQdu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 12:33:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC9EC08C5C2
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 09:33:48 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so21308523ljc.8
+        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 09:33:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m+2vmCPmV1GsBmZa4YiHUJXp9kcoqHgm5vAPz2Z41dc=;
+        b=dCco+UPr+Qdqyxew4yI7E/N/GFI4x1x5iAWBvad3otlo2w6Mz/ATPfCXrVBYyd0fmp
+         sPGCvbx0279Nyc4cAJpMD4bmWLfTalhfPcF9xgQjbppHeOKL/ihn4sRUXyz+/LBcNbN3
+         CBbcve97jjtiQXPsa99SqJjZa7J/nND4Ky+qYTZzd2E5Ne6LR+sAJEJ/6zRDvLrUFK2C
+         C31nJ6SvZRIsytK2bDqotUluqHWbWPj3/sqPddM229t1XvhzoMmumyCRvK4trXb3ZXOD
+         eM+ZaT15kI3Fb/+hgj9hoX5byyWuPDpz7mA1ya6owI8HVRt5Rw+yzGbbZWAg2mlkYxqr
+         YkQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m+2vmCPmV1GsBmZa4YiHUJXp9kcoqHgm5vAPz2Z41dc=;
+        b=sRzKBaA1MpPX4jIWEDn7AnKwX0tqkmoyv5wjn+jUDU/sN5sCvL/iOz1as4ct6n+K1k
+         6+31GlahjPPY93hJmeRVsc9aOMIrOuvTUxTDBQEYGetv3Ax0sAgyLOfxx3DfUevFFo+D
+         JWkhZzB3IqRQYuANsc6omKaritOZopf/rQdxWMWPwcBAazRxH2e9NhNBsomf8iyZcW4r
+         4iTX8ggcmqHnIKlSlk3WUmJSast5pJaOEloqCnLUrgSwXeRJuy6+QJ6rabYnkej1ZaXx
+         baFNUKkhOy5V+Pe2EkLVcfGSo0371snbnI8z3oOX6PzgBocpnNh8R7ew33SiuWmCpTD7
+         puKg==
+X-Gm-Message-State: AOAM530BuEhQp/3oiNqc8Z8gH2h+ljgOQ8ZyDjjUVbkiIfhuaCQEQHQV
+        NJunlwThj/DwEMcZbN4Pmr4=
+X-Google-Smtp-Source: ABdhPJxWz6PWDu5d+EBngNCpxb3yDuZrnsOhXN53kUvD14Jhj/X1w3zjmm7O83fxLy0M2bIlygz48A==
+X-Received: by 2002:a2e:85d2:: with SMTP id h18mr12667749ljj.367.1591634027398;
+        Mon, 08 Jun 2020 09:33:47 -0700 (PDT)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id y199sm4439179lff.6.2020.06.08.09.33.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 09:33:46 -0700 (PDT)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH] ARM: dts: BCM5301X: Add missing memory "device_type" for Luxul XWC-2000
+Date:   Mon,  8 Jun 2020 18:33:41 +0200
+Message-Id: <20200608163341.1743-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608074716.9975-1-s.hauer@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:47:16AM +0200, Sascha Hauer wrote:
-> The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-> called DRSGMII.
-> 
-> This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-> from DT. The MVNETA then configures the SERDES protocol value
-> accordingly.
-> 
-> It was successfully tested on a MV78460 connected to a FPGA.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Digging around, this is Armada XP?  Which SoCs is this mode supported?
-There's no mention of DRSGMII in the A38x nor A37xx documentation which
-are later than Armada XP.
+This property is needed since commit abe60a3a7afb ("ARM: dts: Kill off
+skeleton{64}.dtsi"). Without it booting silently hangs at:
+[    0.000000] Memory policy: Data cache writealloc
 
-What exactly is "drsgmii"?  It can't be "double-rate" SGMII because that
-would give you 2Gbps max instead of the 1Gbps, but this gives 2.5Gbps,
-so I'm really not sure using "drsgmii" is a good idea.  It may be what
-Marvell call it, but we really need to know if there's some vendor
-neutral way to refer to it.
+Fixes: 984829e2d39b ("ARM: dts: BCM5301X: Add DT for Luxul XWC-2000")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ arch/arm/boot/dts/bcm47094-luxul-xwc-2000.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  .../devicetree/bindings/net/ethernet-controller.yaml       | 1 +
->  drivers/net/ethernet/marvell/mvneta.c                      | 7 ++++++-
->  include/linux/phy.h                                        | 3 +++
->  3 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> This patch has already been sent 3 years ago here:
-> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20170123142206.5390-1-jlu@pengutronix.de/
-> Since then the driver has evolved a lot. 2.5Gbps is properly configured in the
-> MAC now.
-
-Nevertheless, adding a new interface mode needs properly documenting to
-describe exactly what it is - see Documentation/networking/phy.rst, the
-section "PHY interface modes".  The above point about "what is this"
-illustrates why we need these documented.
-
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwc-2000.dts b/arch/arm/boot/dts/bcm47094-luxul-xwc-2000.dts
+index 67a5982af9c9..9ae815ddbb4b 100644
+--- a/arch/arm/boot/dts/bcm47094-luxul-xwc-2000.dts
++++ b/arch/arm/boot/dts/bcm47094-luxul-xwc-2000.dts
+@@ -17,6 +17,7 @@ chosen {
+ 	};
+ 
+ 	memory {
++		device_type = "memory";
+ 		reg = <0x00000000 0x08000000
+ 		       0x88000000 0x18000000>;
+ 	};
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+2.26.1
+
