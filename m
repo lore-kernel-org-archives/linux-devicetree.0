@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C94FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA10C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C15220737
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E1320659
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660646;
-	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+	s=default; t=1591660688;
+	bh=DJ2F7ivv8tQYyr+wv76RB0/v0aC81S0HThsE5JGpJ+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWybO/hEgpG1f/1x78JhqKqQvx4onXgZqmBj/nkBDAFpfG5BFLi9toNM6iBs0ki1Z
-	 aT+u1ULDtyyg6ijHoDsNUYcwA3FArT303WYcSVrbfT8ed0GnBFzp6UdUSoJXw+hl10
-	 SPD6JRJLVK+6bviM/jRBjmd46c41SNXV3AYdqymM=
+	b=tJlsfzxhNjjvZKTMB5wdGab7t58jB/Fq13pOq04XeZimGvDfB8oe269d2z87s5gdR
+	 WemYbDs2Z0+71G/8crvNioo49XF5VxaRVjRJPasei8vLbop1CaR9M8vl9VGkXOvETo
+	 pIe2Pruk51flRwnD2BPE0u76IYk7iNpitViN1UwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgFHX5Y (ORCPT
+        id S1731469AbgFHXXS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731498AbgFHXXa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:30 -0400
+        id S1731464AbgFHXXP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DBB20842;
-        Mon,  8 Jun 2020 23:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 619CB20897;
+        Mon,  8 Jun 2020 23:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658609;
-        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+        s=default; t=1591658594;
+        bh=DJ2F7ivv8tQYyr+wv76RB0/v0aC81S0HThsE5JGpJ+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bGZ3deS5CSi9ULJyTo2SuhMYTr2BSPG+XVsvahwyVs5Q+wzBDB2Hz5eBddSvQlApv
-         STtUv1vN7u9pOcBo6Rlb+Yk6jTF4PGaPRxebbFDPECnYP4rDJQffyDs7xQfw67HnyI
-         JquoYKifkO8O85ZkaGxPoSvwFv+clxtR4XRdtPSg=
+        b=LZpHpgpwWIdV+0Uno2geUJ5GcLVrLW72mLY/qsV+bGFSyUjxh17lcO6bDEvSWvGyv
+         Gilm0kin11R8ukpgxcRMLV4M+AOx1QT8+Od6LKjfqufg9VKrcDZ7xj+1vWA1QY+A+c
+         vzNKB1s4RROJCKgpIBmeH8xhfVaRlqC3LHDXGlhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 036/106] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Mon,  8 Jun 2020 19:21:28 -0400
-Message-Id: <20200608232238.3368589-36-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/106] spi: dw: Fix Rx-only DMA transfers
+Date:   Mon,  8 Jun 2020 19:21:19 -0400
+Message-Id: <20200608232238.3368589-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -62,46 +66,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
+[ Upstream commit 46164fde6b7890e7a3982d54549947c8394c0192 ]
 
-Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
-Set the dpi pins to gpio mode and output-low to avoid leakage current
-when dpi disabled.
+Tx-only DMA transfers are working perfectly fine since in this case
+the code just ignores the Rx FIFO overflow interrupts. But it turns
+out the SPI Rx-only transfers are broken since nothing pushing any
+data to the shift registers, so the Rx FIFO is left empty and the
+SPI core subsystems just returns a timeout error. Since DW DMAC
+driver doesn't support something like cyclic write operations of
+a single byte to a device register, the only way to support the
+Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+This is what we intend to fix in this commit by setting the
+SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529131205.31838-9-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-dw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index b6a7e7397b8b..b944fe067188 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -16,6 +16,9 @@ Required properties:
-   Documentation/devicetree/bindings/graph.txt. This port should be connected
-   to the input port of an attached HDMI or LVDS encoder chip.
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 5a47e28e38c1..2207bf17f6a6 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -530,6 +530,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 			dws->dma_inited = 0;
+ 		} else {
+ 			master->can_dma = dws->dma_ops->can_dma;
++			master->flags |= SPI_CONTROLLER_MUST_TX;
+ 		}
+ 	}
  
-+Optional properties:
-+- pinctrl-names: Contain "default" and "sleep".
-+
- Example:
- 
- dpi0: dpi@1401d000 {
-@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
- 		 <&mmsys CLK_MM_DPI_ENGINE>,
- 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
- 	clock-names = "pixel", "engine", "pll";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_pin_func>;
-+	pinctrl-1 = <&dpi_pin_idle>;
- 
- 	port {
- 		dpi0_out: endpoint {
 -- 
 2.25.1
 
