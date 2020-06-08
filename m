@@ -2,190 +2,146 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D61C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 22:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4459DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 22:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF0F02074B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 22:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD6E206D5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 22:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="spLeCZCL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUIUtFOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgFHWqe (ORCPT
+        id S1726848AbgFHWx4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 18:46:34 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:45996 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgFHWqe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 18:46:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1591656391; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=27Rv1Q6nYslL7GrWdq47XLrEYYLVoo4sA7By/cpIaqc=;
-        b=spLeCZCLUeEuXvhm+USTmV2SAeWIGUBiPX5V2tryieK6iLWVFK00l2ZuXRGgw+LavDVQ7E
-        secwbfIbqhpXMBVK3Alkt477dIvR9wyK3GfDI+U1fYyAc9fpHcpfyl+Om7pSuFtAWoN0XQ
-        2jqsTSqp2tUISxAR0YbYseEASuMcCu8=
-Date:   Tue, 09 Jun 2020 00:46:21 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
-Message-Id: <9XPMBQ.UM94FDID8MZW@crapouillou.net>
-In-Reply-To: <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
-References: <20200515104340.10473-1-paul@crapouillou.net>
-        <20200515104340.10473-3-paul@crapouillou.net>
-        <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
-        <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
-        <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
+        Mon, 8 Jun 2020 18:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbgFHWxz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 18:53:55 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F4DC08C5C2;
+        Mon,  8 Jun 2020 15:53:55 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id l1so14791248ede.11;
+        Mon, 08 Jun 2020 15:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o0dkW7AvLyKn1HRWpsXIOwbF0Y+dLturfn26dWeNBGk=;
+        b=oUIUtFODJiEax1cYkKvYmwAdbOx/v8zdOrVZjhTeHg6/0BEdjS1WeDOIvOZ3WMb7/i
+         ONJQj9vfW3ieG2L3o2wsqtHBNoMNMe0kdkpPu0rhTZ2QSLOgtlPblqJ264grL9R+WwlL
+         7kR8ay5zlNj18Un3z9RIxrNLAzj3b6mRroHeqYtD09xsq62yqPZ7dHPaNSD5vqvJRgB3
+         tdCRffLsbtIGDVwc0U62UqtymSVZErg50b+7kgsYm9l8F9rZhjK/gEVBiVT/Vn4nuK/1
+         FiocN+z1p5MEN7CyXQV0CRu18kNf1pHA5GgmoLMFu+qoZ9Q5zfrmT5ME7kJeoWR6apjq
+         tZ9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o0dkW7AvLyKn1HRWpsXIOwbF0Y+dLturfn26dWeNBGk=;
+        b=npldMPLKtImlug97zypKL7xLXWE/DJ9m7b3LS2sAP0G6CuupMtR2QLOo3ym9YewKdh
+         ysyx3hauiwfHdoRyOQWpe4ZxvsIb2eo7EFdj2ZzsGE4+slQKycKl9sjIjrVfmr0vg7k+
+         IvnULWcu1/KZIVb1RfjnTt18JHZkQn4ZaT6QQwLnANuRyZ0KkBG9sTm5IcWnpU+145+a
+         d1aeN1krKNafD7nnhZirx0RzZAz83btKsB8CihDtQJd8JBfYfIHCh3SimEIMZE/tpypJ
+         Qz0Dtk/pv13UeEFrZDa9hAYR3aXPtucI1uDpSfPSuapyT+9jibzd1nh10VCYfhFXymxW
+         FgIw==
+X-Gm-Message-State: AOAM53259hekU0D6RNwfYv/FuuP7cAxcBJbE3YQJ7XUeKzLqrQH4cA53
+        tsKrgW2vzMhF/fDK7UiwHNuewfF6u09DGi5EgkE=
+X-Google-Smtp-Source: ABdhPJwibOfu09ZokvFJB8guqz4Rh/t6R+97kctxbqsoYNwmzeb7qaLLtQeLrCUX3dmQ1Jq2dt20A6x9O/nH7nNQ8Mg=
+X-Received: by 2002:a50:9d46:: with SMTP id j6mr24741835edk.362.1591656833950;
+ Mon, 08 Jun 2020 15:53:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+References: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org>
+ <CALAqxLViRrga-XW2o1J1JutFdS1d-qmmgOrEP2beNygw3A7H4A@mail.gmail.com> <CALAqxLWbhioSH4pFyM348VrGWxRXHQV1s9bdz6HArYguLtAFcw@mail.gmail.com>
+In-Reply-To: <CALAqxLWbhioSH4pFyM348VrGWxRXHQV1s9bdz6HArYguLtAFcw@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 8 Jun 2020 15:54:19 -0700
+Message-ID: <CAF6AEGvGxyen5DbYCoc1x5ZeWiZo0mgvtsNev0k7WJnw+Xgqjg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/msm/dpu: add support for color processing blocks
+ in dpu driver
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Suman,
+On Mon, Jun 8, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Mon, Jun 8, 2020 at 3:25 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Wed, Mar 25, 2020 at 1:17 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+> > >
+> > > This change adds support to configure dspp blocks in
+> > > the dpu driver.
+> > >
+> > > Macro description of the changes coming in this patch.
+> > > 1) Add dspp definitions in the hw catalog.
+> > > 2) Add capability to reserve dspp blocks in the display data path.
+> > > 3) Attach the reserved block to the encoder.
+> > >
+> > > Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> >
+> > Hey all,
+> >   With this patch now merged upstream, I'm seeing a regression on
+> > db845c that I bisected down to it.
+> >
+> > When I boot up I see:
+> > [   40.976737] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> > error]failed to get dspp on lm 0
+> > [   40.985600] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> > error]failed to get dspp on lm 0
+> > [   40.994587] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> > error]failed to get dspp on lm 0
+> > [   41.003492] [drm:_dpu_rm_check_lm_and_get_connected_blks] [dpu
+> > error]failed to get dspp on lm 0
+> > [   41.012283] [drm:_dpu_rm_make_reservation] [dpu error]unable to
+> > find appropriate mixers
+> > [   41.020369] [drm:dpu_rm_reserve] [dpu error]failed to reserve hw
+> > resources: -119
+> >
+> > Over and over, and the display doesn't start up.
+> >
+> > I suspect we're supposed to catch the following check before the failure:
+> >
+> > +       if (!reqs->topology.num_dspp)
+> > +               return true;
+> >
+> > I suspect the issue is in dpu_encoder_get_topology() we don't fully
+> > initialize the topology structure on the stack before returning it.
+> >
+> > Does that sound plausible or is there likely some other cause?
+>
+> This guess is wrong. The topology.num_dspp is 2, but lm_cfg->dspp is
+> coming back as zero.
+>
+> I'll continue digging to see if I can understand better whats going wrong.
+>
 
->>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
->>>> Call pm_runtime_get_sync() before the firmware is loaded, and
->>>> pm_runtime_put() after the remote processor has been stopped.
->>>> 
->>>> Even though the remoteproc device has no PM callbacks, this allows 
->>>> the
->>>> parent device's PM callbacks to be properly called.
->>> 
->>> I see this patch staged now for 5.8, and the latest -next branch 
->>> has broken the pm-runtime autosuspend feature we have in the OMAP 
->>> remoteproc driver. See commit 5f31b232c674 ("remoteproc/omap: Add 
->>> support for runtime auto-suspend/resume").
->>> 
->>> What was the original purpose of this patch, because there can be 
->>> differing backends across different SoCs.
->> 
->> Did you try pm_suspend_ignore_children()? It looks like it was made 
->> for your use-case.
-> 
-> Sorry for the delay in getting back. So, using 
-> pm_suspend_ignore_children() does fix my current issue.
-> 
-> But I still fail to see the original purpose of this patch in the 
-> remoteproc core especially given that the core itself does not have 
-> any callbacks. If the sole intention was to call the parent pdev's 
-> callbacks, then I feel that state-machine is better managed within 
-> that particular platform driver itself, as the sequencing/device 
-> management can vary with different platform drivers.
-
-The problem is that with Ingenic SoCs some clocks must be enabled in 
-order to load the firmware, and the core doesn't give you an option to 
-register a callback to be called before loading it. The first version 
-of my patchset added .prepare/.unprepare callbacks to the struct 
-rproc_ops, but the feedback from the maintainers was that I should do 
-it via runtime PM. However, it was not possible to keep it contained in 
-the driver, since again the core doesn't provide a "prepare" callback, 
-so no place to call pm_runtime_get_sync(). So we settled with having 
-runtime PM in the core without callbacks, which will trigger the 
-runtime PM callbacks of the driver at the right moment.
-
-Sorry if that caused you trouble.
-
-Cheers,
--Paul
->>> 
-
->>> 
->>>> 
->>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>> ---
->>>> 
->>>> Notes:
->>>>      v2-v4: No change
->>>>      v5: Move calls to prepare/unprepare to 
->>>> rproc_fw_boot/rproc_shutdown
->>>>      v6: Instead of prepare/unprepare callbacks, use PM runtime 
->>>> callbacks
->>>>      v7: Check return value of pm_runtime_get_sync()
->>>> 
->>>>   drivers/remoteproc/remoteproc_core.c | 17 ++++++++++++++++-
->>>>   1 file changed, 16 insertions(+), 1 deletion(-)
->>>> 
->>>> diff --git a/drivers/remoteproc/remoteproc_core.c 
->>>> b/drivers/remoteproc/remoteproc_core.c
->>>> index a7f96bc98406..e33d1ef27981 100644
->>>> --- a/drivers/remoteproc/remoteproc_core.c
->>>> +++ b/drivers/remoteproc/remoteproc_core.c
->>>> @@ -29,6 +29,7 @@
->>>>   #include <linux/devcoredump.h>
->>>>   #include <linux/rculist.h>
->>>>   #include <linux/remoteproc.h>
->>>> +#include <linux/pm_runtime.h>
->>>>   #include <linux/iommu.h>
->>>>   #include <linux/idr.h>
->>>>   #include <linux/elf.h>
->>>> @@ -1382,6 +1383,12 @@ static int rproc_fw_boot(struct rproc 
->>>> *rproc, const struct firmware *fw)
->>>>       if (ret)
->>>>           return ret;
->>>>   +    ret = pm_runtime_get_sync(dev);
->>>> +    if (ret < 0) {
->>>> +        dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
->>>> +        return ret;
->>>> +    }
->>>> +
->>>>       dev_info(dev, "Booting fw image %s, size %zd\n", name, 
->>>> fw->size);
->>>>         /*
->>>> @@ -1391,7 +1398,7 @@ static int rproc_fw_boot(struct rproc 
->>>> *rproc, const struct firmware *fw)
->>>>       ret = rproc_enable_iommu(rproc);
->>>>       if (ret) {
->>>>           dev_err(dev, "can't enable iommu: %d\n", ret);
->>>> -        return ret;
->>>> +        goto put_pm_runtime;
->>>>       }
->>>>         rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
->>>> @@ -1435,6 +1442,8 @@ static int rproc_fw_boot(struct rproc 
->>>> *rproc, const struct firmware *fw)
->>>>       rproc->table_ptr = NULL;
->>>>   disable_iommu:
->>>>       rproc_disable_iommu(rproc);
->>>> +put_pm_runtime:
->>>> +    pm_runtime_put(dev);
->>>>       return ret;
->>>>   }
->>>>   @@ -1840,6 +1849,8 @@ void rproc_shutdown(struct rproc *rproc)
->>>>         rproc_disable_iommu(rproc);
->>>>   +    pm_runtime_put(dev);
->>>> +
->>>>       /* Free the copy of the resource table */
->>>>       kfree(rproc->cached_table);
->>>>       rproc->cached_table = NULL;
->>>> @@ -2118,6 +2129,9 @@ struct rproc *rproc_alloc(struct device 
->>>> *dev, const char *name,
->>>>         rproc->state = RPROC_OFFLINE;
->>>>   +    pm_runtime_no_callbacks(&rproc->dev);
->>>> +    pm_runtime_enable(&rproc->dev);
->>>> +
->>>>       return rproc;
->>>>   }
->>>>   EXPORT_SYMBOL(rproc_alloc);
->>>> @@ -2133,6 +2147,7 @@ EXPORT_SYMBOL(rproc_alloc);
->>>>    */
->>>>   void rproc_free(struct rproc *rproc)
->>>>   {
->>>> +    pm_runtime_disable(&rproc->dev);
->>>>       put_device(&rproc->dev);
->>>>   }
->>>>   EXPORT_SYMBOL(rproc_free);
->>>> 
->>> 
+It looks like no DSPP was added to 845, see sdm845_lm vs sc7180_lm
 
 
+Kaylan, can this be fixed sanely to make DSPP optional, or should we
+revert and try again next time?
+
+BR,
+-R
