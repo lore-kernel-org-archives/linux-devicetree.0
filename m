@@ -2,110 +2,124 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280CAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C72C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1B520659
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13D4204EF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660015;
-	bh=GPwglkMMRGPvGth9jFBh/6oBrS8f6pyUQs+nbjvD0JA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkIO21wc0aKKXm3b/qtXqXSJwwWJialgJ+lwt/nX6xTX2wqAoKKG/l3Bz8dcszU4O
-	 hUzivzUJA/xgaS3ZyhBnj6lXCsBLPzUW4ml2TJeNg+2jJzxUcDgjGRXYGKQMFIsCKX
-	 Px2u8jkXZlDIzLNiMk9RrfYA6JiPWnxOj4UTtGY8=
+	s=default; t=1591660046;
+	bh=JfeR1OvUTiZ0lO8gFO9nXXNApbqP7Edk3LbRreh8u6o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rVOmYJyALn60yEOOiAzfVg1vgcPpn0aKVyfF3BfZUDgwmN5B2FyIoGGykIyW8ETzx
+	 oEU0E9g+yuPipOO+dccFO5uU4vgPefbmNl9KdnkMdFH9OYQdudke4owUyUFsFZspws
+	 DPSvR5Vv4OG/2UxIozIpMJdfCwXUS0z9hVnxHjdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387886AbgFHXqw (ORCPT
+        id S1731446AbgFHXrV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53466 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387546AbgFHX0P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S2387930AbgFHXrP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:47:15 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6BF62076C;
-        Mon,  8 Jun 2020 23:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE15420842;
+        Mon,  8 Jun 2020 23:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658775;
-        bh=GPwglkMMRGPvGth9jFBh/6oBrS8f6pyUQs+nbjvD0JA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5Z6kv0u6iOZqYAOFM2IZpNURlKgDqyKwqKTS+UI+ywBCb9Yc3x6Fccs3PuEqliYv
-         YFrwiynYSAn2kMT7QVGUgZvFYthTC4upsstBtsKSN4jl8ok0LYwFQN4Xvxx83PsveO
-         CrTL2MB225X53KwJtIkWtfAuqQ3ZCZv7GzGoKO0w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        s=default; t=1591660034;
+        bh=JfeR1OvUTiZ0lO8gFO9nXXNApbqP7Edk3LbRreh8u6o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ywVQtU9EpMa3kP7TzlTaYd3MC12ox9PdByU6JDD/+1ap9wTefo28zwbDbtquuTTXs
+         q4SPNj+fsG+okq4AuKRockpnZdiBNJVW/msRnFgduqIe/mcn6dRp+arC+1RK8sGZ2j
+         E8yZNl7fH+hOZqypdm+lPKFtCbiHHwk4e9Hqv1bw=
+Received: by mail-oo1-f52.google.com with SMTP id 7so3818488oof.8;
+        Mon, 08 Jun 2020 16:47:14 -0700 (PDT)
+X-Gm-Message-State: AOAM5313IxO3b+ngWsMl/aLyQSIZnHRLKeHaf9QodYpbmaeNnmAwenuE
+        kj6SZgiGXeLD4dwgSmnYnoLu2PmH0tC5LWQn5g==
+X-Google-Smtp-Source: ABdhPJz3gIjlkhZ2RmMRXkIMPB6UylOzQLyhAs6ndsfed5PFu+br/5Z+8Z79xY7reJQ2jrwzMbD3741AqHxlS9Wo3LE=
+X-Received: by 2002:a4a:345b:: with SMTP id n27mr19140154oof.25.1591660034065;
+ Mon, 08 Jun 2020 16:47:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru> <20200527153351.rmzguymz7lm6gvsx@mobilestation>
+ <20200529181338.GA2676189@bogus> <20200529182256.3bp4uvvrvz3ddlrq@mobilestation>
+ <20200529184201.GX1634618@smile.fi.intel.com> <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
+ <20200529185824.o2vcpxe4f63aw465@mobilestation>
+In-Reply-To: <20200529185824.o2vcpxe4f63aw465@mobilestation>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 8 Jun 2020 17:46:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZjYF2Jrvcd8BAHsMfm5-S1J11NVoc6o2q5zE5ekmRTw@mail.gmail.com>
+Message-ID: <CAL_JsqKZjYF2Jrvcd8BAHsMfm5-S1J11NVoc6o2q5zE5ekmRTw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 55/72] mips: MAAR: Use more precise address mask
-Date:   Mon,  8 Jun 2020 19:24:43 -0400
-Message-Id: <20200608232500.3369581-55-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
-References: <20200608232500.3369581-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Fri, May 29, 2020 at 12:58 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+>
+> On Fri, May 29, 2020 at 09:45:37PM +0300, Serge Semin wrote:
+> > On Fri, May 29, 2020 at 09:42:01PM +0300, Andy Shevchenko wrote:
+> > > On Fri, May 29, 2020 at 09:22:56PM +0300, Serge Semin wrote:
+> > > > On Fri, May 29, 2020 at 12:13:38PM -0600, Rob Herring wrote:
+> > > > > On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
+> > >
+> > > > > you're sending
+> > > > > new versions too fast. Give people time to review.
+> > > >
+> > > > Yeah, you did. Sorry for sending the new versions very fast. Normally I prefer
+> > > > to keep up with comments so to past a particular maintainer review as fast as
+> > > > possible without long delays. In my experience the longer you wait, the lesser
+> > > > maintainers remember about your patchset, the harder for one to continue the
+> > > > next versions review.
+> > >
+> >
+>
+> > > Documentation/process/submitting-patches.rst:
+> > >
+> > > "Wait for a minimum of one week before resubmitting or pinging reviewers -
+> > > possibly longer during busy times like merge windows."
+> >
+> > Good to know what I already know.) How much do you personally wait before
+> > resubmitting? In my experience reviewing your DW APB GPIO patches, no longer
+> > than a few hours.
+>
+> Moreover the statement you cited is about the patches, which doesn't get any
+> attention from the maintainers/reviewers for quite some time. In this case I
+> normally resubmit the patches no sooner than a week. I was talking about the
+> situation when you get the review comments, which need to be addressed.
 
-[ Upstream commit bbb5946eb545fab8ad8f46bce8a803e1c0c39d47 ]
+There's not going to be any rule that always works. It takes
+judgement. I'd say the greater the rework from review comments, the
+sooner you can resend. But then if it's multiple
+subsystems/maintainers, you need to give all of them time.
 
-Indeed according to the MIPS32 Privileged Resource Architecgture the MAAR
-pair register address field either takes [12:31] bits for non-XPA systems
-and [12:55] otherwise. In any case the current address mask is just
-wrong for 64-bit and 32-bits XPA chips. So lets extend it to 59-bits
-of physical address value. This shall cover the 64-bits architecture and
-systems with XPA enabled, and won't cause any problem for non-XPA 32-bit
-systems, since address values exceeding the architecture specific MAAR
-mask will be just truncated with setting zeros in the unsupported upper
-bits.
+I go in date order mostly. You send a new version, then you go to the
+back of the queue. So if you want it reviewed the soonest, send it 2
+weeks ago. ;) There's also the strategy of reviewing other patches in
+front of yours. Sometimes I go by version numbers, but send version 50
+and I might be suspicious. And that's rewarding folks who are sloppy
+or keep sending broken stuff. The real solution is I just need more
+help reviewing things.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/include/asm/mipsregs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index a6810923b3f0..a7f9acb42034 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -737,7 +737,7 @@
- 
- /* MAAR bit definitions */
- #define MIPS_MAAR_VH		(_U64CAST_(1) << 63)
--#define MIPS_MAAR_ADDR		((BIT_ULL(BITS_PER_LONG - 12) - 1) << 12)
-+#define MIPS_MAAR_ADDR		GENMASK_ULL(55, 12)
- #define MIPS_MAAR_ADDR_SHIFT	12
- #define MIPS_MAAR_S		(_ULCAST_(1) << 1)
- #define MIPS_MAAR_VL		(_ULCAST_(1) << 0)
--- 
-2.25.1
-
+Rob
