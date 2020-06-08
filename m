@@ -2,110 +2,138 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F174BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745CEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7DBA2053B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5008E2053B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:34:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IuwnBwur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgFHO1o (ORCPT
+        id S1729943AbgFHOeo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:27:44 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45769 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbgFHO1n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 10:27:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m2so13756726otr.12;
-        Mon, 08 Jun 2020 07:27:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UXkSZNHi/WgIFB2sRa6DAx0hWylWs93z0GvndY1AAZs=;
-        b=rvlE251EcZtMNJsFOuM3VOfmXPvbgMbN6ZI906LhX4VQTWlcEs1Ew8fQ7nPNzu2qjr
-         j7actgTCI3/eJYd1j6zkpIqQ69INraX2p8dgth9L7n19mESEi2ZuUvpe0s9e51znz9QT
-         MnPToWl1sw/FT+8WbR/n1/EUu4HtICPM5GjBGhTM7S7wdeLVJBMoJ42eoYTZq6RvJhV1
-         QKgX+kigY0PiAMLlc0+UIbixPnueNAdxwWpr8GG3Gz/Wgezqnl2cXYrwFdaO8TQLt6Bp
-         dc05ebg+2Z3Bpj7wWKGOP+dseKdTWXRinvK+NkIaHuTfX+lc/wrRvuq/3S9+DTZ+0WIH
-         YbKQ==
-X-Gm-Message-State: AOAM533KUCT+O7ZEJA2oUmA6BTZDa80patA50dVIGnc5n+jhMKS1dDdu
-        sRqqRysUusJw/XdkSEfoir1X+4jsAYjZSyGhyPw=
-X-Google-Smtp-Source: ABdhPJxNgjxje+XshY61E4Thz/w6k4S3aOlbBBI4Xqo+OMNuRMsgD44RP+i7RwXHJABQLDAYJVkZB3AufOf/JKhLqYI=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr17972661otp.250.1591626461597;
- Mon, 08 Jun 2020 07:27:41 -0700 (PDT)
+        Mon, 8 Jun 2020 10:34:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54668 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729938AbgFHOeo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 10:34:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058EYdI4052568;
+        Mon, 8 Jun 2020 09:34:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591626879;
+        bh=IvroNvkykC8zcJI+F1zuPF8QbKPd7StRndcYgZ65grA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IuwnBwurWedFUz+osjjpcYVfPppVNah3HxmzdMBaf6znUGkgbkiiQvykLlLMdds2C
+         Izb00KhJJN3wYPHFpqiEtCYVNEAclTVrsquHlgoK4x+xy9nlS5ZL3asPGrQf7yXp1d
+         zyIS7uDOzvlBEmSBU3I67njqRnG2HsHFKt6vVn9A=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058EYdFn115128
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jun 2020 09:34:39 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
+ 2020 09:34:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 8 Jun 2020 09:34:39 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058EYcOV027551;
+        Mon, 8 Jun 2020 09:34:38 -0500
+Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-4-dmurphy@ti.com> <20200606155324.GA21130@amd>
+ <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
+ <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <02cf192f-1948-74a5-f2ef-6c2146422ecb@ti.com>
+Date:   Mon, 8 Jun 2020 09:34:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jun 2020 16:27:30 +0200
-Message-ID: <CAMuHMdU35fvy2TM+u=Zu3-4aVnzOC1Sxophu8WaExS7unVH1fg@mail.gmail.com>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
- Rev.2.0 specific into hihope-common-rev2.dtsi file
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Jacek
 
-Thanks for your patch!
-
-On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Separate out Rev.2.0 specific hardware changes into
-> hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
-> by all the variants for RZ/G2M[N] boards.
+On 6/6/20 2:59 PM, Jacek Anaszewski wrote:
+> Dan,
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> On 6/6/20 6:39 PM, Dan Murphy wrote:
+>> Pavek
+>>
+>> Thanks for the review
+>>
+>> On 6/6/20 10:53 AM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> Introduce a multicolor class that groups colored LEDs
+>>>> within a LED node.
+>>>>
+>>>> The multi color class groups monochrome LEDs and allows controlling 
+>>>> two
+>>>> aspects of the final combined color: hue and lightness. The former is
+>>>> controlled via the intensity file and the latter is controlled
+>>>> via brightness file.
+>>>>
+>>>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
+>>>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>>> new file mode 100644
+> [...]
+>>>> --- a/MAINTAINERS
+>>>> +++ b/MAINTAINERS
+>>>> @@ -9533,6 +9533,14 @@ F: Documentation/devicetree/bindings/leds/
+>>>>   F:    drivers/leds/
+>>>>   F:    include/linux/leds.h
+>>>> +LED MULTICOLOR FRAMEWORK
+>>>> +M:    Dan Murphy <dmurphy@ti.com>
+>>>> +L:    linux-leds@vger.kernel.org
+>>> I'd like to be mentioned here, too. "M: Pavel Machek
+>>> <pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
+>>> file update through a LED tree. Should definitely go to separate
+>>> patch.
+>>
+>> Oh definitely.  I thought it was implied that you and Jacek are both 
+>> Maintainers as well.
+>>
+>> I will add you but will wait to see if Jacek wants to be added.
+>
+> Actually I don't think that we need to add this separate entry
+> for LED multicolor class. This is still under LED subsystem,
+> and I didn't add anything for LED class flash.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+We only need this because I am not a maintainer of the LED flash class 
+or the LED class.
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
-> @@ -0,0 +1,101 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
-> + * parts
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
+But since I authored the code it only made sense to add me as a 
+maintainer for this specific class.
 
-What about adding
+You are one of the maintainers of the LED subsystem and wrote the Flash 
+class so your maintainer ship is implied and you will be CC'd for all 
+patches.
 
-    #include "hihope-common.dtsi"
+This will not be the case for the multi color class
 
-here?
-Then the *rev2.dts files have to include only "hihope-common-rev2.dtsi",
-and get "hihope-common.dtsi" for free?
+Dan
 
-The same is true for the rev4.dtsi and the rev4.dts files.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
