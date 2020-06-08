@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7448C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 10:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273CCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 10:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEB1206A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 10:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10725206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 10:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgFHKEs (ORCPT
+        id S1729306AbgFHKEt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:04:48 -0400
-Received: from lucky1.263xmail.com ([211.157.147.134]:37924 "EHLO
+        Mon, 8 Jun 2020 06:04:49 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:38236 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgFHKEr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 06:04:47 -0400
+        with ESMTP id S1729256AbgFHKEs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 06:04:48 -0400
 Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 34BE5B946E;
-        Mon,  8 Jun 2020 18:04:43 +0800 (CST)
+        by lucky1.263xmail.com (Postfix) with ESMTP id 0C34CDCE2C;
+        Mon,  8 Jun 2020 18:04:44 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,7 +31,7 @@ Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P760T139944424257280S1591610682251378_;
         Mon, 08 Jun 2020 18:04:44 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <1c29348cf35d58ca9c6a893f9ab8a9b7>
+X-UNIQUE-TAG: <b136754a51f36ed4ece7d4e4783fe743>
 X-RL-SENDER: sugar.zhang@rock-chips.com
 X-SENDER: zxg@rock-chips.com
 X-LOGIN-NAME: sugar.zhang@rock-chips.com
@@ -44,9 +44,9 @@ From:   Sugar Zhang <sugar.zhang@rock-chips.com>
 To:     heiko@sntech.de, vkoul@kernel.org
 Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
         Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: [PATCH v1 08/13] ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
-Date:   Mon,  8 Jun 2020 18:04:26 +0800
-Message-Id: <1591610671-71238-4-git-send-email-sugar.zhang@rock-chips.com>
+Subject: [PATCH v1 09/13] arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
+Date:   Mon,  8 Jun 2020 18:04:27 +0800
+Message-Id: <1591610671-71238-5-git-send-email-sugar.zhang@rock-chips.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591602567-43788-1-git-send-email-sugar.zhang@rock-chips.com>
 References: <1591602567-43788-1-git-send-email-sugar.zhang@rock-chips.com>
@@ -61,21 +61,21 @@ for better compatible and higher performance.
 Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 ---
 
- arch/arm/boot/dts/rv1108.dtsi | 1 +
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index f9cfe2c..e8e3b36 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -97,6 +97,7 @@
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			arm,pl330-broken-no-flushp;
-++			arm,pl330-periph-burst;
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index adc9b8b..745a4a5 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -717,6 +717,7 @@
  			clocks = <&cru ACLK_DMAC>;
  			clock-names = "apb_pclk";
+ 			#dma-cells = <1>;
+++			arm,pl330-periph-burst;
  		};
+ 	};
+ 
 -- 
 2.7.4
 
