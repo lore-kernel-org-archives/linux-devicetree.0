@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A85C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11F3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F25BF20737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C834E2076C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663228;
-	bh=kmJ5BQn3b7/Tj0a78WgwZwTGYE27MlHWgm1yPvfpigU=;
+	s=default; t=1591663261;
+	bh=Yf6tijfTtkC0daEZSzoDMhzmrg/OWgETF9rfSQTSNGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+KU6a5ELLQmBnmIn7kAQgtTMOE36IoIyyIExAeloJQSTPc3Ec1WiVAWcAaezpxUB
-	 gt//qaU2BjXPt3BtOeibc3oA7gkFxFz9BWDOI4x/SlfcF0SezxfX7OoQ2ApNnfNNhR
-	 WuHWGWFAGKCWv9be7ICH8dUgmsz0PhwwXVD64gpI=
+	b=yPqCHQ6ObUIihDGieKDrWbKr10HavPt1hb5d7xhOW7JwastGFvGritc88VhzuSyNp
+	 Y33VjpEirdyPdX1x2CSFgO6sq04KLYufZzuHT82bAHHC8gpOh1PDVNAxJ/hlOMZ7do
+	 QCFK/YWj2BEoOfRZR1uLCJ8BnhpW1FDdHC+wbRYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgFIAkR (ORCPT
+        id S1729806AbgFIAkz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729240AbgFHXNJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:09 -0400
+        id S1728050AbgFHXMv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F1C820897;
-        Mon,  8 Jun 2020 23:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA35920B80;
+        Mon,  8 Jun 2020 23:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657989;
-        bh=kmJ5BQn3b7/Tj0a78WgwZwTGYE27MlHWgm1yPvfpigU=;
+        s=default; t=1591657971;
+        bh=Yf6tijfTtkC0daEZSzoDMhzmrg/OWgETF9rfSQTSNGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItI77MPtEp+Sm4XiSrpxJmrEpqBKIfIFIC+Obv0bYcLeGEObzAbnYktKuWuJD8i8F
-         sre6XUYBQFpQ0/LGlKFW9rirOSMZfDB5To0FXV+tCs6XoeuuQLR5mEzvLPEvHbFcGS
-         kDNlHkNkfy4uI0sU6T+9VfRzm5s86c7HdNbHOwQE=
+        b=J/nmDo6tmPGgBdJDjGiJKR5FYeQQxJIC6ss1nCQ099jMorsuL2M6lyxjNxW2BtUBM
+         NU7g61fvlN2XHm47aY7oxLIyjr/x/YIiCkKvOrCPbShWr65ls2lt3UDdBh3VyNkL6i
+         OUnz7pb8nEMrwozIY5+fn2K6b0ciQ9kTDZ2wRq9s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+Cc:     =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 048/606] arm64: dts: meson-g12b-ugoos-am6: fix usb vbus-supply
-Date:   Mon,  8 Jun 2020 19:02:53 -0400
-Message-Id: <20200608231211.3363633-48-sashal@kernel.org>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 034/606] ARM: dts: imx6dl-yapp4: Fix Ursa board Ethernet connection
+Date:   Mon,  8 Jun 2020 19:02:39 -0400
+Message-Id: <20200608231211.3363633-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,36 +61,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-commit 4e025fd91ba32a16ed8131158aa63cd37d141cbb upstream.
+commit cbe63a8358310244e6007398bd2c7c70c7fd51cd upstream.
 
-The USB supply used the wrong property, fixing:
-meson-g12b-ugoos-am6.dt.yaml: usb@ffe09000: 'vbus-regulator' does not match any of the regexes: '^usb@[0-9a-f]+$', 'pinctrl-[0-9]+'
+The Y Soft yapp4 platform supports up to two Ethernet ports.
+The Ursa board though has only one Ethernet port populated and that is
+the port@2. Since the introduction of this platform into mainline a wrong
+port was deleted and the Ethernet could never work. Fix this by deleting
+the correct port node.
 
-Fixes: 2cd2310fca4c ("arm64: dts: meson-g12b-ugoos-am6: add initial device-tree")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Link: https://lore.kernel.org/r/20200326160857.11929-2-narmstrong@baylibre.com
+Fixes: 87489ec3a77f ("ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa boards")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 2 +-
+ arch/arm/boot/dts/imx6dl-yapp4-ursa.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-index ccd0bced01e8..2e66d6418a59 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-@@ -545,7 +545,7 @@ &uart_AO {
- &usb {
- 	status = "okay";
- 	dr_mode = "host";
--	vbus-regulator = <&usb_pwr_en>;
-+	vbus-supply = <&usb_pwr_en>;
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
+index 0d594e4bd559..a1173bf5bff5 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
++++ b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
+@@ -38,7 +38,7 @@ &reg_usb_h1_vbus {
  };
  
- &usb2_phy0 {
+ &switch_ports {
+-	/delete-node/ port@2;
++	/delete-node/ port@3;
+ };
+ 
+ &touchscreen {
 -- 
 2.25.1
 
