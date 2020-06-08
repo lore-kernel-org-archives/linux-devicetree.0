@@ -2,149 +2,72 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3844C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A0DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3FC20774
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moptvi0D"
+	by mail.kernel.org (Postfix) with ESMTP id A4BDA206A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgFHIaw (ORCPT
+        id S1727788AbgFHIl7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728951AbgFHIav (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 04:30:51 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DFEC08C5C3;
-        Mon,  8 Jun 2020 01:30:50 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h95so5703890pje.4;
-        Mon, 08 Jun 2020 01:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Sr4O+in7E3S8yGpfVSAumnolrH/mtR4MAGw7n2lSUi4=;
-        b=moptvi0DYUIGze0sxGapOFQzHdn34hE207jfRTpbHONsJVGMYclaW933o/av3oG8CG
-         Vuv/KoVfx1AI8AGmzrW5DacLpYSDCCa9nfxWdTJwyxWjNDMDYdnICwZh5brGMM8r1ZiT
-         OAA9MmaR4rVNiQXY9uRhwIOejfHm/uYYEGMUMgw3dT+TwileefpJNWtOdCYsC45kFOLa
-         +DdgPWAS2I6SbIwUspfrAqofBTLRIzBZ2JSR4vR9FnTaCKrDiB0a5aLiuiXW1FhyfV3s
-         pIksOg51djhWhTBVsnrpqMjoUtQFLHvgFgzCkrqu48gxnjaStKkSDhCPxHkBhKTk8KyV
-         HoWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Sr4O+in7E3S8yGpfVSAumnolrH/mtR4MAGw7n2lSUi4=;
-        b=FgSV7+SI9RZBR30+2NkkJ4j4MDuLqdjRVnla3BUKj3KijUYs8EvKw4aVCfS9j2h/Oh
-         5ViNJQUJ395/HbmcB4bp9wd2VUCo3+X93OTjoYGmZZnBYxZoWdXk9vT71NhBPOOeY1Hh
-         cj8NisUXjawBICGxERXSpxmtAG/N0pZLzIXzmPr9izAU3BHG7LeDh6z7mRWKUy0eyUZ8
-         wdK0dcmjwtLrmQncCi457gDuZ5y9Bx3MK7RiuN2NM5sWLJ59l2ejH0+MmUBawkuRvgjd
-         cupCNtskmcB79FQfi9ymS1sfPc7HomxS9mtrwCAFPQ6+nY1oeFSg+62526PFzqJZhzcj
-         Y8Mw==
-X-Gm-Message-State: AOAM5320FtajFDXIAeBgolqjzvEN3424ywaiPFxAd1M8dx3dwk3BaEYy
-        tBM4Z/EWq2jfZZQ2wvqAWM8=
-X-Google-Smtp-Source: ABdhPJwWeNEIRHE87XqxZWvoMrcDW/ma0+wwzJWzdrh9mEH1xMwsnwgl+Nww/37mNzaxFJbgWrKhDw==
-X-Received: by 2002:a17:90a:cc5:: with SMTP id 5mr15552855pjt.112.1591605050563;
-        Mon, 08 Jun 2020 01:30:50 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.42])
-        by smtp.gmail.com with ESMTPSA id 27sm1210829pjg.19.2020.06.08.01.30.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Jun 2020 01:30:50 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux@armlinux.org.uk,
-        vladimir.murzin@arm.com, kstewart@linuxfoundation.org,
-        allison@lohutok.net, info@metux.net, tglx@linutronix.de
-Cc:     devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device support reserved memory
-Date:   Mon,  8 Jun 2020 16:30:38 +0800
-Message-Id: <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
-References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+        Mon, 8 Jun 2020 04:41:59 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:59737 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgFHIl7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 04:41:59 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 0588fu6J007444
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Mon, 8 Jun 2020 01:41:57 -0700 (PDT)
+Received: from pek-lpggp2 (128.224.153.75) by ALA-HCB.corp.ad.wrs.com
+ (147.11.189.41) with Microsoft SMTP Server id 14.3.487.0; Mon, 8 Jun 2020
+ 01:41:50 -0700
+Received: by pek-lpggp2 (Postfix, from userid 20544)    id A10AB723B44; Mon,  8
+ Jun 2020 16:41:17 +0800 (CST)
+From:   Jiping Ma <jiping.ma2@windriver.com>
+To:     <frowand.list@gmail.com>, <jiping.ma2@windriver.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dtc: also check <yaml.h> for libyaml
+Date:   Mon, 8 Jun 2020 16:41:17 +0800
+Message-ID: <20200608084117.4563-1-jiping.ma2@windriver.com>
+X-Mailer: git-send-email 2.18.1
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
+it fails to build.
 
-Currently, we use dma direct to request coherent memory for driver on armv7m
-platform if 'cacheid' is zero, but dma_direct_can_mmap() is return false,
-dma_direct_mmap() return -ENXIO for CONFIG_MMU undefined platform.
-
-so we have to back to use 'arm_nommu_dma_ops', add use_reserved_mem() to check
-if device support global or device corherent memory. if yes, then call
-set_dma_ops()
-
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
 ---
- arch/arm/mm/dma-mapping-nommu.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ scripts/dtc/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
-index 287ef898a55e..e1c213fec152 100644
---- a/arch/arm/mm/dma-mapping-nommu.c
-+++ b/arch/arm/mm/dma-mapping-nommu.c
-@@ -14,6 +14,7 @@
- #include <asm/cacheflush.h>
- #include <asm/outercache.h>
- #include <asm/cp15.h>
-+#include <linux/of.h>
+diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+index b5a5b1c..b49dfea 100644
+--- a/scripts/dtc/Makefile
++++ b/scripts/dtc/Makefile
+@@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
+ endif
+ HOST_EXTRACFLAGS += -DNO_YAML
+ else
++ifeq ($(wildcard /usr/include/yaml.h),)
++HOST_EXTRACFLAGS += -DNO_YAML
++else
+ dtc-objs	+= yamltree.o
+ HOSTLDLIBS_dtc	:= $(shell pkg-config yaml-0.1 --libs)
+ endif
++endif
  
- #include "dma.h"
- 
-@@ -188,6 +189,31 @@ const struct dma_map_ops arm_nommu_dma_ops = {
- };
- EXPORT_SYMBOL(arm_nommu_dma_ops);
- 
-+static bool use_reserved_mem(struct device *dev)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_node_by_path("/reserved-memory/linux,dma");
-+
-+	if (np &&
-+		of_device_is_compatible(np, "shared-dma-pool") &&
-+		of_property_read_bool(np, "no-map") &&
-+		of_property_read_bool(np, "linux,dma-default")) {
-+		/* has global corherent mem support */
-+		of_node_put(np);
-+		return true;
-+	}
-+
-+	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-+	if (np) {
-+		/* has dev corherent mem support */
-+		of_node_put(np);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 			const struct iommu_ops *iommu, bool coherent)
- {
-@@ -206,6 +232,6 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- 		dev->archdata.dma_coherent = (get_cr() & CR_M) ? coherent : true;
- 	}
- 
--	if (!dev->archdata.dma_coherent)
-+	if (!dev->archdata.dma_coherent || use_reserved_mem(dev))
- 		set_dma_ops(dev, &arm_nommu_dma_ops);
- }
+ # Generated files need one more search path to include headers in source tree
+ HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
 -- 
-2.7.4
+1.9.1
 
