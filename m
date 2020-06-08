@@ -2,72 +2,199 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A6DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF7AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B472074B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC082076C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2CXriWfr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbQi1FYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgFHO5m (ORCPT
+        id S1730133AbgFHO7j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:57:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39612 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgFHO5m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:57:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=pxY+k1EDOGmASjIgfSa3YXyUmL2DqkU4/aox1YMvk6I=; b=2CXriWfrKP1Fl1stlshdbKaz2m
-        OfGHmEc7e9keimnc6B1dDuLMA6W2Q3LLtqe0b748WjJw0/OkXJdNpHwFSBUa71VtgqlTzrFh2/AU6
-        KcM4j01FXNpS3I0NCGVqADFVUqXE49yVSqMa/bIYOu9G5jtJ3MnjK8wN4LJwtXs/ZvgM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jiJDV-004PYI-4V; Mon, 08 Jun 2020 16:57:37 +0200
-Date:   Mon, 8 Jun 2020 16:57:37 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Message-ID: <20200608145737.GG1006885@lunn.ch>
-References: <20200608074716.9975-1-s.hauer@pengutronix.de>
+        Mon, 8 Jun 2020 10:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgFHO7j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 10:59:39 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70DEC08C5C2;
+        Mon,  8 Jun 2020 07:59:38 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id s21so15538379oic.9;
+        Mon, 08 Jun 2020 07:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sakwAE9UDvgXpfLA/IMovHDdgj7kYeDNiG6uvdI8YnE=;
+        b=rbQi1FYi5A1FxRR3KxNata4g2VukcskcoNJv5Qe6GITqlJm9i5g/03+xRsa3AR0dBV
+         sDzBrJISTgokP0089gBn849qmwZ7h0J8Fq1fwlLMRgzLpmpflfD13KBKimhz7LJxZbDg
+         nC7y6sg6e2oetrDBTfx+8x9s51LwHIWDQbTEcPlErG6xqhUpfQe/UcyZVP5Be/oM/roe
+         TrC76QRbzmJAA1DyxJ4J+FlIGYy/5DixXGS85dc0MLHjhT3crGx8paNRDme7fH5+k2+b
+         1QAWja5dHWRBWtfhbj0jLlH6fnk9FCJBNQ6bvbMPo0+VbEmBdVAuG9Sd2bQoMJRjjl4j
+         vo/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sakwAE9UDvgXpfLA/IMovHDdgj7kYeDNiG6uvdI8YnE=;
+        b=i0A5NwtCabgO8/E+h6X5dQYCiR3/kfTg98SFRy1O3QOPB97Bz196YuQYJ4wwlXjGlT
+         lmKPhGH/BkRK2M6JiJNkWLFFsYlOT1ReB4/NHYLK8UhRKsSnxWxwm4oHtzbpNnn32pcJ
+         ud9hY2sO5XYMEZuKIheqFJgXeqC0dfk7gvTvLAEI6vUjcRaqlSoatctpfkj7c/NWzWM9
+         6F2RnDTJBpOUchfxgZYMweIwa6dCqP+vaKuZtVrOYdwzbqXEzrFTscvBuLv1hPgrCXn+
+         EGsCrn/1xkFF3z5mpp2CgBOuGgS6OIWn6D6o7wVcfk6BUZ3aZITbkdMzFqvBhNuAlylj
+         3bVA==
+X-Gm-Message-State: AOAM530wTcipqlq53xpbmDdrTfi/UK3wJ9P3npqRL5qH8l+5Y1mM9Pa/
+        a+d712L+vfqNLiOva9mQUB3Ak9sBe9DLXKSxcOWWZXw8PH4duA==
+X-Google-Smtp-Source: ABdhPJzbekWad6Gkbqv1f+EDYUA1WR2SWjZmQ8HEVGb3/zsnKNal+9yg73fNP7qK7BqGWigQWcEbKKuYfYQcF5z+v9w=
+X-Received: by 2002:aca:ea44:: with SMTP id i65mr10535404oih.142.1591628378380;
+ Mon, 08 Jun 2020 07:59:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608074716.9975-1-s.hauer@pengutronix.de>
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 8 Jun 2020 15:59:11 +0100
+Message-ID: <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:47:16AM +0200, Sascha Hauer wrote:
-> The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-> called DRSGMII.
-> 
-> This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-> from DT. The MVNETA then configures the SERDES protocol value
-> accordingly.
-> 
-> It was successfully tested on a MV78460 connected to a FPGA.
+Hi Geert,
 
-Hi Sascha
+On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Separate out Rev.2.0 specific hardware changes into
+> > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> > by all the variants for RZ/G2M[N] boards.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
+>
+> Perhaps just hihope-rev2.dtsi, i.e. without the "common-"?
+>
+Yes makes sense.
 
-Is this really overclocked SGMII, or 2500BaseX? How does it differ
-from 2500BaseX, which mvneta already supports?
+> > @@ -0,0 +1,101 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> > + * parts
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +       leds {
+> > +               compatible = "gpio-leds";
+> > +
+> > +               bt_active_led {
+> > +                       label = "blue:bt";
+> > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> > +                       linux,default-trigger = "hci0-power";
+> > +                       default-state = "off";
+> > +               };
+> > +
+> > +               led0 {
+> > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> > +               };
+> > +
+> > +               led1 {
+> > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > +               };
+> > +
+> > +               led2 {
+> > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> > +               };
+> > +
+> > +               led3 {
+> > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> > +               };
+>
+> led1, led2, and led3 are present on both, so I'd keep them in
+> hihope-common.dtsi.
+>
+The leds defined in hihope-common-rev4.dtsi are as per the label names
+on the schematics/board so that it's easier to identify the LED's by
+name.
 
-Also, does comphy need extensions to support this?
+> > +
+> > +               wlan_active_led {
+> > +                       label = "yellow:wlan";
+> > +                       gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
+> > +                       linux,default-trigger = "phy0tx";
+> > +                       default-state = "off";
+> > +               };
+> > +       };
+> > +
+> > +       wlan_en_reg: regulator-wlan_en {
+> > +               compatible = "regulator-fixed";
+> > +               regulator-name = "wlan-en-regulator";
+> > +               regulator-min-microvolt = <1800000>;
+> > +               regulator-max-microvolt = <1800000>;
+> > +               startup-delay-us = <70000>;
+> > +
+> > +               gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
+> > +               enable-active-high;
+> > +       };
+>
+> Same for the WLAN regulator, especially as it is referenced from
+> hihope-common.dtsi.
+> As the GPIO  line differs between the two variants, you just need
+> to add the gpio property in the revision-specific file.
+>
+Agreed will move this to common.
 
-      Andrew
+> > +};
+> > +
+> > +&hscif0 {
+> > +       bluetooth {
+> > +               compatible = "ti,wl1837-st";
+> > +               enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
+> > +       };
+> > +};
+>
+> As node is small, and the GPIO line differs from the two variants,
+> I think duplicating it in both revision-specific files is fine, though.
+>
+Agreed.
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
