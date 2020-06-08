@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3181AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523BCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B542214F1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299A120B80
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657975;
-	bh=eCdWYHv8EcvxTFVDZa4tARPB5ii607RoSfNA5U3lK6s=;
+	s=default; t=1591658004;
+	bh=2tfyawIOeBBGpVSvjt7DJKriTpeiTWyLW3csCNfR08k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPAizgVyF5x6r36Qc/FUpepdx/v6lxnXhFBrnZeWFxHKUUxnEp7ybIDyDKrmbVhaY
-	 ribOOGZH7kHwtyWOARaQtcuAF4lTZxf5vejrRzRhExxyv0JFYzvykpf5NEszhMx7jJ
-	 Yh4YL549FgZB85q/zNjKLDw4fuy39D4+++JeToLA=
+	b=lLeb/NSPRA/RCiMbs8AOi4YgCNdYEcdio0y8uNSHcjB2CdFJpkMYit/7J+Her587S
+	 NS3D1aqCTVDo+sU0wg6Sseu+MnHMZI0KamDYKx5rB9hM44MDsl11TGSnNrKcmf3PAr
+	 gJaf3jCqG2VF6PFXa22QHiHc10A9h+HJDAFFXnr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgFHXMw (ORCPT
+        id S1729337AbgFHXNX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbgFHXMu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:50 -0400
+        id S1729303AbgFHXNV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FE5214F1;
-        Mon,  8 Jun 2020 23:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB2920B80;
+        Mon,  8 Jun 2020 23:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657970;
-        bh=eCdWYHv8EcvxTFVDZa4tARPB5ii607RoSfNA5U3lK6s=;
+        s=default; t=1591658001;
+        bh=2tfyawIOeBBGpVSvjt7DJKriTpeiTWyLW3csCNfR08k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DKLy+PXM+4ek5uyjAcDeQJH4L8kdhc1+hxQ8tSvuqqUpApJXfUAwyjBry/r6BtzcJ
-         eEKdeUIwnguAT0aXyXOrWNPS2YF71UE4z102R2VT2Re//dS+xgTp+YqdCj/G2yt57o
-         bK4CcCqiC2sGT3ifsXSe0d57Xi5Zi2lMj4oUADqs=
+        b=G+eDDXahsUbeWkAN1O7Ky/ww+WY94VvjJZUw2nZOSIjDFe7bKGjS1o2XwzbBBBXNv
+         XDpPSzuRzEqpjGMfDK58mvjNJB43w5TM+B1yel0cSJRKpI/GY6W2RCmyRMkxwBw/Q2
+         adXHvdqBW8QzEUihlyT9o3fDCzKzVQOyP8dfDI+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 033/606] ARM: dts: imx27-phytec-phycard-s-rdk: Fix the I2C1 pinctrl entries
-Date:   Mon,  8 Jun 2020 19:02:38 -0400
-Message-Id: <20200608231211.3363633-33-sashal@kernel.org>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 058/606] arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
+Date:   Mon,  8 Jun 2020 19:03:03 -0400
+Message-Id: <20200608231211.3363633-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,44 +60,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-commit 0caf34350a25907515d929a9c77b9b206aac6d1e upstream.
+commit 28810eecae08f9458a44831978e36f14ed182c80 upstream.
 
-The I2C2 pins are already used and the following errors are seen:
+Some msm8996 based devices are unstable when run with VDD_APC of 1.23V,
+which is listed as the maximum voltage in "Turbo" mode. Given that the
+CPU cluster is not run in "Turbo" mode, reduce this to 0.98V - the
+maximum voltage for nominal operation.
 
-imx27-pinctrl 10015000.iomuxc: pin MX27_PAD_I2C2_SDA already requested by 10012000.i2c; cannot claim for 1001d000.i2c
-imx27-pinctrl 10015000.iomuxc: pin-69 (1001d000.i2c) status -22
-imx27-pinctrl 10015000.iomuxc: could not request pin 69 (MX27_PAD_I2C2_SDA) from group i2c2grp  on device 10015000.iomuxc
-imx-i2c 1001d000.i2c: Error applying setting, reverse things back
-imx-i2c: probe of 1001d000.i2c failed with error -22
-
-Fix it by adding the correct I2C1 IOMUX entries for the pinctrl_i2c1 group.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 61664d0b432a ("ARM: dts: imx27 phyCARD-S pinctrl")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Tested-by: Loic Poulain <loic.poulain@linaro.org>
+Fixes: 7a2a2231ef22 ("arm64: dts: apq8096-db820c: Fix VDD core voltage")
+Cc: Loic Poulain <loic.poulain@linaro.org>
+Link: https://lore.kernel.org/r/20200318054442.3066726-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts | 4 ++--
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-index 0cd75dadf292..188639738dc3 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-@@ -75,8 +75,8 @@ &iomuxc {
- 	imx27-phycard-s-rdk {
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
--				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
--				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
-+				MX27_PAD_I2C_DATA__I2C_DATA 0x0
-+				MX27_PAD_I2C_CLK__I2C_CLK 0x0
- 			>;
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index fff6115f2670..a85b85d85a5f 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -658,8 +658,8 @@ s10 {
+ 	s11 {
+ 		qcom,saw-leader;
+ 		regulator-always-on;
+-		regulator-min-microvolt = <1230000>;
+-		regulator-max-microvolt = <1230000>;
++		regulator-min-microvolt = <980000>;
++		regulator-max-microvolt = <980000>;
+ 	};
+ };
  
 -- 
 2.25.1
