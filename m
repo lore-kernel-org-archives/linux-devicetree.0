@@ -2,144 +2,110 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BEEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F174BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B051120774
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:24:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZfPL8w5"
+	by mail.kernel.org (Postfix) with ESMTP id D7DBA2053B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 14:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgFHOYT (ORCPT
+        id S1729553AbgFHO1o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbgFHOYS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 10:24:18 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5B5C08C5C4
-        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 07:24:18 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id c3so17598884wru.12
-        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 07:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fIhwy13PVaO5F8p6kg+GqvngU7Ke/x9Dg12+TRbhC9I=;
-        b=CZfPL8w5fOBsBIx+z/oomYpe+rnOnlu08HlfeLxZxWn4DvD8EV1jvidfa2G6obPNXw
-         wcLLWFtkhMqdqFwD6ucKN3p6mzAsg7HanEknR4Sla4G+4jcKzr/fpU1V57aBb/7AYoPw
-         a+qTL3H1zDbkTzdEZSwS+EOshh5JBGPjQ8vruPaNy4+5DBNBZZqQkTMEdK4IxTK5NACU
-         GGIM6BOSbSswTePVvH+wIByXOpNUEHdrrZU7+rCQFlWfiin1e/xF6lbhT4X8YtTuAVEZ
-         Fa5yd03P+4vcSrJt3xaJlQ1FH4O1ETJFfjANj9H1Awd+M9I8eobjJwDd948h9av12Eua
-         cTdw==
+        Mon, 8 Jun 2020 10:27:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45769 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728472AbgFHO1n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 10:27:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m2so13756726otr.12;
+        Mon, 08 Jun 2020 07:27:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fIhwy13PVaO5F8p6kg+GqvngU7Ke/x9Dg12+TRbhC9I=;
-        b=KQAKP9ECwrE091v6nqttM4Co+pOdnLp5CWcN0k4rNuAKmp6iDl7aP1Qe+jsXDzGHWY
-         hJ09UiVGt7qNreOEi3iqjlbjm3iiZpJWWhfDaZWLnjbjaPpj3ulHM6SI5zljO49cts06
-         uUDBbHyNZ4LGa+CLzUr+IRUF+ma3mCbvdptquLxcgSoKGADTZ+p1TLV6vTnqCCsLNGD2
-         LA3skl3LHnqmoQzEIS2R/HumrDx4G7zSzh983Mtr5dOHIQk9fTgJ/ioqTu6s4g3dab3t
-         3cl0isoJo/K9RQiNVtchk+Wy8F2UfJ+xZmxO5gpaRUJRarJJb4+M6pvAKTU7d0S/D+PK
-         gmtg==
-X-Gm-Message-State: AOAM530qwKkO7hJx7I/K9BOgHm9yiPBVlfpWEGsL19L1jR+fQuhHJE5P
-        ec43laYVggpI8piuem8crvwFPQ==
-X-Google-Smtp-Source: ABdhPJweehatGIr1BA4m4b/1jQsQ1TEclLtHNU4cdgilO6fq2rqBkF/6wa0DUib7fHXp5oiaj3ZdVg==
-X-Received: by 2002:adf:f208:: with SMTP id p8mr21462928wro.388.1591626257005;
-        Mon, 08 Jun 2020 07:24:17 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id o15sm22497715wmm.31.2020.06.08.07.24.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 07:24:15 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 15:24:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200608142413.GA4106@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
- <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UXkSZNHi/WgIFB2sRa6DAx0hWylWs93z0GvndY1AAZs=;
+        b=rvlE251EcZtMNJsFOuM3VOfmXPvbgMbN6ZI906LhX4VQTWlcEs1Ew8fQ7nPNzu2qjr
+         j7actgTCI3/eJYd1j6zkpIqQ69INraX2p8dgth9L7n19mESEi2ZuUvpe0s9e51znz9QT
+         MnPToWl1sw/FT+8WbR/n1/EUu4HtICPM5GjBGhTM7S7wdeLVJBMoJ42eoYTZq6RvJhV1
+         QKgX+kigY0PiAMLlc0+UIbixPnueNAdxwWpr8GG3Gz/Wgezqnl2cXYrwFdaO8TQLt6Bp
+         dc05ebg+2Z3Bpj7wWKGOP+dseKdTWXRinvK+NkIaHuTfX+lc/wrRvuq/3S9+DTZ+0WIH
+         YbKQ==
+X-Gm-Message-State: AOAM533KUCT+O7ZEJA2oUmA6BTZDa80patA50dVIGnc5n+jhMKS1dDdu
+        sRqqRysUusJw/XdkSEfoir1X+4jsAYjZSyGhyPw=
+X-Google-Smtp-Source: ABdhPJxNgjxje+XshY61E4Thz/w6k4S3aOlbBBI4Xqo+OMNuRMsgD44RP+i7RwXHJABQLDAYJVkZB3AufOf/JKhLqYI=
+X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr17972661otp.250.1591626461597;
+ Mon, 08 Jun 2020 07:27:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Jun 2020 16:27:30 +0200
+Message-ID: <CAMuHMdU35fvy2TM+u=Zu3-4aVnzOC1Sxophu8WaExS7unVH1fg@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 25 May 2020, Michael Walle wrote:
-> Am 2020-05-15 12:28, schrieb Lee Jones:
-> > On Thu, 30 Apr 2020, Michael Walle wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > Am 2020-04-23 19:45, schrieb Michael Walle:
-> > > > There might be multiple children with the device tree compatible, for
-> > > > example if a MFD has multiple instances of the same function. In this
-> > > > case only the first is matched and the other children get a wrong
-> > > > of_node reference.
-> > > > Add a new option to match also against the unit address of the child
-> > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+Hi Prabhakar,
 
-[...]
+Thanks for your patch!
 
-> > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> > > > index d01d1299e49d..c2c0ad6b14f3 100644
-> > > > --- a/include/linux/mfd/core.h
-> > > > +++ b/include/linux/mfd/core.h
-> > > > @@ -13,8 +13,11 @@
-> > > >  #include <linux/platform_device.h>
-> > > >
-> > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-> > > > +#define MFD_OF_REG_VALID	BIT(31)
-> > 
-> > What about 64bit platforms?
-> 
-> The idea was to have this as a logical number. I.e. for now you may only
-> have one subdevice per unique compatible string. In fact, if you have a
-> look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
-> subdevices. But there is only one DT node for all three of it. I guess
-> this works as long as you don't use phandles to reference the pwm node
-> in the device tree. Or you don't want to use device tree properties
-> per subdevice (for example the "timeout-sec" of a watchdog device).
+On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Separate out Rev.2.0 specific hardware changes into
+> hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> by all the variants for RZ/G2M[N] boards.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-This is not a good example, as the "stericsson,ab8500-pwm" is
-legitimate.  Here we are registering 3 potential devices, but only
-instantiating 1 of them.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
+> @@ -0,0 +1,101 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> + * parts
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+
+What about adding
+
+    #include "hihope-common.dtsi"
+
+here?
+Then the *rev2.dts files have to include only "hihope-common-rev2.dtsi",
+and get "hihope-common.dtsi" for free?
+
+The same is true for the rev4.dtsi and the rev4.dts files.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
