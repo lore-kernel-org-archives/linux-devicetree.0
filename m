@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523BCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AACC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 299A120B80
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61FD212CC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658004;
-	bh=2tfyawIOeBBGpVSvjt7DJKriTpeiTWyLW3csCNfR08k=;
+	s=default; t=1591658007;
+	bh=BhGOM1jW327fu3Be7hLYIarcEr4CmakEcQukh31BnIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lLeb/NSPRA/RCiMbs8AOi4YgCNdYEcdio0y8uNSHcjB2CdFJpkMYit/7J+Her587S
-	 NS3D1aqCTVDo+sU0wg6Sseu+MnHMZI0KamDYKx5rB9hM44MDsl11TGSnNrKcmf3PAr
-	 gJaf3jCqG2VF6PFXa22QHiHc10A9h+HJDAFFXnr8=
+	b=iJGvOP3m3fEhWrK90TqgJoHg7FZCIXUQsL9uVJBGE1Ov9u+r5arxTWUNqmaxrW5Zt
+	 NosLeagEh3Wjly8fHXH2iimbUGFU9Vg47XMjDavHcWQ3EoFQwSSjCuTxcOKr5wrEke
+	 zDOGY3IKv8nScBdO9I20HZ0+zd1RCw+RUbrpyekk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgFHXNX (ORCPT
+        id S1729368AbgFHXN0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729303AbgFHXNV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:21 -0400
+        id S1729342AbgFHXNZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFB2920B80;
-        Mon,  8 Jun 2020 23:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A081208C3;
+        Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658001;
-        bh=2tfyawIOeBBGpVSvjt7DJKriTpeiTWyLW3csCNfR08k=;
+        s=default; t=1591658005;
+        bh=BhGOM1jW327fu3Be7hLYIarcEr4CmakEcQukh31BnIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+eDDXahsUbeWkAN1O7Ky/ww+WY94VvjJZUw2nZOSIjDFe7bKGjS1o2XwzbBBBXNv
-         XDpPSzuRzEqpjGMfDK58mvjNJB43w5TM+B1yel0cSJRKpI/GY6W2RCmyRMkxwBw/Q2
-         adXHvdqBW8QzEUihlyT9o3fDCzKzVQOyP8dfDI+M=
+        b=WD8+x1z1um0Me4sbVFCI0qWQ8vzHHjZ8ls737WCW+picLCZHRpPTD67HX5rI5+CDC
+         krA7c39vP6m9cxDuKW3jycG6dlYA0l2g73swytJrhn6ouQ14WnbslsKyvJ/fZ4KXhj
+         DObTQi/J9PTovkPwuwrcHmJXM45z5boyV3Rfy0Vs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 058/606] arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
-Date:   Mon,  8 Jun 2020 19:03:03 -0400
-Message-Id: <20200608231211.3363633-58-sashal@kernel.org>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 061/606] arm64: dts: rockchip: Rename dwc3 device nodes on rk3399 to make dtc happy
+Date:   Mon,  8 Jun 2020 19:03:06 -0400
+Message-Id: <20200608231211.3363633-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,40 +60,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 28810eecae08f9458a44831978e36f14ed182c80 upstream.
+commit 190c7f6fd43a776d4a6da1dac44408104649e9b7 upstream.
 
-Some msm8996 based devices are unstable when run with VDD_APC of 1.23V,
-which is listed as the maximum voltage in "Turbo" mode. Given that the
-CPU cluster is not run in "Turbo" mode, reduce this to 0.98V - the
-maximum voltage for nominal operation.
+The device tree compiler complains that the dwc3 nodes have regs
+properties but no matching unit addresses.
 
-Tested-by: Loic Poulain <loic.poulain@linaro.org>
-Fixes: 7a2a2231ef22 ("arm64: dts: apq8096-db820c: Fix VDD core voltage")
-Cc: Loic Poulain <loic.poulain@linaro.org>
-Link: https://lore.kernel.org/r/20200318054442.3066726-1-bjorn.andersson@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Add the unit addresses to the device node name. While at it, also rename
+the nodes from "dwc3" to "usb", as guidelines require device nodes have
+generic names.
+
+Fixes: 7144224f2c2b ("arm64: dts: rockchip: support dwc3 USB for rk3399")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://lore.kernel.org/r/20200327030414.5903-7-wens@kernel.org
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 4 ++--
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index fff6115f2670..a85b85d85a5f 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -658,8 +658,8 @@ s10 {
- 	s11 {
- 		qcom,saw-leader;
- 		regulator-always-on;
--		regulator-min-microvolt = <1230000>;
--		regulator-max-microvolt = <1230000>;
-+		regulator-min-microvolt = <980000>;
-+		regulator-max-microvolt = <980000>;
- 	};
- };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 33cc21fcf4c1..5c4238a80144 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -410,7 +410,7 @@ usbdrd3_0: usb@fe800000 {
+ 		reset-names = "usb3-otg";
+ 		status = "disabled";
  
+-		usbdrd_dwc3_0: dwc3 {
++		usbdrd_dwc3_0: usb@fe800000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0xfe800000 0x0 0x100000>;
+ 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
+@@ -446,7 +446,7 @@ usbdrd3_1: usb@fe900000 {
+ 		reset-names = "usb3-otg";
+ 		status = "disabled";
+ 
+-		usbdrd_dwc3_1: dwc3 {
++		usbdrd_dwc3_1: usb@fe900000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0xfe900000 0x0 0x100000>;
+ 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
 -- 
 2.25.1
 
