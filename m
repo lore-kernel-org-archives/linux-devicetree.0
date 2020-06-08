@@ -2,104 +2,102 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD72C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB663C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58A18206A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591643752;
-	bh=TsYdJ6dt1H/TCgkEQshMgERo+ve2nAgpCo/k1eH2u/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=erpJ2q2C2PsFb3TZ06CmMi6PMReGgQaavtDRfGfHCFVtbfPGw3+iPOZMgMBsiMneQ
-	 TRkmajSpNbmr7vc4cHimaPXeJ/IwdlkifpAoI9UwlAka7sTv92Bnud0h3WCM5YWc0A
-	 VlTtgqgfzGjs7YdDIyggMFOk59WuUAWZHvZFrSeY=
+	by mail.kernel.org (Postfix) with ESMTP id B44892076A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lvo87ggH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgFHTPv (ORCPT
+        id S1726431AbgFHT1A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:15:51 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33997 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgFHTPt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 15:15:49 -0400
-Received: by mail-il1-f195.google.com with SMTP id v11so17944539ilh.1;
-        Mon, 08 Jun 2020 12:15:47 -0700 (PDT)
+        Mon, 8 Jun 2020 15:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgFHT07 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 15:26:59 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840E1C08C5C2;
+        Mon,  8 Jun 2020 12:26:59 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id l27so19666331ejc.1;
+        Mon, 08 Jun 2020 12:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=D7Eyh5N8pfz8EauteHf9HhIuXtnavNBLFRX9oAYhLG4=;
+        b=Lvo87ggH0byI+EyFYeL9exdQR3LbVzsKH2h6PmUE+rmE+0e3M4YgFFl8VPqazKK0Y5
+         QHLle9/lo+oVZE8TnMD5Rrags132AHtHfLtuR8qSg4uR89DQ0wvk3RkNqFuOiRBp5vdL
+         e24zTkTdY8ypHG+/PdnOZAdS9/Er1utyS6kXgMlX2lczE7rhHQ/c/Dmy/GKmJOGJ/ZH6
+         ka+2UIz6KzumGzc5aVK3hQh1bMyyBLY3ojk/v1k7D4KzA2HQHtwt3KbZTtPKMACg+UJn
+         lD7GCJu+P1FPiMlRDTByodK46ElqiXysoOuqK1baFqbjsnhgWkwGU9Ua1kYaHL/m3rS8
+         AV/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bVsoFmj/HOOaF4AtOKuEbVSeUbWa/HT5CaZGq3xuk+k=;
-        b=SidH17wIWv+MHoeSVtnM0+dASgeqKpWg4hEID5P2eVIn3Ij97EFlCt1zNauiGPGGUz
-         8RHdhY44VkOUvedpqROmJXTh5KWOdc1zeXV5igI6nYvUkAO6gZAJDohFNEzZ4g5uTGJA
-         RzF9jKK+4tzl3QtbwVuik4jaRFY9aHY9fiuFxBReXb38rumM1qrVVWOibTdNh9+iSJMe
-         G43Vo/DMG44+g76nLnp/xS3rJ0sF5yWQvToXBHB3mLBzXGpHTgPmrp26SUCD/EXPj7g8
-         qO8XnvVJwnfBERFOV0fNX4/zyyl18boiU0LuI91I5M+jLcFbOgYO+TrPMn/KKkSwyl4b
-         QVnA==
-X-Gm-Message-State: AOAM533y+11UkW0CHNZXNcGi4ElTjVYitg0UgU+bo1KfXrkmWNruYzGQ
-        ozsxeBDTamXHK+qpLYtJpw==
-X-Google-Smtp-Source: ABdhPJyyki13Kmz3IcORTgD+J9l61fT82bMJryDN6e0+3h6Bw9W1SsjOXqx6qWzG/BBB8aIs7YDvng==
-X-Received: by 2002:a92:d905:: with SMTP id s5mr23653121iln.268.1591643747050;
-        Mon, 08 Jun 2020 12:15:47 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y12sm8016889ili.83.2020.06.08.12.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 12:15:46 -0700 (PDT)
-Received: (nullmailer pid 3350297 invoked by uid 1000);
-        Mon, 08 Jun 2020 19:15:45 -0000
-Date:   Mon, 8 Jun 2020 13:15:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] scripts/dtc: use pkg-config to include <yaml.h> in
- non-standard path
-Message-ID: <20200608191545.GA3346390@bogus>
-References: <20200505100319.741454-1-masahiroy@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D7Eyh5N8pfz8EauteHf9HhIuXtnavNBLFRX9oAYhLG4=;
+        b=hHy8ezfIxxKu7xiojpxIRqtO0on1vVduYj3hWIDCvpt+1pUacaMAZab6EZ7qFz+IQm
+         GoACsdiy3fYrbyKuvYdVRrAYc0NxVIuHH+Qv9+UDRbwfbishvtplAbS/5rzYW60Z1MSs
+         Be9+tAwWf+5QcHWziPmOoxuC8h/OF4CG1PDMXq6xEnVGII0VrC606/vvjlqe19xev1uk
+         0pWpV10dzhxjyc6MV3r/S6zuuN3uOHUaiDTk8reu5iO68cPGrzEdnlsPz+JhsNwxA2BM
+         Dy2hWtkTF+bp9X+QQi7kdvFXGVuF9bZPFcuprJ8itimZJHhSpZi1HgZV617XjZd9y82X
+         B1dw==
+X-Gm-Message-State: AOAM530IWkcN40yuo/NFA2KNRMC6244qws8brj4Ii4VCNFWMm6L8xio9
+        J07p14k+FWk92CCKNPYpwsM=
+X-Google-Smtp-Source: ABdhPJzKdGR87+lnaQjbSaNUsM9U4WQQgOWNUnvPSebnC0vCrDe0wbhkME+OG2sOJY0cWuAAYJvXTA==
+X-Received: by 2002:a17:907:42d5:: with SMTP id ng5mr22394995ejb.164.1591644418324;
+        Mon, 08 Jun 2020 12:26:58 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:3c4b:24e0:3c3a:dc89? ([2a01:110f:b59:fd00:3c4b:24e0:3c3a:dc89])
+        by smtp.gmail.com with ESMTPSA id p13sm13051946edq.50.2020.06.08.12.26.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 12:26:57 -0700 (PDT)
+Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
+ property
+To:     Denis Osterland-Heim <denis.osterland@diehl.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
+ <20200316124851.6303-3-Denis.Osterland@diehl.com>
+ <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
+ <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
+ <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
+ <278a6d81562d4642631fa003c59c4e4876050f54.camel@diehl.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <d1bfbe95-ca09-b1f4-0947-e06a7d29ef79@gmail.com>
+Date:   Mon, 8 Jun 2020 21:26:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505100319.741454-1-masahiroy@kernel.org>
+In-Reply-To: <278a6d81562d4642631fa003c59c4e4876050f54.camel@diehl.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, May 05, 2020 at 07:03:19PM +0900, Masahiro Yamada wrote:
-> Commit 067c650c456e ("dtc: Use pkg-config to locate libyaml") added
-> 'pkg-config --libs' to link libyaml installed in a non-standard
-> location.
-> 
-> yamltree.c includes <yaml.h>, but that commit did not add the search
-> path for <yaml.h>. If /usr/include/yaml.h does not exist, it fails to
-> build. A user can explicitly pass HOSTCFLAGS to work around it, but
-> the policy is not consistent.
-> 
-> There are two ways to deal with libraries in a non-default location.
-> 
-> [1] Use HOSTCFLAGS and HOSTLDFLAGS for additional search paths for
->     headers and libraries.
->     They are documented in Documentation/kbuild/kbuild.rst
-> 
->     $ make HOSTCFLAGS='-I <prefix>/include' HOSTLDFLAGS='-L <prefix>/lib'
-> 
-> [2] Use pkg-config
-> 
->     'pkg-config --cflags' for querying the header search path
->     'pkg-config --libs'   for querying the lib and its path
-> 
-> If we go with pkg-config, use [2] consistently. Do not mix up
-> [1] and [2].
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  scripts/dtc/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
+Hi Dennis,
 
-Sorry, missed this one. Now applied for 5.8.
+On 6/8/20 8:32 AM, Denis Osterland-Heim wrote:
+> Hi Jacek,
+> 
+> is your ack still valid for the new versions of the patch-set?
+> Due to the changes I made, I am not sure.
 
-Rob
+Yes, you can keep it.
+
+-- 
+Best regards,
+Jacek Anaszewski
