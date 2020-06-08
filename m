@@ -2,120 +2,151 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFD8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3886C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D4E2076C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbcMdd/8"
+	by mail.kernel.org (Postfix) with ESMTP id 89A79206A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgFHHqg (ORCPT
+        id S1729076AbgFHHr0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36320 "EHLO
+        Mon, 8 Jun 2020 03:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729008AbgFHHqe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:46:34 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FCCC08C5C5
-        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:46:34 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q11so16265644wrp.3
-        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 00:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
-        b=TbcMdd/8OOsDoTOIeYwoPHkpvrb7BLpJgvs3osnO9kgBDS52ZeSXUiVqA3cdbFfqgQ
-         j+Keb/5fI6A4lol2GJ6ijyjT5cuYD1OchuUXj4zFjT5O9U0kOCVWpub3uGIR4ix8Y4he
-         9LTLgODzbNdftzIB37a00BFCiR2bFxcMbQA44dL/XUL5uFD2NS0l4to3bE/K1fctTx0j
-         2K3o8Z/L7yYzIVoHwF6wYOfG05xBe9ZVWwdsQ4gRjdL5lRFe8YSTkdhtduLscBq/eYKi
-         58Q8jTnzbtIIt5FtaVALNA++QK8rJRqW2Uvyj29SIiBZmzT/CCw00/+UGW8ZAC0BmEPE
-         sHzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
-        b=EnXTe45+QZGtD04LLfmdf394SF3oCYKUs8CC78lQ94iD3td+39gRGCUa6gRLGSO30B
-         V+o5krxsQCZ5yMiLLi1h4zsF7BYbfE8PT6GxEE8Rfqc/ucPZyOnXL5iecKPZyQ7vNfHg
-         HghWeLaFnDIYiHFOJPtA8vx8z+4JYsxrsUi/fS3m7vaWUbqn7IACWuIu99xES1lN/fPM
-         B7VHJjGSZrlkIBgoWIjaTcutYEk2YsdbuSSVxcoVVKbunMzoB+5gDuYzOP/IqpY+FaPY
-         30IWYDbMGVF2QwBDm0oOWHZzZHjFBPXZQQWO/yXw4Rv4Ys02aNMUWiYNV+TwyEuo76QC
-         7PdQ==
-X-Gm-Message-State: AOAM533kYekhHMgo2ydJuaZOx3ec1qFl58zVOzBcQHCDKxxjEvWFEXJE
-        z7oIbnW1jPpsEdtIgmmJClqve374jTQ=
-X-Google-Smtp-Source: ABdhPJylRQSYQXNyAZiyW6rrMJLInL4XF8pMc/Y82ccj0fV0f6vQenutBOzt90BsWef9ORNQoVIZrQ==
-X-Received: by 2002:adf:a449:: with SMTP id e9mr21978811wra.294.1591602392643;
-        Mon, 08 Jun 2020 00:46:32 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id u3sm22618436wrw.89.2020.06.08.00.46.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 00:46:31 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 08:46:30 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200608074630.GA3567@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-6-michael@walle.cc>
- <20200605084915.GE3714@dell>
- <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
+        with ESMTP id S1728992AbgFHHrZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:47:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE9BC08C5C5
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:47:24 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jiCV4-0006sX-7w; Mon, 08 Jun 2020 09:47:18 +0200
+Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jiCV3-0002be-PR; Mon, 08 Jun 2020 09:47:17 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org, kernel@pengutronix.de,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
+Date:   Mon,  8 Jun 2020 09:47:16 +0200
+Message-Id: <20200608074716.9975-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 05 Jun 2020, Michael Walle wrote:
+The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
+called DRSGMII.
 
-> Am 2020-06-05 10:49, schrieb Lee Jones:
-> [..]
-> > > +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip
-> > > *chip)
-> > > +{
-> > > +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
-> > > +}
-> > 
-> > Why not save yourself the trouble and just:
-> > 
-> >   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
-> 
-> Is there a reason why not a single pwm driver uses something like that?
+This patch adds a corresponding phy-mode string 'drsgmii' and parses it
+from DT. The MVNETA then configures the SERDES protocol value
+accordingly.
 
-Copy/paste?  Habit?
+It was successfully tested on a MV78460 connected to a FPGA.
 
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ .../devicetree/bindings/net/ethernet-controller.yaml       | 1 +
+ drivers/net/ethernet/marvell/mvneta.c                      | 7 ++++++-
+ include/linux/phy.h                                        | 3 +++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+This patch has already been sent 3 years ago here:
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20170123142206.5390-1-jlu@pengutronix.de/
+Since then the driver has evolved a lot. 2.5Gbps is properly configured in the
+MAC now.
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+index ac471b60ed6ae..4eead3c89bd3e 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -66,6 +66,7 @@ properties:
+       - gmii
+       - sgmii
+       - qsgmii
++      - drsgmii
+       - tbi
+       - rev-mii
+       - rmii
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 51889770958d8..807c698576c74 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -109,6 +109,7 @@
+ #define MVNETA_SERDES_CFG			 0x24A0
+ #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
+ #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
++#define      MVNETA_DRSGMII_SERDES_PROTO	 0x1107
+ #define MVNETA_TYPE_PRIO                         0x24bc
+ #define      MVNETA_FORCE_UNI                    BIT(21)
+ #define MVNETA_TXQ_CMD_1                         0x24e4
+@@ -3734,10 +3735,11 @@ static void mvneta_validate(struct phylink_config *config,
+ 	struct mvneta_port *pp = netdev_priv(ndev);
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+ 
+-	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
++	/* We only support QSGMII, SGMII, DRSGMII, 802.3z and RGMII modes */
+ 	if (state->interface != PHY_INTERFACE_MODE_NA &&
+ 	    state->interface != PHY_INTERFACE_MODE_QSGMII &&
+ 	    state->interface != PHY_INTERFACE_MODE_SGMII &&
++	    state->interface != PHY_INTERFACE_MODE_DRSGMII &&
+ 	    !phy_interface_mode_is_8023z(state->interface) &&
+ 	    !phy_interface_mode_is_rgmii(state->interface)) {
+ 		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+@@ -3851,6 +3853,7 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
+ 
+ 	if (state->interface == PHY_INTERFACE_MODE_QSGMII ||
+ 	    state->interface == PHY_INTERFACE_MODE_SGMII ||
++	    state->interface == PHY_INTERFACE_MODE_DRSGMII ||
+ 	    phy_interface_mode_is_8023z(state->interface))
+ 		new_ctrl2 |= MVNETA_GMAC2_PCS_ENABLE;
+ 
+@@ -4968,6 +4971,8 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+ 	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+ 		 phy_interface_mode_is_8023z(phy_mode))
+ 		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
++	else if (phy_mode == PHY_INTERFACE_MODE_DRSGMII)
++		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_DRSGMII_SERDES_PROTO);
+ 	else if (!phy_interface_mode_is_rgmii(phy_mode))
+ 		return -EINVAL;
+ 
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 2432ca463ddc0..bf3276b330f9e 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -109,6 +109,7 @@ typedef enum {
+ 	PHY_INTERFACE_MODE_USXGMII,
+ 	/* 10GBASE-KR - with Clause 73 AN */
+ 	PHY_INTERFACE_MODE_10GKR,
++	PHY_INTERFACE_MODE_DRSGMII,
+ 	PHY_INTERFACE_MODE_MAX,
+ } phy_interface_t;
+ 
+@@ -190,6 +191,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ 		return "usxgmii";
+ 	case PHY_INTERFACE_MODE_10GKR:
+ 		return "10gbase-kr";
++	case PHY_INTERFACE_MODE_DRSGMII:
++		return "drsgmii";
+ 	default:
+ 		return "unknown";
+ 	}
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.27.0
+
