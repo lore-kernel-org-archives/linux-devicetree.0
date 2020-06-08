@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A27C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4614C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF4320737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9AF207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664657;
-	bh=GwEbOMu8/8JRIBBYzWPx5EysyBB4jEBoWyltDTe3v+k=;
+	s=default; t=1591664669;
+	bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=coBt/zvncZVB98t+j62iCdxLcqEoEyRJECSvTbuMt9V/1hESUev9z7E2y3gU5pOeG
-	 psn/Wdy5dCbVgYq3PcOGJ5XokRqnkjJXCk9oCaOgg9BN9YmcUv123z81e1cO5jVkOA
-	 51KHKZvCv+zGd/2BTuA21/ImiyRxiECdYQQKIMv4=
+	b=NRssiXho4IjkKgc9bH/fotGzsQhCbX2L0VRuS7PseuX46hehPpzKfH85k32yzsMXs
+	 2lzliWKRFvHNY+kgWmTicC73YByy0ESZctseJ+L4S71R62QWr4SWkmuYU0dljCXK8A
+	 5K5+SatnLsxkqq6GkWcMO5lD2IH4t+wCOz09jv9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgFHXH3 (ORCPT
+        id S1731331AbgFIBES (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgFHXH2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:28 -0400
+        id S1727891AbgFHXHZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FFCB20872;
-        Mon,  8 Jun 2020 23:07:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D025320812;
+        Mon,  8 Jun 2020 23:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657647;
-        bh=GwEbOMu8/8JRIBBYzWPx5EysyBB4jEBoWyltDTe3v+k=;
+        s=default; t=1591657645;
+        bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUnAVq/M1u/jUhL8Lwy4M2r5AstnD44z/Sit1/q3/B5qnDvqqti9HnVUOrwGw8Tj5
-         gw2o9PViPv5ZXH2hQhaeBhL5DJqSBylVGvQ7kIlhx+9+FPZrnEMa2edagafVfzKm93
-         0k8G72AzoO2FUDcvXiaO7B+B+eei1isqLfhYIUS0=
+        b=hRTpDfTaL3Gp0YHHVF/pVVfqBW/0xr2ASUfARjvkAgdOl3D6bKs1z6lxdLEI4sAqn
+         H97X82m9CAPc9AxV3Kif1DCa9aRuJgNGOL4Ked6AWOzKOTbWI/KaqHy/ApcIvCfNSh
+         k43dXp/cHWS/QF/MmerUTICdHqLjCYrF30XdypnM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 062/274] spi: dw: Enable interrupts in accordance with DMA xfer mode
-Date:   Mon,  8 Jun 2020 19:02:35 -0400
-Message-Id: <20200608230607.3361041-62-sashal@kernel.org>
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 061/274] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
+Date:   Mon,  8 Jun 2020 19:02:34 -0400
+Message-Id: <20200608230607.3361041-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -70,66 +66,57 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
+[ Upstream commit a2ac81c6ef4018ea49c034ce165bb9ea1cf99f3e ]
 
-It's pointless to track the Tx overrun interrupts if Rx-only SPI
-transfer is issued. Similarly there is no need in handling the Rx
-overrun/underrun interrupts if Tx-only SPI transfer is executed.
-So lets unmask the interrupts only if corresponding SPI
-transactions are implied.
+Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
+allows") updated the cpu_has_mips* macro to be replaced with a constant
+expression where it's possible. By mistake it wasn't done correctly
+for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
+be replaced with conditional expression __isa_range_or_flag(), which
+means either ISA revision being within the range or the corresponding
+CPU options flag was set at the probe stage or both being true at the
+same time. But the ISA level value doesn't indicate whether the ISA is
+MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
+architectures the __isa_range() macro will activate the
+cpu_has_mips64rX flags, which is incorrect. In order to fix the
+problem we make sure the 64bits CPU support is enabled by means of
+checking the flag cpu_has_64bits aside with proper ISA range and specific
+Revision flag being set.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/mips/include/asm/cpu-features.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 1058b8a6c8a0..e6c045ecffba 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -220,19 +220,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 
- static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- {
--	u16 dma_ctrl = 0;
-+	u16 imr = 0, dma_ctrl = 0;
- 
- 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
- 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
- 
--	if (xfer->tx_buf)
-+	if (xfer->tx_buf) {
- 		dma_ctrl |= SPI_DMA_TDMAE;
--	if (xfer->rx_buf)
-+		imr |= SPI_INT_TXOI;
-+	}
-+	if (xfer->rx_buf) {
- 		dma_ctrl |= SPI_DMA_RDMAE;
-+		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
-+	}
- 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
- 
- 	/* Set the interrupt mask */
--	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
-+	spi_umask_intr(dws, imr);
- 
- 	dws->transfer_handler = dma_transfer;
- 
+diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
+index de44c92b1c1f..d4e120464d41 100644
+--- a/arch/mips/include/asm/cpu-features.h
++++ b/arch/mips/include/asm/cpu-features.h
+@@ -288,10 +288,12 @@
+ # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
+ #endif
+ #ifndef cpu_has_mips64r1
+-# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
++# define cpu_has_mips64r1	(cpu_has_64bits && \
++				 __isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1))
+ #endif
+ #ifndef cpu_has_mips64r2
+-# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
++# define cpu_has_mips64r2	(cpu_has_64bits && \
++				 __isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2))
+ #endif
+ #ifndef cpu_has_mips64r6
+ # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
 -- 
 2.25.1
 
