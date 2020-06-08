@@ -2,101 +2,107 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C596BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5281C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973092053B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Y8KMgJvg"
+	by mail.kernel.org (Postfix) with ESMTP id CEFB82076C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgFHQgi (ORCPT
+        id S1730630AbgFHQod (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:36:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:39716 "EHLO vps0.lunn.ch"
+        Mon, 8 Jun 2020 12:44:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:55066 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730432AbgFHQgh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=88MeFKvCY6T0QrZdQ+i9CPgwNPj+1wwn8P8nThk+OnE=; b=Y8KMgJvgWNbSr18uYw2huKiS+P
-        stY5qeIzYxS6W/lg9xGTQ99h9AEJ7WyjSKLK4oX9MVCkvC1Q0OFQUCMZPOzpW8ZvEbjz0Infp2R1B
-        PbLNvn3peyY6lZMM5oEDZm3fS2VDbOgwM2SoxVFHilleCzrmykl3tw4xQ5Y0ROH6BFlQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jiKlB-004Pxy-4L; Mon, 08 Jun 2020 18:36:29 +0200
-Date:   Mon, 8 Jun 2020 18:36:29 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH] net: phy: mscc: handle the clkout control on some phy
- variants
-Message-ID: <20200608163629.GH1006885@lunn.ch>
-References: <20200608160207.1316052-1-heiko@sntech.de>
+        id S1730583AbgFHQob (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:44:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8326A1FB;
+        Mon,  8 Jun 2020 09:44:30 -0700 (PDT)
+Received: from [10.57.9.113] (unknown [10.57.9.113])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3CB63F73D;
+        Mon,  8 Jun 2020 09:44:25 -0700 (PDT)
+Subject: Re: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+To:     Mark Brown <broonie@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+Date:   Mon, 8 Jun 2020 17:44:21 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608160207.1316052-1-heiko@sntech.de>
+In-Reply-To: <20200608153139.GI4593@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 06:02:07PM +0200, Heiko Stuebner wrote:
-> +static int vsc8531_probe(struct phy_device *phydev)
-> +{
-> +	struct vsc8531_private *vsc8531;
-> +	int rate_magic;
-> +	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
-> +	   VSC8531_LINK_100_ACTIVITY};
-> +
-> +	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
-> +	if (rate_magic < 0)
-> +		return rate_magic;
-> +
-> +	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
-> +	if (!vsc8531)
-> +		return -ENOMEM;
-> +
-> +	phydev->priv = vsc8531;
-> +
-> +	vsc8531->rate_magic = rate_magic;
-> +	vsc8531->nleds = 2;
-> +	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
-> +	vsc8531->hw_stats = vsc85xx_hw_stats;
-> +	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
-> +	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-> +				      sizeof(u64), GFP_KERNEL);
-> +	if (!vsc8531->stats)
-> +		return -ENOMEM;
-> +
-> +	vsc8531_dt_clkout_rate_get(phydev);
-> +
-> +	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-> +}
+On 2020-06-08 16:31, Mark Brown wrote:
+> On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
+> 
+>>>> +	if (transfer->rx_sg.sgl) {
+>>>> +		struct device *rx_dev = spi->controller->dma_rx->device->dev;
+>>>> +
+>>>> +		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
+>>>> +				       transfer->rx_sg.nents, DMA_TO_DEVICE);
+>>>> +	}
+>>>> +
+> 
+>>> This is confusing - why are we DMA mapping to the device after doing a PIO
+>>> transfer?
+> 
+>> 'transfer->rx_sg.sgl' condition check that's the case fallback PIO after DMA transfer
+>> failed. But the spi core still think the buffer should be in 'device' while spi driver
+>> touch it by PIO(CPU), so sync it back to device to ensure all received data flush to DDR.
+> 
+> So we sync it back to the device so that we can then do another sync to
+> CPU?  TBH I'm a bit surprised that there's a requirement that we
+> explicitly undo a sync and that a redundant double sync in the same
+> direction might be an issue but I've not had a need to care so I'm
+> perfectly prepared to believe there is.
+> 
+> At the very least this needs a comment.
 
-Hi Heiko
+Yeah, something's off here - at the very least, syncing with 
+DMA_TO_DEVICE on the Rx buffer that was mapped with DMA_FROM_DEVICE is 
+clearly wrong. CONFIG_DMA_API_DEBUG should scream about that.
 
-The clock change itself looks O.K. Maybe we want to standardize on the
-name of the DT property, since it could be shared across all PHYs
-which have a clock output?
+If the device has written to the buffer at all since dma_map_sg() was 
+called then you do need a dma_sync_sg_for_cpu() call before touching it 
+from a CPU fallback path, but if nobody's going to touch it from that 
+point until it's unmapped then there's no point syncing it again. The 
+my_card_interrupt_handler() example in DMA-API_HOWTO.txt demonstrates this.
 
-Could you add another patch first which refactors the _probe()
-functions. There is a lot of repeated code which could be put into a
-helper.
-
-Thanks
-	Andrew
+Robin.
