@@ -7,53 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB13AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D873C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A0C2086A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0112068D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jgxBh18B"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aH+ynJQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgFHTkm (ORCPT
+        id S1726699AbgFHTkN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:40:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35302 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgFHTkl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 15:40:41 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058Jecvg004394;
-        Mon, 8 Jun 2020 14:40:38 -0500
+        Mon, 8 Jun 2020 15:40:13 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58344 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgFHTkL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 15:40:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058Je1Yq102401;
+        Mon, 8 Jun 2020 14:40:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591645238;
-        bh=4Fus+1STo6fJcdmND8htjDFw0u7LkR/zKPWh9+ob2Js=;
+        s=ti-com-17Q1; t=1591645201;
+        bh=Jf6MKK966/6Olzk1qJChUoSjiHhXr8OEtTXC2DBLRbo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jgxBh18BRXNxtOVN+dkaLeVc0KgWztjTkxiSQoOL7RHSHMGGWjIDNkbTKRjeMyfcj
-         99YPZBkjsoHREymYny5s3zfzfYdPwCOjYS0GZVXamOB238k6bmZVM/+y4XZbj9RnV4
-         ueMZHzkGA46pI3VyLYUc1Ph2r1XWzUCU7dKvbyPU=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058Jec0n030550
+        b=aH+ynJQ80n+suOapwfIRSa/974qomRMDb2TLcci80YCC+iJ9I1ranO1kVjYQeuVXz
+         t3dgu6GR072S/2P5n+YV8OYeAVdSIkKWrtfU2ebNtajixydFuoJVtSZ+xFSGYafTRC
+         ZOSQiG46Dh2o0MytJgEtOhg2dA9IgySEgteV7A70=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058Je1iQ108926
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jun 2020 14:40:38 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 8 Jun 2020 14:40:01 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
- 2020 14:40:37 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 14:40:01 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Jun 2020 14:40:37 -0500
+ Frontend Transport; Mon, 8 Jun 2020 14:40:01 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058Jebog070894;
-        Mon, 8 Jun 2020 14:40:37 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058Je1Kg062377;
+        Mon, 8 Jun 2020 14:40:01 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v27 15/15] leds: lp5523: Fix various formatting issues in the code
-Date:   Mon, 8 Jun 2020 14:39:17 -0500
-Message-ID: <20200608193917.13084-16-dmurphy@ti.com>
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v27 08/15] ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+Date:   Mon, 8 Jun 2020 14:39:10 -0500
+Message-ID: <20200608193917.13084-9-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200608193917.13084-1-dmurphy@ti.com>
 References: <20200608193917.13084-1-dmurphy@ti.com>
@@ -66,66 +71,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix checkpatch errors and warnings for the LP5523.c device
-driver.
+Add the reg property to each channel node.  This update is
+to accommodate the multicolor framework.  In addition to the
+accommodation this allows the LEDs to be placed on any channel
+and allow designs to skip channels as opposed to requiring
+sequential order.
 
 Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- drivers/leds/leds-lp5523.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 9776dc72a764..f55d97258d5e 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -23,13 +23,13 @@
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index 2b9423d55c37..77aa90640052 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -258,29 +258,35 @@ leds: led-controller@30 {
+ 		reg = <0x30>;
+ 		clock-mode = /bits/ 8 <1>;
+ 		status = "disabled";
++		#address-cells = <1>;
++		#size-cells = <0>;
  
- #define LP5523_PROGRAM_LENGTH		32	/* bytes */
- /* Memory is used like this:
--   0x00 engine 1 program
--   0x10 engine 2 program
--   0x20 engine 3 program
--   0x30 engine 1 muxing info
--   0x40 engine 2 muxing info
--   0x50 engine 3 muxing info
--*/
-+ * 0x00 engine 1 program
-+ * 0x10 engine 2 program
-+ * 0x20 engine 3 program
-+ * 0x30 engine 1 muxing info
-+ * 0x40 engine 2 muxing info
-+ * 0x50 engine 3 muxing info
-+ */
- #define LP5523_MAX_LEDS			9
+-		chan0 {
++		chan@0 {
+ 			chan-name = "R";
+ 			led-cur = /bits/ 8 <0x20>;
+ 			max-cur = /bits/ 8 <0x60>;
++			reg = <0>;
+ 		};
  
- /* Registers */
-@@ -326,7 +326,7 @@ static int lp5523_update_program_memory(struct lp55xx_chip *chip,
- 					const u8 *data, size_t size)
- {
- 	u8 pattern[LP5523_PROGRAM_LENGTH] = {0};
--	unsigned cmd;
-+	unsigned int cmd;
- 	char c[3];
- 	int nrchars;
- 	int ret;
-@@ -468,6 +468,7 @@ static int lp5523_mux_parse(const char *buf, u16 *mux, size_t len)
- static void lp5523_mux_to_array(u16 led_mux, char *array)
- {
- 	int i, pos = 0;
-+
- 	for (i = 0; i < LP5523_MAX_LEDS; i++)
- 		pos += sprintf(array + pos, "%x", LED_ACTIVE(led_mux, i));
+-		chan1 {
++		chan@1 {
+ 			chan-name = "G";
+ 			led-cur = /bits/ 8 <0x20>;
+ 			max-cur = /bits/ 8 <0x60>;
++			reg = <1>;
+ 		};
  
-@@ -506,7 +507,7 @@ static int lp5523_load_mux(struct lp55xx_chip *chip, u16 mux, int nr)
- 	if (ret)
- 		return ret;
+-		chan2 {
++		chan@2 {
+ 			chan-name = "B";
+ 			led-cur = /bits/ 8 <0x20>;
+ 			max-cur = /bits/ 8 <0x60>;
++			reg = <2>;
+ 		};
  
--	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM , (u8)(mux >> 8));
-+	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM, (u8)(mux >> 8));
- 	if (ret)
- 		return ret;
+-		chan3 {
++		chan@3 {
+ 			chan-name = "W";
+ 			led-cur = /bits/ 8 <0x0>;
+ 			max-cur = /bits/ 8 <0x0>;
++			reg = <3>;
+ 		};
+ 	};
  
 -- 
 2.26.2
