@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A651C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB377C433E4
 	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F352A206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884DE2076A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgFHJhg (ORCPT
+        id S1729231AbgFHJhg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 8 Jun 2020 05:37:36 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:37169 "EHLO
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:37165 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729203AbgFHJhg (ORCPT
+        by vger.kernel.org with ESMTP id S1729167AbgFHJhg (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 05:37:36 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Jun 2020 02:37:33 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 08 Jun 2020 02:37:31 -0700
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 08 Jun 2020 02:37:31 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 6C2F5217F8; Mon,  8 Jun 2020 15:07:29 +0530 (IST)
+        id B47E921812; Mon,  8 Jun 2020 15:07:29 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         jassisinghbrar@gmail.com, sivaprak@codeaurora.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V3 2/4] dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
-Date:   Mon,  8 Jun 2020 15:07:25 +0530
-Message-Id: <1591609047-29995-3-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V3 4/4] mailbox: qcom: Add ipq6018 apcs compatible
+Date:   Mon,  8 Jun 2020 15:07:27 +0530
+Message-Id: <1591609047-29995-5-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591609047-29995-1-git-send-email-sivaprak@codeaurora.org>
 References: <1591609047-29995-1-git-send-email-sivaprak@codeaurora.org>
@@ -42,57 +42,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add dt-bindings for ipq6018 mailbox driver
+The Qualcomm ipq6018 has apcs block, add compatible for the same. Also,
+the ipq6018 apcs provides a clock functionality similar to msm8916 but
+the clock driver is different.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Create a child device based on the apcs compatible for the clock
+controller functionality.
+
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml         | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-index 12eff94..e05bff4 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-@@ -16,6 +16,7 @@ maintainers:
- properties:
-   compatible:
-     enum:
-+      - qcom,ipq6018-apcs-apps-global
-       - qcom,ipq8074-apcs-apps-global
-       - qcom,msm8916-apcs-kpss-global
-       - qcom,msm8996-apcs-hmss-global
-@@ -38,12 +39,12 @@ properties:
-     const: 1
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 49eebb5..cec34f0 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -29,6 +29,10 @@ struct qcom_apcs_ipc_data {
+ 	char *clk_name;
+ };
  
-   '#clock-cells':
--    const: 0
-+    enum: [ 0, 1 ]
- 
-   clock-names:
-     items:
-       - const: pll
--      - const: aux
-+      - enum: [ aux, xo ]
- 
- required:
-   - compatible
-@@ -84,3 +85,15 @@ examples:
-         clock-names = "pll", "aux";
-         #clock-cells = <0>;
-     };
++static const struct qcom_apcs_ipc_data ipq6018_apcs_data = {
++	.offset = 8, .clk_name = "qcom,apss-ipq6018-clk"
++};
 +
-+  # Example apcs with ipq6018
-+  - |
-+    #include "dt-bindings/clock/qcom,apss-ipq.h"
-+    apcs_ipq: mailbox@b111000 {
-+        compatible = "qcom,ipq6018-apcs-apps-global";
-+        reg = <0x0b111000 0x1000>;
-+        #clock-cells = <1>;
-+        clocks = <&a53pll>, <&xo>;
-+        clock-names = "pll", "xo";
-+        #mbox-cells = <1>;
-+    };
+ static const struct qcom_apcs_ipc_data ipq8074_apcs_data = {
+ 	.offset = 8, .clk_name = NULL
+ };
+@@ -139,6 +143,7 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
+ 
+ /* .data is the offset of the ipc register within the global block */
+ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
++	{ .compatible = "qcom,ipq6018-apcs-apps-global", .data = &ipq6018_apcs_data },
+ 	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = &ipq8074_apcs_data },
+ 	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = &msm8916_apcs_data },
+ 	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = &msm8996_apcs_data },
 -- 
 2.7.4
 
