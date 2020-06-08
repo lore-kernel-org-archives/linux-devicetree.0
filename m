@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C178DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E38C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EFD2078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5A120812
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661945;
-	bh=kHnwlx9BCRreA8gSpamAv5AUS0PWWZVe+8Pj/JLgOwo=;
+	s=default; t=1591661959;
+	bh=AWFsAvNlKIn/ZedZ0Pog+zp8GiCTc+cGaZND5IMT7g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ivd3dO5tiGhA9vPM/oGs5VeRlMDKyGkaBIV0cGeXnQyQUeEaSVae5PMKvrXPIp6eH
-	 eZCOChw8CCY53CgDxeaObER76Kfa3P5Xl/PBMxQRrQfGGwe3HDVlCGQVJ/V7bsxRPa
-	 Tnz0+1w4vX306bnRlyvspDtokNdWHVzcl1BSXKWs=
+	b=BIoJWeRSC0uDnGUucmOOG1rMLtPgEy/3ahk9FTbkkFt1ndrc43+TgOwo+zsnKXlpr
+	 aBdBdKOo+hWwCZDyP24JmqJtlKmB1YEO9/HbrU1tZTS7Qx+63t5+Lzi6K/tzW6rOuV
+	 Q2JmibUZ1O1AWDQUbJxs3nRlyBrvHLyByVSCiKeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbgFHXS1 (ORCPT
+        id S1730848AbgFIATS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgFHXS0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:26 -0400
+        id S1730601AbgFHXST (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A21C02088E;
-        Mon,  8 Jun 2020 23:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8520720814;
+        Mon,  8 Jun 2020 23:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658305;
-        bh=kHnwlx9BCRreA8gSpamAv5AUS0PWWZVe+8Pj/JLgOwo=;
+        s=default; t=1591658299;
+        bh=AWFsAvNlKIn/ZedZ0Pog+zp8GiCTc+cGaZND5IMT7g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mr0MEHwvY1KKWj4DljtbQrNio5LtuHRBDWVbr8a0smgLDOuywmXaP78DCzIZcSsY2
-         KEIUjwsrBZn6AV+y9XdnSHw+0LptDfMNkPXhZoMCnvctA8h8zJv7QdK5dM4fNhYuPO
-         3DZlTTuUBZN5qFp6QjLMoovMrKlZxfNJnkgG9qu8=
+        b=zqMtlIqFiFQMSNJ/LtnH5OYt0Yl0NYmsppZA2GTlwGX7/DRyGXQhnJw3Fq3686xUH
+         GC8Kz2sHWgNn3VbVWZU/j8PTuohi4SquY5cB2KvWIMdAsPsOiJnHlPFWusHeLM/G+3
+         O6/deCf2762OxMB+FtONveW82DHt0lGL7heuqeh0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Beckett <bob.beckett@collabora.com>,
-        Ian Ray <ian.ray@ge.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 307/606] ARM: dts/imx6q-bx50v3: Set display interface clock parents
-Date:   Mon,  8 Jun 2020 19:07:12 -0400
-Message-Id: <20200608231211.3363633-307-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 302/606] arm64: dts: mt8173: fix vcodec-enc clock
+Date:   Mon,  8 Jun 2020 19:07:07 -0400
+Message-Id: <20200608231211.3363633-302-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,120 +61,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Robert Beckett <bob.beckett@collabora.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 665e7c73a7724a393b4ec92d1ae1e029925ef2b7 ]
+[ Upstream commit 3b1f6c5e4dfaf767f6f2f120cd93b347b5a9f1aa ]
 
-Avoid LDB and IPU DI clocks both using the same parent. LDB requires
-pasthrough clock to avoid breaking timing while IPU DI does not.
+Fix the assigned-clock-parents to higher frequency clock to avoid h264
+encode timeout:
 
-Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
-and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
+[  134.763465] mtk_vpu 10020000.vpu: vpu ipi 4 ack time out !
+[  134.769008] [MTK_VCODEC][ERROR][18]: vpu_enc_send_msg() vpu_ipi_send msg_id c002 len 32 fail -5
+[  134.777707] [MTK_VCODEC][ERROR][18]: vpu_enc_encode() AP_IPIMSG_ENC_ENCODE 0 fail
 
-This fixes an issue where attempting atomic modeset while using
-HDMI and display port at the same time causes LDB clock programming
-to destroy the programming of HDMI that was done during the same
-modeset.
+venc_sel is the clock used by h264 encoder, and venclt_sel is the clock
+used by vp8 encoder. Assign venc_sel to vcodecpll_ck and venclt_sel to
+vcodecpll_370p5.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
- originally chosen by Robert Beckett to avoid affecting eMMC clock
- by DRM atomic updates]
-Signed-off-by: Ian Ray <ian.ray@ge.com>
-[Squash Robert's and Ian's commits for bisectability, update patch
- description and add stable tag]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+    vcodecpll                         1482000000
+       vcodecpll_ck                    494000000
+          venc_sel                     494000000
+...
+       vcodecpll_370p5                 370500000
+          venclt_sel                   370500000
+
+Fixes: fbbad0287cec ("arm64: dts: Using standard CCF interface to set vcodec clk")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Link: https://lore.kernel.org/r/20200504124442.208004-1-hsinyi@chromium.org
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
- arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
- arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
- 4 files changed, 15 insertions(+), 25 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
-index 95b8f2d71821..fb0980190aa0 100644
---- a/arch/arm/boot/dts/imx6q-b450v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b450v3.dts
-@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
- 	};
- };
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 8b4e806d5119..125c78321ab4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -1401,8 +1401,8 @@ vcodec_enc: vcodec@18002000 {
+ 				      "venc_lt_sel";
+ 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
+ 					  <&topckgen CLK_TOP_VENC_LT_SEL>;
+-			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
+-						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
++			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL>,
++						 <&topckgen CLK_TOP_VCODECPLL_370P5>;
+ 		};
  
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
--				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--};
--
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
-index 611cb7ae7e55..8f762d9c5ae9 100644
---- a/arch/arm/boot/dts/imx6q-b650v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b650v3.dts
-@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
- 	};
- };
- 
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
--				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--};
--
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
-index e4cb118f88c6..1ea64ecf4291 100644
---- a/arch/arm/boot/dts/imx6q-b850v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-@@ -53,17 +53,6 @@ chosen {
- 	};
- };
- 
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
--			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
--			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
--				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
--				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
--				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
--};
--
- &ldb {
- 	fsl,dual-channel;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index fa27dcdf06f1..1938b04199c4 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -377,3 +377,18 @@ pci_root: root@0,0 {
- 		#interrupt-cells = <1>;
- 	};
- };
-+
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
-+				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
-+};
+ 		jpegdec: jpegdec@18004000 {
 -- 
 2.25.1
 
