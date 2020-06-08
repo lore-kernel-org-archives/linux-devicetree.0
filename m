@@ -2,99 +2,104 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11609C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD72C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB2C42068D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A18206A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591643380;
-	bh=ScyHgiTEWVsjSltSHfU5CEirBNfWdqcMaSWHrvzGXI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QO7HD+JT0PU0T3NUrWD8oFQWhmoG+JJ4WkEB3qSFPoDHHFfGR80c14am2YejDTSeI
-	 Jsv9FuuijmpaqAsUd6Ua6jyEcdSwYDAFHlYtVvL2+C4xsuzLvtB1i4oWClcJ7rEO+/
-	 fTzvM9zNLOGd9aYxjsBGVlL84hd2cngDZMil4fmY=
+	s=default; t=1591643752;
+	bh=TsYdJ6dt1H/TCgkEQshMgERo+ve2nAgpCo/k1eH2u/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=erpJ2q2C2PsFb3TZ06CmMi6PMReGgQaavtDRfGfHCFVtbfPGw3+iPOZMgMBsiMneQ
+	 TRkmajSpNbmr7vc4cHimaPXeJ/IwdlkifpAoI9UwlAka7sTv92Bnud0h3WCM5YWc0A
+	 VlTtgqgfzGjs7YdDIyggMFOk59WuUAWZHvZFrSeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgFHTJk (ORCPT
+        id S1726217AbgFHTPv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgFHTJk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:09:40 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A929206A4;
-        Mon,  8 Jun 2020 19:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591643379;
-        bh=ScyHgiTEWVsjSltSHfU5CEirBNfWdqcMaSWHrvzGXI0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0HI5Qf2uaXoyxIZbmo9cCzld6vkS4PF2GJEARZqh4lxJgpuIWeDBvJW0VA7kP5N4b
-         Vym17/Nx2BSqAbtk8/vIlLBm9muAWf5aCWxC2xSHASLij6u+JsSqS24Diielz58iZf
-         DH9B6v3YP3mO1YrKO15+8WP+zAjs0QAFoItkyqYo=
-Received: by mail-oi1-f180.google.com with SMTP id s21so16334265oic.9;
-        Mon, 08 Jun 2020 12:09:39 -0700 (PDT)
-X-Gm-Message-State: AOAM531So9dIYcMx0uaae4v+31WjztEIkfJz+YyzrGaieJuOGVdswzrP
-        H3KW0rLO0GocM/8yFUobgeGNOyXJrsib6CJhmw==
-X-Google-Smtp-Source: ABdhPJy4Vp6GDix7BLisOjJclsiusfBkLpi//arVNwprm8DvK2iq5xKeK5uY+f9/ewYrYnZiFE4QNF7QCSWvtL+McUo=
-X-Received: by 2002:aca:6004:: with SMTP id u4mr690754oib.106.1591643378869;
- Mon, 08 Jun 2020 12:09:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200608084117.4563-1-jiping.ma2@windriver.com>
-In-Reply-To: <20200608084117.4563-1-jiping.ma2@windriver.com>
+        Mon, 8 Jun 2020 15:15:51 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33997 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgFHTPt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 15:15:49 -0400
+Received: by mail-il1-f195.google.com with SMTP id v11so17944539ilh.1;
+        Mon, 08 Jun 2020 12:15:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bVsoFmj/HOOaF4AtOKuEbVSeUbWa/HT5CaZGq3xuk+k=;
+        b=SidH17wIWv+MHoeSVtnM0+dASgeqKpWg4hEID5P2eVIn3Ij97EFlCt1zNauiGPGGUz
+         8RHdhY44VkOUvedpqROmJXTh5KWOdc1zeXV5igI6nYvUkAO6gZAJDohFNEzZ4g5uTGJA
+         RzF9jKK+4tzl3QtbwVuik4jaRFY9aHY9fiuFxBReXb38rumM1qrVVWOibTdNh9+iSJMe
+         G43Vo/DMG44+g76nLnp/xS3rJ0sF5yWQvToXBHB3mLBzXGpHTgPmrp26SUCD/EXPj7g8
+         qO8XnvVJwnfBERFOV0fNX4/zyyl18boiU0LuI91I5M+jLcFbOgYO+TrPMn/KKkSwyl4b
+         QVnA==
+X-Gm-Message-State: AOAM533y+11UkW0CHNZXNcGi4ElTjVYitg0UgU+bo1KfXrkmWNruYzGQ
+        ozsxeBDTamXHK+qpLYtJpw==
+X-Google-Smtp-Source: ABdhPJyyki13Kmz3IcORTgD+J9l61fT82bMJryDN6e0+3h6Bw9W1SsjOXqx6qWzG/BBB8aIs7YDvng==
+X-Received: by 2002:a92:d905:: with SMTP id s5mr23653121iln.268.1591643747050;
+        Mon, 08 Jun 2020 12:15:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id y12sm8016889ili.83.2020.06.08.12.15.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 12:15:46 -0700 (PDT)
+Received: (nullmailer pid 3350297 invoked by uid 1000);
+        Mon, 08 Jun 2020 19:15:45 -0000
+Date:   Mon, 8 Jun 2020 13:15:45 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 8 Jun 2020 13:09:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
-Message-ID: <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
-Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
-To:     Jiping Ma <jiping.ma2@windriver.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] scripts/dtc: use pkg-config to include <yaml.h> in
+ non-standard path
+Message-ID: <20200608191545.GA3346390@bogus>
+References: <20200505100319.741454-1-masahiroy@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505100319.741454-1-masahiroy@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
->
-> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
-> it fails to build.
-
-Does this patch fix your issue?:
-
-https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
-
-
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+On Tue, May 05, 2020 at 07:03:19PM +0900, Masahiro Yamada wrote:
+> Commit 067c650c456e ("dtc: Use pkg-config to locate libyaml") added
+> 'pkg-config --libs' to link libyaml installed in a non-standard
+> location.
+> 
+> yamltree.c includes <yaml.h>, but that commit did not add the search
+> path for <yaml.h>. If /usr/include/yaml.h does not exist, it fails to
+> build. A user can explicitly pass HOSTCFLAGS to work around it, but
+> the policy is not consistent.
+> 
+> There are two ways to deal with libraries in a non-default location.
+> 
+> [1] Use HOSTCFLAGS and HOSTLDFLAGS for additional search paths for
+>     headers and libraries.
+>     They are documented in Documentation/kbuild/kbuild.rst
+> 
+>     $ make HOSTCFLAGS='-I <prefix>/include' HOSTLDFLAGS='-L <prefix>/lib'
+> 
+> [2] Use pkg-config
+> 
+>     'pkg-config --cflags' for querying the header search path
+>     'pkg-config --libs'   for querying the lib and its path
+> 
+> If we go with pkg-config, use [2] consistently. Do not mix up
+> [1] and [2].
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  scripts/dtc/Makefile | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> index b5a5b1c..b49dfea 100644
-> --- a/scripts/dtc/Makefile
-> +++ b/scripts/dtc/Makefile
-> @@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
->  endif
->  HOST_EXTRACFLAGS += -DNO_YAML
->  else
-> +ifeq ($(wildcard /usr/include/yaml.h),)
-> +HOST_EXTRACFLAGS += -DNO_YAML
-> +else
->  dtc-objs       += yamltree.o
->  HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
->  endif
-> +endif
->
->  # Generated files need one more search path to include headers in source tree
->  HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
-> --
-> 1.9.1
->
+> 
+>  scripts/dtc/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+
+Sorry, missed this one. Now applied for 5.8.
+
+Rob
