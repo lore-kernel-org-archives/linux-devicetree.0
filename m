@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853B1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57ED7206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E73F206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663139;
-	bh=xM1ntgsRqTxDriNXGFqvuAhtnMxp+m2fLoum72+rqno=;
+	s=default; t=1591663158;
+	bh=zjxfOe4pKKBJrhJOeTzaHRdyYwbM0wUQuUKpouCfJ5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p5A5CC6Bn7hID+tRFFs7lpVX3Pk42caP8EtVCd7UUrmRtSuXIpJJYhdag7WgOv3jd
-	 OtijMhoOD3igIEmVoG7gfWnZVUskCNUfFNzIMEweIi6m1l/4rnnF9V8nJBGuKHXHkD
-	 0Mex0Kj08YjpgyTv9CQsku2k8oALcu5GOPGb/ufA=
+	b=JKXASfexhfARiOCHAQGE9+pDXWOxtf7ABsx2cHWOfOuJzX2OfNjLOuafMhXC2/PY9
+	 haYprfDWgPMsarUsAEVgcZo57httXEHD2tRLPdgqc7us5cxerqp4cuPVhINcVTBSs7
+	 9Ykn6pwCtTL88IQQ9yM3UXz7VvNQZwtrdTryA1LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgFHXN0 (ORCPT
+        id S1730270AbgFIAi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33154 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729348AbgFHXNY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:24 -0400
+        id S1729386AbgFHXN2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 570D3214F1;
-        Mon,  8 Jun 2020 23:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 234452151B;
+        Mon,  8 Jun 2020 23:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658004;
-        bh=xM1ntgsRqTxDriNXGFqvuAhtnMxp+m2fLoum72+rqno=;
+        s=default; t=1591658007;
+        bh=zjxfOe4pKKBJrhJOeTzaHRdyYwbM0wUQuUKpouCfJ5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VpAl5rLgn6ZIR6an72xlLKjJQijn3He+rfjIXAEaFR95CSGXlMp/b+DQeJNiWT95T
-         o/qAwD7GKvt8sDnI4mnOBbT5cl3R+ZGYSEae4Jcmeo3NqFflm9++DTQXDLsIMlFc+u
-         kl5GdXvBAST8ilDiljhzKFyRmBbI17eyLeWuU+Zk=
+        b=feUt2CLgWmvaKKqh/7EDgogRqem6wVp2I3Hj/GB0xBn0RYIeJAw1DCgMZkaK4/1LQ
+         e3SkXJxHTGS4EqFfzAUWZntEUXRS9cjbcReamWvmjCoWzsfflPXc1w/kVZCOwXJb/F
+         cOL1oUkGItowkAPvl27Xw/haxgtDnlnn3CMeFS0k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 060/606] arm64: dts: rockchip: Replace RK805 PMIC node name with "pmic" on rk3328 boards
-Date:   Mon,  8 Jun 2020 19:03:05 -0400
-Message-Id: <20200608231211.3363633-60-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 063/606] ARM: dts: r8a73a4: Add missing CMT1 interrupts
+Date:   Mon,  8 Jun 2020 19:03:08 -0400
+Message-Id: <20200608231211.3363633-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,53 +59,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 83b994129fb4c18a8460fd395864a28740e5e7fb upstream.
+commit 0f739fdfe9e5ce668bd6d3210f310df282321837 upstream.
 
-In some board device tree files, "rk805" was used for the RK805 PMIC's
-node name. However the policy for device trees is that generic names
-should be used.
+The R-Mobile APE6 Compare Match Timer 1 generates 8 interrupts, one for
+each channel, but currently only 1 is described.
+Fix this by adding the missing interrupts.
 
-Replace the "rk805" node name with the generic "pmic" name.
-
-Fixes: 1e28037ec88e ("arm64: dts: rockchip: add rk805 node for rk3328-evb")
-Fixes: 955bebde057e ("arm64: dts: rockchip: add rk3328-rock64 board")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Link: https://lore.kernel.org/r/20200327030414.5903-3-wens@kernel.org
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: f7b65230019b9dac ("ARM: shmobile: r8a73a4: Add CMT1 node")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200408090926.25201-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts    | 2 +-
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-index 49c4b96da3d4..6abc6f4a86cf 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-@@ -92,7 +92,7 @@ &gmac2phy {
- &i2c1 {
- 	status = "okay";
- 
--	rk805: rk805@18 {
-+	rk805: pmic@18 {
- 		compatible = "rockchip,rk805";
- 		reg = <0x18>;
- 		interrupt-parent = <&gpio2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index 62936b432f9a..304fad1a0b57 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -169,7 +169,7 @@ &hdmiphy {
- &i2c1 {
- 	status = "okay";
- 
--	rk805: rk805@18 {
-+	rk805: pmic@18 {
- 		compatible = "rockchip,rk805";
- 		reg = <0x18>;
- 		interrupt-parent = <&gpio2>;
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index a5cd31229fbd..a3ba722a9d7f 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -131,7 +131,14 @@ i2c5: i2c@e60b0000 {
+ 	cmt1: timer@e6130000 {
+ 		compatible = "renesas,r8a73a4-cmt1", "renesas,rcar-gen2-cmt1";
+ 		reg = <0 0xe6130000 0 0x1004>;
+-		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
 -- 
 2.25.1
 
