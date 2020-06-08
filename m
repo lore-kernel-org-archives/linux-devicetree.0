@@ -3,96 +3,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14893C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 11:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06703C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 12:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E23422076A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 11:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBDC206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 12:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgFHLlx (ORCPT
+        id S1729642AbgFHMGW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729648AbgFHLlw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 07:41:52 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75210C08C5C2;
-        Mon,  8 Jun 2020 04:41:51 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 04F81100A8787;
-        Mon,  8 Jun 2020 13:41:49 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 99FFD43A8E1; Mon,  8 Jun 2020 13:41:48 +0200 (CEST)
-Date:   Mon, 8 Jun 2020 13:41:48 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200608114148.4bau4mdcvwgf25ut@wunner.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Mon, 8 Jun 2020 08:06:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8828 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729620AbgFHMGW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 08:06:22 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058C4Q96145904;
+        Mon, 8 Jun 2020 08:05:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31hmpwrj2f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 08:05:21 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058C5DwW150022;
+        Mon, 8 Jun 2020 08:05:17 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31hmpwrgxs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 08:05:16 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058C162I023522;
+        Mon, 8 Jun 2020 12:02:31 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 31g2s81kfd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 12:02:31 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058C2SIj47775812
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 12:02:28 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C857EA405C;
+        Mon,  8 Jun 2020 12:02:28 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C0B5A4068;
+        Mon,  8 Jun 2020 12:02:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.150])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jun 2020 12:02:25 +0000 (GMT)
+Message-ID: <1591617744.4638.42.camel@linux.ibm.com>
+Subject: Re: [v1 PATCH 1/2] Refactoring carrying over IMA measuremnet logs
+ over Kexec.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva@linux.microsoft.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, robh+dt@kernel.org,
+        frowand.list@gmail.com, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, pasha.tatashin@soleen.com,
+        allison@lohutok.net, kstewart@linuxfoundation.org,
+        takahiro.akashi@linaro.org, tglx@linutronix.de,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
+        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        balajib@linux.microsoft.com
+Date:   Mon, 08 Jun 2020 08:02:24 -0400
+In-Reply-To: <20200607233323.22375-2-prsriva@linux.microsoft.com>
+References: <20200607233323.22375-1-prsriva@linux.microsoft.com>
+         <20200607233323.22375-2-prsriva@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_11:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0
+ cotscore=-2147483648 spamscore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=945
+ priorityscore=1501 phishscore=0 clxscore=1011 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080093
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 12:11:11PM +0100, Robin Murphy wrote:
-> And all in code that has at least one obvious inefficiency left on
-> the table either way.
+Hi Prakhar,
 
-Care to submit a patch to overcome that inefficiency?
+On Sun, 2020-06-07 at 16:33 -0700, Prakhar Srivastava wrote:
+> This patch moves the non-architecture specific code out of powerpc and
+>  adds to security/ima. 
+> Update the arm64 and powerpc kexec file load paths to carry the IMA measurement
+> logs.
 
+From your patch description, this patch should be broken up.  Moving
+the non-architecture specific code out of powerpc should be one patch.
+ Additional support should be in another patch.  After each patch, the
+code should work properly.
 
-> This thread truly epitomises Knuth's "premature optimisation" quote... ;)
+Before posting patches, please review them, making sure
+unnecessary/unwanted changes haven't crept in - commenting out code,
+moving code without removing the original code.
 
-The thread came about because it can be determined at compile time
-whether the interrupt is going to be shared:
+thanks,
 
-On the BCM2835 (Raspberry Pi 1), CONFIG_ARCH_MULTI_V6 is set and this
-SoC doesn't have multiple bcm2835-spi instances, so no shared interrupt.
-
-The question is how to discern BCM2836/BCM2837 (Raspberry Pi 2/3), which
-do not have multiple instances, and BCM2711 (Raspberry Pi 4) which does.
-
-The Raspberry Pi Foundation compiles BCM2711 kernels with CONFIG_ARM_LPAE=y,
-but Florian considered that kludgy as a discriminator and opted for
-runtime-detection via the compatible string instead.  If you've got
-a better idea please come forward.
-
-Is "optimize shared IRQ support away if IS_ENABLED(CONFIG_ARCH_MULTI_V6),
-else leave it in" the best we can do?
-
-Thanks,
-
-Lukas
+Mimi
