@@ -2,229 +2,146 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB869C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBA0C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B08F206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5E8206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="kmYb5HcY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FcmK3W9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgFHJL5 (ORCPT
+        id S1729202AbgFHJRu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:11:57 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:8838 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgFHJL5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:11:57 -0400
-IronPort-SDR: pt4Yf9i22onVgCSOPow4dHUvGHzBkNVrdZiiLBXDO/NAjl8EX4eM7r8zVp9MdQHVVdg4zhsPsB
- /0XG8U8hH3wJME//zCTHJy/9bvIMoaEZCge0IlMgYDOO7uq5+ExzXxij4Y3gV7UKjHyk1TU0DV
- 0ndI3mImEuGS/snk27gGIisFLCeTBZvYMV0526lPeVEMYDU0r3VwOTPgbyhLTmyaRwbSs4SnMY
- Em63hAXkICDQUTnuRvRjqFd7jKJ/ADd08jZWyT/ZrASCTZH/bAKkDXr97mAOudiG/WGZiNrlKY
- Sac=
-X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
-   d="scan'208";a="12590295"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 08 Jun 2020 11:11:50 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 08 Jun 2020 11:11:50 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 08 Jun 2020 11:11:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591607510; x=1623143510;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VO1nBoZ7bk+RpVUra77pdQ1hNhawpKwhlNaeLjq1Wlc=;
-  b=kmYb5HcYnCb+9YaQp7TQ3X3LUwp5MZNFP1I4e9bzlq7oxxrtIKI1Pldx
-   5ouiEGi5mTeMQZHiBlCTgca9J7ccKSw9hflMEmAsUkEY7l8yAnRNpX7oQ
-   8S1xLttFMKRupN/7naEKWsqbqrxBoO+OAHoG4YLVHEWstKSfcn/GHZIMQ
-   DfO9cdFhQ8xyZpTDJo/GxO+/N761OqUMNtwDVvq5JZR78Fm1u6LLzCYyG
-   KtaCd1pt0YPTJ7WFUUkPeX1skgk9ubf79DlWqQQIcmNr60NWGup6K3opf
-   +vZtSotEG65FokY0AnJKmQEa0xu2M+BJwAHM8VS4D44pw8fcIYhZPs26f
-   Q==;
-IronPort-SDR: X5HsuEcNtuxhNljrHQjK2/+JUOAce/IvfRUV8SuQElkUf9b3h1paR88R0dMlq223kofmaNcKAE
- kniR/1qtpDx4pVQ/E8mYzZESdFpfDsE9SyVDqQ3RRldYuLo2ga+O5HmA1JLnwNz2xhGvm88h2g
- kx2WwAEBOqWgL96vI1lilIJ5JUO06bRLr8K7+VL/0RF8fEP0sntVOScyx5zPQdjYF9przdKSpO
- 9PDmzS3IfRC3HBC2Aj3gPQhcGM/6lIXn1qapKHmY4sNUYnRdk8c05VaqIzxzeDt7gG0XCwBw9X
- T90=
-X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
-   d="scan'208";a="12590294"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 08 Jun 2020 11:11:50 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 3D110280065;
-        Mon,  8 Jun 2020 11:11:56 +0200 (CEST)
-Message-ID: <1b1b16ed993f5418f17e33dc291f13b83fa7b328.camel@ew.tq-group.com>
-Subject: Re: (EXT) [PATCH v9 RESEND 00/13] add ecspi ERR009165 for i.mx6/7
- soc family
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, mark.rutland@arm.com,
-        broonie@kernel.org, robh+dt@kernel.org, catalin.marinas@arm.com,
-        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com
-Date:   Mon, 08 Jun 2020 11:11:48 +0200
-In-Reply-To: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 8 Jun 2020 05:17:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729163AbgFHJRq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 05:17:46 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE598C08C5C4
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 02:17:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id p5so16523912wrw.9
+        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 02:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Lm/JhSU6WIUD9liaClHiq2/rbC+K/Ls1HtNWMD1Nn2A=;
+        b=FcmK3W9ITgW61d17rdHrRaPjerQ/Zh5mw4c44iJ75UtbSzKwd9ySNyhyPDuGMRTLxq
+         2H6QaFZW+s365p8SysfF3q8kg99qujIAIP4GhnqyzQnLjlHXspbg5JEahrzJ78nWEnGF
+         aRcrfKcxTNzXNxRKNmmJpBF0AB/+tPCe22GtOBCWMYTUXilPvW8Lvxdki1cX49ScKgUK
+         BRySgoCAhcZNHORHpL3uFQgs1EBb0AUcAEA6HciCJVGjMtZEHTCkbSjntdhWzJH7kes7
+         Dd7a2aUhqxsr62MAVe8R4uHDvOXyCJ9+YQ+PtOW1FMOHbhRtoJzpV3wFSqG9ChnILtxd
+         lRMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Lm/JhSU6WIUD9liaClHiq2/rbC+K/Ls1HtNWMD1Nn2A=;
+        b=jGifBJW35mH2udlR5XGHXRBPbLJyqbhzKcbviJQhMJ6r4XwXnjZG6IC3BvIH/2Qe4W
+         hpbZhNEsZRfdo5MzTxV7g0iEbY57DW0oy4J9Iy6Wn/Y68cyXiDuFbuLpBAMCkSlEOk5c
+         MZatNx1v5z6XyqKF2Q+JyyD2an4kGvx2jGb01A5AUNaO7qFTnwkyMaOBBdmbiV/YZx6Y
+         QUvPCx2EIU5vmE31WTlGnj7HGwr2tW0Y4E1RT4NvnC1OTktfSQ59ns6GRvRJHz+eBpa+
+         RCbBEInMLHiHpqHS0rZSBWsQToZSg/LumokCkkUSI6uoZgAJkyzf6spiYS2GgSGoHcpg
+         EXIA==
+X-Gm-Message-State: AOAM533i5tssjEv5sQzkrnhb3nIgAsVVraIbhk5rPTKIzl4khavkuyNE
+        Z5kcK4qqrlO8h+7udnB/qzkYnw==
+X-Google-Smtp-Source: ABdhPJy5nApKLg7sAnx1p1z/S0XJC5YRyMc2U//Q+srm6fnQM91nzIe3TXIUUym4iQ5GereEV0LpJg==
+X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr21990314wrt.159.1591607864362;
+        Mon, 08 Jun 2020 02:17:44 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:22:5867:d2c6:75f4])
+        by smtp.gmail.com with ESMTPSA id t7sm22732326wrq.41.2020.06.08.02.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:17:43 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     lee.jones@linaro.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, daniel.lezcano@linaro.org,
+        devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/5] dt-bindings: mfd: add Khadas Microcontroller bindings
+Date:   Mon,  8 Jun 2020 11:17:35 +0200
+Message-Id: <20200608091739.2368-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200608091739.2368-1-narmstrong@baylibre.com>
+References: <20200608091739.2368-1-narmstrong@baylibre.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 2020-06-07 at 07:21 +0800, Robin Gong wrote:
-> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information
-> from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is
-> adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma
-> instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should
-> be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including
-> i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8
-> chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
-> errata
-> or not.
-> The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha
-> could
-> have the chance to test this patch set if could fix their issues.
-> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
+This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+boards.
 
+It has multiple boot control features like password check, power-on
+options, power-off control and system FAN control on recent boards.
 
-Tested-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/mfd/khadas,mcu.yaml   | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
 
-
-> 
-> PS:
->    Please get sdma firmware from below linux-firmware and copy it to
-> your
-> local rootfs /lib/firmware/imx/sdma.
-> 
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
-> 
-> v2:
->   1.Add commit log for reverted patches.
->   2.Add comment for 'ecspi_fixed' in sdma driver.
->   3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
->     rather than remove.
-> v3:
->   1.Confirm with design team make sure ERR009165 fixed on
-> i.mx6ul/i.mx6ull
->     /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy
-> chips.
->     Correct dts related dts patch in v2.
->   2.Clean eratta information in binding doc and new 'tx_glitch_fixed'
-> flag
->     in spi-imx driver to state ERR009165 fixed or not.
->   3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in
-> the
->     errata workaroud, thus improve performance as possible.
-> v4:
->   1.Add Ack tag from Mark and Vinod
->   2.Remove checking 'event_id1' zero as 'event_id0'.
-> v5:
->   1.Add the last patch for compatible with the current uart driver
-> which
->     using rom script, so both uart ram script and rom script
-> supported
->     in latest firmware, by default uart rom script used. UART driver
->     will be broken without this patch.
-> v6:
->   1.Resend after rebase the latest next branch.
->   2.Remove below No.13~No.15 patches of v5 because they were
-> mergered.
->   	ARM: dts: imx6ul: add dma support on ecspi
->   	ARM: dts: imx6sll: correct sdma compatible
->   	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
->   3.Revert "dmaengine: imx-sdma: fix context cache" since
->     'context_loaded' removed.
-> v7:
->   1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix
-> context
->     cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma:
-> refine
->     to load context only once" so that no building waring during
-> comes out
->     during bisect.
->   2.Address Sascha's comments, including eliminating any i.mx6sx in
-> this
->     series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and
-> taking
->     care SMC bit for PIO.
->   3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
->    'spi: imx: add new i.mx6ul compatible name in binding doc'
-> v8:
->   1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and
-> merge
->     it into 04/13 of v7
->   2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for
-> no any
->     ecspi function broken even if sdma firmware not updated.
->   3.merge 'tx.dst_maxburst' changes in the two continous patches into
-> one
->     patch to avoid confusion.
->   4.fix typo 'duplicated'.
-> v9:
->   1. add "spi: imx: add dma_sync_sg_for_device after fallback from
-> dma"
->      to fix the potential issue brought by commit bcd8e7761ec9("spi:
-> imx:
->      fallback to PIO if dma setup failure") which is the only one
-> patch
->      of v8 merged. Thanks Matthias for reporting:
->      
-> https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
->   2. remove 05/13 of v8 "spi: imx:fallback to PIO if dma setup
-> failure"
->      since it's been merged.
-> 
-> Robin Gong (13):
->   spi: imx: add dma_sync_sg_for_device after fallback from dma
->   Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
->   Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
->   Revert "dmaengine: imx-sdma: refine to load context only once"
->   dmaengine: imx-sdma: remove duplicated sdma_load_context
->   dmaengine: imx-sdma: add mcu_2_ecspi script
->   spi: imx: fix ERR009165
->   spi: imx: remove ERR009165 workaround on i.mx6ul
->   spi: imx: add new i.mx6ul compatible name in binding doc
->   dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
->   dma: imx-sdma: add i.mx6ul compatible name
->   dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
->   dmaengine: imx-sdma: add uart rom script
-> 
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
->  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
->  arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
->  drivers/dma/imx-sdma.c                             | 67
-> ++++++++++++--------
->  drivers/spi/spi-imx.c                              | 73
-> +++++++++++++++++++---
->  include/linux/platform_data/dma-imx-sdma.h         |  8 ++-
->  7 files changed, 120 insertions(+), 40 deletions(-)
-> 
+diff --git a/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+new file mode 100644
+index 000000000000..a3b976f101e8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/khadas,mcu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Khadas on-board Microcontroller Device Tree Bindings
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |
++  Khadas embeds a microcontroller on their VIM and Edge boards adding some
++  system feature as PWM Fan control (for VIM2 rev14 or VIM3), User memory
++  storage, IR/Key resume control, system power LED control and more.
++
++properties:
++  compatible:
++    enum:
++      - khadas,mcu # MCU revision is discoverable
++
++  "#cooling-cells": # Only needed for boards having FAN control feature
++    const: 2
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      khadas_mcu: system-controller@18 {
++        compatible = "khadas,mcu";
++        reg = <0x18>;
++        #cooling-cells = <2>;
++      };
++    };
+-- 
+2.22.0
 
