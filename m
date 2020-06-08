@@ -2,246 +2,99 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA22C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 18:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11609C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6F12076A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 18:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYuLeFsF"
+	by mail.kernel.org (Postfix) with ESMTP id CB2C42068D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591643380;
+	bh=ScyHgiTEWVsjSltSHfU5CEirBNfWdqcMaSWHrvzGXI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QO7HD+JT0PU0T3NUrWD8oFQWhmoG+JJ4WkEB3qSFPoDHHFfGR80c14am2YejDTSeI
+	 Jsv9FuuijmpaqAsUd6Ua6jyEcdSwYDAFHlYtVvL2+C4xsuzLvtB1i4oWClcJ7rEO+/
+	 fTzvM9zNLOGd9aYxjsBGVlL84hd2cngDZMil4fmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgFHS45 (ORCPT
+        id S1726403AbgFHTJk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgFHS4z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 14:56:55 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C0CC08C5C5
-        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 11:56:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l26so550688wme.3
-        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 11:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bbezwn5gwDlTS6iFB4r9mviI0BHif4uVVFtQV600W10=;
-        b=bYuLeFsFLMkDx3qZeqjTwTuymeICsPggctKvZNcicEBsCT6pD6pMA7MDedxcCgxxxv
-         DaXRWn69Tos6NjXf9n4UhHrwGd5gC47tLeiiskVQVlVn7tUdf+gKVD++b2pSx6mjt0Wt
-         /GROQLIkv8ERRIXfaTl+IBNn5ySBixDUBCavUZXD4GOr2RPx8jv98AlcXxuFAvV8TSzH
-         uUzKSnqPFAIyr30pkKt7Dm8kolIvPkY4GfLVcdkgaBEz6LXVbdJwTjtf+/4f8Isg7P1S
-         KORdnXpCjh3OH33CQNPDcXraPiI3zvS0de9sedU66a7jPu3xIf4o9mtqTrhWJsUZrxQa
-         4t6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bbezwn5gwDlTS6iFB4r9mviI0BHif4uVVFtQV600W10=;
-        b=cdCVd/I5lg4D0jGPOKdNsO9sZE/VllDKj6YKXQOo/dQZGUv2No1r1HmmQk+mjLwdHq
-         kPRIuSydx8aeCs2uVOk25EDE5HJSWS9CPEKCrLkWJ0Way3c1g2DhCOzkLcQXph0Vot+C
-         geS6usBb/42DPIKRQxsIzmmBBfaz6UlKeU1993bISnKiWDCvS3Ct6kqtjjFaiIdIqZqe
-         R7SJalt3k29/fQGTGA1cuybb1MZ3VHeG3HFSHeBka4pAo+Qbeqsp8tlaEcSiSA7GpMMB
-         d2VJqb21ykzJFflp9vWQIN+I7to+i7DeiTDoLuyS2+djtNvXBduaGcj9TgcwrRlkPFYD
-         chdQ==
-X-Gm-Message-State: AOAM530fQRIiz7Ab9d6WVpKvAamRgR82AD/3r+o0AgH36oSBrl+EDstX
-        70WOPp8/xWlAbl4z98zfygpmnw==
-X-Google-Smtp-Source: ABdhPJyiWUVMEiOfAXAeFrqmYgqJgRJgWv1aBrPn0d5IckEE0fOBQCHvZfLUDwPo686MnqwrE6u1gg==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr135522wmd.138.1591642613825;
-        Mon, 08 Jun 2020 11:56:53 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id l17sm431519wmi.16.2020.06.08.11.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:56:53 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 19:56:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200608185651.GD4106@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+        Mon, 8 Jun 2020 15:09:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgFHTJk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 15:09:40 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A929206A4;
+        Mon,  8 Jun 2020 19:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591643379;
+        bh=ScyHgiTEWVsjSltSHfU5CEirBNfWdqcMaSWHrvzGXI0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0HI5Qf2uaXoyxIZbmo9cCzld6vkS4PF2GJEARZqh4lxJgpuIWeDBvJW0VA7kP5N4b
+         Vym17/Nx2BSqAbtk8/vIlLBm9muAWf5aCWxC2xSHASLij6u+JsSqS24Diielz58iZf
+         DH9B6v3YP3mO1YrKO15+8WP+zAjs0QAFoItkyqYo=
+Received: by mail-oi1-f180.google.com with SMTP id s21so16334265oic.9;
+        Mon, 08 Jun 2020 12:09:39 -0700 (PDT)
+X-Gm-Message-State: AOAM531So9dIYcMx0uaae4v+31WjztEIkfJz+YyzrGaieJuOGVdswzrP
+        H3KW0rLO0GocM/8yFUobgeGNOyXJrsib6CJhmw==
+X-Google-Smtp-Source: ABdhPJy4Vp6GDix7BLisOjJclsiusfBkLpi//arVNwprm8DvK2iq5xKeK5uY+f9/ewYrYnZiFE4QNF7QCSWvtL+McUo=
+X-Received: by 2002:aca:6004:: with SMTP id u4mr690754oib.106.1591643378869;
+ Mon, 08 Jun 2020 12:09:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+References: <20200608084117.4563-1-jiping.ma2@windriver.com>
+In-Reply-To: <20200608084117.4563-1-jiping.ma2@windriver.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 8 Jun 2020 13:09:27 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
+Message-ID: <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
+Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
+To:     Jiping Ma <jiping.ma2@windriver.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 08 Jun 2020, Michael Walle wrote:
+On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
+>
+> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
+> it fails to build.
 
-> Am 2020-06-08 12:02, schrieb Andy Shevchenko:
-> > +Cc: some Intel people WRT our internal discussion about similar
-> > problem and solutions.
-> > 
-> > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > 
-> > ...
-> > 
-> > > Right.  I'm suggesting a means to extrapolate complex shared and
-> > > sometimes intertwined batches of register sets to be consumed by
-> > > multiple (sub-)devices spanning different subsystems.
-> > > 
-> > > Actually scrap that.  The most common case I see is a single Regmap
-> > > covering all child-devices.
-> > 
-> > Yes, because often we need a synchronization across the entire address
-> > space of the (parent) device in question.
-> > 
-> > >  It would be great if there was a way in
-> > > which we could make an assumption that the entire register address
-> > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > > each of the devices described by its child-nodes.  Probably by picking
-> > > up on the 'simple-mfd' compatible string in the first instance.
-> > > 
-> > > Rob, is the above something you would contemplate?
-> > > 
-> > > Michael, do your register addresses overlap i.e. are they intermingled
-> > > with one another?  Do multiple child devices need access to the same
-> > > registers i.e. are they shared?
-> 
-> No they don't overlap, expect for maybe the version register, which is
-> just there once and not per function block.
+Does this patch fix your issue?:
 
-Then what's stopping you having each device Regmap their own space?
+https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
 
-The issues I wish to resolve using 'simple-mfd' are when sub-devices
-register maps overlap and intertwine.
 
-> > > > > > But, there is more in my driver:
-> > > > > >  (1) there is a version check
-> > > 
-> > > If we can rid the Regmap dependency, then creating an entire driver to
-> > > conduct a version check is unjustifiable.  This could become an inline
-> > > function which is called by each of the sub-devices instead, for
-> > > example.
-> 
-> sounds good to me. (although there would then be a probe fail per sub-device
-> if the version is not supported)
-
-I don't see an issue with that.  I would put that check inside a
-shared call though, complete with support for locking.
-
-> > > > > >  (2) there is another function for which there is no suitable linux
-> > > > > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > > > > >      attributes for: This controller supports 16 non-volatile
-> > > > > >      configuration bits. (this is still TBD)
-> > > 
-> > > There is a place for everything in Linux.
-> > > 
-> > > What do these bits configure?
-> 
-> - hardware strappings which have to be there before the board powers up,
->   like clocking mode for different SerDes settings
-> - "keep-in-reset" bits for onboard peripherals if you want to save power
-> - disable watchdog bits (there is a watchdog which is active right from
->   the start and supervises the bootloader start and switches to failsafe
->   mode if it wasn't successfully started)
-> - special boot modes, like eMMC, etc.
-> 
-> Think of it as a 16bit configuration word.
-
-And you wish for users to be able to view these at run-time?
-
-Can they adapt any of them on-the-fly or will the be RO?
-
-> > > > > TBH I'd also say that the enumeration of the subdevices for this
-> > > > > device should be in the device rather than the DT, they don't
-> > > > > seem to be things that exist outside of this one device.
-> > > >
-> > > > We're going circles here, formerly they were enumerated in the MFD.
-> > > > Yes, they are devices which aren't likely be used outside a
-> > > > "sl28cpld", but there might there might be other versions of the
-> > > > sl28cpld with other components on different base addresses. I
-> > > > don't care if they are enumerated in DT or MFD, actually, I'd
-> > > > prefer the latter. _But_ I would like to have the device tree
-> > > > properties for its subdevices, e.g. the ones for the watchdog or
-> > > > whatever components there might be in the future.
-> > > 
-> > > [...]
-> > > 
-> > > > MFD core can
-> > > > match a device tree node today; but only one per unique compatible
-> > > > string. So what should I use to differentiate the different
-> > > > subdevices?
-> > > 
-> > > Right.  I have been aware of this issue.  The only suitable solution
-> > > to this would be to match on 'reg'.
-> 
-> see below (1)
-> 
-> > > 
-> > > FYI: I plan to fix this.
-> > > 
-> > > If your register map needs to change, then I suggest that this is
-> > > either a new device or at least a different version of the device and
-> > > would also have to be represented as different (sub-)mfd_cell.
-> > > 
-> > > > Rob suggested the internal offset, which I did here.
-> > > 
-> > > FWIW, I don't like this idea.  DTs should not have to be modified
-> > > (either in the first instance or subsequently) or specifically
-> > > designed to patch inadequacies in any given OS.
-> 
-> How does (1) play together with this? What do you propose the "reg"
-> property should contain?
-
-Whatever is in the 'reg' property contained in the Device Tree node.
-Either the full address or an offset would be suitable.
-
-Caveat: All this thinking has been done on-the-fly.  I would need to
-look at some examples of existing devices and start coding before I
-could really think the solution through.
-
-Happy to discuss and/or take recommendations though.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> ---
+>  scripts/dtc/Makefile | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> index b5a5b1c..b49dfea 100644
+> --- a/scripts/dtc/Makefile
+> +++ b/scripts/dtc/Makefile
+> @@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
+>  endif
+>  HOST_EXTRACFLAGS += -DNO_YAML
+>  else
+> +ifeq ($(wildcard /usr/include/yaml.h),)
+> +HOST_EXTRACFLAGS += -DNO_YAML
+> +else
+>  dtc-objs       += yamltree.o
+>  HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
+>  endif
+> +endif
+>
+>  # Generated files need one more search path to include headers in source tree
+>  HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
+> --
+> 1.9.1
+>
