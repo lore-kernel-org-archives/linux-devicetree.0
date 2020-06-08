@@ -2,532 +2,130 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1F6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 05:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD8CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 06:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966202076A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 05:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207932076C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 06:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="pnsh1c1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgFHFv5 (ORCPT
+        id S1728966AbgFHGja (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 01:51:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:42875 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbgFHFv5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 01:51:57 -0400
-IronPort-SDR: RomAWwPM3Fpw0sjlV6HRWQ0DKHZX8KZf1HMmIbSVHd5p5rlgdC+X/zrmn41byGLlD19XPbAIiI
- bMOo+PIPs19w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 22:51:40 -0700
-IronPort-SDR: x23D/Uyio/lhPuI9FDBfZLoJbX0vP8Wq2gUSrJsDkICVqC4ZXgsNJqcVLyvgMfLt2rrlNSI1Ov
- TbRU8Lnm9tmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="379319103"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Jun 2020 22:51:37 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        robbh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH 2/2] watchdog: intel: Watchdog timer support on Lightning Mountain
-Date:   Mon,  8 Jun 2020 13:49:40 +0800
-Message-Id: <220609c6aec3dbd06585897ddcfdde277c823cac.1591584255.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1591584255.git.eswara.kota@linux.intel.com>
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1591584255.git.eswara.kota@linux.intel.com>
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
+        Mon, 8 Jun 2020 02:39:30 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:58930 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726929AbgFHGja (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 02:39:30 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Jun 2020 02:39:28 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1591598369; x=1623134369;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=U5aWbGgfeLqvVdcOkQcSA+UTkQNRY5DfGB4faJBfE4Y=;
+  b=pnsh1c1H03eMJPN7kyWzywdsf8agw/zqZ3o6X0+stXhi290Trb0vw4RE
+   R9N0JFUI7EgiqbxEnMYktc6NzXDQcCPeJSwk+MpHIlKiHIQVGF9qFtzDd
+   jWbrPCz8/QSxQu3dpXEe+hbiVMsrT6Qz9tvWl8KX3doymc86lztb9/nEV
+   TGNS4MmKhp0ZckLFgh8FLkMOIQQW2jK9Iu8pmfRjrIIOXk3Rl6SxE0zxa
+   wJ+r2clPpie0DuSY8mnRlr2THtcZNOf+hIgarVabDN3QBkMtaa634yVOx
+   WY+ubZ0I0TBbecNSzzMN/hfyET/NSPFEHrFuCDuSsmLW1b0Px+JH+S1zL
+   w==;
+IronPort-SDR: zLZG1io8aNx3EVCTdX7Dgsr//Wk1KtXN2Dd8zpm1nBDtSjtk45PWiYP9wdkqNpSb5hM5FN+/99
+ M3Wlod9c9r3Q==
+X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
+   d="scan'208";a="37682390"
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
+ property
+Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI386hLe6EAgAAeVQCAAZexgICBcsYA
+Date:   Mon, 8 Jun 2020 06:32:14 +0000
+Message-ID: <278a6d81562d4642631fa003c59c4e4876050f54.camel@diehl.com>
+References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
+         <20200316124851.6303-3-Denis.Osterland@diehl.com>
+         <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
+         <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
+         <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
+In-Reply-To: <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C81CD59B97894247A79E3BF08DCD8F04@diehl.internal>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-TrailerSkip: 1
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPc0t/f4F++sVEcJNEqmL6fJTpDG/iNVDZbUM0X2Br5ZWu
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Intel Lightning Mountain SoC, General Purpose Timer Counter(GPTC)
-programmable as clocksource, real time clock or watchdog timer.
-
-This driver configures GPTC as Watchdog timer and triggers reset signal
-to CPU on timeout.
-
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
- drivers/watchdog/Kconfig              |  13 ++
- drivers/watchdog/Makefile             |   1 +
- drivers/watchdog/intel_lgm_gptc_wdt.c | 420 ++++++++++++++++++++++++++++++++++
- 3 files changed, 434 insertions(+)
- create mode 100644 drivers/watchdog/intel_lgm_gptc_wdt.c
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 0663c604bd642..8009c11e75dda 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1789,6 +1789,19 @@ config IMGPDC_WDT
- 	  To compile this driver as a loadable module, choose M here.
- 	  The module will be called imgpdc_wdt.
- 
-+config INTEL_LGM_GPTC_WDT
-+	tristate "INTEL LGM SoC Watchdog"
-+	depends on X86 || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select REGMAP
-+	select MFD_SYSCON
-+	select WATCHDOG_CORE
-+	help
-+	  Driver for Watchdog Timer on Intel Lightning Mountain SoC.
-+
-+	  To compile this driver as a loadable module, choose M here.
-+	  The module will be called intel_lgm_gptc_wdt.
-+
- config LANTIQ_WDT
- 	tristate "Lantiq SoC watchdog"
- 	depends on LANTIQ
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 6de2e4ceef190..92c99e4c46eb7 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -166,6 +166,7 @@ obj-$(CONFIG_TXX9_WDT) += txx9wdt.o
- obj-$(CONFIG_OCTEON_WDT) += octeon-wdt.o
- octeon-wdt-y := octeon-wdt-main.o octeon-wdt-nmi.o
- obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
-+obj-$(CONFIG_INTEL_LGM_GPTC_WDT) += intel_lgm_gptc_wdt.o
- obj-$(CONFIG_LOONGSON1_WDT) += loongson1_wdt.o
- obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
- obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
-diff --git a/drivers/watchdog/intel_lgm_gptc_wdt.c b/drivers/watchdog/intel_lgm_gptc_wdt.c
-new file mode 100644
-index 0000000000000..52be7cc194f8f
---- /dev/null
-+++ b/drivers/watchdog/intel_lgm_gptc_wdt.c
-@@ -0,0 +1,420 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/watchdog.h>
-+
-+#define GPTC_CLC		0x00
-+#define GPTC_CLC_SUSPEND	BIT(4)
-+#define GPTC_CLC_RMC		GENMASK(15, 8)
-+
-+/* divider 10 to produce 200 / 10 = 20 MHz clock */
-+#define CLC_RMC_DIV		10
-+
-+#define GPTC_CON(X)		(0x10 + (X) * 0x20)
-+#define GPTC_CON_CNT_UP		BIT(1)
-+#define GPTC_CON_ONESHOT	BIT(3)
-+#define GPTC_CON_EXT		BIT(4)
-+
-+#define GPTC_RUN(X)		(0x18 + (X) * 0x20)
-+#define GPTC_RUN_EN		BIT(0)
-+#define GPTC_RUN_STOP		BIT(1)
-+#define GPTC_RUN_RELOAD		BIT(2)
-+
-+#define GPTC_RLD(X)		(0x20 + (X) * 0x20)
-+#define GPTC_CNT(X)		(0x28 + (X) * 0x20)
-+
-+#define GPTC_IRNENCLR		0xF0
-+#define GPTC_IRNEN		0xF4
-+#define GPTC_IRNCR		0xFC
-+
-+/* Watchdog Timeout Reset register offset and bitfeilds */
-+#define BIA_WDT_RST_EN		0x1E0
-+#define BIA_WDT			BIT(6)
-+
-+#define MAX_TIMERID		2
-+#define MAX_CPUID		3
-+#define TIMER_MARGIN_SEC	300
-+
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started\n"
-+	" (default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-+
-+struct lgm_gptc_timer {
-+	struct lgm_gptc_wdt	*wdt_node;
-+	struct watchdog_device	wdd;
-+	unsigned int		tid;
-+	unsigned int		cpuid;
-+	unsigned int		frequency;
-+	unsigned int		cycles;
-+	bool			enable;
-+};
-+
-+struct lgm_gptc_wdt {
-+	struct device		*dev;
-+	void __iomem		*gptc_base;
-+	struct regmap		*rst_hndl;
-+	struct clk		*freqclk;
-+	struct clk		*gateclk;
-+	unsigned int		fpifreq;
-+	enum cpuhp_state	state;
-+};
-+
-+DEFINE_PER_CPU(struct lgm_gptc_timer, lgm_timer_per_cpu);
-+
-+static void lgm_gptc_wdt_cfg_timer(struct lgm_gptc_timer *timer)
-+{
-+	struct lgm_gptc_wdt *wdt_node = timer->wdt_node;
-+	void __iomem *base = wdt_node->gptc_base;
-+	u32 val;
-+
-+	val = readl(base + GPTC_CON(timer->tid));
-+	val &= ~GPTC_CON_CNT_UP;
-+	val |= GPTC_CON_EXT;
-+	val &= ~GPTC_CON_ONESHOT;
-+	writel(val, base + GPTC_CON(timer->tid));
-+	writel(U32_MAX, base + GPTC_RLD(timer->tid));
-+	writel(BIT(timer->tid * 2), base + GPTC_IRNEN);
-+}
-+
-+static void lgm_gptc_wdt_init(struct lgm_gptc_wdt *wdt_node)
-+{
-+	void __iomem *base = wdt_node->gptc_base;
-+
-+	writel(GPTC_CLC_SUSPEND | FIELD_PREP(GPTC_CLC_RMC, CLC_RMC_DIV),
-+	       base + GPTC_CLC);
-+	writel(0xFF, base + GPTC_IRNENCLR);
-+	writel(0xFF, base + GPTC_IRNCR);
-+}
-+
-+static void lgm_gptc_wdt_timer_stop(struct lgm_gptc_timer *timer)
-+{
-+	struct lgm_gptc_wdt *wdt_node = timer->wdt_node;
-+
-+	writel(GPTC_RUN_STOP, wdt_node->gptc_base + GPTC_RUN(timer->tid));
-+	regmap_write(wdt_node->rst_hndl, BIA_WDT_RST_EN, 0x00);
-+}
-+
-+static void lgm_gptc_wdt_timer_set_timeout(struct lgm_gptc_timer *timer,
-+					   u32 timeout)
-+{
-+	unsigned long cycles;
-+	struct lgm_gptc_wdt *wdt_node = timer->wdt_node;
-+
-+	cycles = timeout * timer->frequency / CLC_RMC_DIV;
-+	if (cycles > U32_MAX)
-+		cycles = U32_MAX;
-+
-+	timer->cycles = cycles;
-+	writel(cycles, wdt_node->gptc_base + GPTC_RLD(timer->tid));
-+}
-+
-+static int lgm_gptc_wdt_start(struct watchdog_device *wdt_dev)
-+{
-+	struct lgm_gptc_timer *timer = watchdog_get_drvdata(wdt_dev);
-+	struct lgm_gptc_wdt *wdt_node = timer->wdt_node;
-+	void __iomem *base = wdt_node->gptc_base;
-+	u32 val;
-+
-+	val = readl(base + GPTC_CON(timer->tid));
-+	val &= ~GPTC_CON_ONESHOT;
-+	writel(val, base + GPTC_CON(timer->tid));
-+
-+	writel(timer->cycles, base + GPTC_RLD(timer->tid));
-+	writel(GPTC_RUN_EN | GPTC_RUN_RELOAD, base + GPTC_RUN(timer->tid));
-+	writel(BIT(timer->tid * 2), base + GPTC_IRNEN);
-+
-+	/* Enable WDT reset */
-+	regmap_read(wdt_node->rst_hndl, BIA_WDT_RST_EN, &val);
-+	val |= BIT(timer->cpuid) | BIA_WDT;
-+	regmap_write(wdt_node->rst_hndl, BIA_WDT_RST_EN, val);
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_stop(struct watchdog_device *wdt_dev)
-+{
-+	struct lgm_gptc_timer *timer = watchdog_get_drvdata(wdt_dev);
-+
-+	lgm_gptc_wdt_timer_stop(timer);
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_set_timeout(struct watchdog_device *wdt_dev,
-+				    unsigned int new_timeout)
-+{
-+	struct lgm_gptc_timer *timer = watchdog_get_drvdata(wdt_dev);
-+
-+	wdt_dev->timeout = new_timeout;
-+	lgm_gptc_wdt_timer_set_timeout(timer, new_timeout);
-+
-+	return 0;
-+}
-+
-+static uint32_t lgm_gptc_wdt_get_timeleft(struct watchdog_device *wdt_dev)
-+{
-+	struct lgm_gptc_timer *timer = watchdog_get_drvdata(wdt_dev);
-+	struct lgm_gptc_wdt *wdt_node = timer->wdt_node;
-+	u32 cycles, interval;
-+
-+	cycles = readl(wdt_node->gptc_base + GPTC_CNT(timer->tid));
-+	interval = cycles / timer->frequency / CLC_RMC_DIV;
-+	dev_dbg(wdt_node->dev, "timeleft=%u cycles=%u\n", interval, cycles);
-+
-+	return interval;
-+}
-+
-+static int lgm_gptc_wdt_ping(struct watchdog_device *wdt_dev)
-+{
-+	return lgm_gptc_wdt_start(wdt_dev);
-+}
-+
-+static const struct watchdog_info lgm_gptc_wdt_info = {
-+	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.identity	= "Hardware Watchdog for Intel LGM",
-+};
-+
-+static const struct watchdog_ops lgm_gptc_wdt_ops = {
-+	.start		= lgm_gptc_wdt_start,
-+	.stop		= lgm_gptc_wdt_stop,
-+	.ping		= lgm_gptc_wdt_ping,
-+	.set_timeout	= lgm_gptc_wdt_set_timeout,
-+	.get_timeleft	= lgm_gptc_wdt_get_timeleft,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int lgm_gptc_wdt_reg_wdd(struct lgm_gptc_timer *timer)
-+{
-+	struct lgm_gptc_wdt *wdt_node  = timer->wdt_node;
-+	struct watchdog_device *wdd;
-+	int ret;
-+
-+	wdd = &timer->wdd;
-+	wdd->id = timer->cpuid;
-+	wdd->info = &lgm_gptc_wdt_info;
-+	wdd->ops = &lgm_gptc_wdt_ops;
-+	wdd->min_timeout = 1;
-+	wdd->max_timeout = U32_MAX;
-+	wdd->max_hw_heartbeat_ms = wdd->max_timeout * 1000;
-+	wdd->min_hw_heartbeat_ms = wdd->min_timeout * 1000;
-+	wdd->timeout = TIMER_MARGIN_SEC;
-+	watchdog_init_timeout(wdd, 0, wdt_node->dev);
-+	lgm_gptc_wdt_timer_set_timeout(timer, wdd->timeout);
-+	watchdog_set_drvdata(wdd, timer);
-+	watchdog_set_nowayout(wdd, nowayout);
-+	ret = watchdog_register_device(wdd);
-+	if (ret) {
-+		dev_err(wdt_node->dev,
-+			"Watchdog timer register fail: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_reg_cpu(unsigned int cpu)
-+{
-+	struct lgm_gptc_timer *timer = per_cpu_ptr(&lgm_timer_per_cpu, cpu);
-+
-+	if (!timer->enable)
-+		return 0;
-+
-+	lgm_gptc_wdt_cfg_timer(timer);
-+	lgm_gptc_wdt_reg_wdd(timer);
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_unreg_cpu(unsigned int cpu)
-+{
-+	struct lgm_gptc_timer *timer = per_cpu_ptr(&lgm_timer_per_cpu, cpu);
-+
-+	if (!timer->enable)
-+		return 0;
-+
-+	lgm_gptc_wdt_timer_stop(timer);
-+	watchdog_unregister_device(&timer->wdd);
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_clk_enable(struct lgm_gptc_wdt *wdt_node)
-+{
-+	int ret;
-+
-+	wdt_node->gateclk = devm_clk_get(wdt_node->dev, "gptc");
-+	if (IS_ERR(wdt_node->gateclk)) {
-+		ret = PTR_ERR(wdt_node->gateclk);
-+		if (ret != -EPROBE_DEFER) {
-+			dev_err(wdt_node->dev,
-+				"Failed to get gptc clk: %d\n", ret);
-+		}
-+
-+		return ret;
-+	}
-+
-+	wdt_node->freqclk = devm_clk_get(wdt_node->dev, "freq");
-+	if (IS_ERR(wdt_node->freqclk)) {
-+		ret = PTR_ERR(wdt_node->freqclk);
-+		if (ret != -EPROBE_DEFER) {
-+			dev_err(wdt_node->dev,
-+				"Failed to get freq clk: %d\n", ret);
-+		}
-+
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(wdt_node->gateclk);
-+	if (ret) {
-+		dev_err(wdt_node->dev, "Gate clk enable failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(wdt_node->freqclk);
-+	if (ret) {
-+		dev_err(wdt_node->dev, "fpi clk enable failed: %d\n", ret);
-+		clk_disable_unprepare(wdt_node->gateclk);
-+		return ret;
-+	}
-+
-+	wdt_node->fpifreq = clk_get_rate(wdt_node->freqclk);
-+
-+	return 0;
-+}
-+
-+static void lgm_gptc_wdt_clk_disable(struct lgm_gptc_wdt *wdt_node)
-+{
-+	clk_disable_unprepare(wdt_node->gateclk);
-+	clk_disable_unprepare(wdt_node->freqclk);
-+}
-+
-+static int lgm_gptc_wdt_of_parse_timer(struct lgm_gptc_wdt *wdt_node)
-+{
-+	struct device_node *np = wdt_node->dev->of_node;
-+	struct lgm_gptc_timer *timer;
-+	u32 i, nr_timers, args[4];
-+	int ret;
-+
-+	ret = of_property_read_variable_u32_array(np, "intel,timer-cfg",
-+						  args, 2, 4);
-+	if (ret < 0) {
-+		dev_err(wdt_node->dev, "Failed to get timer cfg: %d\n", ret);
-+		return ret;
-+	}
-+
-+	nr_timers = ret / 2;
-+	if (!nr_timers) {
-+		dev_err(wdt_node->dev, "No timer defined\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < nr_timers; i++) {
-+		if (args[i * 2] > MAX_TIMERID) {
-+			dev_err(wdt_node->dev,
-+				"Invalid timer id %d\n", args[i * 2]);
-+			return -EINVAL;
-+		}
-+
-+		if (args[i * 2 + 1] > MAX_CPUID) {
-+			dev_err(wdt_node->dev,
-+				"Invalid CPU-id : %d\n", args[i * 2 + 1]);
-+			return -EINVAL;
-+		}
-+
-+		timer = per_cpu_ptr(&lgm_timer_per_cpu, args[i * 2 + 1]);
-+		timer->cpuid = args[i * 2 + 1];
-+		timer->tid = args[i * 2];
-+		timer->enable = true;
-+		timer->wdt_node = wdt_node;
-+		timer->frequency = wdt_node->fpifreq;
-+		timer++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_drv_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct lgm_gptc_wdt *wdt_node;
-+	int ret;
-+
-+	wdt_node = devm_kzalloc(dev, sizeof(*wdt_node), GFP_KERNEL);
-+	if (!wdt_node)
-+		return -ENOMEM;
-+
-+	wdt_node->dev = dev;
-+	wdt_node->gptc_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(wdt_node->gptc_base))
-+		return PTR_ERR(wdt_node->gptc_base);
-+
-+	wdt_node->rst_hndl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+							     "intel,wdt-rst-hndl");
-+	if (IS_ERR(wdt_node->rst_hndl)) {
-+		dev_err(dev, "No phandle of reset controller\n");
-+		return PTR_ERR(wdt_node->rst_hndl);
-+	}
-+
-+	ret = lgm_gptc_wdt_clk_enable(wdt_node);
-+	if (ret)
-+		return ret;
-+
-+	ret = lgm_gptc_wdt_of_parse_timer(wdt_node);
-+	if (ret)
-+		return ret;
-+
-+	lgm_gptc_wdt_init(wdt_node);
-+	ret  = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "LGM GPTC WDT REG",
-+				 lgm_gptc_wdt_reg_cpu, lgm_gptc_wdt_unreg_cpu);
-+	if (ret < 0) {
-+		dev_err(dev, "CPU hotplug setup failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	wdt_node->state = ret;
-+	platform_set_drvdata(pdev, wdt_node);
-+
-+	return 0;
-+}
-+
-+static int lgm_gptc_wdt_drv_remove(struct platform_device *dev)
-+{
-+	struct lgm_gptc_wdt *wdt_node = platform_get_drvdata(dev);
-+
-+	cpuhp_remove_state(wdt_node->state);
-+	lgm_gptc_wdt_clk_disable(wdt_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_gptc_wdt_drv_match[] = {
-+	{ .compatible = "intel,lgm-gptc-wdt" },
-+	{}
-+};
-+
-+static struct platform_driver lgm_gptc_wdt_driver = {
-+	.driver		= {
-+		.name		= "intel,lgm-gptc-wdt",
-+		.of_match_table = lgm_gptc_wdt_drv_match,
-+	},
-+	.probe		= lgm_gptc_wdt_drv_probe,
-+	.remove		= lgm_gptc_wdt_drv_remove,
-+};
-+
-+module_platform_driver(lgm_gptc_wdt_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Driver for Watchdog Timer on Intel Lightning Mountain SoC");
--- 
-2.11.0
-
+SGkgSmFjZWssDQoNCmlzIHlvdXIgYWNrIHN0aWxsIHZhbGlkIGZvciB0aGUgbmV3IHZlcnNp
+b25zIG9mIHRoZSBwYXRjaC1zZXQ/DQpEdWUgdG8gdGhlIGNoYW5nZXMgSSBtYWRlLCBJIGFt
+IG5vdCBzdXJlLg0KDQpSZWdhcmRzLCBEZW5pcw0KDQpBbSBEaWVuc3RhZywgZGVuIDE3LjAz
+LjIwMjAsIDIxOjQzICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gSGkgRGVu
+aXMsDQo+IA0KPiBPbiAzLzE2LzIwIDk6MjQgUE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdy
+b3RlOg0KPiA+IEhpIEphY2VrLA0KPiA+IA0KPiA+IEFtIE1vbnRhZywgZGVuIDE2LjAzLjIw
+MjAsIDE5OjM2ICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gPiA+IEhpIERl
+bmlzLA0KPiA+ID4gDQo+ID4gPiBPbiAzLzE2LzIwIDE6NTMgUE0sIERlbmlzIE9zdGVybGFu
+ZC1IZWltIHdyb3RlOg0KPiA+IA0KPiA+IC4uLg0KPiA+ID4gPiAgDQo+ID4gPiA+IEBAIC05
+MiwxMyArOTYsMjcgQEAgc3RhdGljIGludCBsZWRfcHdtX2FkZChzdHJ1Y3QgZGV2aWNlICpk
+ZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYsDQo+ID4gPiA+ICANCj4gPiA+ID4gIAlw
+d21faW5pdF9zdGF0ZShsZWRfZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRlKTsNCj4g
+PiA+ID4gIA0KPiA+ID4gPiArCWlmIChsZWQtPmRlZmF1bHRfc3RhdGUgPT0gTEVEU19QV01f
+REVGU1RBVEVfT04pDQo+ID4gPiA+ICsJCWxlZF9kYXRhLT5jZGV2LmJyaWdodG5lc3MgPSBs
+ZWQtPm1heF9icmlnaHRuZXNzOw0KPiA+ID4gPiArCWVsc2UgaWYgKGxlZC0+ZGVmYXVsdF9z
+dGF0ZSA9PSBMRURTX1BXTV9ERUZTVEFURV9LRUVQKSB7DQo+ID4gPiA+ICsJCXVpbnQ2NF90
+IGJyaWdodG5lc3M7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkJcHdtX2dldF9zdGF0ZShsZWRf
+ZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRlKTsNCj4gPiA+IA0KPiA+ID4gVGhpcyBz
+ZWVtcyB0byBub3QgYmUgcmVhZGluZyB0aGUgZGV2aWNlIHN0YXRlLCBpLmUuIHdoYXQgeW91
+IHRyaWVkDQo+ID4gPiB0byBhZGRyZXNzIGJ5IGRpcmVjdCBjYWxsIHRvIHB3bS0+Y2hpcC0+
+b3BzLT5nZXRfc3RhdGUoKSBiZWZvcmUuDQo+ID4gPiANCj4gPiA+IEFtIEkgbWlzc2luZyBz
+b21ldGhpbmc/DQo+ID4gPiANCj4gPiANCj4gPiB3ZWxsLCBub3QgeW91LCBidXQgSSBtaXNz
+ZWQgY2ZjNGMxODliYzcwYjFhY2MxN2U2ZjFhYmYxZGMxYzBhZTg5MGJkOC4NCj4gPiBTaW5j
+ZSB0aGlzIGNvbW1pdCBwd21fZ2V0X3N0YXRlKCkgaXMgc3VmZmljaWVudC4NCj4gDQo+IEkg
+YXNzdW1lIHlvdSB0ZXN0ZWQgaXQ/DQo+IA0KPiBXaXRoIHRoYXQsIGZvciB0aGUgd2hvbGUg
+c2V0Og0KPiANCj4gQWNrZWQtYnk6IEphY2VrIEFuYXN6ZXdza2kgPGphY2VrLmFuYXN6ZXdz
+a2lAZ21haWwuY29tPg0KPiANCg0KDQpEaWVobCBDb25uZWN0aXZpdHkgU29sdXRpb25zIEdt
+YkgNCkdlc2Now6RmdHNmw7xocnVuZzogSG9yc3QgTGVvbmJlcmdlcg0KU2l0eiBkZXIgR2Vz
+ZWxsc2NoYWZ0OiBOw7xybmJlcmcgLSBSZWdpc3RlcmdlcmljaHQ6IEFtdHNnZXJpY2h0DQpO
+w7xybmJlcmc6IEhSQiAzMjMxNQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fDQoNCkRlciBJbmhhbHQgZGVyIHZvcnN0ZWhlbmRlbiBFLU1haWwgaXN0
+IG5pY2h0IHJlY2h0bGljaCBiaW5kZW5kLiBEaWVzZSBFLU1haWwgZW50aGFlbHQgdmVydHJh
+dWxpY2hlIHVuZC9vZGVyIHJlY2h0bGljaCBnZXNjaHVldHp0ZSBJbmZvcm1hdGlvbmVuLg0K
+SW5mb3JtaWVyZW4gU2llIHVucyBiaXR0ZSwgd2VubiBTaWUgZGllc2UgRS1NYWlsIGZhZWxz
+Y2hsaWNoZXJ3ZWlzZSBlcmhhbHRlbiBoYWJlbi4gQml0dGUgbG9lc2NoZW4gU2llIGluIGRp
+ZXNlbSBGYWxsIGRpZSBOYWNocmljaHQuDQpKZWRlIHVuZXJsYXVidGUgRm9ybSBkZXIgUmVw
+cm9kdWt0aW9uLCBCZWthbm50Z2FiZSwgQWVuZGVydW5nLCBWZXJ0ZWlsdW5nIHVuZC9vZGVy
+IFB1Ymxpa2F0aW9uIGRpZXNlciBFLU1haWwgaXN0IHN0cmVuZ3N0ZW5zIHVudGVyc2FndC4N
+Ci0gSW5mb3JtYXRpb25lbiB6dW0gRGF0ZW5zY2h1dHosIGluc2Jlc29uZGVyZSB6dSBJaHJl
+biBSZWNodGVuLCBlcmhhbHRlbiBTaWUgdW50ZXIgaHR0cHM6Ly93d3cuZGllaGwuY29tL2dy
+b3VwL2RlL3RyYW5zcGFyZW56LXVuZC1pbmZvcm1hdGlvbnNwZmxpY2h0ZW4vDQoNClRoZSBj
+b250ZW50cyBvZiB0aGUgYWJvdmUgbWVudGlvbmVkIGUtbWFpbCBpcyBub3QgbGVnYWxseSBi
+aW5kaW5nLiBUaGlzIGUtbWFpbCBjb250YWlucyBjb25maWRlbnRpYWwgYW5kL29yIGxlZ2Fs
+bHkgcHJvdGVjdGVkIGluZm9ybWF0aW9uLiBQbGVhc2UgaW5mb3JtIHVzIGlmIHlvdSBoYXZl
+IHJlY2VpdmVkIHRoaXMgZS1tYWlsIGJ5DQptaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3Vj
+aCBhIGNhc2UuIEVhY2ggdW5hdXRob3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwg
+YWx0ZXJhdGlvbiwgZGlzdHJpYnV0aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUt
+bWFpbCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiANCi0gRm9yIGdlbmVyYWwgaW5mb3JtYXRp
+b24gb24gZGF0YSBwcm90ZWN0aW9uIGFuZCB5b3VyIHJlc3BlY3RpdmUgcmlnaHRzIHBsZWFz
+ZSB2aXNpdCBodHRwczovL3d3dy5kaWVobC5jb20vZ3JvdXAvZW4vdHJhbnNwYXJlbmN5LWFu
+ZC1pbmZvcm1hdGlvbi1vYmxpZ2F0aW9ucy8NCg==
