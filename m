@@ -2,282 +2,106 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43630C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F23C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2925520774
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EACB20814
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:08:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0WRHvJzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbgFHQC1 (ORCPT
+        id S1730504AbgFHQIK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:02:27 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57392 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730231AbgFHQC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:02:27 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jiKE0-0004S9-Ux; Mon, 08 Jun 2020 18:02:13 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH] net: phy: mscc: handle the clkout control on some phy variants
-Date:   Mon,  8 Jun 2020 18:02:07 +0200
-Message-Id: <20200608160207.1316052-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.26.2
+        Mon, 8 Jun 2020 12:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730357AbgFHQIK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 12:08:10 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB631C08C5C2;
+        Mon,  8 Jun 2020 09:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7VoRl6qQlPxAENq4swBjnhUVEexaLc0WppnAtA1JmcY=; b=0WRHvJzJToSgd8Xjgr1TW5lNh
+        f6sbLcPfQYlR930Di+98noAUh6OtZQe7W6tdF6mQgk3nI3Of8xrxCVr8ots3PjNSAuSaGxDPlB5+a
+        UZ3dzCTg/NReHWAwOA/J1G49dKJtwWy8u0XbEGN/XncsysEekP+B5WOP0+96wJ2SmnwIWBov2+QLY
+        PeEfH4tSH0f4AZfr8n16AhQaXDXP/8lpYc4QjE+MpNYTG5fygyCk4ISApJJ/VXtWutflbFMcbPhoB
+        WYDkjXyaopMoJI+WASx25CpQynsHz75ghL4IRBZmFlCn/uV1SkeUnMCGTxjsge7bQRG4NsdRY9ZhC
+        dOQyVdQhQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:51000)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jiKJf-0000c8-OJ; Mon, 08 Jun 2020 17:08:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jiKJd-0002CW-W7; Mon, 08 Jun 2020 17:08:02 +0100
+Date:   Mon, 8 Jun 2020 17:08:01 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
+Message-ID: <20200608160801.GO1551@shell.armlinux.org.uk>
+References: <20200608074716.9975-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608074716.9975-1-s.hauer@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Mon, Jun 08, 2020 at 09:47:16AM +0200, Sascha Hauer wrote:
+> The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
+> called DRSGMII.
+> 
+> This patch adds a corresponding phy-mode string 'drsgmii' and parses it
+> from DT. The MVNETA then configures the SERDES protocol value
+> accordingly.
+> 
+> It was successfully tested on a MV78460 connected to a FPGA.
 
-At least VSC8530/8531/8540/8541 contain a clock output that can emit
-a predefined rate of 25, 50 or 125MHz.
+Digging around, this is Armada XP?  Which SoCs is this mode supported?
+There's no mention of DRSGMII in the A38x nor A37xx documentation which
+are later than Armada XP.
 
-This may then feed back into the network interface as source clock.
-So follow the example the at803x already set and introduce a
-vsc8531,clk-out-frequency property to set that output.
+What exactly is "drsgmii"?  It can't be "double-rate" SGMII because that
+would give you 2Gbps max instead of the 1Gbps, but this gives 2.5Gbps,
+so I'm really not sure using "drsgmii" is a good idea.  It may be what
+Marvell call it, but we really need to know if there's some vendor
+neutral way to refer to it.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- .../bindings/net/mscc-phy-vsc8531.txt         |  3 +
- drivers/net/phy/mscc/mscc.h                   |  9 ++
- drivers/net/phy/mscc/mscc_main.c              | 93 +++++++++++++++++--
- 3 files changed, 98 insertions(+), 7 deletions(-)
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  .../devicetree/bindings/net/ethernet-controller.yaml       | 1 +
+>  drivers/net/ethernet/marvell/mvneta.c                      | 7 ++++++-
+>  include/linux/phy.h                                        | 3 +++
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> This patch has already been sent 3 years ago here:
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20170123142206.5390-1-jlu@pengutronix.de/
+> Since then the driver has evolved a lot. 2.5Gbps is properly configured in the
+> MAC now.
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 5ff37c68c941..4a1f50ae48e1 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -1,6 +1,8 @@
- * Microsemi - vsc8531 Giga bit ethernet phy
- 
- Optional properties:
-+- vsc8531,clk-out-frequency: Clock output frequency in Hertz.
-+			  Should be one of 25000000, 50000000, 125000000
- - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
- 			  in the first row of Table 1 (below).
- 			  This property is only used in combination
-@@ -63,6 +65,7 @@ Example:
- 
-         vsc8531_0: ethernet-phy@0 {
-                 compatible = "ethernet-phy-id0007.0570";
-+                vsc8531,clk-out-frequency = <125000000>;
-                 vsc8531,vddmac		= <3300>;
-                 vsc8531,edge-slowdown	= <7>;
-                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
-diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-index 414e3b31bb1f..c8c395a041c2 100644
---- a/drivers/net/phy/mscc/mscc.h
-+++ b/drivers/net/phy/mscc/mscc.h
-@@ -218,6 +218,13 @@ enum rgmii_clock_delay {
- #define INT_MEM_DATA_M			  0x00ff
- #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
- 
-+#define MSCC_CLKOUT_CNTL		  13
-+#define CLKOUT_ENABLE			  BIT(15)
-+#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
-+#define CLKOUT_FREQ_25M			  (0x0 << 13)
-+#define CLKOUT_FREQ_50M			  (0x1 << 13)
-+#define CLKOUT_FREQ_125M		  (0x2 << 13)
-+
- #define MSCC_PHY_PROC_CMD		  18
- #define PROC_CMD_NCOMPLETED		  0x8000
- #define PROC_CMD_FAILED			  0x4000
-@@ -361,6 +368,8 @@ struct vsc8531_private {
- 	 */
- 	unsigned int base_addr;
- 
-+	u32 clkout_rate;
-+
- #if IS_ENABLED(CONFIG_MACSEC)
- 	/* MACsec fields:
- 	 * - One SecY per device (enforced at the s/w implementation level)
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index c8aa6d905d8e..8e63af3628cd 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -432,6 +432,18 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- 	return led_mode;
- }
- 
-+static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *priv = phydev->priv;
-+	struct device *dev = &phydev->mdio.dev;
-+	struct device_node *of_node = dev->of_node;
-+
-+	if (!of_node)
-+		return;
-+
-+	of_property_read_u32(of_node, "vsc8531,clk-out-frequency",
-+			     &priv->clkout_rate);
-+}
- #else
- static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- {
-@@ -444,6 +456,10 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- {
- 	return default_mode;
- }
-+
-+static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
-+{
-+}
- #endif /* CONFIG_OF_MDIO */
- 
- static int vsc85xx_dt_led_modes_get(struct phy_device *phydev,
-@@ -1540,6 +1556,37 @@ static int vsc85xx_config_init(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int vsc8531_config_init(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531 = phydev->priv;
-+	u16 val;
-+	int rc;
-+
-+	rc = vsc85xx_config_init(phydev);
-+	if (rc)
-+		return rc;
-+
-+	switch (vsc8531->clkout_rate) {
-+	case 0:
-+		val = 0;
-+		break;
-+	case 25000000:
-+		val = CLKOUT_FREQ_25M | CLKOUT_ENABLE;
-+		break;
-+	case 50000000:
-+		val = CLKOUT_FREQ_50M | CLKOUT_ENABLE;
-+		break;
-+	case 125000000:
-+		val = CLKOUT_FREQ_125M | CLKOUT_ENABLE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
-+			       MSCC_CLKOUT_CNTL, val);
-+}
-+
- static int vsc8584_did_interrupt(struct phy_device *phydev)
- {
- 	int rc = 0;
-@@ -2008,6 +2055,38 @@ static int vsc8514_probe(struct phy_device *phydev)
- 	return vsc85xx_dt_led_modes_get(phydev, default_mode);
- }
- 
-+static int vsc8531_probe(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531;
-+	int rate_magic;
-+	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
-+	   VSC8531_LINK_100_ACTIVITY};
-+
-+	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
-+	if (rate_magic < 0)
-+		return rate_magic;
-+
-+	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
-+	if (!vsc8531)
-+		return -ENOMEM;
-+
-+	phydev->priv = vsc8531;
-+
-+	vsc8531->rate_magic = rate_magic;
-+	vsc8531->nleds = 2;
-+	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
-+	vsc8531->hw_stats = vsc85xx_hw_stats;
-+	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
-+	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-+				      sizeof(u64), GFP_KERNEL);
-+	if (!vsc8531->stats)
-+		return -ENOMEM;
-+
-+	vsc8531_dt_clkout_rate_get(phydev);
-+
-+	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-+}
-+
- static int vsc8574_probe(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531;
-@@ -2174,14 +2253,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask	= 0xfffffff0,
- 	/* PHY_BASIC_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init	= &vsc85xx_config_init,
-+	.config_init	= &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt	= &vsc85xx_ack_interrupt,
- 	.config_intr	= &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2198,14 +2277,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask    = 0xfffffff0,
- 	/* PHY_GBIT_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init    = &vsc85xx_config_init,
-+	.config_init    = &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2222,14 +2301,14 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask	= 0xfffffff0,
- 	/* PHY_BASIC_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init	= &vsc85xx_config_init,
-+	.config_init	= &vsc8531_config_init,
- 	.config_aneg	= &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt	= &vsc85xx_ack_interrupt,
- 	.config_intr	= &vsc85xx_config_intr,
- 	.suspend	= &genphy_suspend,
- 	.resume		= &genphy_resume,
--	.probe		= &vsc85xx_probe,
-+	.probe		= &vsc8531_probe,
- 	.set_wol	= &vsc85xx_wol_set,
- 	.get_wol	= &vsc85xx_wol_get,
- 	.get_tunable	= &vsc85xx_get_tunable,
-@@ -2246,7 +2325,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.phy_id_mask    = 0xfffffff0,
- 	/* PHY_GBIT_FEATURES */
- 	.soft_reset	= &genphy_soft_reset,
--	.config_init    = &vsc85xx_config_init,
-+	.config_init    = &vsc8531_config_init,
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.read_status	= &vsc85xx_read_status,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
+Nevertheless, adding a new interface mode needs properly documenting to
+describe exactly what it is - see Documentation/networking/phy.rst, the
+section "PHY interface modes".  The above point about "what is this"
+illustrates why we need these documented.
+
 -- 
-2.26.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
