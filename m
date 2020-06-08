@@ -2,497 +2,208 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397F4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 21:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A43C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 22:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E95452068D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 21:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948A32076A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 22:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PGGAngSc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dO10ptso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgFHVlj (ORCPT
+        id S1726820AbgFHWDL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgFHVlj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 17:41:39 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0759DC08C5C2;
-        Mon,  8 Jun 2020 14:41:38 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 970F72C9;
-        Mon,  8 Jun 2020 23:41:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591652494;
-        bh=HtVBglGqAbX0nEWRyRTZe4v19VYryUeGRmhTu6v15Gg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PGGAngScOyGI6Ws1zVC7wZeedScB7CTG00XuQqRP2rFYLuWpUY+RXrl3WXIpoQoG/
-         /VMbwOWdW17pmm5sXL0W2VIyUBxKRqidxdzcfBiGu8WLI985gMYk3MuG2qSfzBw3kN
-         cqfv1kJ3f7CK5sdJDdRZeppSlpxIOXr1N57m/jiE=
-Date:   Tue, 9 Jun 2020 00:41:15 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>, tfiga@google.com,
-        pavel@ucw.cz,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        Niklas Soderlund <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v7 03/11] dt-bindings: video-interface: Replace
- 'rotation' description
-Message-ID: <20200608214115.GR5896@pendragon.ideasonboard.com>
-References: <20200318205034.949531-1-jacopo@jmondi.org>
- <20200318205034.949531-4-jacopo@jmondi.org>
- <20200608100903.GZ16711@paasikivi.fi.intel.com>
+        Mon, 8 Jun 2020 18:03:11 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60474 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgFHWDK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 18:03:10 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058M32Zn093885;
+        Mon, 8 Jun 2020 17:03:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591653782;
+        bh=eRUtPW0QBmP/Wad9C0UjnXKV9cgYgomFL1Ha0Of+0Tk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dO10ptsoswLMNsmjagNSKfpu7imkdGItj2fFt+uUhQCMUV9ze6LfMh/0S62t1cgvM
+         rbdDW7A80/s+BqFZYGG/EgRsAkIdyMCXhBkEYJxhjCulZRT5lgOySYMSwcyo7z4NXN
+         yz+aUbN30iS0k5jzacYqu8U8OWGr9sq7kL6GKh2U=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058M32uI041039
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jun 2020 17:03:02 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
+ 2020 17:03:02 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 8 Jun 2020 17:03:02 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058M31Ur051625;
+        Mon, 8 Jun 2020 17:03:01 -0500
+Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, <od@zcrc.me>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+ <20200515104340.10473-3-paul@crapouillou.net>
+ <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
+ <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
+Date:   Mon, 8 Jun 2020 17:03:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200608100903.GZ16711@paasikivi.fi.intel.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Paul,
 
-On Mon, Jun 08, 2020 at 01:09:03PM +0300, Sakari Ailus wrote:
-> Hi Jacopo,
+On 5/22/20 12:11 PM, Paul Cercueil wrote:
+> Hi Suman,
 > 
-> Thank you for this great piece of ASCII art. Also my apologies for
-> reviewing this so late. The latest version is 11 but I believe the content
-> is the same on the commented matters.
+> Le ven. 22 mai 2020 à 11:47, Suman Anna <s-anna@ti.com> a écrit :
+>> Hi Paul,
+>>
+>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
+>>> Call pm_runtime_get_sync() before the firmware is loaded, and
+>>> pm_runtime_put() after the remote processor has been stopped.
+>>>
+>>> Even though the remoteproc device has no PM callbacks, this allows the
+>>> parent device's PM callbacks to be properly called.
+>>
+>> I see this patch staged now for 5.8, and the latest -next branch has 
+>> broken the pm-runtime autosuspend feature we have in the OMAP 
+>> remoteproc driver. See commit 5f31b232c674 ("remoteproc/omap: Add 
+>> support for runtime auto-suspend/resume").
+>>
+>> What was the original purpose of this patch, because there can be 
+>> differing backends across different SoCs.
 > 
-> On Wed, Mar 18, 2020 at 09:50:26PM +0100, Jacopo Mondi wrote:
-> > Replace the 'rotation' property description by providing a definition
-> > relative to the camera sensor pixel array coordinate system and the
-> > captured scene.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Co-developed-by: Niklas Soderlund <niklas.soderlund@ragnatech.se>
-> > 
-> > ---
-> >  .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
-> >  1 file changed, 356 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index 1211bdf80722..36e61d599f34 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -85,9 +85,362 @@ Optional properties
-> > 
-> >  - lens-focus: A phandle to the node of the focus lens controller.
-> > 
-> > -- rotation: The device, typically an image sensor, is not mounted upright,
-> > -  but a number of degrees counter clockwise. Typical values are 0 and 180
-> > -  (upside down).
-> > +- rotation: The camera rotation is expressed as the angular difference in
-> > +  degrees between two reference systems, one relative to the camera module, and
-> > +  one defined on the external world scene to be captured when projected on the
-> > +  image sensor pixel array.
-> > +
-> > +  A camera sensor has a 2-dimensional reference system 'Rc' defined by
-> > +  its pixel array read-out order. The origin is set to the first pixel
-> > +  being read out, the X-axis points along the column read-out direction
-> > +  towards the last columns, and the Y-axis along the row read-out
-> > +  direction towards the last row.
-> > +
-> > +  A typical example for a sensor with a 2592x1944 pixel array matrix
-> > +  observed from the front is
-> > +
-> > +              2591       X-axis          0
-> > +                <------------------------+ 0
-> > +                .......... ... ..........!
-> > +                .......... ... ..........! Y-axis
-> > +                           ...           !
-> > +                .......... ... ..........!
-> > +                .......... ... ..........! 1943
-> > +                                         V
-> > +
-> > +  The external world scene reference system 'Rs' is a 2-dimensional
-> > +  reference system on the focal plane of the camera module. The origin is
-> > +  placed on the top-left corner of the visible scene, the X-axis points
-> > +  towards the right, and the Y-axis points towards the bottom of the
-> > +  scene. The top, bottom, left and right directions are intentionally not
-> > +  defined and depend on the environment in which the camera is used.
-> > +
-> > +  A typical example of a (very common) picture of a shark swimming from
-> > +  left to right, as seen from the camera, is
+> Did you try pm_suspend_ignore_children()? It looks like it was made for 
+> your use-case.
+
+Sorry for the delay in getting back. So, using 
+pm_suspend_ignore_children() does fix my current issue.
+
+But I still fail to see the original purpose of this patch in the 
+remoteproc core especially given that the core itself does not have any 
+callbacks. If the sole intention was to call the parent pdev's 
+callbacks, then I feel that state-machine is better managed within that 
+particular platform driver itself, as the sequencing/device management 
+can vary with different platform drivers.
+
+regards
+Suman
+
 > 
-> In the previous paragraph, it is stated that "top, bottom, left and right
-> directions are intentionally not defined". How about something like
+> Cheers,
+> -Paul
 > 
-> 	A typical example of a (very common) pictore of a shark swimming in
-> 	the direction of X axis, as seen from the camera, is
+>>
+>> regards
+>> Suman
+>>
+>>>
+>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>> ---
+>>>
+>>> Notes:
+>>>      v2-v4: No change
+>>>      v5: Move calls to prepare/unprepare to rproc_fw_boot/rproc_shutdown
+>>>      v6: Instead of prepare/unprepare callbacks, use PM runtime 
+>>> callbacks
+>>>      v7: Check return value of pm_runtime_get_sync()
+>>>
+>>>   drivers/remoteproc/remoteproc_core.c | 17 ++++++++++++++++-
+>>>   1 file changed, 16 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c 
+>>> b/drivers/remoteproc/remoteproc_core.c
+>>> index a7f96bc98406..e33d1ef27981 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -29,6 +29,7 @@
+>>>   #include <linux/devcoredump.h>
+>>>   #include <linux/rculist.h>
+>>>   #include <linux/remoteproc.h>
+>>> +#include <linux/pm_runtime.h>
+>>>   #include <linux/iommu.h>
+>>>   #include <linux/idr.h>
+>>>   #include <linux/elf.h>
+>>> @@ -1382,6 +1383,12 @@ static int rproc_fw_boot(struct rproc *rproc, 
+>>> const struct firmware *fw)
+>>>       if (ret)
+>>>           return ret;
+>>>   +    ret = pm_runtime_get_sync(dev);
+>>> +    if (ret < 0) {
+>>> +        dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>>       dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>>>         /*
+>>> @@ -1391,7 +1398,7 @@ static int rproc_fw_boot(struct rproc *rproc, 
+>>> const struct firmware *fw)
+>>>       ret = rproc_enable_iommu(rproc);
+>>>       if (ret) {
+>>>           dev_err(dev, "can't enable iommu: %d\n", ret);
+>>> -        return ret;
+>>> +        goto put_pm_runtime;
+>>>       }
+>>>         rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
+>>> @@ -1435,6 +1442,8 @@ static int rproc_fw_boot(struct rproc *rproc, 
+>>> const struct firmware *fw)
+>>>       rproc->table_ptr = NULL;
+>>>   disable_iommu:
+>>>       rproc_disable_iommu(rproc);
+>>> +put_pm_runtime:
+>>> +    pm_runtime_put(dev);
+>>>       return ret;
+>>>   }
+>>>   @@ -1840,6 +1849,8 @@ void rproc_shutdown(struct rproc *rproc)
+>>>         rproc_disable_iommu(rproc);
+>>>   +    pm_runtime_put(dev);
+>>> +
+>>>       /* Free the copy of the resource table */
+>>>       kfree(rproc->cached_table);
+>>>       rproc->cached_table = NULL;
+>>> @@ -2118,6 +2129,9 @@ struct rproc *rproc_alloc(struct device *dev, 
+>>> const char *name,
+>>>         rproc->state = RPROC_OFFLINE;
+>>>   +    pm_runtime_no_callbacks(&rproc->dev);
+>>> +    pm_runtime_enable(&rproc->dev);
+>>> +
+>>>       return rproc;
+>>>   }
+>>>   EXPORT_SYMBOL(rproc_alloc);
+>>> @@ -2133,6 +2147,7 @@ EXPORT_SYMBOL(rproc_alloc);
+>>>    */
+>>>   void rproc_free(struct rproc *rproc)
+>>>   {
+>>> +    pm_runtime_disable(&rproc->dev);
+>>>       put_device(&rproc->dev);
+>>>   }
+>>>   EXPORT_SYMBOL(rproc_free);
+>>>
+>>
 > 
-> > +
-> > +               0               X-axis
-> > +             0 +------------------------------------->
-> > +               !
-> > +               !
-> > +               !
-> > +               !           |\____)\___
-> > +               !           ) _____  __`<
-> > +               !           |/     )/
-> > +               !
-> > +               !
-> > +               !
-> > +               V
-> > +             Y-axis
-> > +
-> > +  With the reference system 'Rs' placed on the camera focal plane.
-> > +
-> > +                                  ¸.·˙!
-> > +                              ¸.·˙    !
-> > +                  _       ¸.·˙        !
-> > +               +-/ \-+¸.·˙            !
-> > +               | (o) |                ! Camera focal plane
-> > +               +-----+˙·.¸            !
-> > +                          ˙·.¸        !
-> > +                              ˙·.¸    !
-> > +                                  ˙·.¸!
-> > +
-> > +  When projected on the sensor's pixel array, the image and the associated
-> > +  reference system 'Rs' are typically (but not always) inverted, due to
-> > +  the camera module's lens optical inversion effect.
-> > +
-> > +  Assuming the above represented scene of the swimming shark, the lens
-> > +  inversion projects the scene and its reference system onto the sensor
-> > +  pixel array, seen from the front of the camera sensor, as follow
-> > +
-> > +            Y-axis
-> > +               ^
-> > +               !
-> > +               !
-> > +               !
-> > +               !            |\_____)\__
-> > +               !            ) ____  ___.<
-> > +               !            |/    )/
-> > +               !
-> > +               !
-> > +               !
-> > +             0 +------------------------------------->
-> > +               0               X-axis
-> > +
-> > +  Note the shark being upside-down.
 > 
-> As it's inverted, wouldn't the same happen on the X axis as well?
 
-There's a double inversion. The lens will invert the image along both
-axes, but this picture shows the image as projected on the camera
-sensor, while the previous image showed the scene when looking from the
-camera sensor. As humans have a tendency to turn their head in the
-horizontal plane and not the vertical plane when they want to look
-behind them, switching from looking towards the scene to looking towards
-the sensor inverts the X axis. The end result is that only the Y axis is
-inverted.
-
-> > +
-> > +  The resulting projected reference system is named 'Rp'.
-> > +
-> > +  The camera rotation property is then defined as the angular difference
-> > +  in the counter-clockwise direction between the camera reference system
-> > +  'Rc' and the projected scene reference system 'Rp'. It is expressed in
-> > +  degrees as a number in the range [0, 360[.
-> > +
-> > +  Examples
-> > +
-> > +  0 degrees camera rotation
-> > +
-> > +
-> > +                    Y-Rp
-> > +                     ^
-> > +              Y-Rc   !
-> > +               ^     !
-> > +               !     !
-> > +               !     !
-> > +               !     !
-> > +               !     !
-> > +               !     !
-> > +               !     !
-> > +               !     !
-> > +               !   0 +------------------------------------->
-> > +               !     0               X-Rp
-> > +             0 +------------------------------------->
-> > +               0               X-Rc
-> > +
-> > +
-> > +                                X-Rc                0
-> > +               <------------------------------------+ 0
-> > +                           X-Rp                 0   !
-> > +           <------------------------------------+ 0 !
-> > +                                                !   !
-> > +                                                !   !
-> > +                                                !   !
-> > +                                                !   !
-> > +                                                !   !
-> > +                                                !   !
-> > +                                                !   !
-> > +                                                !   V
-> > +                                                !  Y-Rc
-> > +                                                V
-> > +                                               Y-Rp
-> > +
-> > +  90 degrees camera rotation
-> > +
-> > +               0        Y-Rc
-> > +             0 +-------------------->
-> > +               !   Y-Rp
-> > +               !    ^
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !  0 +------------------------------------->
-> > +               !    0              X-Rp
-> > +               !
-> > +               !
-> > +               !
-> > +               !
-> > +               V
-> > +              X-Rc
-> > +
-> > +  180 degrees camera rotation
-> > +
-> > +                                            0
-> > +       <------------------------------------+ 0
-> > +                        X-Rc                !
-> > +              Y-Rp                          !
-> > +               ^                            !
-> > +               !                            !
-> > +               !                            !
-> > +               !                            !
-> > +               !                            !
-> > +               !                            !
-> > +               !                            !
-> > +               !                            V
-> > +               !                           Y-Rc
-> > +             0 +------------------------------------->
-> > +               0              X-Rp
-> > +
-> > +  270 degrees camera rotation
-> > +
-> > +               0        Y-Rc
-> > +             0 +-------------------->
-> > +               !                                        0
-> > +               !    <-----------------------------------+ 0
-> > +               !                    X-Rp                !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        !
-> > +               !                                        V
-> > +               !                                       Y-Rp
-> > +               !
-> > +               !
-> > +               !
-> > +               !
-> > +               V
-> > +              X-Rc
-> > +
-> > +
-> > +  Example one - Webcam
-> > +
-> > +  A camera module installed on the user facing part of a laptop screen
-> > +  casing used for video calls. The captured images are meant to be
-> > +  displayed in landscape mode (width > height) on the laptop screen.
-> > +
-> > +  The camera is typically mounted upside-down to compensate the lens
-> > +  optical inversion effect.
-> > +
-> > +                    Y-Rp
-> > +              Y-Rc   ^
-> > +               ^     !
-> > +               !     !
-> > +               !     !       |\_____)\__
-> > +               !     !       ) ____  ___.<
-> > +               !     !       |/    )/
-> > +               !     !
-> > +               !     !
-> > +               !     !
-> > +               !   0 +------------------------------------->
-> > +               !     0           X-Rp
-> > +             0 +------------------------------------->
-> > +               0            X-Rc
-> > +
-> > +  The two reference systems are aligned, the resulting camera rotation is
-> > +  0 degrees, no rotation correction needs to be applied to the resulting
-> > +  image once captured to memory buffers to correctly display it to users.
-> > +
-> > +               +--------------------------------------+
-> > +               !                                      !
-> > +               !                                      !
-> > +               !                                      !
-> > +               !             |\____)\___              !
-> > +               !             ) _____  __`<            !
-> > +               !             |/     )/                !
-> > +               !                                      !
-> > +               !                                      !
-> > +               !                                      !
-> > +               +--------------------------------------+
-> > +
-> > +  If the camera sensor is not mounted upside-down to compensate for the
-> > +  lens optical inversion, the two reference systems will not be aligned,
-> > +  with 'Rp' being rotated 180 degrees relatively to 'Rc'.
-> 
-> I'd say the camera is mounted upright (rotation 0) if the image it produces
-> is read from the top-left corner towards the bottom. That is what the
-> current rotation property refers to, and I don't think we can change that
-> anymore.
-
-The camera module is mounted upright, while the camera sensor is mounted
-upside-down :-)
-
-> Note that the lens is a part of the camera (or camera module). Could this
-> be defined for the camera module instead, to be compatible with the
-> existing definition and to take the entire lens system in the module into
-> account?
-
-This documentation intentionally defines rotation using a scene
-reference and a camera sensor reference in order to take the lens (and
-anything else between the two) into account.
-
-> > +
-> > +
-> > +                        X-Rc                0
-> > +       <------------------------------------+ 0
-> > +                                            !
-> > +              Y-Rp                          !
-> > +               ^                            !
-> > +               !                            !
-> > +               !       |\_____)\__          !
-> > +               !       ) ____  ___.<        !
-> > +               !       |/    )/             !
-> > +               !                            !
-> > +               !                            !
-> > +               !                            V
-> > +               !                           Y-Rc
-> > +             0 +------------------------------------->
-> > +               0            X-Rp
-> > +
-> > +  The image once captured to memory will then be rotated by 180 degrees
-> > +
-> > +               +--------------------------------------+
-> > +               !                                      !
-> > +               !                                      !
-> > +               !                                      !
-> > +               !              __/(_____/|             !
-> > +               !            >.___  ____ (             !
-> > +               !                 \(    \|             !
-> > +               !                                      !
-> > +               !                                      !
-> > +               !                                      !
-> > +               +--------------------------------------+
-> > +
-> > +  A software rotation correction of 180 degrees should be applied to
-> > +  correctly display the image.
-> > +
-> > +               +--------------------------------------+
-> > +               !                                      !
-> > +               !                                      !
-> > +               !                                      !
-> > +               !             |\____)\___              !
-> > +               !             ) _____  __`<            !
-> > +               !             |/     )/                !
-> > +               !                                      !
-> > +               !                                      !
-> > +               !                                      !
-> > +               +--------------------------------------+
-> > +
-> > +  Example two - Phone camera
-> > +
-> > +  A camera installed on the back side of a mobile device facing away from
-> > +  the user. The captured images are meant to be displayed in portrait mode
-> > +  (height > width) to match the device screen orientation and the device
-> > +  usage orientation used when taking the picture.
-> > +
-> > +  The camera sensor is typically mounted with its pixel array longer side
-> > +  aligned to the device longer side, upside-down mounted to compensate for
-> > +  the lens optical inversion effect.
-> > +
-> > +               0        Y-Rc
-> > +             0 +-------------------->
-> > +               !   Y-Rp
-> > +               !    ^
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !    !            |\_____)\__
-> > +               !    !            ) ____  ___.<
-> > +               !    !            |/    )/
-> > +               !    !
-> > +               !    !
-> > +               !    !
-> > +               !  0 +------------------------------------->
-> > +               !    0                X-Rp
-> > +               !
-> > +               !
-> > +               !
-> > +               !
-> > +               V
-> > +              X-Rc
-> > +
-> > +  The two reference systems are not aligned and the 'Rp' reference
-> > +  system is rotated by 90 degrees in the counter-clockwise direction
-> > +  relatively to the 'Rc' reference system.
-> > +
-> > +  The image once captured to memory will be rotated.
-> > +
-> > +               +-------------------------------------+
-> > +               |                 _ _                 |
-> > +               |                \   /                |
-> > +               |                 | |                 |
-> > +               |                 | |                 |
-> > +               |                 |  >                |
-> > +               |                <  |                 |
-> > +               |                 | |                 |
-> > +               |                   .                 |
-> > +               |                  V                  |
-> > +               +-------------------------------------+
-> > +
-> > +  A correction of 90 degrees in counter-clockwise direction has to be
-> > +  applied to correctly display the image in portrait mode on the device
-> > +  screen.
-> > +
-> > +                        +--------------------+
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |   |\____)\___      |
-> > +                        |   ) _____  __`<    |
-> > +                        |   |/     )/        |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        |                    |
-> > +                        +--------------------+
-> > 
-> >  - location: The mount location of a device (typically an image sensor or a flash
-> >    LED) expressed as a position relative to the usage orientation of the system
-
--- 
-Regards,
-
-Laurent Pinchart
