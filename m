@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FEBC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487DFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7915120774
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262C62072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663162;
-	bh=mnT9exT/fvQwG63m42+9Iftl9jERWCZuns3xk0LrKSM=;
+	s=default; t=1591663178;
+	bh=iyzJrfIKvVs3kATF4wFc59OozNGRsscsxjNvpz3D/PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ocncCoZF2C6jb2yYa+JtpaNwkQE3t8uXZXvt5G0DxwPtrNBoIIw7kpL7wpqk/oGv6
-	 OUcgQdsKrJDzpne0182W9VJIW0KjnW+YpcTC8Ca+8rKiJNiVY9AO4GYzJh0DepCP8S
-	 Tlnw+ARWQ+lDPzQA82HYGpr3hfJwdAh2+m7y052U=
+	b=0ehYIC9VTdTbyiu1ZXQqTZUntdVSRxcLXaAdt9XZTDU5XsWlCljl7A75ETCVkiPzr
+	 pBSX0Ix1cx5gZSHFI22cBGfGZhXVvl+fKms0An8GS5DsQM85XW20N8UDvXzXCjex/r
+	 OzdWVPaDsBWntseqhT8EvYMAl9XSp1MuUw2pSVGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgFIAjU (ORCPT
+        id S1729007AbgFIAjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgFHXNX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:23 -0400
+        id S1729286AbgFHXNU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9BAD214D8;
-        Mon,  8 Jun 2020 23:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 559BD21532;
+        Mon,  8 Jun 2020 23:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658002;
-        bh=mnT9exT/fvQwG63m42+9Iftl9jERWCZuns3xk0LrKSM=;
+        s=default; t=1591658000;
+        bh=iyzJrfIKvVs3kATF4wFc59OozNGRsscsxjNvpz3D/PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOln4T7m5U/ly0SZ0D/VZCwGunRBH0nC6QoTmU2Xgb2dHSeNdYAG79bcYdNacSgZO
-         8XPLKDUt1SCTeVMAfFUctneNGAh7fPvmh7P3vHvJjShkHLZYceRs0TcdGXAAfCMEau
-         /loJG2eHc9C+qclLN4zsEFgH+JzQlPISmMnsC9C0=
+        b=ifLpUV/BVtBhEIVpwWWxdX06rfnjPrWtv0Ae4kDdOtQ3hcRkGZYgw/akl4LcvfpI7
+         Fv+I451y1R9fZxBNZdu+M9t0PkWxfiVuo6VjUeomu2klnTElqlqPCl4uswZJdguoU/
+         5aEPKusiHQwAraeb69h7jk6GmEC2qpmpO5szFO98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 059/606] arm64: dts: meson-g12-common: fix dwc2 clock names
-Date:   Mon,  8 Jun 2020 19:03:04 -0400
-Message-Id: <20200608231211.3363633-59-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 057/606] arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status property
+Date:   Mon,  8 Jun 2020 19:03:02 -0400
+Message-Id: <20200608231211.3363633-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -64,33 +65,40 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit e4f634d812634067b0c661af2e3cecfd629c89b8 upstream.
+commit 5ac0869fb39b1c1ba84d4d75c550f82e0bf44c96 upstream.
 
-Use the correct dwc2 clock name.
+In the process of moving the VIM3 audio nodes to a G12B specific dtsi
+for enabling the SM1 based VIM3L, the frddr_a status = "okay" property
+got dropped.
+This re-enables the frddr_a node to fix audio support.
 
-Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Reported-by: Christian Hewitt <christianshewitt@gmail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Link: https://lore.kernel.org/r/20200326160857.11929-3-narmstrong@baylibre.com
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20191018140216.4257-1-narmstrong@baylibre.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index abe04f4ad7d8..eeaa95baaa10 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -2204,7 +2204,7 @@ dwc2: usb@ff400000 {
- 				reg = <0x0 0xff400000 0x0 0x40000>;
- 				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
--				clock-names = "ddr";
-+				clock-names = "otg";
- 				phys = <&usb2_phy1>;
- 				phy-names = "usb2-phy";
- 				dr_mode = "peripheral";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+index 554863429aa6..e2094575f528 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+@@ -152,6 +152,10 @@ &cpu103 {
+ 	clock-latency = <50000>;
+ };
+ 
++&frddr_a {
++	status = "okay";
++};
++
+ &frddr_b {
+ 	status = "okay";
+ };
 -- 
 2.25.1
 
