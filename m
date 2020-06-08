@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FEBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F4120774
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7915120774
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663159;
-	bh=z/VmohNmkdvkGAeptphUD4iQVkdn9sw5EBbjAsBiMks=;
+	s=default; t=1591663162;
+	bh=mnT9exT/fvQwG63m42+9Iftl9jERWCZuns3xk0LrKSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcDOksv53OG6MgUp3tVfQi/QueNrAkdLBVGnVx0GXmnmsg19SE94mc0f2lPhANC1k
-	 5fKJEinl2opkvLx9FVEERTYv2jtw/t11y7TngLkLBzk2FBHbWOnnkJd8QgKdzJKlxK
-	 5tvQGClHPkTulLb3tlulmmVPOkDnfM8l3XoXFURU=
+	b=ocncCoZF2C6jb2yYa+JtpaNwkQE3t8uXZXvt5G0DxwPtrNBoIIw7kpL7wpqk/oGv6
+	 OUcgQdsKrJDzpne0182W9VJIW0KjnW+YpcTC8Ca+8rKiJNiVY9AO4GYzJh0DepCP8S
+	 Tlnw+ARWQ+lDPzQA82HYGpr3hfJwdAh2+m7y052U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgFIAi6 (ORCPT
+        id S1727069AbgFIAjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33210 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:39:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbgFHXN0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:26 -0400
+        id S1729332AbgFHXNX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5ED420B80;
-        Mon,  8 Jun 2020 23:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9BAD214D8;
+        Mon,  8 Jun 2020 23:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658006;
-        bh=z/VmohNmkdvkGAeptphUD4iQVkdn9sw5EBbjAsBiMks=;
+        s=default; t=1591658002;
+        bh=mnT9exT/fvQwG63m42+9Iftl9jERWCZuns3xk0LrKSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pg7v13Z/fSFemXm5XNFAVdYPRKeC4gb4dg0rY9ty034yRejEgJQ3QAufiFqv4d72r
-         dvoCz6/PHe00BZtEWogzOYpW5xFhB+Sz32jgPz5kMoPqIin1aEjl52kCotbeKQ2AXo
-         06DZaLCI84EggVADPmwgzorxLdBJr12MMj/Ereeo=
+        b=xOln4T7m5U/ly0SZ0D/VZCwGunRBH0nC6QoTmU2Xgb2dHSeNdYAG79bcYdNacSgZO
+         8XPLKDUt1SCTeVMAfFUctneNGAh7fPvmh7P3vHvJjShkHLZYceRs0TcdGXAAfCMEau
+         /loJG2eHc9C+qclLN4zsEFgH+JzQlPISmMnsC9C0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 062/606] arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
-Date:   Mon,  8 Jun 2020 19:03:07 -0400
-Message-Id: <20200608231211.3363633-62-sashal@kernel.org>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 059/606] arm64: dts: meson-g12-common: fix dwc2 clock names
+Date:   Mon,  8 Jun 2020 19:03:04 -0400
+Message-Id: <20200608231211.3363633-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,36 +62,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 15ddc3e17aec0de4c69d595b873e184432b9791d upstream.
+commit e4f634d812634067b0c661af2e3cecfd629c89b8 upstream.
 
-Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
-This patch changes to ahb clock from SDMA1_ROOT to AHB which fixes the
-timeout error.
+Use the correct dwc2 clock name.
 
-Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lore.kernel.org/r/20200326160857.11929-3-narmstrong@baylibre.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index a44b5438e842..882e913436ca 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -661,7 +661,7 @@ sdma1: dma-controller@30bd0000 {
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MN_CLK_SDMA1_ROOT>,
--					 <&clk IMX8MN_CLK_SDMA1_ROOT>;
-+					 <&clk IMX8MN_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index abe04f4ad7d8..eeaa95baaa10 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -2204,7 +2204,7 @@ dwc2: usb@ff400000 {
+ 				reg = <0x0 0xff400000 0x0 0x40000>;
+ 				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
+-				clock-names = "ddr";
++				clock-names = "otg";
+ 				phys = <&usb2_phy1>;
+ 				phy-names = "usb2-phy";
+ 				dr_mode = "peripheral";
 -- 
 2.25.1
 
