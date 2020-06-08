@@ -2,107 +2,53 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5281C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3983C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 17:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEFB82076C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 16:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0D4206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 17:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbgFHQod (ORCPT
+        id S2387526AbgFHRQi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:44:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:55066 "EHLO foss.arm.com"
+        Mon, 8 Jun 2020 13:16:38 -0400
+Received: from muru.com ([72.249.23.125]:57310 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730583AbgFHQob (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:44:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8326A1FB;
-        Mon,  8 Jun 2020 09:44:30 -0700 (PDT)
-Received: from [10.57.9.113] (unknown [10.57.9.113])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3CB63F73D;
-        Mon,  8 Jun 2020 09:44:25 -0700 (PDT)
-Subject: Re: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
- after fallback from dma
-To:     Mark Brown <broonie@kernel.org>, Robin Gong <yibin.gong@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
- <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
- <20200608143458.GH4593@sirena.org.uk>
- <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200608153139.GI4593@sirena.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
-Date:   Mon, 8 Jun 2020 17:44:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1730697AbgFHRQh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:16:37 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id D658E80E7;
+        Mon,  8 Jun 2020 17:17:28 +0000 (UTC)
+Date:   Mon, 8 Jun 2020 10:16:34 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] DRA7 timer/mailbox dts fixes
+Message-ID: <20200608171634.GK37466@atomide.com>
+References: <20200605221347.15735-1-s-anna@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200608153139.GI4593@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605221347.15735-1-s-anna@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-08 16:31, Mark Brown wrote:
-> On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
+* Suman Anna <s-anna@ti.com> [200605 15:14]:
+> Hi Tony,
 > 
->>>> +	if (transfer->rx_sg.sgl) {
->>>> +		struct device *rx_dev = spi->controller->dma_rx->device->dev;
->>>> +
->>>> +		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
->>>> +				       transfer->rx_sg.nents, DMA_TO_DEVICE);
->>>> +	}
->>>> +
+> The following 2 patches are couple of minor fixes that clean up
+> couple of commits from the "ARM: dts: dra7/am57xx: remoteproc
+> support" series [1]. Please pick these for the 5.8-rc fixes.
 > 
->>> This is confusing - why are we DMA mapping to the device after doing a PIO
->>> transfer?
-> 
->> 'transfer->rx_sg.sgl' condition check that's the case fallback PIO after DMA transfer
->> failed. But the spi core still think the buffer should be in 'device' while spi driver
->> touch it by PIO(CPU), so sync it back to device to ensure all received data flush to DDR.
-> 
-> So we sync it back to the device so that we can then do another sync to
-> CPU?  TBH I'm a bit surprised that there's a requirement that we
-> explicitly undo a sync and that a redundant double sync in the same
-> direction might be an issue but I've not had a need to care so I'm
-> perfectly prepared to believe there is.
-> 
-> At the very least this needs a comment.
+> The issues look to be result of incorrect rebase-conflict resolution
+> of the downstream TI patches based on 5.4 kernel.
 
-Yeah, something's off here - at the very least, syncing with 
-DMA_TO_DEVICE on the Rx buffer that was mapped with DMA_FROM_DEVICE is 
-clearly wrong. CONFIG_DMA_API_DEBUG should scream about that.
+Thanks applying both into fixes.
 
-If the device has written to the buffer at all since dma_map_sg() was 
-called then you do need a dma_sync_sg_for_cpu() call before touching it 
-from a CPU fallback path, but if nobody's going to touch it from that 
-point until it's unmapped then there's no point syncing it again. The 
-my_card_interrupt_handler() example in DMA-API_HOWTO.txt demonstrates this.
-
-Robin.
+Tony
