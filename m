@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29B4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65D0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A635E2064C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982652068D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 23:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658907;
-	bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
+	s=default; t=1591659470;
+	bh=Ec9E1Z1Kggiu9aSgVolMP5zrSre0Y3RZiZbp6pW4Gz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yF8jqkin6m292dlKXI1h9rcHu7hMYPgB6L4DMa1enrEsd4DizeypA+nJ3vvZqo9GB
-	 i64Q3+7eVENlDOGThywYg8Fx8XDy5kzTci5hMs1Mfe4dZ0RxFLaupGAMpK5OlxKgip
-	 8yY89fY7a7SWUdIVRy8DeIx2WI7DaRxi4jYjWCfo=
+	b=Jzdog/5OWEzStujmCNIEF14z2gfEJJjCiv54emjisTnkq1z0n+U6TXeiAWSvITVc0
+	 GOX828PXDyv41GaMioJla4u3fyGNBzT+H6PWc9hzttZVQJeoLfXExod1Xy5yiAyxrU
+	 rGFd7TGQpXftV4WYA7ckCh2yHlTzyPEfbRk37itA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbgFHX20 (ORCPT
+        id S1730629AbgFHXhh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732213AbgFHX2X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:28:23 -0400
+        id S1732241AbgFHX2l (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:28:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E0B20814;
-        Mon,  8 Jun 2020 23:28:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 846982089D;
+        Mon,  8 Jun 2020 23:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658902;
-        bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
+        s=default; t=1591658920;
+        bh=Ec9E1Z1Kggiu9aSgVolMP5zrSre0Y3RZiZbp6pW4Gz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dwkaB8kjN/lD7Jd7gfrifbwz6YVsWs/KAicFdkAkQJjsp620bjodJ4+qHZqlNkhMV
-         BpCdJnPpH2biQH5usHLU9PbLEAncoAIeFGHLXuWLdsQzdlAJVHIN9u/dkWEsFfFbG3
-         7Zke3lBvSEwWTbJhVCVsP9jYjsb/G/+zSbFdadRc=
+        b=M/ia1UA8nibxF6/m26MtEGkXNeVugPk79K0Thgh9drICPU9FybzNnKXqL+hNt9C67
+         0DmmNujX04x0WfbRE1TBXxwNZIZaANPGsqm9M8jVhOTQ2KE8vNd3iYesOS3Red9urY
+         7xkCzppnkk26TpFCqyNyCglQsvEwQKgfRH6Bjwj0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 23/37] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Mon,  8 Jun 2020 19:27:35 -0400
-Message-Id: <20200608232750.3370747-23-sashal@kernel.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 35/37] spi: dw: Return any value retrieved from the dma_transfer callback
+Date:   Mon,  8 Jun 2020 19:27:47 -0400
+Message-Id: <20200608232750.3370747-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232750.3370747-1-sashal@kernel.org>
 References: <20200608232750.3370747-1-sashal@kernel.org>
@@ -67,49 +69,67 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
+[ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
 
-Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-errors") adds cm2_causes[] array with map of error type ID and
-pointers to the short description string. There is a mistake in
-the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-claims they have {0x17,0x18} codes. This is obviously hex-dec
-copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
+DW APB SSI DMA-part of the driver may need to perform the requested
+SPI-transfer synchronously. In that case the dma_transfer() callback
+will return 0 as a marker of the SPI transfer being finished so the
+SPI core doesn't need to wait and may proceed with the SPI message
+trasnfers pumping procedure. This will be needed to fix the problem
+when DMA transactions are finished, but there is still data left in
+the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
+to return 1 as the normal dw_spi_transfer_one() method.
 
-Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Link: https://lore.kernel.org/r/20200529131205.31838-3-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/mips-cm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-dw-mid.c | 2 +-
+ drivers/spi/spi-dw.c     | 7 ++-----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 76f18c56141c..3458d23d230c 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -123,9 +123,9 @@ static char *cm2_causes[32] = {
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
- 	"0x08", "0x09", "0x0a", "0x0b",
- 	"0x0c", "0x0d", "0x0e", "0x0f",
--	"0x10", "0x11", "0x12", "0x13",
--	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
--	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
-+	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
-+	"0x14", "0x15", "0x16", "0x17",
-+	"0x18", "0x19", "0x1a", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index bd116f117b02..14902efae621 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -274,7 +274,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 		dma_async_issue_pending(dws->txchan);
+ 	}
  
+-	return 0;
++	return 1;
+ }
+ 
+ static void mid_spi_dma_stop(struct dw_spi *dws)
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 4edd38d03b93..3667f8860aaf 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -382,11 +382,8 @@ static int dw_spi_transfer_one(struct spi_master *master,
+ 
+ 	spi_enable_chip(dws, 1);
+ 
+-	if (dws->dma_mapped) {
+-		ret = dws->dma_ops->dma_transfer(dws, transfer);
+-		if (ret < 0)
+-			return ret;
+-	}
++	if (dws->dma_mapped)
++		return dws->dma_ops->dma_transfer(dws, transfer);
+ 
+ 	if (chip->poll_mode)
+ 		return poll_transfer(dws);
 -- 
 2.25.1
 
