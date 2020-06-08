@@ -6,123 +6,116 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3916DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFD8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1295E207F9
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D4E2076C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="n7l0SgK9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbcMdd/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgFHHjU (ORCPT
+        id S1726009AbgFHHqg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:39:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
+        Mon, 8 Jun 2020 03:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgFHHjT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:39:19 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA328C08C5C3
-        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:39:19 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id o5so17466813iow.8
-        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 00:39:19 -0700 (PDT)
+        with ESMTP id S1729008AbgFHHqe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:46:34 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FCCC08C5C5
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:46:34 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q11so16265644wrp.3
+        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 00:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LcwxlrO/OObtBQp//yDfIfqp8ggk2aG49WGm1nxOKD8=;
-        b=n7l0SgK9ly7tIWiC0hISkTN3Hg2xfxISuMCU9sxOQu/SbdAa1fPI6m9kQUgTIvoFM7
-         C+6iVxxUFAKeWiJsobiB8zgjj1c/oomV2+G/06e3svaycDfPnY29rAtSTIOBsnG+Bl2Y
-         F9gm0DmjVJY857Uzj+uzTUGFtSZRQjxFkrhc4=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
+        b=TbcMdd/8OOsDoTOIeYwoPHkpvrb7BLpJgvs3osnO9kgBDS52ZeSXUiVqA3cdbFfqgQ
+         j+Keb/5fI6A4lol2GJ6ijyjT5cuYD1OchuUXj4zFjT5O9U0kOCVWpub3uGIR4ix8Y4he
+         9LTLgODzbNdftzIB37a00BFCiR2bFxcMbQA44dL/XUL5uFD2NS0l4to3bE/K1fctTx0j
+         2K3o8Z/L7yYzIVoHwF6wYOfG05xBe9ZVWwdsQ4gRjdL5lRFe8YSTkdhtduLscBq/eYKi
+         58Q8jTnzbtIIt5FtaVALNA++QK8rJRqW2Uvyj29SIiBZmzT/CCw00/+UGW8ZAC0BmEPE
+         sHzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LcwxlrO/OObtBQp//yDfIfqp8ggk2aG49WGm1nxOKD8=;
-        b=B5HXhtI9uUfr+IT/Ncn4uA7yu3loIZBoLtELPPksimy5pWobxBD+XCCukkrYNa/O8b
-         e2X4GusTU8xhNbn5NE9ZCBWdhNng03vsMW1IqXkkSJr4k4JpioCYmmLBj+qC95sURWtQ
-         JQR/ndIjDBMVqcSxonEMEp9hWmcOfh+vg7QS6JghELYwXfd7toqCKqccFUgFCOLD2Kah
-         LJqFyulTOr6r6Xgv24TG7IT058gg8+K+ZXWmgqD15eRasVtu1ZzzN2H8iUQbl1cVB3Wl
-         jHKPpbTcahnCCT56p51NIg5jAWSV3KqrzQmELcetrPXfbJtExmIAdtP46jnJD7H2vMmp
-         mlZw==
-X-Gm-Message-State: AOAM531SS3bDN5NPXnWi7RQs9bEioA0XP52T5Czvjlhj2KZm3r7JQ7e+
-        lGV1PHKGYBeb62QWy9FmkmZOBtUHkwAOz3Zdg1QuzA==
-X-Google-Smtp-Source: ABdhPJzv9bSNg0c3Lb6MGeHJNsgYaaWNOKBk8ind/PzQbkI7YxOFtQHBnXFLW0ow5/C/vDqq7sQ+aZCfb1kkxDZK50U=
-X-Received: by 2002:a6b:b9d5:: with SMTP id j204mr20788375iof.38.1591601958860;
- Mon, 08 Jun 2020 00:39:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604121142.2964437-0-mholenko@antmicro.com>
- <20200604121142.2964437-5-mholenko@antmicro.com> <418aa34e-af6c-3a3c-8d22-e7a122963b8f@infradead.org>
-In-Reply-To: <418aa34e-af6c-3a3c-8d22-e7a122963b8f@infradead.org>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Mon, 8 Jun 2020 09:39:08 +0200
-Message-ID: <CAPk366SL_MPV6Y4oYvkM=cPA9n36cWd3Km9ffeHYaZ9hpC9FqA@mail.gmail.com>
-Subject: Re: [PATCH v7 5/5] drivers/tty/serial: add LiteUART driver
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ii1LpA7xPLv2wdGt5UuWPaO4p+SzGddtJEFd/ScE1mM=;
+        b=EnXTe45+QZGtD04LLfmdf394SF3oCYKUs8CC78lQ94iD3td+39gRGCUa6gRLGSO30B
+         V+o5krxsQCZ5yMiLLi1h4zsF7BYbfE8PT6GxEE8Rfqc/ucPZyOnXL5iecKPZyQ7vNfHg
+         HghWeLaFnDIYiHFOJPtA8vx8z+4JYsxrsUi/fS3m7vaWUbqn7IACWuIu99xES1lN/fPM
+         B7VHJjGSZrlkIBgoWIjaTcutYEk2YsdbuSSVxcoVVKbunMzoB+5gDuYzOP/IqpY+FaPY
+         30IWYDbMGVF2QwBDm0oOWHZzZHjFBPXZQQWO/yXw4Rv4Ys02aNMUWiYNV+TwyEuo76QC
+         7PdQ==
+X-Gm-Message-State: AOAM533kYekhHMgo2ydJuaZOx3ec1qFl58zVOzBcQHCDKxxjEvWFEXJE
+        z7oIbnW1jPpsEdtIgmmJClqve374jTQ=
+X-Google-Smtp-Source: ABdhPJylRQSYQXNyAZiyW6rrMJLInL4XF8pMc/Y82ccj0fV0f6vQenutBOzt90BsWef9ORNQoVIZrQ==
+X-Received: by 2002:adf:a449:: with SMTP id e9mr21978811wra.294.1591602392643;
+        Mon, 08 Jun 2020 00:46:32 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id u3sm22618436wrw.89.2020.06.08.00.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 00:46:31 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 08:46:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gabriel L. Somlo" <gsomlo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200608074630.GA3567@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-6-michael@walle.cc>
+ <20200605084915.GE3714@dell>
+ <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Randy,
+On Fri, 05 Jun 2020, Michael Walle wrote:
 
-On Thu, Jun 4, 2020 at 5:14 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Hi--
->
-> On 6/4/20 3:14 AM, Mateusz Holenko wrote:
-> > +config SERIAL_LITEUART
-> > +     tristate "LiteUART serial port support"
-> > +     depends on HAS_IOMEM
-> > +     depends on OF || COMPILE_TEST
-> > +     depends on LITEX_SOC_CONTROLLER
-> > +     select SERIAL_CORE
-> > +     help
-> > +       This driver is for the FPGA-based LiteUART serial controller from LiteX
-> > +       SoC builder.
-> > +
-> > +       Say 'Y' here if you wish to use the LiteUART serial controller.
-> > +       Otherwise, say 'N'.
->
-> That last paragraph seems to say that Y and N are the only choices here.
-> It can also be set to M ...
+> Am 2020-06-05 10:49, schrieb Lee Jones:
+> [..]
+> > > +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip
+> > > *chip)
+> > > +{
+> > > +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
+> > > +}
+> > 
+> > Why not save yourself the trouble and just:
+> > 
+> >   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
+> 
+> Is there a reason why not a single pwm driver uses something like that?
 
-You are correct, we'll update the help message to make it clear.
+Copy/paste?  Habit?
 
-> --
-> ~Randy
->
-
-Thanks for your comment!
-
-Best,
-Mateusz
-
---
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
