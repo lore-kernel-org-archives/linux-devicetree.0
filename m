@@ -2,97 +2,194 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71130C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67892C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 10:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CA8206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 09:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381C2206A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 10:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n95v2Wx3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="up0PRyxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgFHJk0 (ORCPT
+        id S1729330AbgFHKCf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:40:26 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:39703 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729210AbgFHJk0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 05:40:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591609226; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=H5MuWLiGAPcb/as9k1D9LJqte98VlPM02vFdUe95LKc=; b=n95v2Wx3nrwE8KQIMZVcY2RwGSzDVlmSrcrUc7REWDf0CElxTfzXzBxijiWo/yPABZh0NH9z
- rRQbdbC1hwP5WtTlW/l/Bfk2Qgtd7MbczjLtTlNTi+ATS329LpRiYXJEDnySbuuIPogb5CVh
- Iq/NDgwZMDOn+XE7gDoa7DLDABo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
- 5ede0774754b690164661908 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 08 Jun 2020 09:40:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9057AC43387; Mon,  8 Jun 2020 09:40:04 +0000 (UTC)
-Received: from [192.168.0.105] (unknown [183.83.153.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DFB87C433CA;
-        Mon,  8 Jun 2020 09:40:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DFB87C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH V2 3/3] mailbox: qcom: Add ipq6018 apcs compatible
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1591441171-20341-1-git-send-email-sivaprak@codeaurora.org>
- <1591441171-20341-4-git-send-email-sivaprak@codeaurora.org>
- <CABb+yY2HhHSbP7UX_r1bGgpxzQKfC9aS8r9nxX5AOt8ENG5ACQ@mail.gmail.com>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <0ee184f4-bc8d-09f5-d756-c87498e64777@codeaurora.org>
-Date:   Mon, 8 Jun 2020 15:09:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 06:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729240AbgFHKCe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 06:02:34 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF17DC08C5C3;
+        Mon,  8 Jun 2020 03:02:33 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s10so8571438pgm.0;
+        Mon, 08 Jun 2020 03:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2zoo0ERaliX/JjKEGnYqTQZHfKutQDjXGBUR6MxE50E=;
+        b=up0PRyxOK9NsFIv2bsBl0byvSjs9TKlq7122/ilkRkEttg+3QL6Te0gWz3TYNBv0vi
+         IE21MrMkSmBoOM0mY4Ym6dD4h0fHd8PJqbmjpqRLAoD8EgiLZJlztmdayzlMxvl64uad
+         DTmDDiOoifJ+qZNcLaLd2QSV/HmYZnGjko8DYlFAtHLeNrU6eLEN23fhJDEXcZO9k6su
+         5btG1FU90NfVPGLZPU9H4xy++nNO22Mb48r9L7eryuGK6DS+fMUjxg5jPDGiU2+oNHCp
+         xKXJVPkjQbjd51oijoYnbZKVI1lUIdfoc2nsSSfQ/4wyGgwYugHqOswiCBWgOn9shtpA
+         CEbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2zoo0ERaliX/JjKEGnYqTQZHfKutQDjXGBUR6MxE50E=;
+        b=g+UrNPb+COB2G9HXzGNpVv8bK2+XNK7NVTe7ZrgsXB0MpkLh5baLopiGaSe05kLUc5
+         2oImWxAnKyh6dMEHOELibjZk6aDSEiBXCnN0ldjjmcZYoBnERto5hInNOpH24o0rwiX7
+         IdjzgubCAKzsLFb5JP4eTMpwAs+iNdVOZAixwelfZmbWXBzBJn0YlN/aPvbQCv0tXYLT
+         1zS2tEqhDOl4BgniqlnEbxDY13piiSSf8QO2jWWDdEYmuQBHv3Czyhw16QHGV06i5UOg
+         es1YTLlthzxaR2yJj3B3LiiUzbKmxUeSpWHk5Z83c6B2yY7urQj1y+vwZfApL+su+F4U
+         ez8g==
+X-Gm-Message-State: AOAM530UZqQ/k2LOEI+e4z8ksSnyG7jN5oQUlqwM2BxhETuCr4ymCLnY
+        HAOIxbzfL7A+fyLCchobg5qZgG7oeQrj9RbKgVI=
+X-Google-Smtp-Source: ABdhPJx86tPKDhVhcYy12URCDzcRNhNuX2MCH50rKMBNeLvTYoOCyhjdRnZsCXkMUtFO7r9gOz6BiOXhGjPZOdlfhLw=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr20149238pgk.203.1591610553061;
+ Mon, 08 Jun 2020 03:02:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABb+yY2HhHSbP7UX_r1bGgpxzQKfC9aS8r9nxX5AOt8ENG5ACQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell> <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc> <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc> <20200608082827.GB3567@dell>
+In-Reply-To: <20200608082827.GB3567@dell>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 13:02:21 +0300
+Message-ID: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
+To:     Lee Jones <lee.jones@linaro.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com
+Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jassi,
++Cc: some Intel people WRT our internal discussion about similar
+problem and solutions.
 
-On 6/8/2020 2:15 AM, Jassi Brar wrote:
-> On Sat, Jun 6, 2020 at 5:59 AM Sivaprakash Murugesan
-> <sivaprak@codeaurora.org> wrote:
->> The Qualcomm ipq6018 has apcs block, add compatible for the same.
->> Also, the apcs provides a clock controller functionality similar
->> to msm8916 but the clock driver is different.
->>
->> Create a child platform device based on the apcs compatible for the
->> clock controller functionality.
->>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> ---
->> [V2]
->>   * created a new structur for driver data.
->>   * re-arranged compatible strings in sorted order
->>
-> Please break this into two patches, first reorganise and then add new
-> ipq6018 of_match.
-have sent an updated patch series addressing the comments, thanks for 
-your time.
+On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+> On Sat, 06 Jun 2020, Michael Walle wrote:
+> > Am 2020-06-06 13:46, schrieb Mark Brown:
+> > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+
+...
+
+> Right.  I'm suggesting a means to extrapolate complex shared and
+> sometimes intertwined batches of register sets to be consumed by
+> multiple (sub-)devices spanning different subsystems.
 >
-> thanks.
+> Actually scrap that.  The most common case I see is a single Regmap
+> covering all child-devices.
+
+Yes, because often we need a synchronization across the entire address
+space of the (parent) device in question.
+
+>  It would be great if there was a way in
+> which we could make an assumption that the entire register address
+> space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+> each of the devices described by its child-nodes.  Probably by picking
+> up on the 'simple-mfd' compatible string in the first instance.
+>
+> Rob, is the above something you would contemplate?
+>
+> Michael, do your register addresses overlap i.e. are they intermingled
+> with one another?  Do multiple child devices need access to the same
+> registers i.e. are they shared?
+>
+> > > > But, there is more in my driver:
+> > > >  (1) there is a version check
+>
+> If we can rid the Regmap dependency, then creating an entire driver to
+> conduct a version check is unjustifiable.  This could become an inline
+> function which is called by each of the sub-devices instead, for
+> example.
+>
+> > > >  (2) there is another function for which there is no suitable linux
+> > > >      subsystem I'm aware of and thus which I'd like to us sysfs
+> > > >      attributes for: This controller supports 16 non-volatile
+> > > >      configuration bits. (this is still TBD)
+>
+> There is a place for everything in Linux.
+>
+> What do these bits configure?
+>
+> > > TBH I'd also say that the enumeration of the subdevices for this
+> > > device should be in the device rather than the DT, they don't
+> > > seem to be things that exist outside of this one device.
+> >
+> > We're going circles here, formerly they were enumerated in the MFD.
+> > Yes, they are devices which aren't likely be used outside a
+> > "sl28cpld", but there might there might be other versions of the
+> > sl28cpld with other components on different base addresses. I
+> > don't care if they are enumerated in DT or MFD, actually, I'd
+> > prefer the latter. _But_ I would like to have the device tree
+> > properties for its subdevices, e.g. the ones for the watchdog or
+> > whatever components there might be in the future.
+>
+> [...]
+>
+> > MFD core can
+> > match a device tree node today; but only one per unique compatible
+> > string. So what should I use to differentiate the different
+> > subdevices?
+>
+> Right.  I have been aware of this issue.  The only suitable solution
+> to this would be to match on 'reg'.
+>
+> FYI: I plan to fix this.
+>
+> If your register map needs to change, then I suggest that this is
+> either a new device or at least a different version of the device and
+> would also have to be represented as different (sub-)mfd_cell.
+>
+> > Rob suggested the internal offset, which I did here.
+>
+> FWIW, I don't like this idea.  DTs should not have to be modified
+> (either in the first instance or subsequently) or specifically
+> designed to patch inadequacies in any given OS.
+>
+> > But then, there is less use in duplicating the offsets in the MFD
+> > just to have the MFD enumerate the subdevices and then match
+> > the device tree nodes against it. I can just use
+> > of_platform_populate() to enumerate the children and I won't
+> > have to duplicate the base addresses.
+>
+> Which is fine.  However this causes a different issue for you.  By
+> stripping out the MFD code you render the MFD portion seemingly
+> superfluous.  Another issue driver authors commonly contend with.
+
+-- 
+With Best Regards,
+Andy Shevchenko
