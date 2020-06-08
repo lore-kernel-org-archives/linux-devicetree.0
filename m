@@ -2,144 +2,141 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C174FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA32C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2FF20737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="Oea9ECza"
+	by mail.kernel.org (Postfix) with ESMTP id 09C5020737
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591664655;
+	bh=Kjt7P2a4tbw5TuKZhyerlZXQZ4Y6YzQHMoiX4ctDvCg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xwhRmsjtK6cawZwqlE7q1puGWzAvrqul0MqWwbfO6wwhAkuShYvaQKYeX2PDVHyAJ
+	 VTBO07jMPW4YDbJpXDv09Ml1Vh/T1+Tlfl3msROyqMdVLwxoGp88vkOKuLRtNcpeel
+	 /5CKmXzd0JdsmYid+HktXXI6oyTq4/MJe3QGGdE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgFIBAv (ORCPT
+        id S1728813AbgFIBEL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:00:51 -0400
-Received: from mail-mw2nam10on2058.outbound.protection.outlook.com ([40.107.94.58]:6096
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727884AbgFIBAr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 21:00:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bGVdN7sg0GenyobMj2gNVuJ48zawcZZmPGqETycQdrAHRfLXXCNH3Y4BR5TYiGAybcdOTG4PBVMqF29F/pZwtB4bsGRFy/Hkn9BT1QyLSqXQcr9NqfZ9GBTMY6AP2twXCFf4qQYQRffsBzOArqxDTcAqXLAlWBvgjDX1wDm/LCckdrJTnwsOuC+YkHxZOXVOldQAqsmIx6laDgP1hCZ0JyHf1YlVLIVuvGp6zIUzAqyDFtLlhwrsBTHAJdW6jcHOU+ek8RQYrc0DtomfaeS3RHSMEA7Ra1s4WBcQnBQUn6OtNK0lLG9LjS2/QLMz8PVkMKhDc+4cm8xKtZraD2UzKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W9c5B8+hT9NSRU4nWj6ZWB7+/535KG6Plkzp6oQHtz4=;
- b=Jjyvc2lYFDws8nXFM/wzE6Lxc65hHAdjEzMcjs8hCBVvGQRt9FFmVmfz2U9kh5tpdJs2VRkoiGQ+jTvh7AJzKHFptWTgwYA40Vb7yYM/BRp/S1kBPltUqbZwXqw/dbjkvGY5ZY4sn8klE+Mu4O1EnapYA+4+sM6CTGutlLQWFRjmA89g27eBeZbNxksLcLq8RYHaumHpZlL1RhcBA9kyrQ+68KF6eWvgl/X2w26hVXDiEULqA3Z+iyHvtNUecVRR55qc8ZMccAipP0I8W9Z7fZwZ6dd4B8srqGVX9hVhH+BcNWCTeot2ACiwi0+bzkPSQEx9b2+nuoPC7uA7x2+1pQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W9c5B8+hT9NSRU4nWj6ZWB7+/535KG6Plkzp6oQHtz4=;
- b=Oea9ECzaqf9eTUVbHcIdgp6+4QDXWxDwsw2IEBdoxWHPO6x6XKMj7zP02Fjl8SCV98Iz5X4s/4kLuye19qmDjCwCgHDDyxc0a31RlSjKGnY0VsExKWMY8ox7DSQHjUyLOyxWyg3LBvOvAxy7I842GT/bfQSte2xDY8UN8iZKO00=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from DM6PR11MB2747.namprd11.prod.outlook.com (2603:10b6:5:c6::22) by
- DM6PR11MB3084.namprd11.prod.outlook.com (2603:10b6:5:6c::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3066.22; Tue, 9 Jun 2020 01:00:44 +0000
-Received: from DM6PR11MB2747.namprd11.prod.outlook.com
- ([fe80::ad7f:84a9:35bd:edf8]) by DM6PR11MB2747.namprd11.prod.outlook.com
- ([fe80::ad7f:84a9:35bd:edf8%4]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 01:00:44 +0000
-Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200608084117.4563-1-jiping.ma2@windriver.com>
- <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
-From:   Jiping Ma <Jiping.Ma2@windriver.com>
-Message-ID: <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com>
-Date:   Tue, 9 Jun 2020 09:00:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
-In-Reply-To: <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: HKAPR04CA0010.apcprd04.prod.outlook.com
- (2603:1096:203:d0::20) To DM6PR11MB2747.namprd11.prod.outlook.com
- (2603:10b6:5:c6::22)
+        Mon, 8 Jun 2020 21:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727119AbgFHXHb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F7AB20842;
+        Mon,  8 Jun 2020 23:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657650;
+        bh=Kjt7P2a4tbw5TuKZhyerlZXQZ4Y6YzQHMoiX4ctDvCg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=njYHY3EIiURi4PbA97BlH/BC27GKJPQVQxo8/UaLPpv9vk2+PkJQyCaLnlrn67Gq3
+         JG3kaA0DW2EPXaVKLbQG+loEe0JAR3vOW/sxWMKYvGw8BHaUlm/QZ8Iu02TzSJZJBa
+         faZBSTTAYcFMlk7XO++ATU3O72eaQIEPWH4i291Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 064/274] clocksource: dw_apb_timer: Make CPU-affiliation being optional
+Date:   Mon,  8 Jun 2020 19:02:37 -0400
+Message-Id: <20200608230607.3361041-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.195] (60.247.85.82) by HKAPR04CA0010.apcprd04.prod.outlook.com (2603:1096:203:d0::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.19 via Frontend Transport; Tue, 9 Jun 2020 01:00:42 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 21624f09-73b7-41d7-02cc-08d80c10897d
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3084:
-X-Microsoft-Antispam-PRVS: <DM6PR11MB3084A31E2C7B03744D00287AD8820@DM6PR11MB3084.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-Forefront-PRVS: 042957ACD7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UslHGx2ec5+UDdslXVZaWtddrx67Dt25urGYEQnz9fHCZ3Loo7pLX/CW89fq3Vm1MDmf+t716gWbvLVDEdDn7xQgxmPKZgIbgN+/AWaTOFaivvf/38P+tJRbRF7li4VK57d3L9+DqOrPoaOX8arpw6KMkFsNgocpV2L9DkKP43SsRH9jdMm8B3I6+ZuTRkEGwkcV18Ds49E5PisZi1cxnaaek8uDhgEZDITc2RryXW9rzGH+h0nj7vICy2fmHPUZO3pbfRb4s+N4K0dtgJwMLGFXmuHa8J0VN4WHjWqrmW8FsgzbCZ6RdSRmjltoPVSFPpSNipxMPKe3lFOynmCehZxPkcs1WFLp6cfFo0PCbfFnnVa2rBFuIA7/GuhInrfJ6nxUkkxixGBXMEZ76O5Gtjl6poAEKH5Ng+Ujq9YwTujapiNE2ouI6S3QkUaVU3Gh2ITNuY9mi5YFBQCj1ZmJfd+6EB70GrsC/MNyl6616wu7hN29VphQA5cUy3TISZEJw+fEFxLIyDhNbjWl8GmxHw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2747.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(376002)(136003)(39850400004)(346002)(86362001)(2906002)(6916009)(956004)(5660300002)(186003)(6706004)(53546011)(966005)(16576012)(52116002)(66946007)(16526019)(36756003)(316002)(2616005)(478600001)(6666004)(31696002)(26005)(4326008)(31686004)(66556008)(8676002)(66476007)(8936002)(6486002)(54906003)(78286006)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: H2rKUpsJc2KSAOc1UcXtjXV3UJQ5KCFCkyc3mKn97cmaxtVKJXQz9c5ijT5TzMno+IEDA16tZxU8yBrzDTbSUMpluveGdyw2E9+ShodcPRHgeDCKKB9xMT4mwGGCDao5PdnjBC0EvNp/HoW7NL3bUnGh7aJbrodPgXYcCY1D6kOnoSQrkazVBVYPmPF4AXGWoU7aMPMxT/WyfoZe+au1iCuMz6xleypTnrI10Adby05u0qFMSj1S+N7Qkmeqktn+/5/PxEh16Kf6Z/ymhinDiB/oYmEMYWYP40vC4/84oRqCmy4i/ag8QTUF+CuAayWwcb8nYTtHz6ywtAvqt6tNPWRI5mKSwxX7YxQ0ODnX8kSS6Pb6YPJxbwYU/J/KysIxP/CG599Nb0TDRIddBhYOFgcnosQfd4HSA9AQZmAoiEvJQsxHLOVpPiZQVbWahVGdKfhtpPjaOPyjTnNTgsvXb55G7FZWdRAlKF9amHjdPTs=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21624f09-73b7-41d7-02cc-08d80c10897d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2020 01:00:44.5112
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6kHBufCYTMdCtSTvHbNxr3o7d97wqvdM7SH7k5fuvcEbqj+KqnQUN0r2WcgSPv/jVVwTmkx8hdtzyKrigcY3jn902Gmn5BjC903m/ZnDaSU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3084
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
+[ Upstream commit cee43dbf2ee3f430434e2b66994eff8a1aeda889 ]
 
-On 06/09/2020 03:09 AM, Rob Herring wrote:
-> On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
->> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
->> it fails to build.
-> Does this patch fix your issue?:
->
-> https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
-No, it did not fix the issue.
+Currently the DW APB Timer driver binds each clockevent timers to a
+particular CPU. This isn't good for multiple reasons. First of all seeing
+the device is placed on APB bus (which makes it accessible from any CPU
+core), accessible over MMIO and having the DYNIRQ flag set we can be sure
+that manually binding the timer to any CPU just isn't correct. By doing
+so we just set an extra limitation on device usage. This also doesn't
+reflect the device actual capability, since by setting the IRQ affinity
+we can make it virtually local to any CPU. Secondly imagine if you had a
+real CPU-local timer with the same rating and the same CPU-affinity.
+In this case if DW APB timer was registered first, then due to the
+clockevent framework tick-timer selection procedure we'll end up with the
+real CPU-local timer being left unselected for clock-events tracking. But
+on most of the platforms (MIPS/ARM/etc) such timers are normally embedded
+into the CPU core and are accessible with much better performance then
+devices placed on APB. For instance in MIPS architectures there is
+r4k-timer, which is CPU-local, assigned with the same rating, and normally
+its clockevent device is registered after the platform-specific one.
 
-$ pkg-config --cflags yaml-0.1
+So in order to fix all of these issues let's make the DW APB Timer CPU
+affinity being optional and deactivated by passing a negative CPU id,
+which will effectively set the DW APB clockevent timer cpumask to
+'cpu_possible_mask'.
 
-$ pkg-config yaml-0.1 --libs
--L/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux/usr/lib64 
--lyaml
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-rtc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200521204818.25436-5-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clocksource/dw_apb_timer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
->
->
->> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
->> ---
->>   scripts/dtc/Makefile | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
->> index b5a5b1c..b49dfea 100644
->> --- a/scripts/dtc/Makefile
->> +++ b/scripts/dtc/Makefile
->> @@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
->>   endif
->>   HOST_EXTRACFLAGS += -DNO_YAML
->>   else
->> +ifeq ($(wildcard /usr/include/yaml.h),)
->> +HOST_EXTRACFLAGS += -DNO_YAML
->> +else
->>   dtc-objs       += yamltree.o
->>   HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
->>   endif
->> +endif
->>
->>   # Generated files need one more search path to include headers in source tree
->>   HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
->> --
->> 1.9.1
->>
+diff --git a/drivers/clocksource/dw_apb_timer.c b/drivers/clocksource/dw_apb_timer.c
+index b207a77b0831..f5f24a95ee82 100644
+--- a/drivers/clocksource/dw_apb_timer.c
++++ b/drivers/clocksource/dw_apb_timer.c
+@@ -222,7 +222,8 @@ static int apbt_next_event(unsigned long delta,
+ /**
+  * dw_apb_clockevent_init() - use an APB timer as a clock_event_device
+  *
+- * @cpu:	The CPU the events will be targeted at.
++ * @cpu:	The CPU the events will be targeted at or -1 if CPU affiliation
++ *		isn't required.
+  * @name:	The name used for the timer and the IRQ for it.
+  * @rating:	The rating to give the timer.
+  * @base:	I/O base for the timer registers.
+@@ -257,7 +258,7 @@ dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
+ 	dw_ced->ced.max_delta_ticks = 0x7fffffff;
+ 	dw_ced->ced.min_delta_ns = clockevent_delta2ns(5000, &dw_ced->ced);
+ 	dw_ced->ced.min_delta_ticks = 5000;
+-	dw_ced->ced.cpumask = cpumask_of(cpu);
++	dw_ced->ced.cpumask = cpu < 0 ? cpu_possible_mask : cpumask_of(cpu);
+ 	dw_ced->ced.features = CLOCK_EVT_FEAT_PERIODIC |
+ 				CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
+ 	dw_ced->ced.set_state_shutdown = apbt_shutdown;
+-- 
+2.25.1
 
