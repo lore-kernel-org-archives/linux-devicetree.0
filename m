@@ -2,130 +2,127 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD8CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 06:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3916DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 207932076C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 06:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1295E207F9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="pnsh1c1H"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="n7l0SgK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgFHGja (ORCPT
+        id S1729002AbgFHHjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 02:39:30 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:58930 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726929AbgFHGja (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 02:39:30 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Jun 2020 02:39:28 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1591598369; x=1623134369;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=U5aWbGgfeLqvVdcOkQcSA+UTkQNRY5DfGB4faJBfE4Y=;
-  b=pnsh1c1H03eMJPN7kyWzywdsf8agw/zqZ3o6X0+stXhi290Trb0vw4RE
-   R9N0JFUI7EgiqbxEnMYktc6NzXDQcCPeJSwk+MpHIlKiHIQVGF9qFtzDd
-   jWbrPCz8/QSxQu3dpXEe+hbiVMsrT6Qz9tvWl8KX3doymc86lztb9/nEV
-   TGNS4MmKhp0ZckLFgh8FLkMOIQQW2jK9Iu8pmfRjrIIOXk3Rl6SxE0zxa
-   wJ+r2clPpie0DuSY8mnRlr2THtcZNOf+hIgarVabDN3QBkMtaa634yVOx
-   WY+ubZ0I0TBbecNSzzMN/hfyET/NSPFEHrFuCDuSsmLW1b0Px+JH+S1zL
-   w==;
-IronPort-SDR: zLZG1io8aNx3EVCTdX7Dgsr//Wk1KtXN2Dd8zpm1nBDtSjtk45PWiYP9wdkqNpSb5hM5FN+/99
- M3Wlod9c9r3Q==
-X-IronPort-AV: E=Sophos;i="5.73,487,1583190000"; 
-   d="scan'208";a="37682390"
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI386hLe6EAgAAeVQCAAZexgICBcsYA
-Date:   Mon, 8 Jun 2020 06:32:14 +0000
-Message-ID: <278a6d81562d4642631fa003c59c4e4876050f54.camel@diehl.com>
-References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
-         <20200316124851.6303-3-Denis.Osterland@diehl.com>
-         <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
-         <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
-         <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
-In-Reply-To: <13d593fb-053e-c6de-3237-ec3b6d1c82c5@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C81CD59B97894247A79E3BF08DCD8F04@diehl.internal>
-Content-Transfer-Encoding: base64
+        Mon, 8 Jun 2020 03:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728993AbgFHHjT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:39:19 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA328C08C5C3
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:39:19 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id o5so17466813iow.8
+        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 00:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LcwxlrO/OObtBQp//yDfIfqp8ggk2aG49WGm1nxOKD8=;
+        b=n7l0SgK9ly7tIWiC0hISkTN3Hg2xfxISuMCU9sxOQu/SbdAa1fPI6m9kQUgTIvoFM7
+         C+6iVxxUFAKeWiJsobiB8zgjj1c/oomV2+G/06e3svaycDfPnY29rAtSTIOBsnG+Bl2Y
+         F9gm0DmjVJY857Uzj+uzTUGFtSZRQjxFkrhc4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LcwxlrO/OObtBQp//yDfIfqp8ggk2aG49WGm1nxOKD8=;
+        b=B5HXhtI9uUfr+IT/Ncn4uA7yu3loIZBoLtELPPksimy5pWobxBD+XCCukkrYNa/O8b
+         e2X4GusTU8xhNbn5NE9ZCBWdhNng03vsMW1IqXkkSJr4k4JpioCYmmLBj+qC95sURWtQ
+         JQR/ndIjDBMVqcSxonEMEp9hWmcOfh+vg7QS6JghELYwXfd7toqCKqccFUgFCOLD2Kah
+         LJqFyulTOr6r6Xgv24TG7IT058gg8+K+ZXWmgqD15eRasVtu1ZzzN2H8iUQbl1cVB3Wl
+         jHKPpbTcahnCCT56p51NIg5jAWSV3KqrzQmELcetrPXfbJtExmIAdtP46jnJD7H2vMmp
+         mlZw==
+X-Gm-Message-State: AOAM531SS3bDN5NPXnWi7RQs9bEioA0XP52T5Czvjlhj2KZm3r7JQ7e+
+        lGV1PHKGYBeb62QWy9FmkmZOBtUHkwAOz3Zdg1QuzA==
+X-Google-Smtp-Source: ABdhPJzv9bSNg0c3Lb6MGeHJNsgYaaWNOKBk8ind/PzQbkI7YxOFtQHBnXFLW0ow5/C/vDqq7sQ+aZCfb1kkxDZK50U=
+X-Received: by 2002:a6b:b9d5:: with SMTP id j204mr20788375iof.38.1591601958860;
+ Mon, 08 Jun 2020 00:39:18 -0700 (PDT)
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPc0t/f4F++sVEcJNEqmL6fJTpDG/iNVDZbUM0X2Br5ZWu
+References: <20200604121142.2964437-0-mholenko@antmicro.com>
+ <20200604121142.2964437-5-mholenko@antmicro.com> <418aa34e-af6c-3a3c-8d22-e7a122963b8f@infradead.org>
+In-Reply-To: <418aa34e-af6c-3a3c-8d22-e7a122963b8f@infradead.org>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Mon, 8 Jun 2020 09:39:08 +0200
+Message-ID: <CAPk366SL_MPV6Y4oYvkM=cPA9n36cWd3Km9ffeHYaZ9hpC9FqA@mail.gmail.com>
+Subject: Re: [PATCH v7 5/5] drivers/tty/serial: add LiteUART driver
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gabriel L. Somlo" <gsomlo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgSmFjZWssDQoNCmlzIHlvdXIgYWNrIHN0aWxsIHZhbGlkIGZvciB0aGUgbmV3IHZlcnNp
-b25zIG9mIHRoZSBwYXRjaC1zZXQ/DQpEdWUgdG8gdGhlIGNoYW5nZXMgSSBtYWRlLCBJIGFt
-IG5vdCBzdXJlLg0KDQpSZWdhcmRzLCBEZW5pcw0KDQpBbSBEaWVuc3RhZywgZGVuIDE3LjAz
-LjIwMjAsIDIxOjQzICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gSGkgRGVu
-aXMsDQo+IA0KPiBPbiAzLzE2LzIwIDk6MjQgUE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdy
-b3RlOg0KPiA+IEhpIEphY2VrLA0KPiA+IA0KPiA+IEFtIE1vbnRhZywgZGVuIDE2LjAzLjIw
-MjAsIDE5OjM2ICswMTAwIHNjaHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gPiA+IEhpIERl
-bmlzLA0KPiA+ID4gDQo+ID4gPiBPbiAzLzE2LzIwIDE6NTMgUE0sIERlbmlzIE9zdGVybGFu
-ZC1IZWltIHdyb3RlOg0KPiA+IA0KPiA+IC4uLg0KPiA+ID4gPiAgDQo+ID4gPiA+IEBAIC05
-MiwxMyArOTYsMjcgQEAgc3RhdGljIGludCBsZWRfcHdtX2FkZChzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYsDQo+ID4gPiA+ICANCj4gPiA+ID4gIAlw
-d21faW5pdF9zdGF0ZShsZWRfZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRlKTsNCj4g
-PiA+ID4gIA0KPiA+ID4gPiArCWlmIChsZWQtPmRlZmF1bHRfc3RhdGUgPT0gTEVEU19QV01f
-REVGU1RBVEVfT04pDQo+ID4gPiA+ICsJCWxlZF9kYXRhLT5jZGV2LmJyaWdodG5lc3MgPSBs
-ZWQtPm1heF9icmlnaHRuZXNzOw0KPiA+ID4gPiArCWVsc2UgaWYgKGxlZC0+ZGVmYXVsdF9z
-dGF0ZSA9PSBMRURTX1BXTV9ERUZTVEFURV9LRUVQKSB7DQo+ID4gPiA+ICsJCXVpbnQ2NF90
-IGJyaWdodG5lc3M7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkJcHdtX2dldF9zdGF0ZShsZWRf
-ZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRlKTsNCj4gPiA+IA0KPiA+ID4gVGhpcyBz
-ZWVtcyB0byBub3QgYmUgcmVhZGluZyB0aGUgZGV2aWNlIHN0YXRlLCBpLmUuIHdoYXQgeW91
-IHRyaWVkDQo+ID4gPiB0byBhZGRyZXNzIGJ5IGRpcmVjdCBjYWxsIHRvIHB3bS0+Y2hpcC0+
-b3BzLT5nZXRfc3RhdGUoKSBiZWZvcmUuDQo+ID4gPiANCj4gPiA+IEFtIEkgbWlzc2luZyBz
-b21ldGhpbmc/DQo+ID4gPiANCj4gPiANCj4gPiB3ZWxsLCBub3QgeW91LCBidXQgSSBtaXNz
-ZWQgY2ZjNGMxODliYzcwYjFhY2MxN2U2ZjFhYmYxZGMxYzBhZTg5MGJkOC4NCj4gPiBTaW5j
-ZSB0aGlzIGNvbW1pdCBwd21fZ2V0X3N0YXRlKCkgaXMgc3VmZmljaWVudC4NCj4gDQo+IEkg
-YXNzdW1lIHlvdSB0ZXN0ZWQgaXQ/DQo+IA0KPiBXaXRoIHRoYXQsIGZvciB0aGUgd2hvbGUg
-c2V0Og0KPiANCj4gQWNrZWQtYnk6IEphY2VrIEFuYXN6ZXdza2kgPGphY2VrLmFuYXN6ZXdz
-a2lAZ21haWwuY29tPg0KPiANCg0KDQpEaWVobCBDb25uZWN0aXZpdHkgU29sdXRpb25zIEdt
-YkgNCkdlc2Now6RmdHNmw7xocnVuZzogSG9yc3QgTGVvbmJlcmdlcg0KU2l0eiBkZXIgR2Vz
-ZWxsc2NoYWZ0OiBOw7xybmJlcmcgLSBSZWdpc3RlcmdlcmljaHQ6IEFtdHNnZXJpY2h0DQpO
-w7xybmJlcmc6IEhSQiAzMjMxNQ0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fDQoNCkRlciBJbmhhbHQgZGVyIHZvcnN0ZWhlbmRlbiBFLU1haWwgaXN0
-IG5pY2h0IHJlY2h0bGljaCBiaW5kZW5kLiBEaWVzZSBFLU1haWwgZW50aGFlbHQgdmVydHJh
-dWxpY2hlIHVuZC9vZGVyIHJlY2h0bGljaCBnZXNjaHVldHp0ZSBJbmZvcm1hdGlvbmVuLg0K
-SW5mb3JtaWVyZW4gU2llIHVucyBiaXR0ZSwgd2VubiBTaWUgZGllc2UgRS1NYWlsIGZhZWxz
-Y2hsaWNoZXJ3ZWlzZSBlcmhhbHRlbiBoYWJlbi4gQml0dGUgbG9lc2NoZW4gU2llIGluIGRp
-ZXNlbSBGYWxsIGRpZSBOYWNocmljaHQuDQpKZWRlIHVuZXJsYXVidGUgRm9ybSBkZXIgUmVw
-cm9kdWt0aW9uLCBCZWthbm50Z2FiZSwgQWVuZGVydW5nLCBWZXJ0ZWlsdW5nIHVuZC9vZGVy
-IFB1Ymxpa2F0aW9uIGRpZXNlciBFLU1haWwgaXN0IHN0cmVuZ3N0ZW5zIHVudGVyc2FndC4N
-Ci0gSW5mb3JtYXRpb25lbiB6dW0gRGF0ZW5zY2h1dHosIGluc2Jlc29uZGVyZSB6dSBJaHJl
-biBSZWNodGVuLCBlcmhhbHRlbiBTaWUgdW50ZXIgaHR0cHM6Ly93d3cuZGllaGwuY29tL2dy
-b3VwL2RlL3RyYW5zcGFyZW56LXVuZC1pbmZvcm1hdGlvbnNwZmxpY2h0ZW4vDQoNClRoZSBj
-b250ZW50cyBvZiB0aGUgYWJvdmUgbWVudGlvbmVkIGUtbWFpbCBpcyBub3QgbGVnYWxseSBi
-aW5kaW5nLiBUaGlzIGUtbWFpbCBjb250YWlucyBjb25maWRlbnRpYWwgYW5kL29yIGxlZ2Fs
-bHkgcHJvdGVjdGVkIGluZm9ybWF0aW9uLiBQbGVhc2UgaW5mb3JtIHVzIGlmIHlvdSBoYXZl
-IHJlY2VpdmVkIHRoaXMgZS1tYWlsIGJ5DQptaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3Vj
-aCBhIGNhc2UuIEVhY2ggdW5hdXRob3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwg
-YWx0ZXJhdGlvbiwgZGlzdHJpYnV0aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUt
-bWFpbCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiANCi0gRm9yIGdlbmVyYWwgaW5mb3JtYXRp
-b24gb24gZGF0YSBwcm90ZWN0aW9uIGFuZCB5b3VyIHJlc3BlY3RpdmUgcmlnaHRzIHBsZWFz
-ZSB2aXNpdCBodHRwczovL3d3dy5kaWVobC5jb20vZ3JvdXAvZW4vdHJhbnNwYXJlbmN5LWFu
-ZC1pbmZvcm1hdGlvbi1vYmxpZ2F0aW9ucy8NCg==
+Hi Randy,
+
+On Thu, Jun 4, 2020 at 5:14 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Hi--
+>
+> On 6/4/20 3:14 AM, Mateusz Holenko wrote:
+> > +config SERIAL_LITEUART
+> > +     tristate "LiteUART serial port support"
+> > +     depends on HAS_IOMEM
+> > +     depends on OF || COMPILE_TEST
+> > +     depends on LITEX_SOC_CONTROLLER
+> > +     select SERIAL_CORE
+> > +     help
+> > +       This driver is for the FPGA-based LiteUART serial controller from LiteX
+> > +       SoC builder.
+> > +
+> > +       Say 'Y' here if you wish to use the LiteUART serial controller.
+> > +       Otherwise, say 'N'.
+>
+> That last paragraph seems to say that Y and N are the only choices here.
+> It can also be set to M ...
+
+You are correct, we'll update the help message to make it clear.
+
+> --
+> ~Randy
+>
+
+Thanks for your comment!
+
+Best,
+Mateusz
+
+--
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
