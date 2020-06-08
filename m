@@ -2,90 +2,174 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79288C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 18:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3DCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 18:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C08A2078B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 18:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B3E2078B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 18:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rJuzjWrS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XaqIR5YY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725791AbgFHSfp (ORCPT
+        id S1725798AbgFHSpM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:35:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49950 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgFHSfp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 14:35:45 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058IZf9U084540;
-        Mon, 8 Jun 2020 13:35:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591641341;
-        bh=eHHa7AodQrze13nOKG82sHxSg589G5pCOP+wqJ1onsw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rJuzjWrSienjycKqqtYMN0mQ5AbpdBviACGKVh63TpexqCnNNmMT2SBtubDV70H2s
-         FsRjKMcYMrbQXi3PfI7c/WZY/slk80RQKdCNezcLuAOF6S43gIFMLyw2ZEEALnOrGD
-         lMPLPappRbuaQxCVqSqE8Z4Doa9jP2+BOcbjvqQg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058IZfPX019793
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Jun 2020 13:35:41 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
- 2020 13:35:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Jun 2020 13:35:41 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058IZf1b069557;
-        Mon, 8 Jun 2020 13:35:41 -0500
-Subject: Re: [PATCH v26 00/15] Multicolor Framework v26
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200606155747.GB21130@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e7b26b67-cbb9-d139-a105-6a02bd45179f@ti.com>
-Date:   Mon, 8 Jun 2020 13:35:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 14:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725968AbgFHSpM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 14:45:12 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68D5C08C5C4
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 11:45:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x14so18564778wrp.2
+        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 11:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ySspVCbCwHhpHyThSAZlpsL4E+rejtUqHxn7Z7vlWxo=;
+        b=XaqIR5YYixt9BOP0z0KEUXloA92HRuoRKrairYtC9RkYMC9IpeWZNFhdtm3Ew0S0ik
+         23GSnPKbcQ0iLuaO471GEgonjcDLwGaP8Kz5RZsF4qDAQJYhxfHq+SDj1wQnRnQsuPdk
+         cRlIG+/OaEkp5nBrighVcnPHmVE9LKqgwSYhcc/FBr6yOKQxY1fsLjRZLIKWqRlMxgFK
+         FBCq5icjXeGFENyFVicmG3XnbNL2HRcP8U3PYSH+QTyH+qDr5UGNuKjp33ymGS9uNwRR
+         NsYdveDqU59LDwexizMe7iEdZ45qmTF7FMjUFX8k1NOHb97L6aRezBMZUufezBduirpN
+         Wctw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ySspVCbCwHhpHyThSAZlpsL4E+rejtUqHxn7Z7vlWxo=;
+        b=euu6H3qB5MVtAvmWIHWbkHCRpfZeh+W5hjE75/oLi/gBARM2zGKIloE0m2sYkCXKRc
+         h+85JdR9A09ja52U7Gia6EZ1wNyKWIdA6N5+mgKAEVykFqec5x2wb520i0QxByKJzHMk
+         UWWs45mFAeG3mVoaWT6/u+ccg0MEnzFZfRLxCqShqb4jbbI52KFPSZHzW+pEPw+sy4jj
+         d8BqBrzV+2oJxRBh+c2nAOSqGg4R8wWtB1DQhvsPXfGWTBy1gWBkUc5fyXosggzNARkk
+         88PfjnSbgejT6Z3Pasr8vxDKyqdtd0YJa9KjNgz/HZXItq1f0jQjVnGwlz46aA75BnvI
+         PL+Q==
+X-Gm-Message-State: AOAM531C7PmpsSEIWST+xCaDs8Ydnu07/c3ZQUZ+NzxiISOgb/bbWMNk
+        7caWUW2+sJVkLdTlN2IFoGpMzA==
+X-Google-Smtp-Source: ABdhPJwJkROAZGlSnvebAmkphxhPvdl6ye0SyhN4iF5a2R8kuYku/y1mSAp6OBUwhp5UgMqFn2jP+w==
+X-Received: by 2002:adf:d851:: with SMTP id k17mr216774wrl.30.1591641910077;
+        Mon, 08 Jun 2020 11:45:10 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id u12sm576259wrq.90.2020.06.08.11.45.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 11:45:09 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 19:45:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+Message-ID: <20200608184507.GC4106@dell>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+ <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+ <20200515102848.GH271301@dell>
+ <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
+ <20200608142413.GA4106@dell>
+ <7566ef30fea9740f427f392aabde0eac@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200606155747.GB21130@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7566ef30fea9740f427f392aabde0eac@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pavel
+On Mon, 08 Jun 2020, Michael Walle wrote:
 
-On 6/6/20 10:57 AM, Pavel Machek wrote:
-> Hi!
->
->> This is the multi color LED framework.   This framework presents clustered
->> colored LEDs into an array and allows the user space to adjust the brightness
->> of the cluster using a single file write.  The individual colored LEDs
->> intensities are controlled via a single file that is an array of LEDs
-> Can you re-order the patches so that stuff that can be applied now
-> goes first? Bugfixes, cleanups, devm conversion, yaml conversions that
-> are already acked...
+> Am 2020-06-08 16:24, schrieb Lee Jones:
+> > On Mon, 25 May 2020, Michael Walle wrote:
+> > > Am 2020-05-15 12:28, schrieb Lee Jones:
+> > > > On Thu, 30 Apr 2020, Michael Walle wrote:
+> > > >
+> > > > > Hi Lee,
+> > > > >
+> > > > > Am 2020-04-23 19:45, schrieb Michael Walle:
+> > > > > > There might be multiple children with the device tree compatible, for
+> > > > > > example if a MFD has multiple instances of the same function. In this
+> > > > > > case only the first is matched and the other children get a wrong
+> > > > > > of_node reference.
+> > > > > > Add a new option to match also against the unit address of the child
+> > > > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+> > 
+> > [...]
+> > 
+> > > > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> > > > > > index d01d1299e49d..c2c0ad6b14f3 100644
+> > > > > > --- a/include/linux/mfd/core.h
+> > > > > > +++ b/include/linux/mfd/core.h
+> > > > > > @@ -13,8 +13,11 @@
+> > > > > >  #include <linux/plataorm_device.h>
+> > > > > >
+> > > > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> > > > > > +#define MFD_OF_REG_VALID	BIT(31)
+> > > >
+> > > > What about 64bit platforms?
+> > > 
+> > > The idea was to have this as a logical number. I.e. for now you may
+> > > only
+> > > have one subdevice per unique compatible string. In fact, if you
+> > > have a
+> > > look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
+> > > subdevices. But there is only one DT node for all three of it. I guess
+> > > this works as long as you don't use phandles to reference the pwm node
+> > > in the device tree. Or you don't want to use device tree properties
+> > > per subdevice (for example the "timeout-sec" of a watchdog device).
+> > 
+> > This is not a good example, as the "stericsson,ab8500-pwm" is
+> > legitimate.  Here we are registering 3 potential devices, but only
+> > instantiating 1 of them.
+> 
+> Mh?
+> 
+> static const struct mfd_cell ab8500_devs[] = {
+> ..
+>        OF_MFD_CELL("ab8500-pwm",
+>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
+>         OF_MFD_CELL("ab8500-pwm",
+>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
+>         OF_MFD_CELL("ab8500-pwm",
+>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
+> ..
+> }
+> 
+> And in pwm-ab8500.c there are three offsets based on the pdev->id.
+> 
+> Am I missing something here?
 
-This series should be close to being applied. I am almost done making 
-v26 changes.
+Scrap what I said above.
 
-I don't want to re-order this series.
+For some reason I had of_platform_populate() in my head.
 
-Dan
+This will register and enumerate 3 devices.
 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
