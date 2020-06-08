@@ -2,100 +2,88 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0728BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0369CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68FF206D5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAEE2076A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 08:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgFHIC0 (ORCPT
+        id S1729040AbgFHIQl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:02:26 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:53930 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725840AbgFHICZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 04:02:25 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id ED924634C87;
-        Mon,  8 Jun 2020 11:00:42 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jiCi3-0004mZ-3R; Mon, 08 Jun 2020 11:00:43 +0300
-Date:   Mon, 8 Jun 2020 11:00:43 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v3 08/10] media: i2c: imx290: Add support to enumerate
- all frame sizes
-Message-ID: <20200608080043.GN9947@valkosipuli.retiisi.org.uk>
-References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
- <20200524192505.20682-9-andrey.konovalov@linaro.org>
- <20200526091716.GJ8214@valkosipuli.retiisi.org.uk>
- <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 8 Jun 2020 04:16:41 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55228 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729033AbgFHIQl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 04:16:41 -0400
+IronPort-SDR: pQdvUJQE8R7OAgqwrYb/YNq5uwxA1d4yIfzXeEK3OuFZTpoWASKrHIqsRJbWUbrIW4y98xJqLx
+ URFx+eWfOMUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 01:16:40 -0700
+IronPort-SDR: y+gd4S9S0z9EMfWQWUY2h0Yop59C03M3/SxwLhOSEqyUFl/Kl2ro3sPt9V1obqtgCVHe3cni5V
+ kPfDNsIFkm3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="417956152"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2020 01:16:38 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, adrian.hunter@intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v3 0/2] phy: intel: Add Keem Bay eMMC PHY support
+Date:   Mon,  8 Jun 2020 16:14:59 +0800
+Message-Id: <20200608081501.29558-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 07:28:56PM +0300, Andrey Konovalov wrote:
-> Hi Sakari,
-> 
-> Thank you for the review!
-> 
-> On 26.05.2020 12:17, Sakari Ailus wrote:
-> > Hi Andrey,
-> > 
-> > On Sun, May 24, 2020 at 10:25:03PM +0300, Andrey Konovalov wrote:
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> > > Add support to enumerate all frame sizes supported by IMX290. This is
-> > > required for using with userspace tools such as libcamera.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> > > ---
-> > >   drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
-> > >   1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > > index 6e70ff22bc5f..88850f3b1427 100644
-> > > --- a/drivers/media/i2c/imx290.c
-> > > +++ b/drivers/media/i2c/imx290.c
-> > > @@ -471,6 +471,25 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
-> > >   	return 0;
-> > >   }
-> > > +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
-> > > +				  struct v4l2_subdev_pad_config *cfg,
-> > > +				  struct v4l2_subdev_frame_size_enum *fse)
-> > > +{
-> > > +	if ((fse->code != imx290_formats[0].code) &&
-> > > +	    (fse->code != imx290_formats[1].code))
-> > > +		return -EINVAL;
-> > 
-> > Please skip the modes that do not have the code specified by the user. They
-> > should not be enumerated here.
-> 
-> I've double checked this part of the code, and it doesn't seem to need changes.
-> The reason is that for the both codes the set of the modes and the frame sizes is
-> exactly the same. And the fse->code check above just guards against the codes not
-> supported by the driver at all.
+Hi.
 
-Indeed. Please then ignore the comment.
+The first part is to document DT bindings for Keem Bay eMMC PHY.
+
+The second is the driver file, loosely based on phy-rockchip-emmc.c
+and phy-intel-emmc.c. The latter is not being reused as there are
+quite a number of differences i.e. registers offset, supported clock
+rates, bitfield to set.
+
+The patch was tested with Keem Bay evaluation module board.
+
+Thank you.
+
+Best regards,
+Zainie
+
+Changes since v2:
+- Modify DT example to use single cell for address and size.
+
+Changes since v1:
+- Rework phy-keembay-emmc.c to make it similar to phy-intel-emmc.c.
+- Use regmap_mmio, and remove reference to intel,syscon.
+- Use node name phy@....
+- Update license i.e. use dual license.
+
+
+Wan Ahmad Zainie (2):
+  dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
+  phy: intel: Add Keem Bay eMMC PHY support
+
+ .../bindings/phy/intel,keembay-emmc-phy.yaml  |  45 +++
+ drivers/phy/intel/Kconfig                     |   8 +
+ drivers/phy/intel/Makefile                    |   1 +
+ drivers/phy/intel/phy-keembay-emmc.c          | 321 ++++++++++++++++++
+ 4 files changed, 375 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
 
 -- 
-Sakari Ailus
+2.17.1
+
