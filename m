@@ -2,151 +2,152 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3886C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0E8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89A79206A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F142076A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 07:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uLi1Rmjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgFHHr0 (ORCPT
+        id S1729069AbgFHHta (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
+        Mon, 8 Jun 2020 03:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgFHHrZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:47:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE9BC08C5C5
-        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:47:24 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jiCV4-0006sX-7w; Mon, 08 Jun 2020 09:47:18 +0200
-Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jiCV3-0002be-PR; Mon, 08 Jun 2020 09:47:17 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, kernel@pengutronix.de,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Date:   Mon,  8 Jun 2020 09:47:16 +0200
-Message-Id: <20200608074716.9975-1-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
+        with ESMTP id S1729033AbgFHHt3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 03:49:29 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53ADC08C5C5
+        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 00:49:29 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id h188so9599043lfd.7
+        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 00:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=37K4gneCiuRGulLCKf4ynFvMW4e68flpa0GiDzEnHyg=;
+        b=uLi1RmjhtH1FlDsw82tNk1UEqMah3505zWAqYW0iJnhsR3ofTEhFjqgg0bqVnddqZT
+         wAxQu3f3tLu0IjoYRj/q5xCx5ttN12X/9cS1LPWtvPhLhxvS2znXsVPeT1APIbqa6lNe
+         A4/si6/ECFxjTPLdooQi+BUYuS9FxroIrzWRnwuzUiDLj5axLDtmFK/fgmAKdII++gN0
+         8H+slUd3WPMJbncGutqkddXFKaG9mJrXn4b9AcUYLERHHIRVN1uuOFicsU96UPRjItfA
+         1eA5C+72CB02PbahRX0V2G87TOjsr01aUEtMLxh5bPLhc8KL2wa6RaC1xoAyU4lcJ6mb
+         7heQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=37K4gneCiuRGulLCKf4ynFvMW4e68flpa0GiDzEnHyg=;
+        b=c3R0Vub2vIqKtdynD0YByNFnBfzx91bPxOzx7Mx7fhVmvM8xz8tQ+p7uGL1dLVoVWZ
+         kTHrjJ8RXKVAF6xirZs9JwrW/fgCrDCHFv4LlXm5VqiEs2g+WQF7q0+OzLV9b8Uio19j
+         KbX9/EoRYS20wR3A0vXpEdirOeFopS4WapQZGvMbkhrGUgJF9hf0WzrsGXf/nx2IpDbX
+         WZLmvrO8gPVFP6Z+z5kIP6H7ksDSI1Xl2E9mMSunSZbarFFgK2XKGxR9QQPqeXg0YuKo
+         6ze9PlVshsgBZEIYdLeXMsZWfhpc5JLD3arKVgSS56DvpS82GoEf+D+RB+1Tc93FjWpe
+         xU+g==
+X-Gm-Message-State: AOAM5302oHFUtHYVy/3te7hu8fi+4USe6pBAixGDJ7si4ug6HCbob/3p
+        wydGg44LN7ZKDwnxP7qabKYszXlP0SHLhQdl9SazMw==
+X-Google-Smtp-Source: ABdhPJwxrOl8NL4ByK/Pfp55vHI3T08O8KOMm+uol36pOuMBluSdlFqIghiVrQxdlv6OnTL4mJMgM/2GivNrvUhScRE=
+X-Received: by 2002:ac2:5473:: with SMTP id e19mr11864445lfn.21.1591602567899;
+ Mon, 08 Jun 2020 00:49:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
+ <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
+ <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org> <1591169342.4878.9.camel@mtkswgap22>
+ <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org> <20200603093416.GY1551@shell.armlinux.org.uk>
+ <1591341543.19510.4.camel@mtkswgap22> <20200605080905.GF1551@shell.armlinux.org.uk>
+ <1591347582.21704.9.camel@mtkswgap22>
+In-Reply-To: <1591347582.21704.9.camel@mtkswgap22>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 8 Jun 2020 13:19:16 +0530
+Message-ID: <CAFA6WYNqWmhiz=wvCTt1ubMtrhf+RtFSC2GiQQeteEbmrF1EnQ@mail.gmail.com>
+Subject: Re: Security Random Number Generator support
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Julius Werner <jwerner@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-called DRSGMII.
+Hi Neal,
 
-This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-from DT. The MVNETA then configures the SERDES protocol value
-accordingly.
+On Fri, 5 Jun 2020 at 14:40, Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> On Fri, 2020-06-05 at 09:09 +0100, Russell King - ARM Linux admin wrote:
+> > On Fri, Jun 05, 2020 at 03:19:03PM +0800, Neal Liu wrote:
+> > > On Wed, 2020-06-03 at 17:34 +0800, Russell King - ARM Linux admin wrote:
+> > > > This kind of thing is something that ARM have seems to shy away from
+> > > > doing - it's a point I brought up many years ago when the whole
+> > > > trustzone thing first appeared with its SMC call.  Those around the
+> > > > conference table were not interested - ARM seemed to prefer every
+> > > > vendor to do off and do their own thing with the SMC interface.
+> > >
+> > > Does that mean it make sense to model a sec-rng driver, and get each
+> > > vendor's SMC function id by DT node?
+> >
+> > _If_ vendors have already gone off and decided to use different SMC
+> > function IDs for this, while keeping the rest of the SMC interface
+> > the same, then the choice has already been made.
+> >
+> > I know on 32-bit that some of the secure world implementations can't
+> > be changed; they're burnt into the ROM. I believe on 64-bit that isn't
+> > the case, which makes it easier to standardise.
+> >
+> > Do you have visibility of how this SMC is implemented in the secure
+> > side?  Is it in ATF, and is it done as a vendor hack or is there an
+> > element of generic implementation to it?  Has it been submitted
+> > upstream to the main ATF repository?
+> >
+>
+> Take MediaTek as an example, some SoCs are implemented in ATF, some of
+> them are implemented in TEE.
 
-It was successfully tested on a MV78460 connected to a FPGA.
+In case your TEE implementation is derived from OP-TEE, then I will
+suggest you to re-use OP-TEE based RNG driver [1]. With that, you just
+need to implement an OP-TEE based pseudo trusted application (similar
+to this [2]) specific to your platform and need to extend driver UUID
+config table [3] with UUID of your platform specific pseudo TA. This
+way you can avoid using hardcoded DT based SMC approach and rather use
+auto RNG device detection provided by TEE bus.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- .../devicetree/bindings/net/ethernet-controller.yaml       | 1 +
- drivers/net/ethernet/marvell/mvneta.c                      | 7 ++++++-
- include/linux/phy.h                                        | 3 +++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/char/hw_random/optee-rng.c
+[2] https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/plat-synquacer/rng_pta.c
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/char/hw_random/optee-rng.c#n273
 
-This patch has already been sent 3 years ago here:
-https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20170123142206.5390-1-jlu@pengutronix.de/
-Since then the driver has evolved a lot. 2.5Gbps is properly configured in the
-MAC now.
+-Sumit
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index ac471b60ed6ae..4eead3c89bd3e 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -66,6 +66,7 @@ properties:
-       - gmii
-       - sgmii
-       - qsgmii
-+      - drsgmii
-       - tbi
-       - rev-mii
-       - rmii
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 51889770958d8..807c698576c74 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -109,6 +109,7 @@
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-+#define      MVNETA_DRSGMII_SERDES_PROTO	 0x1107
- #define MVNETA_TYPE_PRIO                         0x24bc
- #define      MVNETA_FORCE_UNI                    BIT(21)
- #define MVNETA_TXQ_CMD_1                         0x24e4
-@@ -3734,10 +3735,11 @@ static void mvneta_validate(struct phylink_config *config,
- 	struct mvneta_port *pp = netdev_priv(ndev);
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
- 
--	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
-+	/* We only support QSGMII, SGMII, DRSGMII, 802.3z and RGMII modes */
- 	if (state->interface != PHY_INTERFACE_MODE_NA &&
- 	    state->interface != PHY_INTERFACE_MODE_QSGMII &&
- 	    state->interface != PHY_INTERFACE_MODE_SGMII &&
-+	    state->interface != PHY_INTERFACE_MODE_DRSGMII &&
- 	    !phy_interface_mode_is_8023z(state->interface) &&
- 	    !phy_interface_mode_is_rgmii(state->interface)) {
- 		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
-@@ -3851,6 +3853,7 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
- 
- 	if (state->interface == PHY_INTERFACE_MODE_QSGMII ||
- 	    state->interface == PHY_INTERFACE_MODE_SGMII ||
-+	    state->interface == PHY_INTERFACE_MODE_DRSGMII ||
- 	    phy_interface_mode_is_8023z(state->interface))
- 		new_ctrl2 |= MVNETA_GMAC2_PCS_ENABLE;
- 
-@@ -4968,6 +4971,8 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- 	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
- 		 phy_interface_mode_is_8023z(phy_mode))
- 		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
-+	else if (phy_mode == PHY_INTERFACE_MODE_DRSGMII)
-+		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_DRSGMII_SERDES_PROTO);
- 	else if (!phy_interface_mode_is_rgmii(phy_mode))
- 		return -EINVAL;
- 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 2432ca463ddc0..bf3276b330f9e 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -109,6 +109,7 @@ typedef enum {
- 	PHY_INTERFACE_MODE_USXGMII,
- 	/* 10GBASE-KR - with Clause 73 AN */
- 	PHY_INTERFACE_MODE_10GKR,
-+	PHY_INTERFACE_MODE_DRSGMII,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
- 
-@@ -190,6 +191,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "usxgmii";
- 	case PHY_INTERFACE_MODE_10GKR:
- 		return "10gbase-kr";
-+	case PHY_INTERFACE_MODE_DRSGMII:
-+		return "drsgmii";
- 	default:
- 		return "unknown";
- 	}
--- 
-2.27.0
-
+> We have no plan to make generic
+> implementation in "secure world".
+>
+> Due to there must have different implementation in secure world for
+> vendors, we plan to provide a generic SMC interface in secure rng kernel
+> driver for more flexibility.
+>
+> Vendors can decide which "secure world" they want (HYP/ATF/TEE) by
+> different smc/hvc and different SMC function IDs in DT node.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
