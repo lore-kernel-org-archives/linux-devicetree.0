@@ -2,111 +2,147 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F4DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 12:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6596DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 12:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F722078D
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 12:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FC22074B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 12:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dXrNihZH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="g1OhfxSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbgFHMHj (ORCPT
+        id S1729698AbgFHMar (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729620AbgFHMHj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 08:07:39 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00440C08C5C3
-        for <devicetree@vger.kernel.org>; Mon,  8 Jun 2020 05:07:38 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id c17so20105912lji.11
-        for <devicetree@vger.kernel.org>; Mon, 08 Jun 2020 05:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D/qQ2HQfxTsoJ7dED6Ll4k5xtZ49R0eYt0PrrCkdekg=;
-        b=dXrNihZHxrlgg0ZVuh5iDRdS0PSRlGxUmjyOhMdSGaLuoVb0KJE0CRuSvL+qX2IrdZ
-         4iH/i8b9Q0hzPOnJg0UGhJzw+DErm+DVr+GuTUY3usetzQakc5u9GHIzF0xDM7UkPYdL
-         noFc+mBbYVtHeUhPCvN+elLUjqoGkRX2W9rMxZLQwdVZHw+9mdsvaXlWmrCi83RpKmKl
-         OAczotPNGkMGD8D1Ho6tevZf0BVykviuzMO2yo5h5r9g4XHmh8//uzx65WS3WSyQcd5R
-         RhF2Q+1jsykqYXUwWJ91kBuirXP98vxB+8FoxesFhPy3/tgI44tH7Q2WyLgUz1W5l9N6
-         AGUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D/qQ2HQfxTsoJ7dED6Ll4k5xtZ49R0eYt0PrrCkdekg=;
-        b=ESWnghQ9Qi2uyn7n/lcgGzdbaGa3LPbf6zrb533t/fNozKraMbrYj2TvawzorCfSPh
-         sWM/a2rSNVWx/RjlhQy3zXdPw17TOdS/iO0gANgzcrtXVGQ3Pl2V3yt1sG8Tlc+Z48cp
-         9Ux2OgicIeX834UiHamOD8C9MCallDmnI45z9PGl6N1xXCT+5T8+2W8QZolJi2iSXVBd
-         CDfue32TyLCAUM9bE1mWwzo6bFBfBNy9sscgjO3/boW/yw6ugQlqWuSKUqD1d+0h8snU
-         YtKlwjEGWMn5rlSZbFeDcYYG2I+KpCstzzFXycafU1u4hsksgSvd/oWmJhqD0z8WwteG
-         DP5A==
-X-Gm-Message-State: AOAM531TSvazuUHyVHUdJlTCVoSdF9qcjKSwOvbOsE2ICmhpHQEiUz2f
-        1/yyDNqRPwdWuO8VUMTuz8aTIkt4ht8CslasSRpyhA==
-X-Google-Smtp-Source: ABdhPJxcmxiJOb9LbDnUYMHnqR3xGRyWKQQ6MvgFlurSgSedWuMdM4etCtorHwAIdzEHNlnCb2Kgpp9dI8wCD0bjVkI=
-X-Received: by 2002:a2e:7303:: with SMTP id o3mr11746949ljc.100.1591618057076;
- Mon, 08 Jun 2020 05:07:37 -0700 (PDT)
+        Mon, 8 Jun 2020 08:30:47 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:63712 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729628AbgFHMaq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 08:30:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591619445; x=1623155445;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DqVy/lhHPIGLZ2gVhB+SkFZeyg+IWDog1e2aJcvmuys=;
+  b=g1OhfxSf5bNH9eAHqIYKROqAvUjUVp3nWW1gh82kObKtTEJMjCi7u/kS
+   4ODNpg64G444b0cON5Z98FKcDZJxRryfUoQp5JUbkJbaY5vcof0mGC2uR
+   mDOsuMwTePtyywqvq9jXo5OQtwkitq3T7TkxHY82KN3Hp+Isv+rS/MNT+
+   quRkeYQtfAbgrnEfwFQAPvX8i9zOY6rYLgdByMmmbL/FYkLIR8qYNIdbf
+   hDvjxvcmE4T7sxpZ+6kkqbNZr86UY0JchhZZGgWzfclw541hESHCi6XwM
+   /xOewbTChL9GP8OJcSK1o5UpnC6YD4LfVX++c3CTp8TjZ5snElnh4rw/L
+   g==;
+IronPort-SDR: BrcHFuJ/CQnl0R+wYshXSuibM0g4Hv44Xsj9CFkUwDVQh+f3qllEPIsWKCCnWEPOVK4fTqlzS/
+ VBQv+MUopWl4M1on8o/VU19//2S0q5NG2ttiUNiROeXy3A4knhTuk4NcA2Z5a3RkZLwDLViwDU
+ AtXaPMkH7UNmQ3VjPPe5lCx/QJXeWml2xlcbSSjA26dPupO4VfYZhxJ3I5ZY+4Q/armI/ZOGO8
+ oOBz5R0WgFHfQIGZmg6r4QS+dJX8D6/zuXhzEdaudAeOR5AA77oTieC9Ov0R6soxulLTqMOyDC
+ 4+c=
+X-IronPort-AV: E=Sophos;i="5.73,487,1583218800"; 
+   d="scan'208";a="79311433"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Jun 2020 05:30:44 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 8 Jun 2020 05:30:44 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 8 Jun 2020 05:30:39 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 00/10] Adding support for Microchip Sparx5 SoC
+Date:   Mon, 8 Jun 2020 14:30:14 +0200
+Message-ID: <20200608123024.5330-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <tencent_77C7CDDE75557AA90115A0DF43576105390A@qq.com>
-In-Reply-To: <tencent_77C7CDDE75557AA90115A0DF43576105390A@qq.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 8 Jun 2020 14:07:24 +0200
-Message-ID: <CACRpkdYMHWWuuH7rNGRhtxA5tkZ=ktsbeo=FTJ7YnpYAFgPsjQ@mail.gmail.com>
-Subject: Re: gpiolib: Add some warn print for easier to debug
-To:     =?UTF-8?B?5LmU5pif?= <mnlife@foxmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     bgolaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi mnlfie,
+This patch series adds support for Microchip Sparx5 SoC, the CPU
+system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+x 2 CPU core (A53).
 
-thanks for your patch!
+Although this is an ARM core, it shares some peripherals with the
+Microsemi Ocelot SoC.
 
-On Fri, May 29, 2020 at 4:57 PM =E4=B9=94=E6=98=9F <mnlife@foxmail.com> wro=
-te:
->
-> From d25875d0a6808713f891fa5bafc313d50f317a52 Mon Sep 17 00:00:00 2001
-> From: mnlife <mnlife@foxmail.com>
-> Date: Fri, 29 May 2020 22:02:55 +0800
-> Subject: [PATCH] gpiolib: Add some warn print for easier to debug
-> Content-Type: text/plain; charset=3D"utf-8"
->
->     when I get gpiod optional failed, I am Confused for a long time.
-> finally i find because of the string con_id is too long,
-> prop_name be truncated.
->
-> Signed-off-by: mnlife <mnlife@foxmail.com>
+Changes in v2:
+- Misc fixes to bindings/arm/microchip,sparx5.yaml
+- Changed clock driver to platform driver, among other fixes
+- arch/arm64/boot/dts/microchip/sparx5.dtsi:
+ - Added pmu and psci node, using PSCI
+ - Updates to GICv3 register spaces (GICV/GICH)
+ - Updated timer interrupt specifiers
+- pinctrl: ocelot: Fixed symbol clashes from powerpc
+- pinctrl: ocelot: Patches already in next-20200605 have been removed
+    from this series.
 
-This makes sense.
+Lars Povlsen (10):
+  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+  arm64: sparx5: Add support for Microchip 2xA53 SoC
+  arm64: dts: sparx5: Add basic cpu support
+  arm64: dts: sparx5: Add pinctrl support
+  pinctrl: ocelot: Add Sparx5 SoC support
+  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+  dt-bindings: clock: sparx5: Add bindings include file
+  clk: sparx5: Add Sparx5 SoC DPLL clock driver
+  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+  arm64: dts: sparx5: Add i2c devices, i2c muxes
 
-> - char prop_name[32]; /* 32 is max size of property name */
-> + char prop_name[48]; /* 48 is max size of property name */
+ .../bindings/arm/microchip,sparx5.yaml        |  65 +++
+ .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
+ .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+ MAINTAINERS                                   |   9 +
+ arch/arm64/Kconfig.platforms                  |  14 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/microchip/Makefile        |   4 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+ .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-sparx5.c                      | 312 +++++++++++++
+ drivers/pinctrl/pinctrl-ocelot.c              | 431 +++++++++++++++++-
+ include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+ 20 files changed, 1577 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+ create mode 100644 drivers/clk/clk-sparx5.c
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
 
-But your patch also increase the allowed prop name to 48
-from 32.
-
-What is this name really, why is it so long?
-
-I'd like to ask the DT maintainers what a proper length
-measure of the *-gpios property may be.
-
-The warning print is a good suggestion, please send a
-patch for just that. And another patch for extending the
-property length.
-
-Yours,
-Linus Walleij
+--
+2.27.0
