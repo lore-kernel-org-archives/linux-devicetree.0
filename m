@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487DFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A85C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262C62072F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25BF20737
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663178;
-	bh=iyzJrfIKvVs3kATF4wFc59OozNGRsscsxjNvpz3D/PQ=;
+	s=default; t=1591663228;
+	bh=kmJ5BQn3b7/Tj0a78WgwZwTGYE27MlHWgm1yPvfpigU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ehYIC9VTdTbyiu1ZXQqTZUntdVSRxcLXaAdt9XZTDU5XsWlCljl7A75ETCVkiPzr
-	 pBSX0Ix1cx5gZSHFI22cBGfGZhXVvl+fKms0An8GS5DsQM85XW20N8UDvXzXCjex/r
-	 OzdWVPaDsBWntseqhT8EvYMAl9XSp1MuUw2pSVGE=
+	b=Q+KU6a5ELLQmBnmIn7kAQgtTMOE36IoIyyIExAeloJQSTPc3Ec1WiVAWcAaezpxUB
+	 gt//qaU2BjXPt3BtOeibc3oA7gkFxFz9BWDOI4x/SlfcF0SezxfX7OoQ2ApNnfNNhR
+	 WuHWGWFAGKCWv9be7ICH8dUgmsz0PhwwXVD64gpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgFIAjc (ORCPT
+        id S1729232AbgFIAkR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729286AbgFHXNU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:20 -0400
+        id S1729240AbgFHXNJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559BD21532;
-        Mon,  8 Jun 2020 23:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F1C820897;
+        Mon,  8 Jun 2020 23:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658000;
-        bh=iyzJrfIKvVs3kATF4wFc59OozNGRsscsxjNvpz3D/PQ=;
+        s=default; t=1591657989;
+        bh=kmJ5BQn3b7/Tj0a78WgwZwTGYE27MlHWgm1yPvfpigU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifLpUV/BVtBhEIVpwWWxdX06rfnjPrWtv0Ae4kDdOtQ3hcRkGZYgw/akl4LcvfpI7
-         Fv+I451y1R9fZxBNZdu+M9t0PkWxfiVuo6VjUeomu2klnTElqlqPCl4uswZJdguoU/
-         5aEPKusiHQwAraeb69h7jk6GmEC2qpmpO5szFO98=
+        b=ItI77MPtEp+Sm4XiSrpxJmrEpqBKIfIFIC+Obv0bYcLeGEObzAbnYktKuWuJD8i8F
+         sre6XUYBQFpQ0/LGlKFW9rirOSMZfDB5To0FXV+tCs6XoeuuQLR5mEzvLPEvHbFcGS
+         kDNlHkNkfy4uI0sU6T+9VfRzm5s86c7HdNbHOwQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 057/606] arm64: dts: meson-g12b-khadas-vim3: add missing frddr_a status property
-Date:   Mon,  8 Jun 2020 19:03:02 -0400
-Message-Id: <20200608231211.3363633-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 048/606] arm64: dts: meson-g12b-ugoos-am6: fix usb vbus-supply
+Date:   Mon,  8 Jun 2020 19:02:53 -0400
+Message-Id: <20200608231211.3363633-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -65,40 +64,34 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 5ac0869fb39b1c1ba84d4d75c550f82e0bf44c96 upstream.
+commit 4e025fd91ba32a16ed8131158aa63cd37d141cbb upstream.
 
-In the process of moving the VIM3 audio nodes to a G12B specific dtsi
-for enabling the SM1 based VIM3L, the frddr_a status = "okay" property
-got dropped.
-This re-enables the frddr_a node to fix audio support.
+The USB supply used the wrong property, fixing:
+meson-g12b-ugoos-am6.dt.yaml: usb@ffe09000: 'vbus-regulator' does not match any of the regexes: '^usb@[0-9a-f]+$', 'pinctrl-[0-9]+'
 
-Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
-Reported-by: Christian Hewitt <christianshewitt@gmail.com>
+Fixes: 2cd2310fca4c ("arm64: dts: meson-g12b-ugoos-am6: add initial device-tree")
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20191018140216.4257-1-narmstrong@baylibre.com
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Link: https://lore.kernel.org/r/20200326160857.11929-2-narmstrong@baylibre.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 554863429aa6..e2094575f528 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -152,6 +152,10 @@ &cpu103 {
- 	clock-latency = <50000>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+index ccd0bced01e8..2e66d6418a59 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+@@ -545,7 +545,7 @@ &uart_AO {
+ &usb {
+ 	status = "okay";
+ 	dr_mode = "host";
+-	vbus-regulator = <&usb_pwr_en>;
++	vbus-supply = <&usb_pwr_en>;
  };
  
-+&frddr_a {
-+	status = "okay";
-+};
-+
- &frddr_b {
- 	status = "okay";
- };
+ &usb2_phy0 {
 -- 
 2.25.1
 
