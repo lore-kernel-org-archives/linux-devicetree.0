@@ -2,93 +2,129 @@ Return-Path: <SRS0=7QPV=7V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBBDC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BE6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0958420760
-	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C3D2068D
+	for <linux-devicetree@archiver.kernel.org>; Mon,  8 Jun 2020 19:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vEdlapUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgFHT1b (ORCPT
+        id S1726409AbgFHTjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:27:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39542 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgFHT1a (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:27:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E1636AE41;
-        Mon,  8 Jun 2020 19:27:31 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        robh@kernel.org, mathias.nyman@linux.intel.com,
-        Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 0/9] Raspberry Pi 4 USB firmware initialization rework
-Date:   Mon,  8 Jun 2020 21:26:52 +0200
-Message-Id: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+        Mon, 8 Jun 2020 15:39:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52688 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgFHTjb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 15:39:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 058JdOuJ007940;
+        Mon, 8 Jun 2020 14:39:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591645164;
+        bh=p3el6r3iFT6tyZHvcT3VOEaphwFqZKjosskfvLkSjGk=;
+        h=From:To:CC:Subject:Date;
+        b=vEdlapUcZ/2jZ8g4lNgHQ5neWHy2f5C7YvL4i0o2stJLQcNd4EbHCHY8zrSDV3icb
+         mx363Y8nQwi0GgCtLDn8harxtX8o+W0IZscx8lALnmjwTxokRidCOTfdT0xTjtNk62
+         eN34AxThRFxkZXqugNaqLgUlDCqbZpLNnAbaAPhY=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 058JdOkj002245
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Jun 2020 14:39:24 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Jun
+ 2020 14:39:24 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 8 Jun 2020 14:39:24 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 058JdOZ1061651;
+        Mon, 8 Jun 2020 14:39:24 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v27 00/15] Multicolor Framework v27
+Date:   Mon, 8 Jun 2020 14:39:02 -0500
+Message-ID: <20200608193917.13084-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-loaded directly from an EEPROM or, if not present, by the SoC's
-co-processor, VideoCore. This series reworks how we handle this.
+Hello
 
-The previous solution makes use of PCI quirks and exporting platform
-specific functions. Albeit functional it feels pretty shoehorned. This
-proposes an alternative way of handling the triggering of the xHCI chip
-initialization trough means of a reset controller.
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-The benefits are pretty evident: less platform churn in core xHCI code,
-and no explicit device dependency management in pcie-brcmstb.
+Dan
 
-Note that patch #1 depend on another series[1].
+Dan Murphy (15):
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt-bindings: leds: Convert leds-lp55xx to yaml
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
+  leds: lp5523: Fix various formatting issues in the code
 
-The series is based on next-20200605.
-
-[1] https://lwn.net/ml/linux-kernel/cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech/
-
----
-
-Nicolas Saenz Julienne (9):
-  dt-bindings: reset: Add a binding for the RPi Firmware USB reset
-  reset: Add Raspberry Pi 4 firmware USB reset controller
-  ARM: dts: bcm2711: Add firmware usb reset node
-  ARM: dts: bcm2711: Add reset controller to xHCI node
-  usb: xhci-pci: Add support for reset controllers
-  Revert "USB: pci-quirks: Add Raspberry Pi 4 quirk"
-  usb: host: pci-quirks: Bypass xHCI quirks for Raspberry Pi 4
-  Revert "firmware: raspberrypi: Introduce vl805 init routine"
-  Revert "PCI: brcmstb: Wait for Raspberry Pi's firmware when present"
-
- .../arm/bcm/raspberrypi,bcm2835-firmware.yaml |  21 +++
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts         |  12 ++
- drivers/firmware/Kconfig                      |   3 +-
- drivers/firmware/raspberrypi.c                |  61 ---------
- drivers/pci/controller/pcie-brcmstb.c         |  17 ---
- drivers/reset/Kconfig                         |   9 ++
- drivers/reset/Makefile                        |   1 +
- drivers/reset/reset-raspberrypi-usb.c         | 122 ++++++++++++++++++
- drivers/usb/host/pci-quirks.c                 |  22 ++--
- drivers/usb/host/xhci-pci.c                   |   9 ++
- include/soc/bcm2835/raspberrypi-firmware.h    |   7 -
- 11 files changed, 184 insertions(+), 100 deletions(-)
- create mode 100644 drivers/reset/reset-raspberrypi-usb.c
+ .../ABI/testing/sysfs-class-led-multicolor    |  36 +
+ .../bindings/leds/leds-class-multicolor.yaml  |  37 +
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 -----
+ .../devicetree/bindings/leds/leds-lp55xx.yaml | 218 +++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  88 ++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  24 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 210 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 783 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 212 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 24 files changed, 1978 insertions(+), 355 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
 
 -- 
 2.26.2
