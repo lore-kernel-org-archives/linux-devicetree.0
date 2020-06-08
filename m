@@ -2,87 +2,116 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AE2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAABDC433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 161E32078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DlylYLiE"
+	by mail.kernel.org (Postfix) with ESMTP id B3B2220801
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgFIAP6 (ORCPT
+        id S1732077AbgFIAQB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:15:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47790 "EHLO m43-7.mailgun.net"
+        Mon, 8 Jun 2020 20:16:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:19508 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730817AbgFIAP5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:15:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591661757; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cnXptHuROdhiqd7OJYq02Tw3oZx7BeMflcINlbXkNI4=;
- b=DlylYLiEUkM57j+aDXROHikRIiHif100WmSqF2bS7o80ArW3VOKIuJ1UCqGRhaKUDYX04ULR
- jz7Ba1XlKYel92hciOs2HEO5DqQdGhNP1C5QcSZka9whjztj0HWz21VCGEQsgp6JCcpihGHh
- 2arXTOIJbH7gf9xwSBTl1vF0NsA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5eded4abf1889e857a21e4c5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 00:15:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99DECC433CA; Tue,  9 Jun 2020 00:15:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 72257C433AF;
-        Tue,  9 Jun 2020 00:15:38 +0000 (UTC)
+        id S1732892AbgFIAPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 20:15:22 -0400
+IronPort-SDR: Z2XkLtwfSAslRmJZ3d7rk5/cuWRpnInUN2YW9JdmQAnTlxopkWLsYG7782hdQ2ihYXF0fr7ldQ
+ ha3w3KEol9iA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 17:15:22 -0700
+IronPort-SDR: qbPVQki+36XgabtS5oHGJy8ZtNY2h1ErJWojOu92iiJpE6H/FNYnEEV0Zuwe6ir3rSdGZ7lwNE
+ vQhFwRYuYNtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,489,1583222400"; 
+   d="scan'208";a="418227405"
+Received: from lkp-server01.sh.intel.com (HELO 12d5c0ac8e64) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2020 17:15:20 -0700
+Received: from kbuild by 12d5c0ac8e64 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jiRvD-00001V-Fz; Tue, 09 Jun 2020 00:15:19 +0000
+Date:   Tue, 9 Jun 2020 04:18:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
+        andy.shevchenko@gmail.com, pmeerw@pmeerw.net,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
+Message-ID: <202006090426.ENCJHJ1n%lkp@intel.com>
+References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 08 Jun 2020 17:15:38 -0700
-From:   tanmay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, seanpaul@chromium.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        robdclark@gmail.com, abhinavk@codeaurora.org,
-        nganji@codeaurora.org, jsanka@codeaurora.org,
-        aravindh@codeaurora.org, hoegsberg@google.com,
-        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
-        Vara Reddy <varar@codeaurora.org>
-Subject: Re: [DPU PATCH v5 2/5] drm: add constant N value in helper file
-In-Reply-To: <158768529129.135303.14920680590198766597@swboyd.mtv.corp.google.com>
-References: <1585701031-28871-1-git-send-email-tanmay@codeaurora.org>
- <1585701031-28871-3-git-send-email-tanmay@codeaurora.org>
- <158768529129.135303.14920680590198766597@swboyd.mtv.corp.google.com>
-Message-ID: <51b45caae61860d6732d7ef575859d72@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-23 16:41, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-03-31 17:30:28)
->> From: Chandan Uddaraju <chandanu@codeaurora.org>
->> 
->> The constant N value (0x8000) is used by multiple DP
-> 
-> There's one driver using it, not multiple.
-> 
-Changed commit message accordingly.
->> drivers. Define this value in header file and use this
->> in the existing i915 display driver.
->> 
->> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
->> Signed-off-by: Vara Reddy <varar@codeaurora.org>
+Hi Tomasz,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on iio/togreg]
+[also build test WARNING on robh/for-next linux/master v5.7]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Tomasz-Duszynski/Add-support-for-SCD30-sensor/20200608-020304
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+
+cppcheck warnings: (new ones prefixed by >>)
+
+>> drivers/iio/chemical/scd30_core.c:93:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+        sign = float32 & BIT(31) ? -1 : 1,
+                                 ^
+
+vim +93 drivers/iio/chemical/scd30_core.c
+
+    87	
+    88	/* simplified float to fixed point conversion with a scaling factor of 0.01 */
+    89	static int scd30_float_to_fp(int float32)
+    90	{
+    91		int fraction, shift,
+    92		    mantissa = float32 & GENMASK(22, 0),
+  > 93		    sign = float32 & BIT(31) ? -1 : 1,
+    94		    exp = (float32 & ~BIT(31)) >> 23;
+    95	
+    96		/* special case 0 */
+    97		if (!exp && !mantissa)
+    98			return 0;
+    99	
+   100		exp -= 127;
+   101		if (exp < 0) {
+   102			exp = -exp;
+   103			/* return values ranging from 1 to 99 */
+   104			return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
+   105		}
+   106	
+   107		/* return values starting at 100 */
+   108		shift = 23 - exp;
+   109		float32 = BIT(exp) + (mantissa >> shift);
+   110		fraction = mantissa & GENMASK(shift - 1, 0);
+   111	
+   112		return sign * (float32 * 100 + ((fraction * 100) >> shift));
+   113	}
+   114	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
