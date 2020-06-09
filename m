@@ -2,154 +2,140 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565DFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903D4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F149207ED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E3B207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgFILOd (ORCPT
+        id S1728953AbgFILSo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:14:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:13346 "EHLO mga03.intel.com"
+        Tue, 9 Jun 2020 07:18:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59602 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728902AbgFILOb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:14:31 -0400
-IronPort-SDR: z9qE89ticaNrfKwWCGu7uuxWge9VMYZ+/nc2lP3aWrnJqyFy2SPwo5K6HXD/cdOnjDuKzzcBO+
- +HjysuT5tXAA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 04:14:30 -0700
-IronPort-SDR: 1x2X09s+C+ZmFmpenHPAYX2alWHxwwRofz1VOCvBr/3CFXAO8x1AES5WZ0cMkbs0UWxKP4TrPA
- gyns/aLdBahg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="379708876"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2020 04:14:26 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jicD6-00BsuX-SU; Tue, 09 Jun 2020 14:14:28 +0300
-Date:   Tue, 9 Jun 2020 14:14:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V7, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-Message-ID: <20200609111428.GH2428291@smile.fi.intel.com>
-References: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
- <20200605105412.18813-3-dongchun.zhu@mediatek.com>
- <20200605124643.GG2428291@smile.fi.intel.com>
- <1591424358.8804.599.camel@mhfsdcap03>
- <20200608132720.GS2428291@smile.fi.intel.com>
- <1591674341.8804.628.camel@mhfsdcap03>
+        id S1727002AbgFILSn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:18:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7B218ACF2;
+        Tue,  9 Jun 2020 11:18:44 +0000 (UTC)
+Message-ID: <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
+Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
+        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 13:18:38 +0200
+In-Reply-To: <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+         <20200608192701.18355-6-nsaenzjulienne@suse.de>
+         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-NVYfO6rea++DlkfIypsN"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591674341.8804.628.camel@mhfsdcap03>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 11:45:41AM +0800, Dongchun Zhu wrote:
-> On Mon, 2020-06-08 at 16:27 +0300, Andy Shevchenko wrote:
-> > On Sat, Jun 06, 2020 at 02:19:18PM +0800, Dongchun Zhu wrote:
-> > > On Fri, 2020-06-05 at 15:46 +0300, Andy Shevchenko wrote:
-> > > > On Fri, Jun 05, 2020 at 06:54:12PM +0800, Dongchun Zhu wrote:
 
-...
+--=-NVYfO6rea++DlkfIypsN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > > > > +#define DW9768_AAC_TIME_DEFAULT			0x20
-> > > > 
-> > > > Hex? Why not decimal?
-> > > > 
-> > > 
-> > > There is one optional property 'dongwoon,aac-timing' defined in DT.
-> > > I don't know whether you have noticed that.
-> > > 
-> > > 'DW9768_AAC_TIME_DEFAULT' is the value set to AACT[5:0] register.
-> > > I thought the Hex unit should be proper as it is directly written to the
-> > > Hex register.
-> > 
-> > I see. I would rather put it like (BIT(6) / 2) to show explicitly that we
-> > choose half of the resolution.
-> > 
-> 
-> I knew your idea.
-> '(BIT(6) / 2)' may somewhat show the meaning of 'median of the total
-> range of AACT[5:0]'.
-> 
-> But this value is still very obscure relative to '0x20'.
-> As I thought that simple is the best, especially for kernel upstream
-> patch.
+Hi Florian, thanks for the reviews!
 
-Okay, let's wait for maintainers to speak up.
+On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
+>=20
+> On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> > Some atypical users of xhci-pci might need to manually reset their xHCI
+> > controller before starting the HCD setup. Check if a reset controller
+> > device is available to the PCI bus and trigger a reset.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/usb/host/xhci-pci.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >=20
+> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > index ef513c2fb843..45f70facdfcd 100644
+> > --- a/drivers/usb/host/xhci-pci.c
+> > +++ b/drivers/usb/host/xhci-pci.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/module.h>
+> >  #include <linux/acpi.h>
+> > +#include <linux/reset.h>
+> > =20
+> >  #include "xhci.h"
+> >  #include "xhci-trace.h"
+> > @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, cons=
+t
+> > struct pci_device_id *id)
+> >  	struct xhci_hcd *xhci;
+> >  	struct usb_hcd *hcd;
+> >  	struct xhci_driver_data *driver_data;
+> > +	struct reset_control *reset;
+> > =20
+> >  	driver_data =3D (struct xhci_driver_data *)id->driver_data;
+> >  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
+> > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, con=
+st
+> > struct pci_device_id *id)
+> >  			return retval;
+> >  	}
+> > =20
+> > +	reset =3D devm_reset_control_get(&dev->bus->dev, NULL);
+>=20
+> Should not this be devm_reset_control_get_optional()?
 
-...
+Yes, you're right.
 
-> > > > > +	for ( ; val >= 0; val -= DW9768_MOVE_STEPS) {
-> > > > > +		ret = dw9768_set_dac(dw9768, val);
-> > > > > +		if (ret) {
-> > > > > +			dev_err(&client->dev, "I2C write fail: %d", ret);
-> > > > > +			return ret;
-> > > > > +		}
-> > > > > +		usleep_range(move_delay_us, move_delay_us + 1000);
-> > > > > +	}
-> > > > 
-> > > > 
-> > > > It will look more naturally in the multiplier kind of value.
-> > > > 
-> > > > 	unsigned int steps = DIV_ROUND_UP(...);
-> > > > 
-> > > > 	while (steps--) {
-> > > > 		...(..., steps * ..._MOVE_STEPS);
-> > > > 		...
-> > > > 	}
-> > > > 
-> > > > but double check arithmetics.
-> > > 
-> > > The current coding style is actually updated with reference to your
-> > > previous comments on DW9768 v3:
-> > > https://patchwork.linuxtv.org/patch/61856/
-> > 
-> > I understand, but can you consider to go further and see if the proposal works?
-> > 
-> 
-> In fact, your suggestion is something like one another method to set DAC
-> value to actuator.
-> It is like there may be several solutions to a question.
-> 
-> Yes. I just tried the new method and it works as expected.
-> u32 steps = DIV_ROUND_UP(dw9768->focus->val, DW9768_MOVE_STEPS);
-> while (steps--) {
-> 	ret = dw9768_set_dac(dw9768, steps * DW9768_MOVE_STEPS);
-> 	if (ret)
-> 		return ret;
-> 	usleep_range(move_delay_us, move_delay_us + 1000);
-> }
-> 
-> But from my perspective, I may prefer to the original method.
-> As here what we really care is the DAC value,
-> 'dw9768_set_dac(dw9768, val)' seems more simple.
+Regards,
+Nicolas
 
-OK.
+> > +	if (IS_ERR(reset)) {
+> > +		retval =3D PTR_ERR(reset);
+> > +		return retval;
+> > +	}
+> > +	reset_control_reset(reset);
+> > +
+> >  	/* Prevent runtime suspending between USB-2 and USB-3 initialization =
+*/
+> >  	pm_runtime_get_noresume(&dev->dev);
+> > =20
+> >=20
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+--=-NVYfO6rea++DlkfIypsN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fcA4ACgkQlfZmHno8
+x/42lggAr4gRLoLdRsOhuBSqjjZLdGcfoxGXMXDpXwxrRsd71lmv+/LtQABORuU3
+Y4M35yyADqBeIuOMtzBSNCxGdLhCxhz4oRZwlAZMO2BRmbv5nVYbesB4JGCeGQ6j
+Kac2Fhfb5aBF7KhISqp7HGN5cH6fQQAgjiPebWDmCNqg0k/kC82VQgJ+JfB3uL3t
+3IuTyHni/9N/xdxeLwZDMjASxQGWRwCq0U+7uGJmsP1lYFB0ucjHa9egEzdeNbui
+DgOvWHSrBjNS3t3bcSpaG5IUspjT+zCYVUOr24zhW7k2WurtDGlkx5Oeh3+/Pipf
++z7kYFcTP0uYL6kbSA4G7CdRzBFWHw==
+=WpCe
+-----END PGP SIGNATURE-----
+
+--=-NVYfO6rea++DlkfIypsN--
 
