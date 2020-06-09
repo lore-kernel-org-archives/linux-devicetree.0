@@ -2,154 +2,114 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C0CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E932420734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bT+muX/Z"
+	by mail.kernel.org (Postfix) with ESMTP id 6D51020734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591728459;
+	bh=uCUPSy3LHC5NpBWjYwABGrcETfQmegBMc7n+u3jXo5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LAL0FeB847oYaaNlzgr9+mIbgCPaike3FeAvdz/9yxBU/RfvIHmjLe6NF+6jogDov
+	 AtqGsd60ZDFJaUv5WCwRIomR6ZviiqH6JluDEGGr8Ey0X/NNpg73oRhl0p+qUZ95gL
+	 8E0JG1e3XL8s5109MHUhcJr5r6q0DVmxZl/kfM8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgFISly (ORCPT
+        id S2388903AbgFISri (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 14:41:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729860AbgFISlt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 14:41:49 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89455C08C5C4
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 11:41:47 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h5so22486254wrc.7
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 11:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=nmaejAPqL7w5RZ3rYBTgKoizKjTpzF9/rXO7+RKEnFs=;
-        b=bT+muX/ZHRyFVoKnvmGjZYEBoJBSQhFE7M258fsMuSAMDYowHgy3BXIG/jHiBLN3Eu
-         j44yKp2S1Qr5XCQKMWibyk0jNOe5ZUqG43z0mTcQgB8TqqYUAilZ/+TflAKsIoD+DYg1
-         GiUnrBLUYvuXERBXq188+PcxnG+tGm3IfxkW3Wq0xTDoNESuL/TXFOE+ZgasGd5La3cx
-         0RN999iXgJC2v/eadBv1wABQnyJuHz70FaHCXXpaWaEftcJLu5dCN01Qk2HOHHG4dywz
-         Noa2fAHca/bEcEoRRIgF3kdGyr3gXsT44NPGuPONy9VKwePCyay2oPzNkfZ81KyeTGx+
-         F5zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=nmaejAPqL7w5RZ3rYBTgKoizKjTpzF9/rXO7+RKEnFs=;
-        b=prNDCJVKXDXvswbG4Y0U7GUYp2hJvMlTXxBjs3g6rQsUHjJ8+IgHxkk9XAeDcWhJhI
-         M1Tlz/sUZBPmOJqWUqr5lI6q45igjK7g/nlqq1dZWcGgIU8nU5BhLrhqumHW3tD0+6tN
-         HXCUyRK4nGuhi4i45dxoohg45ihXdRpy34XhHi34rraSopzPgxB4EqcKZ3jCDigBu/zj
-         fEeXOabymZxudT9fsjcUt2B2KzNyMOO0IdR4PNtXt3APcUVZzd0h6stWnWZ8GLkKrBYK
-         OGr1pn9XEgM3pa/21RF0+acOTfaOUdaZCVZvUy4fZr5EA69+dQ2YH3IzOeubjK3xoejR
-         CxYw==
-X-Gm-Message-State: AOAM531Vimi/6RLHy0u0i+BlKSEP1GQvPpji/LLLaSv44G+HpgiFy430
-        Zxbl1cB681EJ6MucokyNxakmRw==
-X-Google-Smtp-Source: ABdhPJx5FO/vEubUSX2PK6P+KpZvhjPdNngyh29RNODEGr7a4h7Gn46X2+6wYsXyxNUmt6ZTCXwdvQ==
-X-Received: by 2002:adf:f44b:: with SMTP id f11mr5884154wrp.165.1591728105471;
-        Tue, 09 Jun 2020 11:41:45 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id 40sm4694407wrc.15.2020.06.09.11.41.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 11:41:44 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 19:41:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609184142.GN4106@dell>
-References: <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
- <20200609144201.GK4583@sirena.org.uk>
- <a2bae71634fe288f067d5e92090b7561@walle.cc>
- <20200609171520.GC1019634@bogus>
+        Tue, 9 Jun 2020 14:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728400AbgFISrh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 14:47:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76DB520737;
+        Tue,  9 Jun 2020 18:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591728457;
+        bh=uCUPSy3LHC5NpBWjYwABGrcETfQmegBMc7n+u3jXo5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xjqZkmD59drnpt66B3AiMrUEFDamsUUadN8nTRe2dZuviEldMp/gylnJXMc0evNq3
+         VsShA3bQiprNZIaobB1SPaT9wDmYV1nablAHV9pbAYXicU9ovABBDwqYj9CrWU17Dq
+         lGxdoq7nSDB4TdNGoCCsTHMrRHN14lhpwLfSIInY=
+Date:   Tue, 9 Jun 2020 19:47:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200609184734.GS4583@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com>
+ <20200609173143.GN4583@sirena.org.uk>
+ <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+ <20200609175852.GQ4583@sirena.org.uk>
+ <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pa4xkLBhPDIhDLv1"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609171520.GC1019634@bogus>
+In-Reply-To: <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2020, Rob Herring wrote:
 
-> On Tue, Jun 09, 2020 at 05:01:17PM +0200, Michael Walle wrote:
-> > Am 2020-06-09 16:42, schrieb Mark Brown:
-> > > On Tue, Jun 09, 2020 at 04:38:31PM +0200, Michael Walle wrote:
-> > > 
-> > > >   mfd-device@10 {
-> > > >     compatible = "simple-regmap", "simple-mfd";
-> > > >     reg = <10>;
-> > > >     regmap,reg-bits = <8>;
-> > > >     regmap,val-bits = <8>;
-> > > >     sub-device@0 {
-> > > >       compatible = "vendor,sub-device0";
-> > > >       reg = <0>;
-> > > >     };
-> > > 
-> > > A DT binding like this is not a good idea, encoding the details of the
-> > > register map into the DT binding makes it an ABI which is begging for
-> > > trouble.  I'd also suggest that any device using a generic driver like
-> > > this should have a specific compatible string for the device so we can
-> > > go back and add quirks later if we need them.
-> > 
-> > Like in the spidev case, yes. But OTOH if I _just_ encode the parameters
-> > for the regmap a MFD, Lee don't agree because its just a shim. So either
-> > way I seem to be stuck here.
-> > 
-> > Where should I put the code to create an i2c driver, init a regmap and
-> > populate its childen?
-> 
-> Find another driver doing this already and rename it 'simple-mfd' (no 
-> relation to the DT binding) and add your compatible string to it. 
-> 'Generic' or 'simple' drivers don't require generic/simple DT bindings.
+--Pa4xkLBhPDIhDLv1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Creating a generic driver is one of the options spinning around in my
-head.  If nothing better comes of these discussions, I'll turn my hand
-to it soon.
+On Tue, Jun 09, 2020 at 01:06:50PM -0500, Dan Murphy wrote:
 
-> Or extend the existing syscon driver to look up the bus_type and create 
-> the regmap based on the bus type?
+> I could make a default as you suggested to include i2c address and bus in
+> the name.=A0 But the TAS2563 does not need the firmware to operate and the
+> 2562 does not have a DSP.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+That's fine, the driver can just use the compatible string to check this
+and not offer any of the DSP related stuff (it should do this regardless
+of the method used here).  I'm guessing the regmap configs should also
+be different.
+
+> What if there was an ALSA control instead that passed in the firmware name
+> from the user space instead of using the DT?
+
+> Then the control can load and parse the firmware and wait for the user to
+> select the program.
+
+> This would solve a user from having ot update the DT to use a firmware.
+
+That's really not very idiomatic for how Linux does stuff and seems to
+pretty much guarantee issues with hotplugging controls and ordering -
+you'd need special userspace to start up even if it was just a really
+simple DSP config doing only speaker correction or something.  I'm not
+sure what the advantage would be - what problem is this solving over
+static names?
+
+--Pa4xkLBhPDIhDLv1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7f2UUACgkQJNaLcl1U
+h9B2rwf/YFbqDdxSX14Y6RPwmFML2pjKw2MuRY9938rKnwgtQ37Os922ucZ6N6uq
++WvyT864PZsYY8N01/dkmmPd8B+8lV/85PlWg+K+O9BNDLtLY5jnHE4a9xMdaYyB
+zyKzaKlKti2ZpEAJ6fgQY3ja05YEBGKSPtL0PORFHmSKgaQie91AFWRPbbv7Prqb
+FSB4J45Z7rUQ9OTz6qLlxixQbjMjXTx/zXUl9AptuKUvCO3ei2VP9Kx7M1vN7EFn
+ava9TCr/Zex1DfGtLGR2xj48m3UYHcp+r2STuTW3L185w09c9oU3pduzQcF+qd7+
+wngrO/PscDnJ+YLElOOVyQJOcZhFEQ==
+=/Hdd
+-----END PGP SIGNATURE-----
+
+--Pa4xkLBhPDIhDLv1--
