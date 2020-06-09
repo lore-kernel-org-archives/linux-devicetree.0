@@ -2,96 +2,101 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27BFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B88C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8039620835
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591703731;
-	bh=DZZhGzI+zYbVwAglBZbNEPnQrJ7dihjeI/FOUkhIb4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IUplVugWhMflDDduBKTqCX4oLU8HTIh6azPWlm96Ba1mr7jdv4TXy9fyEOO37HufG
-	 XAam72eg/EnR7wPht/yArvajsRVxscMHoVBDqmjW0B+sX3VEqfDLdBmv1+K+NTvKRe
-	 6nNoHM+/Fi5KEpqk86sDVWg31JdUyis9q/42n1lk=
+	by mail.kernel.org (Postfix) with ESMTP id 82BE02078D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgFILza (ORCPT
+        id S1728926AbgFIMAW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgFILz3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 07:55:29 -0400
-Received: from localhost (unknown [122.171.156.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9277720814;
-        Tue,  9 Jun 2020 11:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591703729;
-        bh=DZZhGzI+zYbVwAglBZbNEPnQrJ7dihjeI/FOUkhIb4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2iLIT+qfuXefaCTB6NGgnXlaQ9kNKUrCXOe2fdo2ImwNm/o+nUFsHDKMzihTxBNB3
-         jJ++fFj5/tYq5RTz5SGC8GP6evZRU5ysoXx0Kz943WE8tiXdwCv14fJVDOhJGOE8pX
-         L3uFLHzuZNySy55RhcaZhTV/Pb/P1iPOa/DUO8g0=
-Date:   Tue, 9 Jun 2020 17:25:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     ansuelsmth@gmail.com,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Andy Gross' <agross@codeaurora.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Kishon Vijay Abraham I' <kishon@ti.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: R: [PATCH v6 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy
- driver
-Message-ID: <20200609115525.GD1084979@vkoul-mobl>
-References: <20200603132237.6036-1-ansuelsmth@gmail.com>
- <20200604161942.GK311@earth.li>
- <017001d63b5a$c3807740$4a8165c0$@gmail.com>
- <20200609114148.GS311@earth.li>
+        Tue, 9 Jun 2020 08:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgFIMAV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 08:00:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA625C05BD1E
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 05:00:20 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jicvD-0006J2-Ev; Tue, 09 Jun 2020 14:00:03 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jicv9-00033i-Mm; Tue, 09 Jun 2020 13:59:59 +0200
+Message-ID: <73fdeca7b651252f7907635e97f9f9b31e702868.camel@pengutronix.de>
+Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
+        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 13:59:59 +0200
+In-Reply-To: <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+         <20200608192701.18355-6-nsaenzjulienne@suse.de>
+         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+         <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609114148.GS311@earth.li>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 09-06-20, 12:41, Jonathan McDowell wrote:
-> On Fri, Jun 05, 2020 at 07:00:04PM +0200, ansuelsmth@gmail.com wrote:
-> > > On Wed, Jun 03, 2020 at 03:22:34PM +0200, Ansuel Smith wrote:
-> > > > This has lost in the original push for the dwc3 qcom driver.
-> > > > This is needed for ipq806x SoC as without this the usb ports
-> > > > doesn't work at all.
-> > > 
-> > > FWIW I tested this on my RB3011 so feel free to add:
-> > > 
-> > > Tested-by: Jonathan McDowell <noodles@earth.li>
-> > > 
-> > > One minor comment; would PHY_QCOM_USB_IPQ806X not be a better
-> > > choice than PHY_QCOM_IPQ806X_USB given the existing naming?
-> > > 
-> >
-> > Thanks for the feedback. About naming I'm following the sata ipq806x
-> > naming.  I really hope someone gets this and reviews it since usb is
-> > broken for a long time now.
+Hi Nicolas,
+
+On Tue, 2020-06-09 at 13:18 +0200, Nicolas Saenz Julienne wrote:
+> Hi Florian, thanks for the reviews!
 > 
-> Doesn't seem to have made the 5.8 merge window; I note Vinod has done a
-> bunch of the recent commits to phy/qualcomm/ so adding him to the CC in
-> addition to Kishon.
+> On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
+> > On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> > > Some atypical users of xhci-pci might need to manually reset their xHCI
+> > > controller before starting the HCD setup. Check if a reset controller
+> > > device is available to the PCI bus and trigger a reset.
+> > > 
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > ---
+> > >  drivers/usb/host/xhci-pci.c | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > > 
+> > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> > > index ef513c2fb843..45f70facdfcd 100644
+> > > --- a/drivers/usb/host/xhci-pci.c
+> > > +++ b/drivers/usb/host/xhci-pci.c
+[...]
+> > > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, const
+> > > struct pci_device_id *id)
+> > >  			return retval;
+> > >  	}
+> > >  
+> > > +	reset = devm_reset_control_get(&dev->bus->dev, NULL);
+> > 
+> > Should not this be devm_reset_control_get_optional()?
+> 
+> Yes, you're right.
 
-It is too late for 5.8 now, please rebase and resend it after rc1 is
-tagged
+Please use devm_reset_control_get_optional_exclusive() while you're at
+it.
 
-Thanks
--- 
-~Vinod
+regards
+Philipp
