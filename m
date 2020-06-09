@@ -2,207 +2,136 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3009AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFB520774
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:33:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HjIZbyNu"
+	by mail.kernel.org (Postfix) with ESMTP id BC22B20760
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591709796;
+	bh=Li2Zv/6mZ+A+7R/O4fGGBVAxKZqiekxdMlcIJEyMsuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y6OkTzgt/FouKMZBWZiVAKbyC+AfHBDWiRKWys+HGrlllR+AksJ7ARJpi+i1prrUu
+	 RatwxIpz6zg0n7YLLucs2iL6pDsC/+cxAcUixzIgMYx6KIMEkRV15Mxsh0x6td827g
+	 PXy1ymlssNZjhY6Et69XWrL5BkzpwuiY9KGVkYBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgFINdt (ORCPT
+        id S1728710AbgFINgb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:33:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:31565 "EHLO m43-7.mailgun.net"
+        Tue, 9 Jun 2020 09:36:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgFINdl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:33:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591709621; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=bi0kcoFCDpSOwpX8akilhJLHWYc+3OJnwXkPt4qNrrM=; b=HjIZbyNufNXAV/6FPJ3MkPKokpbFIR53LkuTULRY2K7ZBlWkmYQ5xKhtmAqt57Z1JqneuN41
- 4wvJw5gHi499aMkFuEo1Vh6ZwkwIW+8d1IdhKKcpAY1J1qoPl/n9mCzX1DnnkFKy4xlekELn
- 2I5xUP8DiTx8vL6WvOTFSChDCU4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5edf8fa8e144dd5115a5a151 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:33:28
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8A6BBC43387; Tue,  9 Jun 2020 13:33:28 +0000 (UTC)
-Received: from vnaralas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1728400AbgFINga (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:36:30 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akolli)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A887EC43395;
-        Tue,  9 Jun 2020 13:33:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A887EC43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akolli@codeaurora.org
-From:   Anilkumar Kolli <akolli@codeaurora.org>
-To:     ath11k@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Anilkumar Kolli <akolli@codeaurora.org>
-Subject: [PATCH v2 4/8] ath11k: add IPQ6018 support
-Date:   Tue,  9 Jun 2020 19:02:57 +0530
-Message-Id: <1591709581-18039-5-git-send-email-akolli@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
-References: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 302F220760;
+        Tue,  9 Jun 2020 13:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591709789;
+        bh=Li2Zv/6mZ+A+7R/O4fGGBVAxKZqiekxdMlcIJEyMsuw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wvyrDCX2Kyt8XdCcriT/loGbIqItmnhi6dxs74zoVk3ao9QrbLlBuUdzAO7csHcG8
+         8J9cfDv4FK0Oazwhr1o1bqrJ4gQgjb60Rw+jFyneV0En2dSvoJSxNOc/LXZ2e7b8hU
+         pyoTKOiQHj5Q/qf8HCS3CKeh3ZntT4ycRcBMu3ww=
+Date:   Tue, 9 Jun 2020 14:36:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Message-ID: <20200609133627.GG4583@sirena.org.uk>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+ <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9/eUdp+dLtKXvemk"
+Content-Disposition: inline
+In-Reply-To: <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IPQ6018 has one 5G and one 2G radio with 2x2,
-shares ipq8074 configurations.
 
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
----
- drivers/net/wireless/ath/ath11k/ahb.c  |  3 ++
- drivers/net/wireless/ath/ath11k/core.c | 55 +++++++++++++++++++++++++++++-----
- drivers/net/wireless/ath/ath11k/core.h |  1 +
- drivers/net/wireless/ath/ath11k/hw.h   |  6 ++++
- 4 files changed, 58 insertions(+), 7 deletions(-)
+--9/eUdp+dLtKXvemk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index 30092841ac46..dca014ea7ddf 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -20,6 +20,9 @@ static const struct of_device_id ath11k_ahb_of_match[] = {
- 	{ .compatible = "qcom,ipq8074-wifi",
- 	  .data = (void *)ATH11K_HW_IPQ8074,
- 	},
-+	{ .compatible = "qcom,ipq6018-wifi",
-+	  .data = (void *)ATH11K_HW_IPQ6018,
-+	},
- 	{ }
- };
- 
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index 02501cc154fe..abe9edb56309 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -17,12 +17,24 @@ unsigned int ath11k_debug_mask;
- module_param_named(debug_mask, ath11k_debug_mask, uint, 0644);
- MODULE_PARM_DESC(debug_mask, "Debugging mask");
- 
--static const struct ath11k_hw_params ath11k_hw_params = {
--	.name = "ipq8074",
--	.fw = {
--		.dir = IPQ8074_FW_DIR,
--		.board_size = IPQ8074_MAX_BOARD_DATA_SZ,
--		.cal_size =  IPQ8074_MAX_CAL_DATA_SZ,
-+static const struct ath11k_hw_params ath11k_hw_params_list[] = {
-+	{
-+		.dev_id = ATH11K_HW_IPQ8074,
-+		.name = "ipq8074",
-+		.fw = {
-+			.dir = IPQ8074_FW_DIR,
-+			.board_size = IPQ8074_MAX_BOARD_DATA_SZ,
-+			.cal_size =  IPQ8074_MAX_CAL_DATA_SZ,
-+		},
-+	},
-+	{
-+		.dev_id = ATH11K_HW_IPQ6018,
-+		.name = "ipq6018",
-+		.fw = {
-+			.dir = IPQ6018_FW_DIR,
-+			.board_size = IPQ6018_MAX_BOARD_DATA_SZ,
-+			.cal_size =  IPQ6018_MAX_CAL_DATA_SZ,
-+		},
- 	},
- };
- 
-@@ -707,6 +719,30 @@ static void ath11k_core_restart(struct work_struct *work)
- 	complete(&ab->driver_recovery);
- }
- 
-+static int ath11k_init_hw_params(struct ath11k_base *ab)
-+{
-+	const struct ath11k_hw_params *hw_params = NULL;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ath11k_hw_params_list); i++) {
-+		hw_params = &ath11k_hw_params_list[i];
-+
-+		if (hw_params->dev_id == ab->hw_rev)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(ath11k_hw_params_list)) {
-+		ath11k_err(ab, "Unsupported hardware version: 0x%x\n", ab->hw_rev);
-+		return -EINVAL;
-+	}
-+
-+	ab->hw_params = *hw_params;
-+
-+	ath11k_dbg(ab, ATH11K_DBG_BOOT, "Hardware name %s\n", ab->hw_params.name);
-+
-+	return 0;
-+}
-+
- int ath11k_core_init(struct ath11k_base *ab)
- {
- 	struct device *dev = ab->dev;
-@@ -725,7 +761,12 @@ int ath11k_core_init(struct ath11k_base *ab)
- 		return -EINVAL;
- 	}
- 	ab->tgt_rproc = prproc;
--	ab->hw_params = ath11k_hw_params;
-+
-+	ret = ath11k_init_hw_params(ab);
-+	if (ret) {
-+		ath11k_err(ab, "failed to get hw params %d\n", ret);
-+		return ret;
-+	}
- 
- 	ret = ath11k_core_soc_create(ab);
- 	if (ret) {
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index e04f0e711779..ecf327537ad3 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -88,6 +88,7 @@ struct ath11k_skb_rxcb {
- 
- enum ath11k_hw_rev {
- 	ATH11K_HW_IPQ8074,
-+	ATH11K_HW_IPQ6018,
- };
- 
- enum ath11k_firmware_mode {
-diff --git a/drivers/net/wireless/ath/ath11k/hw.h b/drivers/net/wireless/ath/ath11k/hw.h
-index f7f070af233c..e66f0e0138c4 100644
---- a/drivers/net/wireless/ath/ath11k/hw.h
-+++ b/drivers/net/wireless/ath/ath11k/hw.h
-@@ -73,6 +73,11 @@
- #define IPQ8074_MAX_BOARD_DATA_SZ	(256 * 1024)
- #define IPQ8074_MAX_CAL_DATA_SZ		IPQ8074_MAX_BOARD_DATA_SZ
- 
-+/* IPQ6018 definitions */
-+#define IPQ6018_FW_DIR			ATH11K_FW_DIR "/IPQ6018/hw1.0"
-+#define IPQ6018_MAX_BOARD_DATA_SZ	(256 * 1024)
-+#define IPQ6018_MAX_CAL_DATA_SZ		IPQ6018_MAX_BOARD_DATA_SZ
-+
- #define ATH11K_BOARD_MAGIC		"QCA-ATH11K-BOARD"
- #define ATH11K_BOARD_API2_FILE		"board-2.bin"
- #define ATH11K_DEFAULT_BOARD_FILE	"board.bin"
-@@ -106,6 +111,7 @@ enum ath11k_bus {
- 
- struct ath11k_hw_params {
- 	const char *name;
-+	u16 dev_id;
- 	struct {
- 		const char *dir;
- 		size_t board_size;
--- 
-2.7.4
+On Tue, Jun 09, 2020 at 11:00:33AM +0100, Robin Murphy wrote:
 
+> Ah, I think I understand what's going on now. That's... really ugly :(
+
+> Looking at the SPI core code, I think a better way to handle this would be
+> to have your fallback path call spi_unmap_buf() directly (or perform the
+> same actions, if exporting that to drivers is unacceptable), then make su=
+re
+> ->can_dma() returns false after that such that spi_unmap_msg() won't try =
+to
+> unmap it again. That's a lot more reasonable than trying to fake up a
+> DMA_TO_DEVICE transfer in the middle of a DMA_FROM_DEVICE operation on the
+> same buffer.
+
+Ideally the driver would be checking in can_dma() if the DMA controller
+is able to perform transactions rather than letting things run as far as=20
+trying to actually do the transfer, that's a whole lot cleaner and more
+manageable than running into an error doing the transfer.  I'm surprised
+that there's no DMA API way to figure this out TBH.
+
+We'll also need some handling for this changing at runtime, we're not
+expecting this to be dynamic at all - we're expecting it to be a static
+property of the controller/transfer combination, we didn't contemplate
+this varying randomly at runtime.  Instead of rechecking can_dma() we
+ought to have a flag saying if we did the mapping (which the bodge Robin
+suggests above could clear).
+
+--9/eUdp+dLtKXvemk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fkFoACgkQJNaLcl1U
+h9DtGQgAg3cybc1xp7BBF/QRvws6J4hPoAwnctYQTcfaBVM70lGt4MoQdY+j0ymD
+YB6menlav/89t8bYFq7D5gtHajROU0WHsoMpV0MqojMtTOJG+Bo7uALWKblPRuTH
+kFOBCkPPZXT/yJGw47VaNlQuvjI/Zh8SlLBzjqMAmkDF9OjNN8ZAp8c2KBihDg8O
+YeQZEPlcgtdR/rJlia6YucfA52ZDivjbKaCQIg6hQhiuFU86nxRFqaohBUqxRb5a
+SacvLkra2J+oUkr6z/P76+DkFlZ6cQ3hWGuKWIyr89Ie1/4cvuKvahvYfrpgR2ph
+rY445Tv19HnK2Aaz0RUu6zumFOa3pA==
+=2yHW
+-----END PGP SIGNATURE-----
+
+--9/eUdp+dLtKXvemk--
