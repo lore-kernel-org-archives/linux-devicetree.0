@@ -2,98 +2,119 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306D5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D7CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 064972078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591732951;
-	bh=q+5FPsKLA/Z7flE7/7XyBpxYuqDVnTqZREclhjKh1Yg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o26FlSz07Pq8NC9wDCQ/L4XEuLQ2zhRT56mtodHqAJwxy7v+zH+HsGAlPtS4y3sBr
-	 riJcdnD3r/+D82dzyfIrp2Nfk2Ng8tJkhoTLFvPXZ4fQPbrK/ryPS+bDF82DqB6ew2
-	 dDqPvCjmoH7moogGCv06CGb2gD2zhtKzduka63go=
+	by mail.kernel.org (Postfix) with ESMTP id 18FF020734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:17:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRlKpdJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbgFIUCa (ORCPT
+        id S2387542AbgFIURV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:02:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45692 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFIUC2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 16:02:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id y5so24174642iob.12;
-        Tue, 09 Jun 2020 13:02:27 -0700 (PDT)
+        Tue, 9 Jun 2020 16:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgFIURS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 16:17:18 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BD2C05BD1E;
+        Tue,  9 Jun 2020 13:17:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ne5so1863108pjb.5;
+        Tue, 09 Jun 2020 13:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ycBfwZJp2iSk0H+6hD6qHTXZoBhADfY0mavrlMkbOJI=;
+        b=GRlKpdJHXqeavogNWIbRTZXFAqecpcMOBD54j6AOI+aKs8H3lwYxW9IJkSbNfgeJvJ
+         xire/2BfLwwyptZd8q+QGzejfVC706NkjJ9mnPswdtwskW6WKhqRo2A2mcUCI/f2UZQ1
+         9YXhoyds80y168jeQ0ziR9pXNO/4+Kroy16uF4kBGmnSSDrY6gTCAm7zQ42oESUAWUte
+         c31UMBDe5aD5YiVKceEPt3iXa4v9d9LJ8AZbw/iF1GeJ1uZEVljRrZf0uBbsH4aNFDOH
+         mBaMFjkwCEwpaU1pvaVhCbet9qhe6bHiXaJ2lJAjLlcZb/EGr4vh1wJYlMJswColVlSi
+         HvJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k8Vtkuk+eVaXGU/8rfVJdWcttoiSK9i9poLLXc4pfnw=;
-        b=uUvqEBhR3EXCW+mC25JRkSeAgKuETy/N8Sae6xZgNXUOrjyI0FECNYsbroCECbajXq
-         dCHsQN+UiqSB2fbcx3A787iYg8yTfT7mWo8da9GBGETkj4YQJm65JGV9oAoxyQ5Oxgtq
-         bQcWDmPV3kupCm8l9dCikZ5who4CvhImNKn/oDmgopVnIm2/JKY6eZL6BNwuHsTMi1vo
-         pjdpJZ0uF9myXpxZfS3oTZmZnTsHgwaCYzr/cFcZ5LMuLTWOt509+dnRU+FMjmTcLlY7
-         GgB0RVqNav5c1Lzgt+r7nZCLxrXymqpid/+XI0rbx1iQWjQ+AEkft6zHrEx6v7vMOLQq
-         zOIg==
-X-Gm-Message-State: AOAM531oX/4IWQc2zMqx67sPN7oilvsD7g4J7eGMnmQ016ZbMiXdRqrZ
-        P0ilHD7QC6YZ1Kjx6OS7ZQ==
-X-Google-Smtp-Source: ABdhPJwwjhFBa9o+ou5vR9zbKMqsajdWUO/uk2RF8iJ7Mxb3+utXKh5+R6GmAI2gbaTUyNT6I1quhg==
-X-Received: by 2002:a05:6602:2e96:: with SMTP id m22mr28955927iow.165.1591732947458;
-        Tue, 09 Jun 2020 13:02:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id e184sm7664983iof.44.2020.06.09.13.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 13:02:27 -0700 (PDT)
-Received: (nullmailer pid 1359505 invoked by uid 1000);
-        Tue, 09 Jun 2020 20:02:25 -0000
-Date:   Tue, 9 Jun 2020 14:02:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-pm@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, devicetree@vger.kernel.org,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Subject: Re: [PATCH v3 24/39] dt-bindings: memory: tegra30: Add memory client
- IDs
-Message-ID: <20200609200225.GA1359394@bogus>
-References: <20200607185530.18113-1-digetx@gmail.com>
- <20200607185530.18113-25-digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ycBfwZJp2iSk0H+6hD6qHTXZoBhADfY0mavrlMkbOJI=;
+        b=Fes65+2qBerFnzu3zuLH5E9inN0YUAPwm6Dh9MznXcarqidVBTiJVBTSPkQT/SU2hl
+         3B6D4BmYbFMU7o72m2SB4DSoN8iTqafudQ8Pp7PNyTGVdONfnxSrvrNiMFKbDtJzUGC0
+         UbQX0PLQZMx5jOTi5BVl/Dce7+zzfEVmkOibst5q7ct3TfSiZt4L0hX7r3UcPw8Q25dT
+         tSBb1QcaQa2GmB3mUuYg/uJaG4JIzYWXby5u3Dqp5J7p+h2C8LZrPEoVOGUNQxvle7EI
+         JN/jVR8JYJu8rVlOYOK2yRVg9yMjDsXqN7dxusL+vSLr1r67fssvIUkMESygrTNZRRuF
+         gZmQ==
+X-Gm-Message-State: AOAM533s1rmvztixw/DAdGqeo46XUj1EPjedi4GKQEkjwtn+n09uaGZa
+        dh9BtD/+TObt4PVx94YAV1/TPIvA
+X-Google-Smtp-Source: ABdhPJwanqh4CtSImWJt1rizt00WKH4mXR4I7BTHb+CSiyqSXDleaNuLB6XrtDSyVmukLYHS769hOA==
+X-Received: by 2002:a17:902:7783:: with SMTP id o3mr97268pll.286.1591733837558;
+        Tue, 09 Jun 2020 13:17:17 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 140sm10769164pfv.38.2020.06.09.13.17.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 13:17:16 -0700 (PDT)
+Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609134232.4084718-4-noltari@gmail.com>
+ <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
+ <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
+ <2a621f170574a616bcf047f6725c74552f7abbb1.camel@pengutronix.de>
+ <46614E69-578A-4782-9D72-85B2D2F38FB8@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <e80e5c4c-ceef-3a62-3158-02f742bf76b7@gmail.com>
+Date:   Tue, 9 Jun 2020 13:17:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607185530.18113-25-digetx@gmail.com>
+In-Reply-To: <46614E69-578A-4782-9D72-85B2D2F38FB8@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 07 Jun 2020 21:55:15 +0300, Dmitry Osipenko wrote:
-> Each memory client have a unique hardware ID, this patch adds these IDs.
+
+
+On 6/9/2020 9:41 AM, Álvaro Fernández Rojas wrote:
+>>>> If you can do without this, with I think this driver could be made to
+>>>> use reset-simple.
+>>>
+>>> Yes, but only if I can add reset support with a configurable sleep range to reset-simple. Is this possible?
+>>
+>> I should have mentioned, support for this is on the reset/next branch:
+>>
+>>  git://git.pengutronix.de/pza/linux.git reset/next
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  include/dt-bindings/memory/tegra30-mc.h | 67 +++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
+> Yes, but reset_us was only added to reset_simple_data, so there’s no way to fill that value from reset_simple_devdata or device tree, right?
 
+Not that I can see, but you could certainly extend it here:
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+if (devdata) {
+		reg_offset = devdata->reg_offset;
+		if (devdata->nr_resets)
+			data->rcdev.nr_resets = devdata->nr_resets;
+		data->active_low = devdata->active_low;
+		data->status_active_low = devdata->status_active_low;
+	}
 
-If a tag was not added on purpose, please state why and what changed.
+and have an appropriate devdata structure be provided for your
+compatible string:
 
++	{ .compatible = "brcm,bcm6345-reset", .data = bcm6345_reset_devdata },
+-- 
+Florian
