@@ -2,185 +2,73 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 09:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9E8C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 09:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE41E207C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 09:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="I+/yrmE9"
+	by mail.kernel.org (Postfix) with ESMTP id 4288A20814
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 09:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgFIJN6 (ORCPT
+        id S1728561AbgFIJxL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 05:13:58 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:52003 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgFIJN4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 05:13:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591694036; x=1623230036;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=4gmH4roZ31BbBtOY/irMvwRh3t1QNa19BtAidrntvuM=;
-  b=I+/yrmE9DY6+aW85/yyKlTke2NVSHL6vRluht7C+jUG9f5Ov/0EeM5bE
-   nwAWVJZCoFH4xJoGMZyDFtO2PvI7OzmJVvad9PwO3NKfr0dO+r7Lx7R9k
-   neIYV9EkhbWNRZVk+EDF/mEYMSkMFbKYUBUrmwML5/CQ+2wuPAE9d7uRx
-   XK/D57mQj9VKgQn9NGH3XErnwoOi636yu24a6ZXeUdq/FBBzE5emONI3V
-   LoAmAGsLkEWjA7hZExXfoyWL33p4RZg1rZcNYHSEE6TUhGYglTpRiLxRR
-   sALYQWvjpqgOlJfBMOTJbHD6dT5xzOblfdfI7dTlEqIIzXuwKKVnboEw1
-   Q==;
-IronPort-SDR: VLYk1EEpijJRleQur2LDMOMpKQMGgwyaEf7wD34q+JX5WGTUZUwOWjxi1cLyHnGwvqQoFh4znt
- PD+6Cs+FVj/7nqOT0IVwVhKO0jeEKt2j3QZuYWoTg1iFOzypxd7USwXd4V5ldslOQlNLyHq6xk
- Le8BwgbLtGkLpqFEganF8yy8QODIlPizMZRGBCHZZUdvU6TnU3/bRRw3RxY2GXrC9EhHh0/f4d
- fvPR/R+JWJRdv+ejB81eL7EBaC+/UZGSnEWyKC/ELrQMfqUhuCR+nOwMq623x15E2gS5XbewU6
- CGo=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="15071190"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 02:13:55 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 02:13:54 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
- via Frontend Transport; Tue, 9 Jun 2020 02:13:51 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com> <20200602191025.ywo77nslrgswh6sw@mobilestation>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no IRQ specified in DT
-In-Reply-To: <20200602191025.ywo77nslrgswh6sw@mobilestation>
-Date:   Tue, 9 Jun 2020 11:13:50 +0200
-Message-ID: <87lfkwiott.fsf@soft-dev15.microsemi.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 9 Jun 2020 05:53:11 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46862 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728553AbgFIJxK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 05:53:10 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DA0811A01E7;
+        Tue,  9 Jun 2020 11:53:08 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0218D1A01F7;
+        Tue,  9 Jun 2020 11:53:04 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 95A234029F;
+        Tue,  9 Jun 2020 17:52:57 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     linux-devel@linux.nxdi.nxp.com, Shawn Guo <shawnguo@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
+Date:   Tue,  9 Jun 2020 17:37:41 +0800
+Message-Id: <20200609093741.44050-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Song Hui <hui.song_1@nxp.com>
 
-Serge Semin writes:
+delete the interrupt IRQF_NO_THREAD flags.
 
-> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
->> With this change a SPI controller can be added without having a IRQ
->> associated, and causing all transfers to be polled. For SPI controllers
->> without DMA, this can significantly improve performance by less
->> interrupt handling overhead.
->>
->> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  drivers/spi/spi-dw.c | 21 +++++++++++++--------
->>  1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
->> index 31e3f866d11a7..e572eb34a3c1a 100644
->> --- a/drivers/spi/spi-dw.c
->> +++ b/drivers/spi/spi-dw.c
->> @@ -19,6 +19,8 @@
->>  #include <linux/debugfs.h>
->>  #endif
->>
->
->> +#define VALID_IRQ(i) (i >= 0)
->
-> Mark and Andy are right. It is a good candidate to be in a generic IRQ-related
-> code as Anyd suggested:
->
->> > drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
->> > Candidate to be in include/linux/irq.h ?
->
-> So if you feel like to author additional useful patch integrated into the
-> kernel, this one is a good chance for it.
->
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ drivers/gpio/gpio-mpc8xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, but with the poll_transfer() gone below, I think I'll settle on
-just getting this into the current framework. Optimization (as this is)
-has less priority. I'll put this on the back burner.
-
->> +
->>  /* Slave spi_dev related */
->>  struct chip_data {
->>       u8 tmode;               /* TR/TO/RO/EEPROM */
->> @@ -359,7 +361,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
->>                       spi_enable_chip(dws, 1);
->>                       return ret;
->>               }
->> -     } else if (!chip->poll_mode) {
->> +     } else if (!chip->poll_mode && VALID_IRQ(dws->irq)) {
->>               txlevel = min_t(u16, dws->fifo_len / 2, dws->len / dws->n_bytes);
->>               dw_writel(dws, DW_SPI_TXFLTR, txlevel);
->>
->> @@ -379,7 +381,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
->>                       return ret;
->>       }
->>
->> -     if (chip->poll_mode)
->> +     if (chip->poll_mode || !VALID_IRQ(dws->irq))
->>               return poll_transfer(dws);
->
-> Please note. The chip->poll and the poll_transfer() methods've been discarded
-> from the driver, since commit 1ceb09717e98 ("spi: dw: remove cs_control and
-> poll_mode members from chip_data"). So you gonna have to get the
-> poll_transfer-like method back.
->
-> -Sergey
->
->>
->>       return 1;
->> @@ -487,11 +489,13 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->>
->>       spi_controller_set_devdata(master, dws);
->>
->> -     ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED, dev_name(dev),
->> -                       master);
->> -     if (ret < 0) {
->> -             dev_err(dev, "can not get IRQ\n");
->> -             goto err_free_master;
->> +     if (VALID_IRQ(dws->irq)) {
->> +             ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED,
->> +                               dev_name(dev), master);
->> +             if (ret < 0) {
->> +                     dev_err(dev, "can not get IRQ\n");
->> +                     goto err_free_master;
->> +             }
->>       }
->>
->>       master->use_gpio_descriptors = true;
->> @@ -539,7 +543,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
->>       if (dws->dma_ops && dws->dma_ops->dma_exit)
->>               dws->dma_ops->dma_exit(dws);
->>       spi_enable_chip(dws, 0);
->> -     free_irq(dws->irq, master);
->> +     if (VALID_IRQ(dws->irq))
->> +             free_irq(dws->irq, master);
->>  err_free_master:
->>       spi_controller_put(master);
->>       return ret;
->> --
->> 2.26.2
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..1e86652 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -417,7 +417,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+ 			       mpc8xxx_gpio_irq_cascade,
+-			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       IRQF_SHARED, "gpio-cascade",
+ 			       mpc8xxx_gc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
 -- 
-Lars Povlsen,
-Microchip
+2.9.5
+
