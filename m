@@ -2,62 +2,63 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E79FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878BBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6B32078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66768207C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETaulQJl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQ/bjzvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgFIKwx (ORCPT
+        id S1728206AbgFIKxB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:52:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        Tue, 9 Jun 2020 06:53:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgFIKws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 06:52:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6E6C05BD1E;
-        Tue,  9 Jun 2020 03:52:48 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q11so20790361wrp.3;
-        Tue, 09 Jun 2020 03:52:48 -0700 (PDT)
+        with ESMTP id S1726886AbgFIKwt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 06:52:49 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1FCC03E97C;
+        Tue,  9 Jun 2020 03:52:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q11so20790432wrp.3;
+        Tue, 09 Jun 2020 03:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aWQLYPhqDKfx5oH7hlkSk8K6QKJGKV4Umxbuf8XuqKE=;
-        b=ETaulQJlvjWg8li+bf8I4pofjSMqWGlkLMgkMX5FNju/527xa21LUwKQu8Llko4xu8
-         1POYDiY/fXGnQ6ArUbsP5OU9bFODfEW9vFnIymXfEOSlU39mbbW4G0d4d2JaBquvoeOA
-         NMSCtsZGtaSELMlzpvnxMXTAv1wKQiWIheudPB6/GMk+7MVwyU0G1S3lz73vGu87DOUH
-         DLS0+lymKa1C07kpMIcSCF4MulmCG2QgjNsTnNz6zcWRNxf3s4t746RbxM8n7Ye2OIjh
-         FJaNxqzpv32T4Vj3XKqlxoOAFCnv0yDBNAO5L9LL1uRnlBwEfPjwNil+YW9yyu5A4VjQ
-         SgvQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RN8qA9KeRPApUC9s9M9mqLxO489K/MfoAz940jHP23Y=;
+        b=KQ/bjzvZAfoLGfoT12i5X6Z0l3Dwg03CsiU22jQmf6WO4U3kjZL6jNOLH3pVVe5Tnt
+         RgELItRui03zlzAWxLo/jV5rJxyxBOuFMyhHq95/oZE+QMScFX8PFN05KO+6vMrd/Ykv
+         Qn7A/jpMmd9UUj55yUg8OULwYyGSEvlRXeY5nh8S8XLpVk74TUNBRfPzrhlsZDukx7Ui
+         RiVziKKAInDR5h0GQ/NjNmQhJadTxgBwgVwdw0Dzo3GZRWFRzyokoufLUNKWfOmrUKQf
+         sqVPTK069lREajkxb04vUVcDRFSaGBrZA8DL8pbReeLepaXr4RVEEJclUttXLpYzFZ2h
+         hWLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aWQLYPhqDKfx5oH7hlkSk8K6QKJGKV4Umxbuf8XuqKE=;
-        b=YrwO5YvRUbHDbySOnUezjv+imNrF1pbV9OuVhlACxeCzrVfxr6Imu3zXWPO/EUtZiL
-         mausiKfiaXrFg5bE/KuyPkc9467wZcMZDEvGohgRK1UXEIf24aXGAGy7H6Esbg8kkBNj
-         r+J2PPxc6k9O/LaXrmqU5CF4QKMnVQuU+AAeUWH8MvW/FJ5LEVvVDyHPhQ3NyWiSPXCb
-         F4qCMH5biDFIp/PG2QenjALGV/suYCp0lMETfgkaOiwD/fJaglHUV2b0ZvfptFYsj19W
-         NkqqpYkeVG7+c+tJNoVcJ1JucwC2vAEEBiDh30BDNPcPXat4WeDsIiU/8PvMFPNv0nck
-         b9pA==
-X-Gm-Message-State: AOAM531rrFr+th0tTS9Uzr0NtrO9WYVuS/lg0dIq8AHUZb8Q/ZcAQZBL
-        yIuEe9liRQU20ilNvkpRnf0=
-X-Google-Smtp-Source: ABdhPJyqUX3Bx31cC0wuBVeFSjp63SpZIOZJhoutiFLUR3QrxeRzWtC4QVjzdYdNVFWTohvOnicSdQ==
-X-Received: by 2002:adf:a491:: with SMTP id g17mr4002353wrb.132.1591699966641;
-        Tue, 09 Jun 2020 03:52:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RN8qA9KeRPApUC9s9M9mqLxO489K/MfoAz940jHP23Y=;
+        b=F4wLR/KQ+8RTxmfwLkU8ExDEShJFVQMn40Eo3PaUUJKv0jp2I0/GUyvsMQoNRVdVia
+         zkVAwZ3MQuNm32vhyKGJp/EWXj69baUaF8Upe+LDCurlTGRRzktDjQcaldhBRpye2FBP
+         STf/br4SVnZKEz43uYtgHZg9VWvO+HW+GPlXlgekyRztcXgD0hZP0KPsof67ySxMgA1O
+         3x3XMEI3WWPF5gcdjt3tuQtIr9DtfF9sBrGRrn5NMXOg3bdtnRrzPYEUxIXwSU6fmwJK
+         aEn/xezto1IBG3sKEPR4gbhqHZsywiZWq6w0tZcbrUfMM5vyPYlrV0Kim1REROtaG9ma
+         qibQ==
+X-Gm-Message-State: AOAM531aQ+C6I2KDQGbmkljy5tQVmQeydtbyhMmfRVmEeXSaMEMMtx0z
+        Ea4AHN7NyaWm7zsLXi7XJY9aByDbxM7P7Q==
+X-Google-Smtp-Source: ABdhPJz4YtWMdIQH3Ns4x4rDx6zL4PJImYd9panLoTN08va8Aq47KKkXfkMIGis/Zhdd8xQK0JiL0A==
+X-Received: by 2002:adf:ee47:: with SMTP id w7mr3661475wro.171.1591699967688;
+        Tue, 09 Jun 2020 03:52:47 -0700 (PDT)
 Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id h5sm2949931wrw.85.2020.06.09.03.52.45
+        by smtp.gmail.com with ESMTPSA id h5sm2949931wrw.85.2020.06.09.03.52.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 03:52:46 -0700 (PDT)
+        Tue, 09 Jun 2020 03:52:47 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
@@ -67,10 +68,12 @@ To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
         linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 0/4] bmips: add BCM63xx power domain controller
-Date:   Tue,  9 Jun 2020 12:52:40 +0200
-Message-Id: <20200609105244.4014823-1-noltari@gmail.com>
+Subject: [PATCH 1/4] dt-bindings: soc: brcm: add BCM63xx power domain binding
+Date:   Tue,  9 Jun 2020 12:52:41 +0200
+Message-Id: <20200609105244.4014823-2-noltari@gmail.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200609105244.4014823-1-noltari@gmail.com>
+References: <20200609105244.4014823-1-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -82,21 +85,36 @@ X-Mailing-List: devicetree@vger.kernel.org
 BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
 to enable/disable certain components in order to save power.
 
-Álvaro Fernández Rojas (4):
-  dt-bindings: soc: brcm: add BCM63xx power domain binding
-  soc: bcm: add BCM63xx power domain driver
-  mips: bmips: dts: add BCM6328 power domain support
-  mips: bmips: dts: add BCM6362 power domain support
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ .../devicetree/bindings/mips/brcm/soc.txt       | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
- .../devicetree/bindings/mips/brcm/soc.txt     |  17 +
- arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
- arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
- drivers/soc/bcm/Kconfig                       |   8 +
- drivers/soc/bcm/Makefile                      |   1 +
- drivers/soc/bcm/bcm63xx-power.c               | 374 ++++++++++++++++++
- 6 files changed, 412 insertions(+)
- create mode 100644 drivers/soc/bcm/bcm63xx-power.c
-
+diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Documentation/devicetree/bindings/mips/brcm/soc.txt
+index 3a66d3c483e1..22ec9e39bff7 100644
+--- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
++++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
+@@ -164,3 +164,20 @@ Example:
+ 		reg = <0x4067c0 0x40>;
+ 		interrupts = <&periph_intc 19>;
+ 	};
++
++BCM63xx
++-------
++
++= Power domain controller
++
++BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
++to enable/disable certain components in order to save power.
++
++- compatible		: should contain one of:
++			  "brcm,bcm6318-power-controller"
++			  "brcm,bcm6328-power-controller"
++			  "brcm,bcm6362-power-controller"
++			  "brcm,bcm63268-power-controller"
++- reg 			: the register start and length for the power domain
++			  controller block
++- #power-domain-cells	: must be 1
 -- 
 2.26.2
 
