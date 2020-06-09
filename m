@@ -2,249 +2,106 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67336C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D63C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E982078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9E6207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjhnNr4v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="s+wfFT6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgFIKTU (ORCPT
+        id S1728646AbgFIKUh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:19:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728676AbgFIKR5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 06:17:57 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B9FC03E97C;
-        Tue,  9 Jun 2020 03:17:57 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so1203712pju.3;
-        Tue, 09 Jun 2020 03:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VwGuJZ2SH+okk9ABn43uTSotJJ51Z2CMuq/qQeoTEe4=;
-        b=pjhnNr4vrnj6HYrJGX/WyRx8Ck+Yvq1V3yeairSuLeJmlRbV/5vmehtKGpXFXZHdPv
-         qb67J9+elPBxQasYreEOTVLpQ2TuLkpIa2GVOnlzrmqcLVIBWb5SWnFhwR49Yz6z/fAW
-         yZ8xfkImwJDOJzlV4iS9Hlo4Dl7LhuGWNcqbklKdM3kzfFe0lOChEXAA06W/mCYDTJbE
-         TSRxIQCJ0onxfqaRGiAS8gM0zCkOx90noAs5AoWdUOX+UzEje01ALwSoTYtO+izX71ZL
-         g8ZI/ct9Z2Uw+nzr/zRC2taxiHIV/wAoLdrPoE3IOu1ZYQ5Ww6cncMlE8PidJHSilAUc
-         bXIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VwGuJZ2SH+okk9ABn43uTSotJJ51Z2CMuq/qQeoTEe4=;
-        b=Ku89sWkWpliorTRAGYuwdT7JTbUeK9CQB3fDfTt1kNkDnTtqDmU363x5cFEtXX3tOx
-         Uf+YgtdVteSpUSOh4aP02H+znCvPc5KdMP0R9ip2XLZ1HS+b/7LLl5F3b/JwY3AEOQkO
-         GV1x39puskNjl7tZzj9Oh/vvczT16RXjr92eAVx/+h4B1So0BPAQhoSCmSO4tjzgmTxl
-         IcaH9XyvpuRBFU9OyCbgUvTvHT9ifQ6Bn/c/02fYP+m53hYLGcDV6gbC2nKiwZ3UDufm
-         LUUb4vG0NRd1gi1JwafmQiHd2PuTF/1F7dYTayilWWo2dQe3AECb/RWUVdIymxmopNnU
-         799w==
-X-Gm-Message-State: AOAM531Nt5sRKFicGvYZwL/btaw7SOyxeEfxq4nwU2p0Y2DyuiBqRp0q
-        LEgjrRV867WFpDPeD32wsjYOMjKDffQH3A==
-X-Google-Smtp-Source: ABdhPJy0RGzAkPRj4695BSIL/JFNnbyi0b/ndV/rgx2MHZZLBK0qJRib4cLx+e1PBg0PY/egHfAbDA==
-X-Received: by 2002:a17:902:aa4c:: with SMTP id c12mr2633454plr.280.1591697876517;
-        Tue, 09 Jun 2020 03:17:56 -0700 (PDT)
-Received: from localhost.localdomain ([223.190.87.90])
-        by smtp.gmail.com with ESMTPSA id d189sm9637253pfc.51.2020.06.09.03.17.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 03:17:55 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, afaerber@suse.de, vkoul@kernel.org,
-        manivannan.sadhasivam@linaro.org, robh+dt@kernel.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH v4 05/10] dt-bindings: dmaengine: convert Actions Semi Owl SoCs bindings to yaml
-Date:   Tue,  9 Jun 2020 15:47:05 +0530
-Message-Id: <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+        Tue, 9 Jun 2020 06:20:37 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:36372 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgFIKUf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 06:20:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591698036; x=1623234036;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Jog8U1hg1Jb0yOPntlrXCpHzhFdDi4nx+A8hEzkfpIc=;
+  b=s+wfFT6T4QWxS5bq8yxTT0Co2z5aDLAunK4vm3qRizlZQ4rqyafhZboy
+   cwa+yQ/lu1ZlnEKSlcAR7JYxejO1Q8NlvD6mxABrwjesJnIdwXFfBSM2+
+   IZNX6c0zI7M3ikx3UGLQAWQUIY59PjmlSkPX/f6/dUi86b4D+vebxXjWc
+   CZa6Z+34+AnT9vQGWA8katR00yWcP7TXgYEHLa2keMHF2XLfQikaNYF9f
+   l1g0wab5Kugc2S1TUBKlRAD/ZA0P7sEgEJsBRvxfz4v+ynt8VewMTh9yA
+   r2UmAsgYVcR45HvKw8cejm0VVY88yj2fxs80Uj917Q1S+S9UU147kxgcD
+   Q==;
+IronPort-SDR: GsUomaDlsyMFGql6N5vKCKqggAS8YTeM8rMEysweN7jreEtYgmsUT9SR7LCgT5iWJHn6yq+KBr
+ JcYdSIakI6+vBex31IJhOeiKfHKihHDKm5ZCOwUH9fhXnWy/KxRxYbqgxwXcGeAWeTj3Y+odJK
+ WRJUbXsCdmC398dPnffw8iYmYxC69HKWzjaaP1porxdM6EcDPHCYk+l9UA4wNtGvaF0mszvqg1
+ LF4sySzldi0r2v3DJPvEH+Uwo+SxpKpKRZ/BwGM8uILdf+uSuYToyvvj9qTX+bn1nswG3MFKYk
+ 6/g=
+X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
+   d="scan'208";a="78723000"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 03:20:35 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 9 Jun 2020 03:20:34 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 03:20:32 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] mmc: Adding support for Microchip Sparx5 SoC
+Date:   Tue, 9 Jun 2020 12:20:05 +0200
+Message-ID: <20200609102008.10530-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Converts the device tree bindings for the Actions Semi Owl SoCs DMA
-Controller over to YAML schemas.
+This is an add-on series to the main SoC Sparx5 series
+(Message-ID: <20200608123024.5330-1-lars.povlsen@microchip.com>)
 
-It also adds new compatible string "actions,s700-dma".
+It adds eMMC support for Sparx5, by adding a driver for the SoC SDHCI
+controller, DT configuration and DT binding documentation.
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v3:
-	* No change.
-Changes since v2:
-        * Addressed Rob's comments:
-           - removed unnecessary description.
-           - added unevaluatedProperties
-           - added relevant information about
-             dma-channels and dma-request
-        * Added power-domain property.
-Change since v1:
-        * Updated the description field to reflect
-          only the necessary information.
-        * replaced the maxItems field with description for each
-          controller attribute(except interrupts).
-        * Replaced the clock macro with number to keep the example
-          as independent as possible.
+Changes in v2:
+- Changes in driver as per review comments
+ - Drop debug code
+ - Drop sysfs code
+ - Minor cosmetics
 
- New patch, was not there in RFC.
----
- Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
- Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+Lars Povlsen (3):
+  dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
+  sdhci: sparx5: Add Sparx5 SoC eMMC driver
+  arm64: dts: sparx5: Add Sparx5 eMMC support
 
-diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
-deleted file mode 100644
-index 03e9bb12b75f..000000000000
---- a/Documentation/devicetree/bindings/dma/owl-dma.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* Actions Semi Owl SoCs DMA controller
--
--This binding follows the generic DMA bindings defined in dma.txt.
--
--Required properties:
--- compatible: Should be "actions,s900-dma".
--- reg: Should contain DMA registers location and length.
--- interrupts: Should contain 4 interrupts shared by all channel.
--- #dma-cells: Must be <1>. Used to represent the number of integer
--              cells in the dmas property of client device.
--- dma-channels: Physical channels supported.
--- dma-requests: Number of DMA request signals supported by the controller.
--                Refer to Documentation/devicetree/bindings/dma/dma.txt
--- clocks: Phandle and Specifier of the clock feeding the DMA controller.
--
--Example:
--
--Controller:
--                dma: dma-controller@e0260000 {
--                        compatible = "actions,s900-dma";
--                        reg = <0x0 0xe0260000 0x0 0x1000>;
--                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
--                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
--                        #dma-cells = <1>;
--                        dma-channels = <12>;
--                        dma-requests = <46>;
--                        clocks = <&clock CLK_DMAC>;
--                };
--
--Client:
--
--DMA clients connected to the Actions Semi Owl SoCs DMA controller must
--use the format described in the dma.txt file, using a two-cell specifier
--for each channel.
--
--The two cells in order are:
--1. A phandle pointing to the DMA controller.
--2. The channel id.
--
--uart5: serial@e012a000 {
--        ...
--        dma-names = "tx", "rx";
--        dmas = <&dma 26>, <&dma 27>;
--        ...
--};
-diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-new file mode 100644
-index 000000000000..5577cd910781
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/owl-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Actions Semi Owl SoCs DMA controller
-+
-+description: |
-+  The OWL DMA is a general-purpose direct memory access controller capable of
-+  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
-+  respectively.
-+
-+maintainers:
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - actions,s900-dma
-+      - actions,s700-dma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      controller supports 4 interrupts, which are freely assignable to the
-+      DMA channels.
-+    maxItems: 4
-+
-+  "#dma-cells":
-+    const: 1
-+
-+  dma-channels:
-+    maximum: 12
-+
-+  dma-requests:
-+    maximum: 46
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Phandle and Specifier of the clock feeding the DMA controller.
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#dma-cells"
-+  - dma-channels
-+  - dma-requests
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    dma: dma-controller@e0260000 {
-+        compatible = "actions,s900-dma";
-+        reg = <0x0 0xe0260000 0x0 0x1000>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+        #dma-cells = <1>;
-+        dma-channels = <12>;
-+        dma-requests = <46>;
-+        clocks = <&clock 22>;
-+    };
-+
-+...
--- 
-2.7.4
+ .../mmc/microchip,dw-sparx5-sdhci.yaml        |  57 ++++
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  24 ++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  23 ++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  23 ++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  23 ++
+ drivers/mmc/host/Kconfig                      |  13 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-sparx5.c            | 274 ++++++++++++++++++
+ 8 files changed, 438 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-sparx5.c
 
+--
+Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Cc: linux-mmc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
