@@ -2,120 +2,118 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B89DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C71CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11593206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD62C206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f+J4vZsc"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="M8PvEfs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgFITVA (ORCPT
+        id S1731580AbgFITke (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:21:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:32932 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgFITVA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:21:00 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 059JKX1d088349;
-        Tue, 9 Jun 2020 14:20:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591730433;
-        bh=ZPzxZJaQ2aInc4QHSdxUXpf6Q0oMRP3/URsi//CF6L8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=f+J4vZscyfmvcnEPlE8ig6eRWF1Mcldf0lezx2j9IV/V5OBx3Ljdp9TGELuebGnHz
-         dCAWGlw5iYb3/Ra5aHxyNdTzGkvhcgzq0KfB2sPYWD1NCuKxy2wuXY/pNVKQLmF0Rk
-         Vz7SQKuam4lgPahMqc0JKaErMDosf5dxuZDlBNgw=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 059JKXDc063661
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Jun 2020 14:20:33 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Jun
- 2020 14:20:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 9 Jun 2020 14:20:33 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 059JKU5W083640;
-        Tue, 9 Jun 2020 14:20:31 -0500
-Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
- tas2563
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200609172841.22541-1-dmurphy@ti.com>
- <20200609172841.22541-2-dmurphy@ti.com> <20200609173143.GN4583@sirena.org.uk>
- <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
- <20200609175852.GQ4583@sirena.org.uk>
- <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
- <20200609184734.GS4583@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
-Date:   Tue, 9 Jun 2020 14:20:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 9 Jun 2020 15:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgFITke (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:40:34 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8583EC05BD1E
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:40:34 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c14so22032185qka.11
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:40:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fooRxBUyxBVZY7kJJL8VBy6grxiTlxx+OOYM9dBJ/2A=;
+        b=M8PvEfs14mubrLj1XaXYuw77/9Sq33tjev7K9cNSQaxOHDR6yrSRTFwfmH4RdcsptN
+         clItDCqBLGzhMO6BQxz8iY+SD7ORaFgogN0+hGx3LhLx2U5if5zrUtze9Cvuqx2wWmyf
+         rVWn2umVU71LVwdc9Y1ADjYiP3GYlZBhLhBYHkT9ZvvGyzJj/7/lKO1Qfa3N/42fl1hk
+         wj9BQXiP3HLYmgLp0xcIf6ahnjNgYmYP2y2OzCIQKvx3vfjKou6iKGKCX6eZFp5CVQoa
+         bnB0dIKg22iA7Iv6XuLQCJATB1ao2T2Nm3oZNEVNKJDKHvUSmTPUMgV7nCcwWSdoExnm
+         BmVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fooRxBUyxBVZY7kJJL8VBy6grxiTlxx+OOYM9dBJ/2A=;
+        b=VD0K4LDitKUR6lb5olmqdFzbSd9VWT4vyyGP36r+fLEPhEvg06vw7gre0t8+raxunE
+         UsiCP/OqEqAo2wtJui11MFdMRSd8KxZUCeF8sfmCo54rBqHb6BCbJldZx6l2m134kHcn
+         yIZL1ftTt5Ioh9BONXCkDStwaGCEuqoWgmKII3HMFdahWChZhGThWjyLci27MKkpQ/0s
+         w8pnEbmlIigm1QcQnXZMQAfnALxkbE5DNbIX7IHJ0L0btqhkEUP7i2h4pvSiW00ok7NX
+         Eq5C1QwjbSyT1B6sk4B7TUEPUtlCzS5ipJY6Co7PBH/c9qxo9hpc73nJTEllumBERwrl
+         +iyw==
+X-Gm-Message-State: AOAM5331taaYvyRYyLqz+Tq9jz+nbTeCoqs8k9TAGtTritpOWcS5p9oS
+        IsKVd1DYRf70shUisKFZncyvRg==
+X-Google-Smtp-Source: ABdhPJyBKbeiX6PPFfn4v6iP/rDxW8LkNd+ZfOa5pftTCgh+62D/kuaiIKUv+4K4cVgbFk/e+K0MsA==
+X-Received: by 2002:a05:620a:153c:: with SMTP id n28mr29203054qkk.457.1591731633704;
+        Tue, 09 Jun 2020 12:40:33 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id v8sm10513181qto.21.2020.06.09.12.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 12:40:32 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS),
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
+        linux-kernel@vger.kernel.org (open list),
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH v2 0/8] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865 dts
+Date:   Tue,  9 Jun 2020 15:40:18 -0400
+Message-Id: <20200609194030.17756-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <20200609184734.GS4583@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mark
+Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
 
-On 6/9/20 1:47 PM, Mark Brown wrote:
-> On Tue, Jun 09, 2020 at 01:06:50PM -0500, Dan Murphy wrote:
->
->> I could make a default as you suggested to include i2c address and bus in
->> the name.  But the TAS2563 does not need the firmware to operate and the
->> 2562 does not have a DSP.
-> That's fine, the driver can just use the compatible string to check this
-> and not offer any of the DSP related stuff (it should do this regardless
-> of the method used here).  I'm guessing the regmap configs should also
-> be different.
+Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+few changes. Notably, the HDK865 dts has regulator config changed a bit based
+on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
 
-The driver does check the compatible to determine if DSP loading is 
-available for the device.
+V2 changes:
+* Added two patches for sm8150 and sm8250 iommu compatibles
+* Changed apps_smmu node patches to use new compatibles
+* Updated commit messages for apps_smmu patches to be more correct
+* Updated HDK dts patches based on Bjorn's comments
 
-The driver also checks to see if the firmware file is declared in the DT.
+Jonathan Marek (8):
+  dt-bindings: arm-smmu: Add sm8150 and sm8250 compatible strings
+  iommu: arm-smmu-impl: Use qcom impl for sm8150 and sm8250 compatibles
+  arm64: dts: qcom: sm8150: add apps_smmu node
+  arm64: dts: qcom: sm8250: add apps_smmu node
+  arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+  arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+  arm64: dts: qcom: add sm8150 hdk dts
+  arm64: dts: qcom: add sm8250 hdk dts
 
-So it has to pass 2 checks to even load and parse the firmware to 
-present the controls for the programs and configs.
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |   2 +
+ arch/arm64/boot/dts/qcom/Makefile             |   2 +
+ arch/arm64/boot/dts/qcom/sm8150-hdk.dts       | 463 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          | 180 +++++++
+ arch/arm64/boot/dts/qcom/sm8250-hdk.dts       | 454 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          | 287 +++++++++++
+ drivers/iommu/arm-smmu-impl.c                 |   4 +-
+ 7 files changed, 1391 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
 
-
->> What if there was an ALSA control instead that passed in the firmware name
->> from the user space instead of using the DT?
->> Then the control can load and parse the firmware and wait for the user to
->> select the program.
->> This would solve a user from having ot update the DT to use a firmware.
-> That's really not very idiomatic for how Linux does stuff and seems to
-> pretty much guarantee issues with hotplugging controls and ordering -
-> you'd need special userspace to start up even if it was just a really
-> simple DSP config doing only speaker correction or something.  I'm not
-> sure what the advantage would be - what problem is this solving over
-> static names?
-
-IMO having a static name is the problem. It is an inflexible design.  
-Besides the firmware-name property seems to be used in other drivers to 
-declare firmwares for the boards.
-
-But if no one is complaining or submitting patches within the codecs to 
-be more flexible with firmware then I can just hard code the name like 
-other drivers do.
-
-Dan
+-- 
+2.26.1
 
