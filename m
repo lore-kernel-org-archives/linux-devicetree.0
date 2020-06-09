@@ -2,239 +2,92 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F31C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41224C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345AF20853
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AE9207F9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 10:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pcGpADbz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G6XwXEti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgFIKVI (ORCPT
+        id S1728706AbgFIKZ3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 06:21:08 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:33885 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728852AbgFIKU7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 06:20:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591698059; x=1623234059;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uvdZLOXtOi7wg26h02hvchuYt3RHS4ijlXKYSpYjb/A=;
-  b=pcGpADbzfKjMF7ZeN1FWSAPr1rvFtfn60uZxKv+fhG0/kolZ0jPFoD98
-   9186fIkhXRwCRdtJ7X7UfDDeEzaQBNaUbYIN1tC1wsYX7sGHAQI9S04Oe
-   lXktQRizowNRfyF+1JzAS2zNKbjLkVSt1NyQYdPNsqr5hlEbBdwu1zjej
-   dl/qWdYZGGI36XTqWnm78U0PO9FpHq0FA/e+tIKVVgceigunb04JCyE3g
-   006XBQXGadTc1oHy/Fj6an6n+zYnE6IaSVu1zWC3C3jSzp9xTYCC/4AFV
-   5hQyFkU5oYY5Gj8IXj2b43mtD8UD+osW7hmYEnJ7lBFIxZPBEQZk1l6SY
-   w==;
-IronPort-SDR: CM/5mcfFvrCYnghsesSfofyMLt2nraWxG8jpg7ehNtqeAxUsrwXav3Pwwc+whY2PVa27Fa71hI
- vaN3+YeUUU7ryT+w5wl6aUfBQsTZJ1B13PsfsmOD5xYKdVzeDXy7qaB4OfHRJhpobN30uOIGYf
- F8a8TfEn9uDgkmcvlyRGW/cvesaQJsmxh+O3Mmo7q7MKpHSxBo7zup/C1OmTjWaRT1UQ0nIC49
- dGdLkVzptnrvm1bqyD6J1DVJoTbmB55+TItq+GGHmBdNW9p51rULWwnKUvVw0LcQ4MyPRw0yhB
- zCY=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="75959632"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 03:20:55 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 03:20:55 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 03:20:52 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tue, 9 Jun 2020 06:25:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:18439 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728621AbgFIKYr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 06:24:47 -0400
+X-UUID: 623349c8f7b64ef59f86239c271b8de0-20200609
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=27GaRRMJgI8jXomyewf9EjW3IGOTuWZHXBF43R7U3x8=;
+        b=G6XwXEti9LgKFhiMGH4u4AWjtlbSdrPhFOpaBWZjexEoz1S1qZonWg9E02aEW17gUUIIjRcsWNJLlbbTraFQx0kfrNc9JtJ/wTpnX9s7j5+HLeYz7zAnR+Qw5/KsCZob+2TAUxwlEkU2Usikm0K9gER5ccN3oBPEGMCrpJP/glc=;
+X-UUID: 623349c8f7b64ef59f86239c271b8de0-20200609
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1834220365; Tue, 09 Jun 2020 18:24:33 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 9 Jun 2020 18:24:31 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 9 Jun 2020 18:24:30 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/3] arm64: dts: sparx5: Add Sparx5 eMMC support
-Date:   Tue, 9 Jun 2020 12:20:08 +0200
-Message-ID: <20200609102008.10530-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609102008.10530-1-lars.povlsen@microchip.com>
-References: <20200609102008.10530-1-lars.povlsen@microchip.com>
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: Add MediaTek MT6873 devapc driver
+Date:   Tue, 9 Jun 2020 18:24:19 +0800
+Message-ID: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds eMMC support to the applicable Sparx5 board configuration
-files.
+VGhlc2UgcGF0Y2ggc2VyaWVzIGludHJvZHVjZSBhIE1lZGlhVGVrIE1UNjg3MyBkZXZhcGMgZHJp
+dmVyLg0KDQpNVDY4NzMgYnVzIGZyYWJyaWMgcHJvdmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5IHN1
+cHBvcnQgYW5kIGRhdGENCnByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBh
+Y2Nlc3NlZCBieSB1bmV4cGVjdGVkDQptYXN0ZXJzLg0KVGhlIHNlY3VyaXR5IHZpb2xhdGlvbnMg
+YXJlIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZvcg0KZnVydGhlciBhbmFseXNp
+cyBvciBjb3VudGVybWVhc3VyZXMuDQoNCkFueSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xh
+dGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1cHQsIGFuZA0KaXQgd2lsbCBiZSBoYW5kbGVkIGJ5
+IGRldmFwYy1tdDY4NzMgZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQppbmZvcm1hdGlvbiBpcyBwcmlu
+dGVkIGluIG9yZGVyIHRvIGZpbmQgdGhlIG11cmRlcmVyLg0KDQoqKiogQkxVUkIgSEVSRSAqKioN
+Cg0KTmVhbCBMaXUgKDIpOg0KICBkdC1iaW5kaW5nczogZGV2YXBjOiBhZGQgYmluZGluZ3MgZm9y
+IGRldmFwYy1tdDY4NzMNCiAgc29jOiBtZWRpYXRlazogZGV2YXBjOiBhZGQgZGV2YXBjLW10Njg3
+MyBkcml2ZXINCg0KIC4uLi9zb2MvbWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1tdDY4NzMueWFtbCAg
+ICB8ICAgNjEgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL0tjb25maWcgICAgICAgICAgICAgICAg
+ICB8ICAgIDYgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICB8ICAgIDEgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFwYy9LY29uZmlnICAgICAgICAg
+ICB8ICAgMjUgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFwYy9NYWtlZmlsZSAgICAgICAg
+ICB8ICAgMTMgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2ODczLmMg
+ICB8IDE3MzMgKysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL3NvYy9tZWRpYXRlay9kZXZhcGMv
+ZGV2YXBjLW10Njg3My5oICAgfCAgMTMwICsrDQogLi4uL3NvYy9tZWRpYXRlay9kZXZhcGMvZGV2
+YXBjLW10ay1tdWx0aS1hby5jIHwgMTAxOSArKysrKysrKysrDQogLi4uL3NvYy9tZWRpYXRlay9k
+ZXZhcGMvZGV2YXBjLW10ay1tdWx0aS1hby5oIHwgIDE4MyArKw0KIGluY2x1ZGUvbGludXgvc29j
+L21lZGlhdGVrL2RldmFwY19wdWJsaWMuaCAgICB8ICAgNDEgKw0KIDEwIGZpbGVzIGNoYW5nZWQs
+IDMyMTIgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2ODczLnlhbWwN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL0tjb25maWcN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBjL01ha2VmaWxl
+DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMt
+bXQ2ODczLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvZGV2YXBj
+L2RldmFwYy1tdDY4NzMuaA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3NvYy9tZWRpYXRl
+ay9kZXZhcGMvZGV2YXBjLW10ay1tdWx0aS1hby5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXRrLW11bHRpLWFvLmgNCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvZGV2YXBjX3B1YmxpYy5oDQoNCi0t
+IA0KMi4xOC4wDQo=
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 24 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb134_emmc.dts | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb135_emmc.dts | 23 ++++++++++++++++++
- 4 files changed, 93 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 84bca999420ef..c9dbd1a8b22b6 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -5,6 +5,7 @@
-
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/microchip,sparx5.h>
-
- / {
- 	compatible = "microchip,sparx5";
-@@ -162,6 +163,20 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-
-+		sdhci0: sdhci@600800000 {
-+			compatible = "microchip,dw-sparx5-sdhci";
-+			status = "disabled";
-+			reg = <0x6 0x00800000 0x1000>;
-+			pinctrl-0 = <&emmc_pins>;
-+			pinctrl-names = "default";
-+			clocks = <&clks CLK_ID_AUX1>;
-+			clock-names = "core";
-+			assigned-clocks = <&clks CLK_ID_AUX1>;
-+			assigned-clock-rates = <800000000>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+		};
-+
- 		gpio: pinctrl@6110101e0 {
- 			compatible = "microchip,sparx5-pinctrl";
- 			reg = <0x6 0x110101e0 0x90>, <0x6 0x10508010 0x100>;
-@@ -191,6 +206,15 @@ i2c2_pins: i2c2-pins {
- 				pins = "GPIO_28", "GPIO_29";
- 				function = "twi2";
- 			};
-+
-+			emmc_pins: emmc-pins {
-+				pins = "GPIO_34", "GPIO_35", "GPIO_36",
-+					"GPIO_37", "GPIO_38", "GPIO_39",
-+					"GPIO_40", "GPIO_41", "GPIO_42",
-+					"GPIO_43", "GPIO_44", "GPIO_45",
-+					"GPIO_46", "GPIO_47";
-+				function = "emmc";
-+			};
- 		};
-
- 		i2c0: i2c@600101000 {
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 91ee5b6cfc37a..573309fe45823 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -16,6 +16,29 @@ memory@0 {
- 	};
- };
-
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	bus-width = <8>;
-+	non-removable;
-+	pinctrl-0 = <&emmc_pins>;
-+	max-frequency = <8000000>;
-+	microchip,clock-delay = <10>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-index 10081a66961bb..bbb9852c1f151 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-index 741f0e12260e5..f82266fe2ad49 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
---
-2.27.0
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Cc: linux-mmc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
