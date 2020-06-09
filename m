@@ -2,240 +2,268 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDEFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D1EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35CE120734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:18:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeNW4Ujv"
+	by mail.kernel.org (Postfix) with ESMTP id 55A6C2078D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591734628;
+	bh=Ev9PIvYfFUc8Le4W0OMbc5IZPEJTDtjG+hW4todzOnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZisXccJAYgD15DZN/TzgWU5HWW1bV+pmVb/EZwzRbVuRwMIr1tNSBxGqglLeMo+W2
+	 tdNDqwSGPT/WZKEJuvdEazm2rf5Q31H0kVeRGUVcTIqHAyStgL1jVYwObxMWFry3wb
+	 wgjBFg2/KepqweqPyzk9CaQhPZDrzxgR7xQSM/ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbgFIUSV (ORCPT
+        id S1730901AbgFIUa1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFIUSU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 16:18:20 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8324C05BD1E;
-        Tue,  9 Jun 2020 13:18:18 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id q19so10914eja.7;
-        Tue, 09 Jun 2020 13:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KC+Q83VPZzMlqolXBXEKcpuJ9FScuGWzx6JhmUmNyNc=;
-        b=EeNW4UjvW+6S95WUz7HfGxgUJn1gTCj9PL6zjddRXbKFlkdYb0qnzEyUpYMLYEBiAG
-         5Rk84vvPjS3gHPAYgklMyLmwQ5uNOFj89xf6Yon8QKt9Q8pdrWfMXS97H/Ihba6ITkc+
-         WclOMXtoecZUjQB8R98r2/NXbXX7JvmvqBCMKumx/43z/WX1pANRxrDhuSrRgIYlCeXx
-         2aL4nUYA/1uv+6qkZKxmqJ34ZlRvI5H2zb5c3g+vhEzR4kpKQoY7sUWwv0DrS80AAuTs
-         gxqySTzEuew1YaXOkua01d7GqKwBOhsDiJUAvxgZMF1xtZEV0IAiCwSak0YQlO6KSJHd
-         rJag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KC+Q83VPZzMlqolXBXEKcpuJ9FScuGWzx6JhmUmNyNc=;
-        b=KYgKIvsXFyiwKxbqL58dE7kErlLP4ACQY1g4mZU2yRI06SY9OHAka8nZwst41gPwSH
-         mSnW/ZmITF6d9hrVkXh0n2ApptOKxEt03gmuz0mKZeqdxFVm0Ltz8VZlzzWlRA+gFsUt
-         2grpKiRBQ70ITC2xbDros7bBMZuAw73MMg/xD7Jn7to1P8Oj4wZdR22oqYrxjvWoyrea
-         CAXll3Ln3FCKd00fHseZZigxlwrtgEN0xljVnLz+KHB0V9padZ25mGpocR2/aJTPA/Qe
-         p9UZXzaVHyhhBOrZmyfyLAZncpmh28KIM1iev5VvK7PljmJiPHYNMjP/oyadei/cfTG0
-         E/1A==
-X-Gm-Message-State: AOAM531ycMws1D1+Nu148Hq8z7nxI71+xLO/kp7xc46EajCR8n441HGL
-        OwefyQx7RG1AtN0cn8WWYXA=
-X-Google-Smtp-Source: ABdhPJxfFjAQ2iFrXqTiotmLGJ0K4tuq7uoLusv+WJ6CJh25HXZ7mplpOTW07mjA7oajhYRrItzAWw==
-X-Received: by 2002:a17:906:799:: with SMTP id l25mr135009ejc.234.1591733897541;
-        Tue, 09 Jun 2020 13:18:17 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id y12sm13986179ejr.77.2020.06.09.13.18.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 13:18:17 -0700 (PDT)
-Subject: Re: [PATCH v6 2/8] mtd: rawnand: rockchip: NFC drivers for RK3308,
- RK2928 and others
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
- <20200609074020.23860-3-yifeng.zhao@rock-chips.com>
- <7eb89126-9d4b-9cdf-0f77-3242df36e090@gmail.com>
-Message-ID: <0b83ca45-3218-aaff-1462-7e08ae1e3afd@gmail.com>
-Date:   Tue, 9 Jun 2020 22:18:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 9 Jun 2020 16:30:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387991AbgFIUaY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 16:30:24 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF17E20737;
+        Tue,  9 Jun 2020 20:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591734623;
+        bh=Ev9PIvYfFUc8Le4W0OMbc5IZPEJTDtjG+hW4todzOnc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wlWjMA+S6jOo9DBJZxP3IZYxQtJwcpqfMVf3fsOBuiWpehfck55/UrTZahL2LJNZr
+         eM2On2eali9MzPeipPNRSphuj3yCGQ5JPeE4efOcedLxonac5rKvc3/tYi16Y/ujcD
+         fywbOP0uGCtnKdUBYkm41XcwpUtOcFfdxbAXJdvU=
+Received: by mail-ot1-f54.google.com with SMTP id 69so17727847otv.2;
+        Tue, 09 Jun 2020 13:30:23 -0700 (PDT)
+X-Gm-Message-State: AOAM531aEtRNodC7+WtEvYazoe6PTt7vsRE1rd0z4LNvcQ7TrLtX0HB0
+        GByZ4ztcQfBlmSaTvFAFNSSUH37Uzh2btBvGOQ==
+X-Google-Smtp-Source: ABdhPJytiNCkbeFZhm48iF0qA0Jj530C34uFCDMJSlxSKoYVqiAFCuP/cHwFk0FFmJFhcLALLmfSy7ZtNoDU4IkQv3w=
+X-Received: by 2002:a05:6830:549:: with SMTP id l9mr23548411otb.129.1591734623009;
+ Tue, 09 Jun 2020 13:30:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7eb89126-9d4b-9cdf-0f77-3242df36e090@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com> <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+In-Reply-To: <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 9 Jun 2020 14:30:11 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+Message-ID: <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/9/20 6:10 PM, Johan Jonker wrote:
+On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Hi Rob,
+>
+> Thanks for reviewing the patch! Kindly see inline:
+>
+> On Fri, May 29, 2020 at 2:55 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > > > " Reference to a DT node for the USB Type C Multiplexer controlling the
+> > > > data lines routing for this connector. This switch is assumed registered
+> > > > with the Type C connector class framework, which requires it to be named
+> > > > this way."
+> > > > >
+> > > > > > +          mode-switch:
+> > > > > > +            description: Reference to a DT node for the USB Type C Multiplexer
+> > > > > > +              controlling the data lines routing for this connector.
+> > > > >
+> > > > > This is for alternate mode muxing I presume.
+> > > >
+> > > > Yes, that's right.
+> > > > >
+> > > > > We already have a mux-control binding. Why not use that here?
+> > > >
+> > > > Heikki might be able to offer more insight into why this is the case,
+> > > > since the connector class framework seems to expect a phandle and for
+> > > > the device driver to implement a "set" command. Heikki, would you happen to know?
+> > >
+> > > The mode-switch here would actually represent the "consumer" part in
+> > > the mux-control bindings. So the mux-controls would describe the
+> > > relationship between the "mode-switch" and the mux controller(s),
+> > > while the mode-switch property describes the relationship between
+> > > something like USB Type-C Port Manager (or this cros_ec function) and
+> > > the "mux consumer".
+> >
+> > The "USB Type-C Port Manager" is not just the parent node in your case?
+> >
+> > Can you point me to what you expect your DT to look like showing the
+> > mode switch node, the connector, the USB host(s), and the DP/HDMI
+> > bridge/output?
+>
+> Caveat: I'm not a DT expert and not well-versed with the mux-control
+> bindings, so Heikki may be able to describe these better.
+> That said, here is my attempt to show the nodes you requested, cobbled
+> together from the Rockchip rk3399 DTSI[1] and
+> swboyd's connector binding example [2].
+>
+> Nodes truncated and unrelated fields omitted in the interest of brevity:
+>
+> // Chrome OS EC Type C Port Manager.
+> typec {
+>     compatible = "google,cros-ec-typec";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+>
+>     connector@0 {
+>         compatible = "usb-c-connector";
+>         reg = <0>;
+>         power-role = "dual";
+>         data-role = "dual";
+>         try-power-role = "source";
+>         mode-switch = <&foo_mux>;
+>         // Other switches can point to the same mux.
+>         ....
 
-> On 6/9/20 9:40 AM, Yifeng Zhao wrote:
+The connector is supposed to have 'ports' for USB2, USB3, and Aux
+unless the parent is the USB controller.
 
-[..]
+>     };
+> };
+>
+> // Mux switch
+> // TODO: Can possibly embed this in the PHY controller node itself?
+> foo_mux {
+>     compatible = "vendor,typec-mux";
+>     mux-gpios = <&gpio_controller 23 GPIO_ACTIVE_HIGH>;
+>
+>     ports {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         port@0 {
+>             reg = <0>;
+>             mux_dp_in: endpoint {
+>                 remote-endpoint = <&dp_phy_out>;
+>             };
+>         };
+>
+>         port@1 {
+>             reg = <1>;
+>             mux_usb_in: endpoint1 {
+>                 remote-endpoint = <&usb3_phy_out>;
+>             };
+>         };
 
->> +static int rk_nfc_write_page(struct mtd_info *mtd, struct nand_chip *chip,
->> +			     const u8 *buf, int page, int raw)
->> +{
->> +	struct rk_nfc *nfc = nand_get_controller_data(chip);
->> +	struct rk_nfc_nand_chip *rk_nand = to_rk_nand(chip);
->> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
->> +	int oob_step = (ecc->bytes > 60) ? NFC_MAX_OOB_PER_STEP :
->> +			NFC_MIN_OOB_PER_STEP;
->> +	int pages_per_blk = mtd->erasesize / mtd->writesize;
->> +	int ret = 0, i, boot_rom_mode = 0;
->> +	dma_addr_t dma_data, dma_oob;
->> +	u32 reg;
->> +	u8 *oob;
->> +
->> +	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
->> +
->> +	if (!raw) {
->> +		memcpy(nfc->page_buf, buf, mtd->writesize);
->> +		memset(nfc->oob_buf, 0xff, oob_step * ecc->steps);
->> +
-> 
->> +		/*
->> +		 * The first 8(some devices are 4 or 16) blocks in use by
-> 
-> are in use by
-> 
->> +		 * the boot ROM and the first 32 bits of oob need to link
->> +		 * to the next page address in the same block.
->> +		 * Config the ECC algorithm supported by the boot ROM.
->> +		 */
->> +		if (page < pages_per_blk * rk_nand->boot_blks &&
->> +		    chip->options & NAND_IS_BOOT_MEDIUM) {
->> +			boot_rom_mode = 1;
->> +			if (rk_nand->boot_ecc != ecc->strength)
->> +				rk_nfc_hw_ecc_setup(chip, ecc,
->> +						    rk_nand->boot_ecc);
->> +		}
-> 
-> Helper?
-> 
->> +
->> +		/*
-> 
+This all goes away if you have ports in the connector node. More below.
 
+>     };
+> };
+>
+> // Type C PHY Controller.
+> tcphy0: phy@ff7c0000 {
+>     compatible = "rockchip,rk3399-typec-phy";
+>     reg = <0x0 0xff7c0000 0x0 0x40000>;
+>     ...
+>     tcphy0_dp: phy@dc00000 {
+>         compatible = "soc,dp-phy";
+>         reg = <0xdc00000 0x1000>;
+>         ports {
+>             port@0 {
+>                 reg = <0>;
+>                 dp_phy_out: endpoint {
+>                     remote-endpoint = <&mux_dp_in>;
+>                 };
+>             };
 
->> +		 * Swap the first oob with the seventh oob and bad block
-> 
-> 
-> Swap the first oob byte with the seventh oob byte.
-> 
->> +		 * mask is saved at the seventh oob.
-> 
-> The bad block mask is stored at the seventh oob byte.
+This is wrong in that 'phys' are not part of the graph. It's the DP
+and USB controllers that should be part of the graph. Any phys are
+referenced with the phys binding and are not part of the graph.
 
-Just wondering bit or byte?
-seventh or eight?
+>         };
+>     };
+>
+>     tcphy0_usb3: phy@db00000 {
+>         compatible = "soc,usb3-phy";
+>         reg = <0xdb00000 0x1000>;
+>         ports {
+>             port@0 {
+>                 reg = <0>;
+>                 usb3_phy_out: endpoint {
+>                     remote-endpoint = <&mux_usb3_in>;
+>                 };
+>             };
+>         };
+>     };
+> };
+>
+>
+> // USB3 Host controller
+> usbdrd3_0: usb@fe800000 {
+>     compatible = "rockchip,rk3399-dwc3";
+>     #address-cells = <2>;
+>     #size-cells = <2>;
+>     clocks = ...;
+>     clock-names = ...;
+>     status = "disabled";
+>
+>     usbdrd_dwc3_0: usb@fe800000 {
+>         compatible = "snps,dwc3";
+>         reg = <0x0 0xfe800000 0x0 0x100000>;
+>         interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
+>         clocks = ...;
+>         clock-names = ...;
+>         dr_mode = "otg";
+>         phys = <&tcphy0_usb3>;
+>         phy-names = "usb3-phy";
+>         phy_type = "utmi_wide";
+>         power-domains = <&power RK3399_PD_USB3>;
+>         status = "disabled";
+>     };
+> };
+>
+> // DP controller
+> cdn_dp: dp@fec00000 {
+>     compatible = "rockchip,rk3399-cdn-dp";
+>     reg = <0x0 0xfec00000 0x0 0x100000>;
+>     interrupts = ...;
+>     clocks = ...;
+>     clock-names = ...;
+>     phys = <&tcphy0_dp>;
+>     ...
+>     ports {
+>         dp_in: port {
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>
+>             dp_in_vopb: endpoint@0 {
+>                 reg = <0>;
+>                 remote-endpoint = <&vopb_out_dp>;
+>             };
+>
+>             dp_in_vopl: endpoint@1 {
+>                 reg = <1>;
+>                 remote-endpoint = <&vopl_out_dp>;
+>             };
+>         };
 
-> 
->> +		 */
->> +		swap(chip->oob_poi[0], chip->oob_poi[7]);
+This should have an output port and then that is connected to the USB
+connector. Given that DP is muxed with the USB SS signals, port@1
+(defined as USB SS) should then have 2 endpoints.
 
-uint8_t *oob_poi;
+Then the only new thing here is how to represent the GPIO line
+controlling the mux. Normally, I'd expect this to be in the parent of
+the connector (the type-C controller), but since you have multiple
+connectors, that doesn't work so well. So you can put 'mux-gpios' in
+the port@1 node. (Or maybe it should be 'mux-controls' with a gpio mux
+defined elsewhere).
 
-1: oob_poi points to a byte I think?
-
-What was the swap puspose? A bit or a byte?
-There's 4 bytes oob per step.
-Could you explain?
-
-2: oob_poi[7] counting starts at [0] #1, [7] is then #8 ?
-Is that correct?
-
->> +
->> +		for (i = 0; i < ecc->steps; i++) {
->> +			oob = chip->oob_poi + i * NFC_SYS_DATA_SIZE;
->> +			reg = oob[0] | oob[1] << 8 | oob[2] << 16 |
->> +			      oob[3] << 24;
->> +			if (!i && boot_rom_mode)
->> +				reg = (page & (pages_per_blk - 1)) * 4;
->> +
->> +			if (nfc->cfg->type == NFC_V6 ||
->> +			    nfc->cfg->type == NFC_V8)
->> +				nfc->oob_buf[i * oob_step / 4] = reg;
->> +			else
->> +				nfc->oob_buf[i] = reg;
->> +		}
->> +
->> +		dma_data = dma_map_single(nfc->dev, (void *)nfc->page_buf,
->> +					  mtd->writesize, DMA_TO_DEVICE);
->> +		dma_oob = dma_map_single(nfc->dev, nfc->oob_buf,
->> +					 ecc->steps * oob_step,
->> +					 DMA_TO_DEVICE);
->> +
->> +		reinit_completion(&nfc->done);
->> +		writel(INT_DMA, nfc->regs + nfc->cfg->int_en_off);
->> +
->> +		rk_nfc_xfer_start(nfc, NFC_WRITE, ecc->steps, dma_data,
->> +				  dma_oob);
->> +		ret = wait_for_completion_timeout(&nfc->done,
->> +						  msecs_to_jiffies(100));
->> +		if (!ret)
->> +			dev_warn(nfc->dev, "write: wait dma done timeout.\n");
->> +		/*
->> +		 * Whether the DMA transfer is completed or not. The driver
->> +		 * needs to check the NFC`s status register to see if the data
->> +		 * transfer was completed.
->> +		 */
->> +		ret = rk_nfc_wait_for_xfer_done(nfc);
->> +
->> +		dma_unmap_single(nfc->dev, dma_data, mtd->writesize,
->> +				 DMA_TO_DEVICE);
->> +		dma_unmap_single(nfc->dev, dma_oob, ecc->steps * oob_step,
->> +				 DMA_TO_DEVICE);
->> +
-> 
->> +		if (boot_rom_mode && rk_nand->boot_ecc != ecc->strength)
->> +			rk_nfc_hw_ecc_setup(chip, ecc, ecc->strength);
-> 
-> Helper?
-> 
->> +
->> +		if (ret) {
->> +			ret = -EIO;
-> 
->> +			dev_err(nfc->dev,
->> +				 "write: wait transfer done timeout.\n");
-> 
-> align
-> 
->> +		}
->> +	} else {
-
->> +		rk_nfc_write_buf(chip, buf, mtd->writesize + + mtd->oobsize);
-
-Too many +++ here?                                         ^ ^
-
->> +	}
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = nand_prog_page_end_op(chip);
->> +
->> +	/* Deselect the currently selected target. */
->> +	rk_nfc_select_chip(chip, -1);
->> +
->> +	return ret;
->> +}
+Rob
