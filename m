@@ -2,270 +2,90 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1571CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17786C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB17E2072F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="mudOolJS"
+	by mail.kernel.org (Postfix) with ESMTP id EA00220734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591732051;
+	bh=b98zM1r+w7H4G1OfeA3ig8hCQL8dQWQ7IXoaPcT693M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=loUdwpWeK1LqYibT7n2cLL7wPNtznzchEvGcBeMe1ZRyjA6TLQn1hqVovlxy1HpvE
+	 B/ys5nGBSyb5O01OB7AkkdRM+QAm00yNgmXcTl7tSfj2WZYIcvyaKhXeBxC2WgGc+S
+	 MW+NtQ8iGHDslyO+wP1Ang8WzL2IJbrq80U2Ty+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbgFITp6 (ORCPT
+        id S1730644AbgFITra (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgFITp4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:45:56 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C67C05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:45:56 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g28so22076366qkl.0
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9ZrCSzAkb7wfDLigc14LiL0kxxMcKFIrPg1xhm0sVbw=;
-        b=mudOolJSrL0i8n8Uu53mjbPsOjmwOnd+F1Mzz+H6lPXswNAymQI/IDcaisRnOCaAV4
-         AZlfucE/XT5vZI9p6GhTqHngOWPIbOIupP96RU9c/jQDfgXCs5FAfpkqJF9zEPcoGEA+
-         itqaf3eh+FRXLW4ACy+Bl+175M+YJp2A3UtAiIK1aD01uiZNa6RuBkZb/sYPjziUYCc8
-         kRA7ehQLaxixelCveNTEj5VzMrSefAINRGcZ0MCzsK82z3Huicrr5t5nQak8EyGlywQq
-         a0Gj+B/IpDiP3tjbUHLry4RoZC6EjURyuAaCOC2Ys02T1sw37agLIW9e6ftu7/8jFUQ1
-         f8/A==
+        Tue, 9 Jun 2020 15:47:30 -0400
+Received: from mail-io1-f49.google.com ([209.85.166.49]:34784 "EHLO
+        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731247AbgFITr2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:47:28 -0400
+Received: by mail-io1-f49.google.com with SMTP id m81so24202052ioa.1;
+        Tue, 09 Jun 2020 12:47:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9ZrCSzAkb7wfDLigc14LiL0kxxMcKFIrPg1xhm0sVbw=;
-        b=SDsUS0QhlGYUFrGDaOairRxPMthQJKS93eLM0LpyUe0y0fMgtoxOCTQjXy6Ug8gR9b
-         U7vvzzdN2tTG0pM1/wNzTC1G7IHEjSEOUMcqei0C9oii6LuG6dKgv3UnrkLRwbIxQk9n
-         QDcY+/W4Ydjy+CZipUNFjS/pyM7bOcWgo3MAyWsF5VzQ8g25jXUOl8P4nudBvGCXWmJM
-         3L7Hc/fcpr/rRoG1jgxCx2NmZPkBXzTdMaFDnRxjCjdh9mGppTx+O6eDsX5LZJLIk944
-         alF3xyxQ7zDFxO+UDzW6QqYkMNt7kSVT/Xztc97dxszPZ9KIhExccGwIRsIsrXHKf4XT
-         Gnew==
-X-Gm-Message-State: AOAM532PhUS8veMDDB0DdTLB/GkhLiQoY/qI/ua5u2YopihYiBnD5m0O
-        p1ySgaFt6oRnCNfq59lPVsTrppCaQHOCMg==
-X-Google-Smtp-Source: ABdhPJypggtDy4HDTW7EfQMcvJsTYtg7F/Gh9/LHK+ErfBIBRRg4/fEpTSQRZVqLlHPq3bVEYPzl1g==
-X-Received: by 2002:a05:620a:64f:: with SMTP id a15mr29544126qka.10.1591731955295;
-        Tue, 09 Jun 2020 12:45:55 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id 137sm10785999qkf.44.2020.06.09.12.45.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 12:45:54 -0700 (PDT)
-Subject: Re: [PATCH 5/6] arm64: dts: qcom: add sm8150 hdk dts
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-6-jonathan@marek.ca>
- <20200529030126.GW279327@builder.lan>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <d7c4336f-a2a4-41b1-c481-4d11e57ae6de@marek.ca>
-Date:   Tue, 9 Jun 2020 15:46:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t2PNeHr7WtKmBGrRWwvSyK7EJXV23S5IbKum+4tSdLo=;
+        b=cUugRabf9iGN/1TAHvYGUl2n9/ETqQFK7l+K7tPePmEURpnE7z0tBDZTD+DlER8EIc
+         vX2i90OP0c/JNDJNYQggNwXXYqII8qowGa82EoNZ3oIHKC2gQ8P7zyp0+0zq5fyCJ/zb
+         PgnQ7Jl8bGjHQhJjCYSbMC9oU4LJ+wUwPqz3z3NRn5WS4SURdoUr37woxDi2UOlljXVA
+         1zuUJbSDfuLQBrD2Hb41RRQwHS620PeyZ8JnixjVe21DqbHTUw4J22SmZjOgXG9VQcSW
+         zusoK2yMePmY41f7s1ZQZNmikQb7Zb6CfsCZLpawG8hFPHLMQ7CaoiYXXV0AgWYAhNsx
+         y++g==
+X-Gm-Message-State: AOAM530O4q9fFA79i6vIgIKqF5KjZ/g+zqnhzGg0dLt7ZYvkgmKQxiR+
+        AhkPrv9tuL7ziAkUYHSinw==
+X-Google-Smtp-Source: ABdhPJzkqw9rTuRFVSnJJV9dLPkyXizUcs8OWS/Em9DvF9b+2xxXcMXLSN3D0epKwKbP7NTIsu0k5g==
+X-Received: by 2002:a02:9999:: with SMTP id a25mr27711545jal.129.1591732048022;
+        Tue, 09 Jun 2020 12:47:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t14sm9559645ilp.73.2020.06.09.12.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 12:47:27 -0700 (PDT)
+Received: (nullmailer pid 1335952 invoked by uid 1000);
+        Tue, 09 Jun 2020 19:47:25 -0000
+Date:   Tue, 9 Jun 2020 13:47:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     srv_heupstream@mediatek.com, drinkcat@chromium.org,
+        tfiga@chromium.org, matthias.bgg@gmail.com,
+        linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+        sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
+        louis.kuo@mediatek.com, bingbu.cao@intel.com,
+        shengnan.wang@mediatek.com, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, linux-arm-kernel@lists.infradead.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, sj.huang@mediatek.com
+Subject: Re: [V7, 1/2] media: dt-bindings: media: i2c: Document DW9768
+ bindings
+Message-ID: <20200609194725.GA1335193@bogus>
+References: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
+ <20200605105412.18813-2-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200529030126.GW279327@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605105412.18813-2-dongchun.zhu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/28/20 11:01 PM, Bjorn Andersson wrote:
-> On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
+On Fri, 05 Jun 2020 18:54:11 +0800, Dongchun Zhu wrote:
+> Add DeviceTree binding documentation for Dongwoon Anatech DW9768 voice
+> coil actuator.
 > 
->> Add initial HDK855 dts, based on sm8150-mtp, with a few changes.
->>
-> 
-> Happy to see this on the list Jonathan, just some minor things on the
-> remoteproc nodes below.
-> 
->> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile       |   1 +
->>   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
->>   2 files changed, 462 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index cc103f7020fd..e5dbd8b63951 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->> diff --git a/arch/arm64/boot/dts/qcom/sm8150-hdk.dts b/arch/arm64/boot/dts/qcom/sm8150-hdk.dts
-> [..]
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. SM8150 HDK";
->> +	compatible = "qcom,sm8150-hdk";
->> +
->> +	aliases {
->> +		serial0 = &uart2;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +
->> +	vph_pwr: vph-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vph_pwr";
->> +		regulator-min-microvolt = <3700000>;
->> +		regulator-max-microvolt = <3700000>;
->> +	};
->> +
->> +	/*
->> +	 * Apparently RPMh does not provide support for PM8150 S4 because it
->> +	 * is always-on; model it as a fixed regulator.
->> +	 */
-> 
-> One day we should stop being surprised by this and drop the "Apparently"
-> from this comment ;)
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  .../bindings/media/i2c/dongwoon,dw9768.yaml        | 100 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 ++
+>  2 files changed, 107 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
 > 
 
-Had this copied from sm8150-mtp, dropped the comment entirely (to match 
-sm8250-mtp dts).
-
->> +	vreg_s4a_1p8: pm8150-s4 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vreg_s4a_1p8";
->> +
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <1800000>;
->> +
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +
->> +		vin-supply = <&vph_pwr>;
->> +	};
-> [..]
->> +&remoteproc_adsp {
->> +	status = "okay";
-> 
-> It would be nice to see a
-> 	firmware-name = "qcom/sm8150/adsp.mbn";
-> 
-> here. Because if we ever end up pushing firmware to linux-firmware this
-> DTB would continue to work.
-> 
-> Use https://github.com/andersson/pil-squasher to get mbn files out of
-> the mdt+bXX files for your testing (or just rename/symlink the mdt to
-> mbn for now).
-> 
-
-Added the firmware-name fields as you suggested. One thing to note (it 
-shouldn't matter for HDK), these firmwares can be modified by the device 
-maker, so not all sm8150 will have the same adsp/cdsp/slpi firmware.
-
->> +};
->> +
->> +&remoteproc_cdsp {
->> +	status = "okay";
-> 
-> 	firmware-name = "qcom/sm8150/cdsp.mbn";
-> 
->> +};
->> +
->> +&remoteproc_slpi {
->> +	status = "okay";
-> 
-> 	firmware-name = "qcom/sm8150/slpi.mbn";
-> 
-> Regards,
-> Bjorn
-> 
->> +};
->> +
->> +&tlmm {
->> +	gpio-reserved-ranges = <0 4>, <126 4>;
->> +};
->> +
->> +&uart2 {
->> +	status = "okay";
->> +};
->> +
->> +&ufs_mem_hc {
->> +	status = "okay";
->> +
->> +	reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
->> +
->> +	vcc-supply = <&vreg_l10a_2p5>;
->> +	vcc-max-microamp = <750000>;
->> +	vccq-supply = <&vreg_l9a_1p2>;
->> +	vccq-max-microamp = <700000>;
->> +	vccq2-supply = <&vreg_s4a_1p8>;
->> +	vccq2-max-microamp = <750000>;
->> +};
->> +
->> +&ufs_mem_phy {
->> +	status = "okay";
->> +
->> +	vdda-phy-supply = <&vdda_ufs_2ln_core_1>;
->> +	vdda-max-microamp = <90200>;
->> +	vdda-pll-supply = <&vreg_l3c_1p2>;
->> +	vdda-pll-max-microamp = <19000>;
->> +};
->> +
->> +&usb_1_hsphy {
->> +	status = "okay";
->> +	vdda-pll-supply = <&vdd_usb_hs_core>;
->> +	vdda33-supply = <&vdda_usb_hs_3p1>;
->> +	vdda18-supply = <&vdda_usb_hs_1p8>;
->> +};
->> +
->> +&usb_2_hsphy {
->> +	status = "okay";
->> +	vdda-pll-supply = <&vdd_usb_hs_core>;
->> +	vdda33-supply = <&vdda_usb_hs_3p1>;
->> +	vdda18-supply = <&vdda_usb_hs_1p8>;
->> +};
->> +
->> +&usb_1_qmpphy {
->> +	status = "okay";
->> +	vdda-phy-supply = <&vreg_l3c_1p2>;
->> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
->> +};
->> +
->> +&usb_2_qmpphy {
->> +	status = "okay";
->> +	vdda-phy-supply = <&vreg_l3c_1p2>;
->> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
->> +};
->> +
->> +&usb_1 {
->> +	status = "okay";
->> +};
->> +
->> +&usb_2 {
->> +	status = "okay";
->> +};
->> +
->> +&usb_1_dwc3 {
->> +	dr_mode = "peripheral";
->> +};
->> +
->> +&usb_2_dwc3 {
->> +	dr_mode = "host";
->> +};
->> -- 
->> 2.26.1
->>
+Reviewed-by: Rob Herring <robh@kernel.org>
