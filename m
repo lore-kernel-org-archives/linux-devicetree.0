@@ -2,101 +2,83 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B88C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE05C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BE02078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4E2206A4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgFIMAW convert rfc822-to-8bit (ORCPT
+        id S1729117AbgFIMF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:00:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgFIMAV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 08:00:21 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA625C05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 05:00:20 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jicvD-0006J2-Ev; Tue, 09 Jun 2020 14:00:03 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jicv9-00033i-Mm; Tue, 09 Jun 2020 13:59:59 +0200
-Message-ID: <73fdeca7b651252f7907635e97f9f9b31e702868.camel@pengutronix.de>
-Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
-        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 09 Jun 2020 13:59:59 +0200
-In-Reply-To: <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
-References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
-         <20200608192701.18355-6-nsaenzjulienne@suse.de>
-         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
-         <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 9 Jun 2020 08:05:27 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:42521 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728051AbgFIMF0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 08:05:26 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Jun 2020 17:35:23 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 09 Jun 2020 17:35:01 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 3D1C82055; Tue,  9 Jun 2020 17:35:01 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org, sam@ravnborg.org
+Subject: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens during PM sleep
+Date:   Tue,  9 Jun 2020 17:34:55 +0530
+Message-Id: <20200609120455.20458-1-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+ti-sn65dsi86 bridge is enumerated as a runtime device. When
+suspend is triggered, PM core adds a refcount on all the
+devices and calls device suspend, since usage count is
+already incremented, runtime suspend will not be called
+and it kept the bridge regulators and gpios ON which resulted
+in platform not entering into XO shutdown.
 
-On Tue, 2020-06-09 at 13:18 +0200, Nicolas Saenz Julienne wrote:
-> Hi Florian, thanks for the reviews!
-> 
-> On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
-> > On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
-> > > Some atypical users of xhci-pci might need to manually reset their xHCI
-> > > controller before starting the HCD setup. Check if a reset controller
-> > > device is available to the PCI bus and trigger a reset.
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > ---
-> > >  drivers/usb/host/xhci-pci.c | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > > index ef513c2fb843..45f70facdfcd 100644
-> > > --- a/drivers/usb/host/xhci-pci.c
-> > > +++ b/drivers/usb/host/xhci-pci.c
-[...]
-> > > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, const
-> > > struct pci_device_id *id)
-> > >  			return retval;
-> > >  	}
-> > >  
-> > > +	reset = devm_reset_control_get(&dev->bus->dev, NULL);
-> > 
-> > Should not this be devm_reset_control_get_optional()?
-> 
-> Yes, you're right.
+Add changes to force suspend on the runtime device during pm sleep.
 
-Please use devm_reset_control_get_optional_exclusive() while you're at
-it.
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
 
-regards
-Philipp
+Changes in v2:
+	- Include bridge name in the commit message and 
+	remove dependent patchwork link from the commit
+	text as bridge is independent of OEM(Stephen Boyd)
+
+Changes in v3:
+	- Updating changelog to explain the need for patch
+
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index 6ad688b320ae..2eef755b2917 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -159,6 +159,8 @@ static int __maybe_unused ti_sn_bridge_suspend(struct device *dev)
+ 
+ static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static int status_show(struct seq_file *s, void *data)
+-- 
+2.27.0
+
