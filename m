@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D0DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E26C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43B5F2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C3320774
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WubWCnlk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffYgl05p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgFINOb (ORCPT
+        id S1729796AbgFINS7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:14:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55200 "EHLO
+        Tue, 9 Jun 2020 09:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgFINO1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:14:27 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564A1C03E97C;
-        Tue,  9 Jun 2020 06:14:27 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id x18so8494562lji.1;
-        Tue, 09 Jun 2020 06:14:27 -0700 (PDT)
+        with ESMTP id S1728903AbgFINOb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:14:31 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42421C03E97C;
+        Tue,  9 Jun 2020 06:14:30 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s1so24995711ljo.0;
+        Tue, 09 Jun 2020 06:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o4M3bTUDA74h1lwoV4T2HnrphCh8yThUo/f/7p0LEJQ=;
-        b=WubWCnlkgI26pfDVw0Ep1IhBhHdHzkVOBYEPckyx1O/SSzugmHx8umh0venYLUw/Ro
-         mfDiF91/57n9ZKeX48nhhr3xmtVLkLmP8/aoMTjbmywRLYKaZeSd53ZXy9mqDLnhedCH
-         S3lBChQtwGUrZlKCvD8arJfsrruaX7nvAAwH5PLSoA1mNy1OqZCTFKZxW6Zk37QKK3So
-         yd3LTmHTyJXjSfb8Uc+4nUf1bGJUVgEGZJ7gr/nNpjwmINI2yKy2tVqq5QS43LkptZ8P
-         wCbHInI+KPaGs9kvstdV2zsM+mECcDcGDHnppOC73x608s71jfurL6wgGky/aC7rcNm0
-         d4Cg==
+        bh=GpFtIVnKnNndfebpkGzqwkaxd/wyRN7pW9EKTYyaD+o=;
+        b=ffYgl05pncbdubAvxWR63NSZaAmUmQNPcFogjQbb+PcGJRKuP8Iq/ynaiJSynit/xg
+         keR+9mZfb+LT6ii5FdCO/lBy9nE/++3QDwTMdUwltsZ5pAKMoT9XYkt3z4nHItDpv3Ir
+         0qmVkGd6cqv+vkib9r0Xd+yR8tOef58QmS/0k4be7cUsNgxeZ/jn+0LFdn6PFu6n14nt
+         q7hPh1Jugmrq4m4erOiKWDXBLb2SCJylG30nC61UA3EcVkxpjArkVw8FpOrzQRtlghtI
+         rtLoYVULmY1s8AakiUWvvvk9Pcm179rk9SFjhpkTk6vQCIKeL6zHGKzo+Ek/dkRR2DNB
+         JG/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o4M3bTUDA74h1lwoV4T2HnrphCh8yThUo/f/7p0LEJQ=;
-        b=IlpiRaF0OjBFV2/oAG4LsBTyA0bgqIrTf5asDSmpniO5nMh2OYAOb7MmgzLT60s6Q0
-         PAF9OjHE+RSlYM+VCz2QPq5e/rZ4P5RqWnLmn0dD5oyyviYvfdD371WEnDAQfAJ3U2Hb
-         7U6BDvfXFGYT0dgK3GkqfSndjhO9COWauWq2Mu1o+mtJnEg7PWhBlw5iDXLpY8jSvP3o
-         H0690dOWVayrhoCJn0rg6ezRp7WhM6Q2oP5Kg/kBBvhfgywKekzUFEvhZOHsOQtsD4ut
-         1AaK0rDH+3zcipHcLy2cLY6Jh/felf+QPkSr3ohT0ar6yGVON+Or7pMPDMOSPqk7pjo+
-         RMKQ==
-X-Gm-Message-State: AOAM533NuJ6BMQ+V6jekdvCIdf6TddlhpLR0nhJtzS7huRqyRhmjviGc
-        TqdCOI2Nq1c9rHQ+ELPzgDI=
-X-Google-Smtp-Source: ABdhPJz0i8282/FJQIGDuc8pcHuZXMNEm+kWgDf2nK40LNBw6s1gDJI5NwQ3Sx3CyiBJD1F+eVni3Q==
-X-Received: by 2002:a2e:961a:: with SMTP id v26mr3973130ljh.296.1591708465781;
-        Tue, 09 Jun 2020 06:14:25 -0700 (PDT)
+        bh=GpFtIVnKnNndfebpkGzqwkaxd/wyRN7pW9EKTYyaD+o=;
+        b=CnmUNTBg5f11AdYghJBW0VhvBzAG78EUtd7o9rlqTfpULa8/3AUHzYwqixnZ6sCxM/
+         2s9YXHMix5UU34lzBAsfQ73jdAml8Nm0LMlxs9pq4b4AE03NiNVZFKD6vwmsDz40INIT
+         Pz5F/1pO24wPz+2BEnF2JP+eQIeH8XR/hLRL2junD8vW9FMc5OFXnUy6rAUakiaCEQYT
+         Rq7sUr/os1QlzJt10dcDRz0Wc8sjHd3rksCEirZ5ccH8BCh2C5wUIP8ZCu3Zvq9hqUF+
+         kLZcqLqjAUKlzf1m6ARtV0KJSr1bF7q4JNWlsar+/FpOF5X6njMUilGE5jMecCAW/qea
+         CYaw==
+X-Gm-Message-State: AOAM5327B9gje5y+VMZXqW8GdQTXaxOUq4gg6FzG3PNPXw6WgHJa5N7v
+        MRP/61Zo6OhJjT2AiyRSbGo=
+X-Google-Smtp-Source: ABdhPJxejwOTAdW+uqBjAbDKAokXmYlrwzxZ/NkKhjhobM21Hk8tYt+VAfsUsH4qHeMB+LmaIWHrgQ==
+X-Received: by 2002:a2e:b003:: with SMTP id y3mr13797412ljk.78.1591708468663;
+        Tue, 09 Jun 2020 06:14:28 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.24
+        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:25 -0700 (PDT)
+        Tue, 09 Jun 2020 06:14:28 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v4 01/37] clk: Export clk_hw_reparent()
-Date:   Tue,  9 Jun 2020 16:13:28 +0300
-Message-Id: <20200609131404.17523-2-digetx@gmail.com>
+Subject: [PATCH v4 03/37] clk: tegra: Export Tegra20 EMC kernel symbols
+Date:   Tue,  9 Jun 2020 16:13:30 +0300
+Message-Id: <20200609131404.17523-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
 References: <20200609131404.17523-1-digetx@gmail.com>
@@ -88,28 +88,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We're going to turn Tegra124 Memory Controller driver into a loadable
-kernel module. The driver uses clk_hw_reparent(), which isn't an exported
-kernel symbol. Let's export that function in order to allow modularization
-of the Tegra driver.
+We're going to modularize Tegra EMC drivers and some of the EMC clk driver
+symbols need to be exported, let's export them.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clk/clk.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/tegra/clk-tegra20-emc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 3f588ed06ce3..2fa6394d9a1b 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2439,6 +2439,7 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
- 
- 	clk_core_reparent(hw->core, !new_parent ? NULL : new_parent->core);
+diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
+index 03bf0009a33c..dd74b8543bf1 100644
+--- a/drivers/clk/tegra/clk-tegra20-emc.c
++++ b/drivers/clk/tegra/clk-tegra20-emc.c
+@@ -13,6 +13,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/clk/tegra.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+@@ -235,6 +236,7 @@ void tegra20_clk_set_emc_round_callback(tegra20_clk_emc_round_cb *round_cb,
+ 		emc->cb_arg = cb_arg;
+ 	}
  }
-+EXPORT_SYMBOL_GPL(clk_hw_reparent);
++EXPORT_SYMBOL_GPL(tegra20_clk_set_emc_round_callback);
  
- /**
-  * clk_has_parent - check if a clock is a possible parent for another
+ bool tegra20_clk_emc_driver_available(struct clk_hw *emc_hw)
+ {
+@@ -291,3 +293,4 @@ int tegra20_clk_prepare_emc_mc_same_freq(struct clk *emc_clk, bool same)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(tegra20_clk_prepare_emc_mc_same_freq);
 -- 
 2.26.0
 
