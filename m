@@ -2,308 +2,119 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75660C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFF2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57D53207ED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1B0206D5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgFIIi4 (ORCPT
+        id S1727960AbgFIIyv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:38:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2294 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726463AbgFIIiz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:38:55 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 2858351CAB73E6515A54;
-        Tue,  9 Jun 2020 09:38:53 +0100 (IST)
-Received: from localhost (10.47.27.61) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 9 Jun 2020
- 09:38:52 +0100
-Date:   Tue, 9 Jun 2020 09:38:08 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-CC:     Guenter Roeck <linux@roeck-us.net>, <linux-hwmon@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        <linux-kernel@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
-Message-ID: <20200609093808.00003aad@Huawei.com>
-In-Reply-To: <20200609074940.9529-1-lars.povlsen@microchip.com>
-References: <20200609072828.9088-1-lars.povlsen@microchip.com>
-        <20200609074940.9529-1-lars.povlsen@microchip.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 9 Jun 2020 04:54:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:44502 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727942AbgFIIyv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:54:51 -0400
+IronPort-SDR: IHZxHJjujf618vded86KWVE9FFt8198C9aapRyqsq08P2sEw5Kr5/umc3Alqp89iYOTsMI6RY0
+ t5F9HRYBXTqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 01:54:50 -0700
+IronPort-SDR: 4q6rf01iwrE8qQwBCVDCrNHzYVI8NmhkYfmIoRHi8G3XkTSehbzvgZZbnGhSUIo1wtxjt7PoFO
+ uXnH68APGqYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="270825476"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga003.jf.intel.com with ESMTP; 09 Jun 2020 01:54:48 -0700
+Subject: Re: [PATCH v3 0/4] Add logic to consolidate TRBs for Synopsys xHC
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     John Youn <John.Youn@synopsys.com>
+References: <cover.1590415123.git.joglekar@synopsys.com>
+ <ba1eb639-7c58-c2b2-1bd9-dacec5d1092b@synopsys.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <0083681d-6f68-918a-8109-75e511ef8bf5@linux.intel.com>
+Date:   Tue, 9 Jun 2020 11:57:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.27.61]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <ba1eb639-7c58-c2b2-1bd9-dacec5d1092b@synopsys.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 9 Jun 2020 09:49:40 +0200
-Lars Povlsen <lars.povlsen@microchip.com> wrote:
+On 8.6.2020 7.32, Tejas Joglekar wrote:
+> Hi Mathias,
+>    Will this be added to your next branch ?
 
-> This patch adds a temperature sensor driver to the Sparx5 SoC.
-> 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+There are still some opens Rob Herring pointed out regarding devicetree.
+Adding a compatible string for the synopsys xhci and setting quirk based
+on that sounds good to me.
 
-Hi.  Quick drive by review whilst waiting for coffee time...
+Not sure how that works in cases where the xhci device is created by the DWC3 driver.
+Once we have a solution that Felipe and Rob agrees with I can take the whole
+series.  
 
-A few minor suggestions inline.
+The xhci parts and PCI case looks good to me.
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/hwmon/Kconfig       |  10 +++
->  drivers/hwmon/Makefile      |   2 +-
->  drivers/hwmon/sparx5-temp.c | 152 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 163 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/hwmon/sparx5-temp.c
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 288ae9f63588c..ec6bb8b8b12df 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
->  	  This driver can also be built as a module. If so, the module
->  	  will be called i5k_amb.
-> 
-> +config SENSORS_SPARX5
-> +	tristate "Sparx5 SoC temperature sensor"
-> +	depends on ARCH_SPARX5
-Anything stop this building with COMPILE_TEST?
-
-That will great increase automated build coverage.
-
-> +	help
-> +	  If you say yes here you get support for temperature monitoring
-> +	  with the Microchip Sparx5 SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called sparx5-temp.
-> +
->  config SENSORS_F71805F
->  	tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
->  	depends on !PPC
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3e32c21f5efe3..144f09993a3f4 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_DS1621)	+= ds1621.o
->  obj-$(CONFIG_SENSORS_EMC1403)	+= emc1403.o
->  obj-$(CONFIG_SENSORS_EMC2103)	+= emc2103.o
->  obj-$(CONFIG_SENSORS_EMC6W201)	+= emc6w201.o
-> +obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
->  obj-$(CONFIG_SENSORS_F71805F)	+= f71805f.o
->  obj-$(CONFIG_SENSORS_F71882FG)	+= f71882fg.o
->  obj-$(CONFIG_SENSORS_F75375S)	+= f75375s.o
-> @@ -193,4 +194,3 @@ obj-$(CONFIG_SENSORS_OCC)	+= occ/
->  obj-$(CONFIG_PMBUS)		+= pmbus/
-> 
->  ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-> -
-> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
-> new file mode 100644
-> index 0000000000000..2e754462b6010
-> --- /dev/null
-> +++ b/drivers/hwmon/sparx5-temp.c
-> @@ -0,0 +1,152 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/* Sparx5 SoC temperature sensor driver
-> + *
-> + * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/io.h>
-> +#include <linux/of_device.h>
-I think you only have this to define the id table?
-
-If so, perhaps better to include mod_devicetable.h and not include
-the of header.
-
-> +
-> +#define TEMP_CTRL		0
-> +#define TEMP_CFG		4
-> +#define  TEMP_CFG_CYCLES	GENMASK(24, 15)
-> +#define  TEMP_CFG_CYCLES_OFF	15
-
-Could you used FIELD_PREP etc to avoid having to have both
-the mask and offset defined here?
-
-> +#define  TEMP_CFG_ENA		BIT(0)
-> +#define TEMP_STAT		8
-> +#define  TEMP_STAT_VALID	BIT(12)
-> +#define  TEMP_STAT_TEMP		GENMASK(11, 0)
-> +
-> +struct s5_hwmon {
-> +	void __iomem *base;
-> +};
-> +
-> +static void s5_temp_enable(struct s5_hwmon *hwmon)
-> +{
-> +	u32 val = readl(hwmon->base + TEMP_CFG);
-> +	u32 clk = 250;
-> +
-> +	val &= ~TEMP_CFG_CYCLES;
-> +	val |= (clk << TEMP_CFG_CYCLES_OFF);
-> +	val |= TEMP_CFG_ENA;
-> +
-> +	writel(val, hwmon->base + TEMP_CFG);
-> +}
-> +
-> +static void s5_temp_disable(void *data)
-> +{
-> +	struct s5_hwmon *hwmon = data;
-> +	u32 val = readl(hwmon->base + TEMP_CFG);
-> +
-> +	val &= ~TEMP_CFG_ENA;
-> +
-> +	writel(val, hwmon->base + TEMP_CFG);
-> +}
-> +
-> +static int s5_read(struct device *dev, enum hwmon_sensor_types type,
-> +		   u32 attr, int channel, long *temp)
-> +{
-> +	struct s5_hwmon *hwmon = dev_get_drvdata(dev);
-> +	int rc = 0, value;
-> +	u32 stat;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		stat = readl_relaxed(hwmon->base + TEMP_STAT);
-> +		if (!(stat & TEMP_STAT_VALID))
-> +			return -EIO;
-> +		value = stat & TEMP_STAT_TEMP;
-> +		value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
-> +		value *= 100;
-> +		*temp = value;
-> +		break;
-> +	default:
-> +		rc = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel)
-> +{
-> +	if (type != hwmon_temp)
-> +		return 0;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		return 0444;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static const struct hwmon_channel_info *s5_info[] = {
-> +	HWMON_CHANNEL_INFO(chip,
-> +			   HWMON_C_REGISTER_TZ),
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_INPUT),
-
-Excess line breaks.  The above 2 would be more readable on one line each.
-
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops s5_hwmon_ops = {
-> +	.is_visible = s5_is_visible,
-> +	.read = s5_read,
-> +};
-> +
-> +static const struct hwmon_chip_info s5_chip_info = {
-> +	.ops = &s5_hwmon_ops,
-> +	.info = s5_info,
-> +};
-> +
-> +static int s5_temp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *hwmon_dev;
-> +	struct s5_hwmon *hwmon;
-> +	int err;
-> +
-> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-> +	if (!hwmon)
-> +		return -ENOMEM;
-> +
-> +	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(hwmon->base))
-> +		return PTR_ERR(hwmon->base);
-> +
-> +	err = devm_add_action(&pdev->dev, s5_temp_disable, hwmon);
-> +	if (err)
-> +		return err;
-
-Probably just my linear way of thinking, but unusual to put error
-handling / remove stuff in place _before_ the thing it's unwinding.
-
-We have devm_add_action_or_reset to make it safe to call this after
-the thing it unwinds. 
-
-> +
-> +	s5_temp_enable(hwmon);
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +							 "s5_temp",
-> +							 hwmon,
-> +							 &s5_chip_info,
-> +							 NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +const struct of_device_id s5_temp_match[] = {
-> +	{ .compatible = "microchip,sparx5-temp" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, s5_temp_match);
-> +
-> +static struct platform_driver s5_temp_driver = {
-> +	.probe = s5_temp_probe,
-> +	.driver = {
-> +		.name = "sparx5-temp",
-> +		.of_match_table = s5_temp_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(s5_temp_driver);
-> +
-> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
-> +MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.27.0
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-Mathias
 
 
