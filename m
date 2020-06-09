@@ -2,108 +2,107 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D234CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D2FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFE820774
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591710076;
-	bh=LLqWJbXt6QtzWVgvOd2712wAhSrRI95wAZyysVj9bK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x/btTtC0S6uY/q/hWVaimrYwU6ze1JBFpCOww7yjMmcAk0eqFpAC8xuQ34mwuotiZ
-	 oA3JzqCzVdYE8Oo15DYnodYo3gLrGnlmEX7OS3qnn9Uih0NHSbTWvVbE6xMYoUhhha
-	 rIqb4MOig6HnBCPyZop+Uyr7KTjSOqraGnTDK7v0=
+	by mail.kernel.org (Postfix) with ESMTP id 5E3912078D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:42:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMyUMT4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgFINlP (ORCPT
+        id S1728304AbgFINmh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728480AbgFINlP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:41:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13DE420760;
-        Tue,  9 Jun 2020 13:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591710074;
-        bh=LLqWJbXt6QtzWVgvOd2712wAhSrRI95wAZyysVj9bK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o0ERjX/mDx7TVjKhU7cpUaCWtG5ShegLg/BnxvPntVhuW0ElPicFk1+9q7ch6b5R3
-         dehBiBs10JOSIRtVaUKyFlLqhmZhVhLyq1p9RMlF2JiXSAdwpn/CcnJSvh1twlm8QA
-         xytLUX9t6pq+8Ko8rsT4Y3P87TVIAGf/OarQOayA=
-Date:   Tue, 9 Jun 2020 14:41:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org,
-        msavaliy@codeaurora.org
-Subject: Re: [PATCH V7 RESEND 4/7] spi: spi-geni-qcom: Add interconnect
- support
-Message-ID: <20200609134112.GI4583@sirena.org.uk>
-References: <1591682194-32388-1-git-send-email-akashast@codeaurora.org>
- <1591682194-32388-5-git-send-email-akashast@codeaurora.org>
+        Tue, 9 Jun 2020 09:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgFINmg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:42:36 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A447C05BD1E;
+        Tue,  9 Jun 2020 06:42:36 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id l17so2895536wmj.0;
+        Tue, 09 Jun 2020 06:42:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lTf+Sd5yaFapTCjKu5qesxFzYkBarG1WB0tnN1EJVIU=;
+        b=SMyUMT4r4GLoqclpTP+ykfxVszTnQIGdc4+XMmFuLPfxG4+U0555JNSV7xy4GSwqbS
+         OzoDgXNhBcJ0/A0rkdCfQwaSDrIHjgxqVr/OgnzS1nO/Ngo+73Peip0ox8/dy7wXZiwD
+         QSIiIqdjjaNB8BqeFBI501HSv3ibuLdxKh+FCU4cW55oTJ09e94YsCdvw/R/wwUlKSZF
+         vmCG54DFuAoGEKFtlb47vXJcroscT8JpjOzl0ORv298ieZgMJCtnefOZDEPcBe2+V8VW
+         Zcqp6tEAEhBOX4ZtSaC+b9a1Xcg/n8cqO/riPXr0edrkh3jamLWoDFb8o67J21A2DgPB
+         rBPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lTf+Sd5yaFapTCjKu5qesxFzYkBarG1WB0tnN1EJVIU=;
+        b=U7WGcJzCKDlmIp/Z27k5WrqSzRTcKbcZwDvhNU4LlwGyKY2P6hOc+rOuyj50kCTGUA
+         GUjdtDjnpFFG9dn+09FUddhZzQqScTu/TA5vP8U3RWNojnG2ONHEAOFyokVpVu+1GyKu
+         rxB03wXViubYXevH7dK3GtHgS4R+ghz1LaLUN0TFPVKQ0/9WpubV2ayWnBj4pkM2XgSE
+         uZv4asLm9BcFeIkSTaGgt6c46Hjw42QxavdXcF53EdXEZKaSbx/9dUb26XFRUbe5sqCV
+         QlNxcbZga2URctS1EPg6f/n9hbVLzFOwqlZ6BX9GN6BIdHVqq17vo4AhZtOjpGIUOQan
+         sUlQ==
+X-Gm-Message-State: AOAM5301luubERIXurW3y0rSj5dZwleveiNBzJyaU8JnS5iMLZvmpjaG
+        ZKH4HQxq23JdbxgiEQMIJOI=
+X-Google-Smtp-Source: ABdhPJzFClzGVLeB+bU4YWUUIW9B/nQ4MwkVTdSTM1g36ZiNtF/Kbz+8nr0s0q0oKu83w/dMWH+qPQ==
+X-Received: by 2002:a05:600c:210:: with SMTP id 16mr4389225wmi.185.1591710154732;
+        Tue, 09 Jun 2020 06:42:34 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id w17sm3454067wra.71.2020.06.09.06.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 06:42:34 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH 0/7] bmips: add bcm6345 reset controller support
+Date:   Tue,  9 Jun 2020 15:42:25 +0200
+Message-Id: <20200609134232.4084718-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qVyHzDF4yf4A8jkR"
-Content-Disposition: inline
-In-Reply-To: <1591682194-32388-5-git-send-email-akashast@codeaurora.org>
-X-Cookie: Be careful!  Is it classified?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+BCM63xx SoCs have a reset controller for certain components.
 
---qVyHzDF4yf4A8jkR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Álvaro Fernández Rojas (7):
+  mips: bmips: select ARCH_HAS_RESET_CONTROLLER
+  dt-bindings: reset: add BCM6345 reset controller bindings
+  reset: add BCM6345 reset controller driver
+  mips: bmips: dts: add BCM6328 reset controller support
+  mips: bmips: dts: add BCM6358 reset controller support
+  mips: bmips: dts: add BCM6362 reset controller support
+  mips: bmips: dts: add BCM6368 reset controller support
 
-On Tue, Jun 09, 2020 at 11:26:31AM +0530, Akash Asthana wrote:
-> Get the interconnect paths for SPI based Serial Engine device
-> and vote according to the current bus speed of the driver.
->=20
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
+ .../bindings/reset/brcm,bcm6345-reset.yaml    |  37 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6358.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6368.dtsi          |   6 +
+ drivers/reset/Kconfig                         |   7 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-bcm6345.c                 | 149 ++++++++++++++++++
+ 9 files changed, 219 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
+ create mode 100644 drivers/reset/reset-bcm6345.c
 
-I've repeatedly acked this patch but my ack never seems to get carried
-forward :(
+-- 
+2.26.2
 
-> +	/* Set the bus quota to a reasonable value for register access */
-> +	mas->se.icc_paths[GENI_TO_CORE].avg_bw =3D Bps_to_icc(CORE_2X_50_MHZ);
-> +	mas->se.icc_paths[CPU_TO_GENI].avg_bw =3D GENI_DEFAULT_BW;
-
-Why are these asymmetric?
-
---qVyHzDF4yf4A8jkR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fkXcACgkQJNaLcl1U
-h9AvBQf/dcXzKa7k8e4LYRPmPnHQosxG01GttTB72c7Y1FpruIDtZ9/AQ1bKF824
-68ww6ms6E7s6Yjbv5MCZRorMSzgtX5c6HzltyLfPfNLKUfnji6xOlutircZXZFJc
-nRL6s/fhsxuYBHRgj/ridrEzhgmj0x9jx/z1EDUAWSOvvy+ekC2hjJsX86w09S1v
-CH0UKzWi8VcdZIAkuTXdwBUvohiMFz+1VcJo2qn8WCIB53JeZvwCyiwmwJTlSEf7
-5eq0UhK44xQm4rCZN6HtddJ6HmJAgUNJDwKu6zmDtHFYHEiMRJiElQU2qhJWQlbf
-ZdNrJ0S70lYcOAQaIVfRMTaABp872w==
-=qbNa
------END PGP SIGNATURE-----
-
---qVyHzDF4yf4A8jkR--
