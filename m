@@ -2,241 +2,217 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D74C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501CBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB5E207C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC2B207C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GG5jWooO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrSlB8pY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgFIPOI (ORCPT
+        id S1729665AbgFIPT7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
+        Tue, 9 Jun 2020 11:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730436AbgFIPOH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 11:14:07 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1461CC05BD1E;
-        Tue,  9 Jun 2020 08:14:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so21769308wrt.5;
-        Tue, 09 Jun 2020 08:14:06 -0700 (PDT)
+        with ESMTP id S1729678AbgFIPTs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 11:19:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88A3C08C5C4
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 08:19:45 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c3so21737304wru.12
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 08:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=X7mlTDwQ6+p5MYv0bHUHt/egFgOWZQLtAR3nHiaWIwU=;
-        b=GG5jWooOcAQkNTeAPuyKWbI01TMiq/4C4rQErVii4COMwg+ZNuElAsKC20KVt34Bcv
-         aR4yl/D6QPdvzRfCFRp1x6+XCePKrCEzjwxX2hCkK9QC8sq5iyrCXKfpfAjkAlUgzFLU
-         fBacG/itsgQO5T5HWQQZLxPPMcAKm3RgDDa0qPS0wdDKWIdwcQvoLNZTCpYkqyb2LOST
-         1H9TtirrcwQQjJ5k2qc10/GwbGcj80DqfI/LP1z9aJ1uGs4B3kMqQ5sS0Wpo8kLw3UG5
-         rVB+gbDry3b/P1vSzX+Bndl5M6KvUdM21jxJGd28zqS+syvGhiYXbY47SFf+0UC0O193
-         U40g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Rk2oDZPnfwMXUWPErdEgPnP2nnFU5znUIkJLh8odeKY=;
+        b=TrSlB8pYYj3hLyZLYGz8CnGfrshe0S63alFmjMac7FlNzG2WrvJcCnPzJ8Y3oz/zHu
+         grMZ5fATJYLfW21vf4pqIUOAPjq+r3Et4vCnkaPwST2LbT2KEoI9waM0A52GPC6YdUT3
+         Wc8cUHOlxEpq9fSHi+NmPiY88KUNz40lvfstxa+lVwypcEQcKWkK1lidFi9i4AvNKYnx
+         vJyRjAGpSN4P2TaQTOE5rxOe+rMbWd3rvknENlTFtY9iDv9LR2IXfrDmM0YiCIhZ5Dtc
+         /f++AJlEm+hW9u6LzmlFxwyrCxmT2YbHV9t0fJaWdoOmplWYM0XKAZtxSVfkybGK8Xrc
+         MoRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=X7mlTDwQ6+p5MYv0bHUHt/egFgOWZQLtAR3nHiaWIwU=;
-        b=r9Q9m86E0mHDrO5sxrqRtPOMSMq3T/7Gzr6yD67ncXzIi+xe3JgQ4qfhG8vKjTR79S
-         rQXIj3cZ4H3vS2i7xqWtOdWBXvbQ+qjPNo3Jn8sO0T0Q3WvVh79Pzbt2P8cL/T+65vgZ
-         IytnkBylxC605nFM7PW0NQhALfk/hceG6HS6rRSQ7HvmDR58G2bvOOSL2auoZsnCvZGV
-         qlNNI5lT5L2Fi0l3u6YNSJhIc5AeV/yBljfQGAtO7/aD1j1tzMWEZ40kG2U65p68RntI
-         rw1tksEoyOsQWZbCGfKUxLjvmmtMB2R7j6J0Yj2PnvXK/DznGLn1aezxY62Zje8SPyC+
-         rERA==
-X-Gm-Message-State: AOAM531nHpcU6tlorgImgUydwToCtrKzeQZdVMOSsXTB0Jc50bMYmK2c
-        k4Is0NKBVDtuHnizxrk4j98=
-X-Google-Smtp-Source: ABdhPJwQpkMLSfl8xli+xJLnxxfKBKaQ18eLIxG1Kh0B2CCr63Y+ExyzL+lJyG5Gu2bjWNEd1Y+Pww==
-X-Received: by 2002:a5d:6acf:: with SMTP id u15mr5299037wrw.277.1591715645605;
-        Tue, 09 Jun 2020 08:14:05 -0700 (PDT)
-Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id u12sm3779466wrq.90.2020.06.09.08.14.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 08:14:04 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
-Date:   Tue, 9 Jun 2020 17:14:02 +0200
-Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
-References: <20200609134232.4084718-1-noltari@gmail.com>
- <20200609134232.4084718-4-noltari@gmail.com>
- <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Rk2oDZPnfwMXUWPErdEgPnP2nnFU5znUIkJLh8odeKY=;
+        b=lgL7+a2LeDZJxpD+/paPwZ5/S3oT+f4u0wqZAzNhfDFDim8A8rNl0zUa4TJrMiFdtH
+         ptp3u6rMr0otYx/ZovNqtljl/cW7p5QxJNWIp/q5Ls5ECCGqRdMqlJ3c1QNKeoHCneRO
+         Q4csuxV7lqAdi9kwC8hfJVjgtO7/Otk+fYZw61vyK2oNjf7AuFiOenXgYgs+zWwGgoeA
+         zkbb3D/L5vDon3wWs3SKA6LMYNit2gyPWMfJzLe8G1qbo1PKw7e6vkcJwkPSKXYQh1rb
+         sYmRAqwxCVqFrBTe4kXHXbKTloyKs/f7Mltr/zbqaQhcY/2xu1HTGuu1qvhlZHfi9Hld
+         eGJA==
+X-Gm-Message-State: AOAM532XOofc8cePwPcK0ADGyPz0zRialGb2ySBUKtFZlOhCZob42rvo
+        nKKBEoqqVhyPy5HH8jqh0GCCnA==
+X-Google-Smtp-Source: ABdhPJw2lbdxCvWfX4BaLx0JY0xh8sw3TkHMqxmT6Rm1ZGth1zxLA0vydahsSf+ib3yzcV5qZtEpfw==
+X-Received: by 2002:adf:f4c6:: with SMTP id h6mr5221915wrp.398.1591715984320;
+        Tue, 09 Jun 2020 08:19:44 -0700 (PDT)
+Received: from dell ([2.27.167.101])
+        by smtp.gmail.com with ESMTPSA id h5sm3800319wrw.85.2020.06.09.08.19.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 08:19:43 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 16:19:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200609151941.GM4106@dell>
+References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+ <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
+ <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Tue, 09 Jun 2020, Michael Walle wrote:
 
-> El 9 jun 2020, a las 17:06, Philipp Zabel <p.zabel@pengutronix.de> =
-escribi=C3=B3:
->=20
-> Hi =C3=81lvaro,
->=20
-> On Tue, 2020-06-09 at 15:42 +0200, =C3=81lvaro Fern=C3=A1ndez Rojas =
-wrote:
->> Add support for resetting blocks through the Linux reset controller
->> subsystem for BCM63xx SoCs.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> drivers/reset/Kconfig         |   7 ++
->> drivers/reset/Makefile        |   1 +
->> drivers/reset/reset-bcm6345.c | 149 =
-++++++++++++++++++++++++++++++++++
->> 3 files changed, 157 insertions(+)
->> create mode 100644 drivers/reset/reset-bcm6345.c
->>=20
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index d9efbfd29646..9f1da978cef6 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -41,6 +41,13 @@ config RESET_BERLIN
->> 	help
->> 	  This enables the reset controller driver for Marvell Berlin =
-SoCs.
->>=20
->> +config RESET_BCM6345
->> +	bool "BCM6345 Reset Controller"
->> +	depends on BMIPS_GENERIC || COMPILE_TEST
->> +	default BMIPS_GENERIC
->> +	help
->> +	  This enables the reset controller driver for BCM6345 SoCs.
->> +
->> config RESET_BRCMSTB
->> 	tristate "Broadcom STB reset controller"
->> 	depends on ARCH_BRCMSTB || COMPILE_TEST
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index 249ed357c997..e642aae42f0f 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) +=3D tegra/
->> obj-$(CONFIG_RESET_A10SR) +=3D reset-a10sr.o
->> obj-$(CONFIG_RESET_ATH79) +=3D reset-ath79.o
->> obj-$(CONFIG_RESET_AXS10X) +=3D reset-axs10x.o
->> +obj-$(CONFIG_RESET_BCM6345) +=3D reset-bcm6345.o
->> obj-$(CONFIG_RESET_BERLIN) +=3D reset-berlin.o
->> obj-$(CONFIG_RESET_BRCMSTB) +=3D reset-brcmstb.o
->> obj-$(CONFIG_RESET_BRCMSTB_RESCAL) +=3D reset-brcmstb-rescal.o
->> diff --git a/drivers/reset/reset-bcm6345.c =
-b/drivers/reset/reset-bcm6345.c
->> new file mode 100644
->> index 000000000000..088b7fdb896b
->> --- /dev/null
->> +++ b/drivers/reset/reset-bcm6345.c
->> @@ -0,0 +1,149 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * BCM6345 Reset Controller Driver
->> + *
->> + * Copyright (C) 2020 =C3=81lvaro Fern=C3=A1ndez Rojas =
-<noltari@gmail.com>
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset-controller.h>
->> +
->> +#define BCM6345_RESET_NUM		32
->> +#define BCM6345_RESET_SLEEP_MIN_US	10000
->> +#define BCM6345_RESET_SLEEP_MAX_US	20000
->> +
->> +struct bcm6345_reset {
->> +	struct reset_controller_dev rcdev;
->> +	void __iomem *base;
->> +	spinlock_t lock;
->> +};
->> +
->> +static int bcm6345_reset_update(struct bcm6345_reset *bcm6345_reset,
->> +				unsigned long id, bool assert)
->> +{
->> +	uint32_t val;
->> +
->> +	val =3D __raw_readl(bcm6345_reset->base);
->> +	if (assert)
->> +		val &=3D ~BIT(id);
->> +	else
->> +		val |=3D BIT(id);
->> +	__raw_writel(val, bcm6345_reset->base);
->> +
->> +	return 0;
->> +}
->> +
->> +static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
->> +				unsigned long id)
->> +{
->> +	struct bcm6345_reset *bcm6345_reset =3D
->> +		container_of(rcdev, struct bcm6345_reset, rcdev);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
->> +	bcm6345_reset_update(bcm6345_reset, id, true);
->> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
->> +
->> +	return 0;
->> +}
->> +
->> +static int bcm6345_reset_deassert(struct reset_controller_dev =
-*rcdev,
->> +				  unsigned long id)
->> +{
->> +	struct bcm6345_reset *bcm6345_reset =3D
->> +		container_of(rcdev, struct bcm6345_reset, rcdev);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
->> +	bcm6345_reset_update(bcm6345_reset, id, false);
->> +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
->> +
->> +	return 0;
->> +}
->> +
->> +static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
->> +			       unsigned long id)
->> +{
->> +	struct bcm6345_reset *bcm6345_reset =3D
->> +		container_of(rcdev, struct bcm6345_reset, rcdev);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
->> +	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
->> +		     BCM6345_RESET_SLEEP_MAX_US);
->=20
-> What is the purpose of sleeping before reset assertion?
+> Am 2020-06-09 08:47, schrieb Lee Jones:
+> > On Mon, 08 Jun 2020, Michael Walle wrote:
+> > 
+> > > Am 2020-06-08 20:56, schrieb Lee Jones:
+> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+> > > >
+> > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
+> > > > > > +Cc: some Intel people WRT our internal discussion about similar
+> > > > > > problem and solutions.
+> > > > > >
+> > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
+> > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
+> > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
+> > > > > > > sometimes intertwined batches of register sets to be consumed by
+> > > > > > > multiple (sub-)devices spanning different subsystems.
+> > > > > > >
+> > > > > > > Actually scrap that.  The most common case I see is a single Regmap
+> > > > > > > covering all child-devices.
+> > > > > >
+> > > > > > Yes, because often we need a synchronization across the entire address
+> > > > > > space of the (parent) device in question.
+> > > > > >
+> > > > > > >  It would be great if there was a way in
+> > > > > > > which we could make an assumption that the entire register address
+> > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+> > > > > > > each of the devices described by its child-nodes.  Probably by picking
+> > > > > > > up on the 'simple-mfd' compatible string in the first instance.
+> > > > > > >
+> > > > > > > Rob, is the above something you would contemplate?
+> > > > > > >
+> > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
+> > > > > > > with one another?  Do multiple child devices need access to the same
+> > > > > > > registers i.e. are they shared?
+> > > > >
+> > > > > No they don't overlap, expect for maybe the version register, which is
+> > > > > just there once and not per function block.
+> > > >
+> > > > Then what's stopping you having each device Regmap their own space?
+> > > 
+> > > Because its just one I2C device, AFAIK thats not possible, right?
+> > 
+> > Not sure what (if any) the restrictions are.
+> 
+> You can only have one device per I2C address. Therefore, I need one device
+> which is enumerated by the I2C bus, which then enumerates its sub-devices.
+> I thought this was one of the use cases for MFD. (Regardless of how a
+> sub-device access its registers). So even in the "simple-regmap" case this
+> would need to be an i2c device.
+> 
+> E.g.
+> 
+> &i2cbus {
+>   mfd-device@10 {
+>     compatible = "simple-regmap", "simple-mfd";
+>     reg = <10>;
+>     regmap,reg-bits = <8>;
+>     regmap,val-bits = <8>;
+>     sub-device@0 {
+>       compatible = "vendor,sub-device0";
+>       reg = <0>;
+>     };
+>     ...
+> };
+> 
+> Or if you just want the regmap:
+> 
+> &soc {
+>   regmap: regmap@fff0000 {
+>     compatible = "simple-regmap";
+>     reg = <0xfff0000>;
+>     regmap,reg-bits = <16>;
+>     regmap,val-bits = <32>;
+>   };
+> 
+>   enet-which-needs-syscon-too@1000000 {
+>     vendor,ctrl-regmap = <&regmap>;
+>   };
+> };
+> 
+> Similar to the current syscon (which is MMIO only..).
 
-None, I must have introduced that for testing something and then I =
-forgot to remove it. Sorry for that...
+We do not need a 'simple-regmap' solution for your use-case.
 
->=20
-> If you can do without this, with I think this driver could be made to
-> use reset-simple.
+Since your device's registers are segregated, just split up the
+register map and allocate each sub-device with it's own slice.
 
-Yes, but only if I can add reset support with a configurable sleep range =
-to reset-simple. Is this possible?
+> > I can't think of any reasons why not, off the top of my head.
+> > 
+> > Does Regmap only deal with shared accesses from multiple devices
+> > accessing a single register map, or can it also handle multiple
+> > devices communicating over a single I2C channel?
+> > 
+> > One for Mark perhaps.
 
->=20
-> regards
-> Philipp
-
-Best regards,
-=C3=81lvaro.
-
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
