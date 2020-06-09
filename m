@@ -2,75 +2,71 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06DAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A368DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF622078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EBF207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDrlLBWe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPUt0nwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgFINqU (ORCPT
+        id S1730369AbgFINuS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60138 "EHLO
+        Tue, 9 Jun 2020 09:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFINqT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:46:19 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77900C05BD1E;
-        Tue,  9 Jun 2020 06:46:18 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r18so4052613pgk.11;
-        Tue, 09 Jun 2020 06:46:18 -0700 (PDT)
+        with ESMTP id S1730311AbgFINuR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:50:17 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC613C05BD1E;
+        Tue,  9 Jun 2020 06:50:16 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y17so8058943plb.8;
+        Tue, 09 Jun 2020 06:50:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/k4EmHOAERaREN8qWtWBob3gQXAhxOW13M9Yk4j9DWk=;
-        b=VDrlLBWev6iIEzXHhUoNI4IybHiCQHESLtVnw+LyJynyWlugmQDKaeF6CC+P5jp/mt
-         AZ/1aU88aJoFBGLY5EjklJ9GEqYyz/WcKcIXY9+GH+xWYhW281fY7XoWAfwsqK1uEFxk
-         KGkbEG00F0ocdlqdq8yzr+Y2P25C7yeH7L3HiZ0Mahf7ClIflBgtuXZ7Cn+gdfDb1QxF
-         Hzw89nAdaGmKM9lGEw8kec06jzqm+tBDLx+Lb4mNlxONlXFnKzKIKR6/+f7c94h/M/Uk
-         19GgDbpZzHD63DPAjoGmf+sFIJnLpwq6yX8vqrkFEH1t3k7cSaXZPXC5+2741XPhD+g8
-         rbwg==
+        bh=T+YJKeaOVYUazWEiD+FC8ATuHe96dWcYavuW/yCbOJ8=;
+        b=jPUt0nwIlm22VZ9NM8bA8jJUH3/vojexLi25P2CSJEQLLyMcgS8L/O4tdrqBie5DG4
+         lpCQ83zaNoNLyRbtv9PXZCVijMfIgwToB80TVKfygem0BD5GN3TnPDkl51B0erQQEcRS
+         pMj8dmvRdp9ouEyAd7C9OqJrcaimaa1bFk3SsTLknJtj7oY5n1oF/oD+DrLSdyBeNmGK
+         5xX5S7MH7aWAkbXmi5KB4cvcbCiIrDwj6Nw1dPTdUAmH1816/77epygsbbWsxIk33Xse
+         9pGKdpJ3QG5CdWJgCtKD1wWBA/dEIG5uwm9zvFXlpqmZ7oeFxg4JKuNkAPbt9424wrZ0
+         oFbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=/k4EmHOAERaREN8qWtWBob3gQXAhxOW13M9Yk4j9DWk=;
-        b=mZghWohhP5YArcRahWFw0Vh/BhUH32yEMryGzhL5QSRdIXEHL9WUNZa/3bG3niqq8Q
-         SC44xDWmPuJnFvm5syEJvC8UfnCb3BJZu9zt1/ZW2Z0bZUjPcXPlKlchy8lJhBbgxnbj
-         em3TT0u489LkvF8o29h1ZeTvjFvuoVfXo8XwAVi9QbzNs5wqtxXasdohazFPP27cid8I
-         vZSIQ+0KAIWKBkNYxc1v7JevhfqhSG/AeP8/t8nwWUkJ6Uq1ROqvzlFKlEt3uEECf1q5
-         qatplgxeeAz8bKGNtPERy/PTeTHZPqaoU2ZxvShynw4HIRfhkCl8sd4S9uQ9VxovmNF0
-         JKWw==
-X-Gm-Message-State: AOAM531Q+jslpDc3al9NiWNTzyHPwl1qBuXdqeuAM13df+u7LQKS/ZCy
-        YKC3kdM0XEIGq8sJY/yHBx4=
-X-Google-Smtp-Source: ABdhPJxrS819fvVw2qNU3AZPLSyn8wqMiP7zLeoTRVCfKpLdmwvNkMGjNppIdi/Cmtuey+iTtAhArQ==
-X-Received: by 2002:a63:c004:: with SMTP id h4mr24498663pgg.385.1591710377918;
-        Tue, 09 Jun 2020 06:46:17 -0700 (PDT)
+        bh=T+YJKeaOVYUazWEiD+FC8ATuHe96dWcYavuW/yCbOJ8=;
+        b=FzOgqGoJ2QH9UGgla4PiiCIrbtbGA7e726Lqo7mJ4BnMoFy/XCiHyHVmaonPzRKdOM
+         r22rh2f/UoyRk/HUB9yj1OX7PiUPlem0lNPdUr6Juv1bdJ3T7HCHAnp2pB4ZeQIRrZ3x
+         VHiQtZhWyLlUN+S4RKFC0NzpmZUQhkeDKKxSW+M8UKOAAWvYsVtlQCCgZKKhaUoNBSTg
+         mC0RUoCbpl4b3YrBlrqcRAUHjbmpyf3iFmROzeyC+AsrAC9vAEnx5QK/h1npk2l7DXy/
+         mK9KIjCuhHn1yi4o/DeuqECmqcO46yzpEom6ZsnCpA3aRMKXzjzS/jURwNwWF/nb1lR+
+         qC8Q==
+X-Gm-Message-State: AOAM533gqgHnhXwD4jP2OpV0Bp1JvCUs4qpzySEsL4/Hi0PX3A/WoXFz
+        wqjw3DiIjEaRlAbEgsVX5qc=
+X-Google-Smtp-Source: ABdhPJyUnUWzeW0xWjPqzYyPmmCu9YaKhZU6LXzT6RNu0dBqMFw/Le2X2mLtUg75RNwhOibnjx6iRA==
+X-Received: by 2002:a17:90a:9484:: with SMTP id s4mr5008356pjo.30.1591710616351;
+        Tue, 09 Jun 2020 06:50:16 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 84sm10022131pfu.167.2020.06.09.06.46.16
+        by smtp.gmail.com with ESMTPSA id gq8sm2668734pjb.14.2020.06.09.06.50.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 06:46:17 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
- Watchdog timer
-To:     Dilip Kota <eswara.kota@linux.intel.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        robbh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
- <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
- <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
- <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+        Tue, 09 Jun 2020 06:50:15 -0700 (PDT)
+Subject: Re: [PATCH v2 0/3] hwmon: Adding support for Microchip Sparx5 SoC
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+References: <20200609072828.9088-1-lars.povlsen@microchip.com>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -115,93 +111,45 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
-Date:   Tue, 9 Jun 2020 06:46:15 -0700
+Message-ID: <5f006733-52b6-e003-5db3-2ff16596918c@roeck-us.net>
+Date:   Tue, 9 Jun 2020 06:50:14 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+In-Reply-To: <20200609072828.9088-1-lars.povlsen@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/9/20 1:57 AM, Dilip Kota wrote:
+On 6/9/20 12:28 AM, Lars Povlsen wrote:
+> This is an add-on series to the main SoC Sparx5 series
+> (Message-ID: <20200608123024.5330-1-lars.povlsen@microchip.com>)
 > 
-> On 6/8/2020 9:37 PM, Guenter Roeck wrote:
->> On 6/7/20 10:49 PM, Dilip Kota wrote:
->>> Add YAML schemas for the watchdog timer on Intel Lightning
->>> Mountain SoC.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>> ---
->>>   .../bindings/watchdog/intel,lgm-gptc-wdt.yaml      | 75 ++++++++++++++++++++++
->>>   1 file changed, 75 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>> new file mode 100644
->>> index 0000000000000..83dc39a5090c1
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/watchdog/intel,lgm-gptc-wdt.yaml
->>> @@ -0,0 +1,75 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/watchdog/intel,lgm-gptc-wdt.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Intel Lightning Mountain Watchdog timer.
->>> +
->>> +maintainers:
->>> +  - Dilip Kota <eswara.kota@linux.intel.com>
->>> +
->>> +description: |
->>> +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
->>> +  be configured as Clocksource, real time clock and Watchdog timer.
->>> +  Each General Purpose Timer Counter has three timers. And total four General
->>> +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
->>> +  to 12 timers.
->>> +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
->>> +  timer as watchdog timer. Total four timers are configured as watchdog timers
->>> +  on Lightning Mountain SoC.
->>> +
->> Why not just one ? The watchdog subsystem does not monitor individual CPUs,
->> it monitors the system.
+> Changes in v2:
+> - Changes in driver as per review comments
 > 
-> Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
-> 
-A system watchdog driver should not duplicate functionality
-from kernel/watchdog.c, which monitors individual CPUs.
-If the SoC does nto provide a system watchdog timer (which
-I think is unlikely), it should stick with that. A watchdog
-resetting an individual CPU instead of the entire system
-isn't something I would want to see in the watchdog subsystem.
 
-Guenter
+And you expect the reviewers/maintainers to remember what those were ?
 
+> Lars Povlsen (3):
+>   dt-bindings: hwmon: Add Sparx5 temperature sensor
+>   arm64: dts: sparx5: Add hwmon temperature sensor
+>   hwmon: sparx5: Add Sparx5 SoC temperature driver
 > 
-> ____________________
-> ----------------------------->|                |
->                                                    |         ------------>| Reset controller unit    |
-> |                     |                 |___________________|
-> |                     |
-> |                     |
->   ______________________|__________|______
->   |                                  GPTC   | |            |
->   | ___________   ________|_       ______|____   |
->   | |      timer 1 |   | timer 2      |    | timer 3      |    |
->   | |_________|   |_________|    |_________|    |
->   |______________________________________|
+>  .../bindings/hwmon/microchip,sparx5-temp.yaml |  39 +++++
+>  arch/arm64/boot/dts/microchip/sparx5.dtsi     |   6 +
+>  drivers/hwmon/Kconfig                         |  10 ++
+>  drivers/hwmon/Makefile                        |   2 +-
+>  drivers/hwmon/sparx5-temp.c                   | 152 ++++++++++++++++++
+>  5 files changed, 208 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,sparx5-temp.yaml
+>  create mode 100644 drivers/hwmon/sparx5-temp.c
 > 
-> Regards,
-> -Dilip
+> --
+> 2.27.0
 > 
-> 
->> Guenter
->>
->>
 
