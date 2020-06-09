@@ -2,116 +2,79 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC10AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCF7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC5E52074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11872207C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591724205;
-	bh=X8HLgfbD+c3SVSm2IoJJDLT743uGSNhb1rRFklj1qCo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QzuaoDYD1exxCfNq1Ozm+cdV8mslrS9CX/YbFNUHxyTeIgjxNjx94AgLs2LK1NoNu
-	 Dkybm2kfFLZcAOYPHNhOxUN+A+AHSAoe4OoTbqx8F4wTD6gg4UmmV1nOhJB7XFo1h6
-	 2PGAGrJbrn1TGFlK5WtF38XhD+cT86h/Pv4ZrN5Y=
+	s=default; t=1591724425;
+	bh=w7KpdQejkKvQFJ3gl5VbHATOZZ4/I7zkecz/lkMl5ic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VyIW8pQFoPpcAl/oHpjpk/Hh4lPkwFHWZL8tRRdMtn6HLYzDhUhagwIIqh4Xzoa5/
+	 T90NHVq4acZYSv3q8qm2scJnQ2pCkx7PbPPzhcvOizW7khzZ+ebDkUo+UtAfxLHaAE
+	 T+KpNw/JREFDW61MQf1Hxs52obTlxXEkZY5B6a0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbgFIRgk (ORCPT
+        id S1728829AbgFIRkY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:36:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37756 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbgFIRgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 13:36:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id r2so23753371ioo.4;
-        Tue, 09 Jun 2020 10:36:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7dNnoZ1rdnzksidSAoSZhnIgLkiZGWEcPmE8xec0a/I=;
-        b=RNQoZ+05QeNbX1nMCf5ioAf37nvivHz6QAPZ13BV9WOxXOH456+AiD6Ny1a2MuHlcE
-         +mh5FDbbEh3HsC+dTuLQB3crBDaIGRdQsX6ZN9WUhUeE7ZMEwWS+SykkcAdI3nqCQ4tj
-         LuB/yGpozRGI6CmbW3ElUaw3euR48mhWCsmLGgYBu/HCIrQpewmssFNZUhrmJwMy+meQ
-         Q+bc7p0llUhejYpA0K1tg0ScO/dgQKKBxHiYfvvg/Vd/EP/rmpHsO9Yty8bwxE10D8q9
-         ZksT8PVyHMZLcPEp3hKhpKf40b89WYJbZrXCosZB9leI7uxbSkjiqCD0R4ROTrocoHk9
-         XfMw==
-X-Gm-Message-State: AOAM53046Ub2DrsjTnSofjqEFnHgNJajwK8V/xhqL9x/0vZsaV0s0fbG
-        /CmFWO5kGBdKih9bGjYL3g==
-X-Google-Smtp-Source: ABdhPJx/yiiBlNgsHUuSZP9/9xQBsqT57J3LHhF0CAayD6QmiM8GHdAZbeyCcaqsGh0uWxqQeNNQvg==
-X-Received: by 2002:a02:a78e:: with SMTP id e14mr28221151jaj.9.1591724198380;
-        Tue, 09 Jun 2020 10:36:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y5sm8056179iov.3.2020.06.09.10.36.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:36:37 -0700 (PDT)
-Received: (nullmailer pid 1126603 invoked by uid 1000);
-        Tue, 09 Jun 2020 17:36:36 -0000
-Date:   Tue, 9 Jun 2020 11:36:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     linux-pm@vger.kernel.org, Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Fan Chen <fan.chen@mediatek.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        YT Lee <yt.lee@mediatek.com>,
-        Charles Yang <Charles.Yang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Angus Lin <Angus.Lin@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        HenryC Chen <HenryC.Chen@mediatek.com>,
-        Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v9 1/4] dt-bindings: power: avs: add mtk svs dt-bindings
-Message-ID: <20200609173636.GA1125574@bogus>
-References: <20200609104534.29314-1-roger.lu@mediatek.com>
- <20200609104534.29314-2-roger.lu@mediatek.com>
+        Tue, 9 Jun 2020 13:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728603AbgFIRkX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:40:23 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E91A207ED;
+        Tue,  9 Jun 2020 17:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591724423;
+        bh=w7KpdQejkKvQFJ3gl5VbHATOZZ4/I7zkecz/lkMl5ic=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YYnoAgvghsQKMfB8A5ha44IibF0Ht/eT28Qm+BBUw5W6U/3V68wvenHYLDlPY9ypT
+         QAgTRulQ/kvEaRZy3TbotNUCPHd/swzxRVCKgqQZOFMI+dPDiqlC36OSOYLV5X0X8I
+         3+w0+4RjT86Tg018zcvheI0KP+AevrgQ+kg8zDQc=
+Received: by mail-ot1-f52.google.com with SMTP id t6so8063056otk.9;
+        Tue, 09 Jun 2020 10:40:23 -0700 (PDT)
+X-Gm-Message-State: AOAM532kNRAFrTPbiyIJFdQBbkBUG+D9488mYSCnfFMO+NotQ0b/kwmq
+        eFn3muoz1acvlgIq+O8F0/mNSf5gLe/ooP8F7Q==
+X-Google-Smtp-Source: ABdhPJwimPI5Smkek0oUYxzIjvdaqI9A++Y6WSxijtb8L3lHTu4dOfY2YwSzEUK+7YPDljPv/Ey588Be+RFNrvFTerM=
+X-Received: by 2002:a05:6830:549:: with SMTP id l9mr22951532otb.129.1591724422941;
+ Tue, 09 Jun 2020 10:40:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609104534.29314-2-roger.lu@mediatek.com>
+References: <20200605065258.567858-1-lkundrak@v3.sk>
+In-Reply-To: <20200605065258.567858-1-lkundrak@v3.sk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 9 Jun 2020 11:40:11 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Tpwu3BxNunAEWZeXcWo7-5bz-PetezkrHqweD60rMgw@mail.gmail.com>
+Message-ID: <CAL_Jsq+Tpwu3BxNunAEWZeXcWo7-5bz-PetezkrHqweD60rMgw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: clock: Add a missing include to MMP Audio
+ Clock binding
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2020 18:45:31 +0800, Roger Lu wrote:
-> Document the binding for enabling mtk svs on MediaTek SoC.
-> 
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+On Fri, Jun 5, 2020 at 12:53 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> The include file for input clock in the example was missing, breaking the
+> validation.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Reported-by: Rob Herring <robh+dt@kernel.org>
 > ---
->  .../bindings/power/avs/mtk_svs.yaml           | 141 ++++++++++++++++++
->  1 file changed, 141 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/avs/mtk_svs.yaml
-> 
+>  .../devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml      | 1 +
+>  1 file changed, 1 insertion(+)
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/power/avs/mtk_svs.example.dts:22:18: fatal error: dt-bindings/power/mt8183-power.h: No such file or directory
-         #include <dt-bindings/power/mt8183-power.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/power/avs/mtk_svs.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/power/avs/mtk_svs.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1305800
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Acked-by: Rob Herring <robh@kernel.org>
