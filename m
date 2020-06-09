@@ -2,212 +2,185 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA70CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 09:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBF1206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE41E207C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 09:13:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="I+/yrmE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgFII55 (ORCPT
+        id S1726903AbgFIJN6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:57:57 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63575 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgFII5z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 04:57:55 -0400
-IronPort-SDR: 0Apht4sP8kgflqzjtPyiAoaXc1Mi3vZbnGPt+3TtLidOpeF8AEVO00aDW349tWK38/Mf6KfXDV
- 6qz2XroOoOzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 01:57:54 -0700
-IronPort-SDR: 29e8Ey9G7kNr+oenwBfl0xYeoEgWRj39Uu/pDoiG2r9Lam3mTYwsWYvexTIF9/wgnQEgB2n5Si
- CQ8aAYqztmWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
-   d="scan'208";a="418340444"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 09 Jun 2020 01:57:54 -0700
-Received: from [10.215.166.141] (ekotax-mobl.gar.corp.intel.com [10.215.166.141])
-        by linux.intel.com (Postfix) with ESMTP id 50BC35805B5;
-        Tue,  9 Jun 2020 01:57:51 -0700 (PDT)
-Subject: Re: [PATCH 2/2] watchdog: intel: Watchdog timer support on Lightning
- Mountain
-To:     Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        robbh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
- <220609c6aec3dbd06585897ddcfdde277c823cac.1591584255.git.eswara.kota@linux.intel.com>
- <61d256e7-88ca-ac89-9c80-132c0d2de4a8@roeck-us.net>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <af453186-8017-31de-f6b3-f39f0c3704b8@linux.intel.com>
-Date:   Tue, 9 Jun 2020 16:57:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 9 Jun 2020 05:13:58 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:52003 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgFIJN4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 05:13:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591694036; x=1623230036;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=4gmH4roZ31BbBtOY/irMvwRh3t1QNa19BtAidrntvuM=;
+  b=I+/yrmE9DY6+aW85/yyKlTke2NVSHL6vRluht7C+jUG9f5Ov/0EeM5bE
+   nwAWVJZCoFH4xJoGMZyDFtO2PvI7OzmJVvad9PwO3NKfr0dO+r7Lx7R9k
+   neIYV9EkhbWNRZVk+EDF/mEYMSkMFbKYUBUrmwML5/CQ+2wuPAE9d7uRx
+   XK/D57mQj9VKgQn9NGH3XErnwoOi636yu24a6ZXeUdq/FBBzE5emONI3V
+   LoAmAGsLkEWjA7hZExXfoyWL33p4RZg1rZcNYHSEE6TUhGYglTpRiLxRR
+   sALYQWvjpqgOlJfBMOTJbHD6dT5xzOblfdfI7dTlEqIIzXuwKKVnboEw1
+   Q==;
+IronPort-SDR: VLYk1EEpijJRleQur2LDMOMpKQMGgwyaEf7wD34q+JX5WGTUZUwOWjxi1cLyHnGwvqQoFh4znt
+ PD+6Cs+FVj/7nqOT0IVwVhKO0jeEKt2j3QZuYWoTg1iFOzypxd7USwXd4V5ldslOQlNLyHq6xk
+ Le8BwgbLtGkLpqFEganF8yy8QODIlPizMZRGBCHZZUdvU6TnU3/bRRw3RxY2GXrC9EhHh0/f4d
+ fvPR/R+JWJRdv+ejB81eL7EBaC+/UZGSnEWyKC/ELrQMfqUhuCR+nOwMq623x15E2gS5XbewU6
+ CGo=
+X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
+   d="scan'208";a="15071190"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 02:13:55 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 9 Jun 2020 02:13:54 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
+ via Frontend Transport; Tue, 9 Jun 2020 02:13:51 -0700
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com> <20200602191025.ywo77nslrgswh6sw@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no IRQ specified in DT
+In-Reply-To: <20200602191025.ywo77nslrgswh6sw@mobilestation>
+Date:   Tue, 9 Jun 2020 11:13:50 +0200
+Message-ID: <87lfkwiott.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-In-Reply-To: <61d256e7-88ca-ac89-9c80-132c0d2de4a8@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 6/8/2020 9:36 PM, Guenter Roeck wrote:
-> On 6/7/20 10:49 PM, Dilip Kota wrote:
->> On Intel Lightning Mountain SoC, General Purpose Timer Counter(GPTC)
->> programmable as clocksource, real time clock or watchdog timer.
->>
->> This driver configures GPTC as Watchdog timer and triggers reset signal
->> to CPU on timeout.
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->>   drivers/watchdog/Kconfig              |  13 ++
->>   drivers/watchdog/Makefile             |   1 +
->>   drivers/watchdog/intel_lgm_gptc_wdt.c | 420 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 434 insertions(+)
->>   create mode 100644 drivers/watchdog/intel_lgm_gptc_wdt.c
->>
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index 0663c604bd642..8009c11e75dda 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->> @@ -1789,6 +1789,19 @@ config IMGPDC_WDT
->>   	  To compile this driver as a loadable module, choose M here.
->>   	  The module will be called imgpdc_wdt.
->>   
->> +config INTEL_LGM_GPTC_WDT
->> +	tristate "INTEL LGM SoC Watchdog"
->> +	depends on X86 || COMPILE_TEST
->> +	depends on OF && HAS_IOMEM
->> +	select REGMAP
->> +	select MFD_SYSCON
->> +	select WATCHDOG_CORE
->> +	help
->> +	  Driver for Watchdog Timer on Intel Lightning Mountain SoC.
->> +
->> +	  To compile this driver as a loadable module, choose M here.
->> +	  The module will be called intel_lgm_gptc_wdt.
->> +
->>   config LANTIQ_WDT
->>   	tristate "Lantiq SoC watchdog"
->>   	depends on LANTIQ
->> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->> index 6de2e4ceef190..92c99e4c46eb7 100644
->> --- a/drivers/watchdog/Makefile
->> +++ b/drivers/watchdog/Makefile
->> @@ -166,6 +166,7 @@ obj-$(CONFIG_TXX9_WDT) += txx9wdt.o
->>   obj-$(CONFIG_OCTEON_WDT) += octeon-wdt.o
->>   octeon-wdt-y := octeon-wdt-main.o octeon-wdt-nmi.o
->>   obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
->> +obj-$(CONFIG_INTEL_LGM_GPTC_WDT) += intel_lgm_gptc_wdt.o
->>   obj-$(CONFIG_LOONGSON1_WDT) += loongson1_wdt.o
->>   obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
->>   obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
->> diff --git a/drivers/watchdog/intel_lgm_gptc_wdt.c b/drivers/watchdog/intel_lgm_gptc_wdt.c
->> new file mode 100644
->> index 0000000000000..52be7cc194f8f
->> --- /dev/null
->> +++ b/drivers/watchdog/intel_lgm_gptc_wdt.c
->> @@ -0,0 +1,420 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2020 Intel Corporation.
->> + */
->> +
->> +#include <linux/bitfield.h>
->> +#include <linux/clk.h>
->> +#include <linux/cpu.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/watchdog.h>
->> +
->> +#define GPTC_CLC		0x00
->> +#define GPTC_CLC_SUSPEND	BIT(4)
->> +#define GPTC_CLC_RMC		GENMASK(15, 8)
->> +
->> +/* divider 10 to produce 200 / 10 = 20 MHz clock */
->> +#define CLC_RMC_DIV		10
->> +
->> +#define GPTC_CON(X)		(0x10 + (X) * 0x20)
->> +#define GPTC_CON_CNT_UP		BIT(1)
->> +#define GPTC_CON_ONESHOT	BIT(3)
->> +#define GPTC_CON_EXT		BIT(4)
->> +
->> +#define GPTC_RUN(X)		(0x18 + (X) * 0x20)
->> +#define GPTC_RUN_EN		BIT(0)
->> +#define GPTC_RUN_STOP		BIT(1)
->> +#define GPTC_RUN_RELOAD		BIT(2)
->> +
->> +#define GPTC_RLD(X)		(0x20 + (X) * 0x20)
->> +#define GPTC_CNT(X)		(0x28 + (X) * 0x20)
->> +
->> +#define GPTC_IRNENCLR		0xF0
->> +#define GPTC_IRNEN		0xF4
->> +#define GPTC_IRNCR		0xFC
->> +
->> +/* Watchdog Timeout Reset register offset and bitfeilds */
->> +#define BIA_WDT_RST_EN		0x1E0
->> +#define BIA_WDT			BIT(6)
->> +
->> +#define MAX_TIMERID		2
->> +#define MAX_CPUID		3
->> +#define TIMER_MARGIN_SEC	300
->> +
->> +static bool nowayout = WATCHDOG_NOWAYOUT;
->> +module_param(nowayout, bool, 0);
->> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started\n"
->> +	" (default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->> +
->> +struct lgm_gptc_timer {
->> +	struct lgm_gptc_wdt	*wdt_node;
->> +	struct watchdog_device	wdd;
->> +	unsigned int		tid;
->> +	unsigned int		cpuid;
->> +	unsigned int		frequency;
->> +	unsigned int		cycles;
->> +	bool			enable;
->> +};
->> +
->> +struct lgm_gptc_wdt {
->> +	struct device		*dev;
->> +	void __iomem		*gptc_base;
->> +	struct regmap		*rst_hndl;
->> +	struct clk		*freqclk;
->> +	struct clk		*gateclk;
->> +	unsigned int		fpifreq;
->> +	enum cpuhp_state	state;
->> +};
->> +
->> +DEFINE_PER_CPU(struct lgm_gptc_timer, lgm_timer_per_cpu);
->> +
-> This is unusual. You'll have to provide a very detailed explanation
-> why this is needed.
-Sure will add it.
-It is required for the hotplug cpu support, and hotplug cpu is added 
-because, the cpus on Lightning Mountain SoC can be online and offline 
-dynamically.
-If CPUs come to online after the watchdog driver probe, hotplug CPU 
-support helps to configure watchdog timer once CPU is online.
+Serge Semin writes:
 
-Regards,
--Dilip
+> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
+>> With this change a SPI controller can be added without having a IRQ
+>> associated, and causing all transfers to be polled. For SPI controllers
+>> without DMA, this can significantly improve performance by less
+>> interrupt handling overhead.
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  drivers/spi/spi-dw.c | 21 +++++++++++++--------
+>>  1 file changed, 13 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+>> index 31e3f866d11a7..e572eb34a3c1a 100644
+>> --- a/drivers/spi/spi-dw.c
+>> +++ b/drivers/spi/spi-dw.c
+>> @@ -19,6 +19,8 @@
+>>  #include <linux/debugfs.h>
+>>  #endif
+>>
 >
-> Guenter
+>> +#define VALID_IRQ(i) (i >= 0)
 >
+> Mark and Andy are right. It is a good candidate to be in a generic IRQ-related
+> code as Anyd suggested:
 >
+>> > drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
+>> > Candidate to be in include/linux/irq.h ?
+>
+> So if you feel like to author additional useful patch integrated into the
+> kernel, this one is a good chance for it.
+>
+
+Yeah, but with the poll_transfer() gone below, I think I'll settle on
+just getting this into the current framework. Optimization (as this is)
+has less priority. I'll put this on the back burner.
+
+>> +
+>>  /* Slave spi_dev related */
+>>  struct chip_data {
+>>       u8 tmode;               /* TR/TO/RO/EEPROM */
+>> @@ -359,7 +361,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+>>                       spi_enable_chip(dws, 1);
+>>                       return ret;
+>>               }
+>> -     } else if (!chip->poll_mode) {
+>> +     } else if (!chip->poll_mode && VALID_IRQ(dws->irq)) {
+>>               txlevel = min_t(u16, dws->fifo_len / 2, dws->len / dws->n_bytes);
+>>               dw_writel(dws, DW_SPI_TXFLTR, txlevel);
+>>
+>> @@ -379,7 +381,7 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+>>                       return ret;
+>>       }
+>>
+>> -     if (chip->poll_mode)
+>> +     if (chip->poll_mode || !VALID_IRQ(dws->irq))
+>>               return poll_transfer(dws);
+>
+> Please note. The chip->poll and the poll_transfer() methods've been discarded
+> from the driver, since commit 1ceb09717e98 ("spi: dw: remove cs_control and
+> poll_mode members from chip_data"). So you gonna have to get the
+> poll_transfer-like method back.
+>
+> -Sergey
+>
+>>
+>>       return 1;
+>> @@ -487,11 +489,13 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>>
+>>       spi_controller_set_devdata(master, dws);
+>>
+>> -     ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED, dev_name(dev),
+>> -                       master);
+>> -     if (ret < 0) {
+>> -             dev_err(dev, "can not get IRQ\n");
+>> -             goto err_free_master;
+>> +     if (VALID_IRQ(dws->irq)) {
+>> +             ret = request_irq(dws->irq, dw_spi_irq, IRQF_SHARED,
+>> +                               dev_name(dev), master);
+>> +             if (ret < 0) {
+>> +                     dev_err(dev, "can not get IRQ\n");
+>> +                     goto err_free_master;
+>> +             }
+>>       }
+>>
+>>       master->use_gpio_descriptors = true;
+>> @@ -539,7 +543,8 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>>       if (dws->dma_ops && dws->dma_ops->dma_exit)
+>>               dws->dma_ops->dma_exit(dws);
+>>       spi_enable_chip(dws, 0);
+>> -     free_irq(dws->irq, master);
+>> +     if (VALID_IRQ(dws->irq))
+>> +             free_irq(dws->irq, master);
+>>  err_free_master:
+>>       spi_controller_put(master);
+>>       return ret;
+>> --
+>> 2.26.2
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Lars Povlsen,
+Microchip
