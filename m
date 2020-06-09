@@ -2,168 +2,109 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00799C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20E2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D174C2067B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591726728;
-	bh=GmOf7ufLopIQ4dm5tWeT9BTmDlXoHbRAmXYulRxbARg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n4eHfb3WpF08zTlXy0FJe4vBBxK4akGoQkgEUJntscsraSaZX3Z9ORvd8ombBE8sy
-	 jrAKDx38r2rggfL63gs8d9bHLK9UFRFKo5XJyiMx2hd1EcLA2FqaTR7Q/civfDjnby
-	 MlA7KcHYzEx1wapRucObpOAM7mp0m3kl7n4t8ryk=
+	by mail.kernel.org (Postfix) with ESMTP id B1E732067B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 18:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732607AbgFIRuH (ORCPT
+        id S2388936AbgFISUz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732604AbgFIRuD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 13:50:03 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1500320801;
-        Tue,  9 Jun 2020 17:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591725002;
-        bh=GmOf7ufLopIQ4dm5tWeT9BTmDlXoHbRAmXYulRxbARg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qBlCD7TE7EFTt9PmZafc3XGZkCUYr70hyzrVUttbz0QUrhGE+ZKD3ilnm5gavV5aN
-         NShzrd92zAMR12KJn5yRqWK6hNb+kNIOu8EonT++JAT1G7MwZYQUkMalwtLgErwqPA
-         cfTOtJX7xuvIUUh1lI8qFVC5AfvWBZt9lRQe3g0g=
-Date:   Tue, 9 Jun 2020 18:50:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh@kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] ASoc: tas2563: DSP Firmware loading support
-Message-ID: <20200609175000.GO4583@sirena.org.uk>
-References: <20200609172841.22541-1-dmurphy@ti.com>
- <20200609172841.22541-3-dmurphy@ti.com>
+        Tue, 9 Jun 2020 14:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730905AbgFIRso (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 13:48:44 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E12C03E97C;
+        Tue,  9 Jun 2020 10:48:43 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id B100A2A3B92
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH v9 11/11] Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
+Date:   Tue,  9 Jun 2020 20:49:59 +0300
+Message-Id: <20200609174959.955926-12-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vEfizQhTV1P/vojJ"
-Content-Disposition: inline
-In-Reply-To: <20200609172841.22541-3-dmurphy@ti.com>
-X-Cookie: Be careful!  Is it classified?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This documents the longer-term plan to cleanup the dw-mipi-dsi bridge
+based drivers after the regmap refactor and i.MX6 driver have landed.
 
---vEfizQhTV1P/vojJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The goal is to get the entire bridge logic in one place and continue
+the refactorings under the drm/bridge tree.
 
-On Tue, Jun 09, 2020 at 12:28:41PM -0500, Dan Murphy wrote:
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+---
+ Documentation/gpu/todo.rst | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
->  	.val_bits =3D 8,
-> =20
-> -	.max_register =3D 5 * 128,
-> +	.max_register =3D 255 * 128,
->  	.cache_type =3D REGCACHE_RBTREE,
->  	.reg_defaults =3D tas2562_reg_defaults,
->  	.num_reg_defaults =3D ARRAY_SIZE(tas2562_reg_defaults),
+diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
+index 658b52f7ffc6c..2b142980a4b16 100644
+--- a/Documentation/gpu/todo.rst
++++ b/Documentation/gpu/todo.rst
+@@ -548,6 +548,31 @@ See drivers/gpu/drm/amd/display/TODO for tasks.
+ 
+ Contact: Harry Wentland, Alex Deucher
+ 
++Reorganize dw-mipi-dsi bridge-based host-controller drivers
++-----------------------------------------------------------
++
++The Synopsys DW MIPI DSI bridge is used by a number of SoC platform drivers
++(STM, Rockchip, i.MX) which don't cleanly encapsulate their bridge logic which
++gets split between the Synopsys bridge (drm/bridge/synopsys/dw-mipi-dsi.c) and
++platform drivers like drm/imx/dw_mipi_dsi-imx6.c by passing around the bridge
++configuration regmap, creating new bridges / daisy chaining in platform drivers,
++duplicating encoder creation, having too much encoder logic instead of using the
++simple encoder interface and so on.
++
++The goal of this rework is to make the dw-mipi-dsi driver a better encapsulated
++bridge by moving all bridge-related logic under drm/bridge, including the SoC
++bindings which chain to the core Synopsys code under drm/bridge/dw-mipi-dsi/
++from which they can be further consolidated and cleaned up.
++
++If this goal proves to be impossible then drm_bridge might not be the correct
++abstraction for these host controllers and unifying their logic into a helper
++library encapsulating a drm_encoder might be more desirable, in other words to
++move away from drm_bridge entirely.
++
++Contact: Adrian Ratiu, Daniel Vetter, Laurent Pinchart
++
++Level: Intermediate
++
+ Bootsplash
+ ==========
+ 
+-- 
+2.27.0
 
-Should some or all of the DSP memory be marked as volatile?  I guess if
-we only write program to it then on reload after power off it should be
-fine to just blast everything in again and ignore the fact that some
-will have changed, but it might be helpful for debugging to be able to
-read the live values back and do something more clever for restore.
-
->  #define TAS2562_PAGE_CTRL      0x00
-> +#define TAS2562_BOOK_CTRL      0x7f
-
-*sigh*  Of course the two levels of paging register are not located
-anywhere near each other so we can't easily pretend they're one double
-width page address.  :/
-
-> +static int tas25xx_process_fw_single(struct tas2562_data *tas2562,
-> +				     struct tas25xx_cmd_data *cmd_data,
-> +				     u8 *fw_out)
-> +{
-> +	int num_writes =3D cpu_to_be16(cmd_data->length);
-> +	int i;
-> +	int ret;
-> +	int offset =3D 4;
-> +	int reg_data, write_reg;
-> +
-> +	for (i =3D 0; i < num_writes; i++) {
-> +		/* Reset Page to 0 */
-> +		ret =3D regmap_write(tas2562->regmap, TAS2562_PAGE_CTRL, 0);
-> +		if (ret)
-> +			return ret;
-
-Why?
-
-> +
-> +		cmd_data->book =3D fw_out[offset];
-> +		cmd_data->page =3D fw_out[offset + 1];
-> +		cmd_data->offset =3D fw_out[offset + 2];
-> +		reg_data =3D fw_out[offset + 3];
-> +		offset +=3D 4;
-> +
-> +		ret =3D regmap_write(tas2562->regmap, TAS2562_BOOK_CTRL,
-> +				   cmd_data->book);
-> +		if (ret)
-> +			return ret;
-
-This manual paging doesn't fill me with with joy especially with regard
-to caching and doing the books behind the back of regmap.  I didn't spot
-anything disabling cache or anything in the code.  I think you should
-either bypass the cache while doing this or teach regmap about the
-books (which may require core updates, I can't remember if the range
-code copes with nested levels of paging - I remember thinking about it).
-
-> +static ssize_t write_config_store(struct device *dev,
-> +				struct device_attribute *tas25xx_attr,
-> +				const char *buf, size_t size)
-> +{
-
-This looks like it could just be an enum (it looks like there's names we
-could use) or just a simple numbered control?  Same for all the other
-controls, they're just small integers so don't look hard to handle.  But
-perhaps I'm missing something?
-
-> +	tas2562->fw_data->fw_hdr =3D devm_kzalloc(tas2562->dev, hdr_size,
-> +						GFP_KERNEL);
-> +	if (!tas2562->fw_data->fw_hdr)
-> +		return -ENOMEM;
-> +
-> +	memcpy(tas2562->fw_data->fw_hdr, &fw->data[0], hdr_size);
-
-Should validate that the firmware is actually at least hdr_size big, and
-similarly for all the other lengths we get from the header we should
-check that there's actually enough data in the file.  ATM we just
-blindly copy.
-
-It'd also be good to double check that the number of configs and
-programs is within bounds.
-
---vEfizQhTV1P/vojJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fy8cACgkQJNaLcl1U
-h9DyjAf/U3fDLekpB9MZStpSggO6T3wCfTbWFhFNd8RAcNjhjzxnoumprzpXP7vS
-0udC8M7ISpLr6EIdhF6WScsoEWCM/1quzrZ8T3TSAz5pfAiuepmWMYgZiLr532vv
-jGtuTYBno7H+Kx4CKOc5+mnd7cFWaSQkxWui3/uwDrWrdQRQRva9oZRW5NdYLFGY
-5H2uzDpRDnRetbs4xJztGJ7d4FcgSutaJFsfhe6xMEaN8Hgk73m5UBAK1Epv2LTz
-kswZnjp6SO8jdJCLyiblXnliDIRn/ftQz5hTY2ZLUmZ1ylwpbtuoTdGwpp4NoYfU
-2Qo3ZYiD2Gd7QnI6Jqb6H6LM/8IMNw==
-=c5qv
------END PGP SIGNATURE-----
-
---vEfizQhTV1P/vojJ--
