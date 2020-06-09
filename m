@@ -2,238 +2,111 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E64C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC1BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4AB620737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1432072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591740239;
-	bh=flZ33ysLlKU45UAun+m9I+uL1J5SSmfePQ8hOU6DJfg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=melu5dt6CN4svLSDo+y+t5XzHh9BV2kyAwkgZJT/hvTgYuOtjo75N5oXNGOBt1Hdp
-	 u0mdqDH0cThLwV9+apkVj8FYirtUyxdjPLNWoll5TDXkyXGF3k0lAj3zJtPtbC44yv
-	 R18DASCHLzFBgoB+pUeJSWY3aNYmfZ2YCvVgvcTc=
+	s=default; t=1591740845;
+	bh=2czgAZJmrMm/Zsg2v/BQ7lmeM7czeBz/w4+R5P5z1Xw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vyc9jBTDpeKTBNoy7l9gzsHrAx/SZ2nj+dc9Rh5Xlnlkrk+7ykPby48HLK/gHRMko
+	 UWUgfPSkvBOmxKOUGc0jeoxuCRAc1oFOBsQUFAgAc6b3HaTzbHYtKSzbLIk+jSH4Z6
+	 +QNHYQt7//L5rOeQGyc6uBmaLiO9kBjhRb3r4sSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgFIWD7 (ORCPT
+        id S1728202AbgFIWOF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:03:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbgFIWD6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 18:03:58 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57FD12076A;
-        Tue,  9 Jun 2020 22:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591740237;
-        bh=flZ33ysLlKU45UAun+m9I+uL1J5SSmfePQ8hOU6DJfg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lkIALF/Bz5PHpbWDPE/TVnpI2c/G/+3TP5jdAxlBZenjXoI743llcFBTqAjEKIa2d
-         mk3YMda7mIEGR7kVGu9J1XQi1oUtLlNrQTctAeflcrM3BX9rl37Vd9DR+QmZfHdYB8
-         kpWx8xVi3QwABVCAkftswnHytL9YYHSyJfGQscPo=
-Received: by mail-oi1-f169.google.com with SMTP id a3so210870oid.4;
-        Tue, 09 Jun 2020 15:03:57 -0700 (PDT)
-X-Gm-Message-State: AOAM5317PQEV4SnPsffI9DQfEifdbvXhDebbGyU6LRZaj4SM9Of9BL2U
-        JhEDkclksIl8rZ/3ABE7yAZzgCJBYVy9UvfqHw==
-X-Google-Smtp-Source: ABdhPJzUR9iieM8EaueMmaUiEVRgOMVztBfW1AHBkxHha+Gjto8AsBpZQbvbkHWaNeJrgkpACTnHBYgdAkwtI7Cit6Y=
-X-Received: by 2002:aca:d943:: with SMTP id q64mr294871oig.147.1591740236611;
- Tue, 09 Jun 2020 15:03:56 -0700 (PDT)
+        Tue, 9 Jun 2020 18:14:05 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46740 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgFIWOD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 18:14:03 -0400
+Received: by mail-il1-f196.google.com with SMTP id h3so21898408ilh.13;
+        Tue, 09 Jun 2020 15:14:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6+IKvoJBxDC0gkwKVy035Y+LyuzeC/PUgTKJmP456DM=;
+        b=JI+2kDetuV8agBL7BeFquSGnPMhPlnUJlU2Fp37HfCMp9gTj7PuF60hkr7CufZLc2V
+         KI2cYZvK3vvGhbiVOpVYaV0HERI17qxVyS1hWg0M7dvcw9VKBjn7Pr6t4KkXmWxJfiRm
+         ed9gZM+UYQ9EbhxSIKA4zh6dAJP6cWUFFxsuOh1v5wLyZyr0jS8wQLWR07jtBjeKDGWX
+         rb/sJHtDOww7OUkIxIfYFgE6/S9KfbflsZhfAfRjv2Et4BruUNv3ZtyREgu/E3rgqIAs
+         exJHh8xHuw4k+eZkMG4WPnVSh7hrphzyXLb6ebGlukd1LDchrnnQgOBf3Tv14flvCbvW
+         F6Yg==
+X-Gm-Message-State: AOAM531YGvfAbwXRBtqFzf8c+pN2QW4IcAPrfnkB5GOfuMhN6peCXFzj
+        JDEnT8HkcH3JC4p7wUY89tmuCFM=
+X-Google-Smtp-Source: ABdhPJxoiaeJB5cWwPsTuM2+ydzCxHsKCMc4EpHF0wrt5zhCGpgU41tDnDwG7ZtBcfwEXj4QolvBWw==
+X-Received: by 2002:a92:9f4b:: with SMTP id u72mr135479ili.273.1591740842955;
+        Tue, 09 Jun 2020 15:14:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id p11sm8000193ioo.26.2020.06.09.15.14.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 15:14:02 -0700 (PDT)
+Received: (nullmailer pid 1590865 invoked by uid 1000);
+        Tue, 09 Jun 2020 22:14:01 -0000
+Date:   Tue, 9 Jun 2020 16:14:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Kevin P. Fleming" <kevin+linux@km6g.us>
+Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] rtc: abx80x: Add support for autocalibration filter
+ capacitor
+Message-ID: <20200609221401.GA1492918@bogus>
+References: <20200530123222.361104-1-kevin+linux@km6g.us>
 MIME-Version: 1.0
-References: <20200609110136.GJ4106@dell>
-In-Reply-To: <20200609110136.GJ4106@dell>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 9 Jun 2020 16:03:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
-Message-ID: <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
-Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        GregKroah-Hartmangregkh@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200530123222.361104-1-kevin+linux@km6g.us>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 5:01 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Good morning,
->
-> After a number of reports/queries surrounding a known long-term issue
-> in the MFD core, including the submission of a couple of attempted
-> solutions, I've decided to finally tackle this one myself.
->
-> Currently, when a child platform device (sometimes referred to as a
-> sub-device) is registered via the Multi-Functional Device (MFD) API,
-> the framework attempts to match the newly registered platform device
-> with its associated Device Tree (OF) node.  Until now, the device has
-> been allocated the first node found with an identical OF compatible
-> string.  Unfortunately, if there are, say for example '3' devices
-> which are to be handled by the same driver and therefore have the same
-> compatible string, each of them will be allocated a pointer to the
-> *first* node.
->
-> Let me give you an example.
->
-> I have knocked up an example 'parent' and 'child' device driver.  The
-> parent utilises the MFD API to register 3 identical children, each
-> controlled by the same driver.  This happens a lot.  Fortunately, in
-> the majority of cases, the OF nodes are also totally identical, but
-> what if you wish to configure one of the child devices with different
-> attributes or resources supplied via Device Tree, like a clock?  This
-> is currently impossible.
->
-> Here is the Device Tree representation for the 1 parent and the 3
-> child (sub) devices described above:
->
->         parent {
->                 compatible = "mfd,of-test-parent";
->
->                 child@0 {
+On Sat, May 30, 2020 at 08:32:22AM -0400, Kevin P. Fleming wrote:
+> All of the parts supported by this driver can make use of a
+> small capacitor to improve the accuracy of the autocalibration
+> process for their RC oscillators. If a capacitor is connected,
+> a configuration register must be set to enable its use, so a
+> new Device Tree property has been added for that purpose.
+> 
+> Signed-off-by: Kevin P. Fleming <kevin+linux@km6g.us>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> To: linux-rtc@vger.kernel.org
+> To: devicetree@vger.kernel.org
+> ---
+>  .../bindings/rtc/abracon,abx80x.txt           |  6 ++++
+>  drivers/rtc/rtc-abx80x.c                      | 34 +++++++++++++++++++
+>  2 files changed, 40 insertions(+)
 
-Just a note, unit-address implies there is a 'reg' property. Why
-that's important below.
+Binding should be a separate patch?
 
->                         compatible = "mfd,of-test-child";
->                         clocks = <&clock 0>;
->                 };
->
->                 child@1 {
->                         compatible = "mfd,of-test-child";
->                         clocks = <&clock 1>;
->                 };
->
->                 child@2 {
->                         compatible = "mfd,of-test-child";
->                         clocks = <&clock 2>;
->                 };
->         };
->
-> This is how we register those devices from MFD:
->
-> static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 0, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 1, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 2, "mfd,of-test-child")
-> };
->
-> ... which we pass into mfd_add_devices() for processing.
->
-> In an ideal world.  The devices with the platform_id; 0, 1 and 2 would
-> be matched up to Device Tree nodes; child@0, child@1 and child@2
-> respectively.  Instead all 3 devices will be allocated a pointer to
-> child@0's OF node, which is obviously not correct.
->
-> This is how it looks when each of the child devices are probed:
->
->  [0.708287] mfd-of-test-parent mfd_of_test: Registering 3 devices
->  [...]
->  [0.712511] mfd-of-test-child mfd_of_test_child.0: Probing platform device: 0
->  [0.712710] mfd-of-test-child mfd_of_test_child.0: Using OF node: child@0
->  [0.713033] mfd-of-test-child mfd_of_test_child.1: Probing platform device: 1
->  [0.713381] mfd-of-test-child mfd_of_test_child.1: Using OF node: child@0
->  [0.713691] mfd-of-test-child mfd_of_test_child.2: Probing platform device: 2
->  [0.713889] mfd-of-test-child mfd_of_test_child.2: Using OF node: child@0
->
-> "Why is it when I change child 2's clock rate, it also changes 0's?"
->
-> Whoops!
->
-> So in order to fix this, we need to make MFD more-cleverer!
->
-> However, this is not so simple.  There are some rules we should abide
-> by (I use "should" intentionally here, as something might just have to
-> give):
->
->  a) Since Device Tree is designed to describe hardware, inserting
->     arbitrary properties into DT is forbidden.  This precludes things
->     we would ordinarily be able to match on, like 'id' or 'name'.
->  b) As an extension to a) DTs should also be OS agnostic, so
->     properties like 'mfd-device', 'mfd-order' etc are also not
->     not suitable for inclusion.
->  c) The final solution should ideally be capable of supporting both
->     newly defined and current trees (without retroactive edits)
->     alike.
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+> index 2405e35a1bc0..ad5d59ed6f24 100644
+> --- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+> +++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
+> @@ -29,3 +29,9 @@ and valid to enable charging:
+>   - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
+>   - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
+>                            resistor, the other values are in kOhm.
+> +
+> +All of the devices can have a 47pf capacitor attached to increase the
+> +autocalibration accuracy of their RC oscillators. To enable usage of the
+> +capacitor the following property has to be defined:
+> +
+> + - "abracon,autocal-filter"
 
-Presumably anything current already works. If you had the above
-example already, requiring updating the DT to make it work seems fine.
-
->  d) Existing properties could be used, but not abused.  For example,
->     one of my suggestions (see below) is to use the 'reg' property.
->     This is fine in principle but loading 'reg' with arbitrary values
->     (such as; 0, 1, 2 ... x) which 1) clearly do not have anything to
->     do with registers and 2) would be meaningless in other OSes/
->     implementations, just to serve our purpose, is to be interpreted
->     as an abuse.
-
-Multiple instances of something implies you have some way to address
-them and 'reg' is what defines the address of something. 0,1,2,etc.
-looks suspiciously like just some kernel defined indexes, but if
-that's how things are defined in the datasheet I'm okay with them.
-
-The one wrinkle is there's only one address space at one level, so
-gpio@0, gpio@1, pwm@0, pwm@1, etc. doesn't really work (well, it
-works, but having overlapping addresses is not good practice). Either
-we relax that in this case or we can add another level to group nodes.
-
->
-> Proposal 1:
->
-> As mentioned above, my initial thoughts were to use the 'reg' property
-> to match an MFD cell entry with the correct DT node.  However, not
-> all Device Tree nodes have 'reg' properties.  Particularly true in the
-> case of MFD, where memory resources are usually shared with the parent
-> via Regmap, or (as in the case of the ab8500) the MFD handles all
-> register transactions via its own API.
-
-Just to pick on ab8500, it should have had 'reg' property IMO. The
-'bank' is clearly a h/w property and how you address each sub-device.
-
->
-> Proposal 2:
->
-> If we can't guarantee that all DT nodes will have at least one
-> property in common to be used for matching and we're prevented from
-> supplying additional, potentially bespoke properties, then we must
-> seek an alternative procedure.
->
-> It should be possible to match based on order.  However, the developer
-> would have to guarantee that the order in which the child devices are
-> presented to the MFD API are in exactly the same order as they are
-> represented in the Device Tree.  The obvious draw-back to this
-> strategy is that it's potentially very fragile.
-
-I don't think we should use order.
-
->
-> Current Proposal:
->
-> How about a collection of Proposal 1 and Proposal 2?  First we could
-> attempt a match on the 'reg' property.  Then, if that fails, we would
-> use the fragile-but-its-all-we-have Proposal 2 as the fall-back.
-
-Yes, we should use 'reg' whenever possible. If we don't have 'reg',
-then you shouldn't have a unit-address either and you can simply match
-on the node name (standard DT driver matching is with compatible,
-device_type, and node name (w/o unit-address)). We've generally been
-doing 'classname-N' when there's no 'reg' to do 'classname@N'.
-Matching on 'classname-N' would work with node name matching as only
-unit-addresses are stripped.
+Can't the standard 'quartz-load-femtofarads' property be used here? You 
+might not need to know the value, but presence of the property can 
+enable the feature.
 
 Rob
