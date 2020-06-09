@@ -2,177 +2,430 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A169DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 03:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 03:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C922078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 03:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35CC207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 03:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="eLN9RmOj"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KPfJo9k3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgFIDII (ORCPT
+        id S1726964AbgFIDfJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 23:08:08 -0400
-Received: from mail-eopbgr680064.outbound.protection.outlook.com ([40.107.68.64]:1508
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726884AbgFIDIH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 23:08:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YXwfdOAK147mQyzWS/Gh00wwQ2RFpv+sVNEfVyW9CFibyrijpXqmJ5jQfF18PcfbS3m/zeWe4NuHkxnJZUZMvjBb5DZi7y2j3Vxo5krRIcajIoRTOT3YTbkILiKxoL1bvqLTQpLJ4c2p8LGSqpsR/OgAdok/9QsOccI5wZofhp7lGR0kZnazZyQi7cBaKyrmXUV7H6JUXt2Rw/fNdBlfy2RxlNjbCtfbllKml/Q57xlr/afuqsCztYE6pNp8k0rdPU7jTCV/5eEeNKGUpla+/eElBj9d6ku/wqQExOBC9RIjoB55nittluY1k9F5/yAu6yUQ0xeC9o7skWzDW5F4VQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tQsMU6gNuowAtZGbEP37YPhYzVX+cbmwawQyWiwB2zI=;
- b=caJ3tIjO8NHwuMx756Qkj+wu9HAB9azcSCRYfcFicXJVBE21xlUZZPAxhj6anK3rOG5eA+a7y60uGCrNjQ53u49VYEQBvF2hQs3fdqGE4xosAjOyo5LF7/tyzoLVi8mLwTaQL/PyGAx1SIpjlRVy7aA0SLYieya3asntt334qrpL30VWDgwMxmPC4IoQlTU/wO0UxgFLetWz6KplA+YGBfVWHvEA1DcTzxSlOrnd06nC908KSJnhLxu7ydVcdbSQWtG/vHV25MB0SB/mgZNHWGxTtDbzmgH/vDhwVuCaIY6y496MA+UHEMPPnzvKDDfpICo5MLJBesn5jxdMa2oCbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tQsMU6gNuowAtZGbEP37YPhYzVX+cbmwawQyWiwB2zI=;
- b=eLN9RmOj1/XJmm2oE04zdH8amMxBA6AkHdyeIbmX69HamP5gpaiZvhEogWWl2W3//SwXf5RPHHI5Egx7aA+HYu6fZZ0QrydJBoOol2Ru7Pk+8POb0jPS/7bYMM8jqde/TW79FVKUtgkx+FZpb9sB1gFfP7oLyUCi7R5yNpXDSVw=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=windriver.com;
-Received: from DM6PR11MB2747.namprd11.prod.outlook.com (2603:10b6:5:c6::22) by
- DM6PR11MB3465.namprd11.prod.outlook.com (2603:10b6:5:b::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3066.19; Tue, 9 Jun 2020 03:08:04 +0000
-Received: from DM6PR11MB2747.namprd11.prod.outlook.com
- ([fe80::ad7f:84a9:35bd:edf8]) by DM6PR11MB2747.namprd11.prod.outlook.com
- ([fe80::ad7f:84a9:35bd:edf8%4]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 03:08:04 +0000
-Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200608084117.4563-1-jiping.ma2@windriver.com>
- <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
- <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com>
- <CAK7LNAS3xOvkUWZzZcb7Mk2YsWo+A6XTjzTZjxjvkYCjWjQvFg@mail.gmail.com>
-From:   Jiping Ma <Jiping.Ma2@windriver.com>
-Message-ID: <d76f0e39-e22c-7179-955a-981d42b7bc01@windriver.com>
-Date:   Tue, 9 Jun 2020 11:07:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
-In-Reply-To: <CAK7LNAS3xOvkUWZzZcb7Mk2YsWo+A6XTjzTZjxjvkYCjWjQvFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: HK2PR02CA0148.apcprd02.prod.outlook.com
- (2603:1096:202:16::32) To DM6PR11MB2747.namprd11.prod.outlook.com
- (2603:10b6:5:c6::22)
+        Mon, 8 Jun 2020 23:35:09 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27383 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbgFIDfI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 23:35:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591673706; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=UUNxw2ZssaS7ocDaYl0k/KPa155Ku+qua1Kd4KYd9/8=; b=KPfJo9k3hmZws/qC9ppzbjoScPxmW8QJBQTwAeKHhVI9xvicgxJBYIe06CVo8SCtwzWD9wMI
+ ZUHKuFeTt5QL03jMZqFk3xV14GNtw1BU0tiSRu3n/mKsPELeftJ93jzI0Jy/DgpGSCc+Es2B
+ ZyqbFTr33JXYgQEH98YhXJnIWNI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5edf0366d26ace6bd5b65f1d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 03:35:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 60C7DC43395; Tue,  9 Jun 2020 03:35:02 +0000 (UTC)
+Received: from [192.168.0.106] (unknown [183.83.71.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4CBB2C433CA;
+        Tue,  9 Jun 2020 03:34:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4CBB2C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V3 3/3] mmc: sdhci-msm: Use internal voltage control
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
+ <1591094883-11674-4-git-send-email-vbadigan@codeaurora.org>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <92b149b1-40e0-f612-505c-8e0d0858e1c9@codeaurora.org>
+Date:   Tue, 9 Jun 2020 09:04:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.195] (60.247.85.82) by HK2PR02CA0148.apcprd02.prod.outlook.com (2603:1096:202:16::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Tue, 9 Jun 2020 03:08:02 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: de77cec3-4d74-4089-ce87-08d80c225352
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3465:
-X-Microsoft-Antispam-PRVS: <DM6PR11MB34651B0C349B854C774C47BBD8820@DM6PR11MB3465.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 042957ACD7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YUaUucBzNiQ13MNWQRx5TVOkOqEppQqim5IGPoNChnjdu/omUtwAxkvp6lu64ytwJY5QkNwWok2/zMj9bfF0B52Ef8LtURrxewfPTR3jCHH+r5SqNdmf7dE4wOf48kALszCykIsdRWMMn+Y4oVl8yUsE84gv1x/w3PC7RETKC0K1ZygJgAtkalrQm1EcdOXKmtK2f/VA+W7/u52H6zC8Kx+0WSh7XEw57UlN86bmegiXMAFjpSCy0ujrJNA5A7CLweShaXaDvM41APDi+XcGcA+WQg9BKfPdqB6QyO2QK02NaPZ56LfvJ0VAYV/BIJaiq5IanjcoYl2CbG9MlKKQsOqP7FRVVNDUvftYn8QpdtXmh0GBrgojJb5vWGlKd6yxHe4fqxss405s5EuDg9UsHIU5oVv713tF5SrxJPPG35GocrS7DyYwL3wjPFVTx8jtzGaYuHzn75Xl4H5tCfqWFGVp2elLeXJ9SpoeNd9oMhUtSRlD5prchr0ys8BA18Qyx1KfoTCppjiQIczLLUPKQQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2747.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39850400004)(346002)(396003)(376002)(136003)(6486002)(316002)(2906002)(66476007)(966005)(16576012)(86362001)(478600001)(54906003)(6666004)(66556008)(6706004)(66946007)(31686004)(8676002)(52116002)(26005)(36756003)(16526019)(4326008)(2616005)(186003)(8936002)(5660300002)(31696002)(6916009)(956004)(53546011)(78286006)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: S1uB+9Vloj6P40IeA7QvJ9BKxFSBilJ1Wpv2zVuZxsRvVegwYnoWsqcBAHI1cCmk9Ggkhb3OLWBvIJYny8O2ltkJrTksuC7rLCI8WsG99E/x5ggiqTeDwa7jwHTc6fm7THqxbirIbzbMT8PhYBSxMmzocMrmX6U/UbBr5y3Kj/6nCXCFDFNLjKDT3hilPsED+1AV6PQ5/raHp4wZQEixp/+FQXKMQddh5QswSEPnRHyQAxDDWh87BC3T4j1SkWb5cmRutai56cTwfppQXJS0ZvB36HwTvYhyiKVwvU+vkU+v76USuSehIwryiIOBpVt45ti5o5stV/bioiUrMOuS793VOeFADAKhBmsflFcnL7KuaNaAD1olLaovn/AFCAqxz8h+yf6A1nH80cLeEZwdZklyBLnNvHzrRpi3hd5cl875gtrVlA9EFYKcVC6F30yrURLc+O6KW8zsRzrbul1Myc6tZOTMaDkAmctGGMzlrG4=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de77cec3-4d74-4089-ce87-08d80c225352
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2020 03:08:04.1561
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rb5t1bxDIC5SnjeD7u3kjWTcKP8OEtHyJaj+2pPgJSswskJ+jXHFg7AHJ89rVDv5jLYcQJMRme6lRjp9LY6BZrMQE2IOmsi05ZBHDuYASoM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3465
+In-Reply-To: <1591094883-11674-4-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
+Do you have any comments on V3 patchset?
 
-On 06/09/2020 10:52 AM, Masahiro Yamada wrote:
-> On Tue, Jun 9, 2020 at 10:01 AM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
->>
->>
->> On 06/09/2020 03:09 AM, Rob Herring wrote:
->>> On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
->>>> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
->>>> it fails to build.
->>> Does this patch fix your issue?:
->>>
->>> https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
->> No, it did not fix the issue.
->>
->> $ pkg-config --cflags yaml-0.1
->>
->> $ pkg-config yaml-0.1 --libs
->> -L/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux/usr/lib64
->> -lyaml
-This issue happened in Yocto,  After completing the SDK build and 
-installing it, use a new shell to source the environment and try to 
-build the helper scripts.
-export 
-SDKTARGETSYSROOT=/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux
-export 
-PKG_CONFIG_PATH=$SDKTARGETSYSROOT/usr/lib64/pkgconfig:$SDKTARGETSYSROOT/usr/share/pkgconfig
->
->
->
-> If I install libyaml to a non-standard location
-> (/home/masahiro/foo), my pkg-config shows as follows:
->
->
->
-> masahiro@oscar:~$ pkg-config --cflags   yaml-0.1
-> -I/home/masahiro/foo/include
-> masahiro@oscar:~$ pkg-config --libs   yaml-0.1
-> -L/home/masahiro/foo/lib -lyaml
->
->
->
->
->
->
->
->>>
->>>> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
->>>> ---
->>>>    scripts/dtc/Makefile | 4 ++++
->>>>    1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
->>>> index b5a5b1c..b49dfea 100644
->>>> --- a/scripts/dtc/Makefile
->>>> +++ b/scripts/dtc/Makefile
->>>> @@ -18,9 +18,13 @@ $(error dtc needs libyaml for DT schema validation support. \
->>>>    endif
->>>>    HOST_EXTRACFLAGS += -DNO_YAML
->>>>    else
->>>> +ifeq ($(wildcard /usr/include/yaml.h),)
->>>> +HOST_EXTRACFLAGS += -DNO_YAML
->>>> +else
->>>>    dtc-objs       += yamltree.o
->>>>    HOSTLDLIBS_dtc := $(shell pkg-config yaml-0.1 --libs)
->>>>    endif
->>>> +endif
->>>>
->>>>    # Generated files need one more search path to include headers in source tree
->>>>    HOSTCFLAGS_dtc-lexer.lex.o := -I $(srctree)/$(src)
->>>> --
->>>> 1.9.1
->>>>
->
+Thanks
+Veera
 
+On 6/2/2020 4:17 PM, Veerabhadrarao Badiganti wrote:
+
+> On qcom SD host controllers voltage switching be done after the HW
+> is ready for it. The HW informs its readiness through power irq.
+> The voltage switching should happen only then.
+>
+> Use the internal voltage switching and then control the voltage
+> switching using power irq.
+>
+> Set the regulator load as well so that regulator can be configured
+> in LPM mode when in is not being used.
+>
+> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
+> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+>   drivers/mmc/host/sdhci-msm.c | 235 +++++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 226 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 95cd9735e9a3..20ef90fc7dd7 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -36,7 +36,9 @@
+>   #define CORE_PWRCTL_IO_LOW	BIT(2)
+>   #define CORE_PWRCTL_IO_HIGH	BIT(3)
+>   #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
+> +#define CORE_PWRCTL_BUS_FAIL    BIT(1)
+>   #define CORE_PWRCTL_IO_SUCCESS	BIT(2)
+> +#define CORE_PWRCTL_IO_FAIL     BIT(3)
+>   #define REQ_BUS_OFF		BIT(0)
+>   #define REQ_BUS_ON		BIT(1)
+>   #define REQ_IO_LOW		BIT(2)
+> @@ -277,6 +279,8 @@ struct sdhci_msm_host {
+>   	bool uses_tassadar_dll;
+>   	u32 dll_config;
+>   	u32 ddr_config;
+> +	u32 vqmmc_load;
+> +	bool vqmmc_enabled;
+>   };
+>   
+>   static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+> @@ -1339,6 +1343,91 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+>   		sdhci_msm_hs400(host, &mmc->ios);
+>   }
+>   
+> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
+> +{
+> +	if (IS_ERR(mmc->supply.vmmc))
+> +		return 0;
+> +
+> +	return mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
+> +}
+> +
+> +static int msm_toggle_vqmmc(struct sdhci_msm_host *msm_host,
+> +			      struct mmc_host *mmc, bool level)
+> +{
+> +	int ret;
+> +	struct mmc_ios ios;
+> +
+> +	if (msm_host->vqmmc_enabled == level)
+> +		return 0;
+> +
+> +	if (level) {
+> +		/* Set the IO voltage regulator to default voltage level */
+> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
+> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
+> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
+> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
+> +
+> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
+> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
+> +			if (ret < 0) {
+> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
+> +					mmc_hostname(mmc), ret);
+> +				goto out;
+> +			}
+> +		}
+> +		ret = regulator_enable(mmc->supply.vqmmc);
+> +	} else {
+> +		ret = regulator_disable(mmc->supply.vqmmc);
+> +	}
+> +
+> +	if (ret)
+> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
+> +			mmc_hostname(mmc), level ? "en":"dis", ret);
+> +	else
+> +		msm_host->vqmmc_enabled = level;
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int msm_config_vqmmc_mode(struct sdhci_msm_host *msm_host,
+> +			      struct mmc_host *mmc, bool hpm)
+> +{
+> +	int load, ret;
+> +
+> +	if (!msm_host->vqmmc_load)
+> +		return 0;
+> +
+> +	load = hpm ? msm_host->vqmmc_load : 0;
+> +	ret = regulator_set_load(mmc->supply.vqmmc, load);
+> +	if (ret)
+> +		dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
+> +			mmc_hostname(mmc), ret);
+> +	return ret;
+> +}
+> +
+> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
+> +			      struct mmc_host *mmc, bool level)
+> +{
+> +	int ret;
+> +	bool always_on;
+> +
+> +	if (IS_ERR(mmc->supply.vqmmc)		||
+> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED))
+> +		return 0;
+> +	/*
+> +	 * For eMMC don't turn off Vqmmc, Instead just configure it in LPM
+> +	 * and HPM modes by setting the right amonut of load.
+> +	 */
+> +	always_on = mmc->card && mmc_card_mmc(mmc->card);
+> +
+> +	if (always_on)
+> +		ret = msm_config_vqmmc_mode(msm_host, mmc, level);
+> +	else
+> +		ret = msm_toggle_vqmmc(msm_host, mmc, level);
+> +
+> +	return ret;
+> +}
+> +
+>   static inline void sdhci_msm_init_pwr_irq_wait(struct sdhci_msm_host *msm_host)
+>   {
+>   	init_waitqueue_head(&msm_host->pwr_irq_wait);
+> @@ -1442,8 +1531,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>   {
+>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>   	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	struct mmc_host *mmc = host->mmc;
+>   	u32 irq_status, irq_ack = 0;
+> -	int retry = 10;
+> +	int retry = 10, ret;
+>   	u32 pwr_state = 0, io_level = 0;
+>   	u32 config;
+>   	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
+> @@ -1481,21 +1571,42 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>   	if (irq_status & CORE_PWRCTL_BUS_ON) {
+>   		pwr_state = REQ_BUS_ON;
+>   		io_level = REQ_IO_HIGH;
+> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+>   	}
+>   	if (irq_status & CORE_PWRCTL_BUS_OFF) {
+>   		pwr_state = REQ_BUS_OFF;
+>   		io_level = REQ_IO_LOW;
+> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+>   	}
+> +
+> +	if (pwr_state) {
+> +		ret = sdhci_msm_set_vmmc(mmc);
+> +		if (!ret)
+> +			ret = sdhci_msm_set_vqmmc(msm_host, mmc,
+> +					pwr_state & REQ_BUS_ON);
+> +		if (!ret)
+> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> +		else
+> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
+> +	}
+> +
+>   	/* Handle IO LOW/HIGH */
+> -	if (irq_status & CORE_PWRCTL_IO_LOW) {
+> +	if (irq_status & CORE_PWRCTL_IO_LOW)
+>   		io_level = REQ_IO_LOW;
+> -		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
+> -	}
+> -	if (irq_status & CORE_PWRCTL_IO_HIGH) {
+> +
+> +	if (irq_status & CORE_PWRCTL_IO_HIGH)
+>   		io_level = REQ_IO_HIGH;
+> +
+> +	if (io_level)
+>   		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
+> +
+> +	if (io_level && !IS_ERR(mmc->supply.vqmmc) && !pwr_state) {
+> +		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
+> +		if (ret < 0) {
+> +			dev_err(mmc_dev(mmc), "%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
+> +					mmc_hostname(mmc), ret,
+> +					mmc->ios.signal_voltage, mmc->ios.vdd,
+> +					irq_status);
+> +			irq_ack |= CORE_PWRCTL_IO_FAIL;
+> +		}
+>   	}
+>   
+>   	/*
+> @@ -1544,7 +1655,7 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>   	if (io_level)
+>   		msm_host->curr_io_level = io_level;
+>   
+> -	pr_debug("%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
+> +	dev_dbg(mmc_dev(mmc), "%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
+>   		mmc_hostname(msm_host->mmc), __func__, irq, irq_status,
+>   		irq_ack);
+>   }
+> @@ -1874,6 +1985,106 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+>   	sdhci_reset(host, mask);
+>   }
+>   
+> +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
+> +{
+> +	int ret;
+> +	u32 vmmc_load;
+> +	struct mmc_host *mmc = msm_host->mmc;
+> +
+> +	ret = mmc_regulator_get_supply(msm_host->mmc);
+> +	if (ret)
+> +		return ret;
+> +	device_property_read_u32(&msm_host->pdev->dev,
+> +			"vmmc-supply-max-microamp",
+> +			&vmmc_load);
+> +	device_property_read_u32(&msm_host->pdev->dev,
+> +			"vqmmc-supply-max-microamp",
+> +			&msm_host->vqmmc_load);
+> +
+> +	/* Set active load */
+> +	if (!IS_ERR(mmc->supply.vmmc) && vmmc_load) {
+> +		ret = regulator_set_load(mmc->supply.vmmc, vmmc_load);
+> +		if (ret) {
+> +			dev_err(mmc_dev(mmc), "%s: vmmc set active load failed: %d\n",
+> +				mmc_hostname(mmc), ret);
+> +			return ret;
+> +		}
+> +	}
+> +	if (!IS_ERR(mmc->supply.vqmmc) && msm_host->vqmmc_load) {
+> +		ret = regulator_set_load(mmc->supply.vmmc,
+> +					msm_host->vqmmc_load);
+> +		if (ret) {
+> +			dev_err(mmc_dev(mmc), "%s: vqmmc set active load failed: %d\n",
+> +				mmc_hostname(mmc), ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	sdhci_msm_set_regulator_caps(msm_host);
+> +	mmc->ios.power_mode = MMC_POWER_UNDEFINED;
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
+> +				      struct mmc_ios *ios)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	u16 ctrl, status;
+> +
+> +	/*
+> +	 * Signal Voltage Switching is only applicable for Host Controllers
+> +	 * v3.00 and above.
+> +	 */
+> +	if (host->version < SDHCI_SPEC_300)
+> +		return 0;
+> +
+> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +
+> +	switch (ios->signal_voltage) {
+> +	case MMC_SIGNAL_VOLTAGE_330:
+> +		if (!(host->flags & SDHCI_SIGNALING_330))
+> +			return -EINVAL;
+> +
+> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
+> +		ctrl &= ~SDHCI_CTRL_VDD_180;
+> +		break;
+> +	case MMC_SIGNAL_VOLTAGE_180:
+> +		if (!(host->flags & SDHCI_SIGNALING_180))
+> +			return -EINVAL;
+> +
+> +		/*
+> +		 * Enable 1.8V Signal Enable in the Host Control2
+> +		 * register
+> +		 */
+> +		ctrl |= SDHCI_CTRL_VDD_180;
+> +		break;
+> +	case MMC_SIGNAL_VOLTAGE_120:
+> +		if (!(host->flags & SDHCI_SIGNALING_120))
+> +			return -EINVAL;
+> +		return 0;
+> +	default:
+> +		/* No signal voltage switch required */
+> +		return 0;
+> +	}
+> +
+> +	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+> +
+> +	/* Wait for 5ms */
+> +	usleep_range(5000, 5500);
+> +
+> +	/* regulator output should be stable within 5 ms */
+> +	status = ctrl & SDHCI_CTRL_VDD_180;
+> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +	if ((ctrl & SDHCI_CTRL_VDD_180) == status)
+> +		return 0;
+> +
+> +	dev_warn(mmc_dev(mmc), "%s: Regulator output did not became stable\n",
+> +		mmc_hostname(mmc));
+> +
+> +	return -EAGAIN;
+> +}
+> +
+>   #define DRIVER_NAME "sdhci_msm"
+>   #define SDHCI_MSM_DUMP(f, x...) \
+>   	pr_err("%s: " DRIVER_NAME ": " f, mmc_hostname(host->mmc), ## x)
+> @@ -1960,6 +2171,7 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
+>   	.write_b = sdhci_msm_writeb,
+>   	.irq	= sdhci_msm_cqe_irq,
+>   	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
+> +	.set_power = sdhci_set_power_noreg,
+>   };
+>   
+>   static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+> @@ -2169,6 +2381,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>   	if (core_major == 1 && core_minor >= 0x49)
+>   		msm_host->updated_ddr_cfg = true;
+>   
+> +	ret = sdhci_msm_register_vreg(msm_host);
+> +	if (ret)
+> +		goto clk_disable;
+> +
+>   	/*
+>   	 * Power on reset state may trigger power irq if previous status of
+>   	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
+> @@ -2213,6 +2429,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>   					 MSM_MMC_AUTOSUSPEND_DELAY_MS);
+>   	pm_runtime_use_autosuspend(&pdev->dev);
+>   
+> +	host->mmc_host_ops.start_signal_voltage_switch =
+> +		sdhci_msm_start_signal_voltage_switch;
+>   	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
+>   	if (of_property_read_bool(node, "supports-cqe"))
+>   		ret = sdhci_msm_cqe_add_host(host, pdev);
+> @@ -2220,7 +2438,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>   		ret = sdhci_add_host(host);
+>   	if (ret)
+>   		goto pm_runtime_disable;
+> -	sdhci_msm_set_regulator_caps(msm_host);
+>   
+>   	pm_runtime_mark_last_busy(&pdev->dev);
+>   	pm_runtime_put_autosuspend(&pdev->dev);
