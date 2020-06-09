@@ -2,210 +2,148 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1250BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D12C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8AD020774
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A6220737
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UxlslCOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbgFIQcJ convert rfc822-to-8bit (ORCPT
+        id S1727814AbgFIQjV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57578 "EHLO
+        Tue, 9 Jun 2020 12:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFIQcI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:32:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5651DC05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 09:32:08 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jihAS-0004bR-Sg; Tue, 09 Jun 2020 18:32:04 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jihAS-0005wb-3c; Tue, 09 Jun 2020 18:32:04 +0200
-Message-ID: <2a621f170574a616bcf047f6725c74552f7abbb1.camel@pengutronix.de>
-Subject: Re: [PATCH 3/7] reset: add BCM6345 reset controller driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     =?ISO-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     robh+dt@kernel.org, tsbogend@alpha.franken.de,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Date:   Tue, 09 Jun 2020 18:32:03 +0200
-In-Reply-To: <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
-References: <20200609134232.4084718-1-noltari@gmail.com>
-         <20200609134232.4084718-4-noltari@gmail.com>
-         <341e8482c6bd06267633160d7358fa8331bef515.camel@pengutronix.de>
-         <729976E9-CAF7-47B6-8783-5FD3D85F9EFD@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        with ESMTP id S1727820AbgFIQjU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:39:20 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27E4C05BD1E
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 09:39:19 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id g5so17122862otg.6
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 09:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v7mrV9A8x5gROdoWHb4mBMuLQK66GuFHbbDU9aAaIY4=;
+        b=UxlslCOp5lHCML8zHfSxii0/aaaTdlNzCPYYCv2xzb4wWEZtWsF+k5/n8Osgdx0hJy
+         BfJRocyU0Eo8PTSI7zAl6DbWAZBVkW4kXvOXpX/QENIqRqsf2TPNP9lYxPtdLLVWVtAE
+         ZrBxyXn9wMMr4aKFJuJRt1jw1DUCO9QEpG8AY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v7mrV9A8x5gROdoWHb4mBMuLQK66GuFHbbDU9aAaIY4=;
+        b=HfKpNFz4W2co8p4bXmu2hvHXlj00lTApLCmcTrkofNrySdf2vhghj7uZnwOOvi7+j1
+         +aB7HxooSnSHiPQSTGqKP84P3247ZUcIshg0ZBhQGCktgL3XWHquQnhR0CKuFMXtgYhP
+         rbHE54FCwgceL25V5IcyJOQTho4Pwi7pihXyyEfSfnujpq073TQOgZFggCBJQjBhiKvA
+         KqqwH+CU45a9YmZKkLa86lCuhnzQr0H4g8UUXdJuCN+3+o0FFe5PVfcrBWwyI+GPspyk
+         xv99PV20TsZ7e/sisMtZShOe/Re6/w1M03psdx00wSxWLD++Pr4Exm5MYdsQDvt7b9xV
+         1EQA==
+X-Gm-Message-State: AOAM533vA3SbIpkHM/0ls6SwOjYfSHmQVRruVO17EM3WFuzKnoLnI+DC
+        GpoQ6uClXiIWER2PEBKJkPxp/Gs4Swn46FfcNjHQ7A==
+X-Google-Smtp-Source: ABdhPJyzEiiGK0RgxvAB9nvhNz9jMbudR88GwxzWaWaK//yF7MA0SnaEkI/Owvhift8/7RXSbhpKtNM5VXKxf/ldzwA=
+X-Received: by 2002:a9d:768a:: with SMTP id j10mr23941760otl.188.1591720759321;
+ Tue, 09 Jun 2020 09:39:19 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200609162700.953260-1-adrian.ratiu@collabora.com> <20200609162700.953260-12-adrian.ratiu@collabora.com>
+In-Reply-To: <20200609162700.953260-12-adrian.ratiu@collabora.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Tue, 9 Jun 2020 18:39:08 +0200
+Message-ID: <CAKMK7uGLQCj_oJcbXynt_1bmwBQy6ncUgc49DPejyfCtb68e_g@mail.gmail.com>
+Subject: Re: [PATCH v9 11/11] Documentation: gpu: todo: Add dw-mipi-dsi
+ consolidation plan
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dl-linux-imx <linux-imx@nxp.com>, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Álvaro,
+On Tue, Jun 9, 2020 at 6:25 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+>
+> This documents the longer-term plan to cleanup the dw-mipi-dsi bridge
+> based drivers after the regmap refactor and i.MX6 driver have landed.
+>
+> The goal is to get the entire bridge logic in one place and continue
+> the refactorings under the drm/bridge tree.
+>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Boris Brezillon <boris.brezillon@collabora.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
 
-On Tue, 2020-06-09 at 17:14 +0200, Álvaro Fernández Rojas wrote:
-> Hi Philipp,
-> 
-> > El 9 jun 2020, a las 17:06, Philipp Zabel <p.zabel@pengutronix.de> escribió:
-> > 
-> > Hi Álvaro,
-> > 
-> > On Tue, 2020-06-09 at 15:42 +0200, Álvaro Fernández Rojas wrote:
-> > > Add support for resetting blocks through the Linux reset controller
-> > > subsystem for BCM63xx SoCs.
-> > > 
-> > > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> > > ---
-> > > drivers/reset/Kconfig         |   7 ++
-> > > drivers/reset/Makefile        |   1 +
-> > > drivers/reset/reset-bcm6345.c | 149 ++++++++++++++++++++++++++++++++++
-> > > 3 files changed, 157 insertions(+)
-> > > create mode 100644 drivers/reset/reset-bcm6345.c
-> > > 
-> > > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> > > index d9efbfd29646..9f1da978cef6 100644
-> > > --- a/drivers/reset/Kconfig
-> > > +++ b/drivers/reset/Kconfig
-> > > @@ -41,6 +41,13 @@ config RESET_BERLIN
-> > > 	help
-> > > 	  This enables the reset controller driver for Marvell Berlin SoCs.
-> > > 
-> > > +config RESET_BCM6345
-> > > +	bool "BCM6345 Reset Controller"
-> > > +	depends on BMIPS_GENERIC || COMPILE_TEST
-> > > +	default BMIPS_GENERIC
-> > > +	help
-> > > +	  This enables the reset controller driver for BCM6345 SoCs.
-> > > +
-> > > config RESET_BRCMSTB
-> > > 	tristate "Broadcom STB reset controller"
-> > > 	depends on ARCH_BRCMSTB || COMPILE_TEST
-> > > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> > > index 249ed357c997..e642aae42f0f 100644
-> > > --- a/drivers/reset/Makefile
-> > > +++ b/drivers/reset/Makefile
-> > > @@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_TEGRA) += tegra/
-> > > obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
-> > > obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
-> > > obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
-> > > +obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
-> > > obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-> > > obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
-> > > obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-> > > diff --git a/drivers/reset/reset-bcm6345.c b/drivers/reset/reset-bcm6345.c
-> > > new file mode 100644
-> > > index 000000000000..088b7fdb896b
-> > > --- /dev/null
-> > > +++ b/drivers/reset/reset-bcm6345.c
-> > > @@ -0,0 +1,149 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * BCM6345 Reset Controller Driver
-> > > + *
-> > > + * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-> > > + */
-> > > +
-> > > +#include <linux/delay.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/mod_devicetable.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/reset-controller.h>
-> > > +
-> > > +#define BCM6345_RESET_NUM		32
-> > > +#define BCM6345_RESET_SLEEP_MIN_US	10000
-> > > +#define BCM6345_RESET_SLEEP_MAX_US	20000
-> > > +
-> > > +struct bcm6345_reset {
-> > > +	struct reset_controller_dev rcdev;
-> > > +	void __iomem *base;
-> > > +	spinlock_t lock;
-> > > +};
-> > > +
-> > > +static int bcm6345_reset_update(struct bcm6345_reset *bcm6345_reset,
-> > > +				unsigned long id, bool assert)
-> > > +{
-> > > +	uint32_t val;
-> > > +
-> > > +	val = __raw_readl(bcm6345_reset->base);
-> > > +	if (assert)
-> > > +		val &= ~BIT(id);
-> > > +	else
-> > > +		val |= BIT(id);
-> > > +	__raw_writel(val, bcm6345_reset->base);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int bcm6345_reset_assert(struct reset_controller_dev *rcdev,
-> > > +				unsigned long id)
-> > > +{
-> > > +	struct bcm6345_reset *bcm6345_reset =
-> > > +		container_of(rcdev, struct bcm6345_reset, rcdev);
-> > > +	unsigned long flags;
-> > > +
-> > > +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-> > > +	bcm6345_reset_update(bcm6345_reset, id, true);
-> > > +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int bcm6345_reset_deassert(struct reset_controller_dev *rcdev,
-> > > +				  unsigned long id)
-> > > +{
-> > > +	struct bcm6345_reset *bcm6345_reset =
-> > > +		container_of(rcdev, struct bcm6345_reset, rcdev);
-> > > +	unsigned long flags;
-> > > +
-> > > +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-> > > +	bcm6345_reset_update(bcm6345_reset, id, false);
-> > > +	spin_unlock_irqrestore(&bcm6345_reset->lock, flags);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int bcm6345_reset_reset(struct reset_controller_dev *rcdev,
-> > > +			       unsigned long id)
-> > > +{
-> > > +	struct bcm6345_reset *bcm6345_reset =
-> > > +		container_of(rcdev, struct bcm6345_reset, rcdev);
-> > > +	unsigned long flags;
-> > > +
-> > > +	spin_lock_irqsave(&bcm6345_reset->lock, flags);
-> > > +	usleep_range(BCM6345_RESET_SLEEP_MIN_US,
-> > > +		     BCM6345_RESET_SLEEP_MAX_US);
-> > 
-> > What is the purpose of sleeping before reset assertion?
-> 
-> None, I must have introduced that for testing something and then I forgot to remove it. Sorry for that...
-> 
-> > If you can do without this, with I think this driver could be made to
-> > use reset-simple.
-> 
-> Yes, but only if I can add reset support with a configurable sleep range to reset-simple. Is this possible?
+This cc's the world, but not dri-devel. Can you pls resubmit with that added?
 
-I should have mentioned, support for this is on the reset/next branch:
+Thanks, Daniel
 
-  git://git.pengutronix.de/pza/linux.git reset/next
+> ---
+>  Documentation/gpu/todo.rst | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
+> index 658b52f7ffc6c..2b142980a4b16 100644
+> --- a/Documentation/gpu/todo.rst
+> +++ b/Documentation/gpu/todo.rst
+> @@ -548,6 +548,31 @@ See drivers/gpu/drm/amd/display/TODO for tasks.
+>
+>  Contact: Harry Wentland, Alex Deucher
+>
+> +Reorganize dw-mipi-dsi bridge-based host-controller drivers
+> +-----------------------------------------------------------
+> +
+> +The Synopsys DW MIPI DSI bridge is used by a number of SoC platform drivers
+> +(STM, Rockchip, i.MX) which don't cleanly encapsulate their bridge logic which
+> +gets split between the Synopsys bridge (drm/bridge/synopsys/dw-mipi-dsi.c) and
+> +platform drivers like drm/imx/dw_mipi_dsi-imx6.c by passing around the bridge
+> +configuration regmap, creating new bridges / daisy chaining in platform drivers,
+> +duplicating encoder creation, having too much encoder logic instead of using the
+> +simple encoder interface and so on.
+> +
+> +The goal of this rework is to make the dw-mipi-dsi driver a better encapsulated
+> +bridge by moving all bridge-related logic under drm/bridge, including the SoC
+> +bindings which chain to the core Synopsys code under drm/bridge/dw-mipi-dsi/
+> +from which they can be further consolidated and cleaned up.
+> +
+> +If this goal proves to be impossible then drm_bridge might not be the correct
+> +abstraction for these host controllers and unifying their logic into a helper
+> +library encapsulating a drm_encoder might be more desirable, in other words to
+> +move away from drm_bridge entirely.
+> +
+> +Contact: Adrian Ratiu, Daniel Vetter, Laurent Pinchart
+> +
+> +Level: Intermediate
+> +
+>  Bootsplash
+>  ==========
+>
+> --
+> 2.27.0
+>
 
-regards
-Philipp
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
