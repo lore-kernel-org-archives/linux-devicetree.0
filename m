@@ -2,261 +2,154 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698FFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 05:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B59C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 05:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3651520810
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 05:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D571F207F9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 05:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CkoAtOWJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZIto3/qk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgFIF0b (ORCPT
+        id S1727091AbgFIFz1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 01:26:31 -0400
-Received: from mail-db8eur05on2057.outbound.protection.outlook.com ([40.107.20.57]:30628
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725770AbgFIF0X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 01:26:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=io96niBfdZYvrNcYFxwwbyyy+L/AvKTiyum4nmyLya1gtX+XjrIen5JocPUQWmILcrrct5vGOcVrfnNpKwL3gorfvQRGBPAWVvd8R28djq3MHsdAMGCmhL03EYeCG7ETg5tNG5wXdvyEE+Fj4YRdad1NCnD9nVkXp0RDHL4hsL1Pu9hOmSgii0vMmTCdZriZsB41XC7DzhMg8oDdRBIpGpCPM9BuhsMKXvhxL+becmk96ZDFIkjiOLFwk//qZmLdWAu6RKS7vDXo7ldWbHRr5uRBvMghesHEDPib1P/O307+uXcrdaGzXitAPlTgtWHjG18Q172gSyegBzGmseYCow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bCe1FDaTwCQDaUDTvPzYric+sD1aak+UNbwldILeClU=;
- b=ai4ISta8vZJcqHGQ/Gfd29Fr4QXz+fbZHP+AtFVRbHdm3QON197vV6kG3K2DtjlcYHCCAdVrObob2gzbLyBvuwSE4CqnpFBVuM+vIcjO8b+PmrRr2idiouRR3lSSFXsn3YwsnatiXV15wCHZU3dljWYaJm+wFqGwPW68cLz58xyLzX+yAkQDf2reDM9/qbjla570mX86wAOhANO2bDxxX0rMv3wVFSft/axBxSpfssmuLcA8xQBLftVsSlbapyA5X5lHIu4oFKOP66/2FPBOiHW4pjJ3c6MNLwpCjsZKFIe7qrrnApcnhQi5+Ljo7VViv4lVczs4lOqHUrZ6GxZXUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bCe1FDaTwCQDaUDTvPzYric+sD1aak+UNbwldILeClU=;
- b=CkoAtOWJTsjy81soN1Lp6dK3BxIVwruN5PLY4T9GGKlxqxjgReooLaBewfVRfH+zDFgOFOt8SUuhHlrjv8qm8vPPz+/uHFoEEOm1UxL+h6Rie1p7BoMgD8YEj+c/dRgHvCceMVp7CZPiQQ/riNkVn5wggbeo5TK9JM3AXPQpwIs=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM7PR04MB7048.eurprd04.prod.outlook.com (2603:10a6:20b:11a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
- 2020 05:26:20 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
- 05:26:20 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Jun Li <jun.li@nxp.com>
-CC:     "kishon@ti.com" <kishon@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/2] phy: freescale: imx8mq-usb: add support for imx8mp
- usb phy
-Thread-Topic: [PATCH 2/2] phy: freescale: imx8mq-usb: add support for imx8mp
- usb phy
-Thread-Index: AQHWPZq3axBY0FBNE0y/zPxAacz/majPweoA
-Date:   Tue, 9 Jun 2020 05:26:20 +0000
-Message-ID: <20200609052644.GB14710@b29397-desktop>
-References: <1591621893-22363-1-git-send-email-jun.li@nxp.com>
- <1591621893-22363-2-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1591621893-22363-2-git-send-email-jun.li@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 903aabf4-f343-4c08-789e-08d80c35a481
-x-ms-traffictypediagnostic: AM7PR04MB7048:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB7048CD881FC34C37BCE906CB8B820@AM7PR04MB7048.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:785;
-x-forefront-prvs: 042957ACD7
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /9/71deLRsl2lEJhFoDcwWNwOOW/xG+FfE5NgqPkhfNFWIXaagj7dU3UDUuO5s6P3NtkV7jhfh+JNREfmauI1n2kA9NMtYnw8Z7gvmqNNTCVQ09PJ3YBqdd+T1RwzUCXOB3MoCVVpFOy7m8dpv9cFJBwGX5DPkzAxLCzGar1619kAbsA8i+HbL8xfSVzJm6DoHb/EbpY4/lNWVGl1pNkkvNQFxSiuzb9C0O1d+NshLoSg+dBz44PYK5DKEcMiu/r/RLAC+lcR706iyhKr0yJT8P1oNId6TDjZ5OQbi91cRImK7sNd0joV+hwEAIKVn5oWKzud84P/qkFUZXKJ5UVCvtHZXo+EBDpq+2QmT4m8wnt2gRzPFJznAq+o+3Q3P9y
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(39860400002)(396003)(376002)(136003)(346002)(366004)(5660300002)(8676002)(6486002)(316002)(6862004)(8936002)(44832011)(86362001)(54906003)(1076003)(4326008)(33716001)(478600001)(71200400001)(76116006)(91956017)(9686003)(26005)(6636002)(33656002)(66446008)(66946007)(66476007)(66556008)(186003)(2906002)(53546011)(64756008)(6506007)(83380400001)(6512007)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: fBXSB8B2imdZTY4bffmy+dL97bRDB5jfADycke3Cy0pUMseo8vIUOkNDqlFPXRuYbGJMnPvEtz7lsvNuhmbirxdnWx3CjXr/IGVk8yTJxVWsXcxxGH/kikzd12N2IWfJSUVLjSr7xL4JYXeNmmg89eNRBrAwOV7YzmqLhDbgdShXtG3hKKI4bu8ZVoDcfLxKrvrRZxCaOcoZcVwgb4f10lPRxNKlZs2DtaO4ieOHHdsQEd+IwJ776oEnQ5dtXd4//S9fnioNRNPGm8QDIuV2Jho/pi6DCKsr0ol84QA6Bk3eVYQAbSC9zgYtE6vfhUit1MZ8ZgL7kx7ThcpjQSpwci5ifcptBqazwzM4tWHjZZqQF9a7/wY+N9ghdfTET9675h+lA/DAzYJ0kRllXTkridi4t9Eel43wEGgLr43ApAmIPvSGPdPxPG+DAnNdAv+7RX/SqoemxFo7W9+VEInu8rpJf3sJGIGE4YCWMui/HwW//Cng+dOn/dDt4i+3E+rL
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7CB67CB2FD87F14F901C721B347038EF@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 9 Jun 2020 01:55:27 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59446 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727804AbgFIFz1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 01:55:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591682126; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=lHjRLmr48blxmZp5pC92pn0zhADcIvEhpmaowHJ/1Qo=; b=ZIto3/qksJUFfw4bjgHWXhTFObSUfdSYwER1ot8cvEBXjnkMlUo42oaYPQWDfYrA6zZstISz
+ B4vtAKUsHsYS8BdN7TNMwDVX9ahABlXgrv3VfYF8sH2vu1f0hOt9DIx/v8UTcpoTGwWEjW5Z
+ 3eKWdBA+rWC+xadTahabZhfz7Pg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5edf24378cb42f3a2cdfd51f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 05:55:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76DDFC43387; Tue,  9 Jun 2020 05:55:02 +0000 (UTC)
+Received: from [192.168.43.98] (unknown [157.44.16.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64FA7C433CA;
+        Tue,  9 Jun 2020 05:54:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64FA7C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V7 6/7] spi: spi-qcom-qspi: Add interconnect support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        msavaliy@codeaurora.org, evgreen@chromium.org
+References: <1590497690-29035-1-git-send-email-akashast@codeaurora.org>
+ <1590497690-29035-7-git-send-email-akashast@codeaurora.org>
+ <20200526173613.GF4525@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <6905b55b-772d-e027-0675-e1467445f40b@codeaurora.org>
+Date:   Tue, 9 Jun 2020 11:24:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 903aabf4-f343-4c08-789e-08d80c35a481
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 05:26:20.4797
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x127qhUswNIMvlRv9Xj6d+Wc+2SlSZlVltlafVZBMlG4HriyfvUROvLttutXQSB+yomgEerHfI3EJLpRolM1HQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7048
+In-Reply-To: <20200526173613.GF4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-06-08 21:11:33, Li Jun wrote:
-> Add initial support for imx8mp usb phy support, imx8mp usb has
-> a silimar phy as imx8mq, which has some different customizations
-> on clock and low power design when SoC integration.
->=20
-> Signed-off-by: Li Jun <jun.li@nxp.com>
->=20
-> diff --git a/drivers/phy/freescale/phy-fsl-imx8mq-usb.c b/drivers/phy/fre=
-escale/phy-fsl-imx8mq-usb.c
-> index 0c4833d..030bf4e 100644
-> --- a/drivers/phy/freescale/phy-fsl-imx8mq-usb.c
-> +++ b/drivers/phy/freescale/phy-fsl-imx8mq-usb.c
-> @@ -4,12 +4,16 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/delay.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
->  #include <linux/regulator/consumer.h>
-> =20
->  #define PHY_CTRL0			0x0
->  #define PHY_CTRL0_REF_SSP_EN		BIT(2)
-> +#define PHY_CTRL0_FSEL_MASK		GENMASK(10, 5)
-> +#define PHY_CTRL0_FSEL_24M		(0x2a << 5)
-> =20
->  #define PHY_CTRL1			0x4
->  #define PHY_CTRL1_RESET			BIT(0)
-> @@ -20,6 +24,11 @@
-> =20
->  #define PHY_CTRL2			0x8
->  #define PHY_CTRL2_TXENABLEN0		BIT(8)
-> +#define PHY_CTRL2_OTG_DISABLE		BIT(9)
-> +
-> +#define PHY_CTRL6			0x18
-> +#define PHY_CTRL6_ALT_CLK_EN		BIT(1)
-> +#define PHY_CTRL6_ALT_CLK_SEL		BIT(0)
-> =20
->  struct imx8mq_usb_phy {
->  	struct phy *phy;
-> @@ -54,6 +63,44 @@ static int imx8mq_usb_phy_init(struct phy *phy)
->  	return 0;
->  }
-> =20
-> +static int imx8mp_usb_phy_init(struct phy *phy)
-> +{
-> +	struct imx8mq_usb_phy *imx_phy =3D phy_get_drvdata(phy);
-> +	u32 value;
-> +
-> +	/* USB3.0 PHY signal fsel for 24M ref */
-> +	value =3D readl(imx_phy->base + PHY_CTRL0);
-> +	value &=3D ~PHY_CTRL0_FSEL_MASK;
-> +	value |=3D PHY_CTRL0_FSEL_24M;
-> +	writel(value, imx_phy->base + PHY_CTRL0);
-> +
-> +	/* Disable alt_clk_en and use internal MPLL clocks */
-> +	value =3D readl(imx_phy->base + PHY_CTRL6);
-> +	value &=3D ~(PHY_CTRL6_ALT_CLK_SEL | PHY_CTRL6_ALT_CLK_EN);
-> +	writel(value, imx_phy->base + PHY_CTRL6);
-> +
-> +	value =3D readl(imx_phy->base + PHY_CTRL1);
-> +	value &=3D ~(PHY_CTRL1_VDATSRCENB0 | PHY_CTRL1_VDATDETENB0);
-> +	value |=3D PHY_CTRL1_RESET | PHY_CTRL1_ATERESET;
-> +	writel(value, imx_phy->base + PHY_CTRL1);
-> +
-> +	value =3D readl(imx_phy->base + PHY_CTRL0);
-> +	value |=3D PHY_CTRL0_REF_SSP_EN;
-> +	writel(value, imx_phy->base + PHY_CTRL0);
-> +
-> +	value =3D readl(imx_phy->base + PHY_CTRL2);
-> +	value |=3D PHY_CTRL2_TXENABLEN0 | PHY_CTRL2_OTG_DISABLE;
-> +	writel(value, imx_phy->base + PHY_CTRL2);
-> +
-> +	udelay(10);
-> +
-> +	value =3D readl(imx_phy->base + PHY_CTRL1);
-> +	value &=3D ~(PHY_CTRL1_RESET | PHY_CTRL1_ATERESET);
-> +	writel(value, imx_phy->base + PHY_CTRL1);
-> +
-> +	return 0;
-> +}
-> +
->  static int imx8mq_phy_power_on(struct phy *phy)
->  {
->  	struct imx8mq_usb_phy *imx_phy =3D phy_get_drvdata(phy);
-> @@ -83,12 +130,29 @@ static struct phy_ops imx8mq_usb_phy_ops =3D {
->  	.owner		=3D THIS_MODULE,
->  };
-> =20
-> +static struct phy_ops imx8mp_usb_phy_ops =3D {
-> +	.init		=3D imx8mp_usb_phy_init,
-> +	.power_on	=3D imx8mq_phy_power_on,
-> +	.power_off	=3D imx8mq_phy_power_off,
-> +	.owner		=3D THIS_MODULE,
-> +};
-> +
-> +static const struct of_device_id imx8mq_usb_phy_of_match[] =3D {
-> +	{.compatible =3D "fsl,imx8mq-usb-phy",
-> +	 .data =3D &imx8mq_usb_phy_ops,},
-> +	{.compatible =3D "fsl,imx8mp-usb-phy",
-> +	 .data =3D &imx8mp_usb_phy_ops,},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, imx8mq_usb_phy_of_match);
-> +
->  static int imx8mq_usb_phy_probe(struct platform_device *pdev)
->  {
->  	struct phy_provider *phy_provider;
->  	struct device *dev =3D &pdev->dev;
->  	struct imx8mq_usb_phy *imx_phy;
->  	struct resource *res;
-> +	const struct of_device_id *of_id;
-> =20
->  	imx_phy =3D devm_kzalloc(dev, sizeof(*imx_phy), GFP_KERNEL);
->  	if (!imx_phy)
-> @@ -105,7 +169,12 @@ static int imx8mq_usb_phy_probe(struct platform_devi=
-ce *pdev)
->  	if (IS_ERR(imx_phy->base))
->  		return PTR_ERR(imx_phy->base);
-> =20
-> -	imx_phy->phy =3D devm_phy_create(dev, NULL, &imx8mq_usb_phy_ops);
-> +	of_id =3D of_match_device(imx8mq_usb_phy_of_match, dev);
-> +	if (!of_id)
-> +		return -ENODEV;
-> +
-> +	imx_phy->phy =3D devm_phy_create(dev, NULL, (const struct phy_ops *)
-> +					of_id->data);
->  	if (IS_ERR(imx_phy->phy))
->  		return PTR_ERR(imx_phy->phy);
+Hi Matthias,
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
+On 5/26/2020 11:06 PM, Matthias Kaehlcke wrote:
+> On Tue, May 26, 2020 at 06:24:49PM +0530, Akash Asthana wrote:
+>> Get the interconnect paths for QSPI device and vote according to the
+>> current bus speed of the driver.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>>     path handle
+>>   - As per Matthias comment, added error handling for icc_set_bw call
+>>
+>> Changes in V3:
+>>   - No Change.
+>>
+>> Changes in V4:
+>>   - As per Mark's comment move peak_bw guess as twice of avg_bw if
+>>     nothing mentioned explicitly to ICC core.
+>>
+>> Changes in V5:
+>>   - Add icc_enable/disable to power on/off call.
+>>   - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
+>>     from probe so that when resume/icc_enable is called NOC are running at
+>>     some non-zero value.
+>>
+>> Changes in V6:
+>>   - As per Matthias's comment made print statement consistent across driver
+>>
+>> Changes in V7:
+>>   - As per Matthias's comment removed usage of peak_bw variable because we don't
+>>     have explicit peak requirement, we were voting peak = avg and this can be
+>>     tracked using single variable for avg bw.
+>>   - As per Matthias's comment improved print log.
+>>
+>>   drivers/spi/spi-qcom-qspi.c | 57 ++++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 56 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+>> index 3c4f83b..092ac27 100644
+>> --- a/drivers/spi/spi-qcom-qspi.c
+>> +++ b/drivers/spi/spi-qcom-qspi.c
+>> @@ -2,6 +2,7 @@
+>>   // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
+>>   
+>>   #include <linux/clk.h>
+>> +#include <linux/interconnect.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>>   #include <linux/module.h>
+>> @@ -139,7 +140,9 @@ struct qcom_qspi {
+>>   	struct device *dev;
+>>   	struct clk_bulk_data *clks;
+>>   	struct qspi_xfer xfer;
+>> -	/* Lock to protect xfer and IRQ accessed registers */
+>> +	struct icc_path *icc_path_cpu_to_qspi;
+>> +	unsigned int avg_bw_cpu;
+> I should have noticed this earlier, but the field isn't needed now that
+> we have icc_enable/disable(). The bandwidth is set in
+> qcom_qspi_transfer_one() and that's it.
+>
+>  From my side it would be fine to remove the field in a follow up patch,
+> to avoid respinning the series yet another time just for this.
+>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 
-> =20
-> @@ -120,12 +189,6 @@ static int imx8mq_usb_phy_probe(struct platform_devi=
-ce *pdev)
->  	return PTR_ERR_OR_ZERO(phy_provider);
->  }
-> =20
-> -static const struct of_device_id imx8mq_usb_phy_of_match[] =3D {
-> -	{.compatible =3D "fsl,imx8mq-usb-phy",},
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, imx8mq_usb_phy_of_match);
-> -
->  static struct platform_driver imx8mq_usb_phy_driver =3D {
->  	.probe	=3D imx8mq_usb_phy_probe,
->  	.driver =3D {
-> --=20
-> 2.7.4
->=20
+I will resend patch V7 with the suggested change.
 
---=20
+Thankyou for reviewing
 
-Thanks,
-Peter Chen=
+Regards,
+
+Akash
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
