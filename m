@@ -2,111 +2,88 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC1BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50202C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA1432072F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C662072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591740845;
-	bh=2czgAZJmrMm/Zsg2v/BQ7lmeM7czeBz/w4+R5P5z1Xw=;
+	s=default; t=1591740920;
+	bh=6vHd6xUhswef3CB/VXwZUhfljO5Xa4bRntH/rr42FHI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vyc9jBTDpeKTBNoy7l9gzsHrAx/SZ2nj+dc9Rh5Xlnlkrk+7ykPby48HLK/gHRMko
-	 UWUgfPSkvBOmxKOUGc0jeoxuCRAc1oFOBsQUFAgAc6b3HaTzbHYtKSzbLIk+jSH4Z6
-	 +QNHYQt7//L5rOeQGyc6uBmaLiO9kBjhRb3r4sSk=
+	b=F3mwp/cQYDP4FESg/ND2m0HWqlxuf+0/wnYl/DFQRL1BQe5rrQ2I512skL4lavS7I
+	 q/UGiwZvPL8t9+jD0yF9iizWv7EsreaI2si8gn16RRVHrbIx5EB/1erwc9yj9WT0V6
+	 yQnigO5kKH5iEVtupDcAqDtJbe/jz9MOMDZHxkXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFIWOF (ORCPT
+        id S1728191AbgFIWPT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:14:05 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46740 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbgFIWOD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 18:14:03 -0400
-Received: by mail-il1-f196.google.com with SMTP id h3so21898408ilh.13;
-        Tue, 09 Jun 2020 15:14:03 -0700 (PDT)
+        Tue, 9 Jun 2020 18:15:19 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44681 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbgFIWPS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 18:15:18 -0400
+Received: by mail-il1-f194.google.com with SMTP id i1so20715544ils.11;
+        Tue, 09 Jun 2020 15:15:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6+IKvoJBxDC0gkwKVy035Y+LyuzeC/PUgTKJmP456DM=;
-        b=JI+2kDetuV8agBL7BeFquSGnPMhPlnUJlU2Fp37HfCMp9gTj7PuF60hkr7CufZLc2V
-         KI2cYZvK3vvGhbiVOpVYaV0HERI17qxVyS1hWg0M7dvcw9VKBjn7Pr6t4KkXmWxJfiRm
-         ed9gZM+UYQ9EbhxSIKA4zh6dAJP6cWUFFxsuOh1v5wLyZyr0jS8wQLWR07jtBjeKDGWX
-         rb/sJHtDOww7OUkIxIfYFgE6/S9KfbflsZhfAfRjv2Et4BruUNv3ZtyREgu/E3rgqIAs
-         exJHh8xHuw4k+eZkMG4WPnVSh7hrphzyXLb6ebGlukd1LDchrnnQgOBf3Tv14flvCbvW
-         F6Yg==
-X-Gm-Message-State: AOAM531YGvfAbwXRBtqFzf8c+pN2QW4IcAPrfnkB5GOfuMhN6peCXFzj
-        JDEnT8HkcH3JC4p7wUY89tmuCFM=
-X-Google-Smtp-Source: ABdhPJxoiaeJB5cWwPsTuM2+ydzCxHsKCMc4EpHF0wrt5zhCGpgU41tDnDwG7ZtBcfwEXj4QolvBWw==
-X-Received: by 2002:a92:9f4b:: with SMTP id u72mr135479ili.273.1591740842955;
-        Tue, 09 Jun 2020 15:14:02 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=SIt9vqsJjlEz6zk3asMipOVTh2DgNRRsKYqkupl1gXg=;
+        b=R4PfPuu7ruGQ2sW7S52EvSElX8iMsBrSwCA16pKuFB2l+8imZj6e/5ulc7h1wFOIOX
+         sMlkWwnei7Uw0tAh1N8CWJLw/myv4uYeg+yONTEJFrt3ST+6wkUDFMOKX0dB57Kx1OYC
+         liXp9BxLTsRZAObYwYsr4Jgx/hY3Ua1aOkdDpzazBfpGlteyIH2R3+xIQ9cDrpvPf4fb
+         I4s346teVTV2PWzasj26i6ptbBB+8RAPuX9Rj8fddUP0u/fzoARP1yjumcPBHS68finI
+         OMT2EZpsx3+LFtIn04/5y9SnzYKFEYW1zHafcnfGWmgJsNq6AIp8Tt/uF7S/GToldoDn
+         JW5g==
+X-Gm-Message-State: AOAM5330jyi/usSXXsbQuPsflXW2FX7Z4bAR+0xXCQleZdcML3xDhZRT
+        EPnHAGvMbSe87v6vD07/3g==
+X-Google-Smtp-Source: ABdhPJxkmZxwK1ql79rrG5xPZG7HoeRwm/ev5DUJldBfp7gAWRH0Wlpng2yYdEmTRj4TYhFcRHYY+g==
+X-Received: by 2002:a05:6e02:13f4:: with SMTP id w20mr178303ilj.294.1591740917458;
+        Tue, 09 Jun 2020 15:15:17 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p11sm8000193ioo.26.2020.06.09.15.14.02
+        by smtp.gmail.com with ESMTPSA id w15sm9922978ilj.21.2020.06.09.15.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 15:14:02 -0700 (PDT)
-Received: (nullmailer pid 1590865 invoked by uid 1000);
-        Tue, 09 Jun 2020 22:14:01 -0000
-Date:   Tue, 9 Jun 2020 16:14:01 -0600
+        Tue, 09 Jun 2020 15:15:17 -0700 (PDT)
+Received: (nullmailer pid 1592981 invoked by uid 1000);
+        Tue, 09 Jun 2020 22:15:15 -0000
+Date:   Tue, 9 Jun 2020 16:15:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Kevin P. Fleming" <kevin+linux@km6g.us>
-Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] rtc: abx80x: Add support for autocalibration filter
- capacitor
-Message-ID: <20200609221401.GA1492918@bogus>
-References: <20200530123222.361104-1-kevin+linux@km6g.us>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-usb@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, zhenwenjin@gmail.com,
+        gregkh@linuxfoundation.org, dongsheng.qiu@ingenic.com,
+        yanfei.li@ingenic.com, aric.pzqi@ingenic.com,
+        devicetree@vger.kernel.org, rick.tyliu@ingenic.com,
+        sernia.zhou@foxmail.com, balbi@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: USB: Add Ingenic X1000 and X1830
+ bindings.
+Message-ID: <20200609221515.GA1592928@bogus>
+References: <20200530165253.17445-1-zhouyanjie@wanyeetech.com>
+ <20200530165253.17445-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200530123222.361104-1-kevin+linux@km6g.us>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200530165253.17445-2-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, May 30, 2020 at 08:32:22AM -0400, Kevin P. Fleming wrote:
-> All of the parts supported by this driver can make use of a
-> small capacitor to improve the accuracy of the autocalibration
-> process for their RC oscillators. If a capacitor is connected,
-> a configuration register must be set to enable its use, so a
-> new Device Tree property has been added for that purpose.
+On Sun, 31 May 2020 00:52:52 +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Add the USB PHY bindings for the X1000 SoC and
+> the X1830 SoC from Ingenic.
 > 
-> Signed-off-by: Kevin P. Fleming <kevin+linux@km6g.us>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> To: linux-rtc@vger.kernel.org
-> To: devicetree@vger.kernel.org
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 > ---
->  .../bindings/rtc/abracon,abx80x.txt           |  6 ++++
->  drivers/rtc/rtc-abx80x.c                      | 34 +++++++++++++++++++
->  2 files changed, 40 insertions(+)
-
-Binding should be a separate patch?
-
+>  Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> index 2405e35a1bc0..ad5d59ed6f24 100644
-> --- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> +++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-> @@ -29,3 +29,9 @@ and valid to enable charging:
->   - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
->   - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
->                            resistor, the other values are in kOhm.
-> +
-> +All of the devices can have a 47pf capacitor attached to increase the
-> +autocalibration accuracy of their RC oscillators. To enable usage of the
-> +capacitor the following property has to be defined:
-> +
-> + - "abracon,autocal-filter"
 
-Can't the standard 'quartz-load-femtofarads' property be used here? You 
-might not need to know the value, but presence of the property can 
-enable the feature.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
