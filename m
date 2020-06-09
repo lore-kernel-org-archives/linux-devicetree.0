@@ -2,148 +2,212 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D12C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3AAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A6220737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:39:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UxlslCOp"
+	by mail.kernel.org (Postfix) with ESMTP id BE68720774
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591720863;
+	bh=3qetwtCZbV2rwtSX6HR1C8veFiMVvNuMnN2Up2WK8IE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=GKq4PK8VPWVZ5JxJTIfzILgvW/CMrgTZOyCQO6GpzGFmkt5BjtmwHlxSuIn1ixGmp
+	 R4BoBB1t2pKZDOAQcuSOeRDqK7sZksXztt3h+155lXjxiLHvzvnS38Pdg4r/Y3sxvY
+	 wG3jkLUZUjR92tOgA2ZAS8rcq88PqxALxObYG+kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgFIQjV (ORCPT
+        id S1731061AbgFIQlD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgFIQjU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:39:20 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27E4C05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 09:39:19 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id g5so17122862otg.6
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 09:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v7mrV9A8x5gROdoWHb4mBMuLQK66GuFHbbDU9aAaIY4=;
-        b=UxlslCOp5lHCML8zHfSxii0/aaaTdlNzCPYYCv2xzb4wWEZtWsF+k5/n8Osgdx0hJy
-         BfJRocyU0Eo8PTSI7zAl6DbWAZBVkW4kXvOXpX/QENIqRqsf2TPNP9lYxPtdLLVWVtAE
-         ZrBxyXn9wMMr4aKFJuJRt1jw1DUCO9QEpG8AY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v7mrV9A8x5gROdoWHb4mBMuLQK66GuFHbbDU9aAaIY4=;
-        b=HfKpNFz4W2co8p4bXmu2hvHXlj00lTApLCmcTrkofNrySdf2vhghj7uZnwOOvi7+j1
-         +aB7HxooSnSHiPQSTGqKP84P3247ZUcIshg0ZBhQGCktgL3XWHquQnhR0CKuFMXtgYhP
-         rbHE54FCwgceL25V5IcyJOQTho4Pwi7pihXyyEfSfnujpq073TQOgZFggCBJQjBhiKvA
-         KqqwH+CU45a9YmZKkLa86lCuhnzQr0H4g8UUXdJuCN+3+o0FFe5PVfcrBWwyI+GPspyk
-         xv99PV20TsZ7e/sisMtZShOe/Re6/w1M03psdx00wSxWLD++Pr4Exm5MYdsQDvt7b9xV
-         1EQA==
-X-Gm-Message-State: AOAM533vA3SbIpkHM/0ls6SwOjYfSHmQVRruVO17EM3WFuzKnoLnI+DC
-        GpoQ6uClXiIWER2PEBKJkPxp/Gs4Swn46FfcNjHQ7A==
-X-Google-Smtp-Source: ABdhPJyzEiiGK0RgxvAB9nvhNz9jMbudR88GwxzWaWaK//yF7MA0SnaEkI/Owvhift8/7RXSbhpKtNM5VXKxf/ldzwA=
-X-Received: by 2002:a9d:768a:: with SMTP id j10mr23941760otl.188.1591720759321;
- Tue, 09 Jun 2020 09:39:19 -0700 (PDT)
+        Tue, 9 Jun 2020 12:41:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731047AbgFIQlC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:41:02 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB9620737;
+        Tue,  9 Jun 2020 16:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591720862;
+        bh=3qetwtCZbV2rwtSX6HR1C8veFiMVvNuMnN2Up2WK8IE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Gnv7iLW4r7aiutnfo5dX3y36vm4H9l0xBI/1GwNCCANyOEHLf/II0DhwSfPVU18xm
+         yBfN9P9uI3NczfOFDswMj/i9Ag3CZflc+9IgF+SuFvSu/G1WEhVlbzurUpP2yP0M71
+         /dkMZGf2bBOAUKqSrYo/3wRWWLy2hmdNK0+B57Gw=
+Date:   Tue, 9 Jun 2020 11:41:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ansuelsmth@gmail.com
+Cc:     'Rob Herring' <robh+dt@kernel.org>,
+        'Sham Muthayyan' <smuthayy@codeaurora.org>,
+        'Rob Herring' <robh@kernel.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Stanimir Varbanov' <svarbanov@mm-sol.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        'Varadarajan Narayanan' <varada@codeaurora.org>
+Subject: Re: R: R: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
+Message-ID: <20200609164100.GA1451761@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200609162700.953260-1-adrian.ratiu@collabora.com> <20200609162700.953260-12-adrian.ratiu@collabora.com>
-In-Reply-To: <20200609162700.953260-12-adrian.ratiu@collabora.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 9 Jun 2020 18:39:08 +0200
-Message-ID: <CAKMK7uGLQCj_oJcbXynt_1bmwBQy6ncUgc49DPejyfCtb68e_g@mail.gmail.com>
-Subject: Re: [PATCH v9 11/11] Documentation: gpu: todo: Add dw-mipi-dsi
- consolidation plan
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dl-linux-imx <linux-imx@nxp.com>, kernel@collabora.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <021501d63e6d$18a82b40$49f881c0$@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 6:25 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
->
-> This documents the longer-term plan to cleanup the dw-mipi-dsi bridge
-> based drivers after the regmap refactor and i.MX6 driver have landed.
->
-> The goal is to get the entire bridge logic in one place and continue
-> the refactorings under the drm/bridge tree.
->
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Boris Brezillon <boris.brezillon@collabora.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+On Tue, Jun 09, 2020 at 04:48:51PM +0200, ansuelsmth@gmail.com wrote:
+> > -----Messaggio originale-----
+> > Da: Bjorn Helgaas <helgaas@kernel.org>
+> > Inviato: martedì 2 giugno 2020 19:28
+> > A: ansuelsmth@gmail.com
+> > Cc: 'Rob Herring' <robh+dt@kernel.org>; 'Sham Muthayyan'
+> > <smuthayy@codeaurora.org>; 'Rob Herring' <robh@kernel.org>; 'Andy
+> > Gross' <agross@kernel.org>; 'Bjorn Andersson'
+> > <bjorn.andersson@linaro.org>; 'Bjorn Helgaas' <bhelgaas@google.com>;
+> > 'Mark Rutland' <mark.rutland@arm.com>; 'Stanimir Varbanov'
+> > <svarbanov@mm-sol.com>; 'Lorenzo Pieralisi'
+> > <lorenzo.pieralisi@arm.com>; 'Andrew Murray'
+> > <amurray@thegoodpenguin.co.uk>; 'Philipp Zabel'
+> > <p.zabel@pengutronix.de>; linux-arm-msm@vger.kernel.org; linux-
+> > pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Varadarajan Narayanan <varada@codeaurora.org>
+> > Oggetto: Re: R: [PATCH v5 11/11] PCI: qcom: Add Force GEN1 support
+> > 
+> > [+cc Varada]
+> > 
+> > On Tue, Jun 02, 2020 at 07:07:27PM +0200, ansuelsmth@gmail.com
+> > wrote:
+> > > > On Tue, Jun 02, 2020 at 01:53:52PM +0200, Ansuel Smith wrote:
+> > > > > From: Sham Muthayyan <smuthayy@codeaurora.org>
+> > > > >
+> > > > > Add Force GEN1 support needed in some ipq8064 board that needs to
+> > > > limit
+> > > > > some PCIe line to gen1 for some hardware limitation. This is set by
+> the
+> > > > > max-link-speed binding and needed by some soc based on ipq8064.
+> > (for
+> > > > > example Netgear R7800 router)
+> > > > >
+> > > > > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > ---
+> > > > >  drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++++++
+> > > > >  1 file changed, 13 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > index 259b627bf890..0ce15d53c46e 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > > > @@ -27,6 +27,7 @@
+> > > > >  #include <linux/slab.h>
+> > > > >  #include <linux/types.h>
+> > > > >
+> > > > > +#include "../../pci.h"
+> > > > >  #include "pcie-designware.h"
+> > > > >
+> > > > >  #define PCIE20_PARF_SYS_CTRL			0x00
+> > > > > @@ -99,6 +100,8 @@
+> > > > >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+> > > > >  #define SLV_ADDR_SPACE_SZ			0x10000000
+> > > > >
+> > > > > +#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
+> > > > > +
+> > > > >  #define DEVICE_TYPE_RC				0x4
+> > > > >
+> > > > >  #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+> > > > > @@ -195,6 +198,7 @@ struct qcom_pcie {
+> > > > >  	struct phy *phy;
+> > > > >  	struct gpio_desc *reset;
+> > > > >  	const struct qcom_pcie_ops *ops;
+> > > > > +	int gen;
+> > > > >  };
+> > > > >
+> > > > >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> > > > > @@ -395,6 +399,11 @@ static int qcom_pcie_init_2_1_0(struct
+> > > > qcom_pcie *pcie)
+> > > > >  	/* wait for clock acquisition */
+> > > > >  	usleep_range(1000, 1500);
+> > > > >
+> > > > > +	if (pcie->gen == 1) {
+> > > > > +		val = readl(pci->dbi_base +
+> > > > PCIE20_LNK_CONTROL2_LINK_STATUS2);
+> > > > > +		val |= 1;
+> > > >
+> > > > Is this the same bit that's visible in config space as
+> > > > PCI_EXP_LNKSTA_CLS_2_5GB?  Why not use that #define?
+> > > >
+> > > > There are a bunch of other #defines in this file that look like
+> > > > redefinitions of standard things:
+> > > >
+> > > >   #define PCIE20_COMMAND_STATUS                   0x04
+> > > >     Looks like PCI_COMMAND
+> > > >
+> > > >   #define CMD_BME_VAL                             0x4
+> > > >     Looks like PCI_COMMAND_MASTER
+> > > >
+> > > >   #define PCIE20_DEVICE_CONTROL2_STATUS2          0x98
+> > > >     Looks like (PCIE20_CAP + PCI_EXP_DEVCTL2)
+> > > >
+> > > >   #define PCIE_CAP_CPL_TIMEOUT_DISABLE            0x10
+> > > >     Looks like PCI_EXP_DEVCTL2_COMP_TMOUT_DIS
+> > > >
+> > > >   #define PCIE20_CAP                              0x70
+> > > >     This one is obviously device-specific
+> > > >
+> > > >   #define PCIE20_CAP_LINK_CAPABILITIES            (PCIE20_CAP + 0xC)
+> > > >     Looks like (PCIE20_CAP + PCI_EXP_LNKCAP)
+> > > >
+> > > >   #define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT (BIT(10) |
+> > > > BIT(11))
+> > > >     Looks like PCI_EXP_LNKCAP_ASPMS
+> > > >
+> > > >   #define PCIE20_CAP_LINK_1                       (PCIE20_CAP + 0x14)
+> > > >   #define PCIE_CAP_LINK1_VAL                      0x2FD7F
+> > > >     This looks like PCIE20_CAP_LINK_1 should be (PCIE20_CAP +
+> > > >     PCI_EXP_SLTCAP), but "CAP_LINK_1" doesn't sound like the Slot
+> > > >     Capabilities register, and I don't know what PCIE_CAP_LINK1_VAL
+> > > >     means.
+> > >
+> > > The define are used by ipq8074 and I really can't test the changes.
+> > > Anyway it shouldn't make a difference use the define instead of the
+> > > custom value so a patch should not harm anything... Problem is the
+> > > last 2 define that we really don't know what they are about... How
+> > > should I proceed? Change only the value related to
+> > > PCI_EXP_LNKSTA_CLS_2_5GB or change all the other except the last 2?
+> > 
+> > I personally would change all the ones I mentioned above (in a
+> > separate patch from the one that adds "max-link-speed" support).
+> > Testing isn't a big deal because changing the #defines shouldn't
+> > change the generated code at all.
+> > 
+> > PCIE20_CAP_LINK_1 / PCIE_CAP_LINK1_VAL looks like a potential bug or
+> > at least a very misleading name.  I wouldn't touch it unless we can
+> > figure out what's going on.
+> > 
+> > Looks like most of this was added by 5d76117f070d ("PCI: qcom: Add
+> > support for IPQ8074 PCIe controller").  Shame on me for not asking
+> > these questions at the time.
+> > 
+> > Sham, Varada, can you shed any light on PCIE20_CAP_LINK_1 and
+> > PCIE_CAP_LINK1_VAL?
+> > 
+> 
+> Still no response. Should I push a v6 with this fix and leave the
+> unknown params as they are?
 
-This cc's the world, but not dri-devel. Can you pls resubmit with that added?
-
-Thanks, Daniel
-
-> ---
->  Documentation/gpu/todo.rst | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
-> index 658b52f7ffc6c..2b142980a4b16 100644
-> --- a/Documentation/gpu/todo.rst
-> +++ b/Documentation/gpu/todo.rst
-> @@ -548,6 +548,31 @@ See drivers/gpu/drm/amd/display/TODO for tasks.
->
->  Contact: Harry Wentland, Alex Deucher
->
-> +Reorganize dw-mipi-dsi bridge-based host-controller drivers
-> +-----------------------------------------------------------
-> +
-> +The Synopsys DW MIPI DSI bridge is used by a number of SoC platform drivers
-> +(STM, Rockchip, i.MX) which don't cleanly encapsulate their bridge logic which
-> +gets split between the Synopsys bridge (drm/bridge/synopsys/dw-mipi-dsi.c) and
-> +platform drivers like drm/imx/dw_mipi_dsi-imx6.c by passing around the bridge
-> +configuration regmap, creating new bridges / daisy chaining in platform drivers,
-> +duplicating encoder creation, having too much encoder logic instead of using the
-> +simple encoder interface and so on.
-> +
-> +The goal of this rework is to make the dw-mipi-dsi driver a better encapsulated
-> +bridge by moving all bridge-related logic under drm/bridge, including the SoC
-> +bindings which chain to the core Synopsys code under drm/bridge/dw-mipi-dsi/
-> +from which they can be further consolidated and cleaned up.
-> +
-> +If this goal proves to be impossible then drm_bridge might not be the correct
-> +abstraction for these host controllers and unifying their logic into a helper
-> +library encapsulating a drm_encoder might be more desirable, in other words to
-> +move away from drm_bridge entirely.
-> +
-> +Contact: Adrian Ratiu, Daniel Vetter, Laurent Pinchart
-> +
-> +Level: Intermediate
-> +
->  Bootsplash
->  ==========
->
-> --
-> 2.27.0
->
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Yep, that sounds good to me.
