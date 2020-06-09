@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DBEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6918FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55CB82074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429F220774
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A51TyIWJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sr9smtd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbgFINSH (ORCPT
+        id S1730124AbgFINSL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55248 "EHLO
+        Tue, 9 Jun 2020 09:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729038AbgFINOk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:14:40 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229BBC08C5C4;
-        Tue,  9 Jun 2020 06:14:39 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so25007509ljn.4;
-        Tue, 09 Jun 2020 06:14:39 -0700 (PDT)
+        with ESMTP id S1729000AbgFINOf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:14:35 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C118C03E97C;
+        Tue,  9 Jun 2020 06:14:35 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n23so24969602ljh.7;
+        Tue, 09 Jun 2020 06:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AOO2W4vvP/igevCu4IH6JEPHANPVq7vKrjpVvFg7+eU=;
-        b=A51TyIWJ7Rx+M/S8Z4AxBJiGchLlAeYlZ9ygTRNM9UaeJytu7axCuE6NJ30tVQb/Qr
-         wEt4bI7SGiqBmsN23yEmDSXOk+m58XiRM6LaVPColj+n/rZS7rRxDn59tMQNy4EigbVN
-         nYYQAN9mrEc6YG9EFJrx/xV9JUFeBG56QJaaK6ctw0n9H4UKpcK0yeWeLRtKGRx0Ilpf
-         YcOWTe4IS6rfIefYSChRPl65tCRS5zLpNX7ENVYDg8VG/t+Nzn6WGjwFHYKKfIFm6jzj
-         1OzrGWgkKUDR7rluN2q1UJjrqxJpHT1ZyFL0NCnjLpU9/VG3Pvc+C+YBL4o5gX6JHfDZ
-         DhRQ==
+        bh=eQ3h8Ane+DGwk19e9LoUjeH+6kuRPH+cvxzXdTjxJoI=;
+        b=sr9smtd/X2TAtj+jB9Xt0hR75GzF+z9QEMDVwFu/VhYMicUKng0kG80Vs+otUE3E6e
+         OT8MlEj7ng0+A/YXa3upxyT1+xitxML7CL1pmQ6sFiJsHTRufjHjBdSWzIIJupI/2LwM
+         iAcSajC9XDB5SXxSpHwLyK9wuRp8kIMiL0V3TP7aCn4UZrMyagGowSfjZtIeX+5+T3Em
+         CgFnf5kKqegdAD1c4a9gT62gxmFaVxuInAEi52qng/n86OURvvDTdan7p6rHgNCmhXyk
+         y9gZJUiePCLkW1ueC+0ds06ZdHKlOImsS0Hht/TYCkie+SgGDM7IBDTY3WFlIBoGLGjJ
+         hKjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AOO2W4vvP/igevCu4IH6JEPHANPVq7vKrjpVvFg7+eU=;
-        b=Ux6iqNuanZ4H1oVjmlCYw/yAYttI50FEWpFSDpELmDkbyTpF2gxur41LjcAmvM/PVn
-         oXVWwAxkQZDwOVlAXk4ad+WJmungYuhx61zLt7C8UxLrYQb0Gsl0lx1KeDEFPHPAAN42
-         DjFCs3DSsxTPzBcOL2U58saUd4gQZVC94Fm7x+utuNahAdbyrG+SBo6D7QKueThzYj0W
-         Lvr2hgK2CgvRho/mrK09qM2qjs+MtDT8rOymZKvsDYpX3ICLOIJebmcfziBoLrCdYbo+
-         6PpkrZaJHnx7trpZL9x796hLoLN1W3AnbQqQjr1K+TcsXclnHCnywbLuH2/RHlDdC0gJ
-         oCFA==
-X-Gm-Message-State: AOAM533EcYOMrwLqjtGXRU4OcJcVtbn3e9+11nosJiGqUbvPHydpgO4e
-        BnL5VuzxRk+F+B8YSu8fuzg=
-X-Google-Smtp-Source: ABdhPJyVqj4ryz9H2FvaQa4kZS3Q1Z6etIVNWy3kfiBgX8s492y43kO2ILP+3gviTVFVyE7n7KtZEw==
-X-Received: by 2002:a05:651c:1213:: with SMTP id i19mr12768662lja.116.1591708477515;
-        Tue, 09 Jun 2020 06:14:37 -0700 (PDT)
+        bh=eQ3h8Ane+DGwk19e9LoUjeH+6kuRPH+cvxzXdTjxJoI=;
+        b=fy+fpTYYS02QEzNdq+TSyYYG5tAkRKzUZSwCsF/S3vBhxE4cfLahCamnHxa4Rnc30H
+         i9JWzEJjE7xd4SDS3FuTBQ2TfIzEHE1GGh7ubB7tSp6FbRQi3ecweEayXMjYvSvAISA/
+         vSMJuVfA6G5FnCfI5ibS+KMiEK9/Ci+IphADehSkzBMkYm/9wMWgaPE1w32O6jhEJ9rH
+         3vLFjaH5NF1ZdkFQlGazq4yB6isGuKJTSSDxnWLZMhqvN4BeHSd7Tg8pJwlVk8wH6JGW
+         jCegE5/RMDfxADwungyXO1LzyslBUZsWS00f5xFsj07mcl9RRt4OGdv08OitquHS0nCM
+         rgKg==
+X-Gm-Message-State: AOAM530212iPhbYUdPG0QJfD4Axw0gMrb/cMdmBQ/sUcCG2zZDkXyu/Q
+        f86xpyPL2fyfYJ1WH6mPWuw=
+X-Google-Smtp-Source: ABdhPJysLy/ytBXckY4POgNUQGKQ4QlbcnhjoNkfFQXjUOYkxP+flvZczjNtCZMYL6RWbQxYJYhw5Q==
+X-Received: by 2002:a2e:9c1:: with SMTP id 184mr14667970ljj.241.1591708473574;
+        Tue, 09 Jun 2020 06:14:33 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.36
+        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:37 -0700 (PDT)
+        Tue, 09 Jun 2020 06:14:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -75,9 +75,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v4 10/37] PM / devfreq: tegra20: Silence deferred probe error
-Date:   Tue,  9 Jun 2020 16:13:37 +0300
-Message-Id: <20200609131404.17523-11-digetx@gmail.com>
+Subject: [PATCH v4 07/37] memory: tegra124-emc: Use devm_platform_ioremap_resource
+Date:   Tue,  9 Jun 2020 16:13:34 +0300
+Message-Id: <20200609131404.17523-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
 References: <20200609131404.17523-1-digetx@gmail.com>
@@ -88,35 +88,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra EMC driver was turned into a regular kernel driver, it also could
-be compiled as a loadable kernel module now. Hence EMC clock isn't
-guaranteed to be available and clk_get("emc") may return -EPROBE_DEFER and
-there is no good reason to spam KMSG with a error about missing EMC clock
-in this case, so let's silence the deferred probe error.
+Utilize that relatively new helper which makes code a bit cleaner.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra20-devfreq.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/memory/tegra/tegra124-emc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
-index ff82bac9ee4e..6469dc69c5e0 100644
---- a/drivers/devfreq/tegra20-devfreq.c
-+++ b/drivers/devfreq/tegra20-devfreq.c
-@@ -141,9 +141,11 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+index 98d98d09b00c..6d2897d4dca9 100644
+--- a/drivers/memory/tegra/tegra124-emc.c
++++ b/drivers/memory/tegra/tegra124-emc.c
+@@ -1193,7 +1193,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 	struct platform_device *mc;
+ 	struct device_node *np;
+ 	struct tegra_emc *emc;
+-	struct resource *res;
+ 	u32 ram_code;
+ 	int err;
  
- 	/* EMC is a system-critical clock that is always enabled */
- 	tegra->emc_clock = devm_clk_get(&pdev->dev, "emc");
--	if (IS_ERR(tegra->emc_clock)) {
--		err = PTR_ERR(tegra->emc_clock);
--		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
-+	err = PTR_ERR_OR_ZERO(tegra->emc_clock);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to get emc clock: %d\n",
-+				err);
- 		return err;
- 	}
+@@ -1203,8 +1202,7 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 
+ 	emc->dev = &pdev->dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	emc->regs = devm_ioremap_resource(&pdev->dev, res);
++	emc->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(emc->regs))
+ 		return PTR_ERR(emc->regs);
  
 -- 
 2.26.0
