@@ -7,69 +7,67 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1679FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3744BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3817206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13941206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="R4aWwk4h"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="VQS/zNvj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389301AbgFITkk (ORCPT
+        id S2389313AbgFITk5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58510 "EHLO
+        Tue, 9 Jun 2020 15:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389284AbgFITkf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:40:35 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EFABC05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:40:35 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id f18so22081748qkh.1
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:40:35 -0700 (PDT)
+        with ESMTP id S2389299AbgFITkk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:40:40 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AF1C08C5CB
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:40:40 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k22so18603105qtm.6
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sHWV6OU0cqgaqdPacomRMLT+w3Ah3p0WG4kNzV6/a0A=;
-        b=R4aWwk4htZqHave/9h/EmzzlTvfpyow5xa1HrixdbeagLWiDVCahZX+fvgd72MMhKH
-         mifgYvUj+jhWaMGg3Sy/QuCRU/M6RKcSTiv3XoeJ3SlLx/OpCDJihfdQDGtJHK6Ma2fv
-         57K4OCfyNvmS7Mj4coeIZrZFaJpqmVEx2dQAQ48cfDir+BZHYiiGfFlO10AOnFVbaQ4l
-         xacFlXm9XwJChbkrL3Ai0A69gf+8Aqb9dKIOsXRf2SdsS9hTKPcwi9G1oIrDRlCBi1AV
-         k2QWPQR6Xa9viXBp+BOnMgIdZtNoxs4Gk5hOWjYWXe04l4pzi5HWgoRZ0X44+xTY6pZd
-         w7ow==
+        bh=WcoXpI3zumFD6GXBhxwQCLvdm8lNnHTHO06BBAcncnY=;
+        b=VQS/zNvjUY0GpD9fegTplksKEVAPxp7x8c7YMIdAbszDtBycBHClZWCut9e7oOTzHu
+         thobLB6Y+gmWg2bRW1yyGgqfyJvH665H8D4WVMP0O0/RZMzIlzc255SvDd1tSAAFtCcH
+         HkmkqbJ2zueib2m/lzkn5qg/4RwiEazuGNM5gV2DkcVRdOB1BSE/MntWLfoFaEpkWvZ9
+         FeWGCdAB7TC7WG/YGu7fXjPRbTHSidXHpWNXUI/+tD83vBbvo/Lou5eON1YCVDBf1tPi
+         Tg0HIYrRvWm4efcrrSZRQyRAEXEJNqM0DSRmVu0rHNDjHtvuwuNznBQXZm2tbKRcRdvZ
+         8t9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sHWV6OU0cqgaqdPacomRMLT+w3Ah3p0WG4kNzV6/a0A=;
-        b=NCCaplKWMFznH13kDAg5bwlXx+Fas/vVAeqHUBBhomYLRPSsgJW+esBX7tee/dzRiA
-         mNexLKZia9g7/LoKEqoMkg5Lwdj6qjAuu6ukxwgrx8pua329J4WjBWHPCmPTm55SeRnP
-         6uTxcJ1Gk0xsBmGiPc9PSgHCGXZA9Laqc+ulUxQoBvGvPZ5OjSdbJbnF8bX1GgPgXEeE
-         2KLcV8yvVa31bba1K2JtP7CeYIyC2hsSaHNOdijV393DxYmN1LsVIJ8+tAmtdCG3g5IG
-         oD665TyC2xZKOPSEyYjG/OqxyWwHtl+HZbTz1SnjwTKxjDenMduz98JadHdtOES6BAIv
-         +z/g==
-X-Gm-Message-State: AOAM532T6cYs9ItSNdvnGOEOga7ngM85aVLQMWe7oYBY507aiDRkdQ7x
-        /5Ru3W5B0XDRE5IrL7FkCCkFWg==
-X-Google-Smtp-Source: ABdhPJylYwtTWOmAgXhVLnUMhpb1BZNqKTLwO9QHJOFRb6EbibLEywFO6AcZedPsGIptantkT+8xEA==
-X-Received: by 2002:a05:620a:49c:: with SMTP id 28mr30284895qkr.168.1591731634848;
-        Tue, 09 Jun 2020 12:40:34 -0700 (PDT)
+        bh=WcoXpI3zumFD6GXBhxwQCLvdm8lNnHTHO06BBAcncnY=;
+        b=od4/nPcpYUwn2gwPkaXmXfja8fjwOY0pq0xWliMxb2m6UkJI6gwg570Dbee2Wc9t2/
+         XQw5JKqT7AV6kvozhhXhOhg9xi82bWWKyVVWR/33JPElz2u2Z5tX/kF3zQnzh0oZpIlH
+         x2/a2w/yxupSrWsv5D7kEQfjwSlMOyBdZgVmmLuGmPq3PxXI+Ds3GdOs6qF2unj3/8lg
+         2yq9+yPXCteHd+oBJiAXWQg0IC1vomsJ6xYs2z2kbg1W+cDuxACXrCSume5HsBItmL8L
+         IjE8PNjnnQYF/dXL+azF7cInl1ZYXhBNycrceAa4jckwCToy0fd3KM1tBc6TlhweS38D
+         s5Nw==
+X-Gm-Message-State: AOAM533HhR+CKIN3vYZcRVDQkLyHqZ6zDm739RWcP1Uxut/vLVbmqjIb
+        i5h7BuuAU9yuy0eLbfPA/eZCjw==
+X-Google-Smtp-Source: ABdhPJzpDokLrIZrlzjwSAlshLGYWWNYq60vxKNh1Rb/+VWx7hNAVRLwtdygaEZ6nDkCe9cKJF4Pqg==
+X-Received: by 2002:ac8:341a:: with SMTP id u26mr30392217qtb.36.1591731639481;
+        Tue, 09 Jun 2020 12:40:39 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v8sm10513181qto.21.2020.06.09.12.40.33
+        by smtp.gmail.com with ESMTPSA id v8sm10513181qto.21.2020.06.09.12.40.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 12:40:34 -0700 (PDT)
+        Tue, 09 Jun 2020 12:40:39 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-        iommu@lists.linux-foundation.org (open list:IOMMU DRIVERS),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/8] dt-bindings: arm-smmu: Add sm8150 and sm8250 compatible strings
-Date:   Tue,  9 Jun 2020 15:40:19 -0400
-Message-Id: <20200609194030.17756-2-jonathan@marek.ca>
+Subject: [PATCH v2 5/8] arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+Date:   Tue,  9 Jun 2020 15:40:23 -0400
+Message-Id: <20200609194030.17756-6-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200609194030.17756-1-jonathan@marek.ca>
 References: <20200609194030.17756-1-jonathan@marek.ca>
@@ -80,26 +78,127 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add compatible strings for sm8150 and sm8250 iommus to documentation.
+Add dts nodes for the secondary USB controller and related PHY nodes.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 89 ++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index d7ceb4c34423..3ac741236c8b 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -37,6 +37,8 @@ properties:
-           - enum:
-               - qcom,sc7180-smmu-500
-               - qcom,sdm845-smmu-500
-+              - qcom,sm8150-smmu-500
-+              - qcom,sm8250-smmu-500
-           - const: arm,mmu-500
-       - items:
-           - const: arm,mmu-500
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 5b48dbaee2d8..f928ef9fa3a3 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -636,6 +636,19 @@ usb_1_hsphy: phy@88e2000 {
+ 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+ 		};
+ 
++		usb_2_hsphy: phy@88e3000 {
++			compatible = "qcom,sm8150-usb-hs-phy",
++				     "qcom,usb-snps-hs-7nm-phy";
++			reg = <0 0x088e3000 0 0x400>;
++			status = "disabled";
++			#phy-cells = <0>;
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "ref";
++
++			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
++		};
++
+ 		usb_1_qmpphy: phy@88e9000 {
+ 			compatible = "qcom,sm8150-qmp-usb3-phy";
+ 			reg = <0 0x088e9000 0 0x18c>,
+@@ -671,6 +684,37 @@ usb_1_ssphy: lanes@88e9200 {
+ 			};
+ 		};
+ 
++		usb_2_qmpphy: phy@88eb000 {
++			compatible = "qcom,sm8150-qmp-usb3-uni-phy";
++			reg = <0 0x088eb000 0 0x200>;
++			status = "disabled";
++			#clock-cells = <1>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
++				 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
++			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
++
++			resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
++				 <&gcc GCC_USB3_PHY_SEC_BCR>;
++			reset-names = "phy", "common";
++
++			usb_2_ssphy: lane@88eb200 {
++				reg = <0 0x088eb200 0 0x200>,
++				      <0 0x088eb400 0 0x200>,
++				      <0 0x088eb800 0 0x800>,
++				      <0 0x088eb600 0 0x200>;
++				#phy-cells = <0>;
++				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
++				clock-names = "pipe0";
++				clock-output-names = "usb3_uni_phy_pipe_clk_src";
++			};
++		};
++
+ 		usb_1: usb@a6f8800 {
+ 			compatible = "qcom,sm8150-dwc3", "qcom,dwc3";
+ 			reg = <0 0x0a6f8800 0 0x400>;
+@@ -716,6 +760,51 @@ usb_1_dwc3: dwc3@a600000 {
+ 			};
+ 		};
+ 
++		usb_2: usb@a8f8800 {
++			compatible = "qcom,sm8150-dwc3", "qcom,dwc3";
++			reg = <0 0x0a8f8800 0 0x400>;
++			status = "disabled";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			dma-ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_SEC_AXI_CLK>,
++				 <&gcc GCC_USB30_SEC_MASTER_CLK>,
++				 <&gcc GCC_AGGRE_USB3_SEC_AXI_CLK>,
++				 <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
++				 <&gcc GCC_USB30_SEC_SLEEP_CLK>,
++				 <&gcc GCC_USB3_SEC_CLKREF_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++				      "sleep", "xo";
++
++			assigned-clocks = <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_SEC_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <200000000>;
++
++			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 487 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 490 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 491 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq",
++					  "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++			power-domains = <&gcc USB30_SEC_GDSC>;
++
++			resets = <&gcc GCC_USB30_SEC_BCR>;
++
++			usb_2_dwc3: dwc3@a800000 {
++				compatible = "snps,dwc3";
++				reg = <0 0x0a800000 0 0xcd00>;
++				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
++				iommus = <&apps_smmu 0x160 0>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				phys = <&usb_2_hsphy>, <&usb_2_ssphy>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
++
+ 		aoss_qmp: power-controller@c300000 {
+ 			compatible = "qcom,sm8150-aoss-qmp";
+ 			reg = <0x0 0x0c300000 0x0 0x100000>;
 -- 
 2.26.1
 
