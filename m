@@ -2,89 +2,63 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8686C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D9FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 948D320691
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591723927;
-	bh=LTcBoamWhld/ra+UitAF/59CJxE0THLNOV5UPkWwDm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2UmLzGvch94GQCW44rLH3+LrzFdL0TtcyUsUhlMH1qyIQR2ng0rvOyaeeQfakw2Uf
-	 hixRzN1GNncYMYGGEWiJUITWCf50FgrYoZoX/RsLIxOLCbXbaPUKxhp+pwG+UH2hEx
-	 TTVPWmDOR4Rdw1fnNdgS4NHqo8AeuorYWYg2zb4s=
+	by mail.kernel.org (Postfix) with ESMTP id 335582074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgFIRcH (ORCPT
+        id S1728868AbgFIRfA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:32:07 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:36833 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgFIRcG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 13:32:06 -0400
-Received: by mail-il1-f173.google.com with SMTP id a13so21170498ilh.3;
-        Tue, 09 Jun 2020 10:32:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IGnSfBXB+3nfSv3N6F0fbjwPESQfDqrwP19nspwqC6U=;
-        b=AZiZx/neoKQAPCV9u1imUvPrnpXeDNwR7wx41FcKM/DswJRQgU+3qnmh18pSIySo/1
-         IeZDvKdcZ2S38p9/PmPQ/oYGGiuK1bJnvIyVOWYFPGI5JGQj/FFkUG7IivOq312WcJ0t
-         sp+nS/VmxQ6PAUVWxV8AI6zBMt6LG9aNgWFMXj0g1HZE7s5FMQ2721ifS+q5TGxSif9a
-         c3GZqYWI66CzKJ7+vMZnteJjOJ/n+woVQaxxthqDBIPSvHAy88/BCSFVvEFMBG3htm07
-         vLv0VgestMRYsb01bvBx2Uj+JWywdyExmg9Qg8MwjGiRJc+9oc0pRZe8nyoSJNKIetSM
-         cULg==
-X-Gm-Message-State: AOAM531Fx3dZjuohSRbSYUqtC3H/yc4t+mqagZFH8QQBJOBDPmDkqTaK
-        7/jsAt6rcTBGcGSdxT9B9A==
-X-Google-Smtp-Source: ABdhPJyVUj4y5yOWIEZhHu2FOPrV9CJO6MI8LLU5aR4WVyN9icWLtu67T0oniravBER69+CId1YnxA==
-X-Received: by 2002:a92:89cf:: with SMTP id w76mr20191903ilk.10.1591723925603;
-        Tue, 09 Jun 2020 10:32:05 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id l12sm640246ilj.8.2020.06.09.10.32.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 10:32:04 -0700 (PDT)
-Received: (nullmailer pid 1119483 invoked by uid 1000);
-        Tue, 09 Jun 2020 17:32:04 -0000
-Date:   Tue, 9 Jun 2020 11:32:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: Add MediaTek MT6873 devapc driver
-Message-ID: <20200609173204.GB1107294@bogus>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+        Tue, 9 Jun 2020 13:35:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:43471 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726848AbgFIRfA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:35:00 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3460168AFE; Tue,  9 Jun 2020 19:34:56 +0200 (CEST)
+Date:   Tue, 9 Jun 2020 19:34:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vladimir Murzin <vladimir.murzin@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        dillon min <dillon.minfei@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if
+ device support reserved memory
+Message-ID: <20200609173455.GA25467@lst.de>
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com> <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com> <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com> <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com> <20200609153646.GA17969@lst.de> <031034fb-b109-7410-3ff8-e78cd12a5552@arm.com> <b0c85637-4646-614b-d406-49aa72ce52e1@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <b0c85637-4646-614b-d406-49aa72ce52e1@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 06:24:19PM +0800, Neal Liu wrote:
-> These patch series introduce a MediaTek MT6873 devapc driver.
-> 
-> MT6873 bus frabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violations are logged and sent to the processor for
-> further analysis or countermeasures.
-> 
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by devapc-mt6873 driver. The violation
-> information is printed in order to find the murderer.
+On Tue, Jun 09, 2020 at 05:25:04PM +0100, Vladimir Murzin wrote:
+> Even though commit mentions ARM, I do not see how mmap would continue
+> to work for NOMMU with dma-direct. ARM NOMMU needs it's own DMA operations
+> only in cases where caches are implemented or active, in other cases it
+> fully relies on dma-direct.
 
-There's also a proposed driver with similar functionality[1]. Come up 
-with a common solution.
+> It looks to me that we either should provide NOMMU variant for mmap in
+> dma/direct or (carefully) fix dma/mapping.
 
-Rob
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200128153806.7780-1-benjamin.gaignard@st.com/
+I think dma-direct is the right place, the common helpers in
+dma/mapping.c are basically the red headed stepchilds for misc
+IOMMU drivers not covered by dma-iommu only.
