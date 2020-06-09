@@ -2,113 +2,157 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346C0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F12C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 057822065C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27802078D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWGZMKq/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bdny4aO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgFIINZ (ORCPT
+        id S1728124AbgFIIam (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:13:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIINZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 04:13:25 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC37C05BD43;
-        Tue,  9 Jun 2020 01:13:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f185so2147881wmf.3;
-        Tue, 09 Jun 2020 01:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lZ7VE8MJqXCHe4aK3RhJA3tLbplzIKIABkTQkxT78RY=;
-        b=rWGZMKq/kOuU301GSAaPvp4rBCCwFkzOES+PoDn1UUS7TUCOaBoWz/yWNPukuptWh6
-         +bMjxUoQhzLSLKQNZ8CqCnBQozorbON4z3k+T085t+Y4D2IPpaQE1tiITOFFd11mKfZv
-         U4LxxjNZZo+lFRHty637BqChZLZKRua1mBeoB3nxT6+grzMnnhPiPli84gFBLpRvjxKc
-         oLcQnbvJclLwCz1aeiWQQfJkbTEVx2TmxGSQYGrWRt9libdDBZNG4Gn1Bed8G2wMIcrS
-         ns8ZPr00anFE7iwL4SbjAyU0zVR2199DTF3DMGisD27D5+mdGLAu+6I4NuEri1r62Fxd
-         jnuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lZ7VE8MJqXCHe4aK3RhJA3tLbplzIKIABkTQkxT78RY=;
-        b=MSLlyRXQBkaJ4JSqad97OQnIuAA+5YPI03/oN4dhPrU8jKgx1eezkP2y657W0OGw2/
-         l+fNQA35928ONZviBaQJtjKFx71eU3NvTukMtF03hquRpm+HPuj0k6i7A0WLOaBNXKU9
-         Daq5ujNX+16DNFAjkPzzMhSzE7RDrduHjNdI6AXulKPdiiMo3rZZo+dd3I+q9xGKPmSm
-         5HwGFChWuBngvlefEma2BxAoeIZTCEN6g3hxa7gc3PN4wauo1Yk4k1xLFxeNut75Gj1t
-         A2N8COAxzkTQoy+DmV3ejZK5BxpYzh1tgI/kqnGOyqsEAsYcDHzHAJMwkYlAjrDSqVZJ
-         e26w==
-X-Gm-Message-State: AOAM533mlUv3kWQJVMolgUWH2kgdkfuR5v9a5mnU996GyMVH4Ql2axIw
-        FtD6bcdvt7RmZ9fV+qv/tNg=
-X-Google-Smtp-Source: ABdhPJxCNhNE2GjtWTuK2fi3hX5buGWkwehYCaPfXFVQJllgy0khVjdpFVR+LvdnpUxm1iaF4ALyow==
-X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr2816407wmo.139.1591690403687;
-        Tue, 09 Jun 2020 01:13:23 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id d11sm2418557wrm.64.2020.06.09.01.13.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 01:13:23 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905X3 and S905D3 ID's
-Date:   Tue,  9 Jun 2020 08:13:18 +0000
-Message-Id: <20200609081318.28023-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 9 Jun 2020 04:30:42 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:51461 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728127AbgFIIam (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 04:30:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591691441; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=VohXKRDS9Puk813cVYWgC6ku1tCISrnzQ9+U/f81FYA=;
+ b=Bdny4aO1Ew/DQCOiRQT51QU7XpeTgbD6BRIqmQ4p/cKcT4Zrr+z0FOv5xYslHVb5YYnhZHaG
+ qQPYIjh5qhyYo6Q6UacB+kuLqy8UH21PBIZMkMc5iN0fxWw5++RNStu/JX3HCwtr4kT/nOqW
+ t/BsEgPL2rbDzgBuBBugHN9+NXI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5edf4898badb0d4bcf0b63e7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 08:30:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 01B40C4339C; Tue,  9 Jun 2020 08:30:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ppvk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38F70C433CA;
+        Tue,  9 Jun 2020 08:30:14 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 09 Jun 2020 14:00:14 +0530
+From:   ppvk@codeaurora.org
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=C2=A0V3_1/2=5D_mmc=3A_sdhci-msm=3A_Add_?=
+ =?UTF-8?Q?interconnect_bandwidth_scaling_support?=
+In-Reply-To: <8b2808215a09871bfccccb72cfa01e60@codeaurora.org>
+References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
+ <1591349427-27004-1-git-send-email-ppvk@codeaurora.org>
+ <1591349427-27004-2-git-send-email-ppvk@codeaurora.org>
+ <8b2808215a09871bfccccb72cfa01e60@codeaurora.org>
+Message-ID: <f23dc598cbdbd59df22f29c2b77bd14c@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Correct the SoC revision and package bits/mask values for S905D3/X3 to detect
-a wider range of observed SoC IDs, and tweak sort order for A311D/S922X.
+Hi Sibi,
 
-S905X3 05 0000 0101  (SEI610 initial devices)
-S905X3 10 0001 0000  (ODROID-C4 and recent Android boxes)
-S905X3 50 0101 0000  (SEI610 later revisions)
-S905D3 04 0000 0100  (VIM3L devices in kernelci)
-S905D3 b0 1011 0000  (VIM3L initial production)
+Thanks for the review.
 
-Fixes commit c9cc9bec36d0 ("soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs")
-Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- drivers/soc/amlogic/meson-gx-socinfo.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On 2020-06-05 17:10, Sibi Sankar wrote:
+> Hey Pradeep,
+> Thanks for the patch.
+> 
+> On 2020-06-05 15:00, Pradeep P V K wrote:
+>> Interconnect bandwidth scaling support is now added as a
+>> part of OPP [1]. So, make sure interconnect driver is ready
+> 
+> can you please replace driver with paths
+> instead?
+> 
+ok. I will address this in my next patch set.
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 01fc0d20a70d..6f54bd832c8b 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -66,10 +66,12 @@ static const struct meson_gx_package_id {
- 	{ "A113D", 0x25, 0x22, 0xff },
- 	{ "S905D2", 0x28, 0x10, 0xf0 },
- 	{ "S905X2", 0x28, 0x40, 0xf0 },
--	{ "S922X", 0x29, 0x40, 0xf0 },
- 	{ "A311D", 0x29, 0x10, 0xf0 },
--	{ "S905X3", 0x2b, 0x5, 0xf },
--	{ "S905D3", 0x2b, 0xb0, 0xf0 },
-+	{ "S922X", 0x29, 0x40, 0xf0 },
-+	{ "S905D3", 0x2b, 0x4, 0xf5 },
-+	{ "S905X3", 0x2b, 0x5, 0xf5 },
-+	{ "S905X3", 0x2b, 0x10, 0x3f },
-+	{ "S905D3", 0x2b, 0x30, 0x3f },
- 	{ "A113L", 0x2c, 0x0, 0xf8 },
- };
- 
--- 
-2.17.1
+>> before handling interconnect scaling.
+>> 
+>> This change is based on
+>> [1] [Patch v8] Introduce OPP bandwidth bindings
+>> (https://lkml.org/lkml/2020/5/12/493)
+>> 
+>> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+>> for dev_pm_opp_of_add_table()
+>> (https://lkml.org/lkml/2020/5/5/491)
+> 
+> sry didn't notice ^^ earlier
+> you might want to place these
+> comments and dependencies similar
+> to the following patch.
+> https://patchwork.kernel.org/patch/11573903/
+> 
+ok. will modify in my next patch.
 
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>>  drivers/mmc/host/sdhci-msm.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>> b/drivers/mmc/host/sdhci-msm.c
+>> index b277dd7..a945e84 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -14,6 +14,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/regulator/consumer.h>
+>> +#include <linux/interconnect.h>
+>> 
+>>  #include "sdhci-pltfm.h"
+>>  #include "cqhci.h"
+>> @@ -2070,6 +2071,13 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  	}
+>>  	msm_host->bulk_clks[0].clk = clk;
+>> 
+>> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+> 
+> typo /s/bandwdith/bandwidth
+> 
+>> +	 * scaling before registering the device for OPP.
+>> +	 */
+> 
+> /* Check for optional interconnect paths */
+> Maybe using ^^ would suffice since
+> that's what we are actually doing
+> 
+sure. i will re-modify the comments as suggested ^^ in my next patch.
+
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+> 
+>> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
+>> +	if (ret)
+>> +		goto bus_clk_disable;
+>> +
+>>  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>>  	if (IS_ERR(msm_host->opp_table)) {
+>>  		ret = PTR_ERR(msm_host->opp_table);
