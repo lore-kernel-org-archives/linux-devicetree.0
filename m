@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931F7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22195C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0882074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A7020801
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlbA5cG3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBBB4GQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgFIN3d (ORCPT
+        id S1730002AbgFIN3k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:29:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57526 "EHLO
+        Tue, 9 Jun 2020 09:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729886AbgFIN3U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:29:20 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0064C05BD1E;
-        Tue,  9 Jun 2020 06:29:18 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id z206so12477411lfc.6;
-        Tue, 09 Jun 2020 06:29:18 -0700 (PDT)
+        with ESMTP id S1726083AbgFIN3N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:29:13 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF5AC03E97C;
+        Tue,  9 Jun 2020 06:29:13 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id x18so8559136lji.1;
+        Tue, 09 Jun 2020 06:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EFgGlDJ/IOB3dtpJgB7G52XidpwoJ5cujHUuPtztNOE=;
-        b=dlbA5cG3aH20Oi2fOxbJkQnV8Ei7aXbAbV/TUVb6fJYTG/fsq2+jiyvey3ZjV1Ip7H
-         Z9/2vw6RIkoDDn+LiT0DzlhKWh1+JPkkeJF90U3BCvI2wSmTfWwb0cP+NgBZaHFj9sAH
-         VkktVn3AyZD7+5e+4a7YPd3U9yz3BvXScv+UtpXX1LJcHZwL7cRADUw97wNJDohCn7lR
-         CzTD64KA2rwKYt6/oa40ZmWUlXvzOrfXtjiWzLak4S0leU57leNs73p5pdV85VmZ8UJF
-         7ytLAI2N8ITEfUzUqmrnriKE10Wv5cy6SHzB0Oa4ZEWoCXq9/Vqcxjlqi+ZBPf+gcxgJ
-         30JA==
+        bh=AU8aHNXSJicC/3mJ6DI0lDrv2zkNv1iB0kltJtsuQAw=;
+        b=IBBB4GQdaEQ7q2KiJJZ5ip3X6bkBy0BSWrwk1+gyEldWqxQ2lxcYQ4NQnpk59EeLrV
+         6dMLrwurXlnlBTQSczdGrYF7UXiziOGT+t71YaEfRTR01pXXJtxWB71OKmt+3VNhxW1R
+         q7XIU34BO/1a7G6DB+tcbgukgu+Et04VM2jS9A+RVOIFOcgmkSG7VZK75XN3qpfSkY3K
+         8bYYAu5K+Tk+mUOXcbsKxZxMcHWwWDOmxNQpbiNe/Tr7PeVccT2sMdMQGHY47LW8iPZi
+         hw3BLwoBxXY3tBtq9eOBotQh9i8sq+FidpoV1AtLjP4FNOykoVwkAkbL9zo3k0UxKMqs
+         tVog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EFgGlDJ/IOB3dtpJgB7G52XidpwoJ5cujHUuPtztNOE=;
-        b=L/P6VsDO+4+1A4pJinWhd7RXnGPoq44TIx/FGRUyXBboVacjg36jiD5Xb4tJOdW2fY
-         TxDshQoej4Ffr5uZEjjj490QlMmC+Nu1DN+XO9bEbG1h35/c9K9Qz2Neapg8KmGWV+4C
-         yTMLJSR+WHgO7FMPuEyHwUIKaUJ4C6Snm5dkTqomk1zf0Rjh4b0VCn+c6MyWlo0iE2TW
-         YHuNyyQRJB79Z1FmxjzAeTxTr//n6hwDTk6mjV0HmWqOPAPojIn/LbdR9drA3x2KHUVW
-         Hl9R5539zPmZqPd9KtYdTFOHJvXHedCT9sHuZQeXVFfWIwm4sF2ajUG/SBbaHkw1WxlL
-         iFcA==
-X-Gm-Message-State: AOAM530niglQgxmKw3/3xo2O6QFjO/83kEjRVIORW88WHvBffF8prIxP
-        UAKLHe9bUPxZmk/HCw3DJBg=
-X-Google-Smtp-Source: ABdhPJz51LDc+b1sdoCPibU6J+uu2QhILJ5b6ggG3vyJkQDG/9WGVUEvbtmPRRRQR/Uf8K8DvMfKqw==
-X-Received: by 2002:a19:8ac3:: with SMTP id m186mr15526181lfd.131.1591709357237;
-        Tue, 09 Jun 2020 06:29:17 -0700 (PDT)
+        bh=AU8aHNXSJicC/3mJ6DI0lDrv2zkNv1iB0kltJtsuQAw=;
+        b=KbxrFsRkFQw62IlfAVrjg9Qi5Z9/VfyR5S6f0sEc2iOxuVXS5N4lzh+S6pmIcJpDmx
+         HJGF1otd1IJwcDa/WqEl6+8Y2XFpA1EakB7JaFLjLZPix6qLzmL8iZKfOYg97mCzHx8R
+         9MgZ60eTSo7g/aSTl6REJgwUnnLLawoQhwgGV8OsvMZpqb6n/3fwEAyYT/yWaMXnMFh5
+         MNRLAcsICpKfqMbWI4JebBHge/r8oVx9bJdUGYJApNFTwbg9KbBDZhf2ldlmr+O12wEP
+         GfTZRny38wO3BfNFWYDQGbeMxe92cWUohi4Pjq+u3toMFsnHMOhL/TymLLM7rGgOjpWh
+         F3xQ==
+X-Gm-Message-State: AOAM531gqt7JxiRmcQeDU48gekdhKsjoUoTleLfUKCt0CO+JqEx2wQ4P
+        oMUaz4dUSXy7RcvvOttFXn4=
+X-Google-Smtp-Source: ABdhPJyB6oVMLLLkelmcFvaeFNFXh7QjR+inoxngYrUQfB1L9V+tOfw6vava0XRT98i+C9Ak9k6fmA==
+X-Received: by 2002:a2e:810d:: with SMTP id d13mr7708009ljg.174.1591709351734;
+        Tue, 09 Jun 2020 06:29:11 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id s8sm5069821lfc.83.2020.06.09.06.29.16
+        by smtp.gmail.com with ESMTPSA id s8sm5069821lfc.83.2020.06.09.06.29.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:29:16 -0700 (PDT)
+        Tue, 09 Jun 2020 06:29:11 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 6/6] drm/tegra: output: rgb: Wrap directly-connected panel into DRM bridge
-Date:   Tue,  9 Jun 2020 16:28:55 +0300
-Message-Id: <20200609132855.20975-7-digetx@gmail.com>
+Subject: [PATCH v6 1/6] of_graph: add of_graph_get_local_port()
+Date:   Tue,  9 Jun 2020 16:28:50 +0300
+Message-Id: <20200609132855.20975-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200609132855.20975-1-digetx@gmail.com>
 References: <20200609132855.20975-1-digetx@gmail.com>
@@ -80,133 +80,97 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently Tegra DRM driver manually manages display panel, but this
-management could be moved out into DRM core if we'll wrap panel into
-DRM bridge. This patch wraps RGB panel into a DRM bridge and removes
-manual handling of the panel from the RGB output code.
+In some case, like a DRM display code for example, it's useful to silently
+check whether port node exists at all in a device-tree before proceeding
+with parsing the graph.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+This patch adds of_graph_get_local_port() which returns pointer to a local
+port node, or NULL if graph isn't specified in a device-tree for a given
+device node.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/rgb.c | 53 +++++++++++++------------------------
- 1 file changed, 18 insertions(+), 35 deletions(-)
+ drivers/of/property.c    | 32 +++++++++++++++++++++++---------
+ include/linux/of_graph.h |  7 +++++++
+ 2 files changed, 30 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 9a7024ec96bc..a4c5a6066c54 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -8,7 +8,6 @@
- 
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge_connector.h>
--#include <drm/drm_panel.h>
- #include <drm/drm_simple_kms_helper.h>
- 
- #include "drm.h"
-@@ -86,15 +85,6 @@ static void tegra_dc_write_regs(struct tegra_dc *dc,
- 		tegra_dc_writel(dc, table[i].value, table[i].offset);
- }
- 
--static const struct drm_connector_funcs tegra_rgb_connector_funcs = {
--	.reset = drm_atomic_helper_connector_reset,
--	.detect = tegra_output_connector_detect,
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.destroy = tegra_output_connector_destroy,
--	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
--};
--
- static enum drm_mode_status
- tegra_rgb_connector_mode_valid(struct drm_connector *connector,
- 			       struct drm_display_mode *mode)
-@@ -117,14 +107,8 @@ static void tegra_rgb_encoder_disable(struct drm_encoder *encoder)
- 	struct tegra_output *output = encoder_to_output(encoder);
- 	struct tegra_rgb *rgb = to_rgb(output);
- 
--	if (output->panel)
--		drm_panel_disable(output->panel);
--
- 	tegra_dc_write_regs(rgb->dc, rgb_disable, ARRAY_SIZE(rgb_disable));
- 	tegra_dc_commit(rgb->dc);
--
--	if (output->panel)
--		drm_panel_unprepare(output->panel);
- }
- 
- static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
-@@ -133,9 +117,6 @@ static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
- 	struct tegra_rgb *rgb = to_rgb(output);
- 	u32 value;
- 
--	if (output->panel)
--		drm_panel_prepare(output->panel);
--
- 	tegra_dc_write_regs(rgb->dc, rgb_enable, ARRAY_SIZE(rgb_enable));
- 
- 	value = DE_SELECT_ACTIVE | DE_CONTROL_NORMAL;
-@@ -157,9 +138,6 @@ static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
- 	tegra_dc_writel(rgb->dc, value, DC_DISP_SHIFT_CLOCK_OPTIONS);
- 
- 	tegra_dc_commit(rgb->dc);
--
--	if (output->panel)
--		drm_panel_enable(output->panel);
- }
- 
- static int
-@@ -278,6 +256,23 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 	drm_encoder_helper_add(&output->encoder,
- 			       &tegra_rgb_encoder_helper_funcs);
- 
-+	/*
-+	 * Wrap directly-connected panel into DRM bridge in order to let
-+	 * DRM core to handle panel for us.
-+	 */
-+	if (output->panel) {
-+		output->bridge = devm_drm_panel_bridge_add(output->dev,
-+							   output->panel);
-+		if (IS_ERR(output->bridge)) {
-+			dev_err(output->dev,
-+				"failed to wrap panel into bridge: %pe\n",
-+				output->bridge);
-+			return PTR_ERR(output->bridge);
-+		}
-+
-+		output->panel = NULL;
-+	}
-+
- 	/*
- 	 * Tegra devices that have LVDS panel utilize LVDS encoder bridge
- 	 * for converting up to 28 LCD LVTTL lanes into 5/4 LVDS lanes that
-@@ -292,8 +287,7 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 	 * Newer device-trees utilize LVDS encoder bridge, which provides
- 	 * us with a connector and handles the display panel.
- 	 *
--	 * For older device-trees we fall back to our own connector and use
--	 * nvidia,panel phandle.
-+	 * For older device-trees we wrapped panel into the panel-bridge.
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 1f2086f4e7ce..05c5f619b8bb 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ 	 * parent port node.
  	 */
- 	if (output->bridge) {
- 		err = drm_bridge_attach(&output->encoder, output->bridge,
-@@ -313,17 +307,6 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 		}
- 
- 		drm_connector_attach_encoder(connector, &output->encoder);
--	} else {
--		drm_connector_init(drm, &output->connector,
--				   &tegra_rgb_connector_funcs,
--				   DRM_MODE_CONNECTOR_LVDS);
--		drm_connector_helper_add(&output->connector,
--					 &tegra_rgb_connector_helper_funcs);
--		output->connector.dpms = DRM_MODE_DPMS_OFF;
+ 	if (!prev) {
+-		struct device_node *node;
 -
--		drm_connector_attach_encoder(&output->connector,
--					     &output->encoder);
--		drm_connector_register(&output->connector);
- 	}
+-		node = of_get_child_by_name(parent, "ports");
+-		if (node)
+-			parent = node;
+-
+-		port = of_get_child_by_name(parent, "port");
+-		of_node_put(node);
+-
++		port = of_graph_get_local_port(parent);
+ 		if (!port) {
+ 			pr_err("graph: no port node found in %pOF\n", parent);
+ 			return NULL;
+@@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+ }
+ EXPORT_SYMBOL(of_graph_get_remote_port);
  
- 	err = tegra_output_init(drm, output);
++/**
++ * of_graph_get_local_port() - get local port node
++ * @node: pointer to a local endpoint device_node
++ *
++ * Return: First local port node associated with local endpoint node linked
++ *	   to @node. Use of_node_put() on it when done.
++ */
++struct device_node *of_graph_get_local_port(const struct device_node *node)
++{
++	struct device_node *ports, *port;
++
++	ports = of_get_child_by_name(node, "ports");
++	if (ports)
++		node = ports;
++
++	port = of_get_child_by_name(node, "port");
++	of_node_put(ports);
++
++	return port;
++}
++EXPORT_SYMBOL(of_graph_get_local_port);
++
+ int of_graph_get_endpoint_count(const struct device_node *np)
+ {
+ 	struct device_node *endpoint;
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index 01038a6aade0..1fdeb72c7765 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -54,6 +54,7 @@ struct device_node *of_graph_get_remote_port_parent(
+ struct device_node *of_graph_get_remote_port(const struct device_node *node);
+ struct device_node *of_graph_get_remote_node(const struct device_node *node,
+ 					     u32 port, u32 endpoint);
++struct device_node *of_graph_get_local_port(const struct device_node *node);
+ #else
+ 
+ static inline int of_graph_parse_endpoint(const struct device_node *node,
+@@ -116,6 +117,12 @@ static inline struct device_node *of_graph_get_remote_node(
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_graph_get_local_port(
++					const struct device_node *node)
++{
++	return NULL;
++}
++
+ #endif /* CONFIG_OF */
+ 
+ #endif /* __LINUX_OF_GRAPH_H */
 -- 
 2.26.0
 
