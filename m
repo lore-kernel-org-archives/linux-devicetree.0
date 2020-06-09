@@ -6,90 +6,64 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B62BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD46C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FB020812
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD901204EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 20:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591734695;
-	bh=ZTFt6agJWvmtnPNCEyCUjjcDXXDNqQYSXTCnGm+IrUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WrZjGNBLA+h2SELmzlTu2pxPHRJY4Cyj/t+Ja/gwnp5Dc3EYDHuQjNIF2xjTZ8MoN
-	 s2TRB8lQsLXuV/c4ZsxQ23YaPeoz/9z0i3Kxd6qyMQXDNRBy1+mzV+IuLzBLxTlbFu
-	 4/wtJoJfgjiIqdm3b8VcummKJoCD91TOBdS26yds=
+	s=default; t=1591735514;
+	bh=RSuipI8ccFhupS8paxcrC8x3jfSLQR5eHEjMopWyIZ8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Ephh9WTlNH2Zpkl70Gq6AYY32zIJIEo/dwYoNbErPZ8ihtwpfTsj7P0agWZnfa0iX
+	 GJZ22FLTk2zMtOdCU4XxfCklYx187oSlPdYtaboVyvAJJDKJoxge6qtWnWdBqIIJGq
+	 FznTEFnC9uq4bcoLrHaBv6YHyserIKTlAGSZHerk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387882AbgFIUbe (ORCPT
+        id S1727773AbgFIUpO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 16:31:34 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40012 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731078AbgFIUbc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 16:31:32 -0400
-Received: by mail-il1-f196.google.com with SMTP id t8so21667435ilm.7;
-        Tue, 09 Jun 2020 13:31:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xpHxwxJyEi+QmAQh0g22EZ0JVBelN+B/lL6QJi2kkls=;
-        b=c3QU7h7TbdpJlD0HWArcBA5XGDfNXaR5qy1/dfxvAcmFejTu0QmEcqhigfOfA3D9MZ
-         2mdzGPdlJIDze4YifP8zY8TUFzO0daf908cVMb9CiLKMhYcNnZr+yAhY97hN3gl6JWc/
-         4v4lxH4ZockqJPDvpCKvBKm7bvZ8Ob1S+RC1QZ6XWxDrr+3pRxPKFdYAXxsr/O1Qpk3w
-         1Gag18AqleXdfFh4tI9ckKJdyviZL1l46VtSluRUSCUYDnef2IoD07mGwqJqZWIxExC5
-         iOulSE4oi4O+oMaUxtGJHTt57/8rJBf2cSLgGcT8mVJ00ipjUn0IXDp3d7ZQvvFv0yYU
-         oz2A==
-X-Gm-Message-State: AOAM533mFeDNZse8STW4MYONqo3KCa/rYqAz8ImEKBI01CmceyLsnFPN
-        RNnLdJUzaokuvktMbvqi9W25B7s=
-X-Google-Smtp-Source: ABdhPJyDdn+hAQ2PPSVGXZ5rLVbU0/5fzDWB5qz782naSnxuAHkG5eN2ZKhBcbafUZj+J+E2dFQVRg==
-X-Received: by 2002:a92:489b:: with SMTP id j27mr28987060ilg.295.1591734690074;
-        Tue, 09 Jun 2020 13:31:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id r1sm9823178iln.77.2020.06.09.13.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 13:31:29 -0700 (PDT)
-Received: (nullmailer pid 1404522 invoked by uid 1000);
-        Tue, 09 Jun 2020 20:31:28 -0000
-Date:   Tue, 9 Jun 2020 14:31:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, kamel.bouhara@bootlin.com,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 1/9] dt-bindings: atmel-tcb: convert bindings to
- json-schema
-Message-ID: <20200609203128.GA1404472@bogus>
-References: <20200529232749.299627-1-alexandre.belloni@bootlin.com>
- <20200529232749.299627-2-alexandre.belloni@bootlin.com>
+        Tue, 9 Jun 2020 16:45:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbgFIUpN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 16:45:13 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C09207C3;
+        Tue,  9 Jun 2020 20:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591735513;
+        bh=RSuipI8ccFhupS8paxcrC8x3jfSLQR5eHEjMopWyIZ8=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=q5FDQdcoI0uoFZsasvuO7pKZNkFvuUuO/a28X6QWt0jlJWtoGKuMVg6zRH+lJYbpD
+         UYsWUlWYIaNR/lu9CoOMFoIsAvPjSeCz8X+ZDNLZJ5nTGaa5x+6TXUCyH8QphvwYOJ
+         7DnaVjxtilm2C3+veT4TPYCoWrUKAZQuNwzn0r7s=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529232749.299627-2-alexandre.belloni@bootlin.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200605065258.567858-1-lkundrak@v3.sk>
+References: <20200605065258.567858-1-lkundrak@v3.sk>
+Subject: Re: [PATCH] dt-bindings: clock: Add a missing include to MMP Audio Clock binding
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Date:   Tue, 09 Jun 2020 13:45:12 -0700
+Message-ID: <159173551263.242598.12514933024861447567@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 30 May 2020 01:27:41 +0200, Alexandre Belloni wrote:
-> Convert Atmel Timer Counter Blocks bindings to DT schema format using
-> json-schema.
-> 
-> Also move it out of mfd as it is not and has never been related to mfd.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Quoting Lubomir Rintel (2020-06-04 23:52:58)
+> The include file for input clock in the example was missing, breaking the
+> validation.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Reported-by: Rob Herring <robh+dt@kernel.org>
 > ---
-> Changes in v4:
->  - use oneOf to describe possible clock-names list
-> 
->  .../devicetree/bindings/mfd/atmel-tcb.txt     |  56 --------
->  .../soc/microchip/atmel,at91rm9200-tcb.yaml   | 131 ++++++++++++++++++
->  2 files changed, 131 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
->  create mode 100644 Documentation/devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to clk-next
