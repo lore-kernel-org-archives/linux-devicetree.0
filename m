@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAACC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9F2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC48A2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25A32074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:33:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q3VFl9Zz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eL2iL6Sz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730177AbgFINdn (ORCPT
+        id S1728601AbgFINdn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 9 Jun 2020 09:33:43 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37229 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729844AbgFINdl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:33:41 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:27397 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729023AbgFINdl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:33:41 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591709621; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1591709620; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=ikhgoVwPSpeNysr9hjuRKKtUXK6SsktYFHiCVAXe5S4=; b=Q3VFl9Zz9Gq87fBHkjm7zClELsHmTfp2fW/XbO7fB7N2LJokS89jFuzIlGCOFqHoJTE/9RnG
- OqiMp56CXZXxcsQCZtpFzCMTCtnUMt43sLXJOuDbfB/XrpH6FtS0QAafBITUSYY5CHCiLuSy
- iTsUGZPBhNsKp+YxJraRnO6fxQI=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=E2B2AVpPz/YzRJqkK80E1/17qfCEhD/PP76V2xYd/b4=; b=eL2iL6SzVggJr5Lt+rGSpzvxk1VdTNQNR6EkdsbdJuIZnMkJX39av29yYxSCOy9tE0advfXn
+ +f5t6Za0rllK8p3jVvO30YALQW+SbFM/rezBgxGFV+aBW3ePn3c12KVLpV2xCfEZy5h3IxID
+ YD919Fb8mDWHoj/h9VTAk32Z2mo=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5edf8faa6bebe35deb576bd5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:33:30
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5edf8fa46bebe35deb57598f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:33:24
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D0AC7C43395; Tue,  9 Jun 2020 13:33:30 +0000 (UTC)
+        id 5275FC4339C; Tue,  9 Jun 2020 13:33:24 +0000 (UTC)
 Received: from vnaralas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: akolli)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEB51C43387;
-        Tue,  9 Jun 2020 13:33:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BEB51C43387
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7CA4CC43387;
+        Tue,  9 Jun 2020 13:33:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7CA4CC43387
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akolli@codeaurora.org
 From:   Anilkumar Kolli <akolli@codeaurora.org>
 To:     ath11k@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
         Anilkumar Kolli <akolli@codeaurora.org>
-Subject: [PATCH v2 5/8] ath11k: define max_radios in hw_params
-Date:   Tue,  9 Jun 2020 19:02:58 +0530
-Message-Id: <1591709581-18039-6-git-send-email-akolli@codeaurora.org>
+Subject: [PATCH v2 2/8] ath11k: update firmware files read path
+Date:   Tue,  9 Jun 2020 19:02:55 +0530
+Message-Id: <1591709581-18039-3-git-send-email-akolli@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
 References: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
@@ -62,111 +62,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define max_radios supported in hw_params.
+We need this so that all hardware versions can coexist and
+it's easier to manage everything then all hardware
+directories are under ath11k directory.
+
+Copy ath11k firmware files to
+/lib/firmware/ath11k/IPQ8074/hw2.0/
 
 Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
 ---
- drivers/net/wireless/ath/ath11k/core.c  | 2 ++
- drivers/net/wireless/ath/ath11k/dp_rx.c | 2 +-
- drivers/net/wireless/ath/ath11k/htc.c   | 2 +-
- drivers/net/wireless/ath/ath11k/hw.h    | 1 +
- drivers/net/wireless/ath/ath11k/reg.c   | 2 +-
- drivers/net/wireless/ath/ath11k/wmi.c   | 4 ++--
- 6 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath11k/hw.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index abe9edb56309..115db4c21e70 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -26,6 +26,7 @@ static const struct ath11k_hw_params ath11k_hw_params_list[] = {
- 			.board_size = IPQ8074_MAX_BOARD_DATA_SZ,
- 			.cal_size =  IPQ8074_MAX_CAL_DATA_SZ,
- 		},
-+		.max_radios = 3,
- 	},
- 	{
- 		.dev_id = ATH11K_HW_IPQ6018,
-@@ -35,6 +36,7 @@ static const struct ath11k_hw_params ath11k_hw_params_list[] = {
- 			.board_size = IPQ6018_MAX_BOARD_DATA_SZ,
- 			.cal_size =  IPQ6018_MAX_CAL_DATA_SZ,
- 		},
-+		.max_radios = 2,
- 	},
- };
- 
-diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
-index a54610d75c40..57aee0d9a124 100644
---- a/drivers/net/wireless/ath/ath11k/dp_rx.c
-+++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
-@@ -3792,7 +3792,7 @@ int ath11k_dp_rx_process_wbm_err(struct ath11k_base *ab,
- 	int total_num_buffs_reaped = 0;
- 	int ret, i;
- 
--	for (i = 0; i < MAX_RADIOS; i++)
-+	for (i = 0; i < ab->num_radios; i++)
- 		__skb_queue_head_init(&msdu_list[i]);
- 
- 	srng = &ab->hal.srng_list[dp->rx_rel_ring.ring_id];
-diff --git a/drivers/net/wireless/ath/ath11k/htc.c b/drivers/net/wireless/ath/ath11k/htc.c
-index ad13c648b679..bc0026c1e4a6 100644
---- a/drivers/net/wireless/ath/ath11k/htc.c
-+++ b/drivers/net/wireless/ath/ath11k/htc.c
-@@ -748,7 +748,7 @@ int ath11k_htc_init(struct ath11k_base *ab)
- 		htc->wmi_ep_count = 3;
- 		break;
- 	default:
--		htc->wmi_ep_count = 3;
-+		htc->wmi_ep_count = ab->hw_params.max_radios;
- 		break;
- 	}
- 
 diff --git a/drivers/net/wireless/ath/ath11k/hw.h b/drivers/net/wireless/ath/ath11k/hw.h
-index e66f0e0138c4..d1a08d529988 100644
+index dc4434aefbbe..6e065c4e5935 100644
 --- a/drivers/net/wireless/ath/ath11k/hw.h
 +++ b/drivers/net/wireless/ath/ath11k/hw.h
-@@ -112,6 +112,7 @@ enum ath11k_bus {
- struct ath11k_hw_params {
- 	const char *name;
- 	u16 dev_id;
-+	u8 max_radios;
- 	struct {
- 		const char *dir;
- 		size_t board_size;
-diff --git a/drivers/net/wireless/ath/ath11k/reg.c b/drivers/net/wireless/ath/ath11k/reg.c
-index 453aa9c06969..831f11d1b42e 100644
---- a/drivers/net/wireless/ath/ath11k/reg.c
-+++ b/drivers/net/wireless/ath/ath11k/reg.c
-@@ -695,7 +695,7 @@ void ath11k_reg_free(struct ath11k_base *ab)
- {
- 	int i;
+@@ -69,7 +69,7 @@
+ #define ATH11K_FW_DIR			"ath11k"
  
--	for (i = 0; i < MAX_RADIOS; i++) {
-+	for (i = 0; i < ab->hw_params.max_radios; i++) {
- 		kfree(ab->default_regd[i]);
- 		kfree(ab->new_regd[i]);
- 	}
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
-index c2a972377687..5324782c355b 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.c
-+++ b/drivers/net/wireless/ath/ath11k/wmi.c
-@@ -6152,7 +6152,7 @@ int ath11k_wmi_connect(struct ath11k_base *ab)
- 	u8 wmi_ep_count;
+ /* IPQ8074 definitions */
+-#define IPQ8074_FW_DIR			"IPQ8074"
++#define IPQ8074_FW_DIR			ATH11K_FW_DIR "/IPQ8074/hw2.0"
+ #define IPQ8074_MAX_BOARD_DATA_SZ	(256 * 1024)
+ #define IPQ8074_MAX_CAL_DATA_SZ		IPQ8074_MAX_BOARD_DATA_SZ
  
- 	wmi_ep_count = ab->htc.wmi_ep_count;
--	if (wmi_ep_count > MAX_RADIOS)
-+	if (wmi_ep_count > ab->hw_params.max_radios)
- 		return -1;
- 
- 	for (i = 0; i < wmi_ep_count; i++)
-@@ -6174,7 +6174,7 @@ int ath11k_wmi_pdev_attach(struct ath11k_base *ab,
- {
- 	struct ath11k_pdev_wmi *wmi_handle;
- 
--	if (pdev_id >= MAX_RADIOS)
-+	if (pdev_id >= ab->hw_params.max_radios)
- 		return -EINVAL;
- 
- 	wmi_handle = &ab->wmi_ab.wmi[pdev_id];
 -- 
 2.7.4
 
