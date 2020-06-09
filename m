@@ -2,222 +2,118 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F35EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CD8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF83C2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkSv/99g"
+	by mail.kernel.org (Postfix) with ESMTP id E255D20774
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591709186;
+	bh=PD6ch/MJQc9epSsTqGkjMHuE3Bn2LG6EcC5hHXFGdq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ms43FHLNOlNWhxLsDJDcagiebpmeiPlII1wn9m+pzSkBHdyYi/B6PSotkysiF9le0
+	 B60hjl4ZJ7V2hqM0RDJwMJ5yJ5FwzB5VZN+qH4KsVomSlpAvxCD6QWJNfuonzx7V3D
+	 bxKLTT5lDf4jcf582wQVEx/f6SZEMLyZILONY9DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgFINS7 (ORCPT
+        id S1728834AbgFIN0U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728906AbgFINOb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:14:31 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAA8C08C5C2;
-        Tue,  9 Jun 2020 06:14:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y11so23348190ljm.9;
-        Tue, 09 Jun 2020 06:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=r6f9+MOvkwq1aAaynwsAkKO2umWR0wN+jrBMe13wif8=;
-        b=kkSv/99gOI/t6u4mXuEC1Si/b5wfS61hLdZiZuJcLBD4SD5XNUB4OGCPwTKPQHewDh
-         WJlMxACKl0Uh4wgpLAM94ve+C1wuCJQFMENy3TvxdYc4gDQWBjNkL0eU6cvfIF1P0HU/
-         /UYMSBxVNj81W7nOjsn9GtqCvrjB6SRiPZxpKs7ZLwniJQH76f5OsqSATpUQ0dkdc3NV
-         kKGOqvNV6xYcSCAyhJHDCv+SWUDXLEE5fc3I6BYZwgjsJlEYqQMN7J1eoJzl7cSx6Yul
-         02YH8JIckFCOtgMJDcyqDadEyk/aMC8ObvjsuVTypsmrwyNRU5ZG3Hj8XqHT8lF4gM0c
-         PDBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=r6f9+MOvkwq1aAaynwsAkKO2umWR0wN+jrBMe13wif8=;
-        b=TBcX5s7XmeHuUm6kLyTgJTc49SCm8puL4LO1FkN1qcvVT8FNMk5SSEyFtkTPYSGqLm
-         +w68MthAiaqcb/rvp7EFuvVZTEaPm7q0Tp98oADzEai/cdIyPZWPA8z1rVrWKSAMj1Jb
-         j2b7Z9iHZG5CfYF4Jn6nW5L5qzQYHl5w3TkFLzjztMTjqSHgq6Wc2+uonUDSQKfpQRDG
-         d60u/IJlMKFx4NXoK0kYcUyLVF6REmlIA+YAk5IEtqbeHb+BKC3tlc2bMB2k63JJJcQ1
-         1f44bqzgM6VzO0ZBCgri1LutOqEPBdRCGMmY89AzlQyHC0fvrdApbaHxNt/5EUCYfCwg
-         Q9Dw==
-X-Gm-Message-State: AOAM5317qGK2vkXKwL14eGmGkWLWtKkALugBZpbdUJQTWitk0wPaBTj7
-        HCQ9qr/V6Eof22d3xeBvesM=
-X-Google-Smtp-Source: ABdhPJyb3PjfqSp+L3AKcWzLA0R8DGC3n8YGAq8iTxF1RrXpc11/Hufi5Iffw7zOD7eTzxa4tPog4w==
-X-Received: by 2002:a05:651c:1044:: with SMTP id x4mr9577629ljm.409.1591708467431;
-        Tue, 09 Jun 2020 06:14:27 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id l22sm4323522lji.120.2020.06.09.06.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:14:26 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v4 02/37] clk: tegra: Remove Memory Controller lock
-Date:   Tue,  9 Jun 2020 16:13:29 +0300
-Message-Id: <20200609131404.17523-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200609131404.17523-1-digetx@gmail.com>
-References: <20200609131404.17523-1-digetx@gmail.com>
+        Tue, 9 Jun 2020 09:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727787AbgFIN0U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:26:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7946A2074B;
+        Tue,  9 Jun 2020 13:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591709180;
+        bh=PD6ch/MJQc9epSsTqGkjMHuE3Bn2LG6EcC5hHXFGdq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m64ifHeq25sd9NUSmmUGWjukAom8pausfLbRSSwhrcFU3eCJVbVlg0ILMpKb/Vked
+         cAbbrFQLB4CNUK9xlRfrHUjsjod+WFOu1XpWokyplWBQ/zHrUOBIWmxvht7qCAMuLC
+         RQOC4Mh+5nXlCKj0YAB/Fe3BUxAOyMCTAMvT3N7k=
+Date:   Tue, 9 Jun 2020 14:26:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robin Gong <yibin.gong@nxp.com>
+Subject: Re: (EXT) Re: [PATCH v9 RESEND 01/13] spi: imx: add
+ dma_sync_sg_for_device after fallback from dma
+Message-ID: <20200609132617.GF4583@sirena.org.uk>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+ <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+ <4a663b38fe5c6b2ee37049fb0dcd88b70dbf232e.camel@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="924gEkU1VlJlwnwX"
+Content-Disposition: inline
+In-Reply-To: <4a663b38fe5c6b2ee37049fb0dcd88b70dbf232e.camel@ew.tq-group.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The shared Memory Controller lock isn't needed since the time when
-Memory Clock was made read-only. The lock could be removed safely now.
-Hence let's remove it, this will help a tad to make further patches
-cleaner.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-divider.c  | 4 ++--
- drivers/clk/tegra/clk-tegra114.c | 6 ++----
- drivers/clk/tegra/clk-tegra124.c | 7 ++-----
- drivers/clk/tegra/clk-tegra20.c  | 3 +--
- drivers/clk/tegra/clk-tegra30.c  | 3 +--
- drivers/clk/tegra/clk.h          | 2 +-
- 6 files changed, 9 insertions(+), 16 deletions(-)
+--924gEkU1VlJlwnwX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-index 38daf483ddf1..56adb01638cc 100644
---- a/drivers/clk/tegra/clk-divider.c
-+++ b/drivers/clk/tegra/clk-divider.c
-@@ -177,10 +177,10 @@ static const struct clk_div_table mc_div_table[] = {
- };
- 
- struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
--				  void __iomem *reg, spinlock_t *lock)
-+				  void __iomem *reg)
- {
- 	return clk_register_divider_table(NULL, name, parent_name,
- 					  CLK_IS_CRITICAL,
- 					  reg, 16, 1, CLK_DIVIDER_READ_ONLY,
--					  mc_div_table, lock);
-+					  mc_div_table, NULL);
- }
-diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
-index bc9e47a4cb60..ca8d9737d301 100644
---- a/drivers/clk/tegra/clk-tegra114.c
-+++ b/drivers/clk/tegra/clk-tegra114.c
-@@ -134,7 +134,6 @@ static DEFINE_SPINLOCK(pll_d_lock);
- static DEFINE_SPINLOCK(pll_d2_lock);
- static DEFINE_SPINLOCK(pll_u_lock);
- static DEFINE_SPINLOCK(pll_re_lock);
--static DEFINE_SPINLOCK(emc_lock);
- 
- static struct div_nmp pllxc_nmp = {
- 	.divm_shift = 0,
-@@ -1050,10 +1049,9 @@ static __init void tegra114_periph_clk_init(void __iomem *clk_base,
- 			       ARRAY_SIZE(mux_pllmcp_clkm),
- 			       CLK_SET_RATE_NO_REPARENT,
- 			       clk_base + CLK_SOURCE_EMC,
--			       29, 3, 0, &emc_lock);
-+			       29, 3, 0, NULL);
- 
--	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
--				    &emc_lock);
-+	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA114_CLK_MC] = clk;
- 
- 	clk = tegra_clk_register_periph_gate("mipi-cal", "clk_m", 0, clk_base,
-diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
-index e931319dcc9d..0c956e14b9ca 100644
---- a/drivers/clk/tegra/clk-tegra124.c
-+++ b/drivers/clk/tegra/clk-tegra124.c
-@@ -126,7 +126,6 @@ static DEFINE_SPINLOCK(pll_d_lock);
- static DEFINE_SPINLOCK(pll_e_lock);
- static DEFINE_SPINLOCK(pll_re_lock);
- static DEFINE_SPINLOCK(pll_u_lock);
--static DEFINE_SPINLOCK(emc_lock);
- static DEFINE_SPINLOCK(sor0_lock);
- 
- /* possible OSC frequencies in Hz */
-@@ -1050,8 +1049,7 @@ static __init void tegra124_periph_clk_init(void __iomem *clk_base,
- 					     periph_clk_enb_refcnt);
- 	clks[TEGRA124_CLK_DSIB] = clk;
- 
--	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
--				    &emc_lock);
-+	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA124_CLK_MC] = clk;
- 
- 	/* cml0 */
-@@ -1518,8 +1516,7 @@ static void __init tegra124_132_clock_init_post(struct device_node *np)
- 				  tegra124_reset_deassert);
- 	tegra_add_of_provider(np, of_clk_src_onecell_get);
- 
--	clks[TEGRA124_CLK_EMC] = tegra_clk_register_emc(clk_base, np,
--							&emc_lock);
-+	clks[TEGRA124_CLK_EMC] = tegra_clk_register_emc(clk_base, np, NULL);
- 
- 	tegra_register_devclks(devclks, ARRAY_SIZE(devclks));
- 
-diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
-index 3efc651b42e3..2f8b6de4198f 100644
---- a/drivers/clk/tegra/clk-tegra20.c
-+++ b/drivers/clk/tegra/clk-tegra20.c
-@@ -802,8 +802,7 @@ static void __init tegra20_periph_clk_init(void)
- 
- 	clks[TEGRA20_CLK_EMC] = clk;
- 
--	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
--				    NULL);
-+	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA20_CLK_MC] = clk;
- 
- 	/* dsi */
-diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
-index 37244a7e68c2..88e8c485f8ae 100644
---- a/drivers/clk/tegra/clk-tegra30.c
-+++ b/drivers/clk/tegra/clk-tegra30.c
-@@ -1042,8 +1042,7 @@ static void __init tegra30_periph_clk_init(void)
- 
- 	clks[TEGRA30_CLK_EMC] = clk;
- 
--	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
--				    NULL);
-+	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
- 	clks[TEGRA30_CLK_MC] = clk;
- 
- 	/* cml0 */
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 6b565f6b5f66..5ed8b95d331c 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -136,7 +136,7 @@ struct clk *tegra_clk_register_divider(const char *name,
- 		unsigned long flags, u8 clk_divider_flags, u8 shift, u8 width,
- 		u8 frac_width, spinlock_t *lock);
- struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
--				  void __iomem *reg, spinlock_t *lock);
-+				  void __iomem *reg);
- 
- /*
-  * Tegra PLL:
--- 
-2.26.0
+On Tue, Jun 09, 2020 at 12:09:09PM +0200, Matthias Schiffer wrote:
 
+> I assume the actual issue is that the SDMA controller is considered
+> registered before the firmware load has finished, but I have no idea
+> how feasible it would be to change that (some comments in the code
+> explain why this currently isn't the case).
+
+Right, this is what's causing trouble (or at least the DMA driver not
+doing PIO behind the driver I guess but that's pretty nasty).
+
+--924gEkU1VlJlwnwX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fjfkACgkQJNaLcl1U
+h9BfBAf8CV0CLky89IU/mEpL41EP3zYDh1CpOj14T0/q0rrhzJssgAgiQpuqedGZ
++DCbmgd/BwcI8pzX9h8VKeAd+A3aA7VX99WyBCuXC0HlTSpVXfNToMQJbPtTnZ6Z
+kOgDEW/grpy/YDCsJCbShsIhns0ziINTO7tY9uPaPqBXd9oMDgFLdWRT/FprI3Ev
+k7hg5PoMjblnT55/96ZZgOCUp8OsE1U9vI+o0gModN1ksRouto/eMfei4IibQA9s
+foKiP7g14rArPdSbl+JKhnjPvIt6wrxoNdD5TCh1ZH7u/MI7VrSRr5+OGhguRzha
+K7/XCESdTGTHW+s5NU5gyADCheFsvg==
+=iBCT
+-----END PGP SIGNATURE-----
+
+--924gEkU1VlJlwnwX--
