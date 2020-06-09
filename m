@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C165C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230C8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E1720812
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F302D20812
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 08:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Z26m9ZOT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0ljB9oFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgFIIId (ORCPT
+        id S1727788AbgFIIIq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 04:08:33 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:35539 "EHLO
+        Tue, 9 Jun 2020 04:08:46 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:35563 "EHLO
         esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIIIa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 04:08:30 -0400
+        with ESMTP id S1728156AbgFIIIk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 04:08:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591690109; x=1623226109;
+  t=1591690119; x=1623226119;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EXViZJNoUAiedo3upJN/pWpw3+V8c4VqVgPBgGd+VnY=;
-  b=Z26m9ZOT/j6PyPubsuQxYBIWSNrWK5Q0Oj1Id4ZLjUF/ohtrw84I0XL+
-   2gVJ1b5wEpuKroIg+kjUGi91rRc7aCWVukRwB+JTAq8EOjrdP6GnLDXo4
-   IerXyGR7OD4NOvXAVObZ8/h3ySOv9tZ221Dvv0RAyzRh/KxjQgcErDJEw
-   XRHUj1YLQgNSvJ94SdD0ipglLYk57wZuFwOxgJSOVu3H6EDo+pEW9dV1N
-   e7IOuChPHLB0drUPjGeNiw4PcnFxTQGSiPXVTPZW5nlYi+N7JBG8ssQwS
-   p7bxfWXJz6fh3JPnKDe5BAj95gpZSeHkP9AgXdGiDIDKJ9ov98x9abmLS
+  bh=8mLLYk0uqZ0EEHZBr4fBGxsB72v7sutGB5vvE2ygR9s=;
+  b=0ljB9oFEwZuMGjcgiQjwvJ2/ikiy7lnQBLgPCmL3sMmGD7PV0oWMeBPa
+   3csptAdTZATpUeg6Z3RwTjWI1WD+5WlCvOQQyBYHF8r8Lhp4pCXP7opov
+   iK6kbnkKVQgGC785+OGeK3UGfgCh+ntTfVZjOR6OEhgAbO3MvX8NjsOBc
+   EreXMjOU1AasvMRkta2gJYnDywboRMkGlOUiuIzE6jtgkdSqaKTFSZgXE
+   D+y/xAx/vemv9EmEJrgZLCiubt2TyKTMHea9VGaOrOX1Zgc17aWCGqmjU
+   JBd4fWUpljRMIdMpO9HRv6UiWZb1sgqFxvfMNv13vbIrDdUxtcph/1JZ+
    w==;
-IronPort-SDR: FLOeC5uNuX7vgoZEChRdO9fNed5hRF+qIDQ4ty7HM7RTm9TOpUIcfqEPmqjBJjRJibmmjawtUl
- Aanm9Il+p8QTRBNNifO3W/wSFrzf4uVHb/VxX9axuz6vH77JwFZPVx8ZP5ZtLeENHE2H+mOXLE
- e1MYSBBXbDf8OK+yw6J8/NrS1VFwjZf7CfPcXZlvc4qJRNRLvd7HiJpMXQ77vqTmFF0vXXKd5t
- /CsOJZ2pxXHJ5t/jdddtGSvoLFmByXXJZGdsOBymnfh6rB0T8gwwvWOHGYb6NxPaIvfrw3109L
- Whs=
+IronPort-SDR: fip+a2Jl4EFpakUOYuo/couh6s4iVqnMDrBPzOuJ4eeE7pkSGcUxRnMCGQLHtIhqRHy3ex0gia
+ pFxUqSqjJhSu/wMsWqQ+4PZkflSLFtKpomdGbPUYayvkRMsipj+pst8IFM5IaQjiL8W+X/zZBW
+ A9uc2vuZ9Imm8Ae7lwdIt2r7Fc3EKw4RJjdzPG7GNsShBCUHIq/6truWBjvyJJUXnSOPMhAeuf
+ vCwdTRGGfZdrNasVm2Vt+m4bxos8J14dOFFW10o25EtR/p2FTJdP2QSjhxCbMD9f3HId2SDMnD
+ 0u4=
 X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="79412819"
+   d="scan'208";a="79412866"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 01:08:29 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 01:08:38 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 01:08:28 -0700
+ 15.1.1847.3; Tue, 9 Jun 2020 01:08:38 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 01:08:25 -0700
+ 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 01:08:35 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 To:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
         "Linus Walleij" <linus.walleij@linaro.org>
@@ -64,9 +64,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 06/10] dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
-Date:   Tue, 9 Jun 2020 10:07:05 +0200
-Message-ID: <20200609080709.9654-6-lars.povlsen@microchip.com>
+Subject: [PATCH v2 09/10] arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+Date:   Tue, 9 Jun 2020 10:07:08 +0200
+Message-ID: <20200609080709.9654-9-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200609080709.9654-1-lars.povlsen@microchip.com>
 References: <20200608123024.5330-1-lars.povlsen@microchip.com>
@@ -79,72 +79,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This add the DT bindings documentation for the Sparx5 SoC DPLL clock
+This adds a DPLL clock to the Sparx5 SoC. It is used to generate clock
+to misc peripherals, specifically the SDHCI/eMMC controller.
 
 Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- .../bindings/clock/microchip,sparx5-dpll.yaml | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+ arch/arm64/boot/dts/microchip/sparx5.dtsi | 37 ++++++++++++++---------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
-new file mode 100644
-index 0000000000000..39559a0a598ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/microchip,sparx5-dpll.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+index baf4176ce1dfe..d4d7f9ce627bc 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+@@ -72,20 +72,29 @@ timer {
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+ 	};
+
+-	clocks: clocks {
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges;
+-		ahb_clk: ahb-clk {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <250000000>;
+-		};
+-		sys_clk: sys-clk {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <625000000>;
+-		};
++	lcpll_clk: lcpll-clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <2500000000>;
++	};
 +
-+title: Microchip Sparx5 DPLL Clock
++	clks: clock-controller@61110000c {
++		compatible = "microchip,sparx5-dpll";
++		#clock-cells = <1>;
++		clocks = <&lcpll_clk>;
++		reg = <0x6 0x1110000c 0x24>;
++	};
 +
-+maintainers:
-+  - Lars Povlsen <lars.povlsen@microchip.com>
++	ahb_clk: ahb-clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <250000000>;
++	};
 +
-+description: |
-+  The Sparx5 DPLL clock controller generates and supplies clock to
-+  various peripherals within the SoC.
-+
-+properties:
-+  compatible:
-+    const: microchip,sparx5-dpll
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  # Clock provider for eMMC:
-+  - |
-+    lcpll_clk: lcpll-clk {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <2500000000>;
-+    };
-+    clks: clock-controller@61110000c {
-+        compatible = "microchip,sparx5-dpll";
-+        #clock-cells = <1>;
-+        clocks = <&lcpll_clk>;
-+        reg = <0x1110000c 0x24>;
-+    };
-+
-+...
++	sys_clk: sys-clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <625000000>;
+ 	};
+
+ 	axi: axi@600000000 {
 --
 2.27.0
