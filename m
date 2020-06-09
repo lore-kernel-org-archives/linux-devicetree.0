@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3C1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99D4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A06420737
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFEA2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K97/qA90"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btlSe6N5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgFIQC5 (ORCPT
+        id S1731151AbgFIQDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:02:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
+        Tue, 9 Jun 2020 12:03:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbgFIQCw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:02:52 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DAE8C05BD1E;
-        Tue,  9 Jun 2020 09:02:52 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l17so3373667wmj.0;
-        Tue, 09 Jun 2020 09:02:52 -0700 (PDT)
+        with ESMTP id S1731043AbgFIQCz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:02:55 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E54AC08C5C4;
+        Tue,  9 Jun 2020 09:02:55 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id d128so3718477wmc.1;
+        Tue, 09 Jun 2020 09:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gHs2Hmq/cMCtHez1Sl38pen96RVcvfaVKKusUUWkl1Q=;
-        b=K97/qA90mFaAplYpbm7F7z6CsBsM6H9J8R1c0/lpUWri6OShcydYyNmR4zb7C90DPv
-         lzbveyB8n7KH5x7+d5JLQYfYL+4v87f5ay7UyTtCRDPgS68feFvsW7xi+scpGHQF/pbB
-         Q5UlwcTfmrY0Qkn+aAzLpgiE61pk1cLteFqtyKbyxdztUno48dpmvyTfRijr6dffUWkO
-         aQ0rlvhE3b8YvdkpGytGxC0fBVJw33xeSs2UUPEihXILj25m5LRjSX1v8gZpQiQuFT+1
-         ch1A0brU58L6CxPrb9bRnlPYn1/nyG168zVBmY634uiOrwXNnU6IkutNoOZpt8yevZbY
-         2INA==
+        bh=v7+g5Y6J+VIP2hyLQn1gOGrcKQu1nQn5MWWY3BJimHA=;
+        b=btlSe6N5f0mgQg4Y7OSd90T4VNRMtgo8b62cGj5NRhNQoMD0bG5yfZb3txpvWR2BEu
+         fxgwpVY8GRGO2M7V7O5xI5L6a+Sttal+8lDGQILB6sbNPjH+2CrP/fwfXr7UoVpRwFfs
+         jh7yHVB69j8eeSjLYWlbS3Xz7ym8cF6Q7VIQtzYCDPRU1qUc5EUuOZ+6PjBrvHIJ9GUf
+         y84TS3IAOKtvy0lcP15m3tR3t7YVxd//OVwSX1/8h7jrTbTeMLNVnNU8rUPJMnq+spNp
+         /Poiso72FyHlTfHD4o9EMb9s2Plhsf1LeWiXKrA/HLV3FoLu8rvkGiYImpEBanad4n7i
+         L3Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gHs2Hmq/cMCtHez1Sl38pen96RVcvfaVKKusUUWkl1Q=;
-        b=cOXim3hhifWUkzsJC5eeZgGya/WrJmW46MjUVpGLR/wY8PuNSQdhJWXs/Edekw7ytl
-         VpfXpUnym/C6aeUX32XUaEgf5MO4qR+5UiLvbUu0sEOrSRp/ZfUOptsRxaF035Ffn3S8
-         qCw5QjlBkCpfUJwoPCjWUY+IHOPTDwXJFPdwbhleyruLJasBblz08eb/5gb1AeQ0AWDD
-         uirxYofc8nQbcpNL3yiRXW3N6MeAFt3E1u2wBoDms9QGwI+Im6fEa/nAPGzaS1Qnl03n
-         0+QfncLR1nv4Cana3uEsOSaD7MKADqA2wek1BtFWeODS0MUxtyXe/OBgu+psl1QfBmnH
-         GIIQ==
-X-Gm-Message-State: AOAM532H0Jkr1SfAEdknBpIYGvlcI9GGD/6reCwhnooygN63PdmiJwVA
-        30fAcBJWVBE21dZuoSJQhP0=
-X-Google-Smtp-Source: ABdhPJy5FnOofZd6hVNmjqzMApcPggZpuz45H9Syvb56WQml46U21uNA0VUMvIjObUutm3X5915RSw==
-X-Received: by 2002:a7b:cf35:: with SMTP id m21mr4922248wmg.181.1591718570565;
-        Tue, 09 Jun 2020 09:02:50 -0700 (PDT)
+        bh=v7+g5Y6J+VIP2hyLQn1gOGrcKQu1nQn5MWWY3BJimHA=;
+        b=LSZ2AAVWtfNbgcIaJGZI/yjA4piyeCYn5D+wU6dvTNxzV7/gCICvv4uSEk3DHG7GS3
+         sDCHPmqtqbq8RIOG7EKTC5D6dZ4Apj75/ABtzf0Spg+rOFafXHrtQoFzDlzZVu8epEUF
+         Ns23YwgyGhvnFGhK0fpJw5PnOYZIDiW9DcxAb/AVsymqbjeoXPRKZLO4qo2iyUlB+gC7
+         Tm8jrh7zYsaf7eWM+DNdA1DbqTki1B4gecuaHqrwD/aatrpFI/Kl+Dl6/YpKny9o2wAq
+         AME3GsHyiP54/oEAoyglqs2gtp4AlFhur590+X1oiDrkMdUpnch70hbnU6PxRKnO6qQK
+         OwSA==
+X-Gm-Message-State: AOAM532UtoR/liV8IxvUmzllu0TiWOk9UIu89wcoCt0FdFGksxc9jWsD
+        TOAsi+UogVpBLLuYynctv/4=
+X-Google-Smtp-Source: ABdhPJwc6V6htJyseRGO6OEK+YYDPMrLt46OS61F6ysv6c4T+Rb4Dao0AS6IoQh7Z5XFtHMZkbnfaQ==
+X-Received: by 2002:a1c:2d54:: with SMTP id t81mr5106166wmt.154.1591718573902;
+        Tue, 09 Jun 2020 09:02:53 -0700 (PDT)
 Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id y14sm3341864wma.25.2020.06.09.09.02.49
+        by smtp.gmail.com with ESMTPSA id y14sm3341864wma.25.2020.06.09.09.02.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:02:50 -0700 (PDT)
+        Tue, 09 Jun 2020 09:02:53 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
         bcm-kernel-feedback-list@broadcom.com
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v2 3/7] drivers: reset: simple: add BCM6345 reset support
-Date:   Tue,  9 Jun 2020 18:02:40 +0200
-Message-Id: <20200609160244.4139366-4-noltari@gmail.com>
+Subject: [PATCH v2 6/7] mips: bmips: dts: add BCM6362 reset controller support
+Date:   Tue,  9 Jun 2020 18:02:43 +0200
+Message-Id: <20200609160244.4139366-7-noltari@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200609160244.4139366-1-noltari@gmail.com>
 References: <20200609134232.4084718-1-noltari@gmail.com>
@@ -83,50 +83,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for resetting blocks through the Linux reset controller
-subsystem for BCM63xx SoCs.
+BCM6362 SoCs have a reset controller for certain components.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- v2: add compatibility to reset-simple instead of adding a new driver.
+ v2: no changes.
 
- drivers/reset/Kconfig        | 3 ++-
- drivers/reset/reset-simple.c | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/boot/dts/brcm/bcm6362.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d9efbfd29646..84d29b585e9b 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -153,7 +153,7 @@ config RESET_SCMI
+diff --git a/arch/mips/boot/dts/brcm/bcm6362.dtsi b/arch/mips/boot/dts/brcm/bcm6362.dtsi
+index 8ae6981735b8..443af6b4c838 100644
+--- a/arch/mips/boot/dts/brcm/bcm6362.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6362.dtsi
+@@ -70,6 +70,12 @@ reboot: syscon-reboot@10000008 {
+ 			mask = <0x1>;
+ 		};
  
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REALTEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC
-+	default ARCH_AGILEX || ARCH_ASPEED || ARCH_BITMAIN || ARCH_REALTEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARC || BMIPS_GENERIC
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-@@ -163,6 +163,7 @@ config RESET_SIMPLE
- 	   - Altera SoCFPGAs
- 	   - ASPEED BMC SoCs
- 	   - Bitmain BM1880 SoC
-+	   - BMIPS (BCM6345)
- 	   - Realtek SoCs
- 	   - RCC reset controller in STM32 MCUs
- 	   - Allwinner SoCs
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 067e7e7b34f1..c00bb65c0b70 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -118,6 +118,7 @@ static const struct reset_simple_devdata reset_simple_active_low = {
- static const struct of_device_id reset_simple_dt_ids[] = {
- 	{ .compatible = "altr,stratix10-rst-mgr",
- 		.data = &reset_simple_socfpga },
-+	{ .compatible = "brcm,bcm6345-reset" },
- 	{ .compatible = "st,stm32-rcc", },
- 	{ .compatible = "allwinner,sun6i-a31-clock-reset",
- 		.data = &reset_simple_active_low },
++		periph_rst: reset-controller@10000010 {
++			compatible = "brcm,bcm6345-reset";
++			reg = <0x10000010 0x4>;
++			#reset-cells = <1>;
++		};
++
+ 		periph_intc: interrupt-controller@10000020 {
+ 			compatible = "brcm,bcm6345-l1-intc";
+ 			reg = <0x10000020 0x10>,
 -- 
 2.26.2
 
