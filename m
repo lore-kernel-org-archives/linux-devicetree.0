@@ -2,442 +2,123 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA55C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519EDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C8F2078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vfKyVdxR"
+	by mail.kernel.org (Postfix) with ESMTP id 2F4B020812
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591720115;
+	bh=8sNTrAUtKML2UxjNLUcCvxl5yxTMZGZg4hHFZh+vqYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fFz9KW1vI4FpUtPe4Wqi6PibxyP4DDjmVU/R408GEXSUN93hohon/PiwSv95Wa1iX
+	 6qriU2HMH3lgKDwOlg2b82VIsAIDTBb4nIintV6rc/4qvhszNwjcMX4BlkcT5zAMHh
+	 THLa0zXu0wK5xEJ1+XEOOdm01TLZ6QEO/Zu9JOLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgFIQ0e (ORCPT
+        id S1727814AbgFIQ2e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgFIQ0d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:26:33 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4A4C05BD1E;
-        Tue,  9 Jun 2020 09:26:31 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id x1so23045745ejd.8;
-        Tue, 09 Jun 2020 09:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L9wKymHH/v6YunAl/pZm4DJsFjD8Guav1ycXTwqFKww=;
-        b=vfKyVdxRxA4q52gnUsYFw4pFYUu4DGV+yk/EOOlEdBQxj1G7G1e+GMtG+CjjpiwCxe
-         vSnxDZqt1mh4wExaCTrlRinXa0vic9S4GhsstXDSJwblbn+mp5Znuf7l+bW5R5kWx6vp
-         vAvokFjnQU5q7N9lp1imkWvZ/U+6FzifXYKcHbDvBvsDP5NWMJHqUOpaPpsehEiLB5xt
-         RXx5Mj/k9PNoPYROGUwL3M6Lxf/+C8xuJKuMsMZM7Lo9kyFP7z8bOh2H36tTWamVeWHC
-         sL3BUGeUnkwL4FBc/sXmo7SUKqkzZzdCLTiebtsgtwCCIWRLEXILcX0YeJZQ10fKTJ2y
-         jntA==
+        Tue, 9 Jun 2020 12:28:34 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36856 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgFIQ2e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 12:28:34 -0400
+Received: by mail-io1-f67.google.com with SMTP id r77so10472969ior.3;
+        Tue, 09 Jun 2020 09:28:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L9wKymHH/v6YunAl/pZm4DJsFjD8Guav1ycXTwqFKww=;
-        b=jurxOI5v8xJakmB8krl4AxVGlycfZgCbwLUQbU24uMEJYUXeXp53vosTWxPC1qY4WD
-         OGuhmIEI8HuX8t8zuBq/Krn4A/ZhlbOPXM1VaGvYcIXsbI2qhH/NQsYpXjsCVYCGQdXg
-         BBaZVcROgseinsgedElzpBbLYHnWstc4jgA674bKcbM7pLUAvCygh+46Y0X0LGtanIoM
-         FTXNyDXA+Vc64BQCyrANDueyu+J2Gqu498ewHLqCIX6b/Q+0gUsiDkHN+p83LYQfSDqa
-         KrgpMAh/1MmWcpD271zYWnWANKRSRnXpAZr02e9RVyru9I/tUMEH2ztqf2P6hZv68ZrV
-         OpsQ==
-X-Gm-Message-State: AOAM533SLyfJTPHnwnKOLcO59WU5WRhXVwjsFl7gU9dEaMOio68jrxQW
-        u6acwCDKi79PbxZrbMAIxMc=
-X-Google-Smtp-Source: ABdhPJx4rgMVM78n7LsoCAFv0aB42Sqnt/xc+Emq8/snmpfRTfRhsfsSlFJPG8YDyDyIy9WJTrWyrQ==
-X-Received: by 2002:a17:906:aec3:: with SMTP id me3mr2000797ejb.94.1591719990308;
-        Tue, 09 Jun 2020 09:26:30 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id cb6sm15374049edb.18.2020.06.09.09.26.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A6vd48ocHYfhIgGf9VmwdBfWMzr2z9+KHgzkdfZG/Pw=;
+        b=gdc5NQvllc6HFYMiHDxPVFrXN1WzeG6f8xWMyfju/+9W1a/dTIaU/TiTGVumkwsnmk
+         N1rfHuKlDQimxSYMvp91xWBOHVyuT1wOSVDxYlTJYqjTb6IM3kYrdj1QB2gnztgHDVVx
+         T9jeeXvkmkPvPj7RyutsbMgkJ8UxJ/QcJQpHgWazEt0SENDEy1G9OBRhv3XvO19yxEa3
+         vywbsfTsCsQgIgQIhlmAxS/ecYzbEUJlbQ6/5MCJVV5eVhrbkMEp7lAB35SxCelzlRNV
+         ezzpl+DW8XdZHIRw8OxyW6D7XxUMyw3ZDt+Q58/KcjndZ0DjF9+TFCX85SKtXBqvqFch
+         SrcA==
+X-Gm-Message-State: AOAM5321vBUx3YzsRbR/08cBtvMMGXjHs0lmIQkXipXsR38MJDA8fFgp
+        V1gko/kAdGR1ZRfkDt1qZA==
+X-Google-Smtp-Source: ABdhPJxppbDKoA41o6uRyry3FgAKOA+jukh4Ub5WxT2GMgvWiM/pMXyEGjvEw/XePOisx3B4ZJrI5Q==
+X-Received: by 2002:a05:6638:1483:: with SMTP id j3mr27698460jak.65.1591720112867;
+        Tue, 09 Jun 2020 09:28:32 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id y13sm7449594iob.51.2020.06.09.09.28.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:26:29 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH] dt-bindings: pci: iommu: Convert to json-schema
-Date:   Tue,  9 Jun 2020 18:26:28 +0200
-Message-Id: <20200609162628.1769705-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 09 Jun 2020 09:28:32 -0700 (PDT)
+Received: (nullmailer pid 1020807 invoked by uid 1000);
+        Tue, 09 Jun 2020 16:28:30 -0000
+Date:   Tue, 9 Jun 2020 10:28:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-watchdog@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lee Jones <lee.jones@linaro.org>, Li Yang <leoyang.li@nxp.com>,
+        linux-gpio@vger.kernel.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 01/11] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200609162830.GA1019634@bogus>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-2-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604211039.12689-2-michael@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, 04 Jun 2020 23:10:29 +0200, Michael Walle wrote:
+> Add a device tree bindings for the board management controller found on
+> the Kontron SMARC-sAL28 board.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
+>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
+>  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
+>  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++++++++
+>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+>  6 files changed, 358 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+> 
 
-Convert the PCI IOMMU device tree bindings from free-form text format to
-json-schema.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- .../devicetree/bindings/pci/pci-iommu.txt     | 171 ------------------
- .../devicetree/bindings/pci/pci-iommu.yaml    | 168 +++++++++++++++++
- 2 files changed, 168 insertions(+), 171 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
- create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.yaml
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt b/Documentation/devicetree/bindings/pci/pci-iommu.txt
-deleted file mode 100644
-index 0def586fdcdf..000000000000
---- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
-+++ /dev/null
-@@ -1,171 +0,0 @@
--This document describes the generic device tree binding for describing the
--relationship between PCI(e) devices and IOMMU(s).
--
--Each PCI(e) device under a root complex is uniquely identified by its Requester
--ID (AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
--Function number.
--
--For the purpose of this document, when treated as a numeric value, a RID is
--formatted such that:
--
--* Bits [15:8] are the Bus number.
--* Bits [7:3] are the Device number.
--* Bits [2:0] are the Function number.
--* Any other bits required for padding must be zero.
--
--IOMMUs may distinguish PCI devices through sideband data derived from the
--Requester ID. While a given PCI device can only master through one IOMMU, a
--root complex may split masters across a set of IOMMUs (e.g. with one IOMMU per
--bus).
--
--The generic 'iommus' property is insufficient to describe this relationship,
--and a mechanism is required to map from a PCI device to its IOMMU and sideband
--data.
--
--For generic IOMMU bindings, see
--Documentation/devicetree/bindings/iommu/iommu.txt.
--
--
--PCI root complex
--================
--
--Optional properties
---------------------
--
--- iommu-map: Maps a Requester ID to an IOMMU and associated IOMMU specifier
--  data.
--
--  The property is an arbitrary number of tuples of
--  (rid-base,iommu,iommu-base,length).
--
--  Any RID r in the interval [rid-base, rid-base + length) is associated with
--  the listed IOMMU, with the IOMMU specifier (r - rid-base + iommu-base).
--
--- iommu-map-mask: A mask to be applied to each Requester ID prior to being
--  mapped to an IOMMU specifier per the iommu-map property.
--
--
--Example (1)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID,
--		 * identity-mapped.
--		 */
--		iommu-map = <0x0 &iommu 0x0 0x10000>;
--	};
--};
--
--
--Example (2)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID with the
--		 * function bits masked out.
--		 */
--		iommu-map = <0x0 &iommu 0x0 0x10000>;
--		iommu-map-mask = <0xfff8>;
--	};
--};
--
--
--Example (3)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID,
--		 * but the high bits of the bus number are flipped.
--		 */
--		iommu-map = <0x0000 &iommu 0x8000 0x8000>,
--			    <0x8000 &iommu 0x0000 0x8000>;
--	};
--};
--
--
--Example (4)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu_a: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	iommu_b: iommu@b {
--		reg = <0xb 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	iommu_c: iommu@c {
--		reg = <0xc 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * Devices with bus number 0-127 are mastered via IOMMU
--		 * a, with sideband data being RID[14:0].
--		 * Devices with bus number 128-255 are mastered via
--		 * IOMMU b, with sideband data being RID[14:0].
--		 * No devices master via IOMMU c.
--		 */
--		iommu-map = <0x0000 &iommu_a 0x0000 0x8000>,
--			    <0x8000 &iommu_b 0x0000 0x8000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.yaml b/Documentation/devicetree/bindings/pci/pci-iommu.yaml
-new file mode 100644
-index 000000000000..8aaa8e657559
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/pci-iommu.yaml
-@@ -0,0 +1,168 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/pci-iommu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCI IOMMU bindings
-+
-+maintainers:
-+  - Rob Herring <robh+dt@kernel.org>
-+
-+description: |
-+  This document describes the generic device tree binding for describing the
-+  relationship between PCI(e) devices and IOMMU(s).
-+
-+  Each PCI(e) device under a root complex is uniquely identified by its
-+  Requester ID (AKA RID). A Requester ID is a triplet of a Bus number, Device
-+  number, and Function number.
-+
-+  For the purpose of this document, when treated as a numeric value, a RID is
-+  formatted such that:
-+
-+    * Bits [15:8] are the Bus number.
-+    * Bits [7:3] are the Device number.
-+    * Bits [2:0] are the Function number.
-+    * Any other bits required for padding must be zero.
-+
-+  IOMMUs may distinguish PCI devices through sideband data derived from the
-+  Requester ID. While a given PCI device can only master through one IOMMU, a
-+  root complex may split masters across a set of IOMMUs (e.g. with one IOMMU
-+  per bus).
-+
-+  The generic 'iommus' property is insufficient to describe this relationship,
-+  and a mechanism is required to map from a PCI device to its IOMMU and
-+  sideband data.
-+
-+  For generic IOMMU bindings, see
-+  Documentation/devicetree/bindings/iommu/iommu.txt.
-+
-+properties:
-+  iommu-map:
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: |
-+      Maps a Requester ID to an IOMMU and associated IOMMU specifier data.
-+
-+      The property is an arbitrary number of tuples of (rid-base, iommu,
-+      iommu-base, length).
-+
-+      Any RID r in the interval [rid-base, rid-base + length) is associated
-+      with the listed IOMMU, with the IOMMU specifier (r - rid-base +
-+      iommu-base).
-+
-+  iommu-map-mask:
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    description:
-+      A mask to be applied to each Requester ID prior to being mapped to an
-+      IOMMU specifier per the iommu-map property.
-+
-+examples:
-+  - |
-+    iommu0: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * The sideband data provided to the IOMMU is the RID,
-+         * identity-mapped.
-+         */
-+        iommu-map = <0x0 &iommu0 0x0 0x10000>;
-+    };
-+
-+  - |
-+    iommu1: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * The sideband data provided to the IOMMU is the RID with the
-+         * function bits masked out.
-+         */
-+        iommu-map = <0x0 &iommu 0x0 0x10000>;
-+        iommu-map-mask = <0xfff8>;
-+    };
-+
-+  - |
-+    iommu2: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * The sideband data provided to the IOMMU is the RID,
-+         * but the high bits of the bus number are flipped.
-+         */
-+        iommu-map = <0x0000 &iommu2 0x8000 0x8000>,
-+                    <0x8000 &iommu2 0x0000 0x8000>;
-+    };
-+
-+  - |
-+    iommu_a: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    iommu_b: iommu@b {
-+        reg = <0xb 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    iommu_c: iommu@c {
-+        reg = <0xc 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * Devices with bus number 0-127 are mastered via IOMMU
-+         * a, with sideband data being RID[14:0].
-+         * Devices with bus number 128-255 are mastered via
-+         * IOMMU b, with sideband data being RID[14:0].
-+         * No devices master via IOMMU c.
-+         */
-+        iommu-map = <0x0000 &iommu_a 0x0000 0x8000>,
-+                    <0x8000 &iommu_b 0x0000 0x8000>;
-+    };
--- 
-2.24.1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.example.dt.yaml: sl28cpld@4a: 'gpio@1a', 'gpio@1b', 'hwmon@b', 'interrupt-controller@1c', 'pwm@c', 'pwm@e' do not match any of the regexes: '^gpio(@[0-9]+)?$', '^hwmon(@[0-9]+)?$', '^interrupt-controller(@[0-9]+)?$', '^pwm(@[0-9]+)?$', '^watchdog(@[0-9]+)?$', 'pinctrl-[0-9]+'
+
+See https://patchwork.ozlabs.org/patch/1303780
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
