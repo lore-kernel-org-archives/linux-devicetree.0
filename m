@@ -2,219 +2,71 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E051C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3FFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1536C2078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edsSdQ4Q"
+	by mail.kernel.org (Postfix) with ESMTP id 60913207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 11:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgFILBu (ORCPT
+        id S1726463AbgFILK3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 07:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgFILBn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 07:01:43 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA17C05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 04:01:41 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id x14so20791600wrp.2
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 04:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=iB53fyHzOurV8WdYm7waEB55kXvEexrCk4tRbKxo6YI=;
-        b=edsSdQ4QUBpCuB6ZPxpjxCtDs5OUBve70dB4X0lVcjkKYwBmqZTB3bftQdMdiKXNrx
-         wwFVVppfJOChLOr/f53rT5T2krx/Uhjjymd9BP5jhTkVFLmVKnnNhxygJCDOJlTKmvUO
-         LNk9TQ9qkJGQwcHjLG423MfiCBjALXoUGO9MSv/FGHO3AH4hJLlEeFTlrVJK3eP5vwyP
-         WVw6nLwQjJsdur3OniBYIrNl9VZ2OVVMBINsgPWWSHvZuXJEkl4Eo+uUsjiLoQXqHO7e
-         LGDpTWKsiltd77WdjxD+zqK3YFh4lOxyPt9tj1QKnCnjhHFmTPhiEPJ/3TIkunDx1j2q
-         RaNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=iB53fyHzOurV8WdYm7waEB55kXvEexrCk4tRbKxo6YI=;
-        b=FTmI+XcHgulOdYDJmEW6eVEDvBfsw5woG43zPrZunVHqVeQiaH1rPBj3zuhSEtLscR
-         +dbaMq94XA06/3Ba6Opr/m8pm5t9ote/k3ORSwJDq02QLMFASsRmc4OB/rv3umL5eOpv
-         yAwBLTLp4+b5MK9IjzKC1jU4miLYPp/zoFVzF4sDC9Y+xM5FQ+ysNEavJGigRWkeJgOY
-         ENpiatM8A1W/iJRJrsXgfme8gg87J3P3FackEe7vVbw0c73EeZEvwnCo43IjOuSxKSCi
-         irw+naYdL8wUX/5xWUJpcIUjhLm9x1q4PRTfwrZ7UQYACcsGSBhFlV8ZJgAgcej1vXMP
-         xKLA==
-X-Gm-Message-State: AOAM530+VyI/TDdFKnTvsHnx64bPVyHroIT6CVUZdwsX5QEmW5cXFv9R
-        T4H/mzbqHkmeV5tzPpN4sTuCVQ==
-X-Google-Smtp-Source: ABdhPJxUCvhfV5sICUWSHzMa0DDaIudbYgwZyo/QOT3BfQ+SWUwccYk1omI3D7D2PB+sN+Y9A0ZMjg==
-X-Received: by 2002:a5d:6144:: with SMTP id y4mr3917686wrt.185.1591700499422;
-        Tue, 09 Jun 2020 04:01:39 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id y66sm2578230wmy.24.2020.06.09.04.01.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 04:01:37 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 12:01:36 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        GregKroah-Hartmangregkh@linuxfoundation.org
-Subject: [RFC] MFD's relationship with Device Tree (OF)
-Message-ID: <20200609110136.GJ4106@dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Tue, 9 Jun 2020 07:10:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:39536 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbgFILK2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 07:10:28 -0400
+IronPort-SDR: HZEpOpW3Sa3I0c5eXYCVsQF2z6S0GhpC9hoQL8lIF+GAgEMlRkjL0WUdLUTJlyt/zqATqFcSUx
+ UOKcLIZ+PA4Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 04:10:28 -0700
+IronPort-SDR: AEwrycebfpER+iAA9i20J217dU73zmxVPR+O4cMVHtQjNBhd9Jq//NPONiPpK4DllGf1CIwuVR
+ wBJx9oiFp5wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,491,1583222400"; 
+   d="scan'208";a="349485957"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jun 2020 04:10:24 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, balbi@kernel.org
+Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
+        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com,
+        andriy.shevchenko@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v1 0/2] usb : phy: Add USB PHY support on Intel LGM SoC
+Date:   Tue,  9 Jun 2020 19:08:48 +0800
+Message-Id: <20200609110850.43469-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Good morning,
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
 
-After a number of reports/queries surrounding a known long-term issue
-in the MFD core, including the submission of a couple of attempted
-solutions, I've decided to finally tackle this one myself.
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+  usb: phy: Add USB3 PHY support for Intel LGM SoC
 
-Currently, when a child platform device (sometimes referred to as a
-sub-device) is registered via the Multi-Functional Device (MFD) API,
-the framework attempts to match the newly registered platform device
-with its associated Device Tree (OF) node.  Until now, the device has
-been allocated the first node found with an identical OF compatible
-string.  Unfortunately, if there are, say for example '3' devices
-which are to be handled by the same driver and therefore have the same
-compatible string, each of them will be allocated a pointer to the
-*first* node.
-
-Let me give you an example.
-
-I have knocked up an example 'parent' and 'child' device driver.  The
-parent utilises the MFD API to register 3 identical children, each
-controlled by the same driver.  This happens a lot.  Fortunately, in
-the majority of cases, the OF nodes are also totally identical, but
-what if you wish to configure one of the child devices with different
-attributes or resources supplied via Device Tree, like a clock?  This
-is currently impossible.
-
-Here is the Device Tree representation for the 1 parent and the 3
-child (sub) devices described above:
-
-        parent {
-                compatible = "mfd,of-test-parent";
-
-                child@0 {
-                        compatible = "mfd,of-test-child";
-			clocks = <&clock 0>;
-                };
-
-                child@1 {
-                        compatible = "mfd,of-test-child";
-			clocks = <&clock 1>;
-		};
-
-	        child@2 {
-                        compatible = "mfd,of-test-child";
-			clocks = <&clock 2>;
-                };
-        };
-
-This is how we register those devices from MFD:
-
-static const struct mfd_cell mfd_of_test_cell[] = {
-        OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 0, "mfd,of-test-child"),
-        OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 1, "mfd,of-test-child"),
-	OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 2, "mfd,of-test-child")
-};
-
-... which we pass into mfd_add_devices() for processing.
-
-In an ideal world.  The devices with the platform_id; 0, 1 and 2 would
-be matched up to Device Tree nodes; child@0, child@1 and child@2
-respectively.  Instead all 3 devices will be allocated a pointer to
-child@0's OF node, which is obviously not correct.
-
-This is how it looks when each of the child devices are probed:
-
- [0.708287] mfd-of-test-parent mfd_of_test: Registering 3 devices
- [...]
- [0.712511] mfd-of-test-child mfd_of_test_child.0: Probing platform device: 0
- [0.712710] mfd-of-test-child mfd_of_test_child.0: Using OF node: child@0
- [0.713033] mfd-of-test-child mfd_of_test_child.1: Probing platform device: 1
- [0.713381] mfd-of-test-child mfd_of_test_child.1: Using OF node: child@0
- [0.713691] mfd-of-test-child mfd_of_test_child.2: Probing platform device: 2
- [0.713889] mfd-of-test-child mfd_of_test_child.2: Using OF node: child@0
-
-"Why is it when I change child 2's clock rate, it also changes 0's?"
-
-Whoops!
-
-So in order to fix this, we need to make MFD more-cleverer!
-
-However, this is not so simple.  There are some rules we should abide
-by (I use "should" intentionally here, as something might just have to
-give):
-
- a) Since Device Tree is designed to describe hardware, inserting
-    arbitrary properties into DT is forbidden.  This precludes things
-    we would ordinarily be able to match on, like 'id' or 'name'.
- b) As an extension to a) DTs should also be OS agnostic, so
-    properties like 'mfd-device', 'mfd-order' etc are also not
-    not suitable for inclusion.
- c) The final solution should ideally be capable of supporting both
-    newly defined and current trees (without retroactive edits)
-    alike.
- d) Existing properties could be used, but not abused.  For example,
-    one of my suggestions (see below) is to use the 'reg' property.
-    This is fine in principle but loading 'reg' with arbitrary values
-    (such as; 0, 1, 2 ... x) which 1) clearly do not have anything to
-    do with registers and 2) would be meaningless in other OSes/
-    implementations, just to serve our purpose, is to be interpreted
-    as an abuse.
-
-Proposal 1:
-
-As mentioned above, my initial thoughts were to use the 'reg' property
-to match an MFD cell entry with the correct DT node.  However, not
-all Device Tree nodes have 'reg' properties.  Particularly true in the
-case of MFD, where memory resources are usually shared with the parent
-via Regmap, or (as in the case of the ab8500) the MFD handles all
-register transactions via its own API. 
-
-Proposal 2:
-
-If we can't guarantee that all DT nodes will have at least one
-property in common to be used for matching and we're prevented from
-supplying additional, potentially bespoke properties, then we must
-seek an alternative procedure.
-
-It should be possible to match based on order.  However, the developer
-would have to guarantee that the order in which the child devices are
-presented to the MFD API are in exactly the same order as they are
-represented in the Device Tree.  The obvious draw-back to this
-strategy is that it's potentially very fragile.
-
-Current Proposal:
-
-How about a collection of Proposal 1 and Proposal 2?  First we could
-attempt a match on the 'reg' property.  Then, if that fails, we would
-use the fragile-but-its-all-we-have Proposal 2 as the fall-back.
-
-Thoughts?
+ .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml |  53 ++++
+ drivers/usb/phy/Kconfig                            |  11 +
+ drivers/usb/phy/Makefile                           |   1 +
+ drivers/usb/phy/phy-lgm-usb.c                      | 269 +++++++++++++++++++++
+ 4 files changed, 334 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/usb/phy/phy-lgm-usb.c
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.11.0
+
