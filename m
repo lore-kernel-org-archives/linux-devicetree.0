@@ -2,75 +2,70 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D557EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254C8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2443206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FFD2072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="EXO0/Fk7"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="Afuo/4MC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388444AbgFITlJ (ORCPT
+        id S2389391AbgFITlr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:41:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58500 "EHLO
+        Tue, 9 Jun 2020 15:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389306AbgFITkl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:40:41 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B5F4C03E97C
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:40:41 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g18so18577610qtu.13
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:40:41 -0700 (PDT)
+        with ESMTP id S2389384AbgFITlo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:41:44 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE721C08C5C2
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:41:44 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id h185so26719pfg.2
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        d=konsulko.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pnDedjQOL66s3q5SdYOPeipPok+aT6SguDtHLjkXjY4=;
-        b=EXO0/Fk7WDyQINHdjVUmZeYFckIq1lM7Q9DZJBGCJyUS0oV+PRJGXYEgHJXlJBLKxH
-         wqZ3cAt1OWOwSGKsxQhF2MEsS9BiYZck/2FEVS4wLhWtasCkyCBa8mr6WyWJU1DMTGNR
-         4en4QMw4PODoaTgyepgS+1fvoTXMPcBn8kDcsWxCtoUphhYsCTxia6bDPesOJsNOlRlG
-         WtnAshGDnzroNZU3coRgfnue/sDXphxCzWRo7jBrNM4TKB5TJKuaasEpXMV+O5QqBqOo
-         WZmzonNiFNC6KU/povGQCPQQdqA9vixR27VeZ+G4mhLEsd7xZLPocfNIyNcnFZyRuBVZ
-         vyiw==
+        bh=tKjncVZ4QOe9AtcEsOqfdOIJlppfhRTgsX8dqfWz9G0=;
+        b=Afuo/4MCKsk638UL6cRXXyK+mDgOSMyHLpn5vOBhRNoKPQCDgl+M0Uj8XzX0bJWuYJ
+         c/dDLw4BBIXnUu15Zb/cIcm5HDugcu5iHISy7IZqTwmYRFxyOcZQT6BoJrmjcLh5VInZ
+         tj5sOtNvkGdeIqHAMqFiw//ciBmU59qGwtctY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pnDedjQOL66s3q5SdYOPeipPok+aT6SguDtHLjkXjY4=;
-        b=eUH44VegxDjO4Tba0cbSIOlBCQu6WFc5iQ2BrKThmLp3I6cdaNcv12/M3LsrW4xi8V
-         NW7KF5Og8REkJhg1z/HUT5g/LK13ur5G83P/p/1gClmYOTOR65a+MYFUrgVZLovDUO2o
-         dzxOn9hbB8AITe13vbCmI+OHpkFn8a4oXHWfaMTnorh9OlPJtnshRzNETHlaBIEYLOPd
-         Jk1JZBmg7r+D6vkRecKBR9QGiH40z+bWS+WR66J5ewxsJY3DuNWKWNbPVdGmCrjEKNwk
-         52XOL7OpNlilQKGEfMW2OgS0Cxe1JDmXkkkpv88fmJCIBu3DRFHWnXsyEJWsxibUIc9X
-         i39Q==
-X-Gm-Message-State: AOAM53102TB1c48ru4vCtY346ecbzyEGje6vdlxor1HZqiTobFrn1Meb
-        16KOwxjMmANUga1ARA7Zo6O9dA==
-X-Google-Smtp-Source: ABdhPJwuO4TkhIT0yTCV35EfXAc856j9gUj0HfSEYOdt/oaoDLgaE0tL5n4J9bzZ+MGYvsuhNL1Ydw==
-X-Received: by 2002:ac8:794a:: with SMTP id r10mr30668450qtt.170.1591731640562;
-        Tue, 09 Jun 2020 12:40:40 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v8sm10513181qto.21.2020.06.09.12.40.39
+        bh=tKjncVZ4QOe9AtcEsOqfdOIJlppfhRTgsX8dqfWz9G0=;
+        b=ctahEGl249NZzTVWzq4Nwcnm0OKqGgf+Sze32FpmbaT7PZOKXcIFaxDcXL9YsNyj8m
+         pxEjZSleZl63uvOsHSHbpmVAi0DKXjjTtaxVDMlahM6Tl/piuh+FoUHQd5+x/b8u1jGb
+         0YqtbXtPqOj7oyVNjF3O6jntKVTFqIZ3Tos8qGK298uFSvYk7u7TdNBS2LmIvVy57qT7
+         VoEhejPjpFRRn/O5dcPHWfR1aNZDk+g9emahAhr8RnHzoYDYBCAwsYqCxCGDpQI0/naV
+         E4e29pGvECUFBBkY4z7181ZqryjBzAtu58SA2NKMJxBGh2g9KdAflWWIUJBcpM/2mGXj
+         xoLw==
+X-Gm-Message-State: AOAM532EBOipRNNO3ICym1l2NHY+LdF9ksALrQKAp6eu3t+z9RKsQ+RW
+        NWOza7pcgC3N+AZ3WHMi3QSNqv9LwkVYWg==
+X-Google-Smtp-Source: ABdhPJxsY59wlAe7u96jNUc1NqgqgXcXvHG5lQxGtLmG4W1wZtRJWLQrD/JmjZCM1sSUUi23YzvSSg==
+X-Received: by 2002:a62:ee0b:: with SMTP id e11mr8584104pfi.185.1591731704151;
+        Tue, 09 Jun 2020 12:41:44 -0700 (PDT)
+Received: from ubuntu.Home (anon-42-81.vpn.ipredator.se. [46.246.42.81])
+        by smtp.gmail.com with ESMTPSA id z85sm10563627pfc.66.2020.06.09.12.41.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 12:40:40 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 6/8] arm64: dts: qcom: sm8250: Add USB and PHY device nodes
-Date:   Tue,  9 Jun 2020 15:40:24 -0400
-Message-Id: <20200609194030.17756-7-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200609194030.17756-1-jonathan@marek.ca>
-References: <20200609194030.17756-1-jonathan@marek.ca>
+        Tue, 09 Jun 2020 12:41:43 -0700 (PDT)
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+To:     jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 2/3] dt-bindings: iio: chemical: add O2 EZO module documentation
+Date:   Tue,  9 Jun 2020 12:41:16 -0700
+Message-Id: <20200609194117.5837-3-matt.ranostay@konsulko.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200609194117.5837-1-matt.ranostay@konsulko.com>
+References: <20200609194117.5837-1-matt.ranostay@konsulko.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -78,205 +73,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device nodes for the USB3 controller, QMP SS PHY and
-SNPS HS PHY.
-
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 180 +++++++++++++++++++++++++++
- 1 file changed, 180 insertions(+)
+ .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 035f4552a0ff..25224d8cac4e 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -387,6 +387,186 @@ tcsr_mutex: hwlock@1f40000 {
- 			#hwlock-cells = <1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
+index 69e8931e0ae8..46496dc250f2 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
++++ b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
+@@ -19,6 +19,7 @@ description: |
+     http://www.atlas-scientific.com/_files/_datasheets/_oem/pH_oem_datasheet.pdf
+     http://www.atlas-scientific.com/_files/_datasheets/_oem/RTD_oem_datasheet.pdf
+     http://www.atlas-scientific.com/_files/_datasheets/_probe/EZO_CO2_Datasheet.pdf
++    https://www.atlas-scientific.com/files/EZO_O2_datasheet.pdf
  
-+		usb_1_hsphy: phy@88e3000 {
-+			compatible = "qcom,sm8250-usb-hs-phy",
-+				     "qcom,usb-snps-hs-7nm-phy";
-+			reg = <0 0x088e3000 0 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+		};
-+
-+		usb_2_hsphy: phy@88e4000 {
-+			compatible = "qcom,sm8250-usb-hs-phy",
-+				     "qcom,usb-snps-hs-7nm-phy";
-+			reg = <0 0x088e4000 0 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
-+		};
-+
-+		usb_1_qmpphy: phy@88e9000 {
-+			compatible = "qcom,sm8250-qmp-usb3-phy";
-+			reg = <0 0x088e9000 0 0x200>,
-+			      <0 0x088e8000 0 0x20>;
-+			reg-names = "reg-base", "dp_com";
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "ref_clk_src", "com_aux";
-+
-+			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-+				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_1_ssphy: lanes@88e9200 {
-+				reg = <0 0x088e9200 0 0x200>,
-+				      <0 0x088e9400 0 0x200>,
-+				      <0 0x088e9c00 0 0x400>,
-+				      <0 0x088e9600 0 0x200>,
-+				      <0 0x088e9800 0 0x200>,
-+				      <0 0x088e9a00 0 0x100>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_2_qmpphy: phy@88eb000 {
-+			compatible = "qcom,sm8250-qmp-usb3-uni-phy";
-+			reg = <0 0x088eb000 0 0x200>;
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_USB3_SEC_CLKREF_EN>,
-+				 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
-+
-+			resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
-+				 <&gcc GCC_USB3_PHY_SEC_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_2_ssphy: lane@88eb200 {
-+				reg = <0 0x088eb200 0 0x200>,
-+				      <0 0x088eb400 0 0x200>,
-+				      <0 0x088eb800 0 0x800>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_uni_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_1: usb@a6f8800 {
-+			compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
-+			reg = <0 0x0a6f8800 0 0x400>;
-+			status = "disabled";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			dma-ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
-+				 <&gcc GCC_USB3_SEC_CLKREF_EN>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep", "xo";
-+
-+			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <200000000>;
-+
-+			interrupts-extended = <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&pdc 14 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 15 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 17 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "dp_hs_phy_irq",
-+					  "dm_hs_phy_irq", "ss_phy_irq";
-+
-+			power-domains = <&gcc USB30_PRIM_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_PRIM_BCR>;
-+
-+			usb_1_dwc3: dwc3@a600000 {
-+				compatible = "snps,dwc3";
-+				reg = <0 0x0a600000 0 0xcd00>;
-+				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x0 0x0>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
-+		usb_2: usb@a8f8800 {
-+			compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
-+			reg = <0 0x0a8f8800 0 0x400>;
-+			status = "disabled";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			dma-ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_SEC_AXI_CLK>,
-+				 <&gcc GCC_USB30_SEC_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_SEC_AXI_CLK>,
-+				 <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_SEC_SLEEP_CLK>,
-+				 <&gcc GCC_USB3_SEC_CLKREF_EN>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep", "xo";
-+
-+			assigned-clocks = <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_SEC_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <200000000>;
-+
-+			interrupts-extended = <&intc GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&pdc 12 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 13 IRQ_TYPE_EDGE_BOTH>,
-+					      <&pdc 16 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "dp_hs_phy_irq",
-+					  "dm_hs_phy_irq", "ss_phy_irq";
-+
-+			power-domains = <&gcc USB30_SEC_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_SEC_BCR>;
-+
-+			usb_2_dwc3: dwc3@a800000 {
-+				compatible = "snps,dwc3";
-+				reg = <0 0x0a800000 0 0xcd00>;
-+				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+				iommus = <&apps_smmu 0x20 0>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_2_hsphy>, <&usb_2_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sm8250-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
+ properties:
+   compatible:
+@@ -29,6 +30,7 @@ properties:
+       - atlas,ph-sm
+       - atlas,rtd-sm
+       - atlas,co2-ezo
++      - atlas,o2-ezo
+ 
+   reg:
+      maxItems: 1
 -- 
-2.26.1
+2.25.1
 
