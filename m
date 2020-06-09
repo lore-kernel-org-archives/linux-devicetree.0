@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D498DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AD8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B18AE2078D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E65D120760
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1KrU7/E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQBCPOQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbgFIRBf (ORCPT
+        id S1731397AbgFIRBh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33906 "EHLO
+        Tue, 9 Jun 2020 13:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731390AbgFIRBc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 13:01:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C86C03E97C
+        with ESMTP id S1731388AbgFIRBe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 13:01:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE4B7C05BD1E
         for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 10:01:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y17so22123085wrn.11
+Received: by mail-wm1-x344.google.com with SMTP id r15so3880548wmh.5
         for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 10:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WKkGKM1i+ZwjQU8y1F8HIyZFPfYPlnsKwCB0yR3tEE4=;
-        b=l1KrU7/E31ITIYvTfzAncU/3ntg1p3J+hQNm2CqUP6C5TwinNB1fmslNVYfUmaA97+
-         sXblARRGnzrbPvsWKUx3u3rXRfM+wZayRivtffPho7e6cSWIyu9kMVw18Gbimj3DpJiD
-         lig01x0hwrbI6AHS9YT8uQPrxhQPI8XC8b+jmYeH9Bzve/2XACyki0NJHzUcb+6bG65g
-         B+noBL8e0g3PEanuKZC8jntVyKlxjgOocmPzvxzezW0T7jsMLfZ4/zGQT2gD8DzAEWa/
-         vh2j6aGy5sapw2/KXUmkWNDF/B/rcNVedbz9Jt0y81K2XxU6EYuIwx7WR4hVIhEIK4sN
-         w0kw==
+        bh=56AvKWjySgBgySSonnii/IUH4GT5dcqEj7+lumT1cRY=;
+        b=XQBCPOQcVAJQlXTu6CWnVAFcgJLUEWrBEKEyghumX8BpKiSz/NS70PbTAcrACrc1QX
+         68g9Yhyn00KF4e/vDRky98Ac6TJQohJD8MhVucqhHVTMahC6w1Rbavt6mB7wjin9c3sq
+         5JN+0Gz/3AoarQb/kzAgsPxYaworJHJYPHC1Pdzb1NP3w3nhItxMB0p8+1Oo7Z14ODD1
+         pwrU+vZfomKirX5Eaj1MFykHr40PtRhGTMIpihX9IaOzpctElvn08+96dFtzjle+SvtV
+         2iBMTz41jMTVJFmn8n5+76z+c2SNYjTpmC01emNAdB9TcakjDPzNCNXi7k2SaFbMkyqs
+         LQIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WKkGKM1i+ZwjQU8y1F8HIyZFPfYPlnsKwCB0yR3tEE4=;
-        b=GLQaw8sglFTftatgLKBW8325lg7rWyJtD3X6tkCZzkvxGWMDdtoXIJPB/nr73NzE+m
-         wku56yTDu7Q9RIBkGuc7CB/8kW8XRJAUGoOw6wMFUCLCHkM07CVSv/e9Kh9SIncbjb0S
-         yv33PqrevJ41zRslcVO3EQnUhr5uZ9QUp4gd1cdCKj/RyPOvURQNnBFjYatvBgZCQb2r
-         XRuqo2j8ifSb9XphLqfBw8WfIOTt8YkSSrhNmHqP3c/zUcoUnD1CflKqynFS66UaorDM
-         qSELcv80wTWnU9dajfFJj9s7Su7fmsQKkQW06TZUPaTS89Q4YR0+TD2DohshgARyFzOa
-         qzYw==
-X-Gm-Message-State: AOAM533/dA/dpSXwz3cZWIaAD1p9NiLrBB4w04ykD82MKqVocHeAaNSq
-        qrRArBDh7ocV2Y03/OIm+OA=
-X-Google-Smtp-Source: ABdhPJzgTI+524MDuS7w5lagpPtbOaBYaupWOktz4kyyP9U6rMau70HYUh5ipMQDAj7LI/iV41Sqxw==
-X-Received: by 2002:a5d:400f:: with SMTP id n15mr5825010wrp.419.1591722090607;
-        Tue, 09 Jun 2020 10:01:30 -0700 (PDT)
+        bh=56AvKWjySgBgySSonnii/IUH4GT5dcqEj7+lumT1cRY=;
+        b=YNxhOP/GT7l1zU7wvZYMyQ82BmugyyrFT5AN7ckiMKVzRfFUXhanh54OCrf3n4y5LV
+         pYnlWrD/2gxPZp/oVdnkMBlKgO0vZHP2falEb8+Ebv6UJiqM0Qq4KZBUv19nggCI8+4m
+         3dNTQ1ZSYmq0Q4IrrZaDmg+ZDHroDCBMN7ewm89ZG+4YSmKQVjFfCWtM9RrhcvxqpaMO
+         lxu6wLYLI/q1zEy7nr4+TjkPQGibYiYW7gjg5BYqEu251M9tIcdcQK63F/QoZTxFJAh/
+         zCRQnkv69C/E0/2mROyz2Ty7uaxeyAOsGhZ2cH2biky5UAEs8YEk54phTgzNeuU6A0N3
+         hJpw==
+X-Gm-Message-State: AOAM533tzyqHXWfok67GBX3uTXbe3MXwyEZDBhx/hJsezkjYO6kr2b0H
+        wSacRVHrVtD+uiN18ToKKPU=
+X-Google-Smtp-Source: ABdhPJziUydPOV9zp3et4UyExSQjH9O6K4W1YcNIq3XL7uN3xQiYGzUUym2Piw3iXAr1nsQN8ubfaw==
+X-Received: by 2002:a1c:230a:: with SMTP id j10mr4949426wmj.124.1591722091702;
+        Tue, 09 Jun 2020 10:01:31 -0700 (PDT)
 Received: from cluster5 ([80.76.206.81])
-        by smtp.gmail.com with ESMTPSA id d16sm3500004wmd.42.2020.06.09.10.01.30
+        by smtp.gmail.com with ESMTPSA id 23sm3734204wmo.18.2020.06.09.10.01.31
         (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Tue, 09 Jun 2020 10:01:30 -0700 (PDT)
+        Tue, 09 Jun 2020 10:01:31 -0700 (PDT)
 From:   Matthew Hagan <mnhagan88@gmail.com>
 Cc:     Matthew Hagan <mnhagan88@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Matthew Hagan <mnhagan88@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/3] ARM: dts: NSP: Correct amac_base lengths, mailbox reg and add amac3
-Date:   Tue,  9 Jun 2020 17:58:30 +0100
-Message-Id: <d638e006713d82d1a6af4bdbcfa516f425264bf6.1591719237.git.mnhagan88@gmail.com>
+Subject: [PATCH 3/3] ARM: bcm: Select ARM_TIMER_SP804 for ARCH_BCM_NSP
+Date:   Tue,  9 Jun 2020 17:58:31 +0100
+Message-Id: <afd290238d7a7b392aa477590f3d05f3ebb2f9b9.1591719237.git.mnhagan88@gmail.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <c19be985a3e7abc8ac05fc30678475aeadb73c50.1591719237.git.mnhagan88@gmail.com>
 References: <c19be985a3e7abc8ac05fc30678475aeadb73c50.1591719237.git.mnhagan88@gmail.com>
@@ -82,80 +82,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to gmac/src/et/sys/et_linux.c, IORESOURCE_MEM end address for each
-mac is IPROC_GMACx_REG_BASE+0xbff.
-
-The FA2 mailbox is specified at 0x18025000 but should actually be 0x18025c00,
-length 0x400 according to socregs_nsp.h and board_bu.c. amac3 is at 25000.
+The NSP SoC includes an SP804 timer so should be enabled here.
 
 Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ arch/arm/mach-bcm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 920c0f561e5c..512720f39e04 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -47,6 +47,7 @@ aliases {
- 		ethernet0 = &amac0;
- 		ethernet1 = &amac1;
- 		ethernet2 = &amac2;
-+		ethernet3 = &amac3;
- 	};
- 
- 	cpus {
-@@ -231,7 +232,7 @@ sdio: sdhci@21000 {
- 
- 		amac0: ethernet@22000 {
- 			compatible = "brcm,nsp-amac";
--			reg = <0x022000 0x1000>,
-+			reg = <0x022000 0x0c00>,
- 			      <0x110000 0x1000>;
- 			reg-names = "amac_base", "idm_base";
- 			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-@@ -241,7 +242,7 @@ amac0: ethernet@22000 {
- 
- 		amac1: ethernet@23000 {
- 			compatible = "brcm,nsp-amac";
--			reg = <0x023000 0x1000>,
-+			reg = <0x023000 0x0c00>,
- 			      <0x111000 0x1000>;
- 			reg-names = "amac_base", "idm_base";
- 			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-@@ -251,7 +252,7 @@ amac1: ethernet@23000 {
- 
- 		amac2: ethernet@24000 {
- 			compatible = "brcm,nsp-amac";
--			reg = <0x024000 0x1000>,
-+			reg = <0x024000 0x0c00>,
- 			      <0x112000 0x1000>;
- 			reg-names = "amac_base", "idm_base";
- 			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-@@ -259,10 +260,20 @@ amac2: ethernet@24000 {
- 			status = "disabled";
- 		};
- 
--		mailbox: mailbox@25000 {
--			compatible = "brcm,iproc-fa2-mbox";
--			reg = <0x25000 0x445>;
-+		amac3: ethernet@25000 {
-+			compatible = "brcm,nsp-amac";
-+			reg = <0x025000 0x0c00>,
-+			      <0x113000 0x1000>;
-+			reg-names = "amac_base", "idm_base";
- 			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		mailbox: mailbox@25c00 {
-+			compatible = "brcm,iproc-fa2-mbox";
-+			reg = <0x25c00 0x400>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
+diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+index 6aa938b949db..1df0ee01ee02 100644
+--- a/arch/arm/mach-bcm/Kconfig
++++ b/arch/arm/mach-bcm/Kconfig
+@@ -53,6 +53,7 @@ config ARCH_BCM_NSP
+ 	select ARM_ERRATA_754322
+ 	select ARM_ERRATA_775420
+ 	select ARM_ERRATA_764369 if SMP
++	select ARM_TIMER_SP804
+ 	select THERMAL
+ 	select THERMAL_OF
+ 	help
 -- 
 2.25.4
 
