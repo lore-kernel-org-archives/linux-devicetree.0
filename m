@@ -2,77 +2,67 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194A7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B08BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E802C2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CAA12074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B49t0nxw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Gms34lob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgFIN3k (ORCPT
+        id S1728533AbgFINbK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbgFIN3T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:29:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABEADC03E97C;
-        Tue,  9 Jun 2020 06:29:17 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a9so21494271ljn.6;
-        Tue, 09 Jun 2020 06:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bfaJuFdXozXDPR9zng+hgfPKlX3mT8FyISD1FTQ25bo=;
-        b=B49t0nxwad7JuaDtw6XwwGP7olO4EUYZJRXtmgrvPkREm2Ppd7/QceX0WDCPyE0Gza
-         g0G037SyTdG/CA6TLDbhNbMpBx4jZv8bARBAVbdLQD+96bEx4L6BLoJRbS+BEvJXYo6M
-         +WuiqA/4Ec6gc/uaVLhtHwgRoFLgmuY2YoIfvL7HHhOqnBCpNCJC+HzqlyiEYwj3djgW
-         hJyy/+4mowI8Oj8rnMciNF6fgDjXDcnnwXM55bO0BVTTrw7xSPwIYT0JnWRrhpeI3daO
-         Pu5cMcvRR5afaFCVl6FBt+Ih5DImvS9wujXso75sKP6UVM9yaN9lNDkJGgUpvo1zcvqC
-         3EEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bfaJuFdXozXDPR9zng+hgfPKlX3mT8FyISD1FTQ25bo=;
-        b=qBM4oGdQ3uZIBvO2cgvHaqJnjY7lA2M9q/nXTNMuCP1exHcs5se4RJRvsD8dRQ/C/4
-         5zZWEratG9Jk+1BjNve9xrpfwc2wgy4mTYe2/lY2wGMdP/RUKF3J0tZuKh7EX6ynKHI9
-         zFWGoTbehf0Cap6AOXytfIs0mzva2mkww4ZmaD3yd0K/RHLOtFrD7pMz6oo6LHBNP4cK
-         8vFpw38dDa0X9J9ltEJuRCBzpMBNx8mbeMrcfBsOh5M329GZtO9ov+h6oZav4TFwxUPg
-         UTTJHDZx+c7r9rF0E9zEKS65++oy9VeuqIhuhqva3rW2Wdz4sCPArn/o1xC1O1oVzfjw
-         fTOQ==
-X-Gm-Message-State: AOAM533DIqUZD/XEJjg1/2MeEkATQAMJzsTSdCGR7RKxZcOfhi1lTp7l
-        7TUirX9A2qtdz+n27Kb0tNI=
-X-Google-Smtp-Source: ABdhPJyAWXTNCfEi8RFikv95/5IpuMDduRELo2UqM80wfXS3VGGWUgEySJcI0zefr2Z/3wNmmCONDQ==
-X-Received: by 2002:a2e:2a42:: with SMTP id q63mr1127043ljq.265.1591709356142;
-        Tue, 09 Jun 2020 06:29:16 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id s8sm5069821lfc.83.2020.06.09.06.29.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 06:29:15 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 5/6] drm/tegra: output: rgb: Support LVDS encoder bridge
-Date:   Tue,  9 Jun 2020 16:28:54 +0300
-Message-Id: <20200609132855.20975-6-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200609132855.20975-1-digetx@gmail.com>
-References: <20200609132855.20975-1-digetx@gmail.com>
+        Tue, 9 Jun 2020 09:31:10 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:31991 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728133AbgFINbH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 09:31:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591709466; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=HufavcL6881G+Zx3/1vr1pqV7Vtb/c2BkVpqzTOOMrI=; b=Gms34lobHKREQgShniw5ekyXHCPZgtcqafQJi24YtP6fj+rBLa48XT0X0DcR+DNpTVZTO1vB
+ 0NvxHZ81PMZ6V/cprQt4TGUL4niAiRP5GNB49E7VpVsPkki0pFCF973mmam8wJF3EXQv0ftC
+ nqGyqjCUL2o0gs1v+u27D/KlbUI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5edf8f14567385e8e7f9c099 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:31:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 03655C433CA; Tue,  9 Jun 2020 13:31:00 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BBC4C433C6;
+        Tue,  9 Jun 2020 13:30:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1BBC4C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
+Date:   Tue,  9 Jun 2020 19:00:29 +0530
+Message-Id: <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -80,102 +70,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Newer Tegra device-trees will specify a video output graph, which involves
-LVDS encoder bridge. This patch adds support for the LVDS encoder bridge
-to the RGB output, allowing us to model the display hardware properly.
+Define iommus property for Coresight ETR component in
+SC7180 SoC with the SID and mask to enable SMMU
+translation for this master.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- drivers/gpu/drm/tegra/rgb.c | 58 +++++++++++++++++++++++++++++++------
- 1 file changed, 49 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 0562a7eb793f..9a7024ec96bc 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -7,6 +7,7 @@
- #include <linux/clk.h>
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index f684a0b87848..9b38867740ca 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1711,6 +1711,7 @@
+ 		etr@6048000 {
+ 			compatible = "arm,coresight-tmc", "arm,primecell";
+ 			reg = <0 0x06048000 0 0x1000>;
++			iommus = <&apps_smmu 0x04a0 0x20>;
  
- #include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge_connector.h>
- #include <drm/drm_panel.h>
- #include <drm/drm_simple_kms_helper.h>
- 
-@@ -267,24 +268,63 @@ int tegra_dc_rgb_remove(struct tegra_dc *dc)
- int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- {
- 	struct tegra_output *output = dc->rgb;
-+	struct drm_connector *connector;
- 	int err;
- 
- 	if (!dc->rgb)
- 		return -ENODEV;
- 
--	drm_connector_init(drm, &output->connector, &tegra_rgb_connector_funcs,
--			   DRM_MODE_CONNECTOR_LVDS);
--	drm_connector_helper_add(&output->connector,
--				 &tegra_rgb_connector_helper_funcs);
--	output->connector.dpms = DRM_MODE_DPMS_OFF;
--
- 	drm_simple_encoder_init(drm, &output->encoder, DRM_MODE_ENCODER_LVDS);
- 	drm_encoder_helper_add(&output->encoder,
- 			       &tegra_rgb_encoder_helper_funcs);
- 
--	drm_connector_attach_encoder(&output->connector,
--					  &output->encoder);
--	drm_connector_register(&output->connector);
-+	/*
-+	 * Tegra devices that have LVDS panel utilize LVDS encoder bridge
-+	 * for converting up to 28 LCD LVTTL lanes into 5/4 LVDS lanes that
-+	 * go to display panel's receiver.
-+	 *
-+	 * Encoder usually have a power-down control which needs to be enabled
-+	 * in order to transmit data to the panel.  Historically devices that
-+	 * use an older device-tree version didn't model the bridge, assuming
-+	 * that encoder is turned ON by default, while today's DRM allows us
-+	 * to model LVDS encoder properly.
-+	 *
-+	 * Newer device-trees utilize LVDS encoder bridge, which provides
-+	 * us with a connector and handles the display panel.
-+	 *
-+	 * For older device-trees we fall back to our own connector and use
-+	 * nvidia,panel phandle.
-+	 */
-+	if (output->bridge) {
-+		err = drm_bridge_attach(&output->encoder, output->bridge,
-+					NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-+		if (err) {
-+			dev_err(output->dev, "failed to attach bridge: %d\n",
-+				err);
-+			return err;
-+		}
-+
-+		connector = drm_bridge_connector_init(drm, &output->encoder);
-+		if (IS_ERR(connector)) {
-+			dev_err(output->dev,
-+				"failed to initialize bridge connector: %pe\n",
-+				connector);
-+			return PTR_ERR(connector);
-+		}
-+
-+		drm_connector_attach_encoder(connector, &output->encoder);
-+	} else {
-+		drm_connector_init(drm, &output->connector,
-+				   &tegra_rgb_connector_funcs,
-+				   DRM_MODE_CONNECTOR_LVDS);
-+		drm_connector_helper_add(&output->connector,
-+					 &tegra_rgb_connector_helper_funcs);
-+		output->connector.dpms = DRM_MODE_DPMS_OFF;
-+
-+		drm_connector_attach_encoder(&output->connector,
-+					     &output->encoder);
-+		drm_connector_register(&output->connector);
-+	}
- 
- 	err = tegra_output_init(drm, output);
- 	if (err < 0) {
+ 			clocks = <&aoss_qmp>;
+ 			clock-names = "apb_pclk";
 -- 
-2.26.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
