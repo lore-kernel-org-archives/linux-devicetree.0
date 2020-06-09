@@ -2,121 +2,106 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4614C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007DEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9AF207ED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664669;
-	bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NRssiXho4IjkKgc9bH/fotGzsQhCbX2L0VRuS7PseuX46hehPpzKfH85k32yzsMXs
-	 2lzliWKRFvHNY+kgWmTicC73YByy0ESZctseJ+L4S71R62QWr4SWkmuYU0dljCXK8A
-	 5K5+SatnLsxkqq6GkWcMO5lD2IH4t+wCOz09jv9g=
+	by mail.kernel.org (Postfix) with ESMTP id DC0952076C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 01:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbgFIBES (ORCPT
+        id S1726903AbgFIBOt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbgFHXHZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D025320812;
-        Mon,  8 Jun 2020 23:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657645;
-        bh=dUkrinHv1Rv4amfGn74MI+e2YKhyXCrB1nrhBwjAXsU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRTpDfTaL3Gp0YHHVF/pVVfqBW/0xr2ASUfARjvkAgdOl3D6bKs1z6lxdLEI4sAqn
-         H97X82m9CAPc9AxV3Kif1DCa9aRuJgNGOL4Ked6AWOzKOTbWI/KaqHy/ApcIvCfNSh
-         k43dXp/cHWS/QF/MmerUTICdHqLjCYrF30XdypnM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 061/274] mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
-Date:   Mon,  8 Jun 2020 19:02:34 -0400
-Message-Id: <20200608230607.3361041-61-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jun 2020 21:14:49 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:53198 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgFIBOt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 21:14:49 -0400
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 335D5AD6BE;
+        Tue,  9 Jun 2020 09:14:42 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P3328T139696397076224S1591665277471272_;
+        Tue, 09 Jun 2020 09:14:39 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <9366da969142352c044371455015e4cb>
+X-RL-SENDER: sugar.zhang@rock-chips.com
+X-SENDER: zxg@rock-chips.com
+X-LOGIN-NAME: sugar.zhang@rock-chips.com
+X-FST-TO: vkoul@kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Sugar Zhang <sugar.zhang@rock-chips.com>
+To:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        Sugar Zhang <sugar.zhang@rock-chips.com>,
+        devicetree@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "Leonidas P. Papadakos" <papadakospan@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Johan Jonker <jbx6244@gmail.com>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlos de Paula <me@carlosedp.com>,
+        dmaengine@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH v2 0/13] Patches to improve transfer efficiency for Rockchip SoCs.
+Date:   Tue,  9 Jun 2020 09:14:14 +0800
+Message-Id: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit a2ac81c6ef4018ea49c034ce165bb9ea1cf99f3e ]
 
-Commit 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA
-allows") updated the cpu_has_mips* macro to be replaced with a constant
-expression where it's possible. By mistake it wasn't done correctly
-for cpu_has_mips64r1/cpu_has_mips64r2 macro. They are defined to
-be replaced with conditional expression __isa_range_or_flag(), which
-means either ISA revision being within the range or the corresponding
-CPU options flag was set at the probe stage or both being true at the
-same time. But the ISA level value doesn't indicate whether the ISA is
-MIPS32 or MIPS64. Due to this if we select MIPS32r1 - MIPS32r5
-architectures the __isa_range() macro will activate the
-cpu_has_mips64rX flags, which is incorrect. In order to fix the
-problem we make sure the 64bits CPU support is enabled by means of
-checking the flag cpu_has_64bits aside with proper ISA range and specific
-Revision flag being set.
+Changes in v2:
+- fix FATAL ERROR: Unable to parse input tree
 
-Fixes: 1aeba347b3a9 ("MIPS: Hardcode cpu_has_mips* where target ISA allows")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/include/asm/cpu-features.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Sugar Zhang (13):
+  dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
+  dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
+  dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
+  ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
+  ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
+  ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
+  ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
+  ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
+  arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
+  arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
+  arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
+  arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
+  arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
 
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
-index de44c92b1c1f..d4e120464d41 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -288,10 +288,12 @@
- # define cpu_has_mips32r6	__isa_ge_or_flag(6, MIPS_CPU_ISA_M32R6)
- #endif
- #ifndef cpu_has_mips64r1
--# define cpu_has_mips64r1	__isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1)
-+# define cpu_has_mips64r1	(cpu_has_64bits && \
-+				 __isa_range_or_flag(1, 6, MIPS_CPU_ISA_M64R1))
- #endif
- #ifndef cpu_has_mips64r2
--# define cpu_has_mips64r2	__isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2)
-+# define cpu_has_mips64r2	(cpu_has_64bits && \
-+				 __isa_range_or_flag(2, 6, MIPS_CPU_ISA_M64R2))
- #endif
- #ifndef cpu_has_mips64r6
- # define cpu_has_mips64r6	__isa_ge_and_flag(6, MIPS_CPU_ISA_M64R6)
+ .../devicetree/bindings/dma/arm-pl330.txt          |  1 +
+ arch/arm/boot/dts/rk3036.dtsi                      |  1 +
+ arch/arm/boot/dts/rk322x.dtsi                      |  1 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  3 ++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |  3 ++
+ arch/arm/boot/dts/rv1108.dtsi                      |  1 +
+ arch/arm64/boot/dts/rockchip/px30.dtsi             |  1 +
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi           |  2 +
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  1 +
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  2 +
+ drivers/dma/pl330.c                                | 44 +++++++++++++++-------
+ 12 files changed, 49 insertions(+), 13 deletions(-)
+
 -- 
-2.25.1
+2.7.4
+
+
 
