@@ -2,217 +2,209 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501CBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E752C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC2B207C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61602072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 15:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrSlB8pY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+Zzc+a9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgFIPT7 (ORCPT
+        id S1729523AbgFIPXD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 11:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46378 "EHLO
+        Tue, 9 Jun 2020 11:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729678AbgFIPTs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 11:19:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88A3C08C5C4
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 08:19:45 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c3so21737304wru.12
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 08:19:45 -0700 (PDT)
+        with ESMTP id S1728609AbgFIPXC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 11:23:02 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26F7C05BD1E;
+        Tue,  9 Jun 2020 08:23:02 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id m81so23201144ioa.1;
+        Tue, 09 Jun 2020 08:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Rk2oDZPnfwMXUWPErdEgPnP2nnFU5znUIkJLh8odeKY=;
-        b=TrSlB8pYYj3hLyZLYGz8CnGfrshe0S63alFmjMac7FlNzG2WrvJcCnPzJ8Y3oz/zHu
-         grMZ5fATJYLfW21vf4pqIUOAPjq+r3Et4vCnkaPwST2LbT2KEoI9waM0A52GPC6YdUT3
-         Wc8cUHOlxEpq9fSHi+NmPiY88KUNz40lvfstxa+lVwypcEQcKWkK1lidFi9i4AvNKYnx
-         vJyRjAGpSN4P2TaQTOE5rxOe+rMbWd3rvknENlTFtY9iDv9LR2IXfrDmM0YiCIhZ5Dtc
-         /f++AJlEm+hW9u6LzmlFxwyrCxmT2YbHV9t0fJaWdoOmplWYM0XKAZtxSVfkybGK8Xrc
-         MoRw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tm2L6wHDp3vnilQA0CPW6PPlVERzEGHmJnGxVxjkT7E=;
+        b=T+Zzc+a927fTmCQYyxa3HRIQOfzwB1rlff67AJQPfhedtRBsi15M7hvfbqDBXLIz2Q
+         4KRSTB9cKCGWi5zszA165U7802EQ1b74v54j3AsREkXTLXlxzSrced4LqVHdtgrT1BQ9
+         icKt9YViOgQcAKVNZjPcxK88gttpktYPeUNKqPo0gT68ATxzhYHzokNHc6pQNtrlY3IB
+         KLlyZtOGJ7375RmWBKPKHCsRXSeqb8bmjuZkdeSsCP5k1BIfCRczdUBF+5569MGYmO+T
+         9qN0v9U3DtCz4Hj+aIgzbWRsAMWfOM1PmMsRZr4OhT+ygqb8U0vc40a1PdHjSqLm2//i
+         88sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Rk2oDZPnfwMXUWPErdEgPnP2nnFU5znUIkJLh8odeKY=;
-        b=lgL7+a2LeDZJxpD+/paPwZ5/S3oT+f4u0wqZAzNhfDFDim8A8rNl0zUa4TJrMiFdtH
-         ptp3u6rMr0otYx/ZovNqtljl/cW7p5QxJNWIp/q5Ls5ECCGqRdMqlJ3c1QNKeoHCneRO
-         Q4csuxV7lqAdi9kwC8hfJVjgtO7/Otk+fYZw61vyK2oNjf7AuFiOenXgYgs+zWwGgoeA
-         zkbb3D/L5vDon3wWs3SKA6LMYNit2gyPWMfJzLe8G1qbo1PKw7e6vkcJwkPSKXYQh1rb
-         sYmRAqwxCVqFrBTe4kXHXbKTloyKs/f7Mltr/zbqaQhcY/2xu1HTGuu1qvhlZHfi9Hld
-         eGJA==
-X-Gm-Message-State: AOAM532XOofc8cePwPcK0ADGyPz0zRialGb2ySBUKtFZlOhCZob42rvo
-        nKKBEoqqVhyPy5HH8jqh0GCCnA==
-X-Google-Smtp-Source: ABdhPJw2lbdxCvWfX4BaLx0JY0xh8sw3TkHMqxmT6Rm1ZGth1zxLA0vydahsSf+ib3yzcV5qZtEpfw==
-X-Received: by 2002:adf:f4c6:: with SMTP id h6mr5221915wrp.398.1591715984320;
-        Tue, 09 Jun 2020 08:19:44 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id h5sm3800319wrw.85.2020.06.09.08.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 08:19:43 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 16:19:41 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609151941.GM4106@dell>
-References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tm2L6wHDp3vnilQA0CPW6PPlVERzEGHmJnGxVxjkT7E=;
+        b=Z00A6fa/fFA0XEYYPSwjY//jtmBNL+jQFDxM54Ued2khmGn/rh+d2B6+XPF04zJCx6
+         TvlKHr+zBzkXmE3bf2blhsJxPbt5ujR3trz72JZWxrofG3062Uz3SimglGzTaWHZHFNQ
+         OrwT4ni7eKkBzoQ8Km5XaPsETdPXlCPQpAYa5slLueYgGT5qBDbJQNctaus3dyHjoxr/
+         E2wWfKsqHqjv0XByhfBMjzL/SI6t6nn2rvC3EPiqeUeNkNQkSxbCVpMpPvb/22k0PcXM
+         tHJjNCuvZlUcL4JFQEN4q4ODxlIul4BeqQ8+r9CEMhSqDNQiES34GdLclbQdPw8K12ly
+         M8hg==
+X-Gm-Message-State: AOAM532Kp0Gqo6rqP52Xzo2Oa0lZ/iwjKZ8+S0fjvT8NW1IZlVCo5aqd
+        UrecXt6BsXnuEANlWFP+TVykLUJXAk95+i+sSLE=
+X-Google-Smtp-Source: ABdhPJzVZNaa7SnqUFgCpq6WJTUKH4jHLaYl37zbFlWb1E6BwdaMRDZEkUg9vCMO67A149eiG/aXayH1ph7RpIU/MNM=
+X-Received: by 2002:a05:6638:d05:: with SMTP id q5mr26413027jaj.2.1591716182166;
+ Tue, 09 Jun 2020 08:23:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+ <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com> <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+In-Reply-To: <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Tue, 9 Jun 2020 23:22:24 +0800
+Message-ID: <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
+ support reserved memory
+To:     Vladimir Murzin <vladimir.murzin@arm.com>, hch@lst.de
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2020, Michael Walle wrote:
+Hi Vladimir,
 
-> Am 2020-06-09 08:47, schrieb Lee Jones:
-> > On Mon, 08 Jun 2020, Michael Walle wrote:
-> > 
-> > > Am 2020-06-08 20:56, schrieb Lee Jones:
-> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
-> > > >
-> > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
-> > > > > > +Cc: some Intel people WRT our internal discussion about similar
-> > > > > > problem and solutions.
-> > > > > >
-> > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
-> > > > > > > sometimes intertwined batches of register sets to be consumed by
-> > > > > > > multiple (sub-)devices spanning different subsystems.
-> > > > > > >
-> > > > > > > Actually scrap that.  The most common case I see is a single Regmap
-> > > > > > > covering all child-devices.
-> > > > > >
-> > > > > > Yes, because often we need a synchronization across the entire address
-> > > > > > space of the (parent) device in question.
-> > > > > >
-> > > > > > >  It would be great if there was a way in
-> > > > > > > which we could make an assumption that the entire register address
-> > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > > > > > > each of the devices described by its child-nodes.  Probably by picking
-> > > > > > > up on the 'simple-mfd' compatible string in the first instance.
-> > > > > > >
-> > > > > > > Rob, is the above something you would contemplate?
-> > > > > > >
-> > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
-> > > > > > > with one another?  Do multiple child devices need access to the same
-> > > > > > > registers i.e. are they shared?
-> > > > >
-> > > > > No they don't overlap, expect for maybe the version register, which is
-> > > > > just there once and not per function block.
-> > > >
-> > > > Then what's stopping you having each device Regmap their own space?
-> > > 
-> > > Because its just one I2C device, AFAIK thats not possible, right?
-> > 
-> > Not sure what (if any) the restrictions are.
-> 
-> You can only have one device per I2C address. Therefore, I need one device
-> which is enumerated by the I2C bus, which then enumerates its sub-devices.
-> I thought this was one of the use cases for MFD. (Regardless of how a
-> sub-device access its registers). So even in the "simple-regmap" case this
-> would need to be an i2c device.
-> 
-> E.g.
-> 
-> &i2cbus {
->   mfd-device@10 {
->     compatible = "simple-regmap", "simple-mfd";
->     reg = <10>;
->     regmap,reg-bits = <8>;
->     regmap,val-bits = <8>;
->     sub-device@0 {
->       compatible = "vendor,sub-device0";
->       reg = <0>;
->     };
->     ...
-> };
-> 
-> Or if you just want the regmap:
-> 
-> &soc {
->   regmap: regmap@fff0000 {
->     compatible = "simple-regmap";
->     reg = <0xfff0000>;
->     regmap,reg-bits = <16>;
->     regmap,val-bits = <32>;
->   };
-> 
->   enet-which-needs-syscon-too@1000000 {
->     vendor,ctrl-regmap = <&regmap>;
->   };
-> };
-> 
-> Similar to the current syscon (which is MMIO only..).
+Thanks for reviewing.
 
-We do not need a 'simple-regmap' solution for your use-case.
+Hi Christoph Hellwig,
 
-Since your device's registers are segregated, just split up the
-register map and allocate each sub-device with it's own slice.
+I just want to know if kernel dma mapping/direct is focused on
+platforms with MMU.
+leave arch code to handle dma coherent memory management themself for
+no-MMU platform.
 
-> > I can't think of any reasons why not, off the top of my head.
-> > 
-> > Does Regmap only deal with shared accesses from multiple devices
-> > accessing a single register map, or can it also handle multiple
-> > devices communicating over a single I2C channel?
-> > 
-> > One for Mark perhaps.
+so, you just return error code in kernel/dma/mapping.c,direct.c
+without CONFIG_MMU defined ?
+which means dma-direct mapping doesn't support !CONFIG_MMU is not a
+bug, but design as it's.
+or, just return error code currently, will add dma direct mapping
+support for !CONFIG_MMU in the
+future?
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+As Vladimir Murzin's suggestion has changes in kernel code, I need
+your input to get
+the design goal about dma-direct mapping, thanks.
+
+On Tue, Jun 9, 2020 at 10:07 PM Vladimir Murzin <vladimir.murzin@arm.com> wrote:
+>
+> On 6/8/20 9:30 AM, dillon.minfei@gmail.com wrote:
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > Currently, we use dma direct to request coherent memory for driver on armv7m
+> > platform if 'cacheid' is zero, but dma_direct_can_mmap() is return false,
+> > dma_direct_mmap() return -ENXIO for CONFIG_MMU undefined platform.
+> >
+> > so we have to back to use 'arm_nommu_dma_ops', add use_reserved_mem() to check
+> > if device support global or device corherent memory. if yes, then call
+> > set_dma_ops()
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >  arch/arm/mm/dma-mapping-nommu.c | 28 +++++++++++++++++++++++++++-
+> >  1 file changed, 27 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/mm/dma-mapping-nommu.c b/arch/arm/mm/dma-mapping-nommu.c
+> > index 287ef898a55e..e1c213fec152 100644
+> > --- a/arch/arm/mm/dma-mapping-nommu.c
+> > +++ b/arch/arm/mm/dma-mapping-nommu.c
+> > @@ -14,6 +14,7 @@
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/outercache.h>
+> >  #include <asm/cp15.h>
+> > +#include <linux/of.h>
+> >
+> >  #include "dma.h"
+> >
+> > @@ -188,6 +189,31 @@ const struct dma_map_ops arm_nommu_dma_ops = {
+> >  };
+> >  EXPORT_SYMBOL(arm_nommu_dma_ops);
+> >
+> > +static bool use_reserved_mem(struct device *dev)
+> > +{
+> > +     struct device_node *np;
+> > +
+> > +     np = of_find_node_by_path("/reserved-memory/linux,dma");
+> > +
+> > +     if (np &&
+> > +             of_device_is_compatible(np, "shared-dma-pool") &&
+> > +             of_property_read_bool(np, "no-map") &&
+> > +             of_property_read_bool(np, "linux,dma-default")) {
+> > +             /* has global corherent mem support */
+> > +             of_node_put(np);
+> > +             return true;
+> > +     }
+> > +
+> > +     np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> > +     if (np) {
+> > +             /* has dev corherent mem support */
+> > +             of_node_put(np);
+> > +             return true;
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+> >  void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+> >                       const struct iommu_ops *iommu, bool coherent)
+> >  {
+> > @@ -206,6 +232,6 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+> >               dev->archdata.dma_coherent = (get_cr() & CR_M) ? coherent : true;
+> >       }
+> >
+> > -     if (!dev->archdata.dma_coherent)
+> > +     if (!dev->archdata.dma_coherent || use_reserved_mem(dev))
+> >               set_dma_ops(dev, &arm_nommu_dma_ops);
+> >  }
+> >
+>
+> Sorry I have to NAK this hack :(
+>
+> Digging git history reveled 79964a1c2972 ("ARM: 8633/1: nommu: allow mmap when !CONFIG_MMU")
+> which make me wonder if diff below does the trick for you
+>
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 8f4bbda..8623b9e 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -456,14 +456,14 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>  #else /* CONFIG_MMU */
+>  bool dma_direct_can_mmap(struct device *dev)
+>  {
+> -       return false;
+> +       return true;
+>  }
+>
+>  int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>                 void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>                 unsigned long attrs)
+>  {
+> -       return -ENXIO;
+> +       return vm_iomap_memory(vma, vma->vm_start, (vma->vm_end - vma->vm_start));;
+>  }
+>  #endif /* CONFIG_MMU */
+Yes, this is a quite nice way to support !CONFIG_MMU without cache on
+platforms. I will try your suggestion.
+thanks
+
+>
+> Cheers
+> Vladimir
