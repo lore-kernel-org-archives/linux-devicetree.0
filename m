@@ -2,394 +2,353 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F72C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693BDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE4F9206A4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38567207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 12:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nKUcgDGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgFIMPH convert rfc822-to-8bit (ORCPT
+        id S1729239AbgFIMUn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 08:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbgFIMPG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 08:15:06 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EBDC05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 05:15:05 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jid9g-00086c-JV; Tue, 09 Jun 2020 14:15:00 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jid9f-0004Vl-Vg; Tue, 09 Jun 2020 14:14:59 +0200
-Message-ID: <d2f30dbde89050e428b61092a1e5bbcf8d257129.camel@pengutronix.de>
-Subject: Re: [PATCH v1 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com
-Date:   Tue, 09 Jun 2020 14:14:59 +0200
-In-Reply-To: <20200609110850.43469-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200609110850.43469-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-         <20200609110850.43469-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 9 Jun 2020 08:20:43 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:45463 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgFIMUm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 08:20:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591705242; x=1623241242;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=/ARMfJTWTJUqONEm3m+NvlVGabaqqM3z40RZZEwlMpo=;
+  b=nKUcgDGqQjwA15aFOkqpp9uf7UZVnA4eGvz1uW39vR1DbqBrO94Sycaq
+   fOlyU0RUZyXwuGXjdfoQAKaH48DS8xMyxsX0HdT+6zqHSrancwbwvil6W
+   RiTu3gKRcDKEP3kcKwI1oaStqfTVDKK/1EfVGEXTQJnttVFWQ/Exex+10
+   HRzu207xM54EMnZ3OY75415N8L6ALhAJHKMXoeeLvkwAzZ7eEP8x5ZCS/
+   4J7oDz1bel6PztaWyqMXo+LP/n+IWeSX1tksv4KMFpKh9aXENSn4e/3T7
+   DvQ6dQ8WROJURnC1m/urZgKEOmhn9ZypDhpcOiObsv//SgvjB/iIPbE6i
+   g==;
+IronPort-SDR: jMSRtlxIhw1KB3hsptje3YuoNtLg7hGMSiF68EEdeeTFqzEzPEXSAnsxs8fW/TYAMbZIBvsV6C
+ JnLWPuQ41nD7YyMuqOYXFFGhTcXQPW8hHn+qv6C6KP0PnraA6VDsjpLNfc31EZO0cLeboaixXa
+ OjQ5+naA6n8RzwLlsBdJfnRUjOaI3rhv1Yam3Yx8+KydO6usPbP56QeuA7KgqWk1kHbx/I/W9K
+ FUC4gHHZ7XJ4m4RNaEsswSKvYg2cnU0rpAPZh6AIt1+Llx1IfeSgChoOs+GdjLDF2vktTDzOp0
+ yeM=
+X-IronPort-AV: E=Sophos;i="5.73,492,1583218800"; 
+   d="scan'208";a="78736295"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 05:20:42 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 9 Jun 2020 05:20:40 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
+ via Frontend Transport; Tue, 9 Jun 2020 05:20:38 -0700
+References: <20200609072828.9088-1-lars.povlsen@microchip.com> <20200609074940.9529-1-lars.povlsen@microchip.com> <20200609093808.00003aad@Huawei.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        <linux-kernel@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
+In-Reply-To: <20200609093808.00003aad@Huawei.com>
+Date:   Tue, 9 Jun 2020 14:20:37 +0200
+Message-ID: <87h7vkig6i.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ramuthevar,
 
-On Tue, 2020-06-09 at 19:08 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add support for USB PHY on Intel LGM SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  drivers/usb/phy/Kconfig       |  11 ++
->  drivers/usb/phy/Makefile      |   1 +
->  drivers/usb/phy/phy-lgm-usb.c | 269 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 281 insertions(+)
->  create mode 100644 drivers/usb/phy/phy-lgm-usb.c
-> 
-> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-> index 4b3fa78995cf..95f2e737d663 100644
-> --- a/drivers/usb/phy/Kconfig
-> +++ b/drivers/usb/phy/Kconfig
-> @@ -192,4 +192,15 @@ config JZ4770_PHY
->  	  This driver provides PHY support for the USB controller found
->  	  on the JZ4770 SoC from Ingenic.
->  
-> +config USB_LGM_PHY
-> +	tristate "INTEL Lightning Mountain USB PHY Driver"
-> +	depends on USB_SUPPORT
-> +	select USB_PHY
-> +	select REGULATOR
-> +	select REGULATOR_FIXED_VOLTAGE
-> +	help
-> +	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-> +	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-> +	  of the Intel network SOC.
-> +
->  endmenu
-> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-> index b352bdbe8712..ef5345164e10 100644
-> --- a/drivers/usb/phy/Makefile
-> +++ b/drivers/usb/phy/Makefile
-> @@ -25,3 +25,4 @@ obj-$(CONFIG_USB_ULPI)			+= phy-ulpi.o
->  obj-$(CONFIG_USB_ULPI_VIEWPORT)		+= phy-ulpi-viewport.o
->  obj-$(CONFIG_KEYSTONE_USB_PHY)		+= phy-keystone.o
->  obj-$(CONFIG_JZ4770_PHY)		+= phy-jz4770.o
-> +obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
-> diff --git a/drivers/usb/phy/phy-lgm-usb.c b/drivers/usb/phy/phy-lgm-usb.c
-> new file mode 100644
-> index 000000000000..66cb327b7b71
-> --- /dev/null
-> +++ b/drivers/usb/phy/phy-lgm-usb.c
-> @@ -0,0 +1,269 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel LGM USB PHY driver
-> + *
-> + * Copyright (C) 2020 Intel Corporation.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
-> +#include <linux/usb/phy.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define CTRL1_OFFSET		0x14
-> +#define SRAM_EXT_LD_DONE	BIT(25)
-> +#define SRAM_INIT_DONE		BIT(26)
-> +
-> +#define TCPC_OFFSET		0x1014
-> +#define TCPC_MUX_CTL		GENMASK(1, 0)
-> +#define MUX_NC			0
-> +#define MUX_USB			1
-> +#define MUX_DP			2
-> +#define MUX_USBDP		3
-> +#define TCPC_FLIPPED		BIT(2)
-> +#define TCPC_LOW_POWER_EN	BIT(3)
-> +#define TCPC_VALID		BIT(4)
-> +#define TCPC_DISCONN		\
-> +	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
-> +
-> +static const char *const PHY_RESETS[] = { "phy31", "phy", };
-> +static const char *const CTL_RESETS[] = { "apb", "ctrl", };
-> +
-> +struct tca_apb {
-> +	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-> +	struct regulator *vbus;
-> +	struct work_struct wk;
-> +	struct usb_phy phy;
-> +
-> +	bool phy_initialized;
-> +	bool connected;
-> +};
-> +
-> +static int get_flipped(struct tca_apb *ta, bool *flipped)
-> +{
-> +	union extcon_property_value property;
-> +	int ret;
-> +
-> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-> +	if (ret) {
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> +		return false;
-> +	}
-> +
-> +	*flipped = property.intval;
-> +
-> +	return *flipped;
-> +}
-> +
-> +static int phy_init(struct usb_phy *phy)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-> +	int val, ret, i;
-> +
-> +	if (ta->phy_initialized)
-> +		return 0;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-> +		reset_control_deassert(ta->resets[i]);
-> +
-> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
-> +				 10, 10 * 1000);
-> +	if (IS_ERR(ret)) {
-> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-> +		return PTR_ERR(ret);
-> +	}
-> +
-> +	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-> +
-> +	ta->phy_initialized = true;
-> +	if (!ta->phy.edev)
-> +		return phy->set_vbus(phy, true);
-> +
-> +	schedule_work(&ta->wk);
-> +
-> +	return 0;
-> +}
-> +
-> +static void phy_shutdown(struct usb_phy *phy)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	int i;
-> +
-> +	if (!ta->phy_initialized)
-> +		return;
-> +
-> +	ta->phy_initialized = false;
-> +	flush_work(&ta->wk);
-> +	ta->phy.set_vbus(&ta->phy, false);
-> +	if (ta->connected) {
-> +		ta->connected = false;
-> +		writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-> +		reset_control_assert(ta->resets[i]);
-> +}
-> +
-> +static int phy_set_vbus(struct usb_phy *phy, int on)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	int ret = 0;
-> +
-> +	if (on) {
-> +		ret = regulator_enable(ta->vbus);
-> +		if (ret)
-> +			dev_err(ta->phy.dev, "regulator not enabled\n");
-> +	} else {
-> +		ret = regulator_disable(ta->vbus);
-> +		if (ret)
-> +			dev_err(ta->phy.dev, "regulator not disabled\n");
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void tca_work(struct work_struct *work)
-> +{
-> +	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-> +	union extcon_property_value property;
-> +	bool connected;
-> +	bool flipped;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = get_flipped(ta, &flipped);
-> +	if (!ret)
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> +
-> +	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST);
-> +	if (connected == ta->connected)
-> +		return;
-> +
-> +	ta->connected = connected;
-> +	if (connected) {
-> +		val = TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB);
-> +		if (flipped)
-> +			val |= TCPC_FLIPPED;
-> +		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-> +	} else {
-> +		val = TCPC_DISCONN;
-> +		dev_info(ta->phy.dev, "disconnected\n");
-> +	}
-> +
-> +	writel(val, ta->phy.io_priv + TCPC_OFFSET);
-> +
-> +	if (ta->phy.set_vbus(&ta->phy, connected))
-> +		dev_err(ta->phy.dev, "failed to set VBUS\n");
-> +}
-> +
-> +static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-> +{
-> +	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
-> +
-> +	if (ta->phy_initialized)
-> +		schedule_work(&ta->wk);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int vbus_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-> +{
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int phy_probe(struct platform_device *pdev)
-> +{
-> +	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-> +	struct device *dev = &pdev->dev;
-> +	struct usb_phy *phy;
-> +	struct tca_apb *ta;
-> +	int i;
-> +
-> +	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-> +	if (!ta)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, ta);
-> +	INIT_WORK(&ta->wk, tca_work);
-> +
-> +	phy = &ta->phy;
-> +	phy->dev = dev;
-> +	phy->label = dev_name(dev);
-> +	phy->type = USB_PHY_TYPE_USB3;
-> +	phy->init = phy_init;
-> +	phy->shutdown = phy_shutdown;
-> +	phy->set_vbus = phy_set_vbus;
-> +	phy->id_nb.notifier_call = id_notifier;
-> +	phy->vbus_nb.notifier_call = vbus_notifier;
-> +
-> +	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(phy->io_priv))
-> +		return PTR_ERR(phy->io_priv);
-> +
-> +	ta->vbus = devm_regulator_get(dev, "vbus");
-> +	if (IS_ERR(ta->vbus))
-> +		return PTR_ERR(ta->vbus);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-> +		resets[i] = devm_reset_control_get(dev, CTL_RESETS[i]);
+Jonathan Cameron writes:
 
-Please use devm_reset_control_get_exclusive() instead.
+> On Tue, 9 Jun 2020 09:49:40 +0200
+> Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This patch adds a temperature sensor driver to the Sparx5 SoC.
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>
+> Hi.  Quick drive by review whilst waiting for coffee time...
+>
+> A few minor suggestions inline.
+>
 
-> +		if (IS_ERR(resets[i])) {
-> +			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-> +			return PTR_ERR(resets[i]);
-> +		}
-> +		reset_control_assert(resets[i]);
-> +	}
+Much appreciated!
 
-You should request all reset controls first, and only then start
-asserting / deasserting, otherwise you may end up with partially
-asserted resets in case a later reset control is not found.
+> Thanks,
+>
+> Jonathan
+>
+>> ---
+>>  drivers/hwmon/Kconfig       |  10 +++
+>>  drivers/hwmon/Makefile      |   2 +-
+>>  drivers/hwmon/sparx5-temp.c | 152 ++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 163 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/hwmon/sparx5-temp.c
+>>
+>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>> index 288ae9f63588c..ec6bb8b8b12df 100644
+>> --- a/drivers/hwmon/Kconfig
+>> +++ b/drivers/hwmon/Kconfig
+>> @@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
+>>         This driver can also be built as a module. If so, the module
+>>         will be called i5k_amb.
+>>
+>> +config SENSORS_SPARX5
+>> +     tristate "Sparx5 SoC temperature sensor"
+>> +     depends on ARCH_SPARX5
+> Anything stop this building with COMPILE_TEST?
+>
+> That will great increase automated build coverage.
+>
+>> +     help
+>> +       If you say yes here you get support for temperature monitoring
+>> +       with the Microchip Sparx5 SoC.
+>> +
+>> +       This driver can also be built as a module. If so, the module
+>> +       will be called sparx5-temp.
+>> +
+>>  config SENSORS_F71805F
+>>       tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
+>>       depends on !PPC
+>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>> index 3e32c21f5efe3..144f09993a3f4 100644
+>> --- a/drivers/hwmon/Makefile
+>> +++ b/drivers/hwmon/Makefile
+>> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_DS1621)        += ds1621.o
+>>  obj-$(CONFIG_SENSORS_EMC1403)        += emc1403.o
+>>  obj-$(CONFIG_SENSORS_EMC2103)        += emc2103.o
+>>  obj-$(CONFIG_SENSORS_EMC6W201)       += emc6w201.o
+>> +obj-$(CONFIG_SENSORS_SPARX5) += sparx5-temp.o
+>>  obj-$(CONFIG_SENSORS_F71805F)        += f71805f.o
+>>  obj-$(CONFIG_SENSORS_F71882FG)       += f71882fg.o
+>>  obj-$(CONFIG_SENSORS_F75375S)        += f75375s.o
+>> @@ -193,4 +194,3 @@ obj-$(CONFIG_SENSORS_OCC) += occ/
+>>  obj-$(CONFIG_PMBUS)          += pmbus/
+>>
+>>  ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+>> -
+>> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
+>> new file mode 100644
+>> index 0000000000000..2e754462b6010
+>> --- /dev/null
+>> +++ b/drivers/hwmon/sparx5-temp.c
+>> @@ -0,0 +1,152 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/* Sparx5 SoC temperature sensor driver
+>> + *
+>> + * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/hwmon.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of_device.h>
+> I think you only have this to define the id table?
+>
+> If so, perhaps better to include mod_devicetable.h and not include
+> the of header.
 
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-> +		ta->resets[i] = devm_reset_control_get(dev, PHY_RESETS[i]);
+Well, I ended up needed other, so it became:
 
-Same as above.
+-#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/mod_devicetable.h>
 
-> +		if (IS_ERR(ta->resets[i])) {
-> +			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-> +			return PTR_ERR(ta->resets[i]);
-> +		}
-> +		reset_control_assert(ta->resets[i]);
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-> +		reset_control_deassert(resets[i]);
-> +	/* Need to wait at least 20us before de-assert the PHY */
-> +	usleep_range(20, 100);
+Other of these drivers seem to use "linux/of_device.h" as well?
 
-This waits 20us after de-asserting the reset, not before. Is this in the
-correct place?
+>
+>> +
+>> +#define TEMP_CTRL            0
+>> +#define TEMP_CFG             4
+>> +#define  TEMP_CFG_CYCLES     GENMASK(24, 15)
+>> +#define  TEMP_CFG_CYCLES_OFF 15
+>
+> Could you used FIELD_PREP etc to avoid having to have both
+> the mask and offset defined here?
+>
+>> +#define  TEMP_CFG_ENA                BIT(0)
+>> +#define TEMP_STAT            8
+>> +#define  TEMP_STAT_VALID     BIT(12)
+>> +#define  TEMP_STAT_TEMP              GENMASK(11, 0)
+>> +
+>> +struct s5_hwmon {
+>> +     void __iomem *base;
+>> +};
+>> +
+>> +static void s5_temp_enable(struct s5_hwmon *hwmon)
+>> +{
+>> +     u32 val = readl(hwmon->base + TEMP_CFG);
+>> +     u32 clk = 250;
+>> +
+>> +     val &= ~TEMP_CFG_CYCLES;
+>> +     val |= (clk << TEMP_CFG_CYCLES_OFF);
+>> +     val |= TEMP_CFG_ENA;
+>> +
+>> +     writel(val, hwmon->base + TEMP_CFG);
+>> +}
+>> +
+>> +static void s5_temp_disable(void *data)
+>> +{
+>> +     struct s5_hwmon *hwmon = data;
+>> +     u32 val = readl(hwmon->base + TEMP_CFG);
+>> +
+>> +     val &= ~TEMP_CFG_ENA;
+>> +
+>> +     writel(val, hwmon->base + TEMP_CFG);
+>> +}
+>> +
+>> +static int s5_read(struct device *dev, enum hwmon_sensor_types type,
+>> +                u32 attr, int channel, long *temp)
+>> +{
+>> +     struct s5_hwmon *hwmon = dev_get_drvdata(dev);
+>> +     int rc = 0, value;
+>> +     u32 stat;
+>> +
+>> +     switch (attr) {
+>> +     case hwmon_temp_input:
+>> +             stat = readl_relaxed(hwmon->base + TEMP_STAT);
+>> +             if (!(stat & TEMP_STAT_VALID))
+>> +                     return -EIO;
+>> +             value = stat & TEMP_STAT_TEMP;
+>> +             value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
+>> +             value *= 100;
+>> +             *temp = value;
+>> +             break;
+>> +     default:
+>> +             rc = -EOPNOTSUPP;
+>> +             break;
+>> +     }
+>> +
+>> +     return rc;
+>> +}
+>> +
+>> +static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
+>> +                          u32 attr, int channel)
+>> +{
+>> +     if (type != hwmon_temp)
+>> +             return 0;
+>> +
+>> +     switch (attr) {
+>> +     case hwmon_temp_input:
+>> +             return 0444;
+>> +     default:
+>> +             return 0;
+>> +     }
+>> +}
+>> +
+>> +static const struct hwmon_channel_info *s5_info[] = {
+>> +     HWMON_CHANNEL_INFO(chip,
+>> +                        HWMON_C_REGISTER_TZ),
+>> +     HWMON_CHANNEL_INFO(temp,
+>> +                        HWMON_T_INPUT),
+>
+> Excess line breaks.  The above 2 would be more readable on one line each.
+>
 
-> +	return usb_add_phy_dev(phy);
-> +}
-> +
-> +static int phy_remove(struct platform_device *pdev)
-> +{
-> +	struct tca_apb *ta = platform_get_drvdata(pdev);
-> +
-> +	usb_remove_phy(&ta->phy);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id intel_usb_phy_dt_ids[] = {
-> +	{ .compatible = "intel,lgm-usb-phy" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
-> +
-> +static struct platform_driver lgm_phy_driver = {
-> +	.driver = {
-> +		.name = "lgm-usb-phy",
-> +		.of_match_table = intel_usb_phy_dt_ids,
-> +	},
-> +	.probe = phy_probe,
-> +	.remove = phy_remove,
-> +};
-> +
-> +module_platform_driver(lgm_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-> +MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-> +MODULE_LICENSE("GPL v2");
+Right.
 
-regards
-Philipp
+>> +     NULL
+>> +};
+>> +
+>> +static const struct hwmon_ops s5_hwmon_ops = {
+>> +     .is_visible = s5_is_visible,
+>> +     .read = s5_read,
+>> +};
+>> +
+>> +static const struct hwmon_chip_info s5_chip_info = {
+>> +     .ops = &s5_hwmon_ops,
+>> +     .info = s5_info,
+>> +};
+>> +
+>> +static int s5_temp_probe(struct platform_device *pdev)
+>> +{
+>> +     struct device *hwmon_dev;
+>> +     struct s5_hwmon *hwmon;
+>> +     int err;
+>> +
+>> +     hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+>> +     if (!hwmon)
+>> +             return -ENOMEM;
+>> +
+>> +     hwmon->base = devm_platform_ioremap_resource(pdev, 0);
+>> +     if (IS_ERR(hwmon->base))
+>> +             return PTR_ERR(hwmon->base);
+>> +
+>> +     err = devm_add_action(&pdev->dev, s5_temp_disable, hwmon);
+>> +     if (err)
+>> +             return err;
+>
+> Probably just my linear way of thinking, but unusual to put error
+> handling / remove stuff in place _before_ the thing it's unwinding.
+>
+> We have devm_add_action_or_reset to make it safe to call this after
+> the thing it unwinds.
+>
+
+Seems I got this "backwardness" from ltq-cputemp.c. However, its totally
+unneeded here, so I'll just remove it.
+
+Thanks!
+
+---Lars
+
+>> +
+>> +     s5_temp_enable(hwmon);
+>> +
+>> +     hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+>> +                                                      "s5_temp",
+>> +                                                      hwmon,
+>> +                                                      &s5_chip_info,
+>> +                                                      NULL);
+>> +
+>> +     return PTR_ERR_OR_ZERO(hwmon_dev);
+>> +}
+>> +
+>> +const struct of_device_id s5_temp_match[] = {
+>> +     { .compatible = "microchip,sparx5-temp" },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, s5_temp_match);
+>> +
+>> +static struct platform_driver s5_temp_driver = {
+>> +     .probe = s5_temp_probe,
+>> +     .driver = {
+>> +             .name = "sparx5-temp",
+>> +             .of_match_table = s5_temp_match,
+>> +     },
+>> +};
+>> +
+>> +module_platform_driver(s5_temp_driver);
+>> +
+>> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
+>> +MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 2.27.0
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Lars Povlsen,
+Microchip
