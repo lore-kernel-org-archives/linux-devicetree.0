@@ -2,116 +2,258 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAABDC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B2220801
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C27D2078D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 00:16:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sGVtpU3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbgFIAQB (ORCPT
+        id S1730785AbgFIAQP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:16:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19508 "EHLO mga07.intel.com"
+        Mon, 8 Jun 2020 20:16:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:47790 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732892AbgFIAPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 8 Jun 2020 20:15:22 -0400
-IronPort-SDR: Z2XkLtwfSAslRmJZ3d7rk5/cuWRpnInUN2YW9JdmQAnTlxopkWLsYG7782hdQ2ihYXF0fr7ldQ
- ha3w3KEol9iA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 17:15:22 -0700
-IronPort-SDR: qbPVQki+36XgabtS5oHGJy8ZtNY2h1ErJWojOu92iiJpE6H/FNYnEEV0Zuwe6ir3rSdGZ7lwNE
- vQhFwRYuYNtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,489,1583222400"; 
-   d="scan'208";a="418227405"
-Received: from lkp-server01.sh.intel.com (HELO 12d5c0ac8e64) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 08 Jun 2020 17:15:20 -0700
-Received: from kbuild by 12d5c0ac8e64 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jiRvD-00001V-Fz; Tue, 09 Jun 2020 00:15:19 +0000
-Date:   Tue, 9 Jun 2020 04:18:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
-        andy.shevchenko@gmail.com, pmeerw@pmeerw.net,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
-Message-ID: <202006090426.ENCJHJ1n%lkp@intel.com>
-References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
+        id S1732925AbgFIAQM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 8 Jun 2020 20:16:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591661772; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=PvWYrDCuHj4FNQpaX2EaPOjvDJ9j1UuFf3vzoFveb9Q=;
+ b=sGVtpU3FBppyPafWhNziiT4txuS+yPT7dsnPfxxCdF/lBsOLJXfZ3xvUykMLuFHxbp7f8rTl
+ DTg9Vc0FfBZFV6JcJGDXhjR4LY7nOndHsMIboGvnjImEMseN7HhDWsg0DZ8nyyqEro1ts/0q
+ LpFXVBHkhbBWAUw2ftaeFp0Opyw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5eded4c7d9f1a4ceeffc70c6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 00:16:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0ACA5C433CB; Tue,  9 Jun 2020 00:16:06 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75919C4339C;
+        Tue,  9 Jun 2020 00:16:04 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 08 Jun 2020 17:16:04 -0700
+From:   tanmay@codeaurora.org
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, seanpaul@chromium.org,
+        abhinavk@codeaurora.org, swboyd@chromium.org, robdclark@gmail.com,
+        nganji@codeaurora.org, hoegsberg@google.com,
+        dri-devel@lists.freedesktop.org, Vara Reddy <varar@codeaurora.org>,
+        jsanka@codeaurora.org, aravindh@codeaurora.org,
+        linux-clk@vger.kernel.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Freedreno <freedreno-bounces@lists.freedesktop.org>
+Subject: Re: [Freedreno] [DPU PATCH v5 4/5] drm/msm/dp: add support for DP PLL
+ driver
+In-Reply-To: <158768799258.135303.4148133179625718198@swboyd.mtv.corp.google.com>
+References: <1585701031-28871-1-git-send-email-tanmay@codeaurora.org>
+ <1585701031-28871-5-git-send-email-tanmay@codeaurora.org>
+ <158768799258.135303.4148133179625718198@swboyd.mtv.corp.google.com>
+Message-ID: <55d0c7a95777a988eee64a5b7778c025@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On 2020-04-23 17:26, Stephen Boyd wrote:
+> Quoting Tanmay Shah (2020-03-31 17:30:30)
+>> diff --git a/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c
+> b/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c
+>> new file mode 100644
+>> index 0000000..aa845d0
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm.c
+>> @@ -0,0 +1,401 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
+>> reserved.
+>> + */
+>> +
+>> +/*
+>> + * Display Port PLL driver block diagram for branch clocks
+>> + *
+>> + *              +------------------------------+
+>> + *              |         DP_VCO_CLK           |
+>> + *              |                              |
+>> + *              |    +-------------------+     |
+>> + *              |    |   (DP PLL/VCO)    |     |
+>> + *              |    +---------+---------+     |
+>> + *              |              v               |
+>> + *              |   +----------+-----------+   |
+>> + *              |   | hsclk_divsel_clk_src |   |
+>> + *              |   +----------+-----------+   |
+>> + *              +------------------------------+
+>> + *                              |
+>> + *          +---------<---------v------------>----------+
+>> + *          |                                           |
+>> + * +--------v---------+                                 |
+>> + * |    dp_phy_pll    |                                 |
+>> + * |     link_clk     |                                 |
+>> + * +--------+---------+                                 |
+>> + *          |                                           |
+>> + *          |                                           |
+>> + *          v                                           v
+>> + * Input to DISPCC block                                |
+>> + * for link clk, crypto clk                             |
+>> + * and interface clock                                  |
+>> + *                                                      |
+>> + *                                                      |
+>> + *      +--------<------------+-----------------+---<---+
+>> + *      |                     |                 |
+>> + * +----v---------+  +--------v-----+  +--------v------+
+>> + * | vco_divided  |  | vco_divided  |  | vco_divided   |
+>> + * |    _clk_src  |  |    _clk_src  |  |    _clk_src   |
+>> + * |              |  |              |  |               |
+>> + * |divsel_six    |  |  divsel_two  |  |  divsel_four  |
+>> + * +-------+------+  +-----+--------+  +--------+------+
+>> + *         |                 |                  |
+>> + *         v---->----------v-------------<------v
+>> + *                         |
+>> + *              +----------+---------+
+>> + *              |   dp_phy_pll_vco   |
+>> + *              |       div_clk      |
+>> + *              +---------+----------+
+>> + *                        |
+>> + *                        v
+>> + *              Input to DISPCC block
+>> + *              for DP pixel clock
+> 
+> I suspect this shouldn't be a complicated clk provider at all. Take a
+> look at commit 42d068472ddf ("phy: Add DisplayPort configuration
+> options") for how the phy should manage the link rate, etc. If the
+> dispcc pixel clock needs to know what rate is coming in, then a single
+> clk_hw can be implemented here that tells the consumer (i.e. dispcc) 
+> the
+> rate that it will see at the output of this node. Otherwise, modeling
+> the clk tree inside this PLL block like this is super overly 
+> complicated
+> and wasteful. Don't do it.
+> 
+This will be taken care at later point of time. For now we have removed
+PLL bindings and made PLL as module of DP driver.
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on robh/for-next linux/master v5.7]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Tomasz-Duszynski/Add-support-for-SCD30-sensor/20200608-020304
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> drivers/iio/chemical/scd30_core.c:93:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-        sign = float32 & BIT(31) ? -1 : 1,
-                                 ^
-
-vim +93 drivers/iio/chemical/scd30_core.c
-
-    87	
-    88	/* simplified float to fixed point conversion with a scaling factor of 0.01 */
-    89	static int scd30_float_to_fp(int float32)
-    90	{
-    91		int fraction, shift,
-    92		    mantissa = float32 & GENMASK(22, 0),
-  > 93		    sign = float32 & BIT(31) ? -1 : 1,
-    94		    exp = (float32 & ~BIT(31)) >> 23;
-    95	
-    96		/* special case 0 */
-    97		if (!exp && !mantissa)
-    98			return 0;
-    99	
-   100		exp -= 127;
-   101		if (exp < 0) {
-   102			exp = -exp;
-   103			/* return values ranging from 1 to 99 */
-   104			return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
-   105		}
-   106	
-   107		/* return values starting at 100 */
-   108		shift = 23 - exp;
-   109		float32 = BIT(exp) + (mantissa >> shift);
-   110		fraction = mantissa & GENMASK(shift - 1, 0);
-   111	
-   112		return sign * (float32 * 100 + ((fraction * 100) >> shift));
-   113	}
-   114	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>> + *
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include "dp_pll_10nm.h"
+>> +
+>> +#define NUM_PROVIDED_CLKS              2
+>> +
+>> +#define DP_LINK_CLK_SRC                        0
+>> +#define DP_PIXEL_CLK_SRC               1
+>> +
+> [...]
+>> diff --git a/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm_util.c
+> b/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm_util.c
+>> new file mode 100644
+>> index 0000000..fff2e8d
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/msm/dp/pll/dp_pll_10nm_util.c
+>> @@ -0,0 +1,524 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
+>> reserved.
+>> + */
+>> +
+>> +#define pr_fmt(fmt)    "%s: " fmt, __func__
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/kernel.h>
+>> +
+>> +#include "dp_hpd.h"
+>> +#include "dp_pll.h"
+>> +#include "dp_pll_10nm.h"
+>> +
+> [...]
+>> +
+>> +static int dp_config_vco_rate_10nm(struct msm_dp_pll *pll,
+>> +               unsigned long rate)
+>> +{
+>> +       u32 res = 0;
+>> +       struct dp_pll_10nm *dp_res = to_dp_pll_10nm(pll);
+>> +
+>> +       res = dp_vco_pll_init_db_10nm(pll, rate);
+>> +       if (res) {
+>> +               DRM_ERROR("VCO Init DB failed\n");
+>> +               return res;
+>> +       }
+>> +
+>> +       if (dp_res->lane_cnt != 4) {
+>> +               if (dp_res->orientation == ORIENTATION_CC2)
+>> +                       PLL_REG_W(dp_res->phy_base, REG_DP_PHY_PD_CTL,
+> 0x6d);
+>> +               else
+>> +                       PLL_REG_W(dp_res->phy_base, REG_DP_PHY_PD_CTL,
+> 0x75);
+>> +       } else {
+>> +               PLL_REG_W(dp_res->phy_base, REG_DP_PHY_PD_CTL, 0x7d);
+>> +       }
+> 
+> For example, this part here can be done through the phy configuration
+> ops. A lane count check in the set rate clk op is quite odd!
+> 
+Same here.
+>> +
+>> +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
+>> +                       unsigned long *parent_rate)
+>> +{
+>> +       unsigned long rrate = rate;
+>> +       struct msm_dp_pll *pll = to_msm_dp_pll(hw);
+>> +
+>> +       if (rate <= pll->min_rate)
+>> +               rrate = pll->min_rate;
+>> +       else if (rate <= DP_VCO_HSCLK_RATE_2700MHZDIV1000)
+>> +               rrate = DP_VCO_HSCLK_RATE_2700MHZDIV1000;
+>> +       else if (rate <= DP_VCO_HSCLK_RATE_5400MHZDIV1000)
+>> +               rrate = DP_VCO_HSCLK_RATE_5400MHZDIV1000;
+>> +       else
+>> +               rrate = pll->max_rate;
+> 
+> This is basically link rate setting through the clk framework. Calling
+> clk_set_rate() on the pixel clk is complicated and opaque. I'd expect 
+> to
+> see the DP controller driver set the link rate on the phy with
+> phy_configure(), and then that can change the rate that is seen
+> downstream at the pixel clk. Does the pixel clk need to do anything 
+> with
+> the rate? Probably not? I suspect it can just enable the pixel clk when
+> it needs to and disable it when it doesn't need it.
+> 
+Same here.
+>> +
+>> +       DRM_DEBUG_DP("%s: rrate=%ld\n", __func__, rrate);
+>> +
+>> +       *parent_rate = rrate;
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
