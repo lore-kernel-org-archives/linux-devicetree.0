@@ -2,81 +2,127 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFDEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452EAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAFE207C3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD5D20734
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgFINHx (ORCPT
+        id S1728120AbgFINIJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:07:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24329 "EHLO mga03.intel.com"
+        Tue, 9 Jun 2020 09:08:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42134 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgFINHx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:07:53 -0400
-IronPort-SDR: 4xn6z4oullBCYgzLxsZdeD98kS+uGPcEkgM3TmRSGPnXMtmzQHhjvUd9pDXzDjykkjbl22+W9C
- jGj92f1ahkug==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 06:07:52 -0700
-IronPort-SDR: TEuW1Xzwv7LvQlrm3uAFU5jjG9vOH8wVK7BYT6A6fDw6np9eqHLEufj7FQrWa3ck3rBQDnxcyZ
- 9eYZLvD0p78A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,492,1583222400"; 
-   d="scan'208";a="260103954"
-Received: from lkp-server01.sh.intel.com (HELO 4a187143b92d) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Jun 2020 06:07:49 -0700
-Received: from kbuild by 4a187143b92d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jidym-00001B-RX; Tue, 09 Jun 2020 13:07:48 +0000
-Date:   Tue, 9 Jun 2020 21:07:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     kbuild-all@lists.01.org, Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [RFC PATCH] pinctrl: ocelot: ocelot_pinconf_set() can be static
-Message-ID: <20200609130730.GA6525@70ce5749704d>
-References: <20200609080709.9654-5-lars.povlsen@microchip.com>
+        id S1726937AbgFINIJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:08:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A221CAA6F;
+        Tue,  9 Jun 2020 13:08:10 +0000 (UTC)
+Message-ID: <5c55790c31603aed48fcd6e84ccbc4a6d8c6d1fd.camel@suse.de>
+Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net, robh@kernel.org,
+        mathias.nyman@linux.intel.com, Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     lorenzo.pieralisi@arm.com, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 09 Jun 2020 15:08:04 +0200
+In-Reply-To: <73fdeca7b651252f7907635e97f9f9b31e702868.camel@pengutronix.de>
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+         <20200608192701.18355-6-nsaenzjulienne@suse.de>
+         <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+         <382b81937757de570a83ba4ff9276221c0bba547.camel@suse.de>
+         <73fdeca7b651252f7907635e97f9f9b31e702868.camel@pengutronix.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-aPyaZQX6Bi+lXKb2F+qi"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609080709.9654-5-lars.povlsen@microchip.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-Signed-off-by: kernel test robot <lkp@intel.com>
----
- pinctrl-ocelot.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--=-aPyaZQX6Bi+lXKb2F+qi
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index c2f8e35616278f..c5f94402d963fb 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -782,7 +782,7 @@ static int ocelot_pinconf_get(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
--noinline int ocelot_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+static noinline int ocelot_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			      unsigned long *configs, unsigned int num_configs)
- {
- 	struct ocelot_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+On Tue, 2020-06-09 at 13:59 +0200, Philipp Zabel wrote:
+> Hi Nicolas,
+>=20
+>=20
+>=20
+> On Tue, 2020-06-09 at 13:18 +0200, Nicolas Saenz Julienne wrote:
+>=20
+> > Hi Florian, thanks for the reviews!
+> > On Mon, 2020-06-08 at 12:43 -0700, Florian Fainelli wrote:
+> > > On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> > > > Some atypical users of xhci-pci might need to manually reset their =
+xHCI
+> > > > controller before starting the HCD setup. Check if a reset controll=
+er
+> > > > device is available to the PCI bus and trigger a reset.
+> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > > ---
+> > > >   drivers/usb/host/xhci-pci.c | 9 +++++++++
+> > > >   1 file changed, 9 insertions(+)
+> > > > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pc=
+i.c
+> > > > index ef513c2fb843..45f70facdfcd 100644
+> > > > --- a/drivers/usb/host/xhci-pci.c
+> > > > +++ b/drivers/usb/host/xhci-pci.c
+>=20
+> [...]
+>=20
+> > > > @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev,
+> > > > const
+> > > > struct pci_device_id *id)
+> > > >                    return retval;
+> > > >    }
+> > > >  =20
+> > > > + reset =3D devm_reset_control_get(&dev->bus->dev, NULL);
+> > > Should not this be devm_reset_control_get_optional()?
+> > Yes, you're right.
+>=20
+>=20
+> Please use devm_reset_control_get_optional_exclusive() while you're at
+>=20
+> it.
+>=20
+
+Will do!
+
+Regards,
+Nicolas
+
+
+--=-aPyaZQX6Bi+lXKb2F+qi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7fibQACgkQlfZmHno8
+x/4nCQf+Pu7jCPf9/NoIlTfRB7FZ4OANYt5inVdJyL5rJD2651r40FKjtZOBZzVA
+WZF5fC3mPhzBuwiOY0BhQNmGczuZW7F3xzfWtitDo1ee7xMbBO6Sb+ppOQ3HD3qa
+dDIcoWpQkUBSy4nF2HegV8Mk3lk1wNp5qWKhlOP9RdpI3TaMPQ6LYdjlHKXGnHfK
+tW56rMzKdearm5rY/UuChAfqZgZnlTDugkE/U0PPUToNmd3HVw4I46wNgCPwxFKV
+99FgNnbLiEAqYzOD32uSd8o8N+v7smGdeG8IgNMxji+01vqUH+ygdqUJt/9V3nfK
+jYUgqXTX6cLyPVX9Km25skKw8UAcMw==
+=bQPH
+-----END PGP SIGNATURE-----
+
+--=-aPyaZQX6Bi+lXKb2F+qi--
+
