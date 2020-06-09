@@ -2,135 +2,170 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78981C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 03:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2ECC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 05:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4F920775
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 03:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672B020814
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 05:21:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OMW37jJJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ou2M7RFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgFIDsI (ORCPT
+        id S1725772AbgFIFVK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 8 Jun 2020 23:48:08 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:44086 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727088AbgFIDsH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 8 Jun 2020 23:48:07 -0400
-X-UUID: e43f4377fad742a1a8c541d0b5730a20-20200609
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=40bvsHbdvRwM9Lgi+QQEZZMxTMobgTcPYCKNo+R6gBM=;
-        b=OMW37jJJKadCQAdW+GKVWwY3XoA5m1aWfD9XDMSCmM0zMGrWkvWXD6BJn/G2NT/cKnCGLP+U7DMBHoYC86Gx0iSkMs06roOgoApOOrfIDXvoS41DxA5kMlUVuMgZ0ip6xnwnw+LyuaToGyFWMby8CWkSUZlJnR2Pvf0Sogcq+PU=;
-X-UUID: e43f4377fad742a1a8c541d0b5730a20-20200609
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 988240142; Tue, 09 Jun 2020 11:47:59 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 9 Jun
- 2020 11:47:54 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 9 Jun 2020 11:47:52 +0800
-Message-ID: <1591674341.8804.628.camel@mhfsdcap03>
-Subject: Re: [V7, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
-        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Tue, 9 Jun 2020 11:45:41 +0800
-In-Reply-To: <20200608132720.GS2428291@smile.fi.intel.com>
-References: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
-         <20200605105412.18813-3-dongchun.zhu@mediatek.com>
-         <20200605124643.GG2428291@smile.fi.intel.com>
-         <1591424358.8804.599.camel@mhfsdcap03>
-         <20200608132720.GS2428291@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 9 Jun 2020 01:21:10 -0400
+Received: from mail-eopbgr60048.outbound.protection.outlook.com ([40.107.6.48]:39953
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725770AbgFIFVK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 01:21:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JP7rUtXQfxCyot87oW+5qXkXhyWY16+Jke3B0MJbe3Rfpc3BBPUPiuvYaqWMoNjnHH4HtbFtQLqFx1d3gitQdTI3axZLWDHQMoiPF8DQ9oUP1n9hHnYbTjD1tK2WdbaAJkgOX4qbxcdt3NtajLpm/u4sOse1nnXRBhdqred8tNoh8zqu60tyB6gfCGrk4x6z/WWGn1LjDZWLEJka+K+NZHbpQ3odqP8j67OllUsK9zCD2715I8BYINqkZA8S5ocW1+ILGRFIqOI+dCbUw0ufCTyDMZ3n3VBPCb+MDW37s+0ZvkEU4lSpdOS8HY7VD4E8FC0V1urX5yMrvnFKYbCwIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yHkBw0HPxc+prr1W8elbO/t6RVzRCdRlO9wi82ahmio=;
+ b=bUICbCJ4k6Kk30gR5QEKPgBWNAkGUs5mg+rhw73MBzLGsZgKmoanHje7WQIS161lxt6bxILhlvvdeBOc8kOfIYBz4fAUk7cPEvC1bOLYT0XCHG9bOW/FCK0HXKjIHFhypo8d0BVzx/6qBRIyWSjIyq9Jesbf3lBosL5M1mtTOHMuGcZ/wT4iptMTxcjeCGcsx16ONwRI0D3CwpiVr+7Yt7njKarBjo6rGi/oA7V9T/zCvHeAhI0gxLl59irPmFgoUA2JYYzFsoNIcP2HDvqwnU05PVtwswdx2jSMfhpX3rjbhxJ6rs5LhV/EcsX/Ejr4aDexjkOrGyP89EOOTBig7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yHkBw0HPxc+prr1W8elbO/t6RVzRCdRlO9wi82ahmio=;
+ b=ou2M7RFyYpOHdh+p6qHmmHysqyiQZIdpNpUt+4O5AxIKisLflGHuOvVnXMCxIUdGP+43wgblMSi/O5Pab62C9OerXekcBw7ZoG6RE8GxO58E3Bh+6FkYxcLYddYg2UqDYu8bo6W3fkJTVKfHFVP0gOPDHfobMAgKbf3nvDbP7J0=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6685.eurprd04.prod.outlook.com (2603:10a6:803:120::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Tue, 9 Jun
+ 2020 05:21:04 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 05:21:04 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Thread-Topic: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Thread-Index: AQHWPBYcMy4ZpJEEjkym0JBjSJknZajOy8sAgAABToCAAA6IgIAAFFCAgACn/7A=
+Date:   Tue, 9 Jun 2020 05:21:04 +0000
+Message-ID: <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+In-Reply-To: <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4b0ad395-6309-44de-8f10-08d80c34e846
+x-ms-traffictypediagnostic: VE1PR04MB6685:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB66853D9616D6B448BF527D5589820@VE1PR04MB6685.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2/lNHVr7dIMiPtQ8ub7DLLkN2z2SHr0IbK8WqUsUwy+s+hVtBgkLOZ4rn+Pp5wheI8RlVLx2THWpvLFRjINOtwpS7ibJNG0umcTyCK/ekV1eVwqpNfK/WysrusfKdilptJyHmOfSua8aWaUspqUiZdGBsGGsErhjPmqo6OtRcSSFb+Jd+qktUsAH79lKVj0Gwr+t5qsPmp2uIILQzYruhJM12udeAWzsnH7Uf7F+sljMFUlNXnJyL4TcftWeYC0FMBw2GElck543W6WOnxO9PQVAwwQ7SKc+NLCe+VW3dwLkKWDBm05sxt3Mx2/VMbyCOifrQ+mKesYl4/xPw3C2gA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(53546011)(76116006)(8676002)(2906002)(83380400001)(8936002)(71200400001)(55016002)(478600001)(33656002)(9686003)(5660300002)(66556008)(86362001)(186003)(26005)(54906003)(6506007)(7696005)(316002)(7416002)(110136005)(66476007)(4326008)(66946007)(66446008)(64756008)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Q4lfBzB9Q21BwKqHejUWnW1aU2D8WxZuJwTpbEaGSsgUFZjD3VS1nEGPsn3DraJalKpyqHyMqU+jAvGIwjdmz2GXVGbp2Yc31hiJPzr9vVAvRogDQISFFiyTsvoXdDsX04NenInSynyFFmbNdSHRwpSHBa/3cTETHGP8BeLPklewFbLSfrLA9Mz2WFEWwxakfZhC0PUJg9Fklry7DlKcThmRdukzove/JJIUkFjC/N6MJXRYWwrKrshaGk7TW2hXxZgD3mGWV11BS5f1EvN7NEwrTC6SVksdCbI2Dm/tvp5cdLf7m/kDjquCPFs4eGhhZhevYxO2dZlZp0a9F4SZjqpvHsUCnYRTrYAa/Kq3/kQNe3y2lqeEhlGWw6AEP95C4+j22TzEZCTkDEdGph3OMLK9zLmQrWqxyAG+DMuyOPzRPFpUfAxirbneJvFer9LXoF8Q705PoQRez7kQWzZg5tYhkFJZ4PbVIo98Ssyz31Y=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 831D5E9863D577205AEB68EF6132BEFD4D39F2DA95B875E27B49D7640377CC602000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b0ad395-6309-44de-8f10-08d80c34e846
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 05:21:04.6746
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K0zgAiXkt4M9D8HiTrgFRM5+reDiPPdbu3QQvzHuVPZMC9iY7HndPduCbGYMPRO/LtqJlyfibDCQf8q3zM6WXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6685
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQW5keSwNCg0KT24gTW9uLCAyMDIwLTA2LTA4IGF0IDE2OjI3ICswMzAwLCBBbmR5IFNoZXZj
-aGVua28gd3JvdGU6DQo+IE9uIFNhdCwgSnVuIDA2LCAyMDIwIGF0IDAyOjE5OjE4UE0gKzA4MDAs
-IERvbmdjaHVuIFpodSB3cm90ZToNCj4gPiBPbiBGcmksIDIwMjAtMDYtMDUgYXQgMTU6NDYgKzAz
-MDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gPiA+IE9uIEZyaSwgSnVuIDA1LCAyMDIwIGF0
-IDA2OjU0OjEyUE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4gDQo+IC4uLg0KPiANCj4g
-PiA+ID4gKwlkZXBlbmRzIG9uIEkyQyAmJiBWSURFT19WNEwyDQo+ID4gPiANCj4gPiA+IE5vIGNv
-bXBpbGUgdGVzdD8NCj4gPiA+IA0KPiA+IA0KPiA+IFNvcnJ5Pw0KPiA+IEtjb25maWcgaGVyZSBp
-cyBiYXNlZCBvbiB0aGUgY3VycmVudCBtZWRpYSB0cmVlIG1hc3RlciBicmFuY2guDQo+ID4gSXQg
-aXMgYWxzbyB3aGF0IHRoZSBvdGhlciBzaW1pbGFyIGRyaXZlcnMgZnJvbSBEb25nd29vbiBkby4g
-DQo+IA0KPiBDT01QSUxFX1RFU1QuDQo+IEkgZHVubm8gaWYgaXQncyBlc3RhYmxpc2hlZCBvciBu
-b3QgcHJhY3RpY2UgaW4gbWVkaWEgc3Vic3lzdGVtLg0KPiANCj4gLi4uDQo+IA0KPiA+ID4gPiAr
-LyoNCj4gPiA+ID4gKyAqIERXOTc2OCByZXF1aXJlcyB3YWl0aW5nIHRpbWUgKGRlbGF5IHRpbWUp
-IG9mIHRfT1BSIGFmdGVyIHBvd2VyLXVwLA0KPiA+ID4gPiArICogb3IgaW4gdGhlIGNhc2Ugb2Yg
-UEQgcmVzZXQgdGFraW5nIHBsYWNlLg0KPiA+ID4gPiArICovDQo+ID4gPiA+ICsjZGVmaW5lIERX
-OTc2OF9UX09QUl9VUwkJCQkxMDAwDQo+ID4gPiA+ICsjZGVmaW5lIERXOTc2OF9UdmliX01TX0JB
-U0UxMAkJCSg2NCAtIDEpDQo+ID4gPiA+ICsjZGVmaW5lIERXOTc2OF9BQUNfTU9ERV9ERUZBVUxU
-CQkJMg0KPiA+ID4gDQo+ID4gPiA+ICsjZGVmaW5lIERXOTc2OF9BQUNfVElNRV9ERUZBVUxUCQkJ
-MHgyMA0KPiA+ID4gDQo+ID4gPiBIZXg/IFdoeSBub3QgZGVjaW1hbD8NCj4gPiA+IA0KPiA+IA0K
-PiA+IFRoZXJlIGlzIG9uZSBvcHRpb25hbCBwcm9wZXJ0eSAnZG9uZ3dvb24sYWFjLXRpbWluZycg
-ZGVmaW5lZCBpbiBEVC4NCj4gPiBJIGRvbid0IGtub3cgd2hldGhlciB5b3UgaGF2ZSBub3RpY2Vk
-IHRoYXQuDQo+ID4gDQo+ID4gJ0RXOTc2OF9BQUNfVElNRV9ERUZBVUxUJyBpcyB0aGUgdmFsdWUg
-c2V0IHRvIEFBQ1RbNTowXSByZWdpc3Rlci4NCj4gPiBJIHRob3VnaHQgdGhlIEhleCB1bml0IHNo
-b3VsZCBiZSBwcm9wZXIgYXMgaXQgaXMgZGlyZWN0bHkgd3JpdHRlbiB0byB0aGUNCj4gPiBIZXgg
-cmVnaXN0ZXIuDQo+IA0KPiBJIHNlZS4gSSB3b3VsZCByYXRoZXIgcHV0IGl0IGxpa2UgKEJJVCg2
-KSAvIDIpIHRvIHNob3cgZXhwbGljaXRseSB0aGF0IHdlDQo+IGNob29zZSBoYWxmIG9mIHRoZSBy
-ZXNvbHV0aW9uLg0KPiANCg0KSSBrbmV3IHlvdXIgaWRlYS4NCicoQklUKDYpIC8gMiknIG1heSBz
-b21ld2hhdCBzaG93IHRoZSBtZWFuaW5nIG9mICdtZWRpYW4gb2YgdGhlIHRvdGFsDQpyYW5nZSBv
-ZiBBQUNUWzU6MF0nLg0KDQpCdXQgdGhpcyB2YWx1ZSBpcyBzdGlsbCB2ZXJ5IG9ic2N1cmUgcmVs
-YXRpdmUgdG8gJzB4MjAnLg0KQXMgSSB0aG91Z2h0IHRoYXQgc2ltcGxlIGlzIHRoZSBiZXN0LCBl
-c3BlY2lhbGx5IGZvciBrZXJuZWwgdXBzdHJlYW0NCnBhdGNoLg0KDQo+IC4uLg0KPiANCj4gPiA+
-ID4gKwl2YWwgPSAoKHVuc2lnbmVkIGNoYXIpcmV0ICYgfm1hc2spIHwgKHZhbCAmIG1hc2spOw0K
-PiA+ID4gDQo+ID4gPiBUaGlzIGNhc3QgaXMgd2VpcmQuDQo+ID4gPiANCj4gPiANCj4gPiBUaGFu
-a3MgZm9yIHRoZSByZXZpZXcsIGJ1dCB0aGlzIGNhc3QgaXMgdXNpbmcgY2xhc3NpY2FsIHBhdHRl
-cm4gZnJvbQ0KPiA+IHlvdXIgc3VnZ2VzdGlvbiBvbiBPVjAyQTEwIHY1Og0KPiA+IGh0dHBzOi8v
-cGF0Y2h3b3JrLmxpbnV4dHYub3JnL3BhdGNoLzU5Nzg4Lw0KPiA+IA0KPiA+IFNvIEkgd29uZGVy
-IHdoZXRoZXIgaXQgaXMgc3RpbGwgcmVxdWlyZWQgdG8gYmUgcmVmaW5lZCBjdXJyZW50bHkuDQo+
-ID4gT3Igd2hhdCB3b3VsZCBpdCBiZSBzdXBwb3NlZCB0byBkbyBmb3IgdGhlIGNhc3Q/DQo+IA0K
-PiBPa2F5LCBkb2VzIGl0IHByb2R1Y2UgYSB3YXJuaW5nIHcvbyBjYXN0Pw0KPiBJZiB5ZXMsIHJl
-cGxhY2UgaXQgYXQgbGVhc3QgdG8gYmUgdGhlIHNhbWUgdHlwZSBhcyBtYXNrIGFuZCB2YWwuDQo+
-IA0KDQpOby4NCg0KPiAuLi4NCj4gDQo+ID4gPiA+ICsJZm9yICggOyB2YWwgPj0gMDsgdmFsIC09
-IERXOTc2OF9NT1ZFX1NURVBTKSB7DQo+ID4gPiA+ICsJCXJldCA9IGR3OTc2OF9zZXRfZGFjKGR3
-OTc2OCwgdmFsKTsNCj4gPiA+ID4gKwkJaWYgKHJldCkgew0KPiA+ID4gPiArCQkJZGV2X2Vycigm
-Y2xpZW50LT5kZXYsICJJMkMgd3JpdGUgZmFpbDogJWQiLCByZXQpOw0KPiA+ID4gPiArCQkJcmV0
-dXJuIHJldDsNCj4gPiA+ID4gKwkJfQ0KPiA+ID4gPiArCQl1c2xlZXBfcmFuZ2UobW92ZV9kZWxh
-eV91cywgbW92ZV9kZWxheV91cyArIDEwMDApOw0KPiA+ID4gPiArCX0NCj4gPiA+IA0KPiA+ID4g
-DQo+ID4gPiBJdCB3aWxsIGxvb2sgbW9yZSBuYXR1cmFsbHkgaW4gdGhlIG11bHRpcGxpZXIga2lu
-ZCBvZiB2YWx1ZS4NCj4gPiA+IA0KPiA+ID4gCXVuc2lnbmVkIGludCBzdGVwcyA9IERJVl9ST1VO
-RF9VUCguLi4pOw0KPiA+ID4gDQo+ID4gPiAJd2hpbGUgKHN0ZXBzLS0pIHsNCj4gPiA+IAkJLi4u
-KC4uLiwgc3RlcHMgKiAuLi5fTU9WRV9TVEVQUyk7DQo+ID4gPiAJCS4uLg0KPiA+ID4gCX0NCj4g
-PiA+IA0KPiA+ID4gYnV0IGRvdWJsZSBjaGVjayBhcml0aG1ldGljcy4NCj4gPiANCj4gPiBUaGUg
-Y3VycmVudCBjb2Rpbmcgc3R5bGUgaXMgYWN0dWFsbHkgdXBkYXRlZCB3aXRoIHJlZmVyZW5jZSB0
-byB5b3VyDQo+ID4gcHJldmlvdXMgY29tbWVudHMgb24gRFc5NzY4IHYzOg0KPiA+IGh0dHBzOi8v
-cGF0Y2h3b3JrLmxpbnV4dHYub3JnL3BhdGNoLzYxODU2Lw0KPiANCj4gSSB1bmRlcnN0YW5kLCBi
-dXQgY2FuIHlvdSBjb25zaWRlciB0byBnbyBmdXJ0aGVyIGFuZCBzZWUgaWYgdGhlIHByb3Bvc2Fs
-IHdvcmtzPw0KPiANCg0KSW4gZmFjdCwgeW91ciBzdWdnZXN0aW9uIGlzIHNvbWV0aGluZyBsaWtl
-IG9uZSBhbm90aGVyIG1ldGhvZCB0byBzZXQgREFDDQp2YWx1ZSB0byBhY3R1YXRvci4NCkl0IGlz
-IGxpa2UgdGhlcmUgbWF5IGJlIHNldmVyYWwgc29sdXRpb25zIHRvIGEgcXVlc3Rpb24uDQoNClll
-cy4gSSBqdXN0IHRyaWVkIHRoZSBuZXcgbWV0aG9kIGFuZCBpdCB3b3JrcyBhcyBleHBlY3RlZC4N
-CnUzMiBzdGVwcyA9IERJVl9ST1VORF9VUChkdzk3NjgtPmZvY3VzLT52YWwsIERXOTc2OF9NT1ZF
-X1NURVBTKTsNCndoaWxlIChzdGVwcy0tKSB7DQoJcmV0ID0gZHc5NzY4X3NldF9kYWMoZHc5NzY4
-LCBzdGVwcyAqIERXOTc2OF9NT1ZFX1NURVBTKTsNCglpZiAocmV0KQ0KCQlyZXR1cm4gcmV0Ow0K
-CXVzbGVlcF9yYW5nZShtb3ZlX2RlbGF5X3VzLCBtb3ZlX2RlbGF5X3VzICsgMTAwMCk7DQp9DQoN
-CkJ1dCBmcm9tIG15IHBlcnNwZWN0aXZlLCBJIG1heSBwcmVmZXIgdG8gdGhlIG9yaWdpbmFsIG1l
-dGhvZC4NCkFzIGhlcmUgd2hhdCB3ZSByZWFsbHkgY2FyZSBpcyB0aGUgREFDIHZhbHVlLA0KJ2R3
-OTc2OF9zZXRfZGFjKGR3OTc2OCwgdmFsKScgc2VlbXMgbW9yZSBzaW1wbGUuDQoNCg==
-
+On 2020/06/09 0:44 Robin Murphy <robin.murphy@arm.com> wrote:
+> On 2020-06-08 16:31, Mark Brown wrote:
+> > On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
+> >
+> >>>> +	if (transfer->rx_sg.sgl) {
+> >>>> +		struct device *rx_dev =3D spi->controller->dma_rx->device->dev;
+> >>>> +
+> >>>> +		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
+> >>>> +				       transfer->rx_sg.nents, DMA_TO_DEVICE);
+> >>>> +	}
+> >>>> +
+> >
+> >>> This is confusing - why are we DMA mapping to the device after doing
+> >>> a PIO transfer?
+> >
+> >> 'transfer->rx_sg.sgl' condition check that's the case fallback PIO
+> >> after DMA transfer failed. But the spi core still think the buffer
+> >> should be in 'device' while spi driver touch it by PIO(CPU), so sync i=
+t back to
+> device to ensure all received data flush to DDR.
+> >
+> > So we sync it back to the device so that we can then do another sync
+> > to CPU?  TBH I'm a bit surprised that there's a requirement that we
+> > explicitly undo a sync and that a redundant double sync in the same
+> > direction might be an issue but I've not had a need to care so I'm
+> > perfectly prepared to believe there is.
+> >
+> > At the very least this needs a comment.
+>=20
+> Yeah, something's off here - at the very least, syncing with DMA_TO_DEVIC=
+E on
+> the Rx buffer that was mapped with DMA_FROM_DEVICE is clearly wrong.
+> CONFIG_DMA_API_DEBUG should scream about that.
+>=20
+> If the device has written to the buffer at all since dma_map_sg() was cal=
+led
+> then you do need a dma_sync_sg_for_cpu() call before touching it from a C=
+PU
+> fallback path, but if nobody's going to touch it from that point until it=
+'s
+> unmapped then there's no point syncing it again. The
+> my_card_interrupt_handler() example in DMA-API_HOWTO.txt demonstrates
+> this.
+Thanks for you post, but sorry, that's not spi-imx case now, because the rx=
+ data in device memory is not truly updated from 'device'/DMA, but from PIO=
+, so that dma_sync_sg_for_cpu with DMA_FROM_DEVICE can't be used, otherwise=
+ the fresh data in cache will be invalidated.
+But you're right, kernel warning comes out if CONFIG_DMA_API_DEBUG enabled.=
+..=20
