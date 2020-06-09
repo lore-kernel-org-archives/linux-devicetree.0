@@ -2,230 +2,92 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0C0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E6FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D462320823
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C79D207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 17:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591725129;
+	bh=TgO873VK1uWIKP3ppDJ9nGZ4WoqU168LVpBfn9JCTYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LSmLhrUlFJRPj4/gvuI6PXNG85JaJxxBYJ7GNvtbQp1DZ8+aKHluAkcRGVYhUcOcN
+	 UyGALgYXRJ+jGW6Z0w3+x2WDN0eIXGQK0a0Cw03oBBMaT1BGbumRuyOwWNBvZ4v4bW
+	 zumgxWyoE6DIQGPjC40VIfRqhQu9TMFTYWikSC+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgFIRsk (ORCPT
+        id S1730988AbgFIRwH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 13:48:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51766 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732342AbgFIRsi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 13:48:38 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id BD25F2A3BE2
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Rob Herring <robh@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: [PATCH v9 05/11] dt-bindings: display: add i.MX6 MIPI DSI host controller doc
-Date:   Tue,  9 Jun 2020 20:49:53 +0300
-Message-Id: <20200609174959.955926-6-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609174959.955926-1-adrian.ratiu@collabora.com>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+        Tue, 9 Jun 2020 13:52:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732760AbgFIRwF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 13:52:05 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3D05207C3;
+        Tue,  9 Jun 2020 17:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591725125;
+        bh=TgO873VK1uWIKP3ppDJ9nGZ4WoqU168LVpBfn9JCTYE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=flY6tw4scXwcHAh5ndeODhVjKU39UiDaLUXkNgJF/VeacAKgTqHUSgyi7yWttmL2C
+         dM9+M9jBx7AUtHP71uzwM8FS45GEfL+rpx7XhyaPu/XscJ137rzdA/NcQT7giIjpj6
+         csJPNwgawxwvmK6IpC14ubbfssZ6sBrSNQmrMXks=
+Date:   Tue, 9 Jun 2020 18:52:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] TAS2563 DSP Firmware Loader
+Message-ID: <20200609175203.GP4583@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uQ3BaAlxDi9XKvis"
+Content-Disposition: inline
+In-Reply-To: <20200609172841.22541-1-dmurphy@ti.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This provides an example DT binding for the MIPI DSI host controller
-present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org
-Tested-by: Adrian Pop <pop.adrian61@gmail.com>
-Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
-Changes since v8:
-  - Fixed small compatible string typo caught by checkpatch
-  - Added custom select for 'fsl,imx6-mipi-dsi' (Rob)
-  - Replaced additionalProperties -> unevaluatedProperties (Rob)
-  - Dropped all nodes not adding any new constraints apart from
-  the recently upstreamed snps,dw-mipi-dsi.yaml (Rob)
+--uQ3BaAlxDi9XKvis
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes since v7:
-  - Clarified port@0,1 descriptions, marked them as required and
-  added missing port@0 in example (Laurent)
+On Tue, Jun 09, 2020 at 12:28:39PM -0500, Dan Murphy wrote:
 
-Changes since v6:
-  - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
-  - Moved *-cells properties outside patternProperties (Laurent)
-  - Removed the panel port documentation (Laurent)
-  - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
+> These programs and configurations are selectable via files under the I2C dev
+> node.  There may be a better way to select this through ALSA controls but I was
+> unable to find a good example of this.  This is why this is an RFC patchset.
 
-Changes since v5:
-  - Fixed missing reg warning (Fabio)
-  - Updated dt-schema and fixed warnings (Rob)
+I think you can just use enums for most of this - what you want to do I
+think is parse the firmware, build templates for the controls and then
+add them with snd_soc_add_component_controls().  Userspace *should* cope
+with controls being hotplugged.
 
-Changes since v4:
-  - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
-  and addressed received binding feedback (Rob)
+--uQ3BaAlxDi9XKvis
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changes since v3:
-  - Added commit message (Neil)
-  - Converted to yaml format (Neil)
-  - Minor dt node + driver fixes (Rob)
-  - Added small panel example to the host controller binding
+-----BEGIN PGP SIGNATURE-----
 
-Changes since v2:
-  - Fixed commit tags (Emil)
----
- .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fzEIACgkQJNaLcl1U
+h9Bd3Qf+M45/dHXuPejpoJQrP/PmR/7OYTmNoSJSL7fxpGkoxNV4A5VdPFEM7ZmP
+rfspDqlxdJ9jDVZhCyTaRzlFP9VaklY/9EFupR5qc6ms6ZKdjYrcjWc98Cqlk+d1
+RAN0Y4oxlqfxAZZKlw6ZHFLCMBHdV/vkOBGNZdiiaBqAFprXUVnqlevuGW8Lv7s3
+yDf1Te02bvervNfinPb53nj6QtFoBwixBR8E8zdKINv1ZP8q31YF7c8j/0tvyMkQ
+LZ6OhieBzZeb4YFR7/sieJVpr60qnUKefrtUaPWaJLrFtPb8vuuPmVK+jO4AQ4gF
+5WqFDT0NEUZuTrTzITUHxyZZkRbq9Q==
+=8iWz
+-----END PGP SIGNATURE-----
 
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-new file mode 100644
-index 0000000000000..86093729fd5f9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX6 DW MIPI DSI Host Controller
-+
-+maintainers:
-+  - Adrian Ratiu <adrian.ratiu@collabora.com>
-+
-+description: |
-+  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
-+  IP block with a companion PHY IP.
-+
-+  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-+  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-+  the following device-specific properties.
-+
-+allOf:
-+  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
-+
-+# Need a custom select here or 'snps,dw-mipi-dsi' will match lots of nodes
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - fsl,imx6-mipi-dsi
-+  required:
-+    - compatible
-+
-+properties:
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  compatible:
-+    items:
-+      - const: fsl,imx6-mipi-dsi
-+      - const: snps,dw-mipi-dsi
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,gpr:
-+    description:
-+      Phandle to the iomuxc-gpr region containing the multiplexer ctrl register.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - interrupts
-+
-+examples:
-+  - |+
-+    #include <dt-bindings/clock/imx6qdl-clock.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    dsi: dsi@21e0000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "fsl,imx6-mipi-dsi", "snps,dw-mipi-dsi";
-+        reg = <0x021e0000 0x4000>;
-+        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-+        fsl,gpr = <&gpr>;
-+        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-+                 <&clks IMX6QDL_CLK_MIPI_IPG>;
-+        clock-names = "ref", "pclk";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@0 {
-+                reg = <0>;
-+                mipi_mux_0: endpoint {
-+                    remote-endpoint = <&ipu1_di0_mipi>;
-+                };
-+            };
-+            port@1 {
-+                reg = <1>;
-+                dsi_out: endpoint {
-+                    remote-endpoint = <&panel_in>;
-+                };
-+            };
-+        };
-+
-+        panel@0 {
-+            compatible = "sharp,ls032b3sx01";
-+            reg = <0>;
-+            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                port@0 {
-+                    reg = <0>;
-+                    panel_in: endpoint {
-+                        remote-endpoint = <&dsi_out>;
-+                    };
-+                };
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.27.0
-
+--uQ3BaAlxDi9XKvis--
