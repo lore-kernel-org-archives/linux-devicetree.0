@@ -2,108 +2,130 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C662C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD97C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0DD2078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591719549;
-	bh=rvAHvEibYz1tZdQIA/llKxglupAm3AZPm3CtQ+GmM/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XyW9p2ODvEGHUGG1xTCNrXsoT4SSHRR7kCw5lJkm4dTOoN+Tkz26eO6fiNGhome/7
-	 kUbMfq8LqiC2HUQe8QCaF+iAVeKuKBS3AuK8A5zHw43S/ZK7M0tvEq/fh1EVBeiW34
-	 tRJkqx52Aehe9rWNmoJcFQEbhq+ZXHCBsrVNmf1k=
+	by mail.kernel.org (Postfix) with ESMTP id BBE8420774
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 16:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgFIQTI (ORCPT
+        id S1726546AbgFIQZK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 12:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
+        Tue, 9 Jun 2020 12:25:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:44788 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgFIQTH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 12:19:07 -0400
-Received: from localhost (unknown [122.171.156.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8DC20774;
-        Tue,  9 Jun 2020 16:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591719547;
-        bh=rvAHvEibYz1tZdQIA/llKxglupAm3AZPm3CtQ+GmM/4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FdoAj2OTopFQLxflu9h3hiqwerW2jivX6kpyV1x6Po4yqJnoJ6otofXs0/ayMvUGG
-         Gli4HUPBGzNsHxgfvEuCuTx6E4ZcfAaK44dt1qfKnljwiFRnwMORyM0oWP2mkLBDK9
-         hmnc06FkZ1h3DdrwWYUu7P8PaBrb3KgnlnbN8XiU=
-Date:   Tue, 9 Jun 2020 21:49:03 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v7 3/3] ARM: dts: qcom: ipq4019: add USB devicetree nodes
-Message-ID: <20200609161903.GE1084979@vkoul-mobl>
-References: <20200503201823.531757-1-robert.marko@sartura.hr>
- <20200503201823.531757-3-robert.marko@sartura.hr>
- <20200504073914.GQ1375924@vkoul-mobl>
- <CA+HBbNEiB+o4KxonAu4-ra+P11Yb649v6AFaPjFc8JQDQ8T=CA@mail.gmail.com>
- <CA+HBbNFsZ-v_2cMhDNGnQXTFaqsjGzB+1rAS3=_CLQhd0N4OKQ@mail.gmail.com>
+        id S1725894AbgFIQZK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:25:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69E5F1FB;
+        Tue,  9 Jun 2020 09:25:09 -0700 (PDT)
+Received: from [10.57.49.155] (unknown [10.57.49.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B0BA3F73D;
+        Tue,  9 Jun 2020 09:25:05 -0700 (PDT)
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
+ support reserved memory
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        dillon min <dillon.minfei@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux@armlinux.org.uk, Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, tglx@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+ <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
+ <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+ <CAL9mu0+__0Z3R3TcSrj9-kPxsyQHKS9WqK1u58P0dEZ+Jd-wbQ@mail.gmail.com>
+ <20200609153646.GA17969@lst.de>
+ <031034fb-b109-7410-3ff8-e78cd12a5552@arm.com>
+Message-ID: <b0c85637-4646-614b-d406-49aa72ce52e1@arm.com>
+Date:   Tue, 9 Jun 2020 17:25:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+HBbNFsZ-v_2cMhDNGnQXTFaqsjGzB+1rAS3=_CLQhd0N4OKQ@mail.gmail.com>
+In-Reply-To: <031034fb-b109-7410-3ff8-e78cd12a5552@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
-
-On 09-06-20, 16:45, Robert Marko wrote:
-> HI,
-> Vinod can you maybe pick this?
-
-Sorry can't do.. this needs to go thru Bjorn..
-
-We are in merge window so it is too late for that.
-Bjorn can pick this for 5.9...
-
+On 6/9/20 4:43 PM, Vladimir Murzin wrote:
+> On 6/9/20 4:36 PM, Christoph Hellwig wrote:
+>> On Tue, Jun 09, 2020 at 11:22:24PM +0800, dillon min wrote:
+>>> Hi Vladimir,
+>>>
+>>> Thanks for reviewing.
+>>>
+>>> Hi Christoph Hellwig,
+>>>
+>>> I just want to know if kernel dma mapping/direct is focused on
+>>> platforms with MMU.
+>>> leave arch code to handle dma coherent memory management themself for
+>>> no-MMU platform.
+>>
+>> No, I'd really like to consolidate everything that isn't overly
+>> arch specific eventually.
+>>
+>>>
+>>> so, you just return error code in kernel/dma/mapping.c,direct.c
+>>> without CONFIG_MMU defined ?
+>>> which means dma-direct mapping doesn't support !CONFIG_MMU is not a
+>>> bug, but design as it's.
+>>> or, just return error code currently, will add dma direct mapping
+>>> support for !CONFIG_MMU in the
+>>> future?
+>>>
+>>> As Vladimir Murzin's suggestion has changes in kernel code, I need
+>>> your input to get
+>>> the design goal about dma-direct mapping, thanks.
+>>
+>> Can someone repost the whole patch?
+>>
 > 
-> It would be great to have nodes in 5.8 along the driver
+> Happy to repost as separate patch once dillon confirms it actually works.
 > 
-> Thank
-> Robert
+> Meanwhile, I'm trying to understand at which point we lost this 
+> functionality for NOMMU... maybe it will become different patch :)
 > 
-> On Fri, May 29, 2020 at 11:36 AM Robert Marko <robert.marko@sartura.hr> wrote:
-> >
-> > On Mon, May 4, 2020 at 9:39 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 03-05-20, 22:18, Robert Marko wrote:
-> > > > From: John Crispin <john@phrozen.org>
-> > > >
-> > > > Since we now have driver for the USB PHY, lets add the necessary nodes to DTSI.
-> > >
-> > > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > >
-> > > Bjorn, I have picked the phy and dt binding, feel free to apply this one
-> > >
-> > > Thanks
-> > > --
-> > > ~Vinod
-> >
-> > Any chance of this landing into 5.7?
-> > Driver and bindings have been merged, but I don't see DT nodes queued.
-> >
-> > Regards,
-> > Robert
 
--- 
-~Vinod
+mmap operation for dma-noop (ancestor of dma-direct) was proposed
+in [1]. It was suggested to change dma_common_map() instead which
+was implemented in 
+
+07c75d7a6b9e ("drivers: dma-mapping: allow dma_common_mmap() for NOMMU")
+
+that removed CONFIG_MMU drom dma_common_mmap(). Later
+
+62fcee9a3bd7 ("dma-mapping: remove CONFIG_ARCH_NO_COHERENT_DMA_MMAP")
+
+reintroduced CONFIG_MMU in dma_common_mmap().
+
+Even though commit mentions ARM, I do not see how mmap would continue
+to work for NOMMU with dma-direct. ARM NOMMU needs it's own DMA operations
+only in cases where caches are implemented or active, in other cases it
+fully relies on dma-direct.
+
+It looks to me that we either should provide NOMMU variant for mmap in
+dma/direct or (carefully) fix dma/mapping.
+
+Thoughts?
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-January/480600.html
+
+Vladimir
+
+> Cheers
+> Vladimir
+> 
+
