@@ -2,398 +2,221 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9208C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DEEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B485E20734
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834A1207ED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="bZo0Gti1"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="cEH2mdWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbgFIOZL (ORCPT
+        id S1730004AbgFIOih (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:25:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbgFIOZK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 10:25:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A27C9C08C5C2
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 07:25:09 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c3so21519517wru.12
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 07:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=K4rJYCnsX/Tj+0hJNClACYILsDLzG+crfTmE8yyLMu0=;
-        b=bZo0Gti1Sunym080vSY/iIyUfceTgSDi4jC8Vjap0IwR21v1vkt+7qklae8IIUCTPY
-         mPoCjARIuLdjIUsXJWAAm1r34IK67oCosIGbw8GN8pp5dbxh0f0ToaJOUp5YFs9zl/Li
-         KuMI4AO8o3KPKHax4nar5kqHOeS1jOjr8IvrF7ICkzlKffnRRhymEJmvvLXi/XNdk9w6
-         XcWZurXnBuLlxluoxgTnpDd9xHBeR2QGrI1JPVPnG7gJX0o4VF8KebzUzA8h1O1a3KG1
-         +bdrndxJpiYjEFAW5X0sgCyiFyaIWyz3GlVDMYsNh+TyV6L4+yeZNPum6qnj3SD3H44u
-         ZGkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=K4rJYCnsX/Tj+0hJNClACYILsDLzG+crfTmE8yyLMu0=;
-        b=TWHtRwpCmEaL8utCsrJMRBGEFdBfC8AGybm7uTlACGrDA0ImcbzckyMsk8CdIRPMoc
-         WSc+7wdceWsHs2j6vh3uhYIbpBmOB5ywOOfGCSmLyiyCwtgbM5kLIrm38mfH/hsNvynC
-         KEV6XNMCSpCmeNkJBLMma1CgpKKvhD8rtHr9AvhvL/ZhcN9PJyYAER/6/24PUQjcVzdT
-         fJr4QB7R94aHwIOn/LNqZBLD3gmp9O5znOJZnzkGD2j3xvkL61SQkn/xfqZW3rsU2bs3
-         afGVRX42iZ5GvoGSGQQnHrM6jxPmbUNa+BEVB//HZw+jV1MGpI/QUtCl490u+z/pytXi
-         P+tw==
-X-Gm-Message-State: AOAM531CHNSpXgrrhBdQIo7WU1nL5tasce1Kl0gARA13A5lgBVynhwF+
-        dwgJJ9RF0xFX2H+lt2H1ae6MdA==
-X-Google-Smtp-Source: ABdhPJxs/Re5zuZyyrNoCFIeUXFXWK+c7XYa+Hs6EenLmsAK2lmeQx5Ri0u6hONwcURrgxbSx64N1A==
-X-Received: by 2002:a05:6000:114e:: with SMTP id d14mr4720249wrx.110.1591712708066;
-        Tue, 09 Jun 2020 07:25:08 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id j4sm3285673wma.7.2020.06.09.07.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 07:25:07 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 16:25:04 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: [PATCH] arm: dts: am335x-pocketbeagle: add gpio-line-names
-Message-ID: <20200609142504.GA2955236@x1>
+        Tue, 9 Jun 2020 10:38:37 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:36211 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgFIOig (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 10:38:36 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 1B4C422F2D;
+        Tue,  9 Jun 2020 16:38:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591713512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3ZPJRQPjyIuPfU5SHFsD+L8Q03R3+eZsQvqJ5K0dqDQ=;
+        b=cEH2mdWXJgiXk5AYmdHK2ORPPLW0kmX5gHUPbeGjN4COswBGwClKjt2xvIVY37IpTQHWrV
+        5w99q1qD+cl6dn+sw3zbCeKnqavpkSE/lERuAHNegK905kSkxRCahqrr4BxkdtV93EcvCO
+        sDDLQ2q+b/rGGOqSyyduIDIYa9RDBo8=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 09 Jun 2020 16:38:31 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200609064735.GH4106@dell>
+References: <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc> <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
-many of the TI AM3358 SoC balls to stacking expansion boards called 
-"capes", or to other external connections like jumper wires connected
-to a breadboard.
+Am 2020-06-09 08:47, schrieb Lee Jones:
+> On Mon, 08 Jun 2020, Michael Walle wrote:
+> 
+>> Am 2020-06-08 20:56, schrieb Lee Jones:
+>> > On Mon, 08 Jun 2020, Michael Walle wrote:
+>> >
+>> > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
+>> > > > +Cc: some Intel people WRT our internal discussion about similar
+>> > > > problem and solutions.
+>> > > >
+>> > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+>> > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
+>> > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
+>> > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+>> > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+>> > > >
+>> > > > ...
+>> > > >
+>> > > > > Right.  I'm suggesting a means to extrapolate complex shared and
+>> > > > > sometimes intertwined batches of register sets to be consumed by
+>> > > > > multiple (sub-)devices spanning different subsystems.
+>> > > > >
+>> > > > > Actually scrap that.  The most common case I see is a single Regmap
+>> > > > > covering all child-devices.
+>> > > >
+>> > > > Yes, because often we need a synchronization across the entire address
+>> > > > space of the (parent) device in question.
+>> > > >
+>> > > > >  It would be great if there was a way in
+>> > > > > which we could make an assumption that the entire register address
+>> > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+>> > > > > each of the devices described by its child-nodes.  Probably by picking
+>> > > > > up on the 'simple-mfd' compatible string in the first instance.
+>> > > > >
+>> > > > > Rob, is the above something you would contemplate?
+>> > > > >
+>> > > > > Michael, do your register addresses overlap i.e. are they intermingled
+>> > > > > with one another?  Do multiple child devices need access to the same
+>> > > > > registers i.e. are they shared?
+>> > >
+>> > > No they don't overlap, expect for maybe the version register, which is
+>> > > just there once and not per function block.
+>> >
+>> > Then what's stopping you having each device Regmap their own space?
+>> 
+>> Because its just one I2C device, AFAIK thats not possible, right?
+> 
+> Not sure what (if any) the restrictions are.
 
-Note: the AM3358 die is actually embedded inside of the OSD335x-SM
-System-in-Package (SiP) [1] but that is irrelevant to the gpio driver.
+You can only have one device per I2C address. Therefore, I need one 
+device
+which is enumerated by the I2C bus, which then enumerates its 
+sub-devices.
+I thought this was one of the use cases for MFD. (Regardless of how a
+sub-device access its registers). So even in the "simple-regmap" case 
+this
+would need to be an i2c device.
 
-Many of the P1 and P2 header pins can muxed to a GPIO line.  The
-gpio-line-names describe which P1 or P2 pin that line goes to and the
-default mux for that P1 or P2 pin if it is not GPIO.
-    
-Some GPIO lines are named "[NC]" as the corresponding balls are not
-routed to anything on the PCB.
+E.g.
 
-The goal for these names is to make it easier for a user viewing the
-output of gpioinfo to determine which P1 or P2 pin is connected to a
-GPIO line.  The output of gpioinfo on a PocketBeagle would be:
+&i2cbus {
+   mfd-device@10 {
+     compatible = "simple-regmap", "simple-mfd";
+     reg = <10>;
+     regmap,reg-bits = <8>;
+     regmap,val-bits = <8>;
+     sub-device@0 {
+       compatible = "vendor,sub-device0";
+       reg = <0>;
+     };
+     ...
+};
 
-gpiochip0 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:       "[NC]"       unused   input  active-high 
-	line   2: "P1.08 [SPI0_CLK]" unused input active-high 
-	line   3: "P1.10 [SPI0_MISO]" unused input active-high 
-	line   4: "P1.12 [SPI0_MOSI]" unused input active-high 
-	line   5: "P1.06 [SPI0_CS]" unused input active-high 
-	line   6:  "[MMC0_CD]"         "cd"   input   active-low [used]
-	line   7: "P2.29 [SPI1_CLK]" unused input active-high 
-	line   8:       "[NC]"       unused   input  active-high 
-	line   9:       "[NC]"       unused   input  active-high 
-	line  10:       "[NC]"       unused   input  active-high 
-	line  11:       "[NC]"       unused   input  active-high 
-	line  12: "P1.26 [I2C2_SDA]" unused input active-high 
-	line  13: "P1.28 [I2C2_SCL]" unused input active-high 
-	line  14: "P2.11 [I2C1_SDA]" unused input active-high 
-	line  15: "P2.09 [I2C1_SCL]" unused input active-high 
-	line  16:       "[NC]"       unused   input  active-high 
-	line  17:       "[NC]"       unused   input  active-high 
-	line  18:       "[NC]"       unused   input  active-high 
-	line  19: "P2.31 [SPI1_CS]" unused input active-high 
-	line  20: "P1.20 [PRU0.16]" unused input active-high 
-	line  21:       "[NC]"       unused   input  active-high 
-	line  22:       "[NC]"       unused   input  active-high 
-	line  23:      "P2.03"       unused   input  active-high 
-	line  24:       "[NC]"       unused   input  active-high 
-	line  25:       "[NC]"       unused   input  active-high 
-	line  26:      "P1.34"       unused   input  active-high 
-	line  27:      "P2.19"       unused   input  active-high 
-	line  28:       "[NC]"       unused   input  active-high 
-	line  29:       "[NC]"       unused   input  active-high 
-	line  30: "P2.05 [UART4_RX]" unused input active-high 
-	line  31: "P2.07 [UART4_TX]" unused input active-high 
-gpiochip1 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:       "[NC]"       unused   input  active-high 
-	line   2:       "[NC]"       unused   input  active-high 
-	line   3:       "[NC]"       unused   input  active-high 
-	line   4:       "[NC]"       unused   input  active-high 
-	line   5:       "[NC]"       unused   input  active-high 
-	line   6: "P1.06 [SPI0_CS]" unused input active-high 
-	line   7: "P1.06 [SPI0_CS]" unused input active-high 
-	line   8: "P2.27 [SPI1_MISO]" unused input active-high 
-	line   9: "P2.25 [SPI1_MOSI]" unused input active-high 
-	line  10: "P1.32 [UART0_RX]" unused input active-high 
-	line  11: "P1.30 [UART0_TX]" unused input active-high 
-	line  12:      "P2.24"       unused   input  active-high 
-	line  13:      "P2.33"       unused   input  active-high 
-	line  14:      "P2.22"       unused   input  active-high 
-	line  15:      "P2.18"       unused   input  active-high 
-	line  16:       "[NC]"       unused   input  active-high 
-	line  17:       "[NC]"       unused   input  active-high 
-	line  18: "P2.01 [PWM1A]" unused input active-high 
-	line  19:       "[NC]"       unused   input  active-high 
-	line  20:      "P2.10"       unused   input  active-high 
-	line  21: "[user led 0]" "beaglebone:green:usr0" output active-high [used]
-	line  22: "[user led 1]" "beaglebone:green:usr1" output active-high [used]
-	line  23: "[user led 2]" "beaglebone:green:usr2" output active-high [used]
-	line  24: "[user led 3]" "beaglebone:green:usr3" output active-high [used]
-	line  25:      "P2.06"       unused   input  active-high 
-	line  26:      "P2.04"       unused   input  active-high 
-	line  27:      "P2.02"       unused   input  active-high 
-	line  28:      "P2.08"       unused   input  active-high 
-	line  29:       "[NC]"       unused   input  active-high 
-	line  30:       "[NC]"       unused   input  active-high 
-	line  31:       "[NC]"       unused   input  active-high 
-gpiochip2 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:      "P2.17"       unused   input  active-high 
-	line   2:       "[NC]"       unused   input  active-high 
-	line   3:       "[NC]"       unused   input  active-high 
-	line   4:       "[NC]"       unused   input  active-high 
-	line   5: "[EEPROM_WP]" unused input active-high 
-	line   6:       "[NC]"       unused   input  active-high 
-	line   7:       "[NC]"       unused   input  active-high 
-	line   8:       "[NC]"       unused   input  active-high 
-	line   9:       "[NC]"       unused   input  active-high 
-	line  10:       "[NC]"       unused   input  active-high 
-	line  11:       "[NC]"       unused   input  active-high 
-	line  12:       "[NC]"       unused   input  active-high 
-	line  13:       "[NC]"       unused   input  active-high 
-	line  14:       "[NC]"       unused   input  active-high 
-	line  15:       "[NC]"       unused   input  active-high 
-	line  16:       "[NC]"       unused   input  active-high 
-	line  17:       "[NC]"       unused   input  active-high 
-	line  18:       "[NC]"       unused   input  active-high 
-	line  19:       "[NC]"       unused   input  active-high 
-	line  20:       "[NC]"       unused   input  active-high 
-	line  21:       "[NC]"       unused   input  active-high 
-	line  22: "P2.35 [AIN5]" unused input active-high 
-	line  23: "P1.02 [AIN6]" unused input active-high 
-	line  24: "P1.35 [PRU1.10]" unused input active-high 
-	line  25: "P1.04 [PRU1.11]" unused input active-high 
-	line  26: "[MMC0_DAT3]" unused input active-high 
-	line  27: "[MMC0_DAT2]" unused input active-high 
-	line  28: "[MMC0_DAT1]" unused input active-high 
-	line  29: "[MMC0_DAT0]" unused input active-high 
-	line  30: "[MMC0_CLK]"       unused   input  active-high 
-	line  31: "[MMC0_CMD]"       unused   input  active-high 
-gpiochip3 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:       "[NC]"       unused   input  active-high 
-	line   2:       "[NC]"       unused   input  active-high 
-	line   3:       "[NC]"       unused   input  active-high 
-	line   4:       "[NC]"       unused   input  active-high 
-	line   5: "[I2C0_SDA]"       unused   input  active-high 
-	line   6: "[I2C0_SCL]"       unused   input  active-high 
-	line   7:     "[JTAG]"       unused   input  active-high 
-	line   8:     "[JTAG]"       unused   input  active-high 
-	line   9:       "[NC]"       unused   input  active-high 
-	line  10:       "[NC]"       unused   input  active-high 
-	line  11:       "[NC]"       unused   input  active-high 
-	line  12:       "[NC]"       unused   input  active-high 
-	line  13: "P1.03 [USB1]" unused input active-high 
-	line  14: "P1.36 [PWM0A]" unused input active-high 
-	line  15: "P1.33 [PRU0.1]" unused input active-high 
-	line  16: "P2.32 [PRU0.2]" unused input active-high 
-	line  17: "P2.30 [PRU0.3]" unused input active-high 
-	line  18: "P1.31 [PRU0.4]" unused input active-high 
-	line  19: "P2.34 [PRU0.5]" unused input active-high 
-	line  20: "P2.28 [PRU0.6]" unused input active-high 
-	line  21: "P1.29 [PRU0.7]" unused input active-high 
-	line  22:       "[NC]"       unused   input  active-high 
-	line  23:       "[NC]"       unused   input  active-high 
-	line  24:       "[NC]"       unused   input  active-high 
-	line  25:       "[NC]"       unused   input  active-high 
-	line  26:       "[NC]"       unused   input  active-high 
-	line  27:       "[NC]"       unused   input  active-high 
-	line  28:       "[NC]"       unused   input  active-high 
-	line  29:       "[NC]"       unused   input  active-high 
-	line  30:       "[NC]"       unused   input  active-high 
-	line  31:       "[NC]"       unused   input  active-high 
+Or if you just want the regmap:
 
-[0] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#71_Expansion_Header_Connectors
-[1] https://octavosystems.com/app_notes/osd335x-family-pin-assignments/
+&soc {
+   regmap: regmap@fff0000 {
+     compatible = "simple-regmap";
+     reg = <0xfff0000>;
+     regmap,reg-bits = <16>;
+     regmap,val-bits = <32>;
+   };
 
-Reviewed-by: Jason Kridner <jason@beagleboard.org>
-Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 144 ++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+   enet-which-needs-syscon-too@1000000 {
+     vendor,ctrl-regmap = <&regmap>;
+   };
+};
 
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index 4da719098028..60e5fa2b9156 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -59,6 +59,150 @@ vmmcsd_fixed: fixedregulator0 {
- 	};
- };
- 
-+&gpio0 {
-+	gpio-line-names =
-+		"[NC]",
-+		"[NC]",
-+		"P1.08 [SPI0_CLK]",
-+		"P1.10 [SPI0_MISO]",
-+		"P1.12 [SPI0_MOSI]",
-+		"P1.06 [SPI0_CS]",
-+		"[MMC0_CD]",
-+		"P2.29 [SPI1_CLK]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P1.26 [I2C2_SDA]",
-+		"P1.28 [I2C2_SCL]",
-+		"P2.11 [I2C1_SDA]",
-+		"P2.09 [I2C1_SCL]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.31 [SPI1_CS]",
-+		"P1.20 [PRU0.16]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.03",
-+		"[NC]",
-+		"[NC]",
-+		"P1.34",
-+		"P2.19",
-+		"[NC]",
-+		"[NC]",
-+		"P2.05 [UART4_RX]",
-+		"P2.07 [UART4_TX]";
-+};
-+
-+&gpio1 {
-+	gpio-line-names =
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P1.06 [SPI0_CS]",
-+		"P1.06 [SPI0_CS]",
-+		"P2.27 [SPI1_MISO]",
-+		"P2.25 [SPI1_MOSI]",
-+		"P1.32 [UART0_RX]",
-+		"P1.30 [UART0_TX]",
-+		"P2.24",
-+		"P2.33",
-+		"P2.22",
-+		"P2.18",
-+		"[NC]",
-+		"[NC]",
-+		"P2.01 [PWM1A]",
-+		"[NC]",
-+		"P2.10",
-+		"[user led 0]",
-+		"[user led 1]",
-+		"[user led 2]",
-+		"[user led 3]",
-+		"P2.06",
-+		"P2.04",
-+		"P2.02",
-+		"P2.08",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]";
-+};
-+
-+&gpio2 {
-+	gpio-line-names =
-+		"[NC]",
-+		"P2.17",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[EEPROM_WP]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.35 [AIN5]",
-+		"P1.02 [AIN6]",
-+		"P1.35 [PRU1.10]",
-+		"P1.04 [PRU1.11]",
-+		"[MMC0_DAT3]",
-+		"[MMC0_DAT2]",
-+		"[MMC0_DAT1]",
-+		"[MMC0_DAT0]",
-+		"[MMC0_CLK]",
-+		"[MMC0_CMD]";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[I2C0_SDA]",
-+		"[I2C0_SCL]",
-+		"[JTAG]",
-+		"[JTAG]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P1.03 [USB1]",
-+		"P1.36 [PWM0A]",
-+		"P1.33 [PRU0.1]",
-+		"P2.32 [PRU0.2]",
-+		"P2.30 [PRU0.3]",
-+		"P1.31 [PRU0.4]",
-+		"P2.34 [PRU0.5]",
-+		"P2.28 [PRU0.6]",
-+		"P1.29 [PRU0.7]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]";
-+};
-+
- &am33xx_pinmux {
- 	i2c2_pins: pinmux-i2c2-pins {
- 		pinctrl-single,pins = <
--- 
-2.25.1
+Similar to the current syscon (which is MMIO only..).
 
+-michael
+
+> 
+> I can't think of any reasons why not, off the top of my head.
+> 
+> Does Regmap only deal with shared accesses from multiple devices
+> accessing a single register map, or can it also handle multiple
+> devices communicating over a single I2C channel?
+> 
+> One for Mark perhaps.
+> 
+>> > The issues I wish to resolve using 'simple-mfd' are when sub-devices
+>> > register maps overlap and intertwine.
+> 
+> [...]
+> 
+>> > > > > What do these bits configure?
+>> > >
+>> > > - hardware strappings which have to be there before the board powers
+>> > > up,
+>> > >   like clocking mode for different SerDes settings
+>> > > - "keep-in-reset" bits for onboard peripherals if you want to save
+>> > > power
+>> > > - disable watchdog bits (there is a watchdog which is active right
+>> > > from
+>> > >   the start and supervises the bootloader start and switches to
+>> > > failsafe
+>> > >   mode if it wasn't successfully started)
+>> > > - special boot modes, like eMMC, etc.
+>> > >
+>> > > Think of it as a 16bit configuration word.
+>> >
+>> > And you wish for users to be able to view these at run-time?
+>> 
+>> And esp. change them.
+>> 
+>> > Can they adapt any of them on-the-fly or will the be RO?
+>> 
+>> They are R/W but only will only affect the board behavior after a 
+>> reset.
+> 
+> I see.  Makes sense.  This is board controller territory.  Perhaps
+> suitable for inclusion into drivers/soc or drivers/platform.
