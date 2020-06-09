@@ -2,97 +2,92 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B6BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306B5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08656206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591742303;
-	bh=DMC0QDaxKZmuxVdK3JhVcDPvCC8PTWbCHX+dRyemGvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I+SKFuCO0QZrnbcBb8L/otvZK584s5UuZICxQtBubXhkYPaNHQ/zH2/cXuBIFaNIX
-	 wwh2k/NLD1hN3fAHsp5unhhN9n0vBDlbjEXxEafgGKLfu7ZoxSstyZ4BWaeAoUFQ5e
-	 RZ7/PTbfIl9F2KOzqJ8CrAj1d0HJaT0G5dkFWUTM=
+	by mail.kernel.org (Postfix) with ESMTP id 00FBE207C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 22:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzHtaE2L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgFIWiW (ORCPT
+        id S1728525AbgFIWn5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 18:38:22 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36471 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgFIWiV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 18:38:21 -0400
-Received: by mail-il1-f196.google.com with SMTP id a13so73834ilh.3;
-        Tue, 09 Jun 2020 15:38:20 -0700 (PDT)
+        Tue, 9 Jun 2020 18:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgFIWn5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 18:43:57 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEBD0C05BD1E;
+        Tue,  9 Jun 2020 15:43:56 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id p20so335731ejd.13;
+        Tue, 09 Jun 2020 15:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vXB5gpluMB0lOFLBpitZlFgfHQ/XlzIJ+dmR9JaAw9s=;
+        b=AzHtaE2Lkh8H/AOyQ7Dg5nOjigUf6h3B/3+Xp9DAKQK7f+uZnR6M9AkGLq3D/zEPf6
+         KGXydAltBQm2TxdndJXEP+baK+nPaU686iV3+QIDmtk7kh1gKiS2bcHfaqbwedUW7pC1
+         Yt6wLdqm3TS6OcpJ2JhrixMI2NtFkZtOKQyPJNpiLMtAJs+maq2Qy6/OBzIlB4yp+l8h
+         p0MIb0Ify5P8uhD+oL7q1YxFVxEz7a0UUJgIeS76a4P2mmnCXu8xrGsNlS+QvUzebo6K
+         pIItD1us/1Ij9KQTdPsgCNNaOi9UhSeQSt8iNktOJ8Z8y9xPnFUXt8qFkVwKfZ/pJyeh
+         33yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=we/QVLPljh+VvvW0TyDCBs0GVOvUPbhlxjdGb+22AwU=;
-        b=lPH3skqnbNzXbkmD0AtcbGO2iDzFQs4Ff+GH8qs8I5wNCF+8HsM8W7yX96g6ZURTYx
-         cyenjuVJ8XbA9cnrJZFqmmOvzZBVfXrnItE7kreBd7sgZDZxaXpO3UYyqUGJrJjfDSeY
-         njsc9SoGnAh05FOY3LB3JBS/iXprSZ16k7XfiHmYGnX/3YYdniudpmuBkTmOQlvZ6uxY
-         VZLQdGD0+WWLHOICo6BCYbCJsU9Vo9rzgg1eDnQSkVUwZ2NhePMnwtvP4Si8iNcUydXO
-         D+OMdeH94J3/NGXI8WJ0s8WFHFqMNVjAfUoYsVwX+ADg1sQ+7yF7OH241nfk0uq1F9Bu
-         PV7w==
-X-Gm-Message-State: AOAM532ItB/SqxTDB+gje9GxYWl7Z1fJ9n5ZVxtrkNjS6JAgBzl+RdnI
-        YRgyVZMt4jdgl9xRbHoHMA==
-X-Google-Smtp-Source: ABdhPJz4GX4BnpQD1QFEzALE9UZw4o3rV4NJACs3ZOZEhF5IUEXncgLcDuIDjhxVyYTfB+mgSFz/LA==
-X-Received: by 2002:a92:c5c5:: with SMTP id s5mr242862ilt.85.1591742300408;
-        Tue, 09 Jun 2020 15:38:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t9sm9864098ilg.74.2020.06.09.15.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 15:38:19 -0700 (PDT)
-Received: (nullmailer pid 1629822 invoked by uid 1000);
-        Tue, 09 Jun 2020 22:38:18 -0000
-Date:   Tue, 9 Jun 2020 16:38:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Parthiban Nallathambi <parthiban@linumiz.com>
-Cc:     m.felsch@pengutronix.de, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: fsl: Add MYiR Tech boards
-Message-ID: <20200609223818.GA1626212@bogus>
-References: <20200601145857.5658-1-parthiban@linumiz.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vXB5gpluMB0lOFLBpitZlFgfHQ/XlzIJ+dmR9JaAw9s=;
+        b=oP6vGhJRtvKcgQ63St2/nuNPEjGl24a+oNNi1+dN9ymWN9DOc59x9QKMkNDXgQXU/j
+         7t1vDYK9EI/kp3l9j1cDGop3d0axO8ZLDQAH8GQsJ4N7rrKg0yiWMgEUjKXXDmIpVGjh
+         V0kSoAS9sGBzVNt5aFSsdLTU0pCAlY5Hc7Mnd8b0HkzICXgnXDuwadseLPkkUOoJWlVD
+         UfWiU3HI+Unlu5IhpO5xNWVJ3aoXUZLEQU01Rpz8nwTnIWT4JLz6b+zMzUqXl1CR9LNx
+         A3FzSZcFK6wqR45qtuoTgDHFv1c0ag5MkSZJKrW2DkemwHRsqs/fucBwD2frVzUpOIeL
+         ULhA==
+X-Gm-Message-State: AOAM533mRrEGGB7w63nN5XpFuBq7TW+ZwZfB5hT4POIV+nQZyG/thNWJ
+        v+71XNNpelRe6pxAPT+jAMz3fy8LAe2cMikKzqQ=
+X-Google-Smtp-Source: ABdhPJwN9jPv4IolKEOumXAjoRwK0NMxIMFahAbn/qm7zvM/qDz5Awmao4/g91Kf22umfwaTWyzg6FBx2yTf3qJgUWk=
+X-Received: by 2002:a17:906:5e06:: with SMTP id n6mr550181eju.504.1591742635550;
+ Tue, 09 Jun 2020 15:43:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601145857.5658-1-parthiban@linumiz.com>
+References: <20200531174612.260113-1-konradybcio@gmail.com>
+ <20200531174612.260113-3-konradybcio@gmail.com> <20200609221917.GA1595469@bogus>
+In-Reply-To: <20200609221917.GA1595469@bogus>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Wed, 10 Jun 2020 00:43:19 +0200
+Message-ID: <CAMS8qEVZuGh-hkUQDoC0avSb7gKkWE7cswvhXHZHJhDPPU5u+Q@mail.gmail.com>
+Subject: Re: [PATCH 2/4] Add compatible strings and the include files for the
+ msm8992 GCC.
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 04:58:56PM +0200, Parthiban Nallathambi wrote:
-> Add entries for MYiR Tech imx6ULL eval boards.
-> 
-> Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index cd3fbe7e3948..592d73187da4 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -264,6 +264,8 @@ properties:
->                - armadeus,imx6ull-opos6uldev # OPOS6UL (i.MX6ULL) SoM on OPOS6ULDev board
->                - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
->                - kontron,imx6ull-n6411-som # Kontron N6411 SOM
-> +              - myir,imx6ull-mys-6ulx # MYiR Tech iMX6ULL Evaluation Board
-> +              - myir,imx6ull-mys-6ulx-nand # MYiR Tech iMX6ULL Evaluation Board with NAND
+>'dt-bindings: clock: qcom,gcc: ...' for the subject.
+Will do.
 
-Can't you tell there is nand by the presence of a nand nodes?
+>Don't care about DT on non-GPL OSs?
+I'm not sure I understand? Now that I look at it the copyright to TLF
+looks kinda out of place.. what should it be?
 
->                - toradex,colibri-imx6ull-eval            # Colibri iMX6ULL Module on Colibri Evaluation Board
->                - toradex,colibri-imx6ull-wifi-eval       # Colibri iMX6ULL Wi-Fi / Bluetooth Module on Colibri Evaluation Board
->            - const: fsl,imx6ull
-> -- 
-> 2.26.2
-> 
+>License?
+Derp. Will correct in v2.
+
+
+Thanks for your review
+Konrad
