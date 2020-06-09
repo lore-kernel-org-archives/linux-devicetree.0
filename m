@@ -2,67 +2,42 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F423C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA11AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8E9C2074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:31:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Dbxst0Ke"
+	by mail.kernel.org (Postfix) with ESMTP id C7F3B2074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 13:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgFINbs (ORCPT
+        id S1730067AbgFINb7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 09:31:48 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43381 "EHLO m43-7.mailgun.net"
+        Tue, 9 Jun 2020 09:31:59 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37912 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbgFINbq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 09:31:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591709505; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=jG1tgCEHH2uQuffHUZ/Jw+Nz7O4CF3RMgMRZBRqxeFE=; b=Dbxst0KeS5YZhkbb09XYeb6E9RGksOFhAYCme0Kx+y5Utf3auqpZAkN1BFUzpui0o8dh9mAl
- s38MV0fg5lCIKjaBXPWo2ncZ2/jgQ3kefmFGXYPNsu3dBp43hfp0FEbnnSbNTaJiJ1r2/zoL
- NRenzS9cIVx8MizzP8W0Vg3rVkg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5edf8f1f0206ad41d1380b0d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Jun 2020 13:31:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3AF13C433C6; Tue,  9 Jun 2020 13:31:10 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA75FC433CA;
-        Tue,  9 Jun 2020 13:31:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA75FC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 4/4] arm64: dts: qcom: sm8150: Add Coresight support
-Date:   Tue,  9 Jun 2020 19:00:31 +0530
-Message-Id: <fffd5f623ad9d609433d05e3b56f33b7582517fa.1591708204.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+        id S1729000AbgFINb4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 9 Jun 2020 09:31:56 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jieLv-0004rD-6B; Tue, 09 Jun 2020 15:31:43 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2 2/2] net: phy: mscc: handle the clkout control on some phy variants
+Date:   Tue,  9 Jun 2020 15:31:40 +0200
+Message-Id: <20200609133140.1421109-2-heiko@sntech.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200609133140.1421109-1-heiko@sntech.de>
+References: <20200609133140.1421109-1-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -70,623 +45,242 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add coresight components found on Qualcomm SM8150 SoC.
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+At least VSC8530/8531/8540/8541 contain a clock output that can emit
+a predefined rate of 25, 50 or 125MHz.
+
+This may then feed back into the network interface as source clock.
+So follow the example the at803x already set and introduce a
+vsc8531,clk-out-frequency property to set that output.
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 ---
+Hi Andrew,
 
-Depends on following coresight driver and SM8150 SMMU support:
- - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=159e248e75b1b548276b6571d7740a35cab1f5be
- - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=1b6cddfb7ebb5ed293124698f147e914b15315a1
- - https://lore.kernel.org/lkml/20200524023815.21789-2-jonathan@marek.ca/
+I didn't change the property yet, do you have a suggestion on
+how to name it though? Going by the other examples in the
+ethernet-phy.yamls, something like enet-phy-clock-out-frequency ?
 
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 591 +++++++++++++++++++++++++++
- 1 file changed, 591 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 141c21dfa68c..a2fc77211cc3 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -538,6 +538,597 @@
- 			};
- 		};
+ .../bindings/net/mscc-phy-vsc8531.txt         |  3 +
+ drivers/net/phy/mscc/mscc.h                   |  9 ++
+ drivers/net/phy/mscc/mscc_main.c              | 87 +++++++++++++++++--
+ 3 files changed, 92 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+index 5ff37c68c941..4a1f50ae48e1 100644
+--- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
++++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+@@ -1,6 +1,8 @@
+ * Microsemi - vsc8531 Giga bit ethernet phy
  
-+		stm@6002000 {
-+			compatible = "arm,coresight-stm", "arm,primecell";
-+			reg = <0 0x06002000 0 0x1000>,
-+			      <0 0x16280000 0 0x180000>;
-+			reg-names = "stm-base", "stm-stimulus-base";
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					stm_out: endpoint {
-+						remote-endpoint = <&funnel0_in7>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6041000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06041000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel0_out: endpoint {
-+						remote-endpoint = <&merge_funnel_in0>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@7 {
-+					reg = <7>;
-+					funnel0_in7: endpoint {
-+						remote-endpoint = <&stm_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6042000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06042000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel1_out: endpoint {
-+						remote-endpoint = <&merge_funnel_in1>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@4 {
-+					reg = <4>;
-+					funnel1_in4: endpoint {
-+						remote-endpoint = <&swao_replicator_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6043000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06043000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel2_out: endpoint {
-+						remote-endpoint = <&merge_funnel_in2>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel2_in2: endpoint {
-+						remote-endpoint = <&apss_merge_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6045000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06045000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					merge_funnel_out: endpoint {
-+						remote-endpoint = <&etf_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					merge_funnel_in0: endpoint {
-+						remote-endpoint = <&funnel0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					merge_funnel_in1: endpoint {
-+						remote-endpoint = <&funnel1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					merge_funnel_in2: endpoint {
-+						remote-endpoint = <&funnel2_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@6046000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0 0x06046000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					replicator_out0: endpoint {
-+						remote-endpoint = <&etr_in>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator_out1: endpoint {
-+						remote-endpoint = <&replicator1_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					replicator_in0: endpoint {
-+						remote-endpoint = <&etf_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@6047000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x06047000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_out: endpoint {
-+						remote-endpoint = <&replicator_in0>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					etf_in: endpoint {
-+						remote-endpoint = <&merge_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etr@6048000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x06048000 0 0x1000>;
-+			iommus = <&apps_smmu 0x05e0 0x0>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,scatter-gather;
-+
-+			in-ports {
-+				port {
-+					etr_in: endpoint {
-+						remote-endpoint = <&replicator_out0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@604a000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0 0x0604a000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator1_out: endpoint {
-+						remote-endpoint = <&swao_funnel_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+					replicator1_in: endpoint {
-+						remote-endpoint = <&replicator_out1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@6b08000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x06b08000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					swao_funnel_out: endpoint {
-+						remote-endpoint = <&swao_etf_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@6 {
-+					reg = <6>;
-+					swao_funnel_in: endpoint {
-+						remote-endpoint = <&replicator1_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@6b09000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x06b09000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					swao_etf_out: endpoint {
-+						remote-endpoint = <&swao_replicator_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					swao_etf_in: endpoint {
-+						remote-endpoint = <&swao_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		replicator@6b0a000 {
-+			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-+			reg = <0 0x06b0a000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			qcom,replicator-loses-context;
-+
-+			out-ports {
-+				port {
-+					swao_replicator_out: endpoint {
-+						remote-endpoint = <&funnel1_in4>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					swao_replicator_in: endpoint {
-+						remote-endpoint = <&swao_etf_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7040000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07040000 0 0x1000>;
-+
-+			cpu = <&CPU0>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm0_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7140000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07140000 0 0x1000>;
-+
-+			cpu = <&CPU1>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm1_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7240000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07240000 0 0x1000>;
-+
-+			cpu = <&CPU2>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm2_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7340000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07340000 0 0x1000>;
-+
-+			cpu = <&CPU3>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm3_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in3>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7440000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07440000 0 0x1000>;
-+
-+			cpu = <&CPU4>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm4_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in4>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7540000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07540000 0 0x1000>;
-+
-+			cpu = <&CPU5>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm5_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in5>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7640000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07640000 0 0x1000>;
-+
-+			cpu = <&CPU6>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm6_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in6>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@7740000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x07740000 0 0x1000>;
-+
-+			cpu = <&CPU7>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+			arm,coresight-loses-context-with-cpu;
-+			qcom,skip-power-up;
-+
-+			out-ports {
-+				port {
-+					etm7_out: endpoint {
-+						remote-endpoint = <&apss_funnel_in7>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@7800000 { /* APSS Funnel */
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x07800000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					apss_funnel_out: endpoint {
-+						remote-endpoint = <&apss_merge_funnel_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					apss_funnel_in0: endpoint {
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					apss_funnel_in1: endpoint {
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					apss_funnel_in2: endpoint {
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					apss_funnel_in3: endpoint {
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					apss_funnel_in4: endpoint {
-+						remote-endpoint = <&etm4_out>;
-+					};
-+				};
-+
-+				port@5 {
-+					reg = <5>;
-+					apss_funnel_in5: endpoint {
-+						remote-endpoint = <&etm5_out>;
-+					};
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					apss_funnel_in6: endpoint {
-+						remote-endpoint = <&etm6_out>;
-+					};
-+				};
-+
-+				port@7 {
-+					reg = <7>;
-+					apss_funnel_in7: endpoint {
-+						remote-endpoint = <&etm7_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@7810000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x07810000 0 0x1000>;
-+
-+			clocks = <&aoss_qmp>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					apss_merge_funnel_out: endpoint {
-+						remote-endpoint = <&funnel2_in2>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					apss_merge_funnel_in: endpoint {
-+						remote-endpoint = <&apss_funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x0 0x03100000 0x0 0x300000>,
+ Optional properties:
++- vsc8531,clk-out-frequency: Clock output frequency in Hertz.
++			  Should be one of 25000000, 50000000, 125000000
+ - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
+ 			  in the first row of Table 1 (below).
+ 			  This property is only used in combination
+@@ -63,6 +65,7 @@ Example:
+ 
+         vsc8531_0: ethernet-phy@0 {
+                 compatible = "ethernet-phy-id0007.0570";
++                vsc8531,clk-out-frequency = <125000000>;
+                 vsc8531,vddmac		= <3300>;
+                 vsc8531,edge-slowdown	= <7>;
+                 vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
+diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+index 414e3b31bb1f..c8c395a041c2 100644
+--- a/drivers/net/phy/mscc/mscc.h
++++ b/drivers/net/phy/mscc/mscc.h
+@@ -218,6 +218,13 @@ enum rgmii_clock_delay {
+ #define INT_MEM_DATA_M			  0x00ff
+ #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
+ 
++#define MSCC_CLKOUT_CNTL		  13
++#define CLKOUT_ENABLE			  BIT(15)
++#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
++#define CLKOUT_FREQ_25M			  (0x0 << 13)
++#define CLKOUT_FREQ_50M			  (0x1 << 13)
++#define CLKOUT_FREQ_125M		  (0x2 << 13)
++
+ #define MSCC_PHY_PROC_CMD		  18
+ #define PROC_CMD_NCOMPLETED		  0x8000
+ #define PROC_CMD_FAILED			  0x4000
+@@ -361,6 +368,8 @@ struct vsc8531_private {
+ 	 */
+ 	unsigned int base_addr;
+ 
++	u32 clkout_rate;
++
+ #if IS_ENABLED(CONFIG_MACSEC)
+ 	/* MACsec fields:
+ 	 * - One SecY per device (enforced at the s/w implementation level)
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 54cac9c295ad..012d5019d7c8 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -432,6 +432,18 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+ 	return led_mode;
+ }
+ 
++static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
++{
++	struct vsc8531_private *priv = phydev->priv;
++	struct device *dev = &phydev->mdio.dev;
++	struct device_node *of_node = dev->of_node;
++
++	if (!of_node)
++		return;
++
++	of_property_read_u32(of_node, "vsc8531,clk-out-frequency",
++			     &priv->clkout_rate);
++}
+ #else
+ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ {
+@@ -444,6 +456,10 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+ {
+ 	return default_mode;
+ }
++
++static void vsc8531_dt_clkout_rate_get(struct phy_device *phydev)
++{
++}
+ #endif /* CONFIG_OF_MDIO */
+ 
+ static int vsc85xx_dt_led_modes_get(struct phy_device *phydev,
+@@ -1540,6 +1556,37 @@ static int vsc85xx_config_init(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int vsc8531_config_init(struct phy_device *phydev)
++{
++	struct vsc8531_private *vsc8531 = phydev->priv;
++	u16 val;
++	int rc;
++
++	rc = vsc85xx_config_init(phydev);
++	if (rc)
++		return rc;
++
++	switch (vsc8531->clkout_rate) {
++	case 0:
++		val = 0;
++		break;
++	case 25000000:
++		val = CLKOUT_FREQ_25M | CLKOUT_ENABLE;
++		break;
++	case 50000000:
++		val = CLKOUT_FREQ_50M | CLKOUT_ENABLE;
++		break;
++	case 125000000:
++		val = CLKOUT_FREQ_125M | CLKOUT_ENABLE;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
++			       MSCC_CLKOUT_CNTL, val);
++}
++
+ static int vsc8584_did_interrupt(struct phy_device *phydev)
+ {
+ 	int rc = 0;
+@@ -2020,6 +2067,32 @@ static int vsc8514_probe(struct phy_device *phydev)
+ 				    ARRAY_SIZE(vsc85xx_hw_stats));
+ }
+ 
++static int vsc8531_probe(struct phy_device *phydev)
++{
++	struct vsc8531_private *vsc8531;
++	int rate_magic, rc;
++	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
++	   VSC8531_LINK_100_ACTIVITY};
++
++	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
++	if (rate_magic < 0)
++		return rate_magic;
++
++	rc = vsc85xx_probe_helper(phydev, default_mode,
++				  ARRAY_SIZE(default_mode),
++				  VSC85XX_SUPP_LED_MODES,
++				  vsc85xx_hw_stats,
++				  ARRAY_SIZE(vsc85xx_hw_stats));
++	if (rc < 0)
++		return rc;
++
++	vsc8531 = phydev->priv;
++	vsc8531->rate_magic = rate_magic;
++	vsc8531_dt_clkout_rate_get(phydev);
++
++	return 0;
++}
++
+ static int vsc8574_probe(struct phy_device *phydev)
+ {
+ 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+@@ -2157,14 +2230,14 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.phy_id_mask	= 0xfffffff0,
+ 	/* PHY_BASIC_FEATURES */
+ 	.soft_reset	= &genphy_soft_reset,
+-	.config_init	= &vsc85xx_config_init,
++	.config_init	= &vsc8531_config_init,
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.read_status	= &vsc85xx_read_status,
+ 	.ack_interrupt	= &vsc85xx_ack_interrupt,
+ 	.config_intr	= &vsc85xx_config_intr,
+ 	.suspend	= &genphy_suspend,
+ 	.resume		= &genphy_resume,
+-	.probe		= &vsc85xx_probe,
++	.probe		= &vsc8531_probe,
+ 	.set_wol	= &vsc85xx_wol_set,
+ 	.get_wol	= &vsc85xx_wol_get,
+ 	.get_tunable	= &vsc85xx_get_tunable,
+@@ -2181,14 +2254,14 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.phy_id_mask    = 0xfffffff0,
+ 	/* PHY_GBIT_FEATURES */
+ 	.soft_reset	= &genphy_soft_reset,
+-	.config_init    = &vsc85xx_config_init,
++	.config_init    = &vsc8531_config_init,
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.read_status	= &vsc85xx_read_status,
+ 	.ack_interrupt  = &vsc85xx_ack_interrupt,
+ 	.config_intr    = &vsc85xx_config_intr,
+ 	.suspend	= &genphy_suspend,
+ 	.resume		= &genphy_resume,
+-	.probe		= &vsc85xx_probe,
++	.probe		= &vsc8531_probe,
+ 	.set_wol	= &vsc85xx_wol_set,
+ 	.get_wol	= &vsc85xx_wol_get,
+ 	.get_tunable	= &vsc85xx_get_tunable,
+@@ -2205,14 +2278,14 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.phy_id_mask	= 0xfffffff0,
+ 	/* PHY_BASIC_FEATURES */
+ 	.soft_reset	= &genphy_soft_reset,
+-	.config_init	= &vsc85xx_config_init,
++	.config_init	= &vsc8531_config_init,
+ 	.config_aneg	= &vsc85xx_config_aneg,
+ 	.read_status	= &vsc85xx_read_status,
+ 	.ack_interrupt	= &vsc85xx_ack_interrupt,
+ 	.config_intr	= &vsc85xx_config_intr,
+ 	.suspend	= &genphy_suspend,
+ 	.resume		= &genphy_resume,
+-	.probe		= &vsc85xx_probe,
++	.probe		= &vsc8531_probe,
+ 	.set_wol	= &vsc85xx_wol_set,
+ 	.get_wol	= &vsc85xx_wol_get,
+ 	.get_tunable	= &vsc85xx_get_tunable,
+@@ -2229,7 +2302,7 @@ static struct phy_driver vsc85xx_driver[] = {
+ 	.phy_id_mask    = 0xfffffff0,
+ 	/* PHY_GBIT_FEATURES */
+ 	.soft_reset	= &genphy_soft_reset,
+-	.config_init    = &vsc85xx_config_init,
++	.config_init    = &vsc8531_config_init,
+ 	.config_aneg    = &vsc85xx_config_aneg,
+ 	.read_status	= &vsc85xx_read_status,
+ 	.ack_interrupt  = &vsc85xx_ack_interrupt,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.26.2
 
