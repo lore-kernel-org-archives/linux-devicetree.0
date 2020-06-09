@@ -2,144 +2,246 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6230DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D3EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345C02072F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A572207C3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 19:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="P1LYPNvM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cimu+rlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389290AbgFITmQ (ORCPT
+        id S1729828AbgFITpP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 15:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
+        Tue, 9 Jun 2020 15:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728328AbgFITmN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:42:13 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EB5C05BD1E
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:42:13 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f18so22086660qkh.1
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:42:13 -0700 (PDT)
+        with ESMTP id S1729137AbgFITpK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 15:45:10 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F57C08C5C2
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 12:45:09 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r15so4303364wmh.5
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 12:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PmkfgBREBTZO6Lp2UGSsh4z5MxUsd0nbvKVP/iz3AwU=;
-        b=P1LYPNvMyUWuYnFLslmoaME7fOIbzZ7vLQgZlSN/neUPoucaQ2KOFsChMogb02y8Rd
-         x2gk6UBDLM5J2sRw69zj5ucSIj/r106vHu4lLlzEoAjMD6P2Mdd1isbdnY0u7SgIQmZ1
-         apI0LHIQaBz0M/l5twAWI6FfFEPVLUgRIst+8ImG8Tw4D5ecJOsKg/k/Xs4p7iyo6PM5
-         8z7kIGK2CrX82YlG3xBRdVHUOaj6+Sz1DaY+uilNJmkAy7ijLn8TAAXUO7ND4YI33N4C
-         1O1s/wmoTIvbxBXXN5NFOZlQyACVcrcNbiQ2eg/ZoONzNUCTFPa6j3mzkkjlz0EpJAMr
-         dCpQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=eVChyNp9hZc+Gzjg8UZb0YNMtsUWDyIgCP+b2/L/34Y=;
+        b=Cimu+rlxTJjxCBFMH0knwV5QoVBXhRJmOfAz+EC43J0oGHTAEwARoNbay95Kx3eB7W
+         ptqDaODZ32mHoLWcGw81m9wQbqK3ifMfpRo9GyK+2vojRokke8yhlk/mJgXTBLsl4WpQ
+         0U0yQpDvzkXCZwXSxyDb/ufDjEoWfCeu66+0+50n9NPCoYUhTs2u2Gm62fETckdu7UWT
+         S/YtCKh4HnEschFfSQCfjdd7iC6oO8rLeRA759ywXW6qUciDGTfKtXEWRwHnlIKMAwc1
+         hfaewDA0sHH7tFerdI9BStCA5eGFa7Av0bxROgGCwkuT0nkS67vm8NnbqVA5lUEv8fuo
+         PUlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PmkfgBREBTZO6Lp2UGSsh4z5MxUsd0nbvKVP/iz3AwU=;
-        b=GOSHAz9PLZRTsl87G/CmoDO5Av7W1iOmcXiZ3aGR2ze9IcWJrSPvvm0A5LPt7RW4l6
-         UFzglygWXtSOhDijzmgYS0f1CdrqnyGzuZSgFzx2kdAJqR9fF7cWqioFhPa2tzZcskWQ
-         rn7J9ufgX4kyhne92n4U59RMicucpf+o+HiTLSM3vqK64KOt5CqBqev7luslScZ8Tl/x
-         +oioNsc35iqZSdYaLdyv8ITJzyktX/6LTJEdReW4jGtog9yx/WzGJjlmEmI2bATS/A8v
-         prS3T+N8CmB92MZDAMbpwfMloRmLiAl4yvB9u4C1GTVTbe/rkPks3csXlsuETULl7UC4
-         ysaw==
-X-Gm-Message-State: AOAM530qXNLF+/6alN/EqfLJw0H/i8hc2g9Mo2dEczu/uAw2QD00O73s
-        yn0VOuDnDeI/HMaD2Io+jAvSew==
-X-Google-Smtp-Source: ABdhPJxPoZa5i7cw6g6j5jFto1S52GzTF6MdnrhHijhBh8WO+6es4ey0iqaL1gWN1g5RBgbK55I9nw==
-X-Received: by 2002:a05:620a:200a:: with SMTP id c10mr28557256qka.218.1591731732437;
-        Tue, 09 Jun 2020 12:42:12 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id o66sm10662743qka.60.2020.06.09.12.42.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jun 2020 12:42:12 -0700 (PDT)
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: add sm8250 hdk dts
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=eVChyNp9hZc+Gzjg8UZb0YNMtsUWDyIgCP+b2/L/34Y=;
+        b=VVyaevoYTkaNOL+fxBFZ/K2sJw9QwSUt2FQ8mBlKQUd7mMJF551P4teFmdO3zST+tc
+         u9FnZiVv7EEhx02btH2v6fvnkgCSSmy0AGvvk4Yl6nQb1rKMSFaxX3yTvDRyvHG4dzb8
+         SnJuHnUr87l7bNRo/pU1CQddPCnZuVt6UfLX6G7+tlnZd8S/gcpn7nKdaaC1NofjFuZh
+         XoYQAgXGtx6mJeNUQgd+KvFGRv1sjtgjzZzLoN/R/Ei9wdm1XFC+DWGA8WZ7R8Bo71u6
+         Ybmvp5zqnOBTrJS8sbB2kRUMAwHSWJVUaLXtVPHVclp+iK9uMr0BubRyqrnVrBVPZKSU
+         ztoA==
+X-Gm-Message-State: AOAM533gNdkcjgtCXrUEiRUqUrnRNQViywPyybt0s5pwsP/qdDH9TLTa
+        M/yjm5TLZ3/FPltN+pPubMMVow==
+X-Google-Smtp-Source: ABdhPJy0yYa42yENG73o0WmFdkVW7mcgR4r704T13woKoj35YQQS5XtfAK0Wu3xQ01RXCjgttX8XLA==
+X-Received: by 2002:a1c:f216:: with SMTP id s22mr5325673wmc.167.1591731907981;
+        Tue, 09 Jun 2020 12:45:07 -0700 (PDT)
+Received: from dell ([2.27.167.101])
+        by smtp.gmail.com with ESMTPSA id q1sm3856878wmc.12.2020.06.09.12.45.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 12:45:07 -0700 (PDT)
+Date:   Tue, 9 Jun 2020 20:45:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-7-jonathan@marek.ca>
- <20200529030322.GX279327@builder.lan>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <9076c2c0-853f-62f9-4e34-a78e865a552e@marek.ca>
-Date:   Tue, 9 Jun 2020 15:42:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200609194505.GQ4106@dell>
+References: <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+ <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
+ <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+ <20200609151941.GM4106@dell>
+ <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200529030322.GX279327@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 5/28/20 11:03 PM, Bjorn Andersson wrote:
-> On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
-> 
->> Add initial HDK865 dts, based on sm8250-mtp, with a few changes.
->> Notably, regulator configs are changed a bit.
->>
->> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile       |   1 +
->>   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 ++++++++++++++++++++++++
->>   2 files changed, 455 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index e5dbd8b63951..4649e8bc5034 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-hdk.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
->> diff --git a/arch/arm64/boot/dts/qcom/sm8250-hdk.dts b/arch/arm64/boot/dts/qcom/sm8250-hdk.dts
->> new file mode 100644
->> index 000000000000..d35014bf4f81
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sm8250-hdk.dts
->> @@ -0,0 +1,454 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include "sm8250.dtsi"
->> +#include "pm8150.dtsi"
->> +#include "pm8150b.dtsi"
->> +#include "pm8150l.dtsi"
->> +
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. SM8250 HDK";
->> +	compatible = "qcom,sm8250-hdk";
-> 
-> 	compatible = "qcom,sm8250-hdk", "qcom,sm8250";
-> 
-> Apart from that this looks good!
-> 
+On Tue, 09 Jun 2020, Michael Walle wrote:
 
-Made this change for both HDK dts, but FYI the mtp dts do not have this.
-
-> Thanks,
-> Bjorn
+> Am 2020-06-09 17:19, schrieb Lee Jones:
+> > On Tue, 09 Jun 2020, Michael Walle wrote:
+> > 
+> > > Am 2020-06-09 08:47, schrieb Lee Jones:
+> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+> > > >
+> > > > > Am 2020-06-08 20:56, schrieb Lee Jones:
+> > > > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+> > > > > >
+> > > > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
+> > > > > > > > +Cc: some Intel people WRT our internal discussion about similar
+> > > > > > > > problem and solutions.
+> > > > > > > >
+> > > > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
+> > > > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
+> > > > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> > > > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+> > > > > > > >
+> > > > > > > > ...
+> > > > > > > >
+> > > > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
+> > > > > > > > > sometimes intertwined batches of register sets to be consumed by
+> > > > > > > > > multiple (sub-)devices spanning different subsystems.
+> > > > > > > > >
+> > > > > > > > > Actually scrap that.  The most common case I see is a single Regmap
+> > > > > > > > > covering all child-devices.
+> > > > > > > >
+> > > > > > > > Yes, because often we need a synchronization across the entire address
+> > > > > > > > space of the (parent) device in question.
+> > > > > > > >
+> > > > > > > > >  It would be great if there was a way in
+> > > > > > > > > which we could make an assumption that the entire register address
+> > > > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+> > > > > > > > > each of the devices described by its child-nodes.  Probably by picking
+> > > > > > > > > up on the 'simple-mfd' compatible string in the first instance.
+> > > > > > > > >
+> > > > > > > > > Rob, is the above something you would contemplate?
+> > > > > > > > >
+> > > > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
+> > > > > > > > > with one another?  Do multiple child devices need access to the same
+> > > > > > > > > registers i.e. are they shared?
+> > > > > > >
+> > > > > > > No they don't overlap, expect for maybe the version register, which is
+> > > > > > > just there once and not per function block.
+> > > > > >
+> > > > > > Then what's stopping you having each device Regmap their own space?
+> > > > >
+> > > > > Because its just one I2C device, AFAIK thats not possible, right?
+> > > >
+> > > > Not sure what (if any) the restrictions are.
+> > > 
+> > > You can only have one device per I2C address. Therefore, I need one
+> > > device
+> > > which is enumerated by the I2C bus, which then enumerates its
+> > > sub-devices.
+> > > I thought this was one of the use cases for MFD. (Regardless of how a
+> > > sub-device access its registers). So even in the "simple-regmap"
+> > > case this
+> > > would need to be an i2c device.
 > 
+> Here (see below)
+
+Yes, it should still be an I2C device.
+
+> > > 
+> > > E.g.
+> > > 
+> > > &i2cbus {
+> > >   mfd-device@10 {
+> > >     compatible = "simple-regmap", "simple-mfd";
+> > >     reg = <10>;
+> > >     regmap,reg-bits = <8>;
+> > >     regmap,val-bits = <8>;
+> > >     sub-device@0 {
+> > >       compatible = "vendor,sub-device0";
+> > >       reg = <0>;
+> > >     };
+> > >     ...
+> > > };
+> > > 
+> > > Or if you just want the regmap:
+> > > 
+> > > &soc {
+> > >   regmap: regmap@fff0000 {
+> > >     compatible = "simple-regmap";
+> > >     reg = <0xfff0000>;
+> > >     regmap,reg-bits = <16>;
+> > >     regmap,val-bits = <32>;
+> > >   };
+> > > 
+> > >   enet-which-needs-syscon-too@1000000 {
+> > >     vendor,ctrl-regmap = <&regmap>;
+> > >   };
+> > > };
+> > > 
+> > > Similar to the current syscon (which is MMIO only..).
+> > 
+> > We do not need a 'simple-regmap' solution for your use-case.
+> > 
+> > Since your device's registers are segregated, just split up the
+> > register map and allocate each sub-device with it's own slice.
+> 
+> I don't get it, could you make a device tree example for my
+> use-case? (see also above)
+
+    &i2cbus {
+        mfd-device@10 {
+            compatible = "simple-mfd";
+            reg = <10>;
+
+            sub-device@10 {
+                compatible = "vendor,sub-device";
+                reg = <10>;
+            };
+   };
+
+The Regmap config would be present in each of the child devices.
+
+Each child device would call devm_regmap_init_i2c() in .probe().
+
+> > > > I can't think of any reasons why not, off the top of my head.
+> > > >
+> > > > Does Regmap only deal with shared accesses from multiple devices
+> > > > accessing a single register map, or can it also handle multiple
+> > > > devices communicating over a single I2C channel?
+> > > >
+> > > > One for Mark perhaps.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
