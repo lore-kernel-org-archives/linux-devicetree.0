@@ -2,197 +2,108 @@ Return-Path: <SRS0=SRlD=7W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83B5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46582C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9291D2078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591713732;
-	bh=DBeZHLEQGulEBu3IQlBvivbxuD7CpCjdJ39fxG4UDBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lqpX80tlgNY/9FqLfcB0AgvpAslUjt5FF25M0QG2yFQ7DAszWftULGlT0RlnA1Qmx
-	 SDKKgqtvjkG+g/OrBBxM/EjvyFpxF8MtUHCJL2NEdqfHMUEXSgCr3mEGfVJDJzA7ax
-	 iFYUoXqoafQ5i43wPWiswAvJrjoIPVTle5mkA+ag=
+	by mail.kernel.org (Postfix) with ESMTP id 1ECA72072F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  9 Jun 2020 14:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="z+8b5Aw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgFIOmF (ORCPT
+        id S1728905AbgFIOpn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 10:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgFIOmE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:42:04 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1442D2072F;
-        Tue,  9 Jun 2020 14:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591713723;
-        bh=DBeZHLEQGulEBu3IQlBvivbxuD7CpCjdJ39fxG4UDBw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Khl7WXZjz0yf6NrpGSUGwKvt+9K9Oxrk2SI7klUKYjRZn787104XzLQeBOo1pQ6XD
-         8P3ZXbXVKjAzZIirxNhWJodow3QE8tArvfWVwI7OmyATVf1vglnnzFlbQgsUhrX9os
-         sLU/nPY7O2QDkwwpcjPSl5w/ov2O5k6TSsc7WPf0=
-Date:   Tue, 9 Jun 2020 15:42:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200609144201.GK4583@sirena.org.uk>
-References: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
- <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
- <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+        Tue, 9 Jun 2020 10:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730520AbgFIOpj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 10:45:39 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB40BC03E97C
+        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 07:45:37 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id d67so18968701oig.6
+        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 07:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9qjLlhlbq20TF9w4Fo/M8ySKfJ7eojkDP5aGVWyOb9E=;
+        b=z+8b5Aw4ReeJD8+ObpGHGXPUhGsTR0gr5SV7FLXc+P6XyTivIvbKYbXn2iGa4306Xy
+         xFY5A1sUjgYUM2qSuzyb6/WrbfEeLEIjrD3WFyGO56S6WTB0CYRWbUfgIPqzPtlV1Dz+
+         6K0+QjFjDhw/1pCCXZpNi42Y7G8cTigM9qpKj2Yp2zkqnbsEN9RGtlB5EP/3KK20AnSb
+         XjZwLcohX2VShXTqRdmqw2AG1mzi1Cfk64FCIP+NRSIspVtr4HWH1ecomZCgqvr8Mu03
+         k2P6oYmAHZ7LwqTUF4Rrow3mFI6CffGN4KUzwiq5pmXZQtKlJllUtaSWEkFBspsb3PD2
+         XYbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9qjLlhlbq20TF9w4Fo/M8ySKfJ7eojkDP5aGVWyOb9E=;
+        b=EP6H721TUFml6BgZC7DHGxMb/4Zw3q7EnX54dbFNKWI9KGuKvYliNj9Ku6waazZxAW
+         ggoMmhVZuSC+CNDCpyg2+5drilWCLwEmEXyX8pyDJIUyt1YBU800x+mdbzYWJ5TA1oww
+         DbuiItJ3CY4lkI8Y/ZeQ17VvSqM4QtZ91gdUtAWqUB7VTiZGwZo/e+J+sBxdMgErWdMD
+         0sy+lCFikviB1rVfeoAdmSSPAXUpdvt1AaGQM2rNG0oI0Wttycc+lOYaTzfGOUBqwj9f
+         NFoXQhkDfNqJA51TylYJ0aGG1C7no3P0x0zoXBNmsCovX7mM9C9kbsjiVMW38VRrFxjO
+         yX5g==
+X-Gm-Message-State: AOAM530/GwWrc54yy6PUz9Z+kzS8AVhS+9zUUsViA4MoFexA9ADw4Ag6
+        3F5Bdf63m/cGVftb80N219Kx4/FPrUdEEGZPzdceqA==
+X-Google-Smtp-Source: ABdhPJzQvo0oNgTTh3O9V6qB7+EiOf+sDca48St6UCVl/1HYUyiYmK4ibHrd6RbILNWCIvob0QRF+qZoblwM9pe02js=
+X-Received: by 2002:aca:a8c3:: with SMTP id r186mr3699932oie.173.1591713936880;
+ Tue, 09 Jun 2020 07:45:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0FM4RQAc0jwHekq5"
-Content-Disposition: inline
-In-Reply-To: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
-X-Cookie: Be careful!  Is it classified?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200503201823.531757-1-robert.marko@sartura.hr>
+ <20200503201823.531757-3-robert.marko@sartura.hr> <20200504073914.GQ1375924@vkoul-mobl>
+ <CA+HBbNEiB+o4KxonAu4-ra+P11Yb649v6AFaPjFc8JQDQ8T=CA@mail.gmail.com>
+In-Reply-To: <CA+HBbNEiB+o4KxonAu4-ra+P11Yb649v6AFaPjFc8JQDQ8T=CA@mail.gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Tue, 9 Jun 2020 16:45:25 +0200
+Message-ID: <CA+HBbNFsZ-v_2cMhDNGnQXTFaqsjGzB+1rAS3=_CLQhd0N4OKQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] ARM: dts: qcom: ipq4019: add USB devicetree nodes
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+HI,
+Vinod can you maybe pick this?
 
---0FM4RQAc0jwHekq5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It would be great to have nodes in 5.8 along the driver
 
-On Tue, Jun 09, 2020 at 04:38:31PM +0200, Michael Walle wrote:
+Thank
+Robert
 
->   mfd-device@10 {
->     compatible =3D "simple-regmap", "simple-mfd";
->     reg =3D <10>;
->     regmap,reg-bits =3D <8>;
->     regmap,val-bits =3D <8>;
->     sub-device@0 {
->       compatible =3D "vendor,sub-device0";
->       reg =3D <0>;
->     };
-
-A DT binding like this is not a good idea, encoding the details of the
-register map into the DT binding makes it an ABI which is begging for
-trouble.  I'd also suggest that any device using a generic driver like
-this should have a specific compatible string for the device so we can
-go back and add quirks later if we need them.
-
->     ...
-> };
->=20
-> Or if you just want the regmap:
->=20
-> &soc {
->   regmap: regmap@fff0000 {
->     compatible =3D "simple-regmap";
->     reg =3D <0xfff0000>;
->     regmap,reg-bits =3D <16>;
->     regmap,val-bits =3D <32>;
->   };
->=20
->   enet-which-needs-syscon-too@1000000 {
->     vendor,ctrl-regmap =3D <&regmap>;
->   };
-> };
->=20
-> Similar to the current syscon (which is MMIO only..).
->=20
-> -michael
->=20
-> >=20
-> > I can't think of any reasons why not, off the top of my head.
-> >=20
-> > Does Regmap only deal with shared accesses from multiple devices
-> > accessing a single register map, or can it also handle multiple
-> > devices communicating over a single I2C channel?
-> >=20
-> > One for Mark perhaps.
-> >=20
-> > > > The issues I wish to resolve using 'simple-mfd' are when sub-devices
-> > > > register maps overlap and intertwine.
-> >=20
-> > [...]
-> >=20
-> > > > > > > What do these bits configure?
-> > > > >
-> > > > > - hardware strappings which have to be there before the board pow=
-ers
-> > > > > up,
-> > > > >   like clocking mode for different SerDes settings
-> > > > > - "keep-in-reset" bits for onboard peripherals if you want to save
-> > > > > power
-> > > > > - disable watchdog bits (there is a watchdog which is active right
-> > > > > from
-> > > > >   the start and supervises the bootloader start and switches to
-> > > > > failsafe
-> > > > >   mode if it wasn't successfully started)
-> > > > > - special boot modes, like eMMC, etc.
-> > > > >
-> > > > > Think of it as a 16bit configuration word.
-> > > >
-> > > > And you wish for users to be able to view these at run-time?
-> > >=20
-> > > And esp. change them.
-> > >=20
-> > > > Can they adapt any of them on-the-fly or will the be RO?
-> > >=20
-> > > They are R/W but only will only affect the board behavior after a
-> > > reset.
-> >=20
-> > I see.  Makes sense.  This is board controller territory.  Perhaps
-> > suitable for inclusion into drivers/soc or drivers/platform.
-
---0FM4RQAc0jwHekq5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fn7gACgkQJNaLcl1U
-h9AhrQf/dpQW8gsPG9Ua7FU/Ae75V1zwG5NKx2ioZcYzal7CqZg3Q0+ciOedLwFs
-WELrgzSE7WB9V18aaNAg8CpMIKlBhqU+2I4JxSAZQWfuaFQgrP550jA5iij1L69d
-RIxP1xrQClXSvmJa33MBpD95uFdGEPWxMOiSB72lLy4E7jr65KwJ55P6tcOlXo7L
-Ma/qDeZ0tjrcZOtH5h3dPsJhEojskfrxWJq6CJ1UjXifZxvy+O/khY6E7TTetw3+
-0b8ttqNSXE4Yk9Z7TKhYlonnqWphaX3XdoDvTlbgxmBldVUrr63UJCTbiCm5pKJ1
-HYxxN5ha9XcJcvRtIDLWzkq7wpRCQg==
-=rwO1
------END PGP SIGNATURE-----
-
---0FM4RQAc0jwHekq5--
+On Fri, May 29, 2020 at 11:36 AM Robert Marko <robert.marko@sartura.hr> wrote:
+>
+> On Mon, May 4, 2020 at 9:39 AM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 03-05-20, 22:18, Robert Marko wrote:
+> > > From: John Crispin <john@phrozen.org>
+> > >
+> > > Since we now have driver for the USB PHY, lets add the necessary nodes to DTSI.
+> >
+> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> >
+> > Bjorn, I have picked the phy and dt binding, feel free to apply this one
+> >
+> > Thanks
+> > --
+> > ~Vinod
+>
+> Any chance of this landing into 5.7?
+> Driver and bindings have been merged, but I don't see DT nodes queued.
+>
+> Regards,
+> Robert
