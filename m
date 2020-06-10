@@ -2,149 +2,179 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EA5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400C6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497FB2072F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l7UaQVMn"
+	by mail.kernel.org (Postfix) with ESMTP id 13B4A2072F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 07:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591775840;
+	bh=i0GKyEEgP/d/WJmGZui0xw8vOIPmyZHfPnzNhX2dXNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hixQTTXme00PDLyxmuDYnjCIwZgxBunkuN4DbjHwqJHmEIHQppUVms2GEjDTmFuMv
+	 gkzGxmv10zFrp0lLQJ4i6CzuT56ddXOlA99MsrM0pYtuDCQKJOHsr25fdCKrJvckDJ
+	 tRxh2tEUWl4s+DJdFrjPDxiqUZKFSQzmoKCNxaRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgFJH5I (ORCPT
+        id S1726105AbgFJH5T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 03:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgFJH5H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 03:57:07 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144B3C03E96B
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 00:57:07 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id b16so741984pfi.13
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 00:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nepAZtogo26DJ5bnJNOqagPxZ153pFUZT84gVur7i1g=;
-        b=l7UaQVMnylYytayhT9Eb+iavCxbX/5f95oxWdpZ8MB/cBgS3UEVlUx3AJCX3joPyoz
-         +7IQB7Dv/vu2CkigmKkgIhOpaZkp3z6bpNcaqNmgyVeOty8Qsvb9g/z9nDz7o3yJZjor
-         QRQk6XHP4jCZujdPeHhoMb9MuJD8df1h5zvls=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nepAZtogo26DJ5bnJNOqagPxZ153pFUZT84gVur7i1g=;
-        b=tF4/4UzthmL5fCMZK+tAMoha/J3VwNQ7ggDx4cG/ocLy/c05lXrVUovOdaHEnPd7+4
-         +ueHUMVDnKdjIKW6i4gBfzss3xgorCZfHdY2kfp8G8/lkaimmArF5VUG9wbrnAKYlg13
-         Jy3CTcGqVre6eSCQawrEPpsoMGK6cwwSeINkyUo4ukdnYQ00/rUqiK+lXwj8zNO7temq
-         LHlwU7HAolayi6T0w8/xEO/r1ZFtkpLV6+2Nn5NHC2zKYiGjCMvHbvSwZCZ6B1vqwJv8
-         gPBYUuXWrX/d9iWlrI0Q89/qikBbkv9a9b79jf7cQ2JavlHi79c1g7PjHg20Du54YYan
-         8c6A==
-X-Gm-Message-State: AOAM5318Qwko7AuW5XQQYaJxBvPmcIdHwifRcSdvCd0hAhWVBSmG1g9b
-        +6DD+koAa3Cix+oEHSRLlZA+rw==
-X-Google-Smtp-Source: ABdhPJyFpEwPpz/sR+w73vumtKtcEL6hgugUW6e0Iv9krBz/6Jpzmzy1+Alke8L/jmb6ivd2vbMtqg==
-X-Received: by 2002:a65:640c:: with SMTP id a12mr1624521pgv.408.1591775826624;
-        Wed, 10 Jun 2020 00:57:06 -0700 (PDT)
-Received: from pihsun-glaptop.lan (180-176-97-18.dynamic.kbronet.com.tw. [180.176.97.18])
-        by smtp.googlemail.com with ESMTPSA id y26sm12035850pff.26.2020.06.10.00.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 00:57:05 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org (open list:VOLTAGE AND CURRENT REGULATOR
-        FRAMEWORK),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v2 1/2] dt-bindings: regulator: Add DT binding for cros-ec-regulator
-Date:   Wed, 10 Jun 2020 15:56:43 +0800
-Message-Id: <20200610075649.209852-2-pihsun@chromium.org>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-In-Reply-To: <20200610075649.209852-1-pihsun@chromium.org>
-References: <20200610075649.209852-1-pihsun@chromium.org>
+        Wed, 10 Jun 2020 03:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbgFJH5S (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 03:57:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE8A206C3;
+        Wed, 10 Jun 2020 07:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591775836;
+        bh=i0GKyEEgP/d/WJmGZui0xw8vOIPmyZHfPnzNhX2dXNM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oxMoP3RQ2ZxDZxQTVNc7pdMDGnBLbnF57UtXv+oyWa4vg9Hb5X4nGwZgiUStJ6RMQ
+         Sm9U7RUCEGHGt2X1UAxqeI3BNMCWnXNcVHvwLeZzs2JIdF+8XyUHUBX3O0Q8dM7HZb
+         vpCZBYiRTIqYWBlpmD2TuPFmrBAnDOXYjA7iEn7w=
+Date:   Wed, 10 Jun 2020 08:57:12 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        tabba@google.com, qwandor@google.com, ardb@kernel.org
+Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
+Message-ID: <20200610075711.GC15939@willie-the-truck>
+References: <20200601094512.50509-1-sudeep.holla@arm.com>
+ <20200604133746.GA2951@willie-the-truck>
+ <20200609174123.GA5732@bogus>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200609174123.GA5732@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT binding documentation for cros-ec-regulator, a voltage regulator
-controlled by ChromeOS EC.
+Hi Sudeep,
 
-Changes from v1:
-* Change compatible string to google,regulator-cros-ec.
-* Use reg property in device tree.
-* Change license for dt binding according to checkpatch.pl.
+On Tue, Jun 09, 2020 at 06:41:23PM +0100, Sudeep Holla wrote:
+> On Thu, Jun 04, 2020 at 02:37:46PM +0100, Will Deacon wrote:
+> > On Mon, Jun 01, 2020 at 10:45:09AM +0100, Sudeep Holla wrote:
+> > > Sorry for posting in the middle of merge window and I must have done
+> > > this last week itself. This is not the driver I had thought about posting
+> > > last week. After I started cleaning up and looking at Will's KVM prototype[1]
+> > > for PSA FF-A (previously known as SPCI),
+> >
+> > Yes, I need to do the Big Rename at some point. Joy.
+> >
+> 
+> 😁 
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
- .../bindings/regulator/cros-ec-regulator.yaml | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
+Renamed version here:
 
-diff --git a/Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml b/Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
-new file mode 100644
-index 000000000000..e677614dcdf9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/cros-ec-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS EC controlled voltage regulators
-+
-+maintainers:
-+  - Pi-Hsun Shih <pihsun@chromium.org>
-+
-+description:
-+  Any property defined as part of the core regulator binding, defined in
-+  regulator.yaml, can also be used.
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    const: google,regulator-cros-ec
-+
-+  reg:
-+    maxItems: 1
-+    description: Identifier for the voltage regulator to ChromeOS EC.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cros-ec {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      regulator@0 {
-+        compatible = "regulator-cros-ec";
-+        regulator-min-microvolt = <1800000>;
-+        regulator-max-microvolt = <3300000>;
-+        reg = <0>;
-+      };
-+    };
-+...
--- 
-2.27.0.278.ge193c7cf3a9-goog
+https://android-kvm.googlesource.com/linux/+/refs/heads/willdeacon/psa-ffa
 
+although I haven't psyched myself up to write yaml yet.
+
+> > Setting the static RX/TX buffer allocation aside, why is a DT node needed
+> > at all for the case where Linux is running purely as an FF-A client? I
+> > thought everything should be discoverable via FFA_VERSION, FFA_FEATURES,
+> > FFA_PARTITION_INFO_GET and FFA_ID_GET? That should mean we can get away
+> > without a binding at all for the client case.
+> >
+> 
+> Agreed, I added for RxTx buffers and initially to build the parent/child
+> hierarchy for all users of the driver. Initially I was assuming only
+> in-kernel users and now I agree we should avoid any in kernel users if
+> possible.
+> 
+> One thing to note FFA_PARTITION_INFO_GET relies on Rx buffers to send the
+> information to the caller. So we need to have established buffers before
+> that and one of the reason you don't find that in this RFC. I dropped that
+> too which I wanted initially.
+
+Ok, sounds like we should at least get to a position where we can enumerate
+things, though.
+
+> > > Sorry for long email and too many questions, but I thought it is easier
+> > > this way to begin with than throwing huge code implementing loads of APIs
+> > > with no users(expect example partition) especially that I am posting this
+> > > during merge window.
+> >
+> > No problem. Maybe it would help if I described roughly what we were thinking
+> > of doing for KVM (this is open for discussion, of course):
+> >
+> >  1. Describe KVM-managed partitions in the DT, along the lines of [1]
+> >  2. Expose each partition as a file to userspace. E.g.:
+> >
+> >     /dev/spci/:
+> >
+> > 	self
+> > 	e3a48fa5-dc54-4a8b-898b-bdc4dfeeb7b8
+> > 	49f65057-d002-4ae2-b4ee-d31c7940a13d
+> >
+> >     Here, self would be a symlink to the host uuid. The host uuid file
+> >     would implement FFA_MEM operations using an ioctl(), so you could,
+> >     for example, share a user buffer with multiple partitions by issuing
+> >     a MEM_SHARE ioctl() on self, passing the fds for the borrower partitions
+> >     as arguments. Messaging would be implemented as ioctl()s on the
+> >     partition uuid files themselves.
+> >
+> 
+> OK, IIUC that covers mostly KVM implementation. We still need a way to
+> share the RxTx buffer info to the partitions and DT/ACPI(?) is one
+> possible way. Based on you comment about not needing DT node, do you have
+> any other way to communicate the buffer info to the partitions ?
+
+This is only a concern if KVM chooses to provide the Rx/Tx buffer pair
+though, right? If we punt that down the road for the moment, then we can
+just rely on FFA_RXTX_MAP for now.
+
+> > For communicating with partitions that are not managed by KVM (e.g. trusted
+> > applications), it's not clear to me how much of that will be handled in
+> > kernel or user. I think it would still be worth exposing the partitions as
+> > files, but perhaps having them root only or just returning -EPERM for the
+> > ioctl() if a kernel driver has claimed the partition as its own? Ideally,
+> > FF-A would allow us to transition some of the Trusted OS interfacing code
+> > out to userspace, but I don't know how realistic that is.
+> >
+> 
+> Ah good, so we can still manage in-kernel users this way but we need to
+> provide interface to such a driver which I agree that we need to avoid
+> if possible.
+> 
+> > Anyway, to enable this, I think we need a clear separation in the kernel
+> > between the FF-A code and the users:
+> Agreed.
+> 
+> > KVM will want to expose things as above, but if drivers need to use this
+> > stuff as well then they can plug in as additional users and we don't have to
+> > worry about tripping over the RX/TX buffers etc.
+> >
+> 
+> I am confused a bit. When you refer drivers above, are you referring to
+> drivers in host kernel(hypervisor) or in the partitions. I fail to
+> imagine need for the former.
+
+I'm referring to in-kernel users in the host kernel. For KVM-managed guests,
+we may not need these, although signalling things like system shutdown might
+be better off done without relying on userspace. But my point is really that
+separating the buffer management from the users means we can serialise
+consumers, whether they are in-kernel or out in userspace.
+
+> > What do you think, and do you reckon you can spin a cut-down driver that
+> > implements the common part of the logic (since I know you've written much
+> > of this code already)?
+> >
+> 
+> I am not sure if I am aligned with your thoughts on the buffer sharing
+> yet.
+
+Ok, please let me know if you have any more questions.
+
+Will
