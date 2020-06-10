@@ -2,85 +2,98 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7486C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD64C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 738CE206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D67C206F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591820425;
-	bh=zUv+l6eCuUka+t0W+/cq8TDwEtZ/VpuvX+Ir/0vilz0=;
+	s=default; t=1591820585;
+	bh=TKZ2LXML5cv9NCPIapwBFHDk2LIy23EqZcrzTZVUW2o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n/cXmDSmowaRAGCNIXeGutSwGXf676m1VSUP7jaQmPc6q/Nsj4Hn669gPZwPdWxzP
-	 xvg3Ig3wLg68Yye0RtsRSZiEa4PdJn32SYrvoEStvX6/Kxfp+TLwx8INDrNE2CzyMO
-	 pDUe2+gZXpgpfqLfcvuUXFAZK6EmTVRnxDQVzD+E=
+	b=Z3Re1cnWlGL0V1ZzbZGxVvzR6VKMD9THr6fGOtPRml97kuSXJ9MVGuyqlVlly6LeI
+	 Z3Z4DrAgTtbbRGz/aTpPnxAhW3luU8IMQCMJzW5uKKThzU8jbdJkHheicbMD1t+Nnp
+	 Sz8EG6vAAfVSVU8ru4z948eLOgto6V5fhPaPAt9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgFJUUW (ORCPT
+        id S1728032AbgFJUW7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:20:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34268 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJUUV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:20:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id m81so3832893ioa.1;
-        Wed, 10 Jun 2020 13:20:20 -0700 (PDT)
+        Wed, 10 Jun 2020 16:22:59 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40910 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgFJUW6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:22:58 -0400
+Received: by mail-il1-f196.google.com with SMTP id t8so3261836ilm.7;
+        Wed, 10 Jun 2020 13:22:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tl8LETKmS+P6kESj029xJGHxTqRp5D9lmw9Z1M3J9vU=;
-        b=DrfUH3zYO2X4WaBnNtd7+2SGFw03niiSjySGOfb6RQJWswHhjRy6lEdiqAMnXOkIQ/
-         /a+nks3Trd7K1fiXkIZp8xtRvVnbmaNgXq2eRrDOS6BaBN/U12kRHWJIIumNCjFtg1x0
-         o/MnXw0xK59Nc73xoeI7bxzpsEU752Jg9GLVJXdMT8ZbcAEfRwoznG4k1N/VeGEWJFmn
-         EtbnzmTBgcNK1N4YOZaymW7u2C4pU5BZXJteMawGs3TmoMTnHBT3XmcPcWQImRDpoemP
-         gf2kIPwIRPtpjH96us9xyDwYgSoJC8Bc96POmQunWLqtxQ5/ADXoMXXNF2JBnp80iJLE
-         arDg==
-X-Gm-Message-State: AOAM533KEtyNOLMCxR+1wxlUteoNPobLe+CSA/KEjW1V6/9SE6F/sPvP
-        UEx2J4pr4WRRQ5Loyd0p9Q==
-X-Google-Smtp-Source: ABdhPJwf363QrAeSH44mRLwoy+rufj4TKAIbsyKss64pemnd+VDJVxMcmbKNnoWonDT8GTc5XdYa1w==
-X-Received: by 2002:a05:6638:35d:: with SMTP id x29mr4726694jap.71.1591820420247;
-        Wed, 10 Jun 2020 13:20:20 -0700 (PDT)
+        bh=/YXSTCcj991zSNGpyu99kvR+1fYRbftjWLQgAbbx28Y=;
+        b=tmOPQ72T53Rhi1rCpe41Jlwl4auOldbyBtFXHMhWGno/qg3nFG7xA+EOkAP2r5FCvE
+         kU0oeN+57/V1S0ffD/PSZ6tvK8PVhCd8Ewl0ms3jYPiKafWK9Pz3WFxWwGXD6i7Rzp8/
+         d3O8bUrTVLCo6CzCpOBXGX2PETwKkVFowZTtvV9ZwzsFn7hyN6ti6MzArtCuG7Z4+6YU
+         ryBMfsNyl2FS/7OxN+Ogox5OkjZRtbBnOWXVkb/54wVWlrStK2W7LyUL9KY0qsMR2y8Y
+         PGWSRZBe+CvTm+qm/uyj+jNYJ178aEnDP3fMpypaIdm/xe1WzRU3Sh3C024fPV4+3opE
+         Wd2Q==
+X-Gm-Message-State: AOAM531Xbiza9muTdTtbWu9e9nZ2iTv4Edmi7IyR6R2FgXDsbCv6kh0c
+        6+v6OqblFXMolKvOAuaS6g==
+X-Google-Smtp-Source: ABdhPJy5xOlUuXLQ2M0PsBlE2fZvLeM8bOQGR9ykS86xR02H3MBFr5qW9JVAsXPGGIBf/d9lBSfqyw==
+X-Received: by 2002:a05:6e02:50c:: with SMTP id d12mr4753144ils.140.1591820577238;
+        Wed, 10 Jun 2020 13:22:57 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id k126sm423901iof.50.2020.06.10.13.20.18
+        by smtp.gmail.com with ESMTPSA id 65sm455187ilv.7.2020.06.10.13.22.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:20:19 -0700 (PDT)
-Received: (nullmailer pid 3646187 invoked by uid 1000);
-        Wed, 10 Jun 2020 20:20:18 -0000
-Date:   Wed, 10 Jun 2020 14:20:18 -0600
+        Wed, 10 Jun 2020 13:22:56 -0700 (PDT)
+Received: (nullmailer pid 3649714 invoked by uid 1000);
+        Wed, 10 Jun 2020 20:22:55 -0000
+Date:   Wed, 10 Jun 2020 14:22:55 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     ckeepax@opensource.cirrus.com, patches@opensource.cirrus.com,
-        perex@perex.cz, alsa-devel@alsa-project.org, info@metux.net,
-        broonie@kernel.org, tiwai@suse.com, allison@lohutok.net,
-        tglx@linutronix.de, lgirdwood@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ASoC: bindings: wm8960: Add property for headphone
- detection
-Message-ID: <20200610202018.GA3646134@bogus>
-References: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        balbi@kernel.org
+Subject: Re: [PATCH v2] usb: dwc3: Add support for VBUS power control
+Message-ID: <20200610202255.GA3646369@bogus>
+References: <20200603120915.14001-1-mike.looijmans@topic.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591180013-12416-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <20200603120915.14001-1-mike.looijmans@topic.nl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 03 Jun 2020 18:26:52 +0800, Shengjiu Wang wrote:
-> Add two properties for headphone detection.
+On Wed, Jun 03, 2020 at 02:09:15PM +0200, Mike Looijmans wrote:
+> Support VBUS power control using regulator framework. Enables the regulator
+> while the port is in host mode.
 > 
-> wlf,hp-cfg: A list of headphone jack detect configuration register values
-> wlf,gpio-cfg: A list of GPIO configuration register values
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
->  Documentation/devicetree/bindings/sound/wm8960.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> v2: Add missing devm_regulator_get call which got lost during rebase
 > 
+>  .../devicetree/bindings/usb/dwc3.txt          |  1 +
+>  drivers/usb/dwc3/core.c                       | 34 ++++++++++++++-----
+>  drivers/usb/dwc3/core.h                       |  4 +++
+>  drivers/usb/dwc3/drd.c                        |  6 ++--
+>  4 files changed, 33 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 9946ff9ba735..56bc3f238e2d 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -37,6 +37,7 @@ Optional properties:
+>   - phys: from the *Generic PHY* bindings
+>   - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
+>  	or "usb3-phy".
+> + - vbus-supply: Regulator handle that provides the VBUS power.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Does the DWC3 block require Vbus to power itself? Doubtful. This 
+belongs in a usb-connector node. If the DWC3 driver wants to get the 
+Vbus supply, it can fetch it from that node.
+
+Rob
