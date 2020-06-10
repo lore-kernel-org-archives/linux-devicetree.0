@@ -2,96 +2,96 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25443C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9BDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EFD20820
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C8620656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591818389;
-	bh=V8MuN/Ny5mYSCxK6kfQBnHwCVaOFlIo95wDoCgwHkk4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=y/neWAq0eygSK5vxvBMIje+A/8SfczaRf89NnaUHI/CP9R3jAYOfPG3VBtfwMF1dg
-	 JbA07lh0On1WQSKd8dD+2MyE02QzY/AqjznbVWGxGa+2ikSxMrpQ02DUKG0JM7GoOC
-	 37AtQhrgXsnH3OI7vcBB13Fm30TUs4OnNxBTP46U=
+	s=default; t=1591818613;
+	bh=0CHPkKwBy/H0ULej4YXT7H5HcykHkXz+vPYoHSq6hOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w4DHO03F0fgj/wTZcg2mU2UnyuujEOinznBVwcpZNUh/h+R4uwkDUmaz813RU8i0K
+	 U8Tl5ICLubtEI2OJK2J59FVgM2UE49bIHM3BW04pMhynqqhuYvyq4F4q+J4EeLxmoY
+	 r+eC8iBltnJHuPayg/vPY/GnW5qYSJfIGW/BfRo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgFJTq2 (ORCPT
+        id S1730347AbgFJTuN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:46:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37068 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgFJTq2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 15:46:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id r2so3690532ioo.4;
-        Wed, 10 Jun 2020 12:46:27 -0700 (PDT)
+        Wed, 10 Jun 2020 15:50:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45905 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730085AbgFJTuM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 15:50:12 -0400
+Received: by mail-io1-f68.google.com with SMTP id y5so3659115iob.12;
+        Wed, 10 Jun 2020 12:50:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9mGfZeBBTKc+FrE4dVawruNqiY96bl764hS1tXehIIE=;
-        b=BecvtJMdybauIYqlvP3mmq1I+zjaWUVy2T1dWLXCqVPui0f9ZrXHIw5OgZMR9jD2nz
-         6Kkenw1bpplToRE8BnldssPAk16BOX0ycFGCjDzmK1lkxgfYvlC9FFMakTmXRNoR2FMh
-         K+vbuoOeYDFTB5s/UpPSC+HNmv1Yx1WWKxoQ6jFmKmkGGEF3eXJZI+xIpHlBd0MoNWlr
-         FNDABuN/T559h36U1z7LpsGZfM3UktZaQsWPI3cBeQy7kiJjnq7+YmXm+i8UnvxBXaXT
-         F0OB7wM/ODV6QrD5ci8+ov4frah/6vVmaMjekwZhFFLK1fQsFCq/R0c80J6HgyeCpukj
-         IZ9Q==
-X-Gm-Message-State: AOAM531/4+66IXuJAmV50bbZXPfsk4uBwtBv+uSykua8O/lLf89jxhmV
-        fqRoVulh2xEJwsgihS/wC6KclbQ=
-X-Google-Smtp-Source: ABdhPJyTfZ7stvJ1zJp4PDYd4mXFlNbonBQ7OxS6Ub6k8MoKgsezkrMt64D7x1mMgr57NVmsKtVrYA==
-X-Received: by 2002:a02:2c6:: with SMTP id 189mr4797468jau.115.1591818386360;
-        Wed, 10 Jun 2020 12:46:26 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.251])
-        by smtp.googlemail.com with ESMTPSA id a6sm385535ilh.60.2020.06.10.12.46.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1M+bkyx1XWH7KVWinjgxEZPKQ01wy/6i2E3dZnftVyk=;
+        b=ZzEpRxML6tWtIm/jZFALrpgYbkBDWNFWtV7yavAziDp5urDmFSFIyIJfAN79wmPAnb
+         0XKkClI/aMh9hqv9dEzUdDkme6XUZNAsoojRj8acj+G32r/9V5i0yPwkv3VN6eYevlVZ
+         PecbQwzv1ksetHFEcIW8QjjpLijjhp6+y6viksPAQS5oz9gYnXoxrYvqnRZqpu0MONa/
+         ep42rS7g0qVqNR1IwTYAhGBpWWhm4KMWE18xM6GtMSHN094SnRjkAsfEJePn87bNejJe
+         1R8Mg/7B1fc4tSdooctoH2vv1d0dY5zZiLJRhJ9gi1HzTLtRFAPiOxLlxPhclBhW8GVn
+         MYdw==
+X-Gm-Message-State: AOAM5307H4vlOJYqmy2Yx1uqKOMYwgvsI15J7M4UGzl+1ulnQR8Q8Wll
+        FrMQvArNYAxfEoaj4T7Xww==
+X-Google-Smtp-Source: ABdhPJwRvh/ZDpjvs6OY941xd3Y3JedADa0np5Xq47sS8wJemJewWQcJKW2EHSGQVFQz2QSMIpkUzg==
+X-Received: by 2002:a6b:249:: with SMTP id 70mr4950251ioc.146.1591818610318;
+        Wed, 10 Jun 2020 12:50:10 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id n12sm399848iog.25.2020.06.10.12.50.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:46:25 -0700 (PDT)
+        Wed, 10 Jun 2020 12:50:09 -0700 (PDT)
+Received: (nullmailer pid 3606732 invoked by uid 1000);
+        Wed, 10 Jun 2020 19:50:07 -0000
+Date:   Wed, 10 Jun 2020 13:50:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: mfd: Ensure 'syscon' has a more specific compatible
-Date:   Wed, 10 Jun 2020 13:46:25 -0600
-Message-Id: <20200610194625.3597460-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     rick.tyliu@ingenic.com, dongsheng.qiu@ingenic.com,
+        zhenwenjin@gmail.com, aric.pzqi@ingenic.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        yanfei.li@ingenic.com, tsbogend@alpha.franken.de,
+        paul@crapouillou.net, sernia.zhou@foxmail.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v2 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200610195007.GA3606682@bogus>
+References: <20200602183354.39707-1-zhouyanjie@wanyeetech.com>
+ <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Using 'syscon' alone should be avoided as compatible strings should be
-specific enough to identify the exact set of registers contained. Update
-the schema to ensure at least 2 compatible strings are present.
+On Wed, 03 Jun 2020 02:33:54 +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+> 
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     1.Remove unnecessary "items".
+>     2.Add "clocks" as suggested by Paul Cercueil.
+> 
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+> 
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Maxime Ripard <maxime@cerno.tech>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-FYI, there's 43 cases of this on arm32 in my testing.
-
- Documentation/devicetree/bindings/mfd/syscon.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 19bdaf781853..af7a68051392 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-+++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -43,7 +43,8 @@ properties:
- 
-       - contains:
-           const: syscon
--        additionalItems: true
-+        minItems: 2
-+        maxItems: 4  # Should be enough
- 
-   reg:
-     maxItems: 1
--- 
-2.25.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
