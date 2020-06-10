@@ -2,130 +2,164 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255CAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E190C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0303220823
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B62F2078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZoFELyV3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A5UREhW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgFJS6N (ORCPT
+        id S1727792AbgFJTEA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
+        Wed, 10 Jun 2020 15:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbgFJS6J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 14:58:09 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0DF5C03E96B
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:58:09 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id t26so1216735ual.13
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:58:09 -0700 (PDT)
+        with ESMTP id S1726392AbgFJTD7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 15:03:59 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7F9C03E96F
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 12:03:59 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y20so2838959wmi.2
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 12:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oAuiLS5G9yRr9AdnpqJ+b7J1vIYfSf3q36M8NOV942c=;
-        b=ZoFELyV3tBihmyebsCsoJk3lsYw7dHxokZr208+Oi3cjS0rKE47GyTKi/8fqkKgIhj
-         5s0cu1ckOGvd4aV4SjB5D5/nJDeMoIjxvt2U2Ccw/Kfve0CtzajVy/w53lYfU6Xu6k7N
-         S8PCnMI8f5/e0ChFtq938rNtp430lbPGfI6Ng=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NSUIdscZFTvAj/KAnkXmeLO33H1QImBmP7nNAatzF4E=;
+        b=A5UREhW8Zimz/lgVsX6YJceKyEcTDjGffoiiTJOFdDh2MS8Wxd5Ju72jDNEe03+VwF
+         mVZ3B2461XaZq/JxobIkPo8zWcoju/Yn/0yxVkOeKJtCgUkiqKoSrFTT2OuKrMCeaeFn
+         nXsSEcazn3q3aNRxaP6pf9xhar75XQ1iFYbaA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oAuiLS5G9yRr9AdnpqJ+b7J1vIYfSf3q36M8NOV942c=;
-        b=Og6fw+dmma00FKbY7r5YarHJCZucqBePIebH0kpp2OXA0AUi5y3eB75oWEDtKGNnQS
-         LlDoI/XBcpzrZII+oHtTY/4k53Ypwjt7FsL2ljECo3PoxKDmtl8CP5BpeWuR3eGwSzem
-         xu4993aBxJZRvs6HJSFG0G5DCoS5/bmPQKcmdwWvPHJ6xU0a+nugZC2pcAbgNkt/uKYj
-         t1JECHWaQIA6QtfILZA6BY0CHiSWLtQEu+pOOfWciTKFSv3i+Ahvl+8c7eZD2SNO/yis
-         cEy9j3lEcuFaEszEJsg4Okaqa6XUT4rIK93rK1wjmBPpCN6q2eJDYSE9WqT1+6q0aKFk
-         rO1g==
-X-Gm-Message-State: AOAM533gRjleV+YxsyCgGIVd2OjdRrC/7Q/VWNrvzzEwfvwjsx55LAY6
-        vww8Nfunfi1CXgkllF5nXiKGST0pPpc=
-X-Google-Smtp-Source: ABdhPJyBn3GzGujl8r1jBGGDLEq7E7V3HIyOwRBIFkQP0J3yf03lCqKqT5Ma5tbWv834Qp8ge8ExvA==
-X-Received: by 2002:ab0:168c:: with SMTP id e12mr3699417uaf.89.1591815488435;
-        Wed, 10 Jun 2020 11:58:08 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id s19sm76198vke.14.2020.06.10.11.58.07
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 11:58:07 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id u17so1911778vsu.7
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:58:07 -0700 (PDT)
-X-Received: by 2002:a67:e445:: with SMTP id n5mr3989129vsm.73.1591815486605;
- Wed, 10 Jun 2020 11:58:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NSUIdscZFTvAj/KAnkXmeLO33H1QImBmP7nNAatzF4E=;
+        b=rdMrRJyFgIbZLDZmhHmv2bDq/6pMIbT+DstsZpjtCyFA6waX+r+oAUe5CJDeWrthWt
+         E9xvlPpybp9ft4AbW8Za3qfWlcmzBEApYz3+5SYPzd9z5tO98IV7UXiq3f514oSjZO0p
+         Tn639KWyQOka9MkBHcoHQ9tr9oengYWhcYXbljYezozXSVxfTd+VbWl9GbYzPGCRwrwV
+         j4p3I/PTLLBqIgfwmR72LoFfqX7OvMKCsveiYW0rfOt6RY8yym/Sm6waiFM0JOSh7LbG
+         eCBXiWfqgz37MBH1irgh2J7CnHvnMOZeeR8hwR/AoF67wqH8JwyisvKFYa9VTzqUV5ya
+         8sdg==
+X-Gm-Message-State: AOAM530Q81pq7BvVfpRTbtRDz1QdPPipa0qmf7h31+3Zmm4GdfvCiNQT
+        OJLZEwHa9IkBEFyNjhvhwMGo+g==
+X-Google-Smtp-Source: ABdhPJzTRfYPcTj3IRS5BINNXpxwdDXmbXJOisFqkC0CCPcDchPYcvzcaAwcf6hmVi/W346PEWyYcw==
+X-Received: by 2002:a1c:f301:: with SMTP id q1mr4562383wmq.110.1591815838119;
+        Wed, 10 Jun 2020 12:03:58 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id d2sm1039640wrs.95.2020.06.10.12.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 12:03:57 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 19:03:56 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>, yuzhao@chromium.org,
+        zwisler@chromium.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sean Cheng =?utf-8?B?KOmEreaYh+W8mCk=?= 
+        <Sean.Cheng@mediatek.com>, Sj Huang <sj.huang@mediatek.com>,
+        Christie Yu =?utf-8?B?KOa4uOmbheaDoCk=?= 
+        <christie.yu@mediatek.com>,
+        Frederic Chen =?utf-8?B?KOmZs+S/iuWFgyk=?= 
+        <frederic.chen@mediatek.com>,
+        Jungo Lin =?utf-8?B?KOael+aYjuS/iik=?= <jungo.lin@mediatek.com>,
+        Rynn Wu =?utf-8?B?KOWQs+iCsuaBqSk=?= <Rynn.Wu@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
+Subject: Re: [RFC PATCH V4 1/4] media: v4l2-mem2mem: add v4l2_m2m_suspend,
+ v4l2_m2m_resume
+Message-ID: <20200610190356.GJ201868@chromium.org>
+References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
+ <20191204124732.10932-2-Jerry-Ch.chen@mediatek.com>
+ <20200521171101.GA243874@chromium.org>
+ <e31fe64a-c5c1-7b1e-eec1-27111fe43ac2@xs4all.nl>
+ <CAAFQd5Ad_cnv0qztZOk9c2H0Y+XO6tRcRmS1t4dBw5qbG-d8Nw@mail.gmail.com>
+ <CAAEAJfDboyra5XcEiviJP_3Kk-mDNZH5nstDa_7P7XCV7bu7Pg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200609120455.20458-1-harigovi@codeaurora.org>
-In-Reply-To: <20200609120455.20458-1-harigovi@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 10 Jun 2020 11:57:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UMELcq_-aYdQBW3CuJgTqZWYkE8c5AMKT74Z1Z0QHusg@mail.gmail.com>
-Message-ID: <CAD=FV=UMELcq_-aYdQBW3CuJgTqZWYkE8c5AMKT74Z1Z0QHusg@mail.gmail.com>
-Subject: Re: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens
- during PM sleep
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAEAJfDboyra5XcEiviJP_3Kk-mDNZH5nstDa_7P7XCV7bu7Pg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Jun 10, 2020 at 03:52:39PM -0300, Ezequiel Garcia wrote:
+> Hi everyone,
+> 
+> Thanks for the patch.
+> 
+> On Wed, 10 Jun 2020 at 07:33, Tomasz Figa <tfiga@chromium.org> wrote:
+> >
+> > On Wed, Jun 10, 2020 at 12:29 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> > >
+> > > On 21/05/2020 19:11, Tomasz Figa wrote:
+> > > > Hi Jerry,
+> > > >
+> > > > On Wed, Dec 04, 2019 at 08:47:29PM +0800, Jerry-ch Chen wrote:
+> > > >> From: Pi-Hsun Shih <pihsun@chromium.org>
+> > > >>
+> > > >> Add two functions that can be used to stop new jobs from being queued /
+> > > >> continue running queued job. This can be used while a driver using m2m
+> > > >> helper is going to suspend / wake up from resume, and can ensure that
+> > > >> there's no job running in suspend process.
+[snip]
+> > >
+> > > I assume this will be part of a future patch series that calls these new functions?
+> >
+> > The mtk-jpeg encoder series depends on this patch as well, so I guess
+> > it would go together with whichever is ready first.
+> >
+> > I would also envision someone changing the other existing drivers to
+> > use the helpers, as I'm pretty much sure some of them don't handle
+> > suspend/resume correctly.
+> >
+> 
+> This indeed looks very good. If I understood the issue properly,
+> the change would be useful for both stateless (e.g. hantro, et al)
+> and stateful (e.g. coda) codecs.
+> 
+> Hantro uses pm_runtime_force_suspend, and I believe that
+> could is enough for proper suspend/resume operation.
 
-On Tue, Jun 9, 2020 at 5:05 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> ti-sn65dsi86 bridge is enumerated as a runtime device. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend will not be called
-> and it kept the bridge regulators and gpios ON which resulted
-> in platform not entering into XO shutdown.
+Unfortunately, no. :(
 
-The "XO shutdown" concept is a very Qualcomm-specific concept but this
-bridge chip could be used on any board.  ...but I think it's fine to
-leave it as-is since the meaning is clear enough.
+If the decoder is already decoding a frame, that would forcefully power
+off the hardware and possibly even cause a system lockup if we are
+unlucky to gate a clock in the middle of a bus transaction.
 
+I just inspected the code now and actually found one more bug in its
+power management handling. device_run() calls clk_bulk_enable() before
+pm_runtime_get_sync(), but only the latter is guaranteed to actually
+power on the relevant power domains, so we end up clocking unpowered
+hardware.
 
-> Add changes to force suspend on the runtime device during pm sleep.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->
-> Changes in v2:
->         - Include bridge name in the commit message and
->         remove dependent patchwork link from the commit
->         text as bridge is independent of OEM(Stephen Boyd)
->
-> Changes in v3:
->         - Updating changelog to explain the need for patch
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
->  1 file changed, 2 insertions(+)
+> 
+> I'm not seeing any code in CODA to handle this, so not sure
+> how it's handling suspend/resume.
+> 
+> Maybe we can have CODA as the first user, given it's a well-maintained
+> driver and should be fairly easy to test.
 
-Note that it's generally considered nice to CC folks who commented on
-previous versions of the patch since they are folks who are almost
-certainly interested in it.  In this case that would be me and Stephen
-Boyd.
+I remember checking a number of drivers using the m2m helpers randomly
+and none of them implemented suspend/resume correctly. I suppose that
+was not discovered because normally the userspace itself would stop the
+operation before the system is suspended, although it's not an API
+guarantee.
 
-You could also, in theory, carry Stephen's Reviewed-by patch from v1
-since you have fixed the subject as he requested and you have now also
-fixed the commit message to have some details.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Best regards,
+Tomasz
