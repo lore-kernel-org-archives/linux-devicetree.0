@@ -2,108 +2,100 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB766C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 01:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8FDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2B9B206C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 01:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1772078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 01:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqnJFRkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbgFJBGp (ORCPT
+        id S1726123AbgFJBIK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 21:06:45 -0400
-Received: from mga14.intel.com ([192.55.52.115]:22909 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgFJBGo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 9 Jun 2020 21:06:44 -0400
-IronPort-SDR: Bbj9fit/WQmiNdhHZ18Z2M/6t2ayw4Ba8S0caoj7ZbYlVujV2yPrXvjdRG2tLBNJdeYnKLNtGk
- T2mmOOoR+H1A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2020 18:06:43 -0700
-IronPort-SDR: cBww2uFpyUwLqQE3n0LavVVjC4gKq5MVZcVFC81JfRDr3eCz5+ooYv2iw6/YnxCxtI8cBgtXUv
- wEN6FffG92gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,494,1583222400"; 
-   d="scan'208";a="289014515"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jun 2020 18:06:43 -0700
-Received: from [10.255.176.176] (unknown [10.255.176.176])
-        by linux.intel.com (Postfix) with ESMTP id DF8C3580698;
-        Tue,  9 Jun 2020 18:06:40 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v1 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com
-References: <20200609110850.43469-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200609110850.43469-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <d2f30dbde89050e428b61092a1e5bbcf8d257129.camel@pengutronix.de>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <1ecf98d8-25f5-8f2b-1b6b-8d6f8f758761@linux.intel.com>
-Date:   Wed, 10 Jun 2020 09:06:40 +0800
+        Tue, 9 Jun 2020 21:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgFJBII (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 21:08:08 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC171C05BD1E;
+        Tue,  9 Jun 2020 18:08:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r18so202771pgk.11;
+        Tue, 09 Jun 2020 18:08:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=UmNa5QZXTcifMb5t+sEkwGynN0XSrtWdcarPS3DkzfM=;
+        b=iqnJFRkg2te+YESKxo2ZMUYBeKwbtBR1eF55xnbxHIFvOyY7rT0c1Cg+B9W3c1PFNO
+         zVT0M4AkC8Onf29mHrJOte8g+jXbUrCJTID7w/WUSrW/JRxxV+R3cgqfS/3Ge7Rhn81b
+         urMNyNFw/bEeK9zhet50JRTYSPdIbN0wkZvlPEXkdlmdTAC/bzGL6c8l4eHz/Zrvn0me
+         uGmgt/mKppBwGYmMYAhH+Fc2WYsbx4hwCwhDU7pgRQrBd84cPOkU6ERjfMJj4VeibiSj
+         8pXOZrnJaT7zMjN0HZTclF9GSZ1GkHfkY9jNxJpivBQZ/j6GzONHsl+k7wZkGm7d5RfF
+         Bcfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UmNa5QZXTcifMb5t+sEkwGynN0XSrtWdcarPS3DkzfM=;
+        b=n9fIHT50C8XM8QKI1N3B7K30y/mJd5quNui18Iqrn0TEKFTbaQoIX5LiqbX7SE4kQa
+         sFiEaZm9KJgChoyipnprEVs9QTyDdGjjc0wjo+lQtrWWBZcnc+8N9dx2vpqQDPwdMnma
+         H+BjeE7wAuuv0zxXRdpaNWNlZ52Hsdug2UUs2nwnoTblSIg9VMyd3c4oZmid3QCMTuH3
+         uXJbcfoEq3zmdKV+MV2XvwV5ZTmrWZ1lE1on5nmo+/PbZg/DfSwDe+iu99rHhIokGMrM
+         X1zklMg9PEduE3YT0gUXTkriXtFWDE30QmLOY+Wa4IIqKL0cJ5tC9OgOMshJo9x+32Jh
+         zMng==
+X-Gm-Message-State: AOAM5314ouEh11I+IZ3PCWh0qAJdPKoDhL09HDjM03j7+HxORScNM9kH
+        ftY17YtDug6OCxH6ELlSNOM=
+X-Google-Smtp-Source: ABdhPJyPnOLs8b4BbVR1sZVbbD7hTQb+uB1NhHbXovmx7InQxZ8QLWWZyTdoaqP8jpXpIqJL862v1Q==
+X-Received: by 2002:a63:fc1b:: with SMTP id j27mr614744pgi.251.1591751286328;
+        Tue, 09 Jun 2020 18:08:06 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i197sm11111912pfe.30.2020.06.09.18.08.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 18:08:05 -0700 (PDT)
+Subject: Re: [PATCH v2 4/7] mips: bmips: dts: add BCM6328 reset controller
+ support
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609160244.4139366-1-noltari@gmail.com>
+ <20200609160244.4139366-5-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <47a8def4-a32a-04d3-e4ab-bb358f1455f5@gmail.com>
+Date:   Tue, 9 Jun 2020 18:08:03 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <d2f30dbde89050e428b61092a1e5bbcf8d257129.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200609160244.4139366-5-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Philipp,
 
-Thank you very much for review comments and your time...
 
-On 9/6/2020 8:14 pm, Philipp Zabel wrote:
->> +
->> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
->> +		resets[i] = devm_reset_control_get(dev, CTL_RESETS[i]);
-> Please use devm_reset_control_get_exclusive() instead.
-Noted, will use it.
+On 6/9/2020 9:02 AM, Álvaro Fernández Rojas wrote:
+> BCM6328 SoCs have a reset controller for certain components.
 > 
->> +		if (IS_ERR(resets[i])) {
->> +			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
->> +			return PTR_ERR(resets[i]);
->> +		}
->> +		reset_control_assert(resets[i]);
->> +	}
-> You should request all reset controls first, and only then start
-> asserting / deasserting, otherwise you may end up with partially
-> asserted resets in case a later reset control is not found.
-Agreed!, re-write the assert/de-assert logic as you have suggested.
-> 
->> +
->> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
->> +		ta->resets[i] = devm_reset_control_get(dev, PHY_RESETS[i]);
-> Same as above.
-> 
->> +		if (IS_ERR(ta->resets[i])) {
->> +			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
->> +			return PTR_ERR(ta->resets[i]);
->> +		}
->> +		reset_control_assert(ta->resets[i]);
->> +	}
->> +
->> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
->> +		reset_control_deassert(resets[i]);
->> +	/* Need to wait at least 20us before de-assert the PHY */
->> +	usleep_range(20, 100);
-> This waits 20us after de-asserting the reset, not before. Is this in the
-> correct place?
-yes, you are right, it's in wrong place, Thanks!
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-Regards
-Vadivel
-> 
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+You should probably create include files under include/dt-bindings/
+which designate the various reset control bits that are valid for a
+given SoC.
+-- 
+Florian
