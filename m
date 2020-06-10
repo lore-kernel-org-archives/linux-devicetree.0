@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1260EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7380C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE37A2072F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9937C20829
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+nK1UHj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="siGfsk35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgFJRQz (ORCPT
+        id S1729585AbgFJRQj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33122 "EHLO
+        Wed, 10 Jun 2020 13:16:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729611AbgFJRQm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 13:16:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0438EC03E96B;
-        Wed, 10 Jun 2020 10:16:42 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so3173397wrt.5;
-        Wed, 10 Jun 2020 10:16:41 -0700 (PDT)
+        with ESMTP id S1729570AbgFJRQj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 13:16:39 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60209C03E96B;
+        Wed, 10 Jun 2020 10:16:38 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e1so3173156wrt.5;
+        Wed, 10 Jun 2020 10:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ufahVb650w9qsCrH1Cbf/slHCvCwJwLo7tVzV2USitA=;
-        b=l+nK1UHjzB69FNVE+oP3RRR5YWelnjeKlAXrIBKOzhCz5TUvwa3LtqFS8o2zuiufw/
-         0mYvXmy7lYL8YCoqmDMZA3OberG5ISZzusL1aIVgz2y3qX493weN/bds88e7DcsuQ56c
-         Effdw3cpOAzU/PApjE2DyMlSmIcUaWlZRccwok3cX9xuclJQmo99xJngBphqBL+YZHOi
-         EikWk2YO4hKeu3SFbfYWz69HCqd8eIhKRCZfnZIohmBapa+h7ZD6Vjw1O5xIHxIFgtpH
-         lwgQ1ESCpkn+6wgtwr/S1kw/IaC5HOEpzzzMFmInSSUz92YGPRXQrRWfJbX1pgT4ucKQ
-         lNKg==
+        bh=lDdshItlwdnmfzepKbPpmuAaIp6dKQ9DCj4M6A5UrdU=;
+        b=siGfsk35lzH86e5aquAsfKSdN/8giMFuhHWJ0Tl1Gagq+AHLgUk+aadRSFgiSh8IxB
+         cSMnQzcrmRLpy84clpq/vKIJTgHEvfPII7jNF0s4bPab0HFG6fsbJzERkJ56wCN2YCuj
+         jVkqCD/qcj/9SqdSzSFO9FOOjVZ0ATVHs5ck8NbmyGX8ceB+7nN+Ln/xrdr06jBOED+o
+         iDvtERms7ChgxKij4vxBIRua5fCGCoTpd0+h/RpML/AObNw7glMMHm1xN6wGw/F4HYiV
+         uAFHQOGhPZL9t0pvHNM30US0mXUKC2j7dS/YUU21RaQU449mr7qdGRbjIl9NA6icRS1/
+         Uk5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ufahVb650w9qsCrH1Cbf/slHCvCwJwLo7tVzV2USitA=;
-        b=iGy/wXW0/QGiZXnKExZwvZwN7Xw/pYbibyvRkCgQyJqmJr0M4LtMmrV+l604mVATu6
-         Rmf6Kzgcfhp5uMEZG/HlnK5NIJIP56pNDoiVmP7RUAFFXnKXyDnZdspahUQg9OYK6i6g
-         vL1VCHdT9NAJm7+6nSwQPPo9UvyHRhUmrfFkUx030kUE6MlxpTCZyCYkW4N00nZkhcKj
-         PA79gw6IZjlAMWURTFgTsQmg+OksuYsu4sbhKl6+rjc1P17jJsgfKpiAdEgcuZQsSIP6
-         6q7xySvM9gkJ5B1JJvfzoy7VoVhxVFNKeCzM4P6NAAaKzHMXkafYC0BW1DJQjh6uWnj6
-         XoBg==
-X-Gm-Message-State: AOAM53102yUoRhAgTgRQM87NqVROVlxE5I2hXZ5iBOMBFP/OGM2Y93TJ
-        KGFFDzMABMPLa1rC0VAhJ8o=
-X-Google-Smtp-Source: ABdhPJwEtna7aixJMCKiZdjMiIc1fb6fCfZ/dWM+7OhcJR8NgfA97VJUrOJm8XvzFU8v2Gb2X30fwA==
-X-Received: by 2002:a5d:4701:: with SMTP id y1mr4802365wrq.310.1591809399858;
-        Wed, 10 Jun 2020 10:16:39 -0700 (PDT)
+        bh=lDdshItlwdnmfzepKbPpmuAaIp6dKQ9DCj4M6A5UrdU=;
+        b=IlDcNfGyl1Y5gQ/HIOv9ub19/04yTM24jTbkVFos+3dSi8AN1tg1EudYU3EP+3xyNE
+         AQI2uZCIwHkkNMbCpyDHTDyc5+PQDWK47oHp9l1ilAOhdDlAcsHLtop/kF7DyswN4KIf
+         TVAEkMH+rvhW5FlQaZKoZ0xjLs9m4lVS6p2C37JSf9O8xw68lp2fHGU90cAEObrCCYdn
+         lA5Iooq/UIhKF5s14Xww0HULuVYkkXJ73J8nKa99rCugKd6skB5WdTEW5YOUHILSeZL9
+         601eFOp2tm5zBtjkrs2kQ+mmp+rXhBS6naZOpTqE0lysHwvqHndMQ8YczSJU6QXDPAM7
+         l0IQ==
+X-Gm-Message-State: AOAM532ngoQrZSCaso5wwA+tyRpnmQ1bsiREF9Yr5qvpLbZUGmoqQ9r9
+        nNmVtdg6FVNpfiwZdnc26BE=
+X-Google-Smtp-Source: ABdhPJx1djunj5L522CBpgGonhSBd3Wjpc1V0cz4pd18fakQ5y2c8wzX2CITkveZB2icsrf1vSIbyg==
+X-Received: by 2002:a5d:68c2:: with SMTP id p2mr4809378wrw.253.1591809397002;
+        Wed, 10 Jun 2020 10:16:37 -0700 (PDT)
 Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id f11sm589048wrm.13.2020.06.10.10.16.39
+        by smtp.gmail.com with ESMTPSA id f11sm589048wrm.13.2020.06.10.10.16.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 10:16:39 -0700 (PDT)
+        Wed, 10 Jun 2020 10:16:36 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
@@ -68,9 +68,9 @@ To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
         linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v3 7/9] mips: bmips: dts: add BCM6328 power domain support
-Date:   Wed, 10 Jun 2020 19:16:28 +0200
-Message-Id: <20200610171630.465579-8-noltari@gmail.com>
+Subject: [PATCH v3 4/9] mips: bmips: dts: add BCM63268 power domain definitions
+Date:   Wed, 10 Jun 2020 19:16:25 +0200
+Message-Id: <20200610171630.465579-5-noltari@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200610171630.465579-1-noltari@gmail.com>
 References: <20200610163301.461160-1-noltari@gmail.com>
@@ -83,35 +83,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM6328 SoCs have a power domain controller to enable/disable certain
+BCM63268 SoCs have a power domain controller to enable/disable certain
 components in order to save power.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
  v3: Separate dt-bindings definitions from power domain .dtsi support.
- v2: Add dt-bindings header files.
 
- arch/mips/boot/dts/brcm/bcm6328.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/dt-bindings/soc/bcm63268-pm.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 include/dt-bindings/soc/bcm63268-pm.h
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-index af860d06def6..1f9edd710392 100644
---- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
-@@ -110,6 +110,12 @@ leds0: led-controller@10000800 {
- 			status = "disabled";
- 		};
- 
-+		periph_pwr: power-controller@10001848 {
-+			compatible = "brcm,bcm6328-power-controller";
-+			reg = <0x10001848 0x4>;
-+			#power-domain-cells = <1>;
-+		};
+diff --git a/include/dt-bindings/soc/bcm63268-pm.h b/include/dt-bindings/soc/bcm63268-pm.h
+new file mode 100644
+index 000000000000..84ded53a732f
+--- /dev/null
++++ b/include/dt-bindings/soc/bcm63268-pm.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
 +
- 		ehci: usb@10002500 {
- 			compatible = "brcm,bcm6328-ehci", "generic-ehci";
- 			reg = <0x10002500 0x100>;
++#ifndef __DT_BINDINGS_BMIPS_BCM63268_PM_H
++#define __DT_BINDINGS_BMIPS_BCM63268_PM_H
++
++#define BCM63268_POWER_DOMAIN_SAR	0
++#define BCM63268_POWER_DOMAIN_IPSEC	1
++#define BCM63268_POWER_DOMAIN_MIPS	2
++#define BCM63268_POWER_DOMAIN_DECT	3
++#define BCM63268_POWER_DOMAIN_USBH	4
++#define BCM63268_POWER_DOMAIN_USBD	5
++#define BCM63268_POWER_DOMAIN_ROBOSW	6
++#define BCM63268_POWER_DOMAIN_PCM	7
++#define BCM63268_POWER_DOMAIN_PERIPH	8
++#define BCM63268_POWER_DOMAIN_VDSL_PHY	9
++#define BCM63268_POWER_DOMAIN_VDSL_MIPS	10
++#define BCM63268_POWER_DOMAIN_FAP	11
++#define BCM63268_POWER_DOMAIN_PCIE	12
++#define BCM63268_POWER_DOMAIN_WLAN_PADS	13
++
++#endif /* __DT_BINDINGS_BMIPS_BCM63268_PM_H */
 -- 
 2.26.2
 
