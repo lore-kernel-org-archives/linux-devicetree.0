@@ -2,100 +2,199 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5348C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 11:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780DDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 11:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA717206F4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 11:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591787296;
-	bh=GtO9Z2fQWlJlkwPZR0qQDLQqjFBevy/f60LY5/mvLmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q/A8T4V5B6s1yt/8LDmEabAFNCgYt4FsBJ/A1BQkFEGH+JPOheKqmrbZoxBTvV1Fd
-	 WCOlwykYT6w0L5h7AeNmotcmKrmUiNra10uMZQ2sKbutb+j2wasMBnsVTb5VMQBAvk
-	 0apRPG88gJ/Oc8HG5Df9kl3XDDxepJZiOfUStsAk=
+	by mail.kernel.org (Postfix) with ESMTP id 565132074B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 11:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgFJLIN (ORCPT
+        id S1728401AbgFJLXI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 07:08:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgFJLIN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 07:08:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 10 Jun 2020 07:23:08 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:53702 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728322AbgFJLXH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 07:23:07 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00743206F4;
-        Wed, 10 Jun 2020 11:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591787292;
-        bh=GtO9Z2fQWlJlkwPZR0qQDLQqjFBevy/f60LY5/mvLmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VJHvBXUl3ioJQiOAgUHpbiHUtJJxPObvJMIxTw/d/ldKSZPhNT1QaomsR+8T4Jhpn
-         cRaqRJcP+xPhei12Q16vTObYenaC3BQ7x7Zi+HJKOBJaZ71I4AMblN3ZqRsNA74xsL
-         JMFQBid0MQQQ7fFiBfOj6Wdy1+MR0M3mhVHe9qUc=
-Date:   Wed, 10 Jun 2020 12:08:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
- support
-Message-ID: <20200610110810.GD5005@sirena.org.uk>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 466B8634C87;
+        Wed, 10 Jun 2020 14:23:04 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jiyox-0000ED-RI; Wed, 10 Jun 2020 14:23:03 +0300
+Date:   Wed, 10 Jun 2020 14:23:03 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, robh+dt@kernel.org, helen.koike@collabora.com,
+        digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI
+ port nodes
+Message-ID: <20200610112303.GB805@valkosipuli.retiisi.org.uk>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+ <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Cookie: fortune: No such file or directory
+In-Reply-To: <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sowjanya,
 
---wLAMOaPNJ0fu1fTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the patchset.
 
-On Tue, Jun 09, 2020 at 09:54:13PM +0100, Lad Prabhakar wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
+On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
+> This patch documents Tegra VI and CSI port and endpoint nodes along
+> with the other required properties.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> index 4731921..f70a838 100644
+> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> @@ -65,6 +65,48 @@ of the following host1x client modules:
+>        - power-domains: Must include sor powergate node as csicil is in
+>          SOR partition.
+>  
+> +      Optional properties for csi node:
 
-To repeat my previous feedback I'd expect a driver update as well.
+What hardware does the csi node represent? A CSI-2 receiver? Something
+else?
 
---wLAMOaPNJ0fu1fTG
-Content-Type: application/pgp-signature; name="signature.asc"
+If you have two connections, you need two ports. The example isn't quite
+clear on this; it would appear to represent a single physical interface.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +      - channel nodes: Max upto 6 channels/streams are supported with each CSI
+> +	brick can as either x4 or x2 based on hw connectivity to sensor.
+> +
+> +	Required properties:
+> +	- reg: channel/stream index
+> +	- nvidia,mipi-calibrate: Should contain a phandle and a specifier
+> +	  specifying which pads are used by this CSI port and need to be
+> +	  calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
+> +
+> +	- port: CSI port node and its endpoint nodes as per device graph
+> +          bindings defined in Documentation/devicetree/bindings/graph.txt.
+> +	  Required properties:
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gvxkACgkQJNaLcl1U
-h9D32Qf/X5Q/azyJ8kwxCwKPK7q2OsgAoWrCGEXmWtrCzKN9lNlsJKGNPM9ctmS1
-4cNWCrs7jQjyPhH1QI9chm/tmAGT+Xe1DDGipVvyW/2fWRm11l48Vv6lIO5plSGA
-QyJ9tQHmH0Dk51aIZuxvYWIL4k+4bK3cJfQ0MbuGK+fQFX2RDV2GTca4I4FTiSY8
-lq82HJzpI+39pYY6KnHyyZCy8rDchZT7pQLJ15lI/6cyoLmb248nR2dobAuyvFKS
-3ZFp+DVJhXtPlULNdgrHfoQEzZHiSrwhIy1lmhOIZYOTlGTgv5kF/BaLZE/RjlVb
-sIrgNDH/TrF6mXyMm4rkw1DVN3ILag==
-=qYRC
------END PGP SIGNATURE-----
+You have both properties and nodes here. Same for the above (port is a
+node).
 
---wLAMOaPNJ0fu1fTG--
+> +	  - reg: csi port index based on hw csi lanes connectivity to the
+> +	    sensor.
+> +	  - bus-width: number of lanes used by this port. Supported lanes
+> +	    are 1/2/4.
+
+bus-width belongs to the endpoint. Note that this is for parallel busses
+only. If you need the number of lanes, the property is called data-lanes.
+
+> +	  - endpoint@0: sink node
+> +	    Required properties:
+> +	    - reg: endpoint id. This is used to retrieve pad for creating
+> +	      media link
+> +	    - remote-endpoint: phandle to sensor endpoint
+> +	  - endpoint@1: source node
+> +	    - reg: endpoint id. This is used to retrieve pad for creating
+> +	      media link
+> +	    - remote-endpoint: phandle to vi port endpoint
+> +
+> +  Optional properties for vi node:
+> +  - ports: Video port nodes and endpoint nodes as per device graph bindings
+> +    defined in Documentation/devicetree/bindings/graph.txt
+> +    Max 6 ports are supported and each port should have one endpoint node.
+> +
+> +    Required properties:
+> +    - port: VI port node and its sink endpoint node
+> +      Required properties:
+> +    - reg: should match port index
+> +    - endpoint@0: sink node
+> +      Required properties:
+> +      - reg: endpoint id must be 0
+> +      - remote-endpoint: phandle to CSI endpoint node.
+> +
+>  - epp: encoder pre-processor
+>  
+>    Required properties:
+> @@ -340,6 +382,22 @@ Example:
+>  
+>  			ranges = <0x0 0x0 0x54080000 0x2000>;
+>  
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					imx219_vi_in0: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&imx219_csi_out0>;
+> +					};
+> +				};
+> +			};
+> +
+>  			csi@838 {
+>  				compatible = "nvidia,tegra210-csi";
+>  				reg = <0x838 0x1300>;
+> @@ -362,6 +420,35 @@ Example:
+>  					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
+>  				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
+>  				power-domains = <&pd_sor>;
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				channel@0 {
+> +					reg = <0>;
+> +					nvidia,mipi-calibrate = <&mipi 0x001>;
+> +
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					port@0 {
+> +						reg = <0>;
+> +						bus-width = <2>;
+> +
+> +						#address-cells = <1>;
+> +						#size-cells = <0>;
+> +
+> +						imx219_csi_in0: endpoint@0 {
+> +							reg = <0>;
+> +							remote-endpoint = <&imx219_out0>;
+> +						};
+> +
+> +						imx219_csi_out0: endpoint@1 {
+> +							reg = <1>;
+> +							remote-endpoint = <&imx219_vi_in0>;
+> +						};
+> +					};
+> +				};
+>  			};
+>  		};
+>  
+
+-- 
+Kind regards,
+
+Sakari Ailus
