@@ -2,140 +2,112 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2698DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E8CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F235D2072E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949362070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gpiEPWI1"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AFlVfLb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgFJRAQ (ORCPT
+        id S1728095AbgFJRFu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:00:16 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18488 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgFJRAQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 13:00:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee111920001>; Wed, 10 Jun 2020 10:00:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 10 Jun 2020 10:00:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 10 Jun 2020 10:00:15 -0700
-Received: from [10.2.167.70] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 17:00:14 +0000
-Subject: Re: [RFC PATCH v1 13/18] gpu: host1x: mipi: Add
- of_tegra_mipi_request() API
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
- <1591768960-31648-14-git-send-email-skomatineni@nvidia.com>
- <e84c6723-e94a-3fcf-8b38-eb680c88de25@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <ef909904-9d21-c124-73fc-79c9ae7ac75b@nvidia.com>
-Date:   Wed, 10 Jun 2020 10:00:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 10 Jun 2020 13:05:50 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41344 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgFJRFu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 13:05:50 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BCAAA29E;
+        Wed, 10 Jun 2020 19:05:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591808747;
+        bh=ZT/nC6qDo3qrxgHBIHIVh6Z1UO4m1PQ4ivQ/Rys58vg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AFlVfLb5GWleANehz2I1Q3WGTN1a+PF08g2R3csISBNuHDYxzQ1Q2/J7MLXwsw8qy
+         Hfm9q3uexu28uC50dA9K3rNzTUrjYJEiBPBRWZ3CiizAZI58/37KsMD6/rgv53Gf4A
+         ZOhIdw03o69fRSdFjLPbm3As2Ypiqnbn6VtUj7rI=
+Date:   Wed, 10 Jun 2020 20:05:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200610170527.GA364@pendragon.ideasonboard.com>
+References: <20200513172239.26444-1-laurent.pinchart@ideasonboard.com>
+ <20200513172239.26444-2-laurent.pinchart@ideasonboard.com>
+ <20200526183201.GA134956@bogus>
+ <20200528015537.GF4670@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <e84c6723-e94a-3fcf-8b38-eb680c88de25@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591808402; bh=Imz6doYV660y+cWZb3k3Hst0ZTywDfXDU/B2fakCmbE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=gpiEPWI11tmwvkC1z4UqgSJgJALbX1UO7Icf7RcURBPTCfOGmtBoegR9TiB6A1cUT
-         BpcIZVnuYZ8a3S7SmDrChcksWlyjGqzfvDZXMnS4WELWyhq4yG4FrjJiTJg4mCMbE4
-         b5nHI9snhjEaBq5DJ4CX83uT0iZQ4MuZPOnaSNRtaGJOfIiNlekdxcM+RvTG37CUIc
-         J8dUr9wKHRpV+wILC4lL55qvEvo5oDQp4e7JMbnxy77Z6tpPLlbYVCfOGRdESHEXKQ
-         LVhoCkttS4pwxekjsd92ZwpPPl4whkJTICqFAMoQrXnxd0KcJIUCX7LSF37gShZQsT
-         1pYidMutj/pzQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200528015537.GF4670@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Kishon,
 
-On 6/10/20 6:33 AM, Dmitry Osipenko wrote:
-> 10.06.2020 09:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch adds an API of_tegra_mipi_request() to allow creating
->> mipi device for specific device node rather than a device so Tegra
->> CSI driver can use it for calibrating MIPI pads for each stream
->> independently.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/gpu/host1x/mipi.c | 10 ++++++++--
->>   include/linux/host1x.h    |  2 ++
->>   2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
->> index e00809d..f51fe69 100644
->> --- a/drivers/gpu/host1x/mipi.c
->> +++ b/drivers/gpu/host1x/mipi.c
->> @@ -206,9 +206,9 @@ static int tegra_mipi_power_down(struct tegra_mipi *=
-mipi)
->>   	return 0;
->>   }
->>  =20
->> -struct tegra_mipi_device *tegra_mipi_request(struct device *device)
->> +struct tegra_mipi_device *of_tegra_mipi_request(struct device *device,
->> +						struct device_node *np)
->>   {
->> -	struct device_node *np =3D device->of_node;
->>   	struct tegra_mipi_device *dev;
->>   	struct of_phandle_args args;
->>   	int err;
->> @@ -252,6 +252,12 @@ struct tegra_mipi_device *tegra_mipi_request(struct=
- device *device)
->>   	of_node_put(args.np);
->>   	return ERR_PTR(err);
->>   }
->> +EXPORT_SYMBOL(of_tegra_mipi_request);
->> +
->> +struct tegra_mipi_device *tegra_mipi_request(struct device *device)
->> +{
->> +	return of_tegra_mipi_request(device, device->of_node);
->> +}
->>   EXPORT_SYMBOL(tegra_mipi_request);
->>  =20
->>   void tegra_mipi_free(struct tegra_mipi_device *device)
->> diff --git a/include/linux/host1x.h b/include/linux/host1x.h
->> index c230b4e..a61ca52 100644
->> --- a/include/linux/host1x.h
->> +++ b/include/linux/host1x.h
->> @@ -325,6 +325,8 @@ int host1x_client_resume(struct host1x_client *clien=
-t);
->>  =20
->>   struct tegra_mipi_device;
->>  =20
->> +struct tegra_mipi_device *of_tegra_mipi_request(struct device *device,
->> +						struct device_node *np);
-> Looks like adding a new function here is a bit of overkill. What about
-> to change tegra_mipi_request() to take the node argument?
+On Thu, May 28, 2020 at 04:55:38AM +0300, Laurent Pinchart wrote:
+> On Tue, May 26, 2020 at 12:32:01PM -0600, Rob Herring wrote:
+> > On Wed, 13 May 2020 20:22:37 +0300, Laurent Pinchart wrote:
+> > > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> > > 
+> > > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> > > Processing System Gigabit Transceiver which provides PHY capabilities to
+> > > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> > > 
+> > > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > ---
+> > > Changes since v7:
+> > > 
+> > > - Switch to GPL-2.0-only OR BSD-2-Clause
+> > > 
+> > > Changes since v6:
+> > > 
+> > > - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+> > >   property
+> > > - Dropped status property from example
+> > > - Use 4 spaces to indent example
+> > > 
+> > > Changes since v5:
+> > > 
+> > > - Document clocks and clock-names properties
+> > > - Document resets and reset-names properties
+> > > - Replace subnodes with an additional entry in the PHY cells
+> > > - Drop lane frequency PHY cell, replaced by reference clock phandle
+> > > - Convert bindings to YAML
+> > > - Reword the subject line
+> > > - Drop Rob's R-b as the bindings have significantly changed
+> > > - Drop resets and reset-names properties
+> > > ---
+> > >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+> > >  include/dt-bindings/phy/phy.h                 |   1 +
+> > >  2 files changed, 106 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > 
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Thank you Rob.
+> 
+> Kishon, now that the bindings have been acked, could you please take the
+> series in your tree (which I assume to tbe
+> https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/) ?
+> Is it too late for v5.8 ?
 
-thought to avoid changes to existing usage of that function in other=20
-drivers.
+Gentle ping.
 
-Will update in v2.
+-- 
+Regards,
 
+Laurent Pinchart
