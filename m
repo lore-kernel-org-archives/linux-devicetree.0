@@ -2,169 +2,261 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEE7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE20C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 487B1206C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8145A20656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="cVxMfXgK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l1lc9WvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgFJK3b (ORCPT
+        id S1728251AbgFJKlI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54596 "EHLO
+        Wed, 10 Jun 2020 06:41:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgFJK3Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 06:29:25 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E33C03E96B
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:29:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q11so1659591wrp.3
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:29:23 -0700 (PDT)
+        with ESMTP id S1728149AbgFJKlF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 06:41:05 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57799C03E96B
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:41:05 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id k11so1981914ejr.9
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:41:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2gvb3h72zonJCVPACju41Fbw0tDgnKx5h0TrDtNmZYU=;
-        b=cVxMfXgKRNgr+F74+NX6QkCCJWBVbcaIolD7qRiQgmfdoxxyjdPNvQqSVPvDNHyU5b
-         zutGY00KZ+V2A6xa7UdrCQ4mbO4KOBSVlbJnEi24sWcxCPzWJkbKuUydpqJuzjNDhXN4
-         ztN4nLKUUI+zmTNQ1wipCZvj9rX1uD5inqNhE=
+        bh=b4xt9ro4s6EJh9yAJChrfwEE70fQqv8RKm8O5jxwnF8=;
+        b=l1lc9WvNx7QdPB4+apffY5SPACt/ijyjhjbYY0C9EkWG3RnABAwn7TKeVaauSy9NMU
+         MPhfLiuNtdM7gCzTJw6ftAbcxtZY2ersGZ0blDLT2GHrZiBZgnN0CO2oE5ddHmxZvIWd
+         jimEGBuvkuu8oPARZ7ltp1pHctgWaMHIOf8o4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2gvb3h72zonJCVPACju41Fbw0tDgnKx5h0TrDtNmZYU=;
-        b=q1qdZnihxJJgn7f4XuO7JdoV/UJ7iq5iYcL2Cx4Nai+C6ajiOE3WgVHUNnWFYtvMuN
-         R+PlDfwS8RDTsR32DeZu6fwhtJe4bhOgxMLsA72oRcU30lpglhssU2Jqs+g11iYSGifU
-         gz8iNvSQYcQhrrDNb8k0NGo4oZwUdtOobDeWxoRovfW7RUxTFv5MyPVTOHv2L22BgQ4i
-         MtB6/ZizOeCaZ1nbdU1rLE4bjwPfpMTggWxj9IQyoFcIg/Dza4T++hbuc5s/YWwx0F1H
-         RZJWljTiduUssmJgu7mPERZiCGLbUlQvdxHEbtG4jqYglTL1I6aC2taZZWnjwpEqTfdZ
-         3WEg==
-X-Gm-Message-State: AOAM533vJy/zBEEiZf+cGu2DXHozIpswFEuUp26VnHUIomz8CM9Ulg3I
-        k4Xxeet2lVL3f9cBF2u+zutsc6RACIej/eHTCpFzZw==
-X-Google-Smtp-Source: ABdhPJykAxEMxc/5PA42qda+imN1iaGFnWE/E5DN0O6oJJrD3srN7KBugNNqszuh2dH7sSY67I4FzMJcwCuoTywbwrw=
-X-Received: by 2002:adf:f990:: with SMTP id f16mr2793952wrr.311.1591784962225;
- Wed, 10 Jun 2020 03:29:22 -0700 (PDT)
+        bh=b4xt9ro4s6EJh9yAJChrfwEE70fQqv8RKm8O5jxwnF8=;
+        b=pO2WcmkYx2rgSP/bMsjd1Fb/zqX9yw2zEDiUPfta1UJzs03g5vFZuuZqDiCgASMoPF
+         OWxUd037JBic4X3IDfwItGHaUz13UgPdyBcOKOP8mzaW52k8/IJ0uiE2F2Gwav6UUwyS
+         7Vec0c2JJWtJwwAkk7mHEZ+tfwQgOfx3YAIV2ZbLx1hCPW3S9hcygR3Yp3hHYucgyZth
+         XD6gwPJm+xqmESKCIsSd96AnfH6aWlITmB2vOfgJqRmQmztCju4h3TyquiUTld58B33W
+         Ib8f95iVMBXeD2Qaip8XgwKxr7bE6JVwEW9kWc3X3U03dg/mMKLzFNrjgwfcJI8Qjp0C
+         nOog==
+X-Gm-Message-State: AOAM533akURLehV1urXuXwbVOCfjZYe7AD1+roAe9m9fWXA5T8d8L4hs
+        1j4ys6SNeK8ZmCiXnAIp2LZkf6pZS67StQ==
+X-Google-Smtp-Source: ABdhPJxQxJE5+F8B1MJ4nk9TliV4gZAr0iBlxsh8FwTIRG9VqyYb9UXnphQyymNAXja5pI+lMxpwJQ==
+X-Received: by 2002:a17:906:f115:: with SMTP id gv21mr2651094ejb.340.1591785663749;
+        Wed, 10 Jun 2020 03:41:03 -0700 (PDT)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id v2sm11976787eju.49.2020.06.10.03.41.03
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 03:41:03 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id l12so1973760ejn.10
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:41:03 -0700 (PDT)
+X-Received: by 2002:adf:e2ce:: with SMTP id d14mr2923508wrj.415.1591785187039;
+ Wed, 10 Jun 2020 03:33:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-2-daniel@0x0f.com>
- <cafee323-841d-92ed-b4ad-a1aaa136864d@suse.de>
-In-Reply-To: <cafee323-841d-92ed-b4ad-a1aaa136864d@suse.de>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Wed, 10 Jun 2020 19:29:06 +0900
-Message-ID: <CAFr9PXnPPDWg-Jd_1=LgPEYa8Ru7eKm9wE90-DPR-ggv8NzGHA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: Initial MStar vendor prefixes
- and compatible strings
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
-        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
+References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
+ <20191204124732.10932-2-Jerry-Ch.chen@mediatek.com> <20200521171101.GA243874@chromium.org>
+ <e31fe64a-c5c1-7b1e-eec1-27111fe43ac2@xs4all.nl>
+In-Reply-To: <e31fe64a-c5c1-7b1e-eec1-27111fe43ac2@xs4all.nl>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Wed, 10 Jun 2020 12:32:56 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5Ad_cnv0qztZOk9c2H0Y+XO6tRcRmS1t4dBw5qbG-d8Nw@mail.gmail.com>
+Message-ID: <CAAFQd5Ad_cnv0qztZOk9c2H0Y+XO6tRcRmS1t4dBw5qbG-d8Nw@mail.gmail.com>
+Subject: Re: [RFC PATCH V4 1/4] media: v4l2-mem2mem: add v4l2_m2m_suspend, v4l2_m2m_resume
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>, yuzhao@chromium.org,
+        zwisler@chromium.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= 
+        <Sean.Cheng@mediatek.com>, Sj Huang <sj.huang@mediatek.com>,
+        =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= 
+        <christie.yu@mediatek.com>,
+        =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= 
+        <frederic.chen@mediatek.com>,
+        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>,
+        =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    const: '/'
-> > +  compatible:
-> > +    oneOf:
-> > +      - description: thingy.jp BreadBee
-> > +        items:
-> > +          - const: thingyjp,breadbee
-> > +          - const: mstar,infinity3
-> > +
-> > +      - description: thingy.jp BreadBee Crust
-> > +        items:
-> > +          - const: thingyjp,breadbee-crust
-> > +          - const: mstar,infinity
-> > +
-> > +      - description: 70mai midrive d08
-> > +        items:
-> > +          - const: 70mai,midrived08
-> > +          - const: mstar,mercury5
+On Wed, Jun 10, 2020 at 12:29 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
 >
-> I would advise to restructure these three for forward planning:
-
-That makes a lot of sense. To be honest I basically copied something
-that was in-tree to come up with something that would make checkpatch
-happy and didn't think too much about it.
-
-> >     # Keep list in alphabetical order.
-> > +  "^70mai,.*":
-> > +    description: 70mai
+> On 21/05/2020 19:11, Tomasz Figa wrote:
+> > Hi Jerry,
+> >
+> > On Wed, Dec 04, 2019 at 08:47:29PM +0800, Jerry-ch Chen wrote:
+> >> From: Pi-Hsun Shih <pihsun@chromium.org>
+> >>
+> >> Add two functions that can be used to stop new jobs from being queued /
+> >> continue running queued job. This can be used while a driver using m2m
+> >> helper is going to suspend / wake up from resume, and can ensure that
+> >> there's no job running in suspend process.
+> >>
+> >> BUG=b:143046833
+> >> TEST=build
+> >>
+> >> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> >> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
+> >> ---
+> >>  drivers/media/v4l2-core/v4l2-mem2mem.c | 40 ++++++++++++++++++++++++++
+> >>  include/media/v4l2-mem2mem.h           | 22 ++++++++++++++
+> >>  2 files changed, 62 insertions(+)
+> >>
+> >> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> >> index 5bbdec55b7d7..76ba203e0035 100644
+> >> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> >> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> >> @@ -47,6 +47,10 @@ module_param(debug, bool, 0644);
+> >>  #define TRANS_ABORT         (1 << 2)
+> >>
+> >>
+> >> +/* The job queue is not running new jobs */
+> >> +#define QUEUE_PAUSED                (1 << 0)
+> >> +
+> >> +
+> >>  /* Offset base for buffers on the destination queue - used to distinguish
+> >>   * between source and destination buffers when mmapping - they receive the same
+> >>   * offsets but for different queues */
+> >> @@ -88,6 +92,7 @@ static const char * const m2m_entity_name[] = {
+> >>   * @job_queue:              instances queued to run
+> >>   * @job_spinlock:   protects job_queue
+> >>   * @job_work:               worker to run queued jobs.
+> >> + * @job_queue_flags:        flags of the queue status, %QUEUE_PAUSED.
+> >>   * @m2m_ops:                driver callbacks
+> >>   */
+> >>  struct v4l2_m2m_dev {
+> >> @@ -105,6 +110,7 @@ struct v4l2_m2m_dev {
+> >>      struct list_head        job_queue;
+> >>      spinlock_t              job_spinlock;
+> >>      struct work_struct      job_work;
+> >> +    unsigned long           job_queue_flags;
+> >>
+> >>      const struct v4l2_m2m_ops *m2m_ops;
+> >>  };
+> >> @@ -267,6 +273,12 @@ static void v4l2_m2m_try_run(struct v4l2_m2m_dev *m2m_dev)
+> >>              return;
+> >>      }
+> >>
+> >> +    if (m2m_dev->job_queue_flags & QUEUE_PAUSED) {
+> >> +            spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> >> +            dprintk("Running new jobs is paused\n");
+> >> +            return;
+> >> +    }
+> >> +
+> >>      m2m_dev->curr_ctx = list_first_entry(&m2m_dev->job_queue,
+> >>                                 struct v4l2_m2m_ctx, queue);
+> >>      m2m_dev->curr_ctx->job_flags |= TRANS_RUNNING;
+> >> @@ -447,6 +459,34 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+> >>  }
+> >>  EXPORT_SYMBOL(v4l2_m2m_job_finish);
+> >>
+> >> +void v4l2_m2m_suspend(struct v4l2_m2m_dev *m2m_dev)
+> >> +{
+> >> +    unsigned long flags;
+> >> +    struct v4l2_m2m_ctx *curr_ctx;
+> >> +
+> >> +    spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+> >> +    m2m_dev->job_queue_flags |= QUEUE_PAUSED;
+> >> +    curr_ctx = m2m_dev->curr_ctx;
+> >> +    spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> >> +
+> >> +    if (curr_ctx)
+> >> +            wait_event(curr_ctx->finished,
+> >> +                       !(curr_ctx->job_flags & TRANS_RUNNING));
+> >> +}
+> >> +EXPORT_SYMBOL(v4l2_m2m_suspend);
+> >> +
+> >> +void v4l2_m2m_resume(struct v4l2_m2m_dev *m2m_dev)
+> >> +{
+> >> +    unsigned long flags;
+> >> +
+> >> +    spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
+> >> +    m2m_dev->job_queue_flags &= ~QUEUE_PAUSED;
+> >> +    spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> >> +
+> >> +    v4l2_m2m_try_run(m2m_dev);
+> >> +}
+> >> +EXPORT_SYMBOL(v4l2_m2m_resume);
+> >> +
+> >>  int v4l2_m2m_reqbufs(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
+> >>                   struct v4l2_requestbuffers *reqbufs)
+> >>  {
+> >> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
+> >> index 5467264771ec..119a195da390 100644
+> >> --- a/include/media/v4l2-mem2mem.h
+> >> +++ b/include/media/v4l2-mem2mem.h
+> >> @@ -183,6 +183,28 @@ v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
+> >>      vb2_buffer_done(&buf->vb2_buf, state);
+> >>  }
+> >>
+> >> +/**
+> >> + * v4l2_m2m_suspend() - stop new jobs from being run and wait for current job
+> >> + * to finish
+> >> + *
+> >> + * @m2m_dev: opaque pointer to the internal data to handle M2M context
+> >> + *
+> >> + * Called by a driver in the suspend hook. Stop new jobs from being run, and
+> >> + * wait for current running job to finish.
+> >> + */
+> >> +void v4l2_m2m_suspend(struct v4l2_m2m_dev *m2m_dev);
+> >> +
+> >> +/**
+> >> + * v4l2_m2m_resume() - resume job running and try to run a queued job
+> >> + *
+> >> + * @m2m_dev: opaque pointer to the internal data to handle M2M context
+> >> + *
+> >> + * Called by a driver in the resume hook. This reverts the operation of
+> >> + * v4l2_m2m_suspend() and allows job to be run. Also try to run a queued job if
+> >> + * there is any.
+> >> + */
+> >> +void v4l2_m2m_resume(struct v4l2_m2m_dev *m2m_dev);
+> >> +
+> >>  /**
+> >>   * v4l2_m2m_reqbufs() - multi-queue-aware REQBUFS multiplexer
+> >>   *
+> >> --
+> >> 2.18.0
+> >
+> > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> >
+> > [Corrected Hans's email address.]
+> > Hans, does this look good to you?
 >
-> "70mai Co., Ltd." please - don't just repeat the prefix.
-
-Understood.
-
-> If you split the vendor prefixes to a preceding patch, they have a
-> chance of getting Reviewed-bys more quickly. You can then also CC the
-> vendors on the prefixes you're assigning for them.
-
-thingy.jp is the vendor I'm using for the breadbee project. As for
-70mai and MStar/Sigmastar I have
-tried reaching out to them in the past and they don't respond. In
-70mai's case their camera doesn't
-run Linux by default so I don't think they will care much.
-
-If it helps I can split them out but I'm not sure if it'll be possible
-to ever get the ok from the other vendors.
-For what it's worth the "mstar" prefix is what was being used in their
-kernels up until very recently when
-they switched everything to using "sstar" for SigmaStar. I considered
-using the sstar prefix but went
-with mstar because SigmaStar is totally unknown whereas MStar is
-slightly known, would be more
-recognisable, most of the chips still have mstar written on them and so on.
-
-> > +ARM/MStar/Sigmastar ARMv7 SoC support
-> > +M:   Daniel Palmer <daniel@thingy.jp>
-> > +L:   linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> > +S:   Maintained
-> > +F:   Documentation/devicetree/bindings/arm/mstar.yaml
-> > +
-> >   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
-> >   M:  Michael Petchkovsky <mkpetch@internode.on.net>
-> >   S:  Maintained
+> Yes, this looks good.
 >
-> In theory it's spelled Armv7 since 2017, but MAINTAINERS, subject prefix
-> conventions and many other places in Linux still use the old upper-case
-> spelling, too...
+> Sorry for the late reply.
 
-Understood. I'll fix that up.
+No worries! Thanks a lot.
 
-Thankyou for your input,
+>
+> I assume this will be part of a future patch series that calls these new functions?
 
-Daniel
+The mtk-jpeg encoder series depends on this patch as well, so I guess
+it would go together with whichever is ready first.
+
+I would also envision someone changing the other existing drivers to
+use the helpers, as I'm pretty much sure some of them don't handle
+suspend/resume correctly.
+
+Best regards,
+Tomasz
