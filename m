@@ -2,112 +2,121 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA05AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FC2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95AFF20801
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4792081A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMAGEukT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pbejqEq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgFJGDQ (ORCPT
+        id S1726307AbgFJGC7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgFJGDI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 02:03:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11DCC05BD1E;
-        Tue,  9 Jun 2020 23:03:06 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so812332wrp.2;
-        Tue, 09 Jun 2020 23:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mvokNqexRaegU1modB7NHhGEwXygj1rNSFFDdGJdwa0=;
-        b=mMAGEukTDdiryhtO2yW2E65dypnqCGYbqRrs7w7rKE/V+EEhAhBM27L4eNMIGkYQqd
-         EFkWD7+mPh+dpmN6keyW+8gGZxasZh2CJGRTghTOMp+Vg3YlsI1Cogf6VwyGv5oCQ9eL
-         BznuKmizzvAmZpw4YFSZHDSXMvPUYArmHD50q5r79HngvZ4P/kONZDkm+6lB3b76iBEg
-         6PHxDgbF93E8986oHdtewWko1O8gyekJ+/j/fd81jbb2rL0ICxOgPw3pEmMNDtPRRq+b
-         xPBQOlfwnIYmoMe9wzlyZZsm+UK5bPVow+Yc+d6EA4GN/ElP4+7JDH8ZV5XqI3oi9hGG
-         Sr0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mvokNqexRaegU1modB7NHhGEwXygj1rNSFFDdGJdwa0=;
-        b=XHP0e1LismEyuhLJjelsltEtnr4wdg4drMOJUXBAtDKNubb/NhrtgSHnyOmxIZ6LvQ
-         y3dgl3nQ0zLbF5CY0uiA95x3UMS/w6w11ZiB1+XHJkubh64Tx4umeyl1GNe2ST+K7z47
-         gDhi6UtNwfZDg3IF6sIzw2hGXY1p08pckvPRe0lW0bNhb1eFh9cC6EMczpevfktwy4oc
-         4sbI0MYec34X7k9MFWa7EU7prG4COihkHIDr5ufReDLUXfc2cG6yQpCVItL5CxIHL4x5
-         UDbmGqgZBrxaxoPKEZvKC1DgPHqK+SbrJdwv7fUBQtO9Yp9Cq543IZt7WZ45MwCm1roJ
-         HTvA==
-X-Gm-Message-State: AOAM532ncCz9/c/d/2Xu5UQrqoB+Nk3224fPS3riQPqxBjiYY5NiBBbk
-        1HsSqze7K57R/DtLxO5yhuD+6okn06M=
-X-Google-Smtp-Source: ABdhPJyWv4V1rxzPNSAS30xkqIspxg9pNDEfhvr6Do6JVCr3W3NNGdGXnItKMO7FLMOxDcCF6HDvXg==
-X-Received: by 2002:a05:6000:1146:: with SMTP id d6mr1639898wrx.400.1591768984735;
-        Tue, 09 Jun 2020 23:03:04 -0700 (PDT)
-Received: from macbook-pro-alvaro.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id q5sm6449183wrm.62.2020.06.09.23.03.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 23:03:04 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/4] dt-bindings: soc: brcm: add BCM63xx power domain
- binding
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <f6cbb9bb-15df-6283-a509-ea8a8b9bdaab@gmail.com>
-Date:   Wed, 10 Jun 2020 08:03:02 +0200
-Cc:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EC84127B-DFF6-4EE3-ABDF-BEFAD6BCDEFB@gmail.com>
-References: <20200609105244.4014823-1-noltari@gmail.com>
- <20200609105244.4014823-2-noltari@gmail.com>
- <f6cbb9bb-15df-6283-a509-ea8a8b9bdaab@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 10 Jun 2020 02:02:59 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6094 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgFJGCt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 02:02:49 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee0775b0000>; Tue, 09 Jun 2020 23:02:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 09 Jun 2020 23:02:48 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:48 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:48 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 10 Jun 2020 06:02:48 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ee077870000>; Tue, 09 Jun 2020 23:02:47 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v1 07/18] media: tegra-video: Fix channel format alignment
+Date:   Tue, 9 Jun 2020 23:02:29 -0700
+Message-ID: <1591768960-31648-8-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591768923; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=pbejqEq1pq31KzLzJ/BnpGUQSpGRX3kiKwRtDSyFNjxMx2bWJZCoRynik19X8Eo+N
+         SE0fFIHiGkxfgcnfbJ8s42EkUjVAlHInPXIx6Hv1Ean21ghAEoDwsMJsTXitbeuPoq
+         8RoHlGMhjAveHXUQ+ic3800PIaBZV1mSGlCw9z+Nl1iJxlwrzcIucGwJQCaHHqDfxK
+         alwAekJbgXRDMvuAYRZMR7WGhRmIFb02b3qKt0fQd+qPCVhnCoS3cZ5YdVh3JN4x8a
+         9J4b4oVZB0su9+0acnNE8hr2UFTmoB8AbTjZP200O+09uWESf2tEvZQZgW78UXllO8
+         c5MUQF7Rz6+jw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ok, I will send v2 with a separate YAML file.
+Pixel format width is mistakenly aligned to surface align bytes
+and altering width to aligned value may force sensor mode change
+other than the requested one and also cause mismatch in width
+programmed between sensor and vi which can lead to capture errors.
 
-> El 10 jun 2020, a las 3:15, Florian Fainelli <f.fainelli@gmail.com> =
-escribi=C3=B3:
->=20
->=20
->=20
-> On 6/9/2020 3:52 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
->> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain =
-controller
->> to enable/disable certain components in order to save power.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> .../devicetree/bindings/mips/brcm/soc.txt       | 17 =
-+++++++++++++++++
->=20
-> You should probably create a YAML binding from the beginning that way
-> you get validation for free. This file should ultimately be broken =
-down
-> into separate YAML bindings, but I Have not had the time to do that =
-yet
-> (you are welcome to if you feel like it).
->=20
-> Other than that, the binding definition looks good to me.
-> --=20
-> Florian
+This patch removes width alignment and clamps width as per Tegra
+minimum and maximum limits.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/staging/media/tegra-video/vi.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 1b5e660..d621ebc 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
+ 				    struct v4l2_pix_format *pix,
+ 				    unsigned int bpp)
+ {
+-	unsigned int align;
+-	unsigned int min_width;
+-	unsigned int max_width;
+-	unsigned int width;
+ 	unsigned int min_bpl;
+ 	unsigned int max_bpl;
+ 	unsigned int bpl;
+ 
+ 	/*
+-	 * The transfer alignment requirements are expressed in bytes. Compute
+-	 * minimum and maximum values, clamp the requested width and convert
+-	 * it back to pixels. Use bytesperline to adjust the width.
++	 * The transfer alignment requirements are expressed in bytes.
++	 * Clamp the requested width and height to the limits.
+ 	 */
+-	align = lcm(SURFACE_ALIGN_BYTES, bpp);
+-	min_width = roundup(TEGRA_MIN_WIDTH, align);
+-	max_width = rounddown(TEGRA_MAX_WIDTH, align);
+-	width = roundup(pix->width * bpp, align);
+-
+-	pix->width = clamp(width, min_width, max_width) / bpp;
++	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
+ 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
+ 
+ 	/* Clamp the requested bytes per line value. If the maximum bytes per
+-- 
+2.7.4
 
