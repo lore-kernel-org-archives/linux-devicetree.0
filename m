@@ -2,221 +2,108 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B3DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F74C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20232078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hnRHTdJr"
+	by mail.kernel.org (Postfix) with ESMTP id 9F59E20734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgFJM1p (ORCPT
+        id S1729061AbgFJM62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:27:45 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:46310 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728595AbgFJM1p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 08:27:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591792064; x=1623328064;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=QiFuJl1R5fgwI47VUdUxy1XjRtgrcDqvma+iH44NFSk=;
-  b=hnRHTdJronscFR2yTjdh97Lj7hS7DuvbTw98YNO51LZ3UXc/1VMvT8iB
-   tL32XQg6qZmB6lfLXpoB2+hle/VHVqO0638F1CEGsBCKwtcezoAnTve40
-   UtUMcouuRqBCG2vZROnAdGnkLkF3n4xEH4so9O9shjaHuRwzWkSXN++Dg
-   nAX7PHQHVJ+VPaqQzE/QaSkUOXkRjHN0YWkIxvvNbhEGsAoBZYHFFM+e1
-   XzF4NOtkHPx8N+c74t5M1N2DM2VmSRzs38MnZhCez0+lm1Ql7QT9DniJX
-   /3Ff2ZGW35ZOcUDC3V/+4FNzDYCCEapg/1X7uBVSRMVOABLrnwaMGtED2
-   Q==;
-IronPort-SDR: 0d4g912uhVPOIXVwiNumUIxOuwQwPv1k6y8Nq0I/CzHL1DwOmpG02rnaDxCk0Xul9ey7Wz6RVN
- MoGmGnZ+EQRMel+AUBLPvkn7ON7+DX3N23NsBUbSe4kf82ZfGLZHOVKqaD2P/bCFZobnMwyTGW
- Mk/GSb29bEgBZO+qe3ATVlY/gWm3VEHHqjYkS8fUrMoicwslgxm0AquKfxlA4tXmFapYTg87ht
- IqeLuIZL/Xyzue7miwmvTsqASQip6ZlkRDLZm2sBWdIJbnx0uIdzdqdMkwOrhoL/map1dFX0IR
- qI4=
-X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
-   d="scan'208";a="15250796"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 05:27:36 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 10 Jun 2020 05:27:35 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
- via Frontend Transport; Wed, 10 Jun 2020 05:27:32 -0700
-References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-7-lars.povlsen@microchip.com> <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
-In-Reply-To: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
-Date:   Wed, 10 Jun 2020 14:27:31 +0200
-Message-ID: <87d067hzrg.fsf@soft-dev15.microsemi.net>
+        Wed, 10 Jun 2020 08:58:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:10288 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728819AbgFJM62 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 08:58:28 -0400
+IronPort-SDR: xhjTV7Mfk8x4RkV75uczbCwDJHz4xtBXim8dwxlOVUB/WCI00ei8vnG3EnFbJfbxil+HP2RnCE
+ vArBeqgtZTvQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 05:58:19 -0700
+IronPort-SDR: x3O8cvdGygNGuR71gedAE/dXngwkvm27l9HiR8qBN0I7pniLgn9C7kruwSpSE6mMZ81gBjtdBP
+ LcstwaPIarBA==
+X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
+   d="scan'208";a="349838222"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 05:58:14 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 5D2A9203EB; Wed, 10 Jun 2020 15:58:12 +0300 (EEST)
+Date:   Wed, 10 Jun 2020 15:58:12 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, drinkcat@chromium.org, tfiga@chromium.org,
+        matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V7, 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+Message-ID: <20200610125812.GF16711@paasikivi.fi.intel.com>
+References: <20200605105412.18813-1-dongchun.zhu@mediatek.com>
+ <20200605105412.18813-3-dongchun.zhu@mediatek.com>
+ <20200605124643.GG2428291@smile.fi.intel.com>
+ <1591424358.8804.599.camel@mhfsdcap03>
+ <20200608132720.GS2428291@smile.fi.intel.com>
+ <1591674341.8804.628.camel@mhfsdcap03>
+ <20200609111428.GH2428291@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609111428.GH2428291@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Andy, Dongchun,
 
-Serge Semin writes:
+On Tue, Jun 09, 2020 at 02:14:28PM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 09, 2020 at 11:45:41AM +0800, Dongchun Zhu wrote:
+> > On Mon, 2020-06-08 at 16:27 +0300, Andy Shevchenko wrote:
+> > > On Sat, Jun 06, 2020 at 02:19:18PM +0800, Dongchun Zhu wrote:
+> > > > On Fri, 2020-06-05 at 15:46 +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Jun 05, 2020 at 06:54:12PM +0800, Dongchun Zhu wrote:
+> 
+> ...
+> 
+> > > > > > +#define DW9768_AAC_TIME_DEFAULT			0x20
+> > > > > 
+> > > > > Hex? Why not decimal?
+> > > > > 
+> > > > 
+> > > > There is one optional property 'dongwoon,aac-timing' defined in DT.
+> > > > I don't know whether you have noticed that.
+> > > > 
+> > > > 'DW9768_AAC_TIME_DEFAULT' is the value set to AACT[5:0] register.
+> > > > I thought the Hex unit should be proper as it is directly written to the
+> > > > Hex register.
+> > > 
+> > > I see. I would rather put it like (BIT(6) / 2) to show explicitly that we
+> > > choose half of the resolution.
+> > > 
+> > 
+> > I knew your idea.
+> > '(BIT(6) / 2)' may somewhat show the meaning of 'median of the total
+> > range of AACT[5:0]'.
+> > 
+> > But this value is still very obscure relative to '0x20'.
+> > As I thought that simple is the best, especially for kernel upstream
+> > patch.
+> 
+> Okay, let's wait for maintainers to speak up.
 
-> On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
->> This add DT bindings for the Sparx5 SPI driver.
->
-> This whole file can be easily merged in to the generic DW APB SSI DT
-> binding file. Just use "if: properties: compatible: const: ..." construction
-> to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
->
->>
->> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
->>  1 file changed, 39 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> index a3ac0fa576553..8beecde4b0880 100644
->> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
->> @@ -23,15 +23,23 @@ properties:
->>      enum:
->>        - mscc,ocelot-spi
->>        - mscc,jaguar2-spi
->> +      - microchip,sparx5-spi
->>
->>    interrupts:
->>      maxItems: 1
->>
->>    reg:
->>      minItems: 2
->> -    items:
->> -      - description: Designware SPI registers
->> -      - description: CS override registers
->> +    maxItems: 3
->> +    oneOf:
->> +      - items:
->> +          - description: Designware SPI registers
->> +          - description: CS override registers (Not sparx5).
->> +      - items:
->> +          - description: Designware SPI registers
->> +          - description: CS override registers (Not sparx5).
->> +          - description: Direct mapped SPI read area. If provided, the
->> +              driver will register spi_mem_op's to take advantage of it.
->>
->>    clocks:
->>      maxItems: 1
->> @@ -43,6 +51,23 @@ properties:
->>         enum: [ 2, 4 ]
->>      maxItems: 1
->>
->
->> +  spi-rx-delay-us:
->> +    description: |
->> +      The delay (in usec) of the RX signal sample position. This can
->> +      be used to tne the RX timing in order to acheive higher
->> +      speeds. This is used for all devices on the bus.
->> +    default: 0
->> +    maxItems: 1
->
-> spi-rx-delay-us is defined for a particular SPI-slave. Please see the
-> DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
-> Although as I suggested before this delay isn't what the Dw APB SSI RX sample
-> delay functionality does. Probably a vendor-specific property would be better
-> here. But I'd also define it on a SPI-slave basis, not for all devices on the
-> bus.
-
-Right, I was hunting for something "similar". As pointed out, this is
-really different in nature, and the unit is also too coarse.
-
-I will change this to "snps,rx-sample-delay-ns" as suggested in your
-other comments.
-
->
->> +
->> +  interface-mapping-mask:
->> +    description: |
->> +      On the Sparx5 variant, two different busses are connected to the
->> +      controller. This property is a mask per chip-select, indicating
->> +      whether the CS should go to one or the other interface.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    default: 0
->> +    maxItems: 1
->
-> As Mark rightfully suggested this seems like an SPI-slave related property, then
-> most likely it should be defined on the SPI-slave basis (probably as a bool
-> property). Additionally it's vendor-specific, so the property name should be
-> accordingly prefixed.
-
-Yes, I'll change this to a per-device property. I need the same for the
-above as well.
-
->
->> +
->>  required:
->>    - compatible
->>    - reg
->> @@ -50,11 +75,15 @@ required:
->>
->>  examples:
->>    - |
->> -    spi0: spi@101000 {
->> -      compatible = "mscc,ocelot-spi";
->> -      #address-cells = <1>;
->> -      #size-cells = <0>;
->> -      reg = <0x101000 0x100>, <0x3c 0x18>;
->> -      interrupts = <9>;
->> -      clocks = <&ahb_clk>;
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    spi0: spi@600104000 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        compatible = "microchip,sparx5-spi";
->
->> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
->
-> I have a doubt that defining an empty reg region is a good idea, since you can
-> detect the reg requirements by the node compatible string.
-
-Yes, its probably better that way. It looks ugly too :-)
-
-Thanks for your comments!
-
----Lars
-
-
-> -Sergey
->
->> +        num-cs = <16>;
->> +        reg-io-width = <4>;
->> +        reg-shift = <2>;
->> +        clocks = <&ahb_clk>;
->> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->>      };
->> --
->> 2.26.2
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+The value 0x20 is the device default, I don't see it having any other
+special significance. So I'm totally fine with 0x20.
 
 -- 
-Lars Povlsen,
-Microchip
+Kind regards,
+
+Sakari Ailus
