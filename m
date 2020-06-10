@@ -4,167 +4,204 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D46C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85014C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA21F20656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 19:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B7B206F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591818866;
-	bh=Yg0bwUEXCPhL7rJbg5cSW1Yn2jabUHpPN4pbRRuj8ao=;
+	s=default; t=1591819639;
+	bh=AS09uQ5zG0psed2eOsF980Tp3NDWfM8ROSl6fOyce9M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nxQPhJqOJTPgA3UAy3Zpz1QZ2QcYQY8CCSJtrCIF4YP0cxBoZjWQcEXd1prlohitW
-	 8d0TPkaQLF/tmd0TIRlovq7V9qW+RId3N9rn+d3x/dXIxw4jkkwUSGiibMkRE0zqg9
-	 hVHw2w8RqEUcu7Z6/0Ax7Kbft6aMvPCbisTYaHcI=
+	b=jNJqgQhzgEA1BcZqOSry/i+ySnANiOYNMz7a6nZOAF29lZ122oRQcrZiZ+qE5h0He
+	 r/9yLRd+mO23VA/Oh0Z5cWpoSZ4W/75jrKTHVnggSWWCrFlIo0LCSoPM+7Pj1j6Ix9
+	 A5iW83qR6aFmBaN35YG/GpFhkgLy67MB9RjceUUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgFJTyZ (ORCPT
+        id S1728010AbgFJUHT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 15:54:25 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41917 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgFJTxw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 15:53:52 -0400
-Received: by mail-io1-f65.google.com with SMTP id o5so3691084iow.8;
-        Wed, 10 Jun 2020 12:53:51 -0700 (PDT)
+        Wed, 10 Jun 2020 16:07:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44426 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgFJUHS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:07:18 -0400
+Received: by mail-io1-f66.google.com with SMTP id p20so3728467iop.11;
+        Wed, 10 Jun 2020 13:07:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=O+t9lN1UMgBXDzBprmivY3nXV0Nk80cUhVR4G1aXLM8=;
-        b=Yxq0VeEUi56pSR8YYDTj8uqLk4dp5LqdgvZkrNQiuE9tExPtVnhb7YCQcBExeuHN8D
-         +4nH3vPA2RRKd52GTD1AsIywWzblYmWXhfGacKD0UIUBAJ0uquAiasaMwI5M9jRT25sk
-         hYgzQilQqmG0BswRNV5jaRHWrIa7eMQgRcylgcIIIFoS4VkH52d/7LspaPD6EELhc4XH
-         zMwJiIddk5gVM340V5KCuqS5OxWjj5fLiPn7SM6rXXFWILm4naiq9iLPIaP+2+ZM/SuI
-         e+GwTBI2vYUhxI5su7dHTr4Jecy8OyTVeUUQ7B2jlAYL8rzjg1hpc2VoQCe73g+5YuDW
-         dKEw==
-X-Gm-Message-State: AOAM5331UfG7AsOxR/turAwT/BDJct+m0XiMamHiUdmldXiUDx4MrY8Y
-        kSPN8jb5Oh9EL5ekNa1PdA==
-X-Google-Smtp-Source: ABdhPJxgi35NvZv7yMGHmOA+wBKY4rZbmDSzHwLSvytHAzYSEuK9hWs1yklVui3HUx2F1LGdIWldTg==
-X-Received: by 2002:a02:908b:: with SMTP id x11mr4496909jaf.41.1591818830814;
-        Wed, 10 Jun 2020 12:53:50 -0700 (PDT)
+        bh=mDjqIFf471IkbejX9X3mSLq57qUbwtdIynz5m3TbNPc=;
+        b=N1EBnFhBD1dkm6Zs5C7O6hcfqYj643A3BQLHyDb4Gl3QDVVdBY2hOXhDXU03ZiNBxR
+         Zh7X9kWyGgHznMgBuG0nzNDxeJeFIhwVTHN0V7+ALjQcdWOVGmWUMmmL5ZQCCnHSrZ8M
+         OX6Pkx4Jo/aR3MSpQHmDE0IbrPgb0J6BkM1HxpD3wUowjopDH/XYsDyY1uypcMWh6vqn
+         mn5Bb4Dbx88oiElpEbZCWfC71T4M6mlsM8eontSXwSCY0HQaYzzIyNGzvsvh3ekVHsR2
+         xrtHPvU8nx11v4Hkum/MXo/ZCe5485TTq5YFHxReQvoHZbuhWeSLgD0+CABfd466xgWA
+         Epiw==
+X-Gm-Message-State: AOAM530a9JZ9m1aIk9x5Jg2mIezHJHOIXhEbn89TG/OulnHjRjWWZQvY
+        n+cIMsdPcZdUQ9Ppo1vAfw==
+X-Google-Smtp-Source: ABdhPJx0DQIW00e65FugR8+MSaJ77U4Ds57FdAdVskpy7VWOQQOAAYy8VolmUsIiUifIEK8uD4BRrg==
+X-Received: by 2002:a6b:7516:: with SMTP id l22mr5097843ioh.18.1591819636816;
+        Wed, 10 Jun 2020 13:07:16 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id w29sm428458ila.26.2020.06.10.12.53.49
+        by smtp.gmail.com with ESMTPSA id y5sm491598iov.3.2020.06.10.13.07.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 12:53:49 -0700 (PDT)
-Received: (nullmailer pid 3611634 invoked by uid 1000);
-        Wed, 10 Jun 2020 19:53:48 -0000
-Date:   Wed, 10 Jun 2020 13:53:48 -0600
+        Wed, 10 Jun 2020 13:07:16 -0700 (PDT)
+Received: (nullmailer pid 3629265 invoked by uid 1000);
+        Wed, 10 Jun 2020 20:07:15 -0000
+Date:   Wed, 10 Jun 2020 14:07:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jeff Chase <jnchase@google.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: Add ch7322 media i2c device
-Message-ID: <20200610195348.GA3606875@bogus>
-References: <20200602190914.218541-1-jnchase@google.com>
- <20200602190914.218541-2-jnchase@google.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: tas2562: Convert the tas2562 binding to
+ yaml
+Message-ID: <20200610200715.GA3612550@bogus>
+References: <20200602193524.30309-1-dmurphy@ti.com>
+ <20200602193524.30309-2-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602190914.218541-2-jnchase@google.com>
+In-Reply-To: <20200602193524.30309-2-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:09:13PM -0400, Jeff Chase wrote:
-> The ch7322 is a Chrontel CEC controller.
+On Tue, Jun 02, 2020 at 02:35:24PM -0500, Dan Murphy wrote:
+> Convert the TAS2562 text file to yaml format.
 > 
-> Signed-off-by: Jeff Chase <jnchase@google.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  .../bindings/media/i2c/chrontel,ch7322.yaml   | 67 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  MAINTAINERS                                   |  7 ++
->  3 files changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
+>  .../devicetree/bindings/sound/tas2562.txt     | 34 ----------
+>  .../devicetree/bindings/sound/tas2562.yaml    | 65 +++++++++++++++++++
+>  2 files changed, 65 insertions(+), 34 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml b/Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
+> diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
+> deleted file mode 100644
+> index 94796b547184..000000000000
+> --- a/Documentation/devicetree/bindings/sound/tas2562.txt
+> +++ /dev/null
+> @@ -1,34 +0,0 @@
+> -Texas Instruments TAS2562 Smart PA
+> -
+> -The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
+> -efficiently driving high peak power into small loudspeakers.
+> -Integrated speaker voltage and current sense provides for
+> -real time monitoring of loudspeaker behavior.
+> -
+> -Required properties:
+> - - #address-cells  - Should be <1>.
+> - - #size-cells     - Should be <0>.
+> - - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
+> - - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
+> - - ti,imon-slot-no:- TDM TX current sense time slot.
+> -
+> -Optional properties:
+> -- interrupt-parent: phandle to the interrupt controller which provides
+> -                    the interrupt.
+> -- interrupts: (GPIO) interrupt to which the chip is connected.
+> -- shut-down: GPIO used to control the state of the device.
+> -
+> -Examples:
+> -tas2562@4c {
+> -        #address-cells = <1>;
+> -        #size-cells = <0>;
+> -        compatible = "ti,tas2562";
+> -        reg = <0x4c>;
+> -
+> -        interrupt-parent = <&gpio1>;
+> -        interrupts = <14>;
+> -
+> -	shut-down = <&gpio1 15 0>;
+> -        ti,imon-slot-no = <0>;
+> -};
+> -
+> diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
 > new file mode 100644
-> index 000000000000..daa2869377c5
+> index 000000000000..11e0269d03b3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> +# Copyright (C) 2019 Texas Instruments Incorporated
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/media/i2c/chrontel,ch7322.yaml#"
+> +$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
 > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: Chrontel HDMI-CEC Controller
+> +title: Texas Instruments TAS2562 Smart PA
 > +
 > +maintainers:
-> +  - Jeff Chase <jnchase@google.com>
+> +  - Dan Murphy <dmurphy@ti.com>
 > +
-> +description:
-> +  The Chrontel CH7322 is a discrete HDMI-CEC controller. It is
-> +  programmable through I2C and drives a single CEC line.
+> +description: |
+> +  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
+> +  efficiently driving high peak power into small loudspeakers.
+> +  Integrated speaker voltage and current sense provides for
+> +  real time monitoring of loudspeaker behavior.
 > +
 > +properties:
 > +  compatible:
-> +    const: chrontel,ch7322
+> +    enum:
+> +      - ti,tas2562
+> +      - ti,tas2563
 > +
 > +  reg:
-> +    description: I2C device address
 > +    maxItems: 1
+> +    description: |
+> +       I2C addresss of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
 > +
-> +  clocks:
-> +    maxItems: 1
+> +  shut-down:
+
+Hopefully, this is an error. It should be 'shut-down-gpios'.
+
+Looking at the driver, it is also broken. It's passing 'shut-down-gpio' 
+which means the GPIO core is looking for 'shut-down-gpio-gpio' or 
+'shut-down-gpio-gpios'.
+
+Also the standardish naming here is 'shutdown-gpios'. Given this 
+probably never worked, we should use that.
+
+> +    description: GPIO used to control the state of the device.
 > +
 > +  interrupts:
 > +    maxItems: 1
 > +
-> +  reset-gpios:
-> +    description:
-> +      Reference to the GPIO connected to the RESET pin, if any. This
-> +      pin is active-low.
-> +    maxItems: 1
+> +  ti,imon-slot-no:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: TDM TX current sense time slot.
 > +
-> +  standby-gpios:
-> +    description:
-> +      Reference to the GPIO connected to the OE pin, if any. When low
-> +      the device will respond to power status requests with "standby"
-> +      if in auto mode.
-> +    maxItems: 1
-> +
-> +  # see ../cec.txt
-> +  hdmi-phandle:
-> +    description: phandle to the HDMI controller
+> +  '#sound-dai-cells':
+> +    const: 1
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - interrupts
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      ch7322@75 {
-> +        compatible = "chrontel,ch7322";
-> +        reg = <0x75>;
-> +        interrupts = <47 IRQ_TYPE_EDGE_RISING>;
-> +        standby-gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
-> +        reset-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-> +        hdmi-phandle = <&hdmi>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index d3891386d671..7794ffccd325 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -187,6 +187,8 @@ patternProperties:
->      description: ChipOne
->    "^chipspark,.*":
->      description: ChipSPARK
-> +  "^chrontel,.*":
-> +    description: Chrontel, Inc.
-
-This is in Linus' master already, so you can drop it. Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-Rob
+> +   #include <dt-bindings/gpio/gpio.h>
+> +   i2c0 {
+> +     #address-cells = <1>;
+> +     #size-cells = <0>;
+> +     codec: codec@4c {
+> +       compatible = "ti,tas2562";
+> +       reg = <0x4c>;
+> +       #sound-dai-cells = <1>;
+> +       interrupt-parent = <&gpio1>;
+> +       interrupts = <14>;
+> +
+> +       shut-down = <&gpio1 15 0>;
+> +       ti,imon-slot-no = <0>;
+> +     };
+> +   };
+> +
+> -- 
+> 2.26.2
+> 
