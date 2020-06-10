@@ -2,186 +2,147 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E388DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E7AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9842206F4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878722072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5avXRJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgFJQCO (ORCPT
+        id S1730498AbgFJQHU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:02:14 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:35780 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgFJQCN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:02:13 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 931FE20025;
-        Wed, 10 Jun 2020 18:02:09 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 18:02:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: (EXT) Re: [PATCH 3/4] drm/panel: simple: add CDTech
- S070PWS19HP-FC21 and S070SWV29HG-DC44
-Message-ID: <20200610160208.GA138424@ravnborg.org>
-References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
- <20200610120131.3069-4-matthias.schiffer@ew.tq-group.com>
- <20200610145954.GA135509@ravnborg.org>
- <44d3b82a11fc292f0aa3f60a8ccebd4e8ce5d3e8.camel@ew.tq-group.com>
+        Wed, 10 Jun 2020 12:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730485AbgFJQHT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:07:19 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 798D2C03E96B;
+        Wed, 10 Jun 2020 09:07:18 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id p18so1794406eds.7;
+        Wed, 10 Jun 2020 09:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0T+25FzC3m+ZCfSnTnyTsPpwm0TEOUYS6HI+FaVLFf0=;
+        b=D5avXRJ0CRE/hkpdok7mBnAiikNs9W5NkXT2b9BVl6NYMzgReCYOdrGmGIGvPSBwZl
+         nxl4XzLAKjaPSQjkfVl/HZD8DFloH1qiDSKyADt57D5apRKldzZs7BDidQJFY9wcofhq
+         PXk6APfsy+7jVgM5MFCVkP/zp35AYMbhXk/lubgfOpZ6HG30lT0PCopglonPazmanWmn
+         lhQETTrZ9GrQT4mqGn9tGmsgdrD/yjL0LtKOC7T8FKTYdcIpXV7hsJbYSW6MpLTRJdvX
+         dj5evpQ16e0MVlWqg7hZLVhdSTzZJJhniR6UlmhBd8QrrlwZX6hGWALkN4WP4K9Avh6L
+         5HUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0T+25FzC3m+ZCfSnTnyTsPpwm0TEOUYS6HI+FaVLFf0=;
+        b=mYQksZxnjadvLEVMaCQSfYst33NRdef4PWSuKaNIVDsCF2DabPGwMJObUdHOdGR2bS
+         wmq58Y3HycRkUzYwKmXPNPBYpF/IaK4PmoIwEhrU/UNZJXeezQ0TbanyUzu2mz2IqiHN
+         PZQfkPDe1FQKzz/FOk+2b4xdDl5hVbMxIXjhjT56EvTlIeP2gXxRk04B3nXu6Np2Tlfs
+         PCCNWORX4TcjCUVJwOuJdk0Vv6DEHI/DLkjJLBSHE9qp3Vw/wCviTF6IGzm6PX+R589e
+         hjM3+MAdYjtoyujXqs/80XuGQ41nPHep4gGqSTMWhik+wxv8FYo3fT4qx0BBHxItjPQq
+         Bn3w==
+X-Gm-Message-State: AOAM533kzBc4+GNMbposxlQjpGXQCu6gj3Xj5qdnNySO1FKVPNdeCa6h
+        xJwaF+MPWUVuyGfN5Ww73jA=
+X-Google-Smtp-Source: ABdhPJw+bu9CjVuWWI4xfytkCvENopNDNd4j1yWIK6dWj7rf/Gzq6rA7aX+qYELKxvGHFPBzRi8Tyg==
+X-Received: by 2002:a50:fd05:: with SMTP id i5mr3022459eds.79.1591805237150;
+        Wed, 10 Jun 2020 09:07:17 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-79-35-249-242.retail.telecomitalia.it. [79.35.249.242])
+        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.07.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 09:07:16 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 04/12] PCI: qcom: Add missing reset for ipq806x
+Date:   Wed, 10 Jun 2020 18:06:46 +0200
+Message-Id: <20200610160655.27799-5-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200610160655.27799-1-ansuelsmth@gmail.com>
+References: <20200610160655.27799-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44d3b82a11fc292f0aa3f60a8ccebd4e8ce5d3e8.camel@ew.tq-group.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=8f9FM25-AAAA:8 a=e5mUnYsNAAAA:8
-        a=MH3lEQRaDhxj07Duq-8A:9 a=dKu1ZNvqqGtcOEyT:21 a=FKxxUMPwspYndQKg:21
-        a=CjuIK1q_8ugA:10 a=uSNRK0Bqq4PXrUp6LDpb:22 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 05:26:23PM +0200, Matthias Schiffer wrote:
-> On Wed, 2020-06-10 at 16:59 +0200, Sam Ravnborg wrote:
-> > Hi Matthias.
-> > 
-> > Thanks, a few details you need to fix. See below.
-> > 
-> > 	Sam
-> > 
-> > On Wed, Jun 10, 2020 at 02:01:30PM +0200, Matthias Schiffer wrote:
-> > > From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> > > 
-> > > Add support for the CDTech Electronics displays S070PWS19HP-FC21
-> > > (7.0" WSVGA) and S070SWV29HG-DC44 (7.0" WVGA) to panel-simple.
-> > > 
-> > > Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > > >
-> > > ---
-> > >  drivers/gpu/drm/panel/panel-simple.c | 60
-> > > ++++++++++++++++++++++++++++
-> > >  1 file changed, 60 insertions(+)
-> > > 
-> > > diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> > > b/drivers/gpu/drm/panel/panel-simple.c
-> > > index b6ecd1552132..1673113e5a5a 100644
-> > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > @@ -1315,6 +1315,60 @@ static const struct panel_desc
-> > > cdtech_s043wq26h_ct7 = {
-> > >  	.bus_flags = DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-> > >  };
-> > >  
-> > > +/* S070PWS19HP-FC21 2017/04/22 */
-> > > +static const struct drm_display_mode cdtech_s070pws19hp_fc21_mode
-> > > = {
-> > > +	.clock = 51200,
-> > > +	.hdisplay = 1024,
-> > > +	.hsync_start = 1024 + 160,
-> > > +	.hsync_end = 1024 + 160 + 20,
-> > > +	.htotal = 1024 + 160 + 20 + 140,
-> > > +	.vdisplay = 600,
-> > > +	.vsync_start = 600 + 12,
-> > > +	.vsync_end = 600 + 12 + 3,
-> > > +	.vtotal = 600 + 12 + 3 + 20,
-> > > +	.vrefresh = 60,
-> > 
-> > .vrefresh is no longer present, please drop.
-> 
-> I based my patches on the branch drm-next of 
-> https://cgit.freedesktop.org/drm/drm, should I have used a different
-> branch?
-drm-misc-next would in this case be a better choice.
-In most cases both would have worked equally well, but we have nuked
-.refresh recently.
+Add missing ext reset used by ipq8064 SoC in PCIe qcom driver.
 
-	Sam
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Cc: stable@vger.kernel.org # v4.5+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> 
-> 
-> > > +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> > > +};
-> > > +
-> > > +static const struct panel_desc cdtech_s070pws19hp_fc21 = {
-> > > +	.modes = &cdtech_s070pws19hp_fc21_mode,
-> > > +	.num_modes = 1,
-> > > +	.bpc = 6,
-> > > +	.size = {
-> > > +		.width = 154,
-> > > +		.height = 86,
-> > > +	},
-> > > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> > > DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> > > +};
-> > 
-> > Please add .connector_type - it is mandatory.
-> > > +
-> > > +/* S070SWV29HG-DC44 2017/09/21 */
-> > > +static const struct drm_display_mode cdtech_s070swv29hg_dc44_mode
-> > > = {
-> > > +	.clock = 33300,
-> > > +	.hdisplay = 800,
-> > > +	.hsync_start = 800 + 210,
-> > > +	.hsync_end = 800 + 210 + 2,
-> > > +	.htotal = 800 + 210 + 2 + 44,
-> > > +	.vdisplay = 480,
-> > > +	.vsync_start = 480 + 22,
-> > > +	.vsync_end = 480 + 22 + 2,
-> > > +	.vtotal = 480 + 22 + 2 + 21,
-> > > +	.vrefresh = 60,
-> > 
-> > .vrefresh is no longer present, please drop.
-> > > +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> > > +};
-> > > +
-> > > +static const struct panel_desc cdtech_s070swv29hg_dc44 = {
-> > > +	.modes = &cdtech_s070swv29hg_dc44_mode,
-> > > +	.num_modes = 1,
-> > > +	.bpc = 6,
-> > > +	.size = {
-> > > +		.width = 154,
-> > > +		.height = 86,
-> > > +	},
-> > > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> > > DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> > 
-> > Please add .connector_type - it is mandatory.
-> > > +};
-> > > +
-> > >  static const struct drm_display_mode cdtech_s070wv95_ct16_mode = {
-> > >  	.clock = 35000,
-> > >  	.hdisplay = 800,
-> > > @@ -3723,6 +3777,12 @@ static const struct of_device_id
-> > > platform_of_match[] = {
-> > >  	}, {
-> > >  		.compatible = "cdtech,s043wq26h-ct7",
-> > >  		.data = &cdtech_s043wq26h_ct7,
-> > > +	}, {
-> > > +		.compatible = "cdtech,s070pws19hp-fc21",
-> > > +		.data = &cdtech_s070pws19hp_fc21,
-> > > +	}, {
-> > > +		.compatible = "cdtech,s070swv29hg-dc44",
-> > > +		.data = &cdtech_s070swv29hg_dc44,
-> > >  	}, {
-> > >  		.compatible = "cdtech,s070wv95-ct16",
-> > >  		.data = &cdtech_s070wv95_ct16,
-> > > -- 
-> > > 2.17.1
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 4512c2c5f61c..4dab5ef630cc 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -95,6 +95,7 @@ struct qcom_pcie_resources_2_1_0 {
+ 	struct reset_control *ahb_reset;
+ 	struct reset_control *por_reset;
+ 	struct reset_control *phy_reset;
++	struct reset_control *ext_reset;
+ 	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+ };
+ 
+@@ -272,6 +273,10 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+ 	if (IS_ERR(res->por_reset))
+ 		return PTR_ERR(res->por_reset);
+ 
++	res->ext_reset = devm_reset_control_get_optional_exclusive(dev, "ext");
++	if (IS_ERR(res->ext_reset))
++		return PTR_ERR(res->ext_reset);
++
+ 	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+ 	return PTR_ERR_OR_ZERO(res->phy_reset);
+ }
+@@ -285,6 +290,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	reset_control_assert(res->axi_reset);
+ 	reset_control_assert(res->ahb_reset);
+ 	reset_control_assert(res->por_reset);
++	reset_control_assert(res->ext_reset);
+ 	reset_control_assert(res->phy_reset);
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+@@ -343,6 +349,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_deassert_ahb;
+ 	}
+ 
++	ret = reset_control_deassert(res->ext_reset);
++	if (ret) {
++		dev_err(dev, "cannot deassert ext reset\n");
++		goto err_deassert_ahb;
++	}
++
+ 	/* enable PCIe clocks and resets */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-- 
+2.25.1
+
