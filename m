@@ -2,260 +2,113 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A44CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 02:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FC1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 02:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDBCB2074B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 02:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FE020691
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 02:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZHlIGThs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8fXfi1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFJCPM (ORCPT
+        id S1726040AbgFJCTn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 22:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
+        Tue, 9 Jun 2020 22:19:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgFJCPM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 22:15:12 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81AB6C03E96B
-        for <devicetree@vger.kernel.org>; Tue,  9 Jun 2020 19:15:11 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v24so341246plo.6
-        for <devicetree@vger.kernel.org>; Tue, 09 Jun 2020 19:15:11 -0700 (PDT)
+        with ESMTP id S1725798AbgFJCTm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 22:19:42 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDACDC05BD1E;
+        Tue,  9 Jun 2020 19:19:41 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id w7so268231edt.1;
+        Tue, 09 Jun 2020 19:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=pA37y1CYXLgVHVrYj18ypd3F9//Xs+/YktSGFCHAW98=;
-        b=ZHlIGThs2wHrI9acdaKZPm7Lb1uk9DigKh+enZyozDm5ScRT2fwq9OpuEoMGcvTbil
-         RzRUerujDKwR3+V8Gbxgbil9HvBfDLsDFGazNYuoQ/XSeMQHp4kCfUXJmScKp/L18GBa
-         G1QWMkVYtjvM9bNYn/0A+V8hqgq/hcvRJR57A=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=6nDD9b7w8r1Mr/3MxkpIoE8zWpfhH3upQWRgRKaz8Zc=;
+        b=d8fXfi1l7KInOy0Riqv289V5I5J1ZgSHL1mnqhUsN3TjXORhR79t8BUP4noaM6wxaV
+         oF4HRekWinwy8NGtF9jeedNMhsCBi4m+sXOFRMrd4zvoeaAFaLCp+bO5Vs9NADVkdVmb
+         E8XhMxF9b8v9mq893gxQNCngsZ/XC2oFr+hcO+higI+G2hcc+rErDQ3k1LLqDGmYSMIb
+         WvswuoE/M1rnLHZyRUGJlOBg6FMpqstb0DLvcg2oOGa9ueadZj5PNTIKZ7JeNDh/XzyT
+         EOky1jWF3pqojumstOj6V70bDCg4u20Tv8vBfPXCCddfq08EKytUPg24PfOscZ4ZNv/J
+         eCZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=pA37y1CYXLgVHVrYj18ypd3F9//Xs+/YktSGFCHAW98=;
-        b=NVuTZB15Bmq5YtthWRriKrDe7Aqv42WWccR7XmtsAuVr2qmYnNBFQQW27fLjQNU/R3
-         U+LGWk4hk+7SIYqE2o3qbUL4f3H5iHLVzMifoIp4/j+dMrfO9bLxI8JwXMMNC2L2/MNa
-         zIBCP097evlK81UdNMtqGSm+927XWH3CRQyv5hzECd3+lEuNV7WD1RHHXj9AgZpkMYTk
-         eUFz4+bE/J7j7dp+Pr6G7vbZ+mJW67EpFwmih3/LVlDY+MKY+LtGOzKuLpTojRh7T7el
-         w54qFX9jkUUEHV0l3tsuBKnZH34btWn0p2GVcVA3uhMEhZ5MGGS9iTyNjjss0JPxdGEA
-         DRwA==
-X-Gm-Message-State: AOAM530+M3ngNZ2IY80rlQ4lhEjnyYhKq0wE/z2AL6puG6FCf/j+G9BK
-        srL1pRjGfdY0gD8NKU7mAhVwfw==
-X-Google-Smtp-Source: ABdhPJzk0gQibQx+A+fhILd0h8zf1lcWr4uKRk1XIjkdSzozTHDxJTDuKLAR1DBr8VHwo9N/ttg4oQ==
-X-Received: by 2002:a17:902:c40c:: with SMTP id k12mr1104926plk.105.1591755310849;
-        Tue, 09 Jun 2020 19:15:10 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 140sm11113508pfv.38.2020.06.09.19.15.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 19:15:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6nDD9b7w8r1Mr/3MxkpIoE8zWpfhH3upQWRgRKaz8Zc=;
+        b=RrF6vpttQIyGPG86B7RDWPKWHINqPLY2oWsy2LfnRS6fV+QBGJfmcxB8dFkM36Dhe4
+         xVm0DvVAkAJzsQvRpMGEEJ8FUhW3oWS26q/5/4+440ruLMuQm4slWs3OOwIQ9LDQ3Jc2
+         axvsnBukuWHnZh8Pnf4DkudgvNVjofIUGZiZJMmbncKdpf1nTaFoYmlW6JXBp4IPnyjr
+         rVqyIrwhmdaumx7ihfJCHEsOKPJ1t72Mm8q+NiQwF8jHgcoJX4zw3SAcrNiuB+Ja1sCS
+         40oRQR75iYC73H8yU5IfthhS0ft7lpnFUyckpnt/RL+XYpGbWRX0c2Lwm7DtmqWHIaVn
+         u33Q==
+X-Gm-Message-State: AOAM5338g8k5P9b1gI/QF9WbRpXg//OurhNqyWZtI8JGifUDrZFLk5aQ
+        prfd5HqBJCUB6+vRPbCFvew=
+X-Google-Smtp-Source: ABdhPJyHM8AkM6LFw1w6gnIiVHMouyYrPLgZFtrZzLehkjZn/vUa+ZeZVaI4/d8rIky9PTihQBilQA==
+X-Received: by 2002:a50:b022:: with SMTP id i31mr595400edd.301.1591755580360;
+        Tue, 09 Jun 2020 19:19:40 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id ss4sm14296639ejb.63.2020.06.09.19.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 19:19:39 -0700 (PDT)
+Subject: Re: [PATCH 2/4] soc: bcm: add BCM63xx power domain driver
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200609105244.4014823-1-noltari@gmail.com>
+ <20200609105244.4014823-3-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <13cc694b-c643-0f68-e510-062df5352eaa@gmail.com>
+Date:   Tue, 9 Jun 2020 19:19:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200609033818.9028-1-tanmay@codeaurora.org>
-References: <20200609033818.9028-1-tanmay@codeaurora.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     sam@ravnborg.org, seanpaul@chromium.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        chandanu@codeaurora.org, robdclark@gmail.com,
-        abhinavk@codeaurora.org, nganji@codeaurora.org,
-        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>, devicetree@vger.kernel.org
-Date:   Tue, 09 Jun 2020 19:15:09 -0700
-Message-ID: <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200609105244.4014823-3-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tanmay Shah (2020-06-08 20:38:18)
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml=
- b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> new file mode 100644
-> index 0000000..5fdb915
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-
-Typically the file name matches the compatible string. But the
-compatible string is just qcom,dp-display. Maybe the compatible string
-should be qcom,sc7180-dp? Notice that the SoC number comes first as is
-preferred.
 
 
-> @@ -0,0 +1,142 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only  OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Display Port Controller.
-> +
-> +maintainers:
-> +  - Chandan Uddaraju <chandanu@codeaurora.org>
-> +  - Vara Reddy <varar@codeaurora.org>
-> +  - Tanmay Shah <tanmay@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for MSM Display Port which supports DP host contr=
-ollers
-> +  that are compatible with VESA Display Port interface specification.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: qcom,dp-display
-> +
-> +  cell-index:
-> +    description: Specifies the controller instance.
-> +
-> +  reg:
-> +    items:
-> +      - description: DP controller registers
-> +
-> +  interrupts:
-> +    description: The interrupt signal from the DP block.
-> +
-> +  clocks:
-> +    description: List of clock specifiers for clocks needed by the devic=
-e.
-> +    items:
-> +      - description: Display Port AUX clock
-> +      - description: Display Port Link clock
-> +      - description: Link interface clock between DP and PHY
-> +      - description: Display Port Pixel clock
-> +      - description: Root clock generator for pixel clock
-> +
-> +  clock-names:
-> +    description: |
-> +      Device clock names in the same order as mentioned in clocks proper=
-ty.
-> +      The required clocks are mentioned below.
-> +    items:
-> +      - const: core_aux
-> +      - const: ctrl_link
-> +      - const: ctrl_link_iface
-> +      - const: stream_pixel
-> +      - const: pixel_rcg
+On 6/9/2020 3:52 AM, Álvaro Fernández Rojas wrote:
+> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> to enable/disable certain components in order to save power.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  drivers/soc/bcm/Kconfig         |   8 +
+>  drivers/soc/bcm/Makefile        |   1 +
+>  drivers/soc/bcm/bcm63xx-power.c | 374 ++++++++++++++++++++++++++++++++
 
-Why not just 'pixel'? And why is the root clk generator important? It
-looks like this binding should be using the assigned clock parents
-property instead so that it doesn't have to call clk_set_parent()
-explicitly.
+I would create drivers/soc/bcm/bcm63xx because there are likely going to
+be more changes for BCM63xx DSL SOCs in the future that would land
+there, for instance the BCM63138 and newer SoCs have an entirely
+different reset controller using the on-chip micro controller that would
+be landing there.
 
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  vdda-1p2-supply:
-> +    description: phandle to vdda 1.2V regulator node.
-> +
-> +  vdda-0p9-supply:
-> +    description: phandle to vdda 0.9V regulator node.
-> +
-> +  data-lanes =3D <0 1>:
+Can you also make sure that the MAINTAINERS file still matches that
+location?
 
-Is this correct? We can have =3D <value> in the property name? Also feels
-generic and possibly should come from the phy binding instead of from
-the controller binding.
-
-> +    type: object
-> +    description: Maximum number of lanes that can be used for Display po=
-rt.
-> +
-> +  ports:
-> +    description: |
-> +       Contains display port controller endpoint subnode.
-> +       remote-endpoint: |
-> +         For port@0, set to phandle of the connected panel/bridge's
-> +         input endpoint. For port@1, set to the DPU interface output.
-> +         Documentation/devicetree/bindings/graph.txt and
-> +         Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +patternProperties:
-> +  "^aux-cfg([0-9])-settings$":
-> +    type: object
-> +    description: |
-> +      Specifies the DP AUX configuration [0-9] settings.
-> +      The first entry in this array corresponds to the register offset
-> +      within DP AUX, while the remaining entries indicate the
-> +      programmable values.
-
-I'd prefer this was removed from the binding and hardcoded in the driver
-until we can understand what the values are. If they're not
-understandable then they most likely don't change and should be done in
-the driver.
-
-> +
-> +required:
-> +  - compatible
-> +  - cell-index
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - vdda-1p2-supply
-> +  - vdda-0p9-supply
-> +  - data-lanes
-> +  - ports
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
-> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +    msm_dp: displayport-controller@ae90000{
-> +        compatible =3D "qcom,dp-display";
-> +        cell-index =3D <0>;
-> +        reg =3D <0 0xae90000 0 0x1400>;
-> +        reg-names =3D "dp_controller";
-> +
-> +        interrupt-parent =3D <&display_subsystem>;
-> +        interrupts =3D <12 0>;
-> +
-> +        clocks =3D <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-> +        clock-names =3D "core_aux",
-> +                      "ctrl_link",
-> +                      "ctrl_link_iface", "stream_pixel",
-> +                      "pixel_rcg";
-> +        #clock-cells =3D <1>;
-> +
-> +        vdda-1p2-supply =3D <&vreg_l3c_1p2>;
-> +        vdda-0p9-supply =3D <&vreg_l4a_0p8>;
-> +
-> +        data-lanes =3D <0 1>;
-> +
-> +        ports {
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <0>;
-> +
-> +            port@0 {
-> +                reg =3D <0>;
-> +                dp_in: endpoint {
-> +                    remote-endpoint =3D <&dpu_intf0_out>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg =3D <1>;
-> +                dp_out: endpoint {
-> +                };
-> +            };
-> +        };
-> +    };
-
-I believe there should be a '...' here.
+With respect to the code, given that you have defined #reset-cells = <1>
+in the Device Tree binding, I would expect that you create a header
+under include/dt-bindings/ which defines constants for the various SoCs
+which you are then using within your power domain provider driver.
+bcm2835-power.c is a good example of how this works for instance.
+-- 
+Florian
