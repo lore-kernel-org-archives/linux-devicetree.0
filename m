@@ -2,204 +2,334 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696F5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C4BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 432E520656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0492070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DV34bec3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RPnWMutX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgFJSbA (ORCPT
+        id S1729090AbgFJSgF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 14:31:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
+        Wed, 10 Jun 2020 14:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728951AbgFJSbA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 14:31:00 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96AF4C08C5C4
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:30:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r7so3445495wro.1
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:30:58 -0700 (PDT)
+        with ESMTP id S1729082AbgFJSgE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 14:36:04 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34488C03E96B
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:36:04 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id l17so2771744wmj.0
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:36:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/+J5oO5OnfDiIOVOhIHmtbQvypR4NOyguvZ+vS+VBRA=;
-        b=DV34bec3kn8ups3mo1KcqY/YeluhEBHJfMnEoE9K8u+na1nJ1DGGsyc4jU+glucolT
-         TUviM5dxviwZLPuM0g8+vQXe6cH2pxFxUWwU93dsLznmfLILTgw0LIRBUGyUiEr5eR3C
-         YVHYT4otqvUKNG5g6IBlf3xE5gnzBzFj8GQusuekh3De1azhWfnqZ9zrNkArwxjoeSDN
-         OrOIMECTmg9RCEjAQB7ALp90Ij1RGNwkk5LC/8K25KqHj43cQrS4VRgqmzzK2AP4yrmE
-         cR6KgKL7WPcVlg8QndhCyIa1+G17DLQVODULBk72RsyfmyYYRSqETFm9e19h9C2G/EmO
-         VhdA==
+         :content-disposition:in-reply-to;
+        bh=GAKX/BkxTn/LJgWRS+1X11Mbc2rWzrpG7EzLbVyHFc0=;
+        b=RPnWMutX/QRRcz0TMYMoRUA578kiy7PU2Vm88l+RS5gO/Pknvm5sWAtth+EliUqh38
+         C/UAvvkRwHxWgIhri0FAZGPcCri1wJvxiuiEWMwfPRcAtMNrizZUhQ5wz7rYsUUYyvaJ
+         FtZB75PSjzL6hvGkf/JJzuRYcux77pdBbkM+U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/+J5oO5OnfDiIOVOhIHmtbQvypR4NOyguvZ+vS+VBRA=;
-        b=L50Liy6SMhDcaNRN5HGChOdJDQOAhPXqyMCU8aMXYJdHCrEdmpeMxz9HgCD2FZwgEm
-         9FNV969I9nV0zkPtUI7EMusBjl9UdtMOOjNJGQxN9fNezqVNr99vXn51D+9M2rd8cvJq
-         /QAcoKOyC688ZSqzvFPqYLLi1u8QQAzKxKNWCxOegpnpmf/PW/8EV8jt9lXS5/ZPLRke
-         phnA4KQBCegk4I6gdaIlmER7bNgqE5XzRoFqqQdZFxgk293XjzYSocLPpusmfslu3664
-         Bv7pccmq27w9V8ibYU5aXWrThoD7iyvbN/IYK5skJsiV6B7izukwVghaEMb5wypZvOoI
-         Fp3w==
-X-Gm-Message-State: AOAM533HzwjH6khwtid/P8Fko5pUCtVoaROJ6HwPEBPtA/+doLZ9TlFo
-        j+FWBSU0BluMGybuUpYapewRgw==
-X-Google-Smtp-Source: ABdhPJz6Ni2JYhcqjCdFdfUuYTBOEDs7I3nA8SyUMwPOtX+kOnBTbqU0Si/knyTH6nG0/LiIF9R1rQ==
-X-Received: by 2002:adf:c98a:: with SMTP id f10mr5095428wrh.329.1591813856649;
-        Wed, 10 Jun 2020 11:30:56 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id a15sm878966wra.86.2020.06.10.11.30.55
+         :mime-version:content-disposition:in-reply-to;
+        bh=GAKX/BkxTn/LJgWRS+1X11Mbc2rWzrpG7EzLbVyHFc0=;
+        b=oJVaYKiMqv6qHYhU8Fzp8zo2sOiSatm4zpLTA5fV0sXfwnzlaKWdnI6Dvn2Y5QrUpq
+         ++q+l2MF5v+YnDXulRUpUVldkNwjdv0n9bO1faigEspvYnyauYMM7Z6vzWll5GBTKG6X
+         efN1U8jJkdn2D32f2r5nkSepW4AkkU5zqp05y0IUN8JQh6HtDjAVVZu+8bUp3eo3mg2w
+         ismbJ/CUgvGb8iOnyGdndKoJol8O/LfPDPz6X1FPwhURzoeQlI9qLCVX2bw/X9mffJNm
+         t8BudDi++wFx2VCwRIqaVIYI4Lo4eSklPfVaho/vlFDCGNdofxyhs4qX6BJthEW/ZFtk
+         1Tfg==
+X-Gm-Message-State: AOAM531GU/K8Pw/T67ZDPklEB5aXYzFDOq950Ll3qkMF8+sx33KvYbRH
+        H4072F2FIgxQcu+pMySbREb/tQ==
+X-Google-Smtp-Source: ABdhPJy74R1qCnO28Ip6GBZKnzUcwExOKJX50OLQZG2OUIsPlzuJOoCoKc9XcVZG+a5TOL8W/oWneQ==
+X-Received: by 2002:a1c:e0c3:: with SMTP id x186mr4322110wmg.17.1591814162734;
+        Wed, 10 Jun 2020 11:36:02 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id d5sm981424wrb.14.2020.06.10.11.36.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 11:30:55 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 19:30:53 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200610183053.GV4106@dell>
-References: <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
- <20200609151941.GM4106@dell>
- <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
- <20200609194505.GQ4106@dell>
- <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
- <20200610071940.GS4106@dell>
- <f7b2b690750edd022000ab56d2f58154@walle.cc>
- <20200610075615.GT4106@dell>
- <b06a79c845e0ab251235d30f7dc94dd5@walle.cc>
+        Wed, 10 Jun 2020 11:36:02 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 18:36:00 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
+        matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+Message-ID: <20200610183600.GI201868@chromium.org>
+References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
+ <20200509080627.23222-3-dongchun.zhu@mediatek.com>
+ <20200521193204.GA14214@chromium.org>
+ <1590209415.8804.431.camel@mhfsdcap03>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b06a79c845e0ab251235d30f7dc94dd5@walle.cc>
+In-Reply-To: <1590209415.8804.431.camel@mhfsdcap03>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 10 Jun 2020, Michael Walle wrote:
-
-> Am 2020-06-10 09:56, schrieb Lee Jones:
-> > On Wed, 10 Jun 2020, Michael Walle wrote:
-> > 
-> > > Am 2020-06-10 09:19, schrieb Lee Jones:
-> > > > On Wed, 10 Jun 2020, Michael Walle wrote:
-> > > > > Am 2020-06-09 21:45, schrieb Lee Jones:
-> > > > > > On Tue, 09 Jun 2020, Michael Walle wrote:
-> > > > > > > > We do not need a 'simple-regmap' solution for your use-case.
-> > > > > > > >
-> > > > > > > > Since your device's registers are segregated, just split up the
-> > > > > > > > register map and allocate each sub-device with it's own slice.
-> > > > > > >
-> > > > > > > I don't get it, could you make a device tree example for my
-> > > > > > > use-case? (see also above)
-> > > > > >
-> > > > > >     &i2cbus {
-> > > > > >         mfd-device@10 {
-> > > > > >             compatible = "simple-mfd";
-> > > > > >             reg = <10>;
-> > > > > >
-> > > > > >             sub-device@10 {
-> > > > > >                 compatible = "vendor,sub-device";
-> > > > > >                 reg = <10>;
-> > > > > >             };
-> > > > > >    };
-> > > > > >
-> > > > > > The Regmap config would be present in each of the child devices.
-> > > > > >
-> > > > > > Each child device would call devm_regmap_init_i2c() in .probe().
-> > > > >
-> > > > > Ah, I see. If I'm not wrong, this still means to create an i2c
-> > > > > device driver with the name "simple-mfd".
-> > > >
-> > > > Yes, it does.
-> > > >
-> > > > > Besides that, I don't like this, because:
-> > > > >  - Rob already expressed its concerns with "simple-mfd" and so on.
-> > > >
-> > > > Where did this take place?  I'd like to read up on this.
-> > > 
-> > > In this thread:
-> > > https://lore.kernel.org/linux-devicetree/20200604211039.12689-1-michael@walle.cc/T/#m16fdba5962069e7cd4aa817582ee358c9fe2ecbf
-> > > 
-> > > >
-> > > > >  - you need to duplicate the config in each sub device
-> > > >
-> > > > You can have a share a single config.
-> > > >
-> > > > >  - which also means you are restricting the sub devices to be
-> > > > >    i2c only (unless you implement and duplicate other regmap configs,
-> > > > >    too). For this driver, SPI and MMIO may be viable options.
-> > > >
-> > > > You could also have a shared implementation to choose between different
-> > > > busses.
-> > > 
-> > > Then what is the difference between to have this shared config in the
-> > > parent driver only and use the functions which are already there, i.e.
-> > > dev_get_regmap(parent). But see, below, I'll wait with what you're
-> > > coming up.
-> > 
-> > The difference is the omission of an otherwise pointless/superfluous
-> > driver.  Actually, it's the difference between the omission of 10
-> > pointless drivers!
+On Sat, May 23, 2020 at 12:50:15PM +0800, Dongchun Zhu wrote:
+> Hi Tomasz,
 > 
-> If you want to omit anything generic in the device tree - and as far as
-> I understand it - that should be the way to go, the specific compatible
-> string of the parent device has to go somewhere. Thus I'd appreciate
-> a consolidated (MFD) driver which holds all these, as you say it
-> pointless drivers.
-> Because IMHO they are not pointless, rather they are
-> the actual drivers for the MFD. Its sub nodes are just an implementation
-> detail to be able to use the OF bindings
-> (like your clock example or
-> a phandle to a PWM controller). Just because it is almost nothing there
-> except the regmap instantiation doesn't mean it is not a valid MFD driver.
+> Thanks for the review. My replies are as below.
+> 
+> On Thu, 2020-05-21 at 19:32 +0000, Tomasz Figa wrote:
+> > Hi Dongchun,
+> > 
+> > On Sat, May 09, 2020 at 04:06:27PM +0800, Dongchun Zhu wrote:
+[snip]
+> > > +{
+> > > +	struct i2c_client *client = to_i2c_client(dev);
+> > > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > > +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
+> > > +	int ret;
+> > > +
+> > > +	gpiod_set_value_cansleep(ov02a10->n_rst_gpio, 0);
+> > > +	gpiod_set_value_cansleep(ov02a10->pd_gpio, 0);
+> > > +
+> > > +	ret = clk_prepare_enable(ov02a10->eclk);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "failed to enable eclk\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "failed to enable regulators\n");
+> > > +		goto disable_clk;
+> > > +	}
+> > > +	usleep_range(5000, 6000);
+> > > +
+> > > +	gpiod_set_value_cansleep(ov02a10->pd_gpio, 1);
+> > 
+> > This is a "powerdown" GPIO. It must be set to 0 if the sensor is to be
+> > powered on.
+> > 
+> 
+> The value set by gpiod_set_value_cansleep() API actually depends upon
+> GPIO polarity defined in DT.
+> Since I set GPIO_ACTIVE_LOW to powerdown,
+> gpiod_set_value_cansleep(gpio_desc, value) would set !value to
+> gpio_desc.
+> Thus here powerdown would be low-state when sensor is powered on.
+> For GPIO polarity, I also post a comment to the binding patch.
+>
 
-A valid MFD driver is whatever we (the Linux community at large)
-define it to be.  An MFD is not a real thing.  We made it up.  It's
-MFD which is the implementation detail, not the child devices.  If a
-driver a) does very little, and b) the very little it does do can be
-resolved in a different way, is not a valid driver.  It's a waste of
-disk space.
+That's true. However, this makes the driver really confusing. If someone
+reads this code and compares with the datasheet, it looks incorrect,
+because in the datasheet the powerdown GPIO needs to be configured low
+for the sensor to operate.
 
-> And there is also additional stuff, like clock enable, version checks, etc.
+I'd recommend defining the binding in a way that makes it clear in the driver code
+that it implementes the power sequencing as per the datasheet.
 
-As more functionality is added *then* we can justify a driver.
+[snip]
+> > > +/*
+> > > + * ov02a10_set_exposure - Function called when setting exposure time
+> > > + * @priv: Pointer to device structure
+> > > + * @val: Variable for exposure time, in the unit of micro-second
+> > > + *
+> > > + * Set exposure time based on input value.
+> > > + *
+> > > + * Return: 0 on success
+> > > + */
+> > > +static int ov02a10_set_exposure(struct ov02a10 *ov02a10, int val)
+> > > +{
+> > > +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > > +	int ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, REG_PAGE_SWITCH, REG_ENABLE);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > 
+> > How does this page switch work? According to the documentation I have, the
+> > register allows selecting between a few different pages. However, there
+> > should be two page pointers - one for the AP and the other for the sensor,
+> > so that when the AP is programming page X, the sensor can have consistent
+> > settings from page Y. But here we only set one register and always with
+> > page 1.
+> > 
+> 
+> Thanks for the carefully observation.
+> The style or requirement of register setting here is suggested by OV
+> vendor.
+> From hardware signal behavior and effect-test, this setting should be
+> right.
+> But for your concern, we can also dig into it with OV.
+> Let's have time to talk with OV.
+> 
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_EXPOSURE_H,
+> > > +					val >> OV02A10_EXP_SHIFT);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_EXPOSURE_L, val);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	return i2c_smbus_write_byte_data(client, REG_GLOBAL_EFFECTIVE,
+> > > +					 REG_ENABLE);
+> > 
+> > This patch defines REG_GLOBAL_EFFECTIVE to 0x01. I don't see such register
+> > mentioned in the documentation.
+> > 
+> 
+> There may be several editions of sensor documentation.
+> From OV, 0x01 is one register shall be updated to keep
+> exposure/gain/test pattern... register settings effective.
+>
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Okay, let's try to get some explanation of this offline.
+
+> > > +}
+> > > +
+> > > +static int ov02a10_set_gain(struct ov02a10 *ov02a10, int val)
+> > > +{
+> > > +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > > +	int ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, REG_PAGE_SWITCH, REG_ENABLE);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_GAIN, val);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	return i2c_smbus_write_byte_data(client, REG_GLOBAL_EFFECTIVE,
+> > > +					 REG_ENABLE);
+> > > +}
+> > > +
+> > > +static int ov02a10_set_vblank(struct ov02a10 *ov02a10, int val)
+> > > +{
+> > > +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > > +	u32 vts = val + ov02a10->cur_mode->height - OV02A10_BASIC_LINE;
+> > > +	int ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, REG_PAGE_SWITCH, REG_ENABLE);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
+> > > +					vts >> OV02A10_VTS_SHIFT);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_L, vts);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	return i2c_smbus_write_byte_data(client, REG_GLOBAL_EFFECTIVE,
+> > > +					 REG_ENABLE);
+> > > +}
+> > > +
+> > > +static int ov02a10_set_test_pattern(struct ov02a10 *ov02a10, int pattern)
+> > > +{
+> > > +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > > +	int ret;
+> > > +
+> > > +	if (pattern)
+> > > +		pattern = OV02A10_TEST_PATTERN_ENABLE;
+> > 
+> > Is this necessary? Our control can be 0 for disabled and 1 for color bars.
+> > The latter is the same as the above macro.
+> > 
+> 
+> Yes. It looks redundant here.
+> Fixed in next release.
+> 
+> > [snip]
+> > > +static int ov02a10_initialize_controls(struct ov02a10 *ov02a10)
+> > > +{
+> > > +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > > +	const struct ov02a10_mode *mode;
+> > > +	struct v4l2_ctrl_handler *handler;
+> > > +	struct v4l2_ctrl *ctrl;
+> > > +	u64 exposure_max;
+> > > +	u32 pixel_rate, h_blank;
+> > > +	int ret;
+> > > +
+> > > +	handler = &ov02a10->ctrl_handler;
+> > > +	mode = ov02a10->cur_mode;
+> > > +	ret = v4l2_ctrl_handler_init(handler, 7);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	handler->lock = &ov02a10->mutex;
+> > > +
+> > > +	ctrl = v4l2_ctrl_new_int_menu(handler, NULL, V4L2_CID_LINK_FREQ, 0, 0,
+> > > +				      link_freq_menu_items);
+> > > +	if (ctrl)
+> > > +		ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > > +
+> > > +	pixel_rate = to_pixel_rate(0);
+> > > +	v4l2_ctrl_new_std(handler, NULL, V4L2_CID_PIXEL_RATE, 0, pixel_rate, 1,
+> > > +			  pixel_rate);
+> > > +
+> > > +	h_blank = mode->hts_def - mode->width;
+> > > +	ov02a10->hblank = v4l2_ctrl_new_std(handler, NULL, V4L2_CID_HBLANK,
+> > > +					    h_blank, h_blank, 1, h_blank);
+> > > +	if (ov02a10->hblank)
+> > > +		ov02a10->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > > +
+> > 
+> > Do we need to hold a pointer to this control? We don't seem to ever access
+> > it anywhere else in the driver.
+> > 
+> 
+> No.
+> These lines would be removed in next release.
+> 
+> > > +	ov02a10->vblank = v4l2_ctrl_new_std(handler, &ov02a10_ctrl_ops,
+> > > +					    V4L2_CID_VBLANK, mode->vts_def -
+> > > +					    mode->height,
+> > > +					    OV02A10_VTS_MAX - mode->height, 1,
+> > > +					    mode->vts_def - mode->height);
+> > > +
+> > 
+> > Ditto.
+> > 
+> 
+> These lines would be removed in next release.
+> 
+> > > +	exposure_max = mode->vts_def - 4;
+> > > +	ov02a10->exposure = v4l2_ctrl_new_std(handler, &ov02a10_ctrl_ops,
+> > > +					      V4L2_CID_EXPOSURE,
+> > > +					      OV02A10_EXPOSURE_MIN,
+> > > +					      exposure_max,
+> > > +					      OV02A10_EXPOSURE_STEP,
+> > > +					      mode->exp_def);
+> > > +
+> > > +	ov02a10->anal_gain = v4l2_ctrl_new_std(handler, &ov02a10_ctrl_ops,
+> > > +					       V4L2_CID_ANALOGUE_GAIN,
+> > > +					       OV02A10_GAIN_MIN,
+> > > +					       OV02A10_GAIN_MAX,
+> > > +					       OV02A10_GAIN_STEP,
+> > > +					       OV02A10_GAIN_DEFAULT);
+> > 
+> > Ditto.
+> > 
+> 
+> Fields: exposure and anal_gain would be removed in next release.
+> But v4l2_ctrl_new_std remains, as user may set exp/gain. 
+> 
+
+I don't mean removing the controls, but just not storing the returned
+pointers inside driver data.
+
+Best regards,
+Tomasz
