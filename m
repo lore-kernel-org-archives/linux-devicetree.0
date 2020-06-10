@@ -2,127 +2,98 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B76C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A052072F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9182072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3hfbvJ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsK0qjQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgFJQdG (ORCPT
+        id S1726631AbgFJQo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54594 "EHLO
+        Wed, 10 Jun 2020 12:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728730AbgFJQdF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:33:05 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34ACEC03E96B;
-        Wed, 10 Jun 2020 09:33:05 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id y17so2984022wrn.11;
-        Wed, 10 Jun 2020 09:33:05 -0700 (PDT)
+        with ESMTP id S1726095AbgFJQoZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:44:25 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A708FC03E96B;
+        Wed, 10 Jun 2020 09:44:25 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n23so1206328pgb.12;
+        Wed, 10 Jun 2020 09:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rpDBv2piDn9Q2J9N0i4yiYrjSsor/HRxSClbwdprklk=;
-        b=A3hfbvJ0Q7Jn4eZle67FwEdc1leGYOb7+BdYCoCHSOl/51k/clt4ipp2BpCuRSaJOY
-         IntQmAlLDFuBi7LIqjtK/EZ7lOChoCk9Erp8HeTY+mgeJY/p5FH8whi/Ja+X+h9wSF+2
-         l40McgBrBH+dHEAGJHZOcpQwNhSdHelxmC2KTXvX8/Oah4Sm2aXMfBV6e/QTd1OVxhM+
-         Z44PTtiDGEWbnB5TLwiM76V2TyUvPNzN2K1qXrJWANbzQuWlF5cIeKTSw3gVG+sLnakS
-         nMSZRVnPE42vI2DYHsZsJeat3ylQu/OHrzZ4dvKALwd6czAYv/DHSPaQx0q6MQQOa+LR
-         gIgA==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=N3nz8VAx3pKlB78ptGPJm5PU6bVNdaxgHQ+ZtZ70o9g=;
+        b=RsK0qjQFG8smIxeDdC/ls5gDxMuvHX5+WypypUF024Eh63wsT1MsDgA13sE5uy0HDc
+         dPmzxBGYGshoC3i+1AtL/WmMIURMP/2xE3y81c3yPS4efGLfyhTvG9AFFcb0A64kp7/Y
+         edagcH+s6qf6uwq3KTZvwD4l2PzfGsRL+PVK++/1+yK1ZC1UJZbvwB2CbY6+KM1wyqcU
+         RvwWuoV3ek52JrICTM1Q7LsoEkgYaq1XjJKadz+T2q0YbspNHYG/EHlmdUKOBJLNeimF
+         ZV14DkA3gNqx5RfFpUvzwPdkxcRggPr/IsiizXOlFPvSt4FSRM8kZuYihbCxN+97fAHI
+         9rkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rpDBv2piDn9Q2J9N0i4yiYrjSsor/HRxSClbwdprklk=;
-        b=ZfxfHW1/tXqkpMijzX7tCVZ5I66JC3SKYaqARaq12uqFHrylk4PAcKqlQvVHzJXAQG
-         l61gqKy2RF/HucSyiBgMoZsnIkPQCFEfeKE6MImHluoUGxP7zfianmYBooY+XTxpgfEh
-         dz7SjA7xZazEtT1yU4Lae1LlhlHeZycljnoPkKgMUpNAomVaUurcXO/ZMB781q+D4+gZ
-         Anwcpw1+vToXMGrSu8qBc3GC/RIMA78eg0h7wgLmgr/snPzLGquNvyHKi/a3qasARMJ2
-         mtiK1hDie7K3qxJqLDOC3tXu2fev6wOoo7JehIWdogmA/SD6vAb4/UCGkP5pipEkTFH2
-         ao7Q==
-X-Gm-Message-State: AOAM530rEOC7jnA2CvQeFDz5D6YGFdMU4h9QFzM6Wj9a7cTmxfltL1fi
-        MmLlpBsjZz0UBbjERnh1mb0=
-X-Google-Smtp-Source: ABdhPJw986CQrWCSJAue58mSsilDl/bEgvJUv0KDGG7CDlhYCSLRXNUnEBFvAgfX9ezIlWDuASlMEQ==
-X-Received: by 2002:adf:e588:: with SMTP id l8mr4944794wrm.255.1591806783485;
-        Wed, 10 Jun 2020 09:33:03 -0700 (PDT)
-Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
-        by smtp.gmail.com with ESMTPSA id t7sm414430wrq.41.2020.06.10.09.33.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 09:33:02 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N3nz8VAx3pKlB78ptGPJm5PU6bVNdaxgHQ+ZtZ70o9g=;
+        b=ryW93pvwz5K5BvlTG5oaVvwM9Kaxf7vDX6zJzioWXfC1TU5Xjgq5xWtlQ05t7KDT0q
+         cXu1ZN8T4O2ujiSQ+lu+bB0cEU0rNKFXac0ktZbeMw9TnvhLXilxJwh8vTmKT0X2DS5F
+         xUqS0rr5gEEqi83WXxxBmmNm/qdVeo62uh41arvWzvGdlH6xDBzcXL5odBfoLQ/bxnPp
+         wX7e0gZrCeacSRv8mMxnxTHFLXfF/orrpL8vfvSj/C8BMksq5xQeXp4+ge7XDQbiDN5Z
+         WpdcZOiwGEZvJj6C0gqueZfE/05ym0C7vWpE+enwu0RtVD108JPh2dGFTAQDR1vZ6T7V
+         jhfw==
+X-Gm-Message-State: AOAM532zTt/C9Kjff7BqZN3F2yLICcUpuxdBHtHCOkY5ne+/wOz7OO6M
+        x0rOzoJZIR6jiRCN+T6EkeU=
+X-Google-Smtp-Source: ABdhPJy0NGS7tUqHFFyb+RqTdlQCvJL+oOjZKAXNJ0x3T27vy1QMofrb6uWEJqEWGS1qIggn63zRlg==
+X-Received: by 2002:a63:5fc8:: with SMTP id t191mr3313480pgb.185.1591807465016;
+        Wed, 10 Jun 2020 09:44:25 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u128sm387931pfu.148.2020.06.10.09.44.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2020 09:44:24 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] dt-bindings: soc: brcm: add BCM63xx power domain
+ binding
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, jonas.gorski@gmail.com,
         bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v2 0/6] bmips: add BCM63xx power domain controller
-Date:   Wed, 10 Jun 2020 18:32:55 +0200
-Message-Id: <20200610163301.461160-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200609105244.4014823-1-noltari@gmail.com>
 References: <20200609105244.4014823-1-noltari@gmail.com>
+ <20200610163301.461160-1-noltari@gmail.com>
+ <20200610163301.461160-2-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <61be8299-890e-37c4-4374-06893b8e9e3f@gmail.com>
+Date:   Wed, 10 Jun 2020 09:44:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200610163301.461160-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
-to enable/disable certain components in order to save power.
 
-v2: Introduce changes suggested by Florian:
-  - Add separate YAML file for dt-bindings.
-  - Add bcm63xx folder in drivers/soc/bcm.
-  - Update MAINTAINERS.
-  - Add dt-bindings header files.
-  - Also add BCM63268 support.
 
-Álvaro Fernández Rojas (6):
-  dt-bindings: soc: brcm: add BCM63xx power domain binding
-  soc: bcm: add BCM63xx power domain driver
-  mips: bmips: dts: add BCM6328 power domain support
-  mips: bmips: dts: add BCM6362 power domain support
-  mips: bmips: dts: add BCM63268 power domain support
-  mips: bmips: add BCM6318 power domain definitions
+On 6/10/2020 9:32 AM, Álvaro Fernández Rojas wrote:
+> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> to enable/disable certain components in order to save power.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
- .../bindings/soc/bcm/brcm,bcm63xx-power.yaml  |  44 +++
- MAINTAINERS                                   |   1 +
- arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
- arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
- arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
- drivers/soc/bcm/Kconfig                       |  10 +
- drivers/soc/bcm/Makefile                      |   1 +
- drivers/soc/bcm/bcm63xx/Kconfig               |  12 +
- drivers/soc/bcm/bcm63xx/Makefile              |   2 +
- drivers/soc/bcm/bcm63xx/bcm63xx-power.c       | 374 ++++++++++++++++++
- include/dt-bindings/soc/bcm6318-pm.h          |  17 +
- include/dt-bindings/soc/bcm63268-pm.h         |  21 +
- include/dt-bindings/soc/bcm6328-pm.h          |  17 +
- include/dt-bindings/soc/bcm6362-pm.h          |  21 +
- 14 files changed, 538 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
- create mode 100644 drivers/soc/bcm/bcm63xx/Kconfig
- create mode 100644 drivers/soc/bcm/bcm63xx/Makefile
- create mode 100644 drivers/soc/bcm/bcm63xx/bcm63xx-power.c
- create mode 100644 include/dt-bindings/soc/bcm6318-pm.h
- create mode 100644 include/dt-bindings/soc/bcm63268-pm.h
- create mode 100644 include/dt-bindings/soc/bcm6328-pm.h
- create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.26.2
-
+Florian
