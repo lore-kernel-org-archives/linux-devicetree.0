@@ -4,96 +4,249 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD64C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F697C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D67C206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B77E20760
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591820585;
-	bh=TKZ2LXML5cv9NCPIapwBFHDk2LIy23EqZcrzTZVUW2o=;
+	s=default; t=1591820803;
+	bh=TTa4wdcfzpwDIO05PWNvhxsM11Q7VsymnhvwipIA2QM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z3Re1cnWlGL0V1ZzbZGxVvzR6VKMD9THr6fGOtPRml97kuSXJ9MVGuyqlVlly6LeI
-	 Z3Z4DrAgTtbbRGz/aTpPnxAhW3luU8IMQCMJzW5uKKThzU8jbdJkHheicbMD1t+Nnp
-	 Sz8EG6vAAfVSVU8ru4z948eLOgto6V5fhPaPAt9s=
+	b=kRrZYKxud8LZGiW99nI3PbBlz0SM8p0JAGXuaBppCHCe5/1W3bkGHs9JpGnY2yH3K
+	 c9nIVog2e7VbuDopEKYhGJ4VaI55vFFGQRzC1k5A5kw6xi9ZIWB1s/bFRe+66DfOoN
+	 AeLGcGevOh075RR3hYkeCMf5D/l0jp8eWe/p63QI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgFJUW7 (ORCPT
+        id S1726259AbgFJU0m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:22:59 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40910 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFJUW6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:22:58 -0400
-Received: by mail-il1-f196.google.com with SMTP id t8so3261836ilm.7;
-        Wed, 10 Jun 2020 13:22:57 -0700 (PDT)
+        Wed, 10 Jun 2020 16:26:42 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37607 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgFJU0m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:26:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id r2so3838750ioo.4;
+        Wed, 10 Jun 2020 13:26:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/YXSTCcj991zSNGpyu99kvR+1fYRbftjWLQgAbbx28Y=;
-        b=tmOPQ72T53Rhi1rCpe41Jlwl4auOldbyBtFXHMhWGno/qg3nFG7xA+EOkAP2r5FCvE
-         kU0oeN+57/V1S0ffD/PSZ6tvK8PVhCd8Ewl0ms3jYPiKafWK9Pz3WFxWwGXD6i7Rzp8/
-         d3O8bUrTVLCo6CzCpOBXGX2PETwKkVFowZTtvV9ZwzsFn7hyN6ti6MzArtCuG7Z4+6YU
-         ryBMfsNyl2FS/7OxN+Ogox5OkjZRtbBnOWXVkb/54wVWlrStK2W7LyUL9KY0qsMR2y8Y
-         PGWSRZBe+CvTm+qm/uyj+jNYJ178aEnDP3fMpypaIdm/xe1WzRU3Sh3C024fPV4+3opE
-         Wd2Q==
-X-Gm-Message-State: AOAM531Xbiza9muTdTtbWu9e9nZ2iTv4Edmi7IyR6R2FgXDsbCv6kh0c
-        6+v6OqblFXMolKvOAuaS6g==
-X-Google-Smtp-Source: ABdhPJy5xOlUuXLQ2M0PsBlE2fZvLeM8bOQGR9ykS86xR02H3MBFr5qW9JVAsXPGGIBf/d9lBSfqyw==
-X-Received: by 2002:a05:6e02:50c:: with SMTP id d12mr4753144ils.140.1591820577238;
-        Wed, 10 Jun 2020 13:22:57 -0700 (PDT)
+        bh=dLb7+PK/r7ZuXzs/JmtPoYfJOAKaZP0F2k4snoGnWsU=;
+        b=k+c8qYuPb25cGW4peDqRuSLPhG8c1ugseYt1knsjVyCpHHAohFnoUXXVSrrss+/KhJ
+         klBbGFksueffg1H7P/KlWzFkA2bpjR3wW+TDdqnPpWKan+6PtHeHGrdicSdwH/h1Jrhx
+         934o3wdOZ9Pq7gP2xETitp1p2QCZwbeSbDMaI6aNkN4yteo05tYT2JTfRKOpifBMdyGd
+         /LYtB+Kf9UUyjuq7pGqPCuHufIoWewysa+bq5oBYDofbk4uWfA/0YFunBMaeA7wsECX6
+         0fIrF5HHErTZjiRnRAJaMTp/4e4YuCbvnaq28vfRruFqcK6XagC/Zyli2QqnqmHOOmQz
+         ve8w==
+X-Gm-Message-State: AOAM531ISWY+AFZqD5yIVlV5XDUIXezVHaQZ+ZeHHMeT9P2CKjGGlZzj
+        aXmr0bQOIID9VV4LlcEAKw==
+X-Google-Smtp-Source: ABdhPJyAmUHIBz4O89zykUj+XKP55VbFK+EU3Y8jWd5wfBs0TJ/1pGP+ZZc0aZlh3G9jL0gzne9Igg==
+X-Received: by 2002:a6b:ab82:: with SMTP id u124mr3783659ioe.137.1591820800305;
+        Wed, 10 Jun 2020 13:26:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id 65sm455187ilv.7.2020.06.10.13.22.56
+        by smtp.gmail.com with ESMTPSA id y12sm414686ili.83.2020.06.10.13.26.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:22:56 -0700 (PDT)
-Received: (nullmailer pid 3649714 invoked by uid 1000);
-        Wed, 10 Jun 2020 20:22:55 -0000
-Date:   Wed, 10 Jun 2020 14:22:55 -0600
+        Wed, 10 Jun 2020 13:26:39 -0700 (PDT)
+Received: (nullmailer pid 3654596 invoked by uid 1000);
+        Wed, 10 Jun 2020 20:26:38 -0000
+Date:   Wed, 10 Jun 2020 14:26:38 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        balbi@kernel.org
-Subject: Re: [PATCH v2] usb: dwc3: Add support for VBUS power control
-Message-ID: <20200610202255.GA3646369@bogus>
-References: <20200603120915.14001-1-mike.looijmans@topic.nl>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] devicetree: bindings: phy: Document ipq806x dwc3
+ qcom phy
+Message-ID: <20200610202638.GA3649967@bogus>
+References: <20200603132237.6036-1-ansuelsmth@gmail.com>
+ <20200603132237.6036-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603120915.14001-1-mike.looijmans@topic.nl>
+In-Reply-To: <20200603132237.6036-2-ansuelsmth@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 02:09:15PM +0200, Mike Looijmans wrote:
-> Support VBUS power control using regulator framework. Enables the regulator
-> while the port is in host mode.
+On Wed, Jun 03, 2020 at 03:22:35PM +0200, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC.
 > 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
-> v2: Add missing devm_regulator_get call which got lost during rebase
+> v6:
+> * Add maximum value
+> v5:
+> * Fix dt_binding_check error
+> v4:
+> * Add qcom to specific bindings
+> v3:
+> * Use explicit reg instead of regmap
 > 
->  .../devicetree/bindings/usb/dwc3.txt          |  1 +
->  drivers/usb/dwc3/core.c                       | 34 ++++++++++++++-----
->  drivers/usb/dwc3/core.h                       |  4 +++
->  drivers/usb/dwc3/drd.c                        |  6 ++--
->  4 files changed, 33 insertions(+), 12 deletions(-)
+>  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 ++++++++++++++
+>  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 76 +++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 9946ff9ba735..56bc3f238e2d 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -37,6 +37,7 @@ Optional properties:
->   - phys: from the *Generic PHY* bindings
->   - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
->  	or "usb3-phy".
-> + - vbus-supply: Regulator handle that provides the VBUS power.
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> new file mode 100644
+> index 000000000000..c019de7478e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-hs
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      - "ref" Is required
+> +      - "xo"	Optional external reference clock
 
-Does the DWC3 block require Vbus to power itself? Doubtful. This 
-belongs in a usb-connector node. If the DWC3 driver wants to get the 
-Vbus supply, it can fetch it from that node.
+This is just saying what the schema says. Drop it.
 
-Rob
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    hs_phy_0: phy@110f8800 {
+> +      compatible = "qcom,ipq806x-usb-phy-hs";
+> +      reg = <0x110f8800 0x30>;
+> +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> new file mode 100644
+> index 000000000000..3696a8d7a5c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
+> +  own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq806x-usb-phy-ss
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +  qcom,rx-eq:
+> +    description: Override value for rx_eq.
+> +    default: 4
+> +    maximum: 7
+> +    allOf:
+
+You can drop 'allOf' now and just do $ref directly.
+
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,tx-deamp-3_5db:
+> +    description: Override value for transmit preemphasis.
+> +    default: 23
+> +    maximum: 63
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,mpll:
+> +    description: Override value for mpll.
+> +    default: 0
+> +    maximum: 7
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    ss_phy_0: phy@110f8830 {
+> +      compatible = "qcom,ipq806x-usb-phy-ss";
+> +      reg = <0x110f8830 0x30>;
+> +      clocks = <&gcc USB30_0_MASTER_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> -- 
+> 2.25.1
+> 
