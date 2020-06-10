@@ -2,81 +2,95 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C560C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 08:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AFBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E362072F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 08:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253A220734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:05:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Tcv0NfsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgFJIiW (ORCPT
+        id S1726794AbgFJJFo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:38:22 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34871 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFJIiC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 04:38:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k4so1380885oik.2;
-        Wed, 10 Jun 2020 01:38:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wpr/vh763HjeZP+zP2FvdrT65wytnNPLkj0hJH5/HSU=;
-        b=pLzci9jHCnsmZsXD0DiNzC3IFlDNKiVrp85s8t1tBs9HXAwxY+1OOqA1vJzYbh4+d6
-         3BbX+Rogr0hOXtkrf1pu/WDtKQedB4GBAFBTjRXjdmtVtaxffhQ+bvWT4PjYSbP/sVhQ
-         +vTUWBn7DHwPFqDc4KW3a1gb1Ph4Go/waLDaLy9J4ecO4QHtYaZyNHMCFUOzXYVIZJk8
-         U1hRqEgZlyroFNu2w3ndf3EqNArnJyI+wOcTMXAGySD1a+s5ee0XorkM+zXZcxBCmA+i
-         TzXUjREXs1sQCqjuJfBHrZyDglY6rgG1G7q33d/uKzLL7nETPo834H67JAphc3DkCGqu
-         9LKQ==
-X-Gm-Message-State: AOAM533t8HTUbbUcj8fhTCWnHdr3QwepnDExBHgL/+1EG3iHdwLkKfEI
-        HJ1UzdXBeFCsvfgM9NJYxNTwIp9tTRtXWFxghDY=
-X-Google-Smtp-Source: ABdhPJy/1U4soGDENhmLUY6tvEPackTNczKlnXGG0s9S/MpJevjbk+u+NWI9rauDUQubBnlkMAamXhasUns0Cr7+PGk=
-X-Received: by 2002:aca:4255:: with SMTP id p82mr1559149oia.153.1591778280645;
- Wed, 10 Jun 2020 01:38:00 -0700 (PDT)
+        Wed, 10 Jun 2020 05:05:44 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:10179 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgFJJFo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:05:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591779944; x=1623315944;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=8TnDDBGvjHsVFDp8wvSJgEncCN5mhl7gO30xVW7TOu8=;
+  b=Tcv0NfsAui0jKW1TpwdgCViUwlcciHF6d/lnY0ovwQ96TV2IVjx1vRhF
+   PScDwuh9JkhDYtJODt/1MEEgELeQP3OR19vtkl58JundLlZLmopwwyGnc
+   0NVtcZBIRq30jrmTcP2OWYJM2pBB7hG1HzVUqMrVLKH3oAhkMchzb44LY
+   mUjCYxE+oOGOnN0hkDbrVoLJjhxvWGuI2MLV4Oh0w7wMJNjYGJn0JQepA
+   Detl+YAn06wPzc4wfi29F5fnDm3wsBJDorRovfl3nq6akrYNKbz/0qv0a
+   SXo10m4N7oQK2TrTpvRnfLs5EMk2WWYewhHN7e5BhwjW9sPy7t/3NcCWW
+   Q==;
+IronPort-SDR: bEQtM5O08WY8XWPZjThcORefaYzLaYHRKlbGPIiYxkkzUQKbY97lKXCIRSplUE5/0eMClhaX+4
+ gebC76JG9zjTxzY6MVCBE+rG6ab9+RSBtXlxmZ2q+rRWTB+hakfTGFaxDPhjr65p6eqAEv2Gtc
+ gB5m/Ee1tbcJahx+vdeetPYiNCfzWHHpK+P6KqtxVINVhSM9PSJ1t4Il0iTEDCVHtZ3V3zNAlw
+ hJkVn8F39xowDl2MV44dPrNschw5929QQSuNFCPLiKrn41E5mWZc4yMObr+4GpLhpXQMPztunf
+ vWQ=
+X-IronPort-AV: E=Sophos;i="5.73,495,1583218800"; 
+   d="scan'208";a="82953209"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 02:05:43 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 10 Jun 2020 02:05:43 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1847.3 via Frontend Transport; Wed, 10 Jun 2020 02:05:38 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+        <ludovic.desroches@microchip.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <maz@kernel.org>
+CC:     <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 0/3] add RTT support for SAM9X60
+Date:   Wed, 10 Jun 2020 12:05:33 +0300
+Message-ID: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 10 Jun 2020 10:37:45 +0200
-Message-ID: <CAMuHMdWGs+UHCNXPc3TCAiRTX3M_8FLUAG5pke+=ZDr0uaP3_g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 10:54 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document RZ/G1H (R8A7742) SoC bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+This series adds RTT support for SAM9X60.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Changes in v2:
+- use "atmel,at91sam9260-rtt" as fallback for compatible
+- in patch 1 keep only the addition of sam9x60_aic_irq_fixup
+- get rid of patches 2/5 from v1
+- squash patches 4/5, 5/5 from v1
+- change commit title for patch "rtc: at91sam9: add microchip,sam9x60-rtt"
+  from v1 into "dt-bindings: rtc: add microchip,sam9x60-rtt" and
+  place it before device tree patch
 
-Gr{oetje,eeting}s,
+Claudiu Beznea (3):
+  irqchip/atmel-aic5: add support for sam9x60 rtt fixup
+  dt-bindings: rtc: add microchip,sam9x60-rtt
+  ARM: dts: sam9x60: add rtt
 
-                        Geert
+ Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 4 +++-
+ arch/arm/boot/dts/at91-sam9x60ek.dts                         | 9 +++++++++
+ arch/arm/boot/dts/sam9x60.dtsi                               | 7 +++++++
+ drivers/irqchip/irq-atmel-aic5.c                             | 8 +++++++-
+ 4 files changed, 26 insertions(+), 2 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
