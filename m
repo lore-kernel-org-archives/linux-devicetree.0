@@ -2,122 +2,80 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89580C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 08:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 08:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652C520734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 08:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E312072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 08:15:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="lD1in5nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgFJIKW (ORCPT
+        id S1726462AbgFJIPM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 04:10:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:54400 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgFJIKW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 04:10:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE6251F1;
-        Wed, 10 Jun 2020 01:10:21 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BAA883F6CF;
-        Wed, 10 Jun 2020 01:10:18 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 09:10:11 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        tabba@google.com, qwandor@google.com, ardb@kernel.org
-Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
-Message-ID: <20200610081011.GA2689@bogus>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200604133746.GA2951@willie-the-truck>
- <20200609174123.GA5732@bogus>
- <20200610075711.GC15939@willie-the-truck>
+        Wed, 10 Jun 2020 04:15:12 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:37856 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726424AbgFJIPL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:15:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 21BE44C849;
+        Wed, 10 Jun 2020 08:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        in-reply-to:content-disposition:content-type:content-type
+        :mime-version:references:message-id:subject:subject:from:from
+        :date:date:received:received:received; s=mta-01; t=1591776902;
+         x=1593591303; bh=ssxqr7UK6qEgdMyL7dH+arzPRX8wl0hfdoXSy9e6GuY=; b=
+        lD1in5nRl1asvbaoxp5CSIcslPJ97egR0FsvzFA5Qe6rNOLlNv98ZLD+ablFJq5h
+        CkFPj6VkCst15misLDGQ4YXYJEVNjikauyknE9Unkz6avYBKx4kO4exIUUJO5ZBG
+        d3Yqo8lEmWBcfCgbIRX7GbgiMsSM/x5W267/6q5fcGo=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AjbnNF-_vzes; Wed, 10 Jun 2020 11:15:02 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 291614C84E;
+        Wed, 10 Jun 2020 11:15:01 +0300 (MSK)
+Received: from localhost (172.17.14.122) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 10
+ Jun 2020 11:15:01 +0300
+Date:   Wed, 10 Jun 2020 11:15:00 +0300
+From:   "Alexander A. Filippov" <a.filippov@yadro.com>
+To:     Alexander Filippov <a.filippov@yadro.com>
+CC:     <linux-aspeed@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Geissler <geissonator@yahoo.com>,
+        Patrick Williams <patrick@stwcx.xyz>
+Subject: Re: [PATCH v7] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+Message-ID: <20200610081500.GA27959@bbwork.lan>
+References: <20200429113711.13183-1-a.filippov@yadro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200610075711.GC15939@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200429113711.13183-1-a.filippov@yadro.com>
+X-Originating-IP: [172.17.14.122]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Will,
+On Wed, Apr 29, 2020 at 02:37:11PM +0300, Alexander Filippov wrote:
+> Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
+> by YADRO.
+> 
+> Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+> 
 
-On Wed, Jun 10, 2020 at 08:57:12AM +0100, Will Deacon wrote:
-> Hi Sudeep,
->
-> On Tue, Jun 09, 2020 at 06:41:23PM +0100, Sudeep Holla wrote:
-
-[...]
-
-> >
-> > Agreed, I added for RxTx buffers and initially to build the parent/child
-> > hierarchy for all users of the driver. Initially I was assuming only
-> > in-kernel users and now I agree we should avoid any in kernel users if
-> > possible.
-> >
-> > One thing to note FFA_PARTITION_INFO_GET relies on Rx buffers to send the
-> > information to the caller. So we need to have established buffers before
-> > that and one of the reason you don't find that in this RFC. I dropped that
-> > too which I wanted initially.
->
-> Ok, sounds like we should at least get to a position where we can enumerate
-> things, though.
->
-
-Yes.
-
-[...]
-
-> >
-> > OK, IIUC that covers mostly KVM implementation. We still need a way to
-> > share the RxTx buffer info to the partitions and DT/ACPI(?) is one
-> > possible way. Based on you comment about not needing DT node, do you have
-> > any other way to communicate the buffer info to the partitions ?
->
-> This is only a concern if KVM chooses to provide the Rx/Tx buffer pair
-> though, right? If we punt that down the road for the moment, then we can
-> just rely on FFA_RXTX_MAP for now.
->
-
-Ah OK, I was under the assumption that we didn't want to use FFA_RXTX_{,UN}MAP
-
-[...]
-
-> >
-> > I am confused a bit. When you refer drivers above, are you referring to
-> > drivers in host kernel(hypervisor) or in the partitions. I fail to
-> > imagine need for the former.
->
-> I'm referring to in-kernel users in the host kernel. For KVM-managed guests,
-> we may not need these, although signalling things like system shutdown might
-> be better off done without relying on userspace. But my point is really that
-> separating the buffer management from the users means we can serialise
-> consumers, whether they are in-kernel or out in userspace.
->
-
-Understood.
-
-> > > What do you think, and do you reckon you can spin a cut-down driver that
-> > > implements the common part of the logic (since I know you've written much
-> > > of this code already)?
-> > >
-> >
-> > I am not sure if I am aligned with your thoughts on the buffer sharing
-> > yet.
->
-> Ok, please let me know if you have any more questions.
->
-
-None ATM. As I mentioned I had ruled out RXTX_{,UN}MAP which was my
-misunderstanding.
-
---
-Regards,
-Sudeep
+ping
