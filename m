@@ -2,251 +2,100 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F697C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C5DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B77E20760
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B6D206A4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591820803;
-	bh=TTa4wdcfzpwDIO05PWNvhxsM11Q7VsymnhvwipIA2QM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kRrZYKxud8LZGiW99nI3PbBlz0SM8p0JAGXuaBppCHCe5/1W3bkGHs9JpGnY2yH3K
-	 c9nIVog2e7VbuDopEKYhGJ4VaI55vFFGQRzC1k5A5kw6xi9ZIWB1s/bFRe+66DfOoN
-	 AeLGcGevOh075RR3hYkeCMf5D/l0jp8eWe/p63QI=
+	s=default; t=1591821542;
+	bh=vVDBawfAIxR+XgFV9N0wVIVrEr9RkqoH4OUGfhUX4TE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xJbQxP8EKDb3moGjZdr6ApWE7zThpnkISOvhTGC67c55fsHLDAmzBWqAa1CQuZLsj
+	 Ax6rX6RP7XghSRYFjnDagX5YAukD3JVWRxbAyFU0tKG01+JjukSzrbmkO0tpjmKIjg
+	 XGHvuBCBrshNci0Q/ATrgcYLEmTlqhpxbzuVX+sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbgFJU0m (ORCPT
+        id S1726277AbgFJUi6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:26:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37607 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgFJU0m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:26:42 -0400
-Received: by mail-io1-f67.google.com with SMTP id r2so3838750ioo.4;
-        Wed, 10 Jun 2020 13:26:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dLb7+PK/r7ZuXzs/JmtPoYfJOAKaZP0F2k4snoGnWsU=;
-        b=k+c8qYuPb25cGW4peDqRuSLPhG8c1ugseYt1knsjVyCpHHAohFnoUXXVSrrss+/KhJ
-         klBbGFksueffg1H7P/KlWzFkA2bpjR3wW+TDdqnPpWKan+6PtHeHGrdicSdwH/h1Jrhx
-         934o3wdOZ9Pq7gP2xETitp1p2QCZwbeSbDMaI6aNkN4yteo05tYT2JTfRKOpifBMdyGd
-         /LYtB+Kf9UUyjuq7pGqPCuHufIoWewysa+bq5oBYDofbk4uWfA/0YFunBMaeA7wsECX6
-         0fIrF5HHErTZjiRnRAJaMTp/4e4YuCbvnaq28vfRruFqcK6XagC/Zyli2QqnqmHOOmQz
-         ve8w==
-X-Gm-Message-State: AOAM531ISWY+AFZqD5yIVlV5XDUIXezVHaQZ+ZeHHMeT9P2CKjGGlZzj
-        aXmr0bQOIID9VV4LlcEAKw==
-X-Google-Smtp-Source: ABdhPJyAmUHIBz4O89zykUj+XKP55VbFK+EU3Y8jWd5wfBs0TJ/1pGP+ZZc0aZlh3G9jL0gzne9Igg==
-X-Received: by 2002:a6b:ab82:: with SMTP id u124mr3783659ioe.137.1591820800305;
-        Wed, 10 Jun 2020 13:26:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y12sm414686ili.83.2020.06.10.13.26.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:26:39 -0700 (PDT)
-Received: (nullmailer pid 3654596 invoked by uid 1000);
-        Wed, 10 Jun 2020 20:26:38 -0000
-Date:   Wed, 10 Jun 2020 14:26:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] devicetree: bindings: phy: Document ipq806x dwc3
- qcom phy
-Message-ID: <20200610202638.GA3649967@bogus>
-References: <20200603132237.6036-1-ansuelsmth@gmail.com>
- <20200603132237.6036-2-ansuelsmth@gmail.com>
+        Wed, 10 Jun 2020 16:38:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbgFJUi5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 16:38:57 -0400
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB8D207ED;
+        Wed, 10 Jun 2020 20:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591821537;
+        bh=vVDBawfAIxR+XgFV9N0wVIVrEr9RkqoH4OUGfhUX4TE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=obrMb8CFFtynYPduPZU5dw8GK0JLm4lbIpVKlhyxSMP3ZYf9FftY2ArfbXLa5M8HM
+         ZQmMAtKKCVEcnbzT6GwUR5vtSc80RJjZIt7aWZm47gkROA+yI/H8IeNS4B2F/fzdyK
+         BpLZ3iT/zOih+RgES70kk3kYmmDjFCoV6Q7B43sU=
+Received: by mail-oo1-f45.google.com with SMTP id z145so771708ooa.13;
+        Wed, 10 Jun 2020 13:38:57 -0700 (PDT)
+X-Gm-Message-State: AOAM530X4NK86tlYVVemqxSfJKtg10ovYk445zaRZsdrsGAkYZ/1UAFO
+        OOdTBWAjgm4cq6Koy/EEJh9UYzVtCq9/fdwvFg==
+X-Google-Smtp-Source: ABdhPJx2fhOu4m4KNgYLDqdqhDoSmIrYDD7miA7JHI17HFjaaea3za14GBOk8BLETs0s+5g2YjldV90dmMWdq6ZaZzg=
+X-Received: by 2002:a4a:6156:: with SMTP id u22mr3669189ooe.50.1591821536614;
+ Wed, 10 Jun 2020 13:38:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603132237.6036-2-ansuelsmth@gmail.com>
+References: <1587749770-15082-1-git-send-email-ben.levinsky@xilinx.com>
+ <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com>
+ <20200511221755.GA13585@bogus> <BYAPR02MB44077C8B7B7FD23FDE8E31B8B5B00@BYAPR02MB4407.namprd02.prod.outlook.com>
+In-Reply-To: <BYAPR02MB44077C8B7B7FD23FDE8E31B8B5B00@BYAPR02MB4407.namprd02.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 10 Jun 2020 14:38:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLGo380SRYska+xGgJhgF8NCRvY56ewafvSCU6c-LmhZw@mail.gmail.com>
+Message-ID: <CAL_JsqLGo380SRYska+xGgJhgF8NCRvY56ewafvSCU6c-LmhZw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
+ ZynqMP R5 rproc bindings
+To:     Ben Levinsky <BLEVINSK@xilinx.com>
+Cc:     "ohad@wizery.com" <ohad@wizery.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Michal Simek <michals@xilinx.com>,
+        Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefano Stabellini <stefanos@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:22:35PM +0200, Ansuel Smith wrote:
-> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-> inizialize and use usb on ipq806x SoC.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
-> v6:
-> * Add maximum value
-> v5:
-> * Fix dt_binding_check error
-> v4:
-> * Add qcom to specific bindings
-> v3:
-> * Use explicit reg instead of regmap
-> 
->  .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 ++++++++++++++
->  .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 76 +++++++++++++++++++
->  2 files changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-> new file mode 100644
-> index 000000000000..c019de7478e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
-> +  own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq806x-usb-phy-hs
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Is required
-> +      - "xo"	Optional external reference clock
+On Tue, May 26, 2020 at 11:40 AM Ben Levinsky <BLEVINSK@xilinx.com> wrote:
+>
+> Hi Rob,
+>
+> The Xilinx R5 Remoteproc driver has been around for a long time -- admitt=
+edly we should have upstreamed it long ago. The driver in the current form =
+is using an "classic" remoteproc device tree node as described here.
 
-This is just saying what the schema says. Drop it.
+I would rather not have 2 possible bindings to maintain. If there's
+been no rush to upstream this til now, then it can wait longer.
 
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    hs_phy_0: phy@110f8800 {
-> +      compatible = "qcom,ipq806x-usb-phy-hs";
-> +      reg = <0x110f8800 0x30>;
-> +      clocks = <&gcc USB30_0_UTMI_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> new file mode 100644
-> index 000000000000..3696a8d7a5c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers used in ipq806x. Each DWC3 PHY controller should have its
-> +  own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq806x-usb-phy-ss
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +  qcom,rx-eq:
-> +    description: Override value for rx_eq.
-> +    default: 4
-> +    maximum: 7
-> +    allOf:
+>
+> I am working with Stefano to come up with an appropriate System Device Tr=
+ee representation but it is not going to be ready right away. Our preferenc=
+e would be to upstream the remoteproc node and driver in their current form=
+s while system device tree is maturing.
 
-You can drop 'allOf' now and just do $ref directly.
+There's obviously going to still need to be some sort of description
+of the interface between cores, but this has parts that obviously
+conflict with what's getting defined for system DT. The TCMs are the
+most obvious. If you can remove (or hardcode in the driver) what
+conflicts, then perhaps this can be upstreamed now.
 
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  qcom,tx-deamp-3_5db:
-> +    description: Override value for transmit preemphasis.
-> +    default: 23
-> +    maximum: 63
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  qcom,mpll:
-> +    description: Override value for mpll.
-> +    default: 0
-> +    maximum: 7
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    ss_phy_0: phy@110f8830 {
-> +      compatible = "qcom,ipq806x-usb-phy-ss";
-> +      reg = <0x110f8830 0x30>;
-> +      clocks = <&gcc USB30_0_MASTER_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> -- 
-> 2.25.1
-> 
+Rob
