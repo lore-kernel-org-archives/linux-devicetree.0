@@ -2,139 +2,151 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D10C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B6FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A78072063A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnV4ZJgJ"
+	by mail.kernel.org (Postfix) with ESMTP id D82DE2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgFJQHK (ORCPT
+        id S1728549AbgFJQYQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50570 "EHLO
+        Wed, 10 Jun 2020 12:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727813AbgFJQHJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:07:09 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DC2C03E96B;
-        Wed, 10 Jun 2020 09:07:08 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id m21so1773104eds.13;
-        Wed, 10 Jun 2020 09:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JY2Z05wEjT8R9Sg8HziVbw08CeVdBXBZ3omkpyDUIzA=;
-        b=dnV4ZJgJdAsDZJy/TPbwjrsCspuam2T88UdIM3M6XgPm+h2Ttt+oZtBt/m4PI3c3zF
-         JoxNomgqAf1ZkdsKW+heA/d5GPNxl9HeiOCy1VrIbYf8zxW0hnsohInNDqjrIPn3yKH9
-         nT831LHonxnwqHRgvSyCKUfKbDWZ2R32qwtEutL4KWz4oHkadp7pjg/qgREVO9YNxrrr
-         DUofDtrbAKkY0B4kwIg691RvVYMB2bjhRqNN9yd+swWuY4vr0g7BiLaJAj1ubFZ1JYQ2
-         Vw+qDjNtm25yCxNrago1akR8LUODwg/x7KHD1VVWNdLUOgVy40EOBZZoHvvL8h+IBpk/
-         yanA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JY2Z05wEjT8R9Sg8HziVbw08CeVdBXBZ3omkpyDUIzA=;
-        b=BrFNB4u+8K4EB+NAsWlC+ut2rHLzo5lpzlcVF7Oz+0fcmhaDMZbANytZGFFH6alEvK
-         EdcGoRRMi9KvOTcsJipSOVOGsNhvGVIO3Lf9hpgnsAf7JY6ENcUUtnRhp5ZO9dbmwFOF
-         xl/nOCJ/GFN4ldgk7KeZa8GktQuyFI0jxMJLMoYMYpFicjxsxYHzRcsHGEkAWZ6C9yTn
-         70j++U4h6CR6aKRNSeyYPe+h02R3HgR1J9zMpTHf03zkdeai9eKfgicmWqs0I7HwwuFI
-         QlQGMW+3VqhRNFu8HR6GQQu6V/pMAb14IhgpG5f5w315A8oI+MEzqZKeriwlwKg1O1ew
-         zAag==
-X-Gm-Message-State: AOAM533Klr7mslrq5AzGouTXDr5KLTRJPUAwtMjobVhwXk4QTw3zkoAC
-        +QSCFtZ8lvgv0QEs1/xz17Q=
-X-Google-Smtp-Source: ABdhPJznD/qmqCNCqlkejLt5TscQD+1ezVWRuD6Ejw2gkqK/isOjk1bLru4xuGEqt4Vn+Y46ApM3tg==
-X-Received: by 2002:a50:aacc:: with SMTP id r12mr3044815edc.219.1591805226842;
-        Wed, 10 Jun 2020 09:07:06 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-79-35-249-242.retail.telecomitalia.it. [79.35.249.242])
-        by smtp.googlemail.com with ESMTPSA id ce25sm56067edb.45.2020.06.10.09.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 09:07:06 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 00/12] Multiple fixes in PCIe qcom driver
-Date:   Wed, 10 Jun 2020 18:06:42 +0200
-Message-Id: <20200610160655.27799-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1728077AbgFJQYP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:24:15 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF35DC03E96B;
+        Wed, 10 Jun 2020 09:24:15 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D979F2A12AF
+Subject: Re: [PATCH v3 1/2] dt-bindings: regulator: Add DT binding for
+ cros-ec-regulator
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20200610090748.45908-1-pihsun@chromium.org>
+ <20200610090748.45908-2-pihsun@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <09ef2a68-1770-0b03-0cb1-4de38c5c5106@collabora.com>
+Date:   Wed, 10 Jun 2020 18:24:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200610090748.45908-2-pihsun@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This contains multiple fix for PCIe qcom driver.
-Some optional reset and clocks were missing.
-Fix a problem with no PARF programming that cause kernel lock on load.
-Add support to force gen 1 speed if needed. (due to hardware limitation)
-Add ipq8064 rev 2 support that use a different tx termination offset.
+Hi Pi-Hsun,
 
-v6:
-* Replace custom define
-* Move define not used in 07 to 08
+Thank you for your patch. Some few/trivial comments below
 
-v5:
-* Split PCI: qcom: Add ipq8064 rev2 variant and set tx term offset
+On 10/6/20 11:07, Pi-Hsun Shih wrote:
+> Add DT binding documentation for cros-ec-regulator, a voltage regulator
+> controlled by ChromeOS EC.
+> 
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> ---
+> Changes from v2:
+> * No change
+> 
+> Changes from v1:
+> * Change compatible string to google,regulator-cros-ec.
+> * Use reg property in device tree.
+> * Change license for dt binding according to checkpatch.pl.
+> ---
+>  .../bindings/regulator/cros-ec-regulator.yaml | 43 +++++++++++++++++++
 
-v4:
-* Fix grammar error across all patch subject
-* Use bulk api for clks
-* Program PARF only in ipq8064 SoC
-* Program tx term only in ipq8064 SoC
-* Drop configurable tx-dempth rx-eq
-* Make added clk optional
 
-v3:
-* Fix check reported by checkpatch --strict
-* Rename force_gen1 to gen
+The vendor should be part of the binding name, google,cros-ec-regulator.yaml
 
-v2:
-* Drop iATU programming (already done in pcie init)
-* Use max-link-speed instead of force-gen1 custom definition
-* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-* Introduce a new variant for different revision of ipq8064
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml b/Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
+> new file mode 100644
+> index 000000000000..e677614dcdf9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/cros-ec-regulator.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/cros-ec-regulator.yaml#
 
-Abhishek Sahu (1):
-  PCI: qcom: Change duplicate PCI reset to phy reset
+Remember also to change the name here.
 
-Ansuel Smith (10):
-  PCI: qcom: Add missing ipq806x clocks in PCIe driver
-  dt-bindings: PCI: qcom: Add missing clks
-  PCI: qcom: Add missing reset for ipq806x
-  dt-bindings: PCI: qcom: Add ext reset
-  PCI: qcom: Use bulk clk api and assert on error
-  PCI: qcom: Define some PARF params needed for ipq8064 SoC
-  PCI: qcom: Add support for tx term offset for rev 2.1.0
-  PCI: qcom: Add ipq8064 rev2 variant
-  dt-bindings: PCI: qcom: Add ipq8064 rev 2 variant
-  PCI: qcom: Replace define with standard value
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ChromeOS EC controlled voltage regulators
+> +
+> +maintainers:
+> +  - Pi-Hsun Shih <pihsun@chromium.org>
+> +
+> +description:
+> +  Any property defined as part of the core regulator binding, defined in
+> +  regulator.yaml, can also be used.
+> +
+> +allOf:
+> +  - $ref: "regulator.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: google,regulator-cros-ec
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Identifier for the voltage regulator to ChromeOS EC.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
 
-Sham Muthayyan (1):
-  PCI: qcom: Add Force GEN1 support
+Please use a full example,
 
- .../devicetree/bindings/pci/qcom,pcie.txt     |  15 +-
- drivers/pci/controller/dwc/pcie-qcom.c        | 186 +++++++++++-------
- 2 files changed, 128 insertions(+), 73 deletions(-)
+    spi0 {
+      #address-cells = <1>;
+      #size-cells = <0>;
 
--- 
-2.25.1
+      cros_ec: ec@0 {
+        compatible = "google,cros-ec-spi";
+        reg = <0>;
 
+
+> +    cros-ec {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      regulator@0 {
+> +        compatible = "regulator-cros-ec";
+
+The compatible should be "google,cros-ec-regulator"
+
+> +        regulator-min-microvolt = <1800000>;
+> +        regulator-max-microvolt = <3300000>;
+> +        reg = <0>;
+> +      };
+> +    };
+> +...
+> 
