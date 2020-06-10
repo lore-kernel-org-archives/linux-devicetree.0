@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0531C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815E3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC5CD20801
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578AC20801
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 06:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XWXDYye7"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qfnckt+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgFJGD6 (ORCPT
+        id S1726525AbgFJGE2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 02:03:58 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11236 "EHLO
+        Wed, 10 Jun 2020 02:04:28 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11212 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgFJGCw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 02:02:52 -0400
+        with ESMTP id S1726186AbgFJGCr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 02:02:47 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee0772f0000>; Tue, 09 Jun 2020 23:01:19 -0700
+        id <B5ee0772a0000>; Tue, 09 Jun 2020 23:01:15 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 09 Jun 2020 23:02:51 -0700
+  Tue, 09 Jun 2020 23:02:46 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:51 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
- 2020 06:02:50 +0000
+        by hqpgpgate101.nvidia.com on Tue, 09 Jun 2020 23:02:46 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 06:02:46 +0000
 Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 10 Jun 2020 06:02:50 +0000
+ Transport; Wed, 10 Jun 2020 06:02:46 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.70]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee0778a0000>; Tue, 09 Jun 2020 23:02:50 -0700
+        id <B5ee077850000>; Tue, 09 Jun 2020 23:02:45 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -46,9 +46,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v1 12/18] media: tegra-video: Add support for selection ioctl ops
-Date:   Tue, 9 Jun 2020 23:02:34 -0700
-Message-ID: <1591768960-31648-13-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v1 04/18] i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+Date:   Tue, 9 Jun 2020 23:02:26 -0700
+Message-ID: <1591768960-31648-5-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
 References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
@@ -56,175 +56,65 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591768879; bh=DdvP/XW9hYASnGAPIhOT29pXz3T5UjbPtLN0juCmevk=;
+        t=1591768875; bh=FE3zccXsSJw4dQg1KvzPkaznm8tF4D5l77Bo/LLBkaM=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=XWXDYye7s7Ufn+DmC7r+uZ96qg/VwSsMYQYrQ9FoyGhfjMPjTz8UZ4dJiBBk6TaNG
-         xyI0oUvsqovGo0qYzpCpN/+CAkxwwlSeC3xDJUnlz1zqW8pUx4EWU0vI6vJrzSqXea
-         lx+hZa3KvYJ+ZszkIxcTphv8pejnEzBOta0OR3tlKqeIGvRC+1qmbmJUy1K6fmCSNe
-         453aVDaRLyhkx7pwli7BL0U2B7u2Re5X4T77AVUpKbns15ZCCPmAZoW2U4WW6zopnt
-         YU4h9f383xptqhNkm/aZGZTJFBrvMugE/643FRoahPirlnLKVqAsaNTRJ0MR7F/zkH
-         eVEwaT6FAMwCA==
+        b=qfnckt+MTSZJWTCS16Faw36qp6V4mxwiqEgki2rm3rbSG7DWgXxUyNTa3NxsA5cba
+         nL44D04iaCA9aoZuHtZK411MM8affCmuMTh6zewkeNFu5BxqkFVSo25rLy1Tv6471g
+         ZFIcKA/nexHymQuOA8t+0YnzzC7+l4mlSWlsdiXWWSBWMQa5AotXDOrcPrQik88It0
+         ktkE5PdpkesyxBBJ/Oits55fH7vcNBDOlF3BoMaL/aEK/OBt4YCzJKinScJilVkK0d
+         76Zc5Jp++lqeh52QQ1TYRzTJaTuZW7Ne35Rel815zpWVQ+/GozzX42sq5d1RCOACam
+         xU+5Nv8brGFHA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds selection v4l2 ioctl operations to allow configuring
-a selection rectangle in the sensor through the Tegra video device
-node.
+tegra_i2c_runtime_resume does not disable prior enabled clocks
+properly.
 
-Some sensor drivers supporting crop uses try_crop rectangle from
-v4l2_subdev_pad_config during try format for computing binning.
-
-So with selection ops support, this patch also updates try format
-to use try crop rectangle either from subdev frame size enumeration
-or from subdev crop boundary.
+This patch fixes it.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/vi.c | 106 +++++++++++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 6f320c1..03def26 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -427,6 +427,13 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
- 	struct v4l2_subdev *subdev;
- 	struct v4l2_subdev_format fmt;
- 	struct v4l2_subdev_pad_config *pad_cfg;
-+	struct v4l2_subdev_frame_size_enum fse = {
-+		.which = V4L2_SUBDEV_FORMAT_TRY,
-+	};
-+	struct v4l2_subdev_selection sdsel = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+		.target = V4L2_SEL_TGT_CROP_BOUNDS,
-+	};
- 	int ret;
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 3be1018..dba38a5 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -668,7 +668,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+ 		ret = clk_enable(i2c_dev->slow_clk);
+ 		if (ret < 0) {
+ 			dev_err(dev, "failed to enable slow clock: %d\n", ret);
+-			return ret;
++			goto disable_fast_clk;
+ 		}
+ 	}
  
- 	subdev = tegra_channel_get_remote_subdev(chan, true);
-@@ -449,6 +456,24 @@ static int __tegra_channel_try_format(struct tegra_vi_channel *chan,
- 	fmt.which = V4L2_SUBDEV_FORMAT_TRY;
- 	fmt.pad = 0;
- 	v4l2_fill_mbus_format(&fmt.format, pix, fmtinfo->code);
-+
-+	/*
-+	 * Attempt to obtain the format size from subdev.
-+	 * If not available, try to get crop boundary from subdev.
-+	 */
-+	fse.code = fmtinfo->code;
-+	ret = v4l2_subdev_call(subdev, pad, enum_frame_size, pad_cfg, &fse);
-+	if (ret) {
-+		ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
-+		if (ret)
-+			return -EINVAL;
-+		pad_cfg->try_crop.width = sdsel.r.width;
-+		pad_cfg->try_crop.height = sdsel.r.height;
-+	} else {
-+		pad_cfg->try_crop.width = fse.max_width;
-+		pad_cfg->try_crop.height = fse.max_height;
-+	}
-+
- 	ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
- 	if (ret < 0)
- 		return ret;
-@@ -540,6 +565,85 @@ static int tegra_channel_set_subdev_active_fmt(struct tegra_vi_channel *chan)
+@@ -676,11 +676,18 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+ 	if (ret < 0) {
+ 		dev_err(i2c_dev->dev,
+ 			"Enabling div clk failed, err %d\n", ret);
+-		clk_disable(i2c_dev->fast_clk);
+-		return ret;
++		goto disable_slow_clk;
+ 	}
+ 
  	return 0;
++
++disable_slow_clk:
++	if (i2c_dev->slow_clk)
++		clk_disable(i2c_dev->slow_clk);
++disable_fast_clk:
++	if (!i2c_dev->hw->has_single_clk_source)
++		clk_disable(i2c_dev->fast_clk);
++	return ret;
  }
  
-+static int tegra_channel_g_selection(struct file *file, void *priv,
-+				     struct v4l2_selection *sel)
-+{
-+	struct tegra_vi_channel *chan = video_drvdata(file);
-+	struct v4l2_subdev *subdev;
-+	struct v4l2_subdev_format fmt = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+	};
-+	struct v4l2_subdev_selection sdsel = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+		.target = sel->target,
-+	};
-+	int ret;
-+
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOTTY;
-+
-+	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+	/*
-+	 * Try the get selection operation and fallback to get format if not
-+	 * implemented.
-+	 */
-+	subdev = tegra_channel_get_remote_subdev(chan, true);
-+	ret = v4l2_subdev_call(subdev, pad, get_selection, NULL, &sdsel);
-+	if (!ret)
-+		sel->r = sdsel.r;
-+	if (ret != -ENOIOCTLCMD)
-+		return ret;
-+
-+	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &fmt);
-+	if (ret < 0)
-+		return ret;
-+
-+	sel->r.left = 0;
-+	sel->r.top = 0;
-+	sel->r.width = fmt.format.width;
-+	sel->r.height = fmt.format.height;
-+
-+	return 0;
-+}
-+
-+static int tegra_channel_s_selection(struct file *file, void *fh,
-+				     struct v4l2_selection *sel)
-+{
-+	struct tegra_vi_channel *chan = video_drvdata(file);
-+	struct v4l2_subdev *subdev;
-+	int ret;
-+	struct v4l2_subdev_selection sdsel = {
-+		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
-+		.target = sel->target,
-+		.flags = sel->flags,
-+		.r = sel->r,
-+	};
-+
-+	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
-+		return -ENOTTY;
-+
-+	if (sel->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	if (vb2_is_busy(&chan->queue))
-+		return -EBUSY;
-+
-+	subdev = tegra_channel_get_remote_subdev(chan, true);
-+	ret = v4l2_subdev_call(subdev, pad, set_selection, NULL, &sdsel);
-+	if (!ret) {
-+		sel->r = sdsel.r;
-+		/*
-+		 * Subdev active format resolution may have changed during
-+		 * set selection operation. So, update channel format to
-+		 * the sub-device active format.
-+		 */
-+		return tegra_channel_set_subdev_active_fmt(chan);
-+	}
-+
-+	return ret;
-+}
-+
- static int tegra_channel_enum_input(struct file *file, void *fh,
- 				    struct v4l2_input *inp)
- {
-@@ -597,6 +701,8 @@ static const struct v4l2_ioctl_ops tegra_channel_ioctl_ops = {
- 	.vidioc_streamoff		= vb2_ioctl_streamoff,
- 	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
- 	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
-+	.vidioc_g_selection		= tegra_channel_g_selection,
-+	.vidioc_s_selection		= tegra_channel_s_selection,
- };
- 
- /*
+ static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
 -- 
 2.7.4
 
