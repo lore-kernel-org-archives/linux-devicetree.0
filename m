@@ -2,260 +2,174 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E2FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BB9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C9D2072E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:12:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v5vw7wDl"
+	by mail.kernel.org (Postfix) with ESMTP id 6258920734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591809393;
+	bh=VuG8GFAPexrsYOA4UE1dLrNk0LWRoaPJInTcHfEdbfo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zFrd4kO4T2L1AHfU4dIQvtLPJqRVgB73YXdhnJsOAOO6S2L2mBItn52vUM+XX87Q9
+	 tCgMCUHPCUAbkq1QT357juSlm5OJ+3kERHGum7l453BFUxfvNMRLtulM3WQYw+3wzy
+	 jk2ao2W7WEhcPu1wCSQpUc58Zq/u5H5zRKSotNUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgFJRMI (ORCPT
+        id S1729393AbgFJRQZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:12:08 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53732 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729467AbgFJRMH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:12:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591809125; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Jt8mZoNNfftrfl4eTluurZCUY1cGFSIkcjywI15u/kI=; b=v5vw7wDlwYkAOY5iJuJnKAN28sMk48tJh4adGhEOf+ctW0GmBAGjBCETYCLK8XXCT2feyye8
- 0ig6kfJ31kUvl+SnB8DVdMn+JnSiKLDC/4Ooxfp75LeEcLvuVAgQ0TmU6ldAto5zE2nvcxT+
- diN+YRlu9tY5N3djWjyDkZGfXok=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5ee1145c0206ad41d1e98ccf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 10 Jun 2020 17:11:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A1A94C43391; Wed, 10 Jun 2020 17:11:55 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [183.82.139.165])
+        Wed, 10 Jun 2020 13:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbgFJRQX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 13:16:23 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D298C433CA;
-        Wed, 10 Jun 2020 17:11:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D298C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v2 4/4] clk: qcom: lpass: Add support for LPASS clock
- controller for SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-References: <1589707344-8871-1-git-send-email-tdas@codeaurora.org>
- <1589707344-8871-5-git-send-email-tdas@codeaurora.org>
- <159054904061.88029.1394425232497625411@swboyd.mtv.corp.google.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <3ac34bd7-bc5b-bc04-99ba-8ba3c5a9a691@codeaurora.org>
-Date:   Wed, 10 Jun 2020 22:41:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 5855B20820;
+        Wed, 10 Jun 2020 17:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591809382;
+        bh=VuG8GFAPexrsYOA4UE1dLrNk0LWRoaPJInTcHfEdbfo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cS9uw1oEysLZyc2hML43CnVBubSlpUYbM9CTxkk9RoQ715TYm/u3Dy8vLeX92YFTE
+         IkcqPBTQ3Rx3T8JW4U0T7zi6X4B3yrCgYsmJg7KPfCl1HecKq6oGj5DwWASrzgOSPn
+         lQWCOT18fF9z+do35e5vBc/EmNwC2ti6NMhrdwec=
+Received: by mail-oi1-f171.google.com with SMTP id p70so2728310oic.12;
+        Wed, 10 Jun 2020 10:16:22 -0700 (PDT)
+X-Gm-Message-State: AOAM531sjSvLiUglLnibhf+Ypa7+9PxAnKP41begekUUbzwfpVISI/wb
+        s/tFxhq730hxlIi/Rqfx4jPGr91NKtjLwreD3Q==
+X-Google-Smtp-Source: ABdhPJwHOABuR6AQwMm2KvAS7N8eot1RgRxtzsddB3/K6M8xY7inxghhge+De2OMnh1FR1Xql5mlTOlR1gqOEN6sorU=
+X-Received: by 2002:aca:d943:: with SMTP id q64mr3389865oig.147.1591809381607;
+ Wed, 10 Jun 2020 10:16:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159054904061.88029.1394425232497625411@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc> <20200609151941.GM4106@dell>
+ <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc> <20200609194505.GQ4106@dell>
+ <3a6931248f0efcaf8efbb5425a9bd833@walle.cc> <20200610071940.GS4106@dell>
+In-Reply-To: <20200610071940.GS4106@dell>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 10 Jun 2020 11:16:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
+Message-ID: <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks for your review.
-
-On 5/27/2020 8:40 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2020-05-17 02:22:24)
->> diff --git a/drivers/clk/qcom/lpasscorecc-sc7180.c b/drivers/clk/qcom/lpasscorecc-sc7180.c
->> new file mode 100644
->> index 0000000..86e3599
->> --- /dev/null
->> +++ b/drivers/clk/qcom/lpasscorecc-sc7180.c
->> @@ -0,0 +1,479 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/err.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/pm_clock.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/of.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "common.h"
->> +#include "gdsc.h"
->> +
->> +enum {
->> +       P_BI_TCXO,
->> +       P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD,
->> +       P_SLEEP_CLK,
->> +};
->> +
->> +static struct pll_vco fabia_vco[] = {
->> +       { 249600000, 2000000000, 0 },
->> +};
->> +
->> +static const struct alpha_pll_config lpass_lpaaudio_dig_pll_config = {
->> +       .l = 0x20,
-> [...]
->> +
->> +static struct regmap_config lpass_core_cc_sc7180_regmap_config = {
->> +       .reg_bits = 32,
->> +       .reg_stride = 4,
->> +       .val_bits = 32,
->> +       .fast_io = true,
->> +};
->> +
->> +static const struct qcom_cc_desc lpass_core_hm_sc7180_desc = {
->> +       .config = &lpass_core_cc_sc7180_regmap_config,
->> +       .gdscs = lpass_core_hm_sc7180_gdscs,
->> +       .num_gdscs = ARRAY_SIZE(lpass_core_hm_sc7180_gdscs),
->> +};
->> +
->> +static const struct qcom_cc_desc lpass_core_cc_sc7180_desc = {
->> +       .config = &lpass_core_cc_sc7180_regmap_config,
->> +       .clks = lpass_core_cc_sc7180_clocks,
->> +       .num_clks = ARRAY_SIZE(lpass_core_cc_sc7180_clocks),
->> +};
->> +
->> +static const struct qcom_cc_desc lpass_audio_hm_sc7180_desc = {
->> +       .config = &lpass_core_cc_sc7180_regmap_config,
->> +       .gdscs = lpass_audio_hm_sc7180_gdscs,
->> +       .num_gdscs = ARRAY_SIZE(lpass_audio_hm_sc7180_gdscs),
->> +};
->> +
->> +
-> 
-> Drop double newline please.
-> 
-
-Done.
-
->> +static int lpass_core_cc_sc7180_probe(struct platform_device *pdev)
->> +{
->> +       const struct qcom_cc_desc *desc;
->> +       struct regmap *regmap;
->> +       int ret;
->> +
->> +       lpass_core_cc_sc7180_regmap_config.name = "lpass_audio_cc";
->> +       desc = &lpass_audio_hm_sc7180_desc;
->> +       ret = qcom_cc_probe_by_index(pdev, 1, desc);
->> +       if (ret)
->> +               return ret;
->> +
->> +       lpass_core_cc_sc7180_regmap_config.name = "lpass_core_cc";
->> +       regmap = qcom_cc_map(pdev, &lpass_core_cc_sc7180_desc);
->> +       if (IS_ERR(regmap))
->> +               return PTR_ERR(regmap);
->> +
->> +       /*
->> +        * Keep the CLK always-ON
-> 
-> Why? Presumably to make sure we can access the lpass sysnoc path all the
-> time?
-> 
-
-This is an always ON clock from HW, just making sure to keep it enabled.
-
->> +        * LPASS_AUDIO_CORE_SYSNOC_SWAY_CORE_CLK
->> +        */
->> +       regmap_update_bits(regmap, 0x24000, BIT(0), BIT(0));
->> +
->> +       /* PLL settings */
->> +       regmap_write(regmap, 0x1008, 0x20);
->> +       regmap_update_bits(regmap, 0x1014, BIT(0), BIT(0));
->> +
->> +       clk_fabia_pll_configure(&lpass_lpaaudio_dig_pll, regmap,
->> +                               &lpass_lpaaudio_dig_pll_config);
->> +
->> +       return qcom_cc_really_probe(pdev, &lpass_core_cc_sc7180_desc, regmap);
->> +}
->> +
->> +static int lpass_hm_core_probe(struct platform_device *pdev)
->> +{
->> +       const struct qcom_cc_desc *desc;
->> +       int ret;
->> +
->> +       lpass_core_cc_sc7180_regmap_config.name = "lpass_hm_core";
->> +       desc = &lpass_core_hm_sc7180_desc;
->> +
->> +       return qcom_cc_probe_by_index(pdev, 0, desc);
->> +}
->> +
->> +static const struct of_device_id lpass_core_cc_sc7180_match_table[] = {
->> +       {
->> +               .compatible = "qcom,sc7180-lpasshm",
->> +               .data = lpass_hm_core_probe,
->> +       },
->> +       {
->> +               .compatible = "qcom,sc7180-lpasscorecc",
->> +               .data = lpass_core_cc_sc7180_probe,
->> +       },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, lpass_core_cc_sc7180_match_table);
->> +
->> +static int lpass_core_sc7180_probe(struct platform_device *pdev)
->> +{
->> +       int (*clk_probe)(struct platform_device *p);
->> +       int ret;
->> +
->> +       pm_runtime_enable(&pdev->dev);
->> +       ret = pm_clk_create(&pdev->dev);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = pm_clk_add(&pdev->dev, "gcc_lpass_sway");
->> +       if (ret < 0) {
->> +               dev_err(&pdev->dev, "failed to acquire iface clock\n");
-> 
-> Can the clk name be 'iface' if it's actually the interface clk?
-> "gcc_lpass_sway" looks to be the actual clk name which we shouldn't care
-> about here. It should be whatever clk name we consider it to be, which
-> would mean iface probably.
+On Wed, Jun 10, 2020 at 1:19 AM Lee Jones <lee.jones@linaro.org> wrote:
 >
+> On Wed, 10 Jun 2020, Michael Walle wrote:
+> > Am 2020-06-09 21:45, schrieb Lee Jones:
+> > > On Tue, 09 Jun 2020, Michael Walle wrote:
+> > > > > We do not need a 'simple-regmap' solution for your use-case.
+> > > > >
+> > > > > Since your device's registers are segregated, just split up the
+> > > > > register map and allocate each sub-device with it's own slice.
+> > > >
+> > > > I don't get it, could you make a device tree example for my
+> > > > use-case? (see also above)
+> > >
+> > >     &i2cbus {
+> > >         mfd-device@10 {
+> > >             compatible =3D "simple-mfd";
+> > >             reg =3D <10>;
+> > >
+> > >             sub-device@10 {
+> > >                 compatible =3D "vendor,sub-device";
+> > >                 reg =3D <10>;
+> > >             };
+> > >    };
+> > >
+> > > The Regmap config would be present in each of the child devices.
+> > >
+> > > Each child device would call devm_regmap_init_i2c() in .probe().
+> >
+> > Ah, I see. If I'm not wrong, this still means to create an i2c
+> > device driver with the name "simple-mfd".
+>
+> Yes, it does.
 
-Yes would use "iface".
+TBC, while fine for a driver to bind on 'simple-mfd', a DT compatible
+with that alone is not fine.
 
->> +               goto disable_pm_runtime;
->> +       }
->> +
->> +       clk_probe = of_device_get_match_data(&pdev->dev);
->> +       if (!clk_probe)
->> +               return -EINVAL;
->> +
->> +       ret = clk_probe(pdev);
->> +       if (ret)
->> +               goto destroy_pm_clk;
->> +
->> +       return 0;
+> > Besides that, I don't like this, because:
+> >  - Rob already expressed its concerns with "simple-mfd" and so on.
+>
+> Where did this take place?  I'd like to read up on this.
+>
+> >  - you need to duplicate the config in each sub device
+>
+> You can have a share a single config.
+>
+> >  - which also means you are restricting the sub devices to be
+> >    i2c only (unless you implement and duplicate other regmap configs,
+> >    too). For this driver, SPI and MMIO may be viable options.
+>
+> You could also have a shared implementation to choose between different
+> busses.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+I think it is really the syscon mfd driver you want to generalize to
+other buses. Though with a quick look at it, there's not really a
+whole lot to share. The regmap lookup would be the main thing. You are
+going to need a driver instance for each bus type.
 
---
+> > Thus, I'd rather implement a simple-mfd.c which implement a common
+> > I2C driver for now and populate its children using
+> > devm_of_platform_populate(). This could be extended to support other
+> > type of regmaps like SPI in the future.
+> >
+> > Also some MFD drivers could be moved to this, a likely candidate is
+> > the smsc-ece1099.c. Although I don't really understand its purpose,
+> > if don't have CONFIG_OF.
+> >
+> > Judging from the existing code, this simple-mfd.c wouldn't just be
+> > "a list of compatible" strings but also additional quirks and tweaks
+> > for particular devices in this list.
+
+Yes, this is why specific compatible strings are required.
+
+> Hold off on the simple-mfd.c idea, as I'm not taken by it yet and
+> wouldn't want you to waste your time.  I have another idea which would
+> help.  Give me a few days to put something together.
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
