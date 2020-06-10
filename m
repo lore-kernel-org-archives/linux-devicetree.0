@@ -2,174 +2,133 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BB9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5686AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6258920734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591809393;
-	bh=VuG8GFAPexrsYOA4UE1dLrNk0LWRoaPJInTcHfEdbfo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zFrd4kO4T2L1AHfU4dIQvtLPJqRVgB73YXdhnJsOAOO6S2L2mBItn52vUM+XX87Q9
-	 tCgMCUHPCUAbkq1QT357juSlm5OJ+3kERHGum7l453BFUxfvNMRLtulM3WQYw+3wzy
-	 jk2ao2W7WEhcPu1wCSQpUc58Zq/u5H5zRKSotNUU=
+	by mail.kernel.org (Postfix) with ESMTP id 32B4420734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:16:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcaxtTLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgFJRQZ (ORCPT
+        id S1729548AbgFJRQg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgFJRQX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 13:16:23 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5855B20820;
-        Wed, 10 Jun 2020 17:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591809382;
-        bh=VuG8GFAPexrsYOA4UE1dLrNk0LWRoaPJInTcHfEdbfo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cS9uw1oEysLZyc2hML43CnVBubSlpUYbM9CTxkk9RoQ715TYm/u3Dy8vLeX92YFTE
-         IkcqPBTQ3Rx3T8JW4U0T7zi6X4B3yrCgYsmJg7KPfCl1HecKq6oGj5DwWASrzgOSPn
-         lQWCOT18fF9z+do35e5vBc/EmNwC2ti6NMhrdwec=
-Received: by mail-oi1-f171.google.com with SMTP id p70so2728310oic.12;
-        Wed, 10 Jun 2020 10:16:22 -0700 (PDT)
-X-Gm-Message-State: AOAM531sjSvLiUglLnibhf+Ypa7+9PxAnKP41begekUUbzwfpVISI/wb
-        s/tFxhq730hxlIi/Rqfx4jPGr91NKtjLwreD3Q==
-X-Google-Smtp-Source: ABdhPJwHOABuR6AQwMm2KvAS7N8eot1RgRxtzsddB3/K6M8xY7inxghhge+De2OMnh1FR1Xql5mlTOlR1gqOEN6sorU=
-X-Received: by 2002:aca:d943:: with SMTP id q64mr3389865oig.147.1591809381607;
- Wed, 10 Jun 2020 10:16:21 -0700 (PDT)
+        Wed, 10 Jun 2020 13:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgFJRQf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 13:16:35 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBF6C03E96B;
+        Wed, 10 Jun 2020 10:16:34 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id g10so2538271wmh.4;
+        Wed, 10 Jun 2020 10:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iL6JkaFSUDsP2cIBAqcTq5ZWB5YvEmykfE8Vq8awAQw=;
+        b=bcaxtTLa6yaXrQr2WGhIcl4gQ4/S25pS4Pf3MrwSx1+HgqR+dZygxVMix77dSFWnty
+         w0mkbgZtq8IggE5+g4Ub3WuVA5nffbm/f2X24HModSll9RDFYB9IJmpGrtGYRKzQTZ0s
+         bo0wy+4IhxSu3mj7zOQgaF3sygoe7cOJs3wfAlQRDHpal2FGEg7vpWhIfvQmw7J2XCnL
+         qnEbjEGeafrxz+O++Q48VDZeTXz22dfHPeRYUq1p+kvLy4Koo2Cal247UJA23SsC+Di4
+         q21HXcJv8lQqDEUFEJ2RdpmTXxFqkt5cYXNfd3uqnWF52kNTONWbQTHucMPDFa3qyBv6
+         KVHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iL6JkaFSUDsP2cIBAqcTq5ZWB5YvEmykfE8Vq8awAQw=;
+        b=slLMt1CR1WR0BkMZC6PbacUuVGxXrtse+pPF+cB9zjqIhlnMsg4JNp+P9Z4BX3mqxa
+         PqMCByS24jokJiBNHYqmEgp8PBt5dSJ+zCtAxs6uadAzt7shmtXRFZuYuAyQFkQv//TR
+         irAon1Arng4BKeNHMO8U8ULF/Ezz7QDGsPFMlptR8+9EoKR5q8HR0D4dp3uzX16QNkS9
+         X7maB1BxziiaH94kTTKe/QMpy+LCPAlydRDWQ834VdRmGFfyEWQtmqLHStTNdyBKyiBq
+         ou5H/yC+5Ws60QvcE+Cw7QeEeQH7YyDMaql7NqE4V2VsF0pmf/ettGCVjpjrAMzpOpXj
+         UBQA==
+X-Gm-Message-State: AOAM531vpiEGzb2w6wEXg1zWQNPyEBQHnlzcj5L+EJp0HmKDH+enbR3X
+        h9/enTHlC2vtMHr4RaYMjZ4oHAjU0K8=
+X-Google-Smtp-Source: ABdhPJwxgdE+sQMmQXCuZ/GRpKGHoC8dqENeYrpej3wStTwKD+EQDcCzPpXybdP9IDNRejW39sOmMA==
+X-Received: by 2002:a1c:6606:: with SMTP id a6mr3979323wmc.37.1591809392680;
+        Wed, 10 Jun 2020 10:16:32 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id f11sm589048wrm.13.2020.06.10.10.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 10:16:31 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v3 0/9] bmips: add BCM63xx power domain controller
+Date:   Wed, 10 Jun 2020 19:16:21 +0200
+Message-Id: <20200610171630.465579-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200610163301.461160-1-noltari@gmail.com>
+References: <20200610163301.461160-1-noltari@gmail.com>
 MIME-Version: 1.0
-References: <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
- <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
- <32287ac0488f7cbd5a7d1259c284e554@walle.cc> <20200609151941.GM4106@dell>
- <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc> <20200609194505.GQ4106@dell>
- <3a6931248f0efcaf8efbb5425a9bd833@walle.cc> <20200610071940.GS4106@dell>
-In-Reply-To: <20200610071940.GS4106@dell>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 10 Jun 2020 11:16:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
-Message-ID: <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Michael Walle <michael@walle.cc>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 1:19 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Wed, 10 Jun 2020, Michael Walle wrote:
-> > Am 2020-06-09 21:45, schrieb Lee Jones:
-> > > On Tue, 09 Jun 2020, Michael Walle wrote:
-> > > > > We do not need a 'simple-regmap' solution for your use-case.
-> > > > >
-> > > > > Since your device's registers are segregated, just split up the
-> > > > > register map and allocate each sub-device with it's own slice.
-> > > >
-> > > > I don't get it, could you make a device tree example for my
-> > > > use-case? (see also above)
-> > >
-> > >     &i2cbus {
-> > >         mfd-device@10 {
-> > >             compatible =3D "simple-mfd";
-> > >             reg =3D <10>;
-> > >
-> > >             sub-device@10 {
-> > >                 compatible =3D "vendor,sub-device";
-> > >                 reg =3D <10>;
-> > >             };
-> > >    };
-> > >
-> > > The Regmap config would be present in each of the child devices.
-> > >
-> > > Each child device would call devm_regmap_init_i2c() in .probe().
-> >
-> > Ah, I see. If I'm not wrong, this still means to create an i2c
-> > device driver with the name "simple-mfd".
->
-> Yes, it does.
+BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+to enable/disable certain components in order to save power.
 
-TBC, while fine for a driver to bind on 'simple-mfd', a DT compatible
-with that alone is not fine.
+v3: Introduce changes suggested by Florian:
+  - Use dt-bindings definitions in power domain driver.
+  - Separate dt-bindings definitions from power domain .dtsi support.
+v2: Introduce changes suggested by Florian:
+  - Add separate YAML file for dt-bindings.
+  - Add bcm63xx folder in drivers/soc/bcm.
+  - Update MAINTAINERS.
+  - Add dt-bindings header files.
+  - Also add BCM63268 support.
 
-> > Besides that, I don't like this, because:
-> >  - Rob already expressed its concerns with "simple-mfd" and so on.
->
-> Where did this take place?  I'd like to read up on this.
->
-> >  - you need to duplicate the config in each sub device
->
-> You can have a share a single config.
->
-> >  - which also means you are restricting the sub devices to be
-> >    i2c only (unless you implement and duplicate other regmap configs,
-> >    too). For this driver, SPI and MMIO may be viable options.
->
-> You could also have a shared implementation to choose between different
-> busses.
+Álvaro Fernández Rojas (9):
+  dt-bindings: soc: brcm: add BCM63xx power domain binding
+  mips: bmips: dts: add BCM6328 power domain definitions
+  mips: bmips: dts: add BCM6362 power domain definitions
+  mips: bmips: dts: add BCM63268 power domain definitions
+  mips: bmips: add BCM6318 power domain definitions
+  soc: bcm: add BCM63xx power domain driver
+  mips: bmips: dts: add BCM6328 power domain support
+  mips: bmips: dts: add BCM6362 power domain support
+  mips: bmips: dts: add BCM63268 power domain support
 
-I think it is really the syscon mfd driver you want to generalize to
-other buses. Though with a quick look at it, there's not really a
-whole lot to share. The regmap lookup would be the main thing. You are
-going to need a driver instance for each bus type.
+ .../bindings/soc/bcm/brcm,bcm63xx-power.yaml  |  44 ++
+ MAINTAINERS                                   |   1 +
+ arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
+ drivers/soc/bcm/Kconfig                       |  10 +
+ drivers/soc/bcm/Makefile                      |   1 +
+ drivers/soc/bcm/bcm63xx/Kconfig               |  12 +
+ drivers/soc/bcm/bcm63xx/Makefile              |   2 +
+ drivers/soc/bcm/bcm63xx/bcm63xx-power.c       | 378 ++++++++++++++++++
+ include/dt-bindings/soc/bcm6318-pm.h          |  17 +
+ include/dt-bindings/soc/bcm63268-pm.h         |  21 +
+ include/dt-bindings/soc/bcm6328-pm.h          |  17 +
+ include/dt-bindings/soc/bcm6362-pm.h          |  21 +
+ 14 files changed, 542 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm63xx-power.yaml
+ create mode 100644 drivers/soc/bcm/bcm63xx/Kconfig
+ create mode 100644 drivers/soc/bcm/bcm63xx/Makefile
+ create mode 100644 drivers/soc/bcm/bcm63xx/bcm63xx-power.c
+ create mode 100644 include/dt-bindings/soc/bcm6318-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm63268-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm6328-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
 
-> > Thus, I'd rather implement a simple-mfd.c which implement a common
-> > I2C driver for now and populate its children using
-> > devm_of_platform_populate(). This could be extended to support other
-> > type of regmaps like SPI in the future.
-> >
-> > Also some MFD drivers could be moved to this, a likely candidate is
-> > the smsc-ece1099.c. Although I don't really understand its purpose,
-> > if don't have CONFIG_OF.
-> >
-> > Judging from the existing code, this simple-mfd.c wouldn't just be
-> > "a list of compatible" strings but also additional quirks and tweaks
-> > for particular devices in this list.
+-- 
+2.26.2
 
-Yes, this is why specific compatible strings are required.
-
-> Hold off on the simple-mfd.c idea, as I'm not taken by it yet and
-> wouldn't want you to waste your time.  I have another idea which would
-> help.  Give me a few days to put something together.
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
