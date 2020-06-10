@@ -2,193 +2,191 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394A0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BD9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B34204EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 17:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5EF2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 18:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g3r9royA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/0EIHUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgFJRtH (ORCPT
+        id S1728344AbgFJSCr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 13:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
+        Wed, 10 Jun 2020 14:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJRtG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 13:49:06 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59F5C03E96B
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 10:49:04 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id g11so1439918qvs.2
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 10:49:04 -0700 (PDT)
+        with ESMTP id S1728322AbgFJSCr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 14:02:47 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855AAC08C5C4
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:02:46 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u26so5209881wmn.1
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 11:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Owlfl2QM8eWUh1aUgcBMdltZkMJgzpmGiQXuiegxJgY=;
-        b=g3r9royAyXykHLro3udc39oDnOo2MQJzMuGU8oQYCZH2kH7fl4Ns4aUH8oT7ee2kWK
-         ZUEXtfhB9fJn3aMVj3v2iBVAR3N/jUh9wDK4YAMQxNDfyyPSSf6WtBNlWkVSl7HW8Wf5
-         48M9Lm86qyWzG9Bq7XtocYgkZ0qY82unIh8+M=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JxeiI81YmGg5d9U0C/O9qY0Fd0/ZtRnG2PDA0HglqPI=;
+        b=a/0EIHUrn6R4n3hmim8fYaSU+3VEc6XzE/W9OBdliAF/zvveloGdlLfeLyj/O+g0S+
+         xtGgV00xUPkUAOEq/5grpicbBu7iVxTzPCJLDkCVX4eExpPDvDyft+HwHi6O6t6ksH3Y
+         gwTO7zIdQuRfQxyrmebXQg9q0Ji4x4FAbf0y6TrEfSfCWIculPyuWE6YNUT6KQW8+agX
+         kd9q7mNOJoM/eU9Ca7bX4t6jq0Dy8hfpfOoAwmzi2B+UJN2Mip2mPsRVCPqoaqUtBSgd
+         kj+aPAukgh6gQ0GWPjFa1SHsVOhg58J1eVSu9CuTFweyULX/38yDxnzZD7r2E+cp2gi8
+         RllQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Owlfl2QM8eWUh1aUgcBMdltZkMJgzpmGiQXuiegxJgY=;
-        b=I3g5O5VTDQxfKiSV9iLpmATsX/FurWD/4ky9I98WeEkQPhpZ/LVRmkFyMLOWfi6ebi
-         +IXrfsQ5cxbC5H7RcT9mH+zf4AcDW4Yn/1FQ9uEtkFsmLHc4nfB7BI+yvNtn8pRWvM6G
-         yg/BwxhItAFf1eMtvAs6bx8a3U7GskTts72n7L26n9DIa9k4cGdLkDc48P3m4ihhy2sF
-         PERceFxalJrNmil+SNPrxa03kNoyEurAvbYsqfkwDkJO2FDYZP5t1ISBNOe48xZQ5v+o
-         F9ZOS2A9+RLGdmaxWaId8Yvko9+7ysqBwUv2/c4I3yIYCnc2CpmVFCbR3iU2s1vQqAle
-         l+ww==
-X-Gm-Message-State: AOAM5308ePVS7XxViWhluqXG01sZ5vU9gQv9cZnJZ7U/0OnDCn7Q+BZI
-        aOYsGpIfp6MipQOlz43puhd1LKPbPmXn2yAqO48t+g==
-X-Google-Smtp-Source: ABdhPJyGnlxqozswRrXouKmcSRCE7+Lm8ACMFEvGT8Z2iuSc8FxaabUYWBQsCAkj8cUTQGzC1i509vt5M+nFP6l/ndA=
-X-Received: by 2002:a05:6214:1267:: with SMTP id r7mr4181689qvv.18.1591811343757;
- Wed, 10 Jun 2020 10:49:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JxeiI81YmGg5d9U0C/O9qY0Fd0/ZtRnG2PDA0HglqPI=;
+        b=nXxgBc1buo3mydUc5X9WpR0Taf9HfYmVI/Y/pkg3nyGO2mdAQd76qBx+rL1C1lpsIr
+         kMU3wjijADoqUNWo9OsDsds7/88r5p1Y2U/RmUQiSxs4PcRtpHOZvsvq3I1j/vEWQlTX
+         E2LcXqJCMR0SDwwCLQjpg6VYXciL5dmrzpl0gM1XMJE5mhgAB62z06uZ8DiDHjfrIHy3
+         kwJu96nPynA7UyqZ1StkRs8EL9zPEOJ+McEaVkOG27V7VfeZV3ayrbT1ryOGSn1zZfsB
+         VCHENvKOYC99goQM5RcqBuB8KDPr+oB6AAf5/TynTcoLN9D7feINpdmgAafWYCbTyDY5
+         JSBg==
+X-Gm-Message-State: AOAM533yP3gN7P5zV+aKE9QTNF2dVLFJaczkEoD/VoFJ7GrOWijHS8sV
+        t27oqvvbPZ0/Bx8ZU27myaYaSQ==
+X-Google-Smtp-Source: ABdhPJw80wfVrkd4Pt8pEq+dAgi4oji9xyaGUc5f8gKzhaU2nyB3JgXw9lNxPsej44PCRcfJ5yA8YA==
+X-Received: by 2002:a05:600c:287:: with SMTP id 7mr4521647wmk.91.1591812164504;
+        Wed, 10 Jun 2020 11:02:44 -0700 (PDT)
+Received: from dell ([2.27.167.101])
+        by smtp.gmail.com with ESMTPSA id f11sm832108wrj.2.2020.06.10.11.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 11:02:43 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 19:02:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200610180241.GU4106@dell>
+References: <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc>
+ <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+ <20200609151941.GM4106@dell>
+ <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc>
+ <20200609194505.GQ4106@dell>
+ <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
+ <20200610071940.GS4106@dell>
+ <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
- <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
-In-Reply-To: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Wed, 10 Jun 2020 10:48:52 -0700
-Message-ID: <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Rob Herring <robh@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKr1aDVzgAMjwwK8E8O_f29vSrx1HXk81FF+rd3sEe==w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 10 Jun 2020, Rob Herring wrote:
 
-On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
+> On Wed, Jun 10, 2020 at 1:19 AM Lee Jones <lee.jones@linaro.org> wrote:
 > >
-> > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > > Hi Rob,
+> > On Wed, 10 Jun 2020, Michael Walle wrote:
+> > > Am 2020-06-09 21:45, schrieb Lee Jones:
+> > > > On Tue, 09 Jun 2020, Michael Walle wrote:
+> > > > > > We do not need a 'simple-regmap' solution for your use-case.
+> > > > > >
+> > > > > > Since your device's registers are segregated, just split up the
+> > > > > > register map and allocate each sub-device with it's own slice.
+> > > > >
+> > > > > I don't get it, could you make a device tree example for my
+> > > > > use-case? (see also above)
+> > > >
+> > > >     &i2cbus {
+> > > >         mfd-device@10 {
+> > > >             compatible = "simple-mfd";
+> > > >             reg = <10>;
+> > > >
+> > > >             sub-device@10 {
+> > > >                 compatible = "vendor,sub-device";
+> > > >                 reg = <10>;
+> > > >             };
+> > > >    };
+> > > >
+> > > > The Regmap config would be present in each of the child devices.
+> > > >
+> > > > Each child device would call devm_regmap_init_i2c() in .probe().
 > > >
-> > > Thanks again for the comments and feedback. Kindly see responses inline:
-> > >
-> > > (Trimming unrelated text from thread):
-> > >
-> > >
-> > >             ports {
-> > >                 #address-cells = <1>;
-> > >                 #size-cells = <0>;
-> > >
-> > >                 port@0 {
-> > >                     reg = <0>;
-> > >                     usb_con_hs: endpoint {
-> > >                         remote-endpoint = <&foo_usb_hs_controller>;
-> > >                     };
-> > >                 };
-> > >
-> > >                 port@1 {
-> > >                     reg = <1>;
-> > >                     usb_con0_ss: endpoint@0 {
-> > >                         remote-endpoint = <&mode_mux_in>;
-> > >                     };
-> > >                 };
-> > >
-> > >                 port@2 {
-> > >                     reg = <2>;
-> > >                     usb_con_sbu: endpoint {
-> > >                         remote-endpoint = <&foo_dp_aux>;
-> > >                     };
-> > >                 };
-> > >             };
+> > > Ah, I see. If I'm not wrong, this still means to create an i2c
+> > > device driver with the name "simple-mfd".
 > >
-> > The pins that can be reassigned can in practice go anywhere. We can't
-> > group them in any way. What do we do for example when the two sideband
-> > pins go to different locations?
->
-> The sideband pins from the connector go to multiple places or the
-> sideband signal from a controller go to multiple connectors? Either
-> way, that's solved with multiple endpoints. In the former case, port@2
-> would have multiple endpoints with all the possible connections. The
-> general model of the graph is each port is a separate data channel and
-> multiple endpoints are either a mux or fanout depending on the data
-> direction.
->
-> > It looks like the OF graph for the USB Type-C connectors expects the
-> > pins to be grouped like that, which is too bad, because unfortunately
-> > it will not work. It would require that we have a separate port for
-> > every pin that can be reassigned on the connector, and let's not even
-> > consider that.
->
-> I guess you are referring to the 4 SS signal pairs and that they could
-> be 2 USB links, 1 USB link and 1-2 Alt mode links, or 4 Alt mode
-> links. I think the grouping of SS signals is fine as I'd expect
-> there's a single entity deciding the routing. That would be 'mux' node
-> I think, but 'mux' is the wrong abstraction here. I guess we could
-> have 4 muxes (1 for each signal), but I'd hope we don't need that
-> level of detail in DT. I think we're in agreement on that.
+> > Yes, it does.
+> 
+> TBC, while fine for a driver to bind on 'simple-mfd', a DT compatible
+> with that alone is not fine.
 
-I think the updated example handles this grouping (port@1 going to a
-"SS mux") although as you said it should probably be a group of muxes,
-but I think the example illustrates the point. Is that assessment
-correct?
+'simple-mfd' essentially means:
 
->
-> > We need higher level description of the connections for the USB Type-C
-> > connectors. For example, a connector can be connected to this (or
-> > these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
-> > port, etc. And this is the mux that handles the pins on this
-> > connector, and these are the retimers, etc. etc.
+  "This device doesn't do anything useful, but the children do."
+
+When used with 'syscon' it means:
+
+  "Memory for this device is shared between all children"
+
+Adding more specific/descriptive compatible strings is conceptually
+fine, but they should not be forced to bind to a real driver using
+them.  Else we're creating drivers for the sake of creating drivers.
+
+This is especially true with 'simple-mfd' is used without 'syscon'.
+
+> > > Besides that, I don't like this, because:
+> > >  - Rob already expressed its concerns with "simple-mfd" and so on.
 > >
-> > We also need a way to identify those connections, and relying on
-> > something like fixed port node addresses, so indexes in practice,
-> > feels really risky to me. A conflict may seem unlikely now, but we
-> > seen those so many times in the past other things like GPIOs, IRQs,
-> > etc. We really need to define string identifiers for these
-> > connections.
->
-> I assume for IRQs you are referring to cases where we have a variable
-> number such as 'interrupts = <1 2 3>;' where 'interrupts = <1 3>'
-> doesn't work because we can't describe interrupt 2 is not present? The
-> graph binding doesn't suffer from that issue since we can easily omit
-> port or endpoint nodes.
->
-> Also, the numbering is specific to a compatible string. If we need
-> different numbering, then we can do a new compatible.
->
-> Rob
+> > Where did this take place?  I'd like to read up on this.
+> >
+> > >  - you need to duplicate the config in each sub device
+> >
+> > You can have a share a single config.
+> >
+> > >  - which also means you are restricting the sub devices to be
+> > >    i2c only (unless you implement and duplicate other regmap configs,
+> > >    too). For this driver, SPI and MMIO may be viable options.
+> >
+> > You could also have a shared implementation to choose between different
+> > busses.
+> 
+> I think it is really the syscon mfd driver you want to generalize to
+> other buses. Though with a quick look at it, there's not really a
+> whole lot to share. The regmap lookup would be the main thing. You are
+> going to need a driver instance for each bus type.
 
-Would this block the addition of the "*-switch" properties? IIUC the
-two are related but not dependent on each other.
+On it.
 
-The *-switch properties are phandles which the Type C connector class
-framework expects (and uses to get handles to those switches).
-These would point to the "mux" or "group of mux" abstractions as noted earlier.
-
-I'd suggest we work on updating the Type C connector class to a model
-that can describe connections for both DT (using OF graph) and ACPI,
-if something
-like that exists, but let it not block the addition of these switches
-to usb-connector.yaml; they will be needed by the Type C connector
-class framework
-regardless of the form the connection description takes.
-
-Best regards,
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
