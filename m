@@ -2,130 +2,178 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20FFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2098DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C882078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88FC206F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Y6F1J1An"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="d0gmA+SX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgFJJGB (ORCPT
+        id S1726841AbgFJJHg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:06:01 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:10213 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFJJGA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:06:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591779959; x=1623315959;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=qtiUArQA4p5apTipUrkfZICOBUdYloVo/SZ9mlHt4CE=;
-  b=Y6F1J1An8+MnuPpMHZhvmT1JdVyrl09Cz8qduE3vT+b+XiRvVxmeDbPf
-   UTAukGSM/9YJo/BY2ZU5mA4A/WjeH4Ss6FnRECgOscViJEQz2e0GlDZOF
-   RiTkGvmsqc8Gi2n4kDj6uf9m7s7Yg7M+fbzcJTumdZS5Dz7O5+vA8ZIpK
-   8dPsq8zul+IwmYmEFQ44Ef28l6yBU1sUrQmFezB5W99oGRmvoE2jv2wtr
-   tzW85NvnFA/V533E06vnTFKM7mw8od7171HWC04yncmzKW3S7eKx/5KxU
-   /qrdnKyNqt4dBBhVy43ZMSYUeX+hGmKYyxBmkEVM2/35KMMuu7pQcbk/j
-   g==;
-IronPort-SDR: M4p3KWa4v3dCbOqfupbupyIlgMFVn+ggBBOGIuGBUL4gm84DSrObBOzSMfdhoI6a+u5rPBMcsM
- xG66W88fqLYD/xhoxvF7RqmDw/zuMemtZnxO7J+vqySlRTI/TZ1KuwRM8QYwwrcHsHY+3illSj
- AYELCK8PhZ5CN2ILWoTYlez7/lgWnmtsWcfIyYZ1/5XU88b1OUMGwMhiymbyFn6nkK6H57h3Rf
- AbzfBK9xSMsfYGrI3RpFzFivBTqCNEi872FDud0vctBZMZzLP/lNdvA5waJMq9EoT5AgCkyzyc
- nSs=
-X-IronPort-AV: E=Sophos;i="5.73,495,1583218800"; 
-   d="scan'208";a="82953284"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 02:05:59 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 10 Jun 2020 02:05:57 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1847.3 via Frontend Transport; Wed, 10 Jun 2020 02:05:53 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <maz@kernel.org>
-CC:     <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 3/3] ARM: dts: sam9x60: add rtt
-Date:   Wed, 10 Jun 2020 12:05:36 +0300
-Message-ID: <1591779936-18577-4-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 10 Jun 2020 05:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgFJJHg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:07:36 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1A8C08C5C1
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 02:07:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e18so712103pgn.7
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 02:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tV8bIAKkwRNCkckVOYeoYlebWo0ebt4dV9pe/7DB+wY=;
+        b=d0gmA+SXA5MhEmNQkobfbSzB0bc1wk6GXWffGFVKkkVjlFYV7rTvNNqSeuKazD2eOb
+         qvprZ9QGvxPQNw2aIZzNzycenLIp7znKJ7y+cH7XQ3eyunqrr7LaQLf9eTzIxYcfztvz
+         GsYspG0NeiDtRz/Z93hX7HDkmtn6ePW4RSa08=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tV8bIAKkwRNCkckVOYeoYlebWo0ebt4dV9pe/7DB+wY=;
+        b=Zz1XQkBFcPOX23VBJrHZoOV+ymZ6ynKmXLza3iPoNOE4OxVt/DM2AwqsX6gvfKGhTH
+         NEQb46hxkuomGWXzMRA0RmsKh2cwq3AR6uDt8/mhmYwKcJjX5GUeWA4Cvmg3WR9VFXEd
+         plyKQKLj0ArbTupN1Lez2jmuoUzxubhcBtobjRT+5X8I3JZM/5xrTuA7n6NUNi4+IJW0
+         1gxd41mo2HZf1b8XcQPWXwtqhr5xbVewcga3Ys5/6XUb4rlDzRjkUTJU810HCHIdz4e3
+         ZuHCdAihCVKW+Y5110RMEOWNADiKRPrR/6Pz0VDw9Wy6qATTkXbedAz5z6w3XcIItfZv
+         nRaQ==
+X-Gm-Message-State: AOAM533vdOUMz8r0f6vN6WPvqQbdsmXEtYRk3F34O34zu4HPrq2NBbsg
+        XZqxl0kP8RbxW1jP38JRuq0S9A==
+X-Google-Smtp-Source: ABdhPJzGBt+BpcpNsPtkyLtX6Fhe6c/50y9943yUlx9gwDZf978+h///xXi53aR8z+77tF1GSG3Klg==
+X-Received: by 2002:a63:5644:: with SMTP id g4mr1760871pgm.381.1591780055442;
+        Wed, 10 Jun 2020 02:07:35 -0700 (PDT)
+Received: from shiro.work (p1285116-ipngn200805sizuokaden.shizuoka.ocn.ne.jp. [114.171.61.116])
+        by smtp.googlemail.com with ESMTPSA id nl8sm5191620pjb.13.2020.06.10.02.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 02:07:34 -0700 (PDT)
+From:   Daniel Palmer <daniel@0x0f.com>
+Cc:     k@japko.eu, tim.bird@sony.com, daniel@0x0f.com,
+        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Maxime Ripard <mripard@kernel.org>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] Initial MStar/Sigmastar ARMv7 SoC support
+Date:   Wed, 10 Jun 2020 18:03:58 +0900
+Message-Id: <20200610090421.3428945-1-daniel@0x0f.com>
+X-Mailer: git-send-email 2.27.0.rc0
+In-Reply-To: <20191014061617.10296-2-daniel@0x0f.com>
+References: <20191014061617.10296-2-daniel@0x0f.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add RTT. Allong with it enable GBPR as it is requested by RTT.
+This patch set adds initial support for MStar/Sigmastar's
+ARMv7 based SoCs. There is just enough here to get to a shell
+with an initramfs but support for a lot of the hardware is
+in progress and will follow.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/at91-sam9x60ek.dts | 9 +++++++++
- arch/arm/boot/dts/sam9x60.dtsi       | 7 +++++++
- 2 files changed, 16 insertions(+)
+MStar also shipped chips with MIPS cores and ARM9 etc which
+are incompatible so I've tried to make the distinction in the
+code that this is strictly for the ARMv7 based chips.
 
-diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
-index b484745bf2d4..39d946e0a47c 100644
---- a/arch/arm/boot/dts/at91-sam9x60ek.dts
-+++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
-@@ -309,6 +309,10 @@
- 	};
- };
- 
-+&gpbr {
-+	status = "okay";
-+};
-+
- &i2s {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2s_default>;
-@@ -613,6 +617,11 @@
- 	};
- };
- 
-+&rtt {
-+	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-+	status = "okay";
-+};
-+
- &shutdown_controller {
- 	atmel,shdwc-debouncer = <976>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
-index 6763423d64b8..d10843da4a85 100644
---- a/arch/arm/boot/dts/sam9x60.dtsi
-+++ b/arch/arm/boot/dts/sam9x60.dtsi
-@@ -661,6 +661,13 @@
- 				status = "disabled";
- 			};
- 
-+			rtt: rtt@fffffe20 {
-+				compatible = "microchip,sam9x60-rtt", "atmel,at91sam9260-rtt";
-+				reg = <0xfffffe20 0x20>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				clocks = <&clk32k 0>;
-+			};
-+
- 			pit: timer@fffffe40 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe40 0x10>;
+Differences from v1:
+
+1. v1 only really supported two specific chips that were known
+at the time of submitting that patch series. Since then it's
+become apparent that there are a few families of SoCs based
+on the same ARMv7 core, clk blocks, interrupt controllers etc
+and this v2 attempts to make support more generic so in the future
+more SoCs from this lineage can be added. Support for some other
+chips is already in progress and will follow.
+
+2. v1 only added support for the BreadBee boards that I have been
+working on. v2 also adds support for a readily available car dash
+camera.
+
+3. Support for the BreadBee board has been split into two top level
+dts to cleanly support if either the msc313 or msc313e is mounted on
+the board. The chips are pin compatible but some of the internal
+hardware is different. The u-boot port for these SoCs can detect
+which chip it is running on and select the right dts so the user
+doesn't have to care which chip is mounted on their board.
+
+
+Daniel Palmer (5):
+  dt-bindings: arm: Initial MStar vendor prefixes and compatible strings
+  ARM: mstar: Add machine for MStar/Sigmastar infinity/mercury family
+    ARMv7 SoCs
+  ARM: mstar: Add infinity/mercury series dtsi
+  ARM: mstar: Add dts for msc313(e) based BreadBee boards
+  ARM: mstar: Add dts for 70mai midrive d08
+
+ .../devicetree/bindings/arm/mstar.yaml        | 30 ++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  6 ++
+ MAINTAINERS                                   | 10 +++
+ arch/arm/Kconfig                              |  2 +
+ arch/arm/Makefile                             |  1 +
+ arch/arm/boot/dts/Makefile                    |  4 ++
+ .../dts/infinity-msc313-breadbee_crust.dts    | 25 +++++++
+ arch/arm/boot/dts/infinity-msc313.dtsi        | 14 ++++
+ arch/arm/boot/dts/infinity.dtsi               | 10 +++
+ .../boot/dts/infinity3-msc313e-breadbee.dts   | 25 +++++++
+ arch/arm/boot/dts/infinity3-msc313e.dtsi      | 14 ++++
+ arch/arm/boot/dts/infinity3.dtsi              | 10 +++
+ .../boot/dts/mercury5-ssc8336n-midrive08.dts  | 25 +++++++
+ arch/arm/boot/dts/mercury5-ssc8336n.dtsi      | 14 ++++
+ arch/arm/boot/dts/mercury5.dtsi               | 10 +++
+ arch/arm/boot/dts/mstar-v7.dtsi               | 71 ++++++++++++++++++
+ arch/arm/mach-mstar/Kconfig                   | 26 +++++++
+ arch/arm/mach-mstar/Makefile                  |  1 +
+ arch/arm/mach-mstar/mstarv7.c                 | 72 +++++++++++++++++++
+ 19 files changed, 370 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mstar.yaml
+ create mode 100644 arch/arm/boot/dts/infinity-msc313-breadbee_crust.dts
+ create mode 100644 arch/arm/boot/dts/infinity-msc313.dtsi
+ create mode 100644 arch/arm/boot/dts/infinity.dtsi
+ create mode 100644 arch/arm/boot/dts/infinity3-msc313e-breadbee.dts
+ create mode 100644 arch/arm/boot/dts/infinity3-msc313e.dtsi
+ create mode 100644 arch/arm/boot/dts/infinity3.dtsi
+ create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n-midrive08.dts
+ create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n.dtsi
+ create mode 100644 arch/arm/boot/dts/mercury5.dtsi
+ create mode 100644 arch/arm/boot/dts/mstar-v7.dtsi
+ create mode 100644 arch/arm/mach-mstar/Kconfig
+ create mode 100644 arch/arm/mach-mstar/Makefile
+ create mode 100644 arch/arm/mach-mstar/mstarv7.c
+
 -- 
-2.7.4
+2.27.0.rc0
 
