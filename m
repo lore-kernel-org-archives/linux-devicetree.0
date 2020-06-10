@@ -2,248 +2,322 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C23DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663E5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 21:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39808207ED
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 21:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5192072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 21:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfW3BqMg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pmH/DhOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgFJVIq (ORCPT
+        id S1726321AbgFJVLw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 17:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgFJVIo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 17:08:44 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008B4C03E96B;
-        Wed, 10 Jun 2020 14:08:43 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id o26so2433564edq.0;
-        Wed, 10 Jun 2020 14:08:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LDa+04Be/xlCMfl0fRh8XBQFwebwbi4UUBkBIjXXdhY=;
-        b=tfW3BqMgxOGoNHOtq6wNnV+dWJ7lIVsgFQBkk8q4OFmvc4nrEhf9ls3WIPNOI8srjr
-         LOOkR8oMCsxICKk8BKQUNrge2BP42ZuKQI5o/qO8wWISR+3Fp4NtBYz5pwEVKl1qC5xO
-         16U7Uo9cC6D9peDBjYTwxicOlR0hDY2ZN8px5ws3+94rv8tTly2eZ3xjxVOBG8jtzPcD
-         7NGgOdsDYTS7e+dn64TnIDcJCiKAeA3ljp0AaNTg25djsZihTQ3cHxPP44gvUQ5XZmWE
-         3OoJFx7M1yve0WYYZFPHu0O6jXH6GBh+qPvX/Oe3fWyrZR6BxzujHMnsegrTjvXWZAhX
-         tTXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LDa+04Be/xlCMfl0fRh8XBQFwebwbi4UUBkBIjXXdhY=;
-        b=Hy8aWDYwt6EbXYu5VA0Zthfodz23YLua+WUfTaAKPWLc1kg1PJt+gPMGBiVih7ZI1b
-         wfWOZXDbxSdZ+i6TlJctySWh0qs9Ww4VDFA9aNptkuWAyoEg60R1gxogr6a3ePZMojE7
-         OpmHk6J0am+9vhYP8NeaiQqk6HIsPvNuA6BgsWOuayMzBL/uHHn35pm5xj4lLnl3TXOO
-         lKvX9P/JbMIDL9EIB37vL9+AsxDpkjAYIoaJ9iKUxc+cl0jI+4eAdNT8U1xDOBV4/AsQ
-         fDnrYIpJtHSiFHFOiOeWnAM22xkJHg/QXJ6UTIdzk8erXs01eGs+QnyhJ9mLPulPiF5Q
-         sQ1Q==
-X-Gm-Message-State: AOAM530gXHWn1iaGzhy4/4nRlsZWGaQihHWSLk6sXtKMq8/sUL7aLUwC
-        sNBsF5+mfdmXUmjugHeSuuQ=
-X-Google-Smtp-Source: ABdhPJy+4If6yEOZisi9V/FzhrsqnnGvzWEyL4PSQ5FMAykVZ3YmMobTTp6D/KCwQRdXL9nsJlMGiQ==
-X-Received: by 2002:a05:6402:17f9:: with SMTP id t25mr4231696edy.134.1591823322548;
-        Wed, 10 Jun 2020 14:08:42 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain ([80.180.205.145])
-        by smtp.googlemail.com with ESMTPSA id g25sm447448edq.34.2020.06.10.14.08.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 14:08:42 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v7 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
-Date:   Wed, 10 Jun 2020 23:08:25 +0200
-Message-Id: <20200610210828.13297-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200610210828.13297-1-ansuelsmth@gmail.com>
-References: <20200610210828.13297-1-ansuelsmth@gmail.com>
+        Wed, 10 Jun 2020 17:11:52 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13680 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgFJVLw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 17:11:52 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee14c6a0001>; Wed, 10 Jun 2020 14:11:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 10 Jun 2020 14:11:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 10 Jun 2020 14:11:51 -0700
+Received: from [10.2.167.70] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 21:11:51 +0000
+Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI port
+ nodes
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <digetx@gmail.com>,
+        <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+ <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
+ <20200610112303.GB805@valkosipuli.retiisi.org.uk>
+ <075d9d2e-eaa8-1895-8759-64c682fee1c4@nvidia.com>
+Message-ID: <d0c7a45a-2d84-7f6c-b1dd-496098f91c49@nvidia.com>
+Date:   Wed, 10 Jun 2020 14:11:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <075d9d2e-eaa8-1895-8759-64c682fee1c4@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591823466; bh=vH/jgds5BYy9bydBB1nepGXp1g7humjmHg9RLWhprus=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=pmH/DhOKmrrcBVI/KQKqnT9QkOSBstwEzJBuxf6JCD7G7AtkmBpJcExVLC5PEZmdn
+         pHP2tke8qC4ZOPfmH9XpvAO+hGBKPmyxWqXzE1vBEQDsu+Nbdxjd8+pgFB/xgl8CrZ
+         Napc26gyyIXZEvMMeXLyaiOCtkDdZELD7xJWTQwhtv/kCp0ZhOcjEDBjTJWGkBLWAa
+         FVjWGLplVxus8/mRuhs9Dn0/0QmiKitHtuXYgs3peyj1dXlsTITD09QergXHKLZbj9
+         0vDHIQkIHRr1lt3BhZW5VofeAuLrpSnRvpBLTKnhbJfyFUwIObPFfcFGbV9eA+MWLI
+         0m6vlcn6X2mzw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-inizialize and use usb on ipq806x SoC.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-v7:
-* Drop useless AllOf 
-v6:
-* Add maximum value
-v5:
-* Fix dt_binding_check error
-v4:
-* Add qcom to specific bindings
-v3:
-* Use explicit reg instead of regmap
-
- .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
- .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-new file mode 100644
-index 000000000000..23887ebe08fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-hs
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    hs_phy_0: phy@110f8800 {
-+      compatible = "qcom,ipq806x-usb-phy-hs";
-+      reg = <0x110f8800 0x30>;
-+      clocks = <&gcc USB30_0_UTMI_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-new file mode 100644
-index 000000000000..fa30c24b4405
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-ss
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+  qcom,rx-eq:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for rx_eq.
-+    default: 4
-+    maximum: 7
-+
-+  qcom,tx-deamp-3_5db:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for transmit preemphasis.
-+    default: 23
-+    maximum: 63
-+
-+  qcom,mpll:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for mpll.
-+    default: 0
-+    maximum: 7
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    ss_phy_0: phy@110f8830 {
-+      compatible = "qcom,ipq806x-usb-phy-ss";
-+      reg = <0x110f8830 0x30>;
-+      clocks = <&gcc USB30_0_MASTER_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
--- 
-2.25.1
-
+On 6/10/20 8:15 AM, Sowjanya Komatineni wrote:
+>
+> On 6/10/20 4:23 AM, Sakari Ailus wrote:
+>> Hi Sowjanya,
+>>
+>> Thanks for the patchset.
+>>
+>> On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
+>>> This patch documents Tegra VI and CSI port and endpoint nodes along
+>>> with the other required properties.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>> =C2=A0 .../display/tegra/nvidia,tegra20-host1x.txt=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 87=20
+>>> ++++++++++++++++++++++
+>>> =C2=A0 1 file changed, 87 insertions(+)
+>>>
+>>> diff --git=20
+>>> a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x=
+.txt=20
+>>> b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x=
+.txt=20
+>>>
+>>> index 4731921..f70a838 100644
+>>> ---=20
+>>> a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x=
+.txt
+>>> +++=20
+>>> b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x=
+.txt
+>>> @@ -65,6 +65,48 @@ of the following host1x client modules:
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - power-domains: Must includ=
+e sor powergate node as csicil=20
+>>> is in
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SOR partition.
+>>> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Optional properties for csi node=
+:
+>> What hardware does the csi node represent? A CSI-2 receiver? Something
+>> else?
+>>
+>> If you have two connections, you need two ports. The example isn't quite
+>> clear on this; it would appear to represent a single physical interface.
+>
+> CS-2 receiver with 2 connections. one for sink with sensor to csi and=20
+> other as source with csi to Tegra vi.
+>
+> Was using separate port for sink and source and then I misunderstood=20
+> device graph document and changed to have multiple endpoints in same=20
+> port.
+>
+> Will update this in v2 to have separate port for each sink and source=20
+> endpoint in csi in dt and also in driver implementation.
+>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - channel nodes: Max upto 6 channels/st=
+reams are supported=20
+>>> with each CSI
+>>> +=C2=A0=C2=A0=C2=A0 brick can as either x4 or x2 based on hw connectivi=
+ty to sensor.
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 Required properties:
+>>> +=C2=A0=C2=A0=C2=A0 - reg: channel/stream index
+>>> +=C2=A0=C2=A0=C2=A0 - nvidia,mipi-calibrate: Should contain a phandle a=
+nd a specifier
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 specifying which pads are used by this =
+CSI port and need to be
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 calibrated. See also ../display/tegra/n=
+vidia,tegra114-mipi.txt.
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 - port: CSI port node and its endpoint nodes as per=
+ device graph
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bindings define=
+d in=20
+>>> Documentation/devicetree/bindings/graph.txt.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Required properties:
+>> You have both properties and nodes here. Same for the above (port is a
+>> node).
+> Will update document to separate out port node from properties
+>>
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - reg: csi port index based on hw csi l=
+anes connectivity to the
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sensor.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - bus-width: number of lanes used by th=
+is port. Supported lanes
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 are 1/2/4.
+>> bus-width belongs to the endpoint. Note that this is for parallel busses
+>> only. If you need the number of lanes, the property is called=20
+>> data-lanes.
+> Will update in v2 for having separate ports for sink and source=20
+> endpoints will move bus-width to endpoint.
+Thanks Sakari. Will switch to use data-lanes property in csi ports end=20
+points in v2.
+>>
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - endpoint@0: sink node
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Required properties:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - reg: endpoint id. This is=
+ used to retrieve pad for creating
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media link
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - remote-endpoint: phandle =
+to sensor endpoint
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - endpoint@1: source node
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - reg: endpoint id. This is=
+ used to retrieve pad for creating
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media link
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - remote-endpoint: phandle =
+to vi port endpoint
+>>> +
+>>> +=C2=A0 Optional properties for vi node:
+>>> +=C2=A0 - ports: Video port nodes and endpoint nodes as per device grap=
+h=20
+>>> bindings
+>>> +=C2=A0=C2=A0=C2=A0 defined in Documentation/devicetree/bindings/graph.=
+txt
+>>> +=C2=A0=C2=A0=C2=A0 Max 6 ports are supported and each port should have=
+ one=20
+>>> endpoint node.
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 Required properties:
+>>> +=C2=A0=C2=A0=C2=A0 - port: VI port node and its sink endpoint node
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Required properties:
+>>> +=C2=A0=C2=A0=C2=A0 - reg: should match port index
+>>> +=C2=A0=C2=A0=C2=A0 - endpoint@0: sink node
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Required properties:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - reg: endpoint id must be 0
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - remote-endpoint: phandle to CSI endpo=
+int node.
+>>> +
+>>> =C2=A0 - epp: encoder pre-processor
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0 Required properties:
+>>> @@ -340,6 +382,22 @@ Example:
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 ranges =3D <0x0 0x0 0x54080000 0x2000>;
+>>> =C2=A0 +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 ports {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 port@0 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 imx219_vi_in0: endpoint@0 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
+=3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remot=
+e-endpoint =3D <&imx219_csi_out0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 csi@838 {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,tegra210-csi";
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x838 0x1300>;
+>>> @@ -362,6 +420,35 @@ Example:
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <&tegra_car=
+ TEGRA210_CLK_CSI_TPG>;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "csi", "cilab", "cilcd", =
+"cile",=20
+>>> "csi_tpg";
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&pd_sor>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 channel@0 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nvidia,mipi-calibrate =3D <&m=
+ipi 0x001>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 port@0 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
+=3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bus-w=
+idth =3D <2>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #addr=
+ess-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size=
+-cells =3D <0>;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 imx21=
+9_csi_in0: endpoint@0 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 reg =3D <0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 remote-endpoint =3D <&imx219_out0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 imx21=
+9_csi_out0: endpoint@1 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 reg =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 remote-endpoint =3D <&imx219_vi_in0>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 };
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
