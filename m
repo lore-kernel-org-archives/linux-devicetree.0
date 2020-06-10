@@ -2,91 +2,96 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F55C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 14:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2742078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591797404;
-	bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OBv/9FxH9hL6Gt3XafxpQoJAth0ZTVu03sFrF4tq8ydNkBeQiI2fYIkdkpkAvmJdk
-	 d2S9g6iLe8OjshDbAVvi9vTawMKF8xNNyuryyIMw0tzaRJ6IfvFDQdYtDmYnbPESPI
-	 tWpN9Yyr/JGhI2ag1fh0F0jW60cRGFeWf6cCyxbw=
+	by mail.kernel.org (Postfix) with ESMTP id C360D206F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 14:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioj0E5CL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgFJN4l (ORCPT
+        id S1726912AbgFJOJF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgFJN4k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:56:40 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 293A4206F7;
-        Wed, 10 Jun 2020 13:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591797400;
-        bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cxfDQV9c7q2CTPvH9bVVbFxTVYhTD/TelQG5Yq27BP7A4hg/tJgMFNm8ivwMarGjO
-         //yBZphNP8a1ZofgNgh46xyBh6cjhJOMoAjWU/nRxi9KUj5kZvUQmlGHWfusM5T/1r
-         qGtTogDeicpAsCSSiGjscw3KPco8jXPwv6C5TMzs=
-Received: by mail-ot1-f53.google.com with SMTP id k15so1749089otp.8;
-        Wed, 10 Jun 2020 06:56:40 -0700 (PDT)
-X-Gm-Message-State: AOAM531m1dZIFb+1rkI4bgBKmhKAaakL2oXHRFqarWQQcjeb7xzSCGyZ
-        z3xE15fSJTypdATcudAE3ub/b6BYsO6mgi4WEQ==
-X-Google-Smtp-Source: ABdhPJzmcV+9T4BOYZL9yyzPscKPz9ct+kzL7+78ybw2OrqunkEGa/Wxk94oESNvy8oQbfWj8DD4LjEjvLDexy9UwZ8=
-X-Received: by 2002:a9d:c29:: with SMTP id 38mr2547303otr.107.1591797399576;
- Wed, 10 Jun 2020 06:56:39 -0700 (PDT)
+        Wed, 10 Jun 2020 10:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgFJOJE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 10:09:04 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E115C03E96B;
+        Wed, 10 Jun 2020 07:09:04 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id x6so2406722wrm.13;
+        Wed, 10 Jun 2020 07:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3F1gyxKHBurPb/9ok1v4N24kKX2n+9TWOucrfqchLWY=;
+        b=ioj0E5CLNbfjs5oCFAoQKIzYeZBkUzsBNDPcTEesJcSJ6K2WjEvS0sIXyNdZBne2fA
+         YVFOwVpX6Kvagq0fqimlc2N6UHRM3yksJYSb7cdJeqS69EwbPc7lWT+HhdtAD/Sl8MoY
+         LCK4KOoGz/PNI2oe94EnCJZhuHdMPSJZrfkrCERMqgfai5qijCfK4HEipycaa+0Q1CZb
+         jU1hc5X10bIoud+iLtWn8xlol613jWOuAg/hpOKsShywXzBWw8RLjXFtn4XT5b+9hCSC
+         G03APnvbzi4imW3NZmsUKI/D10zqfJWQqo+3rNODPeenxyc17qu4TDyRwkaMioqpAhUc
+         eK1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3F1gyxKHBurPb/9ok1v4N24kKX2n+9TWOucrfqchLWY=;
+        b=RrFYsjk9leu5TjRiTyB93r40aixrwBx7dO3hQO/T43qxqfSp9+gcyTvo+N9QHKuZuh
+         F8m83/ozqVnHlDuRz8MY2K7SXCaF+MaKd0tFHbb1JXsmSB5GK7gdB5pdIlAVyaDxZ4T8
+         o/UBnyhsEgaPekF+KfQAoJOxRxiOC9WcI4PGvSbdj2pMU063HN+4bbpR9RyTvClIPaoc
+         nR+hSIKRlZFMiG4f2kFE1c6vYRI6ts9aR7Z2zGtdqGoDamCRj3IKCzIrsrnvuSpOXmzM
+         G+cGB4yeRZG6IaIh0x4DJ0kONQF6/lHDry22K74uEB+YIsfmSXOGQYtGdnncU0Ob+atG
+         O3HA==
+X-Gm-Message-State: AOAM530kiFixfLw1KmRSFT1tj5+FdXPcEZ2JvFOnCM3790Sm3erqGTSh
+        WstyicpFmz16gzV7IF6reIY=
+X-Google-Smtp-Source: ABdhPJz+sj/GScpXnuaN0U+4nlhrlDJQgiftq51b43NZYNgW3u6u9jGX7pG3KxZLtkZNex4KR2PtwA==
+X-Received: by 2002:a5d:4bcb:: with SMTP id l11mr4180112wrt.363.1591798142300;
+        Wed, 10 Jun 2020 07:09:02 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id r5sm8565883wrq.0.2020.06.10.07.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 07:09:01 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        julia.lawall@lip6.fr, f4bug@amsat.org, jonas.gorski@gmail.com,
+        lkp@intel.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v2 0/2] clk: bcm63xx-gate: add BCM6318 support
+Date:   Wed, 10 Jun 2020 16:08:56 +0200
+Message-Id: <20200610140858.207329-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200609113049.4035426-1-noltari@gmail.com>
+References: <20200609113049.4035426-1-noltari@gmail.com>
 MIME-Version: 1.0
-References: <20200601094512.50509-1-sudeep.holla@arm.com> <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus> <20200610074346.GB15939@willie-the-truck>
-In-Reply-To: <20200610074346.GB15939@willie-the-truck>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 10 Jun 2020 07:56:28 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
-Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-To:     Will Deacon <will@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 1:43 AM Will Deacon <will@kernel.org> wrote:
->
-> On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
-> > On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
-> > > Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
-> > > at virtual interface(VMs).
-> > >
-> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > ---
-> > >  .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
-> > >  1 file changed, 47 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
-> >
-> > I'm hoping this goes away if the firmware is discoverable, but if not DT
-> > bindings are DT schema now.
->
-> We'll need the binding for the kvm host side, because there are plenty
-> of partition properties that are not discoverable (e.g. number of vCPUs).
+Add support for the gated clock controllers found on the BCM6318.
 
-BTW, there's already a partitioning binding for Power in ePAPR. I've
-not paid much attention to it, but maybe it could be useful here.
+Álvaro Fernández Rojas (2):
+  dt-bindings: clock: bcm63xx: add 6318 gated clock bindings
+  clk: bcm63xx-gate: add BCM6318 support
 
-Rob
+ .../bindings/clock/brcm,bcm63xx-clocks.txt    |  2 +
+ drivers/clk/bcm/clk-bcm63xx-gate.c            | 44 +++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+
+-- 
+2.26.2
+
