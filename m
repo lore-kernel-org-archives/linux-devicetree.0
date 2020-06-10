@@ -2,203 +2,246 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76956C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB090C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53E0B204EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAE4204EC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ce+QbuQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgFJJfj (ORCPT
+        id S1727871AbgFJJkV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:35:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39338 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgFJJfi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:35:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 930BDAD39;
-        Wed, 10 Jun 2020 09:35:37 +0000 (UTC)
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: Initial MStar vendor prefixes
- and compatible strings
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
-        Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191014061617.10296-2-daniel@0x0f.com>
- <20200610090421.3428945-2-daniel@0x0f.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <cafee323-841d-92ed-b4ad-a1aaa136864d@suse.de>
-Date:   Wed, 10 Jun 2020 11:35:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 10 Jun 2020 05:40:21 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35056 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgFJJkV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:40:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1591782018; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/On/ehwkZW4dAQENJyOYSDUUPJRshtztM0aVijS26gU=;
+        b=ce+QbuQFbGIzGybPr0EWbT7tL9A+5UnZ6SZg8HZN/OiCUaNPR6R9qkbDL1Vmj1pUvDFtOz
+        ak0Z5yilp0RgWIRDZ5WT5cW3kEMM1MXnot1tc1YJYW6D71Cppo5LBWW9vEZPpdEQQpYIGC
+        BWiUj13/2kCN8Ib28jH0DXmz/uEu9SI=
+Date:   Wed, 10 Jun 2020 11:40:07 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
+Message-Id: <VUEPBQ.GMXO6YRLF7N22@crapouillou.net>
+In-Reply-To: <107dc1d3-05c6-61be-b82c-197f0c43cdba@ti.com>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+        <20200515104340.10473-3-paul@crapouillou.net>
+        <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
+        <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
+        <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
+        <9XPMBQ.UM94FDID8MZW@crapouillou.net>
+        <107dc1d3-05c6-61be-b82c-197f0c43cdba@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610090421.3428945-2-daniel@0x0f.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi,
 
-Am 10.06.20 um 11:03 schrieb Daniel Palmer:
-> Adds a prefixes for MStar, thingy.jp, 70mai and then defines compatible
-> strings for the first MStar based boards.
-> 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> ---
->   .../devicetree/bindings/arm/mstar.yaml        | 30 +++++++++++++++++++
->   .../devicetree/bindings/vendor-prefixes.yaml  |  6 ++++
->   MAINTAINERS                                   |  6 ++++
->   3 files changed, 42 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/mstar.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mstar.yaml b/Documentation/devicetree/bindings/arm/mstar.yaml
-> new file mode 100644
-> index 000000000000..09e87cf6d6f0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mstar.yaml
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/mstar.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MStar platforms device tree bindings
-> +
-> +maintainers:
-> +  - Daniel Palmer <daniel@thingy.jp>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: thingy.jp BreadBee
-> +        items:
-> +          - const: thingyjp,breadbee
-> +          - const: mstar,infinity3
-> +
-> +      - description: thingy.jp BreadBee Crust
-> +        items:
-> +          - const: thingyjp,breadbee-crust
-> +          - const: mstar,infinity
-> +
-> +      - description: 70mai midrive d08
-> +        items:
-> +          - const: 70mai,midrived08
-> +          - const: mstar,mercury5
+Le lun. 8 juin 2020 =E0 18:10, Suman Anna <s-anna@ti.com> a =E9crit :
+> Hi Paul,
+>=20
+> On 6/8/20 5:46 PM, Paul Cercueil wrote:
+>> Hi Suman,
+>>=20
+>>>>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
+>>>>>> Call pm_runtime_get_sync() before the firmware is loaded, and
+>>>>>> pm_runtime_put() after the remote processor has been stopped.
+>>>>>>=20
+>>>>>> Even though the remoteproc device has no PM callbacks, this=20
+>>>>>> allows the
+>>>>>> parent device's PM callbacks to be properly called.
+>>>>>=20
+>>>>> I see this patch staged now for 5.8, and the latest -next branch=20
+>>>>> =7F=7F=7F=7Fhas =7F=7Fbroken the pm-runtime autosuspend feature we ha=
+ve in=20
+>>>>> the =7F=7F=7F=7FOMAP =7F=7Fremoteproc driver. See commit 5f31b232c674=
+=20
+>>>>> ("remoteproc/omap: =7F=7F=7F=7FAdd =7F=7Fsupport for runtime=20
+>>>>> auto-suspend/resume").
+>>>>>=20
+>>>>> What was the original purpose of this patch, because there can be=20
+>>>>> =7F=7F=7F=7F=7F=7Fdiffering backends across different SoCs.
+>>>>=20
+>>>> Did you try pm_suspend_ignore_children()? It looks like it was=20
+>>>> made =7F=7F=7Ffor =7Fyour use-case.
+>>>=20
+>>> Sorry for the delay in getting back. So, using=20
+>>> =7F=7Fpm_suspend_ignore_children() does fix my current issue.
+>>>=20
+>>> But I still fail to see the original purpose of this patch in the=20
+>>> =7F=7Fremoteproc core especially given that the core itself does not=20
+>>> have =7F=7Fany callbacks. If the sole intention was to call the parent=20
+>>> pdev's =7F=7Fcallbacks, then I feel that state-machine is better=20
+>>> managed within =7F=7Fthat particular platform driver itself, as the=20
+>>> sequencing/device =7F=7Fmanagement can vary with different platform=20
+>>> drivers.
+>>=20
+>> The problem is that with Ingenic SoCs some clocks must be enabled in=20
+>> =7Forder to load the firmware, and the core doesn't give you an option=20
+>> to =7Fregister a callback to be called before loading it.
+>=20
+> Yep, I have similar usage in one of my remoteproc drivers (see=20
+> keystone_remoteproc.c), and I think this all stems from the need to=20
+> use/support loading into a processor's internal memories. My driver=20
+> does leverage the pm-clks backend plugged into pm_runtime, so you=20
+> won't see explicit calls on the clocks.
+>=20
+> I guess the question is what exact PM features you are looking for=20
+> with the Ingenic SoC. I do see you are using pm_runtime autosuspend,=20
+> and your callbacks are managing the clocks, but reset is managed only=20
+> in start/stop.
+>=20
+>> The first version of =7Fmy patchset added .prepare/.unprepare=20
+>> callbacks to the struct rproc_ops, =7Fbut the feedback from the=20
+>> maintainers was that I should do it via =7Fruntime PM. However, it was=20
+>> not possible to keep it contained in the =7Fdriver, since again the=20
+>> core doesn't provide a "prepare" callback, so no =7Fplace to call=20
+>> pm_runtime_get_sync().
+> FWIW, the .prepare/.unprepare callbacks is actually now part of the=20
+> rproc core. Looks like multiple developers had a need for this, and=20
+> this functionality went in at the same time as your driver :). Not=20
+> sure if you looked up the prior patches, I leveraged the patch that=20
+> Loic had submitted a long-time ago, and a revised version of it is=20
+> now part of 5.8-rc1.
 
-I would advise to restructure these three for forward planning:
+WTF maintainers, you refuse my patchset for adding a=20
+.prepare/.unprepare, ask me to do it via runtime PM, then merge another=20
+patchset that adds these callback. At least be constant in your=20
+decisions.
 
-Use const only for the SoC compatible.
+Anyway, now we have two methods added to linux-next for doing the exact=20
+same thing. What should we do about it?
 
-For the boards use an enum with (for now) only the one entry. This 
-affects the description, which may mislead people to duplicate these 
-blocks for each board rather than just for each SoC family. Take a look 
-at other existing files (e.g., my realtek.yaml and actions.yaml, but 
-note they don't have the new-style description line yet - I assume it'll 
-work the same in enum as in your oneOf).
+-Paul
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index ef6d75b9113a..1770fc794027 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -23,6 +23,8 @@ patternProperties:
->     "^(simple-audio-card|simple-graph-card|st-plgpio|st-spics|ts),.*": true
->   
->     # Keep list in alphabetical order.
-> +  "^70mai,.*":
-> +    description: 70mai
+> So we settled with having runtime
+>> PM in the core without callbacks, which will trigger the runtime PM=20
+>> =7Fcallbacks of the driver at the right moment.
+>=20
+> Looks like we can do some cleanup on the Ingenic SoC driver depending=20
+> on the features you want.
+>=20
+> regards
+> Suman
+>=20
+>>=20
+>> Sorry if that caused you trouble.
+>>=20
+>> Cheers,
+>> -Paul
+>>>>>=20
+>>=20
+>>>>>=20
+>>>>>>=20
+>>>>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>>>>> ---
+>>>>>>=20
+>>>>>> Notes:
+>>>>>>      v2-v4: No change
+>>>>>>      v5: Move calls to prepare/unprepare to=20
+>>>>>> =7F=7F=7F=7F=7Frproc_fw_boot/rproc_shutdown
+>>>>>>      v6: Instead of prepare/unprepare callbacks, use PM runtime=20
+>>>>>> =7F=7F=7F=7F=7F=7F=7F=7Fcallbacks
+>>>>>>      v7: Check return value of pm_runtime_get_sync()
+>>>>>>=20
+>>>>>>   drivers/remoteproc/remoteproc_core.c | 17 ++++++++++++++++-
+>>>>>>   1 file changed, 16 insertions(+), 1 deletion(-)
+>>>>>>=20
+>>>>>> diff --git a/drivers/remoteproc/remoteproc_core.c=20
+>>>>>> =7F=7F=7F=7F=7F=7F=7F=7Fb/drivers/remoteproc/remoteproc_core.c
+>>>>>> index a7f96bc98406..e33d1ef27981 100644
+>>>>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>>>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>>>>> @@ -29,6 +29,7 @@
+>>>>>>   #include <linux/devcoredump.h>
+>>>>>>   #include <linux/rculist.h>
+>>>>>>   #include <linux/remoteproc.h>
+>>>>>> +#include <linux/pm_runtime.h>
+>>>>>>   #include <linux/iommu.h>
+>>>>>>   #include <linux/idr.h>
+>>>>>>   #include <linux/elf.h>
+>>>>>> @@ -1382,6 +1383,12 @@ static int rproc_fw_boot(struct rproc=20
+>>>>>> =7F=7F=7F=7F=7F*rproc, =7F=7F=7Fconst struct firmware *fw)
+>>>>>>       if (ret)
+>>>>>>           return ret;
+>>>>>>   =7F+    ret =3D pm_runtime_get_sync(dev);
+>>>>>> +    if (ret < 0) {
+>>>>>> +        dev_err(dev, "pm_runtime_get_sync failed: %d\n", ret);
+>>>>>> +        return ret;
+>>>>>> +    }
+>>>>>> +
+>>>>>>       dev_info(dev, "Booting fw image %s, size %zd\n", name,=20
+>>>>>> =7F=7F=7F=7F=7Ffw->size);
+>>>>>>   =7F      /*
+>>>>>> @@ -1391,7 +1398,7 @@ static int rproc_fw_boot(struct rproc=20
+>>>>>> =7F=7F=7F=7F=7F*rproc, =7F=7F=7Fconst struct firmware *fw)
+>>>>>>       ret =3D rproc_enable_iommu(rproc);
+>>>>>>       if (ret) {
+>>>>>>           dev_err(dev, "can't enable iommu: %d\n", ret);
+>>>>>> -        return ret;
+>>>>>> +        goto put_pm_runtime;
+>>>>>>       }
+>>>>>>   =7F      rproc->bootaddr =3D rproc_get_boot_addr(rproc, fw);
+>>>>>> @@ -1435,6 +1442,8 @@ static int rproc_fw_boot(struct rproc=20
+>>>>>> =7F=7F=7F=7F=7F*rproc, =7F=7F=7Fconst struct firmware *fw)
+>>>>>>       rproc->table_ptr =3D NULL;
+>>>>>>   disable_iommu:
+>>>>>>       rproc_disable_iommu(rproc);
+>>>>>> +put_pm_runtime:
+>>>>>> +    pm_runtime_put(dev);
+>>>>>>       return ret;
+>>>>>>   }
+>>>>>>   =7F@@ -1840,6 +1849,8 @@ void rproc_shutdown(struct rproc *rproc)
+>>>>>>   =7F      rproc_disable_iommu(rproc);
+>>>>>>   =7F+    pm_runtime_put(dev);
+>>>>>> +
+>>>>>>       /* Free the copy of the resource table */
+>>>>>>       kfree(rproc->cached_table);
+>>>>>>       rproc->cached_table =3D NULL;
+>>>>>> @@ -2118,6 +2129,9 @@ struct rproc *rproc_alloc(struct device=20
+>>>>>> =7F=7F=7F=7F=7F*dev, =7F=7F=7Fconst char *name,
+>>>>>>   =7F      rproc->state =3D RPROC_OFFLINE;
+>>>>>>   =7F+    pm_runtime_no_callbacks(&rproc->dev);
+>>>>>> +    pm_runtime_enable(&rproc->dev);
+>>>>>> +
+>>>>>>       return rproc;
+>>>>>>   }
+>>>>>>   EXPORT_SYMBOL(rproc_alloc);
+>>>>>> @@ -2133,6 +2147,7 @@ EXPORT_SYMBOL(rproc_alloc);
+>>>>>>    */
+>>>>>>   void rproc_free(struct rproc *rproc)
+>>>>>>   {
+>>>>>> +    pm_runtime_disable(&rproc->dev);
+>>>>>>       put_device(&rproc->dev);
+>>>>>>   }
+>>>>>>   EXPORT_SYMBOL(rproc_free);
+>>>>>>=20
+>>>>>=20
+>>=20
+>>=20
+>=20
 
-"70mai Co., Ltd." please - don't just repeat the prefix.
 
->     "^abilis,.*":
->       description: Abilis Systems
->     "^abracon,.*":
-> @@ -678,6 +680,8 @@ patternProperties:
->       description: Microsemi Corporation
->     "^msi,.*":
->       description: Micro-Star International Co. Ltd.
-> +  "^mstar,.*":
-> +    description: MStar Semiconductor, Inc.
->     "^mti,.*":
->       description: Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
->     "^multi-inno,.*":
-> @@ -1030,6 +1034,8 @@ patternProperties:
->       description: Three Five Corp
->     "^thine,.*":
->       description: THine Electronics, Inc.
-> +  "^thingyjp,.*":
-> +    description: thingy.jp
->     "^ti,.*":
->       description: Texas Instruments
->     "^tianma,.*":
-
-If you split the vendor prefixes to a preceding patch, they have a 
-chance of getting Reviewed-bys more quickly. You can then also CC the 
-vendors on the prefixes you're assigning for them.
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 77a3fa5e3edd..1ca77f97b8ee 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2110,6 +2110,12 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
->   F:	arch/arm/mach-pxa/mioa701.c
->   
-> +ARM/MStar/Sigmastar ARMv7 SoC support
-> +M:	Daniel Palmer <daniel@thingy.jp>
-> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/arm/mstar.yaml
-> +
->   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
->   M:	Michael Petchkovsky <mkpetch@internode.on.net>
->   S:	Maintained
-
-In theory it's spelled Armv7 since 2017, but MAINTAINERS, subject prefix 
-conventions and many other places in Linux still use the old upper-case 
-spelling, too...
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
