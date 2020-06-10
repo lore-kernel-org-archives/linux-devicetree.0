@@ -2,210 +2,153 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F931C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 15:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 15:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43942078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 15:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="P7I8+djg"
+	by mail.kernel.org (Postfix) with ESMTP id EC6DE20734
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 15:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgFJP00 (ORCPT
+        id S1727006AbgFJPeA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 11:26:26 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:50673 "EHLO mx1.tq-group.com"
+        Wed, 10 Jun 2020 11:34:00 -0400
+Received: from mga01.intel.com ([192.55.52.88]:4941 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbgFJP00 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 11:26:26 -0400
-IronPort-SDR: UCvVFmd+T2/3ddcGqwzY1KXKYIXifE+cRK+2f5+2GBOmMRbPjF5Goar0VwYnIPtXH/xKwHEJyk
- hJkT4aZyr6UbMHwIOzltacS42sW0Tk2Uw4b6sUs3hERrATX552qex5XcJ9Wz4nd2HODJnIxy6X
- dbXGnYs1yTS8YxVhirDvadT0gDfzCuTstCG75F5/MgcwmqUtrHc2qVUJhHmNwYbvpJiWI3uLOu
- RBkJrK9+8b7HoSB523YR3qnC9y7ib5J3KsE/db5EyMbj/9JpeYuyz20C4TlWYYj6uwuiEmqH3M
- tuA=
-X-IronPort-AV: E=Sophos;i="5.73,496,1583190000"; 
-   d="scan'208";a="12640925"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 10 Jun 2020 17:26:24 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 10 Jun 2020 17:26:24 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 10 Jun 2020 17:26:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591802784; x=1623338784;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NgpoLcQmfQK0uSFUsODXw4KgmMJLoHjdRmqi3oYQpMg=;
-  b=P7I8+djgRzLr4OXMOtTfgn4kiw8mcUWEBjMXj/IcNJR/4J8wEk9FtAIc
-   gaCY99ZgSKPKWoVvhSV/C9u7km3HM6IaRQmbFYpY2hjCGjg8yaUz5YR7x
-   ahu1gQ1hsWyxlsNMii7447HcCobyjUt0npe+NlBy3E5ypkWUXa+wweldK
-   hkSIRijK9yQROKvXQb/k3Hm9GiJ69++2mf4DcfJMC6+pfvrH0WHq9Jtr8
-   LxTPU/rzu38xo+tH35DHNxpPReeKvKSt+3ce+7ubSaimUvam7EGsHm59p
-   LjXwtXisHNG6FmhFI5/iYs2bjT1GIxYzKSXXr7geyeC+AJDg07X+MbqKJ
-   A==;
-IronPort-SDR: 58e+uR1RdbqcmyDTrw4VUBYlZWfyW5Zqijv4wjO3KBcZ6MVvCWdyaNzteqxdKknSqhcJQbYIqV
- s6nMgfxxlqJxuDjcLT27n5viu/7Am1LbBDehEL7h1245TeM8VLbxO+A2HgJxHoRJY9a6xTBwE/
- SvbJrGgfodtK39tRhtmKlnAWh1qSAfiuKu9CiyMjdER4/1gMk2yy2Q3UhJ7LsDM7ZAs7lqCwmB
- aSQ5lTLfqyCH9GryLwZ/a4a9dIimZu+eUPpTuJeXwFc05Er7bWRuKHl9QKQce4CKU6X1OZqyyP
- yRM=
-X-IronPort-AV: E=Sophos;i="5.73,496,1583190000"; 
-   d="scan'208";a="12640924"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 10 Jun 2020 17:26:24 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 48A4A280065;
-        Wed, 10 Jun 2020 17:26:24 +0200 (CEST)
-Message-ID: <44d3b82a11fc292f0aa3f60a8ccebd4e8ce5d3e8.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH 3/4] drm/panel: simple: add CDTech
- S070PWS19HP-FC21 and S070SWV29HG-DC44
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 10 Jun 2020 17:26:23 +0200
-In-Reply-To: <20200610145954.GA135509@ravnborg.org>
-References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
-         <20200610120131.3069-4-matthias.schiffer@ew.tq-group.com>
-         <20200610145954.GA135509@ravnborg.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726955AbgFJPeA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 11:34:00 -0400
+IronPort-SDR: xx1XglR9u2jUiy2pJtH5muznMBJTb5XKSiYOKBbOshMV5vavXSo36p8cLFiirwBz2YBu7ULt5O
+ v0vSBjEnXR1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 08:33:59 -0700
+IronPort-SDR: C8mpojf6rG8PFTCnkMLPkSE9uAC0MKC3wnQbTf0JKd9HMz3jyTcxx6XeQ5rqXL8jPAFdmRHChz
+ eqF62gUvMNUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,496,1583222400"; 
+   d="scan'208";a="380094962"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 10 Jun 2020 08:33:56 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 10 Jun 2020 18:33:56 +0300
+Date:   Wed, 10 Jun 2020 18:33:56 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <20200610153356.GC3213128@kuha.fi.intel.com>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+ <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com>
+ <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609235740.GA154315@google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-06-10 at 16:59 +0200, Sam Ravnborg wrote:
-> Hi Matthias.
+On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> Hi Rob,
 > 
-> Thanks, a few details you need to fix. See below.
+> Thanks again for the comments and feedback. Kindly see responses inline:
 > 
-> 	Sam
+> (Trimming unrelated text from thread):
 > 
-> On Wed, Jun 10, 2020 at 02:01:30PM +0200, Matthias Schiffer wrote:
-> > From: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> > 
-> > Add support for the CDTech Electronics displays S070PWS19HP-FC21
-> > (7.0" WSVGA) and S070SWV29HG-DC44 (7.0" WVGA) to panel-simple.
-> > 
-> > Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
+> > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
 > > >
-> > ---
-> >  drivers/gpu/drm/panel/panel-simple.c | 60
-> > ++++++++++++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
+> > > Nodes truncated and unrelated fields omitted in the interest of brevity:
+> > >
+> > > // Chrome OS EC Type C Port Manager.
+> > > typec {
+> > >     compatible = "google,cros-ec-typec";
+> > >     #address-cells = <1>;
+> > >     #size-cells = <0>;
+> > >
+> > >     connector@0 {
+> > >         compatible = "usb-c-connector";
+> > >         reg = <0>;
+> > >         power-role = "dual";
+> > >         data-role = "dual";
+> > >         try-power-role = "source";
+> > >         mode-switch = <&foo_mux>;
+> > >         // Other switches can point to the same mux.
+> > >         ....
 > > 
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> > b/drivers/gpu/drm/panel/panel-simple.c
-> > index b6ecd1552132..1673113e5a5a 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -1315,6 +1315,60 @@ static const struct panel_desc
-> > cdtech_s043wq26h_ct7 = {
-> >  	.bus_flags = DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
-> >  };
-> >  
-> > +/* S070PWS19HP-FC21 2017/04/22 */
-> > +static const struct drm_display_mode cdtech_s070pws19hp_fc21_mode
-> > = {
-> > +	.clock = 51200,
-> > +	.hdisplay = 1024,
-> > +	.hsync_start = 1024 + 160,
-> > +	.hsync_end = 1024 + 160 + 20,
-> > +	.htotal = 1024 + 160 + 20 + 140,
-> > +	.vdisplay = 600,
-> > +	.vsync_start = 600 + 12,
-> > +	.vsync_end = 600 + 12 + 3,
-> > +	.vtotal = 600 + 12 + 3 + 20,
-> > +	.vrefresh = 60,
+> > The connector is supposed to have 'ports' for USB2, USB3, and Aux
+> > unless the parent is the USB controller.
+> Understood; so, coupled with Heikki's explanation (see below for where
+> I've pasted it), would it be something like so? (adding inline to the connector
+> node definition):
 > 
-> .vrefresh is no longer present, please drop.
-
-I based my patches on the branch drm-next of 
-https://cgit.freedesktop.org/drm/drm, should I have used a different
-branch?
-
-
-> > +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> > +};
-> > +
-> > +static const struct panel_desc cdtech_s070pws19hp_fc21 = {
-> > +	.modes = &cdtech_s070pws19hp_fc21_mode,
-> > +	.num_modes = 1,
-> > +	.bpc = 6,
-> > +	.size = {
-> > +		.width = 154,
-> > +		.height = 86,
-> > +	},
-> > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> > DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> > +};
+>             ports {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
 > 
-> Please add .connector_type - it is mandatory.
-> > +
-> > +/* S070SWV29HG-DC44 2017/09/21 */
-> > +static const struct drm_display_mode cdtech_s070swv29hg_dc44_mode
-> > = {
-> > +	.clock = 33300,
-> > +	.hdisplay = 800,
-> > +	.hsync_start = 800 + 210,
-> > +	.hsync_end = 800 + 210 + 2,
-> > +	.htotal = 800 + 210 + 2 + 44,
-> > +	.vdisplay = 480,
-> > +	.vsync_start = 480 + 22,
-> > +	.vsync_end = 480 + 22 + 2,
-> > +	.vtotal = 480 + 22 + 2 + 21,
-> > +	.vrefresh = 60,
+>                 port@0 {
+>                     reg = <0>;
+>                     usb_con_hs: endpoint {
+>                         remote-endpoint = <&foo_usb_hs_controller>;
+>                     };
+>                 };
 > 
-> .vrefresh is no longer present, please drop.
-> > +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> > +};
-> > +
-> > +static const struct panel_desc cdtech_s070swv29hg_dc44 = {
-> > +	.modes = &cdtech_s070swv29hg_dc44_mode,
-> > +	.num_modes = 1,
-> > +	.bpc = 6,
-> > +	.size = {
-> > +		.width = 154,
-> > +		.height = 86,
-> > +	},
-> > +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> > DRM_BUS_FLAG_PIXDATA_POSEDGE,
+>                 port@1 {
+>                     reg = <1>;
+>                     usb_con0_ss: endpoint@0 {
+>                         remote-endpoint = <&mode_mux_in>;
+>                     };
+>                 };
 > 
-> Please add .connector_type - it is mandatory.
-> > +};
-> > +
-> >  static const struct drm_display_mode cdtech_s070wv95_ct16_mode = {
-> >  	.clock = 35000,
-> >  	.hdisplay = 800,
-> > @@ -3723,6 +3777,12 @@ static const struct of_device_id
-> > platform_of_match[] = {
-> >  	}, {
-> >  		.compatible = "cdtech,s043wq26h-ct7",
-> >  		.data = &cdtech_s043wq26h_ct7,
-> > +	}, {
-> > +		.compatible = "cdtech,s070pws19hp-fc21",
-> > +		.data = &cdtech_s070pws19hp_fc21,
-> > +	}, {
-> > +		.compatible = "cdtech,s070swv29hg-dc44",
-> > +		.data = &cdtech_s070swv29hg_dc44,
-> >  	}, {
-> >  		.compatible = "cdtech,s070wv95-ct16",
-> >  		.data = &cdtech_s070wv95_ct16,
-> > -- 
-> > 2.17.1
+>                 port@2 {
+>                     reg = <2>;
+>                     usb_con_sbu: endpoint {
+>                         remote-endpoint = <&foo_dp_aux>;
+>                     };
+>                 };
+>             };
 
+The pins that can be reassigned can in practice go anywhere. We can't
+group them in any way. What do we do for example when the two sideband
+pins go to different locations?
+
+It looks like the OF graph for the USB Type-C connectors expects the
+pins to be grouped like that, which is too bad, because unfortunately
+it will not work. It would require that we have a separate port for
+every pin that can be reassigned on the connector, and let's not even
+consider that.
+
+We need higher level description of the connections for the USB Type-C
+connectors. For example, a connector can be connected to this (or
+these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
+port, etc. And this is the mux that handles the pins on this
+connector, and these are the retimers, etc. etc.
+
+We also need a way to identify those connections, and relying on
+something like fixed port node addresses, so indexes in practice,
+feels really risky to me. A conflict may seem unlikely now, but we
+seen those so many times in the past other things like GPIOs, IRQs,
+etc. We really need to define string identifiers for these
+connections.
+
+
+thanks,
+
+-- 
+heikki
