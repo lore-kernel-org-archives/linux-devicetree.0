@@ -2,261 +2,352 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE20C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6E8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8145A20656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A5C206F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l1lc9WvN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiyjWfmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgFJKlI (ORCPT
+        id S1728339AbgFJKub (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
+        Wed, 10 Jun 2020 06:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgFJKlF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 06:41:05 -0400
+        with ESMTP id S1728149AbgFJKua (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 06:50:30 -0400
 Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57799C03E96B
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:41:05 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id k11so1981914ejr.9
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:41:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F2AC03E96B;
+        Wed, 10 Jun 2020 03:50:30 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id l27so2069189ejc.1;
+        Wed, 10 Jun 2020 03:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b4xt9ro4s6EJh9yAJChrfwEE70fQqv8RKm8O5jxwnF8=;
-        b=l1lc9WvNx7QdPB4+apffY5SPACt/ijyjhjbYY0C9EkWG3RnABAwn7TKeVaauSy9NMU
-         MPhfLiuNtdM7gCzTJw6ftAbcxtZY2ersGZ0blDLT2GHrZiBZgnN0CO2oE5ddHmxZvIWd
-         jimEGBuvkuu8oPARZ7ltp1pHctgWaMHIOf8o4=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LOmMo1Zuovj+Zdo3Z6XAOGDBaVFrsQ/9KBjzRPBjkbw=;
+        b=GiyjWfmI0+ptsGdFAbKzEtUr39pL6sas8NRHV1Xd76jZIF3Z6efJq7Am0xk+mtqecp
+         RBzYkBejER5rqGdUF5FDTuPBmCTyJ8kfSY5VMCGvvBf1YHmBUOz96fwcdN60zmVn/Gtx
+         AkJD1GtPY13pj7jSdVsUcoT8aPKiUESRq0v0Zc5Tm6sPQQmH37bd5TN4NIsjEmrAF2hq
+         Gpa/NspwU58SfewG5TJpINBV/bVa4gmOkBu5wgZTT0fr0CgwUDNOJAxVlvDY62rP3N4e
+         0jG5k0aNSlXNiifMNoZnk1YQMxWOJKO9Pjai7q6cvtjoLdLBL+YRfY5ITLPrL2nGrTaG
+         gnhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b4xt9ro4s6EJh9yAJChrfwEE70fQqv8RKm8O5jxwnF8=;
-        b=pO2WcmkYx2rgSP/bMsjd1Fb/zqX9yw2zEDiUPfta1UJzs03g5vFZuuZqDiCgASMoPF
-         OWxUd037JBic4X3IDfwItGHaUz13UgPdyBcOKOP8mzaW52k8/IJ0uiE2F2Gwav6UUwyS
-         7Vec0c2JJWtJwwAkk7mHEZ+tfwQgOfx3YAIV2ZbLx1hCPW3S9hcygR3Yp3hHYucgyZth
-         XD6gwPJm+xqmESKCIsSd96AnfH6aWlITmB2vOfgJqRmQmztCju4h3TyquiUTld58B33W
-         Ib8f95iVMBXeD2Qaip8XgwKxr7bE6JVwEW9kWc3X3U03dg/mMKLzFNrjgwfcJI8Qjp0C
-         nOog==
-X-Gm-Message-State: AOAM533akURLehV1urXuXwbVOCfjZYe7AD1+roAe9m9fWXA5T8d8L4hs
-        1j4ys6SNeK8ZmCiXnAIp2LZkf6pZS67StQ==
-X-Google-Smtp-Source: ABdhPJxQxJE5+F8B1MJ4nk9TliV4gZAr0iBlxsh8FwTIRG9VqyYb9UXnphQyymNAXja5pI+lMxpwJQ==
-X-Received: by 2002:a17:906:f115:: with SMTP id gv21mr2651094ejb.340.1591785663749;
-        Wed, 10 Jun 2020 03:41:03 -0700 (PDT)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
-        by smtp.gmail.com with ESMTPSA id v2sm11976787eju.49.2020.06.10.03.41.03
-        for <devicetree@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LOmMo1Zuovj+Zdo3Z6XAOGDBaVFrsQ/9KBjzRPBjkbw=;
+        b=YErf7uTy+H2j+rzvVHCKomjo4fBTuAXcHoi9eoVtpPRqP74INPZvFrbzSGyS2d8SMm
+         Gba4NILSKt9qHsvIBNMg/VPYYJc90NFTypBGgY3RZX0a0bM+bs96Pb8iyPWlV0smTw8d
+         wE1iyv8uHQlMCD/+82a34tFVNV/p+bn6DsOmkCn+KGZbRK/280f+wnLEyWguPSS9mvGg
+         oepQIc0xvtNO/0o0AWjRPLh0rBtVD3v1UncmWpr+Ct6LHgMYioYoWZamOEH0lu4hf9of
+         +mpM1UHcVg8QqfTkYlnTLOpJpdNwV6z5JYAM4rPXcHVVCs4mpGF1b5VwmNrgLDxTFNoO
+         LT0A==
+X-Gm-Message-State: AOAM532rQ4wv2yDgo4zFt1X2o5i+MyLfz1I1sF+PUlwqHzn8Zn3u6LTF
+        su5Vgezqx0QPf4XCSZnUcBmsJ3NZ
+X-Google-Smtp-Source: ABdhPJzn4MZoGhaJASFC13nnCPNyWmnoV1PGRcwEhafs4sNzzcFECzbBLrwZnlIYOAb/FnrC0G3zcA==
+X-Received: by 2002:a17:906:fa03:: with SMTP id lo3mr2872150ejb.196.1591786228594;
+        Wed, 10 Jun 2020 03:50:28 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id q12sm15184929ejn.23.2020.06.10.03.50.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2020 03:41:03 -0700 (PDT)
-Received: by mail-ej1-f53.google.com with SMTP id l12so1973760ejn.10
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 03:41:03 -0700 (PDT)
-X-Received: by 2002:adf:e2ce:: with SMTP id d14mr2923508wrj.415.1591785187039;
- Wed, 10 Jun 2020 03:33:07 -0700 (PDT)
+        Wed, 10 Jun 2020 03:50:27 -0700 (PDT)
+Subject: Re: [PATCH v6 1/8] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
+ flash controller
+To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
+ <20200609074020.23860-2-yifeng.zhao@rock-chips.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <e805f6c2-26a2-8163-d061-ce43026d4d3f@gmail.com>
+Date:   Wed, 10 Jun 2020 12:50:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
- <20191204124732.10932-2-Jerry-Ch.chen@mediatek.com> <20200521171101.GA243874@chromium.org>
- <e31fe64a-c5c1-7b1e-eec1-27111fe43ac2@xs4all.nl>
-In-Reply-To: <e31fe64a-c5c1-7b1e-eec1-27111fe43ac2@xs4all.nl>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 10 Jun 2020 12:32:56 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5Ad_cnv0qztZOk9c2H0Y+XO6tRcRmS1t4dBw5qbG-d8Nw@mail.gmail.com>
-Message-ID: <CAAFQd5Ad_cnv0qztZOk9c2H0Y+XO6tRcRmS1t4dBw5qbG-d8Nw@mail.gmail.com>
-Subject: Re: [RFC PATCH V4 1/4] media: v4l2-mem2mem: add v4l2_m2m_suspend, v4l2_m2m_resume
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>, yuzhao@chromium.org,
-        zwisler@chromium.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= 
-        <Sean.Cheng@mediatek.com>, Sj Huang <sj.huang@mediatek.com>,
-        =?UTF-8?B?Q2hyaXN0aWUgWXUgKOa4uOmbheaDoCk=?= 
-        <christie.yu@mediatek.com>,
-        =?UTF-8?B?RnJlZGVyaWMgQ2hlbiAo6Zmz5L+K5YWDKQ==?= 
-        <frederic.chen@mediatek.com>,
-        =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>,
-        =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609074020.23860-2-yifeng.zhao@rock-chips.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:29 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->
-> On 21/05/2020 19:11, Tomasz Figa wrote:
-> > Hi Jerry,
-> >
-> > On Wed, Dec 04, 2019 at 08:47:29PM +0800, Jerry-ch Chen wrote:
-> >> From: Pi-Hsun Shih <pihsun@chromium.org>
-> >>
-> >> Add two functions that can be used to stop new jobs from being queued /
-> >> continue running queued job. This can be used while a driver using m2m
-> >> helper is going to suspend / wake up from resume, and can ensure that
-> >> there's no job running in suspend process.
-> >>
-> >> BUG=b:143046833
-> >> TEST=build
-> >>
-> >> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> >> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
-> >> ---
-> >>  drivers/media/v4l2-core/v4l2-mem2mem.c | 40 ++++++++++++++++++++++++++
-> >>  include/media/v4l2-mem2mem.h           | 22 ++++++++++++++
-> >>  2 files changed, 62 insertions(+)
-> >>
-> >> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> >> index 5bbdec55b7d7..76ba203e0035 100644
-> >> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-> >> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> >> @@ -47,6 +47,10 @@ module_param(debug, bool, 0644);
-> >>  #define TRANS_ABORT         (1 << 2)
-> >>
-> >>
-> >> +/* The job queue is not running new jobs */
-> >> +#define QUEUE_PAUSED                (1 << 0)
-> >> +
-> >> +
-> >>  /* Offset base for buffers on the destination queue - used to distinguish
-> >>   * between source and destination buffers when mmapping - they receive the same
-> >>   * offsets but for different queues */
-> >> @@ -88,6 +92,7 @@ static const char * const m2m_entity_name[] = {
-> >>   * @job_queue:              instances queued to run
-> >>   * @job_spinlock:   protects job_queue
-> >>   * @job_work:               worker to run queued jobs.
-> >> + * @job_queue_flags:        flags of the queue status, %QUEUE_PAUSED.
-> >>   * @m2m_ops:                driver callbacks
-> >>   */
-> >>  struct v4l2_m2m_dev {
-> >> @@ -105,6 +110,7 @@ struct v4l2_m2m_dev {
-> >>      struct list_head        job_queue;
-> >>      spinlock_t              job_spinlock;
-> >>      struct work_struct      job_work;
-> >> +    unsigned long           job_queue_flags;
-> >>
-> >>      const struct v4l2_m2m_ops *m2m_ops;
-> >>  };
-> >> @@ -267,6 +273,12 @@ static void v4l2_m2m_try_run(struct v4l2_m2m_dev *m2m_dev)
-> >>              return;
-> >>      }
-> >>
-> >> +    if (m2m_dev->job_queue_flags & QUEUE_PAUSED) {
-> >> +            spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
-> >> +            dprintk("Running new jobs is paused\n");
-> >> +            return;
-> >> +    }
-> >> +
-> >>      m2m_dev->curr_ctx = list_first_entry(&m2m_dev->job_queue,
-> >>                                 struct v4l2_m2m_ctx, queue);
-> >>      m2m_dev->curr_ctx->job_flags |= TRANS_RUNNING;
-> >> @@ -447,6 +459,34 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
-> >>  }
-> >>  EXPORT_SYMBOL(v4l2_m2m_job_finish);
-> >>
-> >> +void v4l2_m2m_suspend(struct v4l2_m2m_dev *m2m_dev)
-> >> +{
-> >> +    unsigned long flags;
-> >> +    struct v4l2_m2m_ctx *curr_ctx;
-> >> +
-> >> +    spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
-> >> +    m2m_dev->job_queue_flags |= QUEUE_PAUSED;
-> >> +    curr_ctx = m2m_dev->curr_ctx;
-> >> +    spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
-> >> +
-> >> +    if (curr_ctx)
-> >> +            wait_event(curr_ctx->finished,
-> >> +                       !(curr_ctx->job_flags & TRANS_RUNNING));
-> >> +}
-> >> +EXPORT_SYMBOL(v4l2_m2m_suspend);
-> >> +
-> >> +void v4l2_m2m_resume(struct v4l2_m2m_dev *m2m_dev)
-> >> +{
-> >> +    unsigned long flags;
-> >> +
-> >> +    spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
-> >> +    m2m_dev->job_queue_flags &= ~QUEUE_PAUSED;
-> >> +    spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
-> >> +
-> >> +    v4l2_m2m_try_run(m2m_dev);
-> >> +}
-> >> +EXPORT_SYMBOL(v4l2_m2m_resume);
-> >> +
-> >>  int v4l2_m2m_reqbufs(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-> >>                   struct v4l2_requestbuffers *reqbufs)
-> >>  {
-> >> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
-> >> index 5467264771ec..119a195da390 100644
-> >> --- a/include/media/v4l2-mem2mem.h
-> >> +++ b/include/media/v4l2-mem2mem.h
-> >> @@ -183,6 +183,28 @@ v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
-> >>      vb2_buffer_done(&buf->vb2_buf, state);
-> >>  }
-> >>
-> >> +/**
-> >> + * v4l2_m2m_suspend() - stop new jobs from being run and wait for current job
-> >> + * to finish
-> >> + *
-> >> + * @m2m_dev: opaque pointer to the internal data to handle M2M context
-> >> + *
-> >> + * Called by a driver in the suspend hook. Stop new jobs from being run, and
-> >> + * wait for current running job to finish.
-> >> + */
-> >> +void v4l2_m2m_suspend(struct v4l2_m2m_dev *m2m_dev);
-> >> +
-> >> +/**
-> >> + * v4l2_m2m_resume() - resume job running and try to run a queued job
-> >> + *
-> >> + * @m2m_dev: opaque pointer to the internal data to handle M2M context
-> >> + *
-> >> + * Called by a driver in the resume hook. This reverts the operation of
-> >> + * v4l2_m2m_suspend() and allows job to be run. Also try to run a queued job if
-> >> + * there is any.
-> >> + */
-> >> +void v4l2_m2m_resume(struct v4l2_m2m_dev *m2m_dev);
-> >> +
-> >>  /**
-> >>   * v4l2_m2m_reqbufs() - multi-queue-aware REQBUFS multiplexer
-> >>   *
-> >> --
-> >> 2.18.0
-> >
-> > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> >
-> > [Corrected Hans's email address.]
-> > Hans, does this look good to you?
->
-> Yes, this looks good.
->
-> Sorry for the late reply.
+Hi Yifeng,
 
-No worries! Thanks a lot.
+Just a few more comments (part 1).
 
->
-> I assume this will be part of a future patch series that calls these new functions?
+About the name of the dts patches.
 
-The mtk-jpeg encoder series depends on this patch as well, so I guess
-it would go together with whichever is ready first.
+Currently this is used:
+Subject [PATCH v6 6/8] arm: dts: rockchip: Add nfc dts for RV1108 SOC
+Add nfc(nand flash controller) node for RV1108 Soc.
 
-I would also envision someone changing the other existing drivers to
-use the helpers, as I'm pretty much sure some of them don't handle
-suspend/resume correctly.
+Dts is more file related. The patch adds a node, so maybe change it to:
+Subject [PATCH v7 6/8] arm: dts: rockchip: Add nfc node for RV1108 SoC
+Add NAND FLASH Controller(NFC) node for RV1108 SoC.
 
-Best regards,
-Tomasz
+Johan
+
+On 6/9/20 9:40 AM, Yifeng Zhao wrote:
+> Documentation support for Rockchip RK3xxx NAND flash controllers
+> 
+> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> ---
+> 
+> Changes in v6:
+> - Fix some wrong define
+> - Modified the definition of compatible
+> 
+> Changes in v5:
+> - Fix some wrong define
+> - Add boot-medium define
+> - Remove some compatible define
+> 
+> Changes in v4:
+> - The compatible define with rkxx_nfc
+> - Add assigned-clocks
+> - Fix some wrong define
+> 
+> Changes in v3:
+> - Change the title for the dt-bindings
+> 
+> Changes in v2: None
+> 
+>  .../mtd/rockchip,nand-controller.yaml         | 154 ++++++++++++++++++
+>  1 file changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+> new file mode 100644
+> index 000000000000..f753fe8248aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mtd/rockchip,nand-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip SoCs NAND FLASH Controller (NFC)
+> +
+> +allOf:
+> +  - $ref: "nand-controller.yaml#"
+> +
+> +maintainers:
+> +  - Heiko Stuebner <heiko@sntech.de>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: rockchip,px30-nfc
+> +      - const: rockchip,rk2928-nfc
+> +      - const: rockchip,rv1108-nfc
+
+> +      - items:
+> +          - const: rockchip,rk3326-nfc
+> +          - const: rockchip,px30-nfc
+
+In the mainline kernel rk3326.dtsi gets the nodes defined by including
+px30.dtsi, so if nothing changed we don't need a compatible string for
+rk3326. Or else add an extra patch to this serie where this compatible
+string is needed.
+
+> +      - items:
+> +          - const: rockchip,rk3036-nfc
+> +          - const: rockchip,rk2928-nfc
+> +      - items:
+> +          - const: rockchip,rk3308-nfc
+> +          - const: rockchip,rv1108-nfc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    items:
+> +      - description: Bus Clock
+> +      - description: Module Clock
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    items:
+> +      - const: ahb
+> +      - const: nfc
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +
+> +  assigned-clock-rates:
+> +    maxItems: 1
+> +
+> +  pinctrl-0:
+> +    maxItems: 1
+> +
+> +  pinctrl-names:
+> +    const: default
+> +
+> +  power-domains:
+
+> +     maxItems: 1
+
+       ^
+Use 2 spaces instead of 3.
+
+> +
+> +patternProperties:
+> +  "^nand@[a-f0-9]$":
+> +    type: object
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 7
+> +
+> +      nand-ecc-mode:
+> +        const: hw
+> +
+> +      nand-ecc-step-size:
+> +        const: 1024
+> +
+> +      nand-ecc-strength:
+> +        enum: [16, 24, 40, 60, 70]
+> +        description:
+> +          The ECC configurations that can be supported are as follows.
+
+> +          - NFCv900(PX30 and RK3326) support ecc strength 16, 40, 60 and 70.
+> +          - NFCv600(RK3066 and RK2928) support ecc strength 16, 24, 40 and 60.
+> +          - NFCv622(RK3036 and RK3128) support ecc strength 16, 24, 40 and 60.
+> +          - NFCv800(RK3308 and RV1108) support ecc strength 16.
+
+         NFC v600 ECC 16, 24, 40, 60
+           RK2928, RK3066, RK3188
+
+         NFC v622 ECC 16, 24, 40, 60
+           RK3036, RK3128
+
+         NFC v800 ECC 16
+           RK3308, RV1108
+
+         NFC v900 ECC 16, 40, 60, 70
+           PX30, RK3326
+
+Make it more in alphabetically order, so later things can easier be
+inserted.
+Maybe don't use the character '-' at the start of a line in a yaml file?
+
+> +
+> +      nand-bus-width:
+> +        const: 8
+> +
+> +      rockchip,boot-blks:
+> +        minimum: 2
+> +        default: 16
+> +        allOf:
+> +        - $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          The NFC driver need this information to select ECC
+> +          algorithms supported by the BOOTROM.
+
+boot ROM
+
+> +          Only used in combination with 'nand-is-boot-medium'.
+> +
+> +      rockchip,boot-ecc-strength:
+> +        enum: [16, 24, 40, 60, 70]
+> +        allOf:
+> +        - $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          If specified it indicates that a different BCH/ECC setting is
+> +          supported by the BOOTROM.
+
+boot ROM
+
+> +          - NFCv900(PX30 and RK3326) support ecc strength 16 and 70.
+
+> +          - NFCv600(RK3066 and RK2928) support ecc strength 16, 24, 40 and 60.
+
+Is ECC strength for rk3066 16, 24 correct?
+
+> +          - NFCv622(RK3036 and RK3128) support ecc strength 16, 24, 40 and 60.
+> +          - NFCv800(RK3308 and RV1108) support ecc strength 16.
+         NFC v600 ECC 16, 24
+           RK2928, RK3066, RK3188
+
+         NFC v622 ECC 16, 24, 40, 60
+           RK3036, RK3128
+
+         NFC v800 ECC 16
+           RK3308, RV1108
+
+         NFC v900 ECC 16, 70
+           PX30, RK3326
+
+> +          Only used in combination with 'nand-is-boot-medium'.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/rk3308-cru.h>
+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+
+#include <dt-bindings/interrupt-controller/irq.h>
+
+irq.h is included by arm-gic.h, however Heiko recently indicated that
+both should be included.
+
+> +    nfc: nand-controller@ff4b0000 {
+> +      compatible = "rockchip,rk3308-nfc",
+> +                   "rockchip,rv1108-nfc";
+> +      reg = <0x0 0xff4b0000 0x0 0x4000>;
+> +      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+> +      clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
+> +      clock-names = "ahb", "nfc";
+> +      assigned-clocks = <&clks SCLK_NANDC>;
+> +      assigned-clock-rates = <150000000>;
+> +
+> +      pinctrl-0 = <&flash_ale &flash_bus8 &flash_cle &flash_csn0
+> +                   &flash_rdn &flash_rdy &flash_wrn>;
+> +      pinctrl-names = "default";
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      nand@0 {
+> +        reg = <0>;
+> +        label = "rk-nand";
+> +        nand-bus-width = <8>;
+> +        nand-ecc-mode = "hw";
+> +        nand-ecc-step-size = <1024>;
+> +        nand-ecc-strength = <16>;
+> +        nand-is-boot-medium;
+> +        rockchip,boot-blks = <8>;
+> +        rockchip,boot-ecc-strength = <16>;
+> +      };
+> +    };
+> +
+> +...
+> 
+
