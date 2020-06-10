@@ -6,58 +6,56 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F52CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ECEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D33C920691
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C23B2078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591783215;
-	bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+	s=default; t=1591783544;
+	bh=APaQDnwvqyDC5iMG3KTrDaueLYPZ/QB5u1pPBN97fzQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ql+YyI2Zs5sVbZjg1V4JtqQ4C1bk7eSkj0xgD/KrLXBDkuFUy+D6heCmqF5MdEn6f
-	 2xnhlm/G8eN/llhM2piPZNDCWMjLsv8X+qR3KsjPs5p1H0r8EHR9wa/qrHTrpRfsPm
-	 5UThFdGcQtwYjErhPasz3sgJOPovYSJ/sOFE8+PI=
+	b=ybCJA1rRuf0QhHS4rXR+MfMcVnvlNMCZ//SwR3LHIzomrwr8ySYNsJ+yc5H9LC+tN
+	 N6WoNdfjyhhVJppNv21UelABmop0itROxru3sbM/ShXnK2/IAbyx8ulDJZJCVxFcok
+	 9J2zqngZqHSZbNBfkFVE8jMqosNg1aO5PpQx0s1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgFJKAO (ORCPT
+        id S1727946AbgFJKFo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 06:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFJKAN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:00:13 -0400
+        id S1727884AbgFJKFn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:05:43 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8777D206F7;
-        Wed, 10 Jun 2020 10:00:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2CCA2072F;
+        Wed, 10 Jun 2020 10:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591783212;
-        bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+        s=default; t=1591783543;
+        bh=APaQDnwvqyDC5iMG3KTrDaueLYPZ/QB5u1pPBN97fzQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YDs7MBeb2K677sLe+jsRXVpbxfgyiWtMqgAAH4UBRVDPr6G15N6APmORXYwb0GRiV
-         8+vaBwg4yMWkxljIhw0cjb2+glk+B4zRdYHRnaSZhsEefHapZURnCwnIK5CNGsPWW9
-         PssrjRNGQ367egX8GwKYwHnwj4R+zYE2Fw4pcmoo=
-Date:   Wed, 10 Jun 2020 11:00:08 +0100
+        b=i/tVvb7bSNJHPVR9o4oFfQvz+JUaC9+AfvZ9teYOr6qCELHB1Sz89Bt0fM6yHrVyR
+         7dH8g6nfNICEus/twS/WfT+aacHtih//nzKTxVJMblzSq7tNtNp1EeyibfYVkiJn7X
+         FAO+nBY7F5CWHRprRJzg9YDI1N4r3cFgY717ZLWk=
+Date:   Wed, 10 Jun 2020 11:05:41 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: Supply max load for mmc supplies
-Message-ID: <20200610100008.GA5005@sirena.org.uk>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
- <1591094883-11674-2-git-send-email-vbadigan@codeaurora.org>
- <20200609230216.GA1655591@bogus>
+To:     Alexander Stein <alexander.stein@mailbox.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/1] spi: dt-bindings: amlogic, meson-gx-spicc: Fix
+ schema for meson-g12a
+Message-ID: <20200610100541.GA5745@sirena.org.uk>
+References: <20200609165527.55183-1-alexander.stein@mailbox.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
 Content-Disposition: inline
-In-Reply-To: <20200609230216.GA1655591@bogus>
-X-Cookie: fortune: No such file or directory
+In-Reply-To: <20200609165527.55183-1-alexander.stein@mailbox.org>
+X-Cookie: Spelling is a lossed art.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -65,50 +63,36 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---jI8keyz6grp/JLjh
+--HlL+5n6rz5pIUxbD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 09, 2020 at 05:02:16PM -0600, Rob Herring wrote:
-> On Tue, Jun 02, 2020 at 04:17:54PM +0530, Veerabhadrarao Badiganti wrote:
+On Tue, Jun 09, 2020 at 06:55:27PM +0200, Alexander Stein wrote:
+> ---
+> spi@13000: clock-names: Additional items are not allowed ('pclk' was unexpected)
+> spi@13000: clock-names: ['core', 'pclk'] is too long
+> spi@13000: clocks: [[2, 23], [2, 258]] is too long
+> spi@15000: clock-names: Additional items are not allowed ('pclk' was unexpected)
+> spi@15000: clock-names: ['core', 'pclk'] is too long
+> spi@15000: clocks: [[2, 29], [2, 261]] is too long
+> ---
 
-> > +  vmmc-supply-max-microamp:
-> > +    description: Maximum load for the card power.
+Don't use --- in upstream commit logs, as covered in submitting-patches.rst
+these have special meaning and cause the commit log to be truncated.
 
-> > +  vqmmc-supply-max-microamp:
-> > +    description: Maximum load for the bus IO line power.
-
-> By a 'common regulator property' I meant documented with regulator=20
-> binding like *-supply, not common to MMC. How is MMC special?
-
-TBH I'm surprised that these aren't defined by the MMC spec or by the ID
-information from the part we find connected - I'd not expect the board
-to be defining these at all.
-
-> Thinking about this some more, what's wrong with the max current in the=
-=20
-> regulator nodes? I suppose you could have more than one load and need to=
-=20
-> define the loads separately?
-
-One of the bigger reasons to think about the loads would be to
-dynamically configure the mode the regulator is in to go into a more
-efficient mode when some of the devices attached to it are turned off.
-
---jI8keyz6grp/JLjh
+--HlL+5n6rz5pIUxbD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gryQACgkQJNaLcl1U
-h9DsNQf/QMOcKgKBR1OfTOXetzJw0GYmTTeWBRwrDxvOzlh/codHfgyJ97CrHmOY
-1+Th0yTlUfe69S3B5iZpER3S5jU+lsZmkeaKBNfxx3qykrWDpRi3FQG5AIOEBDB6
-m43i71UuvaryROGVyZQWEXiQ+H6RpJ7MV7IUBSa9bFZBVwwJ0ous7/nzsPt5iwfr
-0P/ZivT1TK9t/Zkp7biFYiuIZqvtDaSlO6yyPIb60D0Xq4+9XVJ+kPYnvRj7CEb5
-w3RLxK78z4QCWveNCjNrhIUtynLudM63ofRP3O6qtcYQ7wRkHjvpTbOZ4JvUMoKl
-bdh2nZKb7xJazHo13G3QtNgjgoq/0g==
-=QJTj
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gsHQACgkQJNaLcl1U
+h9BsPwf/d3EW/ZwwzGvj1esEpHD8SwSQ+yMMV19B8wr+cD2nLEjXFYIsqnrfSDVx
+j6UU8sI0xLOXt0qIwdaRKGeM6C2FrNcrMWz7mykGzeErPcNLVhWn/aC6yEXDVpFw
+jMP2rLcju1QccfOkPUJ4vl1kCBjCH5EF2wsVvsznwzChd6GeGubN5SHBxZHwaPYg
+fuOWw0KdkFmbVQeXWyi1fCci3+QYvA/oWYGmgec6b/mVv9p27A228+zMNJ2jyOlb
+TrzmRpvVv9BCQp81skBgn5ZQ/gy8XZjke8dGnxw4/FnL5FHYVV0dzehbzmWqTOBi
+69RhVfacZtIKhjOpDq68m7H4gZH19w==
+=1WyB
 -----END PGP SIGNATURE-----
 
---jI8keyz6grp/JLjh--
+--HlL+5n6rz5pIUxbD--
