@@ -4,204 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85014C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B7B206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8482074B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 20:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591819639;
-	bh=AS09uQ5zG0psed2eOsF980Tp3NDWfM8ROSl6fOyce9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jNJqgQhzgEA1BcZqOSry/i+ySnANiOYNMz7a6nZOAF29lZ122oRQcrZiZ+qE5h0He
-	 r/9yLRd+mO23VA/Oh0Z5cWpoSZ4W/75jrKTHVnggSWWCrFlIo0LCSoPM+7Pj1j6Ix9
-	 A5iW83qR6aFmBaN35YG/GpFhkgLy67MB9RjceUUs=
+	s=default; t=1591820323;
+	bh=lZD7Sa+lOxkbDXZoiCEaR5gV4LQiphLbs7wsQ+7OUGA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DNfSSe9LFcl3H1qvdjGZ2mCnzGOUhir5h4FoYasmiwmmLaEkotv6uVbdfBOnC+O/y
+	 Go5M2uk4qlrnPSdhHiQzLXub9i41hlvpcRjR5dODc6s8G2OOH0VBHpnNDTslaU2iEw
+	 5Bsz+WManqm6UbMkLYzFa+rG8QQ+StebJNYk2lYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgFJUHT (ORCPT
+        id S1727003AbgFJUSn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 16:07:19 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44426 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgFJUHS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 16:07:18 -0400
-Received: by mail-io1-f66.google.com with SMTP id p20so3728467iop.11;
-        Wed, 10 Jun 2020 13:07:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mDjqIFf471IkbejX9X3mSLq57qUbwtdIynz5m3TbNPc=;
-        b=N1EBnFhBD1dkm6Zs5C7O6hcfqYj643A3BQLHyDb4Gl3QDVVdBY2hOXhDXU03ZiNBxR
-         Zh7X9kWyGgHznMgBuG0nzNDxeJeFIhwVTHN0V7+ALjQcdWOVGmWUMmmL5ZQCCnHSrZ8M
-         OX6Pkx4Jo/aR3MSpQHmDE0IbrPgb0J6BkM1HxpD3wUowjopDH/XYsDyY1uypcMWh6vqn
-         mn5Bb4Dbx88oiElpEbZCWfC71T4M6mlsM8eontSXwSCY0HQaYzzIyNGzvsvh3ekVHsR2
-         xrtHPvU8nx11v4Hkum/MXo/ZCe5485TTq5YFHxReQvoHZbuhWeSLgD0+CABfd466xgWA
-         Epiw==
-X-Gm-Message-State: AOAM530a9JZ9m1aIk9x5Jg2mIezHJHOIXhEbn89TG/OulnHjRjWWZQvY
-        n+cIMsdPcZdUQ9Ppo1vAfw==
-X-Google-Smtp-Source: ABdhPJx0DQIW00e65FugR8+MSaJ77U4Ds57FdAdVskpy7VWOQQOAAYy8VolmUsIiUifIEK8uD4BRrg==
-X-Received: by 2002:a6b:7516:: with SMTP id l22mr5097843ioh.18.1591819636816;
-        Wed, 10 Jun 2020 13:07:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y5sm491598iov.3.2020.06.10.13.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:07:16 -0700 (PDT)
-Received: (nullmailer pid 3629265 invoked by uid 1000);
-        Wed, 10 Jun 2020 20:07:15 -0000
-Date:   Wed, 10 Jun 2020 14:07:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: tas2562: Convert the tas2562 binding to
- yaml
-Message-ID: <20200610200715.GA3612550@bogus>
-References: <20200602193524.30309-1-dmurphy@ti.com>
- <20200602193524.30309-2-dmurphy@ti.com>
+        Wed, 10 Jun 2020 16:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgFJUSm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 16:18:42 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3795207C3;
+        Wed, 10 Jun 2020 20:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591820321;
+        bh=lZD7Sa+lOxkbDXZoiCEaR5gV4LQiphLbs7wsQ+7OUGA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2MY6RsEg8AE2qbI2zGFtH4+jGHVA0PEHwFVAhqnqr9RkbYkjLxIpCyCtDV6SV7+vV
+         mXSnExBwV41CziZyJhWMpMidhxWu7mp0XB2T/xpXaaa0dOkBzpTsCT5zpN/Z2y4ogO
+         Xa9AXfDHzWrEjqKC+eQuaGE8Arh20givzxJRc0Sw=
+Received: by mail-ot1-f52.google.com with SMTP id g7so2747971oti.13;
+        Wed, 10 Jun 2020 13:18:41 -0700 (PDT)
+X-Gm-Message-State: AOAM5308XZJlwzfGOpLJkM0ANd54ZYOVsyhWPitoSOmYqVsHxwP0J/fR
+        gGYrD5H0T+0h2En2efkneTaMcMo/SvtN+VAXEg==
+X-Google-Smtp-Source: ABdhPJwyNrli2IyO7NvXxO4E/Ji/aw1Bh37+jXYs5prN7IoJzLfRj7nt48qp5876ykVDiZ4z1KCiN3+jvukHbLzH6gE=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr4180042ots.192.1591820321058;
+ Wed, 10 Jun 2020 13:18:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602193524.30309-2-dmurphy@ti.com>
+References: <20200602200837.321712-1-konradybcio@gmail.com>
+In-Reply-To: <20200602200837.321712-1-konradybcio@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 10 Jun 2020 14:18:30 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ-eHd5yfQ=qg+SSTd6a=xr8C2mGWKMKutDQBfY9XoH+g@mail.gmail.com>
+Message-ID: <CAL_JsqJ-eHd5yfQ=qg+SSTd6a=xr8C2mGWKMKutDQBfY9XoH+g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Documentation: Document an existing qcom,rpm-msm8996 compatible
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 02:35:24PM -0500, Dan Murphy wrote:
-> Convert the TAS2562 text file to yaml format.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+On Tue, Jun 2, 2020 at 2:08 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
+>
+> This compatible has been included in the driver for
+> some time, but it has been overlooked in documentation.
+>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 > ---
->  .../devicetree/bindings/sound/tas2562.txt     | 34 ----------
->  .../devicetree/bindings/sound/tas2562.yaml    | 65 +++++++++++++++++++
->  2 files changed, 65 insertions(+), 34 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
-> deleted file mode 100644
-> index 94796b547184..000000000000
-> --- a/Documentation/devicetree/bindings/sound/tas2562.txt
-> +++ /dev/null
-> @@ -1,34 +0,0 @@
-> -Texas Instruments TAS2562 Smart PA
-> -
-> -The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-> -efficiently driving high peak power into small loudspeakers.
-> -Integrated speaker voltage and current sense provides for
-> -real time monitoring of loudspeaker behavior.
-> -
-> -Required properties:
-> - - #address-cells  - Should be <1>.
-> - - #size-cells     - Should be <0>.
-> - - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
-> - - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
-> - - ti,imon-slot-no:- TDM TX current sense time slot.
-> -
-> -Optional properties:
-> -- interrupt-parent: phandle to the interrupt controller which provides
-> -                    the interrupt.
-> -- interrupts: (GPIO) interrupt to which the chip is connected.
-> -- shut-down: GPIO used to control the state of the device.
-> -
-> -Examples:
-> -tas2562@4c {
-> -        #address-cells = <1>;
-> -        #size-cells = <0>;
-> -        compatible = "ti,tas2562";
-> -        reg = <0x4c>;
-> -
-> -        interrupt-parent = <&gpio1>;
-> -        interrupts = <14>;
-> -
-> -	shut-down = <&gpio1 15 0>;
-> -        ti,imon-slot-no = <0>;
-> -};
-> -
-> diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
-> new file mode 100644
-> index 000000000000..11e0269d03b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> +# Copyright (C) 2019 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments TAS2562 Smart PA
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-> +  efficiently driving high peak power into small loudspeakers.
-> +  Integrated speaker voltage and current sense provides for
-> +  real time monitoring of loudspeaker behavior.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tas2562
-> +      - ti,tas2563
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +       I2C addresss of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
-> +
-> +  shut-down:
+>  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+> index 25541a475ead..4b916d67064a 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+> @@ -24,6 +24,7 @@ resources.
+>                     "qcom,rpm-msm8974"
+>                     "qcom,rpm-msm8976"
+>                     "qcom,rpm-msm8994"
+> +                   "qcom,rpm-msm8996"
 
-Hopefully, this is an error. It should be 'shut-down-gpios'.
+This is dependent on your patch adding 8994. Send them as a series
+please (or at least mention the dependency).
 
-Looking at the driver, it is also broken. It's passing 'shut-down-gpio' 
-which means the GPIO core is looking for 'shut-down-gpio-gpio' or 
-'shut-down-gpio-gpios'.
+And use consistent subjects. Run 'git log --oneline' on the path a
+patch touches to find the pattern used. ('dt-bindings: soc: qcom: ...'
+here).
 
-Also the standardish naming here is 'shutdown-gpios'. Given this 
-probably never worked, we should use that.
-
-> +    description: GPIO used to control the state of the device.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ti,imon-slot-no:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TDM TX current sense time slot.
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
-> +   i2c0 {
-> +     #address-cells = <1>;
-> +     #size-cells = <0>;
-> +     codec: codec@4c {
-> +       compatible = "ti,tas2562";
-> +       reg = <0x4c>;
-> +       #sound-dai-cells = <1>;
-> +       interrupt-parent = <&gpio1>;
-> +       interrupts = <14>;
-> +
-> +       shut-down = <&gpio1 15 0>;
-> +       ti,imon-slot-no = <0>;
-> +     };
-> +   };
-> +
-> -- 
+>                     "qcom,rpm-msm8998"
+>                     "qcom,rpm-sdm660"
+>                     "qcom,rpm-qcs404"
+> --
 > 2.26.2
-> 
+>
