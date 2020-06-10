@@ -2,96 +2,150 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F8EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4427C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B732072E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ginlMGio"
+	by mail.kernel.org (Postfix) with ESMTP id 911E520848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgFJJmM (ORCPT
+        id S1727041AbgFJJoL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbgFJJmM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:42:12 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E401C03E96B
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 02:42:11 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id a9so1640228ljn.6
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 02:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L6IM8HZkBTsTCtJCNJrWL83PXKs3jC9VH6grLKGicZQ=;
-        b=ginlMGioWdNyYUtlQPRf2HXg4R51WjeoOdKcIOGEPmCEun2SAlBkFK4AvudGvS5dtu
-         mcU5Gu9F4mr+CXgz/+DtawHStRUwOEmLfddyQ/M0fQPRfHBXO9tWXYKcXduraDiP2GHf
-         nNOoWY6woHlbOLUe8vm1k/8QE/vWRMC11ai2WkEdy20sTcJGNr+0V/Gk7AKs2LWVnFS8
-         cIl4apzdWwWmENuaX/JnjnNG7Ww7lU2KDI2ZZqA2aHiP9YyvB2rGB/k8JFeZ+DKElbAo
-         jYe9F97RvJXV44rhQSSPcpcuYxCKDSSBO5FOc76iWb0cM1dPtuPACPo+QJL+w4n9iZp5
-         duSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L6IM8HZkBTsTCtJCNJrWL83PXKs3jC9VH6grLKGicZQ=;
-        b=Kgd2Ns4yLpZqgSe1NEvhQ4eeTl5QF+sT6RDtqZ/3MSuNb1tDgAEQUxXP6d3ohnUMuZ
-         EkFUtt/Gin/4qs+5gNLO19lOJV78ryg2+draPQ8Xs/zxZgpDUx6f8p2KDf05aUw54Tj7
-         mZgV9rXgufMu409f14ZjhNhP3SqhyVbVEVKlCPal53fImZuSjii/qDqyrPQ56V2lFyON
-         0X6xbtI1q5elJ1XK5eCjgjxHA9MS/eRFVFcJQWhv876N6liGxh3O9yWm2cNd5t2jE+MQ
-         dxJYg0bP7ND49rILTJYaEdfjKXR9DiDQ+RdSEEVzDxl3sJ32Gt9XY1pfsvT5wZCyfSHP
-         fEzA==
-X-Gm-Message-State: AOAM531G6WWsrMRu7R1hErRmmSntp9QmQFdbVlBVJezdsA5RZJMlXkci
-        ow2EyyHZkjbxGBbK3qmUYc62zFZGLWIRnrB1SkrRoA==
-X-Google-Smtp-Source: ABdhPJxoXuTFk1is/RO31yyyl5TxCVVZ0c+U2ViqAP54c/q3iqGbZn3p/7J7Ck85VUJCcikAOmvYyaaUzgoVKURdnk4=
-X-Received: by 2002:a2e:974a:: with SMTP id f10mr1341404ljj.283.1591782129924;
- Wed, 10 Jun 2020 02:42:09 -0700 (PDT)
+        Wed, 10 Jun 2020 05:44:11 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:58273 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbgFJJoK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:44:10 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N9MlI-1iomFg13Wm-015KAf; Wed, 10 Jun 2020 11:44:08 +0200
+Received: by mail-qk1-f179.google.com with SMTP id 205so1397453qkg.3;
+        Wed, 10 Jun 2020 02:44:07 -0700 (PDT)
+X-Gm-Message-State: AOAM533JwTxCxmVxd+bGyZZ8LWwnIEX2fjF6cxPyHnlMYfZ7DJmTQ3DR
+        xnEMPtcuSkGXp8LYWrvmMMD07CvIN6KnPLv+2p4=
+X-Google-Smtp-Source: ABdhPJzRNYG5EcQw70snnJLT7htZUC81kIXI94+5koJrICYsQfuJmxhcIA3XJt2ckthClHUdy2fovJvPPBTOp1iz1uk=
+X-Received: by 2002:a37:9401:: with SMTP id w1mr2110620qkd.286.1591782246851;
+ Wed, 10 Jun 2020 02:44:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-2-sebastian.reichel@collabora.com>
-In-Reply-To: <20200605224403.181015-2-sebastian.reichel@collabora.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 11:41:59 +0200
-Message-ID: <CACRpkdbx2kRjxhWzfFDHKojY0Yyour2+BCSVeqWHyoT5LhAwtw@mail.gmail.com>
-Subject: Re: [PATCHv2 1/6] dt-bindings: power: supply: gpio-charger: convert
- to yaml
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
+References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-3-daniel@0x0f.com>
+In-Reply-To: <20200610090421.3428945-3-daniel@0x0f.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 10 Jun 2020 11:43:50 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2JeH+-Naivo8B-JWxebB2ArkCLJw8_CN2Goy5bkSTBwg@mail.gmail.com>
+Message-ID: <CAK8P3a2JeH+-Naivo8B-JWxebB2ArkCLJw8_CN2Goy5bkSTBwg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
+ infinity/mercury family ARMv7 SoCs
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     k@japko.eu, "Bird, Timothy" <tim.bird@sony.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Daniel Palmer <daniel@thingy.jp>,
         Rob Herring <robh+dt@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
         Russell King <linux@armlinux.org.uk>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:lU2b0x8yqs9dY8JdqQi624zU2A3u64WZZdXSPs5TO9KumojjZXv
+ Hwug4fi66Y2UDqmvotkCzdDba5/EgMr0wnhdT4++Tnch5W1yI+7AwapjHEPBnFYcjtn0+1c
+ OaD10KUhUWJl3mqItC2yGx5j9Lnh5y6RG1p113v4632WPa3PNcQpVJrr/3Av9VCBvhEV8Z4
+ AnGsrnwLNADH2arIwVGzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W/XwwlzMmJQ=:EU5wKH9C1dYiHYsWryDZQN
+ weK1a0hsWNDmko5Rc//g1iCuwhgmPCZHLkiQZ7WzU19tEB6l6SMYPYcs1Emr6CCCriMqj0EuR
+ waXcV6JsMRn8cTatuiN2/QWjGCzAHEZOjx8rnU1F54R4ZkdL78EUHymkVUdbL+7SyQtWCPe4G
+ xwrlPIGE6MlJVDSuaDw97pfJ4IT9g8+OkULxhsq6VIRNl10bWo+zeogx+ELs4Nmv0c/GRYnRR
+ geU3XvLuY7HPsx/TYccRg8nkim5p9IfH/MUToB3eNCBHkxPaG7ECEumh9LWLCIJEmLPASkXZH
+ bwywkUlO+NfduFmMDoMuR7lgrHu9qijJICisvQGUQxvad/z0J6xTukh3oFcIVQvXLxnQ0WQYy
+ KTWk3uTAZ6QzXffQS5gKidM4u8RGQkX8XrE5ej5cjkj1FvV17ZgSIWhiZAMePZmtW2XsqyzV9
+ Pupd0+TEHZqFUasRhzWYZ8+JQamaTjGqfvfzTTuQRmFQr5Et2gLFkI3e4iPmAXeUziPJOPllo
+ JyRh0VumjCY9rlvGWsfpTNhBn7PW2SAei1iB+rv46ncxHiH+YC6S4Z/YwWxpQo7AJLXzhMewS
+ ClVcH5g/OSKxZZL2OPisBkPLTuVasifNNDkLS2z/hYVJp/xw1G+RF9HcNi2BGZ31zT4IUy4T0
+ W95oqFsDBMYKsiBS8Ngctzz8BwG2Uh8jOob/VkQitSOnHzDeBgJnqILsSGgoF/IMEgPVKwA1h
+ SBN11hStpdDhZr0qaFqBaO8u8OYvrWLvdJuMTItSLFzk/JJHKB/b5+38Kjc6cA3rFJhVakBRU
+ /MjpiG3Bto4LCNA10NSLDFzyTYjfjsUir8qALva+1HM2CZVVaw=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
+On Wed, Jun 10, 2020 at 11:08 AM Daniel Palmer <daniel@0x0f.com> wrote:
 
-> Convert the gpio-charger bindings from text format to
-> new YAML based representation.
->
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> +/*
+> + * This may need locking to deal with situations where an interrupt
+> + * happens while we are in here and mb() gets called by the interrupt handler.
+> + */
 
-Looks good to me, if it passes the checks:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I would suspect that you don't need locking here, and locking would likely
+make it worse.
 
-Yours,
-Linus Walleij
+From what I can tell, an interrupt happening anywhere inside of mstarv7_mb()
+would still result in the function completing (as miu_status still has the
+MSTARV7_L3BRIDGE_STATUS_DONE bit set) and nothing that could
+happen inside the irq would make the barrier weaker, only stronger.
+
+> +static void mstarv7_mb(void)
+> +{
+> +       /* toggle the flush miu pipe fire bit */
+> +       writel_relaxed(0, miu_flush);
+> +       writel_relaxed(MSTARV7_L3BRIDGE_FLUSH_TRIGGER, miu_flush);
+> +       while (!(readl_relaxed(miu_status) & MSTARV7_L3BRIDGE_STATUS_DONE)) {
+> +               /* wait for flush to complete */
+> +       }
+> +}
+
+This is a heavy memory barrier indeed.
+
+The use of _relaxed() accessors is normally a bad idea and should be
+avoided, but
+this is one of the places where it is necessary because the normal
+writel()/readl()
+would recurse into arm_heavy_barrier(). Can you add a comment explaining this
+for the next reviewer?
+
+> +static void __init mstarv7_barriers_init(void)
+> +{
+> +       miu_flush = ioremap(MSTARV7_L3BRIDGE_FLUSH, sizeof(*miu_flush));
+> +       miu_status = ioremap(MSTARV7_L3BRIDGE_STATUS, sizeof(*miu_status));
+> +       soc_mb = mstarv7_mb;
+> +}
+
+Hardcoding physical addresses is generally considered bad style,
+even if you know the address in advance. Can you change this to get
+the address of the L3BRIDGE from DT instead and just hardcode the
+offsets? Note that they are in the same physical page, so you only
+need a single of_iomap().
+
+> +static void __init mstarv7_init(void)
+> +{
+> +       mstarv7_barriers_init();
+> +}
+
+I think you can fold this into a single function.
+
+       Arnd
