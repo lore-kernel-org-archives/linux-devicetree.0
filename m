@@ -2,104 +2,186 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796F8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3218C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45B4620734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2B92067B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591807772;
-	bh=uL84iTpjcJrG49BW1qpvg+ceYzvNWcuI+EjpSNUrXtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i0ijx/jjuVLYPPdbbaTUmiuMnHkV4vqonbEMZ2Qxbne856aAw5f93wRcfS1rNf4e4
-	 rF7s7WV1KsURDe1490/dmpvv3oKQjc/CrWoUO9L8K1/Lg3s/D40S7HNOsP17Ufkik3
-	 RF1Jd2MfAPeZ/tt1TpLmsNvAHFBjaFEFSyBydACk=
+	s=default; t=1591808038;
+	bh=5l99DsraoOPZV1OU1YHuYjZOzAMxH54iUhG8bur9rnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JmwO6xCF/LaYalANLugp/gdZGP25vhty6fms9ZpbkpU0+fOWKG9OQuG/jGnUp3x4E
+	 vOXxyUzr5a/dzRVog9KF5XCUEWFruEaza8OvVfOOWXwMe2m/DYfZntJK8vpxslsrAM
+	 ypgCx+ONk85HKeKGDxcgVebNfV4ux+FhanCiOPSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgFJQtc (ORCPT
+        id S1726775AbgFJQx6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 12:53:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgFJQtb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:49:31 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726517AbgFJQx6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 12:53:58 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BB2C206F4;
-        Wed, 10 Jun 2020 16:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E0ED20734;
+        Wed, 10 Jun 2020 16:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591807770;
-        bh=uL84iTpjcJrG49BW1qpvg+ceYzvNWcuI+EjpSNUrXtM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K8xkfdIgBPkyqakPBMHpmV4MHBmZijBh0k0Idbd2dWb0oW+bJ0Z4h3uPY8S7Tgxaf
-         E/80A/fJ4lmfVN43LkuA+h4k/4DiYQg6MlKgskOCiooP9v0myHwMpWRyFAx5+x2ha6
-         N55T17siJuAHSdEbNMRu/CAG+t9I2DC/f5vAYQsk=
-Date:   Wed, 10 Jun 2020 17:49:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        s=default; t=1591808037;
+        bh=5l99DsraoOPZV1OU1YHuYjZOzAMxH54iUhG8bur9rnM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VKAC3CH1sASX4nfgzMqpFP+edv/gqOVS5WUTKjJX0NX4h3ac+MYrPZ6yhmNCna8Fu
+         cCOVVrFS8zCmP9bLKmf948XY3+q1iIZeKKNz9AhKxOdwQpf1adSEWATaWuKuzTxCZx
+         +e4Sc4bm7L5U3Fb0ONJhJLRXQaY2M2dAzaOm4+HU=
+Received: by mail-oo1-f42.google.com with SMTP id e12so639444oou.2;
+        Wed, 10 Jun 2020 09:53:57 -0700 (PDT)
+X-Gm-Message-State: AOAM5312i7ipcBZKH5D8bs3bvX4cl423qsvIw9wyUpWT3N1+y48jMZDk
+        Wr/ak3M9rkFrCN6FtjOj4eRQhmXJ4bJdBwfXWQ==
+X-Google-Smtp-Source: ABdhPJxqdlrg8qy3QKsG2cIpbwK3twksjEC7SO767My3VTyuKvrDAhv7M8etIZefVyHhyd3wjSboxGEPLEyJMeei2C8=
+X-Received: by 2002:a4a:6156:: with SMTP id u22mr2935115ooe.50.1591808036515;
+ Wed, 10 Jun 2020 09:53:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
+In-Reply-To: <20200610153356.GC3213128@kuha.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 10 Jun 2020 10:53:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+Message-ID: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
- support
-Message-ID: <20200610164928.GJ5005@sirena.org.uk>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200610110810.GD5005@sirena.org.uk>
- <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qD3brAgIG4LbUq6d"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
-X-Cookie: fortune: No such file or directory
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > Hi Rob,
+> >
+> > Thanks again for the comments and feedback. Kindly see responses inline:
+> >
+> > (Trimming unrelated text from thread):
+> >
+> > On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
+> > > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
+> > > >
+> > > > Nodes truncated and unrelated fields omitted in the interest of brevity:
+> > > >
+> > > > // Chrome OS EC Type C Port Manager.
+> > > > typec {
+> > > >     compatible = "google,cros-ec-typec";
+> > > >     #address-cells = <1>;
+> > > >     #size-cells = <0>;
+> > > >
+> > > >     connector@0 {
+> > > >         compatible = "usb-c-connector";
+> > > >         reg = <0>;
+> > > >         power-role = "dual";
+> > > >         data-role = "dual";
+> > > >         try-power-role = "source";
+> > > >         mode-switch = <&foo_mux>;
+> > > >         // Other switches can point to the same mux.
+> > > >         ....
+> > >
+> > > The connector is supposed to have 'ports' for USB2, USB3, and Aux
+> > > unless the parent is the USB controller.
+> > Understood; so, coupled with Heikki's explanation (see below for where
+> > I've pasted it), would it be something like so? (adding inline to the connector
+> > node definition):
+> >
+> >             ports {
+> >                 #address-cells = <1>;
+> >                 #size-cells = <0>;
+> >
+> >                 port@0 {
+> >                     reg = <0>;
+> >                     usb_con_hs: endpoint {
+> >                         remote-endpoint = <&foo_usb_hs_controller>;
+> >                     };
+> >                 };
+> >
+> >                 port@1 {
+> >                     reg = <1>;
+> >                     usb_con0_ss: endpoint@0 {
+> >                         remote-endpoint = <&mode_mux_in>;
+> >                     };
+> >                 };
+> >
+> >                 port@2 {
+> >                     reg = <2>;
+> >                     usb_con_sbu: endpoint {
+> >                         remote-endpoint = <&foo_dp_aux>;
+> >                     };
+> >                 };
+> >             };
+>
+> The pins that can be reassigned can in practice go anywhere. We can't
+> group them in any way. What do we do for example when the two sideband
+> pins go to different locations?
 
---qD3brAgIG4LbUq6d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The sideband pins from the connector go to multiple places or the
+sideband signal from a controller go to multiple connectors? Either
+way, that's solved with multiple endpoints. In the former case, port@2
+would have multiple endpoints with all the possible connections. The
+general model of the graph is each port is a separate data channel and
+multiple endpoints are either a mux or fanout depending on the data
+direction.
 
-On Wed, Jun 10, 2020 at 01:59:24PM +0200, Geert Uytterhoeven wrote:
-> On Wed, Jun 10, 2020 at 1:08 PM Mark Brown <broonie@kernel.org> wrote:
+> It looks like the OF graph for the USB Type-C connectors expects the
+> pins to be grouped like that, which is too bad, because unfortunately
+> it will not work. It would require that we have a separate port for
+> every pin that can be reassigned on the connector, and let's not even
+> consider that.
 
-> > To repeat my previous feedback I'd expect a driver update as well.
+I guess you are referring to the 4 SS signal pairs and that they could
+be 2 USB links, 1 USB link and 1-2 Alt mode links, or 4 Alt mode
+links. I think the grouping of SS signals is fine as I'd expect
+there's a single entity deciding the routing. That would be 'mux' node
+I think, but 'mux' is the wrong abstraction here. I guess we could
+have 4 muxes (1 for each signal), but I'd hope we don't need that
+level of detail in DT. I think we're in agreement on that.
 
-> No driver update is needed.
+> We need higher level description of the connections for the USB Type-C
+> connectors. For example, a connector can be connected to this (or
+> these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
+> port, etc. And this is the mux that handles the pins on this
+> connector, and these are the retimers, etc. etc.
+>
+> We also need a way to identify those connections, and relying on
+> something like fixed port node addresses, so indexes in practice,
+> feels really risky to me. A conflict may seem unlikely now, but we
+> seen those so many times in the past other things like GPIOs, IRQs,
+> etc. We really need to define string identifiers for these
+> connections.
 
-> Documentation/devicetree/bindings/spi/renesas,sh-msiof.yaml says:
+I assume for IRQs you are referring to cases where we have a variable
+number such as 'interrupts = <1 2 3>;' where 'interrupts = <1 3>'
+doesn't work because we can't describe interrupt 2 is not present? The
+graph binding doesn't suffer from that issue since we can easily omit
+port or endpoint nodes.
 
-I'm much more comfortable explicitly listing the new compatible so that
-even if someone makes a DT that doesn't bother listing the fallbacks
-things will work.
+Also, the numbering is specific to a compatible string. If we need
+different numbering, then we can do a new compatible.
 
---qD3brAgIG4LbUq6d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7hDxcACgkQJNaLcl1U
-h9DqzQf+L8N8+1ylxe1pYlV1c//i1CYnyH3GkElfL95nGobYBGb9VLgA4MOcj/0b
-TqbGACtoQm8BL+EE8XzQ3Mj+ohmTisI9JKRHsYoi78Tm8L+dl3pLiPt9Wc30li+K
-nrKA8BHndOoVpRK2SMNgUE+rcU+sImZLTLjfEnZUUGGx7sDJmfFXRHdP2pZb/BEh
-CCN3m+F74/XdRlf8USEa6B4cAN3sfhitr4Tx/hbQ3e8BS7FAhEjp+fP8x+Eji1WW
-xLFk3/DweH05qA6nU0Tm6aHfUyzRaCLbn0LQAgJRBISTdAEc2NGiRXuCZckMFsWJ
-Qguh+qafyIRn22PAoLP8jFAiYNlHbA==
-=02N9
------END PGP SIGNATURE-----
-
---qD3brAgIG4LbUq6d--
+Rob
