@@ -2,96 +2,113 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E846C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F52CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C948206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 09:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KZ3GCV4o"
+	by mail.kernel.org (Postfix) with ESMTP id D33C920691
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591783215;
+	bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ql+YyI2Zs5sVbZjg1V4JtqQ4C1bk7eSkj0xgD/KrLXBDkuFUy+D6heCmqF5MdEn6f
+	 2xnhlm/G8eN/llhM2piPZNDCWMjLsv8X+qR3KsjPs5p1H0r8EHR9wa/qrHTrpRfsPm
+	 5UThFdGcQtwYjErhPasz3sgJOPovYSJ/sOFE8+PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgFJJzr (ORCPT
+        id S1727904AbgFJKAO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 05:55:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFJJzq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 05:55:46 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F272C08C5C1
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 02:55:45 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id x27so1069643lfg.9
-        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 02:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IyM/A+avhJkkQHOLp+OvMDI3GG+kxptVRDbu3u0LPow=;
-        b=KZ3GCV4oQ8GoZhjx2pBRStzJRFJC/aeLvAH56Ms+z3A6pyxZAqr26DULM6tE604ET4
-         Neju+GKK0TxS2BEBiYqrK8ZAAy43gpWB8HQ971utdGJQuFszPl9QZgYYUU0sHCWRnhbd
-         6GIHn8MU1axUgQbHaAfMzacFuagYyooDoAmkS8bnScg9G7g+StfE3LYW19Uxic9LK6On
-         7FiJDSQEmMhNB5t1sCQgPq+qJ/bSCma6+45ICCeJpUzctEGgFrve+wbAlwsfoxQLe6yE
-         B2GSy1pb47oGu2/e3pTl0eh75S/BCedvE9mxxYG9LjtQNOPinBsLstTJ4vPT9T8lwVVt
-         vW3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IyM/A+avhJkkQHOLp+OvMDI3GG+kxptVRDbu3u0LPow=;
-        b=Iwq1MKkcN/QWCehh0z1BdD+nr1rJgbEo4pkiUoMe1IjVCy2Gnh9H2M6eFsm37r1USE
-         4phR6iwt4fUo/0AITW46/PxF2g76vbxpSkjsj2RYjDJWU2hq7ZYqm4gQziZFsYQwUO/2
-         DGYUx9dXYY50z4zELPfKNggx5NjLB0bYf9Ti7XXoiXxsioVzEbMk88M+wXsdQS8b4m6V
-         H4XBkgJbRtmyvc3pw9TUgXCgv3ItW5BCCQazvlbgHUSYl5H9z1Zy2VidD0mu4rw/F4PJ
-         +4w0Env415IkSTCxDE6Rjm0S2D986JGbsnN357yE45NjGh11mybY1jV35MuiwMrQMfz/
-         B8AQ==
-X-Gm-Message-State: AOAM530moYaVo8ZFmo4/OIFsHigZ57XC2hcKtnZSE0mLI5GPqcP4oSLC
-        HZvnmaKd2FTN7745nfj38WTtahdq2nOe57d5ZydsQw==
-X-Google-Smtp-Source: ABdhPJw06BW9DC3WVHZ8QRBMneGYcET56eTT8DIAMhEVt8P5RXWMTPAIOnCaPj54gMD05QlYQar3OpWGUm5iy7QPfE0=
-X-Received: by 2002:ac2:5a07:: with SMTP id q7mr1267243lfn.77.1591782943164;
- Wed, 10 Jun 2020 02:55:43 -0700 (PDT)
+        Wed, 10 Jun 2020 06:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbgFJKAN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:00:13 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8777D206F7;
+        Wed, 10 Jun 2020 10:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591783212;
+        bh=VSaKKfy/V9rqADPSSuu4IkfVocrsiTN4SkeMzZaW7sU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YDs7MBeb2K677sLe+jsRXVpbxfgyiWtMqgAAH4UBRVDPr6G15N6APmORXYwb0GRiV
+         8+vaBwg4yMWkxljIhw0cjb2+glk+B4zRdYHRnaSZhsEefHapZURnCwnIK5CNGsPWW9
+         PssrjRNGQ367egX8GwKYwHnwj4R+zYE2Fw4pcmoo=
+Date:   Wed, 10 Jun 2020 11:00:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: Supply max load for mmc supplies
+Message-ID: <20200610100008.GA5005@sirena.org.uk>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1591094883-11674-1-git-send-email-vbadigan@codeaurora.org>
+ <1591094883-11674-2-git-send-email-vbadigan@codeaurora.org>
+ <20200609230216.GA1655591@bogus>
 MIME-Version: 1.0
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com> <20200605224403.181015-7-sebastian.reichel@collabora.com>
-In-Reply-To: <20200605224403.181015-7-sebastian.reichel@collabora.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 11:55:32 +0200
-Message-ID: <CACRpkdZchnn8EG6HOo_QD=veHJzb_Vy5F2Ma0cEOZUjcZwHPYg@mail.gmail.com>
-Subject: Re: [PATCHv2 6/6] power: supply: gpio-charger: drop legacy GPIO support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Disposition: inline
+In-Reply-To: <20200609230216.GA1655591@bogus>
+X-Cookie: fortune: No such file or directory
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 6, 2020 at 12:44 AM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
 
-> All board files have been converted to use boardfile GPIO
-> descriptor tables, so GPIO support can be removed from
-> platform data.
->
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks so much for doing this!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Tue, Jun 09, 2020 at 05:02:16PM -0600, Rob Herring wrote:
+> On Tue, Jun 02, 2020 at 04:17:54PM +0530, Veerabhadrarao Badiganti wrote:
 
-Yours,
-Linus Walleij
+> > +  vmmc-supply-max-microamp:
+> > +    description: Maximum load for the card power.
+
+> > +  vqmmc-supply-max-microamp:
+> > +    description: Maximum load for the bus IO line power.
+
+> By a 'common regulator property' I meant documented with regulator=20
+> binding like *-supply, not common to MMC. How is MMC special?
+
+TBH I'm surprised that these aren't defined by the MMC spec or by the ID
+information from the part we find connected - I'd not expect the board
+to be defining these at all.
+
+> Thinking about this some more, what's wrong with the max current in the=
+=20
+> regulator nodes? I suppose you could have more than one load and need to=
+=20
+> define the loads separately?
+
+One of the bigger reasons to think about the loads would be to
+dynamically configure the mode the regulator is in to go into a more
+efficient mode when some of the devices attached to it are turned off.
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gryQACgkQJNaLcl1U
+h9DsNQf/QMOcKgKBR1OfTOXetzJw0GYmTTeWBRwrDxvOzlh/codHfgyJ97CrHmOY
+1+Th0yTlUfe69S3B5iZpER3S5jU+lsZmkeaKBNfxx3qykrWDpRi3FQG5AIOEBDB6
+m43i71UuvaryROGVyZQWEXiQ+H6RpJ7MV7IUBSa9bFZBVwwJ0ous7/nzsPt5iwfr
+0P/ZivT1TK9t/Zkp7biFYiuIZqvtDaSlO6yyPIb60D0Xq4+9XVJ+kPYnvRj7CEb5
+w3RLxK78z4QCWveNCjNrhIUtynLudM63ofRP3O6qtcYQ7wRkHjvpTbOZ4JvUMoKl
+bdh2nZKb7xJazHo13G3QtNgjgoq/0g==
+=QJTj
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
