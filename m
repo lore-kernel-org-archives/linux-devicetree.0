@@ -2,212 +2,221 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF15CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B3DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5782078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20232078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 12:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yW/pR62p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hnRHTdJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgFJMWc (ORCPT
+        id S1728965AbgFJM1p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 08:22:32 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17372 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729037AbgFJMWb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 08:22:31 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ACH9O9025176;
-        Wed, 10 Jun 2020 14:22:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Ogt7kzdY+2u4HiQMwxF0C/6ggbmSoaxy/EAlQct2Trk=;
- b=yW/pR62pcvAr+WT+FnE5474MdUVzpX+SupEdiB5AXPQ5h/x2D5zkQ4yLnH4v4FqTLx+c
- C3GElqXURNjT4HlKppybYEEXALEVzG2iAructlOvIylJcznOBXc1hYwpHweROBVZO/mm
- I2muRfWfpHSb3RMqzp4IIsbd2mV2pzvxUJaB6QcXlA+xjgIHBuk6vumVsSNUM1x/yqTE
- USdbSY364zHhrXCncqiRpdptsSFO3t7v3il0NiDROYWE8Z7HcMWPQ9kE2WVHP2I3xk2G
- scxCGQM/nQiBKlnsdlDFXKIowuWvrcKMsmyXIOj6ZO/+cp9/veBfqz9UzIAy8arxh90U Yw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31jppntq1t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Jun 2020 14:22:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9F8B810002A;
-        Wed, 10 Jun 2020 14:22:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 34BF92B9C66;
-        Wed, 10 Jun 2020 14:22:08 +0200 (CEST)
-Received: from SFHDAG6NODE1.st.com (10.75.127.16) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 10 Jun
- 2020 14:22:07 +0200
-Received: from SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27]) by
- SFHDAG6NODE1.st.com ([fe80::8d96:4406:44e3:eb27%20]) with mapi id
- 15.00.1473.003; Wed, 10 Jun 2020 14:22:07 +0200
-From:   Yannick FERTRE <yannick.fertre@st.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Heiko Stuebner" <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        "Jernej Skrabec" <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "Jonas Karlman" <jonas@kwiboo.se>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Subject: Re: [PATCH v9 10/11] drm: bridge: dw-mipi-dsi: fix bad register field
- offsets
-Thread-Topic: [PATCH v9 10/11] drm: bridge: dw-mipi-dsi: fix bad register
- field offsets
-Thread-Index: AQHWPoY3sOkL2THKq0y5LpEfOytE3qjRpO2A
-Date:   Wed, 10 Jun 2020 12:22:07 +0000
-Message-ID: <673a3961-d5ef-b7cd-4301-43c1c2786ed1@st.com>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
- <20200609174959.955926-11-adrian.ratiu@collabora.com>
-In-Reply-To: <20200609174959.955926-11-adrian.ratiu@collabora.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <13E4D089CC2D1740B364E43D624E547D@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 10 Jun 2020 08:27:45 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:46310 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbgFJM1p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 08:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591792064; x=1623328064;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=QiFuJl1R5fgwI47VUdUxy1XjRtgrcDqvma+iH44NFSk=;
+  b=hnRHTdJronscFR2yTjdh97Lj7hS7DuvbTw98YNO51LZ3UXc/1VMvT8iB
+   tL32XQg6qZmB6lfLXpoB2+hle/VHVqO0638F1CEGsBCKwtcezoAnTve40
+   UtUMcouuRqBCG2vZROnAdGnkLkF3n4xEH4so9O9shjaHuRwzWkSXN++Dg
+   nAX7PHQHVJ+VPaqQzE/QaSkUOXkRjHN0YWkIxvvNbhEGsAoBZYHFFM+e1
+   XzF4NOtkHPx8N+c74t5M1N2DM2VmSRzs38MnZhCez0+lm1Ql7QT9DniJX
+   /3Ff2ZGW35ZOcUDC3V/+4FNzDYCCEapg/1X7uBVSRMVOABLrnwaMGtED2
+   Q==;
+IronPort-SDR: 0d4g912uhVPOIXVwiNumUIxOuwQwPv1k6y8Nq0I/CzHL1DwOmpG02rnaDxCk0Xul9ey7Wz6RVN
+ MoGmGnZ+EQRMel+AUBLPvkn7ON7+DX3N23NsBUbSe4kf82ZfGLZHOVKqaD2P/bCFZobnMwyTGW
+ Mk/GSb29bEgBZO+qe3ATVlY/gWm3VEHHqjYkS8fUrMoicwslgxm0AquKfxlA4tXmFapYTg87ht
+ IqeLuIZL/Xyzue7miwmvTsqASQip6ZlkRDLZm2sBWdIJbnx0uIdzdqdMkwOrhoL/map1dFX0IR
+ qI4=
+X-IronPort-AV: E=Sophos;i="5.73,496,1583218800"; 
+   d="scan'208";a="15250796"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jun 2020 05:27:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 10 Jun 2020 05:27:35 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3
+ via Frontend Transport; Wed, 10 Jun 2020 05:27:32 -0700
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-7-lars.povlsen@microchip.com> <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 06/10] dt-bindings: spi: spi-dw-mchp: Add Sparx5 support
+In-Reply-To: <20200602230738.mz2y6i2kjagyt7tk@mobilestation>
+Date:   Wed, 10 Jun 2020 14:27:31 +0200
+Message-ID: <87d067hzrg.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-10_07:2020-06-10,2020-06-10 signatures=0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQWRyaWFuLA0KDQp0aGFua3MgZm9yIHRoZSBwYWNoOiB0ZXN0ZWQgb24gc3RtMzJtcDEuDQoN
-ClRlc3RlZC1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQoNCk9u
-IDYvOS8yMCA3OjQ5IFBNLCBBZHJpYW4gUmF0aXUgd3JvdGU6DQo+IEFjY29yZGluZyB0byB0aGUg
-RFNJIEhvc3QgUmVnaXN0ZXJzIHNlY3Rpb25zIGF2YWlsYWJsZSBpbiB0aGUgSU1YLA0KPiBTVE0g
-YW5kIFJLIHJlZiBtYW51YWxzIGZvciAxLjAxLCAxLjMwIGFuZCAxLjMxLCB0aGUgcmVnaXN0ZXIg
-ZmllbGRzDQo+IGFyZSBzbWFsbGVyIG9yIGJpZ2dlciB0aGFuIHdoYXQncyBjb2RlZCBpbiB0aGUg
-ZHJpdmVyLCBsZWFkaW5nIHRvDQo+IHIvdyBpbiByZXNlcnZlZCBzcGFjZXMgd2hpY2ggbWlnaHQg
-Y2F1c2UgdW5kZWZpbmVkIGJlaGF2aW91cnMuDQo+DQo+IFRlc3RlZC1ieTogQWRyaWFuIFBvcCA8
-cG9wLmFkcmlhbjYxQGdtYWlsLmNvbT4NCj4gVGVzdGVkLWJ5OiBBcm5hdWQgRmVycmFyaXMgPGFy
-bmF1ZC5mZXJyYXJpc0Bjb2xsYWJvcmEuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBZHJpYW4gUmF0
-aXUgPGFkcmlhbi5yYXRpdUBjb2xsYWJvcmEuY29tPg0KPiAtLS0NCj4gTmV3IGluIHY2Lg0KPiAt
-LS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgfCA0
-NiArKysrKysrKystLS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMo
-KyksIDIzIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5v
-cHN5cy9kdy1taXBpLWRzaS5jDQo+IGluZGV4IDFlNDdkNDBiNWJlY2IuLmQyNzQyMTZjNWE3YzIg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1k
-c2kuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNp
-LmMNCj4gQEAgLTMxNiw3ICszMTYsNyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfdmFyaWFudCB7DQo+
-ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV92YXJpYW50IGR3X21pcGlfZHNpX3Yx
-MzBfdjEzMV9sYXlvdXQgPSB7DQo+ICAgCS5jZmdfZHBpX2NvbG9yX2NvZGluZyA9CQlSRUdfRklF
-TEQoRFNJX0RQSV9DT0xPUl9DT0RJTkcsIDAsIDMpLA0KPiAgIAkuY2ZnX2RwaV8xOGxvb3NlbHlf
-ZW4gPQkJUkVHX0ZJRUxEKERTSV9EUElfQ09MT1JfQ09ESU5HLCA4LCA4KSwNCj4gLQkuY2ZnX2Rw
-aV92aWQgPQkJCVJFR19GSUVMRChEU0lfRFBJX1ZDSUQsIDAsIDIpLA0KPiArCS5jZmdfZHBpX3Zp
-ZCA9CQkJUkVHX0ZJRUxEKERTSV9EUElfVkNJRCwgMCwgMSksDQo+ICAgCS5jZmdfZHBpX3ZzeW5j
-X2FjdGl2ZV9sb3cgPQlSRUdfRklFTEQoRFNJX0RQSV9DRkdfUE9MLCAxLCAxKSwNCj4gICAJLmNm
-Z19kcGlfaHN5bmNfYWN0aXZlX2xvdyA9CVJFR19GSUVMRChEU0lfRFBJX0NGR19QT0wsIDIsIDIp
-LA0KPiAgIAkuY2ZnX2NtZF9tb2RlX2Fja19ycXN0X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9E
-RV9DRkcsIDEsIDEpLA0KPiBAQCAtMzI1LDI5ICszMjUsMjkgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBkd19taXBpX2RzaV92YXJpYW50IGR3X21pcGlfZHNpX3YxMzBfdjEzMV9sYXlvdXQgPSB7DQo+
-ICAgCS5jZmdfY21kX21vZGVfZGNzX3N3X3NyX2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9D
-RkcsIDE2LCAxOCksDQo+ICAgCS5jZmdfY21kX21vZGVfZGNzX2x3X2VuID0JUkVHX0ZJRUxEKERT
-SV9DTURfTU9ERV9DRkcsIDE5LCAxOSksDQo+ICAgCS5jZmdfY21kX21vZGVfbWF4X3JkX3BrdF9z
-aXplID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9DRkcsIDI0LCAyNCksDQo+IC0JLmNmZ19jbWRf
-bW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAzMSksDQo+IC0JLmNmZ19jbWRf
-cGt0X3N0YXR1cyA9CQlSRUdfRklFTEQoRFNJX0NNRF9QS1RfU1RBVFVTLCAwLCAzMSksDQo+IC0J
-LmNmZ192aWRfbW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAzMSksDQo+ICsJ
-LmNmZ19jbWRfbW9kZV9lbiA9CQlSRUdfRklFTEQoRFNJX01PREVfQ0ZHLCAwLCAwKSwNCj4gKwku
-Y2ZnX2NtZF9wa3Rfc3RhdHVzID0JCVJFR19GSUVMRChEU0lfQ01EX1BLVF9TVEFUVVMsIDAsIDYp
-LA0KPiArCS5jZmdfdmlkX21vZGVfZW4gPQkJUkVHX0ZJRUxEKERTSV9NT0RFX0NGRywgMCwgMCks
-DQo+ICAgCS5jZmdfdmlkX21vZGVfdHlwZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9NT0RFX0NGRywg
-MCwgMSksDQo+ICAgCS5jZmdfdmlkX21vZGVfbG93X3Bvd2VyID0JUkVHX0ZJRUxEKERTSV9WSURf
-TU9ERV9DRkcsIDgsIDEzKSwNCj4gICAJLmNmZ192aWRfbW9kZV92cGdfZW4gPQkJUkVHX0ZJRUxE
-KERTSV9WSURfTU9ERV9DRkcsIDE2LCAxNiksDQo+ICAgCS5jZmdfdmlkX21vZGVfdnBnX2hvcml6
-ID0JUkVHX0ZJRUxEKERTSV9WSURfTU9ERV9DRkcsIDI0LCAyNCksDQo+IC0JLmNmZ192aWRfcGt0
-X3NpemUgPQkJUkVHX0ZJRUxEKERTSV9WSURfUEtUX1NJWkUsIDAsIDEwKSwNCj4gLQkuY2ZnX3Zp
-ZF9oc2FfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9IU0FfVElNRSwgMCwgMzEpLA0KPiAtCS5j
-ZmdfdmlkX2hicF90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hCUF9USU1FLCAwLCAzMSksDQo+
-IC0JLmNmZ192aWRfaGxpbmVfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9ITElORV9USU1FLCAw
-LCAzMSksDQo+IC0JLmNmZ192aWRfdnNhX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURfVlNBX0xJ
-TkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmJwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURf
-VkJQX0xJTkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmZwX3RpbWUgPQkJUkVHX0ZJRUxEKERT
-SV9WSURfVkZQX0xJTkVTLCAwLCAzMSksDQo+IC0JLmNmZ192aWRfdmFjdGl2ZV90aW1lID0JCVJF
-R19GSUVMRChEU0lfVklEX1ZBQ1RJVkVfTElORVMsIDAsIDMxKSwNCj4gKwkuY2ZnX3ZpZF9wa3Rf
-c2l6ZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9QS1RfU0laRSwgMCwgMTMpLA0KPiArCS5jZmdfdmlk
-X2hzYV90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hTQV9USU1FLCAwLCAxMSksDQo+ICsJLmNm
-Z192aWRfaGJwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9WSURfSEJQX1RJTUUsIDAsIDExKSwNCj4g
-KwkuY2ZnX3ZpZF9obGluZV90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX0hMSU5FX1RJTUUsIDAs
-IDE0KSwNCj4gKwkuY2ZnX3ZpZF92c2FfdGltZSA9CQlSRUdfRklFTEQoRFNJX1ZJRF9WU0FfTElO
-RVMsIDAsIDkpLA0KPiArCS5jZmdfdmlkX3ZicF90aW1lID0JCVJFR19GSUVMRChEU0lfVklEX1ZC
-UF9MSU5FUywgMCwgOSksDQo+ICsJLmNmZ192aWRfdmZwX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9W
-SURfVkZQX0xJTkVTLCAwLCA5KSwNCj4gKwkuY2ZnX3ZpZF92YWN0aXZlX3RpbWUgPQkJUkVHX0ZJ
-RUxEKERTSV9WSURfVkFDVElWRV9MSU5FUywgMCwgMTMpLA0KPiAgIAkuY2ZnX3BoeV90eHJlcXVl
-c3RjbGtocyA9CVJFR19GSUVMRChEU0lfTFBDTEtfQ1RSTCwgMCwgMCksDQo+IC0JLmNmZ19waHlf
-YnRhX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9CVEFfVE9fQ05ULCAwLCAzMSksDQo+IC0JLmNmZ19w
-aHlfbWF4X3JkX3RpbWUgPQkJUkVHX0ZJRUxEKERTSV9QSFlfVE1SX0NGRywgMCwgMTUpLA0KPiAr
-CS5jZmdfcGh5X2J0YV90aW1lID0JCVJFR19GSUVMRChEU0lfQlRBX1RPX0NOVCwgMCwgMTUpLA0K
-PiArCS5jZmdfcGh5X21heF9yZF90aW1lID0JCVJFR19GSUVMRChEU0lfUEhZX1RNUl9DRkcsIDAs
-IDE0KSwNCj4gICAJLmNmZ19waHlfbHAyaHNfdGltZSA9CQlSRUdfRklFTEQoRFNJX1BIWV9UTVJf
-Q0ZHLCAxNiwgMjMpLA0KPiAgIAkuY2ZnX3BoeV9oczJscF90aW1lID0JCVJFR19GSUVMRChEU0lf
-UEhZX1RNUl9DRkcsIDI0LCAzMSksDQo+IC0JLmNmZ19waHlfbWF4X3JkX3RpbWVfdjEzMSA9CVJF
-R19GSUVMRChEU0lfUEhZX1RNUl9SRF9DRkcsIDAsIDE1KSwNCj4gLQkuY2ZnX3BoeV9scDJoc190
-aW1lX3YxMzEgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfQ0ZHLCAwLCAxNSksDQo+IC0JLmNmZ19w
-aHlfaHMybHBfdGltZV92MTMxID0JUkVHX0ZJRUxEKERTSV9QSFlfVE1SX0NGRywgMTYsIDMxKSwN
-Cj4gKwkuY2ZnX3BoeV9tYXhfcmRfdGltZV92MTMxID0JUkVHX0ZJRUxEKERTSV9QSFlfVE1SX1JE
-X0NGRywgMCwgMTQpLA0KPiArCS5jZmdfcGh5X2xwMmhzX3RpbWVfdjEzMSA9CVJFR19GSUVMRChE
-U0lfUEhZX1RNUl9DRkcsIDAsIDkpLA0KPiArCS5jZmdfcGh5X2hzMmxwX3RpbWVfdjEzMSA9CVJF
-R19GSUVMRChEU0lfUEhZX1RNUl9DRkcsIDE2LCAyNSksDQo+ICAgCS5jZmdfcGh5X2Nsa2xwMmhz
-X3RpbWUgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfTFBDTEtfQ0ZHLCAwLCAxNSksDQo+ICAgCS5j
-ZmdfcGh5X2Nsa2hzMmxwX3RpbWUgPQlSRUdfRklFTEQoRFNJX1BIWV9UTVJfTFBDTEtfQ0ZHLCAx
-NiwgMzEpLA0KPiAgIAkuY2ZnX3BoeV90ZXN0Y2xyID0JCVJFR19GSUVMRChEU0lfUEhZX1RTVF9D
-VFJMMCwgMCwgMCksDQo+IEBAIC0zNjEsMTEgKzM2MSwxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
-IGR3X21pcGlfZHNpX3ZhcmlhbnQgZHdfbWlwaV9kc2lfdjEzMF92MTMxX2xheW91dCA9IHsNCj4g
-ICAJLmNmZ19wY2toZGxfY2ZnID0JCVJFR19GSUVMRChEU0lfUENLSERMX0NGRywgMCwgNCksDQo+
-ICAgCS5jZmdfaHN0eF90aW1lb3V0X2NvdW50ZXIgPQlSRUdfRklFTEQoRFNJX1RPX0NOVF9DRkcs
-IDE2LCAzMSksDQo+ICAgCS5jZmdfbHByeF90aW1lb3V0X2NvdW50ZXIgPQlSRUdfRklFTEQoRFNJ
-X1RPX0NOVF9DRkcsIDAsIDE1KSwNCj4gLQkuY2ZnX2ludF9zdGF0MCA9CQlSRUdfRklFTEQoRFNJ
-X0lOVF9TVDAsIDAsIDMxKSwNCj4gLQkuY2ZnX2ludF9zdGF0MSA9CQlSRUdfRklFTEQoRFNJX0lO
-VF9TVDEsIDAsIDMxKSwNCj4gLQkuY2ZnX2ludF9tYXNrMCA9CQlSRUdfRklFTEQoRFNJX0lOVF9N
-U0swLCAwLCAzMSksDQo+IC0JLmNmZ19pbnRfbWFzazEgPQkJUkVHX0ZJRUxEKERTSV9JTlRfTVNL
-MSwgMCwgMzEpLA0KPiAtCS5jZmdfZ2VuX2hkciA9CQkJUkVHX0ZJRUxEKERTSV9HRU5fSERSLCAw
-LCAzMSksDQo+ICsJLmNmZ19pbnRfc3RhdDAgPQkJUkVHX0ZJRUxEKERTSV9JTlRfU1QwLCAwLCAy
-MCksDQo+ICsJLmNmZ19pbnRfc3RhdDEgPQkJUkVHX0ZJRUxEKERTSV9JTlRfU1QxLCAwLCAxMiks
-DQo+ICsJLmNmZ19pbnRfbWFzazAgPQkJUkVHX0ZJRUxEKERTSV9JTlRfTVNLMCwgMCwgMjApLA0K
-PiArCS5jZmdfaW50X21hc2sxID0JCVJFR19GSUVMRChEU0lfSU5UX01TSzEsIDAsIDEyKSwNCj4g
-KwkuY2ZnX2dlbl9oZHIgPQkJCVJFR19GSUVMRChEU0lfR0VOX0hEUiwgMCwgMjMpLA0KPiAgIAku
-Y2ZnX2dlbl9wYXlsb2FkID0JCVJFR19GSUVMRChEU0lfR0VOX1BMRF9EQVRBLCAwLCAzMSksDQo+
-ICAgfTsNCj4gICANCj4gQEAgLTM4Miw3ICszODIsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X21pcGlfZHNpX3ZhcmlhbnQgZHdfbWlwaV9kc2lfdjEwMV9sYXlvdXQgPSB7DQo+ICAgCS5jZmdf
-Y21kX21vZGVfZ2VuX2x3X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9DRkcsIDExLCAxMSks
-DQo+ICAgCS5jZmdfY21kX21vZGVfZGNzX2x3X2VuID0JUkVHX0ZJRUxEKERTSV9DTURfTU9ERV9D
-RkcsIDEyLCAxMiksDQo+ICAgCS5jZmdfY21kX21vZGVfYWNrX3Jxc3RfZW4gPQlSRUdfRklFTEQo
-RFNJX0NNRF9NT0RFX0NGR19WMTAxLCAxMywgMTMpLA0KPiAtCS5jZmdfY21kX3BrdF9zdGF0dXMg
-PQkJUkVHX0ZJRUxEKERTSV9DTURfUEtUX1NUQVRVU19WMTAxLCAwLCAxNCksDQo+ICsJLmNmZ19j
-bWRfcGt0X3N0YXR1cyA9CQlSRUdfRklFTEQoRFNJX0NNRF9QS1RfU1RBVFVTX1YxMDEsIDAsIDYp
-LA0KPiAgIAkuY2ZnX3ZpZF9tb2RlX2VuID0JCVJFR19GSUVMRChEU0lfVklEX01PREVfQ0ZHX1Yx
-MDEsIDAsIDApLA0KPiAgIAkuY2ZnX3ZpZF9tb2RlX3R5cGUgPQkJUkVHX0ZJRUxEKERTSV9WSURf
-TU9ERV9DRkdfVjEwMSwgMSwgMiksDQo+ICAgCS5jZmdfdmlkX21vZGVfbG93X3Bvd2VyID0JUkVH
-X0ZJRUxEKERTSV9WSURfTU9ERV9DRkdfVjEwMSwgMywgOCksDQo=
+
+Serge Semin writes:
+
+> On Wed, May 13, 2020 at 04:00:27PM +0200, Lars Povlsen wrote:
+>> This add DT bindings for the Sparx5 SPI driver.
+>
+> This whole file can be easily merged in to the generic DW APB SSI DT
+> binding file. Just use "if: properties: compatible: const: ..." construction
+> to distinguish ocelot, jaguar, sparx5 and non-sparx5 nodes.
+>
+>>
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  .../bindings/spi/mscc,ocelot-spi.yaml         | 49 +++++++++++++++----
+>>  1 file changed, 39 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>> index a3ac0fa576553..8beecde4b0880 100644
+>> --- a/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>> +++ b/Documentation/devicetree/bindings/spi/mscc,ocelot-spi.yaml
+>> @@ -23,15 +23,23 @@ properties:
+>>      enum:
+>>        - mscc,ocelot-spi
+>>        - mscc,jaguar2-spi
+>> +      - microchip,sparx5-spi
+>>
+>>    interrupts:
+>>      maxItems: 1
+>>
+>>    reg:
+>>      minItems: 2
+>> -    items:
+>> -      - description: Designware SPI registers
+>> -      - description: CS override registers
+>> +    maxItems: 3
+>> +    oneOf:
+>> +      - items:
+>> +          - description: Designware SPI registers
+>> +          - description: CS override registers (Not sparx5).
+>> +      - items:
+>> +          - description: Designware SPI registers
+>> +          - description: CS override registers (Not sparx5).
+>> +          - description: Direct mapped SPI read area. If provided, the
+>> +              driver will register spi_mem_op's to take advantage of it.
+>>
+>>    clocks:
+>>      maxItems: 1
+>> @@ -43,6 +51,23 @@ properties:
+>>         enum: [ 2, 4 ]
+>>      maxItems: 1
+>>
+>
+>> +  spi-rx-delay-us:
+>> +    description: |
+>> +      The delay (in usec) of the RX signal sample position. This can
+>> +      be used to tne the RX timing in order to acheive higher
+>> +      speeds. This is used for all devices on the bus.
+>> +    default: 0
+>> +    maxItems: 1
+>
+> spi-rx-delay-us is defined for a particular SPI-slave. Please see the
+> DT binding file: Documentation/devicetree/bindings/spi/spi-controller.yaml .
+> Although as I suggested before this delay isn't what the Dw APB SSI RX sample
+> delay functionality does. Probably a vendor-specific property would be better
+> here. But I'd also define it on a SPI-slave basis, not for all devices on the
+> bus.
+
+Right, I was hunting for something "similar". As pointed out, this is
+really different in nature, and the unit is also too coarse.
+
+I will change this to "snps,rx-sample-delay-ns" as suggested in your
+other comments.
+
+>
+>> +
+>> +  interface-mapping-mask:
+>> +    description: |
+>> +      On the Sparx5 variant, two different busses are connected to the
+>> +      controller. This property is a mask per chip-select, indicating
+>> +      whether the CS should go to one or the other interface.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    default: 0
+>> +    maxItems: 1
+>
+> As Mark rightfully suggested this seems like an SPI-slave related property, then
+> most likely it should be defined on the SPI-slave basis (probably as a bool
+> property). Additionally it's vendor-specific, so the property name should be
+> accordingly prefixed.
+
+Yes, I'll change this to a per-device property. I need the same for the
+above as well.
+
+>
+>> +
+>>  required:
+>>    - compatible
+>>    - reg
+>> @@ -50,11 +75,15 @@ required:
+>>
+>>  examples:
+>>    - |
+>> -    spi0: spi@101000 {
+>> -      compatible = "mscc,ocelot-spi";
+>> -      #address-cells = <1>;
+>> -      #size-cells = <0>;
+>> -      reg = <0x101000 0x100>, <0x3c 0x18>;
+>> -      interrupts = <9>;
+>> -      clocks = <&ahb_clk>;
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    spi0: spi@600104000 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        compatible = "microchip,sparx5-spi";
+>
+>> +        reg = <0x00104000 0x40>, <0 0>, <0x3000000 0x4000000>;
+>
+> I have a doubt that defining an empty reg region is a good idea, since you can
+> detect the reg requirements by the node compatible string.
+
+Yes, its probably better that way. It looks ugly too :-)
+
+Thanks for your comments!
+
+---Lars
+
+
+> -Sergey
+>
+>> +        num-cs = <16>;
+>> +        reg-io-width = <4>;
+>> +        reg-shift = <2>;
+>> +        clocks = <&ahb_clk>;
+>> +        interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+>>      };
+>> --
+>> 2.26.2
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Lars Povlsen,
+Microchip
