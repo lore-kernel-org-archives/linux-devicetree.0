@@ -2,226 +2,112 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EC8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93D4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC01120760
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="OuOrUdIn"
+	by mail.kernel.org (Postfix) with ESMTP id 893302078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 10:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591784972;
+	bh=pWbMBf+2NHLWsd74kJCHTKb/ilpX227pIQD4SgmxOzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xJ8qRSfhB3OU9RPMNsI/V5E8fG8IUyBrBumQgs9F38ghEIZLIPDuxw0PyA0j2dSis
+	 J7WbpeiJCIaTXhpnQF6qqpCP41oIDl7JyNqivmkn5C8/MJzR8I3KPJv2USMUJRIg48
+	 AhmKbJAHKW7ZJreLW1BShhYD4R1XDvgwI6Q8eU9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgFJK3A (ORCPT
+        id S1728246AbgFJK33 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 06:29:00 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:39773 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726533AbgFJK27 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 06:28:59 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id ixyWjgYFiCKzeixyajwFcP; Wed, 10 Jun 2020 12:28:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591784937; bh=Qmd3Po5WmedPd6SnQS15ReHXur2bmLTHnIR4zy7yoME=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=OuOrUdInufSqMQzHCE6CTrGv5w53ZTR9p0+gjoLzomyoxjSgAkUXQvrcZxZQiiR12
-         OfDWSbNU06h/33MFHQoXg7S7nw6WLs9wIAouDW/YqB5jR0eQgoRnDla6endslz4xMB
-         Sztk27N3QWisuLoa7DYKBbbmPliFVvutkWgnZ54hU4wIlDyGDixlfFN6HdZmADM244
-         2JOhUfQ/vmWQiQY1R9VL+Ffos00eZk3yAbYgNMSDQephICAEFJe3iQVFtmVamPCuk+
-         rXGyiaXlGYPw45NjkbwhROW2IT+rrl9rCmrayTE2XDQjVflZbRdXOXgKx7Ke9M5wRb
-         t0axYFskIzFCw==
-Subject: Re: [RFC PATCH V4 1/4] media: v4l2-mem2mem: add v4l2_m2m_suspend,
- v4l2_m2m_resume
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
-Cc:     laurent.pinchart+renesas@ideasonboard.com, matthias.bgg@gmail.com,
-        mchehab@kernel.org, pihsun@chromium.org, yuzhao@chromium.org,
-        zwisler@chromium.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
-        sj.huang@mediatek.com, christie.yu@mediatek.com,
-        frederic.chen@mediatek.com, jungo.lin@mediatek.com,
-        Rynn.Wu@mediatek.com, linux-media@vger.kernel.org,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
-        Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
-References: <20191204124732.10932-1-Jerry-Ch.chen@mediatek.com>
- <20191204124732.10932-2-Jerry-Ch.chen@mediatek.com>
- <20200521171101.GA243874@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <e31fe64a-c5c1-7b1e-eec1-27111fe43ac2@xs4all.nl>
-Date:   Wed, 10 Jun 2020 12:28:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 10 Jun 2020 06:29:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbgFJK3X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 06:29:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 762FE20656;
+        Wed, 10 Jun 2020 10:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591784963;
+        bh=pWbMBf+2NHLWsd74kJCHTKb/ilpX227pIQD4SgmxOzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1XmLlrByds01M+op+BGXfLVCmQNRSnVf5dOMutgcNHgrt1Pf4i7SBvhZ9G2zTZsOG
+         KtO7gr4mFkvcNsDUD1RoMT4uuweLbOKyjlxmUI5arnGFC+9eE22vLXgefXEnpceHLD
+         fXUQQIy6V1Q9PWKQzwHPypIwFKSufu/mSvdOMHsU=
+Date:   Wed, 10 Jun 2020 11:29:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200610102920.GC5005@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-2-dmurphy@ti.com>
+ <20200609173143.GN4583@sirena.org.uk>
+ <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+ <20200609175852.GQ4583@sirena.org.uk>
+ <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
+ <20200609184734.GS4583@sirena.org.uk>
+ <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521171101.GA243874@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPjvDRwAPuBWAShnkaoy0Ko1HJ/dBfaHGDX6rtabWr+JGzfga9JvRL0Z10aQ1hEni+uuVwBL9NpJlbHqv1Xk/3g6Ii3fEMHWp8W6kf3u1uALpb2Gn9Ao
- QAqUDEgTW2OGCL2CFkzRJPvzV47P+7vm/mf1wEO+hTf/jgPTZLBuMLTo4DSM4YwTSL9CUG4IL8DVfFdKLq8T0Y8PX0uvKd8svILMRVngvwwCw8JA8BiXZxBo
- Iu26+DEFrg0Hc9tclOpaf51WxPfSRwLoi15S3UbAHaBiGa9G78WlIVgoUgP89Sk/EOgNd8P6hlARgeAf8/a9eYojiuOGFDxIhpEp3XuanMMW96e1yGI2h3Ba
- oODjlnzhs8KXcNk4+Qq1Nn06tKrzFPTTnyP9Bo9pqLnWyoOFiZfx/CQgR0z6zMdMkoLjXQGxahk+k2OwPxfQloq6Mf+K3bNynE25GDSLHUR6/flvrQUJ8EOT
- Ynec3fePBQtGaPxWUQm46segEwXUomve1yOK1sjOYJiZlombg3CEZmxLmrEh6Eltw/BcDDuURdl2SrjUAbiEXQxx3REFR992xLvfCqqr8AzsVZgoH3dStTWG
- YUhX4yub2tL3JgDtKE2OtJSI377Buy5UEVZmsILVDp0IVrLoA+Mh6CbzsnSlt7/M4K3saP7ympO8IYRFu1H4PI3n69jwRjUYzySaqguKO+4PR5VOb7qY2ZmT
- MPyvsqUfBgfCzntwyCzk3A019FsIwqhqSfGoWnO5ibXy41Gt071yMqVcQe1Pwob28KMorI0UmVzez3QqSI5VI1nXCRJm6SSGNA8lyjeiyqWp+SqDuHl2JSV3
- ukeiqR4R6rbbCsa3WoLGusGd4lutrXB4WS+tgRveshrLBptlmrl3nc7nFDdX0GjgewYzBwqJckaOqjl/rNnm5WVjFbPCk3e5DFxVMAtp
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Content-Disposition: inline
+In-Reply-To: <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
+X-Cookie: fortune: No such file or directory
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21/05/2020 19:11, Tomasz Figa wrote:
-> Hi Jerry,
-> 
-> On Wed, Dec 04, 2019 at 08:47:29PM +0800, Jerry-ch Chen wrote:
->> From: Pi-Hsun Shih <pihsun@chromium.org>
->>
->> Add two functions that can be used to stop new jobs from being queued /
->> continue running queued job. This can be used while a driver using m2m
->> helper is going to suspend / wake up from resume, and can ensure that
->> there's no job running in suspend process.
->>
->> BUG=b:143046833
->> TEST=build
->>
->> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
->> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.corp-partner.google.com>
->> ---
->>  drivers/media/v4l2-core/v4l2-mem2mem.c | 40 ++++++++++++++++++++++++++
->>  include/media/v4l2-mem2mem.h           | 22 ++++++++++++++
->>  2 files changed, 62 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
->> index 5bbdec55b7d7..76ba203e0035 100644
->> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
->> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
->> @@ -47,6 +47,10 @@ module_param(debug, bool, 0644);
->>  #define TRANS_ABORT		(1 << 2)
->>  
->>  
->> +/* The job queue is not running new jobs */
->> +#define QUEUE_PAUSED		(1 << 0)
->> +
->> +
->>  /* Offset base for buffers on the destination queue - used to distinguish
->>   * between source and destination buffers when mmapping - they receive the same
->>   * offsets but for different queues */
->> @@ -88,6 +92,7 @@ static const char * const m2m_entity_name[] = {
->>   * @job_queue:		instances queued to run
->>   * @job_spinlock:	protects job_queue
->>   * @job_work:		worker to run queued jobs.
->> + * @job_queue_flags:	flags of the queue status, %QUEUE_PAUSED.
->>   * @m2m_ops:		driver callbacks
->>   */
->>  struct v4l2_m2m_dev {
->> @@ -105,6 +110,7 @@ struct v4l2_m2m_dev {
->>  	struct list_head	job_queue;
->>  	spinlock_t		job_spinlock;
->>  	struct work_struct	job_work;
->> +	unsigned long		job_queue_flags;
->>  
->>  	const struct v4l2_m2m_ops *m2m_ops;
->>  };
->> @@ -267,6 +273,12 @@ static void v4l2_m2m_try_run(struct v4l2_m2m_dev *m2m_dev)
->>  		return;
->>  	}
->>  
->> +	if (m2m_dev->job_queue_flags & QUEUE_PAUSED) {
->> +		spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
->> +		dprintk("Running new jobs is paused\n");
->> +		return;
->> +	}
->> +
->>  	m2m_dev->curr_ctx = list_first_entry(&m2m_dev->job_queue,
->>  				   struct v4l2_m2m_ctx, queue);
->>  	m2m_dev->curr_ctx->job_flags |= TRANS_RUNNING;
->> @@ -447,6 +459,34 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
->>  }
->>  EXPORT_SYMBOL(v4l2_m2m_job_finish);
->>  
->> +void v4l2_m2m_suspend(struct v4l2_m2m_dev *m2m_dev)
->> +{
->> +	unsigned long flags;
->> +	struct v4l2_m2m_ctx *curr_ctx;
->> +
->> +	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
->> +	m2m_dev->job_queue_flags |= QUEUE_PAUSED;
->> +	curr_ctx = m2m_dev->curr_ctx;
->> +	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
->> +
->> +	if (curr_ctx)
->> +		wait_event(curr_ctx->finished,
->> +			   !(curr_ctx->job_flags & TRANS_RUNNING));
->> +}
->> +EXPORT_SYMBOL(v4l2_m2m_suspend);
->> +
->> +void v4l2_m2m_resume(struct v4l2_m2m_dev *m2m_dev)
->> +{
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
->> +	m2m_dev->job_queue_flags &= ~QUEUE_PAUSED;
->> +	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
->> +
->> +	v4l2_m2m_try_run(m2m_dev);
->> +}
->> +EXPORT_SYMBOL(v4l2_m2m_resume);
->> +
->>  int v4l2_m2m_reqbufs(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
->>  		     struct v4l2_requestbuffers *reqbufs)
->>  {
->> diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
->> index 5467264771ec..119a195da390 100644
->> --- a/include/media/v4l2-mem2mem.h
->> +++ b/include/media/v4l2-mem2mem.h
->> @@ -183,6 +183,28 @@ v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
->>  	vb2_buffer_done(&buf->vb2_buf, state);
->>  }
->>  
->> +/**
->> + * v4l2_m2m_suspend() - stop new jobs from being run and wait for current job
->> + * to finish
->> + *
->> + * @m2m_dev: opaque pointer to the internal data to handle M2M context
->> + *
->> + * Called by a driver in the suspend hook. Stop new jobs from being run, and
->> + * wait for current running job to finish.
->> + */
->> +void v4l2_m2m_suspend(struct v4l2_m2m_dev *m2m_dev);
->> +
->> +/**
->> + * v4l2_m2m_resume() - resume job running and try to run a queued job
->> + *
->> + * @m2m_dev: opaque pointer to the internal data to handle M2M context
->> + *
->> + * Called by a driver in the resume hook. This reverts the operation of
->> + * v4l2_m2m_suspend() and allows job to be run. Also try to run a queued job if
->> + * there is any.
->> + */
->> +void v4l2_m2m_resume(struct v4l2_m2m_dev *m2m_dev);
->> +
->>  /**
->>   * v4l2_m2m_reqbufs() - multi-queue-aware REQBUFS multiplexer
->>   *
->> -- 
->> 2.18.0
-> 
-> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> 
-> [Corrected Hans's email address.]
-> Hans, does this look good to you?
 
-Yes, this looks good.
+--xo44VMWPx7vlQ2+2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for the late reply.
+On Tue, Jun 09, 2020 at 02:20:29PM -0500, Dan Murphy wrote:
+> On 6/9/20 1:47 PM, Mark Brown wrote:
 
-I assume this will be part of a future patch series that calls these new functions?
+> > That's really not very idiomatic for how Linux does stuff and seems to
+> > pretty much guarantee issues with hotplugging controls and ordering -
+> > you'd need special userspace to start up even if it was just a really
+> > simple DSP config doing only speaker correction or something.  I'm not
+> > sure what the advantage would be - what problem is this solving over
+> > static names?
 
-Regards,
+> IMO having a static name is the problem. It is an inflexible design.=A0
+> Besides the firmware-name property seems to be used in other drivers to
+> declare firmwares for the boards.
 
-	Hans
+> But if no one is complaining or submitting patches within the codecs to be
+> more flexible with firmware then I can just hard code the name like other
+> drivers do.
+
+I'm not *completely* opposed to having the ability to suggest a name in
+firmware, the big problem is making use of the DSP completely dependent
+on having a DT property or doing some non-standard dance in userspace.
+
+--xo44VMWPx7vlQ2+2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7gtf8ACgkQJNaLcl1U
+h9CbrQf7B8RtgYmxR3DH0mpsVd3cVro2R/WpXyZk1PyY6j+8VLCYx2e1D8Qu0GJn
+6nGhVdulQbM2keMV421wGC73yoAPvIU+UHrW8JdJLJ+Se2uhqZS7DPPjcdUJBmz6
+pSt2frp+Jz4iNn+8bFV69Ubj7FoDB71r4wkSqprOW38aB7wNZOIM31mAf+hfn8ps
+juyneFqACKwv4OctOdk3A3kK8UP+EQviWvR+EAG5kJIkznLGht+Fx9U5Li8fBXEz
+IXv0w6uKhw919KWhtVQg+w2yLPCqDSopsIo7UGg9HJ/FXeVK4qgbXdpvQPo26H6m
+Gc92N1Ej/OumXlfZArpAtbFZjNhDpQ==
+=SvRr
+-----END PGP SIGNATURE-----
+
+--xo44VMWPx7vlQ2+2--
