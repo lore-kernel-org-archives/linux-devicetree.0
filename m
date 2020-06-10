@@ -2,95 +2,91 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 13:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F55C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9C8F207C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 13:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2742078C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 13:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591797218;
-	bh=s1vPJ4Oq4k32bys2o6uXySw3TErrUiu1W9fi1VFwHmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ihqvkvpUoGg78sU2Tenod5JLd8GjKChr5DBivsOmGpbSFRx1gHQyvJUFqupgXpHqh
-	 GUzSDc+jodwV1WokwdppX/Z15ML8uLjyBSOVqlBERSvo7uSgidJab1+bKLSSHyOUna
-	 wJI8iJyViUt6symbuqUVmqF+fnZ/erOdMOKduN2E=
+	s=default; t=1591797404;
+	bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OBv/9FxH9hL6Gt3XafxpQoJAth0ZTVu03sFrF4tq8ydNkBeQiI2fYIkdkpkAvmJdk
+	 d2S9g6iLe8OjshDbAVvi9vTawMKF8xNNyuryyIMw0tzaRJ6IfvFDQdYtDmYnbPESPI
+	 tWpN9Yyr/JGhI2ag1fh0F0jW60cRGFeWf6cCyxbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgFJNxi (ORCPT
+        id S1729586AbgFJN4l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 09:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45484 "EHLO mail.kernel.org"
+        Wed, 10 Jun 2020 09:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbgFJNxi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 09:53:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726387AbgFJN4k (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 09:56:40 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31183206F4;
-        Wed, 10 Jun 2020 13:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 293A4206F7;
+        Wed, 10 Jun 2020 13:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591797217;
-        bh=s1vPJ4Oq4k32bys2o6uXySw3TErrUiu1W9fi1VFwHmc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qreQMkrwj+CumutUh7nwPxQ3ljG79JcA1ghbj5W2wDJ145RY55Wlaip8KId3A9cr6
-         cHL9NI66U3QiEbpuD46atfCRf9LV7e7bugfnfNuUXSbPzPdRkMZ4BOY2Zwgdx6hmXx
-         JrB0bpYW08T283+OkQGmaobvjgrpvxlaeL6sAnsU=
-Date:   Wed, 10 Jun 2020 14:53:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org,
-        msavaliy@codeaurora.org
-Subject: Re: [PATCH V7 RESEND 4/7] spi: spi-geni-qcom: Add interconnect
- support
-Message-ID: <20200610135335.GG5005@sirena.org.uk>
-References: <1591682194-32388-1-git-send-email-akashast@codeaurora.org>
- <1591682194-32388-5-git-send-email-akashast@codeaurora.org>
+        s=default; t=1591797400;
+        bh=1Cj2Fu88LV4A1GgSyK0XUoUZIOiwmlOBdE+eZjQYBE8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cxfDQV9c7q2CTPvH9bVVbFxTVYhTD/TelQG5Yq27BP7A4hg/tJgMFNm8ivwMarGjO
+         //yBZphNP8a1ZofgNgh46xyBh6cjhJOMoAjWU/nRxi9KUj5kZvUQmlGHWfusM5T/1r
+         qGtTogDeicpAsCSSiGjscw3KPco8jXPwv6C5TMzs=
+Received: by mail-ot1-f53.google.com with SMTP id k15so1749089otp.8;
+        Wed, 10 Jun 2020 06:56:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531m1dZIFb+1rkI4bgBKmhKAaakL2oXHRFqarWQQcjeb7xzSCGyZ
+        z3xE15fSJTypdATcudAE3ub/b6BYsO6mgi4WEQ==
+X-Google-Smtp-Source: ABdhPJzmcV+9T4BOYZL9yyzPscKPz9ct+kzL7+78ybw2OrqunkEGa/Wxk94oESNvy8oQbfWj8DD4LjEjvLDexy9UwZ8=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr2547303otr.107.1591797399576;
+ Wed, 10 Jun 2020 06:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
-Content-Disposition: inline
-In-Reply-To: <1591682194-32388-5-git-send-email-akashast@codeaurora.org>
-X-Cookie: fortune: No such file or directory
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200601094512.50509-1-sudeep.holla@arm.com> <20200601094512.50509-2-sudeep.holla@arm.com>
+ <20200609223551.GA1620273@bogus> <20200610074346.GB15939@willie-the-truck>
+In-Reply-To: <20200610074346.GB15939@willie-the-truck>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 10 Jun 2020 07:56:28 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
+Message-ID: <CAL_JsqKFDBmyAVjWR9ZxOjU6j2fcCOz32rnnUwBAQzzh-vMa_A@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
+ non-secure VM partitions
+To:     Will Deacon <will@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Jun 10, 2020 at 1:43 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
+> > On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
+> > > Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
+> > > at virtual interface(VMs).
+> > >
+> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > ---
+> > >  .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
+> > >  1 file changed, 47 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
+> >
+> > I'm hoping this goes away if the firmware is discoverable, but if not DT
+> > bindings are DT schema now.
+>
+> We'll need the binding for the kvm host side, because there are plenty
+> of partition properties that are not discoverable (e.g. number of vCPUs).
 
---DWg365Y4B18r8evw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+BTW, there's already a partitioning binding for Power in ePAPR. I've
+not paid much attention to it, but maybe it could be useful here.
 
-On Tue, Jun 09, 2020 at 11:26:31AM +0530, Akash Asthana wrote:
-> Get the interconnect paths for SPI based Serial Engine device
-> and vote according to the current bus speed of the driver.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---DWg365Y4B18r8evw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7g5d4ACgkQJNaLcl1U
-h9BKIQf/Q3VWEhsUfEymHtm5vEhv+ze1U2uQE7g2uwUQ9YZY8QFHJCWB9ASndc5g
-QgChce69MVl8+qsbwJ+hkrWRwtOKe00vqt+lqkAYGWTaKscEAIN+/kcTBAc6sDjx
-AnvBT9QeybB3i4xBtemJoPyPKLC3H1Ez2wZuez5FrqYcdThqiHIuewkCxAUgjg2a
-ovBeeDZ8GrBKfU0c/2HzilwrkovLlc0nuDwWn0xQhKdn9AynKB6UT/JJEhXbi0q6
-EpDqZNEHbv/itTQI0lyAQbcy3QelIcbfwj7rX3rHZN1hDbQ29lFSGSIg0nNQE1iX
-wq9EC6v/TcmPGMnddSvy091y7FAW7g==
-=bZPH
------END PGP SIGNATURE-----
-
---DWg365Y4B18r8evw--
+Rob
