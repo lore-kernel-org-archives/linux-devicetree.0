@@ -2,115 +2,95 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CFDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 00:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4774C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 01:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6330C2078C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 00:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591748988;
-	bh=pSlBcS9kFU9bDgzfsMFBUwoYpu5ZiWs7SSCafDpj32o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iKk7DOeyQdKruJEQ/7FqWjQqiJXAQolPMdrbQCVzCZOOqA5DC+mJEljQsf2Tx/6v+
-	 DTEd7ij4E2U6HfsyLxQJVsBFwLXwPu7r8z9ToabB6NlwOrqumEwbiQcdfP1xsWDvv9
-	 m/nXuhW+IGh7BvVqIwd+wQLkvVqXThEvpCQk5yPM=
+	by mail.kernel.org (Postfix) with ESMTP id B69B12072F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 01:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCQkCdEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgFJA3r (ORCPT
+        id S1726101AbgFJBD3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 9 Jun 2020 20:29:47 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:35709 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgFJA3q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 20:29:46 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 05A0T8DU019689;
-        Wed, 10 Jun 2020 09:29:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 05A0T8DU019689
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591748949;
-        bh=VM70ps23UXtp9wyqfDLB4Qqq6BEuxOAlmWAVhnS3iis=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gVYbEca9FeUnZVXU49Hrf4d0EOcfGyfKIWjsR4VvgeuDC3q8WOHT0+YSePNhbwwpy
-         F5OFC4TOFdd5HTRN65MYMyRJuuCSVoomWFJmgA+uRPO2El8RC1M/rTYfbt8gGp8LLq
-         ASHqHzwKi/tSS9vK3SG3Ji+q+k57uuk/sJORTK9/iqv93Epo4qGA1oRsf1vCqZj7yf
-         Po7ZTLQd4v2ZeB8erBxFcmwIEkuVR8ajM+oTIQL+k/ELkLgR/JUaM7SN7mF97zV62Z
-         pL/tvRDuS11re3Vr2PDmjstxgxIZNtOj7fufIHbX0k9IZ9IRrrsKM5G4mFw0CQefRK
-         iG4fPTSiDZOhg==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id r1so255540uam.6;
-        Tue, 09 Jun 2020 17:29:09 -0700 (PDT)
-X-Gm-Message-State: AOAM531vY6yfc2Z7rIw0H3gGPJgP07mkD5gcdReHf4s43ftdpVj9LapG
-        NWg6s+NjcNp5I1t+nqR9nrUk4A/LstMTt0WppUg=
-X-Google-Smtp-Source: ABdhPJyigR5ge5vveQoPK8ELBVmZtF5xMk71Nnyk0ogmFqEypSJ0hJgpKPOS6JHMNFvjIHwp6Qva/2XYP9bfL1z6Toc=
-X-Received: by 2002:ab0:156d:: with SMTP id p42mr751675uae.121.1591748947924;
- Tue, 09 Jun 2020 17:29:07 -0700 (PDT)
+        Tue, 9 Jun 2020 21:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgFJBD2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Jun 2020 21:03:28 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13C2C05BD1E;
+        Tue,  9 Jun 2020 18:03:27 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so274850plo.7;
+        Tue, 09 Jun 2020 18:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=NupSQB3mn8qZxA9C+29tXiojSZbrUujAJ11XO4adz54=;
+        b=GCQkCdEiNYyzIfE6eQxrZSwuaO0dIWy7eHGXmXA1SdLiERVW7009HeQkYuzacxuYX4
+         5AQz6RnVqsww2m5rDmqQX9T9eeXAgxtZMO177JzKUaLejW1r+042Apv5nkmDnFdl00y3
+         mjRMTj+Pt3Z945s9Olz5qlPDSI1YODCmX+ehy4RY7y6YKt89EkC/J5LQC+z3T7PEUYbf
+         kmi1bh+Vf8C9kQ6IoWA5zG+jR3NXECdz/FF0lgI1cyd6WhtoRtayxHuk2IKv1wF1EYSG
+         JJd6iUR5y0dIYsuolvTTifVRh1PDnfjxll5W+I/ZR/8LfachXBsIQfyPd8vEBpa6ngHY
+         D1zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NupSQB3mn8qZxA9C+29tXiojSZbrUujAJ11XO4adz54=;
+        b=tvcYMxM/e/wMROx3Z1Bs154lkVTocZEdFeTWgQwl2tvL9Z0lsP5zg258gIbxqyDy0K
+         TbQsbXMThongLVrgWo3SKJ7ktqMh6u3EMVAMBcsUH2FcuFSpUeYsZqDBNw5d+iE4cTm2
+         HOgJ5fRtcGPi53tI3t1Qfntq7s7uLEnoOmZPb1vcw+xbCw0cdtXbYXIb3jDVE1sWgIIV
+         1aguZn7pv1rGupevwx5mV/o7+IIRpTQntt0K2bGJp1vBL3F/ftNDCDmefGnQx8M4kZe8
+         +qMcGt3JZZgL2obePXh99/WdBwP28zFTzi7KLsykPQ+fKyDOqvWdaAl/fqqeqHc7qsaj
+         nWpg==
+X-Gm-Message-State: AOAM531+MPLtx/jrrD52sgak37TLZ5W2+YBJqhhkyen00po4VaHdK0nP
+        iqDpeofDHfGVSftJ+WcRX4E=
+X-Google-Smtp-Source: ABdhPJzogdaBaa0lQCLqzIWam/p34pHlSbpfpn+NytAYwVmTCSSIewQgm2rMHf1tgTEBBf+4zrOwtg==
+X-Received: by 2002:a17:90a:1aa2:: with SMTP id p31mr501764pjp.227.1591751006221;
+        Tue, 09 Jun 2020 18:03:26 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 25sm3571826pjk.50.2020.06.09.18.03.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jun 2020 18:03:25 -0700 (PDT)
+Subject: Re: [PATCH v2 1/7] mips: bmips: select ARCH_HAS_RESET_CONTROLLER
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200609134232.4084718-1-noltari@gmail.com>
+ <20200609160244.4139366-1-noltari@gmail.com>
+ <20200609160244.4139366-2-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <894c287e-2cde-63ec-d396-7a5fd175da6f@gmail.com>
+Date:   Tue, 9 Jun 2020 18:03:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200608084117.4563-1-jiping.ma2@windriver.com>
- <CAL_JsqKLfSE5tPEPi1=erqBzCF9fceKKDe4qBkywB4O_JhbjGg@mail.gmail.com>
- <acfc88fc-2a7e-19fe-3dc4-37a03ddabcf9@windriver.com> <CAK7LNAS3xOvkUWZzZcb7Mk2YsWo+A6XTjzTZjxjvkYCjWjQvFg@mail.gmail.com>
- <d76f0e39-e22c-7179-955a-981d42b7bc01@windriver.com>
-In-Reply-To: <d76f0e39-e22c-7179-955a-981d42b7bc01@windriver.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 10 Jun 2020 09:28:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQkXiw9cV=Qt5VrpDGd5CPAPS-EBs0AeOhSJd5JbXtkZg@mail.gmail.com>
-Message-ID: <CAK7LNAQkXiw9cV=Qt5VrpDGd5CPAPS-EBs0AeOhSJd5JbXtkZg@mail.gmail.com>
-Subject: Re: [PATCH] dtc: also check <yaml.h> for libyaml
-To:     Jiping Ma <Jiping.Ma2@windriver.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200609160244.4139366-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 9, 2020 at 12:08 PM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
->
->
->
-> On 06/09/2020 10:52 AM, Masahiro Yamada wrote:
-> > On Tue, Jun 9, 2020 at 10:01 AM Jiping Ma <Jiping.Ma2@windriver.com> wrote:
-> >>
-> >>
-> >> On 06/09/2020 03:09 AM, Rob Herring wrote:
-> >>> On Mon, Jun 8, 2020 at 2:42 AM Jiping Ma <jiping.ma2@windriver.com> wrote:
-> >>>> yamltree.c includes <yaml.h>, If /usr/include/yaml.h does not exist,
-> >>>> it fails to build.
-> >>> Does this patch fix your issue?:
-> >>>
-> >>> https://lore.kernel.org/linux-devicetree/20200505100319.741454-1-masahiroy@kernel.org/
-> >> No, it did not fix the issue.
-> >>
-> >> $ pkg-config --cflags yaml-0.1
-> >>
-> >> $ pkg-config yaml-0.1 --libs
-> >> -L/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux/usr/lib64
-> >> -lyaml
-> This issue happened in Yocto,  After completing the SDK build and
-> installing it, use a new shell to source the environment and try to
-> build the helper scripts.
-> export
-> SDKTARGETSYSROOT=/buildarea/jma1/wr-19-0518/19.45/sysroots/aarch64-wrs-linux
-> export
-> PKG_CONFIG_PATH=$SDKTARGETSYSROOT/usr/lib64/pkgconfig:$SDKTARGETSYSROOT/usr/share/pkgconfig
-> >
-> >
 
 
-Probably, this commit:
+On 6/9/2020 9:02 AM, Álvaro Fernández Rojas wrote:
+> This allows to add reset controllers support.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-https://github.com/yaml/libyaml/commit/3c80be99fb18f3ee18af37221a3b0c4760e8df06
-
-
-Use newer libyaml, and that's fine.
-
-
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Best Regards
-Masahiro Yamada
+Florian
