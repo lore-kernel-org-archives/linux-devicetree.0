@@ -2,186 +2,136 @@ Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3218C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A973C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD2B92067B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591808038;
-	bh=5l99DsraoOPZV1OU1YHuYjZOzAMxH54iUhG8bur9rnM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JmwO6xCF/LaYalANLugp/gdZGP25vhty6fms9ZpbkpU0+fOWKG9OQuG/jGnUp3x4E
-	 vOXxyUzr5a/dzRVog9KF5XCUEWFruEaza8OvVfOOWXwMe2m/DYfZntJK8vpxslsrAM
-	 ypgCx+ONk85HKeKGDxcgVebNfV4ux+FhanCiOPSk=
+	by mail.kernel.org (Postfix) with ESMTP id 3D4342072E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 16:58:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cAdMeWgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgFJQx6 (ORCPT
+        id S1727806AbgFJQ6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 12:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726517AbgFJQx6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 12:53:58 -0400
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E0ED20734;
-        Wed, 10 Jun 2020 16:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591808037;
-        bh=5l99DsraoOPZV1OU1YHuYjZOzAMxH54iUhG8bur9rnM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VKAC3CH1sASX4nfgzMqpFP+edv/gqOVS5WUTKjJX0NX4h3ac+MYrPZ6yhmNCna8Fu
-         cCOVVrFS8zCmP9bLKmf948XY3+q1iIZeKKNz9AhKxOdwQpf1adSEWATaWuKuzTxCZx
-         +e4Sc4bm7L5U3Fb0ONJhJLRXQaY2M2dAzaOm4+HU=
-Received: by mail-oo1-f42.google.com with SMTP id e12so639444oou.2;
-        Wed, 10 Jun 2020 09:53:57 -0700 (PDT)
-X-Gm-Message-State: AOAM5312i7ipcBZKH5D8bs3bvX4cl423qsvIw9wyUpWT3N1+y48jMZDk
-        Wr/ak3M9rkFrCN6FtjOj4eRQhmXJ4bJdBwfXWQ==
-X-Google-Smtp-Source: ABdhPJxqdlrg8qy3QKsG2cIpbwK3twksjEC7SO767My3VTyuKvrDAhv7M8etIZefVyHhyd3wjSboxGEPLEyJMeei2C8=
-X-Received: by 2002:a4a:6156:: with SMTP id u22mr2935115ooe.50.1591808036515;
- Wed, 10 Jun 2020 09:53:56 -0700 (PDT)
+        Wed, 10 Jun 2020 12:58:31 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16700 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgFJQ6a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 12:58:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee110da0000>; Wed, 10 Jun 2020 09:56:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 10 Jun 2020 09:58:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 10 Jun 2020 09:58:30 -0700
+Received: from [10.2.167.70] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jun
+ 2020 16:58:29 +0000
+Subject: Re: [RFC PATCH v1 05/18] i2c: tegra: Fix runtime resume to re-init VI
+ I2C
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+ <1591768960-31648-6-git-send-email-skomatineni@nvidia.com>
+ <fcced8cd-d80d-b09c-b657-cb413ec418f9@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <dc310c94-ae8d-fcf5-be9f-6236f3615dd7@nvidia.com>
+Date:   Wed, 10 Jun 2020 09:58:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
- <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
-In-Reply-To: <20200610153356.GC3213128@kuha.fi.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 10 Jun 2020 10:53:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
-Message-ID: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fcced8cd-d80d-b09c-b657-cb413ec418f9@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591808218; bh=lCn+LcemkNEZVacRc5PI7q1npMKqaFgl+fw6okE0H6U=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=cAdMeWgVEE6NrJQx9xaYzarZGK4cJyQAiZ7rz/T68LylkHXoKF9ZkCO4cE5J4WPJq
+         XqyqOJnzN1EnJnKmXed80z3kWtKMNbInpHBZGDfr9wq/qVSj3g4VPx7mAlyVAVemL/
+         zDYp5EYDTApVFC/EHXQguOlm2P4nJ7ZiddjaFp4a0vF1w7zNA4TSeF4+TAPOAZLwzh
+         lA9sA7jYugjKYvC5LyAxx05fy0Gp6vu7vzB1tHc5APoXMprBjBnw7y5WjWASSktptq
+         sNrLyHrgvxTy7RJViwMupBAjSxEP71nlEkEiWg/FEiHkPyf3KyWzOMDvMsjO7ZatDa
+         QI7UY/E4NDRpg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > Hi Rob,
-> >
-> > Thanks again for the comments and feedback. Kindly see responses inline:
-> >
-> > (Trimming unrelated text from thread):
-> >
-> > On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
-> > > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
-> > > >
-> > > > Nodes truncated and unrelated fields omitted in the interest of brevity:
-> > > >
-> > > > // Chrome OS EC Type C Port Manager.
-> > > > typec {
-> > > >     compatible = "google,cros-ec-typec";
-> > > >     #address-cells = <1>;
-> > > >     #size-cells = <0>;
-> > > >
-> > > >     connector@0 {
-> > > >         compatible = "usb-c-connector";
-> > > >         reg = <0>;
-> > > >         power-role = "dual";
-> > > >         data-role = "dual";
-> > > >         try-power-role = "source";
-> > > >         mode-switch = <&foo_mux>;
-> > > >         // Other switches can point to the same mux.
-> > > >         ....
-> > >
-> > > The connector is supposed to have 'ports' for USB2, USB3, and Aux
-> > > unless the parent is the USB controller.
-> > Understood; so, coupled with Heikki's explanation (see below for where
-> > I've pasted it), would it be something like so? (adding inline to the connector
-> > node definition):
-> >
-> >             ports {
-> >                 #address-cells = <1>;
-> >                 #size-cells = <0>;
-> >
-> >                 port@0 {
-> >                     reg = <0>;
-> >                     usb_con_hs: endpoint {
-> >                         remote-endpoint = <&foo_usb_hs_controller>;
-> >                     };
-> >                 };
-> >
-> >                 port@1 {
-> >                     reg = <1>;
-> >                     usb_con0_ss: endpoint@0 {
-> >                         remote-endpoint = <&mode_mux_in>;
-> >                     };
-> >                 };
-> >
-> >                 port@2 {
-> >                     reg = <2>;
-> >                     usb_con_sbu: endpoint {
-> >                         remote-endpoint = <&foo_dp_aux>;
-> >                     };
-> >                 };
-> >             };
->
-> The pins that can be reassigned can in practice go anywhere. We can't
-> group them in any way. What do we do for example when the two sideband
-> pins go to different locations?
 
-The sideband pins from the connector go to multiple places or the
-sideband signal from a controller go to multiple connectors? Either
-way, that's solved with multiple endpoints. In the former case, port@2
-would have multiple endpoints with all the possible connections. The
-general model of the graph is each port is a separate data channel and
-multiple endpoints are either a mux or fanout depending on the data
-direction.
-
-> It looks like the OF graph for the USB Type-C connectors expects the
-> pins to be grouped like that, which is too bad, because unfortunately
-> it will not work. It would require that we have a separate port for
-> every pin that can be reassigned on the connector, and let's not even
-> consider that.
-
-I guess you are referring to the 4 SS signal pairs and that they could
-be 2 USB links, 1 USB link and 1-2 Alt mode links, or 4 Alt mode
-links. I think the grouping of SS signals is fine as I'd expect
-there's a single entity deciding the routing. That would be 'mux' node
-I think, but 'mux' is the wrong abstraction here. I guess we could
-have 4 muxes (1 for each signal), but I'd hope we don't need that
-level of detail in DT. I think we're in agreement on that.
-
-> We need higher level description of the connections for the USB Type-C
-> connectors. For example, a connector can be connected to this (or
-> these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
-> port, etc. And this is the mux that handles the pins on this
-> connector, and these are the retimers, etc. etc.
->
-> We also need a way to identify those connections, and relying on
-> something like fixed port node addresses, so indexes in practice,
-> feels really risky to me. A conflict may seem unlikely now, but we
-> seen those so many times in the past other things like GPIOs, IRQs,
-> etc. We really need to define string identifiers for these
-> connections.
-
-I assume for IRQs you are referring to cases where we have a variable
-number such as 'interrupts = <1 2 3>;' where 'interrupts = <1 3>'
-doesn't work because we can't describe interrupt 2 is not present? The
-graph binding doesn't suffer from that issue since we can easily omit
-port or endpoint nodes.
-
-Also, the numbering is specific to a compatible string. If we need
-different numbering, then we can do a new compatible.
-
-Rob
+On 6/10/20 6:14 AM, Dmitry Osipenko wrote:
+> 10.06.2020 09:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> VI I2C is on host1x bus and is part of VE power domain.
+>>
+>> During suspend/resume VE power domain goes through power off/on.
+>>
+>> So, controller reset followed by i2c re-initialization is required
+>> after the domain power up.
+>>
+>> This patch fixes it.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/i2c/busses/i2c-tegra.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
+ra.c
+>> index dba38a5..650240d 100644
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>> @@ -293,6 +293,8 @@ struct tegra_i2c_dev {
+>>   	bool is_curr_atomic_xfer;
+>>   };
+>>  =20
+>> +static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reini=
+t);
+>> +
+>>   static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
+>>   		       unsigned long reg)
+>>   {
+>> @@ -679,8 +681,22 @@ static int __maybe_unused tegra_i2c_runtime_resume(=
+struct device *dev)
+>>   		goto disable_slow_clk;
+>>   	}
+>>  =20
+>> +	/*
+>> +	 * VI I2C device is attached to VE power domain which goes through
+>> +	 * power ON/OFF during PM runtime resume/suspend. So, controller
+>> +	 * should go through reset and need to re-initialize after power
+>> +	 * domain ON.
+>> +	 */
+>> +	if (i2c_dev->is_vi) {
+>> +		ret =3D tegra_i2c_init(i2c_dev, true);
+>> +		if (ret)
+>> +			goto disable_div_clk;
+>> +	}
+>> +
+>>   	return 0;
+>>  =20
+>> +disable_div_clk:
+>> +	clk_disable(i2c_dev->div_clk);
+>>   disable_slow_clk:
+>>   	if (i2c_dev->slow_clk)
+>>   		clk_disable(i2c_dev->slow_clk);
+>>
+> The clk_disable() can cope with a NULL argument. Won't it be cleaner to
+> remove the conditions?
+will remove in v2
