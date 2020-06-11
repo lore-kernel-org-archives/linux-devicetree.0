@@ -2,172 +2,122 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DD7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D56C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF4920747
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:26:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MympouM7"
+	by mail.kernel.org (Postfix) with ESMTP id 295882078D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgFKJ0L (ORCPT
+        id S1726823AbgFKJiW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:26:11 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62507 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726560AbgFKJ0L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 05:26:11 -0400
-X-UUID: 28397743254d408eb15d093e40b26913-20200611
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=arPIeFMQZ1+NZeZaAa8iqxicI65qOT2Z+fn97VHkHyg=;
-        b=MympouM7ONPsFXos7gNFoAWJWkGuRm/EHTeuym7LbkREm4KgjMW6EHkJ/xlQOLjYc7RTe6IWMZ4IVI5qgit6V987xZTJtiTCWSVLh3NGBemS2JYlb610XWl3NVPtipSGbTBI3ICIGDDAgRsdRWPTaly/++FaNHEq+IgukLnlvSc=;
-X-UUID: 28397743254d408eb15d093e40b26913-20200611
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1041489277; Thu, 11 Jun 2020 17:26:04 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 11 Jun 2020 17:26:01 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 11 Jun 2020 17:26:01 +0800
-Message-ID: <1591867563.27949.9.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 11 Jun 2020 17:26:03 +0800
-In-Reply-To: <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
-         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 11 Jun 2020 05:38:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43984 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726790AbgFKJiW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 05:38:22 -0400
+IronPort-SDR: OYXV0qGQklU/eQYx0kAdBvudOFPZJ/t81oQviSFTiC5cbHWXWD7qMwPgM4a49UMBI/DIKKy6RA
+ tjBDSBzKSMxw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 02:38:21 -0700
+IronPort-SDR: 7nAZag4CYbYEQrc1XyoWtk0pYw4I0ykWZm3bH7JzVwbEoQUSw3RYtfpKUH/vFdGVbQs9C0U8Rt
+ wCoXP3vLlxjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="275277564"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2020 02:38:19 -0700
+Received: from [10.213.137.212] (ekotax-mobl.gar.corp.intel.com [10.213.137.212])
+        by linux.intel.com (Postfix) with ESMTP id 10672580458;
+        Thu, 11 Jun 2020 02:38:15 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
+ Watchdog timer
+To:     Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        robbh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <cover.1591584255.git.eswara.kota@linux.intel.com>
+ <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
+ <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
+ <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
+ <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
+ <aabceb6f-265d-fd11-eee1-6bccf2160512@linux.intel.com>
+ <c294ced9-a37b-6a90-511e-187bacdec80c@roeck-us.net>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <4feae044-1956-fb70-7786-19c7c48cc391@linux.intel.com>
+Date:   Thu, 11 Jun 2020 17:38:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <c294ced9-a37b-6a90-511e-187bacdec80c@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTEwIGF0IDAwOjAxICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
-SGkgQ2h1bi1LdWFuZywNCg0KW3NuaXBdDQoNCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIG10a19k
-ZXZhcGNfcGRfZ2V0IC0gZ2V0IGRldmFwYyBwZF90eXBlcyBvZiByZWdpc3RlciBhZGRyZXNzLg0K
-PiA+ICsgKg0KPiA+ICsgKiBSZXR1cm5zIHRoZSB2YWx1ZSBvZiByZWcgYWRkcg0KPiA+ICsgKi8N
-Cj4gPiArc3RhdGljIHZvaWQgX19pb21lbSAqbXRrX2RldmFwY19wZF9nZXQoaW50IHNsYXZlX3R5
-cGUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW51bSBERVZB
-UENfUERfUkVHX1RZUEUgcGRfcmVnX3R5cGUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgdTMyIGluZGV4KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbXRr
-X2RldmFwY192aW9faW5mbyAqdmlvX2luZm8gPSBtdGtfZGV2YXBjX2N0eC0+c29jLT52aW9faW5m
-bzsNCj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bSA9IG10a19kZXZhcGNfY3R4LT5zb2Mt
-PnNsYXZlX3R5cGVfbnVtOw0KPiA+ICsgICAgICAgY29uc3QgdTMyICpkZXZhcGNfcGRzID0gbXRr
-X2RldmFwY19jdHgtPnNvYy0+ZGV2YXBjX3BkczsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAq
-cmVnOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICghZGV2YXBjX3BkcykNCj4gPiArICAgICAgICAg
-ICAgICAgcmV0dXJuIE5VTEw7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKChzbGF2ZV90eXBlIDwg
-c2xhdmVfdHlwZV9udW0gJiYNCj4gPiArICAgICAgICAgICAgaW5kZXggPCB2aW9faW5mby0+dmlv
-X21hc2tfc3RhX251bVtzbGF2ZV90eXBlXSkgJiYNCj4gPiArICAgICAgICAgICBwZF9yZWdfdHlw
-ZSA8IFBEX1JFR19UWVBFX05VTSkgew0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSBtdGtfZGV2
-YXBjX2N0eC0+ZGV2YXBjX3BkX2Jhc2Vbc2xhdmVfdHlwZV0gKw0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGRldmFwY19wZHNbcGRfcmVnX3R5cGVdOw0KPiA+ICsNCj4gPiArICAgICAgICAg
-ICAgICAgaWYgKHBkX3JlZ190eXBlID09IFZJT19NQVNLIHx8IHBkX3JlZ190eXBlID09IFZJT19T
-VEEpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnICs9IDB4NCAqIGluZGV4Ow0KPiA+
-ICsNCj4gPiArICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2VycihQRlgg
-IiVzOjB4JXggb3IgJXM6MHgleCBvciAlczoweCV4IGlzIG91dCBvZiBib3VuZGFyeVxuIiwNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICJzbGF2ZV90eXBlIiwgc2xhdmVfdHlwZSwNCj4gDQo+
-IE1vdmUgInNsYXZlX3R5cGUiIGludG8gZm9ybWF0IHN0cmluZy4NCg0KV2h5IGlzIHRoaXMgbmVj
-ZXNzYXJ5PyBJcyB0aGVyZSBhbnkgYmVuZWZpdCBmb3IgbW92aW5nIHRoaXM/DQpTaW5jZSB0aGUg
-bGluZSBsZW5ndGggaXMgYWxtb3N0IG92ZXIgODAgY2hhcnMuDQoNCj4gDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAicGRfcmVnX3R5cGUiLCBwZF9yZWdfdHlwZSwNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICJpbmRleCIsIGluZGV4KTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJu
-IE5VTEw7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHJlZzsNCj4g
-PiArfQ0KPiA+ICsNCj4gDQoNCltzbmlwXQ0KDQo+IA0KPiA+ICsNCj4gPiArLyoNCj4gPiArICog
-ZGV2YXBjX3Zpb2xhdGlvbl9pcnEgLSB0aGUgZGV2YXBjIEludGVycnVwdCBTZXJ2aWNlIFJvdXRp
-bmUgKElTUikgd2lsbCBkdW1wDQo+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICB2aW9sYXRp
-b24gaW5mb3JtYXRpb24gaW5jbHVkaW5nIHdoaWNoIG1hc3RlciB2aW9sYXRlcw0KPiA+ICsgKiAg
-ICAgICAgICAgICAgICAgICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ICsgKi8NCj4gPiArc3RhdGlj
-IGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVyLCB2b2lkICpk
-ZXZfaWQpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bSA9IG10a19kZXZh
-cGNfY3R4LT5zb2MtPnNsYXZlX3R5cGVfbnVtOw0KPiA+ICsgICAgICAgY29uc3Qgc3RydWN0IG10
-a19kZXZpY2VfaW5mbyAqKmRldmljZV9pbmZvOw0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZh
-cGNfdmlvX2luZm8gKnZpb19pbmZvOw0KPiA+ICsgICAgICAgaW50IHNsYXZlX3R5cGUsIHZpb19p
-ZHgsIGluZGV4Ow0KPiA+ICsgICAgICAgY29uc3QgY2hhciAqdmlvX21hc3RlcjsNCj4gPiArICAg
-ICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKyAgICAgICBib29sIG5vcm1hbDsNCj4gPiAr
-ICAgICAgIHU4IHBlcm07DQo+ID4gKw0KPiA+ICsgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJmRl
-dmFwY19sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsgICAgICAgZGV2aWNlX2luZm8gPSBtdGtf
-ZGV2YXBjX2N0eC0+c29jLT5kZXZpY2VfaW5mbzsNCj4gPiArICAgICAgIHZpb19pbmZvID0gbXRr
-X2RldmFwY19jdHgtPnNvYy0+dmlvX2luZm87DQo+ID4gKyAgICAgICBub3JtYWwgPSBmYWxzZTsN
-Cj4gPiArICAgICAgIHZpb19pZHggPSAtMTsNCj4gPiArICAgICAgIGluZGV4ID0gLTE7DQo+ID4g
-Kw0KPiA+ICsgICAgICAgLyogVGhlcmUgYXJlIG11bHRpcGxlIERFVkFQQ19QRCAqLw0KPiA+ICsg
-ICAgICAgZm9yIChzbGF2ZV90eXBlID0gMDsgc2xhdmVfdHlwZSA8IHNsYXZlX3R5cGVfbnVtOyBz
-bGF2ZV90eXBlKyspIHsNCj4gPiArICAgICAgICAgICAgICAgaWYgKCFjaGVja190eXBlMl92aW9f
-c3RhdHVzKHNsYXZlX3R5cGUsICZ2aW9faWR4LCAmaW5kZXgpKQ0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGlmICghbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoc2xhdmVfdHlwZSwgJnZpb19p
-ZHgsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAmaW5kZXgpKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGlu
-dWU7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAvKiBFbnN1cmUgdGhhdCB2aW9sYXRpb24g
-aW5mbyBhcmUgd3JpdHRlbiBiZWZvcmUNCj4gPiArICAgICAgICAgICAgICAgICogZnVydGhlciBv
-cGVyYXRpb25zDQo+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ICsgICAgICAgICAgICAgICBz
-bXBfbWIoKTsNCj4gPiArICAgICAgICAgICAgICAgbm9ybWFsID0gdHJ1ZTsNCj4gPiArDQo+ID4g
-KyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShzbGF2ZV90eXBlLCB2aW9faWR4LCB0cnVl
-KTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGlmIChjbGVhcl92aW9fc3RhdHVzKHNsYXZl
-X3R5cGUsIHZpb19pZHgpKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX3dhcm4oUEZY
-ICIlcywgJXM6MHgleCwgJXM6MHgleFxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICJjbGVhciB2aW8gc3RhdHVzIGZhaWxlZCIsDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAic2xhdmVfdHlwZSIsIHNsYXZlX3R5cGUsDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAidmlvX2luZGV4IiwgdmlvX2lkeCk7DQo+ID4gKw0KPiA+ICsg
-ICAgICAgICAgICAgICBwZXJtID0gZ2V0X3Blcm1pc3Npb24oc2xhdmVfdHlwZSwgaW5kZXgsIHZp
-b19pbmZvLT5kb21haW5faWQpOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgdmlvX21hc3Rl
-ciA9IG10a19kZXZhcGNfY3R4LT5zb2MtPm1hc3Rlcl9nZXQNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAodmlvX2luZm8tPm1hc3Rlcl9pZCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgdmlvX2luZm8tPnZpb19hZGRyLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICBzbGF2
-ZV90eXBlLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICB2aW9faW5mby0+c2hpZnRfc3Rh
-X2JpdCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgdmlvX2luZm8tPmRvbWFpbl9pZCk7
-DQo+IA0KPiBDYWxsIG10Njg3M19idXNfaWRfdG9fbWFzdGVyKCkgZGlyZWN0bHkuIEZvciBmaXJz
-dCBwYXRjaCwgbWFrZSB0aGluZ3MNCj4gYXMgc2ltcGxlIGFzIHBvc3NpYmxlLg0KDQpJbiBkZXZh
-cGNfdmlvbGF0aW9uX2lycSgpIGZ1bmN0aW9uLCB3ZSB1c2UgY29tbW9uIGZsb3cgdG8gaGFuZGxl
-IGVhY2gNCmRldmFwYyB2aW9sYXRpb24gb24gZGlmZmVyZW50IHBsYXRmb3Jtcy4gVGhlIG1hc3Rl
-cl9nZXQoKSBoYXMgZGlmZmVyZW50DQppbXBsZW1lbnRhdGlvbiBvbiBkaWZmZXJlbnQgcGxhdGZv
-cm1zLCB0aGF0IHdoeSBpdCBjYWxsZWQgaW5kaXJlY3RseS4NCg0KT25jZSB3ZSBoYXZlIG5ldyBw
-bGF0Zm9ybSwgd2Ugb25seSBoYXZlIHRvIHVwZGF0ZSBkZXZhcGMtbXR4eHh4LmMNCmluc3RlYWQg
-b2YgY29tbW9uIGhhbmRsZXIgZmxvdy4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAg
-IGlmICghdmlvX21hc3Rlcikgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX3dhcm4o
-UEZYICJtYXN0ZXJfZ2V0IGZhaWxlZFxuIik7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-dmlvX21hc3RlciA9ICJVTktOT1dOX01BU1RFUiI7DQo+ID4gKyAgICAgICAgICAgICAgIH0NCj4g
-PiArDQo+ID4gKyAgICAgICAgICAgICAgIHByX2luZm8oUEZYICIlcyAtICVzOjB4JXgsICVzOjB4
-JXgsICVzOjB4JXgsICVzOjB4JXhcbiIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgIlZp
-b2xhdGlvbiIsICJzbGF2ZV90eXBlIiwgc2xhdmVfdHlwZSwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAic3lzX2luZGV4IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2Vf
-aW5mb1tzbGF2ZV90eXBlXVtpbmRleF0uc3lzX2luZGV4LA0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICJjdHJsX2luZGV4IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2Vf
-aW5mb1tzbGF2ZV90eXBlXVtpbmRleF0uY3RybF9pbmRleCwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAidmlvX2luZGV4IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2Vf
-aW5mb1tzbGF2ZV90eXBlXVtpbmRleF0udmlvX2luZGV4KTsNCj4gPiArDQo+ID4gKyAgICAgICAg
-ICAgICAgIHByX2luZm8oUEZYICIlcyAlcyAlcyAlc1xuIiwNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAiVmlvbGF0aW9uIC0gbWFzdGVyOiIsIHZpb19tYXN0ZXIsDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgImFjY2VzcyB2aW9sYXRpb24gc2xhdmU6IiwNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICBkZXZpY2VfaW5mb1tzbGF2ZV90eXBlXVtpbmRleF0uZGV2aWNlKTsNCj4g
-PiArDQo+ID4gKyAgICAgICAgICAgICAgIGRldmFwY192aW9fcmVhc29uKHBlcm0pOw0KPiA+ICsN
-Cj4gPiArICAgICAgICAgICAgICAgZGV2YXBjX2V4dHJhX2hhbmRsZXIoc2xhdmVfdHlwZSwgdmlv
-X21hc3RlciwgdmlvX2lkeCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgdmlvX2luZm8tPnZpb19hZGRyKTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIG1hc2tf
-bW9kdWxlX2lycShzbGF2ZV90eXBlLCB2aW9faWR4LCBmYWxzZSk7DQo+ID4gKyAgICAgICB9DQo+
-ID4gKw0KPiA+ICsgICAgICAgaWYgKG5vcm1hbCkgew0KPiA+ICsgICAgICAgICAgICAgICBzcGlu
-X3VubG9ja19pcnFyZXN0b3JlKCZkZXZhcGNfbG9jaywgZmxhZ3MpOw0KPiA+ICsgICAgICAgICAg
-ICAgICByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAg
-ICAgc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZGV2YXBjX2xvY2ssIGZsYWdzKTsNCj4gPiArICAg
-ICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCg0KW3NuaXBdDQoNCg0K
 
+On 6/10/2020 9:05 PM, Guenter Roeck wrote:
+> On 6/10/20 12:54 AM, Dilip Kota wrote:
+>> On 6/9/2020 9:46 PM, Guenter Roeck wrote:
+>>> On 6/9/20 1:57 AM, Dilip Kota wrote:
+>>>> On 6/8/2020 9:37 PM, Guenter Roeck wrote:
+>>>>> On 6/7/20 10:49 PM, Dilip Kota wrote:
+[...]
+>>>>>> +
+>>>>>> +description: |
+>>>>>> +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
+>>>>>> +  be configured as Clocksource, real time clock and Watchdog timer.
+>>>>>> +  Each General Purpose Timer Counter has three timers. And total four General
+>>>>>> +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
+>>>>>> +  to 12 timers.
+>>>>>> +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
+>>>>>> +  timer as watchdog timer. Total four timers are configured as watchdog timers
+>>>>>> +  on Lightning Mountain SoC.
+>>>>>> +
+>>>>> Why not just one ? The watchdog subsystem does not monitor individual CPUs,
+>>>>> it monitors the system.
+>>>> Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
+>>>>
+>>> A system watchdog driver should not duplicate functionality
+>>> from kernel/watchdog.c, which monitors individual CPUs.
+>>> If the SoC does nto provide a system watchdog timer (which
+>>> I think is unlikely), it should stick with that. A watchdog
+>>> resetting an individual CPU instead of the entire system
+>>> isn't something I would want to see in the watchdog subsystem.
+>> My bad here, complete hardware reset happens on watchdog timeout not a single CPU or core.
+>> Could you please clarify: The complete system means, you mean, "a watchdog susbsystem should monitor all the cores/cpus in the SoC. Not like each core/cpu in SoC having a wdt".
+>>
+> No, the watchdog subsystem does not monitor "all cores".
+> Again, that is the responsibility of kernel/watchdog.c.
+I am a bit confused here.
+I have gone through the kernel/watchdog.c code and i see hrtimers are 
+used and panic is triggered for lockup on CPU/core.
+It looks similar to the watchdog subsystem which uses wdt and triggers 
+hardware reset on timeout, whereas kernel/watchdog.c using hrtimers and 
+triggers panic on timeout.
+To my understanding Watchdog timer recovers the hardware from software 
+hangs or freeze states on the CPU / cores.
+Also, what does system mean in your statement " watchdog subsystem 
+monitors the system"? What all comes under the system other than the 
+cores/cpus.
+And also i see there is no other watchdog subsystem in Lightning 
+Mountain architecture.
+
+Regards,
+Dilip
+>
+> Guenter
+>
+>> Regards,
+>> Dilip
+>>> Guenter
+>>>
