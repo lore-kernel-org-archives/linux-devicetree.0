@@ -2,54 +2,72 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3BDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 22:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05243C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 23:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2152073E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 22:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591915621;
-	bh=y7oaSm/JNOPNtYb74UFjDdhC6kjkYhvWO/e2LzL1J44=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=sbfimsIpgDjWpPBgaAk3cKCl/wtOsXqbHE/xAWi5WA2767IMPA30wBDUkwCMmMtTX
-	 7LM//7T33HeZ6Adrf+mSx7MUI2pAfH/TseIHnDhhdVsnC503LRbzX+xHRIB/yrFfCl
-	 krRQDEVdpKh11Y7mXd1KXbodYYMaRVzPLDPZukbU=
+	by mail.kernel.org (Postfix) with ESMTP id D0D102078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 23:21:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXgoilEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgFKWrA (ORCPT
+        id S1726414AbgFKXV7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgFKWrA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:47:00 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7139B206D7;
-        Thu, 11 Jun 2020 22:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591915619;
-        bh=y7oaSm/JNOPNtYb74UFjDdhC6kjkYhvWO/e2LzL1J44=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=TpDbc7FE6CrHoiBB2bYYJ9QQFAMPOoV3kRxP6n/lICap+9fQUPgMYZVaNpDKFMj3q
-         FW1wgsvfCl+nJS+R7QC+YD393eLiV5Q3RrVxlGJt3CWjf6Hub1OtjVk5kp3JjycTTs
-         RXz1iXbVH6Dd1RFs5i2AFdTZHHwQ1ZE0WuQlZ3Q4=
+        Thu, 11 Jun 2020 19:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgFKXV5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 19:21:57 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D82C08C5C2
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u8so2834755pje.4
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=Mx1BJS+F5RobWjcFE5t60E3qsaoq0yype8aHumba4AY=;
+        b=RXgoilEj3158/D81CyzqcOUTZGSWHs9fozqqHDzPcxAklVjRdy3hZHjcRNjda1AfcN
+         MWh8NjVKFFD6uqQ06STzWf+p07V+jMqx60Slct7LfhtNx8i3FESb0eHAl0Rzjg1hft3B
+         ++DDeyiqrKN7JopuxQxvASgSkFdlE740/jr9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=Mx1BJS+F5RobWjcFE5t60E3qsaoq0yype8aHumba4AY=;
+        b=ALLuTVAumoFCW1BWc7HGSg85sLXr+/cyaM8JAvBD2mToKZ2LS7mH3Q5Rsr4zBmzyFA
+         PCuznnHonVg6E04j7UXrzR4mu+bqT90jJf0OeyPxQTzKwizBxZ+kLjTtUrgKGJcL9wE9
+         iO2nyklaEnx9U9M1F8W/5IWncWPyhn1h3Yrhakm+uIb6i3OOHYq39zDjJfiWB6d02Xyt
+         PJ1iu/BjFZEXKESQytHpfe0RvsmKTWcsKsFIjsumNbgj6GIdKNmhdFg1Kc8fkbyLaMC6
+         ZEgt4pI4qyXyyuKA/m4iwuToo8+3jujqC3tOkQweSEzeiIA6WNO1ccG5Ke9jf7pVYJi0
+         bZBw==
+X-Gm-Message-State: AOAM533Kxttsa7igpZF7/lujawf7R68xivo5ruI4VG5T9JKJDqUxIpxA
+        DLn/Udlbb5PPojoasg2sNrpxYQ==
+X-Google-Smtp-Source: ABdhPJwdz2sTBkJb9s0f/hzOItcMgoPC81y0CH/eE7gR25jQYxuS18l1pPBiz49y8/WC7LrnNm8i4Q==
+X-Received: by 2002:a17:90a:70c6:: with SMTP id a6mr9302299pjm.16.1591917716068;
+        Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b7sm4036787pfo.202.2020.06.11.16.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 16:21:55 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1591885683-29514-2-git-send-email-sanm@codeaurora.org>
-References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-2-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH 1/2] clk: qcom: gcc: Add genpd active wakeup flag for sc7180
-From:   Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Manu Gautam <mgautam@codeaurora.org>,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Doug Anderson <dianders@chromium.org>,
@@ -60,46 +78,238 @@ To:     Andy Gross <agross@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Thu, 11 Jun 2020 15:46:58 -0700
-Message-ID: <159191561875.242598.18326727418245335996@swboyd.mtv.corp.google.com>
+Date:   Thu, 11 Jun 2020 16:21:54 -0700
+Message-ID: <159191771455.242598.12826819292508436205@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-06-11 07:28:02)
-> From: Taniya Das <tdas@codeaurora.org>
->=20
-> The USB client requires the usb30_prim gdsc to be kept active for
-> certain use cases, thus add the GENPD_FLAG_ACTIVE_WAKEUP flag.
+Quoting Sandeep Maheswaram (2020-06-11 07:28:03)
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+> =20
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+> =20
+>  #include "debug.h"
+> +#include "../host/xhci.h"
+> =20
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY 5000 /* ms */
+> =20
+> +bool need_phy_for_wakeup;
 
-Can you please describe more of what this is for? Once sentence doesn't
-tell me much at all. I guess that sometimes we want to wakeup from USB
-and so the usb gdsc should be marked as "maybe keep on for wakeups" with
-the GENPD_FLAG_ACTIVE_WAKEUP flag if the USB controller is wakeup
-enabled?
+static? But why isn't it part of 'struct dwc3'? There could be multiple
+dwc3 instances that may or may not be wakeup capable.
 
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
+> +
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
+*dwc)
+>         return ret;
+>  }
+> =20
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +       int i, num_ports;
+> +       u32 reg;
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> +       struct xhci_hcd *xhci_hcd =3D hcd_to_xhci(hcd);
+> +
+> +       dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST=
+_LS);
+> +
+> +       reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +       num_ports =3D HCS_MAX_PORTS(reg);
+> +       for (i =3D 0; i < num_ports; i++) {
+> +               reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x=
+10);
 
-Add a Fixes: tag too? And I assume we need to do this for all USB gdscs
-on various SoCs and maybe other GDSCs like PCIe. Any plans to fix those
-GDSCs?
+Please format this as 'port_status_base + i * 0x10'
 
->  drivers/clk/qcom/gcc-sc7180.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-> index ca4383e..2b3dd4e 100644
-> --- a/drivers/clk/qcom/gcc-sc7180.c
-> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> @@ -2263,6 +2263,7 @@ static struct gdsc usb30_prim_gdsc =3D {
->         .gdscr =3D 0x0f004,
->         .pd =3D {
->                 .name =3D "usb30_prim_gdsc",
-> +               .flags =3D GENPD_FLAG_ACTIVE_WAKEUP,
->         },
->         .pwrsts =3D PWRSTS_OFF_ON,
->  };
+> +               if (reg & PORT_PE) {
+> +                       if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +                               dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_=
+HS;
+> +                       else if (DEV_LOWSPEED(reg))
+> +                               dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_=
+LS;
+> +               }
+> +       }
+> +       phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
+> +}
+> +
+>  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+>  {
+>         unsigned long   flags;
+>         u32 reg;
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> =20
+>         switch (dwc->current_dr_role) {
+>         case DWC3_GCTL_PRTCAP_DEVICE:
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 013f42a..ff02d41 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -1094,6 +1094,7 @@ struct dwc3 {
+>         struct phy              *usb3_generic_phy;
+> =20
+>         bool                    phys_ready;
+> +       int                     hs_phy_flags;
+
+Does it need to be signed? Why not unsigned int or unsigned long?
+
+> =20
+>         struct ulpi             *ulpi;
+>         bool                    ulpi_ready;
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..ec183646 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/usb/of.h>
+>  #include <linux/reset.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/usb/hcd.h>
+> =20
+>  #include "core.h"
+> =20
+> @@ -192,21 +193,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
+om *qcom)
+> =20
+>  static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 disable_irq_wake(qcom->hs_phy_irq);
+>                 disable_irq_nosync(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dp_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               disable_irq_wake(qcom->dm_hs_phy_irq);
+> -               disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
+> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
+>         if (qcom->ss_phy_irq) {
+>                 disable_irq_wake(qcom->ss_phy_irq);
+>                 disable_irq_nosync(qcom->ss_phy_irq);
+> @@ -215,21 +229,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc=
+3_qcom *qcom)
+> =20
+>  static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+>  {
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +
+>         if (qcom->hs_phy_irq) {
+>                 enable_irq(qcom->hs_phy_irq);
+>                 enable_irq_wake(qcom->hs_phy_irq);
+>         }
+> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+> +       } else {
+> =20
+> -       if (qcom->dp_hs_phy_irq) {
+> -               enable_irq(qcom->dp_hs_phy_irq);
+> -               enable_irq_wake(qcom->dp_hs_phy_irq);
+> -       }
+> +               if (qcom->dp_hs_phy_irq) {
+> +                       enable_irq(qcom->dp_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
+> +               }
+> =20
+> -       if (qcom->dm_hs_phy_irq) {
+> -               enable_irq(qcom->dm_hs_phy_irq);
+> -               enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               if (qcom->dm_hs_phy_irq) {
+> +                       enable_irq(qcom->dm_hs_phy_irq);
+> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
+> +               }
+>         }
+> -
+>         if (qcom->ss_phy_irq) {
+>                 enable_irq(qcom->ss_phy_irq);
+>                 enable_irq_wake(qcom->ss_phy_irq);
+
+Is it possible to move this code to use the wakeirq library? I believe
+only one irq can be the "wakeup" irq in that case but maybe that is
+possible if we know what mode that phy is in? Or does the superspeed and
+some sort of high speed irq need to be enabled for wakeup in case a usb2
+or usb3 device wants to wakeup?
+
+> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>         u32 val;
+>         int i;
+> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+
+Weird spacing here   ---^
+
+> +
+> +       if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +               device_init_wakeup(qcom->dev, 1);
+> =20
+>         if (qcom->is_suspended)
+>                 return 0;
+> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>         int ret;
+>         int i;
+> =20
+> +       device_init_wakeup(qcom->dev, 0);
+
+Usually device_init_wakeup() is called once during probe and then the
+wakeup enable state for a device is controlled from userspace.  Calling
+this here will be semi-disastrous in the sense that we're going to be
+creating and destroying a wakeup sysfs object each time we suspend. I
+see that dwc3 core code has this pattern of calling device_init_wakeup()
+from the suspend/resume path too, which looks wrong.
+
+Shouldn't we be forwarding the wakeup request from the root hub to the
+controller? I'm not super clear on how USB PM is supposed to work but
+this doesn't look right.
