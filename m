@@ -2,193 +2,290 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8A2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EFDC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A952073E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591905663;
-	bh=vBJOsLq+MF7YPPfH33AW+SH207qD3c7ZoyMCXan7N6k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yj+554sw7914NOSJ3+YZ9ZFXpFnaqy1MlPfmDS7E65Wzc/5u3yW1XIW+O5qrJTnL3
-	 oCXbq5jbJVifMMsuACfrhKQKLypl+WCMHrd9Ozg3KMwgkS9XuOmU16bCYZF91OPtNl
-	 UTZj29ypPh1nO5e9mUxiCDgOW970QLlcwA1px+Cg=
+	by mail.kernel.org (Postfix) with ESMTP id D286320829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B5cJfyYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725824AbgFKUBC (ORCPT
+        id S1726294AbgFKUHN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 16:07:13 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:47534 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbgFKUBC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:01:02 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726523AbgFKUHN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 16:07:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591906031; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Gt4Yl17uHxeVszwUdwoN2Kua/oUvLPKVV3l9/jcWrV0=;
+ b=B5cJfyYckiVEpPX0TWmPFQs5eM6StZ9QC+derUo2KtFQWw0bAM8+vk/ZP6fS/X47FB5rs6fY
+ 93aJMO28M/TCHxmXpWoU2P4Dqii2sd2cIffbJK3L/F5AG+W4EI3pRHMb6LPO81uuycOORdDx
+ 1na2hjVu7YfEfGijUW0jDoBN0SQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5ee28eef0206ad41d192e746 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 20:07:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8E695C43395; Thu, 11 Jun 2020 20:07:10 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C7CA20829;
-        Thu, 11 Jun 2020 20:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591905661;
-        bh=vBJOsLq+MF7YPPfH33AW+SH207qD3c7ZoyMCXan7N6k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RM0NQc90imUodIznICVV11Hdp8caVl144mfdAhxnSYeCxeb423vGRjqoFBU2IpJ+N
-         vhPrFAWLl4kqhBTmPR/AcABKtdGSTSz/VRdCbx0qiGlylBZVHXsmnrbiqx0xys5CrK
-         XE5PqvEhv4dmAe3qTKsJp/1OZbgd/Ujgwgou9vFk=
-Received: by mail-oi1-f171.google.com with SMTP id p70so6530416oic.12;
-        Thu, 11 Jun 2020 13:01:01 -0700 (PDT)
-X-Gm-Message-State: AOAM531awlNa5CB0cxHO4S/eLpeL9ipA1saGl+x7sDm4lsNWOmfFRnBm
-        W6o1vjYEWugG+SzxbFi4BgPpD/l228sw0PZD4g==
-X-Google-Smtp-Source: ABdhPJza8D9UuymcUjm1xsz4J1CZxHk31faK5p3gBrGnmfebOkby+BbsncjLGk+4Sc/aNEYZBK3Yoelmkxgd7CcMJC4=
-X-Received: by 2002:aca:d943:: with SMTP id q64mr7812611oig.147.1591905660418;
- Thu, 11 Jun 2020 13:01:00 -0700 (PDT)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70E5BC433C8;
+        Thu, 11 Jun 2020 20:07:09 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200422222242.241699-1-pmalani@chromium.org> <20200511192800.GA28762@bogus>
- <20200511204635.GC136540@google.com> <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com> <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com> <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
-In-Reply-To: <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 11 Jun 2020 14:00:47 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
-Message-ID: <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 11 Jun 2020 13:07:09 -0700
+From:   tanmay@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, sam@ravnborg.org,
+        seanpaul@chromium.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, chandanu@codeaurora.org,
+        robdclark@gmail.com, abhinavk@codeaurora.org,
+        nganji@codeaurora.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, Vara Reddy <varar@codeaurora.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
+ driver for Snapdragon
+In-Reply-To: <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
+References: <20200609033818.9028-1-tanmay@codeaurora.org>
+ <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
+Message-ID: <d6db52a33ac787c0fe6134ca32c06007@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Hi Rob,
->
-> On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > > > Hi Rob,
-> > > >
-> > > > Thanks again for the comments and feedback. Kindly see responses inline:
-> > > >
-> > > > (Trimming unrelated text from thread):
-> > > >
-> > > >
-> > > >             ports {
-> > > >                 #address-cells = <1>;
-> > > >                 #size-cells = <0>;
-> > > >
-> > > >                 port@0 {
-> > > >                     reg = <0>;
-> > > >                     usb_con_hs: endpoint {
-> > > >                         remote-endpoint = <&foo_usb_hs_controller>;
-> > > >                     };
-> > > >                 };
-> > > >
-> > > >                 port@1 {
-> > > >                     reg = <1>;
-> > > >                     usb_con0_ss: endpoint@0 {
-> > > >                         remote-endpoint = <&mode_mux_in>;
-> > > >                     };
-> > > >                 };
-> > > >
-> > > >                 port@2 {
-> > > >                     reg = <2>;
-> > > >                     usb_con_sbu: endpoint {
-> > > >                         remote-endpoint = <&foo_dp_aux>;
-> > > >                     };
-> > > >                 };
-> > > >             };
-> > >
-> > > The pins that can be reassigned can in practice go anywhere. We can't
-> > > group them in any way. What do we do for example when the two sideband
-> > > pins go to different locations?
-> >
-> > The sideband pins from the connector go to multiple places or the
-> > sideband signal from a controller go to multiple connectors? Either
-> > way, that's solved with multiple endpoints. In the former case, port@2
-> > would have multiple endpoints with all the possible connections. The
-> > general model of the graph is each port is a separate data channel and
-> > multiple endpoints are either a mux or fanout depending on the data
-> > direction.
-> >
-> > > It looks like the OF graph for the USB Type-C connectors expects the
-> > > pins to be grouped like that, which is too bad, because unfortunately
-> > > it will not work. It would require that we have a separate port for
-> > > every pin that can be reassigned on the connector, and let's not even
-> > > consider that.
-> >
-> > I guess you are referring to the 4 SS signal pairs and that they could
-> > be 2 USB links, 1 USB link and 1-2 Alt mode links, or 4 Alt mode
-> > links. I think the grouping of SS signals is fine as I'd expect
-> > there's a single entity deciding the routing. That would be 'mux' node
-> > I think, but 'mux' is the wrong abstraction here. I guess we could
-> > have 4 muxes (1 for each signal), but I'd hope we don't need that
-> > level of detail in DT. I think we're in agreement on that.
->
-> I think the updated example handles this grouping (port@1 going to a
-> "SS mux") although as you said it should probably be a group of muxes,
-> but I think the example illustrates the point. Is that assessment
-> correct?
+On 2020-06-09 19:15, Stephen Boyd wrote:
+> Quoting Tanmay Shah (2020-06-08 20:38:18)
+>> diff --git 
+>> a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml 
+>> b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+>> new file mode 100644
+>> index 0000000..5fdb915
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> 
+> Typically the file name matches the compatible string. But the
+> compatible string is just qcom,dp-display. Maybe the compatible string
+> should be qcom,sc7180-dp? Notice that the SoC number comes first as is
+> preferred.
+> 
+These bindings will be similar for upcoming SOC as well.
+So just for understanding, when we add new SOC do we create new file 
+with same bidings
+with SOC number in new file name?
+Instead we can keep this file's name as qcom,dp-display.yaml (same as 
+compatible const) and we can include SOC number in compatible enum ?
+some examples:
+https://patchwork.kernel.org/patch/11448357/
+https://patchwork.kernel.org/patch/11164619/
+> 
+>> @@ -0,0 +1,142 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only  OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Display Port Controller.
+>> +
+>> +maintainers:
+>> +  - Chandan Uddaraju <chandanu@codeaurora.org>
+>> +  - Vara Reddy <varar@codeaurora.org>
+>> +  - Tanmay Shah <tanmay@codeaurora.org>
+>> +
+>> +description: |
+>> +  Device tree bindings for MSM Display Port which supports DP host 
+>> controllers
+>> +  that are compatible with VESA Display Port interface specification.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: qcom,dp-display
+>> +
+>> +  cell-index:
+>> +    description: Specifies the controller instance.
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: DP controller registers
+>> +
+>> +  interrupts:
+>> +    description: The interrupt signal from the DP block.
+>> +
+>> +  clocks:
+>> +    description: List of clock specifiers for clocks needed by the 
+>> device.
+>> +    items:
+>> +      - description: Display Port AUX clock
+>> +      - description: Display Port Link clock
+>> +      - description: Link interface clock between DP and PHY
+>> +      - description: Display Port Pixel clock
+>> +      - description: Root clock generator for pixel clock
+>> +
+>> +  clock-names:
+>> +    description: |
+>> +      Device clock names in the same order as mentioned in clocks 
+>> property.
+>> +      The required clocks are mentioned below.
+>> +    items:
+>> +      - const: core_aux
+>> +      - const: ctrl_link
+>> +      - const: ctrl_link_iface
+>> +      - const: stream_pixel
+>> +      - const: pixel_rcg
+> 
+> Why not just 'pixel'? And why is the root clk generator important? It
+> looks like this binding should be using the assigned clock parents
+> property instead so that it doesn't have to call clk_set_parent()
+> explicitly.
+> 
+Are we talking about renaming stream_pixel to pixel only?
+We divide clocks in categories: core, control and stream clock.
+Similar terminology will be used in subsequent driver patches as well.
 
-Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+We can remove pixel_rcg use assigned clock parents property and remove 
+clk_set_parent
+from driver.
 
-> > > We need higher level description of the connections for the USB Type-C
-> > > connectors. For example, a connector can be connected to this (or
-> > > these) DisplayPort(s), this USB 2.0 port, this USB 3.x port, this USB4
-> > > port, etc. And this is the mux that handles the pins on this
-> > > connector, and these are the retimers, etc. etc.
-> > >
-> > > We also need a way to identify those connections, and relying on
-> > > something like fixed port node addresses, so indexes in practice,
-> > > feels really risky to me. A conflict may seem unlikely now, but we
-> > > seen those so many times in the past other things like GPIOs, IRQs,
-> > > etc. We really need to define string identifiers for these
-> > > connections.
-> >
-> > I assume for IRQs you are referring to cases where we have a variable
-> > number such as 'interrupts = <1 2 3>;' where 'interrupts = <1 3>'
-> > doesn't work because we can't describe interrupt 2 is not present? The
-> > graph binding doesn't suffer from that issue since we can easily omit
-> > port or endpoint nodes.
-> >
-> > Also, the numbering is specific to a compatible string. If we need
-> > different numbering, then we can do a new compatible.
-> >
-> > Rob
->
-> Would this block the addition of the "*-switch" properties? IIUC the
-> two are related but not dependent on each other.
->
-> The *-switch properties are phandles which the Type C connector class
-> framework expects (and uses to get handles to those switches).
-> These would point to the "mux" or "group of mux" abstractions as noted earlier.
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  vdda-1p2-supply:
+>> +    description: phandle to vdda 1.2V regulator node.
+>> +
+>> +  vdda-0p9-supply:
+>> +    description: phandle to vdda 0.9V regulator node.
+>> +
+>> +  data-lanes = <0 1>:
+> 
+> Is this correct? We can have = <value> in the property name? Also feels
+> generic and possibly should come from the phy binding instead of from
+> the controller binding.
+> 
+We are using this property in DP controller programming sequence such as 
+link training.
+So I think we can keep this here.
+You are right about <value>. <0 1> part should be in example only. It 
+was passing through dt_binding_check though.
+Here it should be like:
+data-lanes:
+minItems:1
+maxItems:4
 
-You don't need them though. Walk the graph. You get the connector
-port@1 remote endpoint and then get its parent.
-
-> I'd suggest we work on updating the Type C connector class to a model
-> that can describe connections for both DT (using OF graph) and ACPI,
-> if something
-> like that exists, but let it not block the addition of these switches
-> to usb-connector.yaml; they will be needed by the Type C connector
-> class framework
-> regardless of the form the connection description takes.
+>> +    type: object
+>> +    description: Maximum number of lanes that can be used for Display 
+>> port.
+>> +
+>> +  ports:
+>> +    description: |
+>> +       Contains display port controller endpoint subnode.
+>> +       remote-endpoint: |
+>> +         For port@0, set to phandle of the connected panel/bridge's
+>> +         input endpoint. For port@1, set to the DPU interface output.
+>> +         Documentation/devicetree/bindings/graph.txt and
+>> +         
+>> Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +patternProperties:
+>> +  "^aux-cfg([0-9])-settings$":
+>> +    type: object
+>> +    description: |
+>> +      Specifies the DP AUX configuration [0-9] settings.
+>> +      The first entry in this array corresponds to the register 
+>> offset
+>> +      within DP AUX, while the remaining entries indicate the
+>> +      programmable values.
+> 
+> I'd prefer this was removed from the binding and hardcoded in the 
+> driver
+> until we can understand what the values are. If they're not
+> understandable then they most likely don't change and should be done in
+> the driver.
+> 
+Typically customers tune these values by working with vendor. So for 
+different boards it can be different. Even though it is hard for 
+customers to do this themselves, these are still board specific and 
+belong to dts. As requested earlier, we have added default values 
+already and made these properties optional but, we would like to keep it 
+in bindings so we can have option to tune them as required.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - cell-index
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - clock-names
+>> +  - vdda-1p2-supply
+>> +  - vdda-0p9-supply
+>> +  - data-lanes
+>> +  - ports
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+>> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> +    msm_dp: displayport-controller@ae90000{
+>> +        compatible = "qcom,dp-display";
+>> +        cell-index = <0>;
+>> +        reg = <0 0xae90000 0 0x1400>;
+>> +        reg-names = "dp_controller";
+>> +
+>> +        interrupt-parent = <&display_subsystem>;
+>> +        interrupts = <12 0>;
+>> +
+>> +        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
+>> +                 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
+>> +                 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
+>> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
+>> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
+>> +        clock-names = "core_aux",
+>> +                      "ctrl_link",
+>> +                      "ctrl_link_iface", "stream_pixel",
+>> +                      "pixel_rcg";
+>> +        #clock-cells = <1>;
+>> +
+>> +        vdda-1p2-supply = <&vreg_l3c_1p2>;
+>> +        vdda-0p9-supply = <&vreg_l4a_0p8>;
+>> +
+>> +        data-lanes = <0 1>;
+>> +
+>> +        ports {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +
+>> +            port@0 {
+>> +                reg = <0>;
+>> +                dp_in: endpoint {
+>> +                    remote-endpoint = <&dpu_intf0_out>;
+>> +                };
+>> +            };
+>> +
+>> +            port@1 {
+>> +                reg = <1>;
+>> +                dp_out: endpoint {
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+> 
+> I believe there should be a '...' here.
+I think you mean signature is missing? If not could you please explain?
