@@ -2,29 +2,28 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F016C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 21:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617DCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 21:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6297C20836
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 21:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 405F620720
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 21:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgFKVMF (ORCPT
+        id S1726387AbgFKVMF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 11 Jun 2020 17:12:05 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:41618 "EHLO
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:38675 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726277AbgFKVME (ORCPT
+        by vger.kernel.org with ESMTP id S1726300AbgFKVME (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Thu, 11 Jun 2020 17:12:04 -0400
 Received: from [78.134.85.74] (port=40536 helo=melee.dev.aim)
         by hostingweb31.netsons.net with esmtpa (Exim 4.93)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1jjUUN-000C9m-S7; Thu, 11 Jun 2020 23:11:55 +0200
+        id 1jjUUO-000C9m-UH; Thu, 11 Jun 2020 23:11:57 +0200
 From:   Luca Ceresoli <luca@lucaceresoli.net>
 To:     linux-fpga@vger.kernel.org
 Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
@@ -33,10 +32,12 @@ Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
         Michal Simek <michal.simek@xilinx.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH 1/5] dt-bindings: fpga: xilinx-slave-serial: valid for the 7 Series too
-Date:   Thu, 11 Jun 2020 23:11:40 +0200
-Message-Id: <20200611211144.9421-1-luca@lucaceresoli.net>
+Subject: [PATCH 4/5] dt-bindings: fpga: xilinx-slave-serial: add optional INIT_B GPIO
+Date:   Thu, 11 Jun 2020 23:11:43 +0200
+Message-Id: <20200611211144.9421-4-luca@lucaceresoli.net>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200611211144.9421-1-luca@lucaceresoli.net>
+References: <20200611211144.9421-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -54,35 +55,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Xilinx 7-series uses the same protocol, mention that.
+The INIT_B is used by the 6 and 7 series to report the programming status,
+providing more control and information about programming errors.
 
 Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 ---
- .../devicetree/bindings/fpga/xilinx-slave-serial.txt     | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/fpga/xilinx-slave-serial.txt       | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-index cfa4ed42b62f..9f103f3872e8 100644
+index 9f103f3872e8..a049082e1513 100644
 --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
 +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-@@ -1,11 +1,14 @@
- Xilinx Slave Serial SPI FPGA Manager
+@@ -16,6 +16,10 @@ Required properties:
+ - prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
+ - done-gpios: config status pin (referred to as DONE in the manual)
  
--Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
--what is referred to as "slave serial" interface.
-+Xilinx Spartan-6 and 7 Series FPGAs support a method of loading the
-+bitstream over what is referred to as "slave serial" interface.
- The slave serial link is not technically SPI, and might require extra
- circuits in order to play nicely with other SPI slaves on the same bus.
++Optional properties:
++- init_b-gpios: initialization status and configuration error pin
++                (referred to as INIT_B in the manual)
++
+ Example for full FPGA configuration:
  
--See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-+See:
-+- https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-+- https://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
-+- https://www.xilinx.com/support/documentation/application_notes/xapp583-fpga-configuration.pdf
- 
- Required properties:
- - compatible: should contain "xlnx,fpga-slave-serial"
+ 	fpga-region0 {
+@@ -40,7 +44,8 @@ Example for full FPGA configuration:
+ 			spi-max-frequency = <60000000>;
+ 			spi-cpha;
+ 			reg = <0>;
+-			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+ 			prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
++			init_b-gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
++			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+ 		};
+ 	};
 -- 
 2.27.0
 
