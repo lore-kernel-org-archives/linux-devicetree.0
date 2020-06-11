@@ -2,128 +2,127 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F139C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F49C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2487320747
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="mRojurgQ"
+	by mail.kernel.org (Postfix) with ESMTP id 98A5E20747
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgFKMq1 (ORCPT
+        id S1727982AbgFKMtQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:46:27 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:1962 "EHLO mx1.tq-group.com"
+        Thu, 11 Jun 2020 08:49:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49308 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbgFKMq1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:46:27 -0400
-IronPort-SDR: GoEYkYcZooYvt5WHfB887+11Y0eKjpCydIa/rCkRxiPmj14qG9pvbg460jX9vewgBZlVC37/VC
- rz4/VYiDr1xXiOwsaMhkq5HPHQH/P/O9nvZ6Sm3oMIbiAd/r3nHu0NEyKacFI39f7E3lPyj/kk
- 3JBcqxdKqFMN1DkLhHYUlYZBfLtMow00EYgKC7SJjYlbMxRyh5BLnAzvIwavbS8nAHWbizuTVh
- 0Hy5b1j1MESFs03LRxjhOWCst7PuY0R+metAyAQWawO6sjE72ysLLvfu8IxhQTqCQUdxQe+/Li
- FXc=
-X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
-   d="scan'208";a="12649695"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 11 Jun 2020 14:46:25 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 11 Jun 2020 14:46:25 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 11 Jun 2020 14:46:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591879585; x=1623415585;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WOtgFgMA4D6zHYZnqGioxM7e60B12PjytiO+UqR0o0c=;
-  b=mRojurgQd0u21jE4CRNZo6ubrbSV1fYgoTAFAP1K9Z3iwTrFdPe6a3Iz
-   JdLsIukm9tuwJfuDoGVkTTvoEueMIhnYr2Jfejv36I4KnRnlxUt5JjIvw
-   2Ajoo1bMARXtBcfKP+wN8DFDnFnlT2oAcKoSMto5ilp+bzOyCQjtWBd5N
-   2sT/3FFaCUZuX5smR8ndCITUXeEmxabEZud8EFcEGEqGUIUYq39SWM4wz
-   uN4A5aRMADn4aF5AtItnKmHFeDo+40dk5rfNVyVGpDDsr2iobbI7G5pfU
-   E1HUwrnwikmAbcS9P6ohhyQm2BYgoO+FJ82E3NsgdVE9jkQl0sjnKydrS
-   g==;
-IronPort-SDR: /kK5eJzHEjZQC5hKKsM9u7lH5ViFWA9o5oJT+Jstl6eJdiiV+yRuhHeZTQe/AVmNoLYp1dNcPz
- aiPSbO1ySGViJtGyLMowmvrBo6jBWPujX6/FpDM+X6FTA5xWyMo4/m7EekTa+YHfEY00+W9bzH
- 7pin9VVGGMqVGPCNAEZZo5dCZ7lALr9egDpH8gBvq9u1cjPeECnsnNSFe84NhbKK0JaFLP0g5T
- pJ5S7X2Sr42otOa95CeuIFaJc2dXLy3sPu4cdtSUzfrydTRFh+EzKlwq9E9W9m+mtFI+GqrlN1
- VcU=
-X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
-   d="scan'208";a="12649694"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 11 Jun 2020 14:46:25 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 5C781280065;
-        Thu, 11 Jun 2020 14:46:26 +0200 (CEST)
-Message-ID: <686342440e7e1be0b010820154d3ae3dbc9f7990.camel@ew.tq-group.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: display: simple: add CDTech
- S070PWS19HP-FC21 and S070SWV29HG-DC44
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1727922AbgFKMtQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:49:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E4BD1ACAE;
+        Thu, 11 Jun 2020 12:49:12 +0000 (UTC)
+Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
+ infinity/mercury family ARMv7 SoCs
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
+        Daniel Palmer <daniel@thingy.jp>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
         Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 11 Jun 2020 14:46:22 +0200
-In-Reply-To: <20200611124209.25028-1-matthias.schiffer@ew.tq-group.com>
-References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
-         <20200611124209.25028-1-matthias.schiffer@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191014061617.10296-2-daniel@0x0f.com>
+ <20200610090421.3428945-3-daniel@0x0f.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <976e789e-edd7-c44d-ea99-840ecb883ff8@suse.de>
+Date:   Thu, 11 Jun 2020 14:49:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200610090421.3428945-3-daniel@0x0f.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2020-06-11 at 14:42 +0200, Matthias Schiffer wrote:
-> Add the CDTech Electronics displays S070PWS19HP-FC21 (7.0" WSVGA) and
-> S070SWV29HG-DC44 (7.0" WVGA) to the panel-simple compatible list.
+Am 10.06.20 um 11:04 schrieb Daniel Palmer:
+> Initial support for the MStar/Sigmastar infinity/mercury series of ARMv7
+> based IP camera and dashcam SoCs.
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> These chips are interesting in that they contain a Cortex A7,
+
+"Cortex-A7"
+
+> peripherals and system memory in a single tiny QFN package that
+> can be hand soldered allowing almost anyone to embed Linux
+
+"soldered, allowing"?
+
+> in their projects.
+> 
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 > ---
+>   MAINTAINERS                   |  1 +
+>   arch/arm/Kconfig              |  2 +
+>   arch/arm/Makefile             |  1 +
+>   arch/arm/mach-mstar/Kconfig   | 26 +++++++++++++
+>   arch/arm/mach-mstar/Makefile  |  1 +
+>   arch/arm/mach-mstar/mstarv7.c | 72 +++++++++++++++++++++++++++++++++++
+>   6 files changed, 103 insertions(+)
+>   create mode 100644 arch/arm/mach-mstar/Kconfig
+>   create mode 100644 arch/arm/mach-mstar/Makefile
+>   create mode 100644 arch/arm/mach-mstar/mstarv7.c
 > 
-> v2: no changes
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1ca77f97b8ee..754521938303 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2114,6 +2114,7 @@ ARM/MStar/Sigmastar ARMv7 SoC support
+>   M:	Daniel Palmer <daniel@thingy.jp>
+>   L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>   S:	Maintained
+> +F:	arch/arm/mach-mstar/
+>   F:	Documentation/devicetree/bindings/arm/mstar.yaml
+>   
+>   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
+[snip]
 
-Oops, it seems I held my git send-email wrong, which caused patches v2
-2-4 to bounce from some servers, should I resend?
+The sort order has recently been changed to case-sensitive, i.e., you 
+should append arch after Documentation.
 
+Regards,
+Andreas
 
-> 
->  .../devicetree/bindings/display/panel/panel-simple.yaml       | 4
-> ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-
-> simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-
-> simple.yaml
-> index 31e3efc73e00..2ddb520edc6d 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-
-> simple.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-
-> simple.yaml
-> @@ -81,6 +81,10 @@ properties:
->        - boe,nv140fhmn49
->          # CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-
-> LCD panel
->        - cdtech,s043wq26h-ct7
-> +        # CDTech(H.K.) Electronics Limited 7" WSVGA (1024x600) TFT
-> LCD Panel
-> +      - cdtech,s070pws19hp-fc21
-> +        # CDTech(H.K.) Electronics Limited 7" WVGA (800x480) TFT LCD
-> Panel
-> +      - cdtech,s070swv29hg-dc44
->          # CDTech(H.K.) Electronics Limited 7" 800x480 color TFT-LCD
-> panel
->        - cdtech,s070wv95-ct16
->          # Chunghwa Picture Tubes Ltd. 7" WXGA TFT LCD panel
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
