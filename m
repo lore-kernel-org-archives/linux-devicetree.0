@@ -2,120 +2,145 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C480C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBC1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69CA320882
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EE720792
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="J/es4ZuP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6b+DZoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgFKPJW (ORCPT
+        id S1728421AbgFKPOl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37956 "EHLO
+        Thu, 11 Jun 2020 11:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgFKPJW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:09:22 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F83C08C5C2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 08:09:20 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u26so7161054wmn.1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 08:09:20 -0700 (PDT)
+        with ESMTP id S1728344AbgFKPOk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:14:40 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691D5C08C5C1;
+        Thu, 11 Jun 2020 08:14:40 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id q19so6835876eja.7;
+        Thu, 11 Jun 2020 08:14:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+bnRdnq8JLK2uL0FC3ENBorVkJKs02mTezFsQPAeEpw=;
-        b=J/es4ZuPXP+1e5VAnum1Q+8LyG8YgT+34mxouqoQK396yvZPiwXy9whPazs99utmeh
-         DyTYcwtRjrpBg6pu4vVfy1dkV/vbVL6mwcEEopeFCEDHWIbmdYLiiAgLTIBqn2KZyui+
-         JsvClLkiKpUBdEGo/omhYWtZu1DAE+g4RA2pE=
+         :cc;
+        bh=RhhbWkTa6xWV0deLfaJXoyvtvAs5iTNkvkhb8jfaq6Y=;
+        b=V6b+DZohDm/hDfiEq33KTHTOYZKmKHXtH9CXlUKI9J3Rmnfq8hF9vsaZiV3GZbZkGN
+         vQo1l0toScYIZhA50AZUN6pllNtCM51xVgBnmrqUjL46cPreHZNGj36MFoo9RLQxERso
+         unyu1r2ieWrdTIfvdYZO6czJqKoHdr6E74rsBCHi08GzN+oE/ZMpMAHObv3HAhKkKhpP
+         NHWyLSLgjxp6TJOJz4yiymx/S/ioV6GL8rV3K5magWDu9N3zM981N56CRWruTNB3DRcv
+         bbTEZoirL61WiBzk51psQ6/RkDol54ZOnrpJvw5c3ollGbbxs027E5BLALrMLQjZaFBZ
+         3ozA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+bnRdnq8JLK2uL0FC3ENBorVkJKs02mTezFsQPAeEpw=;
-        b=DgCMhxhjuSO4RF4GRtQI7BtdfyUatgCSsGgm3RicbtP68MAsMv6U2NWMOOgSFjTVlw
-         Yn4FFOtCm3GLzBG6qq0zIy82STVAO/mZJrIrnGi8Re+YdQNgyxACJ7yL9/kkY1gIUzXJ
-         FQLRaEgThW9jnifK3drX8uQ7+vwH2WZ40AQjb+NSWlW34f8OoSUoGqSZLofVGsdGhZVM
-         gHKAOt1WRBj7SwYuMcvJw1EXWtkj9021R+X8HAvicIuT8gn/GOUmm/DPQHaJhby/A+fW
-         yxyKbzxcVNCe27WrB9YRAYSs2pNawFDTcwr3BbJbtcR4ZfbDQuCyyzh+1Hjk4OMGn+M2
-         +lcA==
-X-Gm-Message-State: AOAM532qyMT9SG8P80DXGo715xpDl3twOCmqf/ADqUkQhoQXmbWZ7C7k
-        ZwDrUjqJFNfr6fCo6QcCIXYmIWgO/Ne+juwFySbdTA==
-X-Google-Smtp-Source: ABdhPJzFEzbTe4nZOrgkcxbo8Z7lm4vXqAHZCE4wREr2gS5klf4OPdEt5oMniUG7xfDDSBaEaZTBP4wrxJeFb49IkAE=
-X-Received: by 2002:a1c:491:: with SMTP id 139mr8147455wme.99.1591888159280;
- Thu, 11 Jun 2020 08:09:19 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=RhhbWkTa6xWV0deLfaJXoyvtvAs5iTNkvkhb8jfaq6Y=;
+        b=SXvaqilEjD18MN2jqvhoZrgn9mwSVPf0mf5Dkf775fZpfdzSEbGGjbmtoZc5K0XVw1
+         HwekTI5llYWrAG9IG4eOz4VpSqfMV3gzotRRf4T7//pIvv8hiluYNNvNcHyqFOc1mTxD
+         Osj1tcBgIvAE3WaM6EhLs2XYn/C5NnW1mKAbhqj0OnSnkn0o4f9/Rnh7vFFa22hQAew5
+         NGxxA5m8qJFIw8X5BCutHigJS0tEI0H/r5wta8rK6L+AWUn18PNyrRDSxqKMZH05z0lQ
+         hPr6kXhyeEyyIGkC98fCYvuVIWVTH7Rs9GJQyDqEapQFZ/QKs6LjlOvNcAqQi795CIAp
+         HFlg==
+X-Gm-Message-State: AOAM532pMCeaSLs6woZTLTmxRDrKUd7Ig+S0HEeC29tT9U0PdojON5aa
+        HXr7kAO72MXH63OXTYNrGpyE7n/LwX9AUDhaQzI=
+X-Google-Smtp-Source: ABdhPJytx7mXiKtufAO92EdC9cVGt6I9RCacutPRVjzVuRfL1EdBtKdRZC45eZpis81SCNqGUNS/sYXxiSkjls/4Ke8=
+X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr9063624ejb.460.1591888477088;
+ Thu, 11 Jun 2020 08:14:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-4-daniel@0x0f.com>
- <bf26822d-acb0-ae40-df7f-80978bd26cfb@suse.de> <CAFr9PXmp=mZhyRDpx_E0_1Zc5SFrSYUm9jP-k7VCDf9P37sT6g@mail.gmail.com>
- <3d933b03-9757-f659-d19a-ce6d0fccebea@suse.de>
-In-Reply-To: <3d933b03-9757-f659-d19a-ce6d0fccebea@suse.de>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Fri, 12 Jun 2020 00:07:59 +0900
-Message-ID: <CAFr9PXmkqFfA=1XFcxOwGM-477eCvy-_y=hY8aW8ePE=nrOO7A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] ARM: mstar: Add infinity/mercury series dtsi
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
-        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
+References: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
+In-Reply-To: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 11 Jun 2020 08:15:03 -0700
+Message-ID: <CAF6AEGtczybJU=_MUnGK3uzfnbgh-PDgAZmp7Fod=9Fc0T=fjg@mail.gmail.com>
+Subject: Re: [v1] drm/msm/dpu: request for display color blocks based on hw
+ catalog entry
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        nganji@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andreas,
+On Thu, Jun 11, 2020 at 5:55 AM Krishna Manikandan
+<mkrishn@codeaurora.org> wrote:
+>
+> From: Kalyan Thota <kalyan_t@codeaurora.org>
+>
+> Request for color processing blocks only if they are
+> available in the display hw catalog and they are
+> sufficient in number for the selection.
+>
 
-On Thu, 11 Jun 2020 at 23:39, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+I believe this should have:
 
-> The downside would be if someone wanted to add newer sstar chips under
-> the new name later, then they wouldn't be grouped with predecessor
-> families. Right now it seems like mercury and infinity are not that
-> different, so I figured it might be useful for people contributing
-> patches to see that changes in one might require review of the other.
+Fixes: e47616df008b ("drm/msm/dpu: add support for color processing
+blocks in dpu driver")
 
-I've thought about this too. One thing I considered was not using
-mstar or sstar at all
-and doing the same thing as sunxi and using either the "chenxing"
-(MorningStar, MStar) or "xingchen" (SigmaStar)
-moniker instead.
-However, there are lots of kernel dumps from MStar based TVs etc in
-the wild already that are using the mstar
-prefix so just continuing to use that seems like the right thing to do.
-
-Thanks,
-
-Daniel
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index 63976dc..9f8de77 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -521,7 +521,7 @@ static struct msm_display_topology dpu_encoder_get_topology(
+>                         struct dpu_kms *dpu_kms,
+>                         struct drm_display_mode *mode)
+>  {
+> -       struct msm_display_topology topology;
+> +       struct msm_display_topology topology = {0};
+>         int i, intf_count = 0;
+>
+>         for (i = 0; i < MAX_PHYS_ENCODERS_PER_VIRTUAL; i++)
+> @@ -537,7 +537,8 @@ static struct msm_display_topology dpu_encoder_get_topology(
+>          * 1 LM, 1 INTF
+>          * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
+>          *
+> -        * Adding color blocks only to primary interface
+> +        * Adding color blocks only to primary interface if available in
+> +        * sufficient number
+>          */
+>         if (intf_count == 2)
+>                 topology.num_lm = 2;
+> @@ -546,8 +547,11 @@ static struct msm_display_topology dpu_encoder_get_topology(
+>         else
+>                 topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
+>
+> -       if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI)
+> -               topology.num_dspp = topology.num_lm;
+> +       if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
+> +               if (dpu_kms->catalog->dspp &&
+> +                       (dpu_kms->catalog->dspp_count >= topology.num_lm))
+> +                       topology.num_dspp = topology.num_lm;
+> +       }
+>
+>         topology.num_enc = 0;
+>         topology.num_intf = intf_count;
+> --
+> 1.9.1
+>
