@@ -2,191 +2,243 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6738C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421F3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF59E20792
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E2qXLywZ"
+	by mail.kernel.org (Postfix) with ESMTP id 16624206A4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591888777;
+	bh=MqTNLa7KvEu+rLXW1cSiiWEYaMtKTvNw/mdVMbOIOWY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SKXxki4EU7lK/thwz92PuuGgP2RTHWpTiMd05fdliDaL82ToGXjlwedm+pXoXY0G4
+	 9KJqUy2lUuHDsgquH2tjbsDpEXsjzknBhJ6RnWO6/NxEr1zFRJb/MU6oU8YfU6rb38
+	 Dj6SzUfaAPXYCctHp5cmZaPu+n0RkAliOT7OwXdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgFKPS4 (ORCPT
+        id S1728546AbgFKPTa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:18:56 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:57174 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728488AbgFKPSy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:18:54 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200611151852epoutp046f0eefefa546066b4618a0adf93af9a6~Xhl4f5DvF1076910769epoutp04y
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 15:18:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200611151852epoutp046f0eefefa546066b4618a0adf93af9a6~Xhl4f5DvF1076910769epoutp04y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591888732;
-        bh=h0Jr8xoU2TPvELPqg4DkGPi4elgZ88JtRpm3jI4sPwQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=E2qXLywZVzIV2fW1SRVFtB8sfs2v4wTUs+C83cFxe4fQV8bMZOIjCHUKh5h+ZPt3S
-         JESIWUg9U8ylqBnIVXGEy9vuGVUXYCEFg6Hokbepzg6Ny2SbxkI4oY61u0hooc5HH/
-         aU1v9ViSpaq+AvezROTfzehwaVuSG0jwDmdN6YIc=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200611151850epcas5p24e66287669171ac559a61cc700b19d56~Xhl3bd9oW2174021740epcas5p2G;
-        Thu, 11 Jun 2020 15:18:50 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9F.67.09467.A5B42EE5; Fri, 12 Jun 2020 00:18:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200611151850epcas5p2a784c542779d9bc1bdcfca28ea8a6c2a~Xhl2nsFSe1713117131epcas5p2d;
-        Thu, 11 Jun 2020 15:18:50 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200611151850epsmtrp1fec96d9694da2e652f1efbe1d90ef856~Xhl2mz7qk1872718727epsmtrp1v;
-        Thu, 11 Jun 2020 15:18:50 +0000 (GMT)
-X-AuditID: b6c32a49-a3fff700000024fb-94-5ee24b5a1ab7
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D2.DF.08303.95B42EE5; Fri, 12 Jun 2020 00:18:50 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200611151846epsmtip14b4bb6edb355961b9377b5a92da29cb5~Xhlzf0dnn1495414954epsmtip1S;
-        Thu, 11 Jun 2020 15:18:46 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Kishon Vijay Abraham I'" <kishon@ti.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        <robh@kernel.org>
-Cc:     <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
-        <linux-scsi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
-        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
-        <linux-kernel@vger.kernel.org>, "'Vinod Koul'" <vkoul@kernel.org>
-In-Reply-To: <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
-Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-Date:   Thu, 11 Jun 2020 20:48:44 +0530
-Message-ID: <001c01d64003$9bca1500$d35e3f00$@samsung.com>
+        Thu, 11 Jun 2020 11:19:30 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42611 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728484AbgFKPT0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:19:26 -0400
+Received: by mail-il1-f196.google.com with SMTP id j19so1611700ilk.9;
+        Thu, 11 Jun 2020 08:19:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bzom5I0Qsx/lQuO9r3157DQxFx5Ipkb4zVlo1+AHki0=;
+        b=NNeDxr0AecAkZ4HRa1nydSUAeXZNp9nkI/lhJMYPBp0FXYGc5aItTdWp67nEiRzSdE
+         aLt0OFni0Lb068GbLSiN8CLBfae5JzsQgRmFPtJgY1qFjAKtxb/lClagJbtj12KImuTM
+         t80SQt5HPYRmajZE2WKzERzgARVmQo8dSpFtDm7P0pjsqDVbV5JXUGBEsa01cq+lgmRY
+         01VOHxfincKZNe9LtFpFZQ8PfzpkWaYA6Lhw83JhyPomofFwizdjSi0f+FNmDW30R6+N
+         GINPQIF9VnH8UufPBrumgrbLw9zGqrKbajupnuLRrXQ/vTO/MVTw6RdoZipeRj/LPd+s
+         1UkQ==
+X-Gm-Message-State: AOAM530YY+W/hzVth3mew2/XvdJ+WhjpKgh5X9NSUN3yleImE5iYPGRS
+        ARviH/AT8Uv3Zd5gmVfgJ/Q0SEM=
+X-Google-Smtp-Source: ABdhPJzBBFxrtcbhqbQcEvm2dr7A3emRqSD+5s6FURtJq4Jy7T00ZrsFE/lLZJrZDfQS7fz2X4MsgA==
+X-Received: by 2002:a05:6e02:e51:: with SMTP id l17mr8951200ilk.39.1591888764995;
+        Thu, 11 Jun 2020 08:19:24 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.251])
+        by smtp.googlemail.com with ESMTPSA id c20sm1587533iot.33.2020.06.11.08.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 08:19:24 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH] dt-bindings: Fix more incorrect 'reg' property sizes in examples
+Date:   Thu, 11 Jun 2020 09:19:23 -0600
+Message-Id: <20200611151923.1102796-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUMBx1WEmQIl7Fhypb7UH7A=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMKsWRmVeSWpSXmKPExsWy7bCmpm6U96M4gxNrTC1e/rzKZvFp/TJW
-        i/lHzrFaXHjaw2Zx/vwGdoubW46yWGx6fI3V4vKuOWwWM87vY7Lovr6DzWL58X9MFv/37GC3
-        WLr1JqPFzjsnmB34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
-        H+hmCuCM4rJJSc3JLEst0rdL4Mq4fESxoFmoYta6+4wNjD/5uhg5OSQETCQOXTjM3MXIxSEk
-        sJtR4vafM2wQzidGiQsz5jFCOJ8ZJd7+e88I07J+5TMmiMQuRolZd3ayQDhvGCU2T9/OBlLF
-        JqArsWNxG5gtIlAhcXP2b3aQImaBc0wS8z5sYwdJcApYSbzt3gdWJCzgJPF6xR6gsRwcLAKq
-        Em+/p4OEeQUsJa4/eskGYQtKnJz5hAXEZhbQlli28DUzxEUKEj+fLmOF2OUnMWvpdnaIGnGJ
-        oz97wJ6TEHjBIXFozXGoBheJI3PfMkHYwhKvjm9hh7ClJF72t7GD3CAhkC3Rs8sYIlwjsXTe
-        MRYI217iwJU5LCAlzAKaEut36UOs4pPo/f2ECaKTV6KjTQiiWlWi+d1VqE5piYnd3awQJR4S
-        fU2iExgVZyH5axaSv2YhuX8Wwq4FjCyrGCVTC4pz01OLTQsM81LL9YoTc4tL89L1kvNzNzGC
-        052W5w7Guw8+6B1iZOJgPMQowcGsJMIrKP4wTog3JbGyKrUoP76oNCe1+BCjNAeLkjiv0o8z
-        cUIC6YklqdmpqQWpRTBZJg5OqQam9RdPcrwQVpacJqfjY3+z0yDBdPLreQqHnF7mfGHs1U7e
-        8PnVPsb5ZUwlry0tnDz0zrzesnrt9C0Xt3vlhc2LMfnv7BRtarIvtU9r/0WHB2ohs6oT1W/m
-        uBr++/jpsmfqZZ4tZTE73shps/W91pgyY/2c9uYmD8UNt4V68pXkvoi4da86dccum3XXdVv2
-        M8fvf9wYt2ErT/377FMTZ/VelbUsKpwRElsz8cyUN25TK07/EbzbI/Rtj4bsroS9vj1r5k+r
-        6vE/84bzv2n1naPpYa5Bcena+w9Miv30T4K5imVtUNfCKx+7GVj3aPheOWL67+1BORG5RIYC
-        jqol36y/SOfeW1W+dulJ+w9tTAzxSizFGYmGWsxFxYkAai2nseYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSnG6U96M4g3mPGC1e/rzKZvFp/TJW
-        i/lHzrFaXHjaw2Zx/vwGdoubW46yWGx6fI3V4vKuOWwWM87vY7Lovr6DzWL58X9MFv/37GC3
-        WLr1JqPFzjsnmB34PC739TJ5bFrVyeaxeUm9R8vJ/SweH5/eYvHo27KK0eP4je1MHp83yXm0
-        H+hmCuCM4rJJSc3JLEst0rdL4MrYf2wJU8F2wYpJu6azNDCu5eti5OSQEDCRWL/yGVMXIxeH
-        kMAORomHt18xQSSkJa5vnMAOYQtLrPz3HMwWEnjFKHGq1Q/EZhPQldixuI0NxBYRqJLoX3Kf
-        GWQQs8ANJonrvWtYIBqWMklMXxEBYnMKWEm87d4H1iAs4CTxesUeoGUcHCwCqhJvv6eDhHkF
-        LCWuP3rJBmELSpyc+QRsDLOAtkTvw1ZGGHvZwtfMELcpSPx8uowV4gY/iVlLt7ND1IhLHP3Z
-        wzyBUXgWklGzkIyahWTULCQtCxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525iBEeu
-        ltYOxj2rPugdYmTiYDzEKMHBrCTCKyj+ME6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OE
-        BNITS1KzU1MLUotgskwcnFINTJc+KU462sAYnbh/l/GtsrBfe67H14ddkV9SNmX3jpM+y4+1
-        P50/WXf6tBkSSz9duBu54SPHv2dRou1cNg97AzUf6qr7bb48+6/j/OwLM5awHc9ln64wWTxs
-        Qv5HqxtvgpsfVIcq3nIpLM2+Iqdk8sHuQB9/Xl9IpKfxubMNnWGZ99csa/I6ECzr4vY58oPw
-        qf9X4uZHxsrtt1CyvCTH8Opwgs3nl3ui3/N9cIx+7tLm/2aN1yav299n9/76Uf1TZbKr/eSr
-        JYJX3L7HFlauPNIUYv/yyCqGF23ZHcdURE86+VxmqjluvTVymYWp/QHlB9bRy3/yRovkHljw
-        vHYqi1JjG+cntpolSUe3b5zfVq/EUpyRaKjFXFScCABlCtMASwMAAA==
-X-CMS-MailID: 20200611151850epcas5p2a784c542779d9bc1bdcfca28ea8a6c2a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
-References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
-        <20200528011658.71590-1-alim.akhtar@samsung.com>
-        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
-        <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
-        <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon
+The examples template is a 'simple-bus' with a size of 1 cell for
+had between 2 and 4 cells which really only errors on I2C or SPI type
+devices with a single cell.
 
-> -----Original Message-----
-> From: Kishon Vijay Abraham I <kishon=40ti.com>
-> Sent: 08 June 2020 08:23
-> To: Alim Akhtar <alim.akhtar=40samsung.com>; 'Martin K. Petersen'
-> <martin.petersen=40oracle.com>; robh=40kernel.org
-> Cc: krzk=40kernel.org; linux-samsung-soc=40vger.kernel.org;
-> avri.altman=40wdc.com; stanley.chu=40mediatek.com; linux-scsi=40vger.kern=
-el.org;
-> linux-arm-kernel=40lists.infradead.org; cang=40codeaurora.org;
-> devicetree=40vger.kernel.org; kwmad.kim=40samsung.com; linux-
-> kernel=40vger.kernel.org; 'Vinod Koul' <vkoul=40kernel.org>
-> Subject: Re: =5BPATCH v10 00/10=5D exynos-ufs: Add support for UFS HCI
->=20
-> Hi Alim,
->=20
-> On 6/8/2020 8:15 AM, Alim Akhtar wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Martin K. Petersen <martin.petersen=40oracle.com>
-> >> Sent: 03 June 2020 08:02
-> >> To: robh=40kernel.org; Alim Akhtar <alim.akhtar=40samsung.com>
-> >> Cc: Martin K . Petersen <martin.petersen=40oracle.com>;
-> >> krzk=40kernel.org;
-> > linux-
-> >> samsung-soc=40vger.kernel.org; avri.altman=40wdc.com;
-> >> stanley.chu=40mediatek.com; linux-scsi=40vger.kernel.org; linux-arm-
-> >> kernel=40lists.infradead.org; cang=40codeaurora.org;
-> > devicetree=40vger.kernel.org;
-> >> kwmad.kim=40samsung.com; linux-kernel=40vger.kernel.org
-> >> Subject: Re: =5BPATCH v10 00/10=5D exynos-ufs: Add support for UFS HCI
-> >>
-> >> On Thu, 28 May 2020 06:46:48 +0530, Alim Akhtar wrote:
-> >>
-> >>> This patch-set introduces UFS (Universal Flash Storage) host
-> >>> controller support for Samsung family SoC. Mostly, it consists of
-> >>> UFS PHY and host specific driver.
-> >>> =5B...=5D
-> >>
-> >> Applied =5B1,2,3,4,5,9=5D to 5.9/scsi-queue. The series won't show up =
-in
-> >> my
-> > public
-> >> tree until shortly after -rc1 is released.
-> >>
-> > Thanks Martin,
-> > Hi Rob and Kishon/Vinod
-> > Can you please pickup dt-bindings and PHY driver respectively?
->=20
-> You might have CC'ed me only for the PHY patch. I don't have the dt-bindi=
-ngs in
-> my inbox. Care to re-send what's missing again? This will be merged after=
- -rc1 is
-> tagged.
->=20
-Sure, will re-send this series.=20
+The easiest fix in most cases is to change the 'reg' property to 1 cell
+for address and size.
 
-> Thanks
-> Kishon
->=20
-> >
-> >> Thanks=21
-> >>
-> >> --
-> >> Martin K. Petersen	Oracle Linux Engineering
-> >
+Cc: "Heiko Stübner" <heiko@sntech.de>
+Cc: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-media@vger.kernel.org
+Cc: linux-mtd@lists.infradead.org
+Cc: netdev@vger.kernel.org
+Cc: alsa-devel@alsa-project.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml     | 4 ++--
+ Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml     | 4 ++--
+ .../devicetree/bindings/display/rockchip/rockchip-vop.yaml    | 4 ++--
+ Documentation/devicetree/bindings/media/rockchip,vdec.yaml    | 2 +-
+ Documentation/devicetree/bindings/media/rockchip-vpu.yaml     | 2 +-
+ .../devicetree/bindings/mtd/arasan,nand-controller.yaml       | 2 +-
+ Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml   | 2 +-
+ .../devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml       | 2 +-
+ Documentation/devicetree/bindings/sound/fsl,easrc.yaml        | 2 +-
+ 9 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+index d6a3b71ea835..68b0131a31d0 100644
+--- a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+@@ -71,8 +71,8 @@ examples:
+ 
+     bus@1f059000 {
+       compatible = "baikal,bt1-apb", "simple-bus";
+-      reg = <0 0x1f059000 0 0x1000>,
+-            <0 0x1d000000 0 0x2040000>;
++      reg = <0x1f059000 0x1000>,
++            <0x1d000000 0x2040000>;
+       reg-names = "ehb", "nodev";
+       #address-cells = <1>;
+       #size-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+index 203bc0e5346b..29e1aaea132b 100644
+--- a/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+@@ -85,8 +85,8 @@ examples:
+ 
+     bus@1f05a000 {
+       compatible = "baikal,bt1-axi", "simple-bus";
+-      reg = <0 0x1f05a000 0 0x1000>,
+-            <0 0x1f04d110 0 0x8>;
++      reg = <0x1f05a000 0x1000>,
++            <0x1f04d110 0x8>;
+       reg-names = "qos", "ehb";
+       #address-cells = <1>;
+       #size-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+index 1695e3e4bcec..ed8148e26e24 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+@@ -106,8 +106,8 @@ examples:
+     #include <dt-bindings/power/rk3288-power.h>
+     vopb: vopb@ff930000 {
+       compatible = "rockchip,rk3288-vop";
+-      reg = <0x0 0xff930000 0x0 0x19c>,
+-            <0x0 0xff931000 0x0 0x1000>;
++      reg = <0xff930000 0x19c>,
++            <0xff931000 0x1000>;
+       interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+       clocks = <&cru ACLK_VOP0>,
+                <&cru DCLK_VOP0>,
+diff --git a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+index 0c68cdad9a31..8d35c327018b 100644
+--- a/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
++++ b/Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+@@ -61,7 +61,7 @@ examples:
+ 
+     vdec: video-codec@ff660000 {
+         compatible = "rockchip,rk3399-vdec";
+-        reg = <0x0 0xff660000 0x0 0x400>;
++        reg = <0xff660000 0x400>;
+         interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>;
+         clocks = <&cru ACLK_VDU>, <&cru HCLK_VDU>,
+                  <&cru SCLK_VDU_CA>, <&cru SCLK_VDU_CORE>;
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+index 27df18ad6a81..2b629456d75f 100644
+--- a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
++++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+@@ -66,7 +66,7 @@ examples:
+ 
+         vpu: video-codec@ff9a0000 {
+                 compatible = "rockchip,rk3288-vpu";
+-                reg = <0x0 0xff9a0000 0x0 0x800>;
++                reg = <0xff9a0000 0x800>;
+                 interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+                              <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+                 interrupt-names = "vepu", "vdpu";
+diff --git a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+index db8f115a13ec..cb9794edff24 100644
+--- a/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
++++ b/Documentation/devicetree/bindings/mtd/arasan,nand-controller.yaml
+@@ -53,7 +53,7 @@ examples:
+   - |
+     nfc: nand-controller@ff100000 {
+         compatible = "xlnx,zynqmp-nand-controller", "arasan,nfc-v3p10";
+-        reg = <0x0 0xff100000 0x0 0x1000>;
++        reg = <0xff100000 0x1000>;
+         clock-names = "controller", "bus";
+         clocks = <&clk200>, <&clk100>;
+         interrupt-parent = <&gic>;
+diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+index af608f2ecfdf..9b7117920d90 100644
+--- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
++++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+@@ -121,7 +121,7 @@ examples:
+ 
+     cpts@310d0000 {
+          compatible = "ti,am65-cpts";
+-         reg = <0x0 0x310d0000 0x0 0x400>;
++         reg = <0x310d0000 0x400>;
+          reg-names = "cpts";
+          clocks = <&main_cpts_mux>;
+          clock-names = "cpts";
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+index 574f890fab1d..4949a2851532 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+@@ -65,7 +65,7 @@ examples:
+     #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+     phy@88e2000 {
+         compatible = "qcom,sm8150-usb-hs-phy";
+-        reg = <0 0x088e2000 0 0x400>;
++        reg = <0x088e2000 0x400>;
+         #phy-cells = <0>;
+ 
+         clocks = <&rpmhcc RPMH_CXO_CLK>;
+diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+index 9dd57a974b28..32d547af9ce7 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
++++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+@@ -80,7 +80,7 @@ examples:
+ 
+     easrc: easrc@300c0000 {
+            compatible = "fsl,imx8mn-easrc";
+-           reg = <0x0 0x300c0000 0x0 0x10000>;
++           reg = <0x300c0000 0x10000>;
+            interrupts = <0x0 122 0x4>;
+            clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
+            clock-names = "mem";
+-- 
+2.25.1
 
