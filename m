@@ -2,189 +2,109 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57891C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D0CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFA620760
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:08:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kIE33h7L"
+	by mail.kernel.org (Postfix) with ESMTP id D207620760
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgFKMIZ (ORCPT
+        id S1728277AbgFKMKI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgFKMIZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 08:08:25 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70980C08C5C3
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 05:08:24 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u26so6814658wmn.1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 05:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=l9/1IkVcWGgYEUiuZWnQIOE6uUjuPXFr0zUWFBzg324=;
-        b=kIE33h7Lf2r+tx6hQ/ix/6+/19I3lB8Ldey0jlumYHalyyXnEmqjH3Ykw4mPIPgrcv
-         4dkNF36frta7vt0Et8JEAJhO/OWx50XwV4omuBKChHuTgqeA1dZ4TD8tQT9UZmcYYDBD
-         iVtWJnbCi9wgpwY0FWz7KnMUpzhRVlUGS2xbU=
+        Thu, 11 Jun 2020 08:10:08 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41556 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbgFKMKH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 08:10:07 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a21so5159831oic.8;
+        Thu, 11 Jun 2020 05:10:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l9/1IkVcWGgYEUiuZWnQIOE6uUjuPXFr0zUWFBzg324=;
-        b=n1XTEpaEwQG2n0JK5Aa/dMzGVbFdQTtS8I9RyfKMh35Mwc+zU5LIEOL8giClnqLkHY
-         Z2MInrolh8xLJX9dYSrFAe2ktMsJ/49+et24I7bw+pVHziGFZC6vXzKyhRgEUicTmc+3
-         qZWiJ+Ox8pqYMLxdcduL8O4IGQTqSrBb2MBqNjrGp2ns0AeLQw6sTwrjuUIZuCw8KWR/
-         ecad1TbDDX2lsYXRXh+eKNxCEkIhtiGNuTHC3IcRd0hI5vE6R5XzEd+GfDXNN97p8qaW
-         Rdk+zWADCnPQxUz7eGKmGXDTmWV3knVcTl6FeYJ+fYrMXjJNrDZo5nkgySf5P6eNhmXy
-         1nkA==
-X-Gm-Message-State: AOAM532UoaWx+ZPt7lk6NftA1pt8Q9xHDz72nluKgWcR6nAhO105LoPA
-        o+geagwZeVdqXGyxeMz8gjud2Q==
-X-Google-Smtp-Source: ABdhPJw/4tFHFEvAplryswUi9eYGwKBoFlfEALinuD5TCcI+/+xf1W81Wni9oObHj3ji4UEsPf8kKQ==
-X-Received: by 2002:a1c:7416:: with SMTP id p22mr7953394wmc.95.1591877303012;
-        Thu, 11 Jun 2020 05:08:23 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id 5sm6618926wrr.5.2020.06.11.05.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 05:08:22 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 12:08:20 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH RESEND v9 05/18] media: platform: Improve power on and
- power off flow
-Message-ID: <20200611120820.GC135826@chromium.org>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
- <20200604090553.10861-7-xia.jiang@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lcgXSywPB08+B3kJ8noSU/N9DMgy+4xXYB/CxnY7Amg=;
+        b=YlTfujDe8X3ycDRnEGMpvy3bI3Tq0C2HNBKvyHBn+b3eKbGpjTj1BPopvaFzcm4c6+
+         /XkYAFrBbV3DlbIRnPnht+/dvtzUUJuQgNGQj2xMw6Ul4cPlp/m7hkFqmyzWlhJ4Xtjo
+         T2WX62k3daDoVOGM6wssDUASmM4Ac+CpycC89ua56x/65V55krS9VlGA3/Dba9NiySJ7
+         W5l+wxVK10jf53cb6tr9wdqb5cRSIbnDas91RDLiKfSIDmDMr4krpyflRcu5waBMHdAx
+         X227idctfxto4tJgrqUeyKACQ2q+CKgBxPTy4bTMwYRwh2QVmYSdbvWE8n+dOEzR590A
+         FooQ==
+X-Gm-Message-State: AOAM533KxYHZl4DFqx84sQMs1Mw0mnlVVVL5iVqq3DColwRfvGpgjm6v
+        emJr3ARUxdoeOommDDoIs11UR9LsGfc8bhDh37OP/Q==
+X-Google-Smtp-Source: ABdhPJxkw8nBqOmM/doJ6JuZq8minHv6eu19aEc1wibYnTv7Nh6qLqRMw7fVRT/pWWz4P5jRTR0aBz/eVhKqpwoAW/s=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr6016101oia.54.1591877405773;
+ Thu, 11 Jun 2020 05:10:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604090553.10861-7-xia.jiang@mediatek.com>
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200610110810.GD5005@sirena.org.uk> <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+ <20200610164928.GJ5005@sirena.org.uk> <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
+ <20200611085004.GC4671@sirena.org.uk>
+In-Reply-To: <20200611085004.GC4671@sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 11 Jun 2020 14:09:54 +0200
+Message-ID: <CAMuHMdUBp79ix5hPjXBARTrOokg-pWY+Rdno9-dd6dBTv+TRcw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+Hi Mark,
 
-On Thu, Jun 04, 2020 at 05:05:40PM +0800, Xia Jiang wrote:
-> Call pm_runtime_get_sync() before starting a frame and then
-> pm_runtime_put() after completing it. This can save power for the time
-> between processing two frames.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v9: use pm_runtime_put() to replace pm_runtime_put_sync()
-> ---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 27 +++++--------------
->  1 file changed, 6 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index 12609ca46fd9..fb624385969e 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -710,23 +710,6 @@ static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
->  		return v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
->  }
->  
-> -static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
-> -{
-> -	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
-> -	struct vb2_v4l2_buffer *vb;
-> -	int ret = 0;
-> -
-> -	ret = pm_runtime_get_sync(ctx->jpeg->dev);
-> -	if (ret < 0)
-> -		goto err;
-> -
-> -	return 0;
-> -err:
-> -	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
-> -		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
-> -	return ret;
-> -}
-> -
->  static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
->  {
->  	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
-> @@ -751,8 +734,6 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
->  
->  	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
->  		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
-> -
-> -	pm_runtime_put_sync(ctx->jpeg->dev);
->  }
->  
->  static const struct vb2_ops mtk_jpeg_qops = {
-> @@ -761,7 +742,6 @@ static const struct vb2_ops mtk_jpeg_qops = {
->  	.buf_queue          = mtk_jpeg_buf_queue,
->  	.wait_prepare       = vb2_ops_wait_prepare,
->  	.wait_finish        = vb2_ops_wait_finish,
-> -	.start_streaming    = mtk_jpeg_start_streaming,
->  	.stop_streaming     = mtk_jpeg_stop_streaming,
->  };
->  
-> @@ -812,7 +792,7 @@ static void mtk_jpeg_device_run(void *priv)
->  	struct mtk_jpeg_src_buf *jpeg_src_buf;
->  	struct mtk_jpeg_bs bs;
->  	struct mtk_jpeg_fb fb;
-> -	int i;
-> +	int i, ret;
->  
->  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
->  	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> @@ -832,6 +812,10 @@ static void mtk_jpeg_device_run(void *priv)
->  		return;
->  	}
->  
-> +	ret = pm_runtime_get_sync(jpeg->dev);
-> +	if (ret < 0)
-> +		goto dec_end;
-> +
->  	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
->  	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
->  		goto dec_end;
-> @@ -957,6 +941,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
->  	v4l2_m2m_buf_done(src_buf, buf_state);
->  	v4l2_m2m_buf_done(dst_buf, buf_state);
->  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> +	pm_runtime_put(ctx->jpeg->dev);
+On Thu, Jun 11, 2020 at 10:50 AM Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Jun 10, 2020 at 09:18:19PM +0200, Geert Uytterhoeven wrote:
+> > On Wed, Jun 10, 2020 at 6:49 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> > > I'm much more comfortable explicitly listing the new compatible so that
+> > > even if someone makes a DT that doesn't bother listing the fallbacks
+> > > things will work.
+>
+> > Adding all of them would cause even more churn when adding support for
+> > a new SoC... There are already more than 700 "renesas," compatible
+> > values documented that are not directly matched by drivers.
+>
+> I'm not sure it's a particular concern, especially since you'll be
+> sending this stuff in the same series as a bindings update and an extra
+> patch in a series makes very little difference.
 
-This patch itself is correct and feel free to add my
+Until the DT bindings are split off into their own project...
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Listing unneeded compatible values in drivers also increases binary size.
+For RSPI and MSIOF that would be +2.5 KiB each.  Times tens of drivers.
 
-However, it looks like there might be one more problem with this driver.
-What happens if the hardware locks up? The driver doesn't seem to take
-any measures to detect that and recover the system.
+Considering the RSPI driver itself is only 9 KiB, and some RZ/A1 systems
+are really memory-constrained, I think it's better to avoid that.
 
-If you take a look at other drivers, e.g. the MTK FD driver, there is a
-delayed work scheduled before starting the hardware and canceled in the
-interrupt handler. If the delayed work is executed, it resets the
-hardware and reports the failure to V4L2, so that the execution can
-continue from next frames.
+> > Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
+> > binding, it will be flagged.
+>
+> For things that are upstream.
 
-This should be fixed in a separate patch, could be outside of this
-series.
+The DT bindings apply to out-of-tree DTS files, too ;-)
+If they're not compliant, all odds are off.
 
-Best regards,
-Tomasz
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
