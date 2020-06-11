@@ -2,167 +2,113 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFD1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2DCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31E8920656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DE3206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591865413;
+	bh=VKzLJW4U7pHPqhl4ThnXEzswPS1Ofcy1J2jS7Gaiglg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wK/BGgcd8J2b7V7j5c+OPg9j+XaEXTdy7/nhRc7MtgMwToy1Ipr9gYX+c3lVt08we
+	 iadQOl1eSBIHlCDc1cYrhghU6ACyQ8SCx+rMDWUOEmkR0COZVU+y+z9HW8Gh6+iXcO
+	 Eth+WqfgloFGY7w05+RguXTJvY7Vy+JS+w23fJNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgFKIgi (ORCPT
+        id S1726983AbgFKIuL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:36:38 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28034 "EHLO mga01.intel.com"
+        Thu, 11 Jun 2020 04:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgFKIgi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:36:38 -0400
-IronPort-SDR: lOKWR2sA++bVoHADnte08VIQl50LoRhATXUliGYK/7alKvJiJBymhptU+9JYr6qtZWpDCQqzS+
- OGtdAtUPJROQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 01:36:38 -0700
-IronPort-SDR: HRmqmbzRLw8/f2rQQukq4hhYhkyAW6AAnCu6i+38YfyYkbtaL1vbq0s5e6LxjNOenQqT8pLdBk
- nPRcJVHMlrUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="271520565"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2020 01:36:38 -0700
-Received: from [10.214.154.243] (vramuthx-mobl1.gar.corp.intel.com [10.214.154.243])
-        by linux.intel.com (Postfix) with ESMTP id 9056E580458;
-        Thu, 11 Jun 2020 01:36:33 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611081254.GR2428291@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <21b5db0e-c45a-2255-0389-04b204685d63@linux.intel.com>
-Date:   Thu, 11 Jun 2020 16:36:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726828AbgFKIuI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:50:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5CE20656;
+        Thu, 11 Jun 2020 08:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591865408;
+        bh=VKzLJW4U7pHPqhl4ThnXEzswPS1Ofcy1J2jS7Gaiglg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c3YzXxCm23G9kUwkGqyiTj1l9M2SniIiN7gj4O8ZEpO3URiUGoFBadDVk7F77FcED
+         BZhei7SJOUSHbvHKUGROkcAZA3vPfCZCOzmPj8KwnnowF24kTbX9YIqBpWKbVtql7Q
+         WZpMZ3SoAxhHPHTlCDGiCTUSQAQVwrn++PkGOh5I=
+Date:   Thu, 11 Jun 2020 09:50:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
+ support
+Message-ID: <20200611085004.GC4671@sirena.org.uk>
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200610110810.GD5005@sirena.org.uk>
+ <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+ <20200610164928.GJ5005@sirena.org.uk>
+ <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611081254.GR2428291@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
+X-Cookie: I like your SNOOPY POSTER!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
 
-Thank you so much for the review comments...
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/6/2020 4:12 pm, Andy Shevchenko wrote:
-> On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add support for USB PHY on Intel LGM SoC.
-> 
-> ...
-> 
->> +static int get_flipped(struct tca_apb *ta, bool *flipped)
->> +{
->> +	union extcon_property_value property;
->> +	int ret;
->> +
->> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
->> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
->> +	if (ret) {
->> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> 
->> +		return false;
-> 
-> return ret;
-Noted.
-> 
->> +	}
->> +
->> +	*flipped = property.intval;
->> +
-> 
->> +	return *flipped;
-> 
-> return 0;
-Noted.
-> 
->> +}
-> 
-> ...I suppose it should be as above.
-> 
-> ...
-> 
->> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
->> +				 10, 10 * 1000);
-exceeds more than 80 characters, so checkpatch throws warnings, to avoid 
-that move to next line.
-> 
-> On one line easier to read.
-> 
->> +	if (ret) {
->> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
->> +		return ret;
->> +	}
-> 
-> ...
-> 
->> +static int phy_set_vbus(struct usb_phy *phy, int on)
->> +{
->> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> 
->> +	int ret = 0;
-> 
-> Assignment is redundant.
-so you mean , should be declared as
-int ret;
-right?
+On Wed, Jun 10, 2020 at 09:18:19PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Jun 10, 2020 at 6:49 PM Mark Brown <broonie@kernel.org> wrote:
 
-> 
->> +
->> +	if (on) {
->> +		ret = regulator_enable(ta->vbus);
->> +		if (ret)
->> +			dev_err(ta->phy.dev, "regulator not enabled\n");
->> +	} else {
->> +		ret = regulator_disable(ta->vbus);
->> +		if (ret)
->> +			dev_err(ta->phy.dev, "regulator not disabled\n");
->> +	}
->> +
->> +	return ret;
->> +}
-> 
-> ...
-> 
->> +	ret = get_flipped(ta, &flipped);
->> +	if (!ret)
->> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> 
-> This should be fixed accordingly.
-Noted.
-> 
-> ...
-> 
->> +		dev_info(ta->phy.dev, "connected%s\n",
->> +			 flipped ? " flipped" : "");
-> 
-> One line.
-exceeds more than 80 characters, so checkpatch throw warnings, to avoid 
-that moved to next line.
+> > I'm much more comfortable explicitly listing the new compatible so that
+> > even if someone makes a DT that doesn't bother listing the fallbacks
+> > things will work.
 
-Regards
-Vadivel
-> 
+> Adding all of them would cause even more churn when adding support for
+> a new SoC... There are already more than 700 "renesas," compatible
+> values documented that are not directly matched by drivers.
+
+I'm not sure it's a particular concern, especially since you'll be
+sending this stuff in the same series as a bindings update and an extra
+patch in a series makes very little difference.
+
+> Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
+> binding, it will be flagged.
+
+For things that are upstream.
+
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7h8DwACgkQJNaLcl1U
+h9AbHwf+Oh0ZTAsfPJi03Ayhsz+OMqw4Uebch9FIKNb8mGnpo5yZuUA/oMtGTghT
+1fT2jkgx+0iNVdRsPz6M1OEuF/ls+JyYrcLOmQyu5Jmb/xhrr62ANmMWQV6oZsD6
+9ANB0yKJUixSwYgu6OWeFgmdYmzT4K29839XsSK/rs4Y3ZcRfrF2F5skGbbHzVCE
+jtqvXG8+GhJHNXpEtyqOd6+sq19g6wJ/Fh13vas59bKQYKaJnn9pS0mjzEughzJ+
+2OQTvE2gAaw4zXf/dKGag1Om1NH6NhS6k8MIxoP/kNa+yyuw2AMSsMt8NC7EsDyy
+yXvvE+bPbnlTWD+L8Quyr0M51PRvZA==
+=au0+
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--
