@@ -2,142 +2,168 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A70C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5552CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 18:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CD720792
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3FA206DC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 18:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="UzXvItjT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fklXI7dW";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZoB6vJzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgFKSOZ (ORCPT
+        id S1726997AbgFKSRI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 14:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbgFKSOZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 14:14:25 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21EC3C08C5C1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 11:14:24 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id z1so5295895qtn.2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 11:14:24 -0700 (PDT)
+        Thu, 11 Jun 2020 14:17:08 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:39081 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgFKSRI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 14:17:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591899427; x=1623435427;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=bHEWGZ17qB78FQWauW/e96EEpjze5BeG437vRJ1kzoY=;
+  b=fklXI7dWFfZ1jjvukKJPpnt4afFPMrjxkuSs1DHgLAGu2beIvttB/s1Q
+   D6Qu+5s0WqOPpnnE7AZoKOBF/Eh3seN8u8SYjN5yqbWc6p2ow/qg4OCbM
+   Wy2eWRTNB93axIbQcsFcakIQtWUHaszk1fuaXOlTmmOYZpjewx5mKYw/U
+   ryCk9wuG5aHyTy878CfIwXEyhzsgN06gXFoJAWCWkJph59IL7TiZ/LX+1
+   Vy4QpXxCjPLuMAhd8hMFC2TSnkmH24Dr9DQaURceYmQtzUNjWuecJfEty
+   ep9pncYkOUJ4lsaG1+hLBrpRmps9mgqnk6LbRIyg9sDMxxe47dBE4a8vm
+   g==;
+IronPort-SDR: vbuA/frDkzSEQUeOfzGAJ2QAX9hjrKdHtd5elwL6R+7Vv7c699AmwX5vwa8ccuREq30JF3G/c+
+ CMfEixDeaif+nsQPXwsW5nIA45/xyAjzwd0Wn6WdmMQH10orygdHSS+w4nWoFDmQnEco0bdAEA
+ 3oW6G2Rgw+C1Ffy68knPUKNfHnsW3fluqE43IE2qaVMVLRl+CvNlYTkFt9+6osVA3yYbua0R07
+ 5lnNaNvxq4Vo39K23XPGb843ZKWprRQMqGlCY+s5BAFKKMFlDJajpGZ7pl2pshbRAZBYCKONgI
+ IlQ=
+X-IronPort-AV: E=Sophos;i="5.73,500,1583218800"; 
+   d="scan'208";a="79774029"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Jun 2020 11:17:07 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 11 Jun 2020 11:17:04 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Thu, 11 Jun 2020 11:17:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bbc3I0NuuQkD8X16umWR7PB7dTYaYPfwnbHQlXxPk1bjDY8eTOFiuAXbFD4i+z2bGheFS2vPqMev/3+htsZnQr2PyiuMCyhDp5pu7jUQ3ZhbLNQANARpkevU2bRVgJtLToD8nTNAA2xeqFZ/2hmE0nobstdmAhp7HLochgL0WQtfw/AmM4PIi3b5s4uurcB9x1vT8UPjHXou5LBXonCqCd5NENSyujF2arMgP1XXrl+ON6TgpWlKBxtMxDJFUZuTD4t/MB+3Z4k/g3na/GHUKxVwWKnciZ/c1IYUwnpd5N7zEsDUb1weKNEyVNfM+mMtprCod+p33m3PWamJCj+2AQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bHEWGZ17qB78FQWauW/e96EEpjze5BeG437vRJ1kzoY=;
+ b=Gvm8HuJ6W1DpeXWVoW+eo0kpL3YngwA0KyLeEtszUhpfS5HTCkIiPIljV775XfPWsYr7T4LS0LSwzOVkSPCl5mLzS6/TWg6vnXC4L0sjUXk3vusAWKJLqAqpzbCZp1l6M+F8zU2Vwfu/lm6IulP13LnO2Dpmz33QD5xH7oaI/p2WZYb5Nk13Pd7XagNHqH+E6My9PYMQnEXXl3Aaq6WPfhoUhJFGku/0/vJOLGmQTWStpsjpFWyl7ndCLAiGy17xgCNVMExa8Fmpz8axDSBBYmfqaDLDJrj9FQB+E6LivkNR7Od9RXPhSOOKvAO/a2ap9Pg0Qwlhu4/fwxLBOqjLfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RrEjUNrF+LcCoD0q18bBvOWgotZ/arY1E00Ez8SFuB4=;
-        b=UzXvItjTl3Sefqh6cZiN+Ut11UgSR1b35+nr4uiV9gw8JqLFSyk5Qaxk51WS0lae6b
-         EGo+sU1PaqEUFzZLA0N0uOqsZ11MlncQf2QBgc6SVRK8hPHuhywF1Jd+V4P6ZiAqrx5F
-         LBgCrh9WBYtAYTsjfVyR8IAkb/M2WjuqXX9PyhaWe3UjKTT6GAxQknvGSEwf+5aziqbc
-         VoHSXsHxF3GLKL5wQS1JbsXMCudYG5KoWybQLVbdOy72APLSYnzsf+dNJpvzZeLIrTXd
-         ejXygMg9o2jUq7G3IIM8PYEZqXmu/Derhzc//dPwBbWp6135oXbL3IqqjkY0emf0C46g
-         GujQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RrEjUNrF+LcCoD0q18bBvOWgotZ/arY1E00Ez8SFuB4=;
-        b=G7Sn8ie3n8yTSm5/of05OmdZeTkaJF3dww8N9DCPr8n4pxSQzjARXU+SSiRgAM98Fx
-         GHlLCx4Kk8VCmihAgKHE1IEmiqzGZKJeY7EKty4i0aMN7TFsAbJxrpbSfSWOGZtrBoNu
-         Ko9FytgrLCZQUcRTNUrJ+DcJfi2cYOmm/SrNF+tEcVk1t6/c8AtsIx1wv7MUTYp2WP1o
-         fJhMvnSHTeYatzNe1Lp/4FQW4BBWDtSkGF0JymJhrH5CkUOyd9XmhKuqnqN165Omz4Wc
-         o329Q+q8mfNQxh7rEx3F053GqEIcy8Jp8lH3v4eFmHWWHPN5zf1IFUCPyS9mg/HKoED4
-         yrUQ==
-X-Gm-Message-State: AOAM530X8bsOhcDZKcwmeh0cjVUTznG4cdXigrRNUAjxW7e17wfdl/rv
-        rerKcJTOXc4YXCqBdgSIOGbY1A==
-X-Google-Smtp-Source: ABdhPJwChoiZB30NjiO8RzdLTNVa5pI98NAl3sOJ9f5Y3i3mQwDQIBhUvM9Foy/EiU6QCoNYO2d2NA==
-X-Received: by 2002:ac8:3551:: with SMTP id z17mr9696644qtb.139.1591899263236;
-        Thu, 11 Jun 2020 11:14:23 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id g5sm3196208qta.46.2020.06.11.11.14.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 11:14:22 -0700 (PDT)
-Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
- dts
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200604135221.GH16719@Mani-XPS-13-9360>
- <20200611180503.GA22890@Mani-XPS-13-9360>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <cf3ccc5f-cdc5-71f5-60e0-7ae44952c667@marek.ca>
-Date:   Thu, 11 Jun 2020 14:14:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200611180503.GA22890@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bHEWGZ17qB78FQWauW/e96EEpjze5BeG437vRJ1kzoY=;
+ b=ZoB6vJzGv7IRv+J41RKS21m3OZW8BElWz7SdSudZXZcgWrj2um0wRC9Ae9ru5Z7Pew9SylsPCJkO3we8hnfGPnq5RPFrAp2NIdew0fRZK/AAsXuIF46ud78zKxBguS3Cj257SKqBZ6/CksN6BAjCUfwOe9dL09qZ9NSwLq/nBX0=
+Received: from MN2PR11MB4269.namprd11.prod.outlook.com (2603:10b6:208:190::32)
+ by MN2PR11MB4077.namprd11.prod.outlook.com (2603:10b6:208:13f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.23; Thu, 11 Jun
+ 2020 18:17:04 +0000
+Received: from MN2PR11MB4269.namprd11.prod.outlook.com
+ ([fe80::8d6f:606b:5ddc:d5cb]) by MN2PR11MB4269.namprd11.prod.outlook.com
+ ([fe80::8d6f:606b:5ddc:d5cb%2]) with mapi id 15.20.3088.021; Thu, 11 Jun 2020
+ 18:17:03 +0000
+From:   <Daire.McNamara@microchip.com>
+To:     <amurray@thegoodpenguin.co.uk>, <rob+dt@kernel.org>,
+        <lorenzo.pieralisi@arm.com>, <linux-pci@vger.kernel.org>,
+        <bhelgaas@google.com>, <devicetree@vger.kernel.org>
+CC:     <david.abdurachmanov@gmail.com>
+Subject: Subject: [PATCH v11 0/2] PCI: microchip: Add host driver for
+ Microchip PCIe controller
+Thread-Topic: Subject: [PATCH v11 0/2] PCI: microchip: Add host driver for
+ Microchip PCIe controller
+Thread-Index: AQHWQByBrGKbXifQ8kGNEYNcis07GA==
+Date:   Thu, 11 Jun 2020 18:17:03 +0000
+Message-ID: <d22fe0b64859b589ffc585380819901827094966.camel@microchip.com>
+Accept-Language: en-IE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: thegoodpenguin.co.uk; dkim=none (message not signed)
+ header.d=none;thegoodpenguin.co.uk; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [89.101.219.210]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 647c0917-4533-4552-4179-08d80e33a48d
+x-ms-traffictypediagnostic: MN2PR11MB4077:
+x-microsoft-antispam-prvs: <MN2PR11MB4077C2BAD002BC6FCEEE663F96800@MN2PR11MB4077.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:792;
+x-forefront-prvs: 0431F981D8
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SSmlWYoNFKBQZ3LEdVL9W70YkywshbrdN4Cuieb9do6pNUwqeUXQE4WMZgQkkh1qz+oWYBQAquDLhZ9BuEcEc1uFHGMf5TXoG/K6OfSkqH4YG2Yj8EXp402h9aJb0Db/F16MLS/frse23yv0WIi+BbBUjj9rSIO8PJuJzXJ+Es7ILe/yzr6LwDFDBEnExyUbhVUHwoOwwjBcFSiTFLh1jFB4p8l0jvzS2ck/7Y63Y2mSbz69o0MijRkYYincazW/5sWiLmYUhRXi25o8i/Jo1vEx1vm4TBYQEPRB0B7BdJmiRER402cU/rGrlaBwn88D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4269.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(136003)(396003)(376002)(346002)(66556008)(66476007)(64756008)(66446008)(6486002)(36756003)(76116006)(66946007)(91956017)(2616005)(86362001)(2906002)(71200400001)(26005)(186003)(478600001)(6506007)(316002)(8936002)(8676002)(4326008)(6512007)(110136005)(83380400001)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: qGL48c4dqtFSBeCOXbOHYBNqJBluJEULDTuBwcukp1Ludh37ELu5jZj6dXR6Fv4+EyOxL3E7Zt/SDgyiPRdY1lQMQNhrV3bzLfOsf21Br+iKFZjglxOw4tpGFbxHQeQcr6fm92m5tkUYTNMgI1aj79md3hULk8g2RwDm+z/u1Ht1cY34mgbywVDMOltTuULInStsLXU9vLE/J3fPmVa+Y6D5orT9qxmDa/LsXvQ8WoQTPtQ3lBpPZicXfcFPI7hDVBW/RUKeW0OwoAkYW/8xdDWXIbmlLTIl8t4BTF0jg8AxKUAZ55aidEK2697iyYG3027oPs2f24+3sRf2DXKJ+8Ne3cqTJqnLz/C5ZTp3VJkHqg1PVfDPNWz0Q/Zkob+X1wt7DKn/OrGM1WE5oUp8W/EscPCVeB15mewbIRz7G5eRhREM9SKtkCX3EYQueI2kBaehvpPdkIJz2f2rz8TdncyR0DltVr0vlnnIfRrXDkU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9347371D70270743AFAF23203DFD1FA2@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 647c0917-4533-4552-4179-08d80e33a48d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 18:17:03.8887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1TNX+07w8QTrW2bUFSWIddgZj+YJX/VEhH8DCIIAdPSGxbziSP6eUANZ5qwCQr6H5JKCPu0jwSPNLfZT05WOKtJCmwpBBFSU5AsgdAJBp5k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4077
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/11/20 2:05 PM, Manivannan Sadhasivam wrote:
-> On Thu, Jun 04, 2020 at 07:22:21PM +0530, Manivannan Sadhasivam wrote:
->> Hi,
->>
->> On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
->>> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
->>>
->>
->> I've tested this series on an SM8250 based board and able to get Type C (USB0)
->> working. There are also couple of Type A ports (USB1) on that board behind a
->> USB hub. It is probing fine but I don't see any activity while connecting a
->> USB device. Will continue to debug and once I get them working, I'll add my
->> Tested-by tag.
->>
-> 
-> So it turned out that I forgot to enable one regulator which kept the USB hub
-> powered down. After enabling that, both Type A ports are working. Hence,
-> 
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Thanks,
-> Mani
-> 
-
-Thanks for testing it. Your Tested-by only applies to the relevant 
-patches (patches 2 and 4 in this version) right? And can I also add your 
-Tested-by tag to my other series 
-(https://patchwork.kernel.org/cover/11567095/) which this depends on?
-
->> Thanks,
->> Mani
->>
->>> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
->>> few changes. Notably, the HDK865 dts has regulator config changed a bit based
->>> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
->>>
->>> Jonathan Marek (6):
->>>    arm64: dts: qcom: sm8150: add apps_smmu node
->>>    arm64: dts: qcom: sm8250: add apps_smmu node
->>>    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
->>>    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
->>>    arm64: dts: qcom: add sm8150 hdk dts
->>>    arm64: dts: qcom: add sm8250 hdk dts
->>>
->>>   arch/arm64/boot/dts/qcom/Makefile       |   2 +
->>>   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
->>>   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
->>>   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
->>>   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
->>>   5 files changed, 1384 insertions(+)
->>>   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
->>>   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
->>>
->>> -- 
->>> 2.26.1
->>>
+DQpUaGlzIHYxMSBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBNaWNyb2NoaXAgUENJZSBQb2xh
+ckZpcmUgUENJZQ0KY29udHJvbGxlciB3aGVuIGNvbmZpZ3VyZWQgaW4gaG9zdCAoUm9vdCBDb21w
+bGV4KSBtb2RlLg0KDQpVcGRhdGVzIHNpbmNlIHYxMDoNCiogQWRqdXN0ZWQgZHJpdmVyIGFzIHBl
+ciBSb2IgSGVycmluZydzIGNvbW1lbnRzLCBub3RhYmx5Og0KICAtIHVzZSBjb21tb24gUENJX01T
+SV9GTEFHUyBkZWZpbmVzDQogIC0gcmVkdWNlIHN0b3JhZ2Ugb2YgdW5uZWNlc3NhcnkgdmFycyBp
+biBtY19wY2llIHN0cnVjdA0KICAtIHN3aXRjaGVkIHRvIHJlYWQvd3JpdGUgcmVsYXhlZCB2YXJp
+YW50cw0KICAtIGV4dGVuZGVkIGxvY2sgaW4gbXNpX2RvbWFpbl9hbGxvYyByb3V0aW5lDQogIC0g
+aW1wcm92ZWQgMzJiaXQgc2FmZXR5LCBzd2l0Y2hlZCBmcm9tIGZpbmRfZmlyc3RfYml0KCkgdG8g
+aWxvZzIoKQ0KICAtIHJlbW92ZWQgdW5uZWNlc3NhcnkgdHdpZGRsZSBvZiBlQ0FNIGNvbmZpZyBz
+cGFjZQ0KDQpVcGRhdGVzIHNpbmNlIHY5Og0KKiBBZGp1c3RlZCBjb21taXQgbG9ncw0KKiBtYWtl
+IGR0X2JpbmRpbmdzX2NoZWNrIHBhc3Nlcw0KDQpVcGRhdGVzIHNpbmNlIHY4Og0KKiBSZWZhY3Rv
+cmVkIGFzIHBlciBSb2IgSGVycmluZydzIGNvbW1lbnRzOg0KICAtIGJpbmRpbmdzIGluIHNjaGVt
+YSBmb3JtYXQNCiAgLSBBZGp1c3RlZCBsaWNlbmNlIHRvIEdQTHYyLjANCiAgLSBSZWZhY3RvcmVk
+IGFjY2VzcyB0byBjb25maWcgc3BhY2UgYmV0d2VlbiBkcml2ZXIgYW5kIGNvbW1vbiBlQ0FNIGNv
+ZGUNCiAgLSBBZG9wdGVkIHBjaV9ob3N0X3Byb2JlKCkNCiAgLSBNaXNjZWxsYW5vdXMgb3RoZXIg
+aW1wcm92ZW1lbnRzDQoNClVwZGF0ZXMgc2luY2Ugdjc6DQoqIEJ1aWxkIGZvciA2NGJpdCBSSVND
+ViBhcmNoaXRlY3R1cmUgb25seQ0KDQpVcGRhdGVzIHNpbmNlIHY2Og0KKiBSZWZhY3RvcmVkIHRv
+IHVzZSBjb21tb24gZUNBTSBkcml2ZXINCiogVXBkYXRlZCB0byBDT05GSUdfUENJRV9NSUNST0NI
+SVBfSE9TVCBldGMNCiogRm9ybWF0dGluZyBpbXByb3ZlbWVudHMNCiogUmVtb3ZlZCBjb2RlIGZv
+ciBzZWxlY3Rpb24gYmV0d2VlbiBicmlkZ2UgMCBhbmQgMQ0KDQpVcGRhdGVzIHNpbmNlIHY1Og0K
+KiBGaXhlZCBLY29uZmlnIHR5cG8gbm90ZWQgYnkgUmFuZHkgRHVubGFwDQoqIFVwZGF0ZWQgd2l0
+aCBjb21tZW50cyBmcm9tIEJqb3JuIEhlbGdhYXMNCg0KVXBkYXRlcyBzaW5jZSB2NDoNCiogRml4
+IGNvbXBpbGUgaXNzdWVzLg0KDQpVcGRhdGVzIHNpbmNlIHYzOg0KKiBVcGRhdGUgYWxsIHJlZmVy
+ZW5jZXMgdG8gTWljcm9zZW1pIHRvIE1pY3JvY2hpcA0KKiBTZXBhcmF0ZSBNU0kgZnVuY3Rpb25h
+bGl0eSBmcm9tIGxlZ2FjeSBQQ0llIGludGVycnVwdCBoYW5kbGluZyBmdW5jdGlvbmFsaXR5DQoN
+ClVwZGF0ZXMgc2luY2UgdjI6DQoqIFNwbGl0IG91dCBEVCBiaW5kaW5ncyBhbmQgVmVuZG9yIElE
+IHVwZGF0ZXMgaW50byB0aGVpciBvd24gcGF0Y2gNCiAgZnJvbSBQQ0llIGRyaXZlci4NCiogVXBk
+YXRlZCBDaGFuZ2UgTG9nDQoNClVwZGF0ZXMgc2luY2UgdjE6DQoqIEluY29ycG9yYXRlIGZlZWRi
+YWNrIGZyb20gQmpvcm4gSGVsZ2Fhcw0KDQpEYWlyZSBNY05hbWFyYSAoMik6DQogIFBDSTogbWlj
+cm9jaGlwOiBBZGQgaG9zdCBkcml2ZXIgZm9yIE1pY3JvY2hpcCBQQ0llIGNvbnRyb2xsZXINCiAg
+UENJOiBtaWNyb2NoaXA6IEFkZCBob3N0IGRyaXZlciBmb3IgTWljcm9jaGlwIFBDSWUgY29udHJv
+bGxlcg0KDQogLi4uL2JpbmRpbmdzL3BjaS9taWNyb2NoaXAscGNpZS1ob3N0LnlhbWwgICAgIHwg
+IDkzICsrKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAgICAgICB8
+ICAgOSArDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9NYWtlZmlsZSAgICAgICAgICAgICAgIHwg
+ICAxICsNCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWljcm9jaGlwLWhvc3QuYyAgfCA2
+ODMgKysrKysrKysrKysrKysrKysrDQogNCBmaWxlcyBjaGFuZ2VkLCA3ODYgaW5zZXJ0aW9ucygr
+KQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGNpL21pY3JvY2hpcCxwY2llLWhvc3QueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL3BjaWUtbWljcm9jaGlwLWhvc3QuYw0KDQoNCmJhc2UtY29tbWl0OiBi
+Mjk0ODJmZGU2NDljNzI0NDFkNTQ3OGE0ZWEyYzUyYzU2ZDk3YTVlDQotLSANCjIuMTcuMQ0KDQo=
