@@ -2,643 +2,148 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FC0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 07:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAA2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F52C20825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 07:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD7120812
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IMcY6+nd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgFKHyJ convert rfc822-to-8bit (ORCPT
+        id S1726881AbgFKIAU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 03:54:09 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43243 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgFKHyJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 03:54:09 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 11A6D20015;
-        Thu, 11 Jun 2020 07:53:59 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 09:53:58 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/8] mtd: rawnand: rockchip: NFC drivers for RK3308,
- RK2928 and others
-Message-ID: <20200611095358.7fceea83@xps13>
-In-Reply-To: <20200609074020.23860-3-yifeng.zhao@rock-chips.com>
-References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
-        <20200609074020.23860-3-yifeng.zhao@rock-chips.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 11 Jun 2020 04:00:20 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:50183 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726841AbgFKIAU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 04:00:20 -0400
+X-UUID: 3425f3c71903411db3d9adf6ff997c7d-20200611
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ymFyA3aRkGFQ0hwS3c5JqbCS9zGTSs9AXR5E+TUVjRw=;
+        b=IMcY6+ndne/pmzJYoDIvoKGGLZDsmRyLtkaBoT9f9k3kS042rQr2UNfVVjFsMNaU0TIrg1vDpeIFOhntx/+VzslwpHRyXvmBu/Aw5OmqYguvwR5+02g/yR/n8LERFqQ/VcTlDVb05mwkpoo8Ar5MVDjfgePkYsYuOZW1mxMvjLM=;
+X-UUID: 3425f3c71903411db3d9adf6ff997c7d-20200611
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 462532237; Thu, 11 Jun 2020 16:00:13 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 11 Jun 2020 16:00:10 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 11 Jun 2020 16:00:10 +0800
+Message-ID: <1591862411.23595.5.camel@mtkswgap22>
+Subject: Re: [PATCH v4 1/4] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Thu, 11 Jun 2020 16:00:11 +0800
+In-Reply-To: <20200529192443.GA2785767@bogus>
+References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
+         <1590659832-31476-2-git-send-email-EastL.Lee@mediatek.com>
+         <20200529192443.GA2785767@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-TM-SNTS-SMTP: E454FB0951BC790B45883925983748159758D5FE3D941C0A086BA0DD8420AA522000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yifeng,
+T24gRnJpLCAyMDIwLTA1LTI5IGF0IDEzOjI0IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVGh1LCBNYXkgMjgsIDIwMjAgYXQgMDU6NTc6MDlQTSArMDgwMCwgRWFzdEwgd3JvdGU6DQo+
+ID4gRG9jdW1lbnQgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1hbmQt
+UXVldWUgRE1BIGNvbnRyb2xsZXINCj4gPiB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNVDY3Nzkg
+U29DIG9yIG90aGVyIHNpbWlsYXIgTWVkaWF0ZWsgU29Dcy4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBFYXN0TCA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NCj4gDQo+IE5lZWQgYSBmdWxsIG5h
+bWUNCg0KT0sNCj4gLg0KPiANCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZG1hL210ay1jcWRtYS55YW1sICAgICAgICAgfCAxMDAgKysrKysrKysrKysrKysrKysrKysrDQo+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9tdGstY3FkbWEueWFt
+bA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZG1hL210ay1jcWRtYS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2RtYS9tdGstY3FkbWEueWFtbA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXgg
+MDAwMDAwMC4uMDQ1YWEwYw0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gQEAgLTAsMCAr
+MSwxMDAgQEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiANCj4g
+RHVhbCBsaWNlbnNlIG5ldyBiaW5kaW5nczoNCj4gDQo+IChHUEwtMi4wLW9ubHkgT1IgQlNELTIt
+Q2xhdXNlKQ0KDQpPSw0KPiANCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0
+dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2RtYS9tdGstY3FkbWEueWFtbCMNCj4gPiArJHNj
+aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4g
+Kw0KPiA+ICt0aXRsZTogTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciBEZXZp
+Y2UgVHJlZSBCaW5kaW5nDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiArICAtIEVhc3RM
+IDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246DQo+ID4g
+KyAgTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciAoQ1FETUEpIG9uIE1lZGlh
+dGVrIFNvQw0KPiA+ICsgIGlzIGRlZGljYXRlZCB0byBtZW1vcnktdG8tbWVtb3J5IHRyYW5zZmVy
+IHRocm91Z2ggcXVldWUgYmFzZWQNCj4gPiArICBkZXNjcmlwdG9yIG1hbmFnZW1lbnQuDQo+ID4g
+Kw0KPiANCj4gTmVlZCBhICRyZWYgdG8gZG1hLWNvbnRyb2xsZXIueWFtbA0KDQpPSw0KPiANCj4g
+PiArcHJvcGVydGllczoNCj4gPiArICAiI2RtYS1jZWxscyI6DQo+ID4gKyAgICBtaW5pbXVtOiAx
+DQo+ID4gKyAgICAjIFNob3VsZCBiZSBlbm91Z2gNCj4gPiArICAgIG1heGltdW06IDI1NQ0KPiA+
+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFVzZWQgdG8gcHJvdmlkZSBETUEgY29udHJv
+bGxlciBzcGVjaWZpYyBpbmZvcm1hdGlvbi4NCj4gPiArDQo+ID4gKyAgY29tcGF0aWJsZToNCj4g
+PiArICAgIGNvbnN0OiBtZWRpYXRlayxjcWRtYQ0KPiANCj4gTmVlZHMgU29DIHNwZWNpZmljIGNv
+bXBhdGlibGUgc3RyaW5nKHMpLg0KT0sNCj4gDQo+ID4gKw0KPiA+ICsgIHJlZzoNCj4gPiArICAg
+IG1pbkl0ZW1zOiAxDQo+ID4gKyAgICBtYXhJdGVtczogMjU1DQo+IA0KPiBZb3UgY2FuIGhhdmUg
+MjU1IHJlZ2lzdGVyIHJlZ2lvbnM/DQpObywgSSdsbCBmaXggbWF4SXRlbXMgdG8gNQ0KPiANCj4g
+WW91IG5lZWQgdG8gZGVmaW5lIHdoYXQgZWFjaCByZWdpb24gaXMgaWYgbW9yZSB0aGFuIDEuDQo+
+IA0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgbWluSXRlbXM6IDENCj4gPiAr
+ICAgIG1heEl0ZW1zOiAyNTUNCj4gDQo+IDI1NSBpbnRlcnJ1cHRzPw0KDQp0aGUgc2FtZSwgNSBp
+bnRlcnJpcHRzLg0KPiANCj4gPiArDQo+ID4gKyAgY2xvY2tzOg0KPiA+ICsgICAgbWF4SXRlbXM6
+IDENCj4gPiArDQo+ID4gKyAgY2xvY2stbmFtZXM6DQo+ID4gKyAgICBjb25zdDogY3FkbWENCj4g
+PiArDQo+ID4gKyAgZG1hLWNoYW5uZWwtbWFzazoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+
+ICsgICAgICBCaXRtYXNrIG9mIGF2YWlsYWJsZSBETUEgY2hhbm5lbHMgaW4gYXNjZW5kaW5nIG9y
+ZGVyIHRoYXQgYXJlDQo+ID4gKyAgICAgIG5vdCByZXNlcnZlZCBieSBmaXJtd2FyZSBhbmQgYXJl
+IGF2YWlsYWJsZSB0byB0aGUNCj4gPiArICAgICAga2VybmVsLiBpLmUuIGZpcnN0IGNoYW5uZWwg
+Y29ycmVzcG9uZHMgdG8gTFNCLg0KPiA+ICsgICAgICBUaGUgZmlyc3QgaXRlbSBpbiB0aGUgYXJy
+YXkgaXMgZm9yIGNoYW5uZWxzIDAtMzEsIHRoZSBzZWNvbmQgaXMgZm9yDQo+ID4gKyAgICAgIGNo
+YW5uZWxzIDMyLTYzLCBldGMuDQo+ID4gKyAgICBhbGxPZjoNCj4gPiArICAgICAgLSAkcmVmOiAv
+c2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzItYXJyYXkNCj4gPiArICAgIGl0
+ZW1zOg0KPiA+ICsgICAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgICAjIFNob3VsZCBiZSBlbm91
+Z2gNCj4gPiArICAgICAgbWF4SXRlbXM6IDI1NQ0KPiANCj4gVGhpcyBhbHJlYWR5IGhhcyBhIGRl
+ZmluaXRpb24gaW4gZG1hLWNvbW1vbi55YW1sLiBEb24ndCBjb3B5LW4tcGFzdGUgDQo+IGl0LiBK
+dXN0IGFkZCBhbnkgY29uc3RyYWludHMgeW91IGhhdmUuIExpa2Ugd2hhdCBpcyB0aGUgbWF4IG51
+bWJlciBvZiANCj4gY2hhbm5lbHM/DQoNCk9LLCB0aGUgbWF4IGNoYW5uZWwgbnVtYmVyIGlzIDUs
+IEknbGwgZml4IGl0IG9uIG5leHQgdmVyc2lvbi4NCj4gDQo+ID4gKw0KPiA+ICsgIGRtYS1jaGFu
+bmVsczoNCj4gPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWlu
+dDMyDQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSBjaGFu
+bmVscyBzdXBwb3J0ZWQgYnkgdGhlIGNvbnRyb2xsZXIuDQo+ID4gKw0KPiA+ICsgIGRtYS1yZXF1
+ZXN0czoNCj4gPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWlu
+dDMyDQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSByZXF1
+ZXN0IHNpZ25hbHMgc3VwcG9ydGVkIGJ5IHRoZSBjb250cm9sbGVyLg0KPiANCj4gU2FtZSBjb21t
+ZW50IG9uIHRoZXNlIDIuDQoNCk9LDQo+IA0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAg
+LSAiI2RtYS1jZWxscyINCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJlZw0KPiA+ICsg
+IC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSBjbG9jay1uYW1lcw0KPiA+
+ICsgIC0gZG1hLWNoYW5uZWwtbWFzaw0KPiA+ICsgIC0gZG1hLWNoYW5uZWxzDQo+ID4gKyAgLSBk
+bWEtcmVxdWVzdHMNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+
+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmlu
+ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQt
+YmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsgICAgI2luY2x1
+ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaD4NCj4gPiArICAgIGNxZG1hOiBkbWEt
+Y29udHJvbGxlckAxMDIxMjAwMCB7DQo+ID4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRl
+ayxjcWRtYSI7DQo+ID4gKyAgICAgICAgcmVnID0gPDAgMHgxMDIxMjAwMCAwIDB4ODA+LA0KPiA+
+ICsgICAgICAgICAgICA8MCAweDEwMjEyMDgwIDAgMHg4MD4sDQo+ID4gKyAgICAgICAgICAgIDww
+IDB4MTAyMTIxMDAgMCAweDgwPjsNCj4gDQo+IEV4YW1wbGVzIGRlZmF1bHQgdG8gMSBjZWxsIGVh
+Y2ggZm9yIGFkZHJlc3MgYW5kIHNpemUuDQpPSw0KPiANCj4gPiArICAgICAgICBpbnRlcnJ1cHRz
+ID0gPEdJQ19TUEkgMTM5IElSUV9UWVBFX0xFVkVMX0xPVz4sDQo+ID4gKyAgICAgICAgICAgIDxH
+SUNfU1BJIDE0MCBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+ICsgICAgICAgICAgICA8R0lDX1NQ
+SSAxNDEgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiArICAgICAgICBjbG9ja3MgPSA8JmluZnJh
+Y2ZnX2FvIENMS19JTkZSQV9DUV9ETUE+Ow0KPiA+ICsgICAgICAgIGNsb2NrLW5hbWVzID0gImNx
+ZG1hIjsNCj4gPiArICAgICAgICBkbWEtY2hhbm5lbC1tYXNrID0gPDYzPjsNCj4gPiArICAgICAg
+ICBkbWEtY2hhbm5lbHMgPSA8Mz47DQo+ID4gKyAgICAgICAgZG1hLXJlcXVlc3RzID0gPDMyPjsN
+Cj4gPiArICAgICAgICAjZG1hLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4g
+Ky4uLg0KPiA+IC0tIA0KPiA+IDEuOS4xDQoNCg==
 
-
-[...]
-
-> +static void rk_nfc_disable_clk(struct rk_nfc_clk *clk)
-> +{
-> +	if (!IS_ERR(clk->nfc_clk))
-> +		clk_disable_unprepare(clk->nfc_clk);
-> +	clk_disable_unprepare(clk->ahb_clk);
-> +}
-> +
-> +static int rk_nfc_ooblayout_free(struct mtd_info *mtd, int section,
-> +				 struct mtd_oob_region *oob_region)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +
-> +	if (section >= chip->ecc.steps)
-> +		return -ERANGE;
-> +
-> +	if (!section) {
-> +		/* The first byte is bad block mask flag. */
-> +		oob_region->length = NFC_SYS_DATA_SIZE - 1;
-> +		oob_region->offset = 1;
-> +	} else {
-> +		oob_region->length = NFC_SYS_DATA_SIZE;
-> +		oob_region->offset = section * NFC_SYS_DATA_SIZE;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rk_nfc_ooblayout_ecc(struct mtd_info *mtd, int section,
-> +				struct mtd_oob_region *oob_region)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +
-> +	if (section)
-> +		return -ERANGE;
-> +
-> +	oob_region->offset = NFC_SYS_DATA_SIZE * chip->ecc.steps;
-> +	oob_region->length = mtd->oobsize - oob_region->offset;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct mtd_ooblayout_ops rk_nfc_ooblayout_ops = {
-> +	.free = rk_nfc_ooblayout_free,
-> +	.ecc = rk_nfc_ooblayout_ecc,
-> +};
-
-This looks like a copy of the core's nand_lp_ooblayout, better use the
-generic one than creation your own.
-
-> +
-> +static int rk_nfc_ecc_init(struct device *dev, struct mtd_info *mtd)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +	struct rk_nfc *nfc = nand_get_controller_data(chip);
-> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
-> +	const u8 *strengths = nfc->cfg->ecc_strengths;
-> +	u8 max_strength, nfc_max_strength;
-> +	int i;
-> +
-> +	nfc_max_strength = nfc->cfg->ecc_strengths[0];
-> +	/* If optional dt settings not present. */
-> +	if (!ecc->size || !ecc->strength ||
-> +	    ecc->strength > nfc_max_strength) {
-> +		/* Use datasheet requirements. */
-> +		ecc->strength = chip->base.eccreq.strength;
-> +		ecc->size = chip->base.eccreq.step_size;
-> +
-> +		/*
-> +		 * Align eccstrength and eccsize.
-> +		 * This controller only supports 512 and 1024 sizes.
-> +		 */
-> +		if (chip->ecc.size < 1024) {
-> +			if (mtd->writesize > 512) {
-> +				chip->ecc.size = 1024;
-> +				chip->ecc.strength <<= 1;
-> +			} else {
-> +				dev_err(dev, "ecc.size not supported\n");
-> +				return -EINVAL;
-> +			}
-> +		} else {
-> +			chip->ecc.size = 1024;
-> +		}
-> +
-> +		ecc->steps = mtd->writesize / ecc->size;
-> +
-> +		/*
-> +		 * HW ECC always request ECC bytes for 1024 bytes blocks.
-> +		 * 4 Bytes is oob for sys data.
-> +		 */
-> +		max_strength = ((mtd->oobsize / ecc->steps) - 4) * 8 /
-> +				 fls(8 * 1024);
-> +		if (max_strength > nfc_max_strength)
-> +			max_strength = nfc_max_strength;
-> +
-> +		for (i = 0; i < 4; i++) {
-> +			if (max_strength >= strengths[i])
-> +				break;
-> +		}
-> +
-> +		if (i >= 4) {
-> +			dev_err(nfc->dev, "unsupported strength\n");
-> +			return -ENOTSUPP;
-> +		}
-> +
-> +		ecc->strength = strengths[i];
-> +	}
-> +	ecc->steps = mtd->writesize / ecc->size;
-> +	ecc->bytes = DIV_ROUND_UP(ecc->strength * fls(8 * 1024), 8);
-> +	/* HW ECC always work with even numbers of ECC bytes. */
-> +	ecc->bytes = ALIGN(ecc->bytes, 2);
-> +
-> +	rk_nfc_hw_ecc_setup(chip, ecc, ecc->strength);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rk_nfc_attach_chip(struct nand_chip *chip)
-> +{
-> +	struct mtd_info *mtd = nand_to_mtd(chip);
-> +	struct device *dev = mtd->dev.parent;
-> +	struct rk_nfc *nfc = nand_get_controller_data(chip);
-> +	struct rk_nfc_nand_chip *rk_nand = to_rk_nand(chip);
-> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
-> +	int len;
-> +	int ret;
-> +
-> +	if (chip->options & NAND_BUSWIDTH_16) {
-> +		dev_err(dev, "16 bits bus width not supported");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (ecc->mode != NAND_ECC_HW)
-> +		return 0;
-> +
-> +	ret = rk_nfc_ecc_init(dev, mtd);
-> +	if (ret)
-> +		return ret;
-> +	rk_nand->spare_per_sector = ecc->bytes + NFC_SYS_DATA_SIZE;
-> +
-> +	/* Check buffer first, avoid duplicate alloc buffer. */
-> +	if (nfc->buffer)
-> +		return 0;
-> +
-> +	len = mtd->writesize + mtd->oobsize;
-> +	nfc->buffer = devm_kzalloc(dev, len, GFP_KERNEL | GFP_DMA);
-> +	if (!nfc->buffer)
-> +		return -ENOMEM;
-> +
-> +	nfc->page_buf = nfc->buffer;
-> +	len = ecc->steps * NFC_MAX_OOB_PER_STEP;
-> +	nfc->oob_buf = devm_kzalloc(dev, len, GFP_KERNEL | GFP_DMA);
-> +	if (!nfc->oob_buf) {
-> +		devm_kfree(dev, nfc->buffer);
-
-This is not needed I suppose and you should probably just return the
-error.
-
-> +		nfc->buffer = NULL;
-> +		nfc->oob_buf = NULL;
-> +		return -ENOMEM;
-> +	}
-> +
-> +	chip->ecc.write_page_raw = rk_nfc_write_page_raw;
-> +	chip->ecc.write_page = rk_nfc_write_page_hwecc;
-> +	chip->ecc.write_oob_raw = rk_nfc_write_oob_std;
-> +	chip->ecc.write_oob = rk_nfc_write_oob_std;
-> +
-> +	chip->ecc.read_page_raw = rk_nfc_read_page_raw;
-> +	chip->ecc.read_page = rk_nfc_read_page_hwecc;
-> +	chip->ecc.read_oob_raw = rk_nfc_read_oob_std;
-> +	chip->ecc.read_oob = rk_nfc_read_oob_std;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct nand_controller_ops rk_nfc_controller_ops = {
-> +	.attach_chip = rk_nfc_attach_chip,
-> +	.exec_op = rk_nfc_exec_op,
-> +	.setup_data_interface = rk_nfc_setup_data_interface,
-> +};
-> +
-> +static int rk_nfc_nand_chip_init(struct device *dev, struct rk_nfc *nfc,
-> +				 struct device_node *np)
-> +{
-> +	struct rk_nfc_nand_chip *nand;
-
-Could you call it rknand or something similar, just so that it is easy
-to get the difference with the nand_chip structure.
-
-> +	struct nand_chip *chip;
-> +	struct mtd_info *mtd;
-> +	int nsels;
-> +	u32 tmp;
-> +	int ret;
-> +	int i;
-> +
-> +	if (!of_get_property(np, "reg", &nsels))
-> +		return -ENODEV;
-> +	nsels /= sizeof(u32);
-> +	if (!nsels || nsels > NFC_MAX_NSELS) {
-> +		dev_err(dev, "invalid reg property size %d\n", nsels);
-> +		return -EINVAL;
-> +	}
-> +
-> +	nand = devm_kzalloc(dev, sizeof(*nand) + nsels * sizeof(u8),
-> +			    GFP_KERNEL);
-> +	if (!nand)
-> +		return -ENOMEM;
-> +
-> +	nand->nsels = nsels;
-> +	for (i = 0; i < nsels; i++) {
-> +		ret = of_property_read_u32_index(np, "reg", i, &tmp);
-> +		if (ret) {
-> +			dev_err(dev, "reg property failure : %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		if (tmp >= NFC_MAX_NSELS) {
-> +			dev_err(dev, "invalid CS: %u\n", tmp);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (test_and_set_bit(tmp, &nfc->assigned_cs)) {
-> +			dev_err(dev, "CS %u already assigned\n", tmp);
-> +			return -EINVAL;
-> +		}
-> +
-> +		nand->sels[i] = tmp;
-> +	}
-> +
-> +	chip = &nand->chip;
-> +	chip->controller = &nfc->controller;
-> +
-> +	nand_set_flash_node(chip, np);
-> +
-> +	nand_set_controller_data(chip, nfc);
-> +
-> +	chip->options |= NAND_USE_BOUNCE_BUFFER | NAND_NO_SUBPAGE_WRITE;
-> +	chip->bbt_options = NAND_BBT_USE_FLASH | NAND_BBT_NO_OOB;
-> +
-> +	/* Set default mode in case dt entry is missing. */
-> +	chip->ecc.mode = NAND_ECC_HW;
-> +
-> +	mtd = nand_to_mtd(chip);
-> +	mtd->owner = THIS_MODULE;
-> +	mtd->dev.parent = dev;
-> +
-> +	if (!mtd->name) {
-> +		dev_err(nfc->dev, "NAND label property is mandatory\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	mtd_set_ooblayout(mtd, &rk_nfc_ooblayout_ops);
-> +	rk_nfc_hw_init(nfc);
-> +	ret = nand_scan(chip, nsels);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (chip->options & NAND_IS_BOOT_MEDIUM) {
-> +		ret = of_property_read_u32(np, "rockchip,boot-blks", &tmp);
-> +		nand->boot_blks = ret ? 0 : tmp;
-> +
-> +		ret = of_property_read_u32(np, "rockchip,boot-ecc-strength",
-> +					   &tmp);
-> +		nand->boot_ecc = ret ? chip->ecc.strength : tmp;
-> +	}
-> +
-> +	ret = mtd_device_register(mtd, NULL, 0);
-> +	if (ret) {
-> +		dev_err(dev, "mtd parse partition error\n");
-> +		nand_release(chip);
-
-nand_cleanup() here
-
-> +		return ret;
-> +	}
-> +
-> +	list_add_tail(&nand->node, &nfc->chips);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rk_nfc_nand_chips_init(struct device *dev, struct rk_nfc *nfc)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct device_node *nand_np;
-> +	int ret = -EINVAL;
-> +	int tmp;
-> +
-> +	for_each_child_of_node(np, nand_np) {
-> +		tmp = rk_nfc_nand_chip_init(dev, nfc, nand_np);
-> +		if (tmp) {
-> +			of_node_put(nand_np);
-> +			return ret;
-> +		}
-> +		/* At least one nand chip is initialized. */
-> +		ret = 0;
-
-I think it's more readable if you count up the number of devices
-initialized by browsing the list of chips handled by the controller
-(list_is_empty() would work just fine).
-
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static struct nfc_cfg nfc_v6_cfg = {
-> +		.type			= NFC_V6,
-> +		.ecc_strengths		= {60, 40, 24, 16},
-> +		.ecc_cfgs		= {
-> +			0x00040011, 0x00040001, 0x00000011, 0x00000001,
-> +		},
-> +		.flctl_off		= 0x08,
-> +		.bchctl_off		= 0x0C,
-> +		.dma_cfg_off		= 0x10,
-> +		.dma_data_buf_off	= 0x14,
-> +		.dma_oob_buf_off	= 0x18,
-> +		.dma_st_off		= 0x1C,
-> +		.bch_st_off		= 0x20,
-> +		.randmz_off		= 0x150,
-> +		.int_en_off		= 0x16C,
-> +		.int_clr_off		= 0x170,
-> +		.int_st_off		= 0x174,
-> +		.oob0_off		= 0x200,
-> +		.oob1_off		= 0x230,
-> +		.ecc0			= {
-> +			.err_flag_bit	= 2,
-> +			.low		= 3,
-> +			.low_mask	= 0x1F,
-> +			.low_bn		= 5,
-> +			.high		= 27,
-> +			.high_mask	= 0x1,
-> +		},
-> +		.ecc1			= {
-> +			.err_flag_bit	= 15,
-> +			.low		= 16,
-> +			.low_mask	= 0x1F,
-> +			.low_bn		= 5,
-> +			.high		= 29,
-> +			.high_mask	= 0x1,
-> +		},
-> +};
-> +
-> +static struct nfc_cfg nfc_v8_cfg = {
-> +		.type			= NFC_V8,
-> +		.ecc_strengths		= {16, 16, 16, 16},
-> +		.ecc_cfgs		= {
-> +			0x00000001, 0x00000001, 0x00000001, 0x00000001,
-> +		},
-> +		.flctl_off		= 0x08,
-> +		.bchctl_off		= 0x0C,
-> +		.dma_cfg_off		= 0x10,
-> +		.dma_data_buf_off	= 0x14,
-> +		.dma_oob_buf_off	= 0x18,
-> +		.dma_st_off		= 0x1C,
-> +		.bch_st_off		= 0x20,
-> +		.bch_st_off		= 0x20,
-> +		.randmz_off		= 0x150,
-> +		.int_en_off		= 0x16C,
-> +		.int_clr_off		= 0x170,
-> +		.int_st_off		= 0x174,
-> +		.oob0_off		= 0x200,
-> +		.oob1_off		= 0x230,
-> +		.ecc0			= {
-> +			.err_flag_bit	= 2,
-> +			.low		= 3,
-> +			.low_mask	= 0x1F,
-> +			.low_bn		= 5,
-> +			.high		= 27,
-> +			.high_mask	= 0x1,
-> +		},
-> +		.ecc1			= {
-> +			.err_flag_bit	= 15,
-> +			.low		= 16,
-> +			.low_mask	= 0x1F,
-> +			.low_bn		= 5,
-> +			.high		= 29,
-> +			.high_mask	= 0x1,
-> +		},
-> +};
-> +
-> +static struct nfc_cfg nfc_v9_cfg = {
-> +		.type			= NFC_V9,
-> +		.ecc_strengths		= {70, 60, 40, 16},
-> +		.ecc_cfgs		= {
-> +			0x00000001, 0x06000001, 0x04000001, 0x02000001,
-> +		},
-> +		.flctl_off		= 0x10,
-> +		.bchctl_off		= 0x20,
-> +		.dma_cfg_off		= 0x30,
-> +		.dma_data_buf_off	= 0x34,
-> +		.dma_oob_buf_off	= 0x38,
-> +		.dma_st_off		= 0x3C,
-> +		.bch_st_off		= 0x150,
-> +		.randmz_off		= 0x208,
-> +		.int_en_off		= 0x120,
-> +		.int_clr_off		= 0x124,
-> +		.int_st_off		= 0x128,
-> +		.oob0_off		= 0x200,
-> +		.oob1_off		= 0x204,
-> +		.ecc0			= {
-> +			.err_flag_bit	= 2,
-> +			.low		= 3,
-> +			.low_mask	= 0x7F,
-> +			.low_bn		= 7,
-> +			.high		= 0,
-> +			.high_mask	= 0x0,
-> +		},
-> +		.ecc1			= {
-> +			.err_flag_bit	= 18,
-> +			.low		= 19,
-> +			.low_mask	= 0x7F,
-> +			.low_bn		= 7,
-> +			.high		= 0,
-> +			.high_mask	= 0x0,
-> +		},
-> +};
-> +
-> +static const struct of_device_id rk_nfc_id_table[] = {
-> +	{.compatible = "rockchip,px30-nfc",
-> +		.data = &nfc_v9_cfg },
-> +	{.compatible = "rockchip,rk2928-nfc",
-> +		.data = &nfc_v6_cfg },
-> +	{.compatible = "rockchip,rv1108-nfc",
-> +		.data = &nfc_v8_cfg },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, rk_nfc_id_table);
-> +
-> +static int rk_nfc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rk_nfc *nfc;
-> +	struct resource *res;
-> +	int ret, irq;
-> +
-> +	nfc = devm_kzalloc(dev, sizeof(*nfc), GFP_KERNEL);
-> +	if (!nfc)
-> +		return -ENOMEM;
-> +
-> +	nand_controller_init(&nfc->controller);
-> +	INIT_LIST_HEAD(&nfc->chips);
-> +	nfc->controller.ops = &rk_nfc_controller_ops;
-> +
-> +	nfc->cfg = of_device_get_match_data(dev);
-> +	nfc->dev = dev;
-> +
-> +	init_completion(&nfc->done);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	nfc->regs = devm_ioremap_resource(dev, res);
-
-There is a devm_platform_ioremap_resource for that
-
-> +	if (IS_ERR(nfc->regs)) {
-> +		ret = PTR_ERR(nfc->regs);
-> +		goto release_nfc;
-> +	}
-> +
-> +	nfc->clk.nfc_clk = devm_clk_get(dev, "nfc");
-> +	if (IS_ERR(nfc->clk.nfc_clk)) {
-> +		dev_dbg(dev, "no nfc clk\n");
-> +		/* Some old device, sush as rk3066, has no nfc clk. */
-
-I would drop the dbg trace and reining nfc_clk to NULL.
-
-Also it might be worth checking the compatible here to ensure this is
-allowed.
-
-> +	}
-> +
-> +	nfc->clk.ahb_clk = devm_clk_get(dev, "ahb");
-> +	if (IS_ERR(nfc->clk.ahb_clk)) {
-> +		dev_err(dev, "no ahb clk\n");
-> +		ret = PTR_ERR(nfc->clk.ahb_clk);
-> +		goto release_nfc;
-> +	}
-> +
-> +	ret = rk_nfc_enable_clk(dev, &nfc->clk);
-> +	if (ret)
-> +		goto release_nfc;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "no nfc irq resource\n");
-> +		ret = -EINVAL;
-> +		goto clk_disable;
-> +	}
-> +
-> +	writel(0, nfc->regs + nfc->cfg->int_en_off);
-> +	ret = devm_request_irq(dev, irq, rk_nfc_irq, 0x0, "rk-nand", nfc);
-> +	if (ret) {
-> +		dev_err(dev, "failed to request nfc irq\n");
-> +		goto clk_disable;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, nfc);
-> +
-> +	ret = rk_nfc_nand_chips_init(dev, nfc);
-> +	if (ret) {
-> +		dev_err(dev, "failed to init nand chips\n");
-> +		goto clk_disable;
-> +	}
-> +	return 0;
-> +
-> +clk_disable:
-> +	rk_nfc_disable_clk(&nfc->clk);
-> +release_nfc:
-> +	return ret;
-> +}
-> +
-> +static int rk_nfc_remove(struct platform_device *pdev)
-> +{
-> +	struct rk_nfc *nfc = platform_get_drvdata(pdev);
-> +	struct rk_nfc_nand_chip *nand;
-> +
-> +	while (!list_empty(&nfc->chips)) {
-> +		nand = list_first_entry(&nfc->chips, struct rk_nfc_nand_chip,
-> +					node);
-> +		nand_release(&nand->chip);
-
-nand_release has been removed (in Linus' branch since this
-week).
-
-> +		list_del(&nand->node);
-> +	}
-> +
-> +	rk_nfc_disable_clk(&nfc->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused rk_nfc_suspend(struct device *dev)
-> +{
-> +	struct rk_nfc *nfc = dev_get_drvdata(dev);
-> +
-> +	rk_nfc_disable_clk(&nfc->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused rk_nfc_resume(struct device *dev)
-> +{
-> +	struct rk_nfc *nfc = dev_get_drvdata(dev);
-> +	struct rk_nfc_nand_chip *nand;
-> +	struct nand_chip *chip;
-> +	int ret;
-> +	u32 i;
-> +
-> +	ret = rk_nfc_enable_clk(dev, &nfc->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Reset NAND chip if VCC was powered off. */
-> +	list_for_each_entry(nand, &nfc->chips, node) {
-> +		chip = &nand->chip;
-> +		for (i = 0; i < nand->nsels; i++)
-> +			nand_reset(chip, i);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops rk_nfc_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(rk_nfc_suspend, rk_nfc_resume)
-> +};
-> +
-> +static struct platform_driver rk_nfc_driver = {
-> +	.probe = rk_nfc_probe,
-> +	.remove = rk_nfc_remove,
-> +	.driver = {
-> +		.name = "rockchip-nfc",
-> +		.of_match_table = rk_nfc_id_table,
-> +		.pm = &rk_nfc_pm_ops,
-> +	},
-> +};
-> +
-> +module_platform_driver(rk_nfc_driver);
-> +
-> +MODULE_LICENSE("Dual MIT/GPL");
-> +MODULE_AUTHOR("Yifeng Zhao <yifeng.zhao@rock-chips.com>");
-> +MODULE_DESCRIPTION("Rockchip Nand Flash Controller Driver");
-> +MODULE_ALIAS("platform:rockchip-nand-controller");
-
-
-
-
-Thanks,
-Miquèl
