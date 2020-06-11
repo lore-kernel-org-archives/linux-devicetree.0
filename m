@@ -1,68 +1,79 @@
-Return-Path: <SRS0=7bfi=7X=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0C1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 23:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DADCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 00:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 599C820835
-	for <linux-devicetree@archiver.kernel.org>; Wed, 10 Jun 2020 23:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E624C207ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 00:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgFJXzQ (ORCPT
+        id S1726808AbgFKADO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 19:55:16 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:58564 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726808AbgFJXzQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 19:55:16 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 7869E634C87;
-        Thu, 11 Jun 2020 02:55:11 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jjAYo-0000KR-W7; Thu, 11 Jun 2020 02:55:11 +0300
-Date:   Thu, 11 Jun 2020 02:55:10 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v4 00/10] Improvements to IMX290 CMOS driver
-Message-ID: <20200610235510.GC805@valkosipuli.retiisi.org.uk>
-References: <20200607163025.8409-1-andrey.konovalov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607163025.8409-1-andrey.konovalov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 10 Jun 2020 20:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgFKADN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 20:03:13 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1271C08C5C1;
+        Wed, 10 Jun 2020 17:03:13 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 955CC11F5F667;
+        Wed, 10 Jun 2020 17:03:12 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 17:03:09 -0700 (PDT)
+Message-Id: <20200610.170309.928494814671626769.davem@davemloft.net>
+To:     heiko@sntech.de
+Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        heiko.stuebner@theobroma-systems.com
+Subject: Re: [PATCH v2 2/2] net: phy: mscc: handle the clkout control on
+ some phy variants
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200609133140.1421109-2-heiko@sntech.de>
+References: <20200609133140.1421109-1-heiko@sntech.de>
+        <20200609133140.1421109-2-heiko@sntech.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 10 Jun 2020 17:03:13 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey,
+From: Heiko Stuebner <heiko@sntech.de>
+Date: Tue,  9 Jun 2020 15:31:40 +0200
 
-On Sun, Jun 07, 2020 at 07:30:15PM +0300, Andrey Konovalov wrote:
-> This patchset adds improvements to the existing media driver for IMX290
-> CMOS sensor from Sony. The major changes are adding 2 lane support,
-> configurable link frequency & pixel rate, test pattern generation, and
-> RAW12 mode support.
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> At least VSC8530/8531/8540/8541 contain a clock output that can emit
+> a predefined rate of 25, 50 or 125MHz.
+> 
+> This may then feed back into the network interface as source clock.
+> So follow the example the at803x already set and introduce a
+> vsc8531,clk-out-frequency property to set that output.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+> Hi Andrew,
+> 
+> I didn't change the property yet, do you have a suggestion on
+> how to name it though? Going by the other examples in the
+> ethernet-phy.yamls, something like enet-phy-clock-out-frequency ?
 
-Could you still see what checkpatch.pl says and address the style issues,
-please? Apart from those this seems fine to me.
+Andrew, please help Heiko out with the naming here so we can move
+forward on this patch series.
 
-There are some on msleep() but I wouldn't worry about those.
-
-Thanks.
-
--- 
-Sakari Ailus
+Thank you.
