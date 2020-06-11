@@ -2,167 +2,167 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB19C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFD1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B782072F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:25:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a1MHK6W6"
+	by mail.kernel.org (Postfix) with ESMTP id 31E8920656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgFKIZ6 (ORCPT
+        id S1726684AbgFKIgi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFKIZ5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 04:25:57 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B69C08C5C2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 01:25:57 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g12so2051815pll.10
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 01:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VrWixJX8R1433fFot6r+tW/CcLgNTOmGLsok7BHH+kg=;
-        b=a1MHK6W6uUyOckqwulCRSQKaR6rgF8BvKNrcYhb49/DPn96bVqlS1Bl5hUvfhmxvck
-         aEYkWIqXCM1GXijNrCS8g7b3coDMpVkOzlhaky8RWiOOC21upfn2pIqrifd5bUM4WwzA
-         DI0JoArULFir3KSN6YKAJZIukJNd52HJAA8ag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VrWixJX8R1433fFot6r+tW/CcLgNTOmGLsok7BHH+kg=;
-        b=GFsv5QPNImXeLBVUuZrStoVDWfQgPlqRMaWV0RMGkEZZTszTkdexzx+lX/DzcmlIqT
-         TdMXaqxmQza2dAdlNVDZiWLjRAo3fMsVKvU8vSzjrtslpIsHAbjoQmnpAmsDr2DzGW8d
-         De0ZB562E/SdgELDwX9zeSwcKedGXWG3HKLBOPfjjxG/TzGTIsizXHGcr3GQXinIuTTK
-         DYtv2wrm3PwDSds89gb6rGIkxcpPPaV9JZNW+uHL21PY7z1xyHayufbSTEf4B1EMicAj
-         bCUtqOhua8rev0mhgrgvO6BzP1j67YYOpweEpnErxRleY+Hdk9vk/cPOaRcDcAEesJLT
-         OcGA==
-X-Gm-Message-State: AOAM530vT78/fjymSjFNNyHTp4FbbgyXIoyRvwBqAJe5xGz2ifjM/nxT
-        E5ajt1wOQXC156k2selsBT/g8Q==
-X-Google-Smtp-Source: ABdhPJzf4UqHA7VW0PtW9nxf8pLJre2QXYQCfOb96yU9u/GvS/OSzfTj0LFSu2FQqnYaUUO+X17i0g==
-X-Received: by 2002:a17:90a:8d11:: with SMTP id c17mr6990504pjo.201.1591863957043;
-        Thu, 11 Jun 2020 01:25:57 -0700 (PDT)
-Received: from pihsun-glaptop.roam.corp.google.com (2001-b400-e256-fea4-a6c2-ff17-248d-0f67.emome-ip6.hinet.net. [2001:b400:e256:fea4:a6c2:ff17:248d:f67])
-        by smtp.googlemail.com with ESMTPSA id m5sm1994749pga.3.2020.06.11.01.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 01:25:56 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org (open list:VOLTAGE AND CURRENT REGULATOR
-        FRAMEWORK),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v5 1/2] dt-bindings: regulator: Add DT binding for cros-ec-regulator
-Date:   Thu, 11 Jun 2020 16:25:36 +0800
-Message-Id: <20200611082542.219516-2-pihsun@chromium.org>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-In-Reply-To: <20200611082542.219516-1-pihsun@chromium.org>
-References: <20200611082542.219516-1-pihsun@chromium.org>
+        Thu, 11 Jun 2020 04:36:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28034 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726560AbgFKIgi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:36:38 -0400
+IronPort-SDR: lOKWR2sA++bVoHADnte08VIQl50LoRhATXUliGYK/7alKvJiJBymhptU+9JYr6qtZWpDCQqzS+
+ OGtdAtUPJROQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 01:36:38 -0700
+IronPort-SDR: HRmqmbzRLw8/f2rQQukq4hhYhkyAW6AAnCu6i+38YfyYkbtaL1vbq0s5e6LxjNOenQqT8pLdBk
+ nPRcJVHMlrUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
+   d="scan'208";a="271520565"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jun 2020 01:36:38 -0700
+Received: from [10.214.154.243] (vramuthx-mobl1.gar.corp.intel.com [10.214.154.243])
+        by linux.intel.com (Postfix) with ESMTP id 9056E580458;
+        Thu, 11 Jun 2020 01:36:33 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
+        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com
+References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200611081254.GR2428291@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <21b5db0e-c45a-2255-0389-04b204685d63@linux.intel.com>
+Date:   Thu, 11 Jun 2020 16:36:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200611081254.GR2428291@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT binding documentation for cros-ec-regulator, a voltage regulator
-controlled by ChromeOS EC.
+Hi Andy,
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
-Changes from v4:
-* Change compatible name from regulator-cros-ec to cros-ec-regulator.
+Thank you so much for the review comments...
 
-Changes from v3:
-* Fix dt bindings file name.
-* Add full example.
+On 11/6/2020 4:12 pm, Andy Shevchenko wrote:
+> On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for USB PHY on Intel LGM SoC.
+> 
+> ...
+> 
+>> +static int get_flipped(struct tca_apb *ta, bool *flipped)
+>> +{
+>> +	union extcon_property_value property;
+>> +	int ret;
+>> +
+>> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
+>> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
+>> +	if (ret) {
+>> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
+> 
+>> +		return false;
+> 
+> return ret;
+Noted.
+> 
+>> +	}
+>> +
+>> +	*flipped = property.intval;
+>> +
+> 
+>> +	return *flipped;
+> 
+> return 0;
+Noted.
+> 
+>> +}
+> 
+> ...I suppose it should be as above.
+> 
+> ...
+> 
+>> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
+>> +				 10, 10 * 1000);
+exceeds more than 80 characters, so checkpatch throws warnings, to avoid 
+that move to next line.
+> 
+> On one line easier to read.
+> 
+>> +	if (ret) {
+>> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
+>> +		return ret;
+>> +	}
+> 
+> ...
+> 
+>> +static int phy_set_vbus(struct usb_phy *phy, int on)
+>> +{
+>> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
+> 
+>> +	int ret = 0;
+> 
+> Assignment is redundant.
+so you mean , should be declared as
+int ret;
+right?
 
-Changes from v2:
-* No change
+> 
+>> +
+>> +	if (on) {
+>> +		ret = regulator_enable(ta->vbus);
+>> +		if (ret)
+>> +			dev_err(ta->phy.dev, "regulator not enabled\n");
+>> +	} else {
+>> +		ret = regulator_disable(ta->vbus);
+>> +		if (ret)
+>> +			dev_err(ta->phy.dev, "regulator not disabled\n");
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+> 
+> ...
+> 
+>> +	ret = get_flipped(ta, &flipped);
+>> +	if (!ret)
+>> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
+> 
+> This should be fixed accordingly.
+Noted.
+> 
+> ...
+> 
+>> +		dev_info(ta->phy.dev, "connected%s\n",
+>> +			 flipped ? " flipped" : "");
+> 
+> One line.
+exceeds more than 80 characters, so checkpatch throw warnings, to avoid 
+that moved to next line.
 
-Changes from v1:
-* Change compatible string to google,regulator-cros-ec.
-* Use reg property in device tree.
-* Change license for dt binding according to checkpatch.pl.
----
- .../regulator/google,cros-ec-regulator.yaml   | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-
-diff --git a/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-new file mode 100644
-index 000000000000..c9453d7ce227
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/google,cros-ec-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS EC controlled voltage regulators
-+
-+maintainers:
-+  - Pi-Hsun Shih <pihsun@chromium.org>
-+
-+description:
-+  Any property defined as part of the core regulator binding, defined in
-+  regulator.yaml, can also be used.
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    const: google,cros-ec-regulator
-+
-+  reg:
-+    maxItems: 1
-+    description: Identifier for the voltage regulator to ChromeOS EC.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros_ec: ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            regulator@0 {
-+                compatible = "google,cros-ec-regulator";
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <3300000>;
-+                reg = <0>;
-+            };
-+        };
-+    };
-+...
--- 
-2.27.0.278.ge193c7cf3a9-goog
-
+Regards
+Vadivel
+> 
