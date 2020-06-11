@@ -2,105 +2,293 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041ABC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D84C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE05A2072F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hF9rAdqc"
+	by mail.kernel.org (Postfix) with ESMTP id 8731B2072F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgFKO2W (ORCPT
+        id S1728314AbgFKO2v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgFKO2V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 10:28:21 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AFEC08C5C3
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:28:20 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so6396756wrp.2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+MwiHwTDigrZz/osHSq5jwVMysur4yPnyLBBwzskG3k=;
-        b=hF9rAdqc/Vs5/6fKuks+MMwm5u0HPIk5I3T763FaYv8nJfRnzVmYS6TkZwBkpQEK58
-         OabTcSTw/chyT3nEYjpMZQDEOQc+ToSeZ2/XR3JxMVn51VBleocqPt81rwrJnQrtsfTu
-         fNHm+OBopt1RhC9Zm1Z4ugCbwiZh785kwWvlc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+MwiHwTDigrZz/osHSq5jwVMysur4yPnyLBBwzskG3k=;
-        b=tNP1hrUvPa+CK93bJjEzFjOy2MW7mguCYzp4QwCb3BK4SLiQLCPONA1D7JTKzcy3Ib
-         THNKB2lpqnKAwerfimP7jvDCE5CYNtHIj3CywgKs2Buj32PB8nP23ZasDmoJVxZjjDPt
-         WF2fG+oQB725gJy6zI8egvqDe0GBQ5WVwqT29KcpnS2B/lLWb9bY8EmWWXDlXHdgNEOv
-         /DvGnVUfmvk00brbWSBDry21ssvQdFYBnxgj85JjYXX0/DnswEuDKwubwcuyRKg37SP2
-         V0RSN2zP/VimuqBoPU7JSU7WSsADNx6OxTn23z46CCrxTan+QefbgA/rRlBiAvVtAS5s
-         D8Sw==
-X-Gm-Message-State: AOAM531UJjqf740Gd1ElmmqXw798j8HdwO4t9k6M09e11NPLHA54Wuoq
-        KkyUAI8Ha6ApXwt/iXozpJVyWg==
-X-Google-Smtp-Source: ABdhPJzQ9+KT5Krp0KhPaomhJuRwTmw/IshQSBBRqrbY7XioECHFV8tO/RyEuLgOWZRGG4tI3GvR+g==
-X-Received: by 2002:a5d:4d4d:: with SMTP id a13mr10081847wru.252.1591885698879;
-        Thu, 11 Jun 2020 07:28:18 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id w17sm5219529wra.71.2020.06.11.07.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:28:18 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 14:28:17 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thu, 11 Jun 2020 10:28:51 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25936 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726657AbgFKO2v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 10:28:51 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Jun 2020 19:58:44 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Jun 2020 19:58:18 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 7135F2AC7; Thu, 11 Jun 2020 19:58:17 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH RESEND v9 10/18] media: platform: Stylistic changes for
- improving code quality
-Message-ID: <20200611142817.GD158633@chromium.org>
-References: <20200604090553.10861-1-xia.jiang@mediatek.com>
- <20200604090553.10861-12-xia.jiang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604090553.10861-12-xia.jiang@mediatek.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+Date:   Thu, 11 Jun 2020 19:58:03 +0530
+Message-Id: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+Avoiding phy powerdown in host mode so that it can be wake up by devices.
+Set usb controller wakeup capable when wakeup capable devices are
+connected to the host.
 
-On Thu, Jun 04, 2020 at 05:05:45PM +0800, Xia Jiang wrote:
-> Change register offset hex numerals from uppercase to lowercase.
-> Change data type of max/min width/height from integer to unsigned
-> integer.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v9: move changing data type of max/min width/height to this patch
-> ---
->  .../media/platform/mtk-jpeg/mtk_jpeg_core.h    |  8 ++++----
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h | 18 +++++++++---------
->  2 files changed, 13 insertions(+), 13 deletions(-)
-> 
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
+ drivers/usb/dwc3/core.h      |  1 +
+ drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----------
+ 3 files changed, 91 insertions(+), 23 deletions(-)
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 25c686a7..8370350 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -31,15 +31,19 @@
+ #include <linux/usb/gadget.h>
+ #include <linux/usb/of.h>
+ #include <linux/usb/otg.h>
++#include <linux/usb/hcd.h>
+ 
+ #include "core.h"
+ #include "gadget.h"
+ #include "io.h"
+ 
+ #include "debug.h"
++#include "../host/xhci.h"
+ 
+ #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+ 
++bool need_phy_for_wakeup;
++
+ /**
+  * dwc3_get_dr_mode - Validates and sets dr_mode
+  * @dwc: pointer to our context structure
+@@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
+ 	return ret;
+ }
+ 
++static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
++{
++
++	int i, num_ports;
++	u32 reg;
++	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
++	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
++
++	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
++
++	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
++
++	num_ports = HCS_MAX_PORTS(reg);
++	for (i = 0; i < num_ports; i++) {
++		reg = readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
++		if (reg & PORT_PE) {
++			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
++				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
++			else if (DEV_LOWSPEED(reg))
++				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
++		}
++	}
++	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
++}
++
+ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ {
+ 	unsigned long	flags;
+ 	u32 reg;
++	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
+ 
+ 	switch (dwc->current_dr_role) {
+ 	case DWC3_GCTL_PRTCAP_DEVICE:
+@@ -1643,9 +1673,10 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 		dwc3_core_exit(dwc);
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
++		dwc3_set_phy_speed_flags(dwc);
+ 		if (!PMSG_IS_AUTO(msg)) {
+-			dwc3_core_exit(dwc);
+-			break;
++			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
++				need_phy_for_wakeup = true;
+ 		}
+ 
+ 		/* Let controller to suspend HSPHY before PHY driver suspends */
+@@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
+ 		if (!PMSG_IS_AUTO(msg)) {
+-			ret = dwc3_core_init_for_resume(dwc);
+-			if (ret)
+-				return ret;
+-			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+-			break;
++			if (!need_phy_for_wakeup) {
++				ret = dwc3_core_init_for_resume(dwc);
++				if (ret)
++					return ret;
++				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
++				break;
++			}
+ 		}
+ 		/* Restore GUSB2PHYCFG bits that were modified in suspend */
+ 		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 013f42a..ff02d41 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -1094,6 +1094,7 @@ struct dwc3 {
+ 	struct phy		*usb3_generic_phy;
+ 
+ 	bool			phys_ready;
++	int			hs_phy_flags;
+ 
+ 	struct ulpi		*ulpi;
+ 	bool			ulpi_ready;
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 1dfd024..ec183646 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -19,6 +19,7 @@
+ #include <linux/usb/of.h>
+ #include <linux/reset.h>
+ #include <linux/iopoll.h>
++#include <linux/usb/hcd.h>
+ 
+ #include "core.h"
+ 
+@@ -192,21 +193,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
+ 
+ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ {
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++
+ 	if (qcom->hs_phy_irq) {
+ 		disable_irq_wake(qcom->hs_phy_irq);
+ 		disable_irq_nosync(qcom->hs_phy_irq);
+ 	}
++	if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
++		if (qcom->dp_hs_phy_irq) {
++			disable_irq_wake(qcom->dp_hs_phy_irq);
++			disable_irq_nosync(qcom->dp_hs_phy_irq);
++		}
++	} else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
++		if (qcom->dm_hs_phy_irq) {
++			disable_irq_wake(qcom->dm_hs_phy_irq);
++			disable_irq_nosync(qcom->dm_hs_phy_irq);
++		}
++	} else {
+ 
+-	if (qcom->dp_hs_phy_irq) {
+-		disable_irq_wake(qcom->dp_hs_phy_irq);
+-		disable_irq_nosync(qcom->dp_hs_phy_irq);
+-	}
++		if (qcom->dp_hs_phy_irq) {
++			disable_irq_wake(qcom->dp_hs_phy_irq);
++			disable_irq_nosync(qcom->dp_hs_phy_irq);
++		}
+ 
+-	if (qcom->dm_hs_phy_irq) {
+-		disable_irq_wake(qcom->dm_hs_phy_irq);
+-		disable_irq_nosync(qcom->dm_hs_phy_irq);
++		if (qcom->dm_hs_phy_irq) {
++			disable_irq_wake(qcom->dm_hs_phy_irq);
++			disable_irq_nosync(qcom->dm_hs_phy_irq);
++		}
+ 	}
+-
+ 	if (qcom->ss_phy_irq) {
+ 		disable_irq_wake(qcom->ss_phy_irq);
+ 		disable_irq_nosync(qcom->ss_phy_irq);
+@@ -215,21 +229,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ 
+ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ {
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++
+ 	if (qcom->hs_phy_irq) {
+ 		enable_irq(qcom->hs_phy_irq);
+ 		enable_irq_wake(qcom->hs_phy_irq);
+ 	}
++	if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
++		if (qcom->dp_hs_phy_irq) {
++			enable_irq(qcom->dp_hs_phy_irq);
++			enable_irq_wake(qcom->dp_hs_phy_irq);
++		}
++	} else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
++		if (qcom->dm_hs_phy_irq) {
++			enable_irq(qcom->dm_hs_phy_irq);
++			enable_irq_wake(qcom->dm_hs_phy_irq);
++		}
++	} else {
+ 
+-	if (qcom->dp_hs_phy_irq) {
+-		enable_irq(qcom->dp_hs_phy_irq);
+-		enable_irq_wake(qcom->dp_hs_phy_irq);
+-	}
++		if (qcom->dp_hs_phy_irq) {
++			enable_irq(qcom->dp_hs_phy_irq);
++			enable_irq_wake(qcom->dp_hs_phy_irq);
++		}
+ 
+-	if (qcom->dm_hs_phy_irq) {
+-		enable_irq(qcom->dm_hs_phy_irq);
+-		enable_irq_wake(qcom->dm_hs_phy_irq);
++		if (qcom->dm_hs_phy_irq) {
++			enable_irq(qcom->dm_hs_phy_irq);
++			enable_irq_wake(qcom->dm_hs_phy_irq);
++		}
+ 	}
+-
+ 	if (qcom->ss_phy_irq) {
+ 		enable_irq(qcom->ss_phy_irq);
+ 		enable_irq_wake(qcom->ss_phy_irq);
+@@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ {
+ 	u32 val;
+ 	int i;
++	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
++	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
++
++	if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
++		device_init_wakeup(qcom->dev, 1);
+ 
+ 	if (qcom->is_suspended)
+ 		return 0;
+@@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 	int ret;
+ 	int i;
+ 
++	device_init_wakeup(qcom->dev, 0);
++
+ 	if (!qcom->is_suspended)
+ 		return 0;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Best regards,
-Tomasz
