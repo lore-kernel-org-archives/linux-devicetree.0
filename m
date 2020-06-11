@@ -2,32 +2,66 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1281CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C480C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6AA2075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CA320882
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="J/es4ZuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgFKPBA (ORCPT
+        id S1728439AbgFKPJW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:01:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34064 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbgFKPBA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 11:01:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AE830AEB1;
-        Thu, 11 Jun 2020 15:00:59 +0000 (UTC)
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: Initial MStar vendor prefixes
- and compatible strings
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
-        Daniel Palmer <daniel@thingy.jp>,
+        Thu, 11 Jun 2020 11:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbgFKPJW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:09:22 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F83C08C5C2
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 08:09:20 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u26so7161054wmn.1
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 08:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+bnRdnq8JLK2uL0FC3ENBorVkJKs02mTezFsQPAeEpw=;
+        b=J/es4ZuPXP+1e5VAnum1Q+8LyG8YgT+34mxouqoQK396yvZPiwXy9whPazs99utmeh
+         DyTYcwtRjrpBg6pu4vVfy1dkV/vbVL6mwcEEopeFCEDHWIbmdYLiiAgLTIBqn2KZyui+
+         JsvClLkiKpUBdEGo/omhYWtZu1DAE+g4RA2pE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+bnRdnq8JLK2uL0FC3ENBorVkJKs02mTezFsQPAeEpw=;
+        b=DgCMhxhjuSO4RF4GRtQI7BtdfyUatgCSsGgm3RicbtP68MAsMv6U2NWMOOgSFjTVlw
+         Yn4FFOtCm3GLzBG6qq0zIy82STVAO/mZJrIrnGi8Re+YdQNgyxACJ7yL9/kkY1gIUzXJ
+         FQLRaEgThW9jnifK3drX8uQ7+vwH2WZ40AQjb+NSWlW34f8OoSUoGqSZLofVGsdGhZVM
+         gHKAOt1WRBj7SwYuMcvJw1EXWtkj9021R+X8HAvicIuT8gn/GOUmm/DPQHaJhby/A+fW
+         yxyKbzxcVNCe27WrB9YRAYSs2pNawFDTcwr3BbJbtcR4ZfbDQuCyyzh+1Hjk4OMGn+M2
+         +lcA==
+X-Gm-Message-State: AOAM532qyMT9SG8P80DXGo715xpDl3twOCmqf/ADqUkQhoQXmbWZ7C7k
+        ZwDrUjqJFNfr6fCo6QcCIXYmIWgO/Ne+juwFySbdTA==
+X-Google-Smtp-Source: ABdhPJzFEzbTe4nZOrgkcxbo8Z7lm4vXqAHZCE4wREr2gS5klf4OPdEt5oMniUG7xfDDSBaEaZTBP4wrxJeFb49IkAE=
+X-Received: by 2002:a1c:491:: with SMTP id 139mr8147455wme.99.1591888159280;
+ Thu, 11 Jun 2020 08:09:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-4-daniel@0x0f.com>
+ <bf26822d-acb0-ae40-df7f-80978bd26cfb@suse.de> <CAFr9PXmp=mZhyRDpx_E0_1Zc5SFrSYUm9jP-k7VCDf9P37sT6g@mail.gmail.com>
+ <3d933b03-9757-f659-d19a-ce6d0fccebea@suse.de>
+In-Reply-To: <3d933b03-9757-f659-d19a-ce6d0fccebea@suse.de>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Fri, 12 Jun 2020 00:07:59 +0900
+Message-ID: <CAFr9PXmkqFfA=1XFcxOwGM-477eCvy-_y=hY8aW8ePE=nrOO7A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] ARM: mstar: Add infinity/mercury series dtsi
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
+        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
         Rob Herring <robh+dt@kernel.org>,
         Russell King <linux@armlinux.org.uk>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -39,100 +73,49 @@ Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Doug Anderson <armlinux@m.disordat.com>,
         Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Gregory Fong <gregory.0xf0@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
         Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>
-References: <20191014061617.10296-2-daniel@0x0f.com>
- <20200610090421.3428945-2-daniel@0x0f.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <c4493f49-2ce8-ad23-0777-9812a1573782@suse.de>
-Date:   Thu, 11 Jun 2020 17:00:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200610090421.3428945-2-daniel@0x0f.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+ linux-mediatek
+Hi Andreas,
 
-Am 10.06.20 um 11:03 schrieb Daniel Palmer:
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index ef6d75b9113a..1770fc794027 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-[...]
-> @@ -678,6 +680,8 @@ patternProperties:
->       description: Microsemi Corporation
->     "^msi,.*":
->       description: Micro-Star International Co. Ltd.
-> +  "^mstar,.*":
-> +    description: MStar Semiconductor, Inc.
+On Thu, 11 Jun 2020 at 23:39, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
 
-Depending on what exactly its legal status is these days 
-(https://en.wikipedia.org/wiki/MStar), you might either follow the below 
-MIPS example of describing it as
+> The downside would be if someone wanted to add newer sstar chips under
+> the new name later, then they wouldn't be grouped with predecessor
+> families. Right now it seems like mercury and infinity are not that
+> different, so I figured it might be useful for people contributing
+> patches to see that changes in one might require review of the other.
 
-"MediaTek Inc. (formerly MStar Semiconductor, Inc.)",
+I've thought about this too. One thing I considered was not using
+mstar or sstar at all
+and doing the same thing as sunxi and using either the "chenxing"
+(MorningStar, MStar) or "xingchen" (SigmaStar)
+moniker instead.
+However, there are lots of kernel dumps from MStar based TVs etc in
+the wild already that are using the mstar
+prefix so just continuing to use that seems like the right thing to do.
 
-or you might extend above description as
-"MStar Semiconductor, Inc. (acquired by MediaTek Inc.)" if it still exists.
+Thanks,
 
-Or accordingly "Xiamen Xingchen Technology Co., Ltd. (formerly MStar 
-Semiconductor, Inc.)" if it was renamed to Sigmastar (in which case you 
-might additionally reserve sstar prefix for Sigmastar while at it).
-
-http://www.sigmastarsemi.com/en/enterprisenews/info.aspx?itemid=441
-
->     "^mti,.*":
->       description: Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
->     "^multi-inno,.*":
-[...]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 77a3fa5e3edd..1ca77f97b8ee 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2110,6 +2110,12 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->   S:	Maintained
->   F:	arch/arm/mach-pxa/mioa701.c
->   
-> +ARM/MStar/Sigmastar ARMv7 SoC support
-
-Here you do mention Sigmastar.
-
-> +M:	Daniel Palmer <daniel@thingy.jp>
-> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/arm/mstar.yaml
-> +
->   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
->   M:	Michael Petchkovsky <mkpetch@internode.on.net>
->   S:	Maintained
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Daniel
