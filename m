@@ -2,127 +2,181 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD53C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 02:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B12C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 04:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D83F2078D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 02:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC04207C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 04:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w74wF5YU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgFKCOb (ORCPT
+        id S1726377AbgFKEmf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 22:14:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:34853 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgFKCOa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 10 Jun 2020 22:14:30 -0400
-IronPort-SDR: jzFqMHkn2R7rstCXA9RliGyxXeSJoea2bxh7+GGMy4QGU7V/SD8t0yVUJd9lywtgWYUnp1HAgt
- rsgl/gdkR9eQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2020 19:14:29 -0700
-IronPort-SDR: jOhxUCI3nq8MORS0dfmzTWNXHTnAN8YKQmBuaAzgU3YCQrNU6NiM+Kzn6Oqj56jxDEPVISc3Zx
- iBkGXv9/MWKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,498,1583222400"; 
-   d="scan'208";a="418953095"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga004.jf.intel.com with ESMTP; 10 Jun 2020 19:14:27 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, balbi@kernel.org,
-        p.zabel@pengutronix.de
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v2 1/2] dt-bindings: usb: Add USB PHY support for Intel LGM SoC
-Date:   Thu, 11 Jun 2020 10:12:45 +0800
-Message-Id: <20200611021246.3250-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 11 Jun 2020 00:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbgFKEme (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 00:42:34 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46F0C08C5C2
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 21:42:34 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so1860739plr.0
+        for <devicetree@vger.kernel.org>; Wed, 10 Jun 2020 21:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=XwjSmj0YkIj3GEvYlKKvoK8cT439RqCf5DLMB9SWDW4=;
+        b=w74wF5YUjewrk9vbH/zjHTo/eUArNEwqWeOG/mT1nsLnHCOdI1Myed+UHlJDsat/Lu
+         qpN5KtmaH3u3ZkbDYx5UhrqF2UdmaNoGnnk/OCE2D2ncidZhjxaLqil76VxJiEBgyxWo
+         CxlEO2CPz1YUi37VtWxNFpS2SrA/Ibsy3cxf/fBo3TyyOSWuCdJrt05TVWLB4ISz9DjA
+         JTN1AFharyUbaEQyRZzeaGrFCVwsNhDjNGu/bnXGcdCqUKZYf+1WR3N1JOtMNaBggjeB
+         +XgJchCJyvKPVBSFh2wZEU37ok+Dm0gt0rNGmUsuSDjKup16LpOuBsGVWXUpsieVIgu5
+         Uaag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=XwjSmj0YkIj3GEvYlKKvoK8cT439RqCf5DLMB9SWDW4=;
+        b=gzxqT3DDo588AxHuGcJ98pA+osYwlVIfN0hIs0tz2rs7b4U6L1UP5SRjUuZIVF33o8
+         L+at8pBMXGUZZXdq+QzKQlKEDXYdO7zFXhMA9CDQycErFStTUGV8so4tqz2io9puI8U5
+         DrlAqQ5fLVRMAc/oyFs/jzXUfDq+oQqXdQuQIQrVukpkrKN0D1gbpbbq+iMnEeBD6aKg
+         60t/fPbU1x4NkLWLkz4UYjkG6WuW11/ouBp/RprfpFk1qs+8Lrv+EDI+8so5qt4wN7GX
+         jwnjQjEHO+Wpg1ygsOx027XLcTzOvkrpWc1xckYeo3urVKJuFYh2u6QeA6UuRTD82kAl
+         g1Ow==
+X-Gm-Message-State: AOAM531P9K4wTydpuaPVtVzPPNB7Qz7PTifyv/ccL3GQeIlTQpiqrO7H
+        ers8wIR9ZvdEkWXL0cdJyxlyKQ==
+X-Google-Smtp-Source: ABdhPJxkxKLcNmWZ0thLxMvgXsFEehY6ttx+oQjKkFShonGpErecqhhgOg93J8S2T7OXwKRpxJFBWw==
+X-Received: by 2002:a17:90a:f993:: with SMTP id cq19mr6526451pjb.154.1591850552960;
+        Wed, 10 Jun 2020 21:42:32 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 207sm1492551pfw.190.2020.06.10.21.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 21:42:32 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 21:39:51 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic Pallardy <loic.pallardy@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v7 3/5] remoteproc: Add support for runtime PM
+Message-ID: <20200611043951.GA3251@builder.lan>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+ <20200515104340.10473-3-paul@crapouillou.net>
+ <035bf8ad-3ef0-8314-ae5c-a94a24c230c8@ti.com>
+ <P2TQAQ.3VDG3B8W2EPF3@crapouillou.net>
+ <daa239fe-afd4-ff2e-3d5c-db09434cac95@ti.com>
+ <9XPMBQ.UM94FDID8MZW@crapouillou.net>
+ <107dc1d3-05c6-61be-b82c-197f0c43cdba@ti.com>
+ <VUEPBQ.GMXO6YRLF7N22@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <VUEPBQ.GMXO6YRLF7N22@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Wed 10 Jun 02:40 PDT 2020, Paul Cercueil wrote:
 
-Add the dt-schema to support USB PHY on Intel LGM SoC
+> Hi,
+>=20
+> Le lun. 8 juin 2020 =E0 18:10, Suman Anna <s-anna@ti.com> a =E9crit :
+> > Hi Paul,
+> >=20
+> > On 6/8/20 5:46 PM, Paul Cercueil wrote:
+> > > Hi Suman,
+> > >=20
+> > > > > > On 5/15/20 5:43 AM, Paul Cercueil wrote:
+> > > > > > > Call pm_runtime_get_sync() before the firmware is loaded, and
+> > > > > > > pm_runtime_put() after the remote processor has been stopped.
+> > > > > > >=20
+> > > > > > > Even though the remoteproc device has no PM
+> > > > > > > callbacks, this allows the
+> > > > > > > parent device's PM callbacks to be properly called.
+> > > > > >=20
+> > > > > > I see this patch staged now for 5.8, and the latest
+> > > > > > -next branch =7F=7F=7F=7Fhas =7F=7Fbroken the pm-runtime autosu=
+spend
+> > > > > > feature we have in the =7F=7F=7F=7FOMAP =7F=7Fremoteproc driver=
+=2E See
+> > > > > > commit 5f31b232c674 ("remoteproc/omap: =7F=7F=7F=7FAdd =7F=7Fsu=
+pport
+> > > > > > for runtime auto-suspend/resume").
+> > > > > >=20
+> > > > > > What was the original purpose of this patch, because
+> > > > > > there can be =7F=7F=7F=7F=7F=7Fdiffering backends across differ=
+ent
+> > > > > > SoCs.
+> > > > >=20
+> > > > > Did you try pm_suspend_ignore_children()? It looks like it
+> > > > > was made =7F=7F=7Ffor =7Fyour use-case.
+> > > >=20
+> > > > Sorry for the delay in getting back. So, using
+> > > > =7F=7Fpm_suspend_ignore_children() does fix my current issue.
+> > > >=20
+> > > > But I still fail to see the original purpose of this patch in
+> > > > the =7F=7Fremoteproc core especially given that the core itself does
+> > > > not have =7F=7Fany callbacks. If the sole intention was to call the
+> > > > parent pdev's =7F=7Fcallbacks, then I feel that state-machine is
+> > > > better managed within =7F=7Fthat particular platform driver itself,
+> > > > as the sequencing/device =7F=7Fmanagement can vary with different
+> > > > platform drivers.
+> > >=20
+> > > The problem is that with Ingenic SoCs some clocks must be enabled in
+> > > =7Forder to load the firmware, and the core doesn't give you an option
+> > > to =7Fregister a callback to be called before loading it.
+> >=20
+> > Yep, I have similar usage in one of my remoteproc drivers (see
+> > keystone_remoteproc.c), and I think this all stems from the need to
+> > use/support loading into a processor's internal memories. My driver does
+> > leverage the pm-clks backend plugged into pm_runtime, so you won't see
+> > explicit calls on the clocks.
+> >=20
+> > I guess the question is what exact PM features you are looking for with
+> > the Ingenic SoC. I do see you are using pm_runtime autosuspend, and your
+> > callbacks are managing the clocks, but reset is managed only in
+> > start/stop.
+> >=20
+> > > The first version of =7Fmy patchset added .prepare/.unprepare
+> > > callbacks to the struct rproc_ops, =7Fbut the feedback from the
+> > > maintainers was that I should do it via =7Fruntime PM. However, it was
+> > > not possible to keep it contained in the =7Fdriver, since again the
+> > > core doesn't provide a "prepare" callback, so no =7Fplace to call
+> > > pm_runtime_get_sync().
+> > FWIW, the .prepare/.unprepare callbacks is actually now part of the
+> > rproc core. Looks like multiple developers had a need for this, and this
+> > functionality went in at the same time as your driver :). Not sure if
+> > you looked up the prior patches, I leveraged the patch that Loic had
+> > submitted a long-time ago, and a revised version of it is now part of
+> > 5.8-rc1.
+>=20
+> WTF maintainers, you refuse my patchset for adding a .prepare/.unprepare,
+> ask me to do it via runtime PM, then merge another patchset that adds the=
+se
+> callback. At least be constant in your decisions.
+>=20
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- .../devicetree/bindings/usb/intel,lgm-usb-phy.yaml | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
+Sorry, I missed this when applying the two patches, but you're of course
+right.
 
-diff --git a/Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml b/Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
-new file mode 100644
-index 000000000000..0fc76cd23774
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/intel,lgm-usb-phy.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/intel,lgm-usb-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel LGM USB PHY Device Tree Bindings
-+
-+maintainers:
-+  - Vadivel Murugan Ramuthevar <vadivel.muruganx.ramuthevar@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-usb-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    items:
-+      - description: USB PHY and Host controller reset
-+      - description: APB BUS reset
-+      - description: General Hardware reset
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+      - const: apb
-+      - const: phy31
-+
-+required:
-+  - compatible
-+  - clocks
-+  - reg
-+  - resets
-+  - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb_phy: usb_phy@e7e00000 {
-+        compatible = "intel,lgm-usb-phy";
-+        reg = <0xe7e00000 0x10000>;
-+        clocks = <&cgu0 153>;
-+        resets = <&rcu 0x70 0x24>,
-+                 <&rcu 0x70 0x26>,
-+                 <&rcu 0x70 0x28>;
-+        reset-names = "phy", "apb", "phy31";
-+    };
--- 
-2.11.0
+> Anyway, now we have two methods added to linux-next for doing the exact s=
+ame
+> thing. What should we do about it?
+>=20
 
+I like the pm_runtime approach and as it was Arnaud that asked you to
+change it, perhaps he and Loic can agree on updating the ST driver so we
+can drop the prepare/unprepare ops again?
+
+Regards,
+Bjorn
