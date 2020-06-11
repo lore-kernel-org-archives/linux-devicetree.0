@@ -2,86 +2,94 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A177C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 11:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1451FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 11:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594052063A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 11:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8F320760
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 11:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgFKLKv (ORCPT
+        id S1728038AbgFKLVM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 07:10:51 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:6075 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727884AbgFKLKr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 07:10:47 -0400
-X-IronPort-AV: E=Sophos;i="5.73,499,1583161200"; 
-   d="scan'208";a="49411152"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Jun 2020 20:10:39 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 480B842B692D;
-        Thu, 11 Jun 2020 20:10:39 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     joro@8bytes.org, robh+dt@kernel.org
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] iommu/renesas: Add support for r8a77961
-Date:   Thu, 11 Jun 2020 20:10:30 +0900
-Message-Id: <1591873830-10128-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591873830-10128-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1591873830-10128-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Thu, 11 Jun 2020 07:21:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33546 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727907AbgFKLVL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 07:21:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 12DD4ABE4;
+        Thu, 11 Jun 2020 11:21:13 +0000 (UTC)
+Message-ID: <4298d8db6dec26317f591271ee15041e0c12f6fd.camel@suse.de>
+Subject: Re: [PATCH v4 00/27] clk: bcm: rpi: Add support for BCM2711
+ firmware clocks
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 11 Jun 2020 13:21:07 +0200
+In-Reply-To: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
+References: <cover.58c6e44891ff5bf61052b5804f7da9b5ba074840.1591860665.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-qp5pvNknzd1S2ihuXchJ"
+User-Agent: Evolution 3.36.2 
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for r8a77961 (R-Car M3-W+).
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/iommu/ipmmu-vmsa.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--=-qp5pvNknzd1S2ihuXchJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 4c2972f..b57b1f2 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -3,7 +3,7 @@
-  * IOMMU API for Renesas VMSA-compatible IPMMU
-  * Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-  *
-- * Copyright (C) 2014 Renesas Electronics Corporation
-+ * Copyright (C) 2014-2020 Renesas Electronics Corporation
-  */
- 
- #include <linux/bitmap.h>
-@@ -753,6 +753,7 @@ static const struct soc_device_attribute soc_rcar_gen3_whitelist[] = {
- 	{ .soc_id = "r8a774b1", },
- 	{ .soc_id = "r8a774c0", },
- 	{ .soc_id = "r8a7795", .revision = "ES3.*" },
-+	{ .soc_id = "r8a77961", },
- 	{ .soc_id = "r8a77965", },
- 	{ .soc_id = "r8a77990", },
- 	{ .soc_id = "r8a77995", },
-@@ -970,6 +971,9 @@ static const struct of_device_id ipmmu_of_ids[] = {
- 		.compatible = "renesas,ipmmu-r8a7796",
- 		.data = &ipmmu_features_rcar_gen3,
- 	}, {
-+		.compatible = "renesas,ipmmu-r8a77961",
-+		.data = &ipmmu_features_rcar_gen3,
-+	}, {
- 		.compatible = "renesas,ipmmu-r8a77965",
- 		.data = &ipmmu_features_rcar_gen3,
- 	}, {
--- 
-2.7.4
+On Thu, 2020-06-11 at 09:31 +0200, Maxime Ripard wrote:
+> Hi,
+>=20
+> Since the whole DRM/HDMI support began to grow fairly big, I've chosen
+> to split away the two discussions between the firmware clocks and the
+> HDMI support.
+>=20
+> Let me know what you think,
+> Maxime
+>=20
+
+With patch #25 manually fixed, the series is:
+
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Regards,
+Nicolas
+
+
+--=-qp5pvNknzd1S2ihuXchJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7iE6MACgkQlfZmHno8
+x/79PAgAp182wijp2dGoNNw89NchByhUXSoq3HViFvOMpA7tfknoLrvB2AF6YQXX
+2ve3ki9iwHaWWKFd58GmLurPDR7RcIVFHAtLT2RPwpbbf9RV8KiYp47xtBHZh8yg
+3oK9JGFkqfVh0qzEmbZ8xrOGqoNIRCNtty4tnzz5om+3ZL2xx3qETHIhiKVygxyu
+WS4nja+AQEG9wkqOGE+JXvi0kErid/NBN7dOH+QP2SH5GgpIeOjNTW36TPAkAzEv
+p5e2Ou504Ryah3il9bWZb/5r0O0njK4O8HJxPhw1k7S9vINYC50ucBTa+dZjYeU/
+/bl9Rt12SAtkbpaNEOm7n45tIqGRHA==
+=K1r7
+-----END PGP SIGNATURE-----
+
+--=-qp5pvNknzd1S2ihuXchJ--
 
