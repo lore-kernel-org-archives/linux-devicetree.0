@@ -2,196 +2,75 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA19C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3606C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC7520656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCAE20656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 09:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591869398;
+	bh=OuqfhL2PTtXpH/ofIcvTInY0cd1kGN0sDs4hy5Wu5CI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=z1NdoHCcfkOEF3SVmqD4ku1cTK1YeeCiXbvWfcqj1izLjbwhOfHqW7vagUtNggRgu
+	 Xmf02EWihmTv3kZqQFOjp1CvkQ6MREQD1XaaXhlJSHRxMq2NA9s1E7vemn0tAFi4Pa
+	 6iJS3yjuuwz3GhR2x2ibf8kvgbDzqc9nkGFYaLYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgFKJxl (ORCPT
+        id S1727041AbgFKJ4e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 05:53:41 -0400
-Received: from mga18.intel.com ([134.134.136.126]:44837 "EHLO mga18.intel.com"
+        Thu, 11 Jun 2020 05:56:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgFKJxl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 05:53:41 -0400
-IronPort-SDR: Sms9Q2Hm/JkSkW4tVuMabxfb07/On+egWnY/F3NkAylRi2vpBSGDT3POL3CkaaQ0cv523qHVvr
- SKjr/BcRvl2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 02:53:41 -0700
-IronPort-SDR: dHCsEc4njPF+kHjdOEWILszXP2QQ+HFtapoZFzJIsrkp1puF+YHOe0YdbiUqnorzm8NusR4716
- 26t59K7DO3yA==
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="350138738"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 02:53:35 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 6E06720680; Thu, 11 Jun 2020 12:53:33 +0300 (EEST)
-Date:   Thu, 11 Jun 2020 12:53:33 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, mchehab@kernel.org,
-        andriy.shevchenko@linux.intel.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, drinkcat@chromium.org,
-        matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V9, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-Message-ID: <20200611095333.GK16711@paasikivi.fi.intel.com>
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
- <20200523084103.31276-3-dongchun.zhu@mediatek.com>
- <20200610194455.GK201868@chromium.org>
+        id S1726864AbgFKJ4e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 05:56:34 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02608207C3;
+        Thu, 11 Jun 2020 09:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591869394;
+        bh=OuqfhL2PTtXpH/ofIcvTInY0cd1kGN0sDs4hy5Wu5CI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=jnYZtZl9pEBQKfzqHaUYKxTJ2Qv+d9orumujxLXAF7ebwn2igRO3zA3nv5Zyb/nBp
+         qQ1tOIPE7XH/8wrZFEBYcm8YM6KaA/TUzhtMjP4KRh9qvjg30W/lCUBs2XCAl9LM1M
+         Uityhnh6CtUUUUuUc9I74cD2BECHsTYU0Zlb1zJ4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610194455.GK201868@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200609120455.20458-1-harigovi@codeaurora.org>
+References: <20200609120455.20458-1-harigovi@codeaurora.org>
+Subject: Re: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens during PM sleep
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org, sam@ravnborg.org
+To:     Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+Date:   Thu, 11 Jun 2020 02:56:33 -0700
+Message-ID: <159186939329.242598.2996575539576077899@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Quoting Harigovindan P (2020-06-09 05:04:55)
+> ti-sn65dsi86 bridge is enumerated as a runtime device. When
+> suspend is triggered, PM core adds a refcount on all the
+> devices and calls device suspend, since usage count is
+> already incremented, runtime suspend will not be called
+> and it kept the bridge regulators and gpios ON which resulted
+> in platform not entering into XO shutdown.
+>=20
+> Add changes to force suspend on the runtime device during pm sleep.
+>=20
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
 
-On Wed, Jun 10, 2020 at 07:44:55PM +0000, Tomasz Figa wrote:
-> Hi Dongchun,
-> 
-> On Sat, May 23, 2020 at 04:41:03PM +0800, Dongchun Zhu wrote:
-> > Add a V4L2 sub-device driver for OV02A10 image sensor.
-> > 
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > ---
-> >  MAINTAINERS                 |    1 +
-> >  drivers/media/i2c/Kconfig   |   13 +
-> >  drivers/media/i2c/Makefile  |    1 +
-> >  drivers/media/i2c/ov02a10.c | 1025 +++++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 1040 insertions(+)
-> >  create mode 100644 drivers/media/i2c/ov02a10.c
-> > 
-> 
-> Thank you for the patch. Please see my comments inline.
-> 
-> [snip]
-> > diff --git a/drivers/media/i2c/ov02a10.c b/drivers/media/i2c/ov02a10.c
-> > new file mode 100644
-> > index 0000000..160a0b5
-> > --- /dev/null
-> > +++ b/drivers/media/i2c/ov02a10.c
-> [snip]
-> > +static const char * const ov02a10_test_pattern_menu[] = {
-> > +	"Disabled",
-> > +	"Color Bar",
-> 
-> nit: We should normalize this to one of the standard names. What is the
-> pattern on this sensor? Is it perhaps "Eight Vertical Colour Bars"?
-> 
-> > +};
-> [snip]
-> > +static int ov02a10_set_fmt(struct v4l2_subdev *sd,
-> > +			   struct v4l2_subdev_pad_config *cfg,
-> > +			   struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > +	struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
-> > +
-> > +	mutex_lock(&ov02a10->mutex);
-> > +
-> 
-> 
-> Don't we need to handle the case when fmt->which is V4L2_SUBDEV_FORMAT_TRY,
-> which is used for trying the format, but not applying it to the hardware?
-
-Yes.
-
-> 
-> > +	if (ov02a10->streaming) {
-> > +		mutex_unlock(&ov02a10->mutex);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	/* Only one sensor mode supported */
-> > +	mbus_fmt->code = ov02a10->fmt.code;
-> > +	ov02a10_fill_fmt(ov02a10->cur_mode, mbus_fmt);
-> > +	ov02a10->fmt = fmt->format;
-> > +
-> > +	mutex_unlock(&ov02a10->mutex);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ov02a10_get_fmt(struct v4l2_subdev *sd,
-> > +			   struct v4l2_subdev_pad_config *cfg,
-> > +			   struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > +	struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
-> > +
-> > +	mutex_lock(&ov02a10->mutex);
-> > +
-> > +	fmt->format = ov02a10->fmt;
-> 
-> Ditto.
-> 
-> > +	mbus_fmt->code = ov02a10->fmt.code;
-> > +	ov02a10_fill_fmt(ov02a10->cur_mode, mbus_fmt);
-> > +
-> > +	mutex_unlock(&ov02a10->mutex);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ov02a10_enum_mbus_code(struct v4l2_subdev *sd,
-> > +				  struct v4l2_subdev_pad_config *cfg,
-> > +				  struct v4l2_subdev_mbus_code_enum *code)
-> > +{
-> > +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > +
-> > +	if (code->index >= ARRAY_SIZE(supported_modes))
-> > +		return -EINVAL;
-> 
-> Hmm, supported_modes[] doesn't seem to hold the information about mbus
-> codes. Should this just perhaps be "!= 0"?
-> 
-> > +
-> > +	code->code = ov02a10->fmt.code;
-> > +
-> > +	return 0;
-> > +}
-> [snip]
-> > +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
-> > +				   struct v4l2_subdev_pad_config *cfg)
-> > +{
-> > +	struct v4l2_subdev_format fmt = {
-> > +		.which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE,
-> > +		.format = {
-> > +			.width = 1600,
-> > +			.height = 1200,
-> > +		}
-> > +	};
-> > +
-> > +	ov02a10_set_fmt(sd, cfg, &fmt);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> 
-> I'm not familiar with this init_cfg operation and the documentation is very
-> sparse about it. Sakari, is this a correct implementation?
-
-The purpose is to initialise a pad configuration (format and selection
-rectangles) to the device defaults. As there seem to be no selection
-rectangles, this seems fine to me.
-
--- 
-Regards,
-
-Sakari Ailus
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
