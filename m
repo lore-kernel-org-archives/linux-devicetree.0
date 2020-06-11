@@ -2,78 +2,90 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DADCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 00:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F0AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 01:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E624C207ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 00:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74F32086A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 01:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591837605;
+	bh=W6LKa2P4P/rOjYxLOpN3TGjHxp6jobdkYSFv//1nxqI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=HgFgpAYFD7Cbong0bg2PuhVsJPes4GVk0MEGkNaHwFaO48N/otS/neVp1sq0aR9Mz
+	 JmPYGy4b9PYAWyDuFymGoAZfXeDH6dObhZS1dfndI+N9rB08bOV7aE+qiFpaE4Ws+B
+	 R6j06MxE+iqRmhKg+gaMAbPn4W54KIiQhRGarJ60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgFKADO (ORCPT
+        id S1726290AbgFKBGo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 10 Jun 2020 20:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgFKADN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 10 Jun 2020 20:03:13 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1271C08C5C1;
-        Wed, 10 Jun 2020 17:03:13 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 955CC11F5F667;
-        Wed, 10 Jun 2020 17:03:12 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 17:03:09 -0700 (PDT)
-Message-Id: <20200610.170309.928494814671626769.davem@davemloft.net>
-To:     heiko@sntech.de
-Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        heiko.stuebner@theobroma-systems.com
-Subject: Re: [PATCH v2 2/2] net: phy: mscc: handle the clkout control on
- some phy variants
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200609133140.1421109-2-heiko@sntech.de>
-References: <20200609133140.1421109-1-heiko@sntech.de>
-        <20200609133140.1421109-2-heiko@sntech.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 10 Jun 2020 17:03:13 -0700 (PDT)
+        Wed, 10 Jun 2020 21:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgFKBGn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 10 Jun 2020 21:06:43 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 643962078D;
+        Thu, 11 Jun 2020 01:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591837603;
+        bh=W6LKa2P4P/rOjYxLOpN3TGjHxp6jobdkYSFv//1nxqI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=p5Ws/B7v9A2CtqbLecns1vXEfFust/09wjIA3exRacTuoXpAUu1lFo/8oQi1QviGH
+         rWzf2rT+Jx9bbxyjuuDKAZ99lRt4PBEKCa6Ia+lB0qKC2dS7eA5KYoR0vt+H6Q2ioR
+         eddd++OO/z0hFuBbX8Tdf2N+8e0S9oruT9rl4AJE=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3ac34bd7-bc5b-bc04-99ba-8ba3c5a9a691@codeaurora.org>
+References: <1589707344-8871-1-git-send-email-tdas@codeaurora.org> <1589707344-8871-5-git-send-email-tdas@codeaurora.org> <159054904061.88029.1394425232497625411@swboyd.mtv.corp.google.com> <3ac34bd7-bc5b-bc04-99ba-8ba3c5a9a691@codeaurora.org>
+Subject: Re: [PATCH v2 4/4] clk: qcom: lpass: Add support for LPASS clock controller for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Wed, 10 Jun 2020 18:06:42 -0700
+Message-ID: <159183760269.242598.3005455698894049563@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko@sntech.de>
-Date: Tue,  9 Jun 2020 15:31:40 +0200
+Quoting Taniya Das (2020-06-10 10:11:49)
+> On 5/27/2020 8:40 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2020-05-17 02:22:24)
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       lpass_core_cc_sc7180_regmap_config.name =3D "lpass_core_cc";
+> >> +       regmap =3D qcom_cc_map(pdev, &lpass_core_cc_sc7180_desc);
+> >> +       if (IS_ERR(regmap))
+> >> +               return PTR_ERR(regmap);
+> >> +
+> >> +       /*
+> >> +        * Keep the CLK always-ON
+> >=20
+> > Why? Presumably to make sure we can access the lpass sysnoc path all the
+> > time?
+> >=20
+>=20
+> This is an always ON clock from HW, just making sure to keep it enabled.
 
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> At least VSC8530/8531/8540/8541 contain a clock output that can emit
-> a predefined rate of 25, 50 or 125MHz.
-> 
-> This may then feed back into the network interface as source clock.
-> So follow the example the at803x already set and introduce a
-> vsc8531,clk-out-frequency property to set that output.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
-> Hi Andrew,
-> 
-> I didn't change the property yet, do you have a suggestion on
-> how to name it though? Going by the other examples in the
-> ethernet-phy.yamls, something like enet-phy-clock-out-frequency ?
+I'm not following. Hardware says it must always be enabled? If it isn't
+enabled is it even possible to write this register?
 
-Andrew, please help Heiko out with the naming here so we can move
-forward on this patch series.
-
-Thank you.
+>=20
+> >> +        * LPASS_AUDIO_CORE_SYSNOC_SWAY_CORE_CLK
+> >> +        */
+> >> +       regmap_update_bits(regmap, 0x24000, BIT(0), BIT(0));
+> >> +
