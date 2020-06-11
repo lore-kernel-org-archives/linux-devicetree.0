@@ -2,76 +2,104 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26980C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 22:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3BDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 22:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B152075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 22:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2152073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 22:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591914904;
-	bh=gwbad36ci73nUilrGtt6jC6dYf8PIdwF48yaLdcVXm8=;
+	s=default; t=1591915621;
+	bh=y7oaSm/JNOPNtYb74UFjDdhC6kjkYhvWO/e2LzL1J44=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=IZ5UuJFQKnhUzeqYosCU2Z/EQ8iFTBDiSsBgtrAzBdo9jqWymOl5Shc0XbW5FJeJy
-	 0MkRUTP3q8N5UwYy5wxiYmIWK8I+q76Kv6Qzr3kA+i4jaHwq/K6XesvOCjif8OWs6S
-	 1mtuxAxo2jbHk106RYrGGqxqBmsIpy9qtLwG3VcQ=
+	b=sbfimsIpgDjWpPBgaAk3cKCl/wtOsXqbHE/xAWi5WA2767IMPA30wBDUkwCMmMtTX
+	 7LM//7T33HeZ6Adrf+mSx7MUI2pAfH/TseIHnDhhdVsnC503LRbzX+xHRIB/yrFfCl
+	 krRQDEVdpKh11Y7mXd1KXbodYYMaRVzPLDPZukbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgFKWfD (ORCPT
+        id S1726298AbgFKWrA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 18:35:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49166 "EHLO mail.kernel.org"
+        Thu, 11 Jun 2020 18:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726159AbgFKWfD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 18:35:03 -0400
+        id S1726254AbgFKWrA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 18:47:00 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD4762073E;
-        Thu, 11 Jun 2020 22:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7139B206D7;
+        Thu, 11 Jun 2020 22:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591914902;
-        bh=gwbad36ci73nUilrGtt6jC6dYf8PIdwF48yaLdcVXm8=;
+        s=default; t=1591915619;
+        bh=y7oaSm/JNOPNtYb74UFjDdhC6kjkYhvWO/e2LzL1J44=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Od59i5ICuZ4toyiQOI1JXBRQzVaVaND+HwYd3buOOvnvaOaavpq1w51ldk/V8R2Cf
-         liE/wpp7P4a2Yjvj/RNO+eC6t30ey6qGpxtlDMLRxY2A7Ipi1KxZ1aA2otP71FZO4i
-         TerIPB4Qwd8OZdFbb7fICHsiRbF9mHGTbNxd7nUU=
+        b=TpDbc7FE6CrHoiBB2bYYJ9QQFAMPOoV3kRxP6n/lICap+9fQUPgMYZVaNpDKFMj3q
+         FW1wgsvfCl+nJS+R7QC+YD393eLiV5Q3RrVxlGJt3CWjf6Hub1OtjVk5kp3JjycTTs
+         RXz1iXbVH6Dd1RFs5i2AFdTZHHwQ1ZE0WuQlZ3Q4=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200611194738.1480393-1-robh@kernel.org>
-References: <20200611194738.1480393-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Remove redundant 'maxItems'
+In-Reply-To: <1591885683-29514-2-git-send-email-sanm@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-2-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH 1/2] clk: qcom: gcc: Add genpd active wakeup flag for sc7180
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>, linux-clk@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-usb@vger.kernel.org
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Date:   Thu, 11 Jun 2020 15:35:02 -0700
-Message-ID: <159191490219.242598.961023303796459910@swboyd.mtv.corp.google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Thu, 11 Jun 2020 15:46:58 -0700
+Message-ID: <159191561875.242598.18326727418245335996@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2020-06-11 12:47:38)
-> There's no need to specify 'maxItems' with the same value as the number
-> of entries in 'items'. A meta-schema update will catch future cases.
+Quoting Sandeep Maheswaram (2020-06-11 07:28:02)
+> From: Taniya Das <tdas@codeaurora.org>
 >=20
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Anson Huang <Anson.Huang@nxp.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-pwm@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> The USB client requires the usb30_prim gdsc to be kept active for
+> certain use cases, thus add the GENPD_FLAG_ACTIVE_WAKEUP flag.
+
+Can you please describe more of what this is for? Once sentence doesn't
+tell me much at all. I guess that sometimes we want to wakeup from USB
+and so the usb gdsc should be marked as "maybe keep on for wakeups" with
+the GENPD_FLAG_ACTIVE_WAKEUP flag if the USB controller is wakeup
+enabled?
+
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org> # clk
+Add a Fixes: tag too? And I assume we need to do this for all USB gdscs
+on various SoCs and maybe other GDSCs like PCIe. Any plans to fix those
+GDSCs?
+
+>  drivers/clk/qcom/gcc-sc7180.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+> index ca4383e..2b3dd4e 100644
+> --- a/drivers/clk/qcom/gcc-sc7180.c
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> @@ -2263,6 +2263,7 @@ static struct gdsc usb30_prim_gdsc =3D {
+>         .gdscr =3D 0x0f004,
+>         .pd =3D {
+>                 .name =3D "usb30_prim_gdsc",
+> +               .flags =3D GENPD_FLAG_ACTIVE_WAKEUP,
+>         },
+>         .pwrsts =3D PWRSTS_OFF_ON,
+>  };
