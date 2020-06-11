@@ -2,152 +2,166 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F7EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 13:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2535C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3AB2083E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 13:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A3F20801
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:17:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AxV/Sk0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgFKNyp (ORCPT
+        id S1728023AbgFKOR2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:54:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33436 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgFKNyp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 09:54:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6D067AB76;
-        Thu, 11 Jun 2020 13:54:44 +0000 (UTC)
-Subject: Re: [PATCH v2 5/5] ARM: mstar: Add dts for 70mai midrive d08
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     k@japko.eu, tim.bird@sony.com, devicetree@vger.kernel.org,
-        Daniel Palmer <daniel@thingy.jp>,
+        Thu, 11 Jun 2020 10:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbgFKOR1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 10:17:27 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22391C08C5C2
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:17:27 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u26so7060837wmn.1
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RNw0t5OF2i7drNguzCKs4BhL36r2VlgNY7GbFOTjqzw=;
+        b=AxV/Sk0DEDT54gQbWwbuHMzsD6e/E7rOARS21Yrb+YqlY/aM5Ccc/oKi9TqQiGSafa
+         H9j+XMp2do7JhHGU93olyhpUGKoWHDkgt21qI8IRXXvvFnxLEBNRt2Yt55Pvowjathtg
+         7jandyKb8/7FIK5JeEn2ibq1k2C0PxlylKzYI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RNw0t5OF2i7drNguzCKs4BhL36r2VlgNY7GbFOTjqzw=;
+        b=g9Ah1ia7MXqqC2ZJu0dv1X0Pqd9JJNNyVfbpXhxiconkmxPWsjsF5/hUENxifeho7c
+         7yAzOSHseQQ/RCRuRhY6+cheILbqKuUAgX6RBpfEvkadMDltZFJ0PtMuPkMmPuW7b7m0
+         +4wvYIRE3m7dC33jV3Zp9ynM84cv54Nmqr9B49VPpKJAaKsG8KFuqOeGYP/y+/j2Vob0
+         K/1FG8U37rAcopWtFgPKS4RPS9XB1zgnq2lluWJyiZVVFGy47JYMTmI7CnOIID5Rj0Zd
+         OIG/7HusiV1n8W3mysBdmDVJ0y1oOsweh8clz5iIw3zfOrXm4sNQt/NuAgps/zBfY5sr
+         FRYA==
+X-Gm-Message-State: AOAM530hzw6d5rD7i9Z+E6+tjhqy2FvMIbPzy2fhzv29/1SszESG80Vn
+        HXPbUFyoc0Ls1b2/BdKn9aDlP6mt61IoXQ==
+X-Google-Smtp-Source: ABdhPJwxfmfetZw9SoQatIxsaEyd3GfuKkNflglFUsvZOtyhVxP2C6KyLrgx+G/tzAa2Jda/IPxaig==
+X-Received: by 2002:a1c:c3d7:: with SMTP id t206mr8521727wmf.69.1591885040174;
+        Thu, 11 Jun 2020 07:17:20 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id t7sm4879946wrq.41.2020.06.11.07.17.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:17:19 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 14:17:18 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191014061617.10296-2-daniel@0x0f.com>
- <20200610090421.3428945-6-daniel@0x0f.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <a626d8a5-16c2-8f0a-b131-c124c06b0317@suse.de>
-Date:   Thu, 11 Jun 2020 15:54:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH RESEND v9 07/18] media: platform: Improve the
+ implementation of the system PM ops
+Message-ID: <20200611141718.GA158633@chromium.org>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-9-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200610090421.3428945-6-daniel@0x0f.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604090553.10861-9-xia.jiang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BTW I think the subject convention has been "ARM: dts: ...", with "ARM: 
-mstar: ..." more for mach-mstar.
+Hi Xia,
 
-Am 10.06.20 um 11:04 schrieb Daniel Palmer:
-> Adds inital support for the 70mai midrive d08 dash camera.
+On Thu, Jun 04, 2020 at 05:05:42PM +0800, Xia Jiang wrote:
+> Add v4l2_m2m_suspend() function call in mtk_jpeg_suspend() to make sure
+> that the current frame is processed completely before suspend.
+> Add v4l2_m2m_resume() function call in mtk_jpeg_resume() to unblock the
+> driver from scheduling next frame.
 > 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
 > ---
->   arch/arm/boot/dts/Makefile                    |  3 ++-
->   .../boot/dts/mercury5-ssc8336n-midrive08.dts  | 25 +++++++++++++++++++
->   2 files changed, 27 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n-midrive08.dts
+> v9: use v4l2_m2m_suspend() and v4l2_m2m_resume() to improve the
+>     implemention of the system PM ops
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 4a5f8075a4f6..35c7ecc52c60 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1344,7 +1344,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
->   dtb-$(CONFIG_ARCH_MILBEAUT) += milbeaut-m10v-evb.dtb
->   dtb-$(CONFIG_ARCH_MSTARV7) += \
->   	infinity-msc313-breadbee_crust.dtb \
-> -	infinity3-msc313e-breadbee.dtb
-> +	infinity3-msc313e-breadbee.dtb \
-> +	mercury5-ssc8336n-midrive08.dtb
->   dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
->   dtb-$(CONFIG_ARCH_ASPEED) += \
->   	aspeed-ast2500-evb.dtb \
-> diff --git a/arch/arm/boot/dts/mercury5-ssc8336n-midrive08.dts b/arch/arm/boot/dts/mercury5-ssc8336n-midrive08.dts
-> new file mode 100644
-> index 000000000000..4ee50ecf6ab1
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mercury5-ssc8336n-midrive08.dts
-> @@ -0,0 +1,25 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 thingy.jp.
-> + * Author: Daniel Palmer <daniel@thingy.jp>
-> + */
+
+Thank you for the patch. Please see my comments inline.
+
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index 7f74597262fc..49bdbf1c435f 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -1208,10 +1208,13 @@ static __maybe_unused int mtk_jpeg_pm_resume(struct device *dev)
+>  static __maybe_unused int mtk_jpeg_suspend(struct device *dev)
+>  {
+>  	int ret;
+> +	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+>  
+>  	if (pm_runtime_suspended(dev))
+>  		return 0;
+>  
+> +	v4l2_m2m_suspend(jpeg->m2m_dev);
 > +
-> +/dts-v1/;
-> +#include "mercury5-ssc8336n.dtsi"
+>  	ret = mtk_jpeg_pm_suspend(dev);
+>  	return ret;
+>  }
+
+This could be simplified into:
+
+{
+	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+
+	v4l2_m2m_suspend(jpeg->m2m_dev);
+	return pm_runtime_force_suspend(dev);
+}
+
+> @@ -1219,12 +1222,15 @@ static __maybe_unused int mtk_jpeg_suspend(struct device *dev)
+>  static __maybe_unused int mtk_jpeg_resume(struct device *dev)
+>  {
+>  	int ret;
+> +	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+>  
+>  	if (pm_runtime_suspended(dev))
+>  		return 0;
+>  
+>  	ret = mtk_jpeg_pm_resume(dev);
+>  
+> +	v4l2_m2m_resume(jpeg->m2m_dev);
 > +
-> +/ {
-> +	model = "midrive d08";
+>  	return ret;
+>  }
 
-Couldn't find this on their website. Should this be "70mai midrive ..." 
-or is "midrive" a different brand?
+Similarly here:
 
-> +	compatible = "70mai,midrived08", "mstar,mercury5";
+{
+	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+	int ret;
 
-Have you considered naming it "70mai,midrive-d08" for better 
-readability? (affects 1/5)
+	ret = pm_runtime_force_resume(dev);
+	if (ret < 0)
+		return ret;
 
-> +
-> +	aliases {
-> +		serial0 = &pm_uart;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&pm_uart {
-> +	status = "okay";
+	v4l2_m2m_resume(jpeg->m2m_dev);
+}
 
-clock-frequency?
+The pm_runtime_force_*() helpers will make sure that the right runtime PM
+state is restored.
 
-> +};
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+Best regards,
+Tomasz
