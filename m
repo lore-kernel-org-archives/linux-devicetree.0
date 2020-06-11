@@ -2,146 +2,102 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6972C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 17:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332A6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 17:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C64C206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 17:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qNg4jL/V"
+	by mail.kernel.org (Postfix) with ESMTP id F20F220829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 17:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591895549;
+	bh=+n3fYC/9iagTFJHZVyX/Y73W3bVcAjcHk8YWZHr8tLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fqGKSiB0ndSGkT/x0xVBlWFuPARO/DCqlCofQqcyESnHZTMMdddYUoGEPvPEwcet4
+	 a/R9O7IQxffuvwr7Ia5CDDnSKM6l2TN6Xuss0lmtJG07nuc7zXQeIuufv/iIR9Rir5
+	 hEuNakMnX2Cssu8rnqDWBoEp6ONUBR2UImZrvHHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgFKRJw (ORCPT
+        id S1726527AbgFKRM2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgFKRJv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 13:09:51 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C3DCC08C5C1;
-        Thu, 11 Jun 2020 10:09:50 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z63so2009129pfb.1;
-        Thu, 11 Jun 2020 10:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=tyHbXeosM2dGn8ctHsVNHECdKzxXjGiOzze56QKF4fM=;
-        b=qNg4jL/ViHHZH09XkCQBWqC5JTg6PQgIK1Z6UnNZErJ7PVvQWXyRK358nn0RhTwslk
-         11uBBTkxv646xxvpuQdkuz6GFk4jTgku/n6lDPPURQplHkJOZUTkGdNLl73NnPvtJ7or
-         GB2PZTcvtnhI6oyHICzvtPn7LV4mHZYZ7IIjANClS2Tqs6dZbr11a76kL+E0MSdXop/s
-         OYFTWuO19zU+dQwYLOi4P01Sj+68P+mnhI4UzsaC1Hj64UlTUfintmt2a8bYYiWtUm/3
-         DHp/QhMmLOnrgIF8ODhDBC4rche77xMTtwYSjo/kFy2pWu6h5CErMmo/AUuHVKAdvLbX
-         vttw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=tyHbXeosM2dGn8ctHsVNHECdKzxXjGiOzze56QKF4fM=;
-        b=IBM67AWlrC276jAs2ZBTz610yNq6Ja++XVCstarI1ns14c0DP4wVID0s8qMw2Ia+vN
-         l0uNF16H/nc1ufRBtxZR58DZNVaPbbmZlDPQiVfoYgPePwwueDbqnnVHA3okbaPnZLOO
-         SPmWF6Z2Vu5VZVbetNeNl1Pv9NqF/nJuMOgp9V812vkEB1SFJXyehlufbO5zoVGJ8dLq
-         ywbQZghaUdBx/drq5XeJ8n1y7yJqxrf3IXKER/8a/176kHME6z2VqzN/RcYI3MMpE4Z3
-         ZViZYNgRRwgYm/Pphb/yKx6a9PQRDhhdqF7nnxW/F8T9ZQYGFPg9pwhces+X0yZZI8UL
-         BDMg==
-X-Gm-Message-State: AOAM5308CjW5Etvc1B3RDAsydI0u84QTdQa5EsxAueGAm5K6YUzcDicB
-        Bl5BYlVxjipETEnKvxoHl6I=
-X-Google-Smtp-Source: ABdhPJyhoBlrc1apK/VfDXDccMgZT+ulv/6Cc2mm4EZHUfi5UyuQ5GrxawPgG6uBpsO/602D1sqvcA==
-X-Received: by 2002:a62:c105:: with SMTP id i5mr8205394pfg.250.1591895389697;
-        Thu, 11 Jun 2020 10:09:49 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b7sm3570250pfo.202.2020.06.11.10.09.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 11 Jun 2020 10:09:47 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 10:09:46 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, robbh@kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yixin.zhu@intel.com
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: intel: Add YAML Schemas for
- Watchdog timer
-Message-ID: <20200611170946.GA70281@roeck-us.net>
-References: <cover.1591584255.git.eswara.kota@linux.intel.com>
- <ac89e289b79fec0a82d1dd060e17eeca024885d5.1591584255.git.eswara.kota@linux.intel.com>
- <235d301b-3b25-bb00-bd1b-c4392fa23c63@roeck-us.net>
- <4a336f1d-68da-3356-a73a-95747ba4af4c@linux.intel.com>
- <83812b78-41e3-299d-36a0-6ce1576e7e78@roeck-us.net>
- <aabceb6f-265d-fd11-eee1-6bccf2160512@linux.intel.com>
- <c294ced9-a37b-6a90-511e-187bacdec80c@roeck-us.net>
- <4feae044-1956-fb70-7786-19c7c48cc391@linux.intel.com>
+        Thu, 11 Jun 2020 13:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgFKRM2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 13:12:28 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC3C207ED;
+        Thu, 11 Jun 2020 17:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591895547;
+        bh=+n3fYC/9iagTFJHZVyX/Y73W3bVcAjcHk8YWZHr8tLw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WIYDmLV4pQ+VScpZK0j6FfcLG6yCMFfeNXbPGe37mo6Gd9wKibO+6WRRvordXe/y4
+         b7RQfeNTNqboZp5k3o+YrkhuZgJW74VUEkPUofs2X+5C1xQFBV7AFodxsqZ+0G3eS+
+         fYY8Ebx5XUE43Tmfz2xVOmZYnDDblbkkGOKYq78g=
+Date:   Thu, 11 Jun 2020 18:12:23 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Achin Gupta <Achin.Gupta@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, nd <nd@arm.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
+ non-secure VM partitions
+Message-ID: <20200611171222.GB7725@willie-the-truck>
+References: <20200601094512.50509-1-sudeep.holla@arm.com>
+ <20200601094512.50509-2-sudeep.holla@arm.com>
+ <20200609223551.GA1620273@bogus>
+ <20200610074346.GB15939@willie-the-truck>
+ <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4feae044-1956-fb70-7786-19c7c48cc391@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 05:38:14PM +0800, Dilip Kota wrote:
+On Thu, Jun 11, 2020 at 03:46:35PM +0000, Achin Gupta wrote:
+> > On 10 Jun 2020, at 08:43, Will Deacon <will@kernel.org> wrote:
+> > On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
+> >> On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
+> >>> Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
+> >>> at virtual interface(VMs).
+> >>> 
+> >>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> >>> ---
+> >>> .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
+> >>> 1 file changed, 47 insertions(+)
+> >>> create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
+> >> 
+> >> I'm hoping this goes away if the firmware is discoverable, but if not DT 
+> >> bindings are DT schema now.
+> > 
+> > We'll need the binding for the kvm host side, because there are plenty
+> > of partition properties that are not discoverable (e.g. number of vCPUs).
 > 
-> On 6/10/2020 9:05 PM, Guenter Roeck wrote:
-> > On 6/10/20 12:54 AM, Dilip Kota wrote:
-> > > On 6/9/2020 9:46 PM, Guenter Roeck wrote:
-> > > > On 6/9/20 1:57 AM, Dilip Kota wrote:
-> > > > > On 6/8/2020 9:37 PM, Guenter Roeck wrote:
-> > > > > > On 6/7/20 10:49 PM, Dilip Kota wrote:
-> [...]
-> > > > > > > +
-> > > > > > > +description: |
-> > > > > > > +  Intel Lightning Mountain SoC has General Purpose Timer Counter(GPTC) which can
-> > > > > > > +  be configured as Clocksource, real time clock and Watchdog timer.
-> > > > > > > +  Each General Purpose Timer Counter has three timers. And total four General
-> > > > > > > +  Purpose Timer Counters are present on Lightning Mountain SoC which sums up
-> > > > > > > +  to 12 timers.
-> > > > > > > +  Lightning Mountain has four CPUs and each CPU is configured with one GPTC
-> > > > > > > +  timer as watchdog timer. Total four timers are configured as watchdog timers
-> > > > > > > +  on Lightning Mountain SoC.
-> > > > > > > +
-> > > > > > Why not just one ? The watchdog subsystem does not monitor individual CPUs,
-> > > > > > it monitors the system.
-> > > > > Intel Atom based Lightning Mountain SoC, system has four CPUs. On Lightning Mountain SoC ,Watchdog subsystem is combination of GPTC timers and reset controller unit. On Lightning Mountain SoC, each CPU is configured with one GPTC timer, so that if any of the CPU hangs or freezes, the watchdog daemon running on respective CPU cannot reset/ping or pet the watchdog timer. This causes the watchdog timeout. On watchdog timeout, reset controller triggers the reset to respective CPU.
-> > > > > 
-> > > > A system watchdog driver should not duplicate functionality
-> > > > from kernel/watchdog.c, which monitors individual CPUs.
-> > > > If the SoC does nto provide a system watchdog timer (which
-> > > > I think is unlikely), it should stick with that. A watchdog
-> > > > resetting an individual CPU instead of the entire system
-> > > > isn't something I would want to see in the watchdog subsystem.
-> > > My bad here, complete hardware reset happens on watchdog timeout not a single CPU or core.
-> > > Could you please clarify: The complete system means, you mean, "a watchdog susbsystem should monitor all the cores/cpus in the SoC. Not like each core/cpu in SoC having a wdt".
-> > > 
-> > No, the watchdog subsystem does not monitor "all cores".
-> > Again, that is the responsibility of kernel/watchdog.c.
-> I am a bit confused here.
-> I have gone through the kernel/watchdog.c code and i see hrtimers are used
-> and panic is triggered for lockup on CPU/core.
-> It looks similar to the watchdog subsystem which uses wdt and triggers
-> hardware reset on timeout, whereas kernel/watchdog.c using hrtimers and
-> triggers panic on timeout.
-> To my understanding Watchdog timer recovers the hardware from software hangs
-> or freeze states on the CPU / cores.
-> Also, what does system mean in your statement " watchdog subsystem monitors
-> the system"? What all comes under the system other than the cores/cpus.
-> And also i see there is no other watchdog subsystem in Lightning Mountain
-> architecture.
+> Just trying to understand the req. a bit betterâ€¦
 > 
+> The FF-A driver in the host can use FFA_PARTITION_INFO_GET to determine
+> the count of partitions and their vCPUs.
+> 
+> Is this about a guest being able to find out how many vCPUs it has? 
 
-From my perspective, we are not going to duplicate functionality covered
-by kernel/watchdog.c, which means we are not going to support per cpu core
-watchdog drivers in drivers/watchdog.
+This is about KVM finding out the information it needs in order to spawn
+non-secure partitions. I don't see how it can do that with
+FFA_PARTITION_INFO_GET -- who would respond?
 
-If you insist doing it anyway, please disuss with Wim.
+But you're right that number of vCPUs was a bad example. We also need
+information such as the entry point.
 
-Thanks,
-Guenter
+Will
