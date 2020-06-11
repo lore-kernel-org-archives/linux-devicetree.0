@@ -2,222 +2,98 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9693EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5DFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAE9207C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA69207ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgFKKDb (ORCPT
+        id S1727773AbgFKKYT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:03:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9863 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727782AbgFKKDb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:03:31 -0400
-IronPort-SDR: L5cfRmxTVdj2l411y4r9KWlyl33VYHq4ccL6pO/tSS8VdibyLKErtWAIMUoSn1WO+OiwuGY0LO
- 1tCc/qYHxfrQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 03:03:30 -0700
-IronPort-SDR: Pn15RnbO6jIDhtSwfC1dpWA2jynSfJXqvEvOYQg42lVNOehGHk53YpEDtcsPI9Se0S/k2dok6n
- ZpkT0LhhwrMw==
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="260660099"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 03:03:25 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id A935D20680; Thu, 11 Jun 2020 13:03:22 +0300 (EEST)
-Date:   Thu, 11 Jun 2020 13:03:22 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V9, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-Message-ID: <20200611100322.GL16711@paasikivi.fi.intel.com>
-References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
- <20200523084103.31276-3-dongchun.zhu@mediatek.com>
- <20200610194455.GK201868@chromium.org>
- <20200611095333.GK16711@paasikivi.fi.intel.com>
- <CAAFQd5BBxBEs=gCohOzOGzkTDNkL1yyu7dtEY26K52=CmFAWnA@mail.gmail.com>
+        Thu, 11 Jun 2020 06:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbgFKKYO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 06:24:14 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5116C08C5C1
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 03:24:13 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 638E02A38CE
+From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     Laurent.pinchart@ideasonboard.com
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
+        tomi.valkeinen@ti.com, robh+dt@kernel.org, airlied@linux.ie
+Subject: [PATCH v3 0/5] dt-bindings: display: ti,tfp410.txt: convert to yaml
+Date:   Thu, 11 Jun 2020 12:23:51 +0200
+Message-Id: <20200611102356.31563-1-ricardo.canuelo@collabora.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5BBxBEs=gCohOzOGzkTDNkL1yyu7dtEY26K52=CmFAWnA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:57:43AM +0200, Tomasz Figa wrote:
-> On Thu, Jun 11, 2020 at 11:53 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Hi Tomasz,
-> >
-> > On Wed, Jun 10, 2020 at 07:44:55PM +0000, Tomasz Figa wrote:
-> > > Hi Dongchun,
-> > >
-> > > On Sat, May 23, 2020 at 04:41:03PM +0800, Dongchun Zhu wrote:
-> > > > Add a V4L2 sub-device driver for OV02A10 image sensor.
-> > > >
-> > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > ---
-> > > >  MAINTAINERS                 |    1 +
-> > > >  drivers/media/i2c/Kconfig   |   13 +
-> > > >  drivers/media/i2c/Makefile  |    1 +
-> > > >  drivers/media/i2c/ov02a10.c | 1025 +++++++++++++++++++++++++++++++++++++++++++
-> > > >  4 files changed, 1040 insertions(+)
-> > > >  create mode 100644 drivers/media/i2c/ov02a10.c
-> > > >
-> > >
-> > > Thank you for the patch. Please see my comments inline.
-> > >
-> > > [snip]
-> > > > diff --git a/drivers/media/i2c/ov02a10.c b/drivers/media/i2c/ov02a10.c
-> > > > new file mode 100644
-> > > > index 0000000..160a0b5
-> > > > --- /dev/null
-> > > > +++ b/drivers/media/i2c/ov02a10.c
-> > > [snip]
-> > > > +static const char * const ov02a10_test_pattern_menu[] = {
-> > > > +   "Disabled",
-> > > > +   "Color Bar",
-> > >
-> > > nit: We should normalize this to one of the standard names. What is the
-> > > pattern on this sensor? Is it perhaps "Eight Vertical Colour Bars"?
-> > >
-> > > > +};
-> > > [snip]
-> > > > +static int ov02a10_set_fmt(struct v4l2_subdev *sd,
-> > > > +                      struct v4l2_subdev_pad_config *cfg,
-> > > > +                      struct v4l2_subdev_format *fmt)
-> > > > +{
-> > > > +   struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > > > +   struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
-> > > > +
-> > > > +   mutex_lock(&ov02a10->mutex);
-> > > > +
-> > >
-> > >
-> > > Don't we need to handle the case when fmt->which is V4L2_SUBDEV_FORMAT_TRY,
-> > > which is used for trying the format, but not applying it to the hardware?
-> >
-> > Yes.
-> >
-> > >
-> > > > +   if (ov02a10->streaming) {
-> > > > +           mutex_unlock(&ov02a10->mutex);
-> > > > +           return -EBUSY;
-> > > > +   }
-> > > > +
-> > > > +   /* Only one sensor mode supported */
-> > > > +   mbus_fmt->code = ov02a10->fmt.code;
-> > > > +   ov02a10_fill_fmt(ov02a10->cur_mode, mbus_fmt);
-> > > > +   ov02a10->fmt = fmt->format;
-> > > > +
-> > > > +   mutex_unlock(&ov02a10->mutex);
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > > +static int ov02a10_get_fmt(struct v4l2_subdev *sd,
-> > > > +                      struct v4l2_subdev_pad_config *cfg,
-> > > > +                      struct v4l2_subdev_format *fmt)
-> > > > +{
-> > > > +   struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > > > +   struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
-> > > > +
-> > > > +   mutex_lock(&ov02a10->mutex);
-> > > > +
-> > > > +   fmt->format = ov02a10->fmt;
-> > >
-> > > Ditto.
-> > >
-> > > > +   mbus_fmt->code = ov02a10->fmt.code;
-> > > > +   ov02a10_fill_fmt(ov02a10->cur_mode, mbus_fmt);
-> > > > +
-> > > > +   mutex_unlock(&ov02a10->mutex);
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > > +static int ov02a10_enum_mbus_code(struct v4l2_subdev *sd,
-> > > > +                             struct v4l2_subdev_pad_config *cfg,
-> > > > +                             struct v4l2_subdev_mbus_code_enum *code)
-> > > > +{
-> > > > +   struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> > > > +
-> > > > +   if (code->index >= ARRAY_SIZE(supported_modes))
-> > > > +           return -EINVAL;
-> > >
-> > > Hmm, supported_modes[] doesn't seem to hold the information about mbus
-> > > codes. Should this just perhaps be "!= 0"?
-> > >
-> > > > +
-> > > > +   code->code = ov02a10->fmt.code;
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > [snip]
-> > > > +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
-> > > > +                              struct v4l2_subdev_pad_config *cfg)
-> > > > +{
-> > > > +   struct v4l2_subdev_format fmt = {
-> > > > +           .which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE,
-> > > > +           .format = {
-> > > > +                   .width = 1600,
-> > > > +                   .height = 1200,
-> > > > +           }
-> > > > +   };
-> > > > +
-> > > > +   ov02a10_set_fmt(sd, cfg, &fmt);
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > >
-> > > I'm not familiar with this init_cfg operation and the documentation is very
-> > > sparse about it. Sakari, is this a correct implementation?
-> >
-> > The purpose is to initialise a pad configuration (format and selection
-> > rectangles) to the device defaults. As there seem to be no selection
-> > rectangles, this seems fine to me.
-> 
-> Thanks. I traced the code and could only see one place where the
-> callback is being called and that was with cfg != NULL. Still, the
-> code above uses "cfg ?" as a check to determine whether TRY or ACTIVE
-> should be passed to which. Is that also correct?
+This series converts the DT binding for the TI TFP410 DPI-to-DVI encoder
+to json-schema.
 
-It could be used in setting the active format in probe. That would probably
-be cleaner than what it currently does.
+This also fixes a minor bug in the ti-tfp410 driver that would cause a
+wrong calculation of the setup and hold times when the de-skew feature
+is enabled. The retrieval of the de-skew value from the DT has also been
+updated to reflect the binding changes.
 
-But apart from that, the framework always calls init_cfg with cfg non-NULL.
+Changes in v3:
+
+  - ti,tfp410.yaml
+    - Original translation to yaml separated into its own commit with no
+      additional changes (Laurent Pinchart).
+    - Redefinition of ti,deskew property in its own commit (Laurent).
+    - Removal of unnecessary text (Laurent).
+    - New conditional constraint for ti,deskew (Laurent).
+    - "ports" node set as optional (Rob Herring).
+
+  - dove-sbc-a510.dts: removed. This comes from Rob's suggestion that
+    the "ports" node should be optional instead of defining empty port
+    nodes in DTs files.
+
+  - ti-tfp410.c
+    - Original changes split into two commits. The first one changes the
+      datatype and retrieval of the deskew property. The second one
+      fixes the calculation of hold and setup times (Laurent).
+
+The bindings have been tested with:
+
+  make dt_binding_check ARCH=<arch> DT_SCHEMA_FILES=<...ti,tfp410.yaml>
+  make dtbs_check ARCH=<arch> DT_SCHEMA_FILES=<...ti,tfp410.yaml>
+
+for <arch> = arm and arm64.
+This uncovered a number of dts files that use the TFP410 but not through
+I2C and don't define the ti,deskew property. These should be fixed at
+some point.
+
+Ricardo Cañuelo (5):
+  dt-bindings: display: ti,tfp410.txt: convert to yaml
+  dt-bindings: display: ti,tfp410.yaml: Redefine ti,deskew property
+  drm/bridge: tfp410: fix de-skew value retrieval from DT
+  drm/bridge: tfp410: Fix setup and hold time calculation
+  dt-bindings: display: ti,tfp410.yaml: make the ports node optional
+
+ .../bindings/display/bridge/ti,tfp410.txt     |  66 ---------
+ .../bindings/display/bridge/ti,tfp410.yaml    | 130 ++++++++++++++++++
+ drivers/gpu/drm/bridge/ti-tfp410.c            |  10 +-
+ 3 files changed, 135 insertions(+), 71 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
 
 -- 
-Sakari Ailus
+2.18.0
+
