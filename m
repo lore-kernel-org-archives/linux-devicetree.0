@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0586C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 13:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57798C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 13:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD89D20801
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 13:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C25207ED
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 13:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="BXD053gC"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="S/jl+slL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgFKNBk (ORCPT
+        id S1726159AbgFKNSf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 09:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
+        Thu, 11 Jun 2020 09:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgFKNBk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 09:01:40 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5136BC03E96F
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 06:01:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x14so6079110wrp.2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 06:01:37 -0700 (PDT)
+        with ESMTP id S1726471AbgFKNSb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 09:18:31 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFFA2C03E96F
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 06:18:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l26so4947848wme.3
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 06:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=elECq92oJ4/XDwQ9hOWJUgujb9aF8JKLlnlf1/L4bGY=;
-        b=BXD053gCnYRcPJDIinKxGq0ceA7ctZrCxv5J4I9m/Cp5sQHGSTDSU0LOtOyVn7qqUj
-         Krd+qAND6/A3L8TTMx2eC5OGjpGZcsZSHiJhVs4+1BKAT1l+6GNPrUI41ck9+os3+tWS
-         XRwTIW87OAy4CW+LaSesaLBcFwKPjdTwBFf9g=
+        bh=3D40KyYMeXLRFbWmcuYLD5ZmMexI/dbs3uEPHhCTA4U=;
+        b=S/jl+slL4mssBKVD02XQnVYrrTOFXjeWo7eAXEftnHakKzcEeJu79b3roxehmDRQLa
+         kzmUXI63zJ99Ff+zyFfuphDwSrKVjOOnFmkLlbzMUHsu7x8mz+FO5iQxXm+/R9kv6fCq
+         iTV1yBhl6egCeeQ33/ivG+d3xVEOcFFrSJqVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=elECq92oJ4/XDwQ9hOWJUgujb9aF8JKLlnlf1/L4bGY=;
-        b=Q0HXsZmrJZ8MNB3H5iBGgBI6FAYxdhrutzTfihltRCF90bdNwuJ1wpGCSl3PWnlxG1
-         O1aZ6UVlDGedBjljnsePIh+TriBpM0mzjYhwajAjDsJHVGbTteLHM+KqonJGf3VtFyiT
-         bhYjrB2/Xe9yKflF27SlFEw83ZeLgjmK7qbqRzDrXi1U3vH+ISkPIc/YNitZXxRix0s0
-         mM0opnJ07167u3m6EUIZ4JKkIKJlB2CGe3CASD96kXgSeRjy7aqZODsUE6Mgwnenkl+m
-         ep0cF5ZWj+ci4XC4ZK4rCFxWrSg77ZP2hIBwahVzfr1rWWPGvizReUFgagRyRPDlfSEj
-         LRhg==
-X-Gm-Message-State: AOAM532hOXROM8H5MpxtxLWo4dCJ76T6zOUgrAQIS0ujOL8Sdre0KJeU
-        JIRcGfUKvGbsqE+RsyebJNejx9DLT1cPRnw+iu15aw==
-X-Google-Smtp-Source: ABdhPJxfj6Ic2hQLja4+A6vurSDrOmbpY/+FxQxxyINLp+8z03ANQKuArnIOi/AhJzUy1lPkZwoVW5sIY5NTSKdMO9E=
-X-Received: by 2002:a5d:6cc1:: with SMTP id c1mr9805713wrc.144.1591880496326;
- Thu, 11 Jun 2020 06:01:36 -0700 (PDT)
+        bh=3D40KyYMeXLRFbWmcuYLD5ZmMexI/dbs3uEPHhCTA4U=;
+        b=Eef9bglQucDtXtmTRTtYDSdutN10od4/PELV3mc6kpO6yL0rUEt3SHshaa2l0N/rNG
+         fkg+XbbiHYkhSfGbdJe/nPDJJyvq6Zh4CHvm5znYAuxL80744A2eHEHOjnNhcESsbHX1
+         PgzdflGErlXsVvdAXhDaG/Rni4+ooRgK8YTNiYJsI57TpVbFS+k1D7zogpa5Z0ETyEol
+         TckW5P1O8l8j2sIsiBghlzozL95qNaWyai2SI3FlFLB5pEIX1C/dHWOfafVrXtpSzarv
+         7UwtYRwTZwBTkcR9xTK0NhMsIRxCdPWk1NkwlbrSvjzH53nBcA4RX+/a5hLFlombxa8u
+         H3Tw==
+X-Gm-Message-State: AOAM531lXD/2tXbfEjJ50zp5/gGqM6qinFf7pBAL6iTgK+aDDL/g3+Ky
+        1Os94kPudN7+2/ji6c1CN6HbipnSO/hm2025Ut866A==
+X-Google-Smtp-Source: ABdhPJyN9QaXL2/nALzV6Wm81/61c10NORZKfBtIvPfa3KPmZdM5dbRmE8hjWi4WODPLxAiHTdkMMTDuDyWSkjv413E=
+X-Received: by 2002:a1c:7206:: with SMTP id n6mr8461880wmc.4.1591881509341;
+ Thu, 11 Jun 2020 06:18:29 -0700 (PDT)
 MIME-Version: 1.0
 References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-3-daniel@0x0f.com>
- <976e789e-edd7-c44d-ea99-840ecb883ff8@suse.de>
-In-Reply-To: <976e789e-edd7-c44d-ea99-840ecb883ff8@suse.de>
+ <f66978d8-22c5-1883-c6bf-52c0c19d6603@suse.de>
+In-Reply-To: <f66978d8-22c5-1883-c6bf-52c0c19d6603@suse.de>
 From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Thu, 11 Jun 2020 22:01:20 +0900
-Message-ID: <CAFr9PXkvmZv3_EakxvRR+X522xN-a8epvF0ns10JeYCLn2uUKw@mail.gmail.com>
+Date:   Thu, 11 Jun 2020 22:18:13 +0900
+Message-ID: <CAFr9PX=jNE-y++W=PVr=EQTiA4CtTM6xpsy2=pnJGPB_Z-BLqg@mail.gmail.com>
 Subject: Re: [PATCH v2 2/5] ARM: mstar: Add machine for MStar/Sigmastar
  infinity/mercury family ARMv7 SoCs
 To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
@@ -99,37 +99,65 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Andreas,
 
-On Thu, 11 Jun 2020 at 21:49, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
-> > peripherals and system memory in a single tiny QFN package that
-> > can be hand soldered allowing almost anyone to embed Linux
+On Thu, 11 Jun 2020 at 21:58, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+
+> You call the dir mach-mstar, but name the Kconfig ARCH_MSTARV7. I had
+> previously been asked to just use the vendor name, so this should
+> probably be just ARCH_MSTAR. Outside arch/arm/ you can then use ARM &&
+> ARCH_MSTAR condition to make things 32-bit only, allowing to reuse
+> ARCH_MSTAR for arm64 or whatever.
+
+The ARM9 MStar chips before they switched to a common ARMv7 base aren't dir=
+ectly
+compatible so I thought there should be some distinction there. I
+doubt anyone will do it
+but I made the directory mach-mstar so potentially someone could add
+machine support
+for the older stuff to without having more directories.
+
+> > +     bool "MStar/Sigmastar ARMv7 SoC Support"
+> > +     depends on ARCH_MULTI_V7
+> > +     select ARM_GIC
+> > +     select ARM_HEAVY_MB
+> > +     help
+> > +       Support for newer MStar/Sigmastar SoC families that are
+> > +       based on ARMv7 cores like the Cortex A7 and share the same
+> > +       basic hardware like the infinity and mercury series.
+> > +
+> > +if ARCH_MSTARV7
+> > +
+> > +config MACH_INFINITY
+> > +     bool "MStar/Sigmastar infinity SoC support"
+> > +     default ARCH_MSTARV7
+> > +     help
+> > +       Support for MStar/Sigmastar infinity IP camera SoCs.
+> > +
+> > +config MACH_MERCURY
+> > +     bool "MStar/Sigmastar mercury SoC support"
+> > +     default ARCH_MSTARV7
+> > +     help
+> > +       Support for MStar/Sigmastar mercury dash camera SoCs.
+> > +       Note that older Mercury2 SoCs are ARM9 based and not supported.
 >
-> "soldered, allowing"?
+> Is this comment really helpful? This menu item would only seem to come
+> up after having selected multi_v7, which kind of rules out ARM9.
 
-The original reads ok to me. Maybe I can just split that into two sentences=
-?
-Like ".. QFN package that can be hand soldered. This allows almost anyone..=
-".
+The older mercury2 based chips seem to still be available and used in
+drive recorders
+that are on the market right now. The infinity series is all ARMv7 so
+can be supported
+but for the mercury series only the newer ones are ARMv7 so I thought
+it was worth
+mentioning that "mercury SoC support" doesn't mean all of them. I'll
+take it out if you
+think it's unnecessary.
 
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -2114,6 +2114,7 @@ ARM/MStar/Sigmastar ARMv7 SoC support
-> >   M:  Daniel Palmer <daniel@thingy.jp>
-> >   L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribe=
-rs)
-> >   S:  Maintained
-> > +F:   arch/arm/mach-mstar/
-> >   F:  Documentation/devicetree/bindings/arm/mstar.yaml
-> >
-> >   ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
-> [snip]
->
-> The sort order has recently been changed to case-sensitive, i.e., you
-> should append arch after Documentation.
+> Consider adding mercury in a second step?
 
-Interesting. Checkpatch didn't complain about that although it
-complained about the
-original ordering I had.
+I'll think about that. I wanted to try to get a machine that isn't one
+I'm personally making
+into the series.
 
-Thanks for the input.
+Cheers,
 
 Daniel
