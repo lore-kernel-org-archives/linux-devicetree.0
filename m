@@ -2,153 +2,163 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38886C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EC3206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:30:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JNIGK39a"
+	by mail.kernel.org (Postfix) with ESMTP id 0EAEB206DC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgFKPaE (ORCPT
+        id S1728424AbgFKPpu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:30:04 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56140 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728411AbgFKPaB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:30:01 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BFTwhu011625;
-        Thu, 11 Jun 2020 10:29:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591889398;
-        bh=Ts4mOPmUuwp74G9T2QNmDc9S2nOXuXjnktWeWg0tJhE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JNIGK39aypt0c6wbZOXG5zQIKDoTZMuHIBsuuwFUsbFxheXyBVzMyjBUyfOcNT+mZ
-         P0pYewUA86E6gH77kMePNW9exU+bGU2L3Gqcfk7gR2ziRd1yeZLAH91jRe63uv2a9D
-         qbDTNYzuvY7V+rN37xV0pS/EZq0KzexO9UeE5JSE=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BFTwaq040509
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 11 Jun 2020 10:29:58 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
- Jun 2020 10:29:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 11 Jun 2020 10:29:55 -0500
-Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BFTtAK021115;
-        Thu, 11 Jun 2020 10:29:55 -0500
-Received: from localhost ([10.250.48.148])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 05BFTtiE085869;
-        Thu, 11 Jun 2020 10:29:55 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Jason Kridner <jdk@ti.com>, Caleb Robey <c-robey@ti.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/2] ARM: dts: am5729-beaglebone-ai: Disable ununsed mailboxes
-Date:   Thu, 11 Jun 2020 10:29:45 -0500
-Message-ID: <20200611152945.27656-3-s-anna@ti.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200611152945.27656-1-s-anna@ti.com>
-References: <20200611152945.27656-1-s-anna@ti.com>
+        Thu, 11 Jun 2020 11:45:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:54190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728422AbgFKPpu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 11:45:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B6E71F1;
+        Thu, 11 Jun 2020 08:45:49 -0700 (PDT)
+Received: from [10.57.43.165] (unknown [10.57.43.165])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B299B3F6CF;
+        Thu, 11 Jun 2020 08:45:45 -0700 (PDT)
+Subject: Re: [PATCH 2/2] arm-nommu: Add use_reserved_mem() to check if device
+ support reserved memory
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     kstewart@linuxfoundation.org, devicetree@vger.kernel.org,
+        alexandre.torgue@st.com, info@metux.net, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, mcoquelin.stm32@gmail.com,
+        tglx@linutronix.de, dillon.minfei@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com, allison@lohutok.net
+References: <1591605038-8682-1-git-send-email-dillon.minfei@gmail.com>
+ <1591605038-8682-3-git-send-email-dillon.minfei@gmail.com>
+ <90df5646-e0c4-fcac-d934-4cc922230dd2@arm.com>
+ <20200610072444.GA6293@infradead.org>
+ <9c3a7b4e-0190-e9bb-91fe-6d5692559888@arm.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <27881ee0-dc40-e8c6-34f6-712f9acc3fbc@arm.com>
+Date:   Thu, 11 Jun 2020 16:45:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <9c3a7b4e-0190-e9bb-91fe-6d5692559888@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The IPU and DSP remote processors use sub-mailbox nodes only from a
-limited set of System Mailboxes 5 and 6 to achieve the Remote Processor
-Messaging (RPMsg) communication stack between the MPU host processor
-and the respective remote processor. These are all defined and enabled
-through the inherited common dra74-ipu-dsp-common.dtsi file.
+On 6/10/20 9:19 AM, Vladimir Murzin wrote:
+> On 6/10/20 8:24 AM, Christoph Hellwig wrote:
+>> Ok, I finally found the original patch from Vladimir.  Comments below:
+>>
+>>> +++ b/kernel/dma/direct.c
+>>> @@ -456,14 +456,14 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>>>  #else /* CONFIG_MMU */
+>>>  bool dma_direct_can_mmap(struct device *dev)
+>>>  {
+>>> -	return false;
+>>> +	return true;
+>>>  }
+>>>  
+>>>  int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>>>  		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>>>  		unsigned long attrs)
+>>>  {
+>>> -	return -ENXIO;
+>>> +	return vm_iomap_memory(vma, vma->vm_start, (vma->vm_end - vma->vm_start));;
+>>
+>> I think we should try to reuse the mmu dma_direct_mmap implementation,
+>> which does about the same.  This version has been compile tested on
+>> arm-nommu only, let me know what you think: (btw, a nommu_defconfig of
+>> some kind for arm would be nice..)
+> 
+> Catch-all nommu_defconfig is not easy for ARM, AFAIK folk carry few hacks
+> for randconfig...
+> 
+> Meanwhile, known working NOMMU configs
+> 
+> $ git grep "# CONFIG_MMU is not set" arch/arm/configs/
+> arch/arm/configs/efm32_defconfig:# CONFIG_MMU is not set
+> arch/arm/configs/lpc18xx_defconfig:# CONFIG_MMU is not set
+> arch/arm/configs/mps2_defconfig:# CONFIG_MMU is not set
+> arch/arm/configs/stm32_defconfig:# CONFIG_MMU is not set
+> arch/arm/configs/vf610m4_defconfig:# CONFIG_MMU is not set
+> 
+>>
+>> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+>> index d006668c0027d2..e0dae570a51530 100644
+>> --- a/kernel/dma/Kconfig
+>> +++ b/kernel/dma/Kconfig
+>> @@ -71,6 +71,7 @@ config SWIOTLB
+>>  # in the pagetables
+>>  #
+>>  config DMA_NONCOHERENT_MMAP
+>> +	default y if !MMU
+>>  	bool
+> 
+> Nit: def_bool !MMU
+> 
+>>  
+>>  config DMA_REMAP
+>> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+>> index 0a4881e59aa7d6..9ec6a5c3fc578c 100644
+>> --- a/kernel/dma/direct.c
+>> +++ b/kernel/dma/direct.c
+>> @@ -459,7 +459,6 @@ int dma_direct_get_sgtable(struct device *dev, struct sg_table *sgt,
+>>  	return ret;
+>>  }
+>>  
+>> -#ifdef CONFIG_MMU
+>>  bool dma_direct_can_mmap(struct device *dev)
+>>  {
+>>  	return dev_is_dma_coherent(dev) ||
+>> @@ -485,19 +484,6 @@ int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>>  	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+>>  			user_count << PAGE_SHIFT, vma->vm_page_prot);
+>>  }
+>> -#else /* CONFIG_MMU */
+>> -bool dma_direct_can_mmap(struct device *dev)
+>> -{
+>> -	return false;
+>> -}
+>> -
+>> -int dma_direct_mmap(struct device *dev, struct vm_area_struct *vma,
+>> -		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+>> -		unsigned long attrs)
+>> -{
+>> -	return -ENXIO;
+>> -}
+>> -#endif /* CONFIG_MMU */
+>>  
+>>  int dma_direct_supported(struct device *dev, u64 mask)
+>>  {
+>>
+> 
+> LGTM. FWIW:
+> 
+> Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
+> 
+> 
 
-The other System Mailboxes do not define any actual sub-mailboxes, so
-they serve no purpose and can all be safely dropped.
+@dillon, can you give it a try?
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/am5729-beagleboneai.dts | 52 -----------------------
- 1 file changed, 52 deletions(-)
+I think Christoph would appreciate your Tested-by and that might speed up
+getting fix mainline.
 
-diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-index 619e75927224..d3e345d6634a 100644
---- a/arch/arm/boot/dts/am5729-beagleboneai.dts
-+++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-@@ -630,58 +630,6 @@ &bandgap {
- 	status = "okay";
- };
- 
--&mailbox1 {
--	status = "okay";
--};
--
--&mailbox2 {
--	status = "okay";
--};
--
--&mailbox3 {
--	status = "okay";
--};
--
--&mailbox4 {
--	status = "okay";
--};
--
--&mailbox5 {
--	status = "okay";
--};
--
--&mailbox6 {
--	status = "okay";
--};
--
--&mailbox7 {
--	status = "okay";
--};
--
--&mailbox8 {
--	status = "okay";
--};
--
--&mailbox9 {
--	status = "okay";
--};
--
--&mailbox10 {
--	status = "okay";
--};
--
--&mailbox11 {
--	status = "okay";
--};
--
--&mailbox12 {
--	status = "okay";
--};
--
--&mailbox13 {
--	status = "okay";
--};
--
- &cpu_alert0 {
- 	temperature = <55000>; /* milliCelsius */
- };
--- 
-2.26.0
+
+Cheers
+Vladimir
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
