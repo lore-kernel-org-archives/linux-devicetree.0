@@ -2,290 +2,150 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EFDC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F315C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D286320829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5969120720
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 20:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B5cJfyYc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbHpE7PO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgFKUHN (ORCPT
+        id S1726180AbgFKU3k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 16:07:13 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47534 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgFKUHN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 16:07:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591906031; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Gt4Yl17uHxeVszwUdwoN2Kua/oUvLPKVV3l9/jcWrV0=;
- b=B5cJfyYckiVEpPX0TWmPFQs5eM6StZ9QC+derUo2KtFQWw0bAM8+vk/ZP6fS/X47FB5rs6fY
- 93aJMO28M/TCHxmXpWoU2P4Dqii2sd2cIffbJK3L/F5AG+W4EI3pRHMb6LPO81uuycOORdDx
- 1na2hjVu7YfEfGijUW0jDoBN0SQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5ee28eef0206ad41d192e746 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 20:07:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8E695C43395; Thu, 11 Jun 2020 20:07:10 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70E5BC433C8;
-        Thu, 11 Jun 2020 20:07:09 +0000 (UTC)
+        Thu, 11 Jun 2020 16:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgFKU3j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 16:29:39 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F08EC08C5C1;
+        Thu, 11 Jun 2020 13:29:39 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f185so6308482wmf.3;
+        Thu, 11 Jun 2020 13:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=InfuSQrhqozKhlVQhqZ021Atyx36SWr0cccknHigJNQ=;
+        b=ZbHpE7PO9ECOREBHZOn1Qa17WdoSlpuNcwmIezC6weQHEgDIphFklrPVQjMV24Q+F7
+         oCRaY5gbpuY8AR9tozQwtS16khDIyeCwMEVEwlFMQ5OVQj+SX9IwKZdWzRueZ+sQfRiM
+         I8UwMn2hOprSlrGjKjUETdEq2M0ucrxDkDIWFOEpxmvh5F5JmsgGpG7y1BVZsXHKMcVc
+         ZvJ49HMlwWilSBCfJvmQwFWURmy0Ol9BUhSeyi0TodmGiiCHAnTqZA3+O/W2fclUZhSL
+         LBDY8Grc1EcJ/UjSJTUwYdhTzDPmW+W/Cj+9EG4h0WUzNUbs7PVuS6VsBO1bATfktoyh
+         58hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=InfuSQrhqozKhlVQhqZ021Atyx36SWr0cccknHigJNQ=;
+        b=p5GbpAbQuULIA3mE+oyUxiQW5sGVaNpx0dXoWnEzakaOGa1KnJsivFha7LL8ORlcHX
+         WVLSXAwsmZJQl8H/MN/MDjBIa2yfbg5I7XG0YDuSOiFyFg1wc7YmSFrNjt5x3iaE6bEN
+         5DELckFXGZRViQT3bNhXEP04hDL717YObs4vOGOdl5VfM4gEMxudGjhAUMUWvJh0CYUf
+         d0FzivcK8FWN1x9fulE7lnm+ntc4CLgvScGSdbNvR96Ax9UCvu85xqNESi+Ejr8PThrr
+         FuqT259Yv+1wcqaglCinMGcoNqPyhSdLJYlEgJaJ7tOsxv0Fh2LbyPT95PsQ5wlNHR5L
+         GOlw==
+X-Gm-Message-State: AOAM531VH459QTnuf49mDS8/IvM8MXFik6u0IjU4zSjAnjH04vQuyYhP
+        bXZA0iDLwUiRSTg8vHjr45+2w4f7RUk=
+X-Google-Smtp-Source: ABdhPJwvme8MOHRP1Z0T/DDWG+CftmsV9ffhkQBubQ9OXPfEQiHP/ly330+hQDhvX4QRxEGnLENdEg==
+X-Received: by 2002:a1c:1d49:: with SMTP id d70mr9813351wmd.49.1591907377821;
+        Thu, 11 Jun 2020 13:29:37 -0700 (PDT)
+Received: from tool.localnet ([213.177.199.127])
+        by smtp.googlemail.com with ESMTPSA id t14sm6785910wrb.94.2020.06.11.13.29.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 13:29:37 -0700 (PDT)
+From:   Daniel =?ISO-8859-1?Q?Gonz=E1lez?= Cabanelas <dgcbueu@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     sre@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 2/2 v2] dt-bindings: power: reset: add yaml bindings for LinkStation power off
+Date:   Thu, 11 Jun 2020 22:29:22 +0200
+Message-ID: <2886932.VqVLtP53aq@tool>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 11 Jun 2020 13:07:09 -0700
-From:   tanmay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, sam@ravnborg.org,
-        seanpaul@chromium.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, chandanu@codeaurora.org,
-        robdclark@gmail.com, abhinavk@codeaurora.org,
-        nganji@codeaurora.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Vara Reddy <varar@codeaurora.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
- driver for Snapdragon
-In-Reply-To: <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
-References: <20200609033818.9028-1-tanmay@codeaurora.org>
- <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
-Message-ID: <d6db52a33ac787c0fe6134ca32c06007@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-09 19:15, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-06-08 20:38:18)
->> diff --git 
->> a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml 
->> b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> new file mode 100644
->> index 0000000..5fdb915
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> 
-> Typically the file name matches the compatible string. But the
-> compatible string is just qcom,dp-display. Maybe the compatible string
-> should be qcom,sc7180-dp? Notice that the SoC number comes first as is
-> preferred.
-> 
-These bindings will be similar for upcoming SOC as well.
-So just for understanding, when we add new SOC do we create new file 
-with same bidings
-with SOC number in new file name?
-Instead we can keep this file's name as qcom,dp-display.yaml (same as 
-compatible const) and we can include SOC number in compatible enum ?
-some examples:
-https://patchwork.kernel.org/patch/11448357/
-https://patchwork.kernel.org/patch/11164619/
-> 
->> @@ -0,0 +1,142 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only  OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Display Port Controller.
->> +
->> +maintainers:
->> +  - Chandan Uddaraju <chandanu@codeaurora.org>
->> +  - Vara Reddy <varar@codeaurora.org>
->> +  - Tanmay Shah <tanmay@codeaurora.org>
->> +
->> +description: |
->> +  Device tree bindings for MSM Display Port which supports DP host 
->> controllers
->> +  that are compatible with VESA Display Port interface specification.
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: qcom,dp-display
->> +
->> +  cell-index:
->> +    description: Specifies the controller instance.
->> +
->> +  reg:
->> +    items:
->> +      - description: DP controller registers
->> +
->> +  interrupts:
->> +    description: The interrupt signal from the DP block.
->> +
->> +  clocks:
->> +    description: List of clock specifiers for clocks needed by the 
->> device.
->> +    items:
->> +      - description: Display Port AUX clock
->> +      - description: Display Port Link clock
->> +      - description: Link interface clock between DP and PHY
->> +      - description: Display Port Pixel clock
->> +      - description: Root clock generator for pixel clock
->> +
->> +  clock-names:
->> +    description: |
->> +      Device clock names in the same order as mentioned in clocks 
->> property.
->> +      The required clocks are mentioned below.
->> +    items:
->> +      - const: core_aux
->> +      - const: ctrl_link
->> +      - const: ctrl_link_iface
->> +      - const: stream_pixel
->> +      - const: pixel_rcg
-> 
-> Why not just 'pixel'? And why is the root clk generator important? It
-> looks like this binding should be using the assigned clock parents
-> property instead so that it doesn't have to call clk_set_parent()
-> explicitly.
-> 
-Are we talking about renaming stream_pixel to pixel only?
-We divide clocks in categories: core, control and stream clock.
-Similar terminology will be used in subsequent driver patches as well.
+Add Linkstation poweroff bindings documentation.=20
 
-We can remove pixel_rcg use assigned clock parents property and remove 
-clk_set_parent
-from driver.
+Signed-off-by: Daniel Gonz=C3=A1lez Cabanelas <dgcbueu@gmail.com>
+=2D--
+Changes in v2:
+  - Changed the required properties and description to adjust to the new
+    driver now enabling the WoL feature on the device.
 
->> +  "#clock-cells":
->> +    const: 1
->> +
->> +  vdda-1p2-supply:
->> +    description: phandle to vdda 1.2V regulator node.
->> +
->> +  vdda-0p9-supply:
->> +    description: phandle to vdda 0.9V regulator node.
->> +
->> +  data-lanes = <0 1>:
-> 
-> Is this correct? We can have = <value> in the property name? Also feels
-> generic and possibly should come from the phy binding instead of from
-> the controller binding.
-> 
-We are using this property in DP controller programming sequence such as 
-link training.
-So I think we can keep this here.
-You are right about <value>. <0 1> part should be in example only. It 
-was passing through dt_binding_check though.
-Here it should be like:
-data-lanes:
-minItems:1
-maxItems:4
+ .../power/reset/linkstation-poweroff.yaml     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/linkstati=
+on-poweroff.yaml
 
->> +    type: object
->> +    description: Maximum number of lanes that can be used for Display 
->> port.
->> +
->> +  ports:
->> +    description: |
->> +       Contains display port controller endpoint subnode.
->> +       remote-endpoint: |
->> +         For port@0, set to phandle of the connected panel/bridge's
->> +         input endpoint. For port@1, set to the DPU interface output.
->> +         Documentation/devicetree/bindings/graph.txt and
->> +         
->> Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +patternProperties:
->> +  "^aux-cfg([0-9])-settings$":
->> +    type: object
->> +    description: |
->> +      Specifies the DP AUX configuration [0-9] settings.
->> +      The first entry in this array corresponds to the register 
->> offset
->> +      within DP AUX, while the remaining entries indicate the
->> +      programmable values.
-> 
-> I'd prefer this was removed from the binding and hardcoded in the 
-> driver
-> until we can understand what the values are. If they're not
-> understandable then they most likely don't change and should be done in
-> the driver.
-> 
-Typically customers tune these values by working with vendor. So for 
-different boards it can be different. Even though it is hard for 
-customers to do this themselves, these are still board specific and 
-belong to dts. As requested earlier, we have added default values 
-already and made these properties optional but, we would like to keep it 
-in bindings so we can have option to tune them as required.
->> +
->> +required:
->> +  - compatible
->> +  - cell-index
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - clock-names
->> +  - vdda-1p2-supply
->> +  - vdda-0p9-supply
->> +  - data-lanes
->> +  - ports
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
->> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->> +    msm_dp: displayport-controller@ae90000{
->> +        compatible = "qcom,dp-display";
->> +        cell-index = <0>;
->> +        reg = <0 0xae90000 0 0x1400>;
->> +        reg-names = "dp_controller";
->> +
->> +        interrupt-parent = <&display_subsystem>;
->> +        interrupts = <12 0>;
->> +
->> +        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
->> +                 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
->> +                 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
->> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
->> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->> +        clock-names = "core_aux",
->> +                      "ctrl_link",
->> +                      "ctrl_link_iface", "stream_pixel",
->> +                      "pixel_rcg";
->> +        #clock-cells = <1>;
->> +
->> +        vdda-1p2-supply = <&vreg_l3c_1p2>;
->> +        vdda-0p9-supply = <&vreg_l4a_0p8>;
->> +
->> +        data-lanes = <0 1>;
->> +
->> +        ports {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +
->> +            port@0 {
->> +                reg = <0>;
->> +                dp_in: endpoint {
->> +                    remote-endpoint = <&dpu_intf0_out>;
->> +                };
->> +            };
->> +
->> +            port@1 {
->> +                reg = <1>;
->> +                dp_out: endpoint {
->> +                };
->> +            };
->> +        };
->> +    };
-> 
-> I believe there should be a '...' here.
-I think you mean signature is missing? If not could you please explain?
+diff --git a/Documentation/devicetree/bindings/power/reset/linkstation-powe=
+roff.yaml b/Documentation/devicetree/bindings/power/reset/linkstation-power=
+off.yaml
+new file mode 100644
+index 0000000000..475eab8225
+=2D-- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.ya=
+ml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/reset/linkstation-poweroff.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Buffalo Linkstation poweroff driver
++
++maintainers:
++  - Daniel Gonz=C3=A1lez Cabanelas <dgcbueu@gmail.com>
++
++description: |
++  This driver is used to add the power off function to some Buffalo
++  LinkStations (ARM MVEBU boards). They use an output pin at the ethernet =
+PHY
++  (LED2/INTn) to inform the board if the power off operation must be perfo=
+rmed
++  at restart time. This pin is ORed with the power switch and allows the W=
+OL=20
++  function to be also used.
++
++  When the power-off handler is called, the ethernet PHY INTn ouptut is se=
+t to
++  LOW state. If the restart command is executed then the PHY INTn output i=
+s=20
++  forced to HIGH state.
++
++properties:
++  compatible:
++    const: linkstation,power-off
++
++  phy-handle,intn:
++    description: Phandle to a node of the ethernet PHY used for the power
++      function.
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++required:
++  - compatible
++  - phy-handle,intn
++
++additionalProperties: false
++
++examples:
++  - |
++    poweroff {
++        compatible =3D "linkstation,power-off";
++        phy-handle,intn =3D <&ethphy0>;
++    };
+=2D-=20
+2.27.0
+
+
+
+
