@@ -4,72 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64607C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA15C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EADE20760
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5530E2078D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 10:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgFKKYe (ORCPT
+        id S1727787AbgFKKnn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 06:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgFKKYS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 06:24:18 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403B4C08C5C5
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 03:24:16 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: rcn)
-        with ESMTPSA id 79FD32A4B73
-From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To:     Laurent.pinchart@ideasonboard.com
-Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net,
-        tomi.valkeinen@ti.com, robh+dt@kernel.org, airlied@linux.ie
-Subject: [PATCH v3 4/5] drm/bridge: tfp410: Fix setup and hold time calculation
-Date:   Thu, 11 Jun 2020 12:23:55 +0200
-Message-Id: <20200611102356.31563-5-ricardo.canuelo@collabora.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200611102356.31563-1-ricardo.canuelo@collabora.com>
-References: <20200611102356.31563-1-ricardo.canuelo@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 11 Jun 2020 06:43:43 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48798 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbgFKKnl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 06:43:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 258262004CB;
+        Thu, 11 Jun 2020 12:43:38 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B2C02004B4;
+        Thu, 11 Jun 2020 12:43:33 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F40BE402BF;
+        Thu, 11 Jun 2020 18:43:27 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
+Date:   Thu, 11 Jun 2020 18:28:09 +0800
+Message-Id: <20200611102809.27829-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This fixes a bug in the calculation of the setup and hold times based on
-the deskew configuration.
+From: Song Hui <hui.song_1@nxp.com>
 
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Delete the interrupt IRQF_NO_THREAD flags in order to gpio interrupts
+can be threaded to allow high-priority processes to preempt.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/gpu/drm/bridge/ti-tfp410.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-index dfde811f3411..21d99b4ea0c9 100644
---- a/drivers/gpu/drm/bridge/ti-tfp410.c
-+++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-@@ -278,8 +278,8 @@ static int tfp410_parse_timings(struct tfp410 *dvi, bool i2c)
- 	if (deskew > 7)
- 		return -EINVAL;
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..1e86652 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -417,7 +417,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
  
--	timings->setup_time_ps = min(0, 1200 - 350 * ((s32)deskew - 4));
--	timings->hold_time_ps = min(0, 1300 + 350 * ((s32)deskew - 4));
-+	timings->setup_time_ps = 1200 - 350 * ((s32)deskew - 4);
-+	timings->hold_time_ps = max(0, 1300 + 350 * ((s32)deskew - 4));
- 
- 	return 0;
- }
+ 	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+ 			       mpc8xxx_gpio_irq_cascade,
+-			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       IRQF_SHARED, "gpio-cascade",
+ 			       mpc8xxx_gc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
 -- 
-2.18.0
+2.9.5
 
