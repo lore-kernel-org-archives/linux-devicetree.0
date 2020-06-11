@@ -2,113 +2,105 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9938FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7DDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAD9207ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02210206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 15:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="A/sme5V/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CDIFH1d1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgFKPWF (ORCPT
+        id S1728424AbgFKP34 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 11:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbgFKPWF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:22:05 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4399BC08C5C1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 08:22:05 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id y20so5438344wmi.2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 08:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=1nlSpRW9uKZkujI3ovnMqEgLfpyhYszTXX8pA7a9rw8=;
-        b=A/sme5V/cIhwe8I9Of5+XKkmePLK6qEFBuhVnLMz3sN9Y9LtjoVeRg2QC+gBfqakOo
-         D7ACqOpcgouR08YG/q+5EbqcykmmmZt8FjsEVm1zcHiHcdIQTBdOIh4Twa3JOP5WB5cF
-         v4Vkxtyf3AsgAFi7urVL2nqe8OI5y0bb89E8nXexnvfLWCc1s/OSw9tJgj3etzRiyuSG
-         nEiTzC9DYj/pd/8EeNBqDzHgigmRmo6AOBlxblrS4dp1AtsUkkw3jQyOHltBa+1xLZqN
-         Kq4uV2dgv/wfuUsT5lkpnNNuYH8nAOzuux679lKkZNeyusFXoMFckaP6pYxNJ49dTr24
-         +vtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1nlSpRW9uKZkujI3ovnMqEgLfpyhYszTXX8pA7a9rw8=;
-        b=oY8I4FYAuKEOFdSTByuTvQ/JR0WOD37+FpMARh8mFPWX+/p+CAZxR2Avk9mU94lGNk
-         X+qFQ5K86Rx7UlNW3v0xbDv5dPWf9g0Nz/0SsHdb9VwtSyr0iXrrWIevQz9l7EiCF9LL
-         /ADfTjwHNfBSV+UjySXID1qCupE5cQzpt4ajgOaqZinvfoOTD6Py5958RLkpEyNilqgN
-         5r5jRodfdumBjo/NerLKJ4lTsF3cfST5IvQgi5hJJCHyVV6woN1OTs0w3GseNMJRXIZF
-         UxAQ6hwO6/cnpeTXnicrUQ+0I4Poijv3STxnFwHRJqRk3JgYKuCcSZwbTNRaAJvfDBic
-         X75g==
-X-Gm-Message-State: AOAM533f3eGpccwcZOGODwbhYZWkmMpC2c3XqXiH6Xq9CygGShvpJ0RB
-        qAXtYiua1PUlUE6yF4Udq4whag==
-X-Google-Smtp-Source: ABdhPJwgOUF0ACQW0V2iGQEHEnECqPXsLPsoErKd6xk/1/oN48hrXu8XWttb4+F2J1GolhZuGaGGEg==
-X-Received: by 2002:a7b:c399:: with SMTP id s25mr9144654wmj.185.1591888923973;
-        Thu, 11 Jun 2020 08:22:03 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id q8sm4290865wmq.1.2020.06.11.08.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 08:22:03 -0700 (PDT)
-Date:   Thu, 11 Jun 2020 17:22:00 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Phong LE <ple@baylibre.com>
-Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
-        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
-        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Baozhu Zuo <zuobaozhu@gmail.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v2 3/4] drm: bridge: add it66121 driver
-Message-ID: <20200611152200.GA3106776@x1>
-References: <20200311125135.30832-1-ple@baylibre.com>
- <20200311125135.30832-4-ple@baylibre.com>
+        Thu, 11 Jun 2020 11:29:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37232 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728411AbgFKP34 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 11:29:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05BFTq9C127234;
+        Thu, 11 Jun 2020 10:29:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591889393;
+        bh=qbKG8m+p3y9aGhFMGec53de0IEuLu9JBOzjzkscBIgo=;
+        h=From:To:CC:Subject:Date;
+        b=CDIFH1d1ZxcujnWczcDM9Szp48icU5w2M18JCaYdOO1GLt4Knv8PrZNFQeNQ/gvaI
+         XCz53HW6dgB9E5mmYCjia/1GT95RUVIvwF1w+AxcrND7FdVIfKhEIQHiR3YyV7X2WX
+         d0NbhGmeqrqrE2+Sd7//90m9WJXK04Fj44AQCzcI=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05BFTqUX083015
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 10:29:52 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 10:29:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 10:29:52 -0500
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05BFTqpC021031;
+        Thu, 11 Jun 2020 10:29:52 -0500
+Received: from localhost ([10.250.48.148])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 05BFTq3k085854;
+        Thu, 11 Jun 2020 10:29:52 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Jason Kridner <jdk@ti.com>, Caleb Robey <c-robey@ti.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/2] Enable IPU and DSP rprocs on AM5729 BeagleBone AI
+Date:   Thu, 11 Jun 2020 10:29:43 -0500
+Message-ID: <20200611152945.27656-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200311125135.30832-4-ple@baylibre.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:51:34PM +0100, Phong LE wrote:
-> This commit is a simple driver for bridge HMDI it66121.
-> The input format is RBG and there is no color conversion.
-> Audio, HDCP and CEC are not supported yet.
-> 
-> Signed-off-by: Phong LE <ple@baylibre.com>
-> ---
->  drivers/gpu/drm/bridge/Kconfig       |   8 +
->  drivers/gpu/drm/bridge/Makefile      |   1 +
->  drivers/gpu/drm/bridge/ite-it66121.c | 997 +++++++++++++++++++++++++++
->  3 files changed, 1006 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/ite-it66121.c
+Hi Tony, Jason, Caleb,
 
-Thanks for working on this driver.  Do you plan to post a v3?
+The IPU and DSP remote processors are finally booting as of latest master
+on almost all the TI DRA7xx/AM57xx boards except for AM5729 BeagleBone AI
+board. We have most of the common dts pieces available due to the usage
+of common dra74-ipu-dsp.common.dtsi and dra7-ipu-dsp-common.dtsi files.
+The series leverages these to enable both the IPUs (IPU1 and IPU2) and
+DSPs (DSP1 and DSP2) on AM5729 BeagleBone AI board.
 
-I am interested as the it66121 is used on the HDMI "cape" expansion
-board for the BeagleBone Green by Seeed Studio [0] and is currently
-supported by an out-of-tree driver [1]
+Patch 1 is enough to enable the support, and patch 2 is a cleanup.
+Patches are based on latest master.
 
--drew
+I don't have access to an BeagleBone AI board, so appreciate some testing
+from any of you. If you are using the TI SDK firmware images, you would
+need the following additional patch [1] to have the rpmsg devices published
+successfully (otherwise you will see a malformed rpmsg ns message trace).
+This patch is getting replaced with an alternate logic, and I am waiting
+for that to be finalized before I update our BIOS-side logic/firmwares.
 
-[0] https://wiki.seeedstudio.com/BeagleBone_Green_HDMI_Cape/
-[1] https://github.com/RobertCNelson/ti-linux-kernel-dev/blob/ti-linux-4.4.y/patches/drivers/it66121/0001-gpu-drm-i2c-suppot-it66121-hdmi-chip.patch
+regards
+Suman
+
+[1] https://patchwork.kernel.org/patch/11096599/
+
+Suman Anna (2):
+  ARM: dts: am5729-beaglebone-ai: Enable IPU & DSP rprocs
+  ARM: dts: am5729-beaglebone-ai: Disable ununsed mailboxes
+
+ arch/arm/boot/dts/am5729-beagleboneai.dts | 73 +++++++----------------
+ 1 file changed, 21 insertions(+), 52 deletions(-)
+
+-- 
+2.26.0
+
