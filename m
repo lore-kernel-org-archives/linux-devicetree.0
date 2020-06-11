@@ -2,149 +2,153 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE7DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B35C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA132074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC78C2074B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgFKIM4 (ORCPT
+        id S1726651AbgFKIOu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:12:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:37101 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgFKIM4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:12:56 -0400
-IronPort-SDR: EzcRdxcBb3j0v8WYfR/dZrEcwkFUjz/RZ2B2/PQ+7B7LyY/GgZH37/ngRSVdozuUTruPrQWbGk
- 0E2fKPKv8Ovw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 01:12:55 -0700
-IronPort-SDR: WU+un76Q4SR2mxZ2hVUP87EHbCpgbHM1YQB+V4UZ7GoQ4Vh+DrugYRjRXu5t7nLe/bA4nQyNHE
- fvEzdvppBlXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="447838730"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 11 Jun 2020 01:12:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jjIKU-00CJMC-OH; Thu, 11 Jun 2020 11:12:54 +0300
-Date:   Thu, 11 Jun 2020 11:12:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-Message-ID: <20200611081254.GR2428291@smile.fi.intel.com>
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 11 Jun 2020 04:14:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46020 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726624AbgFKIOu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 04:14:50 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 15F9D2A183B
+Subject: Re: [PATCH v4 1/2] dt-bindings: regulator: Add DT binding for
+ cros-ec-regulator
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" 
+        <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20200611080505.140731-1-pihsun@chromium.org>
+ <20200611080505.140731-2-pihsun@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <13c64346-b80b-9903-37fa-76b8fa47c01d@collabora.com>
+Date:   Thu, 11 Jun 2020 10:14:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200611080505.140731-2-pihsun@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Hi Pi-Hsun,
+
+Thank you for the patch, one minor nitpick that in my opinion would be good to
+address.
+
+On 11/6/20 10:04, Pi-Hsun Shih wrote:
+> Add DT binding documentation for cros-ec-regulator, a voltage regulator
+> controlled by ChromeOS EC.
 > 
-> Add support for USB PHY on Intel LGM SoC.
-
-...
-
-> +static int get_flipped(struct tca_apb *ta, bool *flipped)
-> +{
-> +	union extcon_property_value property;
-> +	int ret;
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> ---
+> Changes from v3:
+> * Fix dt bindings file name.
+> * Add full example.
+> 
+> Changes from v2:
+> * No change
+> 
+> Changes from v1:
+> * Change compatible string to google,regulator-cros-ec.
+> * Use reg property in device tree.
+> * Change license for dt binding according to checkpatch.pl.
+> ---
+>  .../regulator/google,cros-ec-regulator.yaml   | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
+> new file mode 100644
+> index 000000000000..7e341b65b2dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/google,cros-ec-regulator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-> +	if (ret) {
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-
-> +		return false;
-
-return ret;
-
-> +	}
+> +title: ChromeOS EC controlled voltage regulators
 > +
-> +	*flipped = property.intval;
+> +maintainers:
+> +  - Pi-Hsun Shih <pihsun@chromium.org>
 > +
+> +description:
+> +  Any property defined as part of the core regulator binding, defined in
+> +  regulator.yaml, can also be used.
+> +
+> +allOf:
+> +  - $ref: "regulator.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: google,regulator-cros-ec
 
-> +	return *flipped;
 
-return 0;
+Could we use "google,cros-ec-regulator" as compatible, so we are aligned with
+the driver name and other cros-ec drivers? If you're agree you need to do
+changes here, in the example and in the of table id.
 
-> +}
+In any case the file binding name should match the compatible name and that's
+not the case now, as the file is google,cros-ec-regulator and the compatible is
+google,regulator-cros-ec. So either fix the file binding name or the compatible
+(I'd prefer the second).
 
-...I suppose it should be as above.
-
-...
-
-> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
-> +				 10, 10 * 1000);
-
-On one line easier to read.
-
-> +	if (ret) {
-> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-> +		return ret;
-> +	}
-
-...
-
-> +static int phy_set_vbus(struct usb_phy *phy, int on)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-
-> +	int ret = 0;
-
-Assignment is redundant.
+Thanks,
+  Enric
 
 > +
-> +	if (on) {
-> +		ret = regulator_enable(ta->vbus);
-> +		if (ret)
-> +			dev_err(ta->phy.dev, "regulator not enabled\n");
-> +	} else {
-> +		ret = regulator_disable(ta->vbus);
-> +		if (ret)
-> +			dev_err(ta->phy.dev, "regulator not disabled\n");
-> +	}
+> +  reg:
+> +    maxItems: 1
+> +    description: Identifier for the voltage regulator to ChromeOS EC.
 > +
-> +	return ret;
-> +}
-
-...
-
-> +	ret = get_flipped(ta, &flipped);
-> +	if (!ret)
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-
-This should be fixed accordingly.
-
-...
-
-> +		dev_info(ta->phy.dev, "connected%s\n",
-> +			 flipped ? " flipped" : "");
-
-One line.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        cros_ec: ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            reg = <0>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            regulator@0 {
+> +                compatible = "google,regulator-cros-ec";
+> +                regulator-min-microvolt = <1800000>;
+> +                regulator-max-microvolt = <3300000>;
+> +                reg = <0>;
+> +            };
+> +        };
+> +    };
+> +...
+> 
