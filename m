@@ -2,264 +2,103 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB7FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4307FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD71620801
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF632065C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 14:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="IT02dr8G"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l28f8UvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgFKOTn (ORCPT
+        id S1726414AbgFKOZw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 10:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58462 "EHLO
+        Thu, 11 Jun 2020 10:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgFKOTn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 10:19:43 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF6FC08C5C1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:19:40 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u26so7065146wmn.1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:19:40 -0700 (PDT)
+        with ESMTP id S1728212AbgFKOZv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 10:25:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDBA9C08C5C3
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:25:50 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u13so5157386wml.1
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 07:25:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dnKHXPEH1ozj37XOHtlpuuX/tbRfdpMEjZIEpqlLX6M=;
-        b=IT02dr8GiskF5HGBwCOY84YSjJ5fu38NZHDoVPW7pUp3oEhZJwUiNVkPodr7wSVMTK
-         kkv60uU6Ss3TLFgX8lqs4zDFWnQV0tQ8z7co8MsQb9sDFhmYGg1dvzFmRsGLexWwl3ON
-         Cckjui3jfLAUmj6YPXOey9tYqH3IvmrSyQN68=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4Wl9FPjQM/OmioKsKPEd8aDegLYWZmFx0p2ql/A57hk=;
+        b=l28f8UvDUpME1nIHWAzTfBskecEhX50JaBZhgjJEeNEemNi2o5jq6jzfPAXaUlfCc0
+         Tsgd8VVnkXoyX74/1DMaTTXjBT2cVYaVJLtAnFt53WEJI1amkTsQZ6pe40TWM7f+u8tf
+         gAFiVIgbp/zn78MwZ11YBE5DZge2oKlRtDmMU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dnKHXPEH1ozj37XOHtlpuuX/tbRfdpMEjZIEpqlLX6M=;
-        b=bbY4VjYl1/PALtIQ6olhVxwCy4lYNtOlKQBF1cH6o77q40sb6B8JFZt8PQr/xszhLn
-         EmBB8WzgNEtqXqsj1eUCbJUGjlxGoRXShDT/f03bCD8xr6BgBTuI6FWSPy9WInlpik1W
-         YgZTh1bUPMjEmyDCbSrhcr7CcqCvbxuXpcO2Hvy2mkLSND14kKMUPZb32YHC7DGx+mPX
-         zYUshp2vHZkC/Ets0pkSvNj1Tc5eGJ+m+J2hygk9E/rbIe1SYHuOz/sHiKp/fbMKi5Rp
-         s4zp9CiQcC/ARn3k2Y+Efz03jg8ffwtynx6IRTTlmYMzOycNwrM6b2TNBJ/2Iw3X8kdD
-         tcrA==
-X-Gm-Message-State: AOAM531nDkn3/3TLg5lwKNcM1Ky9GhvgrZTxizN2UOij49YqRrdlezt5
-        vuAO+X+uBY5i6cBJCRHzGWERxWTPp1aIMRZFjxt2pA==
-X-Google-Smtp-Source: ABdhPJwWn0Zuh4S+EzgrstrMFDmZbJ3qgVEgyY/VvonZ/Q9c/GYK2/Uyvn7J4TIzAvqDdFRozzqzSO4by1SmGPIyD4Y=
-X-Received: by 2002:a1c:491:: with SMTP id 139mr7954685wme.99.1591885179520;
- Thu, 11 Jun 2020 07:19:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191014061617.10296-2-daniel@0x0f.com> <20200610090421.3428945-4-daniel@0x0f.com>
- <bf26822d-acb0-ae40-df7f-80978bd26cfb@suse.de>
-In-Reply-To: <bf26822d-acb0-ae40-df7f-80978bd26cfb@suse.de>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Thu, 11 Jun 2020 23:19:23 +0900
-Message-ID: <CAFr9PXmp=mZhyRDpx_E0_1Zc5SFrSYUm9jP-k7VCDf9P37sT6g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] ARM: mstar: Add infinity/mercury series dtsi
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Krzysztof Adamski <k@japko.eu>, tim.bird@sony.com,
-        devicetree@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4Wl9FPjQM/OmioKsKPEd8aDegLYWZmFx0p2ql/A57hk=;
+        b=U0UN/kqFXyJNZ0h1SRgySGrkC49to6k4kVu2+2UpAfNRGjqiNzzz1h5QBXhQRhYZQE
+         7BrYccTkRPHe0yb/vdSjcHeUnScmxD78F9QIDWwGOh7E2qLh5L9SucnKzGiy4BTmciBi
+         iRaBf3uUbNpZyuPS1zPGbpVU6VkY3Vb3rqbdPCR9W5byJt3h0WlZbEOjeZp/cjOcWLk6
+         hZ6eDEKKTp6CtSyMQS0eX9a8AZkE1j1+uvZcGFRS0To5hzrlUcXjPW1ESGriu5//z/5+
+         0+uh30B7c4nbGdCasdivzoaf7q/VrCt4Xxb2fpx91yMjYs4MeRHHDTz6kEtQFHeaLYTa
+         Fxqg==
+X-Gm-Message-State: AOAM5306414TrmZwhfkeLbqa25feMUkmSorDWuYTvNcdFhGnI/fTDNWU
+        VyoPLCDTSFmEbbywU0CIi65MyYJsJtYhdw==
+X-Google-Smtp-Source: ABdhPJwq/eOqXtITLK+kyOLCk4mNDfVsqXIZV2F3yV+6GfhTdR4AaBB6cuDCKN+FCMKfYALtIfLtaA==
+X-Received: by 2002:a1c:1d16:: with SMTP id d22mr8733030wmd.174.1591885548499;
+        Thu, 11 Jun 2020 07:25:48 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id b14sm4310840wmj.47.2020.06.11.07.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 07:25:47 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 14:25:46 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH RESEND v9 08/18] media: platform: Cancel the last frame
+ handling flow
+Message-ID: <20200611142546.GB158633@chromium.org>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-10-xia.jiang@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604090553.10861-10-xia.jiang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi Xia,
 
-On Thu, 11 Jun 2020 at 22:39, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+On Thu, Jun 04, 2020 at 05:05:43PM +0800, Xia Jiang wrote:
+> There is no need to queue an empty buffer for signaling a last frame,
+> because all frames are separate from each other in JPEG.
+> 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v9: new patch
+> ---
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 21 +------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
+> 
 
-> Can you split this up into three parts for easier review?
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-Understood. Will do.
-
-> 2019-2020? Check elsewhere.
-
-The patches are originally from 2019. I'll update everything.
-
-> > + * Author: Daniel Palmer <daniel@thingy.jp>
-> > + */
-> > +
-> > +#include "infinity.dtsi"
-> > +
-> > +/ {
-> > +     memory {
-> > +             device_type =3D "memory";
-> > +             reg =3D <0x20000000 0x4000000>;
->
-> The memory node needs to become memory@20000000 then.
->
-> > +     };
->
-> I take it, this RAM is integrated? Maybe add some explanation of what
-> this file is
-
-Yes. The memory is integrated and the size depends on the specific chips
-so the memory node is at the chip level dtsi and not the board level.
-
-> > +};
-> > diff --git a/arch/arm/boot/dts/infinity.dtsi b/arch/arm/boot/dts/infini=
-ty.dtsi
-> > new file mode 100644
-> > index 000000000000..25d379028689
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/infinity.dtsi
-> > @@ -0,0 +1,10 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019 thingy.jp.
-> > + * Author: Daniel Palmer <daniel@thingy.jp>
-> > + */
-> > +
-> > +#include "mstar-v7.dtsi"
-> > +
-> > +/ {
-> > +};
->
-> What do you intend to add here? Is it really needed? (same below)
-
-The specific nodes will go into there. This is mostly an artefact of splitt=
-ing
-the device trees out of a more developed tree.
-
-> > new file mode 100644
-> > index 000000000000..cf5f18a07835
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/infinity3.dtsi
-> > @@ -0,0 +1,10 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019 thingy.jp.
-> > + * Author: Daniel Palmer <daniel@thingy.jp>
-> > + */
-> > +
-> > +#include "infinity.dtsi"
-> > +
-> > +/ {
-> > +};
->
-> Don't you anticipate incompatibilities between infinity and infinity3,
-> i.e., things you don't want to inherit? Seems a bit optimistic. You can
-> of course overwrite properties, but deleting is more difficult.
-
-In my tree with drivers for the rest of the hardware it hasn't been a probl=
-em.
-So far I've found infinity, infinity2, infinity3, infinity5 and
-infinity6 chips. The memory
-map for them is almost identical and the changes are adding in more
-copies of things
-like DMA controllers, extra clock blocks etc.
-
-Having infinity.dtsi as the base for the newer versions should avoid
-having duplication
-of nodes that aren't common on the mstar armv7 level but are common to
-the infinity subtypes.
-
-There are two good examples of this:
-For infinity? the USB and SD controllers are at the same place for all
-of the chips I've
-found so far. Unfortunately, despite using the same IP block and the
-same driver those
-blocks are in different places in the mercury5. At the moment with all
-of the infinity chips
-pulling in infinity.dtsi those nodes are only in infinity.dtsi and
-mercury5.dtsi.
-If infinity?.dtsi are all stacked on top of the mstarv7.dtsi base then
-there will be a number of
-copies of the same nodes.
-
-> > diff --git a/arch/arm/boot/dts/mercury5.dtsi b/arch/arm/boot/dts/mercur=
-y5.dtsi
-> > new file mode 100644
-> > index 000000000000..25d379028689
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/mercury5.dtsi
-> > @@ -0,0 +1,10 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019 thingy.jp.
-> > + * Author: Daniel Palmer <daniel@thingy.jp>
-> > + */
-> > +
-> > +#include "mstar-v7.dtsi"
-> > +
-> > +/ {
-> > +};
-> > diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-=
-v7.dtsi
-> > new file mode 100644
-> > index 000000000000..0fccc4ca52a4
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/mstar-v7.dtsi
->
-> So this is the only file starting with mstar. Have you thought about
-> prefixing infinity/mercury, so that they're grouped together?
-
-I have been thinking about that. I didn't see any other dts in arm that had
-the vendor as a prefix though. With arm64 everything is in per vendor
-subdirectories
-to achieve the same thing.
-
-> > +             };
-> > +
-> > +             pm_uart: uart@1f221000 {
-> > +                     compatible =3D "ns16550a";
-> > +                     reg =3D <0x1f221000 0x100>;
-> > +                     reg-shift =3D <3>;
-> > +                     clock-frequency =3D <172000000>;
-> > +                     status =3D "disabled";
-> > +             };
->
-> If you have any decent manuals for these SoCs,
-
-Everything so far has been reverse engineered from an old 3.18
-kernel, poking with a multimeter etc. I wish I had a decent manual.
-
-> I suggest to check whether there are any internal buses that you may
-> want to model as simple-bus for grouping. In-tree examples include meson
-> and recently merged rtd1195 - it affects the reg addresses and unit addre=
-sses via
-> suitable ranges mappings.
-
-There is a bridge that is between the CPU and the peripheral registers
-that doesn't quite fit simple-bus (from what I remember it needs a clk).
-My plan was to introduce the thin driver for that bus (it just consumes the=
- clks
-it needs so they don't get disabled at the moment) after introducing
-the clk support.
-
-Thanks,
-
-Daniel
+Best regards,
+Tomasz
