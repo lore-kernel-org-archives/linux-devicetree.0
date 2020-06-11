@@ -2,152 +2,111 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5C5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C259C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDDE20760
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183A82078D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pQnSBE/S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fsSJ58/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgFKMTK (ORCPT
+        id S1726657AbgFKMmb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:19:10 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59330 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726864AbgFKMTK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 08:19:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591877950; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=6vvXLsTpi8eX/TgjYkKkVugmiw4GBm2oRpYR4vVFpmk=; b=pQnSBE/SMKlGKkEKAxDkmwSBah+0vfDeYMSviSuOXffHTZ1JfSD+J4CznKOCAOOCqk0TO/Fw
- d3ovEqejXHCEujjeH/jDDPIEzGHNMChxCoDenXi4JfnM29uTRGAin5aKfH1iiUS96jP8Lkgn
- w9MG5+Qj7cXCMjPn1y2QzM/nwWc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ee2213a86de6ccd44cbb236 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 12:19:06
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 79FDEC43387; Thu, 11 Jun 2020 12:19:05 +0000 (UTC)
-Received: from [192.168.0.118] (unknown [49.207.58.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D2455C433C8;
-        Thu, 11 Jun 2020 12:19:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D2455C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v2 1/3] dt-bindings: nvmem: Add devicetree bindings for
- qfprom-efuse
-To:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Thu, 11 Jun 2020 08:42:31 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:55549 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbgFKMm3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:42:29 -0400
+IronPort-SDR: 6QnX83bhfwIv1Z4tDtveh3u1j+WPRJSeVorbP4ncaFK7bSs2xiFNRcwRO3k9bf4cQL7Ddc9+Mg
+ 5NEVUUJhPX1VK/OqH1BJEcC7rxmIlb58UtfsMbTkGAUH4V1uIv1c5bhU6mcrriZVvVtTMbbuLS
+ iuP6W8EmamhTz8ZTRrkvtOuCkVQ6EyewwObkjjnS40PWNs/WiwPY5KDIbElAA6tZZxkBe+btlz
+ uLeI5k8uidrcJ7kUBvTIUI8AeTHjLDutNZ8DryAf1tJYGaMBJUj1UE6ZAioLOMIXh7xc/WYeEW
+ bFQ=
+X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
+   d="scan'208";a="12649663"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 11 Jun 2020 14:42:26 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 11 Jun 2020 14:42:26 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 11 Jun 2020 14:42:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591879346; x=1623415346;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=NNs0T11lkBWKAhTjjHyrxpI0XkkykM9XmH661Mwcs88=;
+  b=fsSJ58/e22UxJjae6B/e+653HRdwf+MJkgD6XeYgUvzenlr8yd1Iwnvl
+   SWMmzngtJXiHU0VM+f6pxi2wqPosDIbr06519xGBGZIglgfBqSiLGYAFW
+   PU4LvttKDlGjNdM5Z2Eid3EoirLCXCQZfRZgwsTQRuo88BQINQhnpqz2D
+   s5p1zcFJ297u/RM5xIsggGF9O4d7hJELbqZ6/5JPgXWvP7YnHL0bf1KGD
+   HeIbrrPC0xmseUNi+02d4mnpZhQRuuslD82QIBswOD5aAcyL1Zc/hIQyd
+   aecqV4YEoRYpnDD37SCQlQ+Uc/wi37oOm+GpVgUZlWSQFkvC09XXM7M2S
+   Q==;
+IronPort-SDR: F1rP2yFbODOsrNpGQkIWoLiPAoNvfFGTscZcMgcDODq9xCNSgQ3dC4mItNoE3q44WXCBL3AeAC
+ YipbP3XCn4HVo1eZ7ca/LCkFUX1z+Aa4z/TU8TF/buEBAedJh6fpd+KmIPU/RBHaPvXZjX/dzE
+ bFoMEDYqmyMCeKOfva698cC5jNWeynZ6jNeiu7YaLaL5lvozQrxDRnidzaH7L4w5BprslgParq
+ OQvAF1c0hWu8dZJWoe/p9Tq44+fT+HeyCn/X9s6cHLY9x8yYXkcS+IZ4kh/Qw4OJecmD9xmRa8
+ Jys=
+X-IronPort-AV: E=Sophos;i="5.73,499,1583190000"; 
+   d="scan'208";a="12649662"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 11 Jun 2020 14:42:26 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id B77A4280065;
+        Thu, 11 Jun 2020 14:42:27 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        saiprakash.ranjan@codeaurora.org, dhavalp@codeaurora.org,
-        mturney@codeaurora.org, sparate@codeaurora.org,
-        c_rbokka@codeaurora.org, mkurumel@codeaurora.org
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
- <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <8ef8c7c4-3560-274d-3043-ddf5b87e794a@codeaurora.org>
-Date:   Thu, 11 Jun 2020 17:48:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH v2 1/4] dt-bindings: display: simple: add CDTech S070PWS19HP-FC21 and S070SWV29HG-DC44
+Date:   Thu, 11 Jun 2020 14:42:06 +0200
+Message-Id: <20200611124209.25028-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add the CDTech Electronics displays S070PWS19HP-FC21 (7.0" WSVGA) and
+S070SWV29HG-DC44 (7.0" WVGA) to the panel-simple compatible list.
 
-On 6/11/2020 3:18 PM, Ravi Kumar Bokka wrote:
-> This patch adds dt-bindings document for qfprom-efuse controller.
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+---
 
-there is an existing bindings doc (in .txt) which you should convert to yaml,
-and then add another patch to extend it.
+v2: no changes
 
-> 
-> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> ---
->   .../devicetree/bindings/nvmem/qfprom.yaml          | 52 ++++++++++++++++++++++
->   1 file changed, 52 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
-> new file mode 100644
-> index 0000000..7c8fc31
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/nvmem/qfprom.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
-> +
-> +maintainers:
-> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
-> +
-> +allOf:
-> +  - $ref: "nvmem.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,qfprom
-> +
-> +  reg:
-> +    maxItems: 3
-> +
-> +required:
-> +   - compatible
-> +   - reg
-> +   - reg-names
-> +   - clocks
-> +   - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +
-> +    qfprom@780000 {
-> +	compatible = "qcom,qfprom";
-> +	reg = <0 0x00780000 0 0x7a0>,
-> +	      <0 0x00782000 0 0x100>,
-> +	      <0 0x00784000 0 0x8ff>;
-> +	reg-names = "raw", "conf", "corrected";
-> +	clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-> +	clock-names = "secclk";
-> +
-> +	qusb2p_hstx_trim: hstx-trim-primary@25b {
-> +		reg = <0x25b 0x1>;
-> +		bits = <1 3>;
-> +	};
-> +    };
-> +
-> +    &qfprom {
-> +        vcc-supply = <&vreg_l11a_1p8>;
-> +    };
-> +
-> 
+ .../devicetree/bindings/display/panel/panel-simple.yaml       | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 31e3efc73e00..2ddb520edc6d 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -81,6 +81,10 @@ properties:
+       - boe,nv140fhmn49
+         # CDTech(H.K.) Electronics Limited 4.3" 480x272 color TFT-LCD panel
+       - cdtech,s043wq26h-ct7
++        # CDTech(H.K.) Electronics Limited 7" WSVGA (1024x600) TFT LCD Panel
++      - cdtech,s070pws19hp-fc21
++        # CDTech(H.K.) Electronics Limited 7" WVGA (800x480) TFT LCD Panel
++      - cdtech,s070swv29hg-dc44
+         # CDTech(H.K.) Electronics Limited 7" 800x480 color TFT-LCD panel
+       - cdtech,s070wv95-ct16
+         # Chunghwa Picture Tubes Ltd. 7" WXGA TFT LCD panel
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
+
