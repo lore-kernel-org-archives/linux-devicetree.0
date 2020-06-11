@@ -2,112 +2,163 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF09DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805AEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D0E20747
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC862078D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 08:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PImN5EiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFKI5L (ORCPT
+        id S1727031AbgFKI7W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 04:57:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23521 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgFKI5L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:57:11 -0400
-IronPort-SDR: gkrByYmdD0llxZ7os43nv0FkpVmwnSKutCp89rC1VpQzmeMhYGIycqf2zoUwCcvCKAsaN7jIk8
- 2lHDAO4iPBjg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2020 01:57:11 -0700
-IronPort-SDR: juYuwjBBW9pUdIFqtvG3zMWTcmKtppmN3Rnc6YnMclLnW8KezPcotPYDMWX4LzKxJg9MZTpMDO
- PXagRMx5znpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,499,1583222400"; 
-   d="scan'208";a="296522276"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Jun 2020 01:57:08 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jjJ1K-00CJpU-Gh; Thu, 11 Jun 2020 11:57:10 +0300
-Date:   Thu, 11 Jun 2020 11:57:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, balbi@kernel.org,
-        p.zabel@pengutronix.de, gregkh@linuxfoundation.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-Message-ID: <20200611085710.GV2428291@smile.fi.intel.com>
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200611081254.GR2428291@smile.fi.intel.com>
- <21b5db0e-c45a-2255-0389-04b204685d63@linux.intel.com>
+        Thu, 11 Jun 2020 04:59:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52006 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFKI7W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 04:59:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05B8xEnp035483;
+        Thu, 11 Jun 2020 03:59:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591865954;
+        bh=ju8hW0Nntm6A5rQpyFzj3Zxbk+KibA3tjgt8DFUshd4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=PImN5EiSFTZOvESIUfpol30U/CYqfsys/aHI6yzjQ8UAehvHR7r28eRdUJ7cgtY5F
+         a7no8HU0cjyqCB7E8lUoLBfELJZb7Ao2oIVOLFu89b039R60CWeg8KFhR2qfNZsJSV
+         JLqiA5vhospRqrOJc0P1r1qp0PN8Fa+OPflNscY4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05B8xEkq085761
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 03:59:14 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 03:59:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 03:59:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05B8xCH1118378;
+        Thu, 11 Jun 2020 03:59:13 -0500
+Subject: Re: [PATCH v2 2/3] bindings: sound: Add documentation for TI j721e
+ EVM (CPB and IVI)
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+ <20200512131633.32668-3-peter.ujfalusi@ti.com>
+ <20200519222132.GA488519@bogus> <65631db2-5cb2-003a-0526-65d26372616b@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <c91d150c-ddcc-214b-0e7d-ee2318be5269@ti.com>
+Date:   Thu, 11 Jun 2020 11:59:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21b5db0e-c45a-2255-0389-04b204685d63@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <65631db2-5cb2-003a-0526-65d26372616b@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 04:36:29PM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> On 11/6/2020 4:12 pm, Andy Shevchenko wrote:
-> > On Thu, Jun 11, 2020 at 10:12:46AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Hi Rob,
 
-...
+On 20/05/2020 14.50, Peter Ujfalusi wrote:
+>>> +  clocks:
+>>> +    items:
+>>> +      - description: PLL4 clock
+>>> +      - description: PLL15 clock
+>>> +      - description: McASP10 auxclk clock
+>>> +      - description: PLL4_HSDIV0 parent for McASP10 auxclk (for 48KH=
+z)
+>>> +      - description: PLL15_HSDIV0 parent for McASP10 auxclk (for 44.=
+1KHz)
+>>> +      - description: AUDIO_REFCLK2 clock
+>>> +      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK2 clock (for=
+ 48KHz)
+>>> +      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK2 clock (fo=
+r 44.1KHz)
+>>
+>> What h/w are these connected to?
+>=20
+> These clocks are internal to the SoC with the exception of AUDIO_REFCLK=
+2
+> which is routed to SoC pin.
+>=20
+>> You have no control interface here, so how do you have clocks?
+>=20
+> I need to control these clocks, the sound card is the user of these clo=
+cks.
+>=20
+>> Defining parent clocks seems wrong, too. This seems to just be a=20
+>> collection of clocks a driver happens to need. Really, you should be=20
+>> able query possible parents and select one with the right frequency=20
+>> multiple.
+>=20
+> The issue in hand is that I need to dynamically switch between certain
+> parents of the cpb-mcasp (for McASP) and audio-refclk2 (for the codec)
+> based on sampling rate of the stream.
+>=20
+> The McASP auxclk parent can be selected from 7 source and I must use th=
+e
+> two dedicated ones.
+> The REFCLK2 parent can be selected from 30 source.
+>=20
+> It is also a limitation of the system that I can not query directly the=
 
-> > > +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE,
-> > > +				 10, 10 * 1000);
-> exceeds more than 80 characters, so checkpatch throws warnings, to avoid
-> that move to next line.
+> PLL4/PLL15 frequencies, I can only get the frequency on the HSDIVs, but=
 
-> > On one line easier to read.
+> I can not get the divider on them.
+> In order to handle the constraints on clocking I need to know the sourc=
+e
+> rate so the dividers can be taken into account. The codec is picky when=
 
-It's 82 characters. It's fine.
+> it comes to clocking and there is a need to switch between
+> 256/512/768xFS based SCKI in order to be able to support sampling rates=
+=2E
+>=20
+> At the moment I have fixed clocks in place for the pll4/15 with the
+> rates they are configured so the dts can switch to a real clock which I=
 
-> > > +	if (ret) {
-> > > +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-> > > +		return ret;
-> > > +	}
+> can use in the future.
+> As things are it is unlikely that I will ever going to have access to
+> them, but I wanted to avoid in the bindings:
+> ti,j721e-pll4-rate =3D <1179648000>;
+> ti,j721e-pll15-rate =3D <1083801600>;
+>=20
+>>> +
+>>> +  clock-names:
+>>> +    items:
+>>> +      - const: pll4
+>>> +      - const: pll15
+>>> +      - const: cpb-mcasp
+>>> +      - const: cpb-mcasp-48000
+>>> +      - const: cpb-mcasp-44100
+>>> +      - const: audio-refclk2
+>>> +      - const: audio-refclk2-48000
+>>> +      - const: audio-refclk2-44100
 
-...
+It should be better to document the refclk2 (and refclk0 for IVI) clocks
+based on it's use, not source:
+cpb-codec-scki (sourced from audio_refclk2)
+cpb-codec-scki-48000/44100
 
-> > > +	int ret = 0;
-> > 
-> > Assignment is redundant.
-> so you mean , should be declared as
-> int ret;
-> right?
+For the IVI binding it is just s/cpb/ivi in the clock-names.
 
-Right.
+- P=C3=A9ter
 
-...
-
-> > > +		dev_info(ta->phy.dev, "connected%s\n",
-> > > +			 flipped ? " flipped" : "");
-> > 
-> > One line.
-> exceeds more than 80 characters, so checkpatch throw warnings, to avoid that
-> moved to next line.
-
-It's fine to have on one line.
-
-And by the way, try new checkpatch.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
