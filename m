@@ -2,96 +2,132 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD85C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 17:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86766C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 18:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C8920691
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 17:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6535820838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 18:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PjCLvAgU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7Gv3fE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgFKRgf (ORCPT
+        id S1726109AbgFKSFL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 13:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60646 "EHLO
+        Thu, 11 Jun 2020 14:05:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgFKRge (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 13:36:34 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C173C08C5C2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 10:36:33 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id p70so6106903oic.12
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 10:36:33 -0700 (PDT)
+        with ESMTP id S1726920AbgFKSFL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 14:05:11 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B47C03E96F
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 11:05:11 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a45so3315316pje.1
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 11:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jrCOk7vsq1IE7uGd57AzoLSP1ALvkvtrfTao0LV5h+4=;
-        b=PjCLvAgUk17O5rGvaRSULcAXIKgAeNPYfQj4+nc/jEDzvDt79xSOJ9y90gnyDsej57
-         d6kv8CTeKJDW3tgsSbIhUH7B684pz0QDJS1PAC3ELlVYxup3lQZTLhIejtwsgQQWCbBm
-         whcIjLz3Q4YA0rJbpmM7ez8cXb5PsSzB5hLw90jsFbfweSA0DgsHHTj0a3UpXNkTiXsK
-         FHCNP6NH+PXkniJe6PD0IrUkKYLC/AfJYgTbByfESpbB7Eh6RWa3w2B8JexkbcgtqPsr
-         BKFM8ErfoR7rUDwZJTpr2FypGZPTKX734j7VFNPPb3SuZIWCuP8HJJ3I2VIKp5nax4vd
-         X7rA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/Bq+Y46DbuB7fegNcUlJlA3+5rgMyxwf1ZUkLK7/qjM=;
+        b=R7Gv3fE98ru+DOk/HmBKIZiD4prougIBei/WKg3Uv1jP/K/uQk0OHgsEbuebHBTQlq
+         NIrQYcXeASZP6XsiN2ZkVKTTPNL3SH4BjYmAx6t4RXlIWs/vl9R8l40chko3hjLoeOgS
+         mBS2jM9HXU2HvunsDVWIhcls/c8VXN5+yKBIq2GTk+lCPn82yYz6yudWU1/OPqYzrocf
+         8xfYVogCi1sek36jmgI8BIy4opiUNqpMWOxxW69XPiBthR8ajFxkCvug6UzmkN02maCY
+         kWkl5DH37s470oczuWU6G7hFydtBmT2dHO8llaPQ96Z/oFStimg1pVJz3xRTMhUgQVDN
+         jX6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jrCOk7vsq1IE7uGd57AzoLSP1ALvkvtrfTao0LV5h+4=;
-        b=o6m42QV3Pp6Vxw5KnrvMWUDZuVWn11GPno9Kzh7/kbBE3pAsMsheLcATprFmggqzF1
-         KE7w2L0jxS0Am+nRwrFTfeK4Dmq1qFDvfEfp8kEayhimEo4eXCerNzGNhCpJoioywcAN
-         /0GHzCZOxusr80XUqnx89bWfE9Wt4g5KwVP1xY7lleayoIouEf3ERGXYpp5xr0dyfRMj
-         o6gv+rb9CO8BRKlYzQeG4Ndb07RiN346TP/dbw7GK2pBzs2razcJGTqvC1p7NRj2h//K
-         LmIE45P4MMPvSeZ25wzvqWoKtFzkvT0Uk6p+KmVCNXjrP9BSBbz8p9PPsqPQl7jbiEVm
-         Owwg==
-X-Gm-Message-State: AOAM533WFtlrn0bGI1iCeSLRSc+eMCNl98Itujlfp4lAsUMwtaiY5Qpi
-        KZGINHbtgfoIZ18w8oawYCDdbG0/ArcHJn3tkXGsTg==
-X-Google-Smtp-Source: ABdhPJzBOdT+Dsmoz25Sk2BkH7lQgOo+1veTThTfIOcpemZoPqBRr3Bokq20sHjcYAD8NriytacdHguqDLTVuu4eLUw=
-X-Received: by 2002:aca:2108:: with SMTP id 8mr7354040oiz.10.1591896992417;
- Thu, 11 Jun 2020 10:36:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
-In-Reply-To: <1591880115-12721-1-git-send-email-mkrishn@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 11 Jun 2020 10:36:21 -0700
-Message-ID: <CALAqxLWnXD4XzGU=7mkLCyAkN1ONB=NRne9y8PxPWGZg4hgX8Q@mail.gmail.com>
-Subject: Re: [v1] drm/msm/dpu: request for display color blocks based on hw
- catalog entry
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/Bq+Y46DbuB7fegNcUlJlA3+5rgMyxwf1ZUkLK7/qjM=;
+        b=Bl9Jg4QjrF8PjPzr42DuGlVDLV8huVWu7sZYvgxHi8LC44w02lMmFNCizOCfkgyFGk
+         6KSLb3d+GzWeWBo6qXdVXiQfaVT7uSXOwfg9+HrRJR1DkRyvDcl1FNqtFR3eJ+YC4Vgb
+         rF6rHcHTyZc3fjU2rKtxqIhChkayu1xL37n/9rO8oEzNkvHHMaQ82NMguKLmr8w2rQgd
+         CONTbeBH4O9UnQdslXwjRuP3tsRhhlABZ5LsatZiq6dE075a0/5BHJLPf7WpTUt7qSvZ
+         xr/k3HLb55ro6UXhCl8+hUL3B/9bBf7fy60pIDeXrmmdjQJhXK34fhu11VqPWJMh07QW
+         sYYg==
+X-Gm-Message-State: AOAM533UIgBJPZ9aeRSDWLroh1i+h6JHv3uSIk6Fxe+epDREliZ9oikv
+        /lQ31rPLcAksPvFjYtuFaNWr
+X-Google-Smtp-Source: ABdhPJxHypyc6iCgv22ctsppmva0DV430xWYsodx9eTuESqdAVw10oT5wjFanhmVDUQbz9Y0YTVDGA==
+X-Received: by 2002:a17:90a:4809:: with SMTP id a9mr9236473pjh.196.1591898710845;
+        Thu, 11 Jun 2020 11:05:10 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:c:23ea:6d6a:61cf:2fc0:2486])
+        by smtp.gmail.com with ESMTPSA id o18sm4077768pfu.138.2020.06.11.11.05.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 11 Jun 2020 11:05:10 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 23:35:03 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>, hoegsberg@chromium.org,
-        nganji@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>, abhinavk@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
+ dts
+Message-ID: <20200611180503.GA22890@Mani-XPS-13-9360>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200604135221.GH16719@Mani-XPS-13-9360>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604135221.GH16719@Mani-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 5:55 AM Krishna Manikandan
-<mkrishn@codeaurora.org> wrote:
->
-> From: Kalyan Thota <kalyan_t@codeaurora.org>
->
-> Request for color processing blocks only if they are
-> available in the display hw catalog and they are
-> sufficient in number for the selection.
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+On Thu, Jun 04, 2020 at 07:22:21PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
+> 
+> On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
+> > Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+> > 
+> 
+> I've tested this series on an SM8250 based board and able to get Type C (USB0)
+> working. There are also couple of Type A ports (USB1) on that board behind a
+> USB hub. It is probing fine but I don't see any activity while connecting a
+> USB device. Will continue to debug and once I get them working, I'll add my
+> Tested-by tag.
+> 
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+So it turned out that I forgot to enable one regulator which kept the USB hub
+powered down. After enabling that, both Type A ports are working. Hence,
 
-Thanks so much for the quick fix!
--john
+Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+> Thanks,
+> Mani
+> 
+> > Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+> > few changes. Notably, the HDK865 dts has regulator config changed a bit based
+> > on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+> > 
+> > Jonathan Marek (6):
+> >   arm64: dts: qcom: sm8150: add apps_smmu node
+> >   arm64: dts: qcom: sm8250: add apps_smmu node
+> >   arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+> >   arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+> >   arm64: dts: qcom: add sm8150 hdk dts
+> >   arm64: dts: qcom: add sm8250 hdk dts
+> > 
+> >  arch/arm64/boot/dts/qcom/Makefile       |   2 +
+> >  arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+> >  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
+> >  arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
+> >  arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
+> >  5 files changed, 1384 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> >  create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> > 
+> > -- 
+> > 2.26.1
+> > 
