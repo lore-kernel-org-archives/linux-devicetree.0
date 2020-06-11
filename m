@@ -2,109 +2,152 @@ Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D0CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D207620760
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDDE20760
+	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 12:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pQnSBE/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgFKMKI (ORCPT
+        id S1727017AbgFKMTK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 08:10:08 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41556 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgFKMKH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 08:10:07 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a21so5159831oic.8;
-        Thu, 11 Jun 2020 05:10:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lcgXSywPB08+B3kJ8noSU/N9DMgy+4xXYB/CxnY7Amg=;
-        b=YlTfujDe8X3ycDRnEGMpvy3bI3Tq0C2HNBKvyHBn+b3eKbGpjTj1BPopvaFzcm4c6+
-         /XkYAFrBbV3DlbIRnPnht+/dvtzUUJuQgNGQj2xMw6Ul4cPlp/m7hkFqmyzWlhJ4Xtjo
-         T2WX62k3daDoVOGM6wssDUASmM4Ac+CpycC89ua56x/65V55krS9VlGA3/Dba9NiySJ7
-         W5l+wxVK10jf53cb6tr9wdqb5cRSIbnDas91RDLiKfSIDmDMr4krpyflRcu5waBMHdAx
-         X227idctfxto4tJgrqUeyKACQ2q+CKgBxPTy4bTMwYRwh2QVmYSdbvWE8n+dOEzR590A
-         FooQ==
-X-Gm-Message-State: AOAM533KxYHZl4DFqx84sQMs1Mw0mnlVVVL5iVqq3DColwRfvGpgjm6v
-        emJr3ARUxdoeOommDDoIs11UR9LsGfc8bhDh37OP/Q==
-X-Google-Smtp-Source: ABdhPJxkw8nBqOmM/doJ6JuZq8minHv6eu19aEc1wibYnTv7Nh6qLqRMw7fVRT/pWWz4P5jRTR0aBz/eVhKqpwoAW/s=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr6016101oia.54.1591877405773;
- Thu, 11 Jun 2020 05:10:05 -0700 (PDT)
+        Thu, 11 Jun 2020 08:19:10 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:59330 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726864AbgFKMTK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 11 Jun 2020 08:19:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591877950; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=6vvXLsTpi8eX/TgjYkKkVugmiw4GBm2oRpYR4vVFpmk=; b=pQnSBE/SMKlGKkEKAxDkmwSBah+0vfDeYMSviSuOXffHTZ1JfSD+J4CznKOCAOOCqk0TO/Fw
+ d3ovEqejXHCEujjeH/jDDPIEzGHNMChxCoDenXi4JfnM29uTRGAin5aKfH1iiUS96jP8Lkgn
+ w9MG5+Qj7cXCMjPn1y2QzM/nwWc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ee2213a86de6ccd44cbb236 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 11 Jun 2020 12:19:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 79FDEC43387; Thu, 11 Jun 2020 12:19:05 +0000 (UTC)
+Received: from [192.168.0.118] (unknown [49.207.58.25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D2455C433C8;
+        Thu, 11 Jun 2020 12:19:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D2455C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v2 1/3] dt-bindings: nvmem: Add devicetree bindings for
+ qfprom-efuse
+To:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        saiprakash.ranjan@codeaurora.org, dhavalp@codeaurora.org,
+        mturney@codeaurora.org, sparate@codeaurora.org,
+        c_rbokka@codeaurora.org, mkurumel@codeaurora.org
+References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
+ <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <8ef8c7c4-3560-274d-3043-ddf5b87e794a@codeaurora.org>
+Date:   Thu, 11 Jun 2020 17:48:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200610110810.GD5005@sirena.org.uk> <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
- <20200610164928.GJ5005@sirena.org.uk> <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
- <20200611085004.GC4671@sirena.org.uk>
-In-Reply-To: <20200611085004.GC4671@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 11 Jun 2020 14:09:54 +0200
-Message-ID: <CAMuHMdUBp79ix5hPjXBARTrOokg-pWY+Rdno9-dd6dBTv+TRcw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Thu, Jun 11, 2020 at 10:50 AM Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Jun 10, 2020 at 09:18:19PM +0200, Geert Uytterhoeven wrote:
-> > On Wed, Jun 10, 2020 at 6:49 PM Mark Brown <broonie@kernel.org> wrote:
->
-> > > I'm much more comfortable explicitly listing the new compatible so that
-> > > even if someone makes a DT that doesn't bother listing the fallbacks
-> > > things will work.
->
-> > Adding all of them would cause even more churn when adding support for
-> > a new SoC... There are already more than 700 "renesas," compatible
-> > values documented that are not directly matched by drivers.
->
-> I'm not sure it's a particular concern, especially since you'll be
-> sending this stuff in the same series as a bindings update and an extra
-> patch in a series makes very little difference.
+On 6/11/2020 3:18 PM, Ravi Kumar Bokka wrote:
+> This patch adds dt-bindings document for qfprom-efuse controller.
 
-Until the DT bindings are split off into their own project...
+there is an existing bindings doc (in .txt) which you should convert to yaml,
+and then add another patch to extend it.
 
-Listing unneeded compatible values in drivers also increases binary size.
-For RSPI and MSIOF that would be +2.5 KiB each.  Times tens of drivers.
-
-Considering the RSPI driver itself is only 9 KiB, and some RZ/A1 systems
-are really memory-constrained, I think it's better to avoid that.
-
-> > Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
-> > binding, it will be flagged.
->
-> For things that are upstream.
-
-The DT bindings apply to out-of-tree DTS files, too ;-)
-If they're not compliant, all odds are off.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> ---
+>   .../devicetree/bindings/nvmem/qfprom.yaml          | 52 ++++++++++++++++++++++
+>   1 file changed, 52 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
+> new file mode 100644
+> index 0000000..7c8fc31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/nvmem/qfprom.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
+> +
+> +maintainers:
+> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
+> +
+> +allOf:
+> +  - $ref: "nvmem.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,qfprom
+> +
+> +  reg:
+> +    maxItems: 3
+> +
+> +required:
+> +   - compatible
+> +   - reg
+> +   - reg-names
+> +   - clocks
+> +   - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +
+> +    qfprom@780000 {
+> +	compatible = "qcom,qfprom";
+> +	reg = <0 0x00780000 0 0x7a0>,
+> +	      <0 0x00782000 0 0x100>,
+> +	      <0 0x00784000 0 0x8ff>;
+> +	reg-names = "raw", "conf", "corrected";
+> +	clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
+> +	clock-names = "secclk";
+> +
+> +	qusb2p_hstx_trim: hstx-trim-primary@25b {
+> +		reg = <0x25b 0x1>;
+> +		bits = <1 3>;
+> +	};
+> +    };
+> +
+> +    &qfprom {
+> +        vcc-supply = <&vreg_l11a_1p8>;
+> +    };
+> +
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
