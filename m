@@ -2,192 +2,129 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248F3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3970AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED46720792
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591996266;
-	bh=g/uvLDAZ+ol49MHFs1XaNpXDp1DbLpjPRHzPzh71JEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qh3HL89QqpIWN3trfBJzeuHBiVUrHnOr2589IIAvtTJ6n/R+2IpOZI2gtmc6WiPzp
-	 vNGnyd/CF8c3vovlOArVMWQv1VhVTsTTPhxsnqa+dWjTzPc/rfw9CZEW9pTmFjVMM0
-	 4V9somuvI1eCjmnhxXRZ8XmH/gBdj6HBXwuvwtJY=
+	by mail.kernel.org (Postfix) with ESMTP id 0CBDF207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:53:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXp9vM9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLVLF (ORCPT
+        id S1726310AbgFLVxm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 17:11:05 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42480 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLVLF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 17:11:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id x189so2655331iof.9;
-        Fri, 12 Jun 2020 14:11:04 -0700 (PDT)
+        Fri, 12 Jun 2020 17:53:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgFLVxl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 17:53:41 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683B3C03E96F;
+        Fri, 12 Jun 2020 14:53:41 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z206so6289041lfc.6;
+        Fri, 12 Jun 2020 14:53:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VOElnJrxFX82zCegdC8CJL4A4jdek0Vm1aStzl7y+ic=;
+        b=gXp9vM9n3ge6BhZsmJD9ksIhohLFm9UN/zIoj6mNfhOtfJioBKmvHW0fwY5x/GbU1v
+         Kf8RMQGkmUSAabZAsqnQfPEKUnRgT7mkxxqkv8JrGUSOPmYZipgOosu/SsSMGo4aQs0n
+         tHIVHPnGOU5fyr1iOUB7oqTy1oKD5TKoRmDgJ/tWd88wlLjOKAih3CTypJNU3jhumj7N
+         1CjcrkziDeG8PiCzSJ8NfDo3FsbZgLvrBrFH6havbWUkyS/VQjctFpqp+cOorzOEUPrU
+         OxLgEkO+5F2n72o6cYq93lAYysIZnij/b2cBpYUfXaoEF4jSruKoiDWmVJ+r/qgcbQLR
+         uYng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LdO+yABvrQyODTNWEnFCNLq5SRWaCDFSeyJReNxOrN4=;
-        b=rvwlgD4CDjjxhRFq3GnZQuaaOWynCseOjX9XTo9tzIBXSOhAmSz3UyzW90JrGaUNgA
-         8l6XQTaJLbbAYinHsbyVqZwXnU1iGD0TVTxL7PK12EHY1B/hdJZ6yyPaIzah1ZSW4ixd
-         wlZYMGu6nEhyDV6yxZklc+YHnRbVnTM/X6u/Kxugb6Xoooo1r2JNOig5X+R3kBZyBH7B
-         gZr0MhgY7hh94dpkDNznckXaT0DYuxXBv+0/Dw5XB5KfkvswmqVgCwhGfk+rUODFshfa
-         XD8EHjWo+gWCozzZfs7lWJxuaZGSzYit5jCcmoXeWvS54m/6p/HKFBXdZWb/vCRAWRff
-         w6rg==
-X-Gm-Message-State: AOAM533McH6+m52BWG4lE2qXDMSeMO0VYlKFHHFQ6nWrsJ3EKNt3DiRo
-        037kzUbtuadW0f5sSilzGw==
-X-Google-Smtp-Source: ABdhPJyTLPwHiCPMWBDlg3TIAXPWsywr4DNWk8QAGkvpv7/LiQJCR/XEW/hsc3A/ByLjKLXUmh/i0w==
-X-Received: by 2002:a05:6638:406:: with SMTP id q6mr10161463jap.125.1591996263990;
-        Fri, 12 Jun 2020 14:11:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id d66sm3628624iof.27.2020.06.12.14.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 14:11:02 -0700 (PDT)
-Received: (nullmailer pid 3820221 invoked by uid 1000);
-        Fri, 12 Jun 2020 21:11:01 -0000
-Date:   Fri, 12 Jun 2020 15:11:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v9 05/11] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-Message-ID: <20200612211101.GA3808755@bogus>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
- <20200609174959.955926-6-adrian.ratiu@collabora.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VOElnJrxFX82zCegdC8CJL4A4jdek0Vm1aStzl7y+ic=;
+        b=EGBXACxtrYllR0JFynmOAI6SaS1mJTJ6cPvGEo7bI6Bts+cz4xHWD6bfxtgf8piED+
+         BlXaeDGXkR+Rh0AK4ShpNMLPAXbYj6EBiebLbk+9ycx4VuXPjR19Sw3r5nnqynBKwXti
+         ujZzQPNUWw6jgYIlHQCX3kqLNr9KZbpboYpRlWGL15HHyUaa+sZ4g93fm8lEAlLa1ZoQ
+         dWOWzG+zFWdSKPy2dYAgxG4IlSh7NJe3FP1pIteYMxrNuT+NTKkYiKi0FTSle2ocnE/x
+         m7vtdc0ULytNvWSFgESEsrp8cwEOk6I3cy+gJ30pRZfC80WWGW5Weo4szddslDT3RVlV
+         axmQ==
+X-Gm-Message-State: AOAM530x5itoX/ji1Zecdc5lcRAs17pknhhO32qUyLmWjPOV+wcaU/CO
+        LSzj07sx3Um7fYSavzxHGTiS1hVo
+X-Google-Smtp-Source: ABdhPJzmwhK1lXiY/Qgd36vBnvVViqZWltRLjQJol/PlPOPqVI7Vu3PHUVi3sCmITZaFPdk6xhO2qQ==
+X-Received: by 2002:a19:cb05:: with SMTP id b5mr7803699lfg.108.1591998819280;
+        Fri, 12 Jun 2020 14:53:39 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id n1sm2046995ljg.131.2020.06.12.14.53.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 14:53:38 -0700 (PDT)
+Subject: Re: [PATCH v6 6/6] drm/tegra: output: rgb: Wrap directly-connected
+ panel into DRM bridge
+To:     kernel test robot <lkp@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200609132855.20975-7-digetx@gmail.com>
+ <202006130511.AE6Kvrjm%lkp@intel.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <48645520-047f-da72-f8b1-3520911f242e@gmail.com>
+Date:   Sat, 13 Jun 2020 00:53:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609174959.955926-6-adrian.ratiu@collabora.com>
+In-Reply-To: <202006130511.AE6Kvrjm%lkp@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 08:49:53PM +0300, Adrian Ratiu wrote:
-> This provides an example DT binding for the MIPI DSI host controller
+13.06.2020 00:23, kernel test robot пишет:
+> Hi Dmitry,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on next-20200612]
+> [cannot apply to tegra/for-next robh/for-next v5.7]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Dmitry-Osipenko/Support-DRM-bridges-on-NVIDIA-Tegra/20200609-213026
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git abfbb29297c27e3f101f348dc9e467b0fe70f919
+> config: arm64-randconfig-r026-20200612 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 3b43f006294971b8049d4807110032169780e5b8)
 
-It's not an example. It defines the exact binding for this peripheral.
+Interestingly, GCC doesn't report this warning.
 
-> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install arm64 cross compiling tool for clang build
+>         # apt-get install binutils-aarch64-linux-gnu
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm64 
 > 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: devicetree@vger.kernel.org
-> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
-> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
-> Changes since v8:
->   - Fixed small compatible string typo caught by checkpatch
->   - Added custom select for 'fsl,imx6-mipi-dsi' (Rob)
->   - Replaced additionalProperties -> unevaluatedProperties (Rob)
->   - Dropped all nodes not adding any new constraints apart from
->   the recently upstreamed snps,dw-mipi-dsi.yaml (Rob)
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
 > 
-> Changes since v7:
->   - Clarified port@0,1 descriptions, marked them as required and
->   added missing port@0 in example (Laurent)
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
 > 
-> Changes since v6:
->   - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
->   - Moved *-cells properties outside patternProperties (Laurent)
->   - Removed the panel port documentation (Laurent)
->   - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
-> 
-> Changes since v5:
->   - Fixed missing reg warning (Fabio)
->   - Updated dt-schema and fixed warnings (Rob)
-> 
-> Changes since v4:
->   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
->   and addressed received binding feedback (Rob)
-> 
-> Changes since v3:
->   - Added commit message (Neil)
->   - Converted to yaml format (Neil)
->   - Minor dt node + driver fixes (Rob)
->   - Added small panel example to the host controller binding
-> 
-> Changes since v2:
->   - Fixed commit tags (Emil)
-> ---
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 ++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> new file mode 100644
-> index 0000000000000..86093729fd5f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> @@ -0,0 +1,112 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX6 DW MIPI DSI Host Controller
-> +
-> +maintainers:
-> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
-> +
-> +description: |
-> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
-> +  IP block with a companion PHY IP.
-> +
-> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-> +  the following device-specific properties.
-> +
-> +allOf:
-> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
-> +
-> +# Need a custom select here or 'snps,dw-mipi-dsi' will match lots of nodes
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - fsl,imx6-mipi-dsi
-> +  required:
-> +    - compatible
-> +
-> +properties:
+>>> drivers/gpu/drm/tegra/rgb.c:100:48: warning: unused variable 'tegra_rgb_connector_helper_funcs' [-Wunused-const-variable]
+> static const struct drm_connector_helper_funcs tegra_rgb_connector_helper_funcs = {
+> ^
+> 1 warning generated.
 
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
 
-These 2 are covered by dsi-controller.yaml, so you can drop them.
-
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+There are two unused structs in the code and one is referenced by the
+other, I'll remove the unused structs in v7.
