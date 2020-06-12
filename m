@@ -1,315 +1,565 @@
-Return-Path: <SRS0=a2/f=7Y=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05243C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 23:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 00:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D102078C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 11 Jun 2020 23:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5362120878
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 00:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXgoilEj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RgXu17KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgFKXV7 (ORCPT
+        id S1726339AbgFLAWG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 11 Jun 2020 19:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgFKXV5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 19:21:57 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D82C08C5C2
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id u8so2834755pje.4
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=Mx1BJS+F5RobWjcFE5t60E3qsaoq0yype8aHumba4AY=;
-        b=RXgoilEj3158/D81CyzqcOUTZGSWHs9fozqqHDzPcxAklVjRdy3hZHjcRNjda1AfcN
-         MWh8NjVKFFD6uqQ06STzWf+p07V+jMqx60Slct7LfhtNx8i3FESb0eHAl0Rzjg1hft3B
-         ++DDeyiqrKN7JopuxQxvASgSkFdlE740/jr9E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=Mx1BJS+F5RobWjcFE5t60E3qsaoq0yype8aHumba4AY=;
-        b=ALLuTVAumoFCW1BWc7HGSg85sLXr+/cyaM8JAvBD2mToKZ2LS7mH3Q5Rsr4zBmzyFA
-         PCuznnHonVg6E04j7UXrzR4mu+bqT90jJf0OeyPxQTzKwizBxZ+kLjTtUrgKGJcL9wE9
-         iO2nyklaEnx9U9M1F8W/5IWncWPyhn1h3Yrhakm+uIb6i3OOHYq39zDjJfiWB6d02Xyt
-         PJ1iu/BjFZEXKESQytHpfe0RvsmKTWcsKsFIjsumNbgj6GIdKNmhdFg1Kc8fkbyLaMC6
-         ZEgt4pI4qyXyyuKA/m4iwuToo8+3jujqC3tOkQweSEzeiIA6WNO1ccG5Ke9jf7pVYJi0
-         bZBw==
-X-Gm-Message-State: AOAM533Kxttsa7igpZF7/lujawf7R68xivo5ruI4VG5T9JKJDqUxIpxA
-        DLn/Udlbb5PPojoasg2sNrpxYQ==
-X-Google-Smtp-Source: ABdhPJwdz2sTBkJb9s0f/hzOItcMgoPC81y0CH/eE7gR25jQYxuS18l1pPBiz49y8/WC7LrnNm8i4Q==
-X-Received: by 2002:a17:90a:70c6:: with SMTP id a6mr9302299pjm.16.1591917716068;
-        Thu, 11 Jun 2020 16:21:56 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b7sm4036787pfo.202.2020.06.11.16.21.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 16:21:55 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 11 Jun 2020 20:22:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59780 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgFLAWG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 11 Jun 2020 20:22:06 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05C0Lw85008286;
+        Thu, 11 Jun 2020 19:21:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591921318;
+        bh=i0fM58bGqFjTpLXrxPhodYdHp1u0yDhWyAaa5N1STCE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RgXu17KZF2imFXvaNOp98F+l7s2vaUgVFO8TsHpWdB/u2PH7pytohEkqSPIY519uM
+         qdp5mOQjTRqYZj2dtSFpQPFs2F0ZL3CcRltvRpthNagLSHzgqM74NcU9BQ/Q7h+Uo0
+         YhmLEoXLoNgL0XQ3LU9ErsZzPJbnycEVsjY7AyjI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05C0LwK7078852
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 11 Jun 2020 19:21:58 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
+ Jun 2020 19:21:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 11 Jun 2020 19:21:58 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C0Lwcg051898;
+        Thu, 11 Jun 2020 19:21:58 -0500
+Subject: Re: [PATCH v7 4/5] remoteproc: ingenic: Added remoteproc driver
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, <od@zcrc.me>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+ <20200515104340.10473-4-paul@crapouillou.net>
+ <8cdcf5ef-1268-89f6-b229-ac711a80b790@ti.com>
+ <FR8SBQ.5WXNHNH8P2P7@crapouillou.net>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <fc1e14e7-4551-48c3-2820-f5889c50becb@ti.com>
+Date:   Thu, 11 Jun 2020 19:21:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Thu, 11 Jun 2020 16:21:54 -0700
-Message-ID: <159191771455.242598.12826819292508436205@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <FR8SBQ.5WXNHNH8P2P7@crapouillou.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-06-11 07:28:03)
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..8370350 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,15 +31,19 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
-> =20
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
-> =20
->  #include "debug.h"
-> +#include "../host/xhci.h"
-> =20
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY 5000 /* ms */
-> =20
-> +bool need_phy_for_wakeup;
+Hi Paul,
 
-static? But why isn't it part of 'struct dwc3'? There could be multiple
-dwc3 instances that may or may not be wakeup capable.
+On 6/11/20 5:21 PM, Paul Cercueil wrote:
+> Hi Suman,
+> 
+> Le jeu. 11 juin 2020 à 16:47, Suman Anna <s-anna@ti.com> a écrit :
+>> Hi Paul,
+>>
+>> On 5/15/20 5:43 AM, Paul Cercueil wrote:
+>>> This driver is used to boot, communicate with and load firmwares to the
+>>> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+>>> Ingenic.
+>>
+>> I have a few comments w.r.t pm_runtime usage in this driver.
+>>
+>>>
+>>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> ---
+>>>
+>>> Notes:
+>>>      v2: Remove exception for always-mapped memories
+>>>      v3: - Use clk_bulk API
+>>>          - Move device-managed code to its own patch [3/4]
+>>>          - Move devicetree table right above ingenic_rproc_driver
+>>>          - Removed #ifdef CONFIG_OF around devicetree table
+>>>          - Removed .owner = THIS_MODULE in ingenic_rproc_driver
+>>>          - Removed useless platform_set_drvdata()
+>>>      v4: - Add fix reported by Julia
+>>>          - Change Kconfig symbol to INGENIC_VPU_RPROC
+>>>          - Add documentation to struct vpu
+>>>          - disable_irq_nosync() -> disable_irq()
+>>>      v5: No change
+>>>      v6: Instead of prepare/unprepare callbacks, use PM runtime 
+>>> callbacks
+>>>      v7: - Remove use of of_match_ptr()
+>>>          - Move Kconfig symbol so that it's in alphabetical order
+>>>          - Add missing doc for private structure field aux_base
+>>>          - Don't check for (len <= 0) in da_to_va()
+>>>          - Add missing \n in dev_info/dev_err messages
+>>>
+>>>   drivers/remoteproc/Kconfig         |   9 +
+>>>   drivers/remoteproc/Makefile        |   1 +
+>>>   drivers/remoteproc/ingenic_rproc.c | 280 +++++++++++++++++++++++++++++
+>>>   3 files changed, 290 insertions(+)
+>>>   create mode 100644 drivers/remoteproc/ingenic_rproc.c
+>>>
+>>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>>> index fbaed079b299..c4d1731295eb 100644
+>>> --- a/drivers/remoteproc/Kconfig
+>>> +++ b/drivers/remoteproc/Kconfig
+>>> @@ -23,6 +23,15 @@ config IMX_REMOTEPROC
+>>>           It's safe to say N here.
+>>>   +config INGENIC_VPU_RPROC
+>>> +    tristate "Ingenic JZ47xx VPU remoteproc support"
+>>> +    depends on MIPS || COMPILE_TEST
+>>> +    help
+>>> +      Say y or m here to support the VPU in the JZ47xx SoCs from 
+>>> Ingenic.
+>>> +
+>>> +      This can be either built-in or a loadable module.
+>>> +      If unsure say N.
+>>> +
+>>>   config MTK_SCP
+>>>       tristate "Mediatek SCP support"
+>>>       depends on ARCH_MEDIATEK
+>>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+>>> index 0effd3825035..e8b886e511f0 100644
+>>> --- a/drivers/remoteproc/Makefile
+>>> +++ b/drivers/remoteproc/Makefile
+>>> @@ -10,6 +10,7 @@ remoteproc-y                += remoteproc_sysfs.o
+>>>   remoteproc-y                += remoteproc_virtio.o
+>>>   remoteproc-y                += remoteproc_elf_loader.o
+>>>   obj-$(CONFIG_IMX_REMOTEPROC)        += imx_rproc.o
+>>> +obj-$(CONFIG_INGENIC_VPU_RPROC)        += ingenic_rproc.o
+>>>   obj-$(CONFIG_MTK_SCP)            += mtk_scp.o mtk_scp_ipi.o
+>>>   obj-$(CONFIG_OMAP_REMOTEPROC)        += omap_remoteproc.o
+>>>   obj-$(CONFIG_WKUP_M3_RPROC)        += wkup_m3_rproc.o
+>>> diff --git a/drivers/remoteproc/ingenic_rproc.c 
+>>> b/drivers/remoteproc/ingenic_rproc.c
+>>> new file mode 100644
+>>> index 000000000000..189020d77b25
+>>> --- /dev/null
+>>> +++ b/drivers/remoteproc/ingenic_rproc.c
+>>> @@ -0,0 +1,280 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +/*
+>>> + * Ingenic JZ47xx remoteproc driver
+>>> + * Copyright 2019, Paul Cercueil <paul@crapouillou.net>
+>>> + */
+>>> +
+>>> +#include <linux/bitops.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/err.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/pm_runtime.h>
+>>> +#include <linux/remoteproc.h>
+>>> +
+>>> +#include "remoteproc_internal.h"
+>>> +
+>>> +#define REG_AUX_CTRL        0x0
+>>> +#define REG_AUX_MSG_ACK        0x10
+>>> +#define REG_AUX_MSG        0x14
+>>> +#define REG_CORE_MSG_ACK    0x18
+>>> +#define REG_CORE_MSG        0x1C
+>>> +
+>>> +#define AUX_CTRL_SLEEP        BIT(31)
+>>> +#define AUX_CTRL_MSG_IRQ_EN    BIT(3)
+>>> +#define AUX_CTRL_NMI_RESETS    BIT(2)
+>>> +#define AUX_CTRL_NMI        BIT(1)
+>>> +#define AUX_CTRL_SW_RESET    BIT(0)
+>>> +
+>>> +struct vpu_mem_map {
+>>> +    const char *name;
+>>> +    unsigned int da;
+>>> +};
+>>> +
+>>> +struct vpu_mem_info {
+>>> +    const struct vpu_mem_map *map;
+>>> +    unsigned long len;
+>>> +    void __iomem *base;
+>>> +};
+>>> +
+>>> +static const struct vpu_mem_map vpu_mem_map[] = {
+>>> +    { "tcsm0", 0x132b0000 },
+>>> +    { "tcsm1", 0xf4000000 },
+>>> +    { "sram",  0x132f0000 },
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct vpu - Ingenic VPU remoteproc private structure
+>>> + * @irq: interrupt number
+>>> + * @clks: pointers to the VPU and AUX clocks
+>>> + * @aux_base: raw pointer to the AUX interface registers
+>>> + * @mem_info: array of struct vpu_mem_info, which contain the 
+>>> mapping info of
+>>> + *            each of the external memories
+>>> + * @dev: private pointer to the device
+>>> + */
+>>> +struct vpu {
+>>> +    int irq;
+>>> +    struct clk_bulk_data clks[2];
+>>> +    void __iomem *aux_base;
+>>> +    struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+>>> +    struct device *dev;
+>>> +};
+>>> +
+>>> +static int ingenic_rproc_start(struct rproc *rproc)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +    u32 ctrl;
+>>> +
+>>> +    enable_irq(vpu->irq);
+>>> +
+>>> +    /* Reset the AUX and enable message IRQ */
+>>> +    ctrl = AUX_CTRL_NMI_RESETS | AUX_CTRL_NMI | AUX_CTRL_MSG_IRQ_EN;
+>>> +    writel(ctrl, vpu->aux_base + REG_AUX_CTRL);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int ingenic_rproc_stop(struct rproc *rproc)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +
+>>> +    disable_irq(vpu->irq);
+>>> +
+>>> +    /* Keep AUX in reset mode */
+>>> +    writel(AUX_CTRL_SW_RESET, vpu->aux_base + REG_AUX_CTRL);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void ingenic_rproc_kick(struct rproc *rproc, int vqid)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +
+>>> +    writel(vqid, vpu->aux_base + REG_CORE_MSG);
+>>> +}
+>>> +
+>>> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, 
+>>> size_t len)
+>>> +{
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +    void __iomem *va = NULL;
+>>> +    unsigned int i;
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>>> +        const struct vpu_mem_info *info = &vpu->mem_info[i];
+>>> +        const struct vpu_mem_map *map = info->map;
+>>> +
+>>> +        if (da >= map->da && (da + len) < (map->da + info->len)) {
+>>> +            va = info->base + (da - map->da);
+>>> +            break;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    return (__force void *)va;
+>>> +}
+>>> +
+>>> +static struct rproc_ops ingenic_rproc_ops = {
+>>> +    .start = ingenic_rproc_start,
+>>> +    .stop = ingenic_rproc_stop,
+>>> +    .kick = ingenic_rproc_kick,
+>>> +    .da_to_va = ingenic_rproc_da_to_va,
+>>> +};
+>>> +
+>>> +static irqreturn_t vpu_interrupt(int irq, void *data)
+>>> +{
+>>> +    struct rproc *rproc = data;
+>>> +    struct vpu *vpu = rproc->priv;
+>>> +    u32 vring;
+>>> +
+>>> +    vring = readl(vpu->aux_base + REG_AUX_MSG);
+>>> +
+>>> +    /* Ack the interrupt */
+>>> +    writel(0, vpu->aux_base + REG_AUX_MSG_ACK);
+>>> +
+>>> +    return rproc_vq_interrupt(rproc, vring);
+>>> +}
+>>> +
+>>> +static void ingenic_rproc_disable_clks(void *data)
+>>> +{
+>>> +    struct vpu *vpu = data;
+>>> +
+>>> +    pm_runtime_resume(vpu->dev);
+>>> +    pm_runtime_disable(vpu->dev);
+>>> +
+>>> +    clk_bulk_disable_unprepare(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +}
+>>> +
+>>> +static int ingenic_rproc_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct device *dev = &pdev->dev;
+>>> +    struct resource *mem;
+>>> +    struct rproc *rproc;
+>>> +    struct vpu *vpu;
+>>> +    unsigned int i;
+>>> +    int ret;
+>>> +
+>>> +    rproc = devm_rproc_alloc(dev, "ingenic-vpu",
+>>> +                 &ingenic_rproc_ops, NULL, sizeof(*vpu));
+>>> +    if (!rproc)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    vpu = rproc->priv;
+>>> +    vpu->dev = &pdev->dev;
+>>> +    platform_set_drvdata(pdev, vpu);
+>>> +
+>>> +    mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "aux");
+>>> +    vpu->aux_base = devm_ioremap_resource(dev, mem);
+>>> +    if (IS_ERR(vpu->aux_base)) {
+>>> +        dev_err(dev, "Failed to ioremap\n");
+>>> +        return PTR_ERR(vpu->aux_base);
+>>> +    }
+>>> +
+>>> +    for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>>> +        mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>> +                           vpu_mem_map[i].name);
+>>> +
+>>> +        vpu->mem_info[i].base = devm_ioremap_resource(dev, mem);
+>>> +        if (IS_ERR(vpu->mem_info[i].base)) {
+>>> +            ret = PTR_ERR(vpu->mem_info[i].base);
+>>> +            dev_err(dev, "Failed to ioremap\n");
+>>> +            return ret;
+>>> +        }
+>>> +
+>>> +        vpu->mem_info[i].len = resource_size(mem);
+>>> +        vpu->mem_info[i].map = &vpu_mem_map[i];
+>>> +    }
+>>> +
+>>> +    vpu->clks[0].id = "vpu";
+>>> +    vpu->clks[1].id = "aux";
+>>> +
+>>> +    ret = devm_clk_bulk_get(dev, ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Failed to get clocks\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    vpu->irq = platform_get_irq(pdev, 0);
+>>> +    if (vpu->irq < 0)
+>>> +        return vpu->irq;
+>>> +
+>>> +    ret = devm_request_irq(dev, vpu->irq, vpu_interrupt, 0, "VPU", 
+>>> rproc);
+>>> +    if (ret < 0) {
+>>> +        dev_err(dev, "Failed to request IRQ\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    disable_irq(vpu->irq);
+>>> +
+>>> +    /* The clocks must be enabled for the firmware to be loaded in 
+>>> TCSM */
+>>> +    ret = clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Unable to start clocks\n");
+>>> +        return ret;
+>>> +    }
+>>
+>> You are enabling the clocks directly here and also trying to manage 
+>> them through pm_runtime callbacks again.
+> 
+> Yes. The clocks need to be enabled in the probe.
 
-> +
->  /**
->   * dwc3_get_dr_mode - Validates and sets dr_mode
->   * @dwc: pointer to our context structure
-> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
-*dwc)
->         return ret;
->  }
-> =20
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +       int i, num_ports;
-> +       u32 reg;
-> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
-> +       struct xhci_hcd *xhci_hcd =3D hcd_to_xhci(hcd);
-> +
-> +       dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST=
-_LS);
-> +
-> +       reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +       num_ports =3D HCS_MAX_PORTS(reg);
-> +       for (i =3D 0; i < num_ports; i++) {
-> +               reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x=
-10);
+For the preferred non CONFIG_PM case now and lack of prepare/unprepare().
 
-Please format this as 'port_status_base + i * 0x10'
+> 
+>>> +
+>>> +    pm_runtime_irq_safe(dev);
+>>
+>> Nothing wrong with this, but this does take an additional reference 
+>> count on the parent device (a bus device for you??), and also implies 
+>> that your clk driver code can all run in atomic context so unless you 
+>> have a strong reason, it is safe to drop this.
+> 
+> The clock driver code can run in atomic context, it is guaranteed by the 
+> clk API.
 
-> +               if (reg & PORT_PE) {
-> +                       if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +                               dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_=
-HS;
-> +                       else if (DEV_LOWSPEED(reg))
-> +                               dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_=
-LS;
-> +               }
-> +       }
-> +       phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
-> +}
-> +
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
->         unsigned long   flags;
->         u32 reg;
-> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
-> =20
->         switch (dwc->current_dr_role) {
->         case DWC3_GCTL_PRTCAP_DEVICE:
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 013f42a..ff02d41 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -1094,6 +1094,7 @@ struct dwc3 {
->         struct phy              *usb3_generic_phy;
-> =20
->         bool                    phys_ready;
-> +       int                     hs_phy_flags;
+OK.
 
-Does it need to be signed? Why not unsigned int or unsigned long?
+> 
+>>
+>>> +    pm_runtime_set_active(dev);
+>>
+>> The get_sync below would have been sufficient if you had either 
+>> limited the clk API above to just clk_prepare, or you could have moved 
+>> the whole clk API above into your runtime resume callback.
+> 
+> You assume that pm_runtime_get() will enable the clocks, but that's only 
+> true if CONFIG_PM is set.
+> 
+> The reason the clocks are enabled in the probe, and 
+> pm_runtime_set_active() is called, is that it works whether or not 
+> CONFIG_PM is set.
 
-> =20
->         struct ulpi             *ulpi;
->         bool                    ulpi_ready;
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1dfd024..ec183646 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -19,6 +19,7 @@
->  #include <linux/usb/of.h>
->  #include <linux/reset.h>
->  #include <linux/iopoll.h>
-> +#include <linux/usb/hcd.h>
-> =20
->  #include "core.h"
-> =20
-> @@ -192,21 +193,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
-om *qcom)
-> =20
->  static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
->  {
-> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +
->         if (qcom->hs_phy_irq) {
->                 disable_irq_wake(qcom->hs_phy_irq);
->                 disable_irq_nosync(qcom->hs_phy_irq);
->         }
-> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
-> +               }
-> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
-> +               }
-> +       } else {
-> =20
-> -       if (qcom->dp_hs_phy_irq) {
-> -               disable_irq_wake(qcom->dp_hs_phy_irq);
-> -               disable_irq_nosync(qcom->dp_hs_phy_irq);
-> -       }
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dp_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dp_hs_phy_irq);
-> +               }
-> =20
-> -       if (qcom->dm_hs_phy_irq) {
-> -               disable_irq_wake(qcom->dm_hs_phy_irq);
-> -               disable_irq_nosync(qcom->dm_hs_phy_irq);
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       disable_irq_wake(qcom->dm_hs_phy_irq);
-> +                       disable_irq_nosync(qcom->dm_hs_phy_irq);
-> +               }
->         }
-> -
->         if (qcom->ss_phy_irq) {
->                 disable_irq_wake(qcom->ss_phy_irq);
->                 disable_irq_nosync(qcom->ss_phy_irq);
-> @@ -215,21 +229,34 @@ static void dwc3_qcom_disable_interrupts(struct dwc=
-3_qcom *qcom)
-> =20
->  static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
->  {
-> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +
->         if (qcom->hs_phy_irq) {
->                 enable_irq(qcom->hs_phy_irq);
->                 enable_irq_wake(qcom->hs_phy_irq);
->         }
-> +       if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_LS) {
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       enable_irq(qcom->dp_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
-> +               }
-> +       } else if (dwc->hs_phy_flags & PHY_MODE_USB_HOST_HS) {
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       enable_irq(qcom->dm_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
-> +               }
-> +       } else {
-> =20
-> -       if (qcom->dp_hs_phy_irq) {
-> -               enable_irq(qcom->dp_hs_phy_irq);
-> -               enable_irq_wake(qcom->dp_hs_phy_irq);
-> -       }
-> +               if (qcom->dp_hs_phy_irq) {
-> +                       enable_irq(qcom->dp_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dp_hs_phy_irq);
-> +               }
-> =20
-> -       if (qcom->dm_hs_phy_irq) {
-> -               enable_irq(qcom->dm_hs_phy_irq);
-> -               enable_irq_wake(qcom->dm_hs_phy_irq);
-> +               if (qcom->dm_hs_phy_irq) {
-> +                       enable_irq(qcom->dm_hs_phy_irq);
-> +                       enable_irq_wake(qcom->dm_hs_phy_irq);
-> +               }
->         }
-> -
->         if (qcom->ss_phy_irq) {
->                 enable_irq(qcom->ss_phy_irq);
->                 enable_irq_wake(qcom->ss_phy_irq);
+As I said, if the intention is to reflect the clocks active state in rpm 
+status, then pm_runtime_get_noresume() does the job for you instead of 
+get_sync(). pm_runtime_get_sync() typically does 3 things - increment 
+the usage count, invoke your callbacks (enable clocks for you), and sets 
+the status to active, with the last two steps optional depending on 
+usage count.
 
-Is it possible to move this code to use the wakeirq library? I believe
-only one irq can be the "wakeup" irq in that case but maybe that is
-possible if we know what mode that phy is in? Or does the superspeed and
-some sort of high speed irq need to be enabled for wakeup in case a usb2
-or usb3 device wants to wakeup?
+> 
+>>> +    pm_runtime_enable(dev);
+>>> +    pm_runtime_get_sync(dev);
+>>
+>> If the intention was to increment the usage count with the above 
+>> sequence, pm_runtime_get_noresume() is better. But dropping all of the 
+>> above and just using get_sync would have been sufficient.
+>>
+>>> +    pm_runtime_use_autosuspend(dev);
+>>
+>> I don't see any setting of the autosuspend delay (default value is 0). 
+>> So, you might have as well just not used this at all, and just used 
+>> pm_runtime_put() below.
+> 
+> Autosuspend delay value can be set from userspace.
 
-> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
->  {
->         u32 val;
->         int i;
-> +       struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +       struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+Yes, but I don't see a specific purpose for it in your driver. Either 
+you have remoteproc running (and so clocks enabled always), or you don't 
+have a firmware loaded and want clocks disabled (not sure you would want 
+to waste power for certain of amount of time).
 
-Weird spacing here   ---^
+> 
+>>> +
+>>> +    ret = devm_add_action_or_reset(dev, ingenic_rproc_disable_clks, 
+>>> vpu);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Unable to register action\n");
+>>> +        goto out_pm_put;
+>>> +    }
+>>> +
+>>> +    ret = devm_rproc_add(dev, rproc);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "Failed to register remote processor\n");
+>>> +        goto out_pm_put;
+>>> +    }
+>>
+>> You are using auto-boot, so the firmware loading is an asynchronous 
+>> event and most probably you would run through below sequence first, 
+>> and end up disabling the clocks with an incorrect rpm status.
+> 
+> The driver can auto-load the firmware, but that does not mean it will. 
+> We actually don't do that, and load a task-specific firmware onto the 
+> remote processor on demand.
 
-> +
-> +       if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +               device_init_wakeup(qcom->dev, 1);
-> =20
->         if (qcom->is_suspended)
->                 return 0;
-> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->         int ret;
->         int i;
-> =20
-> +       device_init_wakeup(qcom->dev, 0);
+Yeah OK, depends on what is preferred by default. If it is more standard 
+practise that the remoteproc is booted by userspace always, then I 
+suggest setting auto_boot as false. But nothing wrong with expecting to 
+boot by default with a starting firmware.
 
-Usually device_init_wakeup() is called once during probe and then the
-wakeup enable state for a device is controlled from userspace.  Calling
-this here will be semi-disastrous in the sense that we're going to be
-creating and destroying a wakeup sysfs object each time we suspend. I
-see that dwc3 core code has this pattern of calling device_init_wakeup()
-from the suspend/resume path too, which looks wrong.
+> 
+>>> +
+>>> +out_pm_put:
+>>> +    pm_runtime_put_autosuspend(dev);
+>>
+>> And finally, with the remoteproc core rpm patch, this would all have 
+>> been unnecessary.
+>>
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static const struct of_device_id ingenic_rproc_of_matches[] = {
+>>> +    { .compatible = "ingenic,jz4770-vpu-rproc", },
+>>> +    {}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, ingenic_rproc_of_matches);
+>>> +
+>>> +static int __maybe_unused ingenic_rproc_suspend(struct device *dev)
+>>> +{
+>>> +    struct vpu *vpu = dev_get_drvdata(dev);
+>>> +
+>>> +    clk_bulk_disable(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused ingenic_rproc_resume(struct device *dev)
+>>> +{
+>>> +    struct vpu *vpu = dev_get_drvdata(dev);
+>>> +
+>>> +    return clk_bulk_enable(ARRAY_SIZE(vpu->clks), vpu->clks);
+>>> +}
+>>> +
+>>> +static const struct dev_pm_ops __maybe_unused ingenic_rproc_pm = {
+>>> +    SET_RUNTIME_PM_OPS(ingenic_rproc_suspend, ingenic_rproc_resume, 
+>>> NULL)
+>>> +};
+>>> +
+>>> +static struct platform_driver ingenic_rproc_driver = {
+>>> +    .probe = ingenic_rproc_probe,
+>>> +    .driver = {
+>>> +        .name = "ingenic-vpu",
+>>> +#ifdef CONFIG_PM
+>>
+>> Not sure why you would want to maintain this conditional, because 
+>> runtime_pm is a core dependency now for your driver to work properly.
+> 
+> No, it is not - the driver works perfectly fine with CONFIG_PM being 
+> disabled, and having a hardcoded dependency on CONFIG_PM is not 
+> something we want.
 
-Shouldn't we be forwarding the wakeup request from the root hub to the
-controller? I'm not super clear on how USB PM is supposed to work but
-this doesn't look right.
+OK, so if IIUC, in general CONFIG_PM is not a typical usage for your 
+MIPS platforms. Your driver is the first non-ARM remoteproc driver :), 
+CONFIG_PM is almost a given on most ARM platforms.
+
+So, I fail to see how your clocks can stay disabled then when 
+CONFIG_PM=n if the remoteproc fails to load with the current code, which 
+was your primary argument for using prepare/unprepare (based on comments 
+on prior versions). It looks to me that your needs are indeed better 
+suited with the prepare/unprepare ops as in your initial series.
+
+And in the case of CONFIG_PM=y, you have three levels of code that 
+enables the clocks (the bare clk API, the pm_runtime_get in probe, and 
+the pm_runtime_get in the remoteproc core). Depending on the rpm status, 
+it may or may not invoke the callbacks.
+
+regards
+Suman
+
+> 
+> Cheers,
+> -Paul
+> 
+>> regards
+>> Suman
+>>
+>>> +        .pm = &ingenic_rproc_pm,
+>>> +#endif
+>>> +        .of_match_table = ingenic_rproc_of_matches,
+>>> +    },
+>>> +};
+>>> +module_platform_driver(ingenic_rproc_driver);
+>>> +
+>>> +MODULE_LICENSE("GPL");
+>>> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>>> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
+>>>
+>>
+> 
+> 
+
