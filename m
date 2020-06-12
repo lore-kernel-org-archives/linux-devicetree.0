@@ -2,134 +2,103 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8324AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 05:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5F6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52ABC2084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 05:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A303207ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dk3ugeAE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sHazt5Fw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgFLF3B (ORCPT
+        id S1726507AbgFLGWs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 01:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
+        Fri, 12 Jun 2020 02:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgFLF3B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 01:29:01 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4401C03E96F
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 22:28:59 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id s10so3623256pgm.0
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 22:28:59 -0700 (PDT)
+        with ESMTP id S1726300AbgFLGWq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 02:22:46 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E15FC03E96F
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 23:22:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r9so6989016wmh.2
+        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 23:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sn8Q2QTIJp4z3aJYpXX1ZHPFtT0KGOrsa14hJOj2CZ4=;
-        b=dk3ugeAESJZcB7Ib32BwlQGgfx9iTvtwl1PuBEikxgRo0Lc4TtKRi/8Xi2tYQC/z6Q
-         KM/rkoZDO2B3Vv+BV/qKKsEdHASexOfVLUWpEpXby0ddy7vegM42ltm/7YlidZkGXL0j
-         T72ZH63bHrOfLmKNiPoWWBfGFumnggDr1CGNgMOw92+0KZvZTNSskiMm82+LjGyUoY5R
-         2/5dD1b/x0KUfQAS8eAkSu8+/oXb59fy+4zMwQlmbYNTcjQVB9ubXOT0ReEB+k8zt21C
-         D/uS7AKn5xQhG7c6hZ7A8gAN1oMOwXNexQuDSoEovnBE0nrC/yM44wL5x2lLAdlrUFfN
-         mjvg==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=r35/raZrWclZAQmDzK4QKGB4/ZtwPhHpA9L2VMxUYi0=;
+        b=sHazt5Fwsvd+Og9/lqG/YprtOJYONjtaj7z08uneab2SJkRHMzqRUKn1v8POaYQOA2
+         zHz0/+OMQvZIb8YYNsYmjNXYUPUgVEQT26KXtNg8vm/T9C8pQuO9BtKyHsEy+A0nfCFf
+         wcB+W0Qpecva9B3Iw2Q3MHF53Vo3pji+WvOfnoyK5bsRzoQ/74XU/u706hSAF+KHHN4+
+         2vvw63H0YZgUE0sNPAYF30qLixeRfwKACybBvfwfqwsCE1D2H1NN0c9+Ki/Uf/qcJ8oF
+         9KvaznHC8ARcXKlWngB5c+c6s0RxHKD9RZQp5zggoTFa6q0yiNODbR3fdxPaP2CtgGDT
+         yiSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sn8Q2QTIJp4z3aJYpXX1ZHPFtT0KGOrsa14hJOj2CZ4=;
-        b=DjqjAm6R4uisDDgW8tp1jxL7luGFAaJRjnkAF4lzwt99cRWXXB1JqrLhXKpSn9Y+9i
-         nWdCBq/N/sp7UaCya8nV34qr5aCDVhp5f902zvO2Q3HLDp+7pNTl1jnc4LTYGmJNeWGd
-         e8dwkYTvYWERezMz3uiHCTzt7k7HVrvbtffRLZpENU96wiLi6DqM3YSeuGj71Xl25h2Y
-         78nNusDx6GucuebfvUjyobtteUDQ89139GTvXHBXIF+g1jYowEAFCdxTbUxCjd2Punya
-         bm6FX86PHRUadrtq3Ah3ursRVSA96kKJp/JfzGegK5LsR9+2jzwx5x/YIlIheeVcPg3d
-         EcxQ==
-X-Gm-Message-State: AOAM532KOCYjVCLeH+qyzegJDgLSdNIKuK8a/ISKUlihXpnPgRDGHrGD
-        3j7b4AbNZtaecS+TZejNYjKLMw==
-X-Google-Smtp-Source: ABdhPJyHqEKil6Mou/zBNdyhF9uHnkjkpxj+ljkhROJsCnXD4KjAtn8p08f6zo/SXq+4izoXTulfCw==
-X-Received: by 2002:a62:e40f:: with SMTP id r15mr10236310pfh.247.1591939738558;
-        Thu, 11 Jun 2020 22:28:58 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id u14sm5369429pfk.211.2020.06.11.22.28.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jun 2020 22:28:57 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 10:58:53 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200612052853.nds4iycie6ldjnnr@vireshk-i7>
-References: <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
- <20200604092052.GD8814@bogus>
- <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
- <20200605045645.GD12397@bogus>
- <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
- <20200605085830.GA32372@bogus>
- <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
- <20200610093334.yznxl2esv5ht27ns@vireshk-i7>
- <20200611100027.GB18781@bogus>
- <CABb+yY1OwVB+uk+0w+D-4Xy46iYn8tPZYBZ0qjrzQFLA6SaTvw@mail.gmail.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=r35/raZrWclZAQmDzK4QKGB4/ZtwPhHpA9L2VMxUYi0=;
+        b=g6Mh6Sy5phh9Ls7BGtXVup6A8cAY7ziKzHTLczteBOlxd91QtOKSjhYvaKeugdannS
+         CwgRtt/QFqPzTIaRsIDDKMzeMU0nQVrQi0PWq++1mDdqS+euqpFj/vI1ci9R0zY2zf+R
+         zeZx9il9ycBXOQVcF3+l5NjimVHSBCpss5KxeEJpvjourewbMTXZ99cZG82h5vcUR6EB
+         akWsNXXmPquG9q2dI18Ke3cax5+Z75JTkMFW+cY7Xf4oqhq+Vb/EdE7T13meyBB+HWTC
+         Up15U8ZBfagtpP0ZCd/qYsjGN/XZ7Tky205nq01tRfHvhL08ojq8KdvfjdTgQSVp5T9U
+         7AtA==
+X-Gm-Message-State: AOAM531yma49o+ldilTNhXPee+7txHHOaib4qCQjRopt4Oz30cJm7wbz
+        dLirSeBZY9e/dcTios1ovE7oTw==
+X-Google-Smtp-Source: ABdhPJyMZ7jdqnrLlGWZOxx1xPXmlGZ65EoGe9atgpeXrfY05P+k4z1xx3SC4VvX1avfKNeZJIy8Ow==
+X-Received: by 2002:a1c:c2c5:: with SMTP id s188mr11700526wmf.18.1591942963832;
+        Thu, 11 Jun 2020 23:22:43 -0700 (PDT)
+Received: from dell ([2.27.167.101])
+        by smtp.gmail.com with ESMTPSA id o18sm7463231wme.19.2020.06.11.23.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 23:22:43 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 07:22:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartmangregkh@linuxfoundation.org
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+Message-ID: <20200612062240.GC4106@dell>
+References: <20200609110136.GJ4106@dell>
+ <7cf94809-7346-31bc-877c-679ecc4d9710@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABb+yY1OwVB+uk+0w+D-4Xy46iYn8tPZYBZ0qjrzQFLA6SaTvw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7cf94809-7346-31bc-877c-679ecc4d9710@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11-06-20, 19:34, Jassi Brar wrote:
-> In the first post in this thread, Viresh lamented that mailbox
-> introduces "a few ms" delay in the scheduler path.
-> Your own tests show that is certainly not the case -- average is the
-> same as proposed virtual channels 50-100us, the best case is 3us vs
-> 53us for virtual channels.
+On Thu, 11 Jun 2020, Frank Rowand wrote:
 
-Hmmm, I am not sure where is the confusion here Jassi. There are two
-things which are very very different from each other.
+> Please add me to the distribution list for future versions of this.
 
-- Time taken by the mailbox framework (and remote for acknowledging
-  it) for completion of a single request, this can be 3us to 100s of
-  us. This is clear for everyone. THIS IS NOT THE PROBLEM.
+The solution patch is already on v2.
 
-- Delay introduced by few of such requests on the last one, i.e. 5
-  normal requests followed by an important one (like DVFS), the last
-  one needs to wait for the first 5 to finish first. THIS IS THE
-  PROBLEM.
+https://lore.kernel.org/lkml/20200611191002.2256570-1-lee.jones@linaro.org/
 
-Just increasing the timeout isn't going to solve anything as I said in
-the last email, we can make it 5 minutes for what's its worth. The
-idea is to make the turn-around-time less for all the requests..
-
-From Google (I know you must already know it, I am just trying to
-highlight the importance of this thing here):
-
-Turnaround time (TAT) is the time interval from the time of submission
-of a process (read request) to the time of the completion of the
-process.
-
-This is what people care about, that is the whole reason kernel has
-multi-processing support in the first place. If making things
-sequential was good enough, we would have never reached here. The
-whole idea is to parallelize things as much as possible without
-hurting efficiency in a bad way (like too much parallelism). The
-hardware allows parallelism and there is absolutely no point in not
-allowing that. The kernel doesn't need to worry about how the remote
-is going to handle it. Remote may be simple and handle it sequentially
-or it may be running Linux itself and can schedule multiple threads
-for requests.
+I'll bounce it to you.
 
 -- 
-viresh
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
