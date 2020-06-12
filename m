@@ -2,69 +2,128 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9F4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31363206D7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 19:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591989949;
-	bh=DcjK10GvDFeAl9mARoMVV4tuAvpVpKVU/efnkMi2GfM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=f2c0MbB/q3SZyNbg2iLCzsggI6bE/e5TuSASB9R92vLEOsSp4n83ZViUzKf2e9OQR
-	 NZ1ijKhoxDY0Xt5bsCFxB9SGwIQSEVxcMNuDO24zfGeHJ4LbrUHG7vTbpekTTDdIqX
-	 n4WRprDTEy69wgscruULWYicC5hFqRZHY/Dnt/ws=
+	by mail.kernel.org (Postfix) with ESMTP id 5493520723
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h7u6dR4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgFLTZm (ORCPT
+        id S1726309AbgFLUCz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 15:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgFLTZf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 12 Jun 2020 15:25:35 -0400
-Subject: Re: [GIT PULL] Devicetree fixes for v5.8-rc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591989935;
-        bh=DcjK10GvDFeAl9mARoMVV4tuAvpVpKVU/efnkMi2GfM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Gq0jNa65zyKidBw9g5liYqzdlMvMwg+E1yD6e48slKnfeJQ6mZ8mTpmWDYId8wbfD
-         BvqhnIG7uYIzSstb5iTLuv31QIyAce1vEuNA7fR4LUyyIBWI7tlPrdeINuW1FFg//L
-         yYRm4j2Xk2zIqe4KscEhPXHmh/OmbGYuoW4/N5DU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200612174800.GA3459802@bogus>
-References: <20200612174800.GA3459802@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200612174800.GA3459802@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.8-1
-X-PR-Tracked-Commit-Id: 8440d4a75d90556cfb8fb3e244443f67381aafd6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4071b856afc8a49ec41e98ff45151bb0800bc46d
-Message-Id: <159198993544.4050.9158713986979540025.pr-tracker-bot@kernel.org>
-Date:   Fri, 12 Jun 2020 19:25:35 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Fri, 12 Jun 2020 16:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgFLUCz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 16:02:55 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D3EC03E96F
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t7so4617505pgt.3
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6uGSExpyps+wiw7uOwP+l2H0cv+SpFFWTmb8dRKkt6U=;
+        b=h7u6dR4B19jQUlPQPyqjXka9J3KhpwDNlIcPUaI2++siCsOQzCELypYC05rGhkBGfK
+         g6A0zotR7FceCE016nrOeQktoGXFoxfPsVMkwkGm2ZK8vzxnm9PHYfuf86mrONiRQW2Z
+         Zw4dDBZtjL34Gk9sshcTJuMJRBFPMalZqIERo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6uGSExpyps+wiw7uOwP+l2H0cv+SpFFWTmb8dRKkt6U=;
+        b=Mt8ZaidmbUiHJGmGf9MGA4u6O57q5UfOV66RptrHJ7L0/bcdhwwD5dMnyWSNjf3RgL
+         j71fcCC6ONGGp89TTUTLbPHmSt94ViQJhj5JJPqT6LLgYO0AbW5p8qdHhH8kULLFUcTp
+         U7awxyNJMZ7Hs/DyIHG+bAB272tNlKaybo9pnAJ2jPzSMntsKLxbZDVhg4H9dfBj+x24
+         W0mlJdzLBpjQkWFudp7Ld5ZkPsfBQDav2Ku+NRxfd2jTKo/0baNWEKbuglvaIUxlSKdU
+         hHutVLwmzyHWw+27OIk9DwyIOpwVcxQmrusVQjjCSGsB0Nc16mfqzqHNt3Ys/mtYKaGk
+         r+eA==
+X-Gm-Message-State: AOAM531SE00ylE4jYNJtz4qV3NX1fEPqMlzGj83WjSw6TW10Z8Ja3qzJ
+        uYSVzFEFi+vOaNzTTczujVsvsA==
+X-Google-Smtp-Source: ABdhPJz0sMFDiDA11ABe5kT1o/km+Y+ock0L+fTuGu64VLLvv2xzyZOb5s8slfiJArkBbrcCb8SSjA==
+X-Received: by 2002:a63:1617:: with SMTP id w23mr12597286pgl.248.1591992175014;
+        Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id f7sm6544851pje.1.2020.06.12.13.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 13:02:54 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     heiko@sntech.de, linux-rockchip@lists.infradead.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
+        dianders@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] ARM: dts: rockchip: Add marvell BT irq config
+Date:   Fri, 12 Jun 2020 13:02:48 -0700
+Message-Id: <20200612130219.v2.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 12 Jun 2020 11:48:00 -0600:
+Veyron Jaq and Mighty both use the Marvel 8897 WiFi+BT chip. Add wakeup
+and pinctrl block to devicetree so the btmrvl driver can correctly
+configure the wakeup interrupt.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.8-1
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+The Veyron Mighty Chromebook (rk3288 based board) is missing the wake
+configuration for Bluetooth. Without this change, the wake irq was not
+configurable and wake on Bluetooth was broken.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4071b856afc8a49ec41e98ff45151bb0800bc46d
+I verified this change with additional changes in the Bluetooth driver
+(the series is at https://patchwork.kernel.org/cover/11599101/). The
+driver changes are not necessary for this dts change and shouldn't block
+it.
 
-Thank you!
 
+Changes in v2:
+- Move sdio0 ahead of sdmmc
+
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index 171ba6185b6d39..c15d6865f5a390 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -44,6 +44,21 @@ regulator-state-mem {
+ 	};
+ };
+ 
++&sdio0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	btmrvl: btmrvl@2 {
++		compatible = "marvell,sd8897-bt";
++		reg = <2>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
++		marvell,wakeup-pin = /bits/ 16 <13>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l>;
++	};
++};
++
+ &sdmmc {
+ 	disable-wp;
+ 	pinctrl-names = "default";
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.27.0.290.gba653c62da-goog
+
