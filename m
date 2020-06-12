@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA3BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C098C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914B72078C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF30320835
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmowBu5g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ce6EyEcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725440AbgFLEHf (ORCPT
+        id S1726364AbgFLEKn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
+        Fri, 12 Jun 2020 00:10:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgFLEHf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 00:07:35 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653B8C03E96F;
-        Thu, 11 Jun 2020 21:07:35 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id y1so6203007qtv.12;
-        Thu, 11 Jun 2020 21:07:35 -0700 (PDT)
+        with ESMTP id S1725809AbgFLEKm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 00:10:42 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A786C08C5C1;
+        Thu, 11 Jun 2020 21:10:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id f18so7882475qkh.1;
+        Thu, 11 Jun 2020 21:10:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=W9N0HI/VJRXYdn3DxBbsnmWiEpklzY4+CMZBCSjxVLI=;
-        b=MmowBu5g/zlVcPTy3ZBmy5iY8SG0VMb2dSPwH5MLFgedHfF8GKgeUxCK3uT+YrmbGS
-         RacRhfM+AeWoO2epbNIPBsWgS5T7UE4jGevyuf6ruVakGyJdMgmeTUrQOZaKHQU97ykb
-         tanSneGEeRFWtndHd69u5NxH6sVd1mGwvJqHyK16AXgLmttUQgiZz3sXLu88bIq3KxFi
-         RLTeKXpvVyTpibyZiGdxDP7/R+g8uS4KoCGADEFB6XmAuYfCBY6vY3tiVXCGTenBkf/F
-         Qx+3549AhBVymIp5SXL4UtYDx/fkunNCkaX+1XAmaX/eNojPWWSTsIkSMMaZCLdqboxN
-         2/dQ==
+        bh=BX3C143A3POrmkr1aq3BVs/jgbxYgT9lNfcL1LZXEKE=;
+        b=Ce6EyEcTASg05aRX64tIzLPc0Ldl21nX0gdkk7dHj5SV1ezpc5m8hh8vHOtsH+JToW
+         DaMp+mFWljKSMJfR95OV3iaLOcY+6gLvacrCc7XVU0JEWHF4jXaFQHcbj9FHACzbe0gX
+         frbOcTqf7xCByEeC82GrKS9avdSmtjvD8vL38WnBxHX1Jfksx0fkrXl21IEQknqWyQpe
+         m8KUNAagjP4eYoGxp5RbJswUTD0/Z9O9u37+BXOVF2mwXzGOz9+SH+/lOYyZB9L7zCbO
+         WCFs/Q48TOpToI6F737FBKW91eE3+JqcsDuW+RceVONtXQcS0O2B6mYlxqO4DWSYtqcT
+         TXhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=W9N0HI/VJRXYdn3DxBbsnmWiEpklzY4+CMZBCSjxVLI=;
-        b=Qjx4+wZZIKJzuVqWTw99vcP7bbthuANMGnvkeXMQS02N9xuvzDgaziSrFWcDrbIgbW
-         34s8rBIiphpM3fJ0ACDwQ7XP/qzXIjvtBcZ8vrFqDSmScWffWuMvS2izl9euskotyvWl
-         H9YEdAkNxwEGoVW63S+CBC+oqpLSh7iNgSu4D9aiWoJHGMXpYI2TzONi/Rb63nW4Ncp7
-         UAf7cUdEanudaw1mDRt06ESSpCA692dqq7kxxaV8ZUIZdx0MFlMAhEFTkPW964KbQqpT
-         d8rDf2JLD1KNqv1JmlgVUShWttB6Q/oLH2/dX1xW7IM72GVzxSkuDTo80L48Om8Jm0yS
-         qjnA==
-X-Gm-Message-State: AOAM531E2sFGdeDcKcDJu7LgNjnG+Xz1trBh7PIwE9m/PETuNwH4ns1n
-        CuzGs1ErjSIMUvEZJPfgmQjugB2e1n0=
-X-Google-Smtp-Source: ABdhPJxQuukhtwanmQJb52xJH/9PJDz7QPdp/qzb+qaQvTRo3KgSQnfSIXB3TMpsb+uFZnWTDW6TxA==
-X-Received: by 2002:aed:358c:: with SMTP id c12mr1177305qte.214.1591934854411;
-        Thu, 11 Jun 2020 21:07:34 -0700 (PDT)
+        bh=BX3C143A3POrmkr1aq3BVs/jgbxYgT9lNfcL1LZXEKE=;
+        b=KTkza075uWkItUVFJVNvAKHVkfxdsNHjQEtby9w3affNrMWrJPhgRNUGS5wKna3ht5
+         bqYb3IIRs9sVyAzMrvROlkGHdAmWnhwV8xOBU3FpNW7nK3NwEXZHGajxQIcufjpe52aq
+         ila2i7d8pvhKHtkG8xPgrI3y7VjEeZO8U1xoXvQKODKJU6KhZmRsvO7CFzFbH+RkRJTQ
+         glAgQmmpARpZSQ/gvUZdK14pAGhOUn9kb9+3DRMvVs7gPpKqDlCGr7UwQDJcApQE1u+t
+         zZGxSqgxX+kNXVkNQuHnhT9rIVajJfpzUX+d6B620BFJOQiUyTFXRXztKui3v0b1dLpi
+         Z/ww==
+X-Gm-Message-State: AOAM531KPzirPzyLPsx9hhOjoo6s8hMLAU9pBSZaYbmaWWsyjqtBiZsg
+        ldYRqOgWmsYBTbmMFk8Tn0Q=
+X-Google-Smtp-Source: ABdhPJwPPjDV9+Z/ZHy7CT2YOLdbfu1LEYgQSgWOVIRxMfBZM1OtC+Y6K34t5asj2+iAPjCWpVnH1w==
+X-Received: by 2002:a05:620a:4fa:: with SMTP id b26mr1201057qkh.63.1591935040214;
+        Thu, 11 Jun 2020 21:10:40 -0700 (PDT)
 Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id c6sm3609080qkg.93.2020.06.11.21.07.33
+        by smtp.gmail.com with ESMTPSA id t188sm3820131qka.27.2020.06.11.21.10.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2020 21:07:33 -0700 (PDT)
+        Thu, 11 Jun 2020 21:10:39 -0700 (PDT)
 Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
 To:     Lee Jones <lee.jones@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -75,8 +75,8 @@ To:     Lee Jones <lee.jones@linaro.org>,
         GregKroah-Hartmangregkh@linuxfoundation.org
 References: <20200609110136.GJ4106@dell>
 From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <7cf94809-7346-31bc-877c-679ecc4d9710@gmail.com>
-Date:   Thu, 11 Jun 2020 23:07:32 -0500
+Message-ID: <fba8c972-b96c-74ae-b858-c47f2765028f@gmail.com>
+Date:   Thu, 11 Jun 2020 23:10:38 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
@@ -90,10 +90,6 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Lee,
-
-Please add me to the distribution list for future versions of this.
-
--Frank
 
 On 2020-06-09 06:01, Lee Jones wrote:
 > Good morning,
@@ -214,6 +210,13 @@ On 2020-06-09 06:01, Lee Jones wrote:
 > seek an alternative procedure.
 > 
 > It should be possible to match based on order.  However, the developer
+
+You can not count on order.  There are no guarantees of node ordering in
+compilation, modification by bootloader, and within Linux kernel data
+structures.
+
+-Frank
+
 > would have to guarantee that the order in which the child devices are
 > presented to the MFD API are in exactly the same order as they are
 > represented in the Device Tree.  The obvious draw-back to this
