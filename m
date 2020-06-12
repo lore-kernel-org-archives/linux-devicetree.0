@@ -2,154 +2,213 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACEDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 09:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B670BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 09:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B436820835
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 09:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA1E2068E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 09:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JdtW/YSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgFLJGE (ORCPT
+        id S1726362AbgFLJ0l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 05:06:04 -0400
-Received: from regular1.263xmail.com ([211.150.70.202]:43756 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgFLJGE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 05:06:04 -0400
-X-Greylist: delayed 423 seconds by postgrey-1.27 at vger.kernel.org; Fri, 12 Jun 2020 05:06:01 EDT
-Received: from localhost (unknown [192.168.167.13])
-        by regular1.263xmail.com (Postfix) with ESMTP id 6DEDE39D;
-        Fri, 12 Jun 2020 16:58:48 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.19] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P25386T140143252899584S1591952327081440_;
-        Fri, 12 Jun 2020 16:58:48 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <88e6e92c3fdead2ba859d612ff7a405a>
-X-RL-SENDER: sugar.zhang@rock-chips.com
-X-SENDER: zxg@rock-chips.com
-X-LOGIN-NAME: sugar.zhang@rock-chips.com
-X-FST-TO: papadakospan@gmail.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH v2 0/13] Patches to improve transfer efficiency for
- Rockchip SoCs.
-To:     Peter Geis <pgwipeout@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        devicetree@vger.kernel.org, Carlos de Paula <me@carlosedp.com>,
-        dmaengine@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Leonidas P. Papadakos" <papadakospan@gmail.com>
-References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
- <CAMdYzYr+NF7L3KKzcGano=j9V844Gy8gH03hD++CoPe8Ao1QxQ@mail.gmail.com>
- <CAMdYzYqRTbePLKZ6q39Ao3sgLU0xUvrLmwYTVU3feEb4ob6FuQ@mail.gmail.com>
-From:   sugar zhang <sugar.zhang@rock-chips.com>
-Message-ID: <2b12edc3-bd89-e103-f6cb-cdd47fcabb49@rock-chips.com>
-Date:   Fri, 12 Jun 2020 16:58:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 12 Jun 2020 05:26:41 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41732 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgFLJ0k (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 05:26:40 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05C9QWNO042251;
+        Fri, 12 Jun 2020 04:26:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591953992;
+        bh=plg66SGaAwE+4oegw51dtOB9rPV3OE8eIAPCaci5HNM=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=JdtW/YSlg86wXbEQgxn2L0qNpVB2zuM5aY5zJHKuQ2Osl+OGFcqRJn+skJj7vtOnv
+         nkLEwuacDCchzDj5ZCYw/oreRxQxIALwBZgcoaav1iQ0wjgPRc+mzdsH2b+zEIicm1
+         ahdnVgPmrRw4OwAxQwwggc87OKer9Inw1fR9/uMQ=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05C9QWwp051439
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 04:26:32 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 04:26:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 04:26:32 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05C9QU3Q104797;
+        Fri, 12 Jun 2020 04:26:30 -0500
+Subject: Re: [PATCH v3 3/3] ASoC: ti: Add custom machine driver for j721e EVM
+ (CPB and IVI)
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200612085909.15018-1-peter.ujfalusi@ti.com>
+ <20200612085909.15018-4-peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <7f2c4297-3ad9-5b8f-c9a5-5120078120c6@ti.com>
+Date:   Fri, 12 Jun 2020 12:27:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAMdYzYqRTbePLKZ6q39Ao3sgLU0xUvrLmwYTVU3feEb4ob6FuQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200612085909.15018-4-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Peter,
-
-Thanks for testing! but, as I know, GMAC does not use the general 
-dma(pl330) for data transfer,
-
-so, these patchs should not be helpful for your case.
-
-在 2020/6/12 9:15, Peter Geis 写道:
-> On Thu, Jun 11, 2020 at 9:06 PM Peter Geis <pgwipeout@gmail.com> wrote:
->> Good Evening,
->>
->> I am currently testing this on the rk3399-rockpro64, and it appears to
->> fully fix the gmac problem without using txpbl.
->> PCIe also seems to be more stable at high load.
->> I need to conduct long term testing, but it seems to be doing very well.
-> Belay that, it does make it harder to trigger, but the issue still
-> remains on the rk3399.
->
->> Unfortunately it doesn't fix the rk3328 gmac controller.
->>
->> Tested-by: Peter Geis <pgwipeout@gmail.com>
->>
->> On Mon, Jun 8, 2020 at 9:15 PM Sugar Zhang <sugar.zhang@rock-chips.com> wrote:
->>>
->>>
->>> Changes in v2:
->>> - fix FATAL ERROR: Unable to parse input tree
->>>
->>> Sugar Zhang (13):
->>>    dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
->>>    dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
->>>    dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
->>>    ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
->>>    ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
->>>    ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
->>>    ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
->>>    ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
->>>    arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
->>>    arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
->>>    arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
->>>    arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
->>>    arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
->>>
->>>   .../devicetree/bindings/dma/arm-pl330.txt          |  1 +
->>>   arch/arm/boot/dts/rk3036.dtsi                      |  1 +
->>>   arch/arm/boot/dts/rk322x.dtsi                      |  1 +
->>>   arch/arm/boot/dts/rk3288.dtsi                      |  3 ++
->>>   arch/arm/boot/dts/rk3xxx.dtsi                      |  3 ++
->>>   arch/arm/boot/dts/rv1108.dtsi                      |  1 +
->>>   arch/arm64/boot/dts/rockchip/px30.dtsi             |  1 +
->>>   arch/arm64/boot/dts/rockchip/rk3308.dtsi           |  2 +
->>>   arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  1 +
->>>   arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  2 +
->>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  2 +
->>>   drivers/dma/pl330.c                                | 44 +++++++++++++++-------
->>>   12 files changed, 49 insertions(+), 13 deletions(-)
->>>
->>> --
->>> 2.7.4
->>>
->>>
->>>
->>>
->>> _______________________________________________
->>> Linux-rockchip mailing list
->>> Linux-rockchip@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
--- 
-Best Regards!
-张学广/Sugar
-福州瑞芯微电子股份有限公司
-Fuzhou Rockchip Electronics Co.Ltd
 
 
+On 12/06/2020 11.59, Peter Ujfalusi wrote:
+> The audio support on the board is using pcm3168a codec connected to McA=
+SP10
+> serializers in parallel setup.
+> The pcm3168a SCKI clock is coming via the j721e AUDIO_REFCLK2 pin.
+> In order to support 48KHz and 44.1KHz family of sampling rates the pare=
+nt clock
+> for AUDIO_REFCLK2 needs to be changed between PLL4 (for 48KHz) and PLL1=
+5 (for
+> 44.1KHz). The same PLLs are used for McASP10's AUXCLK clock via differe=
+nt
+> HSDIVIDER.
+>=20
+> Generic card can not be used for the board as we need to switch between=
+
+> clock paths for different sampling rate families and also need to chang=
+e
+> the slot_width between 16 and 24 bit audio.
+>=20
+> The audio support on the Infotainment Expansion Board consists of McASP=
+0
+> connected to two pcm3168a codecs with dedicated set of serializers to e=
+ach.
+> The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
+> It is extending the audio support on the CPB.
+>=20
+> Due to the fact that the same PLL4/15 is used by both domains (CPB/IVI)=
+
+> there are cross restriction on sampling rates.
+>=20
+> The IVI side is represented as multicodec setup.
+>=20
+> PCMs available on a plain CPB (no IVI addon):
+> hw:0,0 - cpb playback (8 channels)
+> hw:0,1 - cpb capture (6 channels)
+>=20
+> When the IVI addon is present, additional two PCMs will be present:
+> hw:0,2 - ivi multicodec playback (16 channels)
+> hw:0,3 - ivi multicodec capture (12 channels)
+>=20
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  sound/soc/ti/Kconfig     |   8 +
+>  sound/soc/ti/Makefile    |   2 +
+>  sound/soc/ti/j721e-evm.c | 887 +++++++++++++++++++++++++++++++++++++++=
+
+>  3 files changed, 897 insertions(+)
+>  create mode 100644 sound/soc/ti/j721e-evm.c
+
+> diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+> new file mode 100644
+> index 000000000000..096f045a1120
+> --- /dev/null
+> +++ b/sound/soc/ti/j721e-evm.c
+
+=2E..
+
+> +static int j721e_get_clocks(struct device *dev,
+> +			    struct j721e_audio_clocks *clocks, char *prefix)
+> +{
+> +	struct clk *parent;
+> +	char *clk_name;
+> +	int ret;
+> +
+> +	clocks->target =3D devm_clk_get(dev, prefix);
+> +	if (IS_ERR(clocks->target)) {
+> +		ret =3D PTR_ERR(clocks->target);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_err(dev, "failed to acquire %s': %d\n",
+
+Looks like I have extra "'" in the prints...
+
+> +				prefix, ret);
+> +		return ret;
+> +	}
+> +
+> +	clk_name =3D kasprintf(GFP_KERNEL, "%s-48000", prefix);
+> +	if (clk_name) {
+> +		parent =3D devm_clk_get(dev, clk_name);
+> +		kfree(clk_name);
+> +		if (IS_ERR(parent)) {
+> +			ret =3D PTR_ERR(parent);
+> +			if (ret !=3D -EPROBE_DEFER)
+> +				dev_err(dev, "failed to acquire %s': %d\n",
+> +					prefix, ret);
+> +			return ret;
+
+It should be like this to really not fail with single PLL (from DT), but
+it is not documented and supported officially.
+
+if (ret =3D=3D -EPROBE_DEFER)
+	return ret;
+
+dev_dbg(dev, "no 48KHz parent for %s: %d\n", prefix, ret);
+parent =3D NULL;
+
+> +		}
+> +		clocks->parent[J721E_CLK_PARENT_48000] =3D parent;
+> +	} else {
+> +		return -ENOMEM;
+> +	}
+> +
+> +	clk_name =3D kasprintf(GFP_KERNEL, "%s-44100", prefix);
+> +	if (clk_name) {
+> +		parent =3D devm_clk_get(dev, clk_name);
+> +		kfree(clk_name);
+> +		if (IS_ERR(parent)) {
+> +			ret =3D PTR_ERR(parent);
+> +			if (ret !=3D -EPROBE_DEFER)
+> +				dev_err(dev, "failed to acquire %s': %d\n",
+> +					prefix, ret);
+> +			return ret;
+
+and here
+
+> +		}
+> +		clocks->parent[J721E_CLK_PARENT_44100] =3D parent;
+> +	} else {
+> +		return -ENOMEM;
+> +	}
+
+then:
+
+if (!clocks->parent[J721E_CLK_PARENT_44100] &&
+    !clocks->parent[J721E_CLK_PARENT_48000]) {
+	dev_err(dev, "At least on parent clock is needed for %s\n",
+		prefix);
+	return -EINVAL;
+}
+
+> +
+> +	return 0;
+> +}
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
