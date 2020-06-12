@@ -2,134 +2,103 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570ADC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B33C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 07:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30CE620801
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2AA12081A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 07:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDnKhcR2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FYGfNpDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgFLGrY (ORCPT
+        id S1726353AbgFLHWn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbgFLGrY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 02:47:24 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D94C03E96F;
-        Thu, 11 Jun 2020 23:47:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q11so8556220wrp.3;
-        Thu, 11 Jun 2020 23:47:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bEDPE0wLH9mbIJMf0kGvWOirp0WuDO4dvBhX04ygBLA=;
-        b=PDnKhcR2OKWwop1uvkMULWT6i/7vk+O9RNJihHhNTy6RkG3AMx2zlkW11DMKdLgtTb
-         ac5XQSh1LuUTTDbsN6AyZ11+Fv/KwLCXeDP03o/hkjb6656V2MGNVkRUf2sHcwPIOTv7
-         5OGCY77qTnoulvA/7h4BirLJ9RCSdxXQeldgZF+nkwW37WboQDU6OVdgJvq7yM0jvjjh
-         qEm8DUGQQumSiU4mG0+ZBYRA5GmpaDmD9GWhvm+Q/cm6HQcOtSLNPI597bX3P1mJWNwy
-         hoJcNrPXAo02glX3D5Q2yU7jsE936IfX9Q2UlzfjuzsucwJPUdrZ5XlYk6hyIop6OXee
-         IPhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bEDPE0wLH9mbIJMf0kGvWOirp0WuDO4dvBhX04ygBLA=;
-        b=S00WYaDNlipxNcH1Px5zVjkW5/t6StRvpAjaj1rbl3PqvzWL0jSjUhTaXqeN7CIPu4
-         GF7FEsIksm7rNGxGdsyxNLgFdWmkjzVboTUrj3pwHFDFI2+OgeI84iNbduWRvGRGNlL2
-         k5+Hz1tRbXlSkp3fEP4f72Eoe5n4UgpDptgn3bbDszhosmmIHZdch6WRwHXes1oUb+Pl
-         X3HGupUmDL9J4n5nfXKLKSxagTZebRGDsD2v+06S1jOMcGYRLnbIFgjNlZtzP+BJ3+sh
-         VKz5wilamvemgdyanOVuuZopMjrLXIsUTp9jpwQ/sucj/1M98H7oR3AvVCLdv6bLttHC
-         BtkA==
-X-Gm-Message-State: AOAM5301TIbyo/JsJrqVSdJvt4RcDBHJEI5++wgpOMrisNfyHeZEsek8
-        runtni+C0KxYr61LE9dLBDSYYPkr
-X-Google-Smtp-Source: ABdhPJwJAOei45XC0j5S56zzU0K7jY8wa+9ImMnUqdJ5h6skzOSWjMqam59s69hL/DHXMXwE5cdlXA==
-X-Received: by 2002:a05:6000:100e:: with SMTP id a14mr13202217wrx.349.1591944441631;
-        Thu, 11 Jun 2020 23:47:21 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id s8sm8514759wrm.96.2020.06.11.23.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 23:47:20 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 08:47:19 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>, linux-clk@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove redundant 'maxItems'
-Message-ID: <20200612064719.GA2295929@ulmo>
-References: <20200611194738.1480393-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
-Content-Disposition: inline
-In-Reply-To: <20200611194738.1480393-1-robh@kernel.org>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        Fri, 12 Jun 2020 03:22:43 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:36108 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726349AbgFLHWm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 12 Jun 2020 03:22:42 -0400
+IronPort-SDR: Nc4pdbAZB7Zb0hSTufC5aDJENs09uJDjijKEi0rckHuJmUZMc+HbtyJh44aHWQ2kZ4iJDz+TNd
+ tpgoJbf9+0pVzVWtEkzsUGSdLRz/DFg21/mhW559NZ5gZi+XVf3C5iiU796IVQPiS+EqVO5Q7w
+ JWQswwSTiTNJDAV/qSUj/AySZ5HHG1tHcu14mnUKK2WryPbNzC1mU/i70iVUFcze3+7EmkJmgJ
+ /w1wMzyQu4+x5o+XxqfdVLp6lTJPJePWpJeD0rg/YB3Vos5nBa5cmD7J3H/B8sjbqmvzNTskfe
+ glg=
+X-IronPort-AV: E=Sophos;i="5.73,502,1583190000"; 
+   d="scan'208";a="12657240"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 12 Jun 2020 09:22:40 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 12 Jun 2020 09:22:40 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 12 Jun 2020 09:22:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1591946560; x=1623482560;
+  h=from:to:cc:subject:date:message-id;
+  bh=fswM+upoobDK3SZQ3Lk7Spn5j3s1LgDDzID4tgIKQKo=;
+  b=FYGfNpDfbnfVciJy+omDaBP1tNYcvmPk4Y3Ox+JKFbge+ElspVWN/fGt
+   uvajo3m4KtyaMMp7VZb43dreiMHsPF3Iu0WDaSVFkPeal1bmLTJlW1lZ1
+   aN9wo6SkSpc9P/aPf5Gk8vGOcJc+rqPJOd9Lgw2W9g9GT9A9wU3OOS4Ku
+   JNIASh5ZjqYAY9+2L5PKskm1njIkIQSDlhAnAXNKs3P7m4SY3UFBrks9A
+   6u0t/r6vP7jbw1iwfCumN3McGlmGp+trNV7MMMUJhV+LjYe9sdgCh5gzM
+   3vutsvSIDNYL5Xh/JMj92gRTTHE3Lkvyyog8FJ+lfKJQlOM6PwNmwzO8C
+   A==;
+IronPort-SDR: CxZdULvQnOKEWtol3vQScgJl3EvnJ73XMA8LIpbeTsS9IBbHUbNd6tHEbY+LhiXURpZlX2zeK1
+ hqnyEbiSTMUjD43m7Kntuk27wI7HFRnGFTqEk94k5xzxXND/DJrE1fYDniXhrlcm7S0diK8Wib
+ pf/BfO9bc+AqPpiZT7YvGtmVtq23dzG1lXelE/6czYrfh5G4l5e2Ins7u7Lhv0JQ3bCA8rB8IQ
+ TOW7qrelmvOfYUzLFOY4dQCU5te2RnkKHcBfegqS0Nk7rwojzsPWn0Qr2O41JVIGbxwObH7w5g
+ x4U=
+X-IronPort-AV: E=Sophos;i="5.73,502,1583190000"; 
+   d="scan'208";a="12657239"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 12 Jun 2020 09:22:40 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 3C73B280065;
+        Fri, 12 Jun 2020 09:22:40 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH RESEND v2 0/4] panel-simple: CDTech S070PWS19HP-FC21 and S070SWV29HG-DC44, Tianma TM070JVHG33
+Date:   Fri, 12 Jun 2020 09:22:15 +0200
+Message-Id: <20200612072219.13669-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Matthias Schiffer <matthias.schiffer@tq-group.com>
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adds a few panels TQ-Systems uses with various starterkit
+mainboards. Device trees actually using these panels will be added with
+a later submission.
 
-On Thu, Jun 11, 2020 at 01:47:38PM -0600, Rob Herring wrote:
-> There's no need to specify 'maxItems' with the same value as the number
-> of entries in 'items'. A meta-schema update will catch future cases.
->=20
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Anson Huang <Anson.Huang@nxp.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-pwm@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/imx6q-clock.yaml     | 1 -
->  Documentation/devicetree/bindings/clock/imx6sl-clock.yaml    | 1 -
->  Documentation/devicetree/bindings/clock/imx6sll-clock.yaml   | 1 -
->  Documentation/devicetree/bindings/clock/imx6sx-clock.yaml    | 1 -
->  Documentation/devicetree/bindings/clock/imx6ul-clock.yaml    | 1 -
->  Documentation/devicetree/bindings/pwm/imx-pwm.yaml           | 2 --
->  Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 2 --
->  7 files changed, 9 deletions(-)
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Matthias Schiffer (2):
+  dt-bindings: display: simple: add CDTech S070PWS19HP-FC21 and
+    S070SWV29HG-DC44
+  dt-bindings: display: simple: add Tianma TM070JVHG33
 
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
+Max Merchel (1):
+  drm/panel: simple: add Tianma TM070JVHG33
 
------BEGIN PGP SIGNATURE-----
+Michael Krummsdorf (1):
+  drm/panel: simple: add CDTech S070PWS19HP-FC21 and S070SWV29HG-DC44
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7jJPQACgkQ3SOs138+
-s6HL2g//ZoscfSZkpDxD3dW2jxtxiLW+++f387MavWHS9QM8PYT+3MexQxkUWyjo
-MAxhB4FCLFjHaMCl2sD1vH/FkkfIMPzdV8TEtEGlIm+YO/pDci2EYfHOUHsmZe/A
-Dnn+e7XBzuJ2P9DwUaqszRXB1oO6zb32T9tklAN3qeF/W8Z44kNWE1C5AzlM7Ivw
-q1AoGUYx47iq0Wcqwq/DYATIc1BxT8OGl+rEUGnXXWbLS+NYVT4wi7ML6heNqdBl
-+2KbtWFzbdF3DyA1/b+3XVCGHGrGAnsLMjcNqJiLNnnbIS3v9I+HvzCGNGDDQiM1
-Ld8CfrsPzbKqMWYXhAcFTDtf7oyHrjPt/t1FiTok6i7yQNZ2waHpPF1GKbQ5SXe2
-ITA1XWnSaLJEIqXZMllgQ6cZtxIJmb9rjmbGtzq+YjjNTBWn2Us8K4hDGdx65ILl
-vL8fZd6DPHTyJF3CwK+D7ObJBWqjaZjNf+ViQRGzXTIsRufnA9xR3hNDMeAETJKX
-TGxOheAe1S9O0Rma6V0G1g0nbqX8V45/z1Tpd5L3rp9/ZRrg2RK+70+hBtbR2Jc4
-vLdDpb/4lyskRTU+DKgNtReVD2DP9okNErL5eGTXO81URug5Kr1mZB5+RqKjelnI
-mV/2sKfFnSX33cg3hbP/sDwDxMB+sjjGP+K1JXWxVj9Ez6osPPU=
-=WSuJ
------END PGP SIGNATURE-----
+ .../bindings/display/panel/panel-simple.yaml  |  6 ++
+ drivers/gpu/drm/panel/panel-simple.c          | 75 +++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
---zYM0uCDKw75PZbzx--
+-- 
+2.17.1
+
