@@ -2,388 +2,232 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664F5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54AAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4577F20792
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F282081A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ddFsPwMK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIaEotPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgFLN4i (ORCPT
+        id S1726414AbgFLOTL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
+        Fri, 12 Jun 2020 10:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgFLNyb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 09:54:31 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB74C08C5CA
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:28 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n24so11119569lji.10
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:27 -0700 (PDT)
+        with ESMTP id S1726255AbgFLOTK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:19:10 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC79C03E96F;
+        Fri, 12 Jun 2020 07:19:10 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id t18so9928647wru.6;
+        Fri, 12 Jun 2020 07:19:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7kqfMUc+k2k/CiQ8rg2p7L02Gn6NnHmpWC1JYpqHUwA=;
-        b=ddFsPwMKjSzo2EQi1Zqx3EnOMCVYa3kNjaMMi/H4r2p3LatbMak66e7dd6IwSU10X+
-         zPdd5mxI01/xadY9BLBoJMSN3iV9Vi3mA8vB7fL3ZXKo8dZRHncOiaIQulWBR5h02U1W
-         NToR+Blffkx4NO7rgHKYCdYnO8L6JZceghBlinU7dshVfNdpSv9+Mdfy1hCZ27z9yYkj
-         rGBN9IA+iSxqoZ6snZvKGzF9+9xAcdTF/kPeGeumUI7nvhBPUbeDqlqbEFjMHHa1m5sn
-         JPiB7FgrrVnefgFDsOB2pZcUOOcnG/3p9RSwn427aP3vR7k6kvbmRBwsdYQigy23Q+7J
-         fXwA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jRc2+qZ2Z+lCDr+4i+dVIgMgCDA8r2cDbCUzOgaTMo0=;
+        b=sIaEotPVgM5Lpj72Vt7S+AdSgEEpnw4Hq3Kk4Q+5+BZz99PuXTcXwkfVrsFpLd3UKM
+         7mvoMxDQiRDnj+R2plkcvmCDNNYoep+UzxwzZst9u8fLgbtvVnV+dXBEhE8tYvUno24e
+         ICW7pwsXUfw2YyxcFGlXMj1LCyYI3RL0z1EvWO0fZ0vYnDMOHOL0ZbOOlfiSCLjnxdgz
+         sPyXDQ69ueyiZNOt7gloIofvyRMSdVfBS4G+KhGLCxzpgfHYrq29WRQ8BC/5lvU5cneS
+         41xarqJNJwwRYPbEWZx0MUQgJjuzQjqWzEUPvnVJ74SqWhJXwh3q0bYaJMt4Pk5XYJH+
+         7kiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7kqfMUc+k2k/CiQ8rg2p7L02Gn6NnHmpWC1JYpqHUwA=;
-        b=f0xNG2+szXwqVew0INMszUN41XyvxfVsLKcCNKISrmvmXJBZ6jPH12exIx5thVsE1n
-         nGSgbieCOKLcc78oe876ml3qNEqzdrV8BlsVQkLy6fW4QUkF+ucebuQw1YLZbR02y1tM
-         NmfQxhdKe3nQQ3pWU2J7hNugx8RYkivhQNa69LSvjZSEPhzD26FzKDq6fFs3vPym70Wn
-         NTyqiDc9Rna27c8qiugtSV0M980Kpuct7kKWs6oBZ2K1HpaTSiZzhPx1urUE/D1Lgh2P
-         PAUcmQwtVdpbFwmggNEiep9cNSGKhmJ6gETrA55sAgK2igQOEYfTLT3YiKt8BTKRCw2P
-         1mqQ==
-X-Gm-Message-State: AOAM533cEuC8dydb3mcLYfIKNxctYDAD7mhs+YSERHLK4wCxxInJrRqX
-        bh0jP5mmm+mfmEZll2BefYI/yA==
-X-Google-Smtp-Source: ABdhPJyDBnrD3DlLh7dSvnCrLclg55A+bSStipj3gqqSMeNA7e1fZAY83WXzWV6h0RqFYcGfLoT59g==
-X-Received: by 2002:a2e:818f:: with SMTP id e15mr6754881ljg.376.1591970066440;
-        Fri, 12 Jun 2020 06:54:26 -0700 (PDT)
-Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id a1sm2414415lfi.36.2020.06.12.06.54.24
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jRc2+qZ2Z+lCDr+4i+dVIgMgCDA8r2cDbCUzOgaTMo0=;
+        b=M53jE1zWsB+2ffMzCz3SgjcG/DCEkUMNLvVz75ZQzjeKDnuMSOWsEpobTIjMUE0fvi
+         OSFASx8rAYUJBDkqagzEIS6eMM5ywEyW5HsWO786oViZbGZEMh6UYtPw+w/kBKzpfvez
+         ugskYzBymWBLGaPmvihpaX9N1+owyBan6QZ6EpAsF9atng1NiOKV+rpDyrx6y/ZAAF3g
+         UJQAHpkNdUBX3eI7bTB7ZRG3zDgX2mj92Dghl2BHovwElrCLq0BzlvPkQUYISuMe6Mfs
+         EhIbDldIf1hOxj7ZxnRniCSZSRpcOxOwHm/k0sgeXW/vxLltKUogdQXbGCMN0fL7MiBN
+         6z8A==
+X-Gm-Message-State: AOAM531C6Wz5NKunpViqGjYPup7GxiiDsDYj5LIB4fgSspBTp5Lpip5I
+        TrxYE3TZRsqFYa6Pui9d25M=
+X-Google-Smtp-Source: ABdhPJyPWNgi/OeG+zYPHemJFmuoP0Zxm345flOkQ3UsRJY7Y7RdebTQ2UGjbsKIUGeAqfLCJmbf+A==
+X-Received: by 2002:adf:f389:: with SMTP id m9mr14440659wro.195.1591971548705;
+        Fri, 12 Jun 2020 07:19:08 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id l1sm11468039wrb.31.2020.06.12.07.19.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 06:54:25 -0700 (PDT)
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-To:     mchehab@kernel.org, sakari.ailus@iki.fi,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
-        Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v5 04/10] media: i2c: imx290: Add support for 2 data lanes
-Date:   Fri, 12 Jun 2020 16:53:49 +0300
-Message-Id: <20200612135355.30286-5-andrey.konovalov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200612135355.30286-1-andrey.konovalov@linaro.org>
-References: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+        Fri, 12 Jun 2020 07:19:08 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH 00/38] dt-bindings: json-schema conversions and cleanups
+Date:   Fri, 12 Jun 2020 16:18:25 +0200
+Message-Id: <20200612141903.2391044-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Thierry Reding <treding@nvidia.com>
 
-The IMX290 sensor can output frames with 2/4 CSI2 data lanes. This commit
-adds support for 2 lane mode in addition to the 4 lane and also
-configuring the data lane settings in the driver based on system
-configuration.
+Hi Rob,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
----
- drivers/media/i2c/imx290.c | 147 +++++++++++++++++++++++++++++++++----
- 1 file changed, 133 insertions(+), 14 deletions(-)
+This set of patches is the result of trying to get all the Tegra DTS
+files validated against the YAML bindings. I initially set out to do
+this conversion because I wanted to add interconnect properties and
+a way of validating them, so this started off as just a conversion
+of various bindings and the addition of the interconnects properties
+but then spun out of control a bit as I was running into various
+issues with the validation.
 
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index 7b1de1f0c8b7..ffb393962ffc 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -25,7 +25,12 @@
- #define IMX290_STANDBY 0x3000
- #define IMX290_REGHOLD 0x3001
- #define IMX290_XMSTA 0x3002
-+#define IMX290_FR_FDG_SEL 0x3009
- #define IMX290_GAIN 0x3014
-+#define IMX290_HMAX_LOW 0x301c
-+#define IMX290_HMAX_HIGH 0x301d
-+#define IMX290_PHY_LANE_NUM 0x3407
-+#define IMX290_CSI_LANE_MODE 0x3443
- 
- #define IMX290_DEFAULT_LINK_FREQ 445500000
- 
-@@ -45,6 +50,7 @@ struct imx290_regval {
- struct imx290_mode {
- 	u32 width;
- 	u32 height;
-+	u32 hmax;
- 	u32 pixel_rate;
- 	u32 link_freq_index;
- 
-@@ -56,6 +62,7 @@ struct imx290 {
- 	struct device *dev;
- 	struct clk *xclk;
- 	struct regmap *regmap;
-+	u8 nlanes;
- 
- 	struct v4l2_subdev sd;
- 	struct v4l2_fwnode_endpoint ep;
-@@ -89,14 +96,11 @@ static const struct regmap_config imx290_regmap_config = {
- 
- static const struct imx290_regval imx290_global_init_settings[] = {
- 	{ 0x3007, 0x00 },
--	{ 0x3009, 0x00 },
- 	{ 0x3018, 0x65 },
- 	{ 0x3019, 0x04 },
- 	{ 0x301a, 0x00 },
--	{ 0x3443, 0x03 },
- 	{ 0x3444, 0x20 },
- 	{ 0x3445, 0x25 },
--	{ 0x3407, 0x03 },
- 	{ 0x303a, 0x0c },
- 	{ 0x3040, 0x00 },
- 	{ 0x3041, 0x00 },
-@@ -169,7 +173,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
- 	{ 0x3164, 0x1a },
- 	{ 0x3480, 0x49 },
- 	/* data rate settings */
--	{ 0x3009, 0x01 },
- 	{ 0x3405, 0x10 },
- 	{ 0x3446, 0x57 },
- 	{ 0x3447, 0x00 },
-@@ -187,8 +190,6 @@ static const struct imx290_regval imx290_1080p_settings[] = {
- 	{ 0x3453, 0x00 },
- 	{ 0x3454, 0x17 },
- 	{ 0x3455, 0x00 },
--	{ 0x301c, 0x98 },
--	{ 0x301d, 0x08 },
- };
- 
- static const struct imx290_regval imx290_720p_settings[] = {
-@@ -210,7 +211,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
- 	{ 0x3164, 0x1a },
- 	{ 0x3480, 0x49 },
- 	/* data rate settings */
--	{ 0x3009, 0x01 },
- 	{ 0x3405, 0x10 },
- 	{ 0x3446, 0x4f },
- 	{ 0x3447, 0x00 },
-@@ -228,8 +228,6 @@ static const struct imx290_regval imx290_720p_settings[] = {
- 	{ 0x3453, 0x00 },
- 	{ 0x3454, 0x17 },
- 	{ 0x3455, 0x00 },
--	{ 0x301c, 0xe4 },
--	{ 0x301d, 0x0c },
- };
- 
- static const struct imx290_regval imx290_10bit_settings[] = {
-@@ -250,10 +248,11 @@ static const s64 imx290_link_freq[] = {
- };
- 
- /* Mode configs */
--static const struct imx290_mode imx290_modes[] = {
-+static const struct imx290_mode imx290_modes_2lanes[] = {
- 	{
- 		.width = 1920,
- 		.height = 1080,
-+		.hmax = 0x1130,
- 		.data = imx290_1080p_settings,
- 		.data_size = ARRAY_SIZE(imx290_1080p_settings),
- 		.pixel_rate = 178200000,
-@@ -262,6 +261,7 @@ static const struct imx290_mode imx290_modes[] = {
- 	{
- 		.width = 1280,
- 		.height = 720,
-+		.hmax = 0x19c8,
- 		.data = imx290_720p_settings,
- 		.data_size = ARRAY_SIZE(imx290_720p_settings),
- 		.pixel_rate = 178200000,
-@@ -269,6 +269,44 @@ static const struct imx290_mode imx290_modes[] = {
- 	},
- };
- 
-+static const struct imx290_mode imx290_modes_4lanes[] = {
-+	{
-+		.width = 1920,
-+		.height = 1080,
-+		.hmax = 0x0898,
-+		.data = imx290_1080p_settings,
-+		.data_size = ARRAY_SIZE(imx290_1080p_settings),
-+		.pixel_rate = 178200000,
-+		.link_freq_index = 0,
-+	},
-+	{
-+		.width = 1280,
-+		.height = 720,
-+		.hmax = 0x0ce4,
-+		.data = imx290_720p_settings,
-+		.data_size = ARRAY_SIZE(imx290_720p_settings),
-+		.pixel_rate = 178200000,
-+		.link_freq_index = 0,
-+	},
-+};
-+
-+static inline const struct imx290_mode *imx290_modes_ptr(const struct imx290 *imx290)
-+{
-+	/* We rely on imx290_probe() to ensure that nlanes is either 2 or 4 */
-+	if (imx290->nlanes == 2)
-+		return imx290_modes_2lanes;
-+	else
-+		return imx290_modes_4lanes;
-+}
-+
-+static inline int imx290_modes_num(const struct imx290 *imx290)
-+{
-+	if (imx290->nlanes == 2)
-+		return ARRAY_SIZE(imx290_modes_2lanes);
-+	else
-+		return ARRAY_SIZE(imx290_modes_4lanes);
-+}
-+
- static inline struct imx290 *to_imx290(struct v4l2_subdev *_sd)
- {
- 	return container_of(_sd, struct imx290, sd);
-@@ -450,9 +488,8 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
- 
- 	mutex_lock(&imx290->lock);
- 
--	mode = v4l2_find_nearest_size(imx290_modes,
--				      ARRAY_SIZE(imx290_modes),
--				      width, height,
-+	mode = v4l2_find_nearest_size(imx290_modes_ptr(imx290),
-+				      imx290_modes_num(imx290), width, height,
- 				      fmt->format.width, fmt->format.height);
- 
- 	fmt->format.width = mode->width;
-@@ -522,6 +559,25 @@ static int imx290_write_current_format(struct imx290 *imx290,
- 	return 0;
- }
- 
-+static int imx290_set_hmax(struct imx290 *imx290, u32 val)
-+{
-+	int ret;
-+
-+	ret = imx290_write_reg(imx290, IMX290_HMAX_LOW, (val & 0xff));
-+	if (ret) {
-+		dev_err(imx290->dev, "Error setting HMAX register\n");
-+		return ret;
-+	}
-+
-+	ret = imx290_write_reg(imx290, IMX290_HMAX_HIGH, ((val >> 8) & 0xff));
-+	if (ret) {
-+		dev_err(imx290->dev, "Error setting HMAX register\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /* Start streaming */
- static int imx290_start_streaming(struct imx290 *imx290)
- {
-@@ -550,6 +606,9 @@ static int imx290_start_streaming(struct imx290 *imx290)
- 		dev_err(imx290->dev, "Could not set current mode\n");
- 		return ret;
- 	}
-+	ret = imx290_set_hmax(imx290, imx290->current_mode->hmax);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* Apply customized values from user */
- 	ret = v4l2_ctrl_handler_setup(imx290->sd.ctrl_handler);
-@@ -607,6 +666,49 @@ static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
- 				       imx290->supplies);
- }
- 
-+static int imx290_set_data_lanes(struct imx290 *imx290)
-+{
-+	int ret = 0, laneval, frsel;
-+
-+	switch (imx290->nlanes) {
-+	case 2:
-+		laneval = 0x01;
-+		frsel = 0x02;
-+		break;
-+	case 4:
-+		laneval = 0x03;
-+		frsel = 0x01;
-+		break;
-+	default:
-+		/*
-+		 * We should never hit this since the data lane count is
-+		 * validated in probe itself
-+		 */
-+		dev_err(imx290->dev, "Lane configuration not supported\n");
-+		ret = -EINVAL;
-+		goto exit;
-+	}
-+
-+	ret = imx290_write_reg(imx290, IMX290_PHY_LANE_NUM, laneval);
-+	if (ret) {
-+		dev_err(imx290->dev, "Error setting Physical Lane number register\n");
-+		goto exit;
-+	}
-+
-+	ret = imx290_write_reg(imx290, IMX290_CSI_LANE_MODE, laneval);
-+	if (ret) {
-+		dev_err(imx290->dev, "Error setting CSI Lane mode register\n");
-+		goto exit;
-+	}
-+
-+	ret = imx290_write_reg(imx290, IMX290_FR_FDG_SEL, frsel);
-+	if (ret)
-+		dev_err(imx290->dev, "Error setting FR/FDG SEL register\n");
-+
-+exit:
-+	return ret;
-+}
-+
- static int imx290_power_on(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-@@ -631,6 +733,9 @@ static int imx290_power_on(struct device *dev)
- 	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
- 	usleep_range(30000, 31000);
- 
-+	/* Set data lane count */
-+	imx290_set_data_lanes(imx290);
-+
- 	return 0;
- }
- 
-@@ -677,6 +782,7 @@ static int imx290_probe(struct i2c_client *client)
- 	struct fwnode_handle *endpoint;
- 	struct imx290 *imx290;
- 	u32 xclk_freq;
-+	u32 default_pixel_rate;
- 	int ret;
- 
- 	imx290 = devm_kzalloc(dev, sizeof(*imx290), GFP_KERNEL);
-@@ -703,6 +809,16 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_err;
- 	}
- 
-+	/* Get number of data lanes */
-+	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
-+	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
-+		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
-+		ret = -EINVAL;
-+		goto free_err;
-+	}
-+
-+	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
-+
- 	if (!imx290->ep.nr_of_link_frequencies) {
- 		dev_err(dev, "link-frequency property not found in DT\n");
- 		ret = -EINVAL;
-@@ -780,10 +896,13 @@ static int imx290_probe(struct i2c_client *client)
- 	if (imx290->link_freq)
- 		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 
-+	default_pixel_rate = imx290->nlanes == 2 ?
-+			     imx290_modes_2lanes[0].pixel_rate :
-+			     imx290_modes_4lanes[0].pixel_rate;
- 	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
- 					       V4L2_CID_PIXEL_RATE, 1,
- 					       INT_MAX, 1,
--					       imx290_modes[0].pixel_rate);
-+					       default_pixel_rate);
- 
- 	imx290->sd.ctrl_handler = &imx290->ctrls;
- 
+I do have another set of patches of about 60 patches that fix various
+preexisting issues in the device tree files, but after applying these
+conversions and fixes as well as the DT updates I can validate all 32
+and 64-bit device tree files for Tegra with a "make dtbs_check".
+
+Not all of the device tree bindings have been converted yet, but the
+main ones should be covered. I plan on doing a couple more conversions
+once these have landed and as I find the time.
+
+I wasn't sure whether I should be sending this as multiple smaller
+series or a large set, but ended up deciding on the latter because a lot
+of these are very similar, so should be easier to review as a lot. If
+you prefer some other format, let me know.
+
+Thierry
+
+Thierry Reding (38):
+  dt-bindings: interrupt-controller: arm,gic: Add compatible for
+    Tegra186 AGIC
+  dt-bindings: memory: nvidia: Mark memory controller as interconnect
+    provider
+  dt-bindings: memory: Increase number of reg entries on Tegra194
+  dt-bindings: firmware: Convert Tegra186 BPMP bindings to json-schema
+  dt-bindings: firmware: tegra186-bpmp: Document interconnect paths
+  dt-bindings: display: tegra: Document display-hub
+  dt-bindings: display: tegra: Convert to json-schema
+  dt-bindings: display: tegra: Document interconnect paths
+  dt-bindings: gpu: tegra: Convert to json-schema
+  dt-bindings: gpu: tegra: Document interconnect paths
+  dt-bindings: mmc: tegra: Convert to json-schema
+  dt-bindings: mmc: tegra: Document interconnect paths
+  dt-bindings: pci: tegra: Convert to json-schema
+  dt-bindings: pci: tegra: Document interconnect paths
+  dt-bindings: sound: tegra: hda: Convert to json-schema
+  dt-bindings: sound: tegra: hda: Document interconnect paths
+  dt-bindings: usb: tegra-xusb: Convert to json-schema
+  dt-bindings: usb: tegra-xusb: Document interconnect paths
+  dt-bindings: net: dwc-qos-ethernet: Convert to json-schema
+  dt-bindings: net: dwc-qos-ethernet: Document interconnect paths
+  dt-bindings: sound: sgtl5000: Convert to json-schema
+  dt-bindings: gpio: tegra186: Use unique include guard
+  dt-bindings: gpio: tegra186: Convert to json-schema
+  dt-bindings: mfd: max77620: Convert to json-schema
+  dt-bindings: gpio: tegra: Convert to json-schema
+  dt-bindings: pci: iommu: Convert to json-schema
+  dt-bindings: tegra: Add missing compatible strings
+  dt-bindings: phy: tegra-xusb: Convert to json-schema
+  dt-bindings: tegra: pmc: Increase clock limit for power domains
+  dt-bindings: panel: Allow reg property for DSI panels
+  dt-bindings: panel: simple: Use unevaluatedProperties
+  dt-bindings: leds: Document rfkill* trigger
+  dt-bindings: memory-controller: Document Tegra132 EMC
+  dt-bindings: memory-controller: Fix "reg" entries on Tegra194
+  dt-bindings: memory: Update Tegra210 EMC bindings
+  dt-bindings: power: supply: sbs-battery: Document TI BQ20Z45
+    compatible
+  dt-bindings: pwm: Explicitly include pwm.yaml
+  dt-bindings: serial: Document Tegra-specific properties
+
+ .../devicetree/bindings/arm/tegra.yaml        |   46 +-
+ .../arm/tegra/nvidia,tegra20-pmc.yaml         |    2 +-
+ .../bindings/display/panel/panel-simple.yaml  |    5 +-
+ .../display/tegra/nvidia,tegra20-host1x.txt   |  466 ---
+ .../display/tegra/nvidia,tegra20-host1x.yaml  | 1458 +++++++++
+ .../firmware/nvidia,tegra186-bpmp.txt         |  107 -
+ .../firmware/nvidia,tegra186-bpmp.yaml        |  201 ++
+ .../bindings/gpio/gpio-max77620.txt           |   25 -
+ .../bindings/gpio/nvidia,tegra186-gpio.txt    |  165 -
+ .../bindings/gpio/nvidia,tegra186-gpio.yaml   |  215 ++
+ .../bindings/gpio/nvidia,tegra20-gpio.txt     |   40 -
+ .../bindings/gpio/nvidia,tegra20-gpio.yaml    |  111 +
+ .../devicetree/bindings/gpu/nvidia,gk20a.txt  |   90 -
+ .../devicetree/bindings/gpu/nvidia,gk20a.yaml |  204 ++
+ .../interrupt-controller/arm,gic.yaml         |    7 +
+ .../devicetree/bindings/leds/common.yaml      |   17 +-
+ .../nvidia,tegra124-emc.yaml                  |    4 +-
+ .../nvidia,tegra186-mc.yaml                   |   70 +-
+ .../nvidia,tegra210-emc.yaml                  |   34 +-
+ .../devicetree/bindings/mfd/max77620.txt      |  162 -
+ .../devicetree/bindings/mfd/max77620.yaml     |  662 ++++
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt     |  117 -
+ .../bindings/mmc/nvidia,tegra20-sdhci.yaml    |  283 ++
+ .../bindings/net/snps,dwc-qos-ethernet.txt    |  168 -
+ .../bindings/net/snps,dwc-qos-ethernet.yaml   |  322 ++
+ .../bindings/pci/nvidia,tegra20-pcie.txt      |  682 ----
+ .../bindings/pci/nvidia,tegra20-pcie.yaml     |  835 +++++
+ .../devicetree/bindings/pci/pci-iommu.txt     |  171 -
+ .../devicetree/bindings/pci/pci-iommu.yaml    |  168 +
+ .../phy/nvidia,tegra124-xusb-padctl.txt       |  778 -----
+ .../phy/nvidia,tegra124-xusb-padctl.yaml      | 2800 +++++++++++++++++
+ .../bindings/pinctrl/pinctrl-max77620.txt     |  127 -
+ .../power/supply/sbs,sbs-battery.yaml         |    6 +-
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |   51 +-
+ .../bindings/pwm/google,cros-ec-pwm.yaml      |    4 +-
+ .../devicetree/bindings/pwm/iqs620a-pwm.yaml  |    4 +-
+ .../devicetree/bindings/pwm/pwm-samsung.yaml  |    1 -
+ .../devicetree/bindings/pwm/pwm.yaml          |    2 +
+ .../bindings/pwm/renesas,pwm-rcar.yaml        |    4 +-
+ .../bindings/pwm/renesas,tpu-pwm.yaml         |    4 +-
+ .../bindings/regulator/regulator-max77620.txt |  222 --
+ .../devicetree/bindings/serial/8250.yaml      |   26 +
+ .../bindings/sound/nvidia,tegra30-hda.txt     |   35 -
+ .../bindings/sound/nvidia,tegra30-hda.yaml    |  141 +
+ .../devicetree/bindings/sound/sgtl5000.txt    |   60 -
+ .../devicetree/bindings/sound/sgtl5000.yaml   |  103 +
+ .../bindings/thermal/max77620_thermal.txt     |   70 -
+ .../devicetree/bindings/trivial-devices.yaml  |    2 -
+ .../bindings/usb/nvidia,tegra124-xusb.txt     |  132 -
+ .../bindings/usb/nvidia,tegra124-xusb.yaml    |  371 +++
+ include/dt-bindings/gpio/tegra186-gpio.h      |    4 +-
+ 51 files changed, 8103 insertions(+), 3681 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+ create mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
+ delete mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+ create mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/nvidia,gk20a.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77620.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+ create mode 100644 Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+ delete mode 100644 Documentation/devicetree/bindings/regulator/regulator-max77620.txt
+ delete mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra30-hda.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/sgtl5000.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/sgtl5000.yaml
+ delete mode 100644 Documentation/devicetree/bindings/thermal/max77620_thermal.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.yaml
+
 -- 
-2.17.1
+2.24.1
 
