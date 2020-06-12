@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FACC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CD0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD152067B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80772081A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kkb8O79B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahOoNCKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgFLOTU (ORCPT
+        id S1726490AbgFLOTX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:19:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
+        Fri, 12 Jun 2020 10:19:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgFLOTU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:19:20 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D666BC03E96F;
-        Fri, 12 Jun 2020 07:19:19 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l11so9938503wru.0;
-        Fri, 12 Jun 2020 07:19:19 -0700 (PDT)
+        with ESMTP id S1726255AbgFLOTX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:19:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF2DC03E96F;
+        Fri, 12 Jun 2020 07:19:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l10so9901575wrr.10;
+        Fri, 12 Jun 2020 07:19:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vX9MKJW8wweNyEpOdFefXX+Pm5osjIbsFmCtkArM0kw=;
-        b=Kkb8O79Bk/zeza1zOhpzsut5ZWjE3K40vUpfgsJhAukmTNpG2pCxMViRie3zc+S6Vs
-         Z5BrWsuQkPRPZoso0ZHWPLATzm8XkHGqUs078+FBixx0WFpMYEcmbaBTQoEedPiduhUr
-         kLeAlyZlnZZ4CCz3BgmAi3y/MnO4Rtfas1/HGQSHq25LOWzxQAUpszg5r9hAUFS6N32d
-         dATJaMNNifhazRcpkaZyVM+0ge0Tb4wH/mmKe0+JAbvpd5L0s7LbkZY/mi14k5oJMKRg
-         yFaMkJatTSC9P36W2r2fh9zuqYWMPX6zmAurXaK+KBxmKXptTgirbxsyqDaFbpC3yHUV
-         MYRw==
+        bh=U3kp5xE4YdFU+s+XKW2LORF30/iip2juB3/xvnjGa6I=;
+        b=ahOoNCKD2XMcCVtKrfzOLjeKKZSvPYXI+EqWOQ4nt+pkohAuc8IMjIkbGUCfoKGCgc
+         Urlr9ws4g6LgyaMkyvbJwJCmVSS9Yx4Fk0LINJQqgdcvQE8k1//2TV1CeevkTnU/0+eE
+         pvg9PCeLlOSBfMqozzeDnDKZ3YxUQgbFJ4IIlJoQ2ffLaJXIFCuhkNP0HvljlvB2NZfv
+         h0aPjayGQeryJ0t5BGwbtV7I8Wrq751jnX7QNa5gIGhNVgP7IRWSGNIHxWv/mcS6QGfb
+         WUGy+Yakay+Qd2HfoekoqOdQNuOF4kbseAIUYhwl66xeAvw3Lvuvbv450QV2bqOEI0b/
+         /BzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vX9MKJW8wweNyEpOdFefXX+Pm5osjIbsFmCtkArM0kw=;
-        b=Sfq47Ascsf1jXZiW2mNLDcOFuEqwe/23fanj5fwuloBdI6fKgLJTuytA76MlmuXucQ
-         3G1FDGhZZYNfXqTG4xQyDG8yOEDBcimdQ30UzQ3EaOnTdGWVUB28lMkFg7pLa/+nQef1
-         NjAcMriQklN7OrABv0uoqEIwqjfOY6xctGQQX1EZSXX2rpCo4ZKaFg8DdYFARdG2WmZX
-         5KpK2v7NMTf3yWUSrWClKA4y9erahg/89xlKYPgMy3uhqCIZzqykIbz7DP1hayGieYJh
-         LOWjy+72E59KaoeBloRXVH/B9/YzH4Ui3y/7LRUU3JtoHOl2PsH7iWsLt6eTAZJ6AG8D
-         7y4w==
-X-Gm-Message-State: AOAM530Gw8leySFLA2s7XY+kQIayyMUG8CzlvWlZrS4D5CIhQ3m6aK5w
-        6s19r+NRAvW3ZNZGohixdAo=
-X-Google-Smtp-Source: ABdhPJwEYU4bMLQmJ1g4z97rAM3TNlP7/7ENsuM52k6pQmkGfHm87f3s7SzBD89Nd64LaeISJmfj8g==
-X-Received: by 2002:adf:e58c:: with SMTP id l12mr15284425wrm.34.1591971558641;
-        Fri, 12 Jun 2020 07:19:18 -0700 (PDT)
+        bh=U3kp5xE4YdFU+s+XKW2LORF30/iip2juB3/xvnjGa6I=;
+        b=VHc2t8awN0K/QFu9JlK8e0rEArlHEylGe4XmzHGAaDIkwQA0xwNLy00/tzrjSWyglF
+         V1Vh2BPivTtF0vdXn6MKbAqu62Ezfe7rUL/xhWTAjx9flC1vetqCkAnurEmfaOGLzYPH
+         CCbtizg9qWiPESiPNsNvb4lT69BoCMw9/WT3MGufxJ4PrgAVsQeQGrlJDcYfMyZPwPpF
+         oprRSXp+2oSCDB5guyIPjkqYStitlAOwSE4i+um7xQYNdR87QC0XlDeKXmDGEsM3uXyL
+         jfpKJUZ7ggOG9bZf3iS2oOilqjr8rZj/fyDNmUSrkcqPvWLPZtxZdNexsE6Z9b5/f4ej
+         pR/w==
+X-Gm-Message-State: AOAM530Pnrb98dZfYtv3FUIgRrW8PaW/OyEL0Ur0RKvy1ace/5VSLfG8
+        tOI5NYxOwhIr067ZeeV63A7R+Eoq
+X-Google-Smtp-Source: ABdhPJx6TxEQdX+8oeI/j/Yovc7urBYH+GfvWnaDE9UiBMK22ixKet48GNxqemWqoM+QmFjFLHM9Xg==
+X-Received: by 2002:adf:db09:: with SMTP id s9mr14925575wri.256.1591971560512;
+        Fri, 12 Jun 2020 07:19:20 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id a15sm10426183wra.86.2020.06.12.07.19.17
+        by smtp.gmail.com with ESMTPSA id y37sm11206355wrd.55.2020.06.12.07.19.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 07:19:17 -0700 (PDT)
+        Fri, 12 Jun 2020 07:19:19 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 05/38] dt-bindings: firmware: tegra186-bpmp: Document interconnect paths
-Date:   Fri, 12 Jun 2020 16:18:30 +0200
-Message-Id: <20200612141903.2391044-6-thierry.reding@gmail.com>
+Subject: [PATCH 06/38] dt-bindings: display: tegra: Document display-hub
+Date:   Fri, 12 Jun 2020 16:18:31 +0200
+Message-Id: <20200612141903.2391044-7-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200612141903.2391044-1-thierry.reding@gmail.com>
 References: <20200612141903.2391044-1-thierry.reding@gmail.com>
@@ -77,53 +77,75 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Document the interconnects property that is used to describe the paths
-from and to system memory from and to the BPMP.
+Tegra186 and later have an additional component in the display pipeline
+called the display hub. Document the bindings which were missing.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../firmware/nvidia,tegra186-bpmp.yaml        | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../display/tegra/nvidia,tegra20-host1x.txt   | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-index 0e4d51ba7aa1..fd642eeb8dde 100644
---- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-+++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-@@ -43,6 +43,21 @@ properties:
-       - enum:
-           - nvidia,tegra186-bpmp
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index 47319214b5f6..2cf3cc4893da 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -297,6 +297,56 @@ of the following host1x client modules:
+   - reset-names: Must include the following entries:
+     - vic
  
-+  interconnects:
-+    description: A list of phandle and specifier pairs that describe the
-+      interconnect paths to and from the BPMP.
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
++- display-hub: display controller hub
++  Required properties:
++  - compatible: "nvidia,tegra<chip>-display"
++  - reg: Physical base address and length of the controller's registers.
++  - interrupts: The interrupt outputs from the controller.
++  - clocks: Must contain an entry for each entry in clock-names.
++    See ../clocks/clock-bindings.txt for details.
++  - clock-names: Must include the following entries:
++    - disp
++    - dsc
++    - hub
++  - resets: Must contain an entry for each entry in reset-names.
++    See ../reset/reset.txt for details.
++  - reset-names: Must include the following entries:
++    - misc
++    - wgrp0
++    - wgrp1
++    - wgrp2
++    - wgrp3
++    - wgrp4
++    - wgrp5
++  - power-domains: A list of phandle and specifiers identifying the power
++    domains that the display hub is part of.
++  - ranges: Range of registers used for the display controllers.
 +
-+  interconnect-names:
-+    description: One string for each pair of phandle and specifier in the
-+      "interconnects" property.
-+    $ref: "/schemas/types.yaml#/definitions/string-array"
-+    items:
-+      - const: read
-+      - const: write
-+      - const: dma-mem # dma-read
-+      - const: dma-write
++  Each subnode of the display hub represents one of the display controllers
++  available:
 +
-   iommus:
-     description: |
-       The phandle of the IOMMU and the IOMMU specifier. See ../iommu/iommu.txt
-@@ -158,6 +173,12 @@ examples:
++  - display: display controller
++    - compatible: "nvidia,tegra<chip>-dc"
++    - reg: Physical base address and length of the controller's registers.
++    - interrupts: The interrupt outputs from the controller.
++    - clocks: Must contain an entry for each entry in clock-names.
++      See ../clocks/clock-bindings.txt for details.
++    - clock-names: Must include the following entries:
++      - dc
++    - resets: Must contain an entry for each entry in reset-names.
++      See ../reset/reset.txt for details.
++    - reset-names: Must include the following entries:
++      - dc
++    - power-domains: A list of phandle and specifiers that identify the power
++      domains that this display controller is part of.
++    - iommus: A phandle and specifier identifying the SMMU master interface of
++      this display controller.
++    - nvidia,outputs: A list of phandles of outputs that this display
++      controller can drive.
++    - nvidia,head: The number of the display controller head. This is used to
++      setup the various types of output to receive video data from the given
++      head.
++
+ Example:
  
-     bpmp {
-         compatible = "nvidia,tegra186-bpmp";
-+        interconnects = <&mc TEGRA186_MEMORY_CLIENT_BPMPR &emc>,
-+                        <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc>,
-+                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAR &emc>,
-+                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc>;
-+        interconnect-names = "read", "write", "dma-mem", "dma-write";
-+
-         iommus = <&smmu TEGRA186_SID_BPMP>;
-         mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
-         shmem = <&cpu_bpmp_tx &cpu_bpmp_rx>;
+ / {
 -- 
 2.24.1
 
