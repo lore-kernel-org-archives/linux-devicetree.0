@@ -4,105 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412E9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 196D620789
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9552D206DC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591999144;
-	bh=CCs9RF45QjakoSVzjaeqVLWmN7XoaPl+vnR2jsWktb0=;
+	s=default; t=1591999176;
+	bh=r6ooqF0MeYRPQQMAboaF6hdogeHT8xvVCsydGb6r7pE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hJ3PlVLt8LccIbfetw18Dg7A9R52vUg7wncCiQ0/ZDfl2hek7wchaxlMIQE3GF9qq
-	 owydDUIGCLDYTjN/Ja8G78fqcV0fHfwsS6nkoVDJB83G3TK+nqQWBo6X0HLAa/3N4N
-	 So+z5pVFy11QKAm1uasWE0Q1X6mFPAJ+rx+IXqQ0=
+	b=gjsRROTopauYmvw2eT1Yjz1VA5MsYlMdYDooR6re9ygZgA1TXwSxgauz9qk5lGg9T
+	 qYa6yT0dCR5IcEKqPs6B75J20W60GRVVK44RvqcER8tFFpuJ7+0UwuU98v10xxZnhu
+	 DNe2FuNJ5hSF9lvTmvbPOXmV4jIl+LpKJwY2/qFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgFLV7D (ORCPT
+        id S1726366AbgFLV70 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 17:59:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32930 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLV7D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 17:59:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id i25so11887962iog.0;
-        Fri, 12 Jun 2020 14:59:02 -0700 (PDT)
+        Fri, 12 Jun 2020 17:59:26 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34029 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgFLV7Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 17:59:25 -0400
+Received: by mail-il1-f196.google.com with SMTP id x18so10190730ilp.1;
+        Fri, 12 Jun 2020 14:59:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=IcwIzuXXIINmTNZ5dabq3OUq+ijaCK5xyZMr6C5bYNU=;
-        b=Fm1RD9ptNDKEY03zNasGKIXrdZ0xMxsF66dj23XjDwJ5v+9zshpYrhNIlrWwFCt8s5
-         DAOBKBNH0/G3BULTEM3ewbch5WXONU2hHprLN1+sPYPZohsOygefYZ0cPcfYz/ZiaMag
-         tb1Be+PNw9fjtN5LqWAzOgGGjSqp0SVA0swsiQ5I739mNMX2yM60BcYD+iHDur6r9ek1
-         zDVbjSKLFICl7/rjnioXRIdq9L4m7Bhl9KLd/h1kH8l+0HSD9fehkTwy1MBpWCgrO3nW
-         tU+fp6OYZjAxjp168AOr71OgeKORu+pcRDrCDTdlcWFhXdWHNX63L8EtFCIcLWLIEdIZ
-         xYRg==
-X-Gm-Message-State: AOAM532TMqV6tY0ophcy6mmXGqeqsgseRlaRSYRGn7nQkkOHgtAU/zsw
-        lv0GxvkOGA95Z2YbRl985A==
-X-Google-Smtp-Source: ABdhPJzJbmuNyKxUznuNFYomkX61jS1RECoO+1RR1nZWWD5CDCxryf1kJOvGG091Xx5OpgwCRBLhng==
-X-Received: by 2002:a6b:9355:: with SMTP id v82mr14853058iod.92.1591999141862;
-        Fri, 12 Jun 2020 14:59:01 -0700 (PDT)
+        bh=2F5uGqx/WgH/DEdF5jL50sJc6KALUC66tcH1BXMzDQg=;
+        b=Bw1pu/bowRtt5reFrrJppCdvsXTKsZ/3XOIEo/I8ncBHvEV2JMvQdgPEnO4CoRU5w4
+         NcWvVMOuK7w60YNunnziQRF6bgAoDp1cMHMoTMD6LoEjN/2lrmc+3fDbUE7UCoe8h1It
+         uODOyhPWrhkpQRB2kAraTEMDPghpA7C6ZNR6pI3mD+Lu+O+SwL4yNd69ybRStg4XTaNl
+         jLvQ43vRf1xvoX39LU4YiI6aeUo47kE8RpY6oU6e0Zb9S0IO2KkDYddwhbZttOTPeOdZ
+         Pks+qqVxV6mI+PBswpjUaQofU1mBqRcZTRkICYReAbhtfwSKTjjTK9hYBmS8VEYqm/MD
+         GxfQ==
+X-Gm-Message-State: AOAM533FsYAsL8YZjMvY6WBRJfnVZwW/UW0iNdORfp8Fs/jpgp2u16Jb
+        ZEJxyt/auqQ8UQxpO8qb51gs+Eg=
+X-Google-Smtp-Source: ABdhPJywVx2eakgVkkGLPkb5txGKoTOWYRUqrcf8/RkjN9bEr/ESVtSbdMes1Woh+ZCHmJELA+GZwQ==
+X-Received: by 2002:a05:6e02:dc5:: with SMTP id l5mr14757952ilj.216.1591999162983;
+        Fri, 12 Jun 2020 14:59:22 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id w21sm3819223ioa.48.2020.06.12.14.59.00
+        by smtp.gmail.com with ESMTPSA id y5sm3784445ilp.57.2020.06.12.14.59.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 14:59:01 -0700 (PDT)
-Received: (nullmailer pid 3887135 invoked by uid 1000);
-        Fri, 12 Jun 2020 21:58:59 -0000
-Date:   Fri, 12 Jun 2020 15:58:59 -0600
+        Fri, 12 Jun 2020 14:59:22 -0700 (PDT)
+Received: (nullmailer pid 3887640 invoked by uid 1000);
+        Fri, 12 Jun 2020 21:59:21 -0000
+Date:   Fri, 12 Jun 2020 15:59:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ravi Kumar Bokka <rbokka@codeaurora.org>
-Cc:     mkurumel@codeaurora.org, saiprakash.ranjan@codeaurora.org,
-        linux-kernel@vger.kernel.org, sparate@codeaurora.org,
-        devicetree@vger.kernel.org, dhavalp@codeaurora.org,
-        mturney@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        rnayak@codeaurora.org, c_rbokka@codeaurora.org
-Subject: Re: [RFC v2 1/3] dt-bindings: nvmem: Add devicetree bindings for
- qfprom-efuse
-Message-ID: <20200612215859.GA3886706@bogus>
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
- <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
+To:     Daire.McNamara@microchip.com
+Cc:     amurray@thegoodpenguin.co.uk, linux-pci@vger.kernel.org,
+        robh+dt@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
+Subject: Re: [PATCH v11 1/2] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+Message-ID: <20200612215921.GB3886706@bogus>
+References: <bb21af9144fe624a42ddc3ea302667fa9a46a4c8.camel@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
+In-Reply-To: <bb21af9144fe624a42ddc3ea302667fa9a46a4c8.camel@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 11 Jun 2020 15:18:00 +0530, Ravi Kumar Bokka wrote:
-> This patch adds dt-bindings document for qfprom-efuse controller.
+On Thu, 11 Jun 2020 18:20:11 +0000, Daire.McNamara@microchip.com wrote:
 > 
-> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> add device tree bindings for the Microchip PCIe PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 > ---
->  .../devicetree/bindings/nvmem/qfprom.yaml          | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.yaml
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/nvmem/qfprom.yaml:  while scanning a block scalar
-  in "<unicode string>", line 31, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 35, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/nvmem/qfprom.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/nvmem/qfprom.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qfprom.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/qfprom.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qfprom.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/qfprom.yaml
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dts:24.25-25.55: Warning (reg_format): /example-0/soc/pcie@2030000000:reg: property has invalid length (32 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
 
 
-See https://patchwork.ozlabs.org/patch/1307399
+See https://patchwork.ozlabs.org/patch/1307687
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
