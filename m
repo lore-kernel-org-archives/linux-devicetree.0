@@ -2,196 +2,282 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80502C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D15C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560982067B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789CC2067B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wbAUXz//"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XbRN0hQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgFLRco (ORCPT
+        id S1726263AbgFLReJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:32:44 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47328 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLRcn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 13:32:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CHUUAN039824;
-        Fri, 12 Jun 2020 12:30:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591983030;
-        bh=sr2KEVEQVbaiZmHzFtwyvYGxG5ls7pPhGG6jAjqwh3M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wbAUXz//1QR6GveZJRYVE6er4iYGDqc9JHH9yXVhRS/vgKTlxa1JH7D9kwDc9RuJN
-         nwQU7gBSr+icGaxgEtUaGm9uhqXg6/YOMu3PJEWl2o8EvN7ma9q1A+/tcJucx+I+9/
-         PR5UMwbmE0ZmHglwZ37U0A4k/JXxwdBMll1hVUjE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CHUUUE104980
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jun 2020 12:30:30 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
- Jun 2020 12:30:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 12 Jun 2020 12:30:29 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CHUTf7052587;
-        Fri, 12 Jun 2020 12:30:29 -0500
-Subject: Re: [RFC PATCH 2/2] ASoc: tas2563: DSP Firmware loading support
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200609172841.22541-1-dmurphy@ti.com>
- <20200609172841.22541-3-dmurphy@ti.com> <20200609175000.GO4583@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f9601516-2091-322b-85ff-7cea484fd933@ti.com>
-Date:   Fri, 12 Jun 2020 12:30:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 13:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgFLReJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 13:34:09 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DA3C08C5C1
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 10:34:09 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r18so4427167pgk.11
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 10:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O3A9kqksUUGvdliaTj1158oQyu0tKFSE0txFn2JVaGo=;
+        b=XbRN0hQSE+gVdn/cNLHWHpEMCANqatGirZWTgJFnhn32pjwblWKjnxT4fH+Q67LsUH
+         s4DP0Sk7hQUA7giCY6dfCeCkkv7SvaXCdrVWcVxNoirfUuus11d+nuuRt8q4fcbaUPiB
+         QdJVP5IUllFct+yxKzUwbXLkb2ER45dtLQuWU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O3A9kqksUUGvdliaTj1158oQyu0tKFSE0txFn2JVaGo=;
+        b=dmuVtj4PeT+IHasRI2dY8MbDVof+T0qAq0bTUdxRffq9FPHTP71Ls8TNnvndLRi17e
+         EO+MpsYEnGVp2R+xOtakUVTsXMREfsQzpav2i/m1kyrKL4wN/WNBQN9GE2xRap/T8mnT
+         jc8XG64+975wWNOwXIqv2Vw+70wIuZRB0rRHXy/CpE4WABuAmhbK1zBAgA6ZNPeZ6fxK
+         pZtY1hkpsGdkznV0UrDgnCwViJGhVSFVrfRBxszf/o9RB1q4lloU3bcsyaenKZgU/Nd7
+         0UD8m1Py5dqAGUFSMmNEjyIOx+Pl63sdGHWYfyitaRxTSM4MUe8nZZj10Xb9PgqACpmM
+         T7NQ==
+X-Gm-Message-State: AOAM530AE4CIiPfJzsRgZ0xh3Pty+mLxwP7aScmR3HGusb4LRjzmOHI2
+        p2FhqkFgnATLvXul/+DlPQRJLTvGBhA=
+X-Google-Smtp-Source: ABdhPJyP9QyUwdi9RfNYHIufg1kSh+t7nG1oE0YcJHHYcgIMKDCp+KMt7gfHLMpSNR2FVhmTrjjP2A==
+X-Received: by 2002:a63:7409:: with SMTP id p9mr9764759pgc.6.1591983247727;
+        Fri, 12 Jun 2020 10:34:07 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id b11sm6705969pfr.58.2020.06.12.10.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 10:34:07 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 10:34:06 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+References: <20200511204635.GC136540@google.com>
+ <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com>
+ <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+ <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+ <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200609175000.GO4583@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mark
+Hi Rob,
 
-On 6/9/20 12:50 PM, Mark Brown wrote:
-> On Tue, Jun 09, 2020 at 12:28:41PM -0500, Dan Murphy wrote:
+Thanks as always for your help in reviewing this proposal!
+
+Kindly see inline
+
+(Trimming text);
+On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
+> On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> >
+> > I think the updated example handles this grouping (port@1 going to a
+> > "SS mux") although as you said it should probably be a group of muxes,
+> > but I think the example illustrates the point. Is that assessment
+> > correct?
 >
->>   	.val_bits = 8,
->>   
->> -	.max_register = 5 * 128,
->> +	.max_register = 255 * 128,
->>   	.cache_type = REGCACHE_RBTREE,
->>   	.reg_defaults = tas2562_reg_defaults,
->>   	.num_reg_defaults = ARRAY_SIZE(tas2562_reg_defaults),
-> Should some or all of the DSP memory be marked as volatile?  I guess if
-> we only write program to it then on reload after power off it should be
-> fine to just blast everything in again and ignore the fact that some
-> will have changed, but it might be helpful for debugging to be able to
-> read the live values back and do something more clever for restore.
+> Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
 
-Well the only values I see that change that regmap should care about are 
-in first page of the register map.
+Ack.
 
-After reverse engineering a binary I found that its contents modify page 
-0 registers of the device.
-
-Not a fan of this as it causes un-wanted changes that may have been setup.
-
->
->>   #define TAS2562_PAGE_CTRL      0x00
->> +#define TAS2562_BOOK_CTRL      0x7f
-> *sigh*  Of course the two levels of paging register are not located
-> anywhere near each other so we can't easily pretend they're one double
-> width page address.  :/
-Yes I agree
->
->> +static int tas25xx_process_fw_single(struct tas2562_data *tas2562,
->> +				     struct tas25xx_cmd_data *cmd_data,
->> +				     u8 *fw_out)
->> +{
->> +	int num_writes = cpu_to_be16(cmd_data->length);
->> +	int i;
->> +	int ret;
->> +	int offset = 4;
->> +	int reg_data, write_reg;
->> +
->> +	for (i = 0; i < num_writes; i++) {
->> +		/* Reset Page to 0 */
->> +		ret = regmap_write(tas2562->regmap, TAS2562_PAGE_CTRL, 0);
->> +		if (ret)
->> +			return ret;
-> Why?
-
-Well the reason to set this back to page 0 is that is where the book 
-register is.
-
-So setting this back to page 0 set the Book register appropriately.
+Let's go with "-switch" ? That's what the connector class uses and it
+conveys the meaning (unless that is a reserved keyword in DT).
 
 >
->> +
->> +		cmd_data->book = fw_out[offset];
->> +		cmd_data->page = fw_out[offset + 1];
->> +		cmd_data->offset = fw_out[offset + 2];
->> +		reg_data = fw_out[offset + 3];
->> +		offset += 4;
->> +
->> +		ret = regmap_write(tas2562->regmap, TAS2562_BOOK_CTRL,
->> +				   cmd_data->book);
->> +		if (ret)
->> +			return ret;
-> This manual paging doesn't fill me with with joy especially with regard
-> to caching and doing the books behind the back of regmap.  I didn't spot
-> anything disabling cache or anything in the code.  I think you should
-> either bypass the cache while doing this or teach regmap about the
-> books (which may require core updates, I can't remember if the range
-> code copes with nested levels of paging - I remember thinking about it).
-
-Yeah. After reading this and thinking about this for a couple days.  
-This actually has contention issues with the ALSA controls.
-
-There needs to also be some locks put into place.
-
-I prefer to disable the cache.  Not sure how many other devices use 
-Books and pages for register maps besides TI.
-
-Adding that to regmap might be to specific to our devices.
-
+> > Would this block the addition of the "*-switch" properties? IIUC the
+> > two are related but not dependent on each other.
+> >
+> > The *-switch properties are phandles which the Type C connector class
+> > framework expects (and uses to get handles to those switches).
+> > These would point to the "mux" or "group of mux" abstractions as noted earlier.
 >
->> +static ssize_t write_config_store(struct device *dev,
->> +				struct device_attribute *tas25xx_attr,
->> +				const char *buf, size_t size)
->> +{
-> This looks like it could just be an enum (it looks like there's names we
-> could use) or just a simple numbered control?  Same for all the other
-> controls, they're just small integers so don't look hard to handle.  But
-> perhaps I'm missing something?
-
-No you are right.  The issue with using enums is that the binary is not 
-parsed until after codec_probe and the device is registered.
-
-So the controls would appear later which could be a race condition for 
-the user space.
-
+> You don't need them though. Walk the graph. You get the connector
+> port@1 remote endpoint and then get its parent.
 >
->> +	tas2562->fw_data->fw_hdr = devm_kzalloc(tas2562->dev, hdr_size,
->> +						GFP_KERNEL);
->> +	if (!tas2562->fw_data->fw_hdr)
->> +		return -ENOMEM;
->> +
->> +	memcpy(tas2562->fw_data->fw_hdr, &fw->data[0], hdr_size);
-> Should validate that the firmware is actually at least hdr_size big, and
-> similarly for all the other lengths we get from the header we should
-> check that there's actually enough data in the file.  ATM we just
-> blindly copy.
 
-I will have to look into doing this.  I blindly copy this data because 
-there is really not a viable and reliable way to check sizes against the 
-structures.
+I see; would it be something along the lines of this? (DT example
+follows; search for "example_end" to jump to bottom):
 
+<example_start>
 
-> It'd also be good to double check that the number of configs and
-> programs is within bounds.
+connector@0 {
+    compatible = "usb-c-connector";
+    reg = <0>;
+    power-role = "dual";
+    data-role = "dual";
+    try-power-role = "source";
+    ....
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
 
-This I can check once the data is copied.
+        port@0 {
+            reg = <0>;
+            usb_con_hs: endpoint {
+                remote-endpoint = <&foo_usb_hs_controller>;
+            };
+        };
 
-Dan
+        port@1 {
+            reg = <1>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            usb_con0_ss_mode: endpoint@0 {
+                reg = <0>
+                remote-endpoint = <&mode_switch_ss_in>;
+            };
+
+            usb_con0_ss_orientation: endpoint@1 {
+                        reg = <1>
+                        remote-endpoint = <&orientation_switch_ss_in>;
+            };
+
+            usb_con0_ss_data_role: endpoint@2 {
+                        reg = <2>
+                        remote-endpoint = <&data_role_switch_in>;
+            };
+        };
+
+        port@2 {
+            reg = <2>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+            usb_con0_sbu_mode: endpoint@0 {
+                        reg = <0>
+                        remote-endpoint = <&mode_switch_sbu_in>;
+            };
+            usb_con0_sbu_orientation: endpoint@1 {
+                        reg = <1>
+                        remote-endpoint = <&orientation_switch_sbu_in>;
+            };
+        };
+    };
+};
+
+mode_switch {
+    compatible = "typec-mode-switch";
+    mux-controls = <&mode_mux_controller>;
+    mux-control-names = "mode";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    port@0 {
+        reg = <0>;
+        mode_switch_ss_in: endpoint {
+            remote-endpoint = <&usb_con0_ss_mode>
+        };
+    };
+
+    port@1 {
+        reg = <1>;
+        mode_switch_out_usb3: endpoint {
+            remote-endpoint = <&usb3_0_ep>
+        };
+    };
+
+    port@2 {
+        reg = <2>;
+        mode_switch_out_dp: endpoint {
+            remote-endpoint = <&dp0_out_ep>
+        };
+    };
+
+    port@3 {
+        reg = <3>;
+        mode_switch_sbu_in: endpoint {
+            remote-endpoint = <&usb_con0_sbu_mode>
+        };
+    };
+    // ... other ports similarly defined.
+};
+
+orientation_switch {
+    compatible = "typec-orientation-switch";
+    mux-controls = <&orientation_mux_controller>;
+    mux-control-names = "orientation";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    port@0 {
+        reg = <0>;
+        orientation_switch_ss_in: endpoint {
+            remote-endpoint = <&usb_con0_ss_orientation>
+        };
+    };
+
+    port@1
+        reg = <1>;
+        orientation_switch_sbu_in: endpoint {
+            remote-endpoint = <&usb_con0_sbu_orientation>
+        };
+    };
+    // ... other ports similarly defined.
+};
+
+data_role_switch {
+    compatible = "typec-data-role-switch";
+    mux-controls = <&data_role_switch_controller>;
+    mux-control-names = "data_role";
+
+    port {
+        data_role_switch_in: endpoint {
+            remote-endpoint = <&usb_con0_ss_data_role>
+        };
+    };
+};
+
+<example_end>
+
+Would this be conformant to OF graph and usb-connector bindings
+requirements? We'll certainly send out a format PATCH/RFC series for
+this, but I was hoping to gauge whether we're thinking along the right lines.
+
+So, in effect this would mean:
+- New bindings(and compatible strings) to be added for:
+  typec-{orientation,data-role,mode}-switch.
+- Handling in Type C connector class to parse switches from OF graph.
+- Handling in Type C connector class for distinct switches for port@1
+  (SS lines) and port@2 (SBU lines).
+
+The only thing I'm confused about is how we can define these switch
+remote-endpoint bindings in usb-connector.yaml; the port can have an
+remote-endpoint, but can we specify what the parent of the remote-endpoint
+should have as a compatible string? Or do we not need to?
+
+Best regards,
+
+-Prashant
 
