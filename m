@@ -2,156 +2,150 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B62C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 18:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A229020835
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591984083;
-	bh=g91e/1wv5G9GRPLmh4Bj7jc/z9hjVNSYS/5MOWo0vlg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=P1cmrcQonQcv17qCq5yWe89alJ+hRWLch0D3pCANOflYk6MjuJ53+1T/wF6NGEpOC
-	 16Q4HN/w1YgqriblxK5L7p3n+Z48ZVBvkjup8fF0boTtEWLhGxlqpkz3T74pJHFr02
-	 aW2YFTlT24NUJiQ5EsQKeS8dXC/VkikTtypZ1hJI=
+	by mail.kernel.org (Postfix) with ESMTP id 3BEB6207F7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 18:45:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bRJxS+Q2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgFLRsD (ORCPT
+        id S1726263AbgFLSpk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:48:03 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42351 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgFLRsD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 13:48:03 -0400
-Received: by mail-io1-f67.google.com with SMTP id x189so2050100iof.9;
-        Fri, 12 Jun 2020 10:48:02 -0700 (PDT)
+        Fri, 12 Jun 2020 14:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLSpj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 14:45:39 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C608DC03E96F
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 11:45:39 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id f7so11088243ejq.6
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 11:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P8sNBYcte/zk1gJm2YzOJRDjejnEUqN/A2ieuNyUweg=;
+        b=bRJxS+Q2KQuM54a8erBJ8qt32TXVRsXhyMB8WWOq3eNmxwrN4tec98hY1I3dgRAadb
+         ts7ymaPP/cxcISqUJMVR1rg0hvz0g6hLj31QBZ2Q4wp8U7XtRblQESknjGvBDfox0Z06
+         uKeyun3azaUw4eFf03EUYyLAv5q0HMR3PsF8E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=uWyUwWKv705gfBnI7xH7f3sQ7/rOjfVXvN6QQKVwLtg=;
-        b=hpQP4dBhFBA90/3jTs6s7vLUYoJKuuRIQ44/yAobhCJQjJn1nLMXBh+sntGSqvHchI
-         d2rXk/6H+NVZ4pLowp1ngasZIDl8+QogyU9YlaPsM++uCaKebEQgqXdi7PJfrwPvZ8iY
-         7l3Wks4UtB0SG1Wa2JSp4XQ/vsHn0cD2RA5uM+r4PJ2Ci+wB728YusVFXH9LJArMsqsC
-         EimEJCoGPQPDGicPOgO5kNyuOPho58r/TK4gE+ZxqhuA/jyb5Edbq3EBBp064T/pvXY2
-         Ct96xVh5EXDuFlzSjDKQlj9wb5TuuBTr8UAiGFd3q4moFqmSSgYk+EOu8QB9A6LBb2LS
-         oVhQ==
-X-Gm-Message-State: AOAM533AWb85YbNo2Vh5+oKLO0yCWKI7/afGwvCiVSNcaaOnOrLao9R+
-        qRZsqhWhOBOzdf8xIa8geA==
-X-Google-Smtp-Source: ABdhPJzwJCr4I0Uc4XSq+L9Lzoz3AqWujTzu0zZU+qqJjfl21exA2K0aKAXB3zdsPK+6/+8v2SXDdg==
-X-Received: by 2002:a02:b0c4:: with SMTP id w4mr9021925jah.45.1591984081872;
-        Fri, 12 Jun 2020 10:48:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id n17sm3399021ilq.13.2020.06.12.10.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 10:48:01 -0700 (PDT)
-Received: (nullmailer pid 3462082 invoked by uid 1000);
-        Fri, 12 Jun 2020 17:48:00 -0000
-Date:   Fri, 12 Jun 2020 11:48:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for v5.8-rc
-Message-ID: <20200612174800.GA3459802@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P8sNBYcte/zk1gJm2YzOJRDjejnEUqN/A2ieuNyUweg=;
+        b=ONkwvcxeHdB2EleUUva0aIDanEWgD4ZDv+Zwf1HuOG106up4JOaee2hDr0qS2zAwrQ
+         yNmL2catPACqsR7TPPsU9rr0NFUuSEDUP7IWJcZIQ5TIMviilXMeDLPqOGJ/PqL23oK2
+         IiRWnYQ0kkl5fXBiQsbs21VMN/ZcDeTbOgSPsxk07QJ33jVmcgyHj2nFtsfZTzO5pp/8
+         g5dsxqv2kxjI9mDwiT4jpo1+P1FYcS6iRC2SRjWBbHwG+18qkDhl/MaUeapdGLs5Nij/
+         53K4KlGTIPYpiEnACI5+IGVT/E8zeaTfcnG79YfPtPOBXwdqeDSoP587GJvvEp7tL9Tm
+         krPQ==
+X-Gm-Message-State: AOAM531P4PMlwp3AEhrx71GpC+AdcOtPX8qMq/PEvVKUyXp6LGJv1Y/7
+        scN7N4elP6oD1bQXUJC78NlbgI3v08heeg==
+X-Google-Smtp-Source: ABdhPJxB40oWvKauvYQp7GgS01z+ZZSXZJslOO3BxwosgT1E1lnq6U4bk4Tlud5OV2JdSPZzDhJ4vQ==
+X-Received: by 2002:a17:906:d8bc:: with SMTP id qc28mr15394028ejb.167.1591987538249;
+        Fri, 12 Jun 2020 11:45:38 -0700 (PDT)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
+        by smtp.gmail.com with ESMTPSA id ew9sm3974870ejb.121.2020.06.12.11.45.37
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2020 11:45:38 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id e1so10740023wrt.5
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 11:45:37 -0700 (PDT)
+X-Received: by 2002:a1c:2e0e:: with SMTP id u14mr257126wmu.55.1591987183150;
+ Fri, 12 Jun 2020 11:39:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
+ <20200523084103.31276-3-dongchun.zhu@mediatek.com> <20200610194455.GK201868@chromium.org>
+ <1591958798.8804.660.camel@mhfsdcap03>
+In-Reply-To: <1591958798.8804.660.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Fri, 12 Jun 2020 20:39:30 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5Bcb4A+HAivA-jrczK+OMxwZk3w0GYoh-DU=6gmTZBWnQ@mail.gmail.com>
+Message-ID: <CAAFQd5Bcb4A+HAivA-jrczK+OMxwZk3w0GYoh-DU=6gmTZBWnQ@mail.gmail.com>
+Subject: Re: [V9, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
+        <shengnan.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linus,
+On Fri, Jun 12, 2020 at 12:49 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+>
+> Hi Tomasz,
+>
+> On Wed, 2020-06-10 at 19:44 +0000, Tomasz Figa wrote:
+> > Hi Dongchun,
+> >
+> > On Sat, May 23, 2020 at 04:41:03PM +0800, Dongchun Zhu wrote:
+> > > Add a V4L2 sub-device driver for OV02A10 image sensor.
+> > >
+> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > ---
+> > >  MAINTAINERS                 |    1 +
+> > >  drivers/media/i2c/Kconfig   |   13 +
+> > >  drivers/media/i2c/Makefile  |    1 +
+> > >  drivers/media/i2c/ov02a10.c | 1025 +++++++++++++++++++++++++++++++++++++++++++
+> > >  4 files changed, 1040 insertions(+)
+> > >  create mode 100644 drivers/media/i2c/ov02a10.c
+> > >
+> >
+> > Thank you for the patch. Please see my comments inline.
+> >
+> > [snip]
+> > > diff --git a/drivers/media/i2c/ov02a10.c b/drivers/media/i2c/ov02a10.c
+> > > new file mode 100644
+> > > index 0000000..160a0b5
+> > > --- /dev/null
+> > > +++ b/drivers/media/i2c/ov02a10.c
+> > [snip]
+> > > +static const char * const ov02a10_test_pattern_menu[] = {
+> > > +   "Disabled",
+> > > +   "Color Bar",
+> >
+> > nit: We should normalize this to one of the standard names. What is the
+> > pattern on this sensor? Is it perhaps "Eight Vertical Colour Bars"?
+> >
+>
+> Yes. It is one kind of 'Eight Vertical Colour Bars'.
+> This pattern is called as 'MIPI color bar' per the datasheet.
+> Can we here use 'Vertical Color Bar' or 'MIPI Color Bar'?
+>
 
-Please pull a few DT fixes for v5.8-rc.
+We should try to stick to the names as exposed by existing drivers.
+There was an attempt to unify the naming of some Sony sensors some
+time ago [1]. Perhaps one of the names there matches the pattern of
+this sensor?
 
-Rob
+[1] https://patchwork.kernel.org/patch/10711777/
 
-The following changes since commit 2dca74a40e1e7ff45079d85fc507769383039b9d:
-
-  Merge tag 'mailbox-v5.8' of git://git.linaro.org/landing-teams/working/fujitsu/integration (2020-06-11 12:42:14 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.8-1
-
-for you to fetch changes up to 8440d4a75d90556cfb8fb3e244443f67381aafd6:
-
-  Merge branch 'dt/schema-cleanups' into dt/linus (2020-06-12 09:57:00 -0600)
-
-----------------------------------------------------------------
-Devicetree fixes for v5.8:
-
-- Another round of whack-a-mole removing 'allOf', redundant cases of
-  'maxItems' and incorrect 'reg' sizes
-
-- Fix support for yaml.h in non-standard paths
-
-----------------------------------------------------------------
-Masahiro Yamada (1):
-      scripts/dtc: use pkg-config to include <yaml.h> in non-standard path
-
-Rob Herring (5):
-      dt-bindings: Remove more cases of 'allOf' containing a '$ref'
-      dt-bindings: phy: qcom: Fix missing 'ranges' and example addresses
-      dt-bindings: Fix more incorrect 'reg' property sizes in examples
-      dt-bindings: Remove redundant 'maxItems'
-      Merge branch 'dt/schema-cleanups' into dt/linus
-
- .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     |   5 +-
- .../devicetree/bindings/ata/sata_highbank.yaml     |  21 +-
- .../devicetree/bindings/bus/baikal,bt1-apb.yaml    |   4 +-
- .../devicetree/bindings/bus/baikal,bt1-axi.yaml    |   4 +-
- .../devicetree/bindings/clock/imx6q-clock.yaml     |   1 -
- .../devicetree/bindings/clock/imx6sl-clock.yaml    |   1 -
- .../devicetree/bindings/clock/imx6sll-clock.yaml   |   1 -
- .../devicetree/bindings/clock/imx6sx-clock.yaml    |   1 -
- .../devicetree/bindings/clock/imx6ul-clock.yaml    |   1 -
- .../bindings/display/rockchip/rockchip-vop.yaml    |   4 +-
- .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml |   7 +-
- .../devicetree/bindings/iio/imu/adi,adis16475.yaml |   3 +-
- .../bindings/iio/light/amstaos,tsl2563.yaml        |   5 +-
- .../devicetree/bindings/input/iqs269a.yaml         | 222 +++++++++------------
- .../interrupt-controller/loongson,pch-msi.yaml     |  14 +-
- .../interrupt-controller/loongson,pch-pic.yaml     |   7 +-
- .../devicetree/bindings/ipmi/ipmi-smic.yaml        |  10 +-
- .../bindings/leds/backlight/qcom-wled.yaml         |  43 ++--
- .../devicetree/bindings/leds/leds-aw2013.yaml      |   3 +-
- .../devicetree/bindings/leds/leds-sgm3140.yaml     |   3 +-
- .../devicetree/bindings/mailbox/sprd-mailbox.yaml  |   2 +-
- .../devicetree/bindings/media/i2c/ov8856.yaml      |   3 +-
- .../devicetree/bindings/media/rockchip,vdec.yaml   |   2 +-
- .../devicetree/bindings/media/rockchip-vpu.yaml    |   2 +-
- .../bindings/memory-controllers/ingenic,nemc.yaml  |   5 +-
- .../bindings/mtd/arasan,nand-controller.yaml       |   2 +-
- .../bindings/net/ti,k3-am654-cpsw-nuss.yaml        |   3 +-
- .../devicetree/bindings/net/ti,k3-am654-cpts.yaml  |   8 +-
- .../devicetree/bindings/pci/cdns-pcie-ep.yaml      |   3 +-
- .../devicetree/bindings/pci/cdns-pcie-host.yaml    |   3 +-
- .../devicetree/bindings/phy/calxeda-combophy.yaml  |   5 +-
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |  20 +-
- .../bindings/phy/qcom,qmp-usb3-dp-phy.yaml         |  38 ++--
- .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |   2 +-
- .../devicetree/bindings/phy/renesas,usb3-phy.yaml  |   5 +-
- .../bindings/power/supply/cw2015_battery.yaml      |  15 +-
- .../bindings/power/supply/sbs,sbs-battery.yaml     |   6 +-
- Documentation/devicetree/bindings/pwm/imx-pwm.yaml |   2 -
- .../bindings/regulator/maxim,max77826.yaml         |   9 +-
- .../bindings/regulator/rohm,bd71847-regulator.yaml |  27 +--
- .../devicetree/bindings/rng/arm-cctrng.yaml        |   6 +-
- .../devicetree/bindings/serial/samsung_uart.yaml   |   5 +-
- .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml |   9 +-
- .../devicetree/bindings/sound/fsl,easrc.yaml       |  21 +-
- .../devicetree/bindings/sound/simple-card.yaml     |  10 +-
- .../devicetree/bindings/sound/tlv320adcx140.yaml   |  26 ++-
- .../thermal/socionext,uniphier-thermal.yaml        |   5 +-
- .../devicetree/bindings/usb/aspeed,usb-vhub.yaml   |  24 +--
- .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml |   2 -
- .../devicetree/bindings/watchdog/arm-smc-wdt.yaml  |   3 +-
- scripts/dtc/Makefile                               |   3 +
- 51 files changed, 273 insertions(+), 363 deletions(-)
+Best regards,
+Tomasz
