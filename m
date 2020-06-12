@@ -2,114 +2,118 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E657C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ED1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADC920836
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C7C207F7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OK5Nh3Z2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WGBkayOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgFLRPI (ORCPT
+        id S1726380AbgFLRQM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:15:08 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44848 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgFLRPD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 13:15:03 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CHEOIc035407;
-        Fri, 12 Jun 2020 12:14:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591982064;
-        bh=0CHEg/2YdJEaIawncJx10SE2riY6XRSDzxRhI2/Jvlg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=OK5Nh3Z2OTYUVBCeVNRk4E+OPFD5HYCeYi8rMkyH5xA4x6HX7+yjEFqUPLHDrsEE0
-         UTnU+o3aM5yrZd4uwke2n/ngzPqioCd5QgF3kzNPjNjoptlzP1++VN/Aq4FqCxEp7E
-         8DdRtJaw1072Urtb/ncJSDBfhdn2bzJnybK5BFD8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CHENbX014806
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jun 2020 12:14:24 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
- Jun 2020 12:14:23 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 12 Jun 2020 12:14:23 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CHENtL091610;
-        Fri, 12 Jun 2020 12:14:23 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 2/2] ASoC: tas2562: Update shutdown GPIO property
-Date:   Fri, 12 Jun 2020 12:14:12 -0500
-Message-ID: <20200612171412.25423-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200612171412.25423-1-dmurphy@ti.com>
-References: <20200612171412.25423-1-dmurphy@ti.com>
+        Fri, 12 Jun 2020 13:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgFLRQL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 13:16:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB64C03E96F
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 10:16:11 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u5so4417080pgn.5
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 10:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n/DVn370QK3JABveYtPvNqNj172JCYhZAS0aJ6zLWus=;
+        b=WGBkayOQncqJWL1pDNSbpqpAEpYTm2lZZvE7RitUTK0s6D+ZleVTwP1Bz/70oWaMwH
+         xd3bmuGEFILryOpWCyvdEcq0GOU7OeRSx/E9EqEms+tDKccxbR1k2aBJTrt38WRB/rAr
+         uvcRVyY9xK4ldNcnC15gPh9Ovu+VeyfYIR3is=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n/DVn370QK3JABveYtPvNqNj172JCYhZAS0aJ6zLWus=;
+        b=G25CTtqroQEHcjBCZItT0qmUe2j636qICE2wtOcK/2avfGmGhG4lrU8+YQtiON/nam
+         2CSsOtcD5zTWjEz4yXSyDdb6lGGAMM430MQ0rVeS2iyX426Yu52ySLWX/LkCSz5thhhL
+         DIS/KZlaFAyZOqbagDOVoAI7fnySCrDBMqPvZ9l+CDw1fkpH/+NsYkwEAXmHaYZrS2uz
+         Cyy9o5hyyxmERUkiYcX46i8TCemuzprXxbLgUeN2RtLfNqQLx0yGt/Qoq3m833t8dcjm
+         aziAwcXAtyw60GY0RJ8IdifpTuj/Tw+TZ14i6FF49RQjcO4G3AOerKVPqMbKUpqOBAJx
+         FZWg==
+X-Gm-Message-State: AOAM531hLfwITVfVcRBemeWp4/Q2lQGeN7PJ9Aur7tK2Gx20JL3FquiC
+        pZqKb23N4YIIk26bGwzQZIi8eQ==
+X-Google-Smtp-Source: ABdhPJwE4ZR/5sUg0dBEEXbja2LUrZcrZoRctskyF3/CKvnB+1Ro3otf9lIPw5f35/N2RJ6tvvqKVQ==
+X-Received: by 2002:a62:7695:: with SMTP id r143mr12733091pfc.31.1591982170707;
+        Fri, 12 Jun 2020 10:16:10 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id q6sm6668968pff.79.2020.06.12.10.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 10:16:09 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 10:16:09 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <20200612171609.GA255826@google.com>
+References: <20200519214604.180036-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519214604.180036-1-pmalani@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the shutdown GPIO property to be shutdown from shut-down.
+Hi,
 
-Fixes: c173dba44c2d2 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- sound/soc/codecs/tas2562.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+From the discussion in [1], it looks like reconciling ACPI and DT
+bindings for these properties to be identical is challenging.
 
-diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-index 7fae88655a0f..6026d8b1e7d3 100644
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -619,7 +619,7 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
- 	struct device *dev = tas2562->dev;
- 	int ret = 0;
- 
--	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down-gpio",
-+	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
- 						      GPIOD_OUT_HIGH);
- 	if (IS_ERR(tas2562->sdz_gpio)) {
- 		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER) {
-@@ -628,6 +628,21 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
- 		}
- 	}
- 
-+	/*
-+	 * The shut-down property is deprecated but needs to be checked for
-+	 * backwards compatibility.
-+	 */
-+	if (tas2562->sdz_gpio == NULL) {
-+		tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
-+							      GPIOD_OUT_HIGH);
-+		if (IS_ERR(tas2562->sdz_gpio)) {
-+			if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER) {
-+				tas2562->sdz_gpio = NULL;
-+				return -EPROBE_DEFER;
-+			}
-+		}
-+	}
-+
- 	ret = fwnode_property_read_u32(dev->fwnode, "ti,imon-slot-no",
- 			&tas2562->i_sense_slot);
- 	if (ret)
--- 
-2.26.2
+Let's drop this patch, and move forward with the Patch 2/2 in this
+series [2] alone.
 
+We'll continue the discussion about how we can add these properties to
+devicetree bindings in a conformant way.
+
+Thanks everyone,
+
+-Prashant,
+
+[1]:
+https://lore.kernel.org/lkml/CAL_Jsq+ORkzHchpD0qsH97zDJzXGj3jWy8=orXSVhNQd4kr9Kg@mail.gmail.com/T/#t
+[2]: https://lkml.org/lkml/2020/5/19/1219
+
+(Trimming text);
+On Tue, May 19, 2020 at 02:46:02PM -0700, Prashant Malani wrote:
+> Add properties for mode, orientation and USB data role switches for
+> Type C connectors. When available, these will allow the Type C connector
+> class port driver to configure the various switches according to USB PD
+> information (like orientation, alt mode etc.) provided by the Chrome OS
+> EC controller.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Acked-by: Benson Leung <bleung@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Fixed Acked-by tag typo.
+> 
+> Changes in v2:
+> - Added more text to the switch descriptions, explaining their purpose,
+>   and relation to the Type C connector class framework.
+> 
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 40 ++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
