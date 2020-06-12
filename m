@@ -2,110 +2,197 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98F8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 15:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B27207F7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 15:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TR4RZNsN"
+	by mail.kernel.org (Postfix) with ESMTP id 9041D20801
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgFLPyt (ORCPT
+        id S1726089AbgFLQF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 11:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgFLPyt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 11:54:49 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB232C03E96F;
-        Fri, 12 Jun 2020 08:54:48 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x22so5755182lfd.4;
-        Fri, 12 Jun 2020 08:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zJ5CA7syvux73x6gK6q3wUVaHevP94sNCIRQBIxtmdc=;
-        b=TR4RZNsNHJ6U9cXt8aSA4ISFZgZcSV7jJLhfubCqtF11RkMPBnq1irQy6EOvOH6DQ5
-         VdNQBiSn2/mINPrlViQjIpaDX/6mRnxa30gZE7F0XDqzLkEBpCHE3B3EWO74PlIj+8Dw
-         X05z5VAf/N++f7YUSS/A6ajmmO7jTtyz3btHjM6vNOMh7k8Hqx55nAyKmRB+WQSX7a/S
-         HYdGbd6SzA1IM3C/DRcrjXGPpI1nN3w73T+JrdNpMfAptt1b5tPdalWtu24P75K7Hzt1
-         0IfaMtaXM4APYgHJyh0oQD/ExI5kRCfInUGpFHs0dIQhvizNwMMRExvqnu5ZWcHFPdZL
-         qrzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zJ5CA7syvux73x6gK6q3wUVaHevP94sNCIRQBIxtmdc=;
-        b=SXvwevPFLWH3v4cyizqG7wmdB8A3LTn203O3Yl8HBSja3KZUmpAh0+h/JL8Y0fV7ex
-         qxe59tSaXGZO56Dvm/LscWnBMzflAyDb4RmfZ2s67LygsXF/lrOGFCjNLLNHo2gqo6O6
-         1Sw/Gafhss7zv4ezC6axCUcZ1mL8lOcr76cGvyzge3vEG1vbqGq5RxDUHf91IYt6WJ3+
-         IwWQ7Rr9LIY+rdAIQOzMHr5zkyO1ZFW36215fv/CC2t20k+4HtpIbuwgy4Tt8+jIMqe2
-         r+rHNF1LMKd7f7siVJQGp/crNzaXl71BFiSSWdQ8RJXWo8dS12nLyYiwiv22QLDEtmLP
-         ZHNg==
-X-Gm-Message-State: AOAM531B2v5k6gXz0KM39QO3m6l+a9tatFmrKBE8SU26EWSrlv1uHKie
-        K8lKMlWgH3k4wpmEyLKYk/9UGL2k
-X-Google-Smtp-Source: ABdhPJyKUFDVyC0Ige/FuAieZAveMyD902CTyq5dyK1Cdi5ZMGqFdjYtdCySH51GEjAkhc3M3cRCjQ==
-X-Received: by 2002:a19:2358:: with SMTP id j85mr7336103lfj.182.1591977286617;
-        Fri, 12 Jun 2020 08:54:46 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id l22sm1758694lji.120.2020.06.12.08.54.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 08:54:46 -0700 (PDT)
-Subject: Re: [PATCH 07/38] dt-bindings: display: tegra: Convert to json-schema
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-8-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b20cede8-a9ee-c70d-913d-d0a05d7826b0@gmail.com>
-Date:   Fri, 12 Jun 2020 18:54:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 12 Jun 2020 12:05:27 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36564 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgFLQF0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 12:05:26 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 7E5FC2A56A5
+Received: by earth.universe (Postfix, from userid 1000)
+        id C11383C08C7; Fri, 12 Jun 2020 18:05:21 +0200 (CEST)
+Date:   Fri, 12 Jun 2020 18:05:21 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv3 1/5] dt-bindings: touchscreen: Convert EETI EXC3000
+ touchscreen to json-schema
+Message-ID: <20200612160521.gneedgeu4x4ml27c@earth.universe>
+References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
+ <20200520153936.46869-2-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200612141903.2391044-8-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xnevn6eizwjclo62"
+Content-Disposition: inline
+In-Reply-To: <20200520153936.46869-2-sebastian.reichel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-12.06.2020 17:18, Thierry Reding пишет:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Convert the Tegra host1x controller bindings from the free-form text
-> format to json-schema.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+
+--xnevn6eizwjclo62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Rob,
+
+I justed noticed, that I forgot to have you in To/Cc. Can you please
+have a look at the patch? The full thread is available via Lore,
+please tell me if you need a resend.
+
+https://lore.kernel.org/linux-input/20200520153936.46869-1-sebastian.reiche=
+l@collabora.com/
+
+Sorry for the inconvenience,
+
+-- Sebastian
+
+On Wed, May 20, 2020 at 05:39:32PM +0200, Sebastian Reichel wrote:
+> Convert the EETI EXC3000 binding to DT schema format using json-schema
+>=20
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
-...
-> +  memory-controllers:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>  .../input/touchscreen/eeti,exc3000.yaml       | 53 +++++++++++++++++++
+>  .../bindings/input/touchscreen/exc3000.txt    | 26 ---------
+>  2 files changed, 53 insertions(+), 26 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/e=
+eti,exc3000.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/e=
+xc3000.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc=
+3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc300=
+0.yaml
+> new file mode 100644
+> index 000000000000..022aa69a5dfe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.ya=
+ml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/touchscreen/eeti,exc3000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: EETI EXC3000 series touchscreen controller
+> +
+> +maintainers:
+> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> +
+> +allOf:
+> +  - $ref: touchscreen.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: eeti,exc3000
+> +  reg:
+> +    const: 0x2a
+> +  interrupts:
+> +    maxItems: 1
+> +  touchscreen-size-x: true
+> +  touchscreen-size-y: true
+> +  touchscreen-inverted-x: true
+> +  touchscreen-inverted-y: true
+> +  touchscreen-swapped-x-y: true
 > +
 > +required:
 > +  - compatible
-> +  - interrupts
-> +  - interrupt-names
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - ranges
 > +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
+> +  - interrupts
+> +  - touchscreen-size-x
+> +  - touchscreen-size-y
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include "dt-bindings/interrupt-controller/irq.h"
+> +    i2c {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +        touchscreen@2a {
+> +                compatible =3D "eeti,exc3000";
+> +                reg =3D <0x2a>;
+> +                interrupt-parent =3D <&gpio1>;
+> +                interrupts =3D <9 IRQ_TYPE_LEVEL_LOW>;
+> +                touchscreen-size-x =3D <4096>;
+> +                touchscreen-size-y =3D <4096>;
+> +                touchscreen-inverted-x;
+> +                touchscreen-swapped-x-y;
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.=
+txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+> deleted file mode 100644
+> index 68291b94fec2..000000000000
+> --- a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+> +++ /dev/null
+> @@ -1,26 +0,0 @@
+> -* EETI EXC3000 Multiple Touch Controller
+> -
+> -Required properties:
+> -- compatible: must be "eeti,exc3000"
+> -- reg: i2c slave address
+> -- interrupts: touch controller interrupt
+> -- touchscreen-size-x: See touchscreen.txt
+> -- touchscreen-size-y: See touchscreen.txt
+> -
+> -Optional properties:
+> -- touchscreen-inverted-x: See touchscreen.txt
+> -- touchscreen-inverted-y: See touchscreen.txt
+> -- touchscreen-swapped-x-y: See touchscreen.txt
+> -
+> -Example:
+> -
+> -	touchscreen@2a {
+> -		compatible =3D "eeti,exc3000";
+> -		reg =3D <0x2a>;
+> -		interrupt-parent =3D <&gpio1>;
+> -		interrupts =3D <9 IRQ_TYPE_LEVEL_LOW>;
+> -		touchscreen-size-x =3D <4096>;
+> -		touchscreen-size-y =3D <4096>;
+> -		touchscreen-inverted-x;
+> -		touchscreen-swapped-x-y;
+> -	};
+> --=20
+> 2.26.2
+>=20
 
-This memory-controllers property didn't exist before the conversion. So
-this is not a pure conversion, which makes it a bit difficult to review
-the changes. Could you please factor out the addition of new properties
-into a separate patch?
+--xnevn6eizwjclo62
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7jp7sACgkQ2O7X88g7
++pp9EQ/7BhIOTvcurDFoYgC8ux4KZktjk79cpt9MTDeBQ1hlNEq0X0U4GeEbJTkO
+dl7CIGHs8J8rR+uHL7qRMPKkrW13pN1Uy4syd1dsWRl3ukO5uNrQvKU3x8InCWev
+sb/+AsSxMMU7hdum7qZqTNrKIGoXrQ+E0CWEE4Pvrujho1iU4o0eV/f7Z8N3Xg6/
+r7F0eip2UMBZDMkYjbtU7oWUJyYPIJRcXkS1c/jmHMAfQR2qxDJLblwL+c1QtLLM
+DyawUfDlf5XOAq0LNvy86lnZNi16v4yqrfy1zDVy654z3j2KwveiSTTG4L4i+sbR
+w/0MFQZav2hxBeDQYOIuMciis6G1+632N6J13g2wVbn5OYV1LNa4XvMkUc4YHv06
+QVyrSRPPvfDAnWtBexPeX76sm3/XnnoBfEmM7UKtHSTF7VLpNeN5F37MirkX5//V
+84HU9Orseqa8ymqdvgY0cc+7E80jVHe4OKfYVc57EMoT9v5+eUxSJcOpI9O34g4W
+zoR19VPVvTHXzHY/lClP8mA3c5Tg+CWIR8le+592RmUmPBcr/qg13+ee0TBEgkqN
+2vTOQhbtg2+E9x+Qe8iifxwjdj9jZgWl7oyAhO3y2f3Q9kx5u08wqw4ScKmZCyAg
+hJLzFNqPHUBp0QxVOU/wMFMzbHGe/C/0fsTH6W3zabRDSgxGofg=
+=+YBY
+-----END PGP SIGNATURE-----
+
+--xnevn6eizwjclo62--
