@@ -2,111 +2,124 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41DCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356E0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C45102078E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BD4207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r65b29Wm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lYywnfIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFLWh5 (ORCPT
+        id S1726304AbgFLWtf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 18:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLWh4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 18:37:56 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59A45C03E96F;
-        Fri, 12 Jun 2020 15:37:55 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id h10so1046367pgq.10;
-        Fri, 12 Jun 2020 15:37:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JwfU3Ak+LMYhX+D/DJ3cHip+/Jva9vIJhsQ0OPfwhqg=;
-        b=r65b29WmFEMz4xy4WPMsirQEq75ojHp4m8iYFhOqVHJeReich3JcTaxwUFazCpRvB7
-         Un1TkXGJj5MYakNqXHStcntbcKWiupNGLgq6oHxetBoIydHrpn1reWtWkXIZjDAlntDC
-         Nrs7RGBbMwqnhgx8yEj2s4xMpxf2vwvT5/aJmWVkB/7rQJFVovI3R+gYB2K0eout2plm
-         8LreVbbfdrBxUGIDbu46R6ApvfpaulGW0GbsQRrGNPE6pfLqGYduGVp4lZWW/6nGrcKM
-         C0jIDmnPp0XzOcGsGagXe+UBEj2AjVkbp4HaRj4mQMkQTPVoYN9BVnCM77b1drQQI532
-         eaMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JwfU3Ak+LMYhX+D/DJ3cHip+/Jva9vIJhsQ0OPfwhqg=;
-        b=mej0CNFhQEULTAbIqanVCyZc3A0/QT7tNLCE/4FhZNvVcpfmQAUtVcIk0BGhTRtXzB
-         1PfYfP10WEQZvjlaniYHLD2fDlrpHBhkm8gxKWWMa17esB79Iaidg2aqLFO19xolHIJy
-         wHT0+nOB5BCn2tIqYvIWA76eBO5kyUqqdTa2EinT+kIQy8ozaGeO/uubPCnOYw0ZoqIj
-         aS1IR/f8tfiTsnPnlmD1rIVKTmLogxyJLj9wMnAxPdkVUuOAwWIkLk89AND+EFlOzv6k
-         sxhKiBE3/wk3blHO/Z1lFRBTT2yKaCMLTpvGHuIM6F6uakKY8uHLk43y6m/EGCK02XMx
-         C5dQ==
-X-Gm-Message-State: AOAM532HE7qtkPnyz8EGgcAvcR3cvKP5ew1q5ZhLSHCKcO9BP5ZXp4aH
-        3w9F8t1qSHrI9J3pBF8QbhI=
-X-Google-Smtp-Source: ABdhPJzuqYss2XQHHTEEL4G4ZnVbNSLNJgPld3AOF3f/9w702uxIRSW0jghU9Nn/sCQgdj53nnqUEw==
-X-Received: by 2002:a63:8dc4:: with SMTP id z187mr8101219pgd.199.1592001474836;
-        Fri, 12 Jun 2020 15:37:54 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g9sm6539698pfm.151.2020.06.12.15.37.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 15:37:53 -0700 (PDT)
-Subject: Re: [PATCH v3 2/9] dt-bindings: reset: add BCM6345 reset controller
- bindings
-To:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Roja?= =?UTF-8?Q?s?= 
-        <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de
-References: <20200609160244.4139366-1-noltari@gmail.com>
- <20200610172859.466334-1-noltari@gmail.com>
- <20200610172859.466334-3-noltari@gmail.com> <20200612215756.GA3884504@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <81072f55-b2ea-4ccc-36c3-fccaf9306fce@gmail.com>
-Date:   Fri, 12 Jun 2020 15:37:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Fri, 12 Jun 2020 18:49:35 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57694 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgFLWte (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 18:49:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CMnOqZ121046;
+        Fri, 12 Jun 2020 17:49:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592002164;
+        bh=r3KC4WGjMUHhMPU0T9d+Aev6nWaRVfp+MljfOUVI+nY=;
+        h=From:To:CC:Subject:Date;
+        b=lYywnfImUv/KyQ0kWp4EKnDSpBIQ6xu2IhWLIaIJCohmQL8hQ0tx0PpJTR7tGO/zX
+         EbwP1oMbCsRLyOxSuYE4ucM3oxy8fBspQB8zcB5ACmUVbU+s78iIQKWxUVgIMszlzS
+         8oDZyUtPnZZ4yH4m3vwiBuOs9riK4hUUOmX22bq8=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CMnO1S119570
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 17:49:24 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 17:49:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 17:49:24 -0500
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CMnOgK112149;
+        Fri, 12 Jun 2020 17:49:24 -0500
+Received: from localhost ([10.250.48.148])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 05CMnOTZ062157;
+        Fri, 12 Jun 2020 17:49:24 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v3 0/6] TI K3 DSP remoteproc driver for C66x DSPs
+Date:   Fri, 12 Jun 2020 17:49:08 -0500
+Message-ID: <20200612224914.7634-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200612215756.GA3884504@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi All,
 
+The following is v3 of the K3 DSP remoteproc driver supporting the C66x DSPs
+on the TI K3 J721E SoCs. The patches are based on the latest commit on the
+master branch 44ebe016df3a.
 
-On 6/12/2020 2:57 PM, Rob Herring wrote:
-> On Wed, 10 Jun 2020 19:28:52 +0200, Álvaro Fernández Rojas wrote:
->> Add device tree binding documentation for BCM6345 reset controller.
->>
->> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
->> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  .../bindings/reset/brcm,bcm6345-reset.yaml    | 37 +++++++++++++++++++
->>  1 file changed, 37 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.example.dt.yaml: reset-controller@10000010: reg: [[268435472, 4]] is too short
+The main changes in v3 are mostly around the bindings to address various
+comments from Rob. The bindings patch is the only patch without an Ack on
+v2.
 
-maxItems for the reg property should be 1 here.
+Main changes in v3:
+ - Introduced a new common ti-sci-proc bindings yaml file (Patch #3)
+   that can be used by both K3 DSP and R5F
+ - Updated dt-bindings to address most comments (Patch #4)
+ - Moved the common ti-sci-helper patch (Patch #2) between R5 and DSP drivers
+   from the R5F series to this series, so that this series is standalone and
+   can be merged by itself.
+
+Please see the individual patches for further delta differences.
+
+v2: https://patchwork.kernel.org/cover/11561787/
+v1: https://patchwork.kernel.org/cover/11458573/
+
+regards
+Suman
+
+Suman Anna (6):
+  remoteproc: Introduce rproc_of_parse_firmware() helper
+  remoteproc: k3: Add TI-SCI processor control helper functions
+  dt-bindings: remoteproc: Add common TI SCI rproc bindings
+  dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
+  remoteproc: k3-dsp: Add a remoteproc driver of K3 C66x DSPs
+  remoteproc: k3-dsp: Add support for L2RAM loading on C66x DSPs
+
+ .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 139 ++++
+ .../bindings/remoteproc/ti,k3-sci-proc.yaml   |  51 ++
+ drivers/remoteproc/Kconfig                    |  13 +
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/remoteproc_core.c          |  23 +
+ drivers/remoteproc/remoteproc_internal.h      |   2 +
+ drivers/remoteproc/ti_k3_dsp_remoteproc.c     | 774 ++++++++++++++++++
+ drivers/remoteproc/ti_sci_proc.h              | 102 +++
+ 8 files changed, 1105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+ create mode 100644 drivers/remoteproc/ti_k3_dsp_remoteproc.c
+ create mode 100644 drivers/remoteproc/ti_sci_proc.h
+
 -- 
-Florian
+2.26.0
+
