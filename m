@@ -2,147 +2,172 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7D2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 12:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4B7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 12:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 308A52081A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 12:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tM3daYK/"
+	by mail.kernel.org (Postfix) with ESMTP id 5EF602074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 12:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgFLM2Z (ORCPT
+        id S1726257AbgFLMqj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 08:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgFLM2Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 08:28:25 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7103AC03E96F;
-        Fri, 12 Jun 2020 05:28:25 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c14so8691348qka.11;
-        Fri, 12 Jun 2020 05:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BwnXafa4LmXGLB71ZYrE45hOUaY6Ry8WpQioJAukJwo=;
-        b=tM3daYK/gAR1iS+T2VTFj1FfUq932KVqnJEu6zoTjeHlBb3JPZ1CcFidzqtl77RZGv
-         BEiKHtBWAXZYgrnE/bhoawU8XshBmXodLQdTEsyzhOsRw3gem8/WD3QneuFyIBUQJph8
-         8PQ/rpLPXwZGwfULK6sgPoIP8fA6Yedb459rN/Fu1IPFVHhrK6M2L1P22gixOnVNk82f
-         lqle6nhvtl3PF02YIOuXc+wGQ2gLWzRolYHdZSRg3Z8sM7bFU/rj5hSsgF9aAE0wSx0+
-         Qk0nIqtodjqhYYUnriQstY8IUO3KmTjx414v3o9/RfUPWIX/goFbGcVvq7aEjnudcUOH
-         7XSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BwnXafa4LmXGLB71ZYrE45hOUaY6Ry8WpQioJAukJwo=;
-        b=e1t25173tvSRxbZhRj3qGS6PYU3XlD9GjmbdZYjdz1qLHkb55FQwZIBeYpLRlyiWWg
-         /dPU5N4uJP0Y+oV04zLBLqVYokhthffCqTO4EaWgW1aFpY1ooGt5IXSgKeRFVfgYBczG
-         0DWxaYeZS2SLLNZ5BEe9FfRFHRnXDw9wR9D4ddN818jJ3hebse6K6WE3Ok3la4Pi0gN8
-         6JAi6AjPRUTYqT7FDhsFkBNALV/nM+vMdlygNqrRdcP5YNuW+LgWocwx0wRYNWBSssHU
-         fQiidhE5NWiZ5w+YxqtjvMblnkmtd/KNTtZVCl1ynuo3yPP2TGgszHErZ1ILMGbP03DW
-         6qFw==
-X-Gm-Message-State: AOAM532AfpqfXy7XLfkc7MpMhdGAA6IDKjpckj93OKm/NorpoSRlLMvp
-        tnOVtBD0d15TSCHfOTt9wLgIOC82kF0=
-X-Google-Smtp-Source: ABdhPJwvcSx6JECJEhRXZoRxrBOfrUTYOwVnxOlQVa6Yr+1fad4QCQlU5GdR5k5YIodWz6aXggeRlA==
-X-Received: by 2002:a37:e205:: with SMTP id g5mr2713401qki.451.1591964904689;
-        Fri, 12 Jun 2020 05:28:24 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id m53sm4776290qtb.64.2020.06.12.05.28.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2020 05:28:24 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] mfd: core: Add OF_MFD_CELL_REG() helper
-To:     Lee Jones <lee.jones@linaro.org>, andy.shevchenko@gmail.com,
-        michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux@roeck-us.net, andriy.shevchenko@linux.intel.com,
-        robin.murphy@arm.com, gregkh@linuxfoundation.org,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <20200611191002.2256570-3-lee.jones@linaro.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <6881d95e-c12b-8133-b27c-82c0a2842fd6@gmail.com>
-Date:   Fri, 12 Jun 2020 07:28:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 12 Jun 2020 08:46:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14543 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbgFLMqj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 12 Jun 2020 08:46:39 -0400
+IronPort-SDR: 49zUuSK0a2jGt58vtpZE3Cp5JKCj49cKP8nfcl2IQOGRL3LZ5gsfmqf3Ef7av7/ILAig5OWKFb
+ CtxRZnQ7blXQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 05:46:38 -0700
+IronPort-SDR: L21NZGrdqQp2qnuBtOPnXkZ0pSHOMGXSZDk/lEaKxTyXU2QxT6zlMggNm0vyLrifRezR3WBljH
+ Kush8WavtS2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="380690326"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 12 Jun 2020 05:46:35 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 12 Jun 2020 15:46:34 +0300
+Date:   Fri, 12 Jun 2020 15:46:34 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <20200612124634.GD3213128@kuha.fi.intel.com>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+ <20200511192800.GA28762@bogus>
+ <20200511204635.GC136540@google.com>
+ <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com>
+ <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611191002.2256570-3-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+Frank (me)
+On Wed, Jun 10, 2020 at 10:53:45AM -0600, Rob Herring wrote:
+> On Wed, Jun 10, 2020 at 9:34 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > > Hi Rob,
+> > >
+> > > Thanks again for the comments and feedback. Kindly see responses inline:
+> > >
+> > > (Trimming unrelated text from thread):
+> > >
+> > > On Tue, Jun 09, 2020 at 02:30:11PM -0600, Rob Herring wrote:
+> > > > On Fri, May 29, 2020 at 5:30 PM Prashant Malani <pmalani@chromium.org> wrote:
+> > > > >
+> > > > > Nodes truncated and unrelated fields omitted in the interest of brevity:
+> > > > >
+> > > > > // Chrome OS EC Type C Port Manager.
+> > > > > typec {
+> > > > >     compatible = "google,cros-ec-typec";
+> > > > >     #address-cells = <1>;
+> > > > >     #size-cells = <0>;
+> > > > >
+> > > > >     connector@0 {
+> > > > >         compatible = "usb-c-connector";
+> > > > >         reg = <0>;
+> > > > >         power-role = "dual";
+> > > > >         data-role = "dual";
+> > > > >         try-power-role = "source";
+> > > > >         mode-switch = <&foo_mux>;
+> > > > >         // Other switches can point to the same mux.
+> > > > >         ....
+> > > >
+> > > > The connector is supposed to have 'ports' for USB2, USB3, and Aux
+> > > > unless the parent is the USB controller.
+> > > Understood; so, coupled with Heikki's explanation (see below for where
+> > > I've pasted it), would it be something like so? (adding inline to the connector
+> > > node definition):
+> > >
+> > >             ports {
+> > >                 #address-cells = <1>;
+> > >                 #size-cells = <0>;
+> > >
+> > >                 port@0 {
+> > >                     reg = <0>;
+> > >                     usb_con_hs: endpoint {
+> > >                         remote-endpoint = <&foo_usb_hs_controller>;
+> > >                     };
+> > >                 };
+> > >
+> > >                 port@1 {
+> > >                     reg = <1>;
+> > >                     usb_con0_ss: endpoint@0 {
+> > >                         remote-endpoint = <&mode_mux_in>;
+> > >                     };
+> > >                 };
+> > >
+> > >                 port@2 {
+> > >                     reg = <2>;
+> > >                     usb_con_sbu: endpoint {
+> > >                         remote-endpoint = <&foo_dp_aux>;
+> > >                     };
+> > >                 };
+> > >             };
+> >
+> > The pins that can be reassigned can in practice go anywhere. We can't
+> > group them in any way. What do we do for example when the two sideband
+> > pins go to different locations?
+> 
+> The sideband pins from the connector go to multiple places or the
+> sideband signal from a controller go to multiple connectors? Either
+> way, that's solved with multiple endpoints. In the former case, port@2
+> would have multiple endpoints with all the possible connections. The
+> general model of the graph is each port is a separate data channel and
+> multiple endpoints are either a mux or fanout depending on the data
+> direction.
 
-On 2020-06-11 14:10, Lee Jones wrote:
-> Extend current list of helpers to provide support for parent drivers
-> wishing to match specific child devices to particular OF nodes.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  include/linux/mfd/core.h | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index ae1c6f90388ba..7ce1de99cd8b8 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -14,7 +14,7 @@
->  
->  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
->  
-> -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _match)\
-> +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg, _use_of_reg,_match) \
->  	{								\
->  		.name = (_name),					\
->  		.resources = (_res),					\
-> @@ -22,24 +22,29 @@
->  		.platform_data = (_pdata),				\
->  		.pdata_size = (_pdsize),				\
->  		.of_compatible = (_compat),				\
-> +		.of_reg = (_of_reg),					\
-> +		.use_of_reg = (_use_of_reg),				\
->  		.acpi_match = (_match),					\
->  		.id = (_id),						\
->  	}
->  
-> +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize,_id, _compat, _of_reg) \
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg, true, NULL)
-> +
->  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat) \
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, 0, false, NULL)
->  
->  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match) \
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, false, _match)
->  
->  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id) \
-> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)
-> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, false, NULL)
->  
->  #define MFD_CELL_RES(_name, _res) \
-> -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)
-> +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, false, NULL)
->  
->  #define MFD_CELL_NAME(_name) \
-> -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)
-> +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, false, NULL)
->  
->  struct irq_domain;
->  struct property_entry;
-> 
+No, that's not what I'm trying to ask here. Bad example, sorry. I'm
+trying to understand why is it necessary to slit the connector into
+three separate interfaces? There does not seem to be anything in the
+kernel that would benefit from that. Why isn't the connector described
+as a single interface in devicetree?
 
+My concern with the three separate interfaces is that they may force
+us to know in kernel which of the three interfaces are association
+with a mode, and actually not just the mode, but the possible the pin
+configurations of the mode. That is something that we may end up
+having to hard code into the drivers, even though it does not provide
+any useful information to us, and that would not be OK.
+
+Right now they also allow making assumptions regarding the alternate
+modes since there are no "bindings" for those, for example, if these
+OF graph ports have an endpoint to the DP, it means DP alt mode is
+supported. But that is of course not true. DisplayPort is used also
+with other alternate modes. We must never make any assumptions based
+on those interfaces. So again, why do we have them?
+
+Either I'm missing something, or the devicetree description of the
+Type-C connectors really is way too complex, way too "low level",
+causing us potential problems without providing anything that we could
+actually ever use in the operating system.
+
+
+thanks,
+
+-- 
+heikki
