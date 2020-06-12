@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E898C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B39C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6044620792
+	by mail.kernel.org (Postfix) with ESMTP id EEF08206C3
 	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkPFqeFe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHwdQmRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgFLOUG (ORCPT
+        id S1726542AbgFLOUH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
+        Fri, 12 Jun 2020 10:20:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFLOUF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:20:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A46DC03E96F;
-        Fri, 12 Jun 2020 07:20:03 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x14so9928305wrp.2;
-        Fri, 12 Jun 2020 07:20:03 -0700 (PDT)
+        with ESMTP id S1726523AbgFLOUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:20:06 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9E0C08C5C1;
+        Fri, 12 Jun 2020 07:20:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id j198so9296435wmj.0;
+        Fri, 12 Jun 2020 07:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=L9wKymHH/v6YunAl/pZm4DJsFjD8Guav1ycXTwqFKww=;
-        b=TkPFqeFeTNBX4FL6lF+0WNeivTs95u98HXlMm28gfH2A14M3Ui2XfCNT+0hfXBjHUS
-         ZdjAVcW5k4yIHyCJHgS7sStoGYDwUymRxfGfiawDBVUPsN8+z2VrXcHKlsiIIAJFCdib
-         cYLaEM61bAebhAmHEiE+8oAyJNoy779tDwRlibbgrxc7fpTjGsTVmb1ygx187TB8JIEN
-         2jUcgIFrEYeN9LgnFRgnh2JlBfpUwxLjlkygiKcMQm3PDFqT34OhP90oyFneGQz2kltK
-         J6yWh+5DwsUpLu9PTVfdZH3QgNGXg8nPFBL1eZ6lsr4LWS2GksI+UvxOFeg15IpdNFoJ
-         DRbw==
+        bh=3SBlnX8CB++4asjTi2qXO82F96zMggVrXN5oDOQFuUc=;
+        b=bHwdQmReuoHESd4KYAzL+hmDd3DvaRow4voPxoznNDXLWTLoMBQ3KHhH/9a0D42cnz
+         gB1VFRJsiUzUR+TNnfSI2esa0ikyM8YO/lSnJqnYph+IksJx0KiktE0XzGZV6Tu8ICUG
+         fUIrBCvvfNGuD0MSTnSwk1qM9uvgac8GwnfHLOntnElosHeeyGkFX55pbiBkEA7RvGQX
+         XgnCqXdWdwnwJVFOJ1WMCxLCIpRtlAE+RxOlAPBGwFWHxW3eZIxsQ4d+fgkoKOSfqkKX
+         ptupUShhKgrSb36XUZ1jd4rh2LZFAzMDGvHdyM6t1SpUrN8rvddzIX3awcYpk2jif1Hh
+         sNOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=L9wKymHH/v6YunAl/pZm4DJsFjD8Guav1ycXTwqFKww=;
-        b=M/Zw/Re2jhZUh85iMMtGXQVp9uh4QGbebFwJ/OlbpbKYQwOC64R2GalBnyz12B2JZ7
-         Mc67TVmqpVurV2PVkBS5ZPG3ZS51NjVK8F8CkNoEHZrrVELzub+lc5ApINUZptFUoZ12
-         6XZrBevDWUFlaex6LPHy4p2MH7R4/9dv8ESXb1nM01PXLKFxr7vIa3gis3NUku2SlQrw
-         dN2SVhGPvmDD3GVb59hDT3LwYggzSH1qBLhLYOgspZHMy3aRDPLrFSbx1jAUdYuZ1FM3
-         yT8EWz5F6e3N/OLf7bISkhKoDpU1JAoye4Qnr1ZeaPIHJ/r1FRCPA+ndHapKF0DkokrI
-         l0ig==
-X-Gm-Message-State: AOAM5312jcYSWSRjTyxLFJXfCknhQeuJjc+EklreMWUjPkUsC+rMgNIX
-        FT5XV2CRMlcQUYYYwp9IwaEFk+rT
-X-Google-Smtp-Source: ABdhPJwKTfF3GUNIK9fxg74v9KFJrC+0O/dzuNxZKykbD/JFgX81pXE+2umGmmaSCfKe/z7OaY18yA==
-X-Received: by 2002:a5d:558a:: with SMTP id i10mr16184313wrv.207.1591971602082;
-        Fri, 12 Jun 2020 07:20:02 -0700 (PDT)
+        bh=3SBlnX8CB++4asjTi2qXO82F96zMggVrXN5oDOQFuUc=;
+        b=N7VqHPrx0kQ0MNxcy4Wvbw6bJCRsWN69G19VE6DtDjgWPb0b02gpDy+Gcd4qQvodoB
+         Pv8AS4t/X/pAC5iGjubIf6oaLZZQM/o05S64aQrebRr2pP/WEpwMl6Kk1gOYU18++Q+s
+         CSxqSy8/ioV+gT/tn6ivEJCqVBr9CBFLvHSFdf7nvtV0Zjbt5z+PX9FLRzoTuDkhphQL
+         e/bBKuunqLCm7SG2bVQ2u1ZC3b3ZH7AD7rgD46THfhppZFuCknHD5w80yBUUAdCH9RMD
+         s5OO296/DNc3aOiNXkwwnoUh8D4AbsukckXtrKgVu6ZvTzb1uTCSoN/RgClz9w5wLJoG
+         CipQ==
+X-Gm-Message-State: AOAM530f8ddxq1CktTiPR+mez18NWD1+lMpBnJF437VGiwsCMsl6SxR7
+        8GScwWYsYiYaoNQSPCzaMLF99MAw
+X-Google-Smtp-Source: ABdhPJz0NmexhHI4BVAr63c3c2LAvBHgRHJ25q0+MmNVXyNROpdLZyC9dHle9O28NLITSnIIupiR3A==
+X-Received: by 2002:a1c:6006:: with SMTP id u6mr13599915wmb.39.1591971604004;
+        Fri, 12 Jun 2020 07:20:04 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id l17sm8441535wmi.3.2020.06.12.07.20.00
+        by smtp.gmail.com with ESMTPSA id g187sm9724996wma.17.2020.06.12.07.20.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 07:20:00 -0700 (PDT)
+        Fri, 12 Jun 2020 07:20:03 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 26/38] dt-bindings: pci: iommu: Convert to json-schema
-Date:   Fri, 12 Jun 2020 16:18:51 +0200
-Message-Id: <20200612141903.2391044-27-thierry.reding@gmail.com>
+Subject: [PATCH 27/38] dt-bindings: tegra: Add missing compatible strings
+Date:   Fri, 12 Jun 2020 16:18:52 +0200
+Message-Id: <20200612141903.2391044-28-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200612141903.2391044-1-thierry.reding@gmail.com>
 References: <20200612141903.2391044-1-thierry.reding@gmail.com>
@@ -77,368 +77,88 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Convert the PCI IOMMU device tree bindings from free-form text format to
-json-schema.
+The Nyan Blaze and Nyan Big, as well as Jetson Nano (P3450-0000), Darcy
+(P2894-0050-A08) and Pixel C (Smaug) were never mentioned. Add them.
+
+While at it, also fix a typo in the compatible string for Apalis Tegra30
+v1.1 evaluation board.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../devicetree/bindings/pci/pci-iommu.txt     | 171 ------------------
- .../devicetree/bindings/pci/pci-iommu.yaml    | 168 +++++++++++++++++
- 2 files changed, 168 insertions(+), 171 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
- create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.yaml
+ .../devicetree/bindings/arm/tegra.yaml        | 46 ++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt b/Documentation/devicetree/bindings/pci/pci-iommu.txt
-deleted file mode 100644
-index 0def586fdcdf..000000000000
---- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
-+++ /dev/null
-@@ -1,171 +0,0 @@
--This document describes the generic device tree binding for describing the
--relationship between PCI(e) devices and IOMMU(s).
--
--Each PCI(e) device under a root complex is uniquely identified by its Requester
--ID (AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
--Function number.
--
--For the purpose of this document, when treated as a numeric value, a RID is
--formatted such that:
--
--* Bits [15:8] are the Bus number.
--* Bits [7:3] are the Device number.
--* Bits [2:0] are the Function number.
--* Any other bits required for padding must be zero.
--
--IOMMUs may distinguish PCI devices through sideband data derived from the
--Requester ID. While a given PCI device can only master through one IOMMU, a
--root complex may split masters across a set of IOMMUs (e.g. with one IOMMU per
--bus).
--
--The generic 'iommus' property is insufficient to describe this relationship,
--and a mechanism is required to map from a PCI device to its IOMMU and sideband
--data.
--
--For generic IOMMU bindings, see
--Documentation/devicetree/bindings/iommu/iommu.txt.
--
--
--PCI root complex
--================
--
--Optional properties
---------------------
--
--- iommu-map: Maps a Requester ID to an IOMMU and associated IOMMU specifier
--  data.
--
--  The property is an arbitrary number of tuples of
--  (rid-base,iommu,iommu-base,length).
--
--  Any RID r in the interval [rid-base, rid-base + length) is associated with
--  the listed IOMMU, with the IOMMU specifier (r - rid-base + iommu-base).
--
--- iommu-map-mask: A mask to be applied to each Requester ID prior to being
--  mapped to an IOMMU specifier per the iommu-map property.
--
--
--Example (1)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID,
--		 * identity-mapped.
--		 */
--		iommu-map = <0x0 &iommu 0x0 0x10000>;
--	};
--};
--
--
--Example (2)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID with the
--		 * function bits masked out.
--		 */
--		iommu-map = <0x0 &iommu 0x0 0x10000>;
--		iommu-map-mask = <0xfff8>;
--	};
--};
--
--
--Example (3)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID,
--		 * but the high bits of the bus number are flipped.
--		 */
--		iommu-map = <0x0000 &iommu 0x8000 0x8000>,
--			    <0x8000 &iommu 0x0000 0x8000>;
--	};
--};
--
--
--Example (4)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu_a: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	iommu_b: iommu@b {
--		reg = <0xb 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	iommu_c: iommu@c {
--		reg = <0xc 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * Devices with bus number 0-127 are mastered via IOMMU
--		 * a, with sideband data being RID[14:0].
--		 * Devices with bus number 128-255 are mastered via
--		 * IOMMU b, with sideband data being RID[14:0].
--		 * No devices master via IOMMU c.
--		 */
--		iommu-map = <0x0000 &iommu_a 0x0000 0x8000>,
--			    <0x8000 &iommu_b 0x0000 0x8000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.yaml b/Documentation/devicetree/bindings/pci/pci-iommu.yaml
-new file mode 100644
-index 000000000000..8aaa8e657559
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/pci-iommu.yaml
-@@ -0,0 +1,168 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/pci-iommu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCI IOMMU bindings
-+
-+maintainers:
-+  - Rob Herring <robh+dt@kernel.org>
-+
-+description: |
-+  This document describes the generic device tree binding for describing the
-+  relationship between PCI(e) devices and IOMMU(s).
-+
-+  Each PCI(e) device under a root complex is uniquely identified by its
-+  Requester ID (AKA RID). A Requester ID is a triplet of a Bus number, Device
-+  number, and Function number.
-+
-+  For the purpose of this document, when treated as a numeric value, a RID is
-+  formatted such that:
-+
-+    * Bits [15:8] are the Bus number.
-+    * Bits [7:3] are the Device number.
-+    * Bits [2:0] are the Function number.
-+    * Any other bits required for padding must be zero.
-+
-+  IOMMUs may distinguish PCI devices through sideband data derived from the
-+  Requester ID. While a given PCI device can only master through one IOMMU, a
-+  root complex may split masters across a set of IOMMUs (e.g. with one IOMMU
-+  per bus).
-+
-+  The generic 'iommus' property is insufficient to describe this relationship,
-+  and a mechanism is required to map from a PCI device to its IOMMU and
-+  sideband data.
-+
-+  For generic IOMMU bindings, see
-+  Documentation/devicetree/bindings/iommu/iommu.txt.
-+
-+properties:
-+  iommu-map:
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: |
-+      Maps a Requester ID to an IOMMU and associated IOMMU specifier data.
-+
-+      The property is an arbitrary number of tuples of (rid-base, iommu,
-+      iommu-base, length).
-+
-+      Any RID r in the interval [rid-base, rid-base + length) is associated
-+      with the listed IOMMU, with the IOMMU specifier (r - rid-base +
-+      iommu-base).
-+
-+  iommu-map-mask:
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    description:
-+      A mask to be applied to each Requester ID prior to being mapped to an
-+      IOMMU specifier per the iommu-map property.
-+
-+examples:
-+  - |
-+    iommu0: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * The sideband data provided to the IOMMU is the RID,
-+         * identity-mapped.
-+         */
-+        iommu-map = <0x0 &iommu0 0x0 0x10000>;
-+    };
-+
-+  - |
-+    iommu1: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * The sideband data provided to the IOMMU is the RID with the
-+         * function bits masked out.
-+         */
-+        iommu-map = <0x0 &iommu 0x0 0x10000>;
-+        iommu-map-mask = <0xfff8>;
-+    };
-+
-+  - |
-+    iommu2: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * The sideband data provided to the IOMMU is the RID,
-+         * but the high bits of the bus number are flipped.
-+         */
-+        iommu-map = <0x0000 &iommu2 0x8000 0x8000>,
-+                    <0x8000 &iommu2 0x0000 0x8000>;
-+    };
-+
-+  - |
-+    iommu_a: iommu@a {
-+        reg = <0xa 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    iommu_b: iommu@b {
-+        reg = <0xb 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    iommu_c: iommu@c {
-+        reg = <0xc 0x1>;
-+        compatible = "vendor,some-iommu";
-+        #iommu-cells = <1>;
-+    };
-+
-+    pci@f {
-+        reg = <0xf 0x1>;
-+        compatible = "vendor,pcie-root-complex";
-+        device_type = "pci";
-+
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        ranges = <0x02000000 0 0x00000000 0x00000000 0 0x00000000>;
-+
-+        /*
-+         * Devices with bus number 0-127 are mastered via IOMMU
-+         * a, with sideband data being RID[14:0].
-+         * Devices with bus number 128-255 are mastered via
-+         * IOMMU b, with sideband data being RID[14:0].
-+         * No devices master via IOMMU c.
-+         */
-+        iommu-map = <0x0000 &iommu_a 0x0000 0x8000>,
-+                    <0x8000 &iommu_b 0x0000 0x8000>;
-+    };
+diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
+index 60b38eb5c61a..043ca543be8c 100644
+--- a/Documentation/devicetree/bindings/arm/tegra.yaml
++++ b/Documentation/devicetree/bindings/arm/tegra.yaml
+@@ -49,7 +49,7 @@ properties:
+           - const: toradex,apalis_t30
+           - const: nvidia,tegra30
+       - items:
+-          - const: toradex,apalis_t30-eval-v1.1
++          - const: toradex,apalis_t30-v1.1-eval
+           - const: toradex,apalis_t30-eval
+           - const: toradex,apalis_t30-v1.1
+           - const: toradex,apalis_t30
+@@ -80,6 +80,33 @@ properties:
+           - const: toradex,apalis-tk1-v1.2
+           - const: toradex,apalis-tk1
+           - const: nvidia,tegra124
++      - items:
++          - const: google,nyan-big-rev7
++          - const: google,nyan-big-rev6
++          - const: google,nyan-big-rev5
++          - const: google,nyan-big-rev4
++          - const: google,nyan-big-rev3
++          - const: google,nyan-big-rev2
++          - const: google,nyan-big-rev1
++          - const: google,nyan-big-rev0
++          - const: google,nyan-big
++          - const: google,nyan
++          - const: nvidia,tegra124
++      - items:
++          - const: google,nyan-blaze-rev10
++          - const: google,nyan-blaze-rev9
++          - const: google,nyan-blaze-rev8
++          - const: google,nyan-blaze-rev7
++          - const: google,nyan-blaze-rev6
++          - const: google,nyan-blaze-rev5
++          - const: google,nyan-blaze-rev4
++          - const: google,nyan-blaze-rev3
++          - const: google,nyan-blaze-rev2
++          - const: google,nyan-blaze-rev1
++          - const: google,nyan-blaze-rev0
++          - const: google,nyan-blaze
++          - const: google,nyan
++          - const: nvidia,tegra124
+       - items:
+           - enum:
+               - nvidia,norrin
+@@ -91,7 +118,22 @@ properties:
+               - nvidia,p2371-0000
+               - nvidia,p2371-2180
+               - nvidia,p2571
+-              - nvidia,p2894-0050-a08
++              - nvidia,p3450-0000
++          - const: nvidia,tegra210
++      - items:
++          - const: nvidia,p2894-0050-a08
++          - const: nvidia,darcy
++          - const: nvidia,tegra210
++      - items:
++          - const: google,smaug-rev8
++          - const: google,smaug-rev7
++          - const: google,smaug-rev6
++          - const: google,smaug-rev5
++          - const: google,smaug-rev4
++          - const: google,smaug-rev3
++          - const: google,smaug-rev2
++          - const: google,smaug-rev1
++          - const: google,smaug
+           - const: nvidia,tegra210
+       - items:
+           - enum:
 -- 
 2.24.1
 
