@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C643DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243EBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A311C20842
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05286206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pEwKWO1L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDxRkpdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgFLOUM (ORCPT
+        id S1726463AbgFLOUN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:20:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54522 "EHLO
+        Fri, 12 Jun 2020 10:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgFLOUL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:20:11 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3015EC08C5C1;
-        Fri, 12 Jun 2020 07:20:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so9941499wru.0;
-        Fri, 12 Jun 2020 07:20:11 -0700 (PDT)
+        with ESMTP id S1726523AbgFLOUN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:20:13 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7AEC03E96F;
+        Fri, 12 Jun 2020 07:20:12 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h5so9941766wrc.7;
+        Fri, 12 Jun 2020 07:20:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VOYwdmEMw/z4lW67OcK7qK+qAMqY7Sia5UePwj/cidQ=;
-        b=pEwKWO1LB1tqyApaS1+N4V3LP+fHEzXcb82s3p0EaV075veJOLgAAWzp4ieuDnSMBG
-         pIauuqGxa8Xmtf/byqlT4IHAPU+mk37zGvdfoZ7NBZAFJeOSOhCJ2F8i/22rnEmu7VIN
-         pr/QfQ0lqeP4S6nUuVKZ6g47xhCf3OI+08Y97mXXq1T5lhfWBbCSy7KNSMWOjJ5okhkI
-         Jp/up4c5WePv4OEkKO+Z53FV+2w1+LzqxUxee8CLkKJz3NG+3Hw0xNCxz4GJzotayZh1
-         aQfo8dXCwOmoCik8INuUQfqQjnahqcojaQf/Ya5Mi+R7oK22kmxUC0pKbYBYjwRH+zMH
-         i/yA==
+        bh=ypLjGwiWvtd9+3clCqAju9AHF2v/0LJMoYgXq+yjGNU=;
+        b=GDxRkpdGYwzfUlRL9Pp/N36JVvhMvXjzjyVrhnUsNP03/QBykL2QnWUYE4jGIvy1pG
+         Vle202pNTDzrv7ffXl57KS3CWLDzOP5YWyHBqKNEMe+OE03EELSpGwT4i9IAix7Xo0Ic
+         6+EjOZ47zsCZzLMeamthSTNJrx6vXdGG3tY/Ut6TFmxrcBm85X8haO0nwpwWyliByqTC
+         6x2ol1pOtsOGvk9yLk8sAWTicYRlpHM02Tso3f5hFPGbhNuBztzeOgTC6FaY2gd/d2xH
+         8DJPwYEXj51lNZHTKvOEpefeYyJz26lhTowhe8aM1NIkozaC816c5nFbu6uE58CRWgtH
+         fOmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VOYwdmEMw/z4lW67OcK7qK+qAMqY7Sia5UePwj/cidQ=;
-        b=ipIFt1JQ4wZO1aSXg7UmBqdXB3yF/yicxbxr6A2qKnWnWfvSpoO8W2834yme5Kjo+1
-         GBCs/DHplDIQQHITAHsGGOj5XbV1/OvgbUj5g9upUuhQP3IWfpdP+G67EVKsSUxXQEPN
-         NOjRWnWMtNK85RWiXC/bBT8A2d1zOb5aYSlHcN64xdSinFduBSxvX1zfmNLdovv1Sdog
-         CsG42NVcdo8vDa8LvkP8AzBrVw7+GEuUmjh0Wl8nnRr7j2ylMwNjW5vyJeaz6K1+uD7l
-         6FgFnmLm+RhNu4K9rjg7nkDnJsXfb/stDJHzlx2OLYJCreGJOzyPvhMMWsGLc3UQxhuF
-         c7SA==
-X-Gm-Message-State: AOAM533FzfL46ULoh5Dv6AsIb4BnzxSziSP7t0tmab6SdvOMqPPGeZNw
-        oScHiB/k7Ft7WC5OHBx/7AQ=
-X-Google-Smtp-Source: ABdhPJwNVDezSeXkAWbbOpO/dr4oppaQ3Mg9mGqIVUq1Kxd4oyLGdV2Rgqs6yxrO2GTtzBZkPvk3rA==
-X-Received: by 2002:a05:6000:47:: with SMTP id k7mr14461682wrx.233.1591971609964;
-        Fri, 12 Jun 2020 07:20:09 -0700 (PDT)
+        bh=ypLjGwiWvtd9+3clCqAju9AHF2v/0LJMoYgXq+yjGNU=;
+        b=NoLbwOiKIOxZ6Bac7jOZbwkv45sx3vPHpm3w2HbJlIVX5mVKrHsyYurbeaURobDvtu
+         feawJ96JOTdX9JIx0GqMD6ggDyynyBmZWsXIwOSruougFtW+9E31R91IAf/aL8im190x
+         UNquRgxhfHy6n4IFPE7eE+V8mNT36QBiiHnf7UH/DwyX7g0TVh3kBg8LcwbY8JVC9GVZ
+         9W+F3nF43poP8ERAVTMCRugjEs3rR9dDPSXw8mR92p0FAJb1pTr9/iITw/t7JPtwicqS
+         Yaf6txdwHciCuRZd6KUjeiKdUGnzbrs0NlWbnmGheXBwTxAt0vzqlVEu9kScSd80/1ad
+         tB1Q==
+X-Gm-Message-State: AOAM531PiREC1Dq++eVO5jMgV4VwLn4wgI4HVQ5YheojbSe9wLfDvwGe
+        2OMoACRWNEZqsDX5mNW+oJY=
+X-Google-Smtp-Source: ABdhPJwyQvbHaDRodmywH1ep1wMC0MiJjz9KS9WWrY/61igFpuk/ROYX8LEHQzcpN0dn5hqK9RNGfA==
+X-Received: by 2002:a05:6000:1192:: with SMTP id g18mr16001977wrx.326.1591971611739;
+        Fri, 12 Jun 2020 07:20:11 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id r12sm10749410wrc.22.2020.06.12.07.20.08
+        by smtp.gmail.com with ESMTPSA id y37sm11209708wrd.55.2020.06.12.07.20.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 07:20:09 -0700 (PDT)
+        Fri, 12 Jun 2020 07:20:11 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 30/38] dt-bindings: panel: Allow reg property for DSI panels
-Date:   Fri, 12 Jun 2020 16:18:55 +0200
-Message-Id: <20200612141903.2391044-31-thierry.reding@gmail.com>
+Subject: [PATCH 31/38] dt-bindings: panel: simple: Use unevaluatedProperties
+Date:   Fri, 12 Jun 2020 16:18:56 +0200
+Message-Id: <20200612141903.2391044-32-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200612141903.2391044-1-thierry.reding@gmail.com>
 References: <20200612141903.2391044-1-thierry.reding@gmail.com>
@@ -77,28 +77,28 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-For DSI panels the "reg" property is needed to represent the virtual
-channel of the given panel.
+Using "additionalProperties: false" results in rejecting any of the
+properties defined in panel-common.yaml, whereas the intent is to
+inherit the common properties defined in that file.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../devicetree/bindings/display/panel/panel-simple.yaml        | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index d6cca1479633..34fe3d42b829 100644
+index 34fe3d42b829..c58bc90ffd43 100644
 --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
 +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -267,6 +267,9 @@ properties:
-         # Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
-       - winstar,wf35ltiacd
- 
-+  reg:
-+    description: virtual channel for DSI panels
-+
-   backlight: true
-   enable-gpios: true
+@@ -275,7 +275,7 @@ properties:
    port: true
+   power-supply: true
+ 
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ required:
+   - compatible
 -- 
 2.24.1
 
