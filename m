@@ -2,104 +2,134 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A11C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570ADC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15EAD207ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CE620801
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 06:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDnKhcR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFLGXR (ORCPT
+        id S1726441AbgFLGrY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 02:23:17 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:50651 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbgFLGXR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 12 Jun 2020 02:23:17 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 12 Jun 2020 11:53:13 +0530
-Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 12 Jun 2020 11:52:47 +0530
-Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
-        id 6C8B047A6; Fri, 12 Jun 2020 11:52:46 +0530 (IST)
-From:   Krishna Manikandan <mkrishn@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        nganji@codeaurora.org, mka@chromium.org, john.stultz@linaro.org,
-        dianders@chromium.org, abhinavk@codeaurora.org,
-        mkrishn@codeaurora.org
-Subject: [v2] drm/msm/dpu: request for display color blocks based on hw catalog entry
-Date:   Fri, 12 Jun 2020 11:52:37 +0530
-Message-Id: <1591942957-18410-1-git-send-email-mkrishn@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 12 Jun 2020 02:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbgFLGrY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 02:47:24 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D94C03E96F;
+        Thu, 11 Jun 2020 23:47:22 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q11so8556220wrp.3;
+        Thu, 11 Jun 2020 23:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bEDPE0wLH9mbIJMf0kGvWOirp0WuDO4dvBhX04ygBLA=;
+        b=PDnKhcR2OKWwop1uvkMULWT6i/7vk+O9RNJihHhNTy6RkG3AMx2zlkW11DMKdLgtTb
+         ac5XQSh1LuUTTDbsN6AyZ11+Fv/KwLCXeDP03o/hkjb6656V2MGNVkRUf2sHcwPIOTv7
+         5OGCY77qTnoulvA/7h4BirLJ9RCSdxXQeldgZF+nkwW37WboQDU6OVdgJvq7yM0jvjjh
+         qEm8DUGQQumSiU4mG0+ZBYRA5GmpaDmD9GWhvm+Q/cm6HQcOtSLNPI597bX3P1mJWNwy
+         hoJcNrPXAo02glX3D5Q2yU7jsE936IfX9Q2UlzfjuzsucwJPUdrZ5XlYk6hyIop6OXee
+         IPhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bEDPE0wLH9mbIJMf0kGvWOirp0WuDO4dvBhX04ygBLA=;
+        b=S00WYaDNlipxNcH1Px5zVjkW5/t6StRvpAjaj1rbl3PqvzWL0jSjUhTaXqeN7CIPu4
+         GF7FEsIksm7rNGxGdsyxNLgFdWmkjzVboTUrj3pwHFDFI2+OgeI84iNbduWRvGRGNlL2
+         k5+Hz1tRbXlSkp3fEP4f72Eoe5n4UgpDptgn3bbDszhosmmIHZdch6WRwHXes1oUb+Pl
+         X3HGupUmDL9J4n5nfXKLKSxagTZebRGDsD2v+06S1jOMcGYRLnbIFgjNlZtzP+BJ3+sh
+         VKz5wilamvemgdyanOVuuZopMjrLXIsUTp9jpwQ/sucj/1M98H7oR3AvVCLdv6bLttHC
+         BtkA==
+X-Gm-Message-State: AOAM5301TIbyo/JsJrqVSdJvt4RcDBHJEI5++wgpOMrisNfyHeZEsek8
+        runtni+C0KxYr61LE9dLBDSYYPkr
+X-Google-Smtp-Source: ABdhPJwJAOei45XC0j5S56zzU0K7jY8wa+9ImMnUqdJ5h6skzOSWjMqam59s69hL/DHXMXwE5cdlXA==
+X-Received: by 2002:a05:6000:100e:: with SMTP id a14mr13202217wrx.349.1591944441631;
+        Thu, 11 Jun 2020 23:47:21 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id s8sm8514759wrm.96.2020.06.11.23.47.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 23:47:20 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 08:47:19 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Anson Huang <Anson.Huang@nxp.com>, linux-clk@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Remove redundant 'maxItems'
+Message-ID: <20200612064719.GA2295929@ulmo>
+References: <20200611194738.1480393-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Disposition: inline
+In-Reply-To: <20200611194738.1480393-1-robh@kernel.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Kalyan Thota <kalyan_t@codeaurora.org>
 
-Request for color processing blocks only if they are
-available in the display hw catalog and they are
-sufficient in number for the selection.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
-	- Include Fixes tag in commit message (Rob Clark)
-	- Adding the Tested by tag as there are no code
-	  changes in v2
+On Thu, Jun 11, 2020 at 01:47:38PM -0600, Rob Herring wrote:
+> There's no need to specify 'maxItems' with the same value as the number
+> of entries in 'items'. A meta-schema update will catch future cases.
+>=20
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Anson Huang <Anson.Huang@nxp.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-pwm@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/clock/imx6q-clock.yaml     | 1 -
+>  Documentation/devicetree/bindings/clock/imx6sl-clock.yaml    | 1 -
+>  Documentation/devicetree/bindings/clock/imx6sll-clock.yaml   | 1 -
+>  Documentation/devicetree/bindings/clock/imx6sx-clock.yaml    | 1 -
+>  Documentation/devicetree/bindings/clock/imx6ul-clock.yaml    | 1 -
+>  Documentation/devicetree/bindings/pwm/imx-pwm.yaml           | 2 --
+>  Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 2 --
+>  7 files changed, 9 deletions(-)
 
-Fixes: e47616df008b ("drm/msm/dpu: add support for color processing blocks in dpu driver")
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..9f8de77 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -521,7 +521,7 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 			struct dpu_kms *dpu_kms,
- 			struct drm_display_mode *mode)
- {
--	struct msm_display_topology topology;
-+	struct msm_display_topology topology = {0};
- 	int i, intf_count = 0;
- 
- 	for (i = 0; i < MAX_PHYS_ENCODERS_PER_VIRTUAL; i++)
-@@ -537,7 +537,8 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 	 * 1 LM, 1 INTF
- 	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
- 	 *
--	 * Adding color blocks only to primary interface
-+	 * Adding color blocks only to primary interface if available in
-+	 * sufficient number
- 	 */
- 	if (intf_count == 2)
- 		topology.num_lm = 2;
-@@ -546,8 +547,11 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 	else
- 		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
- 
--	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI)
--		topology.num_dspp = topology.num_lm;
-+	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
-+		if (dpu_kms->catalog->dspp &&
-+			(dpu_kms->catalog->dspp_count >= topology.num_lm))
-+			topology.num_dspp = topology.num_lm;
-+	}
- 
- 	topology.num_enc = 0;
- 	topology.num_intf = intf_count;
--- 
-1.9.1
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7jJPQACgkQ3SOs138+
+s6HL2g//ZoscfSZkpDxD3dW2jxtxiLW+++f387MavWHS9QM8PYT+3MexQxkUWyjo
+MAxhB4FCLFjHaMCl2sD1vH/FkkfIMPzdV8TEtEGlIm+YO/pDci2EYfHOUHsmZe/A
+Dnn+e7XBzuJ2P9DwUaqszRXB1oO6zb32T9tklAN3qeF/W8Z44kNWE1C5AzlM7Ivw
+q1AoGUYx47iq0Wcqwq/DYATIc1BxT8OGl+rEUGnXXWbLS+NYVT4wi7ML6heNqdBl
++2KbtWFzbdF3DyA1/b+3XVCGHGrGAnsLMjcNqJiLNnnbIS3v9I+HvzCGNGDDQiM1
+Ld8CfrsPzbKqMWYXhAcFTDtf7oyHrjPt/t1FiTok6i7yQNZ2waHpPF1GKbQ5SXe2
+ITA1XWnSaLJEIqXZMllgQ6cZtxIJmb9rjmbGtzq+YjjNTBWn2Us8K4hDGdx65ILl
+vL8fZd6DPHTyJF3CwK+D7ObJBWqjaZjNf+ViQRGzXTIsRufnA9xR3hNDMeAETJKX
+TGxOheAe1S9O0Rma6V0G1g0nbqX8V45/z1Tpd5L3rp9/ZRrg2RK+70+hBtbR2Jc4
+vLdDpb/4lyskRTU+DKgNtReVD2DP9okNErL5eGTXO81URug5Kr1mZB5+RqKjelnI
+mV/2sKfFnSX33cg3hbP/sDwDxMB+sjjGP+K1JXWxVj9Ez6osPPU=
+=WSuJ
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
