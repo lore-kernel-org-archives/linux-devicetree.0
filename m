@@ -2,82 +2,174 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A3FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC53C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEFA2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D7520792
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:54:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGmvAh/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgFLNWb (ORCPT
+        id S1726272AbgFLNyO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:22:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64106 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgFLNWb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 12 Jun 2020 09:22:31 -0400
-IronPort-SDR: 63gCey8JAfw0Q2D8vxCz9r0elzj68/6cKxaTnVFs8LRZwfyGMCPt/ZpBUwO3iRifNsIlewfx9D
- I2b9Sg/4LhZg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 06:22:30 -0700
-IronPort-SDR: SX89+EBuBgxAxrixyu2cRCTTkInMh0breXbEkcZpPaEhyA49f6UaS3hr6X/MaTouw6dqetDT+B
- Pv4ZRVio/8Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
-   d="scan'208";a="260827179"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 12 Jun 2020 06:22:29 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jjjdf-00CZGm-Sd; Fri, 12 Jun 2020 16:22:31 +0300
-Date:   Fri, 12 Jun 2020 16:22:31 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH v4 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Message-ID: <20200612132231.GH2428291@smile.fi.intel.com>
-References: <20200612035359.14246-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200612035359.14246-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612035359.14246-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 12 Jun 2020 09:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgFLNyO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 09:54:14 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795FEC03E96F
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:13 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x22so5531067lfd.4
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3vT+wZ8ziAs7E5VUjyW0FBdqzQlsXKfHF9W52Q5ad+c=;
+        b=zGmvAh/ZGt/vXHZt15aQA54OP1BiGscyEILqX9sLVHbugga06Px5iVZuHl/BgKZs2L
+         iSTKyq49oQSV5KOjj7nsgIvgySsjzXLuMR0mB/nFxBXmcyMbmoqzc6MnBVPb2UE4ANcB
+         mnRxBY9ltz2fprsMwW6CzkO3ZAXw8vULAqH3rM8mNjcfolBQZeEkLRG5IvIl0ucIm8Jy
+         YokIBvSfG70XYCC7E0fo1iFGq/C8QZsTbHNkwguVhC4cYIvsK+vVLZHHIflOpGw95St2
+         pPtTtNf1SBpUEVEZA2tMB9omveGeXag0P57aEqXK6yyQZ4Uhbo7f7F6Ztpr2NTdLl+5E
+         oLJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3vT+wZ8ziAs7E5VUjyW0FBdqzQlsXKfHF9W52Q5ad+c=;
+        b=MgGI+yKYxmyh8KK7lMf/cQp2Ptq7LpxUbRF/I82sQEewVWoJlIyGNYCNbV7gh931PP
+         MZMbFlvdHPzNQRR85z3H/LrlbGslOc97zgsK2Plr3mbGR0ZRVRFYiHjYeCCttivubfVX
+         fvq8Fts6IpowaVSGBLz9DFqr0kOr0u7aRbM8wz3pXNMCbJ5UN+YBw0DVHSYnv1JrY9/n
+         WbHASm4x9xIxx96VvAFynmxqDijetpstkgvzRy4vy/ycDm6cjgiFmTLCOn5EmElK7BZL
+         lX5+G6P3updqTOzg9V5i+uWcbnqUGvXraxDS2bSnnRR8bKrSN8xazYbd4yrfjOHY0cG3
+         PWzg==
+X-Gm-Message-State: AOAM532xhG+Z7Sp/6+E8vGrehiyo6pfbtngyJYUcQoTAo45H2HxGg2ip
+        ZIdFgRCBN4OSDiqErEsHI+ZwwQ==
+X-Google-Smtp-Source: ABdhPJzm6BPlNgl41jkg6bQdqNLPtT3HfnpNXfIX/zwF/eepS4r0yWPRsSw2UAFyp0UmDO2to8svIQ==
+X-Received: by 2002:ac2:4d25:: with SMTP id h5mr6879237lfk.87.1591970051731;
+        Fri, 12 Jun 2020 06:54:11 -0700 (PDT)
+Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
+        by smtp.googlemail.com with ESMTPSA id a1sm2414415lfi.36.2020.06.12.06.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 06:54:10 -0700 (PDT)
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+To:     mchehab@kernel.org, sakari.ailus@iki.fi,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
+        Andrey Konovalov <andrey.konovalov@linaro.org>
+Subject: [PATCH v5 00/10] Improvements to IMX290 CMOS driver
+Date:   Fri, 12 Jun 2020 16:53:45 +0300
+Message-Id: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 11:53:59AM +0800, Wan Ahmad Zainie wrote:
-> Add support for eMMC PHY on Intel Keem Bay SoC.
+This patchset adds improvements to the existing media driver for IMX290
+CMOS sensor from Sony. The major changes are adding 2 lane support,
+configurable link frequency & pixel rate, test pattern generation, and
+RAW12 mode support.
 
-Pretty much good, my comments below.
+The link frequency & pixel rate combinations depend on various factors like
+lane count, resolution and image format as per the datasheet.
 
-...
+Also fixes for the following issues in the existing driver are included:
+* the current_format field in the struct imx290 can be used before
+  initialization,
+* the reset signal to IMX290 isn't handled correctly,
+* the bus_type field of v4l2_fwnode_endpoint structure passed as the
+  argument to v4l2_fwnode_endpoint_alloc_parse() function is not
+  initiaized.
 
-> +config PHY_KEEMBAY_EMMC
-> +	tristate "Intel Keem Bay EMMC PHY Driver"
+Changes in v5:
 
-> +	depends on OF
+* Fixed the "Possible unwrapped commit description" issues reported by
+  checkpatch.pl. The "msleep < 20ms can sleep for up to 20ms" warnings
+  are still here, as sleeping for 20ms when the imx290 driver calls
+  msleep(10) is fine
 
-No compile test?
+Changes in v4:
 
-> +	select GENERIC_PHY
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable this to support the Keem Bay EMMC PHY.
+* The review comments from Sakari and Dave are addressed
+  https://lkml.org/lkml/2020/5/24/294
+  In particular,
+  . HMAX values are included into struct imx290_mode. As the consequence,
+    imx290_modes[] table splitted in two (one for 2-lane configuration,
+    and another for the 4-lane one)
+  . link frequency indexes are kept in struct imx290_mode to
+    avoid using the width field as the key for modes table by
+    imx290_get_link_freq_index(). These are still indexes, not the
+    frequencies themselves: we need a separate tables of the frequencies
+    for the V4L2_CID_LINK_FREQ integer menu control anyway, so the
+    link frequency values should be better kept there (in one place)
+  . imx290_modes_[ptr,num]() and imx290_link_freqs_[ptr,num]() helpers
+    introduced to get rid of repeating lane configuration checks in the code
+  . do_div() is used in imx290_calc_pixel_rate() to fix the build error
+    on 32-bit systems
+  . the check for the link frequencies listed in the device tree is
+    reworked to handle multiple frequencies (vs removing the check entirely
+    in v3)
+  . imx290_enum_frame_size() is not changed since v3: all (of the 2) modes
+    are supported for all the media codes. So the available modes / frame
+    sizes have no dependency on the media code. The fse->code check in
+    imx290_enum_frame_size() just guards against the codes not supported
+    by the driver at all
+* removed calling imx290_set_data_lanes() from imx290_probe(): the probe()
+  calls imx290_power_on() a bit earlier, and imx290_power_on() sets the
+  number of data lanes
+* FREQ_INDEX_1080P/FREQ_INDEX_720P #define's introduced to make using
+  imx290_link_freq_* tables a bit more error-proof
+* the values in the imx290_link_freq_*[] tables are devided by 2: the
+  previous ones were equal to the data rates which are twice as the link
+  frequency
 
-Please, be more verbose here, do I, as a user, need this? What will be the module name?
+Changes in v3:
+
+* The review comments from Sakari are addressed
+  https://lkml.org/lkml/2019/12/19/705
+  As a part of those changes:
+  . null ptr checks are added to imx290_set_fmt() so that it can be called
+    early in the probe() function to set the default format, and to
+    initialize imx290->current_mode and imx290->bpp - these last two must be
+    set before imx290_calc_pixel_rate() is called when creating the controls
+  . setting imx290->bpp removed from imx290_write_current_format(). Now this
+    function only writes to the camera sensor registers. The call to
+    imx290_write_current_format() is moved from imx290_set_fmt() back to
+    imx290_start_streaming(): imx290_set_fmt() can be called when the sensor
+    is powered off, and writes to the sensor registers would fail.
+  . in imx290_set_ctrl() in the 12 bpp case the value the BLKLEVEL register
+    is restored to when the test pattern is disabled is made consistent with
+    imx290_12bit_settings[]
+* The "IMX290 sensor driver fixes" patchset included
+  https://patchwork.kernel.org/cover/11407347/
+* Added a patch to set the bus_type field of v4l2_fwnode_endpoint structure
+  before calling v4l2_fwnode_endpoint_alloc_parse()
+
+Andrey Konovalov (4):
+  media: i2c: imx290: set the format before VIDIOC_SUBDEV_G_FMT is
+    called
+  media: i2c: imx290: fix the order of the args in SET_RUNTIME_PM_OPS()
+  media: i2c: imx290: fix reset GPIO pin handling
+  media: i2c: imx290: set bus_type before calling
+    v4l2_fwnode_endpoint_alloc_parse()
+
+Manivannan Sadhasivam (6):
+  media: i2c: imx290: Add support for 2 data lanes
+  media: i2c: imx290: Add configurable link frequency and pixel rate
+  media: i2c: imx290: Add support for test pattern generation
+  media: i2c: imx290: Add RAW12 mode support
+  media: i2c: imx290: Add support to enumerate all frame sizes
+  media: i2c: imx290: Move the settle time delay out of loop
+
+ drivers/media/i2c/imx290.c | 404 +++++++++++++++++++++++++++++++------
+ 1 file changed, 343 insertions(+), 61 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
