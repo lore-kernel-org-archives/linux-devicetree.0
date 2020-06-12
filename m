@@ -2,282 +2,156 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D15C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41E7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 789CC2067B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XbRN0hQS"
+	by mail.kernel.org (Postfix) with ESMTP id C698320836
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 17:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591984020;
+	bh=T2ujSUMcw4VznKUQ1es+CI7i3QTbNB8CVewQY5nNbNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iLz4xW45g7xYOWoxHeHkaC3fSR3UBGWr5TlNmzFKTvRfArj0Fz9sxmG5MSRNJTS+m
+	 ZCxliMnniyFIX0l2FScYc5rwAmAmoT69IqUsx3zsZvmjbQV1IgMQ1b7CUZq7yYKm+O
+	 VHn52xyhNnFSSTyNIKg8H//QXo8QZUpZflzy/rp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgFLReJ (ORCPT
+        id S1726219AbgFLRq4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 13:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFLReJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 13:34:09 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DA3C08C5C1
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 10:34:09 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r18so4427167pgk.11
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 10:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=O3A9kqksUUGvdliaTj1158oQyu0tKFSE0txFn2JVaGo=;
-        b=XbRN0hQSE+gVdn/cNLHWHpEMCANqatGirZWTgJFnhn32pjwblWKjnxT4fH+Q67LsUH
-         s4DP0Sk7hQUA7giCY6dfCeCkkv7SvaXCdrVWcVxNoirfUuus11d+nuuRt8q4fcbaUPiB
-         QdJVP5IUllFct+yxKzUwbXLkb2ER45dtLQuWU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O3A9kqksUUGvdliaTj1158oQyu0tKFSE0txFn2JVaGo=;
-        b=dmuVtj4PeT+IHasRI2dY8MbDVof+T0qAq0bTUdxRffq9FPHTP71Ls8TNnvndLRi17e
-         EO+MpsYEnGVp2R+xOtakUVTsXMREfsQzpav2i/m1kyrKL4wN/WNBQN9GE2xRap/T8mnT
-         jc8XG64+975wWNOwXIqv2Vw+70wIuZRB0rRHXy/CpE4WABuAmhbK1zBAgA6ZNPeZ6fxK
-         pZtY1hkpsGdkznV0UrDgnCwViJGhVSFVrfRBxszf/o9RB1q4lloU3bcsyaenKZgU/Nd7
-         0UD8m1Py5dqAGUFSMmNEjyIOx+Pl63sdGHWYfyitaRxTSM4MUe8nZZj10Xb9PgqACpmM
-         T7NQ==
-X-Gm-Message-State: AOAM530AE4CIiPfJzsRgZ0xh3Pty+mLxwP7aScmR3HGusb4LRjzmOHI2
-        p2FhqkFgnATLvXul/+DlPQRJLTvGBhA=
-X-Google-Smtp-Source: ABdhPJyP9QyUwdi9RfNYHIufg1kSh+t7nG1oE0YcJHHYcgIMKDCp+KMt7gfHLMpSNR2FVhmTrjjP2A==
-X-Received: by 2002:a63:7409:: with SMTP id p9mr9764759pgc.6.1591983247727;
-        Fri, 12 Jun 2020 10:34:07 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id b11sm6705969pfr.58.2020.06.12.10.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 10:34:07 -0700 (PDT)
-Date:   Fri, 12 Jun 2020 10:34:06 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
-References: <20200511204635.GC136540@google.com>
- <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
- <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
- <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+        Fri, 12 Jun 2020 13:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbgFLRq4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 12 Jun 2020 13:46:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE3D4207F7;
+        Fri, 12 Jun 2020 17:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591984015;
+        bh=T2ujSUMcw4VznKUQ1es+CI7i3QTbNB8CVewQY5nNbNI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S6N2mh/90Xu0MjOiCpqZWkF6PpPcmr1PDAz+Gl5c1U+4/1oooNbiJZh4TZBkxNxX0
+         KGRHd2UGLYovhrhZCV95FWPBxQjOuBmh0EFuWTC/Df9tkIocYfscJ+NJBx5UAu+Ixf
+         xQ4woHSijHizGRYsLjkDEsxqODznfDDbsIL0TAag=
+Date:   Fri, 12 Jun 2020 18:46:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh@kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] ASoc: tas2563: DSP Firmware loading support
+Message-ID: <20200612174652.GQ5396@sirena.org.uk>
+References: <20200609172841.22541-1-dmurphy@ti.com>
+ <20200609172841.22541-3-dmurphy@ti.com>
+ <20200609175000.GO4583@sirena.org.uk>
+ <f9601516-2091-322b-85ff-7cea484fd933@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PPxI8paQBs33t8dK"
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+In-Reply-To: <f9601516-2091-322b-85ff-7cea484fd933@ti.com>
+X-Cookie: As seen on TV.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Thanks as always for your help in reviewing this proposal!
+--PPxI8paQBs33t8dK
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kindly see inline
+On Fri, Jun 12, 2020 at 12:30:29PM -0500, Dan Murphy wrote:
+> On 6/9/20 12:50 PM, Mark Brown wrote:
+> > On Tue, Jun 09, 2020 at 12:28:41PM -0500, Dan Murphy wrote:
 
-(Trimming text);
-On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
-> On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> >
-> > I think the updated example handles this grouping (port@1 going to a
-> > "SS mux") although as you said it should probably be a group of muxes,
-> > but I think the example illustrates the point. Is that assessment
-> > correct?
->
-> Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+> > > +		/* Reset Page to 0 */
+> > > +		ret =3D regmap_write(tas2562->regmap, TAS2562_PAGE_CTRL, 0);
+> > > +		if (ret)
+> > > +			return ret;
 
-Ack.
+> > Why?
 
-Let's go with "-switch" ? That's what the connector class uses and it
-conveys the meaning (unless that is a reserved keyword in DT).
+> Well the reason to set this back to page 0 is that is where the book
+> register is.
 
->
-> > Would this block the addition of the "*-switch" properties? IIUC the
-> > two are related but not dependent on each other.
-> >
-> > The *-switch properties are phandles which the Type C connector class
-> > framework expects (and uses to get handles to those switches).
-> > These would point to the "mux" or "group of mux" abstractions as noted earlier.
->
-> You don't need them though. Walk the graph. You get the connector
-> port@1 remote endpoint and then get its parent.
->
+> So setting this back to page 0 set the Book register appropriately.
 
-I see; would it be something along the lines of this? (DT example
-follows; search for "example_end" to jump to bottom):
+Oh dear, usually the paging register is always visible :/
 
-<example_start>
+> > This manual paging doesn't fill me with with joy especially with regard
+> > to caching and doing the books behind the back of regmap.  I didn't spot
+> > anything disabling cache or anything in the code.  I think you should
+> > either bypass the cache while doing this or teach regmap about the
+> > books (which may require core updates, I can't remember if the range
+> > code copes with nested levels of paging - I remember thinking about it).
 
-connector@0 {
-    compatible = "usb-c-connector";
-    reg = <0>;
-    power-role = "dual";
-    data-role = "dual";
-    try-power-role = "source";
-    ....
-    ports {
-        #address-cells = <1>;
-        #size-cells = <0>;
+> Yeah. After reading this and thinking about this for a couple days.=A0 Th=
+is
+> actually has contention issues with the ALSA controls.
 
-        port@0 {
-            reg = <0>;
-            usb_con_hs: endpoint {
-                remote-endpoint = <&foo_usb_hs_controller>;
-            };
-        };
+> There needs to also be some locks put into place.
 
-        port@1 {
-            reg = <1>;
-            #address-cells = <1>;
-            #size-cells = <0>;
+That's not too surprising for something like this.
 
-            usb_con0_ss_mode: endpoint@0 {
-                reg = <0>
-                remote-endpoint = <&mode_switch_ss_in>;
-            };
+> I prefer to disable the cache.=A0 Not sure how many other devices use Boo=
+ks
+> and pages for register maps besides TI.
 
-            usb_con0_ss_orientation: endpoint@1 {
-                        reg = <1>
-                        remote-endpoint = <&orientation_switch_ss_in>;
-            };
+> Adding that to regmap might be to specific to our devices.
 
-            usb_con0_ss_data_role: endpoint@2 {
-                        reg = <2>
-                        remote-endpoint = <&data_role_switch_in>;
-            };
-        };
+Single level pages are in there already, TI is a big user but I've seen
+this from other vendors too.  I do remember some discussion of multi
+level paging before, I think with a TI part, and I *think* it already
+happens to work without needing to do anything but I'd need to go back
+and check and it's 7pm on a Friday night.  IIRC if one paging register
+is within another paged region the code manages to recurse and sort
+things out, but I could be wrong.  I agree that it's a bit specialist if
+it needs anything non-trivial and something driver local would be
+reasonable.
 
-        port@2 {
-            reg = <2>;
-            #address-cells = <1>;
-            #size-cells = <0>;
-            usb_con0_sbu_mode: endpoint@0 {
-                        reg = <0>
-                        remote-endpoint = <&mode_switch_sbu_in>;
-            };
-            usb_con0_sbu_orientation: endpoint@1 {
-                        reg = <1>
-                        remote-endpoint = <&orientation_switch_sbu_in>;
-            };
-        };
-    };
-};
+> > > +	tas2562->fw_data->fw_hdr =3D devm_kzalloc(tas2562->dev, hdr_size,
+> > > +						GFP_KERNEL);
+> > > +	if (!tas2562->fw_data->fw_hdr)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	memcpy(tas2562->fw_data->fw_hdr, &fw->data[0], hdr_size);
 
-mode_switch {
-    compatible = "typec-mode-switch";
-    mux-controls = <&mode_mux_controller>;
-    mux-control-names = "mode";
-    #address-cells = <1>;
-    #size-cells = <0>;
+> > Should validate that the firmware is actually at least hdr_size big, and
+> > similarly for all the other lengths we get from the header we should
+> > check that there's actually enough data in the file.  ATM we just
+> > blindly copy.
 
-    port@0 {
-        reg = <0>;
-        mode_switch_ss_in: endpoint {
-            remote-endpoint = <&usb_con0_ss_mode>
-        };
-    };
+> I will have to look into doing this.=A0 I blindly copy this data because =
+there
+> is really not a viable and reliable way to check sizes against the
+> structures.
 
-    port@1 {
-        reg = <1>;
-        mode_switch_out_usb3: endpoint {
-            remote-endpoint = <&usb3_0_ep>
-        };
-    };
+Yeah, that's reasonable - I was just thinking about checking it against
+the size of the file to make sure it doesn't actually overflow the
+buffer and corrupt things or crash.  Obviously sanity checking is good
+but there's limits on what's sensible.
 
-    port@2 {
-        reg = <2>;
-        mode_switch_out_dp: endpoint {
-            remote-endpoint = <&dp0_out_ep>
-        };
-    };
+--PPxI8paQBs33t8dK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    port@3 {
-        reg = <3>;
-        mode_switch_sbu_in: endpoint {
-            remote-endpoint = <&usb_con0_sbu_mode>
-        };
-    };
-    // ... other ports similarly defined.
-};
+-----BEGIN PGP SIGNATURE-----
 
-orientation_switch {
-    compatible = "typec-orientation-switch";
-    mux-controls = <&orientation_mux_controller>;
-    mux-control-names = "orientation";
-    #address-cells = <1>;
-    #size-cells = <0>;
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7jv4sACgkQJNaLcl1U
+h9BMlwf/cj1YHjgwLNHXDgZjBK7TERfRpzfITO0GwHt/Qh5/Rm3okvB6pnAZOVqO
+OUCX2lQJnVWAavciTR5byOJjB2I5dPrNYgPzOoFtm4N99uLVDecWckSJMw8OK0+k
+FoVcg2KRbKEllkA757zrQccDj8j8nG6Q9jPNMgS3AO7tBG4nz1c0px6mkIs9WK3L
+V56H/5IzZyCVnFEYJfMMlGPTiIBGHRRfKDuDMfJZJ1YdGMH2TonKZtgVkgvRHAWG
+r/m6zWIx6ZK1JTMzMtA8RpItA4zjOULJjl+OJvqDw3r9r8VCTGzDXugk+md0HJcg
+Q4u3PD3TpzBfB3cl6wWBYmrmgLPbtw==
+=Stm+
+-----END PGP SIGNATURE-----
 
-    port@0 {
-        reg = <0>;
-        orientation_switch_ss_in: endpoint {
-            remote-endpoint = <&usb_con0_ss_orientation>
-        };
-    };
-
-    port@1
-        reg = <1>;
-        orientation_switch_sbu_in: endpoint {
-            remote-endpoint = <&usb_con0_sbu_orientation>
-        };
-    };
-    // ... other ports similarly defined.
-};
-
-data_role_switch {
-    compatible = "typec-data-role-switch";
-    mux-controls = <&data_role_switch_controller>;
-    mux-control-names = "data_role";
-
-    port {
-        data_role_switch_in: endpoint {
-            remote-endpoint = <&usb_con0_ss_data_role>
-        };
-    };
-};
-
-<example_end>
-
-Would this be conformant to OF graph and usb-connector bindings
-requirements? We'll certainly send out a format PATCH/RFC series for
-this, but I was hoping to gauge whether we're thinking along the right lines.
-
-So, in effect this would mean:
-- New bindings(and compatible strings) to be added for:
-  typec-{orientation,data-role,mode}-switch.
-- Handling in Type C connector class to parse switches from OF graph.
-- Handling in Type C connector class for distinct switches for port@1
-  (SS lines) and port@2 (SBU lines).
-
-The only thing I'm confused about is how we can define these switch
-remote-endpoint bindings in usb-connector.yaml; the port can have an
-remote-endpoint, but can we specify what the parent of the remote-endpoint
-should have as a compatible string? Or do we not need to?
-
-Best regards,
-
--Prashant
-
+--PPxI8paQBs33t8dK--
