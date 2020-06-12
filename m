@@ -4,90 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000E4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 11:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ED2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 11:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF552065C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 11:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCED120801
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 11:56:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=km6g.us header.i=@km6g.us header.b="g4Bq9cbE"
+	dkim=pass (2048-bit key) header.d=km6g.us header.i=@km6g.us header.b="LqGV1WND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFLLsg (ORCPT
+        id S1726306AbgFLL4H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 07:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59254 "EHLO
+        Fri, 12 Jun 2020 07:56:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgFLLsg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 07:48:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9A1C03E96F
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 04:48:35 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n24so10674960lji.10
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 04:48:35 -0700 (PDT)
+        with ESMTP id S1726219AbgFLL4G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 07:56:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB03C03E96F
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 04:56:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s1so10769967ljo.0
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 04:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=km6g.us; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t/TjfYUNBP2cW26HkJvVfI0SpqRgYSTehKoOJVukkk8=;
-        b=g4Bq9cbEzclMjz5WLywEQTTotOgWBL1TuZxvY8s8NTtX9NhHekjCAEGWRmnI7CJdel
-         rL1llVEc0aF3HjR68ob4kb2AvbuLB84EloS9UKzeqgfrD/p8cVwtFcvE/y5MXtsStkiw
-         p0qgalMfOoLXxrVyIuyBLGTLO/lg46Na7Z5DEj4cKMaRyB6lQJk4e0aJOuzuX1o+Kmu9
-         tjRm6PTkX6pMBgkh8wFOWud3HTJKLivkARIDbXn+uu7Zc4kM+Om7x+oCVHxXhFzwBVAy
-         2VBKOWHM83JfECFRy0bp0sCqp5kx/DiOD82tRFpKoI/kSZdZcrOaf90NCIFdn4snPyqC
-         HOjg==
+        bh=ucnIxwElOKlpVukLSQPIFDo0ylODSRdbNjg1DaOWm74=;
+        b=LqGV1WND1alqrq1ai17PDQE5jJkgjT1U2yfSH6Ba708O8Dp7e8nYt2DEkVlOUUyPBt
+         in1gwcYLKsDkpzsA60x8mKwHz21Qa/CjRJK+puu80S38jRcHDRnTV6dDbs+4mfIn4IzU
+         NP6HG/A/A+EZxW0dO4379SiZpFOaLJicNSu0i0G4ATAb+AxByfQA4MSUCcNlxiX/Ttlt
+         agl9iVM7336MU0ZaZUG8Xoooz+UzaRvpnjmvMJYcd7NLU0cxdLDrP3DYAvyAzF872/tD
+         VdZ5Q4ANArCYY/txhj428HR4p6Eq+2LnH5IQezS/Y+p0E/K5od/YkXzLCCHLhE/b/btH
+         VDdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t/TjfYUNBP2cW26HkJvVfI0SpqRgYSTehKoOJVukkk8=;
-        b=o5fI9kCQT4cyfxtSzkihQo7KOUX2CeexgDnu6QduYqmSVS3WsWJyPsZWltTboyHcBO
-         +L0fOmvmZ6b9WbOYqMDxetOvldp8XiNeCfF2llpopkOc95y7De317WZtrcseQm3MQyBu
-         Cr0SUj+J6Y8/Wb8e5tETqFjxjVAWJpzGbnyNV8LtMs1gy746KDumpXRKkbWclIys1cf0
-         zm7glvskDEiQ2O7XHPMv+qTlqrN7/7icXjMVaKpilEqwqXD5iL7jbhyZnHe5C9LDqs04
-         hVktUh2NSiwwPyBnNHAMpabR0N/2MhZkRuotGy6+zrz+MWg7jwntrozR5vxWLFutl8/W
-         a9PQ==
-X-Gm-Message-State: AOAM532K0C8IKG3TikWEVan1dXCTF+7scZIAZwS0ziWVw6NB8Odp0AkF
-        nSGBfhETGzCRWN1hJd1kCfTSKMz0szzIXc2+kFXT1w==
-X-Google-Smtp-Source: ABdhPJwnbvmf14hLKcPh9xhfT3LGK4uSWsLL6aeTp4pkg6ozrA3vKs6SipXaPF4bNCPSiMJ4KEG9WMcTk678Faudp38=
-X-Received: by 2002:a05:651c:1130:: with SMTP id e16mr6750899ljo.10.1591962514142;
- Fri, 12 Jun 2020 04:48:34 -0700 (PDT)
+        bh=ucnIxwElOKlpVukLSQPIFDo0ylODSRdbNjg1DaOWm74=;
+        b=L6gpGxKsDOJzoeGBFOm2HRQNRVUSwd9pZ6ImAwmVR60g5EhThL+3S+ppg7Nbhxz+mX
+         Q+KwOA4l6IHRa2xhhc23oe/k5VUylO1l6CF8L1tJ3LuPmNtUN0m6qYfX1c4vxHqxc3e+
+         pF5Q9KSVH9thoWI5i81UijA2OcS40JiHAx+fGKStdwQTPXOL4v/aKcEnn3hEJaH5EpvO
+         FPzw6scExw9+N0EweGoTVJjAbJDeO7rs9VMZNMpM+PMjPyoBPDp0OLImW7Xxl/V0PHlV
+         vPBSOuJI6yQokZr+h1j//NA7I9A5RbAlZ+i2yyovz4/p1sWjxmzVvVFX0sBzncQMXbPp
+         T2zA==
+X-Gm-Message-State: AOAM532kynKIAOtn8yZv6N8uF63ahfE40vdXyZKk1+P+5zemSLltSiW/
+        OmGIJZdkdNMKDaYapxiMf6pszqNsNdnUCa5jQo4v2Nq3
+X-Google-Smtp-Source: ABdhPJyFsVBr1HXnoDkX8Krow6XIyHCSYcqeve261bHok+e0Acz6kpApYjthrCaciHsUA76EoEDGOplnxYuumWszqMY=
+X-Received: by 2002:a2e:a367:: with SMTP id i7mr7220605ljn.5.1591962964460;
+ Fri, 12 Jun 2020 04:56:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200530123222.361104-1-kevin+linux@km6g.us> <20200609221401.GA1492918@bogus>
- <CAE+UdorjD+2GORj3M6abgqTb8QnRZNFiyCX9PJAJc09xUBACqA@mail.gmail.com> <20200610151619.GW3720@piout.net>
-In-Reply-To: <20200610151619.GW3720@piout.net>
+References: <20200530124900.363399-1-kevin+linux@km6g.us> <20200530124900.363399-2-kevin+linux@km6g.us>
+ <20200610152204.GX3720@piout.net>
+In-Reply-To: <20200610152204.GX3720@piout.net>
 From:   "Kevin P. Fleming" <kevin+linux@km6g.us>
-Date:   Fri, 12 Jun 2020 07:48:22 -0400
-Message-ID: <CAE+UdooznvJaJsMjrS+MeM6ysii8tR9fuZhjt44sMRF6VjYqPw@mail.gmail.com>
-Subject: Re: [PATCH] rtc: abx80x: Add support for autocalibration filter capacitor
+Date:   Fri, 12 Jun 2020 07:55:53 -0400
+Message-ID: <CAE+UdoqR1iPaYxT4aMCNkq0z8duy6abJcuojDz=wKCe7ZMtD5Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] rtc: abx80x: Add support for autocalibration filter capacitor
 To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     "Kevin P. Fleming" <kevin+linux@km6g.us>,
-        Rob Herring <robh@kernel.org>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>
+        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 11:16 AM Alexandre Belloni
+On Wed, Jun 10, 2020 at 11:22 AM Alexandre Belloni
 <alexandre.belloni@bootlin.com> wrote:
-> When working with RTCs, there is one issue though: boolean properties
-> are not working well because there is no way to express the 3 different
-> conditions:
->  1/ the capacitor is present, set the register
->  2/ the capacitor is absent, clear the register
->  3/ the device tree didn't have this property until not and the register
->    may have been set or cleared using another mean, don't touch it.
+> I'd like to avoid having more error messages in the driver (and whole
+> subsystem). Can you move the ABX8XX_REG_CFG_KEY setting earlier in
+> abx80x_probe so you don't have to do it here and avoid duplication the
+> error message?
 >
-> As your patch is written, it only handles 1 and 3 which is probably the
-> safest option but then we will never have a way to clear it from the
-> driver. I'd say that this is not an issue but it is also something we
-> will never be able to change without breaking some setups.
 
-I agree. I could implement this as an enumerated string option which
-accepts 'yes' or 'no'. Those would cover cases 1 and 2, and the
-absence of the property would be case 3. I looked through the bindings
-that exist and didn't see any examples of properties configured this
-way, but I think it would be understandable to users.
+Based on my reading of the app manual this won't work properly, as
+setting the configuration key only allows writing to one register, and
+then the key is reset. It has to be set to allow enabling the trickle
+charger, and also to allow enabling the autocalibration filter
+capacitor.
+
+> The RTC can still work if this fails and the rror is transient, maybe
+> just warn and continue. It will be set on the next probe.
+
+Will fix in the next version of the patch.
+
+Thanks for the review!
