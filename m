@@ -2,128 +2,192 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9F4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248F3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5493520723
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 20:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h7u6dR4B"
+	by mail.kernel.org (Postfix) with ESMTP id ED46720792
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 21:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591996266;
+	bh=g/uvLDAZ+ol49MHFs1XaNpXDp1DbLpjPRHzPzh71JEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qh3HL89QqpIWN3trfBJzeuHBiVUrHnOr2589IIAvtTJ6n/R+2IpOZI2gtmc6WiPzp
+	 vNGnyd/CF8c3vovlOArVMWQv1VhVTsTTPhxsnqa+dWjTzPc/rfw9CZEW9pTmFjVMM0
+	 4V9somuvI1eCjmnhxXRZ8XmH/gBdj6HBXwuvwtJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgFLUCz (ORCPT
+        id S1726304AbgFLVLF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 16:02:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgFLUCz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 16:02:55 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D3EC03E96F
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t7so4617505pgt.3
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6uGSExpyps+wiw7uOwP+l2H0cv+SpFFWTmb8dRKkt6U=;
-        b=h7u6dR4B19jQUlPQPyqjXka9J3KhpwDNlIcPUaI2++siCsOQzCELypYC05rGhkBGfK
-         g6A0zotR7FceCE016nrOeQktoGXFoxfPsVMkwkGm2ZK8vzxnm9PHYfuf86mrONiRQW2Z
-         Zw4dDBZtjL34Gk9sshcTJuMJRBFPMalZqIERo=
+        Fri, 12 Jun 2020 17:11:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42480 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFLVLF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 17:11:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id x189so2655331iof.9;
+        Fri, 12 Jun 2020 14:11:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6uGSExpyps+wiw7uOwP+l2H0cv+SpFFWTmb8dRKkt6U=;
-        b=Mt8ZaidmbUiHJGmGf9MGA4u6O57q5UfOV66RptrHJ7L0/bcdhwwD5dMnyWSNjf3RgL
-         j71fcCC6ONGGp89TTUTLbPHmSt94ViQJhj5JJPqT6LLgYO0AbW5p8qdHhH8kULLFUcTp
-         U7awxyNJMZ7Hs/DyIHG+bAB272tNlKaybo9pnAJ2jPzSMntsKLxbZDVhg4H9dfBj+x24
-         W0mlJdzLBpjQkWFudp7Ld5ZkPsfBQDav2Ku+NRxfd2jTKo/0baNWEKbuglvaIUxlSKdU
-         hHutVLwmzyHWw+27OIk9DwyIOpwVcxQmrusVQjjCSGsB0Nc16mfqzqHNt3Ys/mtYKaGk
-         r+eA==
-X-Gm-Message-State: AOAM531SE00ylE4jYNJtz4qV3NX1fEPqMlzGj83WjSw6TW10Z8Ja3qzJ
-        uYSVzFEFi+vOaNzTTczujVsvsA==
-X-Google-Smtp-Source: ABdhPJz0sMFDiDA11ABe5kT1o/km+Y+ock0L+fTuGu64VLLvv2xzyZOb5s8slfiJArkBbrcCb8SSjA==
-X-Received: by 2002:a63:1617:: with SMTP id w23mr12597286pgl.248.1591992175014;
-        Fri, 12 Jun 2020 13:02:55 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id f7sm6544851pje.1.2020.06.12.13.02.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LdO+yABvrQyODTNWEnFCNLq5SRWaCDFSeyJReNxOrN4=;
+        b=rvwlgD4CDjjxhRFq3GnZQuaaOWynCseOjX9XTo9tzIBXSOhAmSz3UyzW90JrGaUNgA
+         8l6XQTaJLbbAYinHsbyVqZwXnU1iGD0TVTxL7PK12EHY1B/hdJZ6yyPaIzah1ZSW4ixd
+         wlZYMGu6nEhyDV6yxZklc+YHnRbVnTM/X6u/Kxugb6Xoooo1r2JNOig5X+R3kBZyBH7B
+         gZr0MhgY7hh94dpkDNznckXaT0DYuxXBv+0/Dw5XB5KfkvswmqVgCwhGfk+rUODFshfa
+         XD8EHjWo+gWCozzZfs7lWJxuaZGSzYit5jCcmoXeWvS54m/6p/HKFBXdZWb/vCRAWRff
+         w6rg==
+X-Gm-Message-State: AOAM533McH6+m52BWG4lE2qXDMSeMO0VYlKFHHFQ6nWrsJ3EKNt3DiRo
+        037kzUbtuadW0f5sSilzGw==
+X-Google-Smtp-Source: ABdhPJyTLPwHiCPMWBDlg3TIAXPWsywr4DNWk8QAGkvpv7/LiQJCR/XEW/hsc3A/ByLjKLXUmh/i0w==
+X-Received: by 2002:a05:6638:406:: with SMTP id q6mr10161463jap.125.1591996263990;
+        Fri, 12 Jun 2020 14:11:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id d66sm3628624iof.27.2020.06.12.14.11.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 13:02:54 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     heiko@sntech.de, linux-rockchip@lists.infradead.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org, mka@chromium.org,
-        dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] ARM: dts: rockchip: Add marvell BT irq config
-Date:   Fri, 12 Jun 2020 13:02:48 -0700
-Message-Id: <20200612130219.v2.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+        Fri, 12 Jun 2020 14:11:02 -0700 (PDT)
+Received: (nullmailer pid 3820221 invoked by uid 1000);
+        Fri, 12 Jun 2020 21:11:01 -0000
+Date:   Fri, 12 Jun 2020 15:11:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v9 05/11] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+Message-ID: <20200612211101.GA3808755@bogus>
+References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
+ <20200609174959.955926-6-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609174959.955926-6-adrian.ratiu@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Veyron Jaq and Mighty both use the Marvel 8897 WiFi+BT chip. Add wakeup
-and pinctrl block to devicetree so the btmrvl driver can correctly
-configure the wakeup interrupt.
+On Tue, Jun 09, 2020 at 08:49:53PM +0300, Adrian Ratiu wrote:
+> This provides an example DT binding for the MIPI DSI host controller
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Reviewed-by: Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-The Veyron Mighty Chromebook (rk3288 based board) is missing the wake
-configuration for Bluetooth. Without this change, the wake irq was not
-configurable and wake on Bluetooth was broken.
+It's not an example. It defines the exact binding for this peripheral.
 
-I verified this change with additional changes in the Bluetooth driver
-(the series is at https://patchwork.kernel.org/cover/11599101/). The
-driver changes are not necessary for this dts change and shouldn't block
-it.
+> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: devicetree@vger.kernel.org
+> Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+> Tested-by: Arnaud Ferraris <arnaud.ferraris@collabora.com>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes since v8:
+>   - Fixed small compatible string typo caught by checkpatch
+>   - Added custom select for 'fsl,imx6-mipi-dsi' (Rob)
+>   - Replaced additionalProperties -> unevaluatedProperties (Rob)
+>   - Dropped all nodes not adding any new constraints apart from
+>   the recently upstreamed snps,dw-mipi-dsi.yaml (Rob)
+> 
+> Changes since v7:
+>   - Clarified port@0,1 descriptions, marked them as required and
+>   added missing port@0 in example (Laurent)
+> 
+> Changes since v6:
+>   - Added ref to the newly created snps,dw-mipi-dsi.yaml (Laurent)
+>   - Moved *-cells properties outside patternProperties (Laurent)
+>   - Removed the panel port documentation (Laurent)
+>   - Wrapped lines at 80 chars, typo fixes, sort includes (Laurent)
+> 
+> Changes since v5:
+>   - Fixed missing reg warning (Fabio)
+>   - Updated dt-schema and fixed warnings (Rob)
+> 
+> Changes since v4:
+>   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
+>   and addressed received binding feedback (Rob)
+> 
+> Changes since v3:
+>   - Added commit message (Neil)
+>   - Converted to yaml format (Neil)
+>   - Minor dt node + driver fixes (Rob)
+>   - Added small panel example to the host controller binding
+> 
+> Changes since v2:
+>   - Fixed commit tags (Emil)
+> ---
+>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 ++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> new file mode 100644
+> index 0000000000000..86093729fd5f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+> @@ -0,0 +1,112 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX6 DW MIPI DSI Host Controller
+> +
+> +maintainers:
+> +  - Adrian Ratiu <adrian.ratiu@collabora.com>
+> +
+> +description: |
+> +  The i.MX6 DSI host controller is a Synopsys DesignWare MIPI DSI v1.01
+> +  IP block with a companion PHY IP.
+> +
+> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
+> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
+> +  the following device-specific properties.
+> +
+> +allOf:
+> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
+> +
+> +# Need a custom select here or 'snps,dw-mipi-dsi' will match lots of nodes
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - fsl,imx6-mipi-dsi
+> +  required:
+> +    - compatible
+> +
+> +properties:
 
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
 
-Changes in v2:
-- Move sdio0 ahead of sdmmc
+These 2 are covered by dsi-controller.yaml, so you can drop them.
 
- arch/arm/boot/dts/rk3288-veyron-jaq.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Otherwise,
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-index 171ba6185b6d39..c15d6865f5a390 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
-@@ -44,6 +44,21 @@ regulator-state-mem {
- 	};
- };
- 
-+&sdio0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	btmrvl: btmrvl@2 {
-+		compatible = "marvell,sd8897-bt";
-+		reg = <2>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
-+		marvell,wakeup-pin = /bits/ 16 <13>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l>;
-+	};
-+};
-+
- &sdmmc {
- 	disable-wp;
- 	pinctrl-names = "default";
--- 
-2.27.0.290.gba653c62da-goog
-
+Reviewed-by: Rob Herring <robh@kernel.org>
