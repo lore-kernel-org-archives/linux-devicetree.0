@@ -2,197 +2,190 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90C5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF29C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9041D20801
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630FD2083E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:06:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IFvQsvCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgFLQF1 (ORCPT
+        id S1726085AbgFLQG4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:05:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36564 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgFLQF0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 12:05:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 7E5FC2A56A5
-Received: by earth.universe (Postfix, from userid 1000)
-        id C11383C08C7; Fri, 12 Jun 2020 18:05:21 +0200 (CEST)
-Date:   Fri, 12 Jun 2020 18:05:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv3 1/5] dt-bindings: touchscreen: Convert EETI EXC3000
- touchscreen to json-schema
-Message-ID: <20200612160521.gneedgeu4x4ml27c@earth.universe>
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-2-sebastian.reichel@collabora.com>
+        Fri, 12 Jun 2020 12:06:56 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41966 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgFLQG4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 12:06:56 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CG69T9010005;
+        Fri, 12 Jun 2020 11:06:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591977969;
+        bh=oH4sCsgtmwbi7NkuTRS7n+qQ1L2k/HKZgTqy4o67u2U=;
+        h=From:To:CC:Subject:Date;
+        b=IFvQsvCFwqDXDDwrI/RO83GqmIiRIbKfz8nVWwgLWSgjCu23uhqqdMY13zARTZBiw
+         qyckZXF+N3huPHgaiJddtDQ+NHaZ4nxTdcmScqS+vIuHBINn3BMq5JPRKjqbYUWkcU
+         tNosDs/Wp7qH3DtHfQZY6QDeRjP3IKKfOJjqj9UQ=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05CG69vb119325
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 12 Jun 2020 11:06:09 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 11:06:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 11:06:09 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CG690Y042915;
+        Fri, 12 Jun 2020 11:06:09 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 1/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
+Date:   Fri, 12 Jun 2020 11:06:02 -0500
+Message-ID: <20200612160603.2456-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xnevn6eizwjclo62"
-Content-Disposition: inline
-In-Reply-To: <20200520153936.46869-2-sebastian.reichel@collabora.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the TAS2562 text file to yaml format.
 
---xnevn6eizwjclo62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../devicetree/bindings/sound/tas2562.txt     | 34 ----------
+ .../devicetree/bindings/sound/tas2562.yaml    | 65 +++++++++++++++++++
+ 2 files changed, 65 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
 
-Hi Rob,
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
+deleted file mode 100644
+index 94796b547184..000000000000
+--- a/Documentation/devicetree/bindings/sound/tas2562.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-Texas Instruments TAS2562 Smart PA
+-
+-The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
+-efficiently driving high peak power into small loudspeakers.
+-Integrated speaker voltage and current sense provides for
+-real time monitoring of loudspeaker behavior.
+-
+-Required properties:
+- - #address-cells  - Should be <1>.
+- - #size-cells     - Should be <0>.
+- - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
+- - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
+- - ti,imon-slot-no:- TDM TX current sense time slot.
+-
+-Optional properties:
+-- interrupt-parent: phandle to the interrupt controller which provides
+-                    the interrupt.
+-- interrupts: (GPIO) interrupt to which the chip is connected.
+-- shut-down: GPIO used to control the state of the device.
+-
+-Examples:
+-tas2562@4c {
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-        compatible = "ti,tas2562";
+-        reg = <0x4c>;
+-
+-        interrupt-parent = <&gpio1>;
+-        interrupts = <14>;
+-
+-	shut-down = <&gpio1 15 0>;
+-        ti,imon-slot-no = <0>;
+-};
+-
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
+new file mode 100644
+index 000000000000..bb51fd88c41a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
++# Copyright (C) 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments TAS2562 Smart PA
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
++  efficiently driving high peak power into small loudspeakers.
++  Integrated speaker voltage and current sense provides for
++  real time monitoring of loudspeaker behavior.
++
++properties:
++  compatible:
++    enum:
++      - ti,tas2562
++      - ti,tas2563
++
++  reg:
++    maxItems: 1
++    description: |
++       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
++
++  shutdown-gpio:
++    description: GPIO used to control the state of the device.
++
++  interrupts:
++    maxItems: 1
++
++  ti,imon-slot-no:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: TDM TX current sense time slot.
++
++  '#sound-dai-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++   #include <dt-bindings/gpio/gpio.h>
++   i2c0 {
++     #address-cells = <1>;
++     #size-cells = <0>;
++     codec: codec@4c {
++       compatible = "ti,tas2562";
++       reg = <0x4c>;
++       #sound-dai-cells = <1>;
++       interrupt-parent = <&gpio1>;
++       interrupts = <14>;
++       shutdown-gpio = <&gpio1 15 0>;
++       ti,imon-slot-no = <0>;
++     };
++   };
++
+-- 
+2.26.2
 
-I justed noticed, that I forgot to have you in To/Cc. Can you please
-have a look at the patch? The full thread is available via Lore,
-please tell me if you need a resend.
-
-https://lore.kernel.org/linux-input/20200520153936.46869-1-sebastian.reiche=
-l@collabora.com/
-
-Sorry for the inconvenience,
-
--- Sebastian
-
-On Wed, May 20, 2020 at 05:39:32PM +0200, Sebastian Reichel wrote:
-> Convert the EETI EXC3000 binding to DT schema format using json-schema
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../input/touchscreen/eeti,exc3000.yaml       | 53 +++++++++++++++++++
->  .../bindings/input/touchscreen/exc3000.txt    | 26 ---------
->  2 files changed, 53 insertions(+), 26 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/e=
-eti,exc3000.yaml
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/e=
-xc3000.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc=
-3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc300=
-0.yaml
-> new file mode 100644
-> index 000000000000..022aa69a5dfe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.ya=
-ml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/touchscreen/eeti,exc3000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: EETI EXC3000 series touchscreen controller
-> +
-> +maintainers:
-> +  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> +
-> +allOf:
-> +  - $ref: touchscreen.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: eeti,exc3000
-> +  reg:
-> +    const: 0x2a
-> +  interrupts:
-> +    maxItems: 1
-> +  touchscreen-size-x: true
-> +  touchscreen-size-y: true
-> +  touchscreen-inverted-x: true
-> +  touchscreen-inverted-y: true
-> +  touchscreen-swapped-x-y: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - touchscreen-size-x
-> +  - touchscreen-size-y
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include "dt-bindings/interrupt-controller/irq.h"
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +        touchscreen@2a {
-> +                compatible =3D "eeti,exc3000";
-> +                reg =3D <0x2a>;
-> +                interrupt-parent =3D <&gpio1>;
-> +                interrupts =3D <9 IRQ_TYPE_LEVEL_LOW>;
-> +                touchscreen-size-x =3D <4096>;
-> +                touchscreen-size-y =3D <4096>;
-> +                touchscreen-inverted-x;
-> +                touchscreen-swapped-x-y;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.=
-txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> deleted file mode 100644
-> index 68291b94fec2..000000000000
-> --- a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> +++ /dev/null
-> @@ -1,26 +0,0 @@
-> -* EETI EXC3000 Multiple Touch Controller
-> -
-> -Required properties:
-> -- compatible: must be "eeti,exc3000"
-> -- reg: i2c slave address
-> -- interrupts: touch controller interrupt
-> -- touchscreen-size-x: See touchscreen.txt
-> -- touchscreen-size-y: See touchscreen.txt
-> -
-> -Optional properties:
-> -- touchscreen-inverted-x: See touchscreen.txt
-> -- touchscreen-inverted-y: See touchscreen.txt
-> -- touchscreen-swapped-x-y: See touchscreen.txt
-> -
-> -Example:
-> -
-> -	touchscreen@2a {
-> -		compatible =3D "eeti,exc3000";
-> -		reg =3D <0x2a>;
-> -		interrupt-parent =3D <&gpio1>;
-> -		interrupts =3D <9 IRQ_TYPE_LEVEL_LOW>;
-> -		touchscreen-size-x =3D <4096>;
-> -		touchscreen-size-y =3D <4096>;
-> -		touchscreen-inverted-x;
-> -		touchscreen-swapped-x-y;
-> -	};
-> --=20
-> 2.26.2
->=20
-
---xnevn6eizwjclo62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7jp7sACgkQ2O7X88g7
-+pp9EQ/7BhIOTvcurDFoYgC8ux4KZktjk79cpt9MTDeBQ1hlNEq0X0U4GeEbJTkO
-dl7CIGHs8J8rR+uHL7qRMPKkrW13pN1Uy4syd1dsWRl3ukO5uNrQvKU3x8InCWev
-sb/+AsSxMMU7hdum7qZqTNrKIGoXrQ+E0CWEE4Pvrujho1iU4o0eV/f7Z8N3Xg6/
-r7F0eip2UMBZDMkYjbtU7oWUJyYPIJRcXkS1c/jmHMAfQR2qxDJLblwL+c1QtLLM
-DyawUfDlf5XOAq0LNvy86lnZNi16v4yqrfy1zDVy654z3j2KwveiSTTG4L4i+sbR
-w/0MFQZav2hxBeDQYOIuMciis6G1+632N6J13g2wVbn5OYV1LNa4XvMkUc4YHv06
-QVyrSRPPvfDAnWtBexPeX76sm3/XnnoBfEmM7UKtHSTF7VLpNeN5F37MirkX5//V
-84HU9Orseqa8ymqdvgY0cc+7E80jVHe4OKfYVc57EMoT9v5+eUxSJcOpI9O34g4W
-zoR19VPVvTHXzHY/lClP8mA3c5Tg+CWIR8le+592RmUmPBcr/qg13+ee0TBEgkqN
-2vTOQhbtg2+E9x+Qe8iifxwjdj9jZgWl7oyAhO3y2f3Q9kx5u08wqw4ScKmZCyAg
-hJLzFNqPHUBp0QxVOU/wMFMzbHGe/C/0fsTH6W3zabRDSgxGofg=
-=+YBY
------END PGP SIGNATURE-----
-
---xnevn6eizwjclo62--
