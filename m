@@ -2,171 +2,229 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA3BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DDA20829
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914B72078C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 04:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mQ9C4Aw7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmowBu5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgFLEFl (ORCPT
+        id S1725440AbgFLEHf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 00:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44538 "EHLO
+        Fri, 12 Jun 2020 00:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgFLEFk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 00:05:40 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A1B6C08C5C1
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 21:05:38 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id s10so3537786pgm.0
-        for <devicetree@vger.kernel.org>; Thu, 11 Jun 2020 21:05:38 -0700 (PDT)
+        with ESMTP id S1725372AbgFLEHf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 00:07:35 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653B8C03E96F;
+        Thu, 11 Jun 2020 21:07:35 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id y1so6203007qtv.12;
+        Thu, 11 Jun 2020 21:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iNfpgONIX6TRQlY7VCVFuaZAaeCFmiBcxeh3q+Q9Emc=;
-        b=mQ9C4Aw7UnLy8MGjbM2OH+sYJjoMshBz0UObVOleGhuXtYJKLHLkDe4CS64GHsAzzf
-         qFBNAYjYV108HaXThdR2E1c1lUCTsjwairMoiRkIKp4PnaLs2fRPuGdM97LHIBX+jQi/
-         PPQi1BwP8ENk3T37NSGb4nw6ZIrVVN3ZcpVJs=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=W9N0HI/VJRXYdn3DxBbsnmWiEpklzY4+CMZBCSjxVLI=;
+        b=MmowBu5g/zlVcPTy3ZBmy5iY8SG0VMb2dSPwH5MLFgedHfF8GKgeUxCK3uT+YrmbGS
+         RacRhfM+AeWoO2epbNIPBsWgS5T7UE4jGevyuf6ruVakGyJdMgmeTUrQOZaKHQU97ykb
+         tanSneGEeRFWtndHd69u5NxH6sVd1mGwvJqHyK16AXgLmttUQgiZz3sXLu88bIq3KxFi
+         RLTeKXpvVyTpibyZiGdxDP7/R+g8uS4KoCGADEFB6XmAuYfCBY6vY3tiVXCGTenBkf/F
+         Qx+3549AhBVymIp5SXL4UtYDx/fkunNCkaX+1XAmaX/eNojPWWSTsIkSMMaZCLdqboxN
+         2/dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iNfpgONIX6TRQlY7VCVFuaZAaeCFmiBcxeh3q+Q9Emc=;
-        b=HuLBPF2V0FteqERnpvl7z65yWWsrr9htkwq6kFY6Fw4EPh46KQCqlTUsdn0CbNSOi3
-         lb65qUC5JHiiPyOx6we9HHwzCtbj+92+q4EB9xzUq82Ml2tuaqgg2Xujf66GSSpx2Gah
-         lMI/8tuA27DO3lLR1OXfbej6WZawvu31JZSdVmpZa5kGsY7hbGhmZ5ICcAObRyKD4sbi
-         0Yw25LlxTzUikMFmBwd0OoUTxayUU0YeboR314mThf+66CoI4B3m0M3dap30+kELX0Gx
-         yGTlcQ7L6rv5RphtRSkGt7u8I8GzPd/y64lk+NTDBaj5jnaB/rxbfaex1VGVoQjQGvNF
-         B85A==
-X-Gm-Message-State: AOAM5326hZA6BLijDQ0VcPWwkW45SWbrJmTtq6LHGukdEW1JYzMjVLLU
-        f8AXIHAvjxMbRQgVf85pqFSP8g==
-X-Google-Smtp-Source: ABdhPJxxsRu3FD1Od7Fa7yYEkFAdUaJPbFEkxFnnoj3uFGxKNpxdBkkwp6nH80ZLBRxpPBPTYKEp0w==
-X-Received: by 2002:a65:508c:: with SMTP id r12mr9391678pgp.233.1591934737734;
-        Thu, 11 Jun 2020 21:05:37 -0700 (PDT)
-Received: from pihsun-glaptop.lan (180-176-97-18.dynamic.kbronet.com.tw. [180.176.97.18])
-        by smtp.googlemail.com with ESMTPSA id u7sm4686983pfu.162.2020.06.11.21.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 21:05:36 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W9N0HI/VJRXYdn3DxBbsnmWiEpklzY4+CMZBCSjxVLI=;
+        b=Qjx4+wZZIKJzuVqWTw99vcP7bbthuANMGnvkeXMQS02N9xuvzDgaziSrFWcDrbIgbW
+         34s8rBIiphpM3fJ0ACDwQ7XP/qzXIjvtBcZ8vrFqDSmScWffWuMvS2izl9euskotyvWl
+         H9YEdAkNxwEGoVW63S+CBC+oqpLSh7iNgSu4D9aiWoJHGMXpYI2TzONi/Rb63nW4Ncp7
+         UAf7cUdEanudaw1mDRt06ESSpCA692dqq7kxxaV8ZUIZdx0MFlMAhEFTkPW964KbQqpT
+         d8rDf2JLD1KNqv1JmlgVUShWttB6Q/oLH2/dX1xW7IM72GVzxSkuDTo80L48Om8Jm0yS
+         qjnA==
+X-Gm-Message-State: AOAM531E2sFGdeDcKcDJu7LgNjnG+Xz1trBh7PIwE9m/PETuNwH4ns1n
+        CuzGs1ErjSIMUvEZJPfgmQjugB2e1n0=
+X-Google-Smtp-Source: ABdhPJxQuukhtwanmQJb52xJH/9PJDz7QPdp/qzb+qaQvTRo3KgSQnfSIXB3TMpsb+uFZnWTDW6TxA==
+X-Received: by 2002:aed:358c:: with SMTP id c12mr1177305qte.214.1591934854411;
+        Thu, 11 Jun 2020 21:07:34 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id c6sm3609080qkg.93.2020.06.11.21.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jun 2020 21:07:33 -0700 (PDT)
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+To:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>,
         Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org (open list:VOLTAGE AND CURRENT REGULATOR
-        FRAMEWORK),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v6 1/3] dt-bindings: regulator: Add DT binding for cros-ec-regulator
-Date:   Fri, 12 Jun 2020 12:05:18 +0800
-Message-Id: <20200612040526.192878-2-pihsun@chromium.org>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-In-Reply-To: <20200612040526.192878-1-pihsun@chromium.org>
-References: <20200612040526.192878-1-pihsun@chromium.org>
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartmangregkh@linuxfoundation.org
+References: <20200609110136.GJ4106@dell>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <7cf94809-7346-31bc-877c-679ecc4d9710@gmail.com>
+Date:   Thu, 11 Jun 2020 23:07:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200609110136.GJ4106@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT binding documentation for cros-ec-regulator, a voltage regulator
-controlled by ChromeOS EC.
+Hi Lee,
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Changes from v5:
-* No change
+Please add me to the distribution list for future versions of this.
 
-Changes from v4:
-* Change compatible name from regulator-cros-ec to cros-ec-regulator.
+-Frank
 
-Changes from v3:
-* Fix dt bindings file name.
-* Add full example.
-
-Changes from v2:
-* No change
-
-Changes from v1:
-* Change compatible string to google,regulator-cros-ec.
-* Use reg property in device tree.
-* Change license for dt binding according to checkpatch.pl.
----
- .../regulator/google,cros-ec-regulator.yaml   | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-
-diff --git a/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-new file mode 100644
-index 000000000000..c9453d7ce227
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/google,cros-ec-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ChromeOS EC controlled voltage regulators
-+
-+maintainers:
-+  - Pi-Hsun Shih <pihsun@chromium.org>
-+
-+description:
-+  Any property defined as part of the core regulator binding, defined in
-+  regulator.yaml, can also be used.
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    const: google,cros-ec-regulator
-+
-+  reg:
-+    maxItems: 1
-+    description: Identifier for the voltage regulator to ChromeOS EC.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cros_ec: ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            regulator@0 {
-+                compatible = "google,cros-ec-regulator";
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <3300000>;
-+                reg = <0>;
-+            };
-+        };
-+    };
-+...
--- 
-2.27.0.290.gba653c62da-goog
+On 2020-06-09 06:01, Lee Jones wrote:
+> Good morning,
+> 
+> After a number of reports/queries surrounding a known long-term issue
+> in the MFD core, including the submission of a couple of attempted
+> solutions, I've decided to finally tackle this one myself.
+> 
+> Currently, when a child platform device (sometimes referred to as a
+> sub-device) is registered via the Multi-Functional Device (MFD) API,
+> the framework attempts to match the newly registered platform device
+> with its associated Device Tree (OF) node.  Until now, the device has
+> been allocated the first node found with an identical OF compatible
+> string.  Unfortunately, if there are, say for example '3' devices
+> which are to be handled by the same driver and therefore have the same
+> compatible string, each of them will be allocated a pointer to the
+> *first* node.
+> 
+> Let me give you an example.
+> 
+> I have knocked up an example 'parent' and 'child' device driver.  The
+> parent utilises the MFD API to register 3 identical children, each
+> controlled by the same driver.  This happens a lot.  Fortunately, in
+> the majority of cases, the OF nodes are also totally identical, but
+> what if you wish to configure one of the child devices with different
+> attributes or resources supplied via Device Tree, like a clock?  This
+> is currently impossible.
+> 
+> Here is the Device Tree representation for the 1 parent and the 3
+> child (sub) devices described above:
+> 
+>         parent {
+>                 compatible = "mfd,of-test-parent";
+> 
+>                 child@0 {
+>                         compatible = "mfd,of-test-child";
+> 			clocks = <&clock 0>;
+>                 };
+> 
+>                 child@1 {
+>                         compatible = "mfd,of-test-child";
+> 			clocks = <&clock 1>;
+> 		};
+> 
+> 	        child@2 {
+>                         compatible = "mfd,of-test-child";
+> 			clocks = <&clock 2>;
+>                 };
+>         };
+> 
+> This is how we register those devices from MFD:
+> 
+> static const struct mfd_cell mfd_of_test_cell[] = {
+>         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 0, "mfd,of-test-child"),
+>         OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 1, "mfd,of-test-child"),
+> 	OF_MFD_CELL("mfd_of_test_child", NULL, NULL, 0, 2, "mfd,of-test-child")
+> };
+> 
+> ... which we pass into mfd_add_devices() for processing.
+> 
+> In an ideal world.  The devices with the platform_id; 0, 1 and 2 would
+> be matched up to Device Tree nodes; child@0, child@1 and child@2
+> respectively.  Instead all 3 devices will be allocated a pointer to
+> child@0's OF node, which is obviously not correct.
+> 
+> This is how it looks when each of the child devices are probed:
+> 
+>  [0.708287] mfd-of-test-parent mfd_of_test: Registering 3 devices
+>  [...]
+>  [0.712511] mfd-of-test-child mfd_of_test_child.0: Probing platform device: 0
+>  [0.712710] mfd-of-test-child mfd_of_test_child.0: Using OF node: child@0
+>  [0.713033] mfd-of-test-child mfd_of_test_child.1: Probing platform device: 1
+>  [0.713381] mfd-of-test-child mfd_of_test_child.1: Using OF node: child@0
+>  [0.713691] mfd-of-test-child mfd_of_test_child.2: Probing platform device: 2
+>  [0.713889] mfd-of-test-child mfd_of_test_child.2: Using OF node: child@0
+> 
+> "Why is it when I change child 2's clock rate, it also changes 0's?"
+> 
+> Whoops!
+> 
+> So in order to fix this, we need to make MFD more-cleverer!
+> 
+> However, this is not so simple.  There are some rules we should abide
+> by (I use "should" intentionally here, as something might just have to
+> give):
+> 
+>  a) Since Device Tree is designed to describe hardware, inserting
+>     arbitrary properties into DT is forbidden.  This precludes things
+>     we would ordinarily be able to match on, like 'id' or 'name'.
+>  b) As an extension to a) DTs should also be OS agnostic, so
+>     properties like 'mfd-device', 'mfd-order' etc are also not
+>     not suitable for inclusion.
+>  c) The final solution should ideally be capable of supporting both
+>     newly defined and current trees (without retroactive edits)
+>     alike.
+>  d) Existing properties could be used, but not abused.  For example,
+>     one of my suggestions (see below) is to use the 'reg' property.
+>     This is fine in principle but loading 'reg' with arbitrary values
+>     (such as; 0, 1, 2 ... x) which 1) clearly do not have anything to
+>     do with registers and 2) would be meaningless in other OSes/
+>     implementations, just to serve our purpose, is to be interpreted
+>     as an abuse.
+> 
+> Proposal 1:
+> 
+> As mentioned above, my initial thoughts were to use the 'reg' property
+> to match an MFD cell entry with the correct DT node.  However, not
+> all Device Tree nodes have 'reg' properties.  Particularly true in the
+> case of MFD, where memory resources are usually shared with the parent
+> via Regmap, or (as in the case of the ab8500) the MFD handles all
+> register transactions via its own API. 
+> 
+> Proposal 2:
+> 
+> If we can't guarantee that all DT nodes will have at least one
+> property in common to be used for matching and we're prevented from
+> supplying additional, potentially bespoke properties, then we must
+> seek an alternative procedure.
+> 
+> It should be possible to match based on order.  However, the developer
+> would have to guarantee that the order in which the child devices are
+> presented to the MFD API are in exactly the same order as they are
+> represented in the Device Tree.  The obvious draw-back to this
+> strategy is that it's potentially very fragile.
+> 
+> Current Proposal:
+> 
+> How about a collection of Proposal 1 and Proposal 2?  First we could
+> attempt a match on the 'reg' property.  Then, if that fails, we would
+> use the fragile-but-its-all-we-have Proposal 2 as the fall-back.
+> 
+> Thoughts?
+> 
 
