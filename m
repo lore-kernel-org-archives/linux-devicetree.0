@@ -2,334 +2,94 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51765C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DCBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26522207ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591978958;
-	bh=Q8xnuSQvFkUDr8zmvrG1XuxDC3lkFjCFlAB3OwOthW4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hKj9BbQr6UIq4IUeDHo/nbWUK01cULhz2FBmc7UEqQRp81MFoQ4NV/4QUIIDALWaU
-	 HGSj9Qb7HCeQyXPeyvMLPTsD0s6EcyJWnIBsqTOvDV5UYvetATv3QXD2mob167kIKk
-	 tY4fQmd5Z7tiiCRan1W1xSpV3OerIo6EgfSitXXM=
+	by mail.kernel.org (Postfix) with ESMTP id 93A84207ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 16:27:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nRvp5ktR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgFLQWh (ORCPT
+        id S1726089AbgFLQ1y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 12:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgFLQWh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 12 Jun 2020 12:22:37 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 772AE20836;
-        Fri, 12 Jun 2020 16:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591978955;
-        bh=Q8xnuSQvFkUDr8zmvrG1XuxDC3lkFjCFlAB3OwOthW4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BVQsixGONhmhI/hbz9XIDAHAukYVbQ8gZeQ98icrFxKeCJFbL4dsGpULSCHemI7ws
-         H1oOKVYzkPwdEbybBZUImY0uFFy7+6lm5RhyjtVJHOsbiALRIIxGe+8S0jMnyNrufo
-         IjH3yMvarjQ+TolrbESM6I46+soCSCMoAsOI3phM=
-Received: by mail-oi1-f180.google.com with SMTP id a3so9208909oid.4;
-        Fri, 12 Jun 2020 09:22:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532ANovLS4rjZ67EmgrElHFsZv+eie9dNDi4rxNb9a2AZY4eAbvg
-        KkU+5ojB05YQeBMJYG4dQJG48QSPlUKPJIZKYA==
-X-Google-Smtp-Source: ABdhPJwPoRIwsHGp/Q6SDOjjjB5xHEQEwUclkLWle+xl2si3N6oLoxWnuEys74ZMjvgMU2tZ1ygwIobN1Wc1Q5gaWWQ=
-X-Received: by 2002:aca:6004:: with SMTP id u4mr2905435oib.106.1591978954766;
- Fri, 12 Jun 2020 09:22:34 -0700 (PDT)
+        Fri, 12 Jun 2020 12:27:54 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44424 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgFLQ1x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 12:27:53 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05CGRAm3015312;
+        Fri, 12 Jun 2020 11:27:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591979230;
+        bh=Fkgey716kLKI5iJmQP/27R3X8I0hgKSTact+Z6ZhrrA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nRvp5ktRa3UD52SFpinmzJWjGxRQgF6w36M+Y5QezRyrFu+O77uOkdTRy5rYRC/9T
+         2HAjkKHhYeD82VhVoUaw0508z3QU8ZX8aATV+IiDjNm0gUjY5LPcdFuseNoUtICQjV
+         J8WiQ/nQSDELSHTB4ouX2r/5ye2r0+hoM8Y/Czk0=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGRAOA025356;
+        Fri, 12 Jun 2020 11:27:10 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 12
+ Jun 2020 11:27:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 12 Jun 2020 11:27:09 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05CGR9nZ003371;
+        Fri, 12 Jun 2020 11:27:09 -0500
+Subject: Re: [PATCH v3 2/2] ASoC: tas2562: Update shutdown GPIO property
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200612160603.2456-1-dmurphy@ti.com>
+ <20200612160603.2456-2-dmurphy@ti.com> <20200612160922.GL5396@sirena.org.uk>
+ <0e482167-71c2-a128-b8b4-a054557d30e9@ti.com>
+ <20200612162200.GM5396@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <432c41fe-8afa-2ccb-8917-fd64f4895144@ti.com>
+Date:   Fri, 12 Jun 2020 11:27:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200612015030.16072-1-tanmay@codeaurora.org> <20200612015030.16072-2-tanmay@codeaurora.org>
-In-Reply-To: <20200612015030.16072-2-tanmay@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 12 Jun 2020 10:21:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKO=UZqJYS49gmVkbRocqnOLqH=wCKKZM5a3UvXnWrTeA@mail.gmail.com>
-Message-ID: <CAL_JsqKO=UZqJYS49gmVkbRocqnOLqH=wCKKZM5a3UvXnWrTeA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
- driver for Snapdragon
-To:     Tanmay Shah <tanmay@codeaurora.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, aravindh@codeaurora.org,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200612162200.GM5396@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 7:51 PM Tanmay Shah <tanmay@codeaurora.org> wrote:
->
-> From: Chandan Uddaraju <chandanu@codeaurora.org>
->
-> Add bindings for Snapdragon DisplayPort controller driver.
->
-> Changes in V2:
-> Provide details about sel-gpio
->
-> Changes in V4:
-> Provide details about max dp lanes
-> Change the commit text
->
-> Changes in V5:
-> moved dp.txt to yaml file
->
-> Changes in v6:
-> - Squash all AUX LUT properties into one pattern Property
-> - Make aux-cfg[0-9]-settings properties optional
-> - Remove PLL/PHY bindings from DP controller dts
-> - Add DP clocks description
-> - Remove _clk suffix from clock names
-> - Rename pixel clock to stream_pixel
-> - Remove redundant bindings (GPIO, PHY, HDCP clock, etc..)
-> - Fix indentation
-> - Add Display Port as interface of DPU in DPU bindings
->   and add port mapping accordingly.
->
-> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
-> Signed-off-by: Vara Reddy <varar@codeaurora.org>
-> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
-> ---
->  .../bindings/display/msm/dp-sc7180.yaml       | 142 ++++++++++++++++++
->  .../devicetree/bindings/display/msm/dpu.txt   |   8 +
->  2 files changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+Mark
 
-Is it too much to ask for Qualcomm to coordinate your work? I'm not
-going to do that for you. This conflicts with "[v4] dt-bindings: msm:
-disp: add yaml schemas for DPU and DSI bindings".
+On 6/12/20 11:22 AM, Mark Brown wrote:
+> On Fri, Jun 12, 2020 at 11:18:57AM -0500, Dan Murphy wrote:
+>> On 6/12/20 11:09 AM, Mark Brown wrote:
+>>> On Fri, Jun 12, 2020 at 11:06:03AM -0500, Dan Murphy wrote:
+>>>> -	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down-gpio",
+>>>> +	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
+>>>>    						      GPIOD_OUT_HIGH);
+>>> This also changes the name from shut-down to shutdown which will be
+>>> incompatible (IIRC we do try -gpio as well as -gpios).
+>> Yes the non-standardish name was highlighted by Rob[1].
+> Yes, but we released with it so it's an ABI now and we should still
+> support the old name.
 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> new file mode 100644
-> index 000000000000..5fdb9153df00
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> @@ -0,0 +1,142 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only  OR BSD-2-Clause)
+Well should we then just revert back to the non-standard name and just 
+fix up the code?
 
-Extra space.
+Or should we support both properties?
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Display Port Controller.
-> +
-> +maintainers:
-> +  - Chandan Uddaraju <chandanu@codeaurora.org>
-> +  - Vara Reddy <varar@codeaurora.org>
-> +  - Tanmay Shah <tanmay@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for MSM Display Port which supports DP host controllers
-> +  that are compatible with VESA Display Port interface specification.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: qcom,dp-display
+Dan
 
-That's what the h/w reference manual calls this? It should be SoC specific.
-
-> +
-> +  cell-index:
-> +    description: Specifies the controller instance.
-
-Pretty sure I already said no to this.
-
-> +
-> +  reg:
-> +    items:
-> +      - description: DP controller registers
-
-Just: 'maxItems: 1'
-
-> +
-> +  interrupts:
-> +    description: The interrupt signal from the DP block.
-
-How many?
-
-The description is useless. That's every 'interrupts'.
-
-> +
-> +  clocks:
-> +    description: List of clock specifiers for clocks needed by the device.
-
-That's every 'clocks' property. Drop.
-
-> +    items:
-> +      - description: Display Port AUX clock
-> +      - description: Display Port Link clock
-> +      - description: Link interface clock between DP and PHY
-> +      - description: Display Port Pixel clock
-> +      - description: Root clock generator for pixel clock
-> +
-> +  clock-names:
-> +    description: |
-> +      Device clock names in the same order as mentioned in clocks property.
-> +      The required clocks are mentioned below.
-
-Drop.
-
-> +    items:
-> +      - const: core_aux
-> +      - const: ctrl_link
-> +      - const: ctrl_link_iface
-> +      - const: stream_pixel
-> +      - const: pixel_rcg
-
-blank line
-
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  vdda-1p2-supply:
-> +    description: phandle to vdda 1.2V regulator node.
-> +
-> +  vdda-0p9-supply:
-> +    description: phandle to vdda 0.9V regulator node.
-> +
-> +  data-lanes = <0 1>:
-
-Err, what?!
-
-> +    type: object
-
-This is a DT node?
-
-> +    description: Maximum number of lanes that can be used for Display port.
-> +
-> +  ports:
-> +    description: |
-> +       Contains display port controller endpoint subnode.
-> +       remote-endpoint: |
-> +         For port@0, set to phandle of the connected panel/bridge's
-> +         input endpoint. For port@1, set to the DPU interface output.
-
-Look at other schemas and see how they are done.
-
-> +         Documentation/devicetree/bindings/graph.txt and
-> +         Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +patternProperties:
-> +  "^aux-cfg([0-9])-settings$":
-> +    type: object
-
-This is a DT node?
-
-> +    description: |
-> +      Specifies the DP AUX configuration [0-9] settings.
-> +      The first entry in this array corresponds to the register offset
-> +      within DP AUX, while the remaining entries indicate the
-> +      programmable values.
-> +
-> +required:
-> +  - compatible
-> +  - cell-index
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - vdda-1p2-supply
-> +  - vdda-0p9-supply
-> +  - data-lanes
-> +  - ports
-
-Add:
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
-> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +    msm_dp: displayport-controller@ae90000{
-> +        compatible = "qcom,dp-display";
-> +        cell-index = <0>;
-> +        reg = <0 0xae90000 0 0x1400>;
-> +        reg-names = "dp_controller";
-> +
-> +        interrupt-parent = <&display_subsystem>;
-> +        interrupts = <12 0>;
-> +
-> +        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
-> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-> +        clock-names = "core_aux",
-> +                      "ctrl_link",
-> +                      "ctrl_link_iface", "stream_pixel",
-> +                      "pixel_rcg";
-> +        #clock-cells = <1>;
-> +
-> +        vdda-1p2-supply = <&vreg_l3c_1p2>;
-> +        vdda-0p9-supply = <&vreg_l4a_0p8>;
-> +
-> +        data-lanes = <0 1>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +                dp_in: endpoint {
-> +                    remote-endpoint = <&dpu_intf0_out>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg = <1>;
-> +                dp_out: endpoint {
-> +                };
-> +            };
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
-> index 551ae26f60da..30c8ab479b02 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
-> @@ -65,6 +65,7 @@ Required properties:
->
->         Port 0 -> DPU_INTF1 (DSI1)
->         Port 1 -> DPU_INTF2 (DSI2)
-> +       Port 2 -> DPU_INTF0 (DP)
->
->  Optional properties:
->  - assigned-clocks: list of clock specifiers for clocks needing rate assignment
-> @@ -136,6 +137,13 @@ Example:
->                                                 remote-endpoint = <&dsi1_in>;
->                                         };
->                                 };
-> +
-> +                               port@2 {
-> +                                       reg = <2>;
-> +                                       dpu_intf0_out: endpoint {
-> +                                               remote-endpoint = <&dp_in>;
-> +                                       };
-> +                               };
->                         };
->                 };
->         };
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
