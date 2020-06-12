@@ -2,59 +2,61 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC53C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C866CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D7520792
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3937206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 13:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGmvAh/Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YKUm5+MX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgFLNyO (ORCPT
+        id S1726283AbgFLNzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 09:54:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50412 "EHLO
+        Fri, 12 Jun 2020 09:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgFLNyO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 09:54:14 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795FEC03E96F
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:13 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id x22so5531067lfd.4
-        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:13 -0700 (PDT)
+        with ESMTP id S1726536AbgFLNyv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 09:54:51 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40968C03E96F
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:49 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c17so11141985lji.11
+        for <devicetree@vger.kernel.org>; Fri, 12 Jun 2020 06:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3vT+wZ8ziAs7E5VUjyW0FBdqzQlsXKfHF9W52Q5ad+c=;
-        b=zGmvAh/ZGt/vXHZt15aQA54OP1BiGscyEILqX9sLVHbugga06Px5iVZuHl/BgKZs2L
-         iSTKyq49oQSV5KOjj7nsgIvgySsjzXLuMR0mB/nFxBXmcyMbmoqzc6MnBVPb2UE4ANcB
-         mnRxBY9ltz2fprsMwW6CzkO3ZAXw8vULAqH3rM8mNjcfolBQZeEkLRG5IvIl0ucIm8Jy
-         YokIBvSfG70XYCC7E0fo1iFGq/C8QZsTbHNkwguVhC4cYIvsK+vVLZHHIflOpGw95St2
-         pPtTtNf1SBpUEVEZA2tMB9omveGeXag0P57aEqXK6yyQZ4Uhbo7f7F6Ztpr2NTdLl+5E
-         oLJQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dfWTJRln/wUkUezGYMWTWyc7bZ4R2M6yJEVL+/18MoU=;
+        b=YKUm5+MXtyoghi4Yx87JKWrhK8cqKD7Pbsn3qttgdfSTtHv9XJDTFN6NgT4uvktIZ4
+         uoW5GEgLbTnrIKjiPQH6wahznKsDQ5arq9tYg0nV3URIhCV9lEdy9f9oGwW4Y1W1y9u9
+         w9/5i2Een1oXqRDGaVhEBRV7FFxMTbNX43qg0J+qjrXwn2xDKJ/ytgQrOnogGLijj0/T
+         9Jlw5TytVFnb97n2RZU8Et8Hf57kDLGSF0BPJ8W4BWtNgD3Z+dTD755+KLZnXI2WcLwl
+         IqqKciv1se3OjH7IzAN57JRVq66HbgvpNjVFwb1TDU5vjEHitTUcjc1F7oeh2JdCwLLz
+         xlyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3vT+wZ8ziAs7E5VUjyW0FBdqzQlsXKfHF9W52Q5ad+c=;
-        b=MgGI+yKYxmyh8KK7lMf/cQp2Ptq7LpxUbRF/I82sQEewVWoJlIyGNYCNbV7gh931PP
-         MZMbFlvdHPzNQRR85z3H/LrlbGslOc97zgsK2Plr3mbGR0ZRVRFYiHjYeCCttivubfVX
-         fvq8Fts6IpowaVSGBLz9DFqr0kOr0u7aRbM8wz3pXNMCbJ5UN+YBw0DVHSYnv1JrY9/n
-         WbHASm4x9xIxx96VvAFynmxqDijetpstkgvzRy4vy/ycDm6cjgiFmTLCOn5EmElK7BZL
-         lX5+G6P3updqTOzg9V5i+uWcbnqUGvXraxDS2bSnnRR8bKrSN8xazYbd4yrfjOHY0cG3
-         PWzg==
-X-Gm-Message-State: AOAM532xhG+Z7Sp/6+E8vGrehiyo6pfbtngyJYUcQoTAo45H2HxGg2ip
-        ZIdFgRCBN4OSDiqErEsHI+ZwwQ==
-X-Google-Smtp-Source: ABdhPJzm6BPlNgl41jkg6bQdqNLPtT3HfnpNXfIX/zwF/eepS4r0yWPRsSw2UAFyp0UmDO2to8svIQ==
-X-Received: by 2002:ac2:4d25:: with SMTP id h5mr6879237lfk.87.1591970051731;
-        Fri, 12 Jun 2020 06:54:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dfWTJRln/wUkUezGYMWTWyc7bZ4R2M6yJEVL+/18MoU=;
+        b=BnvIRbbti0N84exZpd7rbx78t/QADVzDBUunDW0T3gCd2VYV4FsytyxAaCZDlgpt5H
+         IfGz+OT1AfQswd/n/sY55UDvRn3Qj1Fvn01Di07yUeANuJg+fIWXwNfo5bfdcTpxzYG4
+         Z+281zCuvY+MLiU6yB4enmta7dXQGf4Dhhj2/BnaptlNaXHEOsx3LARTBzKvXaa2WCkL
+         G4u2NrPhLWSoz8m/06ehi7fg+ab2/JvvA7puJXski16CxK8HuXdd04hvtDf0n21uJBCt
+         s6uW9gZILry+83EbWmHYR1S8X52TgqVwus5sxkuZhQpYHchj2X1tCB4R7kVJL1+xyqQn
+         wadQ==
+X-Gm-Message-State: AOAM532sSpMfj8x3eo7mO5+Grfk4GZF1/3lGK/iYBVU50Gemhfl9bouu
+        G2+P5v3toMY9LuzcZdr5u0VR5g==
+X-Google-Smtp-Source: ABdhPJzkvrMx8Yl1wKGOV7GyTAN+Yk3rUFpSNV9AQJqPXtZtgFKoZ6hefDkjfeWUdm8RijLAnD9lYQ==
+X-Received: by 2002:a2e:81c5:: with SMTP id s5mr6643701ljg.372.1591970087696;
+        Fri, 12 Jun 2020 06:54:47 -0700 (PDT)
 Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id a1sm2414415lfi.36.2020.06.12.06.54.10
+        by smtp.googlemail.com with ESMTPSA id a1sm2414415lfi.36.2020.06.12.06.54.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 06:54:10 -0700 (PDT)
+        Fri, 12 Jun 2020 06:54:47 -0700 (PDT)
 From:   Andrey Konovalov <andrey.konovalov@linaro.org>
 To:     mchehab@kernel.org, sakari.ailus@iki.fi,
         manivannan.sadhasivam@linaro.org
@@ -62,114 +64,146 @@ Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
         Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v5 00/10] Improvements to IMX290 CMOS driver
-Date:   Fri, 12 Jun 2020 16:53:45 +0300
-Message-Id: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+Subject: [PATCH v5 10/10] media: i2c: imx290: set bus_type before calling v4l2_fwnode_endpoint_alloc_parse()
+Date:   Fri, 12 Jun 2020 16:53:55 +0300
+Message-Id: <20200612135355.30286-11-andrey.konovalov@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+References: <20200612135355.30286-1-andrey.konovalov@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds improvements to the existing media driver for IMX290
-CMOS sensor from Sony. The major changes are adding 2 lane support,
-configurable link frequency & pixel rate, test pattern generation, and
-RAW12 mode support.
+The bus_type field of v4l2_fwnode_endpoint structure passed as the argument
+to v4l2_fwnode_endpoint_alloc_parse() function must be initiaized.
+Set it to V4L2_MBUS_CSI2_DPHY, and check for -ENXIO which is returned
+when the requested media bus type doesn't match the fwnode.
 
-The link frequency & pixel rate combinations depend on various factors like
-lane count, resolution and image format as per the datasheet.
+Also remove v4l2_fwnode_endpoint field from struct imx290 as it is only
+needed in the probe function: use the local variable for this purpose.
 
-Also fixes for the following issues in the existing driver are included:
-* the current_format field in the struct imx290 can be used before
-  initialization,
-* the reset signal to IMX290 isn't handled correctly,
-* the bus_type field of v4l2_fwnode_endpoint structure passed as the
-  argument to v4l2_fwnode_endpoint_alloc_parse() function is not
-  initiaized.
+Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+---
+ drivers/media/i2c/imx290.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-Changes in v5:
-
-* Fixed the "Possible unwrapped commit description" issues reported by
-  checkpatch.pl. The "msleep < 20ms can sleep for up to 20ms" warnings
-  are still here, as sleeping for 20ms when the imx290 driver calls
-  msleep(10) is fine
-
-Changes in v4:
-
-* The review comments from Sakari and Dave are addressed
-  https://lkml.org/lkml/2020/5/24/294
-  In particular,
-  . HMAX values are included into struct imx290_mode. As the consequence,
-    imx290_modes[] table splitted in two (one for 2-lane configuration,
-    and another for the 4-lane one)
-  . link frequency indexes are kept in struct imx290_mode to
-    avoid using the width field as the key for modes table by
-    imx290_get_link_freq_index(). These are still indexes, not the
-    frequencies themselves: we need a separate tables of the frequencies
-    for the V4L2_CID_LINK_FREQ integer menu control anyway, so the
-    link frequency values should be better kept there (in one place)
-  . imx290_modes_[ptr,num]() and imx290_link_freqs_[ptr,num]() helpers
-    introduced to get rid of repeating lane configuration checks in the code
-  . do_div() is used in imx290_calc_pixel_rate() to fix the build error
-    on 32-bit systems
-  . the check for the link frequencies listed in the device tree is
-    reworked to handle multiple frequencies (vs removing the check entirely
-    in v3)
-  . imx290_enum_frame_size() is not changed since v3: all (of the 2) modes
-    are supported for all the media codes. So the available modes / frame
-    sizes have no dependency on the media code. The fse->code check in
-    imx290_enum_frame_size() just guards against the codes not supported
-    by the driver at all
-* removed calling imx290_set_data_lanes() from imx290_probe(): the probe()
-  calls imx290_power_on() a bit earlier, and imx290_power_on() sets the
-  number of data lanes
-* FREQ_INDEX_1080P/FREQ_INDEX_720P #define's introduced to make using
-  imx290_link_freq_* tables a bit more error-proof
-* the values in the imx290_link_freq_*[] tables are devided by 2: the
-  previous ones were equal to the data rates which are twice as the link
-  frequency
-
-Changes in v3:
-
-* The review comments from Sakari are addressed
-  https://lkml.org/lkml/2019/12/19/705
-  As a part of those changes:
-  . null ptr checks are added to imx290_set_fmt() so that it can be called
-    early in the probe() function to set the default format, and to
-    initialize imx290->current_mode and imx290->bpp - these last two must be
-    set before imx290_calc_pixel_rate() is called when creating the controls
-  . setting imx290->bpp removed from imx290_write_current_format(). Now this
-    function only writes to the camera sensor registers. The call to
-    imx290_write_current_format() is moved from imx290_set_fmt() back to
-    imx290_start_streaming(): imx290_set_fmt() can be called when the sensor
-    is powered off, and writes to the sensor registers would fail.
-  . in imx290_set_ctrl() in the 12 bpp case the value the BLKLEVEL register
-    is restored to when the test pattern is disabled is made consistent with
-    imx290_12bit_settings[]
-* The "IMX290 sensor driver fixes" patchset included
-  https://patchwork.kernel.org/cover/11407347/
-* Added a patch to set the bus_type field of v4l2_fwnode_endpoint structure
-  before calling v4l2_fwnode_endpoint_alloc_parse()
-
-Andrey Konovalov (4):
-  media: i2c: imx290: set the format before VIDIOC_SUBDEV_G_FMT is
-    called
-  media: i2c: imx290: fix the order of the args in SET_RUNTIME_PM_OPS()
-  media: i2c: imx290: fix reset GPIO pin handling
-  media: i2c: imx290: set bus_type before calling
-    v4l2_fwnode_endpoint_alloc_parse()
-
-Manivannan Sadhasivam (6):
-  media: i2c: imx290: Add support for 2 data lanes
-  media: i2c: imx290: Add configurable link frequency and pixel rate
-  media: i2c: imx290: Add support for test pattern generation
-  media: i2c: imx290: Add RAW12 mode support
-  media: i2c: imx290: Add support to enumerate all frame sizes
-  media: i2c: imx290: Move the settle time delay out of loop
-
- drivers/media/i2c/imx290.c | 404 +++++++++++++++++++++++++++++++------
- 1 file changed, 343 insertions(+), 61 deletions(-)
-
+diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+index 02001c1b0dfc..9c97830164e9 100644
+--- a/drivers/media/i2c/imx290.c
++++ b/drivers/media/i2c/imx290.c
+@@ -70,7 +70,6 @@ struct imx290 {
+ 	u8 bpp;
+ 
+ 	struct v4l2_subdev sd;
+-	struct v4l2_fwnode_endpoint ep;
+ 	struct media_pad pad;
+ 	struct v4l2_mbus_framefmt current_format;
+ 	const struct imx290_mode *current_mode;
+@@ -914,17 +913,18 @@ static const struct media_entity_operations imx290_subdev_entity_ops = {
+  * of MIPI data lanes are mentioned in the device tree, or the value of the
+  * first missing frequency otherwise.
+  */
+-static s64 imx290_check_link_freqs(const struct imx290 *imx290)
++static s64 imx290_check_link_freqs(const struct imx290 *imx290,
++				   const struct v4l2_fwnode_endpoint *ep)
+ {
+ 	int i, j;
+ 	const s64 *freqs = imx290_link_freqs_ptr(imx290);
+ 	int freqs_count = imx290_link_freqs_num(imx290);
+ 
+ 	for (i = 0; i < freqs_count; i++) {
+-		for (j = 0; j < imx290->ep.nr_of_link_frequencies; j++)
+-			if (freqs[i] == imx290->ep.link_frequencies[j])
++		for (j = 0; j < ep->nr_of_link_frequencies; j++)
++			if (freqs[i] == ep->link_frequencies[j])
+ 				break;
+-		if (j == imx290->ep.nr_of_link_frequencies)
++		if (j == ep->nr_of_link_frequencies)
+ 			return freqs[i];
+ 	}
+ 	return 0;
+@@ -934,6 +934,10 @@ static int imx290_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+ 	struct fwnode_handle *endpoint;
++	/* Only CSI2 is supported for now: */
++	struct v4l2_fwnode_endpoint ep = {
++		.bus_type = V4L2_MBUS_CSI2_DPHY
++	};
+ 	struct imx290 *imx290;
+ 	u32 xclk_freq;
+ 	s64 fq;
+@@ -956,15 +960,18 @@ static int imx290_probe(struct i2c_client *client)
+ 		return -EINVAL;
+ 	}
+ 
+-	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &imx290->ep);
++	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
+ 	fwnode_handle_put(endpoint);
+-	if (ret) {
++	if (ret == -ENXIO) {
++		dev_err(dev, "Unsupported bus type, should be CSI2\n");
++		goto free_err;
++	} else if (ret) {
+ 		dev_err(dev, "Parsing endpoint node failed\n");
+ 		goto free_err;
+ 	}
+ 
+ 	/* Get number of data lanes */
+-	imx290->nlanes = imx290->ep.bus.mipi_csi2.num_data_lanes;
++	imx290->nlanes = ep.bus.mipi_csi2.num_data_lanes;
+ 	if (imx290->nlanes != 2 && imx290->nlanes != 4) {
+ 		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
+ 		ret = -EINVAL;
+@@ -973,27 +980,20 @@ static int imx290_probe(struct i2c_client *client)
+ 
+ 	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
+ 
+-	if (!imx290->ep.nr_of_link_frequencies) {
++	if (!ep.nr_of_link_frequencies) {
+ 		dev_err(dev, "link-frequency property not found in DT\n");
+ 		ret = -EINVAL;
+ 		goto free_err;
+ 	}
+ 
+ 	/* Check that link frequences for all the modes are in device tree */
+-	fq = imx290_check_link_freqs(imx290);
++	fq = imx290_check_link_freqs(imx290, &ep);
+ 	if (fq) {
+ 		dev_err(dev, "Link frequency of %lld is not supported\n", fq);
+ 		ret = -EINVAL;
+ 		goto free_err;
+ 	}
+ 
+-	/* Only CSI2 is supported for now */
+-	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+-		dev_err(dev, "Unsupported bus type, should be CSI2\n");
+-		ret = -EINVAL;
+-		goto free_err;
+-	}
+-
+ 	/* get system clock (xclk) */
+ 	imx290->xclk = devm_clk_get(dev, "xclk");
+ 	if (IS_ERR(imx290->xclk)) {
+@@ -1108,7 +1108,7 @@ static int imx290_probe(struct i2c_client *client)
+ 	pm_runtime_enable(dev);
+ 	pm_runtime_idle(dev);
+ 
+-	v4l2_fwnode_endpoint_free(&imx290->ep);
++	v4l2_fwnode_endpoint_free(&ep);
+ 
+ 	return 0;
+ 
+@@ -1118,7 +1118,7 @@ static int imx290_probe(struct i2c_client *client)
+ 	v4l2_ctrl_handler_free(&imx290->ctrls);
+ 	mutex_destroy(&imx290->lock);
+ free_err:
+-	v4l2_fwnode_endpoint_free(&imx290->ep);
++	v4l2_fwnode_endpoint_free(&ep);
+ 
+ 	return ret;
+ }
 -- 
 2.17.1
 
