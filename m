@@ -2,155 +2,237 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED16C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FDBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69DB120663
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C0F20663
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 22:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591999622;
-	bh=rLvNmMlGCs0eEutZ3xksPNRLTmO0lNDJIloHVW0269E=;
+	s=default; t=1591999652;
+	bh=y+LLquDyP3tNf9d94AB3FGBuuWRilebZRyY65s5OrKU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tUasTjbFjikbkSiihKBtpil+IxUMP+HtGBHCDwxn0J/vyqjBdNOFWurFyB5DoT5RF
-	 haH5yHx6yOC2IFoUwtT0xm50vtnkSLt4K1D6e3Wa5c8P5KibMQ1lOzjA9Js9d/J7sq
-	 xQjMlc3jYcCj/p0VHgTZ6x6jHmCg4N4Tbyd7ou8M=
+	b=aDhjIlNwUMEhReZ8ujh25RxWmI+pPXyG0oo4R7xRhXGYgNj5jjzrXf/CifC+Y55fg
+	 iOgemUTld0ON5CrEdMgCNpChc9l5GCEBYZN/ZJtWTgfh/fX9ykoSQv8C6qcZbMgJP9
+	 tI/GFSu4PYeKMJd1lnQECoTO0+pij5eJAvkwg8LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgFLWHB (ORCPT
+        id S1726307AbgFLWHb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 18:07:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44206 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgFLWHB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 18:07:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id p20so11815045iop.11;
-        Fri, 12 Jun 2020 15:07:00 -0700 (PDT)
+        Fri, 12 Jun 2020 18:07:31 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37855 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgFLWHb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 18:07:31 -0400
+Received: by mail-il1-f194.google.com with SMTP id e11so10166467ilr.4;
+        Fri, 12 Jun 2020 15:07:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=AFTBDnDYy+M7RhfFn//fyAlUc4RiakiijMDm4TTAat4=;
-        b=GN5XDZK6PWJURh3mJ1fZM3YPJrD9hgWZn39QTRB7s+MS7qNM4lJI4/Sc1vqqcf2M6v
-         OOem0khBOwp1a8C2rXzrCRL9DNb2LI1X2mBLdSivdhFuTe/fTXPkA//YDHcjpo+7lq6p
-         7KLkfnz8SFK1uQI1Uk/zK+05+x2Xd5pIdU07ObZp0wZ6LmS/zab0evnpUVojVdS+eKTi
-         D98daJmW5a3U2kYT/nmlH/ckIumoFXTgqQok0FBz/Qmu1wgjGzLog9i+apbb5adgMnac
-         MBdYj9ugKq8Vap0BGg756jTruIi7poEmvXofRAd26vI5FlyGUGr/073/cOr3+GoDAt82
-         X7Rg==
-X-Gm-Message-State: AOAM530RvYQfEWrz30t5LuOukwaOSPF16TR8eiq2TPRHozUNgHj1UJRK
-        6VYJxt7j8fNti7BHOhxs8g==
-X-Google-Smtp-Source: ABdhPJw7l3FBkxqdICIq95CjK0SeG1RmP/x/92/27ZBszGzLCWTWKwfrnVt8vk5s0XIyr3PZ52fAPg==
-X-Received: by 2002:a02:cc56:: with SMTP id i22mr10163617jaq.31.1591999620332;
-        Fri, 12 Jun 2020 15:07:00 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=4xIry03fd8dxr46drv3h4qWsyyFNDK6vFVstUdHDtF8=;
+        b=ElJ9Tq5PyPYWpj4Ow+4jhmGpoC9dST2iXEDgX1pHOUXn6NyeH4KDLR+vVw1jo2GzH9
+         jJmCMBYXpdwkt9ykXl8aJD3Gp4Y9Dj3l0nEEBKOFW/hbzOL82twx8QHjyrEEvSnm/sfw
+         ynpe3rjzgPHM+cQeOsFfk7b8qhh/Pp31VuX/HoSFxDTjWN9Cy+L1zOMRba23/2V4NDV1
+         ONtBx4p97vk8zYZw2EGTQgSO2fFjiAjI7vwShKlinqfxecazhIJmJPAqKcL3KsDuvxNZ
+         BRivBblxNnkfkbGcskmEMBJxxCoAwiLdwIVc22cYh+7TIgho1D2plChBoq9GGmQ/ofDV
+         hX+g==
+X-Gm-Message-State: AOAM530UvNCGHz1CP7AAZxw2QHsggXGSay8Yh/0xl0E7FmXbftoovviZ
+        1zd08hMPYp19Y7tF8WrzbA==
+X-Google-Smtp-Source: ABdhPJzF/+9ZfMJkyyFFgXr5biIZ2SgKsz8uWLL+rufhMYHL/Odvf+izks8U9XBkCyTMnnQh1KOc9g==
+X-Received: by 2002:a92:c103:: with SMTP id p3mr15637374ile.166.1591999648497;
+        Fri, 12 Jun 2020 15:07:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id a2sm3652028iln.38.2020.06.12.15.06.59
+        by smtp.gmail.com with ESMTPSA id b29sm3688079ioc.32.2020.06.12.15.07.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 15:06:59 -0700 (PDT)
-Received: (nullmailer pid 3897847 invoked by uid 1000);
-        Fri, 12 Jun 2020 22:06:58 -0000
-Date:   Fri, 12 Jun 2020 16:06:58 -0600
+        Fri, 12 Jun 2020 15:07:27 -0700 (PDT)
+Received: (nullmailer pid 3898541 invoked by uid 1000);
+        Fri, 12 Jun 2020 22:07:25 -0000
+Date:   Fri, 12 Jun 2020 16:07:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Daniel =?iso-8859-1?Q?Gonz=E1lez?= Cabanelas <dgcbueu@gmail.com>
-Cc:     linux-pm@vger.kernel.org, sre@kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2 v2] dt-bindings: power: reset: add yaml bindings for
- LinkStation power off
-Message-ID: <20200612220658.GB3888887@bogus>
-References: <2886932.VqVLtP53aq@tool>
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     afaerber@suse.de, Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Palmer <daniel@thingy.jp>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        allen <allen.chen@ite.com.tw>, Lubomir Rintel <lkundrak@v3.sk>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>, devicetree@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 05/12] dt-bindings: dt-bindings: arm: Add mstar YAML
+ schema
+Message-ID: <20200612220725.GA3898234@bogus>
+References: <20200610090421.3428945-1-daniel@0x0f.com>
+ <20200612130032.3905240-1-daniel@0x0f.com>
+ <20200612130032.3905240-6-daniel@0x0f.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2886932.VqVLtP53aq@tool>
+In-Reply-To: <20200612130032.3905240-6-daniel@0x0f.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 10:29:22PM +0200, Daniel González Cabanelas wrote:
-> Add Linkstation poweroff bindings documentation. 
+On Fri, 12 Jun 2020 22:00:05 +0900, Daniel Palmer wrote:
+> This adds some intial boards for Armv7 based mstar platforms.
 > 
-> Signed-off-by: Daniel González Cabanelas <dgcbueu@gmail.com>
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 > ---
-> Changes in v2:
->   - Changed the required properties and description to adjust to the new
->     driver now enabling the WoL feature on the device.
+>  .../devicetree/bindings/arm/mstar.yaml        | 33 +++++++++++++++++++
+>  MAINTAINERS                                   |  7 ++++
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mstar.yaml
 > 
->  .../power/reset/linkstation-poweroff.yaml     | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml
-> new file mode 100644
-> index 0000000000..475eab8225
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.yaml
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license:
 
-(GPL-2.0-only OR BSD-2-Clause)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/reset/linkstation-poweroff.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Buffalo Linkstation poweroff driver
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-doc-validate", line 64, in <module>
+    ret = check_doc(args.yamldt)
+  File "/usr/local/bin/dt-doc-validate", line 25, in check_doc
+    testtree = dtschema.load(filename, line_number=line_number, duplicate_keys=False)
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 595, in load
+    return yaml.load(f.read())
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
+    for _dummy in generator:
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
+    value = self.construct_mapping(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
+    return BaseConstructor.construct_mapping(self, node, deep=deep)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
+    if self.check_mapping_key(node, key_node, mapping, key, value):
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
+    raise DuplicateKeyError(*args)
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 18, column 9
+found duplicate key "items" with value "[]" (original value: "[]")
+  in "<unicode string>", line 24, column 9
 
-This is a binding for h/w, not a driver.
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
 
-> +
-> +maintainers:
-> +  - Daniel González Cabanelas <dgcbueu@gmail.com>
-> +
-> +description: |
-> +  This driver is used to add the power off function to some Buffalo
-> +  LinkStations (ARM MVEBU boards). They use an output pin at the ethernet PHY
-> +  (LED2/INTn) to inform the board if the power off operation must be performed
-> +  at restart time. This pin is ORed with the power switch and allows the WOL 
-> +  function to be also used.
-> +
-> +  When the power-off handler is called, the ethernet PHY INTn ouptut is set to
-> +  LOW state. If the restart command is executed then the PHY INTn output is 
-> +  forced to HIGH state.
-> +
-> +properties:
-> +  compatible:
-> +    const: linkstation,power-off
-> +
-> +  phy-handle,intn:
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
 
-'phy-handle' is not a vendor.
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/arm/mstar.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/arm/mstar.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-mk-schema", line 34, in <module>
+    schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 557, in process_schemas
+    sch = process_schema(os.path.abspath(filename))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 510, in process_schema
+    schema = load_schema(filename)
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 123, in load_schema
+    return do_load(os.path.join(schema_basedir, schema))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 108, in do_load
+    return yaml.load(tmp)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
+    for _dummy in generator:
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
+    value = self.construct_mapping(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
+    return BaseConstructor.construct_mapping(self, node, deep=deep)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
+    if self.check_mapping_key(node, key_node, mapping, key, value):
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
+    raise DuplicateKeyError(*args)
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 18, column 9
+found duplicate key "items" with value "[]" (original value: "[]")
+  in "<unicode string>", line 24, column 9
 
-> +    description: Phandle to a node of the ethernet PHY used for the power
-> +      function.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
 
-Is there more than 1 ethernet phy? If not, then I don't see why you need 
-this binding at all. Use the top level compatible and find the ethernet 
-phy in the tree.
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
 
-> +
-> +required:
-> +  - compatible
-> +  - phy-handle,intn
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    poweroff {
-> +        compatible = "linkstation,power-off";
-> +        phy-handle,intn = <&ethphy0>;
-> +    };
-> -- 
-> 2.27.0
-> 
-> 
-> 
-> 
+Documentation/devicetree/bindings/Makefile:45: recipe for target 'Documentation/devicetree/bindings/processed-schema.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/processed-schema.yaml] Error 123
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/processed-schema.yaml'
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-mk-schema", line 34, in <module>
+    schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 557, in process_schemas
+    sch = process_schema(os.path.abspath(filename))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 510, in process_schema
+    schema = load_schema(filename)
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 123, in load_schema
+    return do_load(os.path.join(schema_basedir, schema))
+  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 108, in do_load
+    return yaml.load(tmp)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
+    return self.construct_document(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
+    for _dummy in generator:
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
+    value = self.construct_mapping(node)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
+    return BaseConstructor.construct_mapping(self, node, deep=deep)
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
+    if self.check_mapping_key(node, key_node, mapping, key, value):
+  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
+    raise DuplicateKeyError(*args)
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 18, column 9
+found duplicate key "items" with value "[]" (original value: "[]")
+  in "<unicode string>", line 24, column 9
+
+To suppress this check see:
+    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
+
+Duplicate keys will become an error in future releases, and are errors
+by default when using the new API.
+
+Documentation/devicetree/bindings/Makefile:41: recipe for target 'Documentation/devicetree/bindings/processed-schema-examples.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 123
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/processed-schema-examples.yaml'
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+
+See https://patchwork.ozlabs.org/patch/1308156
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
