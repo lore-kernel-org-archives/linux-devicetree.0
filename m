@@ -2,479 +2,133 @@ Return-Path: <SRS0=uNWD=7Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5725DC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083DBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 15:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30059206A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 14:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2ED4206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 12 Jun 2020 15:23:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UyWTZEqh"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="V3oHbThV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgFLOrW (ORCPT
+        id S1726645AbgFLPXn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 12 Jun 2020 10:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgFLOrV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 12 Jun 2020 10:47:21 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3642BC03E96F;
-        Fri, 12 Jun 2020 07:47:21 -0700 (PDT)
-Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A8AF82C2;
-        Fri, 12 Jun 2020 16:47:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591973239;
-        bh=zG5q8wP2mfuUfE3Cb1aWpp0x99T6/VB9E5oBYr5LdzA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UyWTZEqhGniRoN8Z5E7jg60igEqq9qoJHaKOvOJm0rtGhskCI5wvILfdU/60aXgc0
-         uEOTI/48Z/wyyRK9SviAnH3HD4fLS4OdCfOTt/0urCS8gR4Fz6Xucwax76otKzD/Z0
-         w3SUwf86O0i6DzQPRZRDS3AOUAuP9k17t5LrXrSk=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sakari.ailus@iki.fi
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim Integrated MAX9286
-Date:   Fri, 12 Jun 2020 15:47:10 +0100
-Message-Id: <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+        Fri, 12 Jun 2020 11:23:43 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26444 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726644AbgFLPXn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 12 Jun 2020 11:23:43 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CF1VeH016986;
+        Fri, 12 Jun 2020 17:23:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=ZNCgFY29ushPSChdQisNmd/nPHJRu5GNLEvEuVDL5BM=;
+ b=V3oHbThVFkfRLV1aqUq4Dvf3ONhnmS7OuMBOhlANd777f+fD9tVVoIHaEwJ4vgFpvSZg
+ ny2jfjYOv8WKIkMSjIjFTk1FrvIB5BnbeNpKH6maohfuQ408ijgATIlmvcpp/WGF8ken
+ yhOmcT8+nBDSVFsBEFSOcrzGFWyKtA25YStyyT1nOgNdn/yyBXg0p/abfGQW5Mu3KYKX
+ nh9D9z8m9I6iztupBtDMJEcYx/OnMXF3EgJXK8zxXq0gOzsqig1v2pffJtgeN0ILZPS+
+ ieUcR3UoocZX38owaQxDBdc4zbuFRzQM5+meJgD+bGymcZCR8WxA2oGIDZ2Qx+LWV0Ay LQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31g097s1j5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jun 2020 17:23:14 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AF14210002A;
+        Fri, 12 Jun 2020 17:23:12 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 960112B9918;
+        Fri, 12 Jun 2020 17:23:12 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 12 Jun 2020 17:23:11
+ +0200
+From:   Christophe Kerello <christophe.kerello@st.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <arnd@linaro.org>,
+        <alexandre.torgue@st.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH v5 0/6] add STM32 FMC2 EBI controller driver
+Date:   Fri, 12 Jun 2020 17:22:36 +0200
+Message-ID: <1591975362-22009-1-git-send-email-christophe.kerello@st.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-12_11:2020-06-12,2020-06-12 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+The FMC2 functional block makes the interface with: synchronous and
+asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
+peripherals) and NAND flash memories.
+Its main purposes are:
+  - to translate AXI transactions into the appropriate external device
+    protocol
+  - to meet the access time requirements of the external devices
+All external devices share the addresses, data and control signals with the
+controller. Each external device is accessed by means of a unique Chip
+Select. The FMC2 performs only one access at a time to an external device.
 
-The MAX9286 deserializes video data received on up to 4 Gigabit
-Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
-to 4 data lanes.
+Changes in v5:
+ - NAND:
+   - do not display errors if the driver is deferred.
+   - look at the parent compatible string to match what we expect.
+ - bindings:
+   - add Rob reviewed-by tag on patch 3.
+   - fix indent descriptions.
+   - add new NFC compatible string to handle reg number of entries. 
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes in v4:
+ - bindings:
+   - fix filename: st,stm32-fmc2-ebi.yaml
 
----
+Changes in v3:
+ - NAND:
+   - rename labels used on errors
+   - add in the commit log the reason to increase FMC2_TIMEOUT_MS (patch 3)
+   - add Miquel reviewed-by tag (patches 2/4/5/9)
+ - EBI:
+   - move in memory folder
+   - merge MFD and BUS drivers to avoid a MFD driver
+ - bindings:
+   - pattern name has been modified
+   - vendor properties have been modified
+     - s/_/-/
+     - add unit suffix (-ns) on timing properties
 
-v7:
- - Collect Rob's RB tag
- - Remove redundant maxItems from remote-endpoints
- - Fix SPDX licence tag
+Christophe Kerello (6):
+  mtd: rawnand: stm32_fmc2: do not display errors if the driver is
+    deferred
+  dt-bindings: mtd: update STM32 FMC2 NAND controller documentation
+  dt-bindings: memory-controller: add STM32 FMC2 EBI controller
+    documentation
+  memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+  mtd: rawnand: stm32_fmc2: use regmap APIs
+  mtd: rawnand: stm32_fmc2: get resources from parent node
 
-v10:
-[Jacopo]
- - Fix dt-validation
- - Fix dt-binding examples with 2 reg entries
+ .../memory-controllers/st,stm32-fmc2-ebi.yaml      |  252 ++++
+ .../bindings/mtd/st,stm32-fmc2-nand.yaml           |   83 +-
+ drivers/memory/Kconfig                             |   10 +
+ drivers/memory/Makefile                            |    1 +
+ drivers/memory/stm32-fmc2-ebi.c                    | 1206 ++++++++++++++++++++
+ drivers/mtd/nand/raw/Kconfig                       |    1 +
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c             |  311 ++---
+ 7 files changed, 1688 insertions(+), 176 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
+ create mode 100644 drivers/memory/stm32-fmc2-ebi.c
 
-[Kieran]
- - Correctly match the hex camera node reg
- - Add (required) GPIO controller support
-
- .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++++
- 1 file changed, 366 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-new file mode 100644
-index 000000000000..c632a10a753a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-@@ -0,0 +1,366 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2019 Renesas Electronics Corp.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/maxim,max9286.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Maxim Integrated Quad GMSL Deserializer
-+
-+maintainers:
-+  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-+  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-+
-+description: |
-+  The MAX9286 deserializer receives video data on up to 4 Gigabit Multimedia
-+  Serial Links (GMSL) and outputs them on a CSI-2 D-PHY port using up to 4 data
-+  lanes.
-+
-+  In addition to video data, the GMSL links carry a bidirectional control
-+  channel that encapsulates I2C messages. The MAX9286 forwards all I2C traffic
-+  not addressed to itself to the other side of the links, where a GMSL
-+  serializer will output it on a local I2C bus. In the other direction all I2C
-+  traffic received over GMSL by the MAX9286 is output on the local I2C bus.
-+
-+properties:
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  compatible:
-+    const: maxim,max9286
-+
-+  reg:
-+    description: I2C device address
-+    maxItems: 1
-+
-+  poc-supply:
-+    description: Regulator providing Power over Coax to the cameras
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: GPIO connected to the \#PWDN pin with inverted polarity
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+      const: 2
-+
-+  ports:
-+    type: object
-+    description: |
-+      The connections to the MAX9286 GMSL and its endpoint nodes are modelled
-+      using the OF graph bindings in accordance with the video interface
-+      bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+      The following table lists the port number corresponding to each device
-+      port.
-+
-+        Port            Description
-+        ----------------------------------------
-+        Port 0          GMSL Input 0
-+        Port 1          GMSL Input 1
-+        Port 2          GMSL Input 2
-+        Port 3          GMSL Input 3
-+        Port 4          CSI-2 Output
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+      port@[0-3]:
-+        type: object
-+        properties:
-+          reg:
-+            enum: [ 0, 1, 2, 3 ]
-+
-+          endpoint:
-+            type: object
-+
-+            properties:
-+              remote-endpoint:
-+                description: |
-+                 phandle to the remote GMSL source endpoint subnode in the
-+                 remote node port.
-+
-+            required:
-+              - remote-endpoint
-+
-+        required:
-+          - reg
-+          - endpoint
-+
-+        additionalProperties: false
-+
-+      port@4:
-+        type: object
-+        properties:
-+          reg:
-+            const: 4
-+
-+          endpoint:
-+            type: object
-+
-+            properties:
-+              remote-endpoint:
-+                description: phandle to the remote CSI-2 sink endpoint.
-+
-+              data-lanes:
-+                description: array of physical CSI-2 data lane indexes.
-+
-+            required:
-+              - remote-endpoint
-+              - data-lanes
-+
-+        required:
-+          - reg
-+          - endpoint
-+
-+        additionalProperties: false
-+
-+    required:
-+      - port@4
-+
-+  i2c-mux:
-+    type: object
-+    description: |
-+      Each GMSL link is modelled as a child bus of an i2c bus
-+      multiplexer/switch, in accordance with bindings described in
-+      Documentation/devicetree/bindings/i2c/i2c-mux.txt.
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      "^i2c@[0-3]$":
-+        type: object
-+        description: |
-+          Child node of the i2c bus multiplexer which represents a GMSL link.
-+          Each serializer device on the GMSL link remote end is represented with
-+          an i2c-mux child node. The MAX9286 chip supports up to 4 GMSL
-+          channels.
-+
-+        properties:
-+          '#address-cells':
-+            const: 1
-+
-+          '#size-cells':
-+            const: 0
-+
-+          reg:
-+            description: The index of the GMSL channel.
-+            maxItems: 1
-+
-+        patternProperties:
-+          "^camera@[a-f0-9]+$":
-+            type: object
-+            description: |
-+              The remote camera device, composed by a GMSL serializer and a
-+              connected video source.
-+
-+            properties:
-+              compatible:
-+                description: The remote device compatible string.
-+
-+              reg:
-+                minItems: 2
-+                maxItems: 3
-+                description: |
-+                  The I2C addresses to be assigned to the remote devices through
-+                  address reprogramming. The number of entries depends on the
-+                  requirements of the currently connected remote device.
-+
-+              port:
-+                type: object
-+
-+                properties:
-+                  endpoint:
-+                    type: object
-+
-+                    properties:
-+                      remote-endpoint:
-+                        description: phandle to the MAX9286 sink endpoint.
-+
-+                    required:
-+                      - remote-endpoint
-+
-+                    additionalProperties: false
-+
-+                required:
-+                  - endpoint
-+
-+                additionalProperties: false
-+
-+            required:
-+              - compatible
-+              - reg
-+              - port
-+
-+            additionalProperties: false
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - ports
-+  - i2c-mux
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c@e66d8000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      reg = <0 0xe66d8000 0 0x40>;
-+
-+      gmsl-deserializer@2c {
-+        compatible = "maxim,max9286";
-+        reg = <0x2c>;
-+        poc-supply = <&camera_poc_12v>;
-+        enable-gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+
-+            max9286_in0: endpoint {
-+              remote-endpoint = <&rdacm20_out0>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+
-+            max9286_in1: endpoint {
-+              remote-endpoint = <&rdacm20_out1>;
-+            };
-+          };
-+
-+          port@2 {
-+            reg = <2>;
-+
-+            max9286_in2: endpoint {
-+              remote-endpoint = <&rdacm20_out2>;
-+            };
-+          };
-+
-+          port@3 {
-+            reg = <3>;
-+
-+            max9286_in3: endpoint {
-+              remote-endpoint = <&rdacm20_out3>;
-+            };
-+          };
-+
-+          port@4 {
-+            reg = <4>;
-+
-+            max9286_out: endpoint {
-+              data-lanes = <1 2 3 4>;
-+              remote-endpoint = <&csi40_in>;
-+            };
-+          };
-+        };
-+
-+        i2c-mux {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          i2c@0 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <0>;
-+
-+            camera@51 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x51>, <0x61>;
-+
-+              port {
-+                rdacm20_out0: endpoint {
-+                  remote-endpoint = <&max9286_in0>;
-+                };
-+              };
-+
-+            };
-+          };
-+
-+          i2c@1 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <1>;
-+
-+            camera@52 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x52>, <0x62>;
-+
-+              port {
-+                rdacm20_out1: endpoint {
-+                  remote-endpoint = <&max9286_in1>;
-+                };
-+              };
-+            };
-+          };
-+
-+          i2c@2 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <2>;
-+
-+            camera@53 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x53>, <0x63>;
-+
-+              port {
-+                rdacm20_out2: endpoint {
-+                  remote-endpoint = <&max9286_in2>;
-+                };
-+              };
-+            };
-+          };
-+
-+          i2c@3 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <3>;
-+
-+            camera@54 {
-+              compatible = "imi,rdacm20";
-+              reg = <0x54>, <0x64>;
-+
-+              port {
-+                rdacm20_out3: endpoint {
-+                  remote-endpoint = <&max9286_in3>;
-+                };
-+              };
-+            };
-+          };
-+        };
-+      };
-+    };
 -- 
-2.25.1
+1.9.1
 
