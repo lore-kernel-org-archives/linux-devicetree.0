@@ -2,125 +2,95 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5822DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 17:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CD9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 18:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB7920789
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 17:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C33820789
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 18:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="D5iDPVYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgFMRxV convert rfc822-to-8bit (ORCPT
+        id S1726102AbgFMSh4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 13:53:21 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:46741 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgFMRxV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 13:53:21 -0400
-Received: by mail-ej1-f65.google.com with SMTP id p20so13198524ejd.13;
-        Sat, 13 Jun 2020 10:53:19 -0700 (PDT)
+        Sat, 13 Jun 2020 14:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgFMShz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 14:37:55 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152C7C08C5C3
+        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 11:37:53 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id u25so764246lfm.1
+        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 11:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=D5iDPVYgmwGhaOr/Y/znPRPv2TpXLV42qx5RUn1NcoKYPcKfoUd32dXgvYfy7HpZtR
+         CWaB5oSu91X5BT8+OyBx0ASylvZkf1iyeNEyybMEjpleXYYbgQAPxTyUFbTo4O0Lb71b
+         NV5c9umDsLOX2+IgzvEbOcYBQHcKl6oHO6p0Xy55wPAA0S1Qu+y00FxMlmwCorviTut2
+         SxHPOHX08qX0RIkgYTfPZiujKldY/BT4iybzMdfMWX8HXRumTn0tKtuckpGr3qgN3Bh5
+         zjRRnSZMnVMyR9FYk1eBS548LdgE6ksGLupV/Nkd1Hx2dSz5UEc7y86MT0GvqLyFA3/c
+         Xelg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3JeOvtc/eAFvXr156ydRZZGyosX/Qqp3aRK+SICpX5s=;
-        b=sLBPEvEKU7ScKIlWorrVKzreyEkCYAzSdXtL9zPV/k9a1iCPGYpmo4awxkrzKkhh6U
-         ljS0xWEq35aGHV9Q0TUqMU1Wr2CVfnEn8iWe0Qhbst7jpGqajcO/r1/Cx+D60g/28yEu
-         /BiMYnWuMDfIb+DpDY/Zs/2Q2do9UoeO2YbDn159AeKtyHVqs1Cp3mSIjOfrWge7j9Y8
-         JrKYEFomPaxiKPyp6s3r6eBWxnlZ4YXKs3cUZ+FtZtbT1jprsX+ACNwJlCzieQIgIVlZ
-         F+zMfkUBNJUrX24rZZqKrA40iaCnmUoVKhom/t/301MAiKixjLlkEjUppD5Jg5uAI5A3
-         ob5A==
-X-Gm-Message-State: AOAM530vb6vrzbiSMsUhb1/Aq7Po+9UT3wd2QquwWyCXktQ95PdidG93
-        0kNPymiV1LwZxxsLwl4xej3oTjmZUylVv0QT0sUpzw==
-X-Google-Smtp-Source: ABdhPJxBidEPydvBx4KSo0FSYx8i1Uqr0G7Qz/qzjO76L9wCItTl6v+val9pjKo6XeFlXTpivudQHulBPZcm4eDaPxQ=
-X-Received: by 2002:a17:906:27c5:: with SMTP id k5mr18340389ejc.251.1592070799112;
- Sat, 13 Jun 2020 10:53:19 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=cS/oxHFKcoxez1Kn3DayabFnnbBVukssHHsby48T8ZlK8lJlaqzL3J5eua+uYM4svf
+         NbCyjc8AwqiIMbozWLAHvcVbEtY3cuX2t5rQYFX4Uj44+EULezGYPg0p1pzCX+SpNrK0
+         kW50ffks/cqNifGcvqMoL8cy2zqNJOujzt4wWZsOwVLJyVEnL/fIyfovQKdQoRroyJBj
+         TIvPhzRAyCA1fjTrQfQ3rTT3czIWff+KgN88qFpBcZyqgY/GTk8i0unoxHzijeiseR76
+         qmZjsO3DH8WzfQe0HboMv3D2QfUnwAuMxSZw2l/dAbiXJBN+a9EpsbV6GSaWwMkptcwK
+         ulhQ==
+X-Gm-Message-State: AOAM533o+AcTqYs2nck4BEdkuhHABfVtTujE+E+aXGiRpEkNdR3jHqlu
+        OYb9fdbVSg479bmbT7ju/5cySg==
+X-Google-Smtp-Source: ABdhPJwrV3vFpHEGmswCk7rvxEQ6MzcJH8kO3I0D3hgg8DwJsce6wYaVTijjPPpx61Zz6riIeJE6aQ==
+X-Received: by 2002:a19:5216:: with SMTP id m22mr9870055lfb.14.1592073470253;
+        Sat, 13 Jun 2020 11:37:50 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:2e2:84d1:c335:1451:e577:e115])
+        by smtp.gmail.com with ESMTPSA id o16sm3324961ljg.90.2020.06.13.11.37.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 13 Jun 2020 11:37:49 -0700 (PDT)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/2] Add Renesas RPC-IF support
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Organization: Cogent Embedded
+Message-ID: <721e5306-6dc5-4a3a-2bbb-459be6261357@cogentembedded.com>
+Date:   Sat, 13 Jun 2020 21:37:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <20200609113049.4035426-1-noltari@gmail.com> <20200609113049.4035426-3-noltari@gmail.com>
- <1367fcf3-24ed-9106-a329-da5f8e168e17@gmail.com> <3E897527-55EB-47DB-99ED-C737725F0F9E@gmail.com>
- <CAAdtpL7dUZ2RqkrqSxiZxDbp4qY-KdtSc7CyuR+rbnRRA2Yvrw@mail.gmail.com> <93c429b1-31f4-95c2-1bd9-b3756b396f3a@gmail.com>
-In-Reply-To: <93c429b1-31f4-95c2-1bd9-b3756b396f3a@gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Sat, 13 Jun 2020 19:53:07 +0200
-Message-ID: <CAAdtpL6OXziD9Q0dBZzkcq0jPF04rmNd6o_hi7Frm5DejG29mA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] clk: bcm63xx-gate: add BCM6318 support
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 5:32 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 6/10/2020 1:29 AM, Philippe Mathieu-Daudé wrote:
-> > Hi,
-> >
-> > On Wed, Jun 10, 2020 at 8:13 AM Álvaro Fernández Rojas
-> > <noltari@gmail.com> wrote:
-> >>
-> >> Hi Florian,
-> >>
-> >>> El 10 jun 2020, a las 4:27, Florian Fainelli <f.fainelli@gmail.com> escribió:
-> >>>
-> >>>
-> >>>
-> >>> On 6/9/2020 4:30 AM, Álvaro Fernández Rojas wrote:
-> >>>> +static const struct clk_bcm63xx_table_entry bcm6318_clocks[] = {
-> >>>> +    { .name = "adsl_asb", .bit = 0, },
-> >>>> +    { .name = "usb_asb", .bit = 1, },
-> >>>> +    { .name = "mips_asb", .bit = 2, },
-> >>>> +    { .name = "pcie_asb", .bit = 3, },
-> >>>> +    { .name = "phymips_asb", .bit = 4, },
-> >>>> +    { .name = "robosw_asb", .bit = 5, },
-> >>>> +    { .name = "sar_asb", .bit = 6, },
-> >>>> +    { .name = "sdr_asb", .bit = 7, },
-> >>>> +    { .name = "swreg_asb", .bit = 8, },
-> >>>> +    { .name = "periph_asb", .bit = 9, },
-> >>>> +    { .name = "cpubus160", .bit = 10, },
-> >>>> +    { .name = "adsl", .bit = 11, },
-> >>>> +    { .name = "sar124", .bit = 12, },
-> >>>
-> >>> Nit: this should be sar125
-> >>
-> >> Nice catch, I will fix this in v2.
-> >>
-> >>>
-> >>>> +    { .name = "mips", .bit = 13, .flags = CLK_IS_CRITICAL, },
-> >>>> +    { .name = "pcie", .bit = 14, },
-> >>>> +    { .name = "robosw250", .bit = 16, },
-> >>>> +    { .name = "robosw025", .bit = 17, },
-> >>>> +    { .name = "sdr", .bit = 19, .flags = CLK_IS_CRITICAL, },
-> >>>> +    { .name = "usb", .bit = 20, },
-> >>>
-> >>> This should probably be "usbd" to indicate this is the USB device clock
-> >>> (not host)
-> >>
-> >> Ok, I will change it. I got confused by the fact that both (usbd and usbh) were present on 6318_map_part.h:
-> >> #define USBD_CLK_EN         (1 << 20)
-> >> #define USBH_CLK_EN         (1 << 20)
-> >
-> > Is there a datasheet to verify that?
->
-> Not a public one, but I can confirm this is correct given the internal
-> datasheet.
+Hello!
 
-OK thank you Florian.
+Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
+to be accessed via the external address space read mode or the manual mode.
+The memory controller driver for RPC-IF registers either SPI or HyperFLash
+subdevice, depending on the contents of the device tree subnode; it also
+provides the abstract "back end" API that can be used by the "front end"
+SPI/MTD drivers to talk to the real hardware...
 
-> --
-> Florian
+Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+
+[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
+[2/2] memory: add Renesas RPC-IF driver
+
+MBR, Sergei
