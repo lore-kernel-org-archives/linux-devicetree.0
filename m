@@ -2,206 +2,117 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD7AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 18:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5245C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 18:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF93207DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 18:40:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="AiRqStl6"
+	by mail.kernel.org (Postfix) with ESMTP id CF68020789
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 18:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgFMSky (ORCPT
+        id S1726533AbgFMSpJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 14:40:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgFMSky (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 14:40:54 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F99C08C5C2
-        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 11:40:52 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 82so7274554lfh.2
-        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 11:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2ioFOqkA4a9a6fr9aGiz3zoxmx46SUsrv5GXgVDo4ss=;
-        b=AiRqStl64KJspJSsGdLeJ+CRipTU5MqMyxGmA7ZYRDsduWAhyz+K4Mp12yzYrW3h2Z
-         kQrrSw8F36967ah7xyOErSO7C0FOe86MFfKr60ZjRX6s5EGEWBlZXQ79EY7fmj49DZ8b
-         sFuWyeA+ajOyXWhp+dnjgLWr1Jwd4XFfk7VcTnfJt4yvSpMVXhNMdc7vzElaNQcHuFfF
-         Yt0Jku2WBGZhPCOBWTmn7IgzLEWLn0VHKHj63Kmm0EhNDv+aFR9wyuPPBweXP5d2Riuv
-         Oh1caPbdYCe5vJ1SQuUfzgGCTeC89Lr+0VZdhFc+KKf5sgqNsZZTK/V3alHABWFs5HZ/
-         k/5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=2ioFOqkA4a9a6fr9aGiz3zoxmx46SUsrv5GXgVDo4ss=;
-        b=di4wUmDeMgcAk1wJyTFyqpX0z/QjzvUyrJjfGRlnOLiKbx87BdBvkuuS10I0hiuwka
-         aZIUrA28xgRyNjvNlgFqteBzRr411sPA95n14bu99bqbjq3Yv7PCyyHGD9d6WG5VOScT
-         l7yIWt69atr1CBWBVhsdTqk50Z4l9O++LRz4/NPUNSr9/gd+7x9RNqRszSJjVzKMFfgp
-         QBLVWVStOVSgVS4QemwXyM2/346sPipsbEYC1pNeE7rmUFkWEVK85dWmjGosrl62uMs8
-         7SI7bT3S7zi+5YE56nwSvo0q0ATlezh4cII9pcegD1h3kLadVTLzpSynIrfLnrUx+YwJ
-         km0Q==
-X-Gm-Message-State: AOAM531dNWnMTNchBQtaN+IhtpvNq3UlX2m1obmoFOdjARtWywWPo2oZ
-        KiJa9CsDwuE1e27COvaS+UaGUg==
-X-Google-Smtp-Source: ABdhPJyrG3RYdz2pYb8REdSpMtdT/bq1MHQ9n1xyhXYwIOLmAlDW70L8HixuJJw72laZSgiJcU939g==
-X-Received: by 2002:ac2:511d:: with SMTP id q29mr9755341lfb.24.1592073650300;
-        Sat, 13 Jun 2020 11:40:50 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:2e2:84d1:c335:1451:e577:e115])
-        by smtp.gmail.com with ESMTPSA id v23sm2763684ljg.122.2020.06.13.11.40.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 13 Jun 2020 11:40:49 -0700 (PDT)
-Subject: [PATCH v4 1/2] dt-bindings: memory: document Renesas RPC-IF bindings
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Mason Yang <masonccyang@mxic.com.tw>, linux-spi@vger.kernel.org,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-References: <721e5306-6dc5-4a3a-2bbb-459be6261357@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <4becbd3b-c9b9-070a-5771-48cade6651e5@cogentembedded.com>
-Date:   Sat, 13 Jun 2020 21:40:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Sat, 13 Jun 2020 14:45:09 -0400
+Received: from mail-oln040092004050.outbound.protection.outlook.com ([40.92.4.50]:56033
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726317AbgFMSpJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 13 Jun 2020 14:45:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mf5M2UphQE0ZQ9FYFQXrrBOBvxG+U+ZKCokTRa1pKt8dBZkW46k9Uu7qNUYZdGYurrQwQkSAttz9PQ+iyK466Jgxm76xqrlEUfuS2KOMykoD0Nfh2sfVFIHOOkugMkKw/OMqsLKfRNOflKXKsVmTrKEYrUba5zh6BWinSxbFWP1f3ixe9IOhwb0Ghlbd1/6Ca6eRzekjX44chMoIFmtXi3mrKc6OQmAlCqlVhKwFgmBstuke/oXOyEA7PtGHRfneSUF6yAu5rUOwWF7OqCCgOjx2B/Tus+QXofeunLybEm9gqLNScXWU57niIil2yCyuvLMJyUQPQxVhzadrMeTSVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CYTahL2jMwRCksVY8UcLQ3wvb9NY/xCM8WvhbK1A2AU=;
+ b=AW9cTqkhrBWeROWzGa6/wSie4uRp1W3KFKkjI+2fGmJWk8Ud9h6ufkXJuXHmZU8xuCJxfB+YuTZ4Ck9HkviJvneJL9Tvy+uN2GlRMTCKHtCZjS/gjLBGXMCOOoIa/sFamFlW28cAP8ypans2DdoD3ti7FAzvGIUFtpx/n48AyXb6y35/aUiafxYZqM+NNX3nE/H37pYvUB9nnGclGh+oRXLKXv/yJjN0ry5yorviXhkBuapS1laqiV2t5BvDvHDlFGBT2122aOCOzeOdWcFOW0SVoRIE2XSMJUnCAJXQChQhwW/63+A1u07MmS1Muwio/RNbdQO8aOeWiqeeqFnStw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from BL2NAM02FT048.eop-nam02.prod.protection.outlook.com
+ (10.152.76.54) by BL2NAM02HT059.eop-nam02.prod.protection.outlook.com
+ (10.152.76.211) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Sat, 13 Jun
+ 2020 18:45:06 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e46::4a) by BL2NAM02FT048.mail.protection.outlook.com
+ (2a01:111:e400:7e46::109) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend
+ Transport; Sat, 13 Jun 2020 18:45:06 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:9BA1354240F8A7182780AAED1235D5697C636BB2075F896CE049DC9275FD93D1;UpperCasedChecksum:80DEF31A8F7157FA928DEB766E86D5E42919D83FB768F3DFF3612B76BDCF1B88;SizeAsReceived:7657;Count:47
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3088.026; Sat, 13 Jun 2020
+ 18:45:06 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH 0/5] ARM: dts: s5pv210: Improvements for Aries boards
+Date:   Sat, 13 Jun 2020 11:44:22 -0700
+Message-ID: <BN6PR04MB0660787FD651F80CD0C22C2BA39E0@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR07CA0022.namprd07.prod.outlook.com
+ (2603:10b6:300:116::32) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200613184427.23394-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-In-Reply-To: <721e5306-6dc5-4a3a-2bbb-459be6261357@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0022.namprd07.prod.outlook.com (2603:10b6:300:116::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Sat, 13 Jun 2020 18:45:04 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200613184427.23394-1-xc-racer2@live.ca>
+X-TMN:  [dTSGaNHextpa+M8IcfaXs8MkgS7i4q1wmVa3srMNVRsCeG6lT12QraK26x7BronK]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 47
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 85a1dd37-e8fb-4155-8ff2-08d80fc9e3ac
+X-MS-TrafficTypeDiagnostic: BL2NAM02HT059:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2Jfu9KN6RCYhA0TMRIgUsNorxHYIhHBiUrxBq/Xsr0zVSFUAmBO6CFSnt81lIYxUtQZq1H0sIBH3YgNhREZwdLY6SWojCp1aMLQbmnp3pCaVNKKbD7dLvXYRi1sHC6/jZrCRY9TH5C4o9ljY2tN87bm8KqEax1v05RvMaoC+hH4+4v1RhuX0gUEZuF0j8c6MyYYoxb3zi7EtVwgZvJTd8Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: j4qwSlhBO8SIwAeJctjXvxvWppQbIj5Jn4NcJ3UtxSCLqUb1mLf0c0P7W08oBiZVn9stG9245pwy4KC3CeMm90hx2QXFkzTogufF5D304wAsgUSXLyxxbssZEiih8W243ghXNdDB8jQYjk5VSkspjiD3HU1IBaDFKurLeq6zViUZJHogSRIqFhuPfL2oHoMtL3yRhK6nycynDMyokAexdQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85a1dd37-e8fb-4155-8ff2-08d80fc9e3ac
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2020 18:45:06.2412
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2NAM02HT059
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Renesas Reduced Pin Count Interface (RPC-IF) allows a SPI flash or
-HyperFlash connected to the SoC to be accessed via the external address
-space read mode or the manual mode.
+A couple of new drivers have now been added, so we can add support for
+them in the device tree for Aries.  These are the accelerometer (bma023)
+and the light/proximity sensor (gp2a).
 
-Document the device tree bindings for the Renesas RPC-IF found in the R-Car
-gen3 SoCs.
+Additionally, the fuelgauge definition was wrong as there is no interrupt
+support on the galaxys.  The bluetooth definition also had some issues
+with it.
 
-Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+There is one change to the common s5pv210 dtsi and that is that the gph3
+bank was missing the interrupt-controller property.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Jonathan Bakker (5):
+  ARM: dts: s5pv210: Add interrupt-controller property to gph3
+  ARM: dts: s5pv210: Correct fuelgauge definition on Aries
+  ARM: dts: s5pv210: Add support for GP2A light sensor on Aries
+  ARM: dts: s5pv210: Add BMA023 accelerometer support to Aries
+  ARM: dts: s5pv210: Correct BCM4329 bluetooth node
 
----
-Changes in version 4:
-- added the SoC name comments to the RPC-IF's "compatible" prop description;
-- removed a hyphen before 'enum' in the subnode description;
-- removed leading 0s in the "reg" prop in the example.
+ arch/arm/boot/dts/s5pv210-aries.dtsi      | 90 ++++++++++++++++++++---
+ arch/arm/boot/dts/s5pv210-fascinate4g.dts | 17 +++++
+ arch/arm/boot/dts/s5pv210-pinctrl.dtsi    |  2 +
+ 3 files changed, 98 insertions(+), 11 deletions(-)
 
-Changes in version 3:
-- fixed up the whitespace and added hyphens in the "compatible" prop text, also
-  removed the comments;
-- specified the subnode name as "flash", and used "enum" in the subnode text; 
-- fixed up the SPDX-License-Identifier: tag.
-
-Changes in version 2:
-- rewrote the bindings in YAML.
-
- Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml |   87 ++++++++++
- 1 file changed, 87 insertions(+)
-
-Index: linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
-===================================================================
---- /dev/null
-+++ linux/Documentation/devicetree/bindings/memory-controllers/renesas,rpc-if.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/memory-controllers/renesas,rpc-if.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas Reduced Pin Count Interface (RPC-IF)
-+
-+maintainers:
-+  - Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-+
-+description: |
-+  Renesas RPC-IF allows a SPI flash or HyperFlash connected to the SoC to
-+  be accessed via the external address space read mode or the manual mode.
-+
-+  The flash chip itself should be represented by a subnode of the RPC-IF node.
-+  The flash interface is selected based on the "compatible" property of this
-+  subnode:
-+  - if it contains "jedec,spi-nor", then SPI is used;
-+  - if it contains "cfi-flash", then HyperFlash is used.
-+
-+allOf:
-+  - $ref: "/schemas/spi/spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - renesas,r8a77980-rpc-if       # R-Car V3H
-+        - renesas,r8a77995-rpc-if       # R-Car D3
-+      - const: renesas,rcar-gen3-rpc-if # a generic R-Car gen3 device
-+
-+  reg:
-+    items:
-+      - description: RPC-IF registers
-+      - description: direct mapping read mode area
-+      - description: write buffer area
-+
-+  reg-names:
-+    items:
-+      - const: regs
-+      - const: dirmap
-+      - const: wbuf
-+
-+  clocks:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+patternProperties:
-+  "flash@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - cfi-flash
-+          - jedec,spi-nor
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a77995-sysc.h>
-+
-+    spi@ee200000 {
-+      compatible = "renesas,r8a77995-rpc-if", "renesas,rcar-gen3-rpc-if";
-+      reg = <0xee200000 0x200>,
-+            <0x08000000 0x4000000>,
-+            <0xee208000 0x100>;
-+      reg-names = "regs", "dirmap", "wbuf";
-+      clocks = <&cpg CPG_MOD 917>;
-+      power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+      resets = <&cpg 917>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      flash@0 {
-+        compatible = "jedec,spi-nor";
-+        reg = <0>;
-+        spi-max-frequency = <40000000>;
-+        spi-tx-bus-width = <1>;
-+        spi-rx-bus-width = <1>;
-+      };
-+    };
-
+-- 
+2.20.1
 
