@@ -2,130 +2,136 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6692AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46519206D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:39:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tLVtudL6"
+	by mail.kernel.org (Postfix) with ESMTP id 2B4BB206D7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592037807;
+	bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2r28NQWOKMOG/e+y7UYcPS+b8uCAT5kCYDgRbPJvLhsFTvlBnC1dqCgizMvi7W0CD
+	 0Jp+pGDxyE3Bc1XNmALohkMCB0IOBbGLUPzSiUxfw//KHfU2WpYNX+y/lfXWhIk/P+
+	 3eMfroOKsoi7MnOUIZLxubIwhaUukj7JwVoJ2el8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgFMIiR (ORCPT
+        id S1726290AbgFMIn0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgFMIiR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 04:38:17 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3EAC03E96F;
-        Sat, 13 Jun 2020 01:38:17 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x6so12121890wrm.13;
-        Sat, 13 Jun 2020 01:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xtX3WPJttrHzLtySOOYSGEdhsmb/EFMomQI97Y+oq1o=;
-        b=tLVtudL6IHYrxFGEHA7K68mKObLrnTwh1NK4ZQPtvyWsrR1QTvB7F9UJj55Ca4fRaq
-         kKj4Ie22Rr6y50KPHYRovPc08b5pUC9Th8IDJHwALyKzTpc+HTUiqMnnVzIvln20T3yE
-         4+KCBNixuwINWSvY0sO0UbO4ODVjYKp4Pj7dKGv6As2rNoWB8vaNPorM0t0EYhWQHlDv
-         ruVqshPrpC6GChUXFp5Ffb0JDlMNmDgKCGSvkEYipnkPtFfPLjnc259MHJVWIZ9oMGJX
-         LMVBjMmrztHsjU9KekkeWMtleATbKKZQewotcEr9pZ3DEeBHvUzeLbs2x5VyPSC+mn1k
-         tUlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xtX3WPJttrHzLtySOOYSGEdhsmb/EFMomQI97Y+oq1o=;
-        b=Qtps9s3jKs8xj0rXhupKMAQZsQXpZPtJXcSu98areTwfVCsdyNLrWT38K72AQKQmDQ
-         Sh64DOA29nFpnEAp9wXiSgIZyBiEDFA7ESyNBQYyfnWiWAm6g696R6FkLzY1KLvgNHnM
-         eaHNjsuir/uCrNCp4XitcIYRYA3If7ELZriFhLkiwrhhS7jzGkJFI5iF6hWZJjbD+8r5
-         93AYWWONo7uPHQRtxt9DVW6n2JzBmlLflxg2kIggHYalKjMYOVhuE5g7QMK5YbjGclbl
-         4wc43rkzGblDcrkvt0etLC12glEfiGCPeHzHZEhLO2QuF7xk7CisEjQHQ84YPYfbjS8s
-         6GaQ==
-X-Gm-Message-State: AOAM5320qHky3RXjxXtEzROKhPWTZv+STYppwx3pGsBq/5E/byDpReYM
-        yz5gR/TNJyq1TpzBB2cg3LrS/vsP+Jg=
-X-Google-Smtp-Source: ABdhPJxEnxEsI2wTPvv5T6VYAaZGvg92Xt6d/pt0m1N0vct09DAihiAWPObReioQihMwJE7+EHTYCA==
-X-Received: by 2002:adf:ce8d:: with SMTP id r13mr20003195wrn.178.1592037495484;
-        Sat, 13 Jun 2020 01:38:15 -0700 (PDT)
-Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id l17sm11622704wmi.3.2020.06.13.01.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 01:38:15 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v4 0/9] bmips: add bcm6345 reset controller support
-Date:   Sat, 13 Jun 2020 10:38:04 +0200
-Message-Id: <20200613083813.2027186-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200610172859.466334-1-noltari@gmail.com>
-References: <20200610172859.466334-1-noltari@gmail.com>
+        Sat, 13 Jun 2020 04:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgFMIn0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 13 Jun 2020 04:43:26 -0400
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7507F20836;
+        Sat, 13 Jun 2020 08:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592037805;
+        bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BgrzEr0T3JoHmKZPf5JHHJjvygSMZGF5NKn+13GG7QHtIS/IBZ7akYkLuc0TbufY0
+         IdI3tEBicGVpmTrhCjhPNSbLdEFx6l03HXU1AMn8ObSGPs2e5kB+GmV2Rt/rdkNQLA
+         gC00pV5XYzyrAQW5/CPir6q3bWaJ154iM+O+UJ14=
+Received: by mail-lj1-f173.google.com with SMTP id z9so13654752ljh.13;
+        Sat, 13 Jun 2020 01:43:25 -0700 (PDT)
+X-Gm-Message-State: AOAM530UMrNSLF4v9bMAv1GquAIAsJZVHEBg2VJ+ce9ilPP2+24WGcJW
+        9BJyo7cAOyU92QRBAJcL7HThNO6/3AQ43YFnCPM=
+X-Google-Smtp-Source: ABdhPJwZ1ylOrBsd6XVZmYSQ3sLMGYqoTKujz2SwyQaUfONmAEP2kaw8s4sWs89ZwT6ZjZ3AWnilqqgnG/azc96C0bc=
+X-Received: by 2002:a2e:2a42:: with SMTP id q63mr9000358ljq.265.1592037803689;
+ Sat, 13 Jun 2020 01:43:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200611095804.22026-1-f.suligoi@asem.it>
+In-Reply-To: <20200611095804.22026-1-f.suligoi@asem.it>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 13 Jun 2020 16:43:11 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
+Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
+Subject: Re: [PATCH] doc: devicetree: bindings: fix spelling mistake
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-csky@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM63xx SoCs have a reset controller for certain components.
+Acked-by: Guo Ren <guoren@kernel.org>
 
-v4: Fix device tree bindings documentation.
-v3: using reset-simple isn't possible since sleeping after performing the
-    reset is also needed.
-    Add BCM63268 and BCM6318 support.
-v2: add compatibility to reset-simple instead of adding a new driver.
+On Thu, Jun 11, 2020 at 5:58 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
+>
+> Fix typo: "triger" --> "trigger"
+>
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
+>  .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
+>  Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> index ba455589f869..e1c49b660d3a 100644
+> --- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> @@ -12,7 +12,7 @@ Required properties for the top level node:
+>     Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>     interrupt. Should be 2. The first cell defines the interrupt number,
+> -   the second encodes the triger flags encoded as described in
+> +   the second encodes the trigger flags encoded as described in
+>     Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  - compatible:
+>    - "mediatek,mt7621-gpio" for Mediatek controllers
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> index e13405355166..e6bbcae4d07f 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> @@ -10,7 +10,7 @@ Interrupt number definition:
+>   16-31  : private  irq, and we use 16 as the co-processor timer.
+>   31-1024: common irq for soc ip.
+>
+> -Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+> +Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+>   IRQ_TYPE_LEVEL_HIGH (default)
+>   IRQ_TYPE_LEVEL_LOW
+>   IRQ_TYPE_EDGE_RISING
+> diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> index 15cfec08fbb8..f5c7e99cf52b 100644
+> --- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> +++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> @@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
+>   - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
+>   - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
+>   - PTIM_CCVR "cr<3, 14>" Current counter value reg.
+> - - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
+> + - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
+>
+>  ==============================
+>  timer node bindings definition
+> --
+> 2.17.1
+>
 
-Álvaro Fernández Rojas (9):
-  mips: bmips: select ARCH_HAS_RESET_CONTROLLER
-  dt-bindings: reset: add BCM6345 reset controller bindings
-  reset: add BCM6345 reset controller driver
-  mips: bmips: dts: add BCM6328 reset controller support
-  mips: bmips: dts: add BCM6358 reset controller support
-  mips: bmips: dts: add BCM6362 reset controller support
-  mips: bmips: dts: add BCM6368 reset controller support
-  mips: bmips: dts: add BCM63268 reset controller support
-  mips: bmips: add BCM6318 reset controller definitions
-
- .../bindings/reset/brcm,bcm6345-reset.yaml    |  37 +++++
- arch/mips/Kconfig                             |   1 +
- arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
- arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
- arch/mips/boot/dts/brcm/bcm6358.dtsi          |   6 +
- arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
- arch/mips/boot/dts/brcm/bcm6368.dtsi          |   6 +
- drivers/reset/Kconfig                         |   7 +
- drivers/reset/Makefile                        |   1 +
- drivers/reset/reset-bcm6345.c                 | 135 ++++++++++++++++++
- include/dt-bindings/reset/bcm6318-reset.h     |  20 +++
- include/dt-bindings/reset/bcm63268-reset.h    |  26 ++++
- include/dt-bindings/reset/bcm6328-reset.h     |  18 +++
- include/dt-bindings/reset/bcm6358-reset.h     |  15 ++
- include/dt-bindings/reset/bcm6362-reset.h     |  22 +++
- include/dt-bindings/reset/bcm6368-reset.h     |  16 +++
- 16 files changed, 328 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
- create mode 100644 drivers/reset/reset-bcm6345.c
- create mode 100644 include/dt-bindings/reset/bcm6318-reset.h
- create mode 100644 include/dt-bindings/reset/bcm63268-reset.h
- create mode 100644 include/dt-bindings/reset/bcm6328-reset.h
- create mode 100644 include/dt-bindings/reset/bcm6358-reset.h
- create mode 100644 include/dt-bindings/reset/bcm6362-reset.h
- create mode 100644 include/dt-bindings/reset/bcm6368-reset.h
 
 -- 
-2.27.0
+Best Regards
+ Guo Ren
 
+ML: https://lore.kernel.org/linux-csky/
