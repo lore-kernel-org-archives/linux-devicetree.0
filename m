@@ -2,136 +2,144 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518CBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2AEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 10:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4BB206D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592037807;
-	bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2r28NQWOKMOG/e+y7UYcPS+b8uCAT5kCYDgRbPJvLhsFTvlBnC1dqCgizMvi7W0CD
-	 0Jp+pGDxyE3Bc1XNmALohkMCB0IOBbGLUPzSiUxfw//KHfU2WpYNX+y/lfXWhIk/P+
-	 3eMfroOKsoi7MnOUIZLxubIwhaUukj7JwVoJ2el8=
+	by mail.kernel.org (Postfix) with ESMTP id 74CBD2078A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 10:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Adt+01Ov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgFMIn0 (ORCPT
+        id S1725857AbgFMK3O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgFMIn0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:43:26 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7507F20836;
-        Sat, 13 Jun 2020 08:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592037805;
-        bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BgrzEr0T3JoHmKZPf5JHHJjvygSMZGF5NKn+13GG7QHtIS/IBZ7akYkLuc0TbufY0
-         IdI3tEBicGVpmTrhCjhPNSbLdEFx6l03HXU1AMn8ObSGPs2e5kB+GmV2Rt/rdkNQLA
-         gC00pV5XYzyrAQW5/CPir6q3bWaJ154iM+O+UJ14=
-Received: by mail-lj1-f173.google.com with SMTP id z9so13654752ljh.13;
-        Sat, 13 Jun 2020 01:43:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530UMrNSLF4v9bMAv1GquAIAsJZVHEBg2VJ+ce9ilPP2+24WGcJW
-        9BJyo7cAOyU92QRBAJcL7HThNO6/3AQ43YFnCPM=
-X-Google-Smtp-Source: ABdhPJwZ1ylOrBsd6XVZmYSQ3sLMGYqoTKujz2SwyQaUfONmAEP2kaw8s4sWs89ZwT6ZjZ3AWnilqqgnG/azc96C0bc=
-X-Received: by 2002:a2e:2a42:: with SMTP id q63mr9000358ljq.265.1592037803689;
- Sat, 13 Jun 2020 01:43:23 -0700 (PDT)
+        Sat, 13 Jun 2020 06:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgFMK2S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 06:28:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30683C08C5C1;
+        Sat, 13 Jun 2020 03:28:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l10so12311458wrr.10;
+        Sat, 13 Jun 2020 03:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CfKhED64oLaPofTx2Q7mRbBkPCUu8RE1WsA06aG6ESQ=;
+        b=Adt+01OvZnlV1RrvecuxyW4SEA4dZnanaqeAD41hygNms9UWj7AcThLg828cVnoK76
+         MIOPqAmQQindK6CQg4QwyhWb7qLXGjRU2QB9qXnIe7a1BvcaRCyLFFyK4JTbVwmq+A6J
+         0zDo9uoYxRbBTZEE9w74rgFg7emd/7FN91mT4YXdz9v6zCunO4FWLqznBN1rKBKfpZ0U
+         tYYPXGutKTEXj/oIrWBGDlHNeCnMIhhvxIci5eObxsaTevG8ruC+6QiNEMwOENWWEsCL
+         hmxIRqCvzv076BcN1mfPOPQZvKohmo4o36KsC6WNWk+eyk95sMedFYh0ZHRnc+fA88vT
+         L0tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CfKhED64oLaPofTx2Q7mRbBkPCUu8RE1WsA06aG6ESQ=;
+        b=VWb0PGxvOR/uDxT6cbraTmRRWohXDJuQIe+Cw6gdASrKSvfaygSGObnAqMt8qqgFVP
+         LR3JqwUUdf1qCFOgsDFkfQEHkVtOwQ7wPNBYUSj2QvF/Rqb6Ry47KaTuuYbahdM9nO7B
+         IGM9SbjaEEjMJfKsTu8rNWudQlsqr+H1EqE62qDO7a1qYOq3OdS5Via2beiHCCKcsAP7
+         6aeM5M/DyLm4RZNJo7v4HcyGUTBRbl4d8YxjdD1FHKbeTbYaSwY9qMHv5WN1tN9LCdHh
+         KX8D0gHGb7cBoVNQBKXvcEqoZEv4Mgui1lDVhxzvOB/cjBs+QUVfgFIwPatWl5XUbCMn
+         yc2w==
+X-Gm-Message-State: AOAM530YiPZm2pWZ/erVuE4BDPk4W4nYjR448PD3VrFW5yvERJMlmqhU
+        pXP6cO7VzaxDGMgmuteY4u0OoEOP+To=
+X-Google-Smtp-Source: ABdhPJzG3+UFV8B8ZsieoRQk27HAWc5kuM0HPqHA+oDPfem17OOJmYmlDXpsZBg20tyrVUQdCDPtNg==
+X-Received: by 2002:adf:b355:: with SMTP id k21mr19028713wrd.76.1592044095570;
+        Sat, 13 Jun 2020 03:28:15 -0700 (PDT)
+Received: from tool.localnet ([213.177.199.127])
+        by smtp.googlemail.com with ESMTPSA id v66sm13822310wme.13.2020.06.13.03.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 03:28:14 -0700 (PDT)
+From:   Daniel =?ISO-8859-1?Q?Gonz=E1lez?= Cabanelas <dgcbueu@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     sre@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 2/2] dt-bindings: power: reset: add yaml bindings for LinkStation power off
+Date:   Sat, 13 Jun 2020 12:26:56 +0200
+Message-ID: <2774047.62mrzoXREp@tool>
 MIME-Version: 1.0
-References: <20200611095804.22026-1-f.suligoi@asem.it>
-In-Reply-To: <20200611095804.22026-1-f.suligoi@asem.it>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 13 Jun 2020 16:43:11 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
-Subject: Re: [PATCH] doc: devicetree: bindings: fix spelling mistake
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Acked-by: Guo Ren <guoren@kernel.org>
+Add Linkstation poweroff bindings documentation.=20
 
-On Thu, Jun 11, 2020 at 5:58 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
->
-> Fix typo: "triger" --> "trigger"
->
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
->  .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> index ba455589f869..e1c49b660d3a 100644
-> --- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> @@ -12,7 +12,7 @@ Required properties for the top level node:
->     Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
->  - #interrupt-cells : Specifies the number of cells needed to encode an
->     interrupt. Should be 2. The first cell defines the interrupt number,
-> -   the second encodes the triger flags encoded as described in
-> +   the second encodes the trigger flags encoded as described in
->     Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->  - compatible:
->    - "mediatek,mt7621-gpio" for Mediatek controllers
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> index e13405355166..e6bbcae4d07f 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> @@ -10,7 +10,7 @@ Interrupt number definition:
->   16-31  : private  irq, and we use 16 as the co-processor timer.
->   31-1024: common irq for soc ip.
->
-> -Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-> +Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
->   IRQ_TYPE_LEVEL_HIGH (default)
->   IRQ_TYPE_LEVEL_LOW
->   IRQ_TYPE_EDGE_RISING
-> diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> index 15cfec08fbb8..f5c7e99cf52b 100644
-> --- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> +++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> @@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
->   - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
->   - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
->   - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-> - - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
-> + - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
->
->  ==============================
->  timer node bindings definition
-> --
-> 2.17.1
->
+Signed-off-by: Daniel Gonz=C3=A1lez Cabanelas <dgcbueu@gmail.com>
+=2D--
+Changes in v3:
+  - "phy-handle,intn" property deleted. Now autodetection used.
+  - Cosmetic changes
+Changes in v2:
+  - Changed the required properties and description to adjust to the new
+    driver now enabling the WoL feature on the device.
+
+ .../power/reset/linkstation-poweroff.yaml     | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/linkstati=
+on-poweroff.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/reset/linkstation-powe=
+roff.yaml b/Documentation/devicetree/bindings/power/reset/linkstation-power=
+off.yaml
+new file mode 100644
+index 0000000000..8845333ca4
+=2D-- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.ya=
+ml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/reset/linkstation-poweroff.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Buffalo Linkstation poweroff Binding
++
++maintainers:
++  - Daniel Gonz=C3=A1lez Cabanelas <dgcbueu@gmail.com>
++
++description: |
++  Some Buffalo LinkStations (ARM MVEBU boards) use an output pin at the et=
+hernet
++  PHY (LED2/INTn) to inform the board if the power off operation must be p=
+erformed
++  at restart time. This pin is ORed with the power switch and allows the W=
+OL
++  function to be also used.
++
++  When the power-off handler is called, the ethernet PHY INTn ouptut is se=
+t to
++  LOW state. If the restart command is executed then the PHY INTn output is
++  forced to HIGH state.
++
++properties:
++  compatible:
++    const: linkstation,power-off
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    poweroff {
++        compatible =3D "linkstation,power-off";
++    };
+=2D-=20
+2.27.0
 
 
--- 
-Best Regards
- Guo Ren
 
-ML: https://lore.kernel.org/linux-csky/
+
