@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148C0C433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BAFC433E4
 	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3564206D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE4F20836
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncNs2J9A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WgjSWbIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgFMIiu (ORCPT
+        id S1726565AbgFMIiv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52660 "EHLO
+        Sat, 13 Jun 2020 04:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgFMIiZ (ORCPT
+        with ESMTP id S1726468AbgFMIiZ (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 04:38:25 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429F2C08C5C5;
-        Sat, 13 Jun 2020 01:38:23 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j198so10491189wmj.0;
-        Sat, 13 Jun 2020 01:38:23 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0747CC08C5C3;
+        Sat, 13 Jun 2020 01:38:21 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so12183697wrc.7;
+        Sat, 13 Jun 2020 01:38:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=66G4WD3xEE6C4hSbqDUrv41NEzv9wNmeNrUJJ6vnwas=;
-        b=ncNs2J9ALpRzB3pGJOwV+Nb2lbphf+F0bt3EQpJjgLalppTlj+Tshmln8tpixojc/L
-         4aZDOBDao+rGD2MW0ftExo3XOHWqMxLUnNUaSiThk/QYi0CZRrkE7XMwHi6j4Nx3PnP/
-         mFaCCClFWRRKmOU5sMqBt7gHiQLOg+bFqoeQyFEbClYg+zcxtcKpkot/ecvz7EvZEcim
-         2jsfjaYtu2a3BOZz8ntlQbf/F+WVWIT+ODZqtKfN7EukooUyDWF4OL4wkGCb3RlrCxEy
-         S2XylRdeYYJqoiz/7MyFsFhOhpsr4k5zJmOamSvo7pIHFZPljk4nxe3+JpBpWMsqGlS7
-         jLkg==
+        bh=c3LSxS5y9C3iZjIgZQHWu/m3qHf45XIGKZnAz+FSDeE=;
+        b=WgjSWbIwDGFRtvWR/rcwO1/4rnZJxpSaityxQH4xSg4cvMCBz+hZYMLNJ7TQijbbNT
+         N6lONhXyxL6IgHwAQHWZ4ytigf/g34U2GnMkugi8ltIaobS5nKbtEMPqUhx/P6TNL+jN
+         z4zp2+PQ9E5r1IgN7kVIqAiPodKDeV9qB9anDQJm4PdDxDOXojb5jEguLRdzJatSeSoA
+         JRqktpdQb+zhM4IN03KNnfedfw+rztjkvO9/f/sEAXkN4Nc/Yrhe/EyYL0hgJ5WqqGCF
+         u16OwlVxZhKSPBZkEy8fd4/+I25xjrBwY2U/9QJahcsM/vwuj09D0LKzF0EhBvIgTjwY
+         M/+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=66G4WD3xEE6C4hSbqDUrv41NEzv9wNmeNrUJJ6vnwas=;
-        b=lNKTGk1E634A15/UtV0A1T77oeaWKeBtkdKEBNthorUyg+2y/roVFol8RmMeHPY069
-         nz2Q1Fstx83iKOZxRgdtRE6nmUipura5BZojegfIZAXJF0W38bJ4xt8ZhRnqYhDfzawF
-         /SWOS2AC6Fvwk9Id1Kp+CTVMOkmTYcZ6XX2T8xyftJ4qhE56ry2lrbs/u9bXNiVGHuXt
-         Z7qqkVdBSweF3o1yEcS9AEClwREkwfiq37Qy4kPYQ3kaKCgnrz2ZbzT9seX4v39SS59E
-         722yezw1xdGTzjflz7VYfHY4yLi9PjLzUHthXCB+jHCD9G98juEBEBwPLpgIsdQD0LVw
-         5X1w==
-X-Gm-Message-State: AOAM531i/5A36H0DPOXuxE5tGcyjFriCeyagjDw86JzM0XMUvKjrCJPV
-        aBhbAmBZejbmxwyr26q0/RU=
-X-Google-Smtp-Source: ABdhPJyssR4epn5nzbs+vNIfBV5/qjfCCkT2N1cB+HmCSNRfIAYE9hkzSttEOeMEj21zF4NsnqeJPA==
-X-Received: by 2002:a05:600c:2259:: with SMTP id a25mr3118313wmm.32.1592037501903;
-        Sat, 13 Jun 2020 01:38:21 -0700 (PDT)
+        bh=c3LSxS5y9C3iZjIgZQHWu/m3qHf45XIGKZnAz+FSDeE=;
+        b=LVNiQ2J848XrMJIaW7iY2T6VIj8uvkmcoDvBYrBeUYZBJJE1cow+NTBgPKWZoN/BYA
+         HwZa5fOAZeRk3kYtsuSK88xOXBUkznTZkEQqA8u9C6Lhyii5woEEDgvXKSfa6/KrQfui
+         iXq8Eaum1qSEbmELB1FwwkWscmNk07qkimQyxoRzI2PQgL8vaDekbnkAAThkR9wD/t/v
+         Ad+KdmaEViu2ghJ7J1BzjCOK1/H1cW0S73im44qRLKexSUFUtcjB3TckxhCTRVGMjr8D
+         Zmryn8KEO1N3vZLzznZ+2o2YicvX13M5NOCIk1XIRQ/le2253bASj4DIhi/CcZ8AguIh
+         REpg==
+X-Gm-Message-State: AOAM533gINxdprlKCYu1T8zPK6Oy8t0WATRAppZXMXhuekSf6vMq08b7
+        ON1AFw0gU76vf7sw7DC5T5o=
+X-Google-Smtp-Source: ABdhPJzv87O22EmB+aVOPqgmkyvXjpXoSYIBAIJzjW3OnpbpgVzrNUzK4aELEOhhcqfql5nB1z+YEQ==
+X-Received: by 2002:a5d:44cf:: with SMTP id z15mr19988367wrr.164.1592037499613;
+        Sat, 13 Jun 2020 01:38:19 -0700 (PDT)
 Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id l17sm11622704wmi.3.2020.06.13.01.38.20
+        by smtp.gmail.com with ESMTPSA id l17sm11622704wmi.3.2020.06.13.01.38.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 01:38:21 -0700 (PDT)
+        Sat, 13 Jun 2020 01:38:19 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
         bcm-kernel-feedback-list@broadcom.com
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v4 6/9] mips: bmips: dts: add BCM6362 reset controller support
-Date:   Sat, 13 Jun 2020 10:38:10 +0200
-Message-Id: <20200613083813.2027186-7-noltari@gmail.com>
+Subject: [PATCH v4 4/9] mips: bmips: dts: add BCM6328 reset controller support
+Date:   Sat, 13 Jun 2020 10:38:08 +0200
+Message-Id: <20200613083813.2027186-5-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200613083813.2027186-1-noltari@gmail.com>
 References: <20200610172859.466334-1-noltari@gmail.com>
@@ -83,7 +83,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM6362 SoCs have a reset controller for certain components.
+BCM6328 SoCs have a reset controller for certain components.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
@@ -92,17 +92,17 @@ Acked-by: Florian Fainelli <f.fainelli@gmail.com>
  v3: add reset controller definitions header file.
  v2: no changes.
 
- arch/mips/boot/dts/brcm/bcm6362.dtsi      |  6 ++++++
- include/dt-bindings/reset/bcm6362-reset.h | 22 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 include/dt-bindings/reset/bcm6362-reset.h
+ arch/mips/boot/dts/brcm/bcm6328.dtsi      |  6 ++++++
+ include/dt-bindings/reset/bcm6328-reset.h | 18 ++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+ create mode 100644 include/dt-bindings/reset/bcm6328-reset.h
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6362.dtsi b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-index 8ae6981735b8..443af6b4c838 100644
---- a/arch/mips/boot/dts/brcm/bcm6362.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-@@ -70,6 +70,12 @@ reboot: syscon-reboot@10000008 {
- 			mask = <0x1>;
+diff --git a/arch/mips/boot/dts/brcm/bcm6328.dtsi b/arch/mips/boot/dts/brcm/bcm6328.dtsi
+index af860d06def6..590118cf5c12 100644
+--- a/arch/mips/boot/dts/brcm/bcm6328.dtsi
++++ b/arch/mips/boot/dts/brcm/bcm6328.dtsi
+@@ -57,6 +57,12 @@ clkctl: clock-controller@10000004 {
+ 			#clock-cells = <1>;
  		};
  
 +		periph_rst: reset-controller@10000010 {
@@ -114,34 +114,30 @@ index 8ae6981735b8..443af6b4c838 100644
  		periph_intc: interrupt-controller@10000020 {
  			compatible = "brcm,bcm6345-l1-intc";
  			reg = <0x10000020 0x10>,
-diff --git a/include/dt-bindings/reset/bcm6362-reset.h b/include/dt-bindings/reset/bcm6362-reset.h
+diff --git a/include/dt-bindings/reset/bcm6328-reset.h b/include/dt-bindings/reset/bcm6328-reset.h
 new file mode 100644
-index 000000000000..7ebb0546e0ab
+index 000000000000..0f3df87d47af
 --- /dev/null
-+++ b/include/dt-bindings/reset/bcm6362-reset.h
-@@ -0,0 +1,22 @@
++++ b/include/dt-bindings/reset/bcm6328-reset.h
+@@ -0,0 +1,18 @@
 +/* SPDX-License-Identifier: GPL-2.0+ */
 +
-+#ifndef __DT_BINDINGS_RESET_BCM6362_H
-+#define __DT_BINDINGS_RESET_BCM6362_H
++#ifndef __DT_BINDINGS_RESET_BCM6328_H
++#define __DT_BINDINGS_RESET_BCM6328_H
 +
-+#define BCM6362_RST_SPI		0
-+#define BCM6362_RST_IPSEC	1
-+#define BCM6362_RST_EPHY	2
-+#define BCM6362_RST_SAR		3
-+#define BCM6362_RST_ENETSW	4
-+#define BCM6362_RST_USBD	5
-+#define BCM6362_RST_USBH	6
-+#define BCM6362_RST_PCM		7
-+#define BCM6362_RST_PCIE_CORE	8
-+#define BCM6362_RST_PCIE	9
-+#define BCM6362_RST_PCIE_EXT	10
-+#define BCM6362_RST_WLAN_SHIM	11
-+#define BCM6362_RST_DDR_PHY	12
-+#define BCM6362_RST_FAP		13
-+#define BCM6362_RST_WLAN_UBUS	14
++#define BCM6328_RST_SPI		0
++#define BCM6328_RST_EPHY	1
++#define BCM6328_RST_SAR		2
++#define BCM6328_RST_ENETSW	3
++#define BCM6328_RST_USBS	4
++#define BCM6328_RST_USBH	5
++#define BCM6328_RST_PCM		6
++#define BCM6328_RST_PCIE_CORE	7
++#define BCM6328_RST_PCIE	8
++#define BCM6328_RST_PCIE_EXT	9
++#define BCM6328_RST_PCIE_HARD	10
 +
-+#endif /* __DT_BINDINGS_RESET_BCM6362_H */
++#endif /* __DT_BINDINGS_RESET_BCM6328_H */
 -- 
 2.27.0
 
