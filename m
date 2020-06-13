@@ -2,144 +2,138 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2AEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 10:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B90C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 11:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CBD2078A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 10:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E044E2078E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 11:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Adt+01Ov"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTzviXfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725857AbgFMK3O (ORCPT
+        id S1725857AbgFMLKv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 06:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41278 "EHLO
+        Sat, 13 Jun 2020 07:10:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgFMK2S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 06:28:18 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30683C08C5C1;
-        Sat, 13 Jun 2020 03:28:17 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l10so12311458wrr.10;
-        Sat, 13 Jun 2020 03:28:17 -0700 (PDT)
+        with ESMTP id S1725812AbgFMLKt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 07:10:49 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32193C03E96F;
+        Sat, 13 Jun 2020 04:10:48 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id x189so3861281iof.9;
+        Sat, 13 Jun 2020 04:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CfKhED64oLaPofTx2Q7mRbBkPCUu8RE1WsA06aG6ESQ=;
-        b=Adt+01OvZnlV1RrvecuxyW4SEA4dZnanaqeAD41hygNms9UWj7AcThLg828cVnoK76
-         MIOPqAmQQindK6CQg4QwyhWb7qLXGjRU2QB9qXnIe7a1BvcaRCyLFFyK4JTbVwmq+A6J
-         0zDo9uoYxRbBTZEE9w74rgFg7emd/7FN91mT4YXdz9v6zCunO4FWLqznBN1rKBKfpZ0U
-         tYYPXGutKTEXj/oIrWBGDlHNeCnMIhhvxIci5eObxsaTevG8ruC+6QiNEMwOENWWEsCL
-         hmxIRqCvzv076BcN1mfPOPQZvKohmo4o36KsC6WNWk+eyk95sMedFYh0ZHRnc+fA88vT
-         L0tQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OfwgZGxqgOQqlfdsbrVmrJYBmDVjYO5l26ONiG/HNmI=;
+        b=hTzviXfnQMMBsbnXT/MMCNfVogrI2B8Q81Hyf4gKf+mEg0SvNCdFaphFvyWTxmWuUW
+         PKDZao280LrHa5+AHZLQGqnFnC0pM3xAiBe5EM4e7BGWCY89GtPWpHW4jtmqTmNl22ja
+         Q5lF1GCifXqPSKUNxmXduqrvSDGo1SXi0boGEdHD7g5lzTrfUrFkYLw0M73nsO5WUJ61
+         aiB0x0l4HMt6K+msOHSDJnHnNCEcvvIh6oFiLey0dtigyYc3qCsus4CO1pqC9Kla1FKR
+         b/OD+eHjgvitj6mcH9ayQ72zR+rO9KvVUOyxRFq8Nva0XvF3n8x43nCxXx3Poq7pmjP8
+         gVMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CfKhED64oLaPofTx2Q7mRbBkPCUu8RE1WsA06aG6ESQ=;
-        b=VWb0PGxvOR/uDxT6cbraTmRRWohXDJuQIe+Cw6gdASrKSvfaygSGObnAqMt8qqgFVP
-         LR3JqwUUdf1qCFOgsDFkfQEHkVtOwQ7wPNBYUSj2QvF/Rqb6Ry47KaTuuYbahdM9nO7B
-         IGM9SbjaEEjMJfKsTu8rNWudQlsqr+H1EqE62qDO7a1qYOq3OdS5Via2beiHCCKcsAP7
-         6aeM5M/DyLm4RZNJo7v4HcyGUTBRbl4d8YxjdD1FHKbeTbYaSwY9qMHv5WN1tN9LCdHh
-         KX8D0gHGb7cBoVNQBKXvcEqoZEv4Mgui1lDVhxzvOB/cjBs+QUVfgFIwPatWl5XUbCMn
-         yc2w==
-X-Gm-Message-State: AOAM530YiPZm2pWZ/erVuE4BDPk4W4nYjR448PD3VrFW5yvERJMlmqhU
-        pXP6cO7VzaxDGMgmuteY4u0OoEOP+To=
-X-Google-Smtp-Source: ABdhPJzG3+UFV8B8ZsieoRQk27HAWc5kuM0HPqHA+oDPfem17OOJmYmlDXpsZBg20tyrVUQdCDPtNg==
-X-Received: by 2002:adf:b355:: with SMTP id k21mr19028713wrd.76.1592044095570;
-        Sat, 13 Jun 2020 03:28:15 -0700 (PDT)
-Received: from tool.localnet ([213.177.199.127])
-        by smtp.googlemail.com with ESMTPSA id v66sm13822310wme.13.2020.06.13.03.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 03:28:14 -0700 (PDT)
-From:   Daniel =?ISO-8859-1?Q?Gonz=E1lez?= Cabanelas <dgcbueu@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     sre@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: power: reset: add yaml bindings for LinkStation power off
-Date:   Sat, 13 Jun 2020 12:26:56 +0200
-Message-ID: <2774047.62mrzoXREp@tool>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OfwgZGxqgOQqlfdsbrVmrJYBmDVjYO5l26ONiG/HNmI=;
+        b=jNTu15gygEF+fB89THDJvw62uT3nPZsX4JQwI6yimF8FwACAax5ZqhKT7yHZSUm2ij
+         BobRSUFSVbzrSz7hggN4tF2WZk3tQM/qwBOSPSkCtDaddvSO0Infa3i1waRnA5tJ0VSY
+         g+LfqymmNXawy8tcomUvp3QlqLumCZCIcdxVY2Rg6IRvQqDROQU439iTl+H4M50cc0mB
+         H5N0YLDuIIc5EeqSrWd+6lGRC69Yy5UjBa9JKAvrNuKYUhVTcSrz8Q2BGabgA5qjXylc
+         67tZhk56pJC4jniL/3R+pv0J8R8rAyPM0CWIc9jGO1kMLdGoRwWwAXdP4mRF+lz9PmB8
+         k+jA==
+X-Gm-Message-State: AOAM533JJiES1kejEbj50b6I2b5WfsktAS9Ky0vH3SpD6XBZL9ZmOATR
+        NtdeBaqvWvvOoAs7uhFEdXDLT412DwepATRa8oI=
+X-Google-Smtp-Source: ABdhPJzfNmWpmXODYBXE9MO17hXKsSRyxKjtcDMu6I34oal91Ru8QR474bDJlRYWV2P67w77MQOE75EWxC200ucPdSQ=
+X-Received: by 2002:a02:b0c4:: with SMTP id w4mr11941834jah.45.1592046647428;
+ Sat, 13 Jun 2020 04:10:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20200504230100.181926-1-aford173@gmail.com> <20200505184223.GR37466@atomide.com>
+ <CAHCN7xJxg+uO4h2RcapyjormTMzXFwoMUOi7rh2hUsScJtK56Q@mail.gmail.com> <20200505233408.GS37466@atomide.com>
+In-Reply-To: <20200505233408.GS37466@atomide.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sat, 13 Jun 2020 06:10:36 -0500
+Message-ID: <CAHCN7xJnBkihY0XwNw+7xj5qZhwz_Up-b_LEt3PY8aFWVYsnrQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: omap3: Migrate AES from hwmods to sysc-omap2
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Linkstation poweroff bindings documentation.=20
+On Tue, May 5, 2020 at 6:34 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Adam Ford <aford173@gmail.com> [200505 21:18]:
+> > On Tue, May 5, 2020 at 1:42 PM Tony Lindgren <tony@atomide.com> wrote:
+> > >
+> > > * Adam Ford <aford173@gmail.com> [200504 16:02]:
+> > > > Various OMAP3 boards have two AES blocks, but only one is currently
+> > > > available, because the hwmods are only configured for one.
+> > > >
+> > > > This patch migrates the hwmods for the AES engine to sysc-omap2
+> > > > which allows the second AES crypto engine to become available.
+> > > >
+> > > >   omap-aes 480a6000.aes1: OMAP AES hw accel rev: 2.6
+> > > >   omap-aes 480a6000.aes1: will run requests pump with realtime priority
+> > > >   omap-aes 480c5000.aes2: OMAP AES hw accel rev: 2.6
+> > > >   omap-aes 480c5000.aes2: will run requests pump with realtime priority
+> > >
+> > > Great :) Looks like I'm getting the following though:
+> > >
+> > > DTC     arch/arm/boot/dts/am3517-craneboard.dtb
+> > > arch/arm/boot/dts/omap3.dtsi:160.39-184.5: ERROR (phandle_references):
+> > > /ocp@68000000/target-module@480a6000:
+> > > Reference to non-existent node or label "aes1_ick"
+> > >
+> > > Is this patch maybe missing a change for am3717 for the aes1_ick?
+> >
+> > I am guessing it's the same issue that plagues the am3517 with a note
+> > in the hwmods that stated noone seems to know which am3517's support
+> > it and which don't.  The RNG was disabled on the 3517, so I am
+> > guessing I'll do the same for AES.
+>
+> OK, I have no idea what modules might be there on am3517.
 
-Signed-off-by: Daniel Gonz=C3=A1lez Cabanelas <dgcbueu@gmail.com>
-=2D--
-Changes in v3:
-  - "phy-handle,intn" property deleted. Now autodetection used.
-  - Cosmetic changes
-Changes in v2:
-  - Changed the required properties and description to adjust to the new
-    driver now enabling the WoL feature on the device.
+I'm going to repost a V2 with the node removed on am3517.
 
- .../power/reset/linkstation-poweroff.yaml     | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/linkstati=
-on-poweroff.yaml
+>
+> > I should have posted it as an RFC, because I don't have the proper IRQ
+> > setup for the newly supported AES engine.  The interrupts that are
+> > used for the original AES are listed as 'Reserved' in the AM3517 TRM.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/linkstation-powe=
-roff.yaml b/Documentation/devicetree/bindings/power/reset/linkstation-power=
-off.yaml
-new file mode 100644
-index 0000000000..8845333ca4
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/linkstation-poweroff.ya=
-ml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/reset/linkstation-poweroff.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Buffalo Linkstation poweroff Binding
-+
-+maintainers:
-+  - Daniel Gonz=C3=A1lez Cabanelas <dgcbueu@gmail.com>
-+
-+description: |
-+  Some Buffalo LinkStations (ARM MVEBU boards) use an output pin at the et=
-hernet
-+  PHY (LED2/INTn) to inform the board if the power off operation must be p=
-erformed
-+  at restart time. This pin is ORed with the power switch and allows the W=
-OL
-+  function to be also used.
-+
-+  When the power-off handler is called, the ethernet PHY INTn ouptut is se=
-t to
-+  LOW state. If the restart command is executed then the PHY INTn output is
-+  forced to HIGH state.
-+
-+properties:
-+  compatible:
-+    const: linkstation,power-off
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    poweroff {
-+        compatible =3D "linkstation,power-off";
-+    };
-=2D-=20
-2.27.0
+Through trial and error, I think I have the right IRQ for OMAP3630 for
+the 2nd instance.
 
+> > I assume the second engine uses different interrupts.  I don't suppose
+> > anyone know what it should be?
+>
+> Sorry no idea, usually the secure accelerator documentation is just
+> left out it seems. My guess the values are the same as on omap3.
 
+Tony - Could you review the hwmod transition I did for the first
+engine to make sure I did it right?
 
+If you think I did it right, I'll post my V2.
 
+adam
+>
+> Regards,
+>
+> Tony
