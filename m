@@ -2,141 +2,126 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1681C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 07:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD41C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC80F20739
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 07:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF51207FF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:21:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KomVBFFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgFMH2N (ORCPT
+        id S1726445AbgFMIVw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 03:28:13 -0400
-Received: from relay-1.mailobj.net ([213.182.54.6]:41347 "EHLO
-        relay-1.mailobj.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgFMH2N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 03:28:13 -0400
-Received: from v-1.localdomain (v-1.in.mailobj.net [192.168.90.191])
-        by relay-1.mailobj.net (Postfix) with SMTP id D8B441313;
-        Sat, 13 Jun 2020 09:28:10 +0200 (CEST)
-Received: by ip-25.net-c.com [213.182.54.25] with ESMTP
-        Sat, 13 Jun 2020 09:29:06 +0200 (CEST)
-X-EA-Auth: GFlNqPOnryBWWPR9yRGa9FR7SvNUqCx0XlDq0JoL5wztFgxm55OQ3G6WRVfQPTMXVwU7+Mvd5eDbRteJooM3b1T4GWggjMrvImGSxNsn8aM=
-From:   Vincent Knecht <vincent.knecht@mailoo.org>
-To:     sboyd@kernel.org
-Cc:     konradybcio@gmail.com, Vincent Knecht <vincent.knecht@mailoo.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] clk: qcom: smd: Add support for MSM8936 rpm clocks
-Date:   Sat, 13 Jun 2020 09:27:42 +0200
-Message-Id: <20200613072745.1249003-2-vincent.knecht@mailoo.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200613072745.1249003-1-vincent.knecht@mailoo.org>
-References: <20200613072745.1249003-1-vincent.knecht@mailoo.org>
+        Sat, 13 Jun 2020 04:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgFMIVt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 04:21:49 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE304C03E96F;
+        Sat, 13 Jun 2020 01:21:48 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id r7so12173249wro.1;
+        Sat, 13 Jun 2020 01:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DoN3E570Tgck4JHoiO1BCeh8lVyob2ymeZAqeFZLRCw=;
+        b=KomVBFFEY01cn8qSaSpGn2bs8xen61b+GAcvHrWP+OfLcrS6sP1Phif43oers7ruDb
+         T2wlM1GJUgypfJiDuo48Flonu/oIoA7rcqXZQSGxku5/WUPPHz1PuniJ6yy7Tmu41usc
+         zgBa5H9UVIOwVd4+UAZAbq+K4lplYo4k2bQGQrg0qRAj8FoB/yZuPDqN//vW6Qhj7sVn
+         b9VyVNZwi8Li3wlcaJv5dCxlGUlpXyzA5p+oMNv02yku0mm/roOY7qMwcP76PmwtQjo6
+         Gy/TAdVzLbLDtztYvhynIIahb+SxlgHpACpvqRqLPxJZAvkzm9Lsz5+7rmXrMahhNf3G
+         vkcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DoN3E570Tgck4JHoiO1BCeh8lVyob2ymeZAqeFZLRCw=;
+        b=R/FVcylb60FEHOMn/pYjdgPq3qJTU6ucQIWGF+spjoxDzWZofcSB6ovkFSPaE0p8Xf
+         YAd4TLgbNpFqvjndLcjEKTjIGO6gwLQv8iEoHYb6WEjjI22jfQTBcbi9wM5j58nylQq+
+         C6IjFFIVioB/NpLc2AHDQ0NUL/8MuqUzGy/PgEtktIE/rSbuRRqL03oTMdXNgSDqNyvR
+         FVsu8xnycoqXrLi6G6pdcpAMynX4SmQsVABxHvgTRhjdjrwHJyg3UdEh7sLkpSarvgMM
+         yYofPhreMWSjcmMU5z41kr0LoSNPPlqyTEamVjCNEAB0HMpewJ1d0W9LPYvYaCgk4Uwr
+         MZNw==
+X-Gm-Message-State: AOAM533mCKuE/zy2z6ORf7Lu4Pmuh/yjSTiwMw0RbfaXjMkBRGrxHWR1
+        mZ9b1RblfB9bTDix+YXylJ8=
+X-Google-Smtp-Source: ABdhPJxVr3xsef7IJjNafvsri58MYOPMlv8KhrwExQB+Z43DqwlLLdXVJPToW24b08dF7kNNarUJjg==
+X-Received: by 2002:a5d:4c4b:: with SMTP id n11mr17856525wrt.381.1592036506938;
+        Sat, 13 Jun 2020 01:21:46 -0700 (PDT)
+Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
+        by smtp.gmail.com with ESMTPSA id n189sm12243603wmb.43.2020.06.13.01.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2020 01:21:46 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v4 3/9] mips: bmips: add BCM6362 power domain definitions
+Date:   Sat, 13 Jun 2020 10:21:34 +0200
+Message-Id: <20200613082140.2009461-4-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200613082140.2009461-1-noltari@gmail.com>
+References: <20200610171630.465579-1-noltari@gmail.com>
+ <20200613082140.2009461-1-noltari@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add missing definition of rpm clk for msm8936 soc (also used by msm8939)
+BCM6362 SoCs have a power domain controller to enable/disable certain
+components in order to save power.
 
-Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- drivers/clk/qcom/clk-smd-rpm.c         | 50 ++++++++++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h |  2 ++
- 2 files changed, 52 insertions(+)
+ v4: Remove "dts: " from commit title.
+ v3: Separate dt-bindings definitions from power domain .dtsi support.
 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index 52f63ad787ba..de42f012af57 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -452,6 +452,55 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8916 = {
- 	.num_clks = ARRAY_SIZE(msm8916_clks),
- };
- 
-+/* msm8936 */
-+DEFINE_CLK_SMD_RPM(msm8936, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8936, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8936, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8936, sysmmnoc_clk, sysmmnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-+DEFINE_CLK_SMD_RPM_QDSS(msm8936, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk1, bb_clk1_a, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk2, bb_clk2_a, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk1, rf_clk1_a, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk2, rf_clk2_a, 5);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk1_pin, bb_clk1_a_pin, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk2_pin, bb_clk2_a_pin, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk1_pin, rf_clk1_a_pin, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk2_pin, rf_clk2_a_pin, 5);
+ include/dt-bindings/soc/bcm6362-pm.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
+
+diff --git a/include/dt-bindings/soc/bcm6362-pm.h b/include/dt-bindings/soc/bcm6362-pm.h
+new file mode 100644
+index 000000000000..d087ba63c7a1
+--- /dev/null
++++ b/include/dt-bindings/soc/bcm6362-pm.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
 +
-+static struct clk_smd_rpm *msm8936_clks[] = {
-+	[RPM_SMD_PCNOC_CLK]		= &msm8936_pcnoc_clk,
-+	[RPM_SMD_PCNOC_A_CLK]		= &msm8936_pcnoc_a_clk,
-+	[RPM_SMD_SNOC_CLK]		= &msm8936_snoc_clk,
-+	[RPM_SMD_SNOC_A_CLK]		= &msm8936_snoc_a_clk,
-+	[RPM_SMD_BIMC_CLK]		= &msm8936_bimc_clk,
-+	[RPM_SMD_BIMC_A_CLK]		= &msm8936_bimc_a_clk,
-+	[RPM_SMD_SYSMMNOC_CLK]		= &msm8936_sysmmnoc_clk,
-+	[RPM_SMD_SYSMMNOC_A_CLK]	= &msm8936_sysmmnoc_a_clk,
-+	[RPM_SMD_QDSS_CLK]		= &msm8936_qdss_clk,
-+	[RPM_SMD_QDSS_A_CLK]		= &msm8936_qdss_a_clk,
-+	[RPM_SMD_BB_CLK1]		= &msm8936_bb_clk1,
-+	[RPM_SMD_BB_CLK1_A]		= &msm8936_bb_clk1_a,
-+	[RPM_SMD_BB_CLK2]		= &msm8936_bb_clk2,
-+	[RPM_SMD_BB_CLK2_A]		= &msm8936_bb_clk2_a,
-+	[RPM_SMD_RF_CLK1]		= &msm8936_rf_clk1,
-+	[RPM_SMD_RF_CLK1_A]		= &msm8936_rf_clk1_a,
-+	[RPM_SMD_RF_CLK2]		= &msm8936_rf_clk2,
-+	[RPM_SMD_RF_CLK2_A]		= &msm8936_rf_clk2_a,
-+	[RPM_SMD_BB_CLK1_PIN]		= &msm8936_bb_clk1_pin,
-+	[RPM_SMD_BB_CLK1_A_PIN]		= &msm8936_bb_clk1_a_pin,
-+	[RPM_SMD_BB_CLK2_PIN]		= &msm8936_bb_clk2_pin,
-+	[RPM_SMD_BB_CLK2_A_PIN]		= &msm8936_bb_clk2_a_pin,
-+	[RPM_SMD_RF_CLK1_PIN]		= &msm8936_rf_clk1_pin,
-+	[RPM_SMD_RF_CLK1_A_PIN]		= &msm8936_rf_clk1_a_pin,
-+	[RPM_SMD_RF_CLK2_PIN]		= &msm8936_rf_clk2_pin,
-+	[RPM_SMD_RF_CLK2_A_PIN]		= &msm8936_rf_clk2_a_pin,
-+};
++#ifndef __DT_BINDINGS_BMIPS_BCM6362_PM_H
++#define __DT_BINDINGS_BMIPS_BCM6362_PM_H
 +
-+static const struct rpm_smd_clk_desc rpm_clk_msm8936 = {
-+		.clks = msm8936_clks,
-+		.num_clks = ARRAY_SIZE(msm8936_clks),
-+};
++#define BCM6362_POWER_DOMAIN_SAR	0
++#define BCM6362_POWER_DOMAIN_IPSEC	1
++#define BCM6362_POWER_DOMAIN_MIPS	2
++#define BCM6362_POWER_DOMAIN_DECT	3
++#define BCM6362_POWER_DOMAIN_USBH	4
++#define BCM6362_POWER_DOMAIN_USBD	5
++#define BCM6362_POWER_DOMAIN_ROBOSW	6
++#define BCM6362_POWER_DOMAIN_PCM	7
++#define BCM6362_POWER_DOMAIN_PERIPH	8
++#define BCM6362_POWER_DOMAIN_ADSL_PHY	9
++#define BCM6362_POWER_DOMAIN_GMII_PADS	10
++#define BCM6362_POWER_DOMAIN_FAP	11
++#define BCM6362_POWER_DOMAIN_PCIE	12
++#define BCM6362_POWER_DOMAIN_WLAN_PADS	13
 +
- /* msm8974 */
- DEFINE_CLK_SMD_RPM(msm8974, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8974, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-@@ -768,6 +817,7 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
- 
- static const struct of_device_id rpm_smd_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
-+	{ .compatible = "qcom,rpmcc-msm8936", .data = &rpm_clk_msm8936 },
- 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
- 	{ .compatible = "qcom,rpmcc-msm8976", .data = &rpm_clk_msm8976 },
- 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index ae74c43c485d..4a0238ccf9f2 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -133,5 +133,7 @@
- #define RPM_SMD_RF_CLK3_A			87
- #define RPM_SMD_RF_CLK3_PIN			88
- #define RPM_SMD_RF_CLK3_A_PIN			89
-+#define RPM_SMD_SYSMMNOC_CLK			90
-+#define RPM_SMD_SYSMMNOC_A_CLK			91
- 
- #endif
++#endif /* __DT_BINDINGS_BMIPS_BCM6362_PM_H */
 -- 
-2.25.4
-
+2.27.0
 
