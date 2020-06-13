@@ -2,63 +2,62 @@ Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A89CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61541C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22C0207FF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0872081A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 08:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fe+VxsiJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pnPQEFr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFMIV6 (ORCPT
+        id S1726396AbgFMIVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 04:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50150 "EHLO
+        Sat, 13 Jun 2020 04:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgFMIVx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 04:21:53 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E02FC03E96F;
-        Sat, 13 Jun 2020 01:21:51 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j198so10471443wmj.0;
-        Sat, 13 Jun 2020 01:21:51 -0700 (PDT)
+        with ESMTP id S1725783AbgFMIVp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 04:21:45 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17370C03E96F;
+        Sat, 13 Jun 2020 01:21:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t18so12148813wru.6;
+        Sat, 13 Jun 2020 01:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=C4bfyVONOHjcFyM7sJIEOYSWfm64yEtLiOJDCx3EJbM=;
-        b=fe+VxsiJ2aLLcurn27oooHYDzruQSLHqQV6NJVUI08Ahni23BqSpG2mC7OjbEFvyPA
-         BYRw44rMww8tN10plqDA6Jr17l0kGSdLMXpVjZ6VWb24OdrDXTHmp7AiIj/NMvP2Zv5O
-         fKZ8RHasFKBjAZzlI1wQtDvzrZjyZK+fimhFjNihoYKHP7rhPxbilIyiJjIasImiD89F
-         7XhFf0dMY0EUVqwPT7hLa8bh3XBcCpKOMY3z0Xhud5Tzykq8BL4GunvhrkaA6ibQuHpP
-         ET1ysYdu3UxKZhFdtaU1D1MCVrSnENdmWzMrXCimGc+86fpanDU3iY9VxdR3FpeCKuml
-         IGXA==
+        bh=u96+rSBzcvuJKQmsLPT95WNJaRtQiHeNyjReZCDFzSY=;
+        b=pnPQEFr4liss5K5xbfzMn1tzmUyypjIhnw3RSaB5blOyygSUBKCgBIpfvOy1MdJ3oW
+         1adpoRXb4dccRnASiMIXjPuCtF1JEz571GMH2QWkRNAwlDAhjW42nKXqtVSeJAscvcNX
+         2l+01+9YIWsNJzRA4EAbWSiDxq72uT4skM8n6R3WrpjCrrSi+b6xeYA0CcXf5TiDgBAV
+         KF3hmVE4XF39GeRC7ofXwSNc3QFNpr/Cco+1cXJnS31TtNY1Z36yKe1Aa8KY8djx33y6
+         dDnxjjtmjTje0wyKORz3XYA6NNaeaPOurlZLpP6MDwK6d01CPpPM8CFfyySZT1DOhAYt
+         DTtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=C4bfyVONOHjcFyM7sJIEOYSWfm64yEtLiOJDCx3EJbM=;
-        b=irKn9Vv6O0Uv+l5eIjCp1svYvUdu4fg7XrN7c6lBNxLVYmarL8RPfZHXiPonIlJbof
-         5dhojNcb4u1RVhoxGmT6GxxVexJcaHsw/wknRz8WoAi7YB4WswehGN1OJmlXvny+dcFL
-         rxv0Yho80gJKm8Teuk3bwr1rJ0dsdEmm2d9SBx2jm97OPagJCoyb3NCxmQ2wG43QM0mi
-         1M+KD4vLAT12NhcL85sLX5p3Gj6VAvhIMhxeh4P13LPH4lMgSZdtWYjJqhFto/3FTmeB
-         sRA5wjOt8/tNadwH8iNraAtOWdE6zZ1JvJgpQrJlh7nfA9X2PZUWcn1EPorNhrIC/R29
-         eUUg==
-X-Gm-Message-State: AOAM533qBeRhByOHIeVIzJrFP0LsQoXL5jP9qwF+VTP12cPxbV3JC/Dq
-        Z+7FJ0fGZbaiDmbvLqDyIaacNieQkz8=
-X-Google-Smtp-Source: ABdhPJy1PC/bskdeYWnOqeO7otjJvlSboU8zNxvQBtf/D60FD3pp6y5OeQPPTq/GaqO6FbTD3M+vkw==
-X-Received: by 2002:a1c:7f44:: with SMTP id a65mr3026760wmd.53.1592036510041;
-        Sat, 13 Jun 2020 01:21:50 -0700 (PDT)
+        bh=u96+rSBzcvuJKQmsLPT95WNJaRtQiHeNyjReZCDFzSY=;
+        b=hBGL/ta6od8C8NLrV42xuUXpri9dotzingucOq1cQY8QbpSWA5gnlax42pawSbyMS/
+         3Ab40LMrwqJRfhfrPjHL2hnX9n7cLXnt8F3+ururNI2V5l8ShHGETxjnpZ6xvOqL5Ksx
+         xxUhPOB/w5ODRx9gR+DWc5FhFTHjpL3lR0TC0yuEsu7YVl1hT5FhnsMqMWY5n7ZuoLhI
+         jPaNKxgJyba+Sxpw/V7mdK+17TGHBZ9hdpedn8D1WvmEG/8pdxx1UKvcoluzyE6Gdz8D
+         g6dfNE5Mwb3Mqoo3vL873C7BsJbMMsKC6tY0Q9ANFBajESSYVrDyGLE+Mnr4EqmGMBk7
+         vJuQ==
+X-Gm-Message-State: AOAM530t64dw6/soQBrMO/Uweh32ZUOw6MyQBY3Bn1qol8a+njrDvife
+        cLeVL9KEGfobBrdsFrrSsmQ=
+X-Google-Smtp-Source: ABdhPJw5CQuHg+8ucc6NHRSc0Qqxol1zn/CzcAseQTV40KLUTSXTJCWbJem1vvXYdaCLRmT8uSKI5w==
+X-Received: by 2002:adf:d0d0:: with SMTP id z16mr19349679wrh.308.1592036503434;
+        Sat, 13 Jun 2020 01:21:43 -0700 (PDT)
 Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id n189sm12243603wmb.43.2020.06.13.01.21.49
+        by smtp.gmail.com with ESMTPSA id n189sm12243603wmb.43.2020.06.13.01.21.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jun 2020 01:21:49 -0700 (PDT)
+        Sat, 13 Jun 2020 01:21:42 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
@@ -68,13 +67,12 @@ To:     hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
         linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v4 6/9] soc: bcm: add BCM63xx power domain driver
-Date:   Sat, 13 Jun 2020 10:21:37 +0200
-Message-Id: <20200613082140.2009461-7-noltari@gmail.com>
+Subject: [PATCH v4 0/9] bmips: add BCM63xx power domain controller
+Date:   Sat, 13 Jun 2020 10:21:31 +0200
+Message-Id: <20200613082140.2009461-1-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200613082140.2009461-1-noltari@gmail.com>
+In-Reply-To: <20200610171630.465579-1-noltari@gmail.com>
 References: <20200610171630.465579-1-noltari@gmail.com>
- <20200613082140.2009461-1-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -86,483 +84,52 @@ X-Mailing-List: devicetree@vger.kernel.org
 BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
 to enable/disable certain components in order to save power.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v4: no changes.
- v3: Use dt-bindings definitions in power domain driver.
- v2: Introduce bcm63xx folder in drivers/soc/bcm and update MAINTAINERS.
+v4: Fix device tree bindings documentation.
+v3: Introduce changes suggested by Florian:
+  - Use dt-bindings definitions in power domain driver.
+  - Separate dt-bindings definitions from power domain .dtsi support.
+v2: Introduce changes suggested by Florian:
+  - Add separate YAML file for dt-bindings.
+  - Add bcm63xx folder in drivers/soc/bcm.
+  - Update MAINTAINERS.
+  - Add dt-bindings header files.
+  - Also add BCM63268 support.
 
- MAINTAINERS                             |   1 +
- drivers/soc/bcm/Kconfig                 |  10 +
- drivers/soc/bcm/Makefile                |   1 +
- drivers/soc/bcm/bcm63xx/Kconfig         |  12 +
- drivers/soc/bcm/bcm63xx/Makefile        |   2 +
- drivers/soc/bcm/bcm63xx/bcm63xx-power.c | 378 ++++++++++++++++++++++++
- 6 files changed, 404 insertions(+)
+Álvaro Fernández Rojas (9):
+  dt-bindings: soc: brcm: add BCM63xx power domain binding
+  mips: bmips: add BCM6328 power domain definitions
+  mips: bmips: add BCM6362 power domain definitions
+  mips: bmips: add BCM63268 power domain definitions
+  mips: bmips: add BCM6318 power domain definitions
+  soc: bcm: add BCM63xx power domain driver
+  mips: bmips: dts: add BCM6328 power domain support
+  mips: bmips: dts: add BCM6362 power domain support
+  mips: bmips: dts: add BCM63268 power domain support
+
+ .../bindings/power/brcm,bcm63xx-power.yaml    |  44 ++
+ MAINTAINERS                                   |   1 +
+ arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
+ drivers/soc/bcm/Kconfig                       |  10 +
+ drivers/soc/bcm/Makefile                      |   1 +
+ drivers/soc/bcm/bcm63xx/Kconfig               |  12 +
+ drivers/soc/bcm/bcm63xx/Makefile              |   2 +
+ drivers/soc/bcm/bcm63xx/bcm63xx-power.c       | 378 ++++++++++++++++++
+ include/dt-bindings/soc/bcm6318-pm.h          |  17 +
+ include/dt-bindings/soc/bcm63268-pm.h         |  21 +
+ include/dt-bindings/soc/bcm6328-pm.h          |  17 +
+ include/dt-bindings/soc/bcm6362-pm.h          |  21 +
+ 14 files changed, 542 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/brcm,bcm63xx-power.yaml
  create mode 100644 drivers/soc/bcm/bcm63xx/Kconfig
  create mode 100644 drivers/soc/bcm/bcm63xx/Makefile
  create mode 100644 drivers/soc/bcm/bcm63xx/bcm63xx-power.c
+ create mode 100644 include/dt-bindings/soc/bcm6318-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm63268-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm6328-pm.h
+ create mode 100644 include/dt-bindings/soc/bcm6362-pm.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 56d7d27fc114..4eb0f248d440 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3450,6 +3450,7 @@ F:	arch/mips/bmips/*
- F:	arch/mips/boot/dts/brcm/bcm*.dts*
- F:	arch/mips/include/asm/mach-bmips/*
- F:	arch/mips/kernel/*bmips*
-+F:	drivers/soc/bcm/bcm63xx
- F:	drivers/irqchip/irq-bcm63*
- F:	drivers/irqchip/irq-bcm7*
- F:	drivers/irqchip/irq-brcmstb*
-diff --git a/drivers/soc/bcm/Kconfig b/drivers/soc/bcm/Kconfig
-index 648e32693b7e..24f92a6e882a 100644
---- a/drivers/soc/bcm/Kconfig
-+++ b/drivers/soc/bcm/Kconfig
-@@ -22,6 +22,15 @@ config RASPBERRYPI_POWER
- 	  This enables support for the RPi power domains which can be enabled
- 	  or disabled via the RPi firmware.
- 
-+config SOC_BCM63XX
-+	bool "Broadcom 63xx SoC drivers"
-+	depends on BMIPS_GENERIC || COMPILE_TEST
-+	help
-+	  Enables drivers for the Broadcom 63xx series of chips.
-+	  Drivers can be enabled individually within this menu.
-+
-+	  If unsure, say N.
-+
- config SOC_BRCMSTB
- 	bool "Broadcom STB SoC drivers"
- 	depends on ARM || ARM64 || BMIPS_GENERIC || COMPILE_TEST
-@@ -33,6 +42,7 @@ config SOC_BRCMSTB
- 
- 	  If unsure, say N.
- 
-+source "drivers/soc/bcm/bcm63xx/Kconfig"
- source "drivers/soc/bcm/brcmstb/Kconfig"
- 
- endmenu
-diff --git a/drivers/soc/bcm/Makefile b/drivers/soc/bcm/Makefile
-index d92268a829a9..7bc90e0bd773 100644
---- a/drivers/soc/bcm/Makefile
-+++ b/drivers/soc/bcm/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_BCM2835_POWER)	+= bcm2835-power.o
- obj-$(CONFIG_RASPBERRYPI_POWER)	+= raspberrypi-power.o
-+obj-$(CONFIG_SOC_BCM63XX)	+= bcm63xx/
- obj-$(CONFIG_SOC_BRCMSTB)	+= brcmstb/
-diff --git a/drivers/soc/bcm/bcm63xx/Kconfig b/drivers/soc/bcm/bcm63xx/Kconfig
-new file mode 100644
-index 000000000000..16f648a6c70a
---- /dev/null
-+++ b/drivers/soc/bcm/bcm63xx/Kconfig
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+if SOC_BCM63XX
-+
-+config BCM63XX_POWER
-+	bool "BCM63xx power domain driver"
-+	depends on BMIPS_GENERIC || (COMPILE_TEST && OF)
-+	select PM_GENERIC_DOMAINS if PM
-+	help
-+	  This enables support for the BCM63xx power domains controller on
-+	  BCM6318, BCM6328, BCM6362 and BCM63268 SoCs.
-+
-+endif # SOC_BCM63XX
-diff --git a/drivers/soc/bcm/bcm63xx/Makefile b/drivers/soc/bcm/bcm63xx/Makefile
-new file mode 100644
-index 000000000000..0710d5e018cc
---- /dev/null
-+++ b/drivers/soc/bcm/bcm63xx/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_BCM63XX_POWER) += bcm63xx-power.o
-diff --git a/drivers/soc/bcm/bcm63xx/bcm63xx-power.c b/drivers/soc/bcm/bcm63xx/bcm63xx-power.c
-new file mode 100644
-index 000000000000..515fe182dc34
---- /dev/null
-+++ b/drivers/soc/bcm/bcm63xx/bcm63xx-power.c
-@@ -0,0 +1,378 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * BCM63xx Power Domain Controller Driver
-+ *
-+ * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-+ */
-+
-+#include <dt-bindings/soc/bcm6318-pm.h>
-+#include <dt-bindings/soc/bcm6328-pm.h>
-+#include <dt-bindings/soc/bcm6362-pm.h>
-+#include <dt-bindings/soc/bcm63268-pm.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+
-+struct bcm63xx_power_dev {
-+	struct generic_pm_domain genpd;
-+	struct bcm63xx_power *power;
-+	uint32_t mask;
-+};
-+
-+struct bcm63xx_power {
-+	void __iomem *base;
-+	spinlock_t lock;
-+	struct bcm63xx_power_dev *dev;
-+	struct genpd_onecell_data genpd_data;
-+	struct generic_pm_domain **genpd;
-+};
-+
-+struct bcm63xx_power_data {
-+	const char * const name;
-+	uint8_t bit;
-+	unsigned int flags;
-+};
-+
-+static int bcm63xx_power_get_state(struct bcm63xx_power_dev *pmd, bool *is_on)
-+{
-+	struct bcm63xx_power *power = pmd->power;
-+
-+	if (!pmd->mask) {
-+		*is_on = false;
-+		return -EINVAL;
-+	}
-+
-+	*is_on = !(__raw_readl(power->base) & pmd->mask);
-+
-+	return 0;
-+}
-+
-+static int bcm63xx_power_set_state(struct bcm63xx_power_dev *pmd, bool on)
-+{
-+	struct bcm63xx_power *power = pmd->power;
-+	unsigned long flags;
-+	uint32_t val;
-+
-+	if (!pmd->mask)
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&power->lock, flags);
-+	val = __raw_readl(power->base);
-+	if (on)
-+		val &= ~pmd->mask;
-+	else
-+		val |= pmd->mask;
-+	__raw_writel(val, power->base);
-+	spin_unlock_irqrestore(&power->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int bcm63xx_power_on(struct generic_pm_domain *genpd)
-+{
-+	struct bcm63xx_power_dev *pmd = container_of(genpd,
-+		struct bcm63xx_power_dev, genpd);
-+
-+	return bcm63xx_power_set_state(pmd, true);
-+}
-+
-+static int bcm63xx_power_off(struct generic_pm_domain *genpd)
-+{
-+	struct bcm63xx_power_dev *pmd = container_of(genpd,
-+		struct bcm63xx_power_dev, genpd);
-+
-+	return bcm63xx_power_set_state(pmd, false);
-+}
-+
-+static int bcm63xx_power_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct resource *res;
-+	const struct bcm63xx_power_data *entry, *table;
-+	struct bcm63xx_power *power;
-+	unsigned int ndom;
-+	uint8_t max_bit = 0;
-+	int ret;
-+
-+	power = devm_kzalloc(dev, sizeof(*power), GFP_KERNEL);
-+	if (!power)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	power->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(power->base))
-+		return PTR_ERR(power->base);
-+
-+	table = of_device_get_match_data(dev);
-+	if (!table)
-+		return -EINVAL;
-+
-+	power->genpd_data.num_domains = 0;
-+	ndom = 0;
-+	for (entry = table; entry->name; entry++) {
-+		max_bit = max(max_bit, entry->bit);
-+		ndom++;
-+	}
-+
-+	if (!ndom)
-+		return -ENODEV;
-+
-+	power->genpd_data.num_domains = max_bit + 1;
-+
-+	power->dev = devm_kcalloc(dev, power->genpd_data.num_domains,
-+				  sizeof(struct bcm63xx_power_dev),
-+				  GFP_KERNEL);
-+	if (!power->dev)
-+		return -ENOMEM;
-+
-+	power->genpd = devm_kcalloc(dev, power->genpd_data.num_domains,
-+				    sizeof(struct generic_pm_domain *),
-+				    GFP_KERNEL);
-+	if (!power->genpd)
-+		return -ENOMEM;
-+
-+	power->genpd_data.domains = power->genpd;
-+
-+	ndom = 0;
-+	for (entry = table; entry->name; entry++) {
-+		struct bcm63xx_power_dev *pmd = &power->dev[ndom];
-+		bool is_on;
-+
-+		pmd->power = power;
-+		pmd->mask = BIT(entry->bit);
-+		pmd->genpd.name = entry->name;
-+		pmd->genpd.flags = entry->flags;
-+
-+		ret = bcm63xx_power_get_state(pmd, &is_on);
-+		if (ret)
-+			dev_warn(dev, "unable to get current state for %s\n",
-+				 pmd->genpd.name);
-+
-+		pmd->genpd.power_on = bcm63xx_power_on;
-+		pmd->genpd.power_off = bcm63xx_power_off;
-+
-+		pm_genpd_init(&pmd->genpd, NULL, !is_on);
-+		power->genpd[entry->bit] = &pmd->genpd;
-+
-+		ndom++;
-+	}
-+
-+	spin_lock_init(&power->lock);
-+
-+	ret = of_genpd_add_provider_onecell(np, &power->genpd_data);
-+	if (ret) {
-+		dev_err(dev, "failed to register genpd driver: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dev_info(dev, "registered %u power domains\n", ndom);
-+
-+	return 0;
-+}
-+
-+static const struct bcm63xx_power_data bcm6318_power_domains[] = {
-+	{
-+		.name = "pcie",
-+		.bit = BCM6318_POWER_DOMAIN_PCIE,
-+	}, {
-+		.name = "usb",
-+		.bit = BCM6318_POWER_DOMAIN_USB,
-+	}, {
-+		.name = "ephy0",
-+		.bit = BCM6318_POWER_DOMAIN_EPHY0,
-+	}, {
-+		.name = "ephy1",
-+		.bit = BCM6318_POWER_DOMAIN_EPHY1,
-+	}, {
-+		.name = "ephy2",
-+		.bit = BCM6318_POWER_DOMAIN_EPHY2,
-+	}, {
-+		.name = "ephy3",
-+		.bit = BCM6318_POWER_DOMAIN_EPHY3,
-+	}, {
-+		.name = "ldo2p5",
-+		.bit = BCM6318_POWER_DOMAIN_LDO2P5,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "ldo2p9",
-+		.bit = BCM6318_POWER_DOMAIN_LDO2P9,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "sw1p0",
-+		.bit = BCM6318_POWER_DOMAIN_SW1P0,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "pad",
-+		.bit = BCM6318_POWER_DOMAIN_PAD,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		/* sentinel */
-+	},
-+};
-+
-+static const struct bcm63xx_power_data bcm6328_power_domains[] = {
-+	{
-+		.name = "adsl2-mips",
-+		.bit = BCM6328_POWER_DOMAIN_ADSL2_MIPS,
-+	}, {
-+		.name = "adsl2-phy",
-+		.bit = BCM6328_POWER_DOMAIN_ADSL2_PHY,
-+	}, {
-+		.name = "adsl2-afe",
-+		.bit = BCM6328_POWER_DOMAIN_ADSL2_AFE,
-+	}, {
-+		.name = "sar",
-+		.bit = BCM6328_POWER_DOMAIN_SAR,
-+	}, {
-+		.name = "pcm",
-+		.bit = BCM6328_POWER_DOMAIN_PCM,
-+	}, {
-+		.name = "usbd",
-+		.bit = BCM6328_POWER_DOMAIN_USBD,
-+	}, {
-+		.name = "usbh",
-+		.bit = BCM6328_POWER_DOMAIN_USBH,
-+	}, {
-+		.name = "pcie",
-+		.bit = BCM6328_POWER_DOMAIN_PCIE,
-+	}, {
-+		.name = "robosw",
-+		.bit = BCM6328_POWER_DOMAIN_ROBOSW,
-+	}, {
-+		.name = "ephy",
-+		.bit = BCM6328_POWER_DOMAIN_EPHY,
-+	}, {
-+		/* sentinel */
-+	},
-+};
-+
-+static const struct bcm63xx_power_data bcm6362_power_domains[] = {
-+	{
-+		.name = "sar",
-+		.bit = BCM6362_POWER_DOMAIN_SAR,
-+	}, {
-+		.name = "ipsec",
-+		.bit = BCM6362_POWER_DOMAIN_IPSEC,
-+	}, {
-+		.name = "mips",
-+		.bit = BCM6362_POWER_DOMAIN_MIPS,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "dect",
-+		.bit = BCM6362_POWER_DOMAIN_DECT,
-+	}, {
-+		.name = "usbh",
-+		.bit = BCM6362_POWER_DOMAIN_USBH,
-+	}, {
-+		.name = "usbd",
-+		.bit = BCM6362_POWER_DOMAIN_USBD,
-+	}, {
-+		.name = "robosw",
-+		.bit = BCM6362_POWER_DOMAIN_ROBOSW,
-+	}, {
-+		.name = "pcm",
-+		.bit = BCM6362_POWER_DOMAIN_PCM,
-+	}, {
-+		.name = "periph",
-+		.bit = BCM6362_POWER_DOMAIN_PERIPH,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "adsl-phy",
-+		.bit = BCM6362_POWER_DOMAIN_ADSL_PHY,
-+	}, {
-+		.name = "gmii-pads",
-+		.bit = BCM6362_POWER_DOMAIN_GMII_PADS,
-+	}, {
-+		.name = "fap",
-+		.bit = BCM6362_POWER_DOMAIN_FAP,
-+	}, {
-+		.name = "pcie",
-+		.bit = BCM6362_POWER_DOMAIN_PCIE,
-+	}, {
-+		.name = "wlan-pads",
-+		.bit = BCM6362_POWER_DOMAIN_WLAN_PADS,
-+	}, {
-+		/* sentinel */
-+	},
-+};
-+
-+static const struct bcm63xx_power_data bcm63268_power_domains[] = {
-+	{
-+		.name = "sar",
-+		.bit = BCM63268_POWER_DOMAIN_SAR,
-+	}, {
-+		.name = "ipsec",
-+		.bit = BCM63268_POWER_DOMAIN_IPSEC,
-+	}, {
-+		.name = "mips",
-+		.bit = BCM63268_POWER_DOMAIN_MIPS,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "dect",
-+		.bit = BCM63268_POWER_DOMAIN_DECT,
-+	}, {
-+		.name = "usbh",
-+		.bit = BCM63268_POWER_DOMAIN_USBH,
-+	}, {
-+		.name = "usbd",
-+		.bit = BCM63268_POWER_DOMAIN_USBD,
-+	}, {
-+		.name = "robosw",
-+		.bit = BCM63268_POWER_DOMAIN_ROBOSW,
-+	}, {
-+		.name = "pcm",
-+		.bit = BCM63268_POWER_DOMAIN_PCM,
-+	}, {
-+		.name = "periph",
-+		.bit = BCM63268_POWER_DOMAIN_PERIPH,
-+		.flags = GENPD_FLAG_ALWAYS_ON,
-+	}, {
-+		.name = "vdsl-phy",
-+		.bit = BCM63268_POWER_DOMAIN_VDSL_PHY,
-+	}, {
-+		.name = "vdsl-mips",
-+		.bit = BCM63268_POWER_DOMAIN_VDSL_MIPS,
-+	}, {
-+		.name = "fap",
-+		.bit = BCM63268_POWER_DOMAIN_FAP,
-+	}, {
-+		.name = "pcie",
-+		.bit = BCM63268_POWER_DOMAIN_PCIE,
-+	}, {
-+		.name = "wlan-pads",
-+		.bit = BCM63268_POWER_DOMAIN_WLAN_PADS,
-+	}, {
-+		/* sentinel */
-+	},
-+};
-+
-+static const struct of_device_id bcm63xx_power_of_match[] = {
-+	{
-+		.compatible = "brcm,bcm6318-power-controller",
-+		.data = &bcm6318_power_domains,
-+	}, {
-+		.compatible = "brcm,bcm6328-power-controller",
-+		.data = &bcm6328_power_domains,
-+	}, {
-+		.compatible = "brcm,bcm6362-power-controller",
-+		.data = &bcm6362_power_domains,
-+	}, {
-+		.compatible = "brcm,bcm63268-power-controller",
-+		.data = &bcm63268_power_domains,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+
-+static struct platform_driver bcm63xx_power_driver = {
-+	.driver = {
-+		.name = "bcm63xx-power-controller",
-+		.of_match_table = bcm63xx_power_of_match,
-+	},
-+	.probe  = bcm63xx_power_probe,
-+};
-+builtin_platform_driver(bcm63xx_power_driver);
 -- 
 2.27.0
 
