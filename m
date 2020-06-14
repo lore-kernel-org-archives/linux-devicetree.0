@@ -2,231 +2,97 @@ Return-Path: <SRS0=7KtL=73=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9918AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 14:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D58C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 15:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D1F20747
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 14:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59CF2078A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 15:11:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="WojMRQ/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgFNOht (ORCPT
+        id S1726978AbgFNPLI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 10:37:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:35990 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgFNOhr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 14 Jun 2020 10:37:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42EB3201186;
-        Sun, 14 Jun 2020 16:37:45 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9D447201182;
-        Sun, 14 Jun 2020 16:37:41 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 09034402D0;
-        Sun, 14 Jun 2020 22:37:36 +0800 (SGT)
-From:   Biwen Li <biwen.li@oss.nxp.com>
-To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Sun, 14 Jun 2020 22:32:05 +0800
-Message-Id: <20200614143206.24993-3-biwen.li@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200614143206.24993-1-biwen.li@oss.nxp.com>
-References: <20200614143206.24993-1-biwen.li@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 14 Jun 2020 11:11:08 -0400
+Received: from www381.your-server.de ([78.46.137.84]:41598 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgFNPLH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 11:11:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=2DdAg+LgMBd0da3+ETcMF3kF+GgHUd3v2IJF8Z+RehE=; b=WojMRQ/HGD48weFeNClYtL1TYx
+        xS7hBXCEQWorRipPomN2p6KcuCRsXJi8Nc4JnoVU3NpqP6SWN3W6hwVGzs2QgjS+6VV2UjBqrun0r
+        mMulN2/Dl7lQys1FILORLf56YqqP9ZouTuhfgy7OxcGAOWesdzU52giqo1FVH0VIX5q2INuX3Nezs
+        NsF4vbU6C35QYjh1E7yaU/cPTCixz7uenHN0GtHnZ1dO6kp3OjUNoLHQl3ezS8gBxKHJE1NcIflQo
+        0cfhIIAS68MGNx28cMfUuqFwDyXPr5Uixl++4jVmV3XmFvAT/j/8H7ok4K+14RgMnGZDNCZ1otBE6
+        JF/osOWg==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jkUHd-0002I6-7W; Sun, 14 Jun 2020 17:10:53 +0200
+Received: from [82.135.70.239] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jkUHc-000Rve-TY; Sun, 14 Jun 2020 17:10:52 +0200
+Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
+ support
+To:     Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        jic23@kernel.org, robh+dt@kernel.org, robh@kernel.org,
+        mchehab+huawei@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200608204250.3291-1-jmaneyrol@invensense.com>
+ <20200608204250.3291-7-jmaneyrol@invensense.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
+Date:   Sun, 14 Jun 2020 17:10:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200608204250.3291-7-jmaneyrol@invensense.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25843/Sun Jun 14 14:53:02 2020)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+On 6/8/20 10:42 PM, Jean-Baptiste Maneyrol wrote:
+> +	case IIO_CHAN_INFO_PROCESSED:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = inv_icm42600_temp_read(st, &temp);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		*val = temp;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 483;
+> +		*val2 = 91787;
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		*val = 25000;
+> +		return IIO_VAL_INT;
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+If the data is returned processed there is no need to specify scale and 
+offset.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v2:
-	- use generic name
-	- use definition
-
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 006e544..4742efe 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -512,6 +513,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3b641bd..55ceae7 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -829,6 +830,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index d4c1da3..3c92c21 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -765,6 +766,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 36a7995..169f474 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -781,6 +782,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: power-controller@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 3944ef1..0c74021 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -763,6 +764,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: power-controller@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.7.4
+But since the transformation to turn the data into standard units is a 
+simple linear transform the preferred way to handle this is to return 
+RAW data and specify scale and offset.
 
