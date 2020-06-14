@@ -2,101 +2,109 @@ Return-Path: <SRS0=7KtL=73=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D47C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 04:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD3EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 07:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5157207C4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 04:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F109206D7
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 07:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EA8ZJ/30"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RZBoUhX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725730AbgFNEwI (ORCPT
+        id S1725385AbgFNHat (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 00:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNEwI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 00:52:08 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D71C03E96F;
-        Sat, 13 Jun 2020 21:52:08 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b5so6314639pfp.9;
-        Sat, 13 Jun 2020 21:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=pwEq6EWpgufif9QPiano6bX2JLu9B/b2fY6JCl1CvF0=;
-        b=EA8ZJ/30lYzSM+O5Ao9/Ja09w1VYKLmQC6IgIxCv1GcHgzq0f7zYIFeiYGte+tvZpj
-         m8phLFt4LhYvOerJ0AEAz4uG1ZMO3Fp6Ljo8RTNAb5+S8u3GrJSfSDWnqNDErS+RBn6Q
-         EsSXqIGflYh7WkNRHLjlzB5No7BDJlYyBdRQMjUa+aZlxh0Nhkpjv6xOBlDlUQoB4LRo
-         L8Oa9KCpF7MRnAA4M2HIwFugVC1kfvp8495tVmDmkn46x7BXBC1y0pe/3/apXmUv2Eff
-         vXaZWTvcwbngVvktvneqElaD5G01ylxSIVXwJeNfY5nxoxo0ESGyA+/U85npSUYr7WHQ
-         cYWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pwEq6EWpgufif9QPiano6bX2JLu9B/b2fY6JCl1CvF0=;
-        b=RZcC/gii/iqtmcuqvozo8CRH6gdq7wZy3JMOOIwQ878EoAA3MyEhgbe6ljOa3Zdvmu
-         VJU/t0cOantMq4QJ6f7D5sP0kIU5PtRACkL/sqMvmH+bsuatZf+x2+lkH7G3Y+wrYjdf
-         q091UBA/S+7pBbbMWq+qUr7x0vat9+wpCtfOMrVolpwKwbeZKOVvrbjj3XgUTEVCO4ap
-         K/zj7D8gg9NMrwu9Exlt+hiV4P/RhWXBET13pzL4ptitawYvDGWBoUOcyOVlt3K0X4Kj
-         tQfmmHkwTVJT7tXmgRnix7HXCcp6tnJ4JHEZyfXF3kJoZDshaqB7Fw35qFO+1X2topji
-         4I+w==
-X-Gm-Message-State: AOAM532wk390aQ7ms5XhD2kLluotv8/bsq3/Afliq8glauE7UaruWvLk
-        oCIugc1XhlK+/qCBKO8fim0=
-X-Google-Smtp-Source: ABdhPJxrPp5ZsndlHOswB03R3pfo+8b7pocnbx3Qc8nk69x8SYVX2vrDmgvUm/wJKjOzz5g+xLTfNw==
-X-Received: by 2002:a62:2d0:: with SMTP id 199mr12416482pfc.4.1592110327089;
-        Sat, 13 Jun 2020 21:52:07 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id r20sm10726402pfc.101.2020.06.13.21.52.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Jun 2020 21:52:06 -0700 (PDT)
-Subject: Re: [PATCH v4 3/9] reset: add BCM6345 reset controller driver
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-References: <20200610172859.466334-1-noltari@gmail.com>
- <20200613083813.2027186-1-noltari@gmail.com>
- <20200613083813.2027186-4-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7996d8c7-c408-40bb-e468-f1121b69f662@gmail.com>
-Date:   Sat, 13 Jun 2020 21:52:02 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Sun, 14 Jun 2020 03:30:49 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:27760 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725265AbgFNHat (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 03:30:49 -0400
+X-UUID: 3bc1a341b00542dfb52cf5ddf64727f4-20200614
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=L4w1BxuPEuaolAl73lyLpZak7tmL/oTsWS9Ew8XXxXE=;
+        b=RZBoUhX3c7O133L0zkcaymSsylEgXeymaK/OdhgmQIYSpmkVcnkuWh+lDI4Y4p9cTGptptDLE9nDeANKdxHWprvaLF1luXLytLBN8pHjRX/z7hzGAmcmISfDa7+NK4zhlbzj87Mu35I/xVV5omD/3JyVITWgju0NvNgAoN4DMKc=;
+X-UUID: 3bc1a341b00542dfb52cf5ddf64727f4-20200614
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1197687010; Sun, 14 Jun 2020 15:30:40 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 14 Jun
+ 2020 15:30:37 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Sun, 14 Jun 2020 15:30:35 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v16 0/1] mt8183 dpi support pin mode swap
+Date:   Sun, 14 Jun 2020 15:30:35 +0800
+Message-ID: <20200614073036.63969-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200613083813.2027186-4-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E1923E3E3C51486693955F8F978D504463E5922E9982C95200D291053619C5292000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Q2hhbmdlcyBzaW5jZSB2MTU6DQogLSBGaXggWUFNTCBMaWNlbnNlIHRvIChHUEwtMi4wLW9ubHkg
+T1IgQlNELTItQ2xhdXNlKS4NCiAtICJkdC1iaW5kaW5nczogZGlzcGxheTogbWVkaWF0ZWs6IGNv
+bnRyb2wgZHBpIHBpbnMgbW9kZSB0byBhdm9pZCBsZWFrYWdlIg0KICAgImRybS9tZWRpYXRlazog
+c2V0IGRwaSBwaW4gbW9kZSB0byBncGlvIGxvdyB0byBhdm9pZCBsZWFrYWdlIGN1cnJlbnQiDQog
+ICBhcHBsaWVkIHYxNS4gVGhlIGxpbmtzIGFyZSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
+L3BhdGNoLzExNDg5NTQ1Lw0KICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8x
+MTQ4OTU3Ny8NCg0KQ2hhbmdlcyBzaW5jZSB2MTQ6DQogLSBhZGQgIkFja2VkLWJ5IiBhbmQgIlJl
+dmlld2VkLWJ5Ig0KIC0gY2hhbmdlIHBvcnRAMCB0byBwb3J0IGluIHlhbWwNCg0KQ2hhbmdlcyBz
+aW5jZSB2MTM6DQogLSBtb3ZlIGRwaSBkdWFsIGVkZ2UgcGF0Y2hlcyB0byBhbm90aGVyIHNlcmll
+cyBiZWNhdXNlIGl0IHdpbGwgaGF2ZSBsb25nIHRpbWUNCiAgIHRvIGltcGxlbWVudCB0aGUgZHVh
+bCBlZGdlIGNoYW5nZSBiYXNlIGJvcmlzIHBhdGNoZXMuDQogICBodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL2NvdmVyLzExMzU0Mjc5Lw0KDQpDaGFuZ2VzIHNpbmNlIHYxMjoNCiAtIGZpeCBt
+ZWRpYXRlayxkcGkueWFtbCBtYWtlX2R0X2JpbmRpbmdfY2hlY2sgZXJyb3JzLg0KDQpDaGFuZ2Ug
+c2luY2UgdjExOg0KIC0gZmluZSB0dW5lIG1lZGlhdGVrLGRwaS55YW1sLg0KIC0gYWRkIEFja2Vk
+LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPi4NCg0KQ2hhbmdlIHNpbmNlIHYxMDoN
+CiAtIGNvbnZlcnQgdGhlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21lZGlhdGVrL21lZGlhdGVrLGRwaS50eHQNCiAgIHRvIHlhbWwgZm9ybWF0Lg0KIC0gcmVhZCB0
+aGUgcGNsay1zYW1wbGUgaW4gZW5kcG9pbnQuDQoNCkNoYW5nZXMgc2luY2Ugdjk6DQogLSByZW5h
+bWUgcGluY3RybC1uYW1lcyA9ICJncGlvbW9kZSIsICJkcGltb2RlIiB0byAiYWN0aXZlIiwgImlk
+bGUiLg0KIC0gZml4IHNvbWUgdHlwby4NCg0KQ2hhbmdlcyBzaW5jZSB2ODoNCiAtIGRyb3AgcGNs
+ay1zYW1wbGUgcmVkZWZpbmUgaW4gbWVkaWF0ZWssZHBpLnR4dA0KIC0gb25seSBnZXQgdGhlIGdw
+aW9tb2RlIGFuZCBkcGltb2RlIHdoZW4gZHBpLT5waW5jdHJsIGlzIHN1Y2Nlc3NmdWwuDQoNCkNo
+YW5nZXMgc2luY2Ugdjc6DQogLSBzZXBhcmF0ZSBkdC1iaW5kaW5ncyB0byBpbmRlcGVuZGVudCBw
+YXRjaGVzLg0KIC0gbW92ZSBkcGkgZHVhbCBlZGdlIHRvIG9uZSBwYXRjaC4NCg0KQ2hhbmdlcyBz
+aW5jZSB2NjoNCiAtIGNoYW5nZSBkdWFsX2VkZ2UgdG8gcGNsay1zYW1wbGUNCiAtIHJlbW92ZSBk
+cGlfcGluX21vZGVfc3dhcCBhbmQNCg0KQ2hhbmdlcyBzaW5jZSB2NToNCiAtIGZpbmUgdHVuZSB0
+aGUgZHQtYmluZGluZ3MgY29tbWl0IG1lc3NhZ2UuDQoNCkNoYW5nZXMgc2luY2UgdjQ6DQogLSBt
+b3ZlIHBpbiBtb2RlIGNvbnRyb2wgYW5kIGR1YWwgZWRnZSBjb250cm9sIHRvIGRldmVpY2UgdHJl
+ZS4NCiAtIHVwZGF0ZSBkdC1iaW5kaW5ncyBkb2N1bWVudCBmb3IgcGluIG1vZGUgc3dhcCBhbmQg
+ZHVhbCBlZGdlIGNvbnRyb2wuDQoNCkNoYW5nZXMgc2luY2UgdjM6DQogLSBhZGQgZHBpIHBpbiBt
+b2RlIGNvbnRyb2wgd2hlbiBkcGkgb24gb3Igb2ZmLg0KIC0gdXBkYXRlIGRwaSBkdWFsIGVkZ2Ug
+Y29tbWVudC4NCg0KQ2hhbmdlcyBzaW5jZSB2MjoNCiAtIHVwZGF0ZSBkdC1iaW5kaW5ncyBkb2N1
+bWVudCBmb3IgbXQ4MTgzIGRwaS4NCiAtIHNlcGFyYXRlIGR1YWwgZWRnZSBtb2RmaWNhdGlvbiBh
+cyBpbmRlcGVuZGVudCBwYXRjaC4NCg0KSml0YW8gU2hpICgxKToNCiAgZHQtYmluZGluZ3M6IGRp
+c3BsYXk6IG1lZGlhdGVrOiBjb252ZXJ0IHRoZSBkcGkgYmluZGluZ3MgdG8geWFtbA0KDQogLi4u
+L2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dCAgICAgICAgIHwgNDIgLS0tLS0tLS0N
+CiAuLi4vZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkueWFtbCAgICAgICAgfCA5NyArKysr
+KysrKysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2VkLCA5NyBpbnNlcnRpb25zKCspLCA0MiBk
+ZWxldGlvbnMoLSkNCiBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRl
+ay9tZWRpYXRlayxkcGkueWFtbA0KDQotLSANCjIuMjUuMQ0K
 
-
-On 6/13/2020 1:38 AM, Álvaro Fernández Rojas wrote:
-> Add support for resetting blocks through the Linux reset controller
-> subsystem for BCM63xx SoCs.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-
-With the kbuild robot error fixed:
-
-Reviewed-by: Florian Fainelli <F.fainelli@gmail.com>
-
-Thanks!
--- 
-Florian
