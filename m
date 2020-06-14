@@ -2,180 +2,85 @@ Return-Path: <SRS0=7KtL=73=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B19C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CEFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6C920739
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 17:23:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQDJDQZC"
+	by mail.kernel.org (Postfix) with ESMTP id 39C1120739
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 20:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgFNRXr (ORCPT
+        id S1727823AbgFNUAw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 13:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbgFNRXZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 13:23:25 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305E8C05BD43;
-        Sun, 14 Jun 2020 10:23:25 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id i27so16376312ljb.12;
-        Sun, 14 Jun 2020 10:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bfaJuFdXozXDPR9zng+hgfPKlX3mT8FyISD1FTQ25bo=;
-        b=HQDJDQZCB/xOQVZo2t6Fc/k3bSs8SMgo0QWAfN4dQfoQ1LINb2Kyzl2YimVdQPXszj
-         P7IJoLJq4mexh79Re8BDkeoEFzFIWdI3AKivBUBAasbS8jAKLm3URdeMvc46FoxNRTYP
-         8g+Ffm3qJToMdpFD3NxmcptMbqbFl+dbNe1XK0ITwvLTxOfbRQIka36OtSIURZ9OB2dw
-         +1eZkJmqZbzGyeotAvl56hp0QsS25Dk4REsJ9wgfS816WTDjmtxbr81CGfvsskpYwANx
-         SNhUXfdvt7LDWSTNTSjejIOULBYtIRL5BeDuY2lxFxqyVU2w5wR3WLDiyq48MEBHsSIv
-         XJHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bfaJuFdXozXDPR9zng+hgfPKlX3mT8FyISD1FTQ25bo=;
-        b=V0dqTjrfy07pO5RKOxzOkI9t1bmnB4rO4Q8ZpX1iOSIJT0ttAXbNlQAlIpautyztYt
-         X44/PgM9eg98VIiJ+r2S8x5DPrWuInBsmexx+jAxZFyPWTOt2V3eX4BJOU0B3ZsG/NkL
-         Y9karOlrDlvrIUreODaN6zzQeiBGhjGYsEDpDduE8MDk8WHFhKNmQfVUDONp26Hfs26n
-         fyYBV2Ptx8FWyDx41txer1hrDF391GxagrQRRgjZc4KllXqmq2KSUdxwnWxDSEARCz10
-         2Fscel9wBzCyrJvODlXiUf8i4K9BFsFAzShO0O2KZAbPSZFyeGZAwMgthqiE1GdCxa2u
-         zdfg==
-X-Gm-Message-State: AOAM531jRsHZWp8NnxxcAOM64pwgC2ighTlGDsuNPpqCFEdRuR9gpUWZ
-        n+67Ch8iH32M7/nzM/xiPOQ=
-X-Google-Smtp-Source: ABdhPJydsb3itiYMRywNC5ifF4Kc/5EdonKXAtEm8tYm6mo/Q8ZftpEz4mh0PXzhyD+30VDVunJPtQ==
-X-Received: by 2002:a2e:b4a5:: with SMTP id q5mr10853627ljm.186.1592155403476;
-        Sun, 14 Jun 2020 10:23:23 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id m14sm55144lfp.18.2020.06.14.10.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2020 10:23:23 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 5/6] drm/tegra: output: rgb: Support LVDS encoder bridge
-Date:   Sun, 14 Jun 2020 20:22:33 +0300
-Message-Id: <20200614172234.8856-6-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200614172234.8856-1-digetx@gmail.com>
-References: <20200614172234.8856-1-digetx@gmail.com>
+        Sun, 14 Jun 2020 16:00:52 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:34603 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726648AbgFNUAw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 14 Jun 2020 16:00:52 -0400
+Received: from [37.163.176.33] (port=58546 helo=[192.168.43.3])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jkYoB-0007H9-7c; Sun, 14 Jun 2020 22:00:48 +0200
+Subject: Re: [RFC 2/4] regulator: lp87565: dt: remove duplicated section
+To:     Rob Herring <robh@kernel.org>, Keerthy <j-keerthy@ti.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Axel Lin <axel.lin@ingics.com>
+References: <20200603200319.16184-1-luca@lucaceresoli.net>
+ <20200603200319.16184-3-luca@lucaceresoli.net>
+ <20200612221954.GA3919662@bogus>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <532c0ac1-b520-3443-1f8f-12fd87011076@lucaceresoli.net>
+Date:   Sun, 14 Jun 2020 22:00:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200612221954.GA3919662@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Newer Tegra device-trees will specify a video output graph, which involves
-LVDS encoder bridge. This patch adds support for the LVDS encoder bridge
-to the RGB output, allowing us to model the display hardware properly.
+Hi Rob, Keerthy,
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/gpu/drm/tegra/rgb.c | 58 +++++++++++++++++++++++++++++++------
- 1 file changed, 49 insertions(+), 9 deletions(-)
+On 13/06/20 00:19, Rob Herring wrote:
+> On Wed, Jun 03, 2020 at 10:03:17PM +0200, Luca Ceresoli wrote:
+>> The "Required properties:" section is copied verbatim for each of the two
+>> supported chips. In preparation to add a new chip variant make it a common
+>> section and keep the two examples to differentiate between the two chips.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>> ---
+>>  .../devicetree/bindings/mfd/lp87565.txt       | 21 ++++---------------
+>>  1 file changed, 4 insertions(+), 17 deletions(-)
+> 
+> If you want to clean this up, can you convert it to DT schema?
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 0562a7eb793f..9a7024ec96bc 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -7,6 +7,7 @@
- #include <linux/clk.h>
- 
- #include <drm/drm_atomic_helper.h>
-+#include <drm/drm_bridge_connector.h>
- #include <drm/drm_panel.h>
- #include <drm/drm_simple_kms_helper.h>
- 
-@@ -267,24 +268,63 @@ int tegra_dc_rgb_remove(struct tegra_dc *dc)
- int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- {
- 	struct tegra_output *output = dc->rgb;
-+	struct drm_connector *connector;
- 	int err;
- 
- 	if (!dc->rgb)
- 		return -ENODEV;
- 
--	drm_connector_init(drm, &output->connector, &tegra_rgb_connector_funcs,
--			   DRM_MODE_CONNECTOR_LVDS);
--	drm_connector_helper_add(&output->connector,
--				 &tegra_rgb_connector_helper_funcs);
--	output->connector.dpms = DRM_MODE_DPMS_OFF;
--
- 	drm_simple_encoder_init(drm, &output->encoder, DRM_MODE_ENCODER_LVDS);
- 	drm_encoder_helper_add(&output->encoder,
- 			       &tegra_rgb_encoder_helper_funcs);
- 
--	drm_connector_attach_encoder(&output->connector,
--					  &output->encoder);
--	drm_connector_register(&output->connector);
-+	/*
-+	 * Tegra devices that have LVDS panel utilize LVDS encoder bridge
-+	 * for converting up to 28 LCD LVTTL lanes into 5/4 LVDS lanes that
-+	 * go to display panel's receiver.
-+	 *
-+	 * Encoder usually have a power-down control which needs to be enabled
-+	 * in order to transmit data to the panel.  Historically devices that
-+	 * use an older device-tree version didn't model the bridge, assuming
-+	 * that encoder is turned ON by default, while today's DRM allows us
-+	 * to model LVDS encoder properly.
-+	 *
-+	 * Newer device-trees utilize LVDS encoder bridge, which provides
-+	 * us with a connector and handles the display panel.
-+	 *
-+	 * For older device-trees we fall back to our own connector and use
-+	 * nvidia,panel phandle.
-+	 */
-+	if (output->bridge) {
-+		err = drm_bridge_attach(&output->encoder, output->bridge,
-+					NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-+		if (err) {
-+			dev_err(output->dev, "failed to attach bridge: %d\n",
-+				err);
-+			return err;
-+		}
-+
-+		connector = drm_bridge_connector_init(drm, &output->encoder);
-+		if (IS_ERR(connector)) {
-+			dev_err(output->dev,
-+				"failed to initialize bridge connector: %pe\n",
-+				connector);
-+			return PTR_ERR(connector);
-+		}
-+
-+		drm_connector_attach_encoder(connector, &output->encoder);
-+	} else {
-+		drm_connector_init(drm, &output->connector,
-+				   &tegra_rgb_connector_funcs,
-+				   DRM_MODE_CONNECTOR_LVDS);
-+		drm_connector_helper_add(&output->connector,
-+					 &tegra_rgb_connector_helper_funcs);
-+		output->connector.dpms = DRM_MODE_DPMS_OFF;
-+
-+		drm_connector_attach_encoder(&output->connector,
-+					     &output->encoder);
-+		drm_connector_register(&output->connector);
-+	}
- 
- 	err = tegra_output_init(drm, output);
- 	if (err < 0) {
+Sure, no problem. My only question is who should I set in the
+"maintainers" property.
+
+Keerty, as the original author and TI employee, you surely know this
+chip series much better than I do. Would you like to be the maintainer
+for this binding document? Otherwise I can do it "best effort".
+
+Regards,
 -- 
-2.26.0
-
+Luca
