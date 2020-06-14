@@ -1,184 +1,232 @@
-Return-Path: <SRS0=mubR=72=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=7KtL=73=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C702C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 20:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660C5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 03:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4993A207BC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 13 Jun 2020 20:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mHYsfVWk"
+	by mail.kernel.org (Postfix) with ESMTP id 376A52074D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 03:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592105196;
+	bh=qvlEooqb/QRVp+lH3E3ELUViJHiT65J+THRseprWAaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=b+HaC2d9/lZVNdKjszdbelso/yIU2zwjAsKTL5hN57RJuLwCFXidP9yHm71eSLCPx
+	 QTG5Ik7swyRlUIBO6Ytj3H4CSSFyWHXO1qdW90QNUGOc25Fno7tWVcWF72nG+6WAZH
+	 E4aIVBkYVFe98wo61a3SqxwBdDvXFsKIxSekXbNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgFMUeD (ORCPT
+        id S1726486AbgFND0f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 13 Jun 2020 16:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgFMUeD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 13 Jun 2020 16:34:03 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08C1C03E96F
-        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 13:34:02 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id x14so819928uao.7
-        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 13:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pFT7Bod/9AoTK+hxJjFcu5z1EALQ7iKlU3WZg2UfXP8=;
-        b=mHYsfVWkpWT/Ai6osOEylJ7exHOUZGF4DaYhgObEejCaq1yPbfgEyqjZbr249SlXQZ
-         n3RjhizZ0d7XosGnL4EZ+tFbht3dbKGR/bCJDOIbzJ3/CRzjm3h0aviYUJfv8p/p293x
-         GKoMTAv9W4HsLYRBkfNW2U/aL/Xtn8YGr+PEs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pFT7Bod/9AoTK+hxJjFcu5z1EALQ7iKlU3WZg2UfXP8=;
-        b=RXPjEMHOifqBeoQvQk1e9gvRP7n8Dk71xLOtLL+enNQgqGe9hfJGWqYC7tIcjMGrZX
-         9IjCyJuc6Sz1y1emxTFl8GnIRClCGrAqK38dyH9n8bXl0X5PymMK39I+XVyMtGKDe9Lb
-         ANyXETLQMqsn5zPbHSw9hUsTALRTMK930ZGy33EZhPc8L1FzDl5Vg2txO2V3RHajp6XY
-         0W44nsBppc4irWmLWxVaAvsQznitB5Z2kad0qV5uABTROm17PLEbWGEHrTMTvaakSs+3
-         /BIGP/u0VDkD8BDv2AZWRqqLWmCaII1RxA3SsqtfP+zx6RWLWGhMKvsOSuD+3R/eZ6ZZ
-         XwUA==
-X-Gm-Message-State: AOAM532pnsHAob655KkMiKEeZG/WFLu+w7OXbnPQoSbf9mu+y9fOY/n5
-        t9SFJ7lW+uME1L7EU3DyTKRu59QY2pI=
-X-Google-Smtp-Source: ABdhPJxZYvHFhlj3gCdtdE9LmCiKHJxneotlNhNgAKTT5Fvjr7Pb+zRbEpef6LNMLOwNac9LApXV9w==
-X-Received: by 2002:ab0:5398:: with SMTP id k24mr14417920uaa.2.1592080441358;
-        Sat, 13 Jun 2020 13:34:01 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id i2sm1614186vkp.22.2020.06.13.13.34.00
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Jun 2020 13:34:00 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id m18so3043525vkk.9
-        for <devicetree@vger.kernel.org>; Sat, 13 Jun 2020 13:34:00 -0700 (PDT)
-X-Received: by 2002:a1f:5cd0:: with SMTP id q199mr13644108vkb.34.1592080439926;
- Sat, 13 Jun 2020 13:33:59 -0700 (PDT)
+        Sat, 13 Jun 2020 23:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726460AbgFND0f (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 13 Jun 2020 23:26:35 -0400
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56643207BC;
+        Sun, 14 Jun 2020 03:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592105194;
+        bh=qvlEooqb/QRVp+lH3E3ELUViJHiT65J+THRseprWAaA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eon4nXGoInfcbJ2DApkv30ONI4y4tgc3ZVBLeJJML95S9RcnB4CcVgCsDPZsiO5Xr
+         noJ8CfgAeox5VQ+EtJ4FKFzDc5fX9tTir0Lpl+5YOo6DQruoPTYkBScuUHbGNxM0j9
+         uRgY3SvxlXhN8E5VDYbK9NfGn5tzzEz4C170TxnA=
+Received: by mail-ej1-f41.google.com with SMTP id x1so13884458ejd.8;
+        Sat, 13 Jun 2020 20:26:34 -0700 (PDT)
+X-Gm-Message-State: AOAM5317Ug04ZF/jKUoJGGpNrywn2EJ2aZTpGItvFXHyCufqYSOGlv0T
+        b09DESZ65pWGVY5/OVfgp3l/tE4CgEXpTVEqeA==
+X-Google-Smtp-Source: ABdhPJygZ7+s9E2uvJLRmzF/ZlQdQNkUgdnyD0VfMuR6Y68ATgx7MtpXGPqODUSOl8hq5eaKX9phvJjtfPuGGjD6oXA=
+X-Received: by 2002:a17:906:7696:: with SMTP id o22mr19140394ejm.245.1592105192907;
+ Sat, 13 Jun 2020 20:26:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org> <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
-In-Reply-To: <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Sat, 13 Jun 2020 13:33:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XSfMPehyCLB25hct+GE8JtU=5J=04KyU4AoHfg9cs50A@mail.gmail.com>
-Message-ID: <CAD=FV=XSfMPehyCLB25hct+GE8JtU=5J=04KyU4AoHfg9cs50A@mail.gmail.com>
-Subject: Re: [RFC v2 2/3] drivers: nvmem: Add QTI qfprom-efuse support
-To:     Ravi Kumar Bokka <rbokka@codeaurora.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com> <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 14 Jun 2020 11:26:21 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8W7FLrjKbNt+WHXjsBzgn_E7n5stKjv94RBnF7ktVuiA@mail.gmail.com>
+Message-ID: <CAAOTY_8W7FLrjKbNt+WHXjsBzgn_E7n5stKjv94RBnF7ktVuiA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi, Neal:
 
-On Thu, Jun 11, 2020 at 2:49 AM Ravi Kumar Bokka <rbokka@codeaurora.org> wrote:
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:25=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> This patch adds support for QTI qfprom-efuse controller. This driver can
-> access the raw qfprom regions for fuse blowing.
+> MT6873 bus frabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violations are logged and sent to the processor for
+> further analysis or countermeasures.
 >
-> The current existed qfprom driver is only supports for cpufreq, thermal sensors
-> drivers by read out calibration data, speed bins..etc which is stored
-> by qfprom efuses.
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by devapc-mt6873 driver. The violation
+> information is printed in order to find the murderer.
 >
-> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 > ---
 
-It makes all your code reviewers much happier (and much more likely to
-take the time to review your patches) if you include a changelog with
-what changed from one version to the next.  If you would like some
-help maintaining such a thing, might I suggest "patman":
+[snip]
 
-https://gitlab.denx.de/u-boot/u-boot/-/blob/master/tools/patman/README
+> +
+> +       /* 50 */
+> +       {-1, -1, 50, "OOB_way_en", true},
+> +       {-1, -1, 51, "OOB_way_en", true},
+> +       {-1, -1, 52, "OOB_way_en", true},
+> +       {-1, -1, 53, "OOB_way_en", true},
+> +       {-1, -1, 54, "OOB_way_en", true},
+> +       {-1, -1, 55, "OOB_way_en", true},
+> +       {-1, -1, 56, "Decode_error", true},
+> +       {-1, -1, 57, "Decode_error", true},
+> +       {-1, -1, 58, "DISP_PWM", false},
+> +       {-1, -1, 59, "IMP_IIC_WRAP", false},
+> +
+> +       /* 60 */
+> +       {-1, -1, 60, "DEVICE_APC_PERI_PAR__AO", false},
+> +       {-1, -1, 61, "DEVICE_APC_PERI_PAR_PDN", false},
 
-...pay no mind that it's hosted in the U-Boot repo--it's really quite
-a great tool.
+You does not process the item whose enable_vio_irq is false, so I
+think you should remove these items and remove enable_vio_irq because
+the rest item's enable_vio_irq would always be true.
 
+> +};
+> +
+> +static struct mtk_device_num mtk6873_devices_num[] =3D {
+> +       {SLAVE_TYPE_INFRA, VIO_SLAVE_NUM_INFRA},
+> +       {SLAVE_TYPE_PERI, VIO_SLAVE_NUM_PERI},
+> +       {SLAVE_TYPE_PERI2, VIO_SLAVE_NUM_PERI2},
+> +       {SLAVE_TYPE_PERI_PAR, VIO_SLAVE_NUM_PERI_PAR},
+> +};
+> +
+> +static struct PERIAXI_ID_INFO peri_mi_id_to_master[] =3D {
+> +       {"THERM2",       { 0, 0, 0 } },
+> +       {"SPM",          { 0, 1, 0 } },
+> +       {"CCU",          { 0, 0, 1 } },
+> +       {"THERM",        { 0, 1, 1 } },
+> +       {"SPM_DRAMC",    { 1, 1, 0 } },
 
->  drivers/nvmem/Kconfig  |   1 +
->  drivers/nvmem/qfprom.c | 405 ++++++++++++++++++++++++++++++++++++++++++++++---
->  2 files changed, 385 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index d7b7f6d..623d59e 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -117,6 +117,7 @@ config QCOM_QFPROM
->         help
->           Say y here to enable QFPROM support. The QFPROM provides access
->           functions for QFPROM data to rest of the drivers via nvmem interface.
-> +         And this driver provides access QTI qfprom efuse via nvmem interface.
+The bits { 1, 1, 0 } equal to a number 0x3, I thiink you should use a
+number instead of bits and everything would be more easy.
 
-I'm not sure it was necessary to add that line, but I won't object if
-you/others really like it.
+> +};
+> +
 
+[snip]
 
->           This driver can also be built as a module. If so, the module
->           will be called nvmem_qfprom.
-> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-> index 8a91717..312318c 100644
-> --- a/drivers/nvmem/qfprom.c
-> +++ b/drivers/nvmem/qfprom.c
+> +
+> +/*
+> + * mtk_devapc_vio_check - check violation shift status is raised or not.
+> + *
+> + * Returns the value of violation shift status reg
+> + */
+> +static void mtk_devapc_vio_check(int slave_type, int *shift_bit)
+> +{
+> +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       u32 vio_shift_sta;
+> +       int i;
+> +
+> +       if (slave_type >=3D slave_type_num) {
 
-You've still mostly not addressed most of the review feedback I've now
-given you 3 times.  Rather than repeating comments, I have simply
-provided a patch that makes the driver into a state that I'm happy
-with:
+This never happen, so remove it.
 
-https://crrev.com/c/2244932
+> +               pr_err(PFX "%s: param check failed, %s:0x%x\n",
+> +                      __func__, "slave_type", slave_type);
+> +               return;
+> +       }
+> +
+> +       vio_info =3D mtk_devapc_ctx->soc->vio_info;
+> +       vio_shift_sta =3D readl(mtk_devapc_pd_get(slave_type, VIO_SHIFT_S=
+TA, 0));
+> +
+> +       if (!vio_shift_sta) {
+> +               pr_info(PFX "violation is triggered before. %s:0x%x\n",
+> +                       "shift_bit", *shift_bit);
+> +
+> +       } else if (vio_shift_sta & (0x1UL << *shift_bit)) {
+> +               pr_debug(PFX "%s: 0x%x is matched with %s:%d\n",
+> +                        "vio_shift_sta", vio_shift_sta,
+> +                        "shift_bit", *shift_bit);
+> +
+> +       } else {
+> +               pr_info(PFX "%s: 0x%x is not matched with %s:%d\n",
+> +                       "vio_shift_sta", vio_shift_sta,
+> +                       "shift_bit", *shift_bit);
+> +
+> +               for (i =3D 0; i < MOD_NO_IN_1_DEVAPC * 2; i++) {
+> +                       if (vio_shift_sta & (0x1 << i)) {
+> +                               *shift_bit =3D i;
+> +                               break;
+> +                       }
+> +               }
+> +       }
+> +
+> +       vio_info->shift_sta_bit =3D *shift_bit;
+> +}
+> +
+> +static void devapc_extract_vio_dbg(int slave_type)
+> +{
+> +       u32 slave_type_num =3D mtk_devapc_ctx->soc->slave_type_num;
+> +       void __iomem *vio_dbg0_reg, *vio_dbg1_reg, *vio_dbg2_reg;
+> +       const struct mtk_infra_vio_dbg_desc *vio_dbgs;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       u32 dbg0;
+> +
+> +       if (slave_type >=3D slave_type_num) {
 
-Rough summary:
+Ditto.
 
-* There should be no reason to provide "reset" values for things.  For
-anything that you change for fuse blowing, just save and restore
-after.
+Regards,
+Chun-Kuang.
 
-* Use the major/minor version read from 0x6000 to pick the parameters
-to use.  Please double-check that I got this right.
-
-* Reading should still read "corrected", not "raw".  Added a sysfs
-knob to allow you to read "raw", though.
-
-* Simplified the SoC data structure.
-
-* No need for quite so many levels of abstraction for setting clocks /
-regulator.
-
-* Don't set regulator voltage.  Rely on device tree to make sure it's right.
-
-* Properly undo things in the case of failure.
-
-* Don't just keep enabling the regulator over and over again.
-
-* Enable / disable the clock each time; now we don't need a .remove
-function and yet we still don't leave the clock enabled/prepared.
-
-* Polling every 100 us but timing out in 10 us didn't make sense.
-Swap those.  Also no reason for 100 us to be SoC specific.
-
-* No need for reg-names.
-
-* We shouldn't be creating two separate nvmem devices.
-
-
-In general I'm happy to post my series to the list myself to get
-review feedback.  For now I'm expecting that you can squash my changes
-in and send the next version.
-
-
--Doug
+> +               pr_err(PFX "%s: param check failed, %s:0x%x\n",
+> +                      __func__, "slave_type", slave_type);
+> +               return;
+> +       }
+> +
+> +       vio_dbg0_reg =3D mtk_devapc_pd_get(slave_type, VIO_DBG0, 0);
+> +       vio_dbg1_reg =3D mtk_devapc_pd_get(slave_type, VIO_DBG1, 0);
+> +       vio_dbg2_reg =3D mtk_devapc_pd_get(slave_type, VIO_DBG2, 0);
+> +
+> +       vio_dbgs =3D mtk_devapc_ctx->soc->vio_dbgs;
+> +       vio_info =3D mtk_devapc_ctx->soc->vio_info;
+> +
+> +       /* Extract violation information */
+> +       dbg0 =3D readl(vio_dbg0_reg);
+> +       vio_info->master_id =3D readl(vio_dbg1_reg);
+> +       vio_info->vio_addr =3D readl(vio_dbg2_reg);
+> +
+> +       vio_info->domain_id =3D (dbg0 & vio_dbgs->vio_dbg_dmnid)
+> +               >> vio_dbgs->vio_dbg_dmnid_start_bit;
+> +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_dbg_w_vio)
+> +                       >> vio_dbgs->vio_dbg_w_vio_start_bit) =3D=3D 1;
+> +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_dbg_r_vio)
+> +                       >> vio_dbgs->vio_dbg_r_vio_start_bit) =3D=3D 1;
+> +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->vio_addr_high)
+> +               >> vio_dbgs->vio_addr_high_start_bit;
+> +
+> +       devapc_vio_info_print();
+> +}
+> +
+> +/*
