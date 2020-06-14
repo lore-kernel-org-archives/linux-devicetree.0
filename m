@@ -2,96 +2,93 @@ Return-Path: <SRS0=7KtL=73=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A2DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 10:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F63C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 11:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C72F7204EA
-	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 10:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BlnySnM1"
+	by mail.kernel.org (Postfix) with ESMTP id AD18020739
+	for <linux-devicetree@archiver.kernel.org>; Sun, 14 Jun 2020 11:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592132541;
+	bh=vdvhO18kafQQuERDsffJBG+UirhqAxuyW0HdLhyqUxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pUausx83vZ8DlJ3OwLxX0xvvZG2GCsdhp03Ug/v0MDdAO6Kx4OOvvU8NzIR+dqlSU
+	 WevkMxVC6SRpX+vszn72+dl8bD3x5lo2qQQ24szjwZK72Yyz4hMfL+aerkfrYO/Ibv
+	 EpKsCjf1JN+vp+xjF6HsWzTsRGgVd5FCSbWFIhQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbgFNK0m (ORCPT
+        id S1726766AbgFNLCJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 06:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgFNK0l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 06:26:41 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76259C05BD43;
-        Sun, 14 Jun 2020 03:26:41 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0729722F99;
-        Sun, 14 Jun 2020 12:26:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1592130396;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gJxvGjLG+zCr4pQZGoAns/cjbZC5rD9SgUiVfLcsZLU=;
-        b=BlnySnM1M9f1ZLAY/nIMAW9bAmVM+K1Bf0A3llGF/CTB6QOnLrIBj40JijOMu1qlQSjljA
-        ZtMT+RwKwVKn+uGRrfs5xtJu6Q8SxuYPJCt9FvQTRBheTbAujw+6glWcKcLZOU7A3BmMWG
-        pvRuQ/8ZNiI21iavo62b6Q0nAC/+PSc=
+        Sun, 14 Jun 2020 07:02:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40374 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725265AbgFNLCI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 07:02:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p18so9431687eds.7;
+        Sun, 14 Jun 2020 04:02:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vAJP+Qm1ITbUQAx+Rf97o4j246jVO27jjV+OTrxlf9M=;
+        b=KA6lNZSTuFKBkcG4HXnojDB4pAXB66TIOQzID8VKo3hgpFraw7eNN9P52FEe2RRihV
+         IbfM59XkAiFw2MgNj1krHmhcCoSXjOfgHTAVeZjdc9J18wh7xL6DrSYtL8J9AB2VWZth
+         YJllEjnNAJyAFh0xILyu17sRO83boxI91VKeQyQuDZCJaduRlSsPMYJsLzEwX1jqLrM4
+         vpZxRniqXVtPu0FahwkgHwwbeynjRHS85RHJKr9LZXppmX9JekYtIea9ZrgG4sLBTKD6
+         L6K7wOMba3uGiYKGXVmPwTNCqVasqz3ISj/3SQPE4X9TrHMRiBnwzdE0CoeVIZ4kGxqC
+         qhEQ==
+X-Gm-Message-State: AOAM532GDs028mokDblxB1iy0SatVPykiKaRfbPgD5hsdgnak4AkcpjR
+        Cx5tS8cH8E6DwYzHpY8xMXc=
+X-Google-Smtp-Source: ABdhPJwtSvwv9aaQuA4MA3Hl/WyWGidqaLZh3pPqB1mdV9/OfwZ6uDKB+wc1JMWBqtFyq3k9oCrZvw==
+X-Received: by 2002:a05:6402:22a5:: with SMTP id cx5mr20312888edb.246.1592132525507;
+        Sun, 14 Jun 2020 04:02:05 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id m30sm6507368eda.16.2020.06.14.04.02.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 14 Jun 2020 04:02:04 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 13:02:02 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, avri.altman@wdc.com,
+        martin.petersen@oracle.com, kwmad.kim@samsung.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com
+Subject: Re: [RESEND PATCH v10 10/10] arm64: dts: Add node for ufs exynos7
+Message-ID: <20200614110202.GA9009@kozik-lap>
+References: <20200613024706.27975-1-alim.akhtar@samsung.com>
+ <CGME20200613030458epcas5p3f9667bab202d99fb332d5bf5aad63c85@epcas5p3.samsung.com>
+ <20200613024706.27975-11-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 14 Jun 2020 12:26:30 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
-In-Reply-To: <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
-References: <20200609110136.GJ4106@dell>
- <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <0709f20bc61afb6656bc57312eb69f56@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200613024706.27975-11-alim.akhtar@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sat, Jun 13, 2020 at 08:17:06AM +0530, Alim Akhtar wrote:
+> Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
+> 
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Tested-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  .../boot/dts/exynos/exynos7-espresso.dts      |  4 ++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi       | 43 ++++++++++++++++++-
+>  2 files changed, 45 insertions(+), 2 deletions(-)
+> 
 
-Am 2020-06-10 00:03, schrieb Rob Herring:
-[..]
-> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
-> then you shouldn't have a unit-address either and you can simply match
-> on the node name (standard DT driver matching is with compatible,
-> device_type, and node name (w/o unit-address)). We've generally been
-> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
-> Matching on 'classname-N' would work with node name matching as only
-> unit-addresses are stripped.
+This is already applied and in the linux-next.  Don't resend applied
+patches.
 
-This still keeps me thinking. Shouldn't we allow the (MFD!) device
-driver creator to choose between "classname@N" and "classname-N".
-In most cases N might not be made up, but it is arbitrarily chosen;
-for example you've chosen the bank for the ab8500 reg. It is not
-a defined entity, like an I2C address if your parent is an I2C bus,
-or a SPI chip select, or the memory address in case of MMIO. Instead
-the device driver creator just chooses some "random" property from
-the datasheet; another device creator might have chosen another
-property. Wouldn't it make more sense, to just say this MFD provides
-N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
-That would also be the logical consequence of the current MFD sub
-device to OF node matching code, which just supports N=1.
-
--michael
+Best regards,
+Krzysztof
