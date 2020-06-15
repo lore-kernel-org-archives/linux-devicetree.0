@@ -7,188 +7,142 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1080BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C52520656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E518E20842
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592241029;
-	bh=5J7trZYqXsQ/ZE4NkGE3ei/YqU0yopBsTFYbXj4pUcE=;
+	s=default; t=1592241134;
+	bh=xZw3wFFs3EiOb5XtW46JuclA2MCo7BVAfYAO895nV6A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XaiNz1oB8gYpRe9nBXNy3OGL2yu7y37FW/CdfEU5dgT0a0WWsKNuPFBS3qkVnCRNk
-	 Pl0f0D2KiNdZEOMbtHXu+JBgCQIs9x9T6bSMeIEB3Aara+asd0bzfXtdy2M9jHkx7H
-	 +ClkkUap7MJIW1sVLxHxq5nbAcTz0I0ikujsi3dM=
+	b=n15ePf62yIZm1W5Zifk4kYTqdZGarPE7GddunXyNSYhP0ACMtSMbdkjuwsv+8wTZ8
+	 okVtI4+QU47HqdVMipBxR1enOEWGeqXW2UcuBGrN5mZt3OVAyZulCq9C+20t6GT0NU
+	 YUzYSzqU8VLCiC60zL44QYpxLyAjPTWj+qRUneZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgFORKY (ORCPT
+        id S1731192AbgFORMO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:10:24 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42383 "EHLO
+        Mon, 15 Jun 2020 13:12:14 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39766 "EHLO
         mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFORKX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:10:23 -0400
-Received: by mail-il1-f194.google.com with SMTP id j19so11856887ilk.9;
-        Mon, 15 Jun 2020 10:10:22 -0700 (PDT)
+        with ESMTP id S1728585AbgFORMO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:12:14 -0400
+Received: by mail-il1-f194.google.com with SMTP id p5so16032953ile.6;
+        Mon, 15 Jun 2020 10:12:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=r803xRFcPvmpXFa1K2XnBd/d3Bh9X4F37U/xu3Rfl4k=;
-        b=d+hxdzKhY0MvgdfkyGSyWaUM0l1y2ATpnEo9dZZdNwC4WFb8Jvu9vZhHHbVgBrV9fA
-         GNtYvC/GFpDUV+rzI23cE0/IeY5nQ9JzTxc0vbpcFXrnmB77Iid3HUkvy5hlndMkDCm/
-         /HIfiwrBiNgfV9p9CXx5fhOPlNiv3Fp1WhuEPJg+sSk0FOITJ5r2CjZm2a+NIG59pjrT
-         2bdhuNEQLIdQSm8i2yGC6EidsvHfWuksyWpH9CiFEl4ZEFuY814bzKD7Sk8O8SK2Toaf
-         AhdMTwHS91jO3CkWp/n0byRCp1XrYFeMC7+RS37Y70zROQ7I7IOeIqp5oAhdvoZNsR5d
-         6IWQ==
-X-Gm-Message-State: AOAM531ZPt17ng4E/Tyg4HaEnoMC7GCHiipg7zEvTPXKCG/HDlb3/nef
-        zvSxioDZk0CaVryLOMKrDg==
-X-Google-Smtp-Source: ABdhPJwYFOkv4MBunz1/x3wynbR0mIu9yWv9/lv+W7Wq5EC//9bf9NoG5DNwv6k7SCoCT0S73eCFaQ==
-X-Received: by 2002:a92:1b86:: with SMTP id f6mr28209946ill.9.1592241021829;
-        Mon, 15 Jun 2020 10:10:21 -0700 (PDT)
+        bh=G5WGUPUAIcBwza0/xjtURoDyzwjIEB/Wr5gpuV9swD0=;
+        b=Fb5sDDB6HAlXnpW72K2SysMhHR6ikH+Ykhhe5p25LfdPbgbZU3KCUlvWMsslFZELKp
+         DtMBAItYor6zb9jFTUl8fiKIltN9olwQPiklKgmBTECXNSA6PWQjru2vIiSfDztDKfbF
+         Y+QguN10MtEVyGpCcOBLn9ujYjjq0Oj79fZsf9UFvcrv8pXQ9wJGOCIx9UJoNEc4ItOI
+         ufeDI7+VN8iBt+daO3PbA61Ga14YuqBxrbCJOC2FMIvY7u8BK0ng8vr7b2vIQPZsYqX8
+         r9MiFXVYWHZci//6BEZjOKiSXf64/K2vxYbFCWNV6M3xqmW9y4oyqg7K9gNOsmJaRCKO
+         k48A==
+X-Gm-Message-State: AOAM5335ITTZVqkEzSbq6JNhbwhasnj8HijusyMyXJ9ePCDn7QDuhB5E
+        wBDsjGBN60FQFUvhUqjLmg==
+X-Google-Smtp-Source: ABdhPJxkSrEaxMErK0l1AP6V19vUpDxfZBbTo5MTNzsZPQNLZcHrexQ20OfNYIzpl4S1RoaRPH6/Mg==
+X-Received: by 2002:a92:d845:: with SMTP id h5mr27854230ilq.4.1592241131756;
+        Mon, 15 Jun 2020 10:12:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id g15sm8155694ilq.39.2020.06.15.10.10.19
+        by smtp.gmail.com with ESMTPSA id d71sm8551428ill.9.2020.06.15.10.12.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:10:20 -0700 (PDT)
-Received: (nullmailer pid 1967664 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:10:18 -0000
-Date:   Mon, 15 Jun 2020 11:10:18 -0600
+        Mon, 15 Jun 2020 10:12:11 -0700 (PDT)
+Received: (nullmailer pid 1970644 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:12:09 -0000
+Date:   Mon, 15 Jun 2020 11:12:09 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux@rempel-privat.de,
-        wolfram@the-dreams.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 3/3] dt-bindings: i2c: Convert imx i2c to json-schema
-Message-ID: <20200615171018.GA1961591@bogus>
-References: <1591235358-15516-1-git-send-email-Anson.Huang@nxp.com>
- <1591235358-15516-4-git-send-email-Anson.Huang@nxp.com>
+Cc:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: spi: Convert mxs spi to json-schema
+Message-ID: <20200615171209.GA1968084@bogus>
+References: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
+ <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591235358-15516-4-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:49:18AM +0800, Anson Huang wrote:
-> Convert the i.MX I2C binding to DT schema format using json-schema,
-> some improvements applied, such as update example based on latest DT
-> file, add more compatible for existing SoCs, and remove unnecessary
-> common property "pinctrl".
+On Thu, Jun 04, 2020 at 09:55:29AM +0800, Anson Huang wrote:
+> Convert the MXS SPI binding to DT schema format using json-schema
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
 > Changes since V1:
-> 	- add "additionalProperties: false".
+> 	- add "unevaluatedProperties: false".
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ---------
->  Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 119 +++++++++++++++++++++
->  2 files changed, 119 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+>  Documentation/devicetree/bindings/spi/mxs-spi.txt  | 26 ----------
+>  Documentation/devicetree/bindings/spi/mxs-spi.yaml | 57 ++++++++++++++++++++++
+>  2 files changed, 57 insertions(+), 26 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.txt b/Documentation/devicetree/bindings/spi/mxs-spi.txt
 > deleted file mode 100644
-> index b967544..0000000
-> --- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+> index 3499b73..0000000
+> --- a/Documentation/devicetree/bindings/spi/mxs-spi.txt
 > +++ /dev/null
-> @@ -1,49 +0,0 @@
-> -* Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
+> @@ -1,26 +0,0 @@
+> -* Freescale MX233/MX28 SSP/SPI
 > -
 > -Required properties:
-> -- compatible :
-> -  - "fsl,imx1-i2c" for I2C compatible with the one integrated on i.MX1 SoC
-> -  - "fsl,imx21-i2c" for I2C compatible with the one integrated on i.MX21 SoC
-> -  - "fsl,vf610-i2c" for I2C compatible with the one integrated on Vybrid vf610 SoC
-> -- reg : Should contain I2C/HS-I2C registers location and length
-> -- interrupts : Should contain I2C/HS-I2C interrupt
-> -- clocks : Should contain the I2C/HS-I2C clock specifier
+> -- compatible: Should be "fsl,<soc>-spi", where soc is "imx23" or "imx28"
+> -- reg: Offset and length of the register set for the device
+> -- interrupts: Should contain SSP ERROR interrupt
+> -- dmas: DMA specifier, consisting of a phandle to DMA controller node
+> -  and SSP DMA channel ID.
+> -  Refer to dma.txt and fsl-mxs-dma.txt for details.
+> -- dma-names: Must be "rx-tx".
 > -
 > -Optional properties:
-> -- clock-frequency : Constains desired I2C/HS-I2C bus clock frequency in Hz.
-> -  The absence of the property indicates the default frequency 100 kHz.
-> -- dmas: A list of two dma specifiers, one for each entry in dma-names.
-> -- dma-names: should contain "tx" and "rx".
-> -- scl-gpios: specify the gpio related to SCL pin
-> -- sda-gpios: specify the gpio related to SDA pin
-> -- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
-> -  bus recovery, call it "gpio" state
+> -- clock-frequency : Input clock frequency to the SPI block in Hz.
+> -		    Default is 160000000 Hz.
 > -
-> -Examples:
+> -Example:
 > -
-> -i2c@83fc4000 { /* I2C2 on i.MX51 */
-> -	compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
-> -	reg = <0x83fc4000 0x4000>;
-> -	interrupts = <63>;
+> -ssp0: ssp@80010000 {
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -	compatible = "fsl,imx28-spi";
+> -	reg = <0x80010000 0x2000>;
+> -	interrupts = <96>;
+> -	dmas = <&dma_apbh 0>;
+> -	dma-names = "rx-tx";
 > -};
-> -
-> -i2c@70038000 { /* HS-I2C on i.MX51 */
-> -	compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
-> -	reg = <0x70038000 0x4000>;
-> -	interrupts = <64>;
-> -	clock-frequency = <400000>;
-> -};
-> -
-> -i2c0: i2c@40066000 { /* i2c0 on vf610 */
-> -	compatible = "fsl,vf610-i2c";
-> -	reg = <0x40066000 0x1000>;
-> -	interrupts =<0 71 0x04>;
-> -	dmas = <&edma0 0 50>,
-> -		<&edma0 0 51>;
-> -	dma-names = "rx","tx";
-> -	pinctrl-names = "default", "gpio";
-> -	pinctrl-0 = <&pinctrl_i2c1>;
-> -	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-> -	scl-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
-> -	sda-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+> diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.yaml b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
 > new file mode 100644
-> index 0000000..63cceab
+> index 0000000..68c5d6d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-> @@ -0,0 +1,119 @@
+> +++ b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
+> @@ -0,0 +1,57 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/i2c/i2c-imx.yaml#
+> +$id: http://devicetree.org/schemas/spi/mxs-spi.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
+> +title: Freescale MX233/MX28 SSP/SPI
 > +
 > +maintainers:
-> +  - Wolfram Sang <wolfram@the-dreams.de>
+> +  - Marek Vasut <marex@denx.de>
+> +
+> +allOf:
+> +  - $ref: "/schemas/spi/spi-controller.yaml#"
 > +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +      - const: fsl,imx1-i2c
-> +      - const: fsl,imx21-i2c
-> +      - const: fsl,vf610-i2c
-> +      - items:
-> +          - const: fsl,imx35-i2c
-> +          - const: fsl,imx1-i2c
-> +      - items:
-> +          - enum:
-> +            - fsl,imx25-i2c
-> +            - fsl,imx27-i2c
-> +            - fsl,imx31-i2c
-> +            - fsl,imx50-i2c
-> +            - fsl,imx51-i2c
-> +            - fsl,imx53-i2c
-> +            - fsl,imx6q-i2c
-> +            - fsl,imx6sl-i2c
-> +            - fsl,imx6sx-i2c
-> +            - fsl,imx6sll-i2c
-> +            - fsl,imx6ul-i2c
-> +            - fsl,imx7s-i2c
-> +            - fsl,imx8mq-i2c
-> +            - fsl,imx8mm-i2c
-> +            - fsl,imx8mn-i2c
-> +            - fsl,imx8mp-i2c
-> +          - const: fsl,imx21-i2c
+> +    enum:
+> +      - fsl,imx23-spi
+> +      - fsl,imx28-spi
 > +
 > +  reg:
 > +    maxItems: 1
@@ -196,90 +150,43 @@ On Thu, Jun 04, 2020 at 09:49:18AM +0800, Anson Huang wrote:
 > +  interrupts:
 > +    maxItems: 1
 > +
-> +  clocks:
+> +  dmas:
 > +    maxItems: 1
 > +
-> +  clock-names:
-> +    const: ipg
+> +  dma-names:
+> +    const: rx-tx
 > +
 > +  clock-frequency:
 > +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Already has a type.
+Already has a type, drop.
 
-> +    description: |
-> +      Constains desired I2C/HS-I2C bus clock frequency in Hz.
-> +      The absence of the property indicates the default frequency 100 kHz.
-> +    default: 100000
+With that,
 
-The bus default is up to 3MHz. Is that valid here?
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> +
-> +  dmas:
-> +    items:
-> +      - description: DMA controller phandle and request line for RX
-> +      - description: DMA controller phandle and request line for TX
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: tx
-> +
-> +  sda-gpios:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-
-*-gpios already has a type
-
-> +    description: |
-> +      gpio used for the sda signal, this should be flagged as
-> +      active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
-> +      from <dt-bindings/gpio/gpio.h> since the signal is by definition
-> +      open drain.
-> +    maxItems: 1
-> +
-> +  scl-gpios:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description: |
-> +      gpio used for the scl signal, this should be flagged as
-> +      active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
-> +      from <dt-bindings/gpio/gpio.h> since the signal is by definition
-> +      open drain.
-> +    maxItems: 1
+> +    description: input clock frequency to the SPI block in Hz.
+> +    default: 160000000
 > +
 > +required:
 > +  - compatible
 > +  - reg
 > +  - interrupts
-> +  - clocks
+> +  - dmas
+> +  - dma-names
 > +
-> +additionalProperties: false
+> +unevaluatedProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/imx5-clock.h>
-> +    #include <dt-bindings/clock/vf610-clock.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    i2c@83fc4000 {
-> +        compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
-> +        reg = <0x83fc4000 0x4000>;
-> +        interrupts = <63>;
-> +        clocks = <&clks IMX5_CLK_I2C2_GATE>;
-> +    };
-> +
-> +    i2c@40066000 {
-> +        compatible = "fsl,vf610-i2c";
-> +        reg = <0x40066000 0x1000>;
-> +        interrupts = <71 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clks VF610_CLK_I2C0>;
-> +        clock-names = "ipg";
-> +        dmas = <&edma0 0 50>,
-> +               <&edma0 0 51>;
-> +        dma-names = "rx","tx";
-
-space                       ^
-
+> +    spi@80010000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,imx28-spi";
+> +        reg = <0x80010000 0x2000>;
+> +        interrupts = <96>;
+> +        dmas = <&dma_apbh 0>;
+> +        dma-names = "rx-tx";
 > +    };
 > -- 
 > 2.7.4
