@@ -2,140 +2,123 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA61C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0B9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD22206B7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1586E2065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lc/0UVSx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="StdSSRTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgFOJ0t (ORCPT
+        id S1729153AbgFOJfF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:26:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728815AbgFOJ0t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:26:49 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B033EC05BD43
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 02:26:48 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l17so13899178wmj.0
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 02:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Rzxkol7w2QC50xcBFexG/soZ0rzW0UYaIlHrmwy/Vl4=;
-        b=lc/0UVSxPinnkjDB/lFuqYGDeDU3GTO/xQpG14bzThYrcAzSIf4rcgTtABwesYQmpk
-         ZeZ393630Ant4rb6ydPcR037Ny5WHbHzrVRrSUjC8OiOndguT3fbjALpGxY3uIqF4+xy
-         G1ROVao91s3C13/YISlmmLI8VYZXLxC0P3FVJrVvPi1id7KFd427AluMHr3mqBvePJIN
-         rfDMCdtRR2HgrtpQf9WGtvgaJlsedSjanZYR5rOamASSWWy2HcJX7fjYPARmrc4cCR3h
-         sEOAwa/hDp/2yGmDo3eYiDgB4+0KR5/c7ELTwXQoUcAOApfqXqz7IZP19e5bpylQpseK
-         rSeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Rzxkol7w2QC50xcBFexG/soZ0rzW0UYaIlHrmwy/Vl4=;
-        b=iDXHLiizgdHmZIF21kc6Ms5oPiiboY/VYZEhOfAOUo1SHZ8F+88hZLYeukQmSDWf9s
-         S8jkNh63jnzb/hwjNak49an48QDG0L1jLdIH8n2HT9XnJEgzFJJZeMrycmX5XE9CKFc3
-         DD8hKK9RpOqgZwMrzmL3oNEX3xhc5dhW9OyNwbJxJ7/rpI9OesMFl0lVBdbkXmV01tO8
-         BYFLXtEnlu77OCSQ73/e96Kr8PeASPREliOyRH/MLy5XdGVNHjN8GGbUbTEyXkd+JTy0
-         NEIg4EAYd/6vAfkpqorLp5Rc5xbxEP3g38gdBcPel6WNzGzAX1i8T1g4osd7n+yxq9EN
-         Bh1w==
-X-Gm-Message-State: AOAM5331kkd3heakFCZCPUqX5bHQlx49f7InEvoiUS1POduVY/ncM8s9
-        Ux1bsYSTOtSAK55R6zK+9/DLxQ==
-X-Google-Smtp-Source: ABdhPJwCaq+quncmRhoHqb9o1t8O7Lp9QJlLwsERoVR/Cy+mzVIJu9PSqQTp80ULC4g08tqY/VX/vA==
-X-Received: by 2002:a1c:790a:: with SMTP id l10mr11470065wme.80.1592213207106;
-        Mon, 15 Jun 2020 02:26:47 -0700 (PDT)
-Received: from dell ([2.27.167.101])
-        by smtp.gmail.com with ESMTPSA id k21sm24685707wrd.24.2020.06.15.02.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 02:26:46 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 10:26:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200615092644.GA2608702@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
+        Mon, 15 Jun 2020 05:35:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47812 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728411AbgFOJfF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:35:05 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Z1JB028757;
+        Mon, 15 Jun 2020 04:35:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592213701;
+        bh=Hh5bDu46FKnWsaHiQaJZRC4oLqQ1UDQANlpuKX2a/5o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=StdSSRTQz4BpTRXgzU8AeSab+0iKkdFFbbdwTa5XiImeXTp7uWuE7tUOqkVdFZH8B
+         6Ga35UtBnaLk4JaqHaueBXkbYN+qC9CP90lapVHSV4I2zf/B7ERPLXrJJgb7KYZa0S
+         5ubthkLEBqywCtj5a1+DS8Bu/qTnkrbw/WmGqXdE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Z1To027648;
+        Mon, 15 Jun 2020 04:35:01 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
+ Jun 2020 04:35:01 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 15 Jun 2020 04:35:01 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Yw9p130834;
+        Mon, 15 Jun 2020 04:34:59 -0500
+Subject: Re: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
+To:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+References: <20200611220951.GA3355634@x1>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
+Date:   Mon, 15 Jun 2020 12:34:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
+In-Reply-To: <20200611220951.GA3355634@x1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 14 Jun 2020, Frank Rowand wrote:
 
-> Hi Lee,
-> 
-> I'm looking at 5.8-rc1.
-> 
-> The only use of OF_MFD_CELL() where the same compatible is specified
-> for multiple elements of a struct mfd_cell array is for compatible
-> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
-> 
->         OF_MFD_CELL("ab8500-pwm",
->                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
->         OF_MFD_CELL("ab8500-pwm",
->                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
->         OF_MFD_CELL("ab8500-pwm",
->                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
-> 
-> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
-> are:
-> 
->    arch/arm/boot/dts/ste-ab8500.dtsi
->    arch/arm/boot/dts/ste-ab8505.dtsi
-> 
-> These two .dtsi files only have a single node with this compatible.
-> Chasing back to .dts and .dtsi files that include these two .dtsi
-> files, I see no case where there are multiple nodes with this
-> compatible.
-> 
-> So it looks to me like there is no .dts in mainline that is providing
-> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
-> is expecting.  No case that there are multiple mfd child nodes where
-> mfd_add_device() would assign the first of n child nodes with the
-> same compatible to multiple devices.
-> 
-> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
-> Am I missing something here?
-> 
-> If I am correct, then either drivers/mfd/ab8500-core.c or
-> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
 
-Your analysis is correct.
+On 12/06/2020 01:09, Drew Fustini wrote:
+> Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
+> RGMII mode") the networking is broken on the BeagleBone AI which has
+> the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
+> phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
+> 
+> Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
+> other AM5729 boards.
 
-Although it's not "broken", it just works when it really shouldn't.
+commit ref is incorrect
+> 
+> [0] https://github.com/beagleboard/beaglebone-ai/blob/master/BeagleBone-AI_sch.pdf
+> 
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> Fixes: cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
 
-I will be fixing the 'ab8500-pwm' case in due course.
+Pls change fixed tag to
+520557d4854b ARM: dts: am5729: beaglebone-ai: adding device tree
+as this board DTB was merged only in 5.8.
 
-> Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
-> approach (I have not completely read the actual code in the patch yet
-> though).
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>   arch/arm/boot/dts/am5729-beagleboneai.dts | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> index 9877d7709d41..4c51c6b05e64 100644
+> --- a/arch/arm/boot/dts/am5729-beagleboneai.dts
+> +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> @@ -505,7 +505,7 @@ &mac {
+>   
+>   &cpsw_emac0 {
+>   	phy-handle = <&phy0>;
+> -	phy-mode = "rgmii";
+> +	phy-mode = "rgmii-rxid";
+>   };
+>   
+>   &ocp {
+> 
 
-Thanks.
+Thanks, pls fix above and you can add my
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+grygorii
