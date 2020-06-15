@@ -2,158 +2,129 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA093C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43382C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C290207D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5BA20756
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2sUgJQO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qd+VOY29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgFOTm4 (ORCPT
+        id S1731154AbgFOUPu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730913AbgFOTmz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 15:42:55 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A6CC061A0E;
-        Mon, 15 Jun 2020 12:42:54 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id s23so8265516pfh.7;
-        Mon, 15 Jun 2020 12:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0qrQRoXABWjnKwQa7O+onv4TFfIuamL/7UM0/e+lKcY=;
-        b=L2sUgJQOmXLIdpN/acBHO/x2Cs7rcGS5cLssbvpSCPQavY3CLsMPoxVRWpDQ4X3gg2
-         Q6EhXUvFvQYhYYYikWxkiO8jgo9sxSaLKxp0irclj3xWDXwHWzSmnmErDycvzIxS3G0i
-         fKcDmGBbWHU5ZcS45ePpyoZ62Grc589q5VCS5LX8TwDSRLtIrtWycymbEQ0o3/Xb/FP4
-         K/IlsTc96LpXUjzuoz74MUtSgISWwunogcs9Kn7bx5EbyvWj8Dah2flMxF9A0IKyNFOe
-         qylDtRWWQUxDgq9sjf9xcJLZWxo4W1z4ascb3zMs8UXv1cFkP939eIgwwnwwVCaEdeI6
-         WQqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0qrQRoXABWjnKwQa7O+onv4TFfIuamL/7UM0/e+lKcY=;
-        b=X2ny6vDoe+7KIUVmK1lWnDte8x3yD3KPMryMY4HcAzUN6ZdZ1WoQixAW1YFz6CtXju
-         Rkj60ldv0/DAyqz5qcxBLwBqjuVxoPorteYHEgYPoC5ZBYFbUdy/a8hJkjxyU6iNwsPU
-         BRld8FZ4T8a/cJ7GalG5MdhoZ/MJQk1zARI171p2Tmgu7FZZjgQcQG7dnQB+bwwIXngG
-         FTKJQL79XacsEmrqFJ8PqhxuNukq4boGomMxIzATTH2ixRhujCB2lcgnCZkhHM5zoOSp
-         cHnfJvSaqH5+W4R//PnZ/nVQZ5eLO3t37MKNW/bJpAXg+crgLhWEa5sdeuiod9TO/szD
-         VU3w==
-X-Gm-Message-State: AOAM5321NhYxSb4vfi8Diau057WeFlDMRKg7xcoXRe9Wn5VyoD8sX3zq
-        qMz+lxc3pxWGAjqMc6MMGCE=
-X-Google-Smtp-Source: ABdhPJzd8NKZ4V1T8V4Nkdlh9ron23wWPpYk6qMRFJf5t5GVGxrIMoa3t6qMXRy8YkjSV+ietR9EQg==
-X-Received: by 2002:a63:546:: with SMTP id 67mr23612510pgf.364.1592250173912;
-        Mon, 15 Jun 2020 12:42:53 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n65sm14213758pfn.17.2020.06.15.12.42.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 12:42:53 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-To:     Robin Murphy <robin.murphy@arm.com>, Lukas Wunner <lukas@wunner.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608114148.4bau4mdcvwgf25ut@wunner.de>
- <3d4fd3f9-9bde-90a8-bef5-9fc97cc9b363@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <2e4a6c4b-857f-1000-e7fd-327b0800fb97@gmail.com>
-Date:   Mon, 15 Jun 2020 12:42:50 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Mon, 15 Jun 2020 16:15:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51458 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgFOUPt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 16:15:49 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05FKFhin094396;
+        Mon, 15 Jun 2020 15:15:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592252143;
+        bh=p3el6r3iFT6tyZHvcT3VOEaphwFqZKjosskfvLkSjGk=;
+        h=From:To:CC:Subject:Date;
+        b=Qd+VOY29E02Kv5KpVAvk4QMZ70WZAWUmLoxDY4jIxM9g3oYmD8Kh64CQq/UjjCtZi
+         zXSJlKdlImxStqe8PKLHGEozdx1oVUC53InG+pYIA/zrPqeduBOakjAFNWXWjiWQ6E
+         /ClqtbL5QD7DBGcr6x6ybeG0ZiZMk4SnjJW8jc1E=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKFhCQ044828;
+        Mon, 15 Jun 2020 15:15:43 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
+ Jun 2020 15:15:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 15 Jun 2020 15:15:43 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKFhAT061823;
+        Mon, 15 Jun 2020 15:15:43 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [RESEND PATCH v27 00/15] Multicolor Framework v27
+Date:   Mon, 15 Jun 2020 15:15:07 -0500
+Message-ID: <20200615201522.19677-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <3d4fd3f9-9bde-90a8-bef5-9fc97cc9b363@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello
 
+This is the multi color LED framework.   This framework presents clustered
+colored LEDs into an array and allows the user space to adjust the brightness
+of the cluster using a single file write.  The individual colored LEDs
+intensities are controlled via a single file that is an array of LEDs
 
-On 6/15/2020 12:09 PM, Robin Murphy wrote:
-> On 2020-06-08 12:41, Lukas Wunner wrote:
->> On Mon, Jun 08, 2020 at 12:11:11PM +0100, Robin Murphy wrote:
->>> And all in code that has at least one obvious inefficiency left on
->>> the table either way.
->>
->> Care to submit a patch to overcome that inefficiency?
-> 
-> I'll have a quick go, but without any way to measure performance impact
-> (or even test for correctness) I don't fancy going too deep based purely
-> on disassembly and ARM11 cycle timings.
-> 
->>> This thread truly epitomises Knuth's "premature optimisation"
->>> quote... ;)
->>
->> The thread came about because it can be determined at compile time
->> whether the interrupt is going to be shared:
-> 
-> ...which is exactly my point - "because it can be" is anything but proof
-> that avoiding a trivial check makes enough measurable difference to
-> justify putting in the effort to do so.
-> 
->> On the BCM2835 (Raspberry Pi 1), CONFIG_ARCH_MULTI_V6 is set and this
->> SoC doesn't have multiple bcm2835-spi instances, so no shared interrupt.
->>
->> The question is how to discern BCM2836/BCM2837 (Raspberry Pi 2/3), which
->> do not have multiple instances, and BCM2711 (Raspberry Pi 4) which does.
-> 
-> Hmm, how much relative importance does that have? On a 700MHz ARM11 it's
-> obviously desirable to spend as little time in the IRQ handler as
-> possible in order to have time left to do anything else, but on the
-> other SoCs even if the IRQ remains permanently asserted it can still
-> only consume 25% of the available CPU capacity, at which point the
-> impact of 2-3 cycles either way at 1GHz+ seems pretty much immeasurable.
-> 
->> The Raspberry Pi Foundation compiles BCM2711 kernels with
->> CONFIG_ARM_LPAE=y,
->> but Florian considered that kludgy as a discriminator and opted for
->> runtime-detection via the compatible string instead.  If you've got
->> a better idea please come forward.
->>
->> Is "optimize shared IRQ support away if IS_ENABLED(CONFIG_ARCH_MULTI_V6),
->> else leave it in" the best we can do?
-> 
-> In all honesty I'm starting to think it seriously might be :)
+Dan
 
-Or how about this: we slightly re-structure the interrupt handler such
-that all possible interrupt conditions are explicitly handled and
-terminate with a return IRQ_HANDLED, and those which are not, including
-in the case of a "spurious" (because the interrupt was triggered for
-another SPI controller instance), then we finish the function with
-IRQ_NONE. This would not impact the performance for the BCM2835/36/37
-which would still have a single controller/single interrupt line to handle.
+Dan Murphy (15):
+  dt: bindings: Add multicolor class dt bindings documention
+  leds: Add multicolor ID to the color ID list
+  leds: multicolor: Introduce a multicolor class definition
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  dt-bindings: leds: Convert leds-lp55xx to yaml
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+  leds: lp55xx: Convert LED class registration to devm_*
+  leds: lp55xx: Add multicolor framework support to lp55xx
+  leds: lp5523: Update the lp5523 code to add multicolor brightness
+    function
+  leds: lp5521: Add multicolor framework multicolor brightness support
+  leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
+  leds: lp5523: Fix various formatting issues in the code
+
+ .../ABI/testing/sysfs-class-led-multicolor    |  36 +
+ .../bindings/leds/leds-class-multicolor.yaml  |  37 +
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 +++
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 -----
+ .../devicetree/bindings/leds/leds-lp55xx.yaml | 218 +++++
+ Documentation/leds/index.rst                  |   1 +
+ Documentation/leds/leds-class-multicolor.rst  |  88 ++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ drivers/leds/Kconfig                          |  24 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/led-class-multicolor.c           | 210 +++++
+ drivers/leds/led-core.c                       |   1 +
+ drivers/leds/leds-lp50xx.c                    | 783 ++++++++++++++++++
+ drivers/leds/leds-lp5521.c                    |  43 +-
+ drivers/leds/leds-lp5523.c                    |  62 +-
+ drivers/leds/leds-lp5562.c                    |  22 +-
+ drivers/leds/leds-lp55xx-common.c             | 212 +++--
+ drivers/leds/leds-lp55xx-common.h             |  16 +-
+ drivers/leds/leds-lp8501.c                    |  23 +-
+ include/dt-bindings/leds/common.h             |   3 +-
+ include/linux/led-class-multicolor.h          | 121 +++
+ include/linux/platform_data/leds-lp55xx.h     |   8 +
+ 24 files changed, 1978 insertions(+), 355 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-lp50xx.c
+ create mode 100644 include/linux/led-class-multicolor.h
+
 -- 
-Florian
+2.26.2
+
