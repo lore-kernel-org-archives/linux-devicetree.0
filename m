@@ -2,113 +2,123 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBAEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B436C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0612053B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0332067B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oISdFcYS"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0kZKh1Sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgFOIoz (ORCPT
+        id S1729155AbgFOIuj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:44:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728603AbgFOIoy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 04:44:54 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBCEC061A0E;
-        Mon, 15 Jun 2020 01:44:54 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id k1so6426365pls.2;
-        Mon, 15 Jun 2020 01:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=myvNnjze95Yl2SyKV+SrVEtGJL4UPmr2kTdonMuTSII=;
-        b=oISdFcYSOQZNDKsKZuBBTK+7unBXRFo+muI/V1jUc3IfXu3i7HmaqO+k2IqsjChblm
-         xgKiEbr3IRoIzbdmFXzO62cdT0AcUo8LzLRd9WnCoWE6FHTzuNLG7QGW7lZhlFvAult6
-         EzBIfeZUJ++8H4GKeNlQyAF4m6xYscy67qYLE+kusDfC+LzuidKlXdhA9dhO628EK/hz
-         04ZRl2osW+mN5jz0r4gS127mX2uebX/qvvkk7ZfpQhhMuRnl/Ty9lhAqMuOCJjpDlGG5
-         83xoWWLOVAdS22ZZGIOqmu9Y2ghUHftTcHtA2Ic0x0tSeLjpcMcq/I29llSpScOOtdlm
-         a2Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=myvNnjze95Yl2SyKV+SrVEtGJL4UPmr2kTdonMuTSII=;
-        b=Y2kIFY6BwBxzW3TFPYRHLE/3+3OT8NBp9RYl54rjhWMI8ck7NkjctV40rvV1neEUpi
-         tprROxDyPxIUmo7Cj80H0bBXZMSEVCg3BB5foNVFrCy/GhsbVORxKS4rq2BJlsKYVJ0u
-         ChL+X49kNbOWlsb/Lbvi8SUywgNkk8rwnFPYXCuEHY4qio6R8OEVTgcD+iIbRDMqQktF
-         CDzhbNKqN1EB+OFK44w3m2uyuY1tkztVcq8X1ilwpB1h/z8FbEOtg439uV9jfy/tWZVo
-         8VPS6aCS5Bpu4CwzdL4kGuBs88cAotujrX+0tNOHPlCAdJaUvyS+0uZ0MbcQXPZtdEBG
-         0nag==
-X-Gm-Message-State: AOAM531pXqAZfsa3cfbkE20VpbNZMezQ4MfRr32CSK6ANn3KW/b6Z9KJ
-        u+2UbSGL3ay5iok016N2TWn4gdTGR7zSdaXxoHY=
-X-Google-Smtp-Source: ABdhPJzZSVB9+37ZECL2ML/pFpQxuUFxCPGZLcIJ+xzsp2pcKjg11WpH23kGVz5r9pIbWTHuVH/fIRyg3tivNSH3Q30=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr11342618pjq.228.1592210693624;
- Mon, 15 Jun 2020 01:44:53 -0700 (PDT)
+        Mon, 15 Jun 2020 04:50:39 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37884 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728496AbgFOIuj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:50:39 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F8lwYA021890;
+        Mon, 15 Jun 2020 10:49:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=VJv/B5BqqCzIrb2NhvcIyxQJgblrWvMESlW9XtRoNEA=;
+ b=0kZKh1SbuXWQB7p9qxsFxBRqM5mfwfpwfQppSZHbAi7aGlAxJMn6HF+ePByVUQeWhP5n
+ KHEOUmeg4EKm8z+vwmjt3IOBgkxpIr2YfeCVj8ChuRaXXCTBuIspiTs1/dAn8wURSGv3
+ Y6blL4F1iGve6mV/JSA2Pyx58BOe+zFpXoYwH56D9UtIt/jTmZ8DZ9aR36vl+fmDipKB
+ R2v0LPU2N1A8tx4U+bnCxdr1YQs9SwTSs/TW9vbPuAGsUovU8eMdffUak45+mjdEPJwW
+ S7cPK9U9RSfiHWTSauFsD/Mg20ZYaYQu+bkEKaSI52QL+y3Vo08SpxeK1fP9HowPDr67 wQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mnph0ecj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 10:49:53 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 76ACA10002A;
+        Mon, 15 Jun 2020 10:49:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4485B2BE225;
+        Mon, 15 Jun 2020 10:49:45 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
+ 2020 10:49:44 +0200
+Subject: Re: [PATCH v6 0/9] Enable ili9341 and l3gd20 on stm32f429-disco
+To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
+        <p.zabel@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
+        <thierry.reding@gmail.com>, <sam@ravnborg.org>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <andy.shevchenko@gmail.com>, <noralf@tronnes.org>,
+        <linus.walleij@linaro.org>, <broonie@kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-clk@vger.kernel.org>,
+        <dillonhua@gmail.com>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <bfb78ded-11bf-e9e3-4211-5fa86c6e0f0f@st.com>
+Date:   Mon, 15 Jun 2020 10:49:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
- <20200509080627.23222-3-dongchun.zhu@mediatek.com> <20200521193204.GA14214@chromium.org>
- <1590209415.8804.431.camel@mhfsdcap03> <20200610183600.GI201868@chromium.org>
- <1591954266.8804.646.camel@mhfsdcap03> <CAAFQd5CboZ9aFhUyKPES_2oO_AKAOh3Pg8D+9YpfmzJ8v-yFHw@mail.gmail.com>
- <1592205866.8804.686.camel@mhfsdcap03>
-In-Reply-To: <1592205866.8804.686.camel@mhfsdcap03>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 15 Jun 2020 11:44:41 +0300
-Message-ID: <CAHp75Ve12f7skOs1iW5U4=meP5-fXRppH=XMST6asQbjxn2OGg@mail.gmail.com>
-Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
-        <shengnan.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:30 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> On Fri, 2020-06-12 at 20:49 +0200, Tomasz Figa wrote:
-> > On Fri, Jun 12, 2020 at 11:33 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+Hi Dillon,
+
+On 5/27/20 9:27 AM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
 
 ...
 
-> > [1] https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html#the-active-low-and-open-drain-semantics
-> >
->
-> Thank you for the sharing.
-> If driver only focus on the logical function of GPIO pins,
-> 'n_rst_gpio' may need to be renamed back to the 1st version 'rst_gpio'.
+> dillon min (9):
+>    ARM: dts: stm32: Add dma config for spi5
+>    ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+>    ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
+>      stm32429-disco board
+>    dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+>    clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate
+>    clk: stm32: Fix ltdc's clock turn off by clk_disable_unused() after
+>      kernel     startup
+>    drm/panel: Add ilitek ili9341 panel driver
+>    spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+>    spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+>      be     coexit with 'SPI_3WIRE' mode
+> 
+>   .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+>   arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+>   arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+>   arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+>   drivers/clk/clk-stm32f4.c                          |    7 +-
+>   drivers/gpu/drm/panel/Kconfig                      |   12 +
+>   drivers/gpu/drm/panel/Makefile                     |    1 +
+>   drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1288 ++++++++++++++++++++
+>   drivers/spi/spi-stm32.c                            |   19 +-
+>   drivers/spi/spi.c                                  |    3 +-
+>   10 files changed, 1508 insertions(+), 9 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+>   create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> 
 
-Yes, we should not have any of n_* GPIOs, they must be marked as Active Low.
+DT patches (patch 1 to 3) applied on stm32-next. I assume that binding 
+one will go with drm/panel driver patch.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks
+Alex
