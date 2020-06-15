@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D340C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE23C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4206720679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D1220707
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgFOJHj (ORCPT
+        id S1728852AbgFOJHu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:07:39 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:19465 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728852AbgFOJHj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:07:39 -0400
+        Mon, 15 Jun 2020 05:07:50 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:48203 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729144AbgFOJHu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:07:50 -0400
 X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 3D1DF240004;
-        Mon, 15 Jun 2020 09:07:35 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 85C1920002;
+        Mon, 15 Jun 2020 09:07:45 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
@@ -40,30 +40,25 @@ Cc:     Julien Su <juliensu@mxic.com.tw>,
         Mason Yang <masonccyang@mxic.com.tw>,
         Chuanhong Guo <gch981213@gmail.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 13/20] mtd: nand: Rename a core structure
-Date:   Mon, 15 Jun 2020 11:07:34 +0200
-Message-Id: <20200615090734.26297-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v7 11/20] mtd: nand: Drop useless 'depends on' in Kconfig
+Date:   Mon, 15 Jun 2020 11:07:44 +0200
+Message-Id: <20200615090744.26359-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200529002517.3546-14-miquel.raynal@bootlin.com>
+In-Reply-To: <20200529002517.3546-12-miquel.raynal@bootlin.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 8ea52c976c9f5ba7d8adbbc46733be5a0abbf5fd
+X-linux-mtd-patch-commit: 764cf0c82cb7573472dbcc4fef20c6639a3dd1a5
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-05-29 at 00:25:10 UTC, Miquel Raynal wrote:
-> Prepare the migration to a generic ECC engine by renaming the
-> nand_ecc_req structure into nand_ecc_props. This structure will be the
-> base of a wider 'nand_ecc' structure.
-> 
-> In nand_device, these properties are still named "eccreq" even if
-> "eccprops" might be more descriptive. This is just a transition step,
-> this field is being replaced very soon by a much wider structure. The
-> impact of renaming this field would be huge compared to its interest.
+On Fri, 2020-05-29 at 00:25:08 UTC, Miquel Raynal wrote:
+> Both OneNAND and raw NAND bits can't be compiled if MTD is disabled
+> because of the if/endif logic in drivers/mtd/Kconfig. There is no need
+> for an extra "depends on MTD" in their respective Kconfig files.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
