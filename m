@@ -2,123 +2,82 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0B9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BC2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1586E2065F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:35:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="StdSSRTQ"
+	by mail.kernel.org (Postfix) with ESMTP id D859D206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgFOJfF (ORCPT
+        id S1729040AbgFOJiR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:35:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47812 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728411AbgFOJfF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:35:05 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Z1JB028757;
-        Mon, 15 Jun 2020 04:35:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592213701;
-        bh=Hh5bDu46FKnWsaHiQaJZRC4oLqQ1UDQANlpuKX2a/5o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=StdSSRTQz4BpTRXgzU8AeSab+0iKkdFFbbdwTa5XiImeXTp7uWuE7tUOqkVdFZH8B
-         6Ga35UtBnaLk4JaqHaueBXkbYN+qC9CP90lapVHSV4I2zf/B7ERPLXrJJgb7KYZa0S
-         5ubthkLEBqywCtj5a1+DS8Bu/qTnkrbw/WmGqXdE=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Z1To027648;
-        Mon, 15 Jun 2020 04:35:01 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
- Jun 2020 04:35:01 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 15 Jun 2020 04:35:01 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Yw9p130834;
-        Mon, 15 Jun 2020 04:34:59 -0500
-Subject: Re: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
-To:     Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>
-References: <20200611220951.GA3355634@x1>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
-Date:   Mon, 15 Jun 2020 12:34:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200611220951.GA3355634@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 15 Jun 2020 05:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgFOJiR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:38:17 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA990C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 02:38:16 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 531BF2A2050
+Message-ID: <8ad9a397a5fa6cebd2a4e0170dfa96ad73907faf.camel@collabora.com>
+Subject: Re: [PATCH v3 5/5] dt-bindings: display: ti,tfp410.yaml: make the
+ ports node optional
+From:   Ricardo =?ISO-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     devicetree@vger.kernel.org, jason@lakedaemon.net, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
+        tomi.valkeinen@ti.com, kernel@collabora.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 15 Jun 2020 11:38:07 +0200
+In-Reply-To: <20200611160817.GA6031@pendragon.ideasonboard.com>
+References: <20200611102356.31563-1-ricardo.canuelo@collabora.com>
+         <20200611102356.31563-6-ricardo.canuelo@collabora.com>
+         <20200611160817.GA6031@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Laurent,
 
+Thanks for reviewing the patch
 
-On 12/06/2020 01:09, Drew Fustini wrote:
-> Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
-> RGMII mode") the networking is broken on the BeagleBone AI which has
-> the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
-> phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
+On Thu, 2020-06-11 at 19:08 +0300, Laurent Pinchart wrote:
+> Hi Ricardo,
 > 
-> Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
-> other AM5729 boards.
-
-commit ref is incorrect
+> Thank you for the patch.
 > 
-> [0] https://github.com/beagleboard/beaglebone-ai/blob/master/BeagleBone-AI_sch.pdf
+> On Thu, Jun 11, 2020 at 12:23:56PM +0200, Ricardo Cañuelo wrote:
+> > Make the ports node optional, since there are some DTs that don't define
+> > any ports for ti,tfp410.
+> > 
+> > Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 > 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-> Fixes: cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
+> Shouldn't we fix those DTs instead ? What's the point of a TFP410
+> without ports in DT ?
 
-Pls change fixed tag to
-520557d4854b ARM: dts: am5729: beaglebone-ai: adding device tree
-as this board DTB was merged only in 5.8.
+This comes from the discussion in the previous version of this series.
 
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->   arch/arm/boot/dts/am5729-beagleboneai.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-> index 9877d7709d41..4c51c6b05e64 100644
-> --- a/arch/arm/boot/dts/am5729-beagleboneai.dts
-> +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-> @@ -505,7 +505,7 @@ &mac {
->   
->   &cpsw_emac0 {
->   	phy-handle = <&phy0>;
-> -	phy-mode = "rgmii";
-> +	phy-mode = "rgmii-rxid";
->   };
->   
->   &ocp {
-> 
+In the DTs that don't define any ports (it's dove-sbc-a510.dts only, actually)
+it's not clear how to define the ports (I'm not familiar with this board).
+Initially I defined a set of empty ports just to comply with the binding
+requirements, but Rob suggested that we might as well declare them as optional,
+since having an empty port definition with no remote endpoints is no better than
+having no ports at all.
 
-Thanks, pls fix above and you can add my
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+I understand both opinions but I just don't know which is the best option at
+this point.
 
--- 
-Best regards,
-grygorii
+Cheers,
+Ricardo
+
