@@ -2,273 +2,263 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE4CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2F3C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B562067B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3602076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BbTr3728"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MJkmyUMh";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MJkmyUMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgFOLit (ORCPT
+        id S1729665AbgFOLnN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOLis (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 07:38:48 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE6AC061A0E
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 04:38:48 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id o4so1692634lfi.7
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 04:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vMHg+Ylhsphqjn4gUXoftnjcXS/LUuG+Lo5gPl1+kVo=;
-        b=BbTr3728/DwOBbhItC/6sHoC6MIAWqNCevMtCSvKxx2lYMiqAso2o7PRvxI0V0lr0/
-         czbgb/Otn2PBm3YWRm44rHhukYppHwsa06LNximpGPzajrW2KsINi2Wq7cb7/stfL6+5
-         0TbDF63KyEK3yTgI7C/mXV9H+TK5FVNvKwtb4I3VTT6/tmBZjny3Kfl7s6h7TO18ZCC+
-         0UYWUepm3FlvTfjHbE3xGRfCY4Ue/hVaRcOAM7AarW1YOyd/4PCcafzgVcDiUil77ACu
-         zAuXzr9tVCRI1IWw9B32g9mVuY7SCwmtVhd8EsA1mC7oGYZQSYUIhjM4BxohXAEVWJbn
-         G4GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vMHg+Ylhsphqjn4gUXoftnjcXS/LUuG+Lo5gPl1+kVo=;
-        b=q+oZ66vYYqjlxQvB1ecihMWPZToB2qu5XqlVhKGYS3LBh+sPXW9wr1r+ol7VX9nfad
-         QY+sUDdjkZL+ObdDFQo7uU1uVHPhhfZ7Dvgy+8uuIwgvauJaOVnXnVxsZ4TAy5GJzQla
-         q/i2UBFv2Axe2WsqCWeFRB3EQy+1IzMidd6zV8Un/BXibThXalqNLNL9uCkBnBiBO9Fe
-         nmUbnU1C5UGu64IPrFt1RYyLP5bCu5G3Fob8AKZ2VboW4swbAf1OlSm5Ox6oA9ZHZyh/
-         dWo5WHXZFZfyDJ4hdiaGjqHMuaWYyrLSQKHka5ND8rdfuBdts3M2ELocJNbyp+4mkWRA
-         qCvg==
-X-Gm-Message-State: AOAM530hsKV+dNOICQt86yrcDfuzscDbTuNOtkIuB6+zMa3Ph+74hpOB
-        1Ed6vvucSB4Uy00CnOR/+OvQ6w==
-X-Google-Smtp-Source: ABdhPJw40VZB+Irh1ggpg21MubQ0lHR2ONbXH3h/ifQyHuno/K6xFnAmXx/co1rjzQAAMqRyaEDD9Q==
-X-Received: by 2002:ac2:5de1:: with SMTP id z1mr13329029lfq.183.1592221126550;
-        Mon, 15 Jun 2020 04:38:46 -0700 (PDT)
-Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id n10sm398660lfb.82.2020.06.15.04.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 04:38:45 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 13:38:43 +0200
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>, tabba@google.com,
-        qwandor@google.com, ardb@kernel.org
-Subject: Re: [RFC PATCH 0/3] firmware: Add support for PSA FF-A interface
-Message-ID: <20200615113843.GA2269951@jade>
+        Mon, 15 Jun 2020 07:43:13 -0400
+Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:49101
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729642AbgFOLnK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:43:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ma7y0JebvfR2qlgpX/GeMfqA09AcySzvtkwKLoE+LNY=;
+ b=MJkmyUMhhPw6gwyBlCg/WnIRxV2tkc5bAglDsPQLyxN593H49AkfXSCp5boc8dSwOIAF9hgzoIU96BQhs+53UJEr9PgdANmzDcwfZmB46iVaoJoxVaLO0tSTkZgfK47AGuomPlPfk6BQE3wPwUGffGUIxgF47piVQs4MbFb5ylA=
+Received: from AM7PR03CA0018.eurprd03.prod.outlook.com (2603:10a6:20b:130::28)
+ by AM0PR08MB3666.eurprd08.prod.outlook.com (2603:10a6:208:dd::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Mon, 15 Jun
+ 2020 11:43:05 +0000
+Received: from AM5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:130:cafe::5a) by AM7PR03CA0018.outlook.office365.com
+ (2603:10a6:20b:130::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend
+ Transport; Mon, 15 Jun 2020 11:43:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT018.mail.protection.outlook.com (10.152.16.114) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18 via Frontend Transport; Mon, 15 Jun 2020 11:43:05 +0000
+Received: ("Tessian outbound 8bb15bb571b3:v59"); Mon, 15 Jun 2020 11:43:05 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 990b144d1fa36f7d
+X-CR-MTA-TID: 64aa7808
+Received: from cf8903235265.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id B5F5F256-C443-4D19-97A6-FEC4B41F19FD.1;
+        Mon, 15 Jun 2020 11:43:00 +0000
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cf8903235265.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Mon, 15 Jun 2020 11:43:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gl8cC8LGgthrucel3KrC44ctbPDhNbIH63Pj5ClunFnADdS7Eiym0Gtjed+262hNMZtWKUFoEoFSVBqVtOGJENcfKdDXuXWmiS+ZgTy23hQJOSfi5JHzKnIYWp2+INHjqGA5Ot7JW4aJn0jlAW3f2wWz+amMnI0LDJvziyi9qrOEj+yZD3eg+48h8sjW+6dEYibbubXnfV76Tw2acs4SEq7MXfO7MR5ZPdbxWlUeLqbE2ZcRpKBwl12tuxBj3WuJhkEYDLG4D/x6zQLA56bsGSm+1BVEApIJmA6cpAOwZXrR4OB87iHCmjpPkAge+JU1s5/EZpGLVxXHpJr18pSrDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ma7y0JebvfR2qlgpX/GeMfqA09AcySzvtkwKLoE+LNY=;
+ b=MQPU3ZJkkUxtofxS/3AXQKrQr1dPC+MBNIWYNHlz/9DhcOUdEx7NtSPLUdLGJxxtWevKwprf31SSfjXnRMDARkLA/oVPo19kMOr5NUhb7IvSKrXkgmhPRDNtEgyDndGZO0H/2JbSE8tkMhB0upVTBzioy/26ptisvOdG1TJ2AqNHKfp/gGYLymfSCHLiLLfCpBMIjdXxmjPSnvcrD61r5p9Bqi67WwQW4aNz9ZCn7ixSHKVy1Arkaf7wK4fz/lLGKXnkrEKvmD1b0ZmsDi5GIAEkFtKa1/RLyyAzf/v7m0JRcLciBSo70kfASLLiDy4e2pqRaAWROJ375DNfsG8jmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ma7y0JebvfR2qlgpX/GeMfqA09AcySzvtkwKLoE+LNY=;
+ b=MJkmyUMhhPw6gwyBlCg/WnIRxV2tkc5bAglDsPQLyxN593H49AkfXSCp5boc8dSwOIAF9hgzoIU96BQhs+53UJEr9PgdANmzDcwfZmB46iVaoJoxVaLO0tSTkZgfK47AGuomPlPfk6BQE3wPwUGffGUIxgF47piVQs4MbFb5ylA=
+Authentication-Results-Original: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
+Received: from DB6PR0801MB1861.eurprd08.prod.outlook.com (2603:10a6:4:73::21)
+ by DB6PR0801MB2087.eurprd08.prod.outlook.com (2603:10a6:4:77::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.23; Mon, 15 Jun
+ 2020 11:42:59 +0000
+Received: from DB6PR0801MB1861.eurprd08.prod.outlook.com
+ ([fe80::ac31:e5b9:8aa0:4a33]) by DB6PR0801MB1861.eurprd08.prod.outlook.com
+ ([fe80::ac31:e5b9:8aa0:4a33%8]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
+ 11:42:59 +0000
+Date:   Mon, 15 Jun 2020 12:42:20 +0100
+From:   Achin Gupta <achin.gupta@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>, nd <nd@arm.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
+ non-secure VM partitions
+Message-ID: <20200615114220.GE46361@C02TC1ARHF1T>
 References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200604133746.GA2951@willie-the-truck>
- <20200609174123.GA5732@bogus>
-MIME-Version: 1.0
+ <20200601094512.50509-2-sudeep.holla@arm.com>
+ <20200609223551.GA1620273@bogus>
+ <20200610074346.GB15939@willie-the-truck>
+ <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
+ <20200611171222.GB7725@willie-the-truck>
+ <20200615091639.GD46361@C02TC1ARHF1T>
+ <20200615095133.GA2477@willie-the-truck>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200609174123.GA5732@bogus>
+In-Reply-To: <20200615095133.GA2477@willie-the-truck>
+X-ClientProxiedBy: LO2P265CA0190.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a::34) To DB6PR0801MB1861.eurprd08.prod.outlook.com
+ (2603:10a6:4:73::21)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from C02TC1ARHF1T (217.140.99.251) by LO2P265CA0190.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Mon, 15 Jun 2020 11:42:58 +0000
+X-Originating-IP: [217.140.99.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 71719c1c-e5d6-4e98-44d7-08d8112144c7
+X-MS-TrafficTypeDiagnostic: DB6PR0801MB2087:|AM0PR08MB3666:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB36668BC80C03BD751296865DFF9C0@AM0PR08MB3666.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;OLM:10000;
+X-Forefront-PRVS: 04359FAD81
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 5NifFQqv5w0MYM6GIJcUdZbam8T8BzjbqsBzdMD9OgucXbeTkrPeSJ6RzygVpq0k1DhSIpw2mSN25T0HkH67m1ZaGsFtxWWcr2Cl/p2Hgwn/J5Qz6tZbBFFZT0Ak1YJwaAKTfTJMDVA95M1/WkblkyDzHJHtgIDomg6UYhj90Pzov/ok5cJ5Y1H+9rUARZ0t0Z33k/r66+/CdivhznpMFb9zr1ahMx+W83RreahpfcVV6QMLZ5gZ9SSVGGKhK87CMjoLdGvBfzJghpjwxrt6W61fL3OsLCXndBzA1MXAkwSXeEN0PH/bb0RbYE7WdxIsOmos5yOQJ1b4z3k/dA30dg==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0801MB1861.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(376002)(136003)(39860400002)(4326008)(16526019)(33656002)(186003)(55016002)(6916009)(8676002)(26005)(66946007)(8936002)(66476007)(5660300002)(1076003)(66556008)(9686003)(2906002)(316002)(52116002)(54906003)(44832011)(956004)(33716001)(6496006)(86362001)(83380400001)(478600001)(6666004)(53546011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: j6YNtTGdp/kYjGKTT7VVqkHCfbMbiazhHDp7gbZqaBcCPQJA17uJ0KtYYcppuI6SbRjH7j3/MHbvMMThavkJ/wSqy1V9ZZvlj/CYOQw3JWP2ETf2UkkAwu2Yer6+I2+9Jj9H6Lbjc0YwfJxZf/lKBwfZD40PdrBPkiZ4DjbegT1w/ZRtjs50Kc9OjTsr5jYcNojz6NVmbISE6rW7VJZ3ESMEnBVz/hL6B9qClODGcvowi6EWQ9Qo2yyPFhykeadFX6tuDgq6o4inMM63v1bUfvxwc4zT0YI1ki4YQuBlwv38DRGtOLKz8hMl1SMNYXhdfgDU2qTcQcbWqzxoxB1Oz/tWniBBmGbsBXwh+CUGK5wDr6o5tID3GgXQVjN2pHgOp9kPIS5jnfmpKvaYRoi2b1vqdI1EcxAmgPsFG2wf+SQyxRgnux+CrntbzUEpkwiuh8uXLXtBGF2uLj1OC4MJDM7PNqDNAldlmQaq60DCK7H7kNxRHZP5S7U/zhvwkrr/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB2087
+Original-Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(136003)(396003)(346002)(46966005)(478600001)(336012)(956004)(70206006)(33716001)(26005)(55016002)(82740400003)(9686003)(186003)(33656002)(54906003)(47076004)(16526019)(5660300002)(70586007)(81166007)(6862004)(356005)(8936002)(1076003)(82310400002)(450100002)(8676002)(316002)(6496006)(86362001)(4326008)(44832011)(2906002)(6666004)(83380400001)(53546011)(36906005);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 0f4457fa-6c72-40f8-5e21-08d8112140ac
+X-Forefront-PRVS: 04359FAD81
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ALL8Vyz8q/ZRn+CcOMmvwfF/6eEL5LUuQdppv+9ry0TOErI/6rhaZS6n0H08f7lomfPw78+T+QBuaf7IZCRt1NbpWBCkca1qN2QDX+1CYB+JgEbJlGvewtZqc9aMIHXIP/rCc7+c3RQcAwpgBIEvh9+7+EWlB9PUbrRn+cdPJB9Rp0tB1rFtN8lH9HgCy1mxHC+YgLCuC+j5ZcfxLGJrXW5a5P63zViSWo+enVmuzA9T+XDcopKZfRi/19LDvPCuj/QUXJgACGkvbKLpp9xAC9Ta/C60braLhiwBUB+W0hkNr38Znkg4OTkA2dLufnlwVbhO3SEYpuXpAzf/dd6ae/pUAurJz4R2c1jl1o3xJXW5HYvtfagHB/DXtJh7P3fJvOwOLc8hxCDLU0IzQeYVqQ==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 11:43:05.7658
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71719c1c-e5d6-4e98-44d7-08d8112144c7
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3666
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Jun 09, 2020 at 06:41:23PM +0100, Sudeep Holla wrote:
-> (Sorry for the delay, got distracted with some other bug fix.)
-> 
-> On Thu, Jun 04, 2020 at 02:37:46PM +0100, Will Deacon wrote:
-> > Hi Sudeep, [+Fuad, Andrew and Ard]
-> >
-> > (To other interested readers: if you haven't seen it, the FF-A spec is here:
-> >  https://static.docs.arm.com/den0077/a/DEN0077A_PSA_Firmware_Framework_Arm_v8-A_1.0_EAC.pdf
-> >  since this discussion makes no sense without that, and a tiny bit of sense
-> >  with it. It used to be called "SPCI" but it was recently renamed.)
-> >
-> 
-> Thanks for adding all interested parties.
-> 
-> > On Mon, Jun 01, 2020 at 10:45:09AM +0100, Sudeep Holla wrote:
-> > > Sorry for posting in the middle of merge window and I must have done
-> > > this last week itself. This is not the driver I had thought about posting
-> > > last week. After I started cleaning up and looking at Will's KVM prototype[1]
-> > > for PSA FF-A (previously known as SPCI),
-> >
-> > Yes, I need to do the Big Rename at some point. Joy.
-> >
-> 
-> 😁 
-> 
-> > > I got more doubts on alignment and dropped huge chunk of interface APIs in
-> > > the driver in order to keep it simple, and get aligned more with that
-> > > prototype and avoid scanning lots of code unnecessary.
-> >
-> > You also dropped most of the code, so this doesn't really do anything in
-> > its current form ;)
-> >
-> 
-> Yes, it was intentional 😉 
-> 
-> > > Here are few things to clarify:
+On Mon, Jun 15, 2020 at 10:51:34AM +0100, Will Deacon wrote:
+> On Mon, Jun 15, 2020 at 10:16:39AM +0100, Achin Gupta wrote:
+> > On Thu, Jun 11, 2020 at 06:12:23PM +0100, Will Deacon wrote:
+> > > On Thu, Jun 11, 2020 at 03:46:35PM +0000, Achin Gupta wrote:
+> > > > > On 10 Jun 2020, at 08:43, Will Deacon <will@kernel.org> wrote:
+> > > > > On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
+> > > > >> On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
+> > > > >>> Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
+> > > > >>> at virtual interface(VMs).
+> > > > >>>
+> > > > >>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > >>> ---
+> > > > >>> .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
+> > > > >>> 1 file changed, 47 insertions(+)
+> > > > >>> create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
+> > > > >>
+> > > > >> I'm hoping this goes away if the firmware is discoverable, but if not DT
+> > > > >> bindings are DT schema now.
+> > > > >
+> > > > > We'll need the binding for the kvm host side, because there are plenty
+> > > > > of partition properties that are not discoverable (e.g. number of vCPUs).
+> > > >
+> > > > Just trying to understand the req. a bit better…
+> > > >
+> > > > The FF-A driver in the host can use FFA_PARTITION_INFO_GET to determine
+> > > > the count of partitions and their vCPUs.
+> > > >
+> > > > Is this about a guest being able to find out how many vCPUs it has?
 > > >
-> > > 1. DT bindings
-> > > ---------------
-> > > 	I was initially against adding bindings for Tx/Rx buffers for
-> > > 	partitions. As per the spec, an endpoint could allocate the
-> > > 	buffer pair and use the FFA_RXTX_MAP interface to map it with the
-> > > 	Hypervisor(KVM here). However looking at the prototype and also
-> > > 	I remember you mentioning that it is not possible to manage buffers
-> > > 	in that way. Please confirm if you plan to add the buffer details
-> > > 	fetcthing them through ioctls in KVM and adding them to VM DT nodes
-> > > 	in KVM userspace. I will update the bindings accordingly.
+> > > This is about KVM finding out the information it needs in order to spawn
+> > > non-secure partitions. I don't see how it can do that with
+> > > FFA_PARTITION_INFO_GET -- who would respond?
 > >
-> > I think it's useful to have a mode of operation where the hypervisor
-> > allocates the RX/TX buffers and advertises them in the DT. However, we
-> > can always add this later, so there's no need to have it in the binding
-> > from the start. Best start as simple as possible, I reckon.
+> > Right! FFA_PARTITION_INFO_GET is meant to help the FF-A driver in the kernel to
+> > determine partition properties. It assumes that EL2 SW has already read each
+> > partition's manifest and will reply to this ABI.
 > >
-> 
-> OK
-> 
-> > Setting the static RX/TX buffer allocation aside, why is a DT node needed
-> > at all for the case where Linux is running purely as an FF-A client? I
-> > thought everything should be discoverable via FFA_VERSION, FFA_FEATURES,
-> > FFA_PARTITION_INFO_GET and FFA_ID_GET? That should mean we can get away
-> > without a binding at all for the client case.
-> >
-> 
-> Agreed, I added for RxTx buffers and initially to build the parent/child
-> hierarchy for all users of the driver. Initially I was assuming only
-> in-kernel users and now I agree we should avoid any in kernel users if
-> possible.
-> 
-> One thing to note FFA_PARTITION_INFO_GET relies on Rx buffers to send the
-> information to the caller. So we need to have established buffers before
-> that and one of the reason you don't find that in this RFC. I dropped that
-> too which I wanted initially.
-> 
-> > > 2. Driver
-> > > ---------
-> > > a. Support for multiple partitions in a VM
-> > > ------------------------------------------
-> > > 	I am not sure if there is need for supporting multiple partitions
-> > > 	within a VM. It should be possible to do so as I expect to create
-> > > 	device for each partition entry under arm-psa-ffa devicetree node.
-> > > 	However, I don't want to assume something that will never be a
-> > > 	usecase. However I don't think this will change must of the
-> > > 	abstraction as we need to keep the interface API implementation
-> > > 	separate to support different partitions on various platforms.
-> >
-> > I think Ard has a case for something like this, where a VM actually consists
-> > of multiple partitions so that S-EL0 services can be provided from NS-EL0.
-> > However, he probably wants that for a dynamically created VM, so we'd
-> > need a way to instantiate an FFA namespace for the VM. Maybe that can be
-> > done entirely in userspace by the VMM...
-> >
-> 
-> Interesting...
-> 
-> > > b. SMCCC interface
-> > > ------------------
-> > > 	This is something I messed up completely while trying to add
-> > > 	support for SMCCC v1.2. It now supports x0-x17 as parameter
-> > > 	registers(input) and return registers(output). I started simple
-> > > 	with x0-x7 as both input and output as PSA FF-A needs that at
-> > > 	most. But extending to x0-x17 then became with messy in my
-> > > 	implementation. That's the reason I dropped it completely
-> > > 	here and thought of checking it first.
-> > >
-> > > 	Do we need to extend the optimisations that were done to handle
-> > > 	ARCH_WORKAROUND_{1,2}. Or should be just use a version with x0-x7
-> > > 	as both input and ouput. Hyper-V guys need full x0-x17 support.
-> > >
-> > > 	I need some guidance as what is the approach preferred ?
-> >
-> > I think we can start off with x0-x7 and extend if later if we need to.
-> >
-> 
-> Sure
-> 
-> > > 3. Partitions
-> > > -------------
-> > > 	I am not sure if we have a full define partition that we plan to
-> > > 	push upstream. Without one, we can have a sample/example partition
-> > > 	to test all the interface APIs, but is that fine with respect to
-> > > 	what we want upstream ? Any other thoughts that helps to test the
-> > > 	driver ?
-> >
-> > I think that's the best you can do for now. We can probably help with
-> > testing as our stuff gets off the ground.
-> >
-> 
-> OK
-> 
-> > > Sorry for long email and too many questions, but I thought it is easier
-> > > this way to begin with than throwing huge code implementing loads of APIs
-> > > with no users(expect example partition) especially that I am posting this
-> > > during merge window.
-> >
-> > No problem. Maybe it would help if I described roughly what we were thinking
-> > of doing for KVM (this is open for discussion, of course):
-> >
-> >  1. Describe KVM-managed partitions in the DT, along the lines of [1]
-> >  2. Expose each partition as a file to userspace. E.g.:
-> >
-> >     /dev/spci/:
-> >
-> > 	self
-> > 	e3a48fa5-dc54-4a8b-898b-bdc4dfeeb7b8
-> > 	49f65057-d002-4ae2-b4ee-d31c7940a13d
-> >
-> >     Here, self would be a symlink to the host uuid. The host uuid file
-> >     would implement FFA_MEM operations using an ioctl(), so you could,
-> >     for example, share a user buffer with multiple partitions by issuing
-> >     a MEM_SHARE ioctl() on self, passing the fds for the borrower partitions
-> >     as arguments. Messaging would be implemented as ioctl()s on the
-> >     partition uuid files themselves.
-> >
-> 
-> OK, IIUC that covers mostly KVM implementation. We still need a way to
-> share the RxTx buffer info to the partitions and DT/ACPI(?) is one
-> possible way. Based on you comment about not needing DT node, do you have
-> any other way to communicate the buffer info to the partitions ?
-> 
-> >  3. We'll need some (all?) of these patches to unmap memory from the host
-> >     when necessary:
-> >
-> >     https://lwn.net/Articles/821215/
-> >
-> >     (for nVHE, we'll have a stage-2 for the host so we can unmap there as
-> >     well)
-> >
-> 
-> Sounds more fun.
-> 
-> > For communicating with partitions that are not managed by KVM (e.g. trusted
-> > applications), it's not clear to me how much of that will be handled in
-> > kernel or user. I think it would still be worth exposing the partitions as
-> > files, but perhaps having them root only or just returning -EPERM for the
-> > ioctl() if a kernel driver has claimed the partition as its own? Ideally,
-> > FF-A would allow us to transition some of the Trusted OS interfacing code
-> > out to userspace, but I don't know how realistic that is.
-> >
-> 
-> Ah good, so we can still manage in-kernel users this way but we need to
-> provide interface to such a driver which I agree that we need to avoid
-> if possible.
+> > IIUC, with protected KVM, this information will have to be a part of the
+> > manifest that the KVM host consumes.
+>
+> The host does not consume the manifest directly -- instead, the bootloader
+> will use the manifest to populate these DT nodes. Again, these are *only*
+> for non-secure virtual partitions which are to be managed by KVM.
 
-The OP-TEE driver is an in-kernel user, I don't see that we can migrate
-that to user space in the nearest future. In fact I'm not sure it would
-make sense since we have a kernel internal interface which is used by
-some drivers.
+Yes. Understand and agree. Manifest is an overloaded term. I was using it to
+describe the DT nodes that the host will consume.
 
-Cheers,
-Jens
+>
+> > But then, can this be made discoverable (use a SMC for discovery) at all as Rob
+> > had originally suggested. Firmware (Secure world) has no clue and the bootloader
+> > is long gone.
+>
+> Make what discoverable?
+
+I thought the original question was to make partition properties discoverable
+instead of relying on DT nodes. I might have misunderstood. Looks like we are on
+the same page in any case :o)
+
+>
+> > Separate topic, protected KVM does not get dibs on the manifest and it relies on
+> > the KVM host to specify the address ranges for each partition? Does this not
+> > mean that the KVM host can control the physical address space each partition
+> > sees. This seems contrary to the isolation guarantees that protected KVM must
+> > provide?
+>
+> The host is trusted during early boot, and gives up this trust after
+> initialising EL2 fully. So roughly speaking, we:
+>
+> 	* Boot at EL2 and install a shim
+> 	* Drop down to EL2 and start the host kernel
+> 	* Before some initialisation (DT parsing, SMP bringup, etc)
+> 	* Init KVM by calling back up to EL2 to install the full hypervisor
+>
+> At that point, the EL1 host is no longer trusted and the last call
+> effectively "locks it out" from EL2.
+
+Ok. Protected KVM (PKVM) must create S2 tables when asked to setup a partition
+by the Host. My main concern is if PKVM must trust the Host to provide the
+correct physical address space ranges for a partition?
+
+I guess your point is this is not a problem since PKVM can lock the Host out of
+those address ranges in any case?
+
+It is a bit counter intuitive that the Host gets to see and potentially
+manipulate information that was verified and extracted by the bootloader from
+the partition's manifest. This hapens before PKVM sees the same
+information. Can't put my finger on what could go wrong though. Depends upon the
+threat model too!
+
+>
+> > > But you're right that number of vCPUs was a bad example. We also need
+> > > information such as the entry point.
+> >
+> > Yes. From a spec perspective this should be specified in the partition manifest
+> > unless the base address of the loaded image can be assummed to be the entry
+> > point.
+>
+> Right, but the format of the manifest isn't defined by the spec so I really
+> don't think it's something that Linux should be dealing with directly.
+
+Agree.
+
+cheers,
+Achin
+>
+> Will
