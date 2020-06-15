@@ -2,81 +2,110 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6285CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9C4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2256C207DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE2F2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592242112;
-	bh=iUXZuIT/dDXb7EKudwm706z+Hr9CMEQKWm5SnIdb0a4=;
+	s=default; t=1592242253;
+	bh=zjfjIr28wp7lz1LzhG/6HN/tE1zYdIy5YMG1lFm5t3o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nd4yB0qeExGjmiI60+IQKhQAlgtryPcIusWXmxOZR+byPNC38XohA8SwyhHaiYVxA
-	 B/Fs3Zi3aNqlpmdyTaEFThfXpj7DaOZThrTHzwnl/brb8upxhNGEFpbOP/oLdb2m/h
-	 ir08flXCG5WI9gRf3lFjjvG1VNb1Ut6ICzPvuGXE=
+	b=Tkcd0KRTcbFaGipwq1QFuvj+0JyBLflA2QWgJLj72bBDahWFZrCaoCxrxrkxJy9Tx
+	 NYejsgyHvhMC9cc7zuSbNeiZ2rQTuAZvkYBCPQKWwcGNoYq48M1DfZCyGnn6/kQFeH
+	 tygrs+lZctEhl/0LJ/hutfK2HNwhCPV5oedG5s4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgFOR2b (ORCPT
+        id S1729806AbgFORar (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:28:31 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46373 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgFOR2b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:28:31 -0400
-Received: by mail-io1-f66.google.com with SMTP id t9so18777046ioj.13;
-        Mon, 15 Jun 2020 10:28:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MYImRG60d+Rk9sSAeNy5oAUfEqEV6FzOSefEkoMdz1A=;
-        b=c6Q5k+Rfdu730zCRRld/lD30CrWWmoIAIK0lnGjzpL3igvV40WPNk9FRWSzJ16IEbv
-         uU6lAS+IA035ly6sSgUzBWuJnxeAUJVnA6XIlx9zGWo0GSFS5vxHGOl1yvYLJCsZIfFK
-         cvgrlhbL0XoPTdOzSeRvftGG1MBkib7QWdU6vjXreWoHgJaRfw6eULGVzHkk3KCm++lJ
-         RQiPCpEfQdvSxIK8JKWhMGz9VLAlgMPBvY39sV0zY2Zc08q4H5po2zkICH8tBzusa9P2
-         frAEpCh99XIicsaHqY5OXI65jO3PyeWVjyeBjruauM2+oZfqf81xs0kaaWbWD+Kl8uH1
-         03hw==
-X-Gm-Message-State: AOAM533xWWdjf7TNkesEmalps0BEYVkk5bdUvVCyTXIFL9Nuc3loYsBH
-        JPKwc0ehy1DrRnYyP/wdEQ==
-X-Google-Smtp-Source: ABdhPJwz5sp/TMnFaz83wtBaFbg7kfsSf/GiLBBdiXdjYa27eWvs6SUspoeUIqIBwTNfg4+zClzoEA==
-X-Received: by 2002:a05:6602:228b:: with SMTP id d11mr26217595iod.98.1592242110735;
-        Mon, 15 Jun 2020 10:28:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id x18sm8170183ilq.46.2020.06.15.10.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:28:30 -0700 (PDT)
-Received: (nullmailer pid 1996652 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:28:29 -0000
-Date:   Mon, 15 Jun 2020 11:28:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Danny Lin <danny@kdrag0n.dev>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 1/1] of: reserved_mem: Fix typo in the too-many-regions
- message
-Message-ID: <20200615172829.GA1996494@bogus>
-References: <20200604054900.200317-1-danny@kdrag0n.dev>
+        Mon, 15 Jun 2020 13:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729124AbgFORaq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:30:46 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E67207DA;
+        Mon, 15 Jun 2020 17:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592242246;
+        bh=zjfjIr28wp7lz1LzhG/6HN/tE1zYdIy5YMG1lFm5t3o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kbiOeSJ5hsV6hDsh+iuN2Phq6hYAF5UJ44P9QG4f+TFAQCtZ64BlSAiZYOQpulXiK
+         67EgWWNfvy/lMMgh8iWjub0lDsZ+oJADxAMCsvwN6/9PXWGWHMOCffBDH1fAQ2ccWu
+         cq3OE58P8henl7vX0sG5AOeHjm9kUWZlb5TbeQWU=
+Date:   Mon, 15 Jun 2020 18:30:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, lukas@wunner.de,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200615173043.GB4447@sirena.org.uk>
+References: <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+ <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+ <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
+ <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
+ <20200608112840.GC4593@sirena.org.uk>
+ <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
+ <20200615170031.GA4447@sirena.org.uk>
+ <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t8N2qprAjL+0GVly"
 Content-Disposition: inline
-In-Reply-To: <20200604054900.200317-1-danny@kdrag0n.dev>
+In-Reply-To: <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 03 Jun 2020 22:49:00 -0700, Danny Lin wrote:
-> Minor fix for a missing preposition in the error message that appears
-> when there are too many reserved memory regions for the allocated array
-> to store.
-> 
-> Signed-off-by: Danny Lin <danny@kdrag0n.dev>
-> ---
->  drivers/of/of_reserved_mem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
 
-Applied, thanks!
+--t8N2qprAjL+0GVly
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jun 15, 2020 at 10:04:46AM -0700, Florian Fainelli wrote:
+
+> OK, how about I send you an increment patch (would a fixup be okay?)
+> that adds __always_inline since we know from this thread that some
+> compilers may mis-optimize the function inlining?
+
+That's fine for me.
+
+--t8N2qprAjL+0GVly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nsEIACgkQJNaLcl1U
+h9DSkAf+I43C4D+5MeXey+DqEhoeIq/jqtEbSPUS6Liq/5dDiTCy2KeFvsYZ5v46
+Cvvn7ou6wPLdnXrPMiMdEl38cJzJfNAv7d3ydsMBlvAGRo6+3noBPoAU9k/gWDAd
+ZE9v3hNFw65ZI4XUK0+SsSOrXGIW9405DEUkKvstmqE8VHyvlSwtAyztcjBJubAj
+M14yKL96sow3/AUJ06Tay2iZK6k6n8VgDTy+/3AmXhX9hrw3jrE2VWYJCan9lhkZ
+64cvvmhjLHeuSa3XVtVk/+qE59QwOk9fkdIOcIgWsjL21/udkyHSNJsaWLdk5dy1
+1TdbguW5djIMdY6+QrNrDDQKtVU27A==
+=gAli
+-----END PGP SIGNATURE-----
+
+--t8N2qprAjL+0GVly--
