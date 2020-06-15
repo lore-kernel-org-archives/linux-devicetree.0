@@ -2,510 +2,303 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA5FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 01:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FACC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 01:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19ED5206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 01:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD68A20768
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 01:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/YxUfxv"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="h49eDckZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgFOBTP (ORCPT
+        id S1728099AbgFOBoE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 21:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgFOBTP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 21:19:15 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE007C061A0E;
-        Sun, 14 Jun 2020 18:19:14 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id er17so7032511qvb.8;
-        Sun, 14 Jun 2020 18:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LHskQ8f2Dmk0xpDNDHCGI6zB+LcQzd4CszN17YA72hY=;
-        b=n/YxUfxvvJxXpzKcG86jLlw8TlsmqMIOxHbW6z8WZNai475DlJEtz12clxlqDVKYDu
-         3LHwGk43kkQir8OCXkBcNBMxDQ5sLMzUL+YSiYB3KAwVWsiKoSfNow+3Re5Vl5lUc8Fo
-         xgP4RcDuktQKaVWuqVOB68OEvgc1/xyXcu3b5A8fa5mL1ZJWtu/qxWTlmZ0vmS44jfd3
-         /57JkyOWmMI7JOon+FUVZ15vIkJg4FCAzQcmzxtk6sYEJVvZwJ6XSBf7hdLe4EYAhP5F
-         vvL2RGugBp2Ox+M2vEptS+LU/RylzKsvnjt98HvYr6TreYYdTLU7x7ZkvDQAnGAj4KI6
-         Xftw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LHskQ8f2Dmk0xpDNDHCGI6zB+LcQzd4CszN17YA72hY=;
-        b=SHdXAljfk2y5L8LyWhNodp2Hb1WwP/fzFVsC3dnDBX2qA7ogzO7Lz+SK0wa+g0tO+O
-         CDl6Jbm1k6XS7dYgeLZtRP7ZhSyzBTDkstRNNvDM9kW91/osb02juDwDdlr2wMRtmNsY
-         tKjWzD9ttMdU0sfXVbJKNVkhOEfhKRD/xiVlUrqyGDrpiCZSThJjxsMquAxQ3zEq6WHB
-         7aR5EM7txW/1IQPc3MqOOhKyrfNCPqU3uzaVgX6WI7kcxVVbAKLZ+0j2anoD0LjHoAwK
-         GZNFZ7jO76+hTBBggZTsVqdONGdjWoLkXsv5SHrkLnlc8zIxfUTq5DCu5lSHG9RkIbMY
-         e1QQ==
-X-Gm-Message-State: AOAM530M85CdjBsHKzUIFQaH903PMlzF+/36GKbLHqsNi4pMfNOEYxRO
-        5B6H1lzCxiRAH+8WOnwSs1c=
-X-Google-Smtp-Source: ABdhPJw/xRgeMEzo8Mq6tZJ8JtGVxQMqMSEP7dS5xLV6b7UxttcieO2g3RiF2q15DuPVBN07XRJtnQ==
-X-Received: by 2002:a05:6214:594:: with SMTP id bx20mr22490987qvb.131.1592183953831;
-        Sun, 14 Jun 2020 18:19:13 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a82sm10561443qkb.29.2020.06.14.18.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 18:19:13 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>, andy.shevchenko@gmail.com,
-        michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux@roeck-us.net, andriy.shevchenko@linux.intel.com,
-        robin.murphy@arm.com, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
-Date:   Sun, 14 Jun 2020 20:19:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200611191002.2256570-1-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        Sun, 14 Jun 2020 21:44:04 -0400
+Received: from mail-eopbgr40051.outbound.protection.outlook.com ([40.107.4.51]:36934
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727946AbgFOBoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 14 Jun 2020 21:44:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X4ldQ9wuKnImPWg70KlZ6RzHJHDsZL0D8tdQ5jHQp/LizWLQjvBYfr8BtqnWVPG+cnxHTRzh3yxu+5D13/XDKpkp+MHJPmNSvFooblG7azlSWZURpLjnUEj4YqvS0hT2zDMh2Ywb0FlvU1dyaFH1MJqW1ByhdUnznVMenP48BQM7qYcXohehIBzRvgVe85ZxhNpbsXwvl3pUBivkGs3mfUIttA02mX01L5Qn+RhkkzvY0WV03/e8SdmAtVbMVfGpuB3Cep7eJpTQQzRw+wISXFv4PF3/fiGRKF62AwRwJWfXXQaxLoDrFl8bRe6S+VG4Wflfdb9LmbRC2plzrHXWvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/vghfboLsFKfABaduR7Z+S06naU75Y/mNfqzAPql5k4=;
+ b=nYzltESDd7eVfPm30mTPqEaq3NRFMdITNFTjUQFjcCvQZrKqUr5MRA3TzrjrJHDh05LEsBPKCURfPqoIeeI3H0zS3DRuLzcbQreWRzVD5pzaDteOnmYZ3gfi8ec+C3JQ4eBtPSL0VfksL4dcoywyr/3NiwnhBGVbWJIB11bv2JDyyey0fB0UUJClbwwDG+sP90MZArw2IGfQO9VJknRE/G+9OETnKyTQFdR+CiKfHaPB6R7F0lY9oUhF+zW6aAGPbzWaqqK9Tbvmpebzztbs7Gxyv86BDaxteQnOxY+0fGHbeKV5q4pP0ZJ23zozzcaaZ22/cy58Tr2rfs6weQXcsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/vghfboLsFKfABaduR7Z+S06naU75Y/mNfqzAPql5k4=;
+ b=h49eDckZf1ors9LLE1ZpgbiKvB9DvVo0/c6K75nioOUQ5W9GMr5wjuMj8eXO3+Ex4eS9bo3yyeakliXfjoIN5yJPyO6k5L6VZLUVU63VTMgI8Qs303gwukWFhM0cOcUnp3D8qM46sHYlMCxdozsfq/aXHhO44NN5m+ZBX2tFSfQ=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM7PR04MB7111.eurprd04.prod.outlook.com (2603:10a6:20b:118::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
+ 2020 01:44:00 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
+ 01:44:00 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+CC:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+Thread-Topic: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+Thread-Index: AQHWP/yk3Ds0XPnWRk2lm9dM/5Lml6jY7QUA
+Date:   Mon, 15 Jun 2020 01:43:59 +0000
+Message-ID: <20200615014423.GA14073@b29397-desktop>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
+ <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 296e7fc9-883a-4190-7c15-08d810cd9384
+x-ms-traffictypediagnostic: AM7PR04MB7111:
+x-microsoft-antispam-prvs: <AM7PR04MB7111E54D6C6EA616BA735EE08B9C0@AM7PR04MB7111.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /nmTThL4CBGIzdX7lUXLLGB/JYfeVLXIuWZrvlZrZXSBPE6mWXkTw7JPoD6kgrAJ62id7HQ+qHhLYkTb7/cX9Crz+Z1fUkp/YzvvKxm86iAVuNhVIPMpADecDuRL6aVDEbiFUCDAmQJaRwuPGemZogdEapNQWHRCMyHorAaux56yTBhAXnyo4AMZhMJ3OR3fWJ4I48Z+1kTwQPT4FSVvFqualjN80iKSqTyjNDC835H6KGtEO6dfV/VwrDDtYngycf/ZuMTDQUCoHES1TwDluP+uBlNPGhCgX0glhIQOFWIzYKMHjMJOyCm3Wij0kJ9DY4t2tiqfNpvFHktv6kxy3A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(186003)(7416002)(4326008)(71200400001)(8676002)(66556008)(9686003)(2906002)(6486002)(91956017)(8936002)(44832011)(76116006)(64756008)(6512007)(66946007)(66446008)(66476007)(15650500001)(6916009)(33656002)(33716001)(86362001)(5660300002)(26005)(53546011)(478600001)(83380400001)(1076003)(316002)(6506007)(54906003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: SSdGHJN1og3AQnE8snsBaaP9T2HLf5s8k03CO72WdUJusVUofhLIfRacWqXrqK9AU7EAsCsoywLJWzp8Z1so0u+XBVgv4plbZcK8jtkr6CjCP+S1TkqTCKNp6oP9O2AD3BI6xMuOO5BwGGoGv6Euir+1bGNqJLxlMTzoNYJ4rgp56emv6BvGvXILwqIiYeEwrIQxJClQHIISfMLHv0fWOpir7Ts3wuzcl0tbVN8vp7wxjexVvpsT+nk3aoQ/1BMeQ6/joehELF716bKBjXjrat22GnDQ91FbyfocSUSiwEVn/snHgLnfx9VsqejfWm5axWlqtaPOCGYdIzqyvQAqOjHsy/nrjQGulYVktObFIOy1kaSV+3cFKUqixNUPYZJXmQA0/Y1Z9rn2SYO310e2uxuR4eZfSirNAHlLW3yA4IAyeZEQ6XHMYQqF54y4DfRW5SH0LL0309o7X4liazqlYEIXOU7fQSs2zM0QOZI4GV0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <571B2A92D9B6F7488E811D1102381E4C@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 296e7fc9-883a-4190-7c15-08d810cd9384
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 01:44:00.0456
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 99wIwgKNnRhcUUH4TRfaCT5qhFwKxwDFi0Y+wvoGUU+Phf9YcvRRgzoVZbDbtla46q8kLD1D5zCTOd1uc4czxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7111
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
-
-I'm looking at 5.8-rc1.
-
-The only use of OF_MFD_CELL() where the same compatible is specified
-for multiple elements of a struct mfd_cell array is for compatible
-"stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
-
-        OF_MFD_CELL("ab8500-pwm",
-                    NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
-        OF_MFD_CELL("ab8500-pwm",
-                    NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
-        OF_MFD_CELL("ab8500-pwm",
-                    NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
-
-The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
-are:
-
-   arch/arm/boot/dts/ste-ab8500.dtsi
-   arch/arm/boot/dts/ste-ab8505.dtsi
-
-These two .dtsi files only have a single node with this compatible.
-Chasing back to .dts and .dtsi files that include these two .dtsi
-files, I see no case where there are multiple nodes with this
-compatible.
-
-So it looks to me like there is no .dts in mainline that is providing
-the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
-is expecting.  No case that there are multiple mfd child nodes where
-mfd_add_device() would assign the first of n child nodes with the
-same compatible to multiple devices.
-
-So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
-Am I missing something here?
-
-If I am correct, then either drivers/mfd/ab8500-core.c or
-ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
-
-Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
-approach (I have not completely read the actual code in the patch yet
-though).
-
-
-On 2020-06-11 14:10, Lee Jones wrote:
-> Currently, when a child platform device (sometimes referred to as a
-> sub-device) is registered via the Multi-Functional Device (MFD) API,
-> the framework attempts to match the newly registered platform device
-> with its associated Device Tree (OF) node.  Until now, the device has
-> been allocated the first node found with an identical OF compatible
-> string.  Unfortunately, if there are, say for example '3' devices
-> which are to be handled by the same driver and therefore have the same
-> compatible string, each of them will be allocated a pointer to the
-> *first* node.
-> 
-> An example Device Tree entry might look like this:
-> 
->   mfd_of_test {
->           compatible = "mfd,of-test-parent";
->           #address-cells = <0x02>;
->           #size-cells = <0x02>;
-> 
->           child@aaaaaaaaaaaaaaaa {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xaaaaaaaa 0xaaaaaaaa 0 0x11>,
->                         <0xbbbbbbbb 0xbbbbbbbb 0 0x22>;
->           };
-> 
->           child@cccccccc {
->                   compatible = "mfd,of-test-child";
->                   reg = <0x00000000 0xcccccccc 0 0x33>;
->           };
-> 
->           child@dddddddd00000000 {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xdddddddd 0x00000000 0 0x44>;
->           };
->   };
-> 
-> When used with example sub-device registration like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 0, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child")
->   };
-> 
-> ... the current implementation will result in all devices being allocated
-> the first OF node found containing a matching compatible string:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@aaaaaaaaaaaaaaaa
-> 
-> After this patch each device will be allocated a unique OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@cccccccc
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@dddddddd00000000
-> 
-> Which is fine if all OF nodes are identical.  However if we wish to
-> apply an attribute to particular device, we really need to ensure the
-> correct OF node will be associated with the device containing the
-> correct address.  We accomplish this by matching the device's address
-> expressed in DT with one provided during sub-device registration.
-> Like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child", 0xdddddddd00000000),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> This will ensure a specific device (designated here using the
-> platform_ids; 1, 2 and 3) is matched with a particular OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@dddddddd00000000
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@cccccccc
-> 
-> This implementation is still not infallible, hence the mention of
-> "best effort" in the commit subject.  Since we have not *insisted* on
-> the existence of 'reg' properties (in some scenarios they just do not
-> make sense) and no device currently uses the new 'of_reg' attribute,
-> we have to make an on-the-fly judgement call whether to associate the
-> OF node anyway.  Which we do in cases where parent drivers haven't
-> specified a particular OF node to match to.  So there is a *slight*
-> possibility of the following result (note: the implementation here is
-> convoluted, but it shows you one means by which this process can
-> still break):
-> 
->   /*
->    * First entry will match to the first OF node with matching compatible
->    * Second will fail, since the first took its OF node and is no longer available
->    * Third will succeed
->    */
-
-The following mfd_of_test_cell[] looks like a bug to me.  For a given
-compatible value, either reg is required or is not allowed.
-
-One could add validation code to mfd_add_devices(), which would scan the
-parameter "cells", checking for multiple array elements with the same
-compatible value where one of the elements does not have .use_of_reg
-set.  This seems to be a pain to program and not needed, because the
-validation process, using the binding definition, would detect the
-problem in the .dts source file, because either the required reg
-property would be missing or the not to be specified reg property exists.
-Whether reg is required or not allowed is based on the compatible value.
-
-
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
-> 	OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> The result:
-> 
->   [0.753869] mfd-of-test-parent mfd_of_test: Registering 3 devices
->   [0.756597] mfd-of-test-child: Failed to locate of_node [id: 2]
->   [0.759999] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.760314] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.760908] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.761183] mfd-of-test-child mfd-of-test-child.2: No OF node associated with this device
->   [0.761621] mfd-of-test-child mfd-of-test-child.3: Probing platform device: 3
->   [0.761899] mfd-of-test-child mfd-of-test-child.3: Using OF node: child@cccccccc
-> 
-> We could code around this with some pre-parsing semantics, but the
-> added complexity required to cover each and every corner-case is not
-
-So this should problem should not occur.
-
-
-> justified.  Merely patching the current failing (via this patch) is
-> already working with some pretty small corner-cases.  Other issues
-
-If there are existing corner cases, I did not search the source tree
-sufficiently.  What are the current corner cases?
-
--Frank
-
-> should be patched in the parent drivers which can be achieved simply
-> by implementing OF_MFD_CELL_REG().
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On 20-06-11 19:58:03, Sandeep Maheswaram wrote:
+> Avoiding phy powerdown in host mode so that it can be wake up by devices.
+> Set usb controller wakeup capable when wakeup capable devices are
+> connected to the host.
+>=20
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
-> 
-> Changelog:
-> 
-> v1 => v2:
->   * Simply return -EAGAIN if node is already in use
->   * Allow for valid of_reg=0 by introducing use_of_reg boolean flag
->   * Split helpers out into separate patch
-> 
-> drivers/mfd/mfd-core.c   | 99 +++++++++++++++++++++++++++++++++++-----
->  include/linux/mfd/core.h | 10 ++++
->  2 files changed, 97 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index e831e733b38cf..120803717b828 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/kernel.h>
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
-> +#include <linux/list.h>
->  #include <linux/property.h>
->  #include <linux/mfd/core.h>
->  #include <linux/pm_runtime.h>
-> @@ -17,8 +18,17 @@
->  #include <linux/module.h>
->  #include <linux/irqdomain.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/regulator/consumer.h>
->  
-> +static LIST_HEAD(mfd_of_node_list);
+>  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
+>  drivers/usb/dwc3/core.h      |  1 +
+>  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----=
+------
+>  3 files changed, 91 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+> =20
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+> =20
+>  #include "debug.h"
+> +#include "../host/xhci.h"
+> =20
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+> =20
+> +bool need_phy_for_wakeup;
+
+Global variable may not suitable.
+
 > +
-> +struct mfd_of_node_entry {
-> +	struct list_head list;
-> +	struct device *dev;
-> +	struct device_node *np;
-> +};
-> +
->  static struct device_type mfd_dev_type = {
->  	.name	= "mfd_device",
->  };
-> @@ -107,6 +117,54 @@ static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
+*dwc)
+>  	return ret;
 >  }
->  #endif
->  
-> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
-> +				    struct device_node *np,
-> +				    const struct mfd_cell *cell)
+> =20
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
 > +{
-> +	struct mfd_of_node_entry *of_entry;
-> +	const __be32 *reg;
-> +	u64 of_node_addr;
 > +
-> +	/* Skip devices 'disabled' by Device Tree */
-> +	if (!of_device_is_available(np))
-> +		return -ENODEV;
+> +	int i, num_ports;
+> +	u32 reg;
+> +	struct usb_hcd	*hcd =3D platform_get_drvdata(dwc->xhci);
+> +	struct xhci_hcd	*xhci_hcd =3D hcd_to_xhci(hcd);
 > +
-> +	/* Skip if OF node has previously been allocated to a device */
-> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
-> +		if (of_entry->np == np)
-> +			return -EAGAIN;
+> +	dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
 > +
-> +	if (!cell->use_of_reg)
-> +		/* No of_reg defined - allocate first free compatible match */
-> +		goto allocate_of_node;
+> +	reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
 > +
-> +	/* We only care about each node's first defined address */
-> +	reg = of_get_address(np, 0, NULL, NULL);
-> +	if (!reg)
-> +		/* OF node does not contatin a 'reg' property to match to */
-> +		return -EAGAIN;
-> +
-> +	of_node_addr = of_read_number(reg, of_n_addr_cells(np));
-> +
-> +	if (cell->of_reg != of_node_addr)
-> +		/* No match */
-> +		return -EAGAIN;
-> +
-> +allocate_of_node:
-> +	of_entry = kzalloc(sizeof(*of_entry), GFP_KERNEL);
-> +	if (!of_entry)
-> +		return -ENOMEM;
-> +
-> +	of_entry->dev = &pdev->dev;
-> +	of_entry->np = np;
-> +	list_add_tail(&of_entry->list, &mfd_of_node_list);
-> +
-> +	pdev->dev.of_node = np;
-> +	pdev->dev.fwnode = &np->fwnode;
-> +
-> +	return 0;
+> +	num_ports =3D HCS_MAX_PORTS(reg);
+> +	for (i =3D 0; i < num_ports; i++) {
+> +		reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
+> +		if (reg & PORT_PE) {
+> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_HS;
+> +			else if (DEV_LOWSPEED(reg))
+> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_LS;
+> +		}
+> +	}
+> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
 > +}
 > +
->  static int mfd_add_device(struct device *parent, int id,
->  			  const struct mfd_cell *cell,
->  			  struct resource *mem_base,
-> @@ -115,6 +173,7 @@ static int mfd_add_device(struct device *parent, int id,
->  	struct resource *res;
->  	struct platform_device *pdev;
->  	struct device_node *np = NULL;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  	int ret = -ENOMEM;
->  	int platform_id;
->  	int r;
-> @@ -149,19 +208,22 @@ static int mfd_add_device(struct device *parent, int id,
->  	if (ret < 0)
->  		goto fail_res;
->  
-> -	if (parent->of_node && cell->of_compatible) {
-> +	if (IS_ENABLED(CONFIG_OF) && parent->of_node && cell->of_compatible) {
->  		for_each_child_of_node(parent->of_node, np) {
->  			if (of_device_is_compatible(np, cell->of_compatible)) {
-> -				if (!of_device_is_available(np)) {
-> -					/* Ignore disabled devices error free */
-> -					ret = 0;
-> +				ret = mfd_match_of_node_to_dev(pdev, np, cell);
-> +				if (ret == -EAGAIN)
-> +					continue;
-> +				if (ret)
->  					goto fail_alias;
-> -				}
-> -				pdev->dev.of_node = np;
-> -				pdev->dev.fwnode = &np->fwnode;
-> +
->  				break;
->  			}
->  		}
-> +
-> +		if (!pdev->dev.of_node)
-> +			pr_warn("%s: Failed to locate of_node [id: %d]\n",
-> +				cell->name, platform_id);
->  	}
->  
->  	mfd_acpi_add_device(cell, pdev);
-> @@ -170,13 +232,13 @@ static int mfd_add_device(struct device *parent, int id,
->  		ret = platform_device_add_data(pdev,
->  					cell->platform_data, cell->pdata_size);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	if (cell->properties) {
->  		ret = platform_device_add_properties(pdev, cell->properties);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	for (r = 0; r < cell->num_resources; r++) {
-> @@ -213,18 +275,18 @@ static int mfd_add_device(struct device *parent, int id,
->  			if (has_acpi_companion(&pdev->dev)) {
->  				ret = acpi_check_resource_conflict(&res[r]);
->  				if (ret)
-> -					goto fail_alias;
-> +					goto fail_of_entry;
->  			}
->  		}
->  	}
->  
->  	ret = platform_device_add_resources(pdev, res, cell->num_resources);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	ret = platform_device_add(pdev);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	if (cell->pm_runtime_no_callbacks)
->  		pm_runtime_no_callbacks(&pdev->dev);
-> @@ -233,6 +295,12 @@ static int mfd_add_device(struct device *parent, int id,
->  
->  	return 0;
->  
-> +fail_of_entry:
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == &pdev->dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
->  fail_alias:
->  	regulator_bulk_unregister_supply_alias(&pdev->dev,
->  					       cell->parent_supplies,
-> @@ -287,6 +355,7 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
+>  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
 >  {
->  	struct platform_device *pdev;
->  	const struct mfd_cell *cell;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  
->  	if (dev->type != &mfd_dev_type)
->  		return 0;
-> @@ -297,6 +366,12 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
->  					       cell->num_parent_supplies);
->  
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
-> +
->  	kfree(cell);
->  
->  	platform_device_unregister(pdev);
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index d01d1299e49dc..a148b907bb7f1 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -78,6 +78,16 @@ struct mfd_cell {
->  	 */
->  	const char		*of_compatible;
->  
-> +	/*
-> +	 * Address as defined in Device Tree.  Used to compement 'of_compatible'
-> +	 * (above) when matching OF nodes with devices that have identical
-> +	 * compatible strings
-> +	 */
-> +	const u64 of_reg;
-> +
-> +	/* Set to 'true' to use 'of_reg' (above) - allows for of_reg=0 */
-> +	bool use_of_reg;
-> +
->  	/* Matches ACPI */
->  	const struct mfd_cell_acpi_match	*acpi_match;
->  
-> 
+>  	unsigned long	flags;
+>  	u32 reg;
+> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> =20
+>  	switch (dwc->current_dr_role) {
+>  	case DWC3_GCTL_PRTCAP_DEVICE:
+> @@ -1643,9 +1673,10 @@ static int dwc3_suspend_common(struct dwc3 *dwc, p=
+m_message_t msg)
+>  		dwc3_core_exit(dwc);
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+> +		dwc3_set_phy_speed_flags(dwc);
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			dwc3_core_exit(dwc);
+> -			break;
+> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +				need_phy_for_wakeup =3D true;
 
+You may only need to check device_may_wakeup(dwc->dev) for wakeup
+enabled since it is at controller driver, and we only need to let
+controller's wakeup feature be ready if needed.
+
+It is not easy for driver to judge if all /sys/../wakeup/enabled are
+true, consider the use case: there is a HUB with USB mouse on the
+controller, if the wakeup is not enabled for USB mouse, the controller
+will not be waken up through click the mouse.
+
+>  		}
+> =20
+>  		/* Let controller to suspend HSPHY before PHY driver suspends */
+> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
+m_message_t msg)
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			ret =3D dwc3_core_init_for_resume(dwc);
+> -			if (ret)
+> -				return ret;
+> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> -			break;
+> +			if (!need_phy_for_wakeup) {
+> +				ret =3D dwc3_core_init_for_resume(dwc);
+> +				if (ret)
+> +					return ret;
+> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> +				break;
+> +			}
+>  		}
+>  		/* Restore GUSB2PHYCFG bits that were modified in suspend */
+>  		reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 013f42a..ff02d41 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -1094,6 +1094,7 @@ struct dwc3 {
+>  	struct phy		*usb3_generic_phy;
+> =20
+>  	bool			phys_ready;
+> +	int			hs_phy_flags;
+> =20
+>  	struct ulpi		*ulpi;
+>  	bool			ulpi_ready;
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..ec183646 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+
+You may split core and glue changes as two patches.
+
+> @@ -19,6 +19,7 @@
+>  #include <linux/usb/of.h>
+>  #include <linux/reset.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/usb/hcd.h>
+> =20
+>  #include "core.h"
+> =20
+> @@ -192,21 +193,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
+om *qcom)
+> =20
+>  	if (qcom->ss_phy_irq) {
+>  		enable_irq(qcom->ss_phy_irq);
+>  		enable_irq_wake(qcom->ss_phy_irq);
+> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>  	u32 val;
+>  	int i;
+> +	struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
+> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+> +
+> +	if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +		device_init_wakeup(qcom->dev, 1);
+
+You could let the glue layer wakeup entry always there through:
+device_set_wakeup_capable(dev, true), and the user could choose
+if the wakeup is enabled or not.
+
+Peter
+> =20
+>  	if (qcom->is_suspended)
+>  		return 0;
+> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>  	int ret;
+>  	int i;
+> =20
+> +	device_init_wakeup(qcom->dev, 0);
+> +
+>  	if (!qcom->is_suspended)
+>  		return 0;
+> =20
+> --=20
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>=20
+
+--=20
+
+Thanks,
+Peter Chen=
