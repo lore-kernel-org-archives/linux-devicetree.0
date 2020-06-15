@@ -4,93 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F378C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2EDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 12:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CBC20707
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919AD20679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 12:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592222274;
-	bh=rpbnAOKtxA3+nfUXJkVdH+zEnfJWigejr23KttLO5UY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kVSYfiym/UXNiJYU3VSuliqQdx7yJ32CoS2AKoyaAjfWUBLjSd3sJWwUEZYuoJkqj
-	 gK9KaBENM1JGJNP98U+9+NzUSg+4E6vASpospl1iAjS9dZYAs9J5nchoh0vKnPHTHU
-	 LSmpMnWErYGsboKAGoDbic25+wgk3fy78tVLHSns=
+	s=default; t=1592222425;
+	bh=rwqUCTO58i5LtMrJbfCyPSZGV/lwxxKzZFf+w5tF0KU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vlHF2k2cfk7LqmGUe2yDaQQEgzBxvhQz4Doif90U3V4iIHl2N56dGd/pGeNmn0HDy
+	 tIJA35qkF3JGuLljJMtuJYfdCkxoGvf2dXA1Y851NrHC1odfFF/fSgoFYVXP0xXNKA
+	 D0skhDokX97LPrD3Q8qRs5kK6M2gESeUdSAmqyyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgFOL5s (ORCPT
+        id S1729763AbgFOMAV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58784 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 08:00:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbgFOL5r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:57:47 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S1728510AbgFOMAU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:00:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6E9420707;
-        Mon, 15 Jun 2020 11:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE34320679;
+        Mon, 15 Jun 2020 12:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592222267;
-        bh=rpbnAOKtxA3+nfUXJkVdH+zEnfJWigejr23KttLO5UY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2i3T7ir8nRePtjA7yM7lTLP8N5Mg8pTCb0g5sSudBtMQUXuSInrQXbPvspRlwfi3D
-         e6dqCc5qQw1g9wuB2qHFB+MBvKWAfMx91pxYWrRiBAjO+LwOWTqj1ALsYLAOHXl0yW
-         zvCtLuwvkqCilQiWyGUQ4B1EJBkYVMVC7zPzP+bg=
-Date:   Mon, 15 Jun 2020 13:57:39 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 13/29] dt: fix broken links due to txt->yaml renames
-Message-ID: <20200615135739.798f4489@coco.lan>
-In-Reply-To: <20200615111927.GC4447@sirena.org.uk>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org>
-        <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
-        <20200615111927.GC4447@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1592222420;
+        bh=rwqUCTO58i5LtMrJbfCyPSZGV/lwxxKzZFf+w5tF0KU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HuhaZ1E/uhWGMwQOmHLl2x6A1HlqNMW1HoJtbYQhBCTFc1nVg02Z9xiV0yNrZ2reG
+         fj/OFvspf1huUFCt74ieeXEMIaZsNyKAz/9h7eJ08tsPsSMVGMk/Q08009XSx9VM6F
+         P5rY10LRbpeIRSbYQzyxKJYgWng20BFWrnTVI+2I=
+Date:   Mon, 15 Jun 2020 13:00:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     robh+dt@kernel.org, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        lgirdwood@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        lijun.kernel@gmail.com, rdunlap@infradead.org,
+        jackp@codeaurora.org, bryan.odonoghue@linaro.org
+Subject: Re: [PATCH v2 4/6] regulator: Add support for QCOM PMIC VBUS booster
+Message-ID: <20200615120018.GI4447@sirena.org.uk>
+References: <20200612231918.8001-1-wcheng@codeaurora.org>
+ <20200612231918.8001-5-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VkVuOCYP9O7H3CXI"
+Content-Disposition: inline
+In-Reply-To: <20200612231918.8001-5-wcheng@codeaurora.org>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
 
-Em Mon, 15 Jun 2020 12:19:27 +0100
-Mark Brown <broonie@kernel.org> escreveu:
+--VkVuOCYP9O7H3CXI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Mon, Jun 15, 2020 at 08:46:52AM +0200, Mauro Carvalho Chehab wrote:
-> > There are some new broken doc links due to yaml renames
-> > at DT. Developers should really run:  
-> 
-> I also previously acked this one in 20200504100822.GA5491@sirena.org.uk.
-> Has anything changed here to cause the ack to be dropped?
+On Fri, Jun 12, 2020 at 04:19:16PM -0700, Wesley Cheng wrote:
 
-Both patches are the same. I forgot to add your acks on my tree. 
+> +++ b/drivers/regulator/qcom_usb_vbus-regulator.c
+> @@ -0,0 +1,147 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
 
-My bad!
+Please make the entire comment a C++ one so things look more
+intentional.
 
-Thanks,
-Mauro
+> +static int qcom_usb_vbus_enable(struct regulator_dev *rdev)
+> +{
+
+> +static int qcom_usb_vbus_disable(struct regulator_dev *rdev)
+> +{
+
+> +static int qcom_usb_vbus_is_enabled(struct regulator_dev *rdev)
+> +{
+
+These operations can all be replaced by regulator_is_enabled_regmap()
+and friends.
+
+> +	init_data.constraints.valid_ops_mask |= REGULATOR_CHANGE_STATUS;
+
+No, this is broken - regulators should not override the constraints the
+machine sets.
+
+--VkVuOCYP9O7H3CXI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nYtEACgkQJNaLcl1U
+h9B2xQf/elyk74snQRDjxhiJQzyG+kMEpR5muDGLg/ZKzb0LHtRNb+t0RcqkzTFm
+7YlZ6L0oMl4RX8ZsVlZT+RxWROHw+MuYF5itiC5pbDvWl2jjIJGn2jI5/wq+7zQD
+LfHAJWQCUCzjHGuTgtXXzoejILvkrSaxPkffHfQj/zTX/kfLciOlMmykYEDVTOWM
+h8AkuzhvtQEAJMpzF986hzyhjx/gAfNNbkGiCOmJPoeFMXF7kqtRjZDIN59pC/se
+oJ1zDYM0gzqUDki1mrfW9UdGKXKr5egUvBT11dbZKWzOOIKizDyLlmmaH8s2p5d5
+Y3gJnWM3vmGfn0YrVIAA8bzUHRrbRQ==
+=2JmG
+-----END PGP SIGNATURE-----
+
+--VkVuOCYP9O7H3CXI--
