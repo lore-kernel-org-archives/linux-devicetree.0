@@ -2,231 +2,248 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE93C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75465C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66955207DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48827207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMGDs1fB"
+	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="NZ8/p+7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgFOOBe (ORCPT
+        id S1729243AbgFOOG3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
+        Mon, 15 Jun 2020 10:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730133AbgFOOBc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 10:01:32 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7444CC05BD1E
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:01:32 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 35so1513247ple.0
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:01:32 -0700 (PDT)
+        with ESMTP id S1728510AbgFOOG2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 10:06:28 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758A1C05BD43
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:06:27 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so17619055ejd.0
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=8ES2NVshIOgfEMCf72wvYUExToe999LpTEELFEYgbIc=;
-        b=tMGDs1fBAbWOpekLNkbLGeRxaer/gDzJk4z0CLytkTCxnH5P9sYGrEzQe8zC3xJb7I
-         f12rYbaNdXcEz0Lxpu06vzpOtKQFoI7YtEOiG0pyEoIzbcGa9e4mNicHkkMH0IojaqrZ
-         Doohf/eYCV/vrunU+4iTVvd8YAI35NsWd8mSPzoQw0x08IfabLoijEVUYnd8wbeth3+r
-         zFrS5Hl8YylmZDVE4KhdtobyJAhlPB32+hknqzvYxrQg5OirgwjX4rdt6huIFO1T8+Mi
-         0Utq3wiKizi4n/MJwPtY1csN+yvR9G+9ealXuHkxo2w1TZK0bF11/NQlUMpFcW8aMY+M
-         XQFA==
+        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=k4C/+/fRiSIFo4IwQCmhnSuHF4dvzSlHbziYd2q10mQ=;
+        b=NZ8/p+7g9oqbeQZ9B5d/f0cUBG4RZ75xNZh+kaEgvuG4T0Y5KIcXATW79vy8VHQHki
+         e3yWeeWTfYAGO510r+e/ojTL5lsR6vriuVpbvtDVjdR+ND72+xYPQpfGKqBxGFeL9bT5
+         Ij8Y67WRfNUbAZUGvhCkSj3ijJ9p1aMn2eXJHYhWB020oNjFgYAdaNOYRDxfG1d7y2Dm
+         YEBs3NJ6Ahbf2/Ir6/sw/R8U3c+l+y9vMwl1r3pTPKva9S/GmdfKNxeivNIpw6Q5nSn0
+         Q6EtqSpUJ1n622RtCppfZHake6HfduWk35qKczzCkrMWhYD3G7457U6jL2MplvqD0KV+
+         gUSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=8ES2NVshIOgfEMCf72wvYUExToe999LpTEELFEYgbIc=;
-        b=ELMozrF2hKpUvPU3TeWHw9FnBuOxRYDUYFJ0uNFXgZqepgdMFpx/+aE8URWfsfHDGh
-         wIuFeIvZh+i9nrSnIao7MLqC5fcb5voBXGkUKejqhr1NPIWoSEkIhwpU1M3kvi3vhs92
-         x4+chHgkeJbSaQZNdHSbsRyL2sp+SbBQPNDcbGEpcYH2qy/qmtnOmMdUgKNO2EwtzBqD
-         FA+FILSqDOGdFvAxTQWnEwvRhSgyLHytFac2KKHAGHekYYqpx717xMoD+epzT/8pUEaG
-         56sJAtsDD1tes5k10d08KIVr5LWWqN6To+mYezpmpMQ3RPPKUn8bRatHYfhgzx7HS9BP
-         j0wQ==
-X-Gm-Message-State: AOAM5328dvcPcKf4/0uoMqNebxxtBY1t7xaH4AAE+UT3AATSGKkA59+6
-        f0+JmXpkgOlOHT746CFEbesxHkXj8A==
-X-Google-Smtp-Source: ABdhPJxvPO0BNiqVGlonkLfh0wYJeKkGOFIFSFn0SFRbCZK2iFCaXihPRZlZWxzbRuCq1qQpSAMZUg==
-X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr11644235pjq.14.1592229691691;
-        Mon, 15 Jun 2020 07:01:31 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6e9c:5ed9:4574:ef47:f924:dba6? ([2409:4072:6e9c:5ed9:4574:ef47:f924:dba6])
-        by smtp.gmail.com with ESMTPSA id c9sm14246360pfp.100.2020.06.15.07.01.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:01:30 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 19:31:21 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200612135355.30286-11-andrey.konovalov@linaro.org>
-References: <20200612135355.30286-1-andrey.konovalov@linaro.org> <20200612135355.30286-11-andrey.konovalov@linaro.org>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=k4C/+/fRiSIFo4IwQCmhnSuHF4dvzSlHbziYd2q10mQ=;
+        b=AWN730UGRqFjZJ87HlezbNAIfYiYg/siNm+Qgln1YGcdmLSxPu/DRrWO0tmwAaSLEI
+         egjKGeBbIbC+ssp8sYEsZcNxpiqQ2QWsSIYQIbZqKoNEpdFfvpsE43Y/d47+mmUIpvsY
+         3rSI2JpiwG0bXk5+oN7SH+uz0ErqBg0kxG43KyC9A0PqKqsK/FIgxqYWI7PViQdDjBuo
+         IDSdWPToFPjnnMc0vM5W1inDzp8RxCKNARj0/vSClGJh0Svllxl8D4SZBIykQxKp6ca4
+         xF9Ot+C5liL+cHR66Ab2SPB1scVFaCISLU35ZK15UbpP8gO8HJXy/0x4YFf7yFeB88Er
+         xt6w==
+X-Gm-Message-State: AOAM533PxMAneRsdf1YW/mxUwS0JFcnjP7EhHRGRuUDKFhFHhB/1h6U3
+        LIzJ+pmtnWyrN2MKE16QcMiGlIkDPw==
+X-Google-Smtp-Source: ABdhPJyuz3H0ISp8bnWfVL3IJF5WWI0Mfe4/Pv7NWPYiNpmsG89DIJEsajkV05rWnd4kfW88xq5z4g==
+X-Received: by 2002:a17:906:c150:: with SMTP id dp16mr25220134ejc.536.1592229985726;
+        Mon, 15 Jun 2020 07:06:25 -0700 (PDT)
+Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
+        by smtp.gmail.com with ESMTPSA id n17sm1587294ejj.75.2020.06.15.07.06.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 07:06:25 -0700 (PDT)
+From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
+Subject: Re: [cadence-spi] daisy chain
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
+ <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
+ <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com>
+ <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
+ <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com>
+Message-ID: <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
+Date:   Mon, 15 Jun 2020 16:06:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 10/10] media: i2c: imx290: set bus_type before calling v4l2_fwnode_endpoint_alloc_parse()
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
-        sakari.ailus@iki.fi
-CC:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <69487D0C-D5CE-4B41-9593-A1AF7D205681@linaro.org>
+In-Reply-To: <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Sorry for the typo in the example device tree:
 
-
-On 12 June 2020 7:23:55 PM IST, Andrey Konovalov <andrey=2Ekonovalov@linar=
-o=2Eorg> wrote:
->The bus_type field of v4l2_fwnode_endpoint structure passed as the
->argument
->to v4l2_fwnode_endpoint_alloc_parse() function must be initiaized=2E
->Set it to V4L2_MBUS_CSI2_DPHY, and check for -ENXIO which is returned
->when the requested media bus type doesn't match the fwnode=2E
+On 15.06.2020 15:57, Adrian Fiergolski wrote:
+> Hi Geert,
 >
->Also remove v4l2_fwnode_endpoint field from struct imx290 as it is only
->needed in the probe function: use the local variable for this purpose=2E
+> Thank you for the quick reply.
 >
->Signed-off-by: Andrey Konovalov <andrey=2Ekonovalov@linaro=2Eorg>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan=2Esadhasivam@linaro=2Eorg>
-
-Wondering if we need to tag fixes for this patch!
-
-Thanks,=20
-Mani
-
->---
-> drivers/media/i2c/imx290=2Ec | 38 +++++++++++++++++++-------------------
-> 1 file changed, 19 insertions(+), 19 deletions(-)
+> On 15.06.2020 15:07, Geert Uytterhoeven wrote:
+>> Hi Adrian,
+>>
+>> CC devicetree
+>>
+>> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
+>> <adrian.fiergolski@fastree3d.com> wrote:
+>>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
+>>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
+>>>> <adrian.fiergolski@fastree3d.com> wrote:
+>>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
+>>>> connected to a single chip select of the cadence-spi master. I have the
+>>>> impression such a configuration is supported by none of those two
+>>>> drivers. I could try to extend both, however, I haven't found any other
+>>>> SPI driver, where I could find implementation inspiration. Is it
+>>>> supported by kernel?
+>>>>
+>>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
+>>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
+>>>> "registers-number" DT property.
+>>>>
+>>>> So both drivers handle this in their SPI slave drivers.
+>>>>
+>>>> Of course this does not handle the mixed case, i.e. daisy-chaining
+>>>> different types of devices.
+>>>>
+>>>> The documentation mentions only about the common 'daisy-chained-devices'
+>>>> property (devicetree/bindings/common-properties.txt). However, in order
+>>>> to try to implement it in the master driver, IMHO, the spi subsystem
+>>>> would need to have a call 'no-operation' to other nodes on the
+>>>> daisy-chain, which are not addressed by the given SPI access. Is there
+>>>> any recommended approach to address this case?
+>>>>
+>>>> Supporting this in a generic way would indeed be nice, as it would mean
+>>>> individual SPI slave drivers no longer have to care about it.
+>>>> However, that may be difficult, as the master needs to known which
+>>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
+>>> In fact, the ultimate solution would be to have it solved at the level
+>>> of the spi subsystem:
+>>>
+>>>   * /spi_device struct/ would contain extra callback which returns msg
+>>>     to be sent for no operation.
+>>>   * spi_device struct would contain a pointer to the list describing the
+>>>     given daisy chain (list of spi_devices on the chain)
+>>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
+>>>     indicating length of a command of the addressed device if it's on
+>>>     the daisy chain
+>>>     For example, in case of the ltc2634 device, the regular message
+>>>     consists of 24 bits, but when device is a part of a daisy chain, the
+>>>     messages are 32 bits. This 32 would be stored in
+>>>     /daisy_chain_msg_length./
+>>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
+>>>     /spi_message_init_with_transfer/ would create a msg of length equal
+>>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
+>>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
+>>>     would be filled with the command of the addressed device on the
+>>>     chain and no_operation content for all other devices on the chain
+>>>     not being addressed
+>> Sounds good to me.
+>>
+>>>   * I think in such a case, the /daisy-chained-devices /property would
+>>>     be not used, as chains would be build basing on the assigned
+>>>     chipselect (reg property).
+>> So you still have to describe the chain in DT in some way.
+>> As there can be only a single sub node with the same unit address
+>> (= chip select), you probably need a container with that address, which
+>> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
+> Good point. So maybe at the level of the device tree, it could be
+> described like that (based on the spi-cadence example):
 >
->diff --git a/drivers/media/i2c/imx290=2Ec b/drivers/media/i2c/imx290=2Ec
->index 02001c1b0dfc=2E=2E9c97830164e9 100644
->--- a/drivers/media/i2c/imx290=2Ec
->+++ b/drivers/media/i2c/imx290=2Ec
->@@ -70,7 +70,6 @@ struct imx290 {
-> 	u8 bpp;
->=20
-> 	struct v4l2_subdev sd;
->-	struct v4l2_fwnode_endpoint ep;
-> 	struct media_pad pad;
-> 	struct v4l2_mbus_framefmt current_format;
-> 	const struct imx290_mode *current_mode;
->@@ -914,17 +913,18 @@ static const struct media_entity_operations
->imx290_subdev_entity_ops =3D {
->* of MIPI data lanes are mentioned in the device tree, or the value of
->the
->  * first missing frequency otherwise=2E
->  */
->-static s64 imx290_check_link_freqs(const struct imx290 *imx290)
->+static s64 imx290_check_link_freqs(const struct imx290 *imx290,
->+				   const struct v4l2_fwnode_endpoint *ep)
-> {
-> 	int i, j;
-> 	const s64 *freqs =3D imx290_link_freqs_ptr(imx290);
-> 	int freqs_count =3D imx290_link_freqs_num(imx290);
->=20
-> 	for (i =3D 0; i < freqs_count; i++) {
->-		for (j =3D 0; j < imx290->ep=2Enr_of_link_frequencies; j++)
->-			if (freqs[i] =3D=3D imx290->ep=2Elink_frequencies[j])
->+		for (j =3D 0; j < ep->nr_of_link_frequencies; j++)
->+			if (freqs[i] =3D=3D ep->link_frequencies[j])
-> 				break;
->-		if (j =3D=3D imx290->ep=2Enr_of_link_frequencies)
->+		if (j =3D=3D ep->nr_of_link_frequencies)
-> 			return freqs[i];
-> 	}
-> 	return 0;
->@@ -934,6 +934,10 @@ static int imx290_probe(struct i2c_client *client)
-> {
-> 	struct device *dev =3D &client->dev;
-> 	struct fwnode_handle *endpoint;
->+	/* Only CSI2 is supported for now: */
->+	struct v4l2_fwnode_endpoint ep =3D {
->+		=2Ebus_type =3D V4L2_MBUS_CSI2_DPHY
->+	};
-> 	struct imx290 *imx290;
-> 	u32 xclk_freq;
-> 	s64 fq;
->@@ -956,15 +960,18 @@ static int imx290_probe(struct i2c_client
->*client)
-> 		return -EINVAL;
-> 	}
->=20
->-	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &imx290->ep);
->+	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
-> 	fwnode_handle_put(endpoint);
->-	if (ret) {
->+	if (ret =3D=3D -ENXIO) {
->+		dev_err(dev, "Unsupported bus type, should be CSI2\n");
->+		goto free_err;
->+	} else if (ret) {
-> 		dev_err(dev, "Parsing endpoint node failed\n");
-> 		goto free_err;
-> 	}
->=20
-> 	/* Get number of data lanes */
->-	imx290->nlanes =3D imx290->ep=2Ebus=2Emipi_csi2=2Enum_data_lanes;
->+	imx290->nlanes =3D ep=2Ebus=2Emipi_csi2=2Enum_data_lanes;
-> 	if (imx290->nlanes !=3D 2 && imx290->nlanes !=3D 4) {
-> 		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
-> 		ret =3D -EINVAL;
->@@ -973,27 +980,20 @@ static int imx290_probe(struct i2c_client
->*client)
->=20
-> 	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
->=20
->-	if (!imx290->ep=2Enr_of_link_frequencies) {
->+	if (!ep=2Enr_of_link_frequencies) {
-> 		dev_err(dev, "link-frequency property not found in DT\n");
-> 		ret =3D -EINVAL;
-> 		goto free_err;
-> 	}
->=20
-> 	/* Check that link frequences for all the modes are in device tree */
->-	fq =3D imx290_check_link_freqs(imx290);
->+	fq =3D imx290_check_link_freqs(imx290, &ep);
-> 	if (fq) {
-> 		dev_err(dev, "Link frequency of %lld is not supported\n", fq);
-> 		ret =3D -EINVAL;
-> 		goto free_err;
-> 	}
->=20
->-	/* Only CSI2 is supported for now */
->-	if (imx290->ep=2Ebus_type !=3D V4L2_MBUS_CSI2_DPHY) {
->-		dev_err(dev, "Unsupported bus type, should be CSI2\n");
->-		ret =3D -EINVAL;
->-		goto free_err;
->-	}
->-
-> 	/* get system clock (xclk) */
-> 	imx290->xclk =3D devm_clk_get(dev, "xclk");
-> 	if (IS_ERR(imx290->xclk)) {
->@@ -1108,7 +1108,7 @@ static int imx290_probe(struct i2c_client
->*client)
-> 	pm_runtime_enable(dev);
-> 	pm_runtime_idle(dev);
->=20
->-	v4l2_fwnode_endpoint_free(&imx290->ep);
->+	v4l2_fwnode_endpoint_free(&ep);
->=20
-> 	return 0;
->=20
->@@ -1118,7 +1118,7 @@ static int imx290_probe(struct i2c_client
->*client)
-> 	v4l2_ctrl_handler_free(&imx290->ctrls);
-> 	mutex_destroy(&imx290->lock);
-> free_err:
->-	v4l2_fwnode_endpoint_free(&imx290->ep);
->+	v4l2_fwnode_endpoint_free(&ep);
->=20
-> 	return ret;
-> }
+>         spi0: spi@ff040000 {
+>             compatible = "cdns,spi-r1p6";
+>             status = "disabled";
+>             interrupt-parent = <&gic>;
+>             interrupts = <0 19 4>;
+>             reg = <0x0 0xff040000 0x0 0x1000>;
+>             clock-names = "ref_clk", "pclk";
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>             power-domains = <&zynqmp_firmware PD_SPI_0>;
+>             daisy-chain0 : daisy_chain@0 {
+>                #address-cells = <1>;
+>                #size-cells = <0>;
+>                reg = <0>;
+>                daisy-chained-devices = 2;
+>
+>                dac0: ltc2632@0 {
+>                    compatible = "lltc,ltc2634-l12";
+>                    reg = <0>;
+>                    spi-max-frequency = <1000000>;
+>                };
+>                dac1: ltc2632@1 {
+>                    compatible = "lltc,ltc2634-l12";
+>                    reg = <1>;
+>                    spi-max-frequency = <2000000>;
+>                };
+>            };
+>         };
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+        spi0: spi@ff040000 {
+            compatible = "cdns,spi-r1p6";
+            status = "disabled";
+            interrupt-parent = <&gic>;
+            interrupts = <0 19 4>;
+            reg = <0x0 0xff040000 0x0 0x1000>;
+            clock-names = "ref_clk", "pclk";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            power-domains = <&zynqmp_firmware PD_SPI_0>;
+            daisy-chain0 : daisy_chain@0 {
+               #address-cells = <1>;
+               #size-cells = <0>;
+               #daisy-chained-devices = <2>;
+
+               reg = <0>;
+               
+               dac0: ltc2632@0 {
+                   compatible = "lltc,ltc2634-l12";
+                   reg = <0>;
+                   spi-max-frequency = <1000000>;
+               };
+               dac1: ltc2632@1 {
+                   compatible = "lltc,ltc2634-l12";
+                   reg = <1>;
+                   spi-max-frequency = <2000000>;
+               };
+           };
+        };
+
+>
+> Once a node has daisy-chanied-devices property defined,
+> of_register_spi_device (spi.c) will interpret it as a daisy chain. I
+> will assume, that for the given chain the lowest frequency of the whole
+> chain should be used. When it comes to the mode, as in case of
+> incompatibility no much can be done anyway, the mode of the addressed
+> spi device will be used.
+>
+>>> If you agree with the above description, I could try to implement it. Of
+>>> course any suggestion are welcome, however, I would like to have a
+>>> working solution until end of this week, so I would appreciate an active
+>>> feedback. As my SoC works with kernel v4.19, I would implement it for
+>>> it, test it, and move it afterwards to the master version (I hope, there
+>>> were no big changes in the SPI subsystem, right?).
+>> Having something that works by the end of the week sounds doable to.
+>> Getting it in shape for upstreaming is a different thing...
+> Let's try then. As I wrote earlier, I will try to implement it and test
+> it with 4.19. Afterwards, I will share it with you for a general concept
+> review. Once no comments, I will try to move it to the master and we can
+> start from there the upstreaming process.
+>
+> Regards,
+>
+> Adrian
+>
+>
