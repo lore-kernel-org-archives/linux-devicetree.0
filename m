@@ -2,126 +2,88 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7E9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DA3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8BD620679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:35:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIxkFBz4"
+	by mail.kernel.org (Postfix) with ESMTP id 511CA2067B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592239309;
+	bh=Sg9pbTBM29sML7ioDwEww4Qaaa7omQvS8yZyfbKVLPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YzygKl/pR6n/zhVIb0S6O33lXeQSOzSDxBAaCxuh19nw+iMNJo3pt6BJjjWFP39u7
+	 4iTLTU/jRZbOylwfACAaBsS8H17pMKUeCdJijdanRiTpcrYw7hL8rBmbVa+FD6ptzS
+	 Il1zBrmfK5Ng278N/BkaLVvXbk3QZXE3R61I51zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgFOQfJ (ORCPT
+        id S1731081AbgFOQlo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:35:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730622AbgFOQfI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:35:08 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9358EC061A0E;
-        Mon, 15 Jun 2020 09:35:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so17819122wru.0;
-        Mon, 15 Jun 2020 09:35:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5lQ7/lXKr17vodyRktD27IeUshUvPdaX3z7NooA/F6c=;
-        b=lIxkFBz4V7PvO7vVgR/1G7SztwCxC+vE7xGy7iiI04gpvRrGz3fvI6WC2TlbheWbcA
-         hVziL9UihaCcCbEfALSiVRaZEaoEWBDglQSV7TEf4br1zJMuX19hnyeWo2IBZjx1+F4T
-         GNG5MSP4WRky8nQZ6FezVDnp8l/iUQelNogrAsqbUOnGnXMk1D2ga531EYXwTTm+Z32V
-         zrhWCmNoWtFtobtHUq8eRx4yMvvhF+TR4xw4vOUFD5xk9BEliXendpGi3k62DLLehbVU
-         AKog/oFVxhmYuZJZMkHqRqWZxcPbRUmS8YKBMXB7PROAR0Zse1agKmEZyIMnnkdkmczY
-         vexA==
+        Mon, 15 Jun 2020 12:41:44 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37841 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730985AbgFOQlm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:41:42 -0400
+Received: by mail-il1-f195.google.com with SMTP id e11so15914850ilr.4;
+        Mon, 15 Jun 2020 09:41:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5lQ7/lXKr17vodyRktD27IeUshUvPdaX3z7NooA/F6c=;
-        b=NSieIw2QkhC7AGri6LILIaNY4AntXJV60RgY9O5A/B2lvjTyudyRK3uP2wZi8tk3mV
-         io5h84M+v5pbjT632U9cefLbnI//9shA9B44VhAqazUN1asD86gOFG3vBQ//oBXhj+3V
-         JjKBKhMM08sgREZeVGbUhVvPmelq9CNKF4Ivvkbh28iCXSo3i5w4Wq3nzkTIgq1QpR/7
-         AZhjIsk+h6YCVo+45fx6mMK4pGb7Kk6uRo3PAPn4h4ms+1N+UCFFAoA//qc9csul/LE4
-         Tqif2r3fRyPLcQhBD25j6W9uffsU+upV1RpBQe2GO59F7zh5M5R9ZXtEgBmbj1NhuJBA
-         BKnA==
-X-Gm-Message-State: AOAM532n8qAMP/6DXxccku/+UMm27Z2iZUyrB/bqzK9gk65t6KACoelA
-        SNR10jvGugjF+3fIEKdNXNc=
-X-Google-Smtp-Source: ABdhPJx16P7DvzPCkCZaqX3CvQm6rK5GkXK/vM+JGs/qyiKtD3n7zer28P+ZWST4ukMKG0x0q4CynA==
-X-Received: by 2002:adf:ecc2:: with SMTP id s2mr32591979wro.60.1592238906258;
-        Mon, 15 Jun 2020 09:35:06 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d24sm67808wmb.45.2020.06.15.09.35.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 09:35:05 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-To:     Mark Brown <broonie@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, lukas@wunner.de,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608112840.GC4593@sirena.org.uk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
-Date:   Mon, 15 Jun 2020 09:34:58 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3Urph/U1UKzR1PGfVK4c+aNc5CstzpffUrGS0jzQZrg=;
+        b=NWOFhuynPH9TBcqI22lYfH9Y8BplE/rJ/75sF3nhHZSWGc5lGXlSw6WCVnOsyE4N8c
+         Rd6x+5IJZDc/mxrsyFf3FWwIl5eWbZfoaP5aB5H/63K04kCz04OY+UETq7F6kELlgxVL
+         YltXUe9cSlkktKV4p5JTpHDups5wDgIy2gCIFZG9FN1WBX5/SHb5iqWTB1GxDRvwomfd
+         fmPf5DOld6I9iV4FWVj1yWZAbnSDHbdC3JkxugL0eLWoN8uGpJstj6e6KPDOwJYHbBUC
+         x1Qrwkrox+WBidDYUNPGT6PaZqWa5ax/oWIrymrFNl4Hx08dpQ0e2zEGuCdfPaCc5Fvr
+         sYDA==
+X-Gm-Message-State: AOAM533ACBNglswbY2qrmTzcJBtw8xkXK3IScFisCSJloUYlLWpG098d
+        7kAB1B0Hi3ylx+GpGyJA6g==
+X-Google-Smtp-Source: ABdhPJzR+1azivHuOTLfcrjgVgEufsot5KpaUT3Obr+FfX/SVPDRyiHptwaIbAJrewGwD3KKNi3pSA==
+X-Received: by 2002:a92:c985:: with SMTP id y5mr27865848iln.50.1592239300220;
+        Mon, 15 Jun 2020 09:41:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k185sm8463534ilk.16.2020.06.15.09.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:41:39 -0700 (PDT)
+Received: (nullmailer pid 1922706 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:41:38 -0000
+Date:   Mon, 15 Jun 2020 10:41:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     festevam@gmail.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Linux-imx@nxp.com, ulf.hansson@linaro.org, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, kernel@pengutronix.de, mpa@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org
+Subject: Re: [PATCH V2 3/3] dt-bindings: mmc: Convert mxs mmc to json-schema
+Message-ID: <20200615164138.GA1922410@bogus>
+References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
+ <1591234886-15351-4-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200608112840.GC4593@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591234886-15351-4-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 6/8/2020 4:28 AM, Mark Brown wrote:
-> On Mon, Jun 08, 2020 at 12:11:11PM +0100, Robin Murphy wrote:
+On Thu, 04 Jun 2020 09:41:26 +0800, Anson Huang wrote:
+> Convert the MXS MMC binding to DT schema format using json-schema
 > 
->> Again, 2 cycles. The overhead of a static key alone is at least 50% of that.
->> And that's not even considering whether the change in code layout caused by
->> doubling up the IRQ handler might affect I-cache or branch predictor
->> behaviour, where a single miss stands to more than wipe out any perceived
->> saving. And all in code that has at least one obvious inefficiency left on
->> the table either way.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  Documentation/devicetree/bindings/mmc/mxs-mmc.txt  | 27 ----------
+>  Documentation/devicetree/bindings/mmc/mxs-mmc.yaml | 58 ++++++++++++++++++++++
+>  2 files changed, 58 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
 > 
->> This thread truly epitomises Knuth's "premature optimisation" quote... ;)
-> 
-> In fairness the main reason this driver is so heavily tuned already (and
-> has lead to some really nice improvements in the core) is that there are
-> a number of users hitting 100% CPU utilization driving SPI devices on
-> some of the older RPi hardware, IIRC around IIO type applications
-> mostly.  I do tend to agree that this particular optimization is a bit
-> marginal but there has been a lot of effort put into this.
 
-OK, so this has been dropped for spi/for-next right? How do we move from
-there?
--- 
-Florian
+Applied, thanks!
