@@ -2,116 +2,248 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B4AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B87DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC681207D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592254122;
-	bh=wo+re6s2YDnW0mUOtFNK3Gv5qenkYP/Ioxp0Ii0ipxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q2wsLeiMjYiztK3BHamK7KuyeRcz0Ze5t9UrzUhb+2UxavY4Ethb09I9HVTSfuRxa
-	 nKUihwzlZ0Obab/hTUocd4jxjdx2yroHP8EInQtVyGpN3j3tSa2Xfu3WGvgR697+Jw
-	 SJOslpKo/tL72vygHJBXxVHnwZ3bOLy17N/ZI9iQ=
+	by mail.kernel.org (Postfix) with ESMTP id 55B0220768
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGRXvuMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbgFOUsm (ORCPT
+        id S1731643AbgFOUxp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729692AbgFOUsm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:48:42 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1F62074D;
-        Mon, 15 Jun 2020 20:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592254121;
-        bh=wo+re6s2YDnW0mUOtFNK3Gv5qenkYP/Ioxp0Ii0ipxk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L9bF2WuOC/XYQjJ1bZnbdmypv0LffpNr8hVmWkop5+13+AmcUErcAInWJ68Yn0qqg
-         xtfvmizZti3ycCopliDMI17OZbSkRMUkSGMBnkVExAHB7yEsFK9F5pxuZkDjfgVgt6
-         5GYlONQY7SQWv8T1RjbBgJ+yyfD0DetFOD9sboPY=
-Date:   Mon, 15 Jun 2020 21:48:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Mon, 15 Jun 2020 16:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731674AbgFOUxo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 16:53:44 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21311C061A0E;
+        Mon, 15 Jun 2020 13:53:44 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id o15so18912984ejm.12;
+        Mon, 15 Jun 2020 13:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LDa+04Be/xlCMfl0fRh8XBQFwebwbi4UUBkBIjXXdhY=;
+        b=PGRXvuMIFyIyF0h7nvwdA9KxzYRPeJd6LCvKVzfgb7pdPBPrsn8zxeQcLcklnQmz8D
+         YtDv6vLtJ4f+usnGazC1HDWUsJE8WFMZWCqrV5ovlUX27WOjlvxuE8QRFU/w7oPkp3u5
+         VYw9FDFcLiYXJt3xIxTvb936e6YjpMPpjM4fZV7Tinyl0y5c1UN7tJlT7wL9fI2paqNU
+         8xpuI9pU/TcB2OWWfM3aPZXNyHgzh9OiAyJYKd2EDIV1jwVVCFQbraCHLCrNmi0QncP1
+         6dTfBylyDtKKO8P2UTGFsIpu8gyVAC3gqCYi5Z+i7Xm9XJLoQEv70YfhyNMwDB3J81+p
+         wyWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LDa+04Be/xlCMfl0fRh8XBQFwebwbi4UUBkBIjXXdhY=;
+        b=OyX2fFwvU3dWmZL8IFTu2B/OWhPGZgv4vnk8aQiuMutoz41Tp1vwQi1g+dOHgrGZpJ
+         4hiFdweeb849uFY5cmR1KTE0HH/64LOnvYNuSj5/DnR7eMWnbEz0Hjt2MJTrEuzvil/U
+         VQZjiYE+7ptclZEnk9h1iRzhdOh0hKzhquagFg4lTf5HJXeWGFYKjH0vcVRXMm+PaMfk
+         V42wSCM4gF60zKwbCFhpgXBDnY9OyJYpglqZrt+jvLkErzcnYs3BgIWCLj4Go2awSiXo
+         LIhTCU1NsQWg2j7CZGDBLv+JWNJGRQl2Mc+Dlcp3sVTiLXizl0nIIqs8UfJveTLQ44ut
+         gB0g==
+X-Gm-Message-State: AOAM532kgnWzuYaBW+aIDtoQP6eBNxsNKJjePgq902CUxsn58xBkd1jh
+        si48igviRUbcqEYqOAW3veM=
+X-Google-Smtp-Source: ABdhPJyvgvddV2Am6iMRQU4f+LdnBjLu14NU9cgIVBN7HODprFfy3to/JBy7qUDrKUviQJd70jZljA==
+X-Received: by 2002:a17:906:470a:: with SMTP id y10mr28676692ejq.535.1592254421834;
+        Mon, 15 Jun 2020 13:53:41 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-95-238-254-39.retail.telecomitalia.it. [95.238.254.39])
+        by smtp.googlemail.com with ESMTPSA id u13sm9738503ejf.60.2020.06.15.13.53.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 13:53:41 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200615204838.GD4447@sirena.org.uk>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608114148.4bau4mdcvwgf25ut@wunner.de>
- <3d4fd3f9-9bde-90a8-bef5-9fc97cc9b363@arm.com>
- <2e4a6c4b-857f-1000-e7fd-327b0800fb97@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [RESEND PATCH v7 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
+Date:   Mon, 15 Jun 2020 22:53:27 +0200
+Message-Id: <20200615205333.20747-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0
+In-Reply-To: <20200615205333.20747-1-ansuelsmth@gmail.com>
+References: <20200615205333.20747-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+Xnt6BZa+I2KmHWw"
-Content-Disposition: inline
-In-Reply-To: <2e4a6c4b-857f-1000-e7fd-327b0800fb97@gmail.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+inizialize and use usb on ipq806x SoC.
 
---+Xnt6BZa+I2KmHWw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+v7:
+* Drop useless AllOf 
+v6:
+* Add maximum value
+v5:
+* Fix dt_binding_check error
+v4:
+* Add qcom to specific bindings
+v3:
+* Use explicit reg instead of regmap
 
-On Mon, Jun 15, 2020 at 12:42:50PM -0700, Florian Fainelli wrote:
+ .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
+ .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
+ 2 files changed, 128 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
 
-> Or how about this: we slightly re-structure the interrupt handler such
-> that all possible interrupt conditions are explicitly handled and
-> terminate with a return IRQ_HANDLED, and those which are not, including
-> in the case of a "spurious" (because the interrupt was triggered for
-> another SPI controller instance), then we finish the function with
-> IRQ_NONE. This would not impact the performance for the BCM2835/36/37
-> which would still have a single controller/single interrupt line to handle.
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+new file mode 100644
+index 000000000000..23887ebe08fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-hs
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: ref
++      - const: xo
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    hs_phy_0: phy@110f8800 {
++      compatible = "qcom,ipq806x-usb-phy-hs";
++      reg = <0x110f8800 0x30>;
++      clocks = <&gcc USB30_0_UTMI_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+new file mode 100644
+index 000000000000..fa30c24b4405
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-ss
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: ref
++      - const: xo
++
++  qcom,rx-eq:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for rx_eq.
++    default: 4
++    maximum: 7
++
++  qcom,tx-deamp-3_5db:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for transmit preemphasis.
++    default: 23
++    maximum: 63
++
++  qcom,mpll:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Override value for mpll.
++    default: 0
++    maximum: 7
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    ss_phy_0: phy@110f8830 {
++      compatible = "qcom,ipq806x-usb-phy-ss";
++      reg = <0x110f8830 0x30>;
++      clocks = <&gcc USB30_0_MASTER_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+-- 
+2.25.1
 
-That seems sensible - it's generally a good way to structure interrupt
-handlers.  It's almost there already.
-
---+Xnt6BZa+I2KmHWw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7n3qYACgkQJNaLcl1U
-h9DisAf6A5UOQQuqIInhodRjyyOGfjW8rSDr/5WD85MI8WAWlgspNB+6CifvPJk+
-+/yjv693s/Qlzec/Yg+M92TBor94AU3VWYiT1re9UoFIu35WAPSCL1A4E6imwUxs
-cYJgHI0eE3L2muigphjbBlhUufPTRm2BDAFaHZhGTuJvRfCbbfPZdV555Fxa3r6w
-GVdrs5U40M3TsJ4Wy/ht3mcnF5jRc3OvpsLAIMeVadzsNzG80GNbCn8RYaKPnUPD
-OjxdMc4lA3HhZRqiYvUjUEmG4U0MXSb1DoC+8/tr/rfj6yOn+su94phT6RXF3plY
-CObjpS476p9DJlmYVYA54/uj06NWpg==
-=1R8u
------END PGP SIGNATURE-----
-
---+Xnt6BZa+I2KmHWw--
