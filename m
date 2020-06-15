@@ -2,147 +2,105 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0035CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A72C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D44B920714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592214703;
-	bh=VQSsnQX35sR5TfD+RN9LG5tzaQw22yankU/+xU93cY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YBARtfR9L3KuW1JRST/wvNUqdAb/pXT2gQ9SG/kyNNzGW5kPUFBuUCWI1yV0B3JwO
-	 E4hoLu5PCYFdyfU9516zBBVyrEe6Ul/nSI9fN5BXRmtVR7vdiE0yJidi8tt1E7Hl76
-	 Ihchywed2U9lyWcf1EALU5NRDxM8GH05Ttvvcjh4=
+	by mail.kernel.org (Postfix) with ESMTP id DC8A62068E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FWTE3LOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgFOJvj (ORCPT
+        id S1728368AbgFOJzo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgFOJvj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:51:39 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 473972068E;
-        Mon, 15 Jun 2020 09:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592214698;
-        bh=VQSsnQX35sR5TfD+RN9LG5tzaQw22yankU/+xU93cY4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NQlHIN8i1uqF1tHVpoAL5v8g7CDhJAeOmA5A4ZAFG/9WAYr0bA3PhhvfkIL4Y7/Ou
-         f9FQVRO5Ig4MDP3DfzPHGzWExA+gt3xKXnkuw3xtrvsmBqYDns3yZXwM6Ccwytdxom
-         9D7nTIyyyknQuA1HM6+iRJOwaNtrKorByKA5bYhg=
-Date:   Mon, 15 Jun 2020 10:51:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Achin Gupta <achin.gupta@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Mon, 15 Jun 2020 05:55:44 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:25620 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729546AbgFOJzl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592214941; x=1623750941;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=EhgQcEHdAJNNogp8ECOYFDSbKYvI+4DJ91LLczqWy04=;
+  b=FWTE3LOCNe8dkA+l9ufDkKq+ekYxqlzUbszUeuV3h3ONxdFb/nCGFcyz
+   X4ff/+TAK7XgMkf44udOLqNVi1/qWGGv1c7UE4h1c/hJ2boeZZUb43hJd
+   SWAgHPzchwMkAgQ6zik5syAKZDae5HfD8SEq1K5lIlOmsktwDqlIr2aXJ
+   s+uRyMtg8C8X/fGsAHhSpeR4vehbpHHa2IyWMPzs+r2D6h5wud+ycPM5R
+   PcL/0CFTQvZlibDgjQz57IoN5WeUCwvBUPctX71MOQyXWB5i+BLDzK8+b
+   P7cRqqlHc54X0vLBAr9Q5+v2OqfD0MzB/Va1Qv/1asFSL/tk0knTYRuXd
+   g==;
+IronPort-SDR: 3s2PWCYQ6TfpQV3qjczFo20MSKizU76Vihaekzc+/qHm8xTAzxtT3kh+4s+S0oZYGEXetR6Yh7
+ OfTBjXknHe7jR+mfKwKGcahtHRVhbVSRLO5zcR/GRQdNaB05IDPbRfnS1Xtf5JfgGSkfHG263Y
+ ZrBWFhHPBLCIhyQioV5KNu8CxD1fegoTK2DkpAvTTErXbcW1ka2VixFF60DiKFiup4XUpuNOU7
+ ad73hHq2NghakCJmS3kNIiG/1RyLF7u0eB0kGR0l9UtEqcHwI3bmImJjlnFp3ARRwNNZrOqwKJ
+ KAU=
+X-IronPort-AV: E=Sophos;i="5.73,514,1583218800"; 
+   d="scan'208";a="80112721"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 02:55:40 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 15 Jun 2020 02:55:40 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 02:55:37 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, nd <nd@arm.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-Message-ID: <20200615095133.GA2477@willie-the-truck>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus>
- <20200610074346.GB15939@willie-the-truck>
- <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
- <20200611171222.GB7725@willie-the-truck>
- <20200615091639.GD46361@C02TC1ARHF1T>
+        <linux-kernel@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <claudiu.beznea@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH 2/3] ARM: dts: at91: sam9x60ek: classd: pull-down the L1 and L3 lines
+Date:   Mon, 15 Jun 2020 12:55:24 +0300
+Message-ID: <20200615095525.43414-2-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
+References: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615091639.GD46361@C02TC1ARHF1T>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:16:39AM +0100, Achin Gupta wrote:
-> On Thu, Jun 11, 2020 at 06:12:23PM +0100, Will Deacon wrote:
-> > On Thu, Jun 11, 2020 at 03:46:35PM +0000, Achin Gupta wrote:
-> > > > On 10 Jun 2020, at 08:43, Will Deacon <will@kernel.org> wrote:
-> > > > On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
-> > > >> On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
-> > > >>> Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
-> > > >>> at virtual interface(VMs).
-> > > >>>
-> > > >>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > >>> ---
-> > > >>> .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
-> > > >>> 1 file changed, 47 insertions(+)
-> > > >>> create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
-> > > >>
-> > > >> I'm hoping this goes away if the firmware is discoverable, but if not DT
-> > > >> bindings are DT schema now.
-> > > >
-> > > > We'll need the binding for the kvm host side, because there are plenty
-> > > > of partition properties that are not discoverable (e.g. number of vCPUs).
-> > >
-> > > Just trying to understand the req. a bit better…
-> > >
-> > > The FF-A driver in the host can use FFA_PARTITION_INFO_GET to determine
-> > > the count of partitions and their vCPUs.
-> > >
-> > > Is this about a guest being able to find out how many vCPUs it has?
-> >
-> > This is about KVM finding out the information it needs in order to spawn
-> > non-secure partitions. I don't see how it can do that with
-> > FFA_PARTITION_INFO_GET -- who would respond?
-> 
-> Right! FFA_PARTITION_INFO_GET is meant to help the FF-A driver in the kernel to
-> determine partition properties. It assumes that EL2 SW has already read each
-> partition's manifest and will reply to this ABI.
-> 
-> IIUC, with protected KVM, this information will have to be a part of the
-> manifest that the KVM host consumes.
+The L1 and L3 lines drive NMOS transistors that are OFF with a low level.
+On the SAM9X60 EK board, if the pins corresponding to L1 and L3
+have pull-ups enabled, there is an extra 2 x 30uA power consumption.
+Use pull-downs for these 2 lines to remove the unnecessary power
+consumption.
 
-The host does not consume the manifest directly -- instead, the bootloader
-will use the manifest to populate these DT nodes. Again, these are *only*
-for non-secure virtual partitions which are to be managed by KVM.
+Fixes: 1e5f532c2737 ("ARM: dts: at91: sam9x60: add device tree for soc and board")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ arch/arm/boot/dts/at91-sam9x60ek.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> But then, can this be made discoverable (use a SMC for discovery) at all as Rob
-> had originally suggested. Firmware (Secure world) has no clue and the bootloader
-> is long gone.
+diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts b/arch/arm/boot/dts/at91-sam9x60ek.dts
+index b484745bf2d4..3b9bb29d9e23 100644
+--- a/arch/arm/boot/dts/at91-sam9x60ek.dts
++++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
+@@ -470,9 +470,9 @@ classd {
+ 		pinctrl_classd_default: classd {
+ 			atmel,pins =
+ 				<AT91_PIOA 24 AT91_PERIPH_C AT91_PINCTRL_PULL_UP
+-				 AT91_PIOA 25 AT91_PERIPH_C AT91_PINCTRL_PULL_UP
++				 AT91_PIOA 25 AT91_PERIPH_C AT91_PINCTRL_PULL_DOWN
+ 				 AT91_PIOA 26 AT91_PERIPH_C AT91_PINCTRL_PULL_UP
+-				 AT91_PIOA 27 AT91_PERIPH_C AT91_PINCTRL_PULL_UP>;
++				 AT91_PIOA 27 AT91_PERIPH_C AT91_PINCTRL_PULL_DOWN>;
+ 		};
+ 	};
+ 
+-- 
+2.25.1
 
-Make what discoverable?
-
-> Separate topic, protected KVM does not get dibs on the manifest and it relies on
-> the KVM host to specify the address ranges for each partition? Does this not
-> mean that the KVM host can control the physical address space each partition
-> sees. This seems contrary to the isolation guarantees that protected KVM must
-> provide?
-
-The host is trusted during early boot, and gives up this trust after
-initialising EL2 fully. So roughly speaking, we:
-
-	* Boot at EL2 and install a shim
-	* Drop down to EL2 and start the host kernel
-	* Before some initialisation (DT parsing, SMP bringup, etc)
-	* Init KVM by calling back up to EL2 to install the full hypervisor
-
-At that point, the EL1 host is no longer trusted and the last call
-effectively "locks it out" from EL2.
-
-> > But you're right that number of vCPUs was a bad example. We also need
-> > information such as the entry point.
-> 
-> Yes. From a spec perspective this should be specified in the partition manifest
-> unless the base address of the loaded image can be assummed to be the entry
-> point.
-
-Right, but the format of the manifest isn't defined by the spec so I really
-don't think it's something that Linux should be dealing with directly.
-
-Will
