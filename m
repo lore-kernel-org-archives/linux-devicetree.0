@@ -2,105 +2,81 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4B7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6285CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB37620810
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2256C207DA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592241968;
-	bh=WDkf6lzZ6UgWs3EMY6W8Qdhefho3OZTzr9BHJ5YRgCM=;
+	s=default; t=1592242112;
+	bh=iUXZuIT/dDXb7EKudwm706z+Hr9CMEQKWm5SnIdb0a4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kiQFnYbRiJ6mhennW0otez/LdNoPOdChb5+DUfmqHOxQxRcTaqbWzbmZ2s+mCMi66
-	 Sk9kGhODZbHhpcnhTpOTJheUzCRhvmeZaCrljgt7CHSR+R7o0FRDPch6qDuZV5hbYK
-	 /MH4+c6OQlSpZXYgII1ekl3lMgX+GY09GCdu9+tE=
+	b=Nd4yB0qeExGjmiI60+IQKhQAlgtryPcIusWXmxOZR+byPNC38XohA8SwyhHaiYVxA
+	 B/Fs3Zi3aNqlpmdyTaEFThfXpj7DaOZThrTHzwnl/brb8upxhNGEFpbOP/oLdb2m/h
+	 ir08flXCG5WI9gRf3lFjjvG1VNb1Ut6ICzPvuGXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgFORZ7 (ORCPT
+        id S1729967AbgFOR2b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:25:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42802 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729682AbgFORZ4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:25:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id x189so9699243iof.9;
-        Mon, 15 Jun 2020 10:25:56 -0700 (PDT)
+        Mon, 15 Jun 2020 13:28:31 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46373 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbgFOR2b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:28:31 -0400
+Received: by mail-io1-f66.google.com with SMTP id t9so18777046ioj.13;
+        Mon, 15 Jun 2020 10:28:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dS/bdtyItiFAm48ZgF1YTbFmFfDKJ+FCEj9MlB0IAp4=;
-        b=Mh0Ka0/cKEgpKLlxOSeYVWIMR6LVkaGR3s77d98ifHYMG3k2Eax8NY1OM9nctyhEJw
-         CgSnNMTtUwWe38pErH3E2fvU21HrLYHmPwn8edEJV6En26Ev/txmMvg+NvN3lNiyAyiv
-         DqZprbJCizSTxTJ/B7zMIXgyr3F9TY1BKVeLRpDCkycUbAODGkMURseBQSZO48sPBh5Z
-         ZGcQmzla5KMbNLuwFpZKDIfC/+1XhyaUiRLDZglovWDCRMkRDT4hJ/uvdAf+0eDaZZey
-         M63luWtJq55bdYxTBLfg3T2UhHNNd7s/g5+wco2O7Buy6TOMnDuHUC6MhCc4j4qNc1Xe
-         MrYQ==
-X-Gm-Message-State: AOAM533Y0eTeIdSCEqOd5Uub/6Oc86tBfF18dJDXqmcJAMrs0h6Kpf5b
-        +bZO5tJ5lkYBtAKyawWsHQ==
-X-Google-Smtp-Source: ABdhPJypddMh0DtNo4yEvMLEEWMso2FJiLJSg0Shc51QJu95Vb3Bgqf+obC4mOb9N+9IlXsrnh6G0Q==
-X-Received: by 2002:a02:6c8f:: with SMTP id w137mr23100744jab.38.1592241955783;
-        Mon, 15 Jun 2020 10:25:55 -0700 (PDT)
+        bh=MYImRG60d+Rk9sSAeNy5oAUfEqEV6FzOSefEkoMdz1A=;
+        b=c6Q5k+Rfdu730zCRRld/lD30CrWWmoIAIK0lnGjzpL3igvV40WPNk9FRWSzJ16IEbv
+         uU6lAS+IA035ly6sSgUzBWuJnxeAUJVnA6XIlx9zGWo0GSFS5vxHGOl1yvYLJCsZIfFK
+         cvgrlhbL0XoPTdOzSeRvftGG1MBkib7QWdU6vjXreWoHgJaRfw6eULGVzHkk3KCm++lJ
+         RQiPCpEfQdvSxIK8JKWhMGz9VLAlgMPBvY39sV0zY2Zc08q4H5po2zkICH8tBzusa9P2
+         frAEpCh99XIicsaHqY5OXI65jO3PyeWVjyeBjruauM2+oZfqf81xs0kaaWbWD+Kl8uH1
+         03hw==
+X-Gm-Message-State: AOAM533xWWdjf7TNkesEmalps0BEYVkk5bdUvVCyTXIFL9Nuc3loYsBH
+        JPKwc0ehy1DrRnYyP/wdEQ==
+X-Google-Smtp-Source: ABdhPJwz5sp/TMnFaz83wtBaFbg7kfsSf/GiLBBdiXdjYa27eWvs6SUspoeUIqIBwTNfg4+zClzoEA==
+X-Received: by 2002:a05:6602:228b:: with SMTP id d11mr26217595iod.98.1592242110735;
+        Mon, 15 Jun 2020 10:28:30 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id 2sm8612606ila.0.2020.06.15.10.25.53
+        by smtp.gmail.com with ESMTPSA id x18sm8170183ilq.46.2020.06.15.10.28.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:25:55 -0700 (PDT)
-Received: (nullmailer pid 1992268 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:25:52 -0000
-Date:   Mon, 15 Jun 2020 11:25:52 -0600
+        Mon, 15 Jun 2020 10:28:30 -0700 (PDT)
+Received: (nullmailer pid 1996652 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:28:29 -0000
+Date:   Mon, 15 Jun 2020 11:28:29 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200615172552.GA1978070@bogus>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-4-f.fainelli@gmail.com>
- <20200604041732.7ijkvad2yadtgjid@wunner.de>
+To:     Danny Lin <danny@kdrag0n.dev>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 1/1] of: reserved_mem: Fix typo in the too-many-regions
+ message
+Message-ID: <20200615172829.GA1996494@bogus>
+References: <20200604054900.200317-1-danny@kdrag0n.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604041732.7ijkvad2yadtgjid@wunner.de>
+In-Reply-To: <20200604054900.200317-1-danny@kdrag0n.dev>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 06:17:32AM +0200, Lukas Wunner wrote:
-> On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
-> > +static const struct of_device_id bcm2835_spi_match[] = {
-> > +	{ .compatible = "brcm,bcm2835-spi", .data = &bcm2835_spi_interrupt },
-> > +	{ .compatible = "brcm,bcm2711-spi", .data = &bcm2835_spi_sh_interrupt },
-> > +	{ .compatible = "brcm,bcm7211-spi", .data = &bcm2835_spi_sh_interrupt },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
+On Wed, 03 Jun 2020 22:49:00 -0700, Danny Lin wrote:
+> Minor fix for a missing preposition in the error message that appears
+> when there are too many reserved memory regions for the allocated array
+> to store.
 > 
-> Maybe I'm missing something but I think you either have to reverse the
-> order of the entries in this array or change patch [2/3] to drop
-> "brcm,bcm2835-spi" from the compatible string:
+> Signed-off-by: Danny Lin <danny@kdrag0n.dev>
+> ---
+>  drivers/of/of_reserved_mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> __of_match_node() iterates over the entries in the array above and
-> calls __of_device_is_compatible() for each of them, which returns
-> success if the entry matches any of the device's compatible string.
 
-The order here doesn't matter. I'm pretty sure we fixed this years ago 
-to always match to the most specific compatible.
-
-Rob
+Applied, thanks!
