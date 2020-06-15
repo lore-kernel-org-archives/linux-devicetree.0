@@ -2,84 +2,105 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F9DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB80C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 18:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B987C207DD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592243974;
-	bh=OonnPQI/Z44DweaSgstFD5k0v+bFlZ6gJPYBQ5CCQAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KNkSsqnddVezgDeikjMVE/84hrgOqeaFeV1HZGKWh1Tla+XwOxeizTulOsqZnz46g
-	 09WzA+DvMBiScewLB1pSxYaAZ4YudjiRxAQATh3OaNl+RLMIR6QP1eOMX5FhmXs7gz
-	 Ybcegmk9kLfeIpSepZkhYHJY/SnPQ1O4s9togEsU=
+	by mail.kernel.org (Postfix) with ESMTP id B4347206B7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 18:15:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="i38VihqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbgFOR7b (ORCPT
+        id S1729354AbgFOSPW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:59:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42585 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFOR7a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:59:30 -0400
-Received: by mail-io1-f67.google.com with SMTP id x189so9817143iof.9;
-        Mon, 15 Jun 2020 10:59:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BHgT2mx8xkJ6dyh2wGvrPbLyiW7OY04S9iTFYV1Zgpg=;
-        b=rw23SjXGskCZ3jzGz9JQt9PiV/TagMMnIzG29tJPnjvWpFqEPrB/+gbmRNZCrUiA8H
-         aedApV2zvWHKFwJSPjJZ9skm6FIsTLA9WFYEFPBWI6jkKr734j6QH4QbM0QMGKMKj9vc
-         QvkQkMJyXlpBSHG5wl27QO3pXAfPlVe8neMHk4WQHctnjKnpLniy1/70Aqn9+jCwFRYq
-         J5SzJHD7lAN/fa8zhXTHYASCHydFtU3cZa2DSNfpPWOSCRL7p2FtrqjVo94tpyyWgO7U
-         SFtgjXudNhsxez1gRFx+FmGHtl4jjoJVcCm7TSGrXsg6AB1vaNKnF62LV+p0QQZNOy0n
-         YMYw==
-X-Gm-Message-State: AOAM531+dQvZqIbs7YnBb6/mY88nNgxm1FbhG47KTVAsWZcp/9QzfSzS
-        MHw4Cmve7vSTSPuxXvxwG3wCstQ=
-X-Google-Smtp-Source: ABdhPJzcQSDpOkBhHJENl2D/pzMbYPzaQ2yaqC/lvyTGhRDc0VY48ge4XqLEln/oOi42VvZqeG5+Ng==
-X-Received: by 2002:a02:ccb3:: with SMTP id t19mr23072149jap.20.1592243969677;
-        Mon, 15 Jun 2020 10:59:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id g15sm8288584ilr.5.2020.06.15.10.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:59:29 -0700 (PDT)
-Received: (nullmailer pid 2045960 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:59:28 -0000
-Date:   Mon, 15 Jun 2020 11:59:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        agross@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V7 1/4] dt-bindings: clock: add ipq6018 a53 pll compatible
-Message-ID: <20200615175928.GA2045909@bogus>
-References: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org>
- <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
+        Mon, 15 Jun 2020 14:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFOSPW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 14:15:22 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4CCC061A0E;
+        Mon, 15 Jun 2020 11:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zvkQuGM3IsR34BEyAX62BLAfdrNM9I5xmocgMbFO1Lg=; b=i38VihqNIvcpDPK1HeExRe/m2+
+        UHuq5PWGHTdI3SFPaRzakWY2nSOelK+Bc8BdqHf7fAZGRboAm0DUkw6Xu2I52d87vvuj+TJud2Kj3
+        mKdn4WBJmyNv/Q6fL4EJoinAY+UN1C4g3539FV+6p/Mg8eYD4bdrtj4AEVoVwL7U/vEJs7hNznlDa
+        zeD9gS0cOT1KRUvWRwJcoEj4iRKtpN5peCNT6rnrqMBdVzktPdp2Jb9aZQ0hjziQQwHCRtbrcXDrj
+        rOVr06xA1Ueurj4gtsu9RPCbaAv8EG+7DvWiLjxetkU5EGWuxJUUWvAaA2qiqI6xMM3/0aeRHJceE
+        qTwQowNA==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jktdc-0007gZ-0L; Mon, 15 Jun 2020 19:15:16 +0100
+Date:   Mon, 15 Jun 2020 19:15:15 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: net: dsa: qca8k: document SGMII
+ properties
+Message-ID: <20200615181515.GC17897@earth.li>
+References: <cover.1591380105.git.noodles@earth.li>
+ <ca767d2dd00280f7c0826c133d1ff6f262b6736d.1591380105.git.noodles@earth.li>
+ <20200615174516.GA2018349@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <20200615174516.GA2018349@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 06 Jun 2020 16:25:04 +0530, Sivaprakash Murugesan wrote:
-> cpus on ipq6018 are clocked by a53 pll, add device compatible for a53
-> pll found on ipq6018 devices.
+On Mon, Jun 15, 2020 at 11:45:16AM -0600, Rob Herring wrote:
+> On Fri, Jun 05, 2020 at 07:10:02PM +0100, Jonathan McDowell wrote:
+> > This patch documents the qca8k's SGMII related properties that allow
+> > configuration of the SGMII port.
+> > 
+> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> > ---
+> >  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> > index ccbc6d89325d..9e7d74a248ad 100644
+> > --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> > +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> > @@ -11,7 +11,11 @@ Required properties:
+> >  
+> >  Optional properties:
+> >  
+> > +- disable-serdes-autoneg: Boolean, disables auto-negotiation on the SerDes
+> >  - reset-gpios: GPIO to be used to reset the whole device
+> > +- sgmii-delay: Boolean, presence delays SGMII clock by 2ns
+> > +- sgmii-mode: String, operation mode of the SGMII interface.
+> > +  Supported values are: "basex", "mac", "phy".
 > 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
-> [V7]
->  * Addressed minor review comment from Rob
->  .../devicetree/bindings/clock/qcom,a53pll.yaml         | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
+> Either these should be common properties and documented in a common 
+> spot or they need vendor prefixes. They seem like they former to me 
+> (though 'sgmii-delay' would need to be more general and take a time).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I've managed to spin a subsequent revision which avoids the need for a
+device tree change, based on comments similar to yours. I'll keep them
+in mind should it become necessary to re-introduce the DT options.
+
+J.
+
+-- 
+] https://www.earth.li/~noodles/ []  I'm a creep, I'm a weirdo, what   [
+]  PGP/GPG Key @ the.earth.li    []     the hell am I doing here?      [
+] via keyserver, web or email.   []                                    [
+] RSA: 4096/0x94FA372B2DA8B985   []                                    [
