@@ -2,155 +2,298 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA49C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95325C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB8B52078E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nk+CrK+q"
+	by mail.kernel.org (Postfix) with ESMTP id 6950C207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592238289;
+	bh=NvZ4xROZpS01Xr+qnNQUx1FmKHE5zI1O4pPdowqV0+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bEskbdjLzq/b7vSrXqQ1t4SsxCRl+ccU7paZMwiZN8qAunhZU3bRi+cgU6hkz3RKv
+	 2SqgfoDqvRdwtnyRGcUT25z+AbafLPZh1IYW76crnGymIl2PolMP7RF5hoBs3pchsE
+	 X6y8Jq/ttv2NiSO5ByS+lqxachG1jX6Jv9g6Q4g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbgFOQYU (ORCPT
+        id S1730854AbgFOQYs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:24:20 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:22425 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730957AbgFOQYP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:24:15 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200615162410epoutp03a7265dfa5e7e321247b855912b3bea93~YxEC2znD90577505775epoutp03R
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 16:24:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200615162410epoutp03a7265dfa5e7e321247b855912b3bea93~YxEC2znD90577505775epoutp03R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592238250;
-        bh=BEyEvCjpVeZ0zAtPUpZTgBK+qidw68l28PlKRvrd7jk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=nk+CrK+qc0f8ji52XtUiNy90799GBidX1zYiF7LTklutrm0zGDpEyzSPXGwyUWWR4
-         F1Lam81jeItu+474IkdKRH+cdqULbjtQG8n/ZIpeL9SFFwSQt7nAV4Rz93uWIwaGwP
-         VlkY2NPWF0m8uzb6JmQqydo6Dl9SyBzNPKAtnj4E=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200615162409epcas5p1076dad5980246b4ed9585b73bdd7d4d6~YxECOMLhF0740907409epcas5p1h;
-        Mon, 15 Jun 2020 16:24:09 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        47.26.09475.9A0A7EE5; Tue, 16 Jun 2020 01:24:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200615162408epcas5p3c8bfc7f248fa72fd01156d39851e628d~YxEBRa4iD0964309643epcas5p30;
-        Mon, 15 Jun 2020 16:24:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200615162408epsmtrp1a573006830526845280bb8711ad00873~YxEBQlGE12292522925epsmtrp1F;
-        Mon, 15 Jun 2020 16:24:08 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-c3-5ee7a0a9c69e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9E.2E.08382.8A0A7EE5; Tue, 16 Jun 2020 01:24:08 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200615162405epsmtip19e7d7fb67d9663b3e7591a2ca5be9e08~YxD_UUEA-2560325603epsmtip1s;
-        Mon, 15 Jun 2020 16:24:05 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     <kishon@ti.com>
-Cc:     <kbuild-all@lists.01.org>, <clang-built-linux@googlegroups.com>,
-        <devicetree@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <krzk@kernel.org>, <avri.altman@wdc.com>,
-        <martin.petersen@oracle.com>, <kwmad.kim@samsung.com>,
-        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        "'kernel test robot'" <lkp@intel.com>
-In-Reply-To: <202006131334.EEnoEaXS%lkp@intel.com>
-Subject: RE: [RESEND PATCH v10 07/10] phy: samsung-ufs: add UFS PHY driver
- for samsung SoC
-Date:   Mon, 15 Jun 2020 21:54:03 +0530
-Message-ID: <000101d64331$65230260$2f690720$@samsung.com>
+        Mon, 15 Jun 2020 12:24:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43328 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbgFOQYs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:24:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so949543iol.10;
+        Mon, 15 Jun 2020 09:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YdqlCPeMy6mhxxUsYFBiIEErVyP/IfOhgQot6haL/bk=;
+        b=I5e2QY3eZQrqlGn4yblkXnJhtih4rj+nydKLgcMIQvoGLgVSQVLnXotzdc2Wr7evNl
+         uoSm/mu6TDDorwxO6x1iSt64gnQrV+WZKhN6YeElA8VcAdDCwFUxbMtmta+J7Sf+8jI8
+         Rz5+MqAh1Hc8fXpnqzE/fnK21YRhpZYxEjsLjJYa4IyFw0b6R+DAATT4F5YdYpUeTWfU
+         ExOk7pMg+/AGXrNGiF5wQCITGF7neycb41uBfF+Qhr76dMfw2fcBhiisdvVYJUY5j9Ab
+         Gy/VSF2b0rhKlgvRfVtTHoY8k8GnlFGC0hULG1VoCLexTWAa1i9ixUS/kTGIu81cS1bf
+         6rjQ==
+X-Gm-Message-State: AOAM530054BYeytVx8yAWG361wHbEDKDFD6nn4iIOjDbnddBS3Ve9dtx
+        R92rr7oPr4D1xWuYP6gFfQ==
+X-Google-Smtp-Source: ABdhPJw9jyd07OqpB3eUqIEGtPzpWwPUI8yPAdfXF+9S621Y7f0IepBuQ20G4JgHvwQeMt9CPRwfrA==
+X-Received: by 2002:a5e:dc03:: with SMTP id b3mr29058506iok.27.1592238286532;
+        Mon, 15 Jun 2020 09:24:46 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id g64sm8166922iof.5.2020.06.15.09.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:24:46 -0700 (PDT)
+Received: (nullmailer pid 1891953 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:24:45 -0000
+Date:   Mon, 15 Jun 2020 10:24:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     ulf.hansson@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        mpa@pengutronix.de, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: mmc: Convert imx esdhc to json-schema
+Message-ID: <20200615162445.GA1885779@bogus>
+References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
+ <1591234886-15351-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJxKJl1qzUofIPujdEacJl88XyIuwGkdPiqAy1Y4e2nfYD4sA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNKsWRmVeSWpSXmKPExsWy7bCmuu7KBc/jDK6c1bJ4+fMqm8Wn9ctY
-        LR68mc1mMf/IOVaLs93XGC0uPO1hszh/fgO7xc0tR1ksZpzfx2TRfX0Hm8Wr5kdsFsuP/2Oy
-        WLr1JqMDr8flvl4mjz0TT7J5LN7zkslj06pONo/u2f9YPFpO7mfx+Pj0FotH35ZVjB7Hb2xn
-        8vi8Sc6j/UA3UwB3FJdNSmpOZllqkb5dAlfGm7sLWAo6eSp2nnnF1MC4jKuLkYNDQsBE4t9d
-        6y5GLg4hgd2MEt0nZjBCOJ8YJW5vPssM4XxjlNi1YD9LFyMnWMfVKW+hEnsZJS41b2eDcN4w
-        Spw82cEMUsUmoCuxY3EbG4gtIiAssXnfW7AiZoHnTBLTnr5jAklwChhJvNrdwgpiCwvESOxs
-        fAzWzCKgKtH4bT2YzStgKXGv8QWULShxcuYTsDOYBeQltr+dwwxxkoLEz6fLWCGWOUmc3L2G
-        DaJGXOLozx6wUyUEvnBILP24jh2iwUXi+9wfUP8IS7w6vgUqLiXxsr+NHRIy2RI9u4whwjUS
-        S+cdgyq3lzhwZQ4LSAmzgKbE+l36EKv4JHp/P2GC6OSV6GgTgqhWlWh+dxWqU1piYnc3K4Tt
-        IbHp3jb2CYyKs5A8NgvJY7OQPDALYdkCRpZVjJKpBcW56anFpgXGeanlesWJucWleel6yfm5
-        mxjB6U/Lewfjowcf9A4xMnEwHmKU4GBWEuE9JP88Tog3JbGyKrUoP76oNCe1+BCjNAeLkjiv
-        0o8zcUIC6YklqdmpqQWpRTBZJg5OqQamQyffFsQIMrx4+vho23v5KzqOzB6vztp1fVlZLxl0
-        X/Nve0nRfpUilyL3fzumKBbHqWVOvlNvXX6bXWLv5tP27tdfnncq6ujiYY1bN2WGgI/Kef0c
-        Ycm96XcPs2RzHapYv+bg7G/lCfNnywuqGuqEu6UvjDY4MPexhqnah03KBtd23/S7FRFx3jss
-        d0pTAsM0ifA10ze2dwZovvRdv7WUJ/pdfdIhM72ij3MEW/1u/6+relC/NH3h+lP2V1R6jLss
-        /q0SWFJ4XjevaIGXyabcn0/FkkP7uZrvm8y+JCVbInAywcPv04I92eJ+t09ZG7ef+PdR8fq3
-        0zUpxr55Obuqn72r+dGuucr2WGryd0YlluKMREMt5qLiRAALl04q7gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsWy7bCSnO6KBc/jDDp3aFm8/HmVzeLT+mWs
-        Fg/ezGazmH/kHKvF2e5rjBYXnvawWZw/v4Hd4uaWoywWM87vY7Lovr6DzeJV8yM2i+XH/zFZ
-        LN16k9GB1+NyXy+Tx56JJ9k8Fu95yeSxaVUnm0f37H8sHi0n97N4fHx6i8Wjb8sqRo/jN7Yz
-        eXzeJOfRfqCbKYA7issmJTUnsyy1SN8ugSvjzd0FLAWdPBU7z7xiamBcxtXFyMkhIWAicXXK
-        W+YuRi4OIYHdjBIHXrxggkhIS1zfOIEdwhaWWPnvOTtE0StGid3LnzKCJNgEdCV2LG5jA7FF
-        gIo273vLBlLELPCVSWLisr+MEB1bGCXaPuxiBqniFDCSeLW7hRXEFhaIkmib+xFsHYuAqkTj
-        t/VgNbwClhL3Gl9A2YISJ2c+Yeli5ACaqifRthFsMbOAvMT2t3OYIa5TkPj5dBkrxBFOEid3
-        r2GDqBGXOPqzh3kCo/AsJJNmIUyahWTSLCQdCxhZVjFKphYU56bnFhsWGOallusVJ+YWl+al
-        6yXn525iBMexluYOxu2rPugdYmTiYDzEKMHBrCTCe0j+eZwQb0piZVVqUX58UWlOavEhRmkO
-        FiVx3huFC+OEBNITS1KzU1MLUotgskwcnFINTOfqeOY/EUhj+jbdVCjr3OQvTyP/5pelzf26
-        oVdz61H37Ovf2w/n89zlNm/+IRe280v6n8S+LV4bbh9LPcS3IbPT+yTL2T9lJTP/9F2W2dN9
-        WbuHZ5/46i8zPyuIPbh5+EOC+ZbT0nLWF7bPSC/Z7Hq77oJFnHkK0+szgt5Juow79aa5LShm
-        +MWg2rfO4GNqccrxzQef2779upQ/+8KNCT4zP/TGr9WNTJni7Lixsv/XqdaF3NO+BIlM65rP
-        nup7Pv+pyJmtO25vSNLV365/48N83fCTdzcqRP/OWq17/gLHg2114l9ffV3z++veyyd3bhfb
-        vylJeYPax8vvN52dfa7pWFbC3VkvFcsPB+hpd1nvUmIpzkg01GIuKk4EAJd1RTVSAwAA
-X-CMS-MailID: 20200615162408epcas5p3c8bfc7f248fa72fd01156d39851e628d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200613052521epcas5p140d979df19fae20c858c485409596a7a
-References: <20200613024706.27975-8-alim.akhtar@samsung.com>
-        <CGME20200613052521epcas5p140d979df19fae20c858c485409596a7a@epcas5p1.samsung.com>
-        <202006131334.EEnoEaXS%lkp@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591234886-15351-2-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-> -----Original Message-----
-> From: kernel test robot <lkp@intel.com>
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+On Thu, Jun 04, 2020 at 09:41:24AM +0800, Anson Huang wrote:
+> Convert the i.MX ESDHC binding to DT schema format using json-schema
 > 
-> >> drivers/phy/samsung/phy-samsung-ufs.c:47:5: warning: no previous
-> >> prototype for function 'samsung_ufs_phy_wait_for_lock_acq'
-> >> [-Wmissing-prototypes]
-> int samsung_ufs_phy_wait_for_lock_acq(struct phy *phy) ^
-> drivers/phy/samsung/phy-samsung-ufs.c:47:1: note: declare 'static' if the
-> function is not intended to be used outside of this translation unit int
-> samsung_ufs_phy_wait_for_lock_acq(struct phy *phy) ^ static
-> >> drivers/phy/samsung/phy-samsung-ufs.c:77:5: warning: no previous
-> >> prototype for function 'samsung_ufs_phy_calibrate'
-> >> [-Wmissing-prototypes]
-> int samsung_ufs_phy_calibrate(struct phy *phy) ^
-> drivers/phy/samsung/phy-samsung-ufs.c:77:1: note: declare 'static' if the
-> function is not intended to be used outside of this translation unit int
-> samsung_ufs_phy_calibrate(struct phy *phy) ^ static
-> 2 warnings generated.
-> 
-Not sure, how to handle this here, is this something that you can take care
-while applying this patch? Or
-Shell in send another patch to fix this warning reported by test robot?
-(Other patches in this series is already taken in respective tree)
-
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://protect2.fireeye.com/url?k=9d5936bf-c0c2cadc-9d58bdf0-
-> 0cc47a31cdbc-
-> 6ed890c1e74d92a7&q=1&u=https%3A%2F%2Flists.01.org%2Fhyperkitty%2Flist
-> %2Fkbuild-all%40lists.01.org
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 124 +++++++++++++++++++++
+>  2 files changed, 124 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> deleted file mode 100644
+> index de1b8bd..0000000
+> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> +++ /dev/null
+> @@ -1,67 +0,0 @@
+> -* Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
+> -
+> -The Enhanced Secure Digital Host Controller on Freescale i.MX family
+> -provides an interface for MMC, SD, and SDIO types of memory cards.
+> -
+> -This file documents differences between the core properties described
+> -by mmc.txt and the properties used by the sdhci-esdhc-imx driver.
+> -
+> -Required properties:
+> -- compatible : Should be "fsl,<chip>-esdhc", the supported chips include
+> -	       "fsl,imx25-esdhc"
+> -	       "fsl,imx35-esdhc"
+> -	       "fsl,imx51-esdhc"
+> -	       "fsl,imx53-esdhc"
+> -	       "fsl,imx6q-usdhc"
+> -	       "fsl,imx6sl-usdhc"
+> -	       "fsl,imx6sx-usdhc"
+> -	       "fsl,imx6ull-usdhc"
+> -	       "fsl,imx7d-usdhc"
+> -	       "fsl,imx7ulp-usdhc"
+> -	       "fsl,imx8mq-usdhc"
+> -	       "fsl,imx8mm-usdhc"
+> -	       "fsl,imx8mn-usdhc"
+> -	       "fsl,imx8mp-usdhc"
+> -	       "fsl,imx8qm-usdhc"
+> -	       "fsl,imx8qxp-usdhc"
+> -
+> -Optional properties:
+> -- fsl,wp-controller : Indicate to use controller internal write protection
+> -- fsl,delay-line : Specify the number of delay cells for override mode.
+> -  This is used to set the clock delay for DLL(Delay Line) on override mode
+> -  to select a proper data sampling window in case the clock quality is not good
+> -  due to signal path is too long on the board. Please refer to eSDHC/uSDHC
+> -  chapter, DLL (Delay Line) section in RM for details.
+> -- voltage-ranges : Specify the voltage range in case there are software
+> -  transparent level shifters on the outputs of the controller. Two cells are
+> -  required, first cell specifies minimum slot voltage (mV), second cell
+> -  specifies maximum slot voltage (mV). Several ranges could be specified.
+> -- fsl,tuning-start-tap: Specify the start dealy cell point when send first CMD19
+> -  in tuning procedure.
+> -- fsl,tuning-step: Specify the increasing delay cell steps in tuning procedure.
+> -  The uSDHC use one delay cell as default increasing step to do tuning process.
+> -  This property allows user to change the tuning step to more than one delay
+> -  cells which is useful for some special boards or cards when the default
+> -  tuning step can't find the proper delay window within limited tuning retries.
+> -- fsl,strobe-dll-delay-target: Specify the strobe dll control slave delay target.
+> -  This delay target programming host controller loopback read clock, and this
+> -  property allows user to change the delay target for the strobe input read clock.
+> -  If not use this property, driver default set the delay target to value 7.
+> -  Only eMMC HS400 mode need to take care of this property.
+> -
+> -Examples:
+> -
+> -esdhc@70004000 {
+> -	compatible = "fsl,imx51-esdhc";
+> -	reg = <0x70004000 0x4000>;
+> -	interrupts = <1>;
+> -	fsl,wp-controller;
+> -};
+> -
+> -esdhc@70008000 {
+> -	compatible = "fsl,imx51-esdhc";
+> -	reg = <0x70008000 0x4000>;
+> -	interrupts = <2>;
+> -	cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
+> -	wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
+> -};
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> new file mode 100644
+> index 0000000..74db24aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/fsl-imx-esdhc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
+> +
+> +maintainers:
+> +  - Shawn Guo <shawn.guo@linaro.org>
+> +
+> +allOf:
+> +  - $ref: "mmc-controller.yaml"
+> +
+> +description: |
+> +  The Enhanced Secure Digital Host Controller on Freescale i.MX family
+> +  provides an interface for MMC, SD, and SDIO types of memory cards.
+> +
+> +  This file documents differences between the core properties described
+> +  by mmc.txt and the properties used by the sdhci-esdhc-imx driver.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx25-esdhc
+> +      - fsl,imx35-esdhc
+> +      - fsl,imx51-esdhc
+> +      - fsl,imx53-esdhc
+> +      - fsl,imx6q-usdhc
+> +      - fsl,imx6sl-usdhc
+> +      - fsl,imx6sx-usdhc
+> +      - fsl,imx6ull-usdhc
+> +      - fsl,imx7d-usdhc
+> +      - fsl,imx7ulp-usdhc
+> +      - fsl,imx8mq-usdhc
+> +      - fsl,imx8mm-usdhc
+> +      - fsl,imx8mn-usdhc
+> +      - fsl,imx8mp-usdhc
+> +      - fsl,imx8qm-usdhc
+> +      - fsl,imx8qxp-usdhc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  fsl,wp-controller:
+> +    description: |
+> +      boolean, if present, indicate to use controller internal write protection.
+> +    type: boolean
+> +
+> +  fsl,delay-line:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the number of delay cells for override mode.
+> +      This is used to set the clock delay for DLL(Delay Line) on override mode
+> +      to select a proper data sampling window in case the clock quality is not good
+> +      due to signal path is too long on the board. Please refer to eSDHC/uSDHC
+> +      chapter, DLL (Delay Line) section in RM for details.
+> +    default: 0
+> +
+> +  voltage-ranges:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
+> +    description: |
+> +      Specify the voltage range in case there are software
+> +      transparent level shifters on the outputs of the controller. Two cells are
+> +      required, first cell specifies minimum slot voltage (mV), second cell
+> +      specifies maximum slot voltage (mV). Several ranges could be specified.
+> +    items:
+> +      items:
+> +        - description: value for minimum slot voltage
+> +        - description: value for maximum slot voltage
+> +    maxItems: 1
 
+This contradicts 'Several ranges could be specified.'
+
+> +
+> +  fsl,tuning-start-tap:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the start dealy cell point when send first CMD19 in tuning procedure.
+
+typo: delay
+
+> +    default: 0
+> +
+> +  fsl,tuning-step:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the increasing delay cell steps in tuning procedure.
+> +      The uSDHC use one delay cell as default increasing step to do tuning process.
+> +      This property allows user to change the tuning step to more than one delay
+> +      cells which is useful for some special boards or cards when the default
+> +      tuning step can't find the proper delay window within limited tuning retries.
+> +    default: 0
+> +
+> +  fsl,strobe-dll-delay-target:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the strobe dll control slave delay target.
+> +      This delay target programming host controller loopback read clock, and this
+> +      property allows user to change the delay target for the strobe input read clock.
+> +      If not use this property, driver default set the delay target to value 7.
+> +      Only eMMC HS400 mode need to take care of this property.
+> +    default: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    mmc@70004000 {
+> +        compatible = "fsl,imx51-esdhc";
+> +        reg = <0x70004000 0x4000>;
+> +        interrupts = <1>;
+> +        fsl,wp-controller;
+> +    };
+> +
+> +    mmc@70008000 {
+> +        compatible = "fsl,imx51-esdhc";
+> +        reg = <0x70008000 0x4000>;
+> +        interrupts = <2>;
+> +        cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
+> +        wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
+> +    };
+> -- 
+> 2.7.4
+> 
