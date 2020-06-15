@@ -2,101 +2,95 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967FCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429BFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 725CB206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIDTWFM2"
+	by mail.kernel.org (Postfix) with ESMTP id 1849F20739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFOHbm (ORCPT
+        id S1728522AbgFOHiz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgFOHbm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 03:31:42 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8F6C05BD1E
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 00:31:42 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u128so352671pgu.13
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 00:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LrJ4JAo2vjzpAGyvhcbFA7qISNQsytIItEN02iswbAY=;
-        b=xIDTWFM2aEF9G48Tte+2/OhzJEH4zIX8UuUvaXknN7D4I4cmnaZPllbbgOZ2Qk+1bY
-         xbc+h154cHHO0epDGK216n3MwNuTQp8fqNoImvPxYEWwYNbpZlJyWIj2LFILlM6wvgH+
-         PrrwqgyDhhXP7IQ8oGaTW5/tJ5HPe94oZv9gZMHEzR71J+0zMmRMINshTnnEMwgOVaAR
-         riY+A1J2/TsZ/dTasy+1g79Vmc0d1usNeEDBgt0+HWb+bXb9RnVRGlHffL4L/ugZBF2w
-         Dud6PN5w+IJx6AeU9QRAZD329d15LkFad4bKzdPv8fewOwdQekgvuC7XPd0gsL3i8Aa0
-         VR1w==
+        Mon, 15 Jun 2020 03:38:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40406 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbgFOHiz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 03:38:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s13so12358142otd.7;
+        Mon, 15 Jun 2020 00:38:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LrJ4JAo2vjzpAGyvhcbFA7qISNQsytIItEN02iswbAY=;
-        b=HCUCqPOKU8Hf0v6pBVRa8A/V0TdobgE2IGy5ivDU6OQMXTsMp1JQdh3b2fYrcyTFol
-         bx1NuidGkLAJPRLyNy3F1kAZ/5IFRaM82PnbTc8UM+hw82bWbyNv5Geps42QJL7GpKUF
-         Q71YqvbCQCBJYnQet8fn0hEwAnrR1Rtj8pNFvYbBVEs/z0WLmmLk6hY2fpj1I/ZzqctC
-         Qz4NtEgy7Vb4l7cG8KXmje/k91SCAW/gB65KJK/Ei6H+2UItyx7n60lCqyP8HvdSyKxu
-         THvXVTE1HWEfzGVIU3/hn/H25aEM9lcWZqkHxplyTp0UgaqshqRxabHpto80iydB37jG
-         DhmA==
-X-Gm-Message-State: AOAM531jsHdxMi+lLgOt/v57TVyfA1fe5k3M7IoLNY6k/dfke883bPlG
-        ZEo1SKKJG2ft1ozAhgLbU1QSRg==
-X-Google-Smtp-Source: ABdhPJzYVFN3gBHjfNgqZa/g6YU6WbN/APpY56EAa5j7L5CZKm7Xt1592LSNfKcNJdQv1J9FEzZwKg==
-X-Received: by 2002:a63:5f41:: with SMTP id t62mr20785803pgb.252.1592206301079;
-        Mon, 15 Jun 2020 00:31:41 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id p14sm11774352pjf.32.2020.06.15.00.31.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 00:31:40 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 13:01:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH 00/12] Add cpufreq and cci devfreq for mt8183, and SVS
- support
-Message-ID: <20200615073138.2vk5f3kplsz6rgqc@vireshk-i7>
-References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PFfNHgVox7KX7C95z1fc2WDvt6ykxqikNS/QtJNZ6S8=;
+        b=nRR8nAQssd3tHaanXqlUNMKKplCGhFMDhveZQzz+Vu61zi4sbskOc058CE654nlSiT
+         WIN9s3uYdOMTNw2bxVveEEz6ZRHv0B9XZfXMY2PGzXXLJ7CTD+ePQpRveaQuM8IWlvQa
+         zrvgwGJgawZZisnV0Id1i2/+n4gK/SK4rN3l1TY+m/LnMQd4+DbNUfsTccIxIm9ZlBFj
+         jKdYkzSs8QjncbwDGEXNeZpIuSNYKurJ12kmk4MCsZ/NYuR+CxbbgMV8V67DXClDrzc0
+         UkACb+mJ4qvRli2M/jHqx7FZh0bIh9sjMfnFFU5g6X1zSgHTPp8AVk0jyMMXFNQ5Y/jr
+         XA0Q==
+X-Gm-Message-State: AOAM531UrOiZWiIPUQXrRg8vqFV0AWVXJwp78i/UC7SwT3E/lfBMPi4d
+        lP5cvJuXVZp6W15CfDoKBIwKaHG5QA8wxc0+aDEoyYdh
+X-Google-Smtp-Source: ABdhPJw1n6MZZyE41PxKdYk9SuES7QIn4SjvHd3chD7k1FUdfaufEWwdkiYC+uoydTPHuFwA5x2yDo0fkj7opPN6ftE=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr19213763otr.107.1592206732676;
+ Mon, 15 Jun 2020 00:38:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <cover.1592203542.git.mchehab+huawei@kernel.org> <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
+In-Reply-To: <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 15 Jun 2020 09:38:41 +0200
+Message-ID: <CAMuHMdV=omjGQUTZL0vBYhHDX+6GGn_Lx=2tMuGc4csJ9EKbkQ@mail.gmail.com>
+Subject: Re: [PATCH 12/29] dt: update a reference for reneases pcar file
+ renamed to yaml
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-05-20, 11:42, Andrew-sh.Cheng wrote:
-> 	- Resend depending patches of Sravana Kannan base on kernel-5.7
+Hi Mauro,
 
-Saravana's patches were never accepted and I suggested him this which
-he never tested I believe.
+On Mon, Jun 15, 2020 at 8:47 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+> This file was renamed, but its reference at pfc-pinctl.txt is
 
-https://lore.kernel.org/lkml/20191125112812.26jk5hsdwqfnofc2@vireshk-i7/
+pfc-pinctrl.txt
 
-There is no point rebasing your stuff on a series which hasn't
-concluded or is accepted, at least logically.
+> still pointing to the old file.
+>
+> Fixes: 7f7d408e5a00 ("dt-bindings: gpio: rcar: Convert to json-schema")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+Thanks!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Note that the reference will go away with the pfc-pinctrl.txt json-schema
+conversion.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-viresh
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
