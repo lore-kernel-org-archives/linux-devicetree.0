@@ -2,265 +2,174 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7FFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BB4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4B120857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592241286;
-	bh=paQABkpq5ck42pvrmFPvYEob/i6ZpRVVHGgk9a/lNAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tXyFvE3jR+24WFf5ZCAKiSZGodctSLP5V8/pI2LrX1xGd5qOwlIVPb7MMbHHI9wk9
-	 rbOlIjg85X2Pp4+1y/cmG8MrfgaYJVsFaoBtHPXg/+qUS9YpqgIXoUZL88iCNC8BGk
-	 N7jq6wIsz7JY7043hIqhT/c1HILjANZcR/qec9yY=
+	by mail.kernel.org (Postfix) with ESMTP id 18512206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:18:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMf5OWp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbgFOROq (ORCPT
+        id S1729806AbgFORSA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:14:46 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45940 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729354AbgFOROp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:14:45 -0400
-Received: by mail-io1-f65.google.com with SMTP id y5so18680975iob.12;
-        Mon, 15 Jun 2020 10:14:44 -0700 (PDT)
+        Mon, 15 Jun 2020 13:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729682AbgFORSA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:18:00 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A21C05BD43
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:17:59 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id u5so7872747pgn.5
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4tBg685n+rvOlJARxC/GZpj7s58rUY4EPS7OgTBXC28=;
+        b=qMf5OWp/BZGBVGr6GzBckHt7yZutPv6Ww0rfvb7z0X6LV4pWqnPy6J1A3STjwKZMWi
+         nVBys61Vt7LoY86iMXOZtz8Cac6wHUA2uwAWybbItiJy9TChYqMS/gjHJq7rL09/sOEt
+         OesmI/6d7jNHv1UL/WtnVV2TkJ1V58mZCeuO+YMK4uWp9VM1H30g9Bn3c1JbNohJWFSI
+         csKqKPb8i+P6Mgo+G2Y4CwGRgBi6Vh+Y2RfjP2BhRdNoVTapT7y0zBIe3Ub5RALjtJkc
+         SQzsXAoZWDnwZnBThFKWfsLfnuezFzF4YfSabLLP3QzLPYn8qzqhyspUwgqqPjxetusa
+         4fHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hiOijoD53LX37YRMIwEiw00dAjUSx8soGvrpBh7UCNk=;
-        b=Qp9t/KukYyFxOiVzLy05euwvk2eHpu3iUN54O56gdnqMdhs2oFTtUmSgr4OIRQjalN
-         jXMkicbQ4ftOaaksx7gMLuIc3GhsFBoXB2aZGezpjzQeKaMSlrMz73L31/4eiPwL5tBz
-         /5YHxy7eu6z22XXhs8l7pTRL0G/QBzRJaMUTpiYtNBCM4XI/uVysscsjv0GjSS5R5eLn
-         X/G8UJjcxLdni/NPuaRrZiHgM9EgvKETQe+VQgxCHc1MDSJtI8yS//l3Eox9bZwEk8bt
-         ilYdm1Fq0tW4DduMvS+ERjovuHRWvAGo2WCsz2aMvM8+2ng1nj+GEMPmAzwpQpuySFn9
-         R3FA==
-X-Gm-Message-State: AOAM530pGKBUdNU2LvGx9W34hCV31XdZccl4eENEIq0xY1ixgBBSdL3w
-        nb9zQ1tGiSkmPgchUoKczQ==
-X-Google-Smtp-Source: ABdhPJzMt4RbwBhE8d8aXJ1Kn/OXGkG36uamUKf5TRxX+ttPOWrLxY6THuuBLi6cS0RFohMBITK0UQ==
-X-Received: by 2002:a02:7f4d:: with SMTP id r74mr21951710jac.51.1592241283969;
-        Mon, 15 Jun 2020 10:14:43 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id v11sm8354642ile.61.2020.06.15.10.14.42
+        bh=4tBg685n+rvOlJARxC/GZpj7s58rUY4EPS7OgTBXC28=;
+        b=luB1/6UJsbREoETZktfZFXQZ8k3i8MwlxNwe9eNj5PjYpP06tCSds9XAp2F6EqdFJE
+         Jdhjj5xqRLutT38A7nPk0WN7i/EvqYLQUiIadNU7tAaQv/TvVnAN9a/mcKBr743uWTmS
+         ptuy0V9Ojf+maykulr1r153+9+OKjxkvudVFAEk1GUWlyrwTSUJJqZMmmMAIAhqoobjX
+         A/VHqrrF9y066EO6cdLgjAz/eAu5rGbKwXD6LiAo6SX+oX5foRQkKsasVaZHpIZcx2m2
+         Vo3Jl1miy7kA9h8VlzUjXC4rfeS28ByVDyhpfQVKKR99+2qZ9krlwxjFFkSddqoxoTkH
+         KIcg==
+X-Gm-Message-State: AOAM5326tF4um8jPjsMCPxKy2LQ3oC+wdixbACixbhaqwUUREce4LS7N
+        jO4egfiKUNfRV4VP3FyFHHmMpQ==
+X-Google-Smtp-Source: ABdhPJzDcXoNX77HGgl+fpRA2bt04/aYiGdDfkkyODxwlkE3OkNhPp/3uUdSH5iaHvmi/LICqc75gQ==
+X-Received: by 2002:a62:640b:: with SMTP id y11mr23794549pfb.195.1592241478412;
+        Mon, 15 Jun 2020 10:17:58 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id i22sm14310258pfo.92.2020.06.15.10.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:14:43 -0700 (PDT)
-Received: (nullmailer pid 1974668 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:14:41 -0000
-Date:   Mon, 15 Jun 2020 11:14:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 15 Jun 2020 10:17:57 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 11:17:55 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 2/3] dt-bindings: spi: Convert imx cspi to json-schema
-Message-ID: <20200615171441.GA1971091@bogus>
-References: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
- <1591235731-15673-3-git-send-email-Anson.Huang@nxp.com>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
+Subject: Re: [PATCH 1/4] arm64: dts: qcom: sc7180: Add support to skip
+ powering up of ETM
+Message-ID: <20200615171755.GA225607@xps15>
+References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+ <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591235731-15673-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:55:30AM +0800, Anson Huang wrote:
-> Convert the i.MX CSPI binding to DT schema format using json-schema,
-> update compatible, remove obsolete properties "fsl,spi-num-chipselects"
-> and update the example based on latest DT file.
+On Tue, Jun 09, 2020 at 07:00:28PM +0530, Sai Prakash Ranjan wrote:
+> Add "qcom,skip-power-up" property to skip powering up ETM
+> on SC7180 SoC to workaround a hardware errata where CPU
+> watchdog counter is stopped when ETM power up bit is set
+> (i.e., when TRCPDCR.PU = 1).
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
-> Changes since V1:
-> 	- add "unevaluatedProperties: false".
-> ---
->  .../devicetree/bindings/spi/fsl-imx-cspi.txt       | 56 ------------
->  .../devicetree/bindings/spi/fsl-imx-cspi.yaml      | 99 ++++++++++++++++++++++
->  2 files changed, 99 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> deleted file mode 100644
-> index 33bc58f..0000000
-> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -* Freescale (Enhanced) Configurable Serial Peripheral Interface
-> -  (CSPI/eCSPI) for i.MX
-> -
-> -Required properties:
-> -- compatible :
-> -  - "fsl,imx1-cspi" for SPI compatible with the one integrated on i.MX1
-> -  - "fsl,imx21-cspi" for SPI compatible with the one integrated on i.MX21
-> -  - "fsl,imx27-cspi" for SPI compatible with the one integrated on i.MX27
-> -  - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
-> -  - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-> -  - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-> -  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
-> -  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
-> -  - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
-> -  - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
-> -  - "fsl,imx8mp-ecspi" for SPI compatible with the one integrated on i.MX8MP
-> -- reg : Offset and length of the register set for the device
-> -- interrupts : Should contain CSPI/eCSPI interrupt
-> -- clocks : Clock specifiers for both ipg and per clocks.
-> -- clock-names : Clock names should include both "ipg" and "per"
-> -See the clock consumer binding,
-> -	Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -
-> -Recommended properties:
-> -- cs-gpios : GPIOs to use as chip selects, see spi-bus.txt.  While the native chip
-> -select lines can be used, they appear to always generate a pulse between each
-> -word of a transfer.  Most use cases will require GPIO based chip selects to
-> -generate a valid transaction.
-> -
-> -Optional properties:
-> -- num-cs :  Number of total chip selects, see spi-bus.txt.
-> -- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-> -Documentation/devicetree/bindings/dma/dma.txt.
-> -- dma-names: DMA request names, if present, should include "tx" and "rx".
-> -- fsl,spi-rdy-drctl: Integer, representing the value of DRCTL, the register
-> -controlling the SPI_READY handling. Note that to enable the DRCTL consideration,
-> -the SPI_READY mode-flag needs to be set too.
-> -Valid values are: 0 (disabled), 1 (edge-triggered burst) and 2 (level-triggered burst).
-> -
-> -Obsolete properties:
-> -- fsl,spi-num-chipselects : Contains the number of the chipselect
-> -
-> -Example:
-> -
-> -ecspi@70010000 {
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -	compatible = "fsl,imx51-ecspi";
-> -	reg = <0x70010000 0x4000>;
-> -	interrupts = <36>;
-> -	cs-gpios = <&gpio3 24 0>, /* GPIO3_24 */
-> -		   <&gpio3 25 0>; /* GPIO3_25 */
-> -	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
-> -	dma-names = "rx", "tx";
-> -	fsl,spi-rdy-drctl = <1>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
-> new file mode 100644
-> index 0000000..606af7d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/fsl-imx-cspi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale (Enhanced) Configurable Serial Peripheral Interface (CSPI/eCSPI) for i.MX
-> +
-> +maintainers:
-> +  - Shawn Guo <shawn.guo@linaro.org>
-> +
-> +allOf:
-> +  - $ref: "/schemas/spi/spi-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: fsl,imx1-cspi
-> +      - const: fsl,imx21-cspi
-> +      - const: fsl,imx27-cspi
-> +      - const: fsl,imx31-cspi
-> +      - const: fsl,imx35-cspi
-> +      - const: fsl,imx51-ecspi
-> +      - const: fsl,imx53-ecspi
-> +      - items:
-> +        - enum:
-> +          - fsl,imx50-ecspi
-> +          - fsl,imx6q-ecspi
-> +          - fsl,imx6sx-ecspi
-> +          - fsl,imx6sl-ecspi
-> +          - fsl,imx6sll-ecspi
-> +          - fsl,imx6ul-ecspi
-> +          - fsl,imx7d-ecspi
-> +          - fsl,imx8mq-ecspi
-> +          - fsl,imx8mm-ecspi
-> +          - fsl,imx8mn-ecspi
-> +          - fsl,imx8mp-ecspi
-> +        - const: fsl,imx51-ecspi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: SoC SPI ipg clock
-> +      - description: SoC SPI per clock
-> +    maxItems: 2
+> Depends on ETM driver change here:
+>  - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=159e248e75b1b548276b6571d7740a35cab1f5be 
+> 
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 7c2b79dda3d7..f684a0b87848 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1810,6 +1810,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1829,6 +1830,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1848,6 +1850,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1867,6 +1870,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1886,6 +1890,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1905,6 +1910,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1924,6 +1930,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1943,6 +1950,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
 
-Can drop 'maxItems', it is redundant here.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ipg
-> +      - const: per
-> +    maxItems: 2
-
-And here.
-
-> +
-> +  dmas:
-> +    items:
-> +      - description: DMA controller phandle and request line for RX
-> +      - description: DMA controller phandle and request line for TX
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: tx
-> +
-> +  fsl,spi-rdy-drctl:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Integer, representing the value of DRCTL, the register controlling
-> +      the SPI_READY handling. Note that to enable the DRCTL consideration,
-> +      the SPI_READY mode-flag needs to be set too.
-> +      Valid values are: 0 (disabled), 1 (edge-triggered burst) and 2 (level-triggered burst).
-> +    enum: [0, 1, 2]
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx5-clock.h>
-> +
-> +    spi@70010000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "fsl,imx51-ecspi";
-> +        reg = <0x70010000 0x4000>;
-> +        interrupts = <36>;
-> +        clocks = <&clks IMX5_CLK_ECSPI1_IPG_GATE>,
-> +                 <&clks IMX5_CLK_ECSPI1_PER_GATE>;
-> +        clock-names = "ipg", "per";
-> +    };
+>  
+>  			out-ports {
+>  				port {
 > -- 
-> 2.7.4
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
 > 
