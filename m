@@ -2,154 +2,243 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00284C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E3FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C563B20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719382068E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GcSraQTy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RthVmVY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgFOH1K (ORCPT
+        id S1728597AbgFOH1d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:27:10 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:6834 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728380AbgFOH1J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 03:27:09 -0400
-X-UUID: 2666c78addd64c669bb9616387d2124c-20200615
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=m/v3E4p1m/OZyPE8uUXIhT+TD6yH0vQGAescG6WMe18=;
-        b=GcSraQTy7mQuCj1GiotVFbBU92YScetN/KT9Jr41BGjeUuPyIwgv6Dc2kKq4E0mU98Of1nvuEvIxaLGK8acWBvTP5Nw52FQXHf8SxreUy9fifUHdF/QN6OvCB4SJ7gbfFAGt6GlQ+rnKPzr6BF0il9WiTec/rY8Lym0e70OP7DA=;
-X-UUID: 2666c78addd64c669bb9616387d2124c-20200615
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1671516636; Mon, 15 Jun 2020 15:26:57 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 15 Jun
- 2020 15:26:50 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 15 Jun 2020 15:26:49 +0800
-Message-ID: <1592205866.8804.686.camel@mhfsdcap03>
-Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        "Shengnan Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=A3=E7=94=B7=29?=" 
-        <shengnan.wang@mediatek.com>, <dongchun.zhu@mediatek.com>
-Date:   Mon, 15 Jun 2020 15:24:26 +0800
-In-Reply-To: <CAAFQd5CboZ9aFhUyKPES_2oO_AKAOh3Pg8D+9YpfmzJ8v-yFHw@mail.gmail.com>
-References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
-         <20200509080627.23222-3-dongchun.zhu@mediatek.com>
-         <20200521193204.GA14214@chromium.org>
-         <1590209415.8804.431.camel@mhfsdcap03>
-         <20200610183600.GI201868@chromium.org>
-         <1591954266.8804.646.camel@mhfsdcap03>
-         <CAAFQd5CboZ9aFhUyKPES_2oO_AKAOh3Pg8D+9YpfmzJ8v-yFHw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 15 Jun 2020 03:27:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:53638 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728380AbgFOH1c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:27:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592206051; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=fEk7YP/LrCEAqKTSFo02hM8U5W6/ymF6qtRNJISca3Y=; b=RthVmVY9/qBF04kKB2W7R0Kfk94QAhY1qwlWndycgl6Xb85IJXIegFZZdNJgVQnLmVCtyDnO
+ egk2M5mOZuud6ES4uMYsZoVcg+PSIyJKbdTKPh/6K3dD+jQAod/qvqwksL6qxGxmCHJ/xaGw
+ lXLWD0rC27Ly3PFRTnbo0IKl5h0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5ee722dda3d8a44743c2b317 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 07:27:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 762AFC43391; Mon, 15 Jun 2020 07:27:24 +0000 (UTC)
+Received: from [192.168.0.12] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBBFAC433C8;
+        Mon, 15 Jun 2020 07:27:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBBFAC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V7 RESEND 6/7] spi: spi-qcom-qspi: Add interconnect
+ support
+To:     broonie@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        msavaliy@codeaurora.org
+References: <1591682194-32388-1-git-send-email-akashast@codeaurora.org>
+ <1591682194-32388-7-git-send-email-akashast@codeaurora.org>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <2e299942-2a51-f023-ea6a-fa7822912d9e@codeaurora.org>
+Date:   Mon, 15 Jun 2020 12:57:12 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: F48042F2A1F78F21A0AF70589031EBB7AAF552C4E8B9EC0D9A43D09539458DD92000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1591682194-32388-7-git-send-email-akashast@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgVG9tYXN6LA0KDQpPbiBGcmksIDIwMjAtMDYtMTIgYXQgMjA6NDkgKzAyMDAsIFRvbWFzeiBG
-aWdhIHdyb3RlOg0KPiBPbiBGcmksIEp1biAxMiwgMjAyMCBhdCAxMTozMyBBTSBEb25nY2h1biBa
-aHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGkgVG9tYXN6
-LA0KPiA+DQo+ID4gT24gV2VkLCAyMDIwLTA2LTEwIGF0IDE4OjM2ICswMDAwLCBUb21hc3ogRmln
-YSB3cm90ZToNCj4gPiA+IE9uIFNhdCwgTWF5IDIzLCAyMDIwIGF0IDEyOjUwOjE1UE0gKzA4MDAs
-IERvbmdjaHVuIFpodSB3cm90ZToNCj4gPiA+ID4gSGkgVG9tYXN6LA0KPiA+ID4gPg0KPiA+ID4g
-PiBUaGFua3MgZm9yIHRoZSByZXZpZXcuIE15IHJlcGxpZXMgYXJlIGFzIGJlbG93Lg0KPiA+ID4g
-Pg0KPiA+ID4gPiBPbiBUaHUsIDIwMjAtMDUtMjEgYXQgMTk6MzIgKzAwMDAsIFRvbWFzeiBGaWdh
-IHdyb3RlOg0KPiA+ID4gPiA+IEhpIERvbmdjaHVuLA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gT24g
-U2F0LCBNYXkgMDksIDIwMjAgYXQgMDQ6MDY6MjdQTSArMDgwMCwgRG9uZ2NodW4gWmh1IHdyb3Rl
-Og0KPiA+ID4gW3NuaXBdDQo+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gKyAgICAgICBzdHJ1
-Y3QgaTJjX2NsaWVudCAqY2xpZW50ID0gdG9faTJjX2NsaWVudChkZXYpOw0KPiA+ID4gPiA+ID4g
-KyAgICAgICBzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNkID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVu
-dCk7DQo+ID4gPiA+ID4gPiArICAgICAgIHN0cnVjdCBvdjAyYTEwICpvdjAyYTEwID0gdG9fb3Yw
-MmExMChzZCk7DQo+ID4gPiA+ID4gPiArICAgICAgIGludCByZXQ7DQo+ID4gPiA+ID4gPiArDQo+
-ID4gPiA+ID4gPiArICAgICAgIGdwaW9kX3NldF92YWx1ZV9jYW5zbGVlcChvdjAyYTEwLT5uX3Jz
-dF9ncGlvLCAwKTsNCj4gPiA+ID4gPiA+ICsgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVw
-KG92MDJhMTAtPnBkX2dwaW8sIDApOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAg
-ICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUob3YwMmExMC0+ZWNsayk7DQo+ID4gPiA+ID4gPiAr
-ICAgICAgIGlmIChyZXQgPCAwKSB7DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgZGV2X2Vy
-cihkZXYsICJmYWlsZWQgdG8gZW5hYmxlIGVjbGtcbiIpOw0KPiA+ID4gPiA+ID4gKyAgICAgICAg
-ICAgICAgIHJldHVybiByZXQ7DQo+ID4gPiA+ID4gPiArICAgICAgIH0NCj4gPiA+ID4gPiA+ICsN
-Cj4gPiA+ID4gPiA+ICsgICAgICAgcmV0ID0gcmVndWxhdG9yX2J1bGtfZW5hYmxlKE9WMDJBMTBf
-TlVNX1NVUFBMSUVTLCBvdjAyYTEwLT5zdXBwbGllcyk7DQo+ID4gPiA+ID4gPiArICAgICAgIGlm
-IChyZXQgPCAwKSB7DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJm
-YWlsZWQgdG8gZW5hYmxlIHJlZ3VsYXRvcnNcbiIpOw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICAgIGdvdG8gZGlzYWJsZV9jbGs7DQo+ID4gPiA+ID4gPiArICAgICAgIH0NCj4gPiA+ID4gPiA+
-ICsgICAgICAgdXNsZWVwX3JhbmdlKDUwMDAsIDYwMDApOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4g
-PiA+ID4gKyAgICAgICBncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAob3YwMmExMC0+cGRfZ3Bpbywg
-MSk7DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGlzIGlzIGEgInBvd2VyZG93biIgR1BJTy4gSXQg
-bXVzdCBiZSBzZXQgdG8gMCBpZiB0aGUgc2Vuc29yIGlzIHRvIGJlDQo+ID4gPiA+ID4gcG93ZXJl
-ZCBvbi4NCj4gPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgdmFsdWUgc2V0IGJ5IGdwaW9k
-X3NldF92YWx1ZV9jYW5zbGVlcCgpIEFQSSBhY3R1YWxseSBkZXBlbmRzIHVwb24NCj4gPiA+ID4g
-R1BJTyBwb2xhcml0eSBkZWZpbmVkIGluIERULg0KPiA+ID4gPiBTaW5jZSBJIHNldCBHUElPX0FD
-VElWRV9MT1cgdG8gcG93ZXJkb3duLA0KPiA+ID4gPiBncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAo
-Z3Bpb19kZXNjLCB2YWx1ZSkgd291bGQgc2V0ICF2YWx1ZSB0bw0KPiA+ID4gPiBncGlvX2Rlc2Mu
-DQo+ID4gPiA+IFRodXMgaGVyZSBwb3dlcmRvd24gd291bGQgYmUgbG93LXN0YXRlIHdoZW4gc2Vu
-c29yIGlzIHBvd2VyZWQgb24uDQo+ID4gPiA+IEZvciBHUElPIHBvbGFyaXR5LCBJIGFsc28gcG9z
-dCBhIGNvbW1lbnQgdG8gdGhlIGJpbmRpbmcgcGF0Y2guDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4g
-VGhhdCdzIHRydWUuIEhvd2V2ZXIsIHRoaXMgbWFrZXMgdGhlIGRyaXZlciByZWFsbHkgY29uZnVz
-aW5nLiBJZiBzb21lb25lDQo+ID4gPiByZWFkcyB0aGlzIGNvZGUgYW5kIGNvbXBhcmVzIHdpdGgg
-dGhlIGRhdGFzaGVldCwgaXQgbG9va3MgaW5jb3JyZWN0LA0KPiA+ID4gYmVjYXVzZSBpbiB0aGUg
-ZGF0YXNoZWV0IHRoZSBwb3dlcmRvd24gR1BJTyBuZWVkcyB0byBiZSBjb25maWd1cmVkIGxvdw0K
-PiA+ID4gZm9yIHRoZSBzZW5zb3IgdG8gb3BlcmF0ZS4NCj4gPiA+DQo+ID4gPiBJJ2QgcmVjb21t
-ZW5kIGRlZmluaW5nIHRoZSBiaW5kaW5nIGluIGEgd2F5IHRoYXQgbWFrZXMgaXQgY2xlYXIgaW4g
-dGhlIGRyaXZlciBjb2RlDQo+ID4gPiB0aGF0IGl0IGltcGxlbWVudGVzIHRoZSBwb3dlciBzZXF1
-ZW5jaW5nIGFzIHBlciB0aGUgZGF0YXNoZWV0Lg0KPiA+ID4NCj4gPg0KPiA+IFVoLWh1aC4uLg0K
-PiA+IEJ1dCBpdCBhbGwgZGVwZW5kcyBvbiBob3cgd2UgbG9vayBhdCB0aGUgcG93ZXJkb3duIEdQ
-SU8uDQo+ID4gT3Igd2hlcmUgc2hvdWxkIHdlIGRlZmluZSB0aGUgYWN0aXZlIGxvdyBvciBhY3Rp
-dmUgaGlnaCwgdGhlIGRyaXZlciBvcg0KPiA+IERUPw0KPiA+DQo+ID4gTXkgaW5pdGlhbCBpZGVh
-IGlzIHVzaW5nIERUIEdQSU8gcG9sYXJpdHkgdG8gZGVzY3JpYmUgc2Vuc29yIGFjdGl2ZQ0KPiA+
-IHBvbGFyaXR5IGFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0Lg0KPiA+IEFzIGFuIGFjdGl2ZSBs
-b3cgc2h1dGRvd24gc2lnbmFsIGlzIGVxdWl2YWxlbnQgdG8gYW4gYWN0aXZlIGhpZ2ggZW5hYmxl
-DQo+ID4gc2lnbmFsLg0KPiA+DQo+IA0KPiBPa2F5LCBJIGRpc2N1c3NlZCB0aGlzIG9mZmxpbmUg
-d2l0aCBMYXVyZW50IGFuZCBTYWthcmkgYW5kIHdlIGFsc28NCj4gZm91bmQgdGhlIGd1aWRlbGlu
-ZXMgb2YgdGhlIExpbnV4IEdQSU8gc3Vic3lzdGVtIG9uIHRoaXMgWzFdLg0KPiANCj4gVGhlIGNv
-bmNsdXNpb24gaXMgdGhhdCB0aGUgcGluIG5hbWVzIGluIHRoZSBkcml2ZXIgb3IgRFQgbXVzdCBu
-b3QNCj4gY29udGFpbiBhbnkgbmVnYXRpb24gcHJlZml4ZXMgYW5kIHRoZSBkcml2ZXIgbmVlZHMg
-dG8gY2FyZSBvbmx5IGFib3V0DQo+IHRoZSBsb2dpY2FsIGZ1bmN0aW9uIG9mIHRoZSBwaW4sIHN1
-Y2ggYXMgInBvd2VyZG93biIgb3IgInJlc2V0Ii4gSW4NCj4gY2FzZSBvZiB0aGlzIGRyaXZlciwg
-d2Ugc2hvdWxkIGNhbGwgdGhlIHBpbnMgInJzdCIgYW5kICJwZCIgYW5kDQo+IHNldHRpbmcgdGhl
-bSB0byAxIHdvdWxkIHRyaWdnZXIgdGhlIHJlc2V0IGFuZCBwb3dlciBkb3duIHJlc3BlY3RpdmVs
-eS4NCj4gVGhlIHBoeXNpY2FsIHNpZ25hbCBwb2xhcml0eSBtdXN0IGJlIGNvbmZpZ3VyZWQgaW4g
-RFQgdXNpbmcgdGhlDQo+IHBvbGFyaXR5IGZsYWdzLg0KPiANCj4gWzFdIGh0dHBzOi8vd3d3Lmtl
-cm5lbC5vcmcvZG9jL2h0bWwvbGF0ZXN0L2RyaXZlci1hcGkvZ3Bpby9jb25zdW1lci5odG1sI3Ro
-ZS1hY3RpdmUtbG93LWFuZC1vcGVuLWRyYWluLXNlbWFudGljcw0KPiANCg0KVGhhbmsgeW91IGZv
-ciB0aGUgc2hhcmluZy4NCklmIGRyaXZlciBvbmx5IGZvY3VzIG9uIHRoZSBsb2dpY2FsIGZ1bmN0
-aW9uIG9mIEdQSU8gcGlucywNCiduX3JzdF9ncGlvJyBtYXkgbmVlZCB0byBiZSByZW5hbWVkIGJh
-Y2sgdG8gdGhlIDFzdCB2ZXJzaW9uICdyc3RfZ3BpbycuDQoNCj4gQmVzdCByZWdhcmRzLA0KPiBU
-b21hc3oNCg0K
+Hi Mark,
+
+Would you be able to review/ack this QSPI patch, you have already acked 
+"QUP SPI" patch from the series "[Patch V7 RESEND 4/7]"
+
+Putting a gentle reminder in-case this patch is missed.
+
+Regards,
+
+Akash
+
+On 6/9/2020 11:26 AM, Akash Asthana wrote:
+> Get the interconnect paths for QSPI device and vote according to the
+> current bus speed of the driver.
+>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in V2:
+>   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>     path handle
+>   - As per Matthias comment, added error handling for icc_set_bw call
+>
+> Changes in V3:
+>   - No Change.
+>
+> Changes in V4:
+>   - As per Mark's comment move peak_bw guess as twice of avg_bw if
+>     nothing mentioned explicitly to ICC core.
+>
+> Changes in V5:
+>   - Add icc_enable/disable to power on/off call.
+>   - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
+>     from probe so that when resume/icc_enable is called NOC are running at
+>     some non-zero value.
+>
+> Changes in V6:
+>   - As per Matthias's comment made print statement consistent across driver
+>
+> Changes in V7:
+>   - As per Matthias's comment removed usage of peak_bw variable because we don't
+>     have explicit peak requirement, we were voting peak = avg and this can be
+>     tracked using single variable for avg bw.
+>   - As per Matthias's comment improved print log.
+>
+> Changes in Resend V7:
+>   - As per Matthias comment removed "unsigned int avg_bw_cpu" from
+>     struct qcom_qspi as we are using that variable only once.
+>
+>   drivers/spi/spi-qcom-qspi.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 55 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+> index 3c4f83b..b5b4cf6 100644
+> --- a/drivers/spi/spi-qcom-qspi.c
+> +++ b/drivers/spi/spi-qcom-qspi.c
+> @@ -2,6 +2,7 @@
+>   // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
+>   
+>   #include <linux/clk.h>
+> +#include <linux/interconnect.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/io.h>
+>   #include <linux/module.h>
+> @@ -139,7 +140,8 @@ struct qcom_qspi {
+>   	struct device *dev;
+>   	struct clk_bulk_data *clks;
+>   	struct qspi_xfer xfer;
+> -	/* Lock to protect xfer and IRQ accessed registers */
+> +	struct icc_path *icc_path_cpu_to_qspi;
+> +	/* Lock to protect data accessed by IRQs */
+>   	spinlock_t lock;
+>   };
+>   
+> @@ -229,6 +231,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
+>   	int ret;
+>   	unsigned long speed_hz;
+>   	unsigned long flags;
+> +	unsigned int avg_bw_cpu;
+>   
+>   	speed_hz = slv->max_speed_hz;
+>   	if (xfer->speed_hz)
+> @@ -241,6 +244,18 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
+>   		return ret;
+>   	}
+>   
+> +	/*
+> +	 * Set BW quota for CPU as driver supports FIFO mode only.
+> +	 * We don't have explicit peak requirement so keep it equal to avg_bw.
+> +	 */
+> +	avg_bw_cpu = Bps_to_icc(speed_hz);
+> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, avg_bw_cpu, avg_bw_cpu);
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu: %d\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+> +
+>   	spin_lock_irqsave(&ctrl->lock, flags);
+>   
+>   	/* We are half duplex, so either rx or tx will be set */
+> @@ -458,6 +473,29 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>   	if (ret)
+>   		goto exit_probe_master_put;
+>   
+> +	ctrl->icc_path_cpu_to_qspi = devm_of_icc_get(dev, "qspi-config");
+> +	if (IS_ERR(ctrl->icc_path_cpu_to_qspi)) {
+> +		ret = PTR_ERR(ctrl->icc_path_cpu_to_qspi);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get cpu path: %d\n", ret);
+> +		goto exit_probe_master_put;
+> +	}
+> +	/* Set BW vote for register access */
+> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, Bps_to_icc(1000),
+> +				Bps_to_icc(1000));
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu: %d\n",
+> +				__func__, ret);
+> +		goto exit_probe_master_put;
+> +	}
+> +
+> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
+> +	if (ret) {
+> +		dev_err(ctrl->dev, "%s: ICC disable failed for cpu: %d\n",
+> +				__func__, ret);
+> +		goto exit_probe_master_put;
+> +	}
+> +
+>   	ret = platform_get_irq(pdev, 0);
+>   	if (ret < 0)
+>   		goto exit_probe_master_put;
+> @@ -511,9 +549,17 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
+>   {
+>   	struct spi_master *master = dev_get_drvdata(dev);
+>   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+> +	int ret;
+>   
+>   	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
+>   
+> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
+> +	if (ret) {
+> +		dev_err_ratelimited(ctrl->dev, "%s: ICC disable failed for cpu: %d\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+> +
+>   	return 0;
+>   }
+>   
+> @@ -521,6 +567,14 @@ static int __maybe_unused qcom_qspi_runtime_resume(struct device *dev)
+>   {
+>   	struct spi_master *master = dev_get_drvdata(dev);
+>   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
+> +	int ret;
+> +
+> +	ret = icc_enable(ctrl->icc_path_cpu_to_qspi);
+> +	if (ret) {
+> +		dev_err_ratelimited(ctrl->dev, "%s: ICC enable failed for cpu: %d\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+>   
+>   	return clk_bulk_prepare_enable(QSPI_NUM_CLKS, ctrl->clks);
+>   }
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
