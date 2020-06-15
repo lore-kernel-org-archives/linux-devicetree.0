@@ -6,143 +6,276 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B61C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29896C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 010022076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08DE22076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbgFONHj (ORCPT
+        id S1730135AbgFONWQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:07:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36364 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgFONHj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 09:07:39 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 97so13044641otg.3;
-        Mon, 15 Jun 2020 06:07:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iSsJfEBKvALFrXFgdoS1N0VdhxgvLc52xB34AcC9mQM=;
-        b=n0dp4YGiBiM5v1eNi89Ig8kS6cY6Bh9VHW8uaqE86+QC0x2kXVr6fl+QBKmBSpH1Uv
-         a30lPyMQ+Q+L7+I1qNSgzkBaG2P2rxFjBktqsAH4jtdKpA1PCjHtolkZfPNF6OjcKFiu
-         wHulBNvkgVQ2OkSNYdLhu/RkeErXi1qZKPOCH+Gfc+HZ/jJAR5IQs72hWT4EhfYxmrHR
-         4iXckPqxUCRYldLEL9my/M3LJUywzj4kXItOXumfPIzBGcrIF3R/aRF18GvnpdCONWv0
-         +5Yd7huFmaff6iGSantFt6lYCy9aQTBcEs8AZ7g0m/yIMZqOuhXj0CM/EDY6ojq7a5T/
-         rGwg==
-X-Gm-Message-State: AOAM5331j87L3wiayTseatjZ1SXLdOEfi7NsnsZDChRNLMPrZQmWOxG0
-        shf+Qim8I9WCm9wiWIR87CKC1CV2Sl3wjQriiZ9cd8DY
-X-Google-Smtp-Source: ABdhPJzxDMDVkQ073lLLuSP4HvmEzzAQAtG0qgHPyL51Q8qUxY0RIBK+jKac5tmfH0R617J/b68GXDyv4uiWOEyUM3Y=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr21458229otp.250.1592226457793;
- Mon, 15 Jun 2020 06:07:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
- <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com> <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com>
-In-Reply-To: <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 15 Jun 2020 15:07:26 +0200
-Message-ID: <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
-Subject: Re: [cadence-spi] daisy chain
-To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
+        Mon, 15 Jun 2020 09:22:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24235 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730024AbgFONWP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:22:15 -0400
+IronPort-SDR: oL7MMLqnTJi+LrNFK+73CcAzWyWnuuWj4VDUeerUmiWxhtU2IEkyCO/vrFF7zRHWS/lNF2KM12
+ fagsG7eDTc7A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 06:22:11 -0700
+IronPort-SDR: Isa4E4uTJMkkSo2ZlLmIqfPIaJ+R6Kk7H+n9197KtuYSbjF2bfITOzXlZWlWIRSQPFlg0/SPe9
+ SiEzxJcxxCOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
+   d="scan'208";a="382545177"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 15 Jun 2020 06:22:07 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 15 Jun 2020 16:22:07 +0300
+Date:   Mon, 15 Jun 2020 16:22:07 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <20200615132207.GG3213128@kuha.fi.intel.com>
+References: <20200512134154.GC2085641@kuha.fi.intel.com>
+ <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com>
+ <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+ <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+ <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+ <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
-
-CC devicetree
-
-On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
-<adrian.fiergolski@fastree3d.com> wrote:
-> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
-> > On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
-> > <adrian.fiergolski@fastree3d.com> wrote:
-> > I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
-> > connected to a single chip select of the cadence-spi master. I have the
-> > impression such a configuration is supported by none of those two
-> > drivers. I could try to extend both, however, I haven't found any other
-> > SPI driver, where I could find implementation inspiration. Is it
-> > supported by kernel?
+On Fri, Jun 12, 2020 at 10:34:06AM -0700, Prashant Malani wrote:
+> Hi Rob,
+> 
+> Thanks as always for your help in reviewing this proposal!
+> 
+> Kindly see inline
+> 
+> (Trimming text);
+> On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
+> > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
+> > >
+> > > I think the updated example handles this grouping (port@1 going to a
+> > > "SS mux") although as you said it should probably be a group of muxes,
+> > > but I think the example illustrates the point. Is that assessment
+> > > correct?
 > >
-> > drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
-> > drivers/gpio/gpio-74x164.c supports multiple shift registers through the
-> > "registers-number" DT property.
+> > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+> 
+> Ack.
+> 
+> Let's go with "-switch" ? That's what the connector class uses and it
+> conveys the meaning (unless that is a reserved keyword in DT).
+
+Just as a clarification here, we should not be even talking about
+signal routing here. We are talking about functions that an external
+components perform from the connector's perspective. It depends on the
+platform does that function require changing the routing of the lines
+from the connector. For example, data role swapping does not require
+muxing on platforms that have single dual-role USB controller, but
+platforms that have separate IPs for the USB host and USB device
+controllers will need a mux.
+
+Note, that it is even possible that switching from USB to DisplayPort
+mode does not require any pin reconfiguration from the mux, even if
+the platform has one, because the PHY can be shared between USB3 and
+DP. Then the PHY just needs to be told that it is now in DP mode when
+DP alt mode is entered instead of the mux.
+
+> > > Would this block the addition of the "*-switch" properties? IIUC the
+> > > two are related but not dependent on each other.
+> > >
+> > > The *-switch properties are phandles which the Type C connector class
+> > > framework expects (and uses to get handles to those switches).
+> > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
 > >
-> > So both drivers handle this in their SPI slave drivers.
+> > You don't need them though. Walk the graph. You get the connector
+> > port@1 remote endpoint and then get its parent.
 > >
-> > Of course this does not handle the mixed case, i.e. daisy-chaining
-> > different types of devices.
-> >
-> > The documentation mentions only about the common 'daisy-chained-devices'
-> > property (devicetree/bindings/common-properties.txt). However, in order
-> > to try to implement it in the master driver, IMHO, the spi subsystem
-> > would need to have a call 'no-operation' to other nodes on the
-> > daisy-chain, which are not addressed by the given SPI access. Is there
-> > any recommended approach to address this case?
-> >
-> > Supporting this in a generic way would indeed be nice, as it would mean
-> > individual SPI slave drivers no longer have to care about it.
-> > However, that may be difficult, as the master needs to known which
-> > dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
->
-> In fact, the ultimate solution would be to have it solved at the level
-> of the spi subsystem:
->
->   * /spi_device struct/ would contain extra callback which returns msg
->     to be sent for no operation.
->   * spi_device struct would contain a pointer to the list describing the
->     given daisy chain (list of spi_devices on the chain)
->   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
->     indicating length of a command of the addressed device if it's on
->     the daisy chain
->     For example, in case of the ltc2634 device, the regular message
->     consists of 24 bits, but when device is a part of a daisy chain, the
->     messages are 32 bits. This 32 would be stored in
->     /daisy_chain_msg_length./
->   * When /spi_write/ was called (include/linux/spi/spi.h), the
->     /spi_message_init_with_transfer/ would create a msg of length equal
->     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
->     Afterwards, in /spi_message_init_with_transfers/, the actual message
->     would be filled with the command of the addressed device on the
->     chain and no_operation content for all other devices on the chain
->     not being addressed
+> 
+> I see; would it be something along the lines of this? (DT example
+> follows; search for "example_end" to jump to bottom):
 
-Sounds good to me.
+I just realized that you have in practice placed the mux-agent into
+the graph below, right? That we can not do, because it is not
+physically connected to the connector.
 
->   * I think in such a case, the /daisy-chained-devices /property would
->     be not used, as chains would be build basing on the assigned
->     chipselect (reg property).
+> <example_start>
+> 
+> connector@0 {
+>     compatible = "usb-c-connector";
+>     reg = <0>;
+>     power-role = "dual";
+>     data-role = "dual";
+>     try-power-role = "source";
+>     ....
+>     ports {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+> 
+>         port@0 {
+>             reg = <0>;
+>             usb_con_hs: endpoint {
+>                 remote-endpoint = <&foo_usb_hs_controller>;
+>             };
+>         };
+> 
+>         port@1 {
+>             reg = <1>;
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+> 
+>             usb_con0_ss_mode: endpoint@0 {
+>                 reg = <0>
+>                 remote-endpoint = <&mode_switch_ss_in>;
+>             };
+> 
+>             usb_con0_ss_orientation: endpoint@1 {
+>                         reg = <1>
+>                         remote-endpoint = <&orientation_switch_ss_in>;
+>             };
+> 
+>             usb_con0_ss_data_role: endpoint@2 {
+>                         reg = <2>
+>                         remote-endpoint = <&data_role_switch_in>;
+>             };
+>         };
+> 
+>         port@2 {
+>             reg = <2>;
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>             usb_con0_sbu_mode: endpoint@0 {
+>                         reg = <0>
+>                         remote-endpoint = <&mode_switch_sbu_in>;
+>             };
+>             usb_con0_sbu_orientation: endpoint@1 {
+>                         reg = <1>
+>                         remote-endpoint = <&orientation_switch_sbu_in>;
+>             };
+>         };
+>     };
+> };
+> 
+> mode_switch {
+>     compatible = "typec-mode-switch";
+>     mux-controls = <&mode_mux_controller>;
+>     mux-control-names = "mode";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+> 
+>     port@0 {
+>         reg = <0>;
+>         mode_switch_ss_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_mode>
+>         };
+>     };
+> 
+>     port@1 {
+>         reg = <1>;
+>         mode_switch_out_usb3: endpoint {
+>             remote-endpoint = <&usb3_0_ep>
+>         };
+>     };
+> 
+>     port@2 {
+>         reg = <2>;
+>         mode_switch_out_dp: endpoint {
+>             remote-endpoint = <&dp0_out_ep>
+>         };
+>     };
+> 
+>     port@3 {
+>         reg = <3>;
+>         mode_switch_sbu_in: endpoint {
+>             remote-endpoint = <&usb_con0_sbu_mode>
+>         };
+>     };
+>     // ... other ports similarly defined.
+> };
+> 
+> orientation_switch {
+>     compatible = "typec-orientation-switch";
+>     mux-controls = <&orientation_mux_controller>;
+>     mux-control-names = "orientation";
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+> 
+>     port@0 {
+>         reg = <0>;
+>         orientation_switch_ss_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_orientation>
+>         };
+>     };
+> 
+>     port@1
+>         reg = <1>;
+>         orientation_switch_sbu_in: endpoint {
+>             remote-endpoint = <&usb_con0_sbu_orientation>
+>         };
+>     };
+>     // ... other ports similarly defined.
+> };
+> 
+> data_role_switch {
+>     compatible = "typec-data-role-switch";
+>     mux-controls = <&data_role_switch_controller>;
+>     mux-control-names = "data_role";
+> 
+>     port {
+>         data_role_switch_in: endpoint {
+>             remote-endpoint = <&usb_con0_ss_data_role>
+>         };
+>     };
+> };
+> 
+> <example_end>
+> 
+> Would this be conformant to OF graph and usb-connector bindings
+> requirements? We'll certainly send out a format PATCH/RFC series for
+> this, but I was hoping to gauge whether we're thinking along the right lines.
+> 
+> So, in effect this would mean:
+> - New bindings(and compatible strings) to be added for:
+>   typec-{orientation,data-role,mode}-switch.
+> - Handling in Type C connector class to parse switches from OF graph.
+> - Handling in Type C connector class for distinct switches for port@1
+>   (SS lines) and port@2 (SBU lines).
+> 
+> The only thing I'm confused about is how we can define these switch
+> remote-endpoint bindings in usb-connector.yaml; the port can have an
+> remote-endpoint, but can we specify what the parent of the remote-endpoint
+> should have as a compatible string? Or do we not need to?
 
-So you still have to describe the chain in DT in some way.
-As there can be only a single sub node with the same unit address
-(= chip select), you probably need a container with that address, which
-would contain all devices in the chain, in order (unit addresses 0, 1, ...).
-
-> If you agree with the above description, I could try to implement it. Of
-> course any suggestion are welcome, however, I would like to have a
-> working solution until end of this week, so I would appreciate an active
-> feedback. As my SoC works with kernel v4.19, I would implement it for
-> it, test it, and move it afterwards to the master version (I hope, there
-> were no big changes in the SPI subsystem, right?).
-
-Having something that works by the end of the week sounds doable to.
-Getting it in shape for upstreaming is a different thing...
-
-Gr{oetje,eeting}s,
-
-                        Geert
+thanks,
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+heikki
