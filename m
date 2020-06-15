@@ -2,193 +2,126 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D30C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 05:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB0BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 05:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70DF520714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 05:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6A820663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 05:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="VnHovaYB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T6bPl0dm"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KyqdcA5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726006AbgFOFaB (ORCPT
+        id S1728284AbgFOF5N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 01:30:01 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:40351 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbgFOFaA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 01:30:00 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 11C7858015D;
-        Mon, 15 Jun 2020 01:29:59 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 15 Jun 2020 01:29:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=T
-        aA4E30QnHyeJ9whAqz+gQm0yiiY1N3IeCntOygSgK0=; b=VnHovaYBvVNQ5PB69
-        2joW6HWwNYxw+wLXn1HV058OUH4LUVjdRtUcukZZkSgJ5bp0VgMXUaZLpNfQ+VwE
-        Wd0GVbRcy6B+PqW998RP/0zpjkb/FyI5oBBzt9gpnPkhS/hROGqv4YLpOMzcIcxq
-        TJQL1Xv8t6WIo2ob5T6LjcaDwPlEVyU5ot92ibnwhuvOXKv6Vdc5JfcjvUmyCfW5
-        BU4YA9BpbtqGg8NjsYglD+Roerx5mi/qbpNwtqEeX6M5FoXjGjEIBZSgd26Ob+4i
-        n7E1j4daZ4TRFTe9ztm4Wuxv2vzXhUqciaS0pAZzjoqAB1gt/CwKxzbauG4VKLSR
-        6NIJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=TaA4E30QnHyeJ9whAqz+gQm0yiiY1N3IeCntOygSg
-        K0=; b=T6bPl0dmmV+dSft3EEM3ybxMd1c/zRbCddAhVegeIYK6h2twX3hVO/12y
-        L9wfTjIZxSZmg4UxUA6/hjMjZWGQFhWGkP+wmA362R0DmTXGNzCueZyvVDlbKB6m
-        d1TZsa4OqjKUk3zTlcm/o0cFBN2cnQxWdNHu08VW9hg5bePFlGt3zdf0RhAqjxap
-        S9O6IYZNT2zyEL7FrmTdhWV0RuMRQNh6BOlz1Cn0OwJKqdhfWU0z+eYnGEDh0lqA
-        U3hC5ID2RB/VCpU+7Xnqfp3A3F7F0jPyTw54w7Pw+VYNoAMIN6c+NNqdqBnc2qb6
-        EX1FA+M1rSVZ9RjiFxCHbMenonGJw==
-X-ME-Sender: <xms:UAfnXgchR5EfKaztTnPmBJEqIwAJhjyy4s1u_RDLA6EBXk8q5KXEuA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeijedgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepuefhfffgveejjeevhfdukeejhedtiefhgeejfeeuuddtkedugeei
-    hfduteelffetnecuffhomhgrihhnpehlihhnuhigqdhsuhhngihirdhorhhgnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:UAfnXiN2X4_CmZVwRgc2hQ9c57zCzsCTMNu2VwPLWGK9a7NE8qEWCg>
-    <xmx:UAfnXhgXbQlQlWFfOYc2YwnRrfMGPI-ddUY8YxtMJLcqGQliEwJnKQ>
-    <xmx:UAfnXl_RNWWM8Nx-uvbY74bwSX1fkCMRrx0RI9d8g5fT-EvqgPOnbg>
-    <xmx:VwfnXuIHbrppvTvIufguNgabIuddsz8xtj8GMgOmr9F4WXgMBD0j6A>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A99B330618B7;
-        Mon, 15 Jun 2020 01:29:51 -0400 (EDT)
-Subject: Re: [PATCH v2 1/9] irqchip/sun6i-r: Use a stacked irqchip driver
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200525041302.51213-1-samuel@sholland.org>
- <20200525041302.51213-2-samuel@sholland.org>
- <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <fcfe6d02-2500-37de-e795-664bf2c7b5ee@sholland.org>
-Date:   Mon, 15 Jun 2020 00:29:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 15 Jun 2020 01:57:13 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:50516 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728162AbgFOF5N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 01:57:13 -0400
+X-UUID: 9abc56e96e1048909a776cb841c925ee-20200615
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fnDevRc5gzT9pEFX+fLR5VMrjoY4YqsLtT0zU0Ke8Vo=;
+        b=KyqdcA5Do0y9bMA6H3+uabWe1c4s3kmjolNH0KbG6DwdnK8N7s39aHknayMvdo+RZVd9ttExpZ2KQToGpXdHPfPQq4yBz1gKJa4CesKvNPAmh0h0YC4Jr0mDbt9SOvF6dsLL8ycdkveCpBrH2uANri0QxOTZ09xDiST7QOrdjXc=;
+X-UUID: 9abc56e96e1048909a776cb841c925ee-20200615
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1471708032; Mon, 15 Jun 2020 13:56:57 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 15 Jun
+ 2020 13:56:55 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 15 Jun 2020 13:56:54 +0800
+Message-ID: <1592200471.8804.681.camel@mhfsdcap03>
+Subject: Re: [V9, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg 
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        "Shengnan Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=A3=E7=94=B7=29?=" 
+        <shengnan.wang@mediatek.com>, <dongchun.zhu@mediatek.com>
+Date:   Mon, 15 Jun 2020 13:54:31 +0800
+In-Reply-To: <CAAFQd5Bcb4A+HAivA-jrczK+OMxwZk3w0GYoh-DU=6gmTZBWnQ@mail.gmail.com>
+References: <20200523084103.31276-1-dongchun.zhu@mediatek.com>
+         <20200523084103.31276-3-dongchun.zhu@mediatek.com>
+         <20200610194455.GK201868@chromium.org>
+         <1591958798.8804.660.camel@mhfsdcap03>
+         <CAAFQd5Bcb4A+HAivA-jrczK+OMxwZk3w0GYoh-DU=6gmTZBWnQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 05083A7EAA71BA34896525D44F4E88087FD14958F89E60E60F8969B81D033BF72000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/8/20 3:48 AM, Maxime Ripard wrote:
-> On Sun, May 24, 2020 at 11:12:54PM -0500, Samuel Holland wrote:
->> The R_INTC in the A31 and newer sun8i/sun50i SoCs is more similar to the
->> original sun4i interrupt controller than the sun7i/sun9i NMI controller.
->> It is used for two distinct purposes:
->>  1) To control the trigger, latch, and mask for the NMI input pin
->>  2) To provide the interrupt input for the ARISC coprocessor
->>
->> As this interrupt controller is not documented, information about it
->> comes from vendor-provided ARISC firmware and from experimentation.
->>
->> Like the original sun4i interrupt controller, it has:
->>  - A VECTOR_REG at 0x00 (configurable via the BASE_ADDR_REG at 0x04)
->>  - A NMI_CTRL_REG, PENDING_REG, and ENABLE_REG as used by both the
->>    sun4i and sunxi-nmi drivers
->>  - A MASK_REG at 0x50
->>  - A RESP_REG at 0x60
->>
->> Differences from the sun4i interrupt controller appear to be:
->>  - It is only known to have one register of each kind (max 32 inputs)
->>  - There is no FIQ-related logic
->>  - There is no interrupt priority logic
->>
->> In order to fulfill its two purposes, this hardware block combines two
->> types of IRQs. First, the NMI pin is routed to the "IRQ 0" input on this
->> chip, with a trigger type controlled by the NMI_CTRL_REG. The "IRQ 0
->> pending" output from this chip, if enabled, is then routed to a SPI IRQ
->> input on the GIC, as IRQ_TYPE_LEVEL_HIGH. In other words, bit 0 of
->> ENABLE_REG *does* affect the NMI IRQ seen at the GIC.
->>
->> The NMI is then followed by a contiguous block of (at least) 15 IRQ
->> inputs that are connected in parallel to both R_INTC and the GIC. Or
->> in other words, the other bits of ENABLE_REG *do not* affect the IRQs
->> seen at the GIC.
->>
->> Finally, the global "IRQ pending" output from R_INTC, after being masked
->> by MASK_REG and RESP_REG, is connected to the "external interrupt" input
->> of the ARISC CPU (an OR1200). This path is not relevant to Linux.
->>
->> Because of the 1:1 correspondence between R_INTC and GIC inputs, this is
->> a perfect scenario for using a stacked irqchip driver. We want to hook
->> into enabling/disabling IRQs to add more features to the GIC
->> (specifically to allow masking the NMI and setting its trigger type),
->> but we don't need to actually handle the IRQ in this driver.
->>
->> And since R_INTC is in the always-on power domain, and its output is
->> connected directly in to the power management coprocessor, a stacked
->> irqchip driver provides a simple way to add wakeup support to this set
->> of IRQs. That is a future patch; for now, just the NMI is moved over.
->>
->> This driver keeps the same DT binding as the existing driver. The
->> "interrupt" property of the R_INTC node is used to determine 1) the
->> offset between GIC and R_INTC hwirq numbers and 2) the type of trigger
->> between the R_INTC "IRQ 0 pending" output and the GIC NMI input.
->>
->> This commit mostly reverts commit 173bda53b340 ("irqchip/sunxi-nmi:
->> Support sun6i-a31-r-intc compatible").
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> 
-> As usual, thanks for that commit log (and the experiments you did to
-> write it in the first place).
-> 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> 
-> Maxime
+SGkgVG9tYXN6LA0KDQpPbiBGcmksIDIwMjAtMDYtMTIgYXQgMjA6MzkgKzAyMDAsIFRvbWFzeiBG
+aWdhIHdyb3RlOg0KPiBPbiBGcmksIEp1biAxMiwgMjAyMCBhdCAxMjo0OSBQTSBEb25nY2h1biBa
+aHUgPGRvbmdjaHVuLnpodUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGkgVG9tYXN6
+LA0KPiA+DQo+ID4gT24gV2VkLCAyMDIwLTA2LTEwIGF0IDE5OjQ0ICswMDAwLCBUb21hc3ogRmln
+YSB3cm90ZToNCj4gPiA+IEhpIERvbmdjaHVuLA0KPiA+ID4NCj4gPiA+IE9uIFNhdCwgTWF5IDIz
+LCAyMDIwIGF0IDA0OjQxOjAzUE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4gPiA+ID4g
+QWRkIGEgVjRMMiBzdWItZGV2aWNlIGRyaXZlciBmb3IgT1YwMkExMCBpbWFnZSBzZW5zb3IuDQo+
+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IERvbmdjaHVuIFpodSA8ZG9uZ2NodW4uemh1
+QG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBNQUlOVEFJTkVSUyAgICAgICAg
+ICAgICAgICAgfCAgICAxICsNCj4gPiA+ID4gIGRyaXZlcnMvbWVkaWEvaTJjL0tjb25maWcgICB8
+ICAgMTMgKw0KPiA+ID4gPiAgZHJpdmVycy9tZWRpYS9pMmMvTWFrZWZpbGUgIHwgICAgMSArDQo+
+ID4gPiA+ICBkcml2ZXJzL21lZGlhL2kyYy9vdjAyYTEwLmMgfCAxMDI1ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gIDQgZmlsZXMgY2hhbmdlZCwg
+MTA0MCBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9t
+ZWRpYS9pMmMvb3YwMmExMC5jDQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gVGhhbmsgeW91IGZvciB0
+aGUgcGF0Y2guIFBsZWFzZSBzZWUgbXkgY29tbWVudHMgaW5saW5lLg0KPiA+ID4NCj4gPiA+IFtz
+bmlwXQ0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9pMmMvb3YwMmExMC5jIGIv
+ZHJpdmVycy9tZWRpYS9pMmMvb3YwMmExMC5jDQo+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+DQo+ID4gPiA+IGluZGV4IDAwMDAwMDAuLjE2MGEwYjUNCj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0K
+PiA+ID4gPiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9vdjAyYTEwLmMNCj4gPiA+IFtzbmlwXQ0K
+PiA+ID4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBvdjAyYTEwX3Rlc3RfcGF0dGVybl9t
+ZW51W10gPSB7DQo+ID4gPiA+ICsgICAiRGlzYWJsZWQiLA0KPiA+ID4gPiArICAgIkNvbG9yIEJh
+ciIsDQo+ID4gPg0KPiA+ID4gbml0OiBXZSBzaG91bGQgbm9ybWFsaXplIHRoaXMgdG8gb25lIG9m
+IHRoZSBzdGFuZGFyZCBuYW1lcy4gV2hhdCBpcyB0aGUNCj4gPiA+IHBhdHRlcm4gb24gdGhpcyBz
+ZW5zb3I/IElzIGl0IHBlcmhhcHMgIkVpZ2h0IFZlcnRpY2FsIENvbG91ciBCYXJzIj8NCj4gPiA+
+DQo+ID4NCj4gPiBZZXMuIEl0IGlzIG9uZSBraW5kIG9mICdFaWdodCBWZXJ0aWNhbCBDb2xvdXIg
+QmFycycuDQo+ID4gVGhpcyBwYXR0ZXJuIGlzIGNhbGxlZCBhcyAnTUlQSSBjb2xvciBiYXInIHBl
+ciB0aGUgZGF0YXNoZWV0Lg0KPiA+IENhbiB3ZSBoZXJlIHVzZSAnVmVydGljYWwgQ29sb3IgQmFy
+JyBvciAnTUlQSSBDb2xvciBCYXInPw0KPiA+DQo+IA0KPiBXZSBzaG91bGQgdHJ5IHRvIHN0aWNr
+IHRvIHRoZSBuYW1lcyBhcyBleHBvc2VkIGJ5IGV4aXN0aW5nIGRyaXZlcnMuDQo+IFRoZXJlIHdh
+cyBhbiBhdHRlbXB0IHRvIHVuaWZ5IHRoZSBuYW1pbmcgb2Ygc29tZSBTb255IHNlbnNvcnMgc29t
+ZQ0KPiB0aW1lIGFnbyBbMV0uIFBlcmhhcHMgb25lIG9mIHRoZSBuYW1lcyB0aGVyZSBtYXRjaGVz
+IHRoZSBwYXR0ZXJuIG9mDQo+IHRoaXMgc2Vuc29yPw0KPiANCj4gWzFdIGh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3MTE3NzcvDQo+IA0KDQpTb3VuZHMgZ3JlYXQuDQpJdCBp
+cyBvbmUgZ29vZCBpZGVhIHRvIHN1bW1hcml6ZSB0ZXN0IHBhdHRlcm5zIGZyb20gdmFyaW91cyBz
+ZW5zb3JzLg0KQnV0IG9uZSBxdWVzdGlvbiBwbGFndWluZyBtZSBpcyB0aGF0IGl0IHNlZW1zIGV2
+ZW4gZm9yIHRoZSBzYW1lICJFaWdodA0KVmVydGljYWwgQ29sb3VyIEJhcnMiLCBkaWZmZXJlbnQg
+c2Vuc29ycyBtYXkgaGF2ZSBkaWZmZXJlbnQgUkdCIGNvbG9yDQptYXAuDQoNCk1vcmVvdmVyLCBk
+ZWZpbml0aW9uIHN0YW5kYXJkcyBvZiBjb2xvciBiYXIgc3R5bGUgbWF5IGRpZmZlciBhbW9uZw0K
+ZGlmZmVyZW50IHNlbnNvciBjaGlwIHZlbmRvcnMuDQpGb3IgaW5zdGFuY2UsIFNvbnkgb2Z0ZW4g
+dXNlcyAiU29saWQgQ29sb3IiLCAiQ29sb3IgQmFycyBXaXRoIEZhZGUgdG8NCkdyZXkiLCAiUE45
+IiB0byBhYnN0cmFjdCB0ZXN0IHBhdHRlcm4gb3V0cHV0IHR5cGU7IHdoaWxlIE9tbmlWaXNpb24N
+CmFkb3B0cyBjb2xvciBiYXIgdHlwZSAxLCAyLCAzLCA0IG9yICJNSVBJIENvbG9yIEJhciIsICJJ
+U1AgQ29sb3IgQmFyIg0KaW5zdGVhZC4NCg0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KDQo=
 
-I've done more experimenting, and I've learned what comes after the first 16
-IRQs: all of the other SPI IRQs, multiplexed in clusters of 8, with per-IRQ
-masks for the inputs to each cluster.
-
-In fact, the H6 has so many IRQs that it begins to use the the second register
-in each group (0x14, 0x44, 0x54). This means that more than one register in each
-group are in fact implemented.
-
-See https://linux-sunxi.org/INTC#IRQ_Mapping for more details.
-
-The ability to send other IRQs to the AR100 makes it possible to implement
-functionality like USB Remote Wakeup or Wake on LAN without adding complexity to
-the AR100 firmware.
-
-I will need to update the driver to take advantage of this ability, and it
-raises some questions about the binding. Since the NMI is not the
-lowest-numbered IRQ that can be mapped, the numbering scheme would need to
-change. Maybe the IRQ number should be the same as the GIC SPI IRQ number? But
-this would mean a new compatible.
-
-The other question is which devices should be routed through this irqchip
-driver? Anything that provides a wakeup source needs to go through it, so it can
-intercept irq_set_wake. Probably other devices should not, as 1) not quite all
-IRQs can even be sent to the AR100 for wakeup (e.g. the A64 appears to stop in
-the middle of the GPU IRQs), and 2) stacking on another irqchip driver adds a
-(tiny) overhead to masking/unmasking during IRQ handling.
-
-Thoughts?
-Samuel
