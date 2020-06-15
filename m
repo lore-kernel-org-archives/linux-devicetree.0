@@ -2,217 +2,255 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D82C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6175C206B7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC8120679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbgFOOkU (ORCPT
+        id S1730598AbgFOOpR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:40:20 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39678 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730503AbgFOOkU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 10:40:20 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d67so16063041oig.6;
-        Mon, 15 Jun 2020 07:40:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rcay9uCDol5ek0H9aB+GTc9B9A7OXkd9/2qPj3gqRRc=;
-        b=gOst+sDC9x5wChjx6dEyJKAppRdGJ6peWeurEMoruakLvh8vSs3xNWQBjU2xCKX5Y4
-         uNQGjAS/tV5KmAb1HNt09euo+CcOh4JkjXLJgYuBamGdbdBDap6QF4MgD75Yg30V3xaC
-         I2wK6EO3qKdnK6wyBgY7Ki047UWd1cgYEZI3T9n3jocwDMOGDx+LcP7uMQFLyypz4khE
-         VoyAVF0mFdxEl2o40F6GVozVgCv4IWr1gsfhx2bA0NKhSMF8r6eOXx6+7d88+aVeFwP6
-         cFMPLibW+9EHEGOam4ZB0ZhQIJ1KmEbXiaV3E7iUxG7uO4caKwmbjhsWO0/VfiQp7g0a
-         hdvg==
-X-Gm-Message-State: AOAM533gulnKPMoUWR3qBkwO+Jb0XPkCx1Go+AFM3REOUsGCb2IINnYO
-        A4AlwSZgKlVxpx1+WTO7w1rfEiaThiGul/uNIa8RTKuN
-X-Google-Smtp-Source: ABdhPJyzs7Sy/TbPQB7whx7T2Er1XPJbQcTk0I3JgaXXBL2M3Csf25y1FXxBr1wX5s3q14Go2ZJNCKeUBmIo4v+7Y+o=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr9122803oia.54.1592232017510;
- Mon, 15 Jun 2020 07:40:17 -0700 (PDT)
+        Mon, 15 Jun 2020 10:45:17 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:57632 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728304AbgFOOpP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:45:15 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jkqMC-0004iN-07; Mon, 15 Jun 2020 16:45:04 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a helper
+Date:   Mon, 15 Jun 2020 16:44:59 +0200
+Message-Id: <20200615144501.1140870-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
- <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
- <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com> <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
- <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com> <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
-In-Reply-To: <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 15 Jun 2020 16:40:04 +0200
-Message-ID: <CAMuHMdWPo6xDMipBg2noSOD3trYJjifDbSf-krtgPkA-XdbXZg@mail.gmail.com>
-Subject: Re: [cadence-spi] daisy chain
-To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-On Mon, Jun 15, 2020 at 4:06 PM Adrian Fiergolski
-<adrian.fiergolski@fastree3d.com> wrote:
-> Sorry for the typo in the example device tree:
->
-> On 15.06.2020 15:57, Adrian Fiergolski wrote:
-> > On 15.06.2020 15:07, Geert Uytterhoeven wrote:
-> >> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
-> >> <adrian.fiergolski@fastree3d.com> wrote:
-> >>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
-> >>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
-> >>>> <adrian.fiergolski@fastree3d.com> wrote:
-> >>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
-> >>>> connected to a single chip select of the cadence-spi master. I have the
-> >>>> impression such a configuration is supported by none of those two
-> >>>> drivers. I could try to extend both, however, I haven't found any other
-> >>>> SPI driver, where I could find implementation inspiration. Is it
-> >>>> supported by kernel?
-> >>>>
-> >>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
-> >>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
-> >>>> "registers-number" DT property.
-> >>>>
-> >>>> So both drivers handle this in their SPI slave drivers.
-> >>>>
-> >>>> Of course this does not handle the mixed case, i.e. daisy-chaining
-> >>>> different types of devices.
-> >>>>
-> >>>> The documentation mentions only about the common 'daisy-chained-devices'
-> >>>> property (devicetree/bindings/common-properties.txt). However, in order
-> >>>> to try to implement it in the master driver, IMHO, the spi subsystem
-> >>>> would need to have a call 'no-operation' to other nodes on the
-> >>>> daisy-chain, which are not addressed by the given SPI access. Is there
-> >>>> any recommended approach to address this case?
-> >>>>
-> >>>> Supporting this in a generic way would indeed be nice, as it would mean
-> >>>> individual SPI slave drivers no longer have to care about it.
-> >>>> However, that may be difficult, as the master needs to known which
-> >>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
-> >>> In fact, the ultimate solution would be to have it solved at the level
-> >>> of the spi subsystem:
-> >>>
-> >>>   * /spi_device struct/ would contain extra callback which returns msg
-> >>>     to be sent for no operation.
-> >>>   * spi_device struct would contain a pointer to the list describing the
-> >>>     given daisy chain (list of spi_devices on the chain)
-> >>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
-> >>>     indicating length of a command of the addressed device if it's on
-> >>>     the daisy chain
-> >>>     For example, in case of the ltc2634 device, the regular message
-> >>>     consists of 24 bits, but when device is a part of a daisy chain, the
-> >>>     messages are 32 bits. This 32 would be stored in
-> >>>     /daisy_chain_msg_length./
-> >>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
-> >>>     /spi_message_init_with_transfer/ would create a msg of length equal
-> >>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
-> >>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
-> >>>     would be filled with the command of the addressed device on the
-> >>>     chain and no_operation content for all other devices on the chain
-> >>>     not being addressed
-> >> Sounds good to me.
-> >>
-> >>>   * I think in such a case, the /daisy-chained-devices /property would
-> >>>     be not used, as chains would be build basing on the assigned
-> >>>     chipselect (reg property).
-> >> So you still have to describe the chain in DT in some way.
-> >> As there can be only a single sub node with the same unit address
-> >> (= chip select), you probably need a container with that address, which
-> >> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
-> > Good point. So maybe at the level of the device tree, it could be
-> > described like that (based on the spi-cadence example):
-> >
-> >         spi0: spi@ff040000 {
-> >             compatible = "cdns,spi-r1p6";
-> >             status = "disabled";
-> >             interrupt-parent = <&gic>;
-> >             interrupts = <0 19 4>;
-> >             reg = <0x0 0xff040000 0x0 0x1000>;
-> >             clock-names = "ref_clk", "pclk";
-> >             #address-cells = <1>;
-> >             #size-cells = <0>;
-> >             power-domains = <&zynqmp_firmware PD_SPI_0>;
-> >             daisy-chain0 : daisy_chain@0 {
-> >                #address-cells = <1>;
-> >                #size-cells = <0>;
-> >                reg = <0>;
-> >                daisy-chained-devices = 2;
-> >
-> >                dac0: ltc2632@0 {
-> >                    compatible = "lltc,ltc2634-l12";
-> >                    reg = <0>;
-> >                    spi-max-frequency = <1000000>;
-> >                };
-> >                dac1: ltc2632@1 {
-> >                    compatible = "lltc,ltc2634-l12";
-> >                    reg = <1>;
-> >                    spi-max-frequency = <2000000>;
-> >                };
-> >            };
-> >         };
->
->         spi0: spi@ff040000 {
->             compatible = "cdns,spi-r1p6";
->             status = "disabled";
->             interrupt-parent = <&gic>;
->             interrupts = <0 19 4>;
->             reg = <0x0 0xff040000 0x0 0x1000>;
->             clock-names = "ref_clk", "pclk";
->             #address-cells = <1>;
->             #size-cells = <0>;
->             power-domains = <&zynqmp_firmware PD_SPI_0>;
->             daisy-chain0 : daisy_chain@0 {
->                #address-cells = <1>;
->                #size-cells = <0>;
->                #daisy-chained-devices = <2>;
+The different probe functions share a lot of code, so move the
+common parts into a helper to reduce duplication.
 
-You probably want a proper "compatible" value here instead.
-I don't think "#daisy-chained-devices" is needed, it can be derived
-from the number of subnodes.
+This moves the devm_phy_package_join below the general allocation
+but as all components just allocate things, this should be ok.
 
->
->                reg = <0>;
->
->                dac0: ltc2632@0 {
->                    compatible = "lltc,ltc2634-l12";
->                    reg = <0>;
->                    spi-max-frequency = <1000000>;
->                };
->                dac1: ltc2632@1 {
->                    compatible = "lltc,ltc2634-l12";
->                    reg = <1>;
->                    spi-max-frequency = <2000000>;
->                };
->            };
->         };
->
-> >
-> > Once a node has daisy-chanied-devices property defined,
-> > of_register_spi_device (spi.c) will interpret it as a daisy chain. I
-> > will assume, that for the given chain the lowest frequency of the whole
-> > chain should be used. When it comes to the mode, as in case of
-> > incompatibility no much can be done anyway, the mode of the addressed
-> > spi device will be used.
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+changes in v3:
+- adapt to 5.8 merge-window results
+changes in v2:
+- new patch as suggested by Andrew
 
-Don't the modes have to agree, too?
-Else the dummy command may be interpreted differently than intended.
+ drivers/net/phy/mscc/mscc_main.c | 123 +++++++++++++++----------------
+ 1 file changed, 60 insertions(+), 63 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+index 5ddc44f87eaf..68308d3e9589 100644
+--- a/drivers/net/phy/mscc/mscc_main.c
++++ b/drivers/net/phy/mscc/mscc_main.c
+@@ -1935,12 +1935,11 @@ static int vsc85xx_read_status(struct phy_device *phydev)
+ 	return genphy_read_status(phydev);
+ }
+ 
+-static int vsc8514_probe(struct phy_device *phydev)
++static int vsc85xx_probe_helper(struct phy_device *phydev,
++				u32 *leds, int num_leds, u16 led_modes,
++				const struct vsc85xx_hw_stat *stats, int nstats)
+ {
+ 	struct vsc8531_private *vsc8531;
+-	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+-	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+-	   VSC8531_DUPLEX_COLLISION};
+ 
+ 	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+ 	if (!vsc8531)
+@@ -1948,54 +1947,65 @@ static int vsc8514_probe(struct phy_device *phydev)
+ 
+ 	phydev->priv = vsc8531;
+ 
+-	vsc8584_get_base_addr(phydev);
+-	devm_phy_package_join(&phydev->mdio.dev, phydev,
+-			      vsc8531->base_addr, 0);
+-
+-	vsc8531->nleds = 4;
+-	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc85xx_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
++	vsc8531->nleds = num_leds;
++	vsc8531->supp_led_modes = led_modes;
++	vsc8531->hw_stats = stats;
++	vsc8531->nstats = nstats;
+ 	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+ 				      sizeof(u64), GFP_KERNEL);
+ 	if (!vsc8531->stats)
+ 		return -ENOMEM;
+ 
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return vsc85xx_dt_led_modes_get(phydev, leds);
+ }
+ 
+-static int vsc8574_probe(struct phy_device *phydev)
++static int vsc8514_probe(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531;
++	int rc;
+ 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+ 	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+ 	   VSC8531_DUPLEX_COLLISION};
+ 
+-	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+-	if (!vsc8531)
+-		return -ENOMEM;
+-
+-	phydev->priv = vsc8531;
++	rc = vsc85xx_probe_helper(phydev, default_mode,
++				  ARRAY_SIZE(default_mode),
++				  VSC85XX_SUPP_LED_MODES,
++				  vsc85xx_hw_stats,
++				  ARRAY_SIZE(vsc85xx_hw_stats));
++	if (rc < 0)
++		return rc;
+ 
++	vsc8531 = phydev->priv;
+ 	vsc8584_get_base_addr(phydev);
+-	devm_phy_package_join(&phydev->mdio.dev, phydev,
+-			      vsc8531->base_addr, 0);
++	return devm_phy_package_join(&phydev->mdio.dev, phydev,
++				     vsc8531->base_addr, 0);
++}
+ 
+-	vsc8531->nleds = 4;
+-	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc8584_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
+-	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+-				      sizeof(u64), GFP_KERNEL);
+-	if (!vsc8531->stats)
+-		return -ENOMEM;
++static int vsc8574_probe(struct phy_device *phydev)
++{
++	struct vsc8531_private *vsc8531;
++	int rc;
++	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
++	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
++	   VSC8531_DUPLEX_COLLISION};
++
++	rc = vsc85xx_probe_helper(phydev, default_mode,
++				  ARRAY_SIZE(default_mode),
++				  VSC8584_SUPP_LED_MODES,
++				  vsc8584_hw_stats,
++				  ARRAY_SIZE(vsc8584_hw_stats));
++	if (rc < 0)
++		return rc;
+ 
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	vsc8584_get_base_addr(phydev);
++	return devm_phy_package_join(&phydev->mdio.dev, phydev,
++				     vsc8531->base_addr, 0);
+ }
+ 
+ static int vsc8584_probe(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531;
++	int rc;
+ 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+ 	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+ 	   VSC8531_DUPLEX_COLLISION};
+@@ -2005,32 +2015,24 @@ static int vsc8584_probe(struct phy_device *phydev)
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+-	if (!vsc8531)
+-		return -ENOMEM;
+-
+-	phydev->priv = vsc8531;
++	rc = vsc85xx_probe_helper(phydev, default_mode,
++				  ARRAY_SIZE(default_mode),
++				  VSC8584_SUPP_LED_MODES,
++				  vsc8584_hw_stats,
++				  ARRAY_SIZE(vsc8584_hw_stats));
++	if (rc < 0)
++		return rc;
+ 
++	vsc8531 = phydev->priv;
+ 	vsc8584_get_base_addr(phydev);
+-	devm_phy_package_join(&phydev->mdio.dev, phydev,
+-			      vsc8531->base_addr, 0);
+-
+-	vsc8531->nleds = 4;
+-	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc8584_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
+-	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+-				      sizeof(u64), GFP_KERNEL);
+-	if (!vsc8531->stats)
+-		return -ENOMEM;
+-
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return devm_phy_package_join(&phydev->mdio.dev, phydev,
++				     vsc8531->base_addr, 0);
+ }
+ 
+ static int vsc85xx_probe(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531;
+-	int rate_magic;
++	int rate_magic, rc;
+ 	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
+ 	   VSC8531_LINK_100_ACTIVITY};
+ 
+@@ -2038,23 +2040,18 @@ static int vsc85xx_probe(struct phy_device *phydev)
+ 	if (rate_magic < 0)
+ 		return rate_magic;
+ 
+-	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+-	if (!vsc8531)
+-		return -ENOMEM;
+-
+-	phydev->priv = vsc8531;
++	rc = vsc85xx_probe_helper(phydev, default_mode,
++				  ARRAY_SIZE(default_mode),
++				  VSC85XX_SUPP_LED_MODES,
++				  vsc85xx_hw_stats,
++				  ARRAY_SIZE(vsc85xx_hw_stats));
++	if (rc < 0)
++		return rc;
+ 
++	vsc8531 = phydev->priv;
+ 	vsc8531->rate_magic = rate_magic;
+-	vsc8531->nleds = 2;
+-	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
+-	vsc8531->hw_stats = vsc85xx_hw_stats;
+-	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
+-	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
+-				      sizeof(u64), GFP_KERNEL);
+-	if (!vsc8531->stats)
+-		return -ENOMEM;
+ 
+-	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++	return 0;
+ }
+ 
+ /* Microsemi VSC85xx PHYs */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
