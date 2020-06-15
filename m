@@ -2,99 +2,116 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E426C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B4AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6968520663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v1P4IOim"
+	by mail.kernel.org (Postfix) with ESMTP id BC681207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 20:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592254122;
+	bh=wo+re6s2YDnW0mUOtFNK3Gv5qenkYP/Ioxp0Ii0ipxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q2wsLeiMjYiztK3BHamK7KuyeRcz0Ze5t9UrzUhb+2UxavY4Ethb09I9HVTSfuRxa
+	 nKUihwzlZ0Obab/hTUocd4jxjdx2yroHP8EInQtVyGpN3j3tSa2Xfu3WGvgR697+Jw
+	 SJOslpKo/tL72vygHJBXxVHnwZ3bOLy17N/ZI9iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgFOUb7 (ORCPT
+        id S1731558AbgFOUsm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:31:59 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53732 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgFOUbX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 16:31:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05FKVIrP098992;
-        Mon, 15 Jun 2020 15:31:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592253078;
-        bh=O7jkcz4ZeSjHhyhXjefbDQx00ANrTeDJE4DwrKvT2cQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=v1P4IOimcJS9ym8uO9nJDeATWPXCLwcEB5NkKzWWrjIJHv8KfPM7TvsgKhQQGasKO
-         aZjDtjf7S9zuRjIqrfDcsTKqTY2d5X6OQHUZ96dm4s7UCFXydzs1krFE1Sfqwq6r03
-         2m5X30U/4NfmeqZa49YRk4soAzXIsHyJK74VHaBc=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKVIt5068327;
-        Mon, 15 Jun 2020 15:31:18 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
- Jun 2020 15:31:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 15 Jun 2020 15:31:18 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKVIfr021151;
-        Mon, 15 Jun 2020 15:31:18 -0500
-Subject: Re: [RESEND PATCH v27 00/15] Multicolor Framework v27
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-1-dmurphy@ti.com>
- <20200615202731.GA18028@duo.ucw.cz>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <55a4f116-30fd-b1b1-3ba3-188e1833c4e4@ti.com>
-Date:   Mon, 15 Jun 2020 15:31:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 16:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729692AbgFOUsm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 16:48:42 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC1F62074D;
+        Mon, 15 Jun 2020 20:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592254121;
+        bh=wo+re6s2YDnW0mUOtFNK3Gv5qenkYP/Ioxp0Ii0ipxk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L9bF2WuOC/XYQjJ1bZnbdmypv0LffpNr8hVmWkop5+13+AmcUErcAInWJ68Yn0qqg
+         xtfvmizZti3ycCopliDMI17OZbSkRMUkSGMBnkVExAHB7yEsFK9F5pxuZkDjfgVgt6
+         5GYlONQY7SQWv8T1RjbBgJ+yyfD0DetFOD9sboPY=
+Date:   Mon, 15 Jun 2020 21:48:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200615204838.GD4447@sirena.org.uk>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+ <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+ <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+ <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
+ <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
+ <20200608114148.4bau4mdcvwgf25ut@wunner.de>
+ <3d4fd3f9-9bde-90a8-bef5-9fc97cc9b363@arm.com>
+ <2e4a6c4b-857f-1000-e7fd-327b0800fb97@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615202731.GA18028@duo.ucw.cz>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+Xnt6BZa+I2KmHWw"
+Content-Disposition: inline
+In-Reply-To: <2e4a6c4b-857f-1000-e7fd-327b0800fb97@gmail.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pavel
 
-On 6/15/20 3:27 PM, Pavel Machek wrote:
-> Hi!
->
->> This is the multi color LED framework.   This framework presents clustered
->> colored LEDs into an array and allows the user space to adjust the brightness
->> of the cluster using a single file write.  The individual colored LEDs
->> intensities are controlled via a single file that is an array of
->> LEDs
-> Please don't do this. Pinging whoever you think is blocking the merge
-> is okay, but resending big series just because people are busy over
-> the merge window is not cool.
+--+Xnt6BZa+I2KmHWw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Actually that is not the case.  I missed adding Rob H to the series so I 
-resent the patches to add Rob in.
+On Mon, Jun 15, 2020 at 12:42:50PM -0700, Florian Fainelli wrote:
 
-There was no intent to resend because I thought it was blocked.
+> Or how about this: we slightly re-structure the interrupt handler such
+> that all possible interrupt conditions are explicitly handled and
+> terminate with a return IRQ_HANDLED, and those which are not, including
+> in the case of a "spurious" (because the interrupt was triggered for
+> another SPI controller instance), then we finish the function with
+> IRQ_NONE. This would not impact the performance for the BCM2835/36/37
+> which would still have a single controller/single interrupt line to handle.
 
-I know we are in a merge window and thoroughly understand that ppl are busy.
+That seems sensible - it's generally a good way to structure interrupt
+handlers.  It's almost there already.
 
-If I thought it was blocked I would have just bumped the first patch.
+--+Xnt6BZa+I2KmHWw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Dan
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7n3qYACgkQJNaLcl1U
+h9DisAf6A5UOQQuqIInhodRjyyOGfjW8rSDr/5WD85MI8WAWlgspNB+6CifvPJk+
++/yjv693s/Qlzec/Yg+M92TBor94AU3VWYiT1re9UoFIu35WAPSCL1A4E6imwUxs
+cYJgHI0eE3L2muigphjbBlhUufPTRm2BDAFaHZhGTuJvRfCbbfPZdV555Fxa3r6w
+GVdrs5U40M3TsJ4Wy/ht3mcnF5jRc3OvpsLAIMeVadzsNzG80GNbCn8RYaKPnUPD
+OjxdMc4lA3HhZRqiYvUjUEmG4U0MXSb1DoC+8/tr/rfj6yOn+su94phT6RXF3plY
+CObjpS476p9DJlmYVYA54/uj06NWpg==
+=1R8u
+-----END PGP SIGNATURE-----
 
-> Thanks,
->
-> 								Pavel
+--+Xnt6BZa+I2KmHWw--
