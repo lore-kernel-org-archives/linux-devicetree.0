@@ -4,75 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F54C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B1AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3F420663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAFD520663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592237856;
-	bh=lL2YJfiOmDqqdjpqMZP8itENm3DNLdpBH9GrN9nbrLg=;
+	s=default; t=1592237950;
+	bh=De1ygWfVC04QCSTpGYUm/kRvjgyR4IWcEhnOKIuZGzc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=spQrtIzSdXuiHTri8HYtPMssHy41sN4R+zAJ4gwLQYbLm81nq1+YBAzEPcAGX7U7j
-	 LbrWFon0nf9Y+Lv/sRUrGLykMnXBUNrMZpW60ChW9e7plPPPAbDvprR2Pt+EjNhEyg
-	 2sTBDWs/siejzzZgAWuU9B6LtHLk/UDayvvPKn5k=
+	b=SUhjGKCfX5rU3a2t6AYCneN06gC/UownkEJDqmaLB+KHAmHMdmjR3HzAte/nMiq37
+	 PID88NgliuJCSJFgCbkK4/aAGWmjVBPyE6+aMgPJYzBItW/RbEeRawKr7Vd/HBgAvW
+	 NkUULhqq2Ct8V4PPp9ME+U4SbT1/5vj2LEHeTUJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgFOQRg (ORCPT
+        id S1730557AbgFOQTJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:17:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35912 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgFOQRg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:17:36 -0400
-Received: by mail-io1-f67.google.com with SMTP id r77so18530103ior.3;
-        Mon, 15 Jun 2020 09:17:35 -0700 (PDT)
+        Mon, 15 Jun 2020 12:19:09 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35021 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbgFOQTI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:19:08 -0400
+Received: by mail-il1-f193.google.com with SMTP id l6so15893165ilo.2;
+        Mon, 15 Jun 2020 09:19:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6gGkie1VJgyejolWVwkstnKk4jWEjffhAsOsdBf85vU=;
-        b=pzhfpJHa0ofgSO67tNRjW60XahuIAkdogxM8FoFMlsHa3G3d/n+l4dqhnSxF5hILMy
-         YDpAGpCl6zgEnFdgGfPjr9Y3O0m6FZLhVBOsEyylZWfp9Xa7Q1Lzh07D0Taq94Hdhn/l
-         T/++bSCEYkDLNUWlTIKTFUhdgDuhpIPl/hJtIPiwRmQsUPNIh9/PuHEL69wbFOuKNOiY
-         bZpuZhTPz0CmPv8HuSK6JzTXKU09LzsMKyH/7SyIiZVy5AjyhQO9tUrgCNCyp5Xl5ih3
-         QIRpO9GMA5wI5IYOIHohP3dcxwuYIsFFdn+retCJ4F7Z1xFGKSi9k+im8WzbC6ySLH3m
-         t5ZQ==
-X-Gm-Message-State: AOAM53152smY+wV/sNKCwCSMQ195+VEVhOqHxHxZlZXvHmnRZ/cw1IS4
-        IpMvCwGEvLDogxHsKw6jaaVf2ms=
-X-Google-Smtp-Source: ABdhPJw/KDrnSwnnbddf4RcRgxXREh25qGZ48O6ynKO5qh7LxGxzK4wVJUt4len6bxDotbgeYXKrsA==
-X-Received: by 2002:a5e:dd45:: with SMTP id u5mr28250638iop.118.1592237855286;
-        Mon, 15 Jun 2020 09:17:35 -0700 (PDT)
+        bh=UPfOOEL5DDndxKqYhH4//hh/kNNX+nOa7IzprjkujnA=;
+        b=cRmJu8cy9BSQ8vMTfFKkplQJ7m8wYIdBCxA8NFgquV3RERIwVs4HbnRuv2k3lAxvgW
+         M7pq3H/45CadZEKohN84B30aObT+CtS7HBnGnhBS24B9xpEwgAAzCyXfwSR6NbVeJD1I
+         TzDvacdfRhf5UDlR9PTTh9rEoV3pD+cibRpKJMcM3m7zMU9OYSharzpgmX4op3D6rljJ
+         Gg+9V2O9p2AYNJ9921zsNT9xXd2wcJa6SrXftCk0N3c6T1VAYEaStTCgurnS+Km4OG9W
+         3iBEfoM1xWr0mZQJia6iOqwvgD+N+ny1wooEEgcPZWOGjawEo2oBUT3u2qnivdfTIgCv
+         o21Q==
+X-Gm-Message-State: AOAM533nRY/J81nUfMsLyu8X0Zjl0rC56tnOASEMrNYn4/EchO/YrY5O
+        EBYyrLyV4zKspub3kxk+qA==
+X-Google-Smtp-Source: ABdhPJwBNTN8gYyShvFlByTQFx7N5htyq6qg0xw5IUoPCulOgSRZVKo6/Bey6il0ASqfKtWzFGQctA==
+X-Received: by 2002:a92:4948:: with SMTP id w69mr24962411ila.15.1592237947412;
+        Mon, 15 Jun 2020 09:19:07 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id n12sm8201702iog.25.2020.06.15.09.17.34
+        by smtp.gmail.com with ESMTPSA id p5sm8136663ilg.88.2020.06.15.09.19.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:17:34 -0700 (PDT)
-Received: (nullmailer pid 1880059 invoked by uid 1000);
-        Mon, 15 Jun 2020 16:17:33 -0000
-Date:   Mon, 15 Jun 2020 10:17:33 -0600
+        Mon, 15 Jun 2020 09:19:06 -0700 (PDT)
+Received: (nullmailer pid 1882654 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:19:04 -0000
+Date:   Mon, 15 Jun 2020 10:19:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RESEND PATCH] dt-bindings: property-units: Add picoseconds type
-Message-ID: <20200615161733.GA1879978@bogus>
-References: <20200602164219.3159-1-dmurphy@ti.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Linux-imx@nxp.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH V5] dt-bindings: thermal: Convert qoriq to json-schema
+Message-ID: <20200615161904.GA1882367@bogus>
+References: <1591234216-14927-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602164219.3159-1-dmurphy@ti.com>
+In-Reply-To: <1591234216-14927-1-git-send-email-Anson.Huang@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 02 Jun 2020 11:42:19 -0500, Dan Murphy wrote:
-> Add the '-ps' picosecond unit suffix for property names.
+On Thu, 04 Jun 2020 09:30:16 +0800, Anson Huang wrote:
+> Convert the qoriq thermal binding to DT schema format using json-schema
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/property-units.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Changes since V4:
+> 	- add "additionalProperties: false"
+> ---
+>  .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
+>  .../devicetree/bindings/thermal/qoriq-thermal.yaml | 114 +++++++++++++++++++++
+>  2 files changed, 114 insertions(+), 71 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
 > 
 
 Applied, thanks!
