@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F1BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A40C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 126B22071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F99207DA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BZKxxOEh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="yyIHAQ1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgFONdF (ORCPT
+        id S1730599AbgFONdj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:33:05 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:17288 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730490AbgFONdC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 09:33:02 -0400
+        Mon, 15 Jun 2020 09:33:39 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:62259 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730586AbgFONdd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 09:33:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592227983; x=1623763983;
+  t=1592228012; x=1623764012;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7xKYbNgRORGSIRkucj0cga7qBY8A11GtjHiebfAEts4=;
-  b=BZKxxOEh6ERkYDaYVo4u1zMpJONmStzOkBEfoXd2NJnYnD9R4tZGrYXy
-   xZ7PHbeMZUANKfPDZEQJG2CIHAq5IsXCRUx4bvL8xegQTaxAIevx0Yc9n
-   MGfP9XQKcsImTPzDrysSkuqGfb+lzokO4N1+0ebWF39ZM3ynMyUTeRXvP
-   5RgU24ryz35DhsTSqhMDXMUyZrAgOxdwYzxugwbfJ6IE+aRZ216cxd/8G
-   oj+JItjVarHsZAOGPko1vr1dEucSJtXY4cF1O4yu1almRgqxhVA1UYAD8
-   NC5E+J4h4tP4Y4CjHAJNAKtyOFhZ19GyGJq7Qq6jmvJObxkvQzYNqLh8V
+  bh=rRTIXOzrYA0AtMeoJg5RqciWe1e7/mnpkRYykpgr3sA=;
+  b=yyIHAQ1C28Ys7ujDrpEbxWMCU073o53ykWnr9UDhxts2+cvkO0e+4S50
+   KgHxeoetgOfl+nqtDMPZrKwe/9/Z54qpaPIkYsxJ4NA80ay191fk3FGAW
+   Yxx4pbx0iG0TxmcupujoFg5zGdN+hH9Cz94yXuODbG/0OeCm/tbIQuop6
+   iXJxitprD7hpYklpQbWA5zp1LpadXtXgupJFMpgkxA8VB1c26a338r968
+   BP+skCS42D4u/cAKau9jQWknhWfHBRSSUjmqcKu0Wfy7n/NvhRQaCirQG
+   imiY3NPIg8sRQ3R5dqhQvoYIzeULmFGCHA/VE2GPKehhFA+XzmaWt7xNQ
    w==;
-IronPort-SDR: +P10UNKRjPYPhcNlyDckMifLPkD02tynVgW46HfjcCQyW5aygqAvziSg0Dl2tCY18IIMh3Iq1k
- 59pbDvVExiOfL2ZcbH+SGDjp8YCji8I8s9Hj+ezrJ1Vnvz3I/sq4dIyzU7OlZunBoH5UMa692B
- hJyxbyJkfA/cIjNDb0EvdJ701n9H2FO1MFWw+N+bippQ2RPI0udRwJgIn/3B8GI4qWg6GkmKv5
- jFqN1wvNAL+TGEe6GxM3oZCxLmBJjVjYWT1eFg5E/CaA2rVdiaP+XSrSebdoANMlA089lzGMmO
- T18=
+IronPort-SDR: 5ofjhwF7QOHeq5AcCXwJ+TCUOP6Bt3/KzVZaXS2RqLWGFgxXxu3bnMWA7BEvIaFLyg3OI1Ou9h
+ i7b6ZK1wZSveaP9j6QTOp71W32s4P7z/ihAr4gd5uPBycPOOcXwapyFCW8jhag58e+l7tyBMHx
+ 4RuAUA8J/QCH3am5KHoZbPPuUX2gjDWwtq0Lr7ngschjtg7quruj8UiVWD+5D12iyh1pHTrCJ8
+ WuS1vRm0M+bEBdrPnkvECVGuUDhw+Pbud7FXADyoQOAOD7d7l5mfNTpiROppoQXC39yofNwhQ9
+ Ppg=
 X-IronPort-AV: E=Sophos;i="5.73,514,1583218800"; 
-   d="scan'208";a="79480463"
+   d="scan'208";a="83619533"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 06:33:02 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 06:33:32 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 15 Jun 2020 06:33:01 -0700
+ 15.1.1979.3; Mon, 15 Jun 2020 06:33:28 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 06:32:57 -0700
+ 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 06:33:28 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 List-Id: <soc.lore.kernel.org>
 To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Linus Walleij <linus.walleij@linaro.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         Steen Hegelund <Steen.Hegelund@microchip.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
@@ -67,9 +66,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 01/10] dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
-Date:   Mon, 15 Jun 2020 15:32:33 +0200
-Message-ID: <20200615133242.24911-2-lars.povlsen@microchip.com>
+Subject: [PATCH v3 10/10] arm64: dts: sparx5: Add i2c devices, i2c muxes
+Date:   Mon, 15 Jun 2020 15:32:42 +0200
+Message-ID: <20200615133242.24911-11-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615133242.24911-1-lars.povlsen@microchip.com>
 References: <20200615133242.24911-1-lars.povlsen@microchip.com>
@@ -81,100 +80,433 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds the main Sparx5 SoC DT documentation file, with information
-abut the supported board types.
+This patch adds i2c devices and muxes to the Sparx5 reference boards.
 
 Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- .../bindings/arm/microchip,sparx5.yaml        | 65 +++++++++++++++++++
- .../devicetree/bindings/mfd/syscon.yaml       |  1 +
- 2 files changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  38 +++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |   4 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 237 ++++++++++++++++++
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  77 ++++++
+ .../boot/dts/microchip/sparx5_pcb_common.dtsi |   4 +
+ 5 files changed, 360 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
-new file mode 100644
-index 0000000000000..ecf6fa12e6ad2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+index 161846caf9c94..cf712e80615da 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+@@ -170,6 +170,44 @@ uart2_pins: uart2-pins {
+ 				pins = "GPIO_26", "GPIO_27";
+ 				function = "uart2";
+ 			};
 +
-+title: Microchip Sparx5 Boards Device Tree Bindings
++			i2c_pins: i2c-pins {
++				pins = "GPIO_14", "GPIO_15";
++				function = "twi";
++			};
 +
-+maintainers:
-+  - Lars Povlsen <lars.povlsen@microchip.com>
++			i2c2_pins: i2c2-pins {
++				pins = "GPIO_28", "GPIO_29";
++				function = "twi2";
++			};
++		};
 +
-+description: |+
-+   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
-+   gigabit TSN-capable gigabit switches.
++		i2c0: i2c@600101000 {
++			compatible = "snps,designware-i2c";
++			status = "disabled";
++			pinctrl-0 = <&i2c_pins>;
++			pinctrl-names = "default";
++			reg = <0x6 0x00101000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-sda-hold-time-ns = <300>;
++			clock-frequency = <100000>;
++			clocks = <&ahb_clk>;
++		};
 +
-+   The SparX-5 Ethernet switch family provides a rich set of switching
-+   features such as advanced TCAM-based VLAN and QoS processing
-+   enabling delivery of differentiated services, and security through
-+   TCAM-based frame processing using versatile content aware processor
-+   (VCAP)
++		i2c1: i2c@600103000 {
++			compatible = "snps,designware-i2c";
++			status = "disabled";
++			pinctrl-0 = <&i2c2_pins>;
++			pinctrl-names = "default";
++			reg = <0x6 0x00103000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			i2c-sda-hold-time-ns = <300>;
++			clock-frequency = <100000>;
++			clocks = <&ahb_clk>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+index d7f985f7ee020..91ee5b6cfc37a 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+@@ -15,3 +15,7 @@ memory@0 {
+ 		reg = <0x00000000 0x00000000 0x10000000>;
+ 	};
+ };
 +
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - description: The Sparx5 pcb125 board is a modular board,
-+          which has both spi-nor and eMMC storage. The modular design
-+          allows for connection of different network ports.
-+        items:
-+          - const: microchip,sparx5-pcb125
-+          - const: microchip,sparx5
-+
-+      - description: The Sparx5 pcb134 is a pizzabox form factor
-+          gigabit switch with 20 SFP ports. It features spi-nor and
-+          either spi-nand or eMMC storage (mount option).
-+        items:
-+          - const: microchip,sparx5-pcb134
-+          - const: microchip,sparx5
-+
-+      - description: The Sparx5 pcb135 is a pizzabox form factor
-+          gigabit switch with 48+4 Cu ports. It features spi-nor and
-+          either spi-nand or eMMC storage (mount option).
-+        items:
-+          - const: microchip,sparx5-pcb135
-+          - const: microchip,sparx5
-+
-+  axi@600000000:
-+    type: object
-+    description: the root node in the Sparx5 platforms must contain
-+      an axi bus child node. They are always at physical address
-+      0x600000000 in all the Sparx5 variants.
-+    properties:
-+      compatible:
-+        items:
-+          - const: simple-bus
-+
-+    required:
-+      - compatible
-+
-+required:
-+  - compatible
-+  - axi@600000000
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 19bdaf781853b..f3fba860d3cc5 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-+++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -38,6 +38,7 @@ properties:
-               - allwinner,sun8i-h3-system-controller
-               - allwinner,sun8i-v3s-system-controller
-               - allwinner,sun50i-a64-system-controller
-+              - microchip,sparx5-cpu-syscon
++&i2c1 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+index 9b2aec400101b..18a535a043686 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+@@ -7,9 +7,246 @@
+ #include "sparx5_pcb_common.dtsi"
  
-           - const: syscon
+ /{
++	aliases {
++	    i2c0   = &i2c0;
++	    i2c100 = &i2c100;
++	    i2c101 = &i2c101;
++	    i2c102 = &i2c102;
++	    i2c103 = &i2c103;
++	    i2c104 = &i2c104;
++	    i2c105 = &i2c105;
++	    i2c106 = &i2c106;
++	    i2c107 = &i2c107;
++	    i2c108 = &i2c108;
++	    i2c109 = &i2c109;
++	    i2c110 = &i2c110;
++	    i2c111 = &i2c111;
++	    i2c112 = &i2c112;
++	    i2c113 = &i2c113;
++	    i2c114 = &i2c114;
++	    i2c115 = &i2c115;
++	    i2c116 = &i2c116;
++	    i2c117 = &i2c117;
++	    i2c118 = &i2c118;
++	    i2c119 = &i2c119;
++	};
++
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
+ 		priority = <200>;
+ 	};
+ };
++
++&gpio {
++	i2cmux_pins_i: i2cmux-pins-i {
++	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
++		      "GPIO_20", "GPIO_22", "GPIO_36", "GPIO_35",
++		      "GPIO_50", "GPIO_51", "GPIO_56", "GPIO_57";
++		function = "twi_scl_m";
++		output-low;
++	};
++	i2cmux_0: i2cmux-0 {
++		pins = "GPIO_16";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_1: i2cmux-1 {
++		pins = "GPIO_17";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_2: i2cmux-2 {
++		pins = "GPIO_18";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_3: i2cmux-3 {
++		pins = "GPIO_19";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_4: i2cmux-4 {
++		pins = "GPIO_20";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_5: i2cmux-5 {
++		pins = "GPIO_22";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_6: i2cmux-6 {
++		pins = "GPIO_36";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_7: i2cmux-7 {
++		pins = "GPIO_35";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_8: i2cmux-8 {
++		pins = "GPIO_50";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_9: i2cmux-9 {
++		pins = "GPIO_51";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_10: i2cmux-10 {
++		pins = "GPIO_56";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_11: i2cmux-11 {
++		pins = "GPIO_57";
++		function = "twi_scl_m";
++		output-high;
++	};
++};
++
++&axi {
++	i2c0_imux: i2c0-imux@0 {
++		compatible = "i2c-mux-pinctrl";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-parent = <&i2c0>;
++	};
++	i2c0_emux: i2c0-emux@0 {
++		compatible = "i2c-mux-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-parent = <&i2c0>;
++	};
++};
++
++&i2c0_imux {
++	pinctrl-names =
++		"i2c100", "i2c101", "i2c102", "i2c103",
++		"i2c104", "i2c105", "i2c106", "i2c107",
++		"i2c108", "i2c109", "i2c110", "i2c111", "idle";
++	pinctrl-0 = <&i2cmux_0>;
++	pinctrl-1 = <&i2cmux_1>;
++	pinctrl-2 = <&i2cmux_2>;
++	pinctrl-3 = <&i2cmux_3>;
++	pinctrl-4 = <&i2cmux_4>;
++	pinctrl-5 = <&i2cmux_5>;
++	pinctrl-6 = <&i2cmux_6>;
++	pinctrl-7 = <&i2cmux_7>;
++	pinctrl-8 = <&i2cmux_8>;
++	pinctrl-9 = <&i2cmux_9>;
++	pinctrl-10 = <&i2cmux_10>;
++	pinctrl-11 = <&i2cmux_11>;
++	pinctrl-12 = <&i2cmux_pins_i>;
++	i2c100: i2c_sfp1 {
++		reg = <0x0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c101: i2c_sfp2 {
++		reg = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c102: i2c_sfp3 {
++		reg = <0x2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c103: i2c_sfp4 {
++		reg = <0x3>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c104: i2c_sfp5 {
++		reg = <0x4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c105: i2c_sfp6 {
++		reg = <0x5>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c106: i2c_sfp7 {
++		reg = <0x6>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c107: i2c_sfp8 {
++		reg = <0x7>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c108: i2c_sfp9 {
++		reg = <0x8>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c109: i2c_sfp10 {
++		reg = <0x9>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c110: i2c_sfp11 {
++		reg = <0xa>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c111: i2c_sfp12 {
++		reg = <0xb>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
++
++&i2c0_emux {
++	mux-gpios = <&gpio 55 GPIO_ACTIVE_HIGH
++		     &gpio 60 GPIO_ACTIVE_HIGH
++		     &gpio 61 GPIO_ACTIVE_HIGH
++		     &gpio 54 GPIO_ACTIVE_HIGH>;
++	idle-state = <0x8>;
++	i2c112: i2c_sfp13 {
++		reg = <0x0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c113: i2c_sfp14 {
++		reg = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c114: i2c_sfp15 {
++		reg = <0x2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c115: i2c_sfp16 {
++		reg = <0x3>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c116: i2c_sfp17 {
++		reg = <0x4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c117: i2c_sfp18 {
++		reg = <0x5>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c118: i2c_sfp19 {
++		reg = <0x6>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c119: i2c_sfp20 {
++		reg = <0x7>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+index 9b2aec400101b..d71f11a10b3d2 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+@@ -7,9 +7,86 @@
+ #include "sparx5_pcb_common.dtsi"
  
+ /{
++	aliases {
++	    i2c0   = &i2c0;
++	    i2c152 = &i2c152;
++	    i2c153 = &i2c153;
++	    i2c154 = &i2c154;
++	    i2c155 = &i2c155;
++	};
++
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
+ 		priority = <200>;
+ 	};
+ };
++
++&gpio {
++	i2cmux_pins_i: i2cmux-pins-i {
++	       pins = "GPIO_35", "GPIO_36",
++		      "GPIO_50", "GPIO_51";
++		function = "twi_scl_m";
++		output-low;
++	};
++	i2cmux_s29: i2cmux-0 {
++		pins = "GPIO_35";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_s30: i2cmux-1 {
++		pins = "GPIO_36";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_s31: i2cmux-2 {
++		pins = "GPIO_50";
++		function = "twi_scl_m";
++		output-high;
++	};
++	i2cmux_s32: i2cmux-3 {
++		pins = "GPIO_51";
++		function = "twi_scl_m";
++		output-high;
++	};
++};
++
++&axi {
++	i2c0_imux: i2c0-imux@0 {
++		compatible = "i2c-mux-pinctrl";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-parent = <&i2c0>;
++	};
++};
++
++&i2c0_imux {
++	pinctrl-names =
++		"i2c152", "i2c153", "i2c154", "i2c155",
++		"idle";
++	pinctrl-0 = <&i2cmux_s29>;
++	pinctrl-1 = <&i2cmux_s30>;
++	pinctrl-2 = <&i2cmux_s31>;
++	pinctrl-3 = <&i2cmux_s32>;
++	pinctrl-4 = <&i2cmux_pins_i>;
++	i2c152: i2c_sfp1 {
++		reg = <0x0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c153: i2c_sfp2 {
++		reg = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c154: i2c_sfp3 {
++		reg = <0x2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++	i2c155: i2c_sfp4 {
++		reg = <0x3>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+index 1f99d0db1284f..9d1a082de3e29 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+@@ -13,3 +13,7 @@ &uart0 {
+ &uart1 {
+ 	status = "okay";
+ };
++
++&i2c0 {
++	status = "okay";
++};
 -- 
 2.27.0
 
