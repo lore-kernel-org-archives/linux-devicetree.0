@@ -2,167 +2,107 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2016CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 15:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BA2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 15:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A0A2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 15:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABC6207D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 15:22:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="luIhE+PL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbgFOPQj (ORCPT
+        id S1730480AbgFOPWW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:16:39 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34471 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730197AbgFOPQj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 11:16:39 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B1D2EFF811;
-        Mon, 15 Jun 2020 15:16:32 +0000 (UTC)
-Date:   Mon, 15 Jun 2020 17:19:56 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim
- Integrated MAX9286
-Message-ID: <20200615151956.fsiczqldkle5aevb@uno.localdomain>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
- <20200612221003.GA3901624@bogus>
- <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
- <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
+        Mon, 15 Jun 2020 11:22:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44302 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730276AbgFOPWW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 11:22:22 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05FFMDxd017087;
+        Mon, 15 Jun 2020 10:22:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592234533;
+        bh=lFphuT9/fLqmMX5KQS/n4x1iHwg2iEXgSdymwnDbOug=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=luIhE+PLABzCVoOJA+VA5MPTSccrDdsmqbNpKI4mP/b4uHjeb5ee0bPTAwADd1lx1
+         lvHCLa2lILwuSrHBKNoVPt4z/asl9mrJlrRrnG/kxt74hbN65nR6GqoFdsmEqNPgyO
+         /pn0WA6uvxcX98O2IUYW2OCgCtmezfcdhG8cSTYY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FFMDFR015782;
+        Mon, 15 Jun 2020 10:22:13 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
+ Jun 2020 10:22:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 15 Jun 2020 10:22:12 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FFMBRB075950;
+        Mon, 15 Jun 2020 10:22:11 -0500
+Subject: Re: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
+To:     Drew Fustini <drew@beagleboard.org>
+CC:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+References: <20200611220951.GA3355634@x1>
+ <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com> <20200615124506.GA3833448@x1>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <6a7eb03a-933b-0f04-a42d-a457f3fa1d9f@ti.com>
+Date:   Mon, 15 Jun 2020 18:22:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
+In-Reply-To: <20200615124506.GA3833448@x1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Mon, Jun 15, 2020 at 09:02:28AM -0600, Rob Herring wrote:
-> On Sat, Jun 13, 2020 at 6:28 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
-> >
-> > Hi Rob,
-> >
-> > On Fri, Jun 12, 2020 at 04:10:03PM -0600, Rob Herring wrote:
-> > > On Fri, 12 Jun 2020 15:47:10 +0100, Kieran Bingham wrote:
-> > > > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > >
-> > > > The MAX9286 deserializes video data received on up to 4 Gigabit
-> > > > Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
-> > > > to 4 data lanes.
-> > > >
-> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> > > > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > > > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > >
-> > > > ---
-> > > >
-> > > > v7:
-> > > >  - Collect Rob's RB tag
-> > > >  - Remove redundant maxItems from remote-endpoints
-> > > >  - Fix SPDX licence tag
-> > > >
-> > > > v10:
-> > > > [Jacopo]
-> > > >  - Fix dt-validation
-> > > >  - Fix dt-binding examples with 2 reg entries
-> > > >
-> > > > [Kieran]
-> > > >  - Correctly match the hex camera node reg
-> > > >  - Add (required) GPIO controller support
-> > > >
-> > > >  .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++++
-> > > >  1 file changed, 366 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
-> > > >
-> > >
-> > >
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > >
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3865935872, 0, 64] is too long
-> > >
-> > >
-> > > See https://patchwork.ozlabs.org/patch/1308280
-> > >
-> > > If you already ran 'make dt_binding_check' and didn't see the above
-> > > error(s), then make sure dt-schema is up to date:
-> > >
-> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> > >
-> >
-> > I have updated my dt-schema installation to the latest github master
-> > -------------------------------------------------------------------------------
-> > Successfully installed dtschema-2020.6.dev8+g4d2d86c
-> >
-> > https://github.com/devicetree-org/dt-schema/commit/4d2d86c5cd65cd3944ce0aaa400866bc36727bea
-> >
-> > $ /usr/bin/dt-validate -V
-> > 2020.6.dev8+g4d2d86c
-> > -------------------------------------------------------------------------------
-> >
-> > But I still cannot reproduce the error.
-> >
-> > However, I see this commit in your next branch
-> > https://github.com/devicetree-org/dt-schema/commit/b72500282cfd2eba6f9df4d7553f696544b40ee6
-> > "schemas: Add a schema to check 'reg' sizes "
-> >
-> > Which sounds very likely related to the above reported error.
-> > Was this intentional ?
->
-> Yes, I can't add the new checks to master until all the in tree schema
-> are fixed yet I want to check submissions with pending checks, so I
-> created the 'next' branch.
-
-I see, makes sense. Can I just suggest to add a few words about this
-new branch in the automated reply ? Otherwise the ones who are not aware
-of this (like I was) will keep wondering why they don't see the error your
-bot reported even if they have updated their dt-schema version to the
-latest available master.
-
->
-> > I'm not sure how I should handle this. The error reports the i2c node
-> > parents should have both address-cells and size-cells properties set
-> > to 2, but in the example there is not i2c node parent at all :)
-> > Should I add a parent node for the i2c in the example snippet ?
->
-> The examples have default sizes of 1 cell. If you need something
-> different, the example has to define a parent node to specify it. In
-> your case, I'd just change 'reg' to use 1 cell each.
->
-
-Thanks, will fix.
 
 
-> Rob
+On 15/06/2020 15:45, Drew Fustini wrote:
+> On Mon, Jun 15, 2020 at 12:34:57PM +0300, Grygorii Strashko wrote:
+>>
+>>
+>> On 12/06/2020 01:09, Drew Fustini wrote:
+>>> Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
+>>> RGMII mode") the networking is broken on the BeagleBone AI which has
+>>> the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
+>>> phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
+>>>
+>>> Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
+>>> other AM5729 boards.
+>>
+>> commit ref is incorrect
+> 
+> Do you mean commit ref 820f8a870f65 ?
+> ("ARM: dts: am57xx: fix networking on boards with ksz9031 phy")
+> 
+> I thought it made sense to point to that commit as you seemed to be
+> fixing a very similar issue, just for a different phy.
+
+Yes. but you should use proper format for commit ref:
+commit <12+ chars of sha1> (\"<title line>\")'
+
+checkpatch should warn you.
+
+
+
+
+-- 
+Best regards,
+grygorii
