@@ -2,247 +2,91 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A703C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFA7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C2D2078A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="fDBz+MR4"
+	by mail.kernel.org (Postfix) with ESMTP id 628FB207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592237390;
+	bh=y2mDqtL28u7c4GVeiXXe7rwaVgAELY4epCSa6Dtiaco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pg6uvQJWk6Q4jsfntoxltoV1+GzNa1owpMRHLSvE1V1obmQsEBfSf6n78IwJHq1Zd
+	 ArMfMKn/jy7by6opAAUXay5whk54XFKAkXV2jdI70u2lrUnj88Bttcqwn9Ugy26ycG
+	 tnGZRK0RoKsyBxIW0VsY1vAUSfRJIA//3H946IgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgFOQFL (ORCPT
+        id S1730622AbgFOQJq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFOQFK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:05:10 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517A2C05BD43
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 09:05:08 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o15so18000440ejm.12
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 09:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wHdSctAVV7+vdCi6OCZW+YeNrdn7gZmxe6ZghoxDO8o=;
-        b=fDBz+MR4tQdh14SBRZibCRBIjTBbkLlG4UwGFLBPkN50TGTweFRsqLIsnEujMbVQEN
-         XYnQ2JQFUs+8RoAEbkBgaWvVZssXr0CGbHh/uGvJk8I+2scZLob7mL8Cr0hHDFfpo061
-         shTmcHetiDD++9vuAgueC3+mMYkjtARplIBIOqKZEdUArT4V0rgWRV2++FHGPXIsWY/7
-         FW56iwv+IKqyRmVmqG/zthnaoFKv4MY0iRUenph0EwM/V0BX/KsTgbMK5gBZUMKmrydV
-         zOEOuxryT3kxzZRo9ZpvYfTkII9l9mu3DUtxEUchUd+XAxnBjaq8QgvSVOmKkiQBhhfa
-         MXtg==
+        Mon, 15 Jun 2020 12:09:46 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44506 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730426AbgFOQJq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:09:46 -0400
+Received: by mail-il1-f196.google.com with SMTP id i1so15772635ils.11;
+        Mon, 15 Jun 2020 09:09:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wHdSctAVV7+vdCi6OCZW+YeNrdn7gZmxe6ZghoxDO8o=;
-        b=VSQymFC8JLSmXnH5lt/ZPExbgGWns5Y27UAyYviW9GRcbG1aamM/TyMCh27SBqLXUP
-         NnmxjKnOD+hhDefPOEeZX+unxDHgbXO4aM1kv3PLU/HeFV4jFQonNpMGpot8n790IwFl
-         jeai+UsN4cYSG335MPs0K7QoQDxo5JT1t8QSeJXF6ZyXI2QdSD5rKwIrlPs22NpycXJX
-         Hxa5Y7yhiBZ95Afp4BTgbGj9+xSU0l/+es1naAnmi3CfKwbv6dNpZMmHVm0AJcmVrmPf
-         Vn0Bju6gUzIRFR9CMpDiP55I9Tpg4PNN2mpcqT5uUe5Zq3ToL6vSNUPdIzZjlTnh8HGa
-         3ULQ==
-X-Gm-Message-State: AOAM5317q4IaiP3irPFnBmkbZLgHLOLpXnlG0N+PWv6HsekrDPluEmky
-        yhwi890DIhR8tSik4VHAkJe0YfURDw==
-X-Google-Smtp-Source: ABdhPJz7Yn0hfXxmlzRHJomiS8tSbeggJmkYPTssbnoOonbzWn6MhJizZJ/0+LqBWbeQU6gdkRXyZA==
-X-Received: by 2002:a17:907:72ca:: with SMTP id du10mr25773377ejc.78.1592237106236;
-        Mon, 15 Jun 2020 09:05:06 -0700 (PDT)
-Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id o16sm9330237ejg.106.2020.06.15.09.05.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 09:05:05 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
-Subject: Re: [cadence-spi] daisy chain
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
- <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
- <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com>
- <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
- <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com>
- <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
- <CAMuHMdWPo6xDMipBg2noSOD3trYJjifDbSf-krtgPkA-XdbXZg@mail.gmail.com>
-Message-ID: <4311cc0a-016d-1a24-10f9-9dccc28ddd43@fastree3d.com>
-Date:   Mon, 15 Jun 2020 18:05:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Nnum2C4PhSpPEfhThcj8nUToxxJitXHNbBnp8YsxMRk=;
+        b=nHNF3at8lOny0OmnYg2NfU28goLlyMRmH6wSp4UN3MNXxEzc09/9Ixr8xi4VFEPwej
+         E2IeG4tneHQ4NnVA/1eFqtvdFTcqRJ1GSTNU+t/vemqKL6UYiB05PJu/VN1syvwZXahp
+         1fvrQPlC39HM+bDWXFya6fsXhPbIfhmDxfEyXdP6xeo+cbSBEC/m38w8x4ijjW8CUJot
+         S1kQjISKtpzy2Xk5C0iXcr0iV7paQLjxR2eAICnIFFHZRQ9j2hKLKvgIajQIHCXk7Nue
+         WumDedU4zL0UHgvhs8AfGh7qMH+CHgpYcWZSRuEJI5Rbx0pY0/eExwwVswWI86JskuKM
+         Fw5Q==
+X-Gm-Message-State: AOAM532AnbhweoAk/nPGV7tX7nAFhyDh/82PP+XgG29ABqHgFMKuvdE+
+        Q4DpwqCGiPyqUC4F+6T4wg==
+X-Google-Smtp-Source: ABdhPJw+XZZMbcw5q6e9ZPoHyfPayYNgKmpC2lmw3amkyFocbJjFVs0xj6wgLmEd9xyiUTfpovFVMg==
+X-Received: by 2002:a92:c6c5:: with SMTP id v5mr25902857ilm.1.1592237385404;
+        Mon, 15 Jun 2020 09:09:45 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id 13sm8260749ilg.24.2020.06.15.09.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:09:44 -0700 (PDT)
+Received: (nullmailer pid 1861367 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:09:43 -0000
+Date:   Mon, 15 Jun 2020 10:09:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>
+Subject: Re: [PATCH] dt-bindings: irqchip: renesas-rza1-irqc: Convert to
+ json-schema
+Message-ID: <20200615160943.GA1861039@bogus>
+References: <20200528132853.1751-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWPo6xDMipBg2noSOD3trYJjifDbSf-krtgPkA-XdbXZg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528132853.1751-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+On Thu, 28 May 2020 15:28:53 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas RZ/A1 Interrupt Controller Device Tree binding
+> documentation to json-schema.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Validation depends on "[PATCH dt-schema] Fix interrupt controllers with
+> interrupt-map".
+> http://lore.kernel.org/r/20200528132323.30288-1-geert+renesas@glider.be
+> ---
+>  .../renesas,rza1-irqc.txt                     | 43 ----------
+>  .../renesas,rza1-irqc.yaml                    | 80 +++++++++++++++++++
+>  2 files changed, 80 insertions(+), 43 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.yaml
+> 
 
-On 15.06.2020 16:40, Geert Uytterhoeven wrote:
-> Hi Adrian,
->
-> On Mon, Jun 15, 2020 at 4:06 PM Adrian Fiergolski
-> <adrian.fiergolski@fastree3d.com> wrote:
->> Sorry for the typo in the example device tree:
->>
->> On 15.06.2020 15:57, Adrian Fiergolski wrote:
->>> On 15.06.2020 15:07, Geert Uytterhoeven wrote:
->>>> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
->>>> <adrian.fiergolski@fastree3d.com> wrote:
->>>>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
->>>>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
->>>>>> <adrian.fiergolski@fastree3d.com> wrote:
->>>>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
->>>>>> connected to a single chip select of the cadence-spi master. I have the
->>>>>> impression such a configuration is supported by none of those two
->>>>>> drivers. I could try to extend both, however, I haven't found any other
->>>>>> SPI driver, where I could find implementation inspiration. Is it
->>>>>> supported by kernel?
->>>>>>
->>>>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
->>>>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
->>>>>> "registers-number" DT property.
->>>>>>
->>>>>> So both drivers handle this in their SPI slave drivers.
->>>>>>
->>>>>> Of course this does not handle the mixed case, i.e. daisy-chaining
->>>>>> different types of devices.
->>>>>>
->>>>>> The documentation mentions only about the common 'daisy-chained-devices'
->>>>>> property (devicetree/bindings/common-properties.txt). However, in order
->>>>>> to try to implement it in the master driver, IMHO, the spi subsystem
->>>>>> would need to have a call 'no-operation' to other nodes on the
->>>>>> daisy-chain, which are not addressed by the given SPI access. Is there
->>>>>> any recommended approach to address this case?
->>>>>>
->>>>>> Supporting this in a generic way would indeed be nice, as it would mean
->>>>>> individual SPI slave drivers no longer have to care about it.
->>>>>> However, that may be difficult, as the master needs to known which
->>>>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
->>>>> In fact, the ultimate solution would be to have it solved at the level
->>>>> of the spi subsystem:
->>>>>
->>>>>   * /spi_device struct/ would contain extra callback which returns msg
->>>>>     to be sent for no operation.
->>>>>   * spi_device struct would contain a pointer to the list describing the
->>>>>     given daisy chain (list of spi_devices on the chain)
->>>>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
->>>>>     indicating length of a command of the addressed device if it's on
->>>>>     the daisy chain
->>>>>     For example, in case of the ltc2634 device, the regular message
->>>>>     consists of 24 bits, but when device is a part of a daisy chain, the
->>>>>     messages are 32 bits. This 32 would be stored in
->>>>>     /daisy_chain_msg_length./
->>>>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
->>>>>     /spi_message_init_with_transfer/ would create a msg of length equal
->>>>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
->>>>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
->>>>>     would be filled with the command of the addressed device on the
->>>>>     chain and no_operation content for all other devices on the chain
->>>>>     not being addressed
->>>> Sounds good to me.
->>>>
->>>>>   * I think in such a case, the /daisy-chained-devices /property would
->>>>>     be not used, as chains would be build basing on the assigned
->>>>>     chipselect (reg property).
->>>> So you still have to describe the chain in DT in some way.
->>>> As there can be only a single sub node with the same unit address
->>>> (= chip select), you probably need a container with that address, which
->>>> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
->>> Good point. So maybe at the level of the device tree, it could be
->>> described like that (based on the spi-cadence example):
->>>
->>>         spi0: spi@ff040000 {
->>>             compatible = "cdns,spi-r1p6";
->>>             status = "disabled";
->>>             interrupt-parent = <&gic>;
->>>             interrupts = <0 19 4>;
->>>             reg = <0x0 0xff040000 0x0 0x1000>;
->>>             clock-names = "ref_clk", "pclk";
->>>             #address-cells = <1>;
->>>             #size-cells = <0>;
->>>             power-domains = <&zynqmp_firmware PD_SPI_0>;
->>>             daisy-chain0 : daisy_chain@0 {
->>>                #address-cells = <1>;
->>>                #size-cells = <0>;
->>>                reg = <0>;
->>>                daisy-chained-devices = 2;
->>>
->>>                dac0: ltc2632@0 {
->>>                    compatible = "lltc,ltc2634-l12";
->>>                    reg = <0>;
->>>                    spi-max-frequency = <1000000>;
->>>                };
->>>                dac1: ltc2632@1 {
->>>                    compatible = "lltc,ltc2634-l12";
->>>                    reg = <1>;
->>>                    spi-max-frequency = <2000000>;
->>>                };
->>>            };
->>>         };
->>         spi0: spi@ff040000 {
->>             compatible = "cdns,spi-r1p6";
->>             status = "disabled";
->>             interrupt-parent = <&gic>;
->>             interrupts = <0 19 4>;
->>             reg = <0x0 0xff040000 0x0 0x1000>;
->>             clock-names = "ref_clk", "pclk";
->>             #address-cells = <1>;
->>             #size-cells = <0>;
->>             power-domains = <&zynqmp_firmware PD_SPI_0>;
->>             daisy-chain0 : daisy_chain@0 {
->>                #address-cells = <1>;
->>                #size-cells = <0>;
->>                #daisy-chained-devices = <2>;
-> You probably want a proper "compatible" value here instead.
-> I don't think "#daisy-chained-devices" is needed, it can be derived
-> from the number of subnodes.
-compatible = "daisy_chain" or compatible ="simple-bus" would be better?
-Both could be caught by of_register_spi_devices to populate the daisy
-chain. Do you agree that at that level the chip select could be defined?
-The reg properties from the sub-nodes (defining actual spi devices)
-would be ignored, thus not even needed to be defined.
->
->>                reg = <0>;
->>
->>                dac0: ltc2632@0 {
->>                    compatible = "lltc,ltc2634-l12";
->>                    reg = <0>;
->>                    spi-max-frequency = <1000000>;
->>                };
->>                dac1: ltc2632@1 {
->>                    compatible = "lltc,ltc2634-l12";
->>                    reg = <1>;
->>                    spi-max-frequency = <2000000>;
->>                };
->>            };
->>         };
->>
->>> Once a node has daisy-chanied-devices property defined,
->>> of_register_spi_device (spi.c) will interpret it as a daisy chain. I
->>> will assume, that for the given chain the lowest frequency of the whole
->>> chain should be used. When it comes to the mode, as in case of
->>> incompatibility no much can be done anyway, the mode of the addressed
->>> spi device will be used.
-> Don't the modes have to agree, too?
-> Else the dummy command may be interpreted differently than intended.
-
-So, in case of incompatible mode, let's throw an error and remove
-devices of the whole daisy chain, maybe?
-
-Regards,
-
-Adrian
-
-
+Applied, thanks!
