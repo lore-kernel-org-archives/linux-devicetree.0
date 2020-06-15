@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738B5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7FDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCC32078E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49A42078E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+VMjeDy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5NacBgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbgFOVGa (ORCPT
+        id S1731170AbgFOVGV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43044 "EHLO
+        Mon, 15 Jun 2020 17:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731561AbgFOVG2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 17:06:28 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4707C061A0E;
-        Mon, 15 Jun 2020 14:06:26 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id g1so12562126edv.6;
-        Mon, 15 Jun 2020 14:06:26 -0700 (PDT)
+        with ESMTP id S1731143AbgFOVGU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 17:06:20 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC8DC061A0E;
+        Mon, 15 Jun 2020 14:06:19 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q19so18970722eja.7;
+        Mon, 15 Jun 2020 14:06:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9tnxzeLrebInQm8RJ3dhvveUmV0mvvYaTXd5mudNeVI=;
-        b=A+VMjeDys94CDeGa8so1cw8SK6kOKajtWmtZo61PfDLIDos9vKPvMheTSEtwpPOMDq
-         fOtAu1eaWEYYD+13Rj1HONQ0HzKBHo94pLkaRqApcbWqpgnMzGRQPRiFhPK+XOoH8nHR
-         WOrKiWMvkdzY1Zk0uWXH/n9niJY4zCJL3o8hH6OBhFSwTbk4k8wRLoiY8Ea92htc6SzG
-         1KpSu4nRqa4yIKewL4CLxH62EHKSgifTk3w+44lmiWcW9UiJlfkDPJpUCjcy2L6vDSsU
-         6aKcp7+utM7lKOhdZHUDXOPagPy739DmtTcu56696qu7XFFrAXVyeEXrLvFHRul7sIAy
-         vFHg==
+        bh=Ny7VFcxsvYKg4f+n4WOuXVu12FivhYhgkhTSalaSq1o=;
+        b=g5NacBgIxdFzpLhC9wXirlN9cuKXhuOjymYkv9LCeup3ZKh2QUAo2TwiGXysGLXCXw
+         t+hJ1LPooMx/mx4Amd741IhzdH0M+egeJaO8efrt+yjB1dRxKXmh88Weun7FYV/dDRgY
+         oCkr24DCknaoAilnpE9abK7/7/E6oxmELUsplz0l04/UPAereIO1OCjSoveo3GnHG7UC
+         yRq/6cahvTU03jKNb+jW2K+01FGm28MYo6mnWGI8H6Ni+SkVQwwygPC49Ko4qV6ye0Ng
+         CwQHy/BIUZv3qJqfWaGMdI0gjE+B/yI/FuoYGLnp+qmJd8d+5nLaTMeuHncZ/ZBGVm0x
+         83Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9tnxzeLrebInQm8RJ3dhvveUmV0mvvYaTXd5mudNeVI=;
-        b=Crca/0Qhz1pY+pVB0tH9OBytST4Kvqk2FJ9UA7phvLSbtI1Ldnz9gEIGrXJQFIUkRv
-         jpYQ9X4bix91Qsk/4+RCBv6BKTowPYn59LNvXzOcW2e2fA9OTfBpNSaeNUB/5FT/M7u3
-         S10txvHaK7E6FS4YK/obyfQPI5UlL6+9ldeHsT3pMhbckfpJnUZV3hqno/P3b5+uSz27
-         9Yl5H/gvMildniyU9f2dXVzaLDD7hC2wTb+XMHmna4MOvoBJzrAjXX+IzEO/OYjjCc41
-         DN4Vc5l1+0K/JRfe3slD71KC9yLTpBEBwkLd07+CFfr8oFFiFcdFccyjiDHz2G47aGfL
-         IRhA==
-X-Gm-Message-State: AOAM53276eBlvgvi0zhxUhX0Bgw4WxhKIyoaJytcQ2kRJztdd911pZTj
-        P0BgMeX1Poj9VzBNC7PnTSc=
-X-Google-Smtp-Source: ABdhPJwycVWBkKUbT79y/6ixRAVaDmgCQO3Wcl78/yG0bB8Fs0uCTlcD0tWDy3ht0ECl+4iTADafXA==
-X-Received: by 2002:a05:6402:3c2:: with SMTP id t2mr25485628edw.361.1592255185458;
-        Mon, 15 Jun 2020 14:06:25 -0700 (PDT)
+        bh=Ny7VFcxsvYKg4f+n4WOuXVu12FivhYhgkhTSalaSq1o=;
+        b=LO9+6t2ekc7v8Yj76yXDuXa4y8MEZ8AowrRTTDC0FWiC7HwA7BjTc285GYqRjJdS02
+         kgWy5lNYFCdicftDSHemySizXdiF8zY8ddBRcARNfAkSnNObH74thETsvNNmHgroplZE
+         Qq2sixfkkHZmuA+z3Uz0mmjjbKEfyewXBHFyEfnpv1XN8vFnRrLWpwTX6Q5Ob/Xrjg+x
+         V///+zj/wD4/MLd7I8oEHtRivRpwYfDcxb3jyR8rxf+LXVYi1asz1iAwCfg3ScmjUT6e
+         LR6ItBTsvDh9U6an3KNVV+qgVuf3taoeL0AWmQ4ekDiDcIaIhRcd0A6zQHyqjZ5koign
+         GsbA==
+X-Gm-Message-State: AOAM533QGycr/cl4PcvjCEiKCi69uNDBDpnctMdIzza1ixtZmhqL1BzU
+        oj5kVa3Bdv8W2Bht1F9bDDI=
+X-Google-Smtp-Source: ABdhPJx3ixPAnnbaJyJLkyhgJVkLG92eNr147cfvyRIh/mdS9RocY6L78KcsY5XqUsDPrshmJvKJIQ==
+X-Received: by 2002:a17:906:86c5:: with SMTP id j5mr28474078ejy.88.1592255178156;
+        Mon, 15 Jun 2020 14:06:18 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-95-238-254-39.retail.telecomitalia.it. [95.238.254.39])
-        by smtp.googlemail.com with ESMTPSA id d5sm9662226ejr.78.2020.06.15.14.06.23
+        by smtp.googlemail.com with ESMTPSA id d5sm9662226ejr.78.2020.06.15.14.06.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 14:06:24 -0700 (PDT)
+        Mon, 15 Jun 2020 14:06:17 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>,
@@ -72,9 +72,9 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 05/12] dt-bindings: PCI: qcom: Add ext reset
-Date:   Mon, 15 Jun 2020 23:06:01 +0200
-Message-Id: <20200615210608.21469-6-ansuelsmth@gmail.com>
+Subject: [PATCH v7 02/12] dt-bindings: PCI: qcom: Add missing clks
+Date:   Mon, 15 Jun 2020 23:05:58 +0200
+Message-Id: <20200615210608.21469-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
 References: <20200615210608.21469-1-ansuelsmth@gmail.com>
@@ -85,38 +85,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document ext reset used in ipq8064 SoC by qcom PCIe driver.
+Document missing clks used in ipq8064 SoC.
 
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pci/qcom,pcie.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index becdbdc0fffa..6efcef040741 100644
+index 981b4de12807..becdbdc0fffa 100644
 --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -179,6 +179,7 @@
- 			- "pwr"			PWR reset
- 			- "ahb"			AHB reset
- 			- "phy_ahb"		PHY AHB reset
-+			- "ext"			EXT reset
- 
- - reset-names:
- 	Usage: required for ipq8074
-@@ -287,8 +288,9 @@
+@@ -90,6 +90,8 @@
+ 	Definition: Should contain the following entries
+ 			- "core"	Clocks the pcie hw block
+ 			- "phy"		Clocks the pcie PHY block
++			- "aux" 	Clocks the pcie AUX block
++			- "ref" 	Clocks the pcie ref block
+ - clock-names:
+ 	Usage: required for apq8084/ipq4019
+ 	Value type: <stringlist>
+@@ -277,8 +279,10 @@
+ 				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 		clocks = <&gcc PCIE_A_CLK>,
+ 			 <&gcc PCIE_H_CLK>,
+-			 <&gcc PCIE_PHY_CLK>;
+-		clock-names = "core", "iface", "phy";
++			 <&gcc PCIE_PHY_CLK>,
++			 <&gcc PCIE_AUX_CLK>,
++			 <&gcc PCIE_ALT_REF_CLK>;
++		clock-names = "core", "iface", "phy", "aux", "ref";
+ 		resets = <&gcc PCIE_ACLK_RESET>,
  			 <&gcc PCIE_HCLK_RESET>,
  			 <&gcc PCIE_POR_RESET>,
- 			 <&gcc PCIE_PCI_RESET>,
--			 <&gcc PCIE_PHY_RESET>;
--		reset-names = "axi", "ahb", "por", "pci", "phy";
-+			 <&gcc PCIE_PHY_RESET>,
-+			 <&gcc PCIE_EXT_RESET>;
-+		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
- 		pinctrl-0 = <&pcie_pins_default>;
- 		pinctrl-names = "default";
- 	};
 -- 
 2.27.0.rc0
 
