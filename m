@@ -2,150 +2,113 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6037AC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBAEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E85120578
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0612053B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 08:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rf/sB6ar";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oM+16xZp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oISdFcYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgFOInQ (ORCPT
+        id S1728852AbgFOIoz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:43:16 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33837 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728852AbgFOIlZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:41:25 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C6964580157;
-        Mon, 15 Jun 2020 04:41:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 15 Jun 2020 04:41:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=xWZqdsHt+6XnG
-        lVmmHecqtGqe51QGLTcTPJqY9E6BXQ=; b=rf/sB6arnc1rND9DFy0oopvGGDlOx
-        9R4Evuyf9zSzrEqCXE3gMPmarxr2ADeEy96zP9j6UF77BUF0xsuQCkJrM1t4gpMX
-        JutrSVIyn/spmcqkV4lNZvWWMou3ZvTc/HqqJilkelAgtnMkFuiiZo+ZXIUinj7x
-        wzv7BHWS4wFFrrNjSaeBq/LZvvtjzT62JoDgPQgEFT4pF7ghlELOwx+x/2IH6qpd
-        Kgdvfycq8sSy9s6pWrhO/gD89ygdS/G7eGXsM467Np4Kpw6TLgTheUgsxxgg7VDS
-        UJWV9pEJmQ0jP8xJCQYpF8cEhePnLOIfobnr7mxp5Q/gntKVf/DkX59RQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=xWZqdsHt+6XnGlVmmHecqtGqe51QGLTcTPJqY9E6BXQ=; b=oM+16xZp
-        T0R3Uk1tSSYAhpivxYh0eamwxEVhI2QDzAQkxt82csqPBPS2FuePDoxP3ksQpvVT
-        PJ34BidMOEJvTX/NW756o3VjrJsVh/UfhQOIK/SFuF3dF5szgzmdMxJuIFU4Nz9y
-        ui3epPrNL0ToRgQKuqIDv7oSS+gwjVte/aiytIiu8lQ02OLbXXrxVJm9qchxLouC
-        L1XFfpCncBpY+vMED9wRP+fEKHYnjrvjVbILRdpp34nZBhtx+hARHsz2O/iICOyL
-        xt5eU3ZimB3q2MQD6zpUPM8XQnS0x3tO2ph0LdZr1qb/uLKh2eDTw3KD1CvPe32c
-        YCSBU+UKBBiRrA==
-X-ME-Sender: <xms:MzTnXgdCc6IdKnIEaqKKL_i6S-e1sli8WddaLPbnTMk-yfKUfR2m6A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeikedgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:MzTnXiODz_AwCfZteVWHNfhM5LcpCIWYh2vRnBn1E5NPomqYcLZaSQ>
-    <xmx:MzTnXhig0C0dMu5u5uC8U1_yYbCXq4JD9rqk4jZZTs7YUKyeVQPPAw>
-    <xmx:MzTnXl8mrZyaenU93X5IGKDYnGUOWk_XfLjB40OKo7cPhR19I6ARUw>
-    <xmx:MzTnXsF9Fp7jW6TKW7vQNi_nfGTLb_OTKoeeY7PfFHn_RLjyejVxkw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5C5253280063;
-        Mon, 15 Jun 2020 04:41:23 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v5 02/27] dt-bindings: clock: Add a binding for the RPi Firmware clocks
-Date:   Mon, 15 Jun 2020 10:40:42 +0200
-Message-Id: <f6105207e7ef5a5ea8d7a1774faf989d341a25f5.1592210452.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
-References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
+        Mon, 15 Jun 2020 04:44:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728603AbgFOIoy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 04:44:54 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBCEC061A0E;
+        Mon, 15 Jun 2020 01:44:54 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id k1so6426365pls.2;
+        Mon, 15 Jun 2020 01:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=myvNnjze95Yl2SyKV+SrVEtGJL4UPmr2kTdonMuTSII=;
+        b=oISdFcYSOQZNDKsKZuBBTK+7unBXRFo+muI/V1jUc3IfXu3i7HmaqO+k2IqsjChblm
+         xgKiEbr3IRoIzbdmFXzO62cdT0AcUo8LzLRd9WnCoWE6FHTzuNLG7QGW7lZhlFvAult6
+         EzBIfeZUJ++8H4GKeNlQyAF4m6xYscy67qYLE+kusDfC+LzuidKlXdhA9dhO628EK/hz
+         04ZRl2osW+mN5jz0r4gS127mX2uebX/qvvkk7ZfpQhhMuRnl/Ty9lhAqMuOCJjpDlGG5
+         83xoWWLOVAdS22ZZGIOqmu9Y2ghUHftTcHtA2Ic0x0tSeLjpcMcq/I29llSpScOOtdlm
+         a2Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=myvNnjze95Yl2SyKV+SrVEtGJL4UPmr2kTdonMuTSII=;
+        b=Y2kIFY6BwBxzW3TFPYRHLE/3+3OT8NBp9RYl54rjhWMI8ck7NkjctV40rvV1neEUpi
+         tprROxDyPxIUmo7Cj80H0bBXZMSEVCg3BB5foNVFrCy/GhsbVORxKS4rq2BJlsKYVJ0u
+         ChL+X49kNbOWlsb/Lbvi8SUywgNkk8rwnFPYXCuEHY4qio6R8OEVTgcD+iIbRDMqQktF
+         CDzhbNKqN1EB+OFK44w3m2uyuY1tkztVcq8X1ilwpB1h/z8FbEOtg439uV9jfy/tWZVo
+         8VPS6aCS5Bpu4CwzdL4kGuBs88cAotujrX+0tNOHPlCAdJaUvyS+0uZ0MbcQXPZtdEBG
+         0nag==
+X-Gm-Message-State: AOAM531pXqAZfsa3cfbkE20VpbNZMezQ4MfRr32CSK6ANn3KW/b6Z9KJ
+        u+2UbSGL3ay5iok016N2TWn4gdTGR7zSdaXxoHY=
+X-Google-Smtp-Source: ABdhPJzZSVB9+37ZECL2ML/pFpQxuUFxCPGZLcIJ+xzsp2pcKjg11WpH23kGVz5r9pIbWTHuVH/fIRyg3tivNSH3Q30=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr11342618pjq.228.1592210693624;
+ Mon, 15 Jun 2020 01:44:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200509080627.23222-1-dongchun.zhu@mediatek.com>
+ <20200509080627.23222-3-dongchun.zhu@mediatek.com> <20200521193204.GA14214@chromium.org>
+ <1590209415.8804.431.camel@mhfsdcap03> <20200610183600.GI201868@chromium.org>
+ <1591954266.8804.646.camel@mhfsdcap03> <CAAFQd5CboZ9aFhUyKPES_2oO_AKAOh3Pg8D+9YpfmzJ8v-yFHw@mail.gmail.com>
+ <1592205866.8804.686.camel@mhfsdcap03>
+In-Reply-To: <1592205866.8804.686.camel@mhfsdcap03>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Jun 2020 11:44:41 +0300
+Message-ID: <CAHp75Ve12f7skOs1iW5U4=meP5-fXRppH=XMST6asQbjxn2OGg@mail.gmail.com>
+Subject: Re: [V8, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Cao Bing Bu <bingbu.cao@intel.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Louis Kuo <louis.kuo@mediatek.com>,
+        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
+        <shengnan.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The firmware running on the RPi VideoCore can be used to discover and
-change the various clocks running in the BCM2711. Since devices will
-need to use them through the DT, let's add a pretty simple binding.
+On Mon, Jun 15, 2020 at 10:30 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+> On Fri, 2020-06-12 at 20:49 +0200, Tomasz Figa wrote:
+> > On Fri, Jun 12, 2020 at 11:33 AM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
 
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+...
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-index cec540c052b6..b48ed875eb8e 100644
---- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-@@ -22,6 +22,25 @@ properties:
-       Phandle to the firmware device's Mailbox.
-       (See: ../mailbox/mailbox.txt for more information)
- 
-+  clocks:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: raspberrypi,firmware-clocks
-+
-+      "#clock-cells":
-+        const: 1
-+        description: >
-+          The argument is the ID of the clocks contained by the
-+          firmware messages.
-+
-+    required:
-+      - compatible
-+      - "#clock-cells"
-+
-+    additionalProperties: false
-+
- required:
-   - compatible
-   - mboxes
-@@ -31,5 +50,10 @@ examples:
-     firmware {
-         compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
-         mboxes = <&mailbox>;
-+
-+        firmware_clocks: clocks {
-+            compatible = "raspberrypi,firmware-clocks";
-+            #clock-cells = <1>;
-+        };
-     };
- ...
+> > [1] https://www.kernel.org/doc/html/latest/driver-api/gpio/consumer.html#the-active-low-and-open-drain-semantics
+> >
+>
+> Thank you for the sharing.
+> If driver only focus on the logical function of GPIO pins,
+> 'n_rst_gpio' may need to be renamed back to the 1st version 'rst_gpio'.
+
+Yes, we should not have any of n_* GPIOs, they must be marked as Active Low.
+
 -- 
-git-series 0.9.1
+With Best Regards,
+Andy Shevchenko
