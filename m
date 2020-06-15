@@ -4,74 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B05C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6C1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0542920739
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF6720679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592222496;
-	bh=bckLxMEKq0w5/9SzJe+n69vU2/hXF7ff/hu/a17+8+c=;
+	s=default; t=1592222510;
+	bh=CM24pedTnetKRTjlq0H+6fc2bSL16QovoA2odE5GIvY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OXgkw+84cH73XBVnkHt3FHCoHXd8VOEKenWsUmC7lX1ouyNxcQ/PLkUqCSjYN4Z6e
-	 3MZ6DiKt1fmepjNjwiCle8g41mQv1xXkSr0ccIGILnSN6HFZGjH/ddu2Sj9Qzby74E
-	 Je9ui4sz8aRSGzHuPHt0xF8wDF0t86hCfk0DiCz0=
+	b=qHNiYfEPdPRHXlNVStV1kxHdGmYc4SjX45mj+tWjmaLpuumo/oZ2zEXCYxem5jUiS
+	 JJ/O+k61VzRxdOuVR/sHctBi2hxnKASdirPfTzb/yEuq8ggJhKLgHo5LiW8P3EIpr+
+	 NhZZN8mE/JGjazI2xZsnHZbzfFHWnR2dhuPEAnHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbgFOMB3 (ORCPT
+        id S1729766AbgFOMBu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 08:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbgFOMB2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:01:28 -0400
+        id S1729734AbgFOMBt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:01:49 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB9B20679;
-        Mon, 15 Jun 2020 12:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 741A320714;
+        Mon, 15 Jun 2020 12:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592222487;
-        bh=bckLxMEKq0w5/9SzJe+n69vU2/hXF7ff/hu/a17+8+c=;
+        s=default; t=1592222509;
+        bh=CM24pedTnetKRTjlq0H+6fc2bSL16QovoA2odE5GIvY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JYy9uvJD0PYRI2p3DwIotJOPqtgow49a6afHPJvsWcuBY0yjMd4cMirM6pN9r8hnW
-         bAuNvqGDTjO1PYNVybPD0JTt0QO17WOahY67f2Xbvv7ksMXm+vjQWpUNkhQeWo72XL
-         h9meg4DTVT4OxdC2+kMDmPK4hWvZvLhU3rIlMDWM=
-Date:   Mon, 15 Jun 2020 13:01:25 +0100
+        b=f4AIuqKc7TIwjfvhv2rmefsUZLRNT8PWkKDYmZzB2Y2K0R+Bim8k0XxWMyEWFRZyx
+         VDtL/EyqDSXpCpLHMs+CRe9zfpzov4HjNszopTxDyVAgdHctUOXZf5VWZX4Arhs8ry
+         Hbaf2QazFrz0l50kvfyfqiWJc0/uBGadeW4ift+Y=
+Date:   Mon, 15 Jun 2020 13:01:46 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 13/29] dt: fix broken links due to txt->yaml renames
-Message-ID: <20200615120125.GJ4447@sirena.org.uk>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
- <20200615111927.GC4447@sirena.org.uk>
- <20200615135739.798f4489@coco.lan>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        msavaliy@codeaurora.org
+Subject: Re: [PATCH V7 RESEND 6/7] spi: spi-qcom-qspi: Add interconnect
+ support
+Message-ID: <20200615120146.GK4447@sirena.org.uk>
+References: <1591682194-32388-1-git-send-email-akashast@codeaurora.org>
+ <1591682194-32388-7-git-send-email-akashast@codeaurora.org>
+ <2e299942-2a51-f023-ea6a-fa7822912d9e@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="va4/JQ6j8/8uipEp"
+        protocol="application/pgp-signature"; boundary="fUvfsPTz/SzOZDdw"
 Content-Disposition: inline
-In-Reply-To: <20200615135739.798f4489@coco.lan>
+In-Reply-To: <2e299942-2a51-f023-ea6a-fa7822912d9e@codeaurora.org>
 X-Cookie: Offer may end without notice.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -80,39 +66,46 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---va4/JQ6j8/8uipEp
+--fUvfsPTz/SzOZDdw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 15, 2020 at 01:57:39PM +0200, Mauro Carvalho Chehab wrote:
-> Mark Brown <broonie@kernel.org> escreveu:
-> > On Mon, Jun 15, 2020 at 08:46:52AM +0200, Mauro Carvalho Chehab wrote:
-> > > There are some new broken doc links due to yaml renames
-> > > at DT. Developers should really run: =20
+On Mon, Jun 15, 2020 at 12:57:12PM +0530, Akash Asthana wrote:
+> Hi Mark,
+>=20
+> Would you be able to review/ack this QSPI patch, you have already acked "=
+QUP
+> SPI" patch from the series "[Patch V7 RESEND 4/7]"
+>=20
+> Putting a gentle reminder in-case this patch is missed.
 
-> > I also previously acked this one in 20200504100822.GA5491@sirena.org.uk.
-> > Has anything changed here to cause the ack to be dropped?
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-> Both patches are the same. I forgot to add your acks on my tree.=20
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
 
-> My bad!
-
-Ah, no worries - no wonder I couldn't spot the changes!
-
---va4/JQ6j8/8uipEp
+--fUvfsPTz/SzOZDdw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nYxUACgkQJNaLcl1U
-h9AlAAf8D93i17Pj7T800BmwJ3UUHzaiQeRYZFSyfjkXbmviTRnh3rTP+7Rx/Rqe
-83+UeFeMR/Rn18FzLvpCjXuZ1LTbEsOj7/3vkvecKW+LQy/oHwTsTr09Im4vI0h2
-9r3wxGGCXOU+EPu2c9ZT3j+Sp9yhWheTN0ym70YLHDtJuat1Bjw96kBQF8vpo1d9
-AGTB8NOjhstg/4Z+dZYlx5NhdbG4f5qV9zkkVGyZJ1xcdrgs60KfolFrCfTtUG2X
-qRm7RhGf/Rum0bhUG8lvkRaJGz9+Wh9eQA3JUHItfxFEvpM1scwlHJrBTxo7fP9y
-ytZ9j2PBRG+rP5iCMbibBf7cKbhhMg==
-=xi26
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nYyoACgkQJNaLcl1U
+h9DyOAf/buJgSYiAf2Fl+YYl1CDe6yV/KLmnww9YUYvfvzsGAJLXJZVQthCKq7zr
+j7m+iDZpujyNeT1zSI1hZqy7sXVaPc3zdMOP+LFa0xVHxICQh4oF0qsHbn402vI+
+S7xT0XB1vK526+pHgLJ9FS18jP7z3T2C97M/1E5IvIjpvv4HipVwAsXUuroPZy04
+2ePbyIT5rye/tCgBmh8QoZbrtOEM+NBz5zkphREYpUA0Yhb7bWjtbswguwBR+IpQ
+OW5+r2OlQ7FHxKWSChKMXAuD3zIdagwe6tkXKFr0ZqzZJpzClcNyU9GMA3PDfIYx
+cMoFw4AZrl5MTycVwk4DnifcFo+giQ==
+=sGlf
 -----END PGP SIGNATURE-----
 
---va4/JQ6j8/8uipEp--
+--fUvfsPTz/SzOZDdw--
