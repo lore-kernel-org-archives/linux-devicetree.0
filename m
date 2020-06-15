@@ -2,280 +2,179 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29896C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F1BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08DE22076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126B22071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 13:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BZKxxOEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgFONWQ (ORCPT
+        id S1730498AbgFONdF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:22:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24235 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbgFONWP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:22:15 -0400
-IronPort-SDR: oL7MMLqnTJi+LrNFK+73CcAzWyWnuuWj4VDUeerUmiWxhtU2IEkyCO/vrFF7zRHWS/lNF2KM12
- fagsG7eDTc7A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 06:22:11 -0700
-IronPort-SDR: Isa4E4uTJMkkSo2ZlLmIqfPIaJ+R6Kk7H+n9197KtuYSbjF2bfITOzXlZWlWIRSQPFlg0/SPe9
- SiEzxJcxxCOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="382545177"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 15 Jun 2020 06:22:07 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 15 Jun 2020 16:22:07 +0300
-Date:   Mon, 15 Jun 2020 16:22:07 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200615132207.GG3213128@kuha.fi.intel.com>
-References: <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
- <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
- <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
- <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+        Mon, 15 Jun 2020 09:33:05 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:17288 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbgFONdC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 09:33:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592227983; x=1623763983;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7xKYbNgRORGSIRkucj0cga7qBY8A11GtjHiebfAEts4=;
+  b=BZKxxOEh6ERkYDaYVo4u1zMpJONmStzOkBEfoXd2NJnYnD9R4tZGrYXy
+   xZ7PHbeMZUANKfPDZEQJG2CIHAq5IsXCRUx4bvL8xegQTaxAIevx0Yc9n
+   MGfP9XQKcsImTPzDrysSkuqGfb+lzokO4N1+0ebWF39ZM3ynMyUTeRXvP
+   5RgU24ryz35DhsTSqhMDXMUyZrAgOxdwYzxugwbfJ6IE+aRZ216cxd/8G
+   oj+JItjVarHsZAOGPko1vr1dEucSJtXY4cF1O4yu1almRgqxhVA1UYAD8
+   NC5E+J4h4tP4Y4CjHAJNAKtyOFhZ19GyGJq7Qq6jmvJObxkvQzYNqLh8V
+   w==;
+IronPort-SDR: +P10UNKRjPYPhcNlyDckMifLPkD02tynVgW46HfjcCQyW5aygqAvziSg0Dl2tCY18IIMh3Iq1k
+ 59pbDvVExiOfL2ZcbH+SGDjp8YCji8I8s9Hj+ezrJ1Vnvz3I/sq4dIyzU7OlZunBoH5UMa692B
+ hJyxbyJkfA/cIjNDb0EvdJ701n9H2FO1MFWw+N+bippQ2RPI0udRwJgIn/3B8GI4qWg6GkmKv5
+ jFqN1wvNAL+TGEe6GxM3oZCxLmBJjVjYWT1eFg5E/CaA2rVdiaP+XSrSebdoANMlA089lzGMmO
+ T18=
+X-IronPort-AV: E=Sophos;i="5.73,514,1583218800"; 
+   d="scan'208";a="79480463"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 06:33:02 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 15 Jun 2020 06:33:01 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 06:32:57 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 01/10] dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+Date:   Mon, 15 Jun 2020 15:32:33 +0200
+Message-ID: <20200615133242.24911-2-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200615133242.24911-1-lars.povlsen@microchip.com>
+References: <20200615133242.24911-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:34:06AM -0700, Prashant Malani wrote:
-> Hi Rob,
-> 
-> Thanks as always for your help in reviewing this proposal!
-> 
-> Kindly see inline
-> 
-> (Trimming text);
-> On Thu, Jun 11, 2020 at 02:00:47PM -0600, Rob Herring wrote:
-> > On Wed, Jun 10, 2020 at 11:49 AM Prashant Malani <pmalani@chromium.org> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Wed, Jun 10, 2020 at 9:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > > On Tue, Jun 09, 2020 at 04:57:40PM -0700, Prashant Malani wrote:
-> > >
-> > > I think the updated example handles this grouping (port@1 going to a
-> > > "SS mux") although as you said it should probably be a group of muxes,
-> > > but I think the example illustrates the point. Is that assessment
-> > > correct?
-> >
-> > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
-> 
-> Ack.
-> 
-> Let's go with "-switch" ? That's what the connector class uses and it
-> conveys the meaning (unless that is a reserved keyword in DT).
+This adds the main Sparx5 SoC DT documentation file, with information
+abut the supported board types.
 
-Just as a clarification here, we should not be even talking about
-signal routing here. We are talking about functions that an external
-components perform from the connector's perspective. It depends on the
-platform does that function require changing the routing of the lines
-from the connector. For example, data role swapping does not require
-muxing on platforms that have single dual-role USB controller, but
-platforms that have separate IPs for the USB host and USB device
-controllers will need a mux.
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ .../bindings/arm/microchip,sparx5.yaml        | 65 +++++++++++++++++++
+ .../devicetree/bindings/mfd/syscon.yaml       |  1 +
+ 2 files changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
 
-Note, that it is even possible that switching from USB to DisplayPort
-mode does not require any pin reconfiguration from the mux, even if
-the platform has one, because the PHY can be shared between USB3 and
-DP. Then the PHY just needs to be told that it is now in DP mode when
-DP alt mode is entered instead of the mux.
-
-> > > Would this block the addition of the "*-switch" properties? IIUC the
-> > > two are related but not dependent on each other.
-> > >
-> > > The *-switch properties are phandles which the Type C connector class
-> > > framework expects (and uses to get handles to those switches).
-> > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
-> >
-> > You don't need them though. Walk the graph. You get the connector
-> > port@1 remote endpoint and then get its parent.
-> >
-> 
-> I see; would it be something along the lines of this? (DT example
-> follows; search for "example_end" to jump to bottom):
-
-I just realized that you have in practice placed the mux-agent into
-the graph below, right? That we can not do, because it is not
-physically connected to the connector.
-
-> <example_start>
-> 
-> connector@0 {
->     compatible = "usb-c-connector";
->     reg = <0>;
->     power-role = "dual";
->     data-role = "dual";
->     try-power-role = "source";
->     ....
->     ports {
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         port@0 {
->             reg = <0>;
->             usb_con_hs: endpoint {
->                 remote-endpoint = <&foo_usb_hs_controller>;
->             };
->         };
-> 
->         port@1 {
->             reg = <1>;
->             #address-cells = <1>;
->             #size-cells = <0>;
-> 
->             usb_con0_ss_mode: endpoint@0 {
->                 reg = <0>
->                 remote-endpoint = <&mode_switch_ss_in>;
->             };
-> 
->             usb_con0_ss_orientation: endpoint@1 {
->                         reg = <1>
->                         remote-endpoint = <&orientation_switch_ss_in>;
->             };
-> 
->             usb_con0_ss_data_role: endpoint@2 {
->                         reg = <2>
->                         remote-endpoint = <&data_role_switch_in>;
->             };
->         };
-> 
->         port@2 {
->             reg = <2>;
->             #address-cells = <1>;
->             #size-cells = <0>;
->             usb_con0_sbu_mode: endpoint@0 {
->                         reg = <0>
->                         remote-endpoint = <&mode_switch_sbu_in>;
->             };
->             usb_con0_sbu_orientation: endpoint@1 {
->                         reg = <1>
->                         remote-endpoint = <&orientation_switch_sbu_in>;
->             };
->         };
->     };
-> };
-> 
-> mode_switch {
->     compatible = "typec-mode-switch";
->     mux-controls = <&mode_mux_controller>;
->     mux-control-names = "mode";
->     #address-cells = <1>;
->     #size-cells = <0>;
-> 
->     port@0 {
->         reg = <0>;
->         mode_switch_ss_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_mode>
->         };
->     };
-> 
->     port@1 {
->         reg = <1>;
->         mode_switch_out_usb3: endpoint {
->             remote-endpoint = <&usb3_0_ep>
->         };
->     };
-> 
->     port@2 {
->         reg = <2>;
->         mode_switch_out_dp: endpoint {
->             remote-endpoint = <&dp0_out_ep>
->         };
->     };
-> 
->     port@3 {
->         reg = <3>;
->         mode_switch_sbu_in: endpoint {
->             remote-endpoint = <&usb_con0_sbu_mode>
->         };
->     };
->     // ... other ports similarly defined.
-> };
-> 
-> orientation_switch {
->     compatible = "typec-orientation-switch";
->     mux-controls = <&orientation_mux_controller>;
->     mux-control-names = "orientation";
->     #address-cells = <1>;
->     #size-cells = <0>;
-> 
->     port@0 {
->         reg = <0>;
->         orientation_switch_ss_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_orientation>
->         };
->     };
-> 
->     port@1
->         reg = <1>;
->         orientation_switch_sbu_in: endpoint {
->             remote-endpoint = <&usb_con0_sbu_orientation>
->         };
->     };
->     // ... other ports similarly defined.
-> };
-> 
-> data_role_switch {
->     compatible = "typec-data-role-switch";
->     mux-controls = <&data_role_switch_controller>;
->     mux-control-names = "data_role";
-> 
->     port {
->         data_role_switch_in: endpoint {
->             remote-endpoint = <&usb_con0_ss_data_role>
->         };
->     };
-> };
-> 
-> <example_end>
-> 
-> Would this be conformant to OF graph and usb-connector bindings
-> requirements? We'll certainly send out a format PATCH/RFC series for
-> this, but I was hoping to gauge whether we're thinking along the right lines.
-> 
-> So, in effect this would mean:
-> - New bindings(and compatible strings) to be added for:
->   typec-{orientation,data-role,mode}-switch.
-> - Handling in Type C connector class to parse switches from OF graph.
-> - Handling in Type C connector class for distinct switches for port@1
->   (SS lines) and port@2 (SBU lines).
-> 
-> The only thing I'm confused about is how we can define these switch
-> remote-endpoint bindings in usb-connector.yaml; the port can have an
-> remote-endpoint, but can we specify what the parent of the remote-endpoint
-> should have as a compatible string? Or do we not need to?
-
-thanks,
-
+diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+new file mode 100644
+index 0000000000000..ecf6fa12e6ad2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Sparx5 Boards Device Tree Bindings
++
++maintainers:
++  - Lars Povlsen <lars.povlsen@microchip.com>
++
++description: |+
++   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
++   gigabit TSN-capable gigabit switches.
++
++   The SparX-5 Ethernet switch family provides a rich set of switching
++   features such as advanced TCAM-based VLAN and QoS processing
++   enabling delivery of differentiated services, and security through
++   TCAM-based frame processing using versatile content aware processor
++   (VCAP)
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: The Sparx5 pcb125 board is a modular board,
++          which has both spi-nor and eMMC storage. The modular design
++          allows for connection of different network ports.
++        items:
++          - const: microchip,sparx5-pcb125
++          - const: microchip,sparx5
++
++      - description: The Sparx5 pcb134 is a pizzabox form factor
++          gigabit switch with 20 SFP ports. It features spi-nor and
++          either spi-nand or eMMC storage (mount option).
++        items:
++          - const: microchip,sparx5-pcb134
++          - const: microchip,sparx5
++
++      - description: The Sparx5 pcb135 is a pizzabox form factor
++          gigabit switch with 48+4 Cu ports. It features spi-nor and
++          either spi-nand or eMMC storage (mount option).
++        items:
++          - const: microchip,sparx5-pcb135
++          - const: microchip,sparx5
++
++  axi@600000000:
++    type: object
++    description: the root node in the Sparx5 platforms must contain
++      an axi bus child node. They are always at physical address
++      0x600000000 in all the Sparx5 variants.
++    properties:
++      compatible:
++        items:
++          - const: simple-bus
++
++    required:
++      - compatible
++
++required:
++  - compatible
++  - axi@600000000
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 19bdaf781853b..f3fba860d3cc5 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -38,6 +38,7 @@ properties:
+               - allwinner,sun8i-h3-system-controller
+               - allwinner,sun8i-v3s-system-controller
+               - allwinner,sun50i-a64-system-controller
++              - microchip,sparx5-cpu-syscon
+ 
+           - const: syscon
+ 
 -- 
-heikki
+2.27.0
+
