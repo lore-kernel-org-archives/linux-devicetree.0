@@ -2,236 +2,151 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B8CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF367C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 22:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C414B20768
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592259784;
-	bh=j4z0XBSGuF+WLgQoNw8dYLLAwZXMYmBL6SbWZDYqhgo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1tPtY5DMEB1TaEDnWcg7ITFL2jLY39k34TurUbIgB8M4hNe96l9ey27dDNvHGvYwd
-	 8A4wLmvUPvgMT7niwRx8cQR1+VMoS0vh7zUqvSNko08rO89OmECkoNvLP5Q3GHPzRv
-	 eM4s2Wpx9Bn6Pm5XWtYETt34YlNY37Abp6Pk5TMs=
+	by mail.kernel.org (Postfix) with ESMTP id A9E612078E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 22:51:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r7tHGJO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgFOWXE (ORCPT
+        id S1726589AbgFOWvt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbgFOWXE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:23:04 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 15 Jun 2020 18:51:49 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18838 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgFOWvs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 18:51:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592261508; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ezmSdU6tYLdFTOr1T+ah81x42+90GeQROYmrVSVF2Ys=;
+ b=r7tHGJO6MAv47wxpJmg4zH6O1OrZHjtdu2IcpaS43yNmITwHKD7S3xc0eoBjaDeHV+cvMOAd
+ nCYwZ0p2D8X4Cv4CTA1bTRdQ+I2MdnAxv0iQpIjC6Eu1uxXzrFzs/u5C7Mbs7pp5txNnGdZf
+ sCHa4mSFsA6uXphaOJkxW/Ejpwc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ee7fb83c4bb4f886dc8752f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 22:51:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 25C20C43391; Mon, 15 Jun 2020 22:51:47 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FBA220768;
-        Mon, 15 Jun 2020 22:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592259782;
-        bh=j4z0XBSGuF+WLgQoNw8dYLLAwZXMYmBL6SbWZDYqhgo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A0ln/FTnO3bXXFoMfOOmXO9+YPb4HtDl5FAc69IIVFUftd52l5eHxu1pjXoiKDWjs
-         IXF/u9kJ5Y1W98W3vIRE1F6QfGJkv49cjEWDysvimaQnVtZOqXtQNpokzw7fDVaSf2
-         tBPH3w8ep+lYinUoHqMIrsJJSRpUUbwbLBFm6XCo=
-Received: by mail-oi1-f176.google.com with SMTP id b8so17472195oic.1;
-        Mon, 15 Jun 2020 15:23:02 -0700 (PDT)
-X-Gm-Message-State: AOAM531zUH1+3mYG9IU4q/U2g0e4x5cQoL/X55rQhJxecraLfOHthw5b
-        Dbr+fTGfIDCuCcmSoh8Lho72Xs+a3gjcRpb+lg==
-X-Google-Smtp-Source: ABdhPJwMEufH0zIsPUC/JrC3ZiEk4m9XpE9RQClmRqKUdXAgPYO5wkOtjPOF3WMU4QN5C+4QD08fesyUzN22iVqsIfI=
-X-Received: by 2002:aca:d454:: with SMTP id l81mr1308803oig.152.1592259781555;
- Mon, 15 Jun 2020 15:23:01 -0700 (PDT)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0D19C433CB;
+        Mon, 15 Jun 2020 22:51:45 +0000 (UTC)
 MIME-Version: 1.0
-References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
- <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
- <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com> <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
- <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com> <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
- <CAMuHMdWPo6xDMipBg2noSOD3trYJjifDbSf-krtgPkA-XdbXZg@mail.gmail.com>
- <4311cc0a-016d-1a24-10f9-9dccc28ddd43@fastree3d.com> <CAMuHMdVHqNi9peLm8Lf+uSXDjzJP6eB9Kz1oM-Mr8RQ62+1uZg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVHqNi9peLm8Lf+uSXDjzJP6eB9Kz1oM-Mr8RQ62+1uZg@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 15 Jun 2020 16:22:49 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLuo4jB6B8eqwm3YQ1gxxndwC6o23=+tm0dugPcGxm6ww@mail.gmail.com>
-Message-ID: <CAL_JsqLuo4jB6B8eqwm3YQ1gxxndwC6o23=+tm0dugPcGxm6ww@mail.gmail.com>
-Subject: Re: [cadence-spi] daisy chain
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 15 Jun 2020 15:51:45 -0700
+From:   tanmay@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     robh+dt@kernel.org, sam@ravnborg.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, robdclark@gmail.com,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org
+Subject: Re: [PATCH v6 0/5] Add support for DisplayPort driver on
+In-Reply-To: <159200440578.62212.5195358467251573190@swboyd.mtv.corp.google.com>
+References: <20200612015030.16072-1-tanmay@codeaurora.org>
+ <159200440578.62212.5195358467251573190@swboyd.mtv.corp.google.com>
+Message-ID: <1eda01da33b620ddee5162be3326853f@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 3:30 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Adrian,
->
-> On Mon, Jun 15, 2020 at 6:05 PM Adrian Fiergolski
-> <adrian.fiergolski@fastree3d.com> wrote:
-> > On 15.06.2020 16:40, Geert Uytterhoeven wrote:
-> > > On Mon, Jun 15, 2020 at 4:06 PM Adrian Fiergolski
-> > > <adrian.fiergolski@fastree3d.com> wrote:
-> > >> Sorry for the typo in the example device tree:
-> > >>
-> > >> On 15.06.2020 15:57, Adrian Fiergolski wrote:
-> > >>> On 15.06.2020 15:07, Geert Uytterhoeven wrote:
-> > >>>> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
-> > >>>> <adrian.fiergolski@fastree3d.com> wrote:
-> > >>>>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
-> > >>>>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
-> > >>>>>> <adrian.fiergolski@fastree3d.com> wrote:
-> > >>>>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
-> > >>>>>> connected to a single chip select of the cadence-spi master. I have the
-> > >>>>>> impression such a configuration is supported by none of those two
-> > >>>>>> drivers. I could try to extend both, however, I haven't found any other
-> > >>>>>> SPI driver, where I could find implementation inspiration. Is it
-> > >>>>>> supported by kernel?
-> > >>>>>>
-> > >>>>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
-> > >>>>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
-> > >>>>>> "registers-number" DT property.
-> > >>>>>>
-> > >>>>>> So both drivers handle this in their SPI slave drivers.
-> > >>>>>>
-> > >>>>>> Of course this does not handle the mixed case, i.e. daisy-chaining
-> > >>>>>> different types of devices.
-> > >>>>>>
-> > >>>>>> The documentation mentions only about the common 'daisy-chained-devices'
-> > >>>>>> property (devicetree/bindings/common-properties.txt). However, in order
-> > >>>>>> to try to implement it in the master driver, IMHO, the spi subsystem
-> > >>>>>> would need to have a call 'no-operation' to other nodes on the
-> > >>>>>> daisy-chain, which are not addressed by the given SPI access. Is there
-> > >>>>>> any recommended approach to address this case?
-> > >>>>>>
-> > >>>>>> Supporting this in a generic way would indeed be nice, as it would mean
-> > >>>>>> individual SPI slave drivers no longer have to care about it.
-> > >>>>>> However, that may be difficult, as the master needs to known which
-> > >>>>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
-> > >>>>> In fact, the ultimate solution would be to have it solved at the level
-> > >>>>> of the spi subsystem:
-> > >>>>>
-> > >>>>>   * /spi_device struct/ would contain extra callback which returns msg
-> > >>>>>     to be sent for no operation.
-> > >>>>>   * spi_device struct would contain a pointer to the list describing the
-> > >>>>>     given daisy chain (list of spi_devices on the chain)
-> > >>>>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
-> > >>>>>     indicating length of a command of the addressed device if it's on
-> > >>>>>     the daisy chain
-> > >>>>>     For example, in case of the ltc2634 device, the regular message
-> > >>>>>     consists of 24 bits, but when device is a part of a daisy chain, the
-> > >>>>>     messages are 32 bits. This 32 would be stored in
-> > >>>>>     /daisy_chain_msg_length./
-> > >>>>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
-> > >>>>>     /spi_message_init_with_transfer/ would create a msg of length equal
-> > >>>>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
-> > >>>>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
-> > >>>>>     would be filled with the command of the addressed device on the
-> > >>>>>     chain and no_operation content for all other devices on the chain
-> > >>>>>     not being addressed
-> > >>>> Sounds good to me.
-> > >>>>
-> > >>>>>   * I think in such a case, the /daisy-chained-devices /property would
-> > >>>>>     be not used, as chains would be build basing on the assigned
-> > >>>>>     chipselect (reg property).
-> > >>>> So you still have to describe the chain in DT in some way.
-> > >>>> As there can be only a single sub node with the same unit address
-> > >>>> (= chip select), you probably need a container with that address, which
-> > >>>> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
-> > >>> Good point. So maybe at the level of the device tree, it could be
-> > >>> described like that (based on the spi-cadence example):
-> > >>>
-> > >>>         spi0: spi@ff040000 {
-> > >>>             compatible = "cdns,spi-r1p6";
-> > >>>             status = "disabled";
-> > >>>             interrupt-parent = <&gic>;
-> > >>>             interrupts = <0 19 4>;
-> > >>>             reg = <0x0 0xff040000 0x0 0x1000>;
-> > >>>             clock-names = "ref_clk", "pclk";
-> > >>>             #address-cells = <1>;
-> > >>>             #size-cells = <0>;
-> > >>>             power-domains = <&zynqmp_firmware PD_SPI_0>;
-> > >>>             daisy-chain0 : daisy_chain@0 {
-> > >>>                #address-cells = <1>;
-> > >>>                #size-cells = <0>;
-> > >>>                reg = <0>;
-> > >>>                daisy-chained-devices = 2;
-> > >>>
-> > >>>                dac0: ltc2632@0 {
-> > >>>                    compatible = "lltc,ltc2634-l12";
-> > >>>                    reg = <0>;
-> > >>>                    spi-max-frequency = <1000000>;
-> > >>>                };
-> > >>>                dac1: ltc2632@1 {
-> > >>>                    compatible = "lltc,ltc2634-l12";
-> > >>>                    reg = <1>;
-> > >>>                    spi-max-frequency = <2000000>;
-> > >>>                };
-> > >>>            };
-> > >>>         };
-> > >>         spi0: spi@ff040000 {
-> > >>             compatible = "cdns,spi-r1p6";
-> > >>             status = "disabled";
-> > >>             interrupt-parent = <&gic>;
-> > >>             interrupts = <0 19 4>;
-> > >>             reg = <0x0 0xff040000 0x0 0x1000>;
-> > >>             clock-names = "ref_clk", "pclk";
-> > >>             #address-cells = <1>;
-> > >>             #size-cells = <0>;
-> > >>             power-domains = <&zynqmp_firmware PD_SPI_0>;
-> > >>             daisy-chain0 : daisy_chain@0 {
-> > >>                #address-cells = <1>;
-> > >>                #size-cells = <0>;
-> > >>                #daisy-chained-devices = <2>;
-> > >
-> > > You probably want a proper "compatible" value here instead.
-> > > I don't think "#daisy-chained-devices" is needed, it can be derived
-> > > from the number of subnodes.
+On 2020-06-12 16:26, Stephen Boyd wrote:
 
-This is not how '#daisy-chained-devices' works either. The chained
-devices are represented as a single node and a single driver instance
-handles multiple physical devices.
+Thanks for reviews Stephen.
 
-The above looks like mux'ed access rather than creating a 'super'
-device. Would you want to program all N chips in one SPI transfer or
-it's one device at a time? (We should be careful with the bindings
-that we're not encoding that into the binding as that could evolve
-with the OS.)
+> Quoting Tanmay Shah (2020-06-11 18:50:25)
+>> These patches add support for Display-Port driver on SnapDragon
+>> hardware. It adds
+>> DP driver and DP PLL driver files along with the needed device-tree
+>> bindings.
+>> 
+>> The block diagram of DP driver is shown below:
+>> 
+>> 
+>>                  +-------------+
+>>                  |DRM FRAMEWORK|
+>>                  +------+------+
+>>                         |
+>>                    +----v----+
+>>                    | DP DRM  |
+>>                    +----+----+
+>>                         |
+>>                    +----v----+
+>>      +------------+|   DP    +----------++------+
+>>      +        +---+| DISPLAY |+---+      |      |
+>>      |        +    +-+-----+-+    |      |      |
+>>      |        |      |     |      |      |      |
+>>      |        |      |     |      |      |      |
+>>      |        |      |     |      |      |      |
+>>      v        v      v     v      v      v      v
+>>  +------+ +------+ +---+ +----+ +----+ +---+ +-----+
+>>  |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
+>>  |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
+>>  +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
+>>     |                              |     |
+>>  +--v---+                         +v-----v+
+>>  |DEVICE|                         |  DP   |
+>>  | TREE |                         |CATALOG|
+>>  +------+                         +---+---+
+>>                                       |
+>>                                   +---v----+
+>>                                   |CTRL/PHY|
+>>                                   |   HW   |
+>>                                   +--------+
+>> 
+> 
+> I've never seen a block diagram for a driver before...
+> 
+It is here for v5. https://patchwork.freedesktop.org/series/74312/
 
+>> 
+>> These patches have dependency on clock driver changes mentioned below:
+>> https://patchwork.kernel.org/patch/11245895/
+>> https://patchwork.kernel.org/cover/11069083/
+> 
+> These are merged right? Don't need to include this if it's already
+> merged.
+> 
+Ok Thanks.
 
-> > compatible = "daisy_chain" or compatible ="simple-bus" would be better?
->
-> Not "simple-bus", as this is not a simple memory-mapped bus.
-> I'd use something like "spi,daisy-chain", to be validated by RobH.
-
-Okay, but what makes it generic?
-
-What happens with power control of the child devices? While I'd think
-the only sane design is shared supplies, resets, clocks, etc. (and
-daisy-chained-devices certainly assumes that), it's certainly possible
-some cross device control is needed.
-
-> > Both could be caught by of_register_spi_devices to populate the daisy
-> > chain. Do you agree that at that level the chip select could be defined?
->
-> Or by a separate SPI device driver that matches against "spi,daisy-chain",
-> and parse the subnodes.
->
-> > The reg properties from the sub-nodes (defining actual spi devices)
-> > would be ignored, thus not even needed to be defined.
->
-> They are needed to determine the order in the chain.
-
-Agreed, you need something to address a device. A better address might
-be the bit position of the device in the chain. Then this could work
-for any mixture of devices that support chaining (though you'd need to
-know what's a nop for each device).
-
-Rob
+> Can you include a changelog in the cover letter too so we know what has
+> changed between versions of the patchset?
+> 
+Sure.
+>> 
+>> Chandan Uddaraju (4):
+>>   dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+>>   drm: add constant N value in helper file
+>>   drm/msm/dp: add displayPort driver support
+>>   drm/msm/dp: add support for DP PLL driver
+>> 
+>> Jeykumar Sankaran (1):
+>>   drm/msm/dpu: add display port support in DPU
+>> 
+> [...]
+>> 
+>> 
+>> base-commit: 48f99181fc118d82dc8bf6c7221ad1c654cb8bc2
+> 
+> What is this commit? I don't see it in linux-next.
+Here: 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200603&id=48f99181fc118d82dc8bf6c7221ad1c654cb8bc2
