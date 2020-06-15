@@ -2,140 +2,217 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82993C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD2F20739
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Le1ui5h1"
+	by mail.kernel.org (Postfix) with ESMTP id 6175C206B7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgFOO2t (ORCPT
+        id S1730698AbgFOOkU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729962AbgFOO2t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 10:28:49 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A45C061A0E
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:28:48 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id g10so14840383wmh.4
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xGDCFEKi8HPI3D0JqHhVUyKhW7cWu5yo2qs+AF/FFQg=;
-        b=Le1ui5h1RFDRX7MHDNBOe50JiR6qxmvuYkfJy1r90c0vukA2QbHtCC4GjaGhFi7aY1
-         UfVZVUoClT7O/3WPSZ4WZFovdZUEVQ+XHmOCdzqJvgUdW2BeYmUIncJAZl7SHmK8EPpO
-         Xwto79YM518LbFSqELX9i9IoK3X0emmXvFr5P9YjZ+hcflPmSZPE/47zOJ2CLWBPZ9R/
-         FjXErRJAQRSufzyoJTBg8TN75eHwMCfckicK/iC/UKtttLIVkCgQbjh9lt2F2CWumOvu
-         7KA/feRfIM0R5fdFwxwYKb4mrlNg3sxIJT7hfccnSV4BpnIsevRelZKhwoJwjQwOmEmM
-         VhGw==
+        Mon, 15 Jun 2020 10:40:20 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39678 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730503AbgFOOkU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 10:40:20 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d67so16063041oig.6;
+        Mon, 15 Jun 2020 07:40:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xGDCFEKi8HPI3D0JqHhVUyKhW7cWu5yo2qs+AF/FFQg=;
-        b=OB/3N+M8QfhREwCH0IRwSXRC/oFUW9k3UfIuWj4FkNXB2u3iM6sJ8ZiGqKH0f6O6yw
-         JYYFYT3hJ1vRrroT9/K+WkawkIdUdlKB77cr7YLdnHiq3ZNgXD3nQUY86g2nfxstxf4G
-         7omk5lqnndOUg1EUDUQ+Qu+7kK6n+uXpDVFehcbGHx5eeCPuuEMbROjeYa7LjiLbbN7d
-         vGh2oHVYX2HZ/KiEzcthOt8DzARBDo/GiJ96+q4ewEwhZLCjusfnSrNVZIse/UlfZrAQ
-         FrwZ8N/e/7Qg93ilEhmkC9s6WT4hMav/Vq96yO4Iq+TS1WEHgjRkPgEZdH1C2e8hZqlZ
-         GMuw==
-X-Gm-Message-State: AOAM5300KoXOFLSjvBaxWtPgB1ebrWaEVlVW5eB6ceg+sbjYBq/tketB
-        NQd7oaeyl+0O6b/wq6ZFtVKPMw==
-X-Google-Smtp-Source: ABdhPJzjPlB084ZbJ22w6JnJ0+3/LKJfBN9RTr2pz+fW7ZJKZZzu0Z/8wTigeY3ja39uTmOlimT/RA==
-X-Received: by 2002:a1c:7717:: with SMTP id t23mr13299332wmi.175.1592231327311;
-        Mon, 15 Jun 2020 07:28:47 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id a6sm24329946wrn.38.2020.06.15.07.28.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:28:46 -0700 (PDT)
-Subject: Re: [RFC v2 1/3] dt-bindings: nvmem: Add devicetree bindings for
- qfprom-efuse
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
- <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
- <CAD=FV=WjvAWVmq3fTh=_f2p1Dv+sXg1RV-CqZr8KRgHe8_wT0w@mail.gmail.com>
- <0ee1d7fa-0520-a347-6a55-6ab646284b1a@linaro.org>
- <CAD=FV=WGCvQTRHWX4Dvx+pTf010NbEzQMgcV4WDKQ6M8KO-cRw@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <9f702f74-1fb7-423b-0899-0bdaeafbef82@linaro.org>
-Date:   Mon, 15 Jun 2020 15:28:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rcay9uCDol5ek0H9aB+GTc9B9A7OXkd9/2qPj3gqRRc=;
+        b=gOst+sDC9x5wChjx6dEyJKAppRdGJ6peWeurEMoruakLvh8vSs3xNWQBjU2xCKX5Y4
+         uNQGjAS/tV5KmAb1HNt09euo+CcOh4JkjXLJgYuBamGdbdBDap6QF4MgD75Yg30V3xaC
+         I2wK6EO3qKdnK6wyBgY7Ki047UWd1cgYEZI3T9n3jocwDMOGDx+LcP7uMQFLyypz4khE
+         VoyAVF0mFdxEl2o40F6GVozVgCv4IWr1gsfhx2bA0NKhSMF8r6eOXx6+7d88+aVeFwP6
+         cFMPLibW+9EHEGOam4ZB0ZhQIJ1KmEbXiaV3E7iUxG7uO4caKwmbjhsWO0/VfiQp7g0a
+         hdvg==
+X-Gm-Message-State: AOAM533gulnKPMoUWR3qBkwO+Jb0XPkCx1Go+AFM3REOUsGCb2IINnYO
+        A4AlwSZgKlVxpx1+WTO7w1rfEiaThiGul/uNIa8RTKuN
+X-Google-Smtp-Source: ABdhPJyzs7Sy/TbPQB7whx7T2Er1XPJbQcTk0I3JgaXXBL2M3Csf25y1FXxBr1wX5s3q14Go2ZJNCKeUBmIo4v+7Y+o=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr9122803oia.54.1592232017510;
+ Mon, 15 Jun 2020 07:40:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=WGCvQTRHWX4Dvx+pTf010NbEzQMgcV4WDKQ6M8KO-cRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
+ <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
+ <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com> <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
+ <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com> <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
+In-Reply-To: <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 15 Jun 2020 16:40:04 +0200
+Message-ID: <CAMuHMdWPo6xDMipBg2noSOD3trYJjifDbSf-krtgPkA-XdbXZg@mail.gmail.com>
+Subject: Re: [cadence-spi] daisy chain
+To:     Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
+Cc:     linux-spi <linux-spi@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Adrian,
 
+On Mon, Jun 15, 2020 at 4:06 PM Adrian Fiergolski
+<adrian.fiergolski@fastree3d.com> wrote:
+> Sorry for the typo in the example device tree:
+>
+> On 15.06.2020 15:57, Adrian Fiergolski wrote:
+> > On 15.06.2020 15:07, Geert Uytterhoeven wrote:
+> >> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
+> >> <adrian.fiergolski@fastree3d.com> wrote:
+> >>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
+> >>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
+> >>>> <adrian.fiergolski@fastree3d.com> wrote:
+> >>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
+> >>>> connected to a single chip select of the cadence-spi master. I have the
+> >>>> impression such a configuration is supported by none of those two
+> >>>> drivers. I could try to extend both, however, I haven't found any other
+> >>>> SPI driver, where I could find implementation inspiration. Is it
+> >>>> supported by kernel?
+> >>>>
+> >>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
+> >>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
+> >>>> "registers-number" DT property.
+> >>>>
+> >>>> So both drivers handle this in their SPI slave drivers.
+> >>>>
+> >>>> Of course this does not handle the mixed case, i.e. daisy-chaining
+> >>>> different types of devices.
+> >>>>
+> >>>> The documentation mentions only about the common 'daisy-chained-devices'
+> >>>> property (devicetree/bindings/common-properties.txt). However, in order
+> >>>> to try to implement it in the master driver, IMHO, the spi subsystem
+> >>>> would need to have a call 'no-operation' to other nodes on the
+> >>>> daisy-chain, which are not addressed by the given SPI access. Is there
+> >>>> any recommended approach to address this case?
+> >>>>
+> >>>> Supporting this in a generic way would indeed be nice, as it would mean
+> >>>> individual SPI slave drivers no longer have to care about it.
+> >>>> However, that may be difficult, as the master needs to known which
+> >>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
+> >>> In fact, the ultimate solution would be to have it solved at the level
+> >>> of the spi subsystem:
+> >>>
+> >>>   * /spi_device struct/ would contain extra callback which returns msg
+> >>>     to be sent for no operation.
+> >>>   * spi_device struct would contain a pointer to the list describing the
+> >>>     given daisy chain (list of spi_devices on the chain)
+> >>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
+> >>>     indicating length of a command of the addressed device if it's on
+> >>>     the daisy chain
+> >>>     For example, in case of the ltc2634 device, the regular message
+> >>>     consists of 24 bits, but when device is a part of a daisy chain, the
+> >>>     messages are 32 bits. This 32 would be stored in
+> >>>     /daisy_chain_msg_length./
+> >>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
+> >>>     /spi_message_init_with_transfer/ would create a msg of length equal
+> >>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
+> >>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
+> >>>     would be filled with the command of the addressed device on the
+> >>>     chain and no_operation content for all other devices on the chain
+> >>>     not being addressed
+> >> Sounds good to me.
+> >>
+> >>>   * I think in such a case, the /daisy-chained-devices /property would
+> >>>     be not used, as chains would be build basing on the assigned
+> >>>     chipselect (reg property).
+> >> So you still have to describe the chain in DT in some way.
+> >> As there can be only a single sub node with the same unit address
+> >> (= chip select), you probably need a container with that address, which
+> >> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
+> > Good point. So maybe at the level of the device tree, it could be
+> > described like that (based on the spi-cadence example):
+> >
+> >         spi0: spi@ff040000 {
+> >             compatible = "cdns,spi-r1p6";
+> >             status = "disabled";
+> >             interrupt-parent = <&gic>;
+> >             interrupts = <0 19 4>;
+> >             reg = <0x0 0xff040000 0x0 0x1000>;
+> >             clock-names = "ref_clk", "pclk";
+> >             #address-cells = <1>;
+> >             #size-cells = <0>;
+> >             power-domains = <&zynqmp_firmware PD_SPI_0>;
+> >             daisy-chain0 : daisy_chain@0 {
+> >                #address-cells = <1>;
+> >                #size-cells = <0>;
+> >                reg = <0>;
+> >                daisy-chained-devices = 2;
+> >
+> >                dac0: ltc2632@0 {
+> >                    compatible = "lltc,ltc2634-l12";
+> >                    reg = <0>;
+> >                    spi-max-frequency = <1000000>;
+> >                };
+> >                dac1: ltc2632@1 {
+> >                    compatible = "lltc,ltc2634-l12";
+> >                    reg = <1>;
+> >                    spi-max-frequency = <2000000>;
+> >                };
+> >            };
+> >         };
+>
+>         spi0: spi@ff040000 {
+>             compatible = "cdns,spi-r1p6";
+>             status = "disabled";
+>             interrupt-parent = <&gic>;
+>             interrupts = <0 19 4>;
+>             reg = <0x0 0xff040000 0x0 0x1000>;
+>             clock-names = "ref_clk", "pclk";
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>             power-domains = <&zynqmp_firmware PD_SPI_0>;
+>             daisy-chain0 : daisy_chain@0 {
+>                #address-cells = <1>;
+>                #size-cells = <0>;
+>                #daisy-chained-devices = <2>;
 
-On 15/06/2020 15:27, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Jun 15, 2020 at 3:44 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->>>> +properties:
->>>> +  compatible:
->>>> +    enum:
->>>> +      - qcom,qfprom
->>>
->>> As per discussion in patch #1, I believe SoC compatible should be here
->>> too in case it is ever needed.  This is standard practice for dts
->>> files for IP blocks embedded in an SoC.  AKA, this should be:
->>>
->>>       items:
->>>         - enum:
->>>             - qcom,apq8064-qfprom
->>>             - qcom,apq8084-qfprom
->>>             - qcom,msm8974-qfprom
->>>             - qcom,msm8916-qfprom
->>>             - qcom,msm8996-qfprom
->>>             - qcom,msm8998-qfprom
->>>             - qcom,qcs404-qfprom
->>>             - qcom,sc7180-qfprom
->>>             - qcom,sdm845-qfprom
->>
->>
->> Above is not required for now in this patchset, as we can attach data at
->> runtime specific to version of the qfprom.
->>
->> This can be added when required!
-> 
-> I'm OK with leaving off for this patchset.  After we get everything
-> landed for blowing fuses then I can send out a separate patch where we
-> can debate the merits of adding the SoC-specific compatible strings.
-> :-)  Sound good?
+You probably want a proper "compatible" value here instead.
+I don't think "#daisy-chained-devices" is needed, it can be derived
+from the number of subnodes.
 
-Sounds good!
+>
+>                reg = <0>;
+>
+>                dac0: ltc2632@0 {
+>                    compatible = "lltc,ltc2634-l12";
+>                    reg = <0>;
+>                    spi-max-frequency = <1000000>;
+>                };
+>                dac1: ltc2632@1 {
+>                    compatible = "lltc,ltc2634-l12";
+>                    reg = <1>;
+>                    spi-max-frequency = <2000000>;
+>                };
+>            };
+>         };
+>
+> >
+> > Once a node has daisy-chanied-devices property defined,
+> > of_register_spi_device (spi.c) will interpret it as a daisy chain. I
+> > will assume, that for the given chain the lowest frequency of the whole
+> > chain should be used. When it comes to the mode, as in case of
+> > incompatibility no much can be done anyway, the mode of the addressed
+> > spi device will be used.
 
---srini
+Don't the modes have to agree, too?
+Else the dummy command may be interpreted differently than intended.
 
-> 
-> -Doug
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
