@@ -2,243 +2,101 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E3FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967FCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 719382068E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725CB206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RthVmVY9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIDTWFM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgFOH1d (ORCPT
+        id S1728428AbgFOHbm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:27:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53638 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728380AbgFOH1c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:27:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592206051; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=fEk7YP/LrCEAqKTSFo02hM8U5W6/ymF6qtRNJISca3Y=; b=RthVmVY9/qBF04kKB2W7R0Kfk94QAhY1qwlWndycgl6Xb85IJXIegFZZdNJgVQnLmVCtyDnO
- egk2M5mOZuud6ES4uMYsZoVcg+PSIyJKbdTKPh/6K3dD+jQAod/qvqwksL6qxGxmCHJ/xaGw
- lXLWD0rC27Ly3PFRTnbo0IKl5h0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
- 5ee722dda3d8a44743c2b317 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 07:27:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 762AFC43391; Mon, 15 Jun 2020 07:27:24 +0000 (UTC)
-Received: from [192.168.0.12] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBBFAC433C8;
-        Mon, 15 Jun 2020 07:27:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBBFAC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V7 RESEND 6/7] spi: spi-qcom-qspi: Add interconnect
+        Mon, 15 Jun 2020 03:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbgFOHbm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 03:31:42 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8F6C05BD1E
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 00:31:42 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u128so352671pgu.13
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 00:31:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LrJ4JAo2vjzpAGyvhcbFA7qISNQsytIItEN02iswbAY=;
+        b=xIDTWFM2aEF9G48Tte+2/OhzJEH4zIX8UuUvaXknN7D4I4cmnaZPllbbgOZ2Qk+1bY
+         xbc+h154cHHO0epDGK216n3MwNuTQp8fqNoImvPxYEWwYNbpZlJyWIj2LFILlM6wvgH+
+         PrrwqgyDhhXP7IQ8oGaTW5/tJ5HPe94oZv9gZMHEzR71J+0zMmRMINshTnnEMwgOVaAR
+         riY+A1J2/TsZ/dTasy+1g79Vmc0d1usNeEDBgt0+HWb+bXb9RnVRGlHffL4L/ugZBF2w
+         Dud6PN5w+IJx6AeU9QRAZD329d15LkFad4bKzdPv8fewOwdQekgvuC7XPd0gsL3i8Aa0
+         VR1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LrJ4JAo2vjzpAGyvhcbFA7qISNQsytIItEN02iswbAY=;
+        b=HCUCqPOKU8Hf0v6pBVRa8A/V0TdobgE2IGy5ivDU6OQMXTsMp1JQdh3b2fYrcyTFol
+         bx1NuidGkLAJPRLyNy3F1kAZ/5IFRaM82PnbTc8UM+hw82bWbyNv5Geps42QJL7GpKUF
+         Q71YqvbCQCBJYnQet8fn0hEwAnrR1Rtj8pNFvYbBVEs/z0WLmmLk6hY2fpj1I/ZzqctC
+         Qz4NtEgy7Vb4l7cG8KXmje/k91SCAW/gB65KJK/Ei6H+2UItyx7n60lCqyP8HvdSyKxu
+         THvXVTE1HWEfzGVIU3/hn/H25aEM9lcWZqkHxplyTp0UgaqshqRxabHpto80iydB37jG
+         DhmA==
+X-Gm-Message-State: AOAM531jsHdxMi+lLgOt/v57TVyfA1fe5k3M7IoLNY6k/dfke883bPlG
+        ZEo1SKKJG2ft1ozAhgLbU1QSRg==
+X-Google-Smtp-Source: ABdhPJzYVFN3gBHjfNgqZa/g6YU6WbN/APpY56EAa5j7L5CZKm7Xt1592LSNfKcNJdQv1J9FEzZwKg==
+X-Received: by 2002:a63:5f41:: with SMTP id t62mr20785803pgb.252.1592206301079;
+        Mon, 15 Jun 2020 00:31:41 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id p14sm11774352pjf.32.2020.06.15.00.31.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 00:31:40 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 13:01:38 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH 00/12] Add cpufreq and cci devfreq for mt8183, and SVS
  support
-To:     broonie@kernel.org
-Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org,
-        msavaliy@codeaurora.org
-References: <1591682194-32388-1-git-send-email-akashast@codeaurora.org>
- <1591682194-32388-7-git-send-email-akashast@codeaurora.org>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <2e299942-2a51-f023-ea6a-fa7822912d9e@codeaurora.org>
-Date:   Mon, 15 Jun 2020 12:57:12 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Message-ID: <20200615073138.2vk5f3kplsz6rgqc@vireshk-i7>
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <1591682194-32388-7-git-send-email-akashast@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
+On 20-05-20, 11:42, Andrew-sh.Cheng wrote:
+> 	- Resend depending patches of Sravana Kannan base on kernel-5.7
 
-Would you be able to review/ack this QSPI patch, you have already acked 
-"QUP SPI" patch from the series "[Patch V7 RESEND 4/7]"
+Saravana's patches were never accepted and I suggested him this which
+he never tested I believe.
 
-Putting a gentle reminder in-case this patch is missed.
+https://lore.kernel.org/lkml/20191125112812.26jk5hsdwqfnofc2@vireshk-i7/
 
-Regards,
-
-Akash
-
-On 6/9/2020 11:26 AM, Akash Asthana wrote:
-> Get the interconnect paths for QSPI device and vote according to the
-> current bus speed of the driver.
->
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in V2:
->   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
->     path handle
->   - As per Matthias comment, added error handling for icc_set_bw call
->
-> Changes in V3:
->   - No Change.
->
-> Changes in V4:
->   - As per Mark's comment move peak_bw guess as twice of avg_bw if
->     nothing mentioned explicitly to ICC core.
->
-> Changes in V5:
->   - Add icc_enable/disable to power on/off call.
->   - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
->     from probe so that when resume/icc_enable is called NOC are running at
->     some non-zero value.
->
-> Changes in V6:
->   - As per Matthias's comment made print statement consistent across driver
->
-> Changes in V7:
->   - As per Matthias's comment removed usage of peak_bw variable because we don't
->     have explicit peak requirement, we were voting peak = avg and this can be
->     tracked using single variable for avg bw.
->   - As per Matthias's comment improved print log.
->
-> Changes in Resend V7:
->   - As per Matthias comment removed "unsigned int avg_bw_cpu" from
->     struct qcom_qspi as we are using that variable only once.
->
->   drivers/spi/spi-qcom-qspi.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 55 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-> index 3c4f83b..b5b4cf6 100644
-> --- a/drivers/spi/spi-qcom-qspi.c
-> +++ b/drivers/spi/spi-qcom-qspi.c
-> @@ -2,6 +2,7 @@
->   // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
->   
->   #include <linux/clk.h>
-> +#include <linux/interconnect.h>
->   #include <linux/interrupt.h>
->   #include <linux/io.h>
->   #include <linux/module.h>
-> @@ -139,7 +140,8 @@ struct qcom_qspi {
->   	struct device *dev;
->   	struct clk_bulk_data *clks;
->   	struct qspi_xfer xfer;
-> -	/* Lock to protect xfer and IRQ accessed registers */
-> +	struct icc_path *icc_path_cpu_to_qspi;
-> +	/* Lock to protect data accessed by IRQs */
->   	spinlock_t lock;
->   };
->   
-> @@ -229,6 +231,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->   	int ret;
->   	unsigned long speed_hz;
->   	unsigned long flags;
-> +	unsigned int avg_bw_cpu;
->   
->   	speed_hz = slv->max_speed_hz;
->   	if (xfer->speed_hz)
-> @@ -241,6 +244,18 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->   		return ret;
->   	}
->   
-> +	/*
-> +	 * Set BW quota for CPU as driver supports FIFO mode only.
-> +	 * We don't have explicit peak requirement so keep it equal to avg_bw.
-> +	 */
-> +	avg_bw_cpu = Bps_to_icc(speed_hz);
-> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, avg_bw_cpu, avg_bw_cpu);
-> +	if (ret) {
-> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu: %d\n",
-> +			__func__, ret);
-> +		return ret;
-> +	}
-> +
->   	spin_lock_irqsave(&ctrl->lock, flags);
->   
->   	/* We are half duplex, so either rx or tx will be set */
-> @@ -458,6 +473,29 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->   	if (ret)
->   		goto exit_probe_master_put;
->   
-> +	ctrl->icc_path_cpu_to_qspi = devm_of_icc_get(dev, "qspi-config");
-> +	if (IS_ERR(ctrl->icc_path_cpu_to_qspi)) {
-> +		ret = PTR_ERR(ctrl->icc_path_cpu_to_qspi);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get cpu path: %d\n", ret);
-> +		goto exit_probe_master_put;
-> +	}
-> +	/* Set BW vote for register access */
-> +	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, Bps_to_icc(1000),
-> +				Bps_to_icc(1000));
-> +	if (ret) {
-> +		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu: %d\n",
-> +				__func__, ret);
-> +		goto exit_probe_master_put;
-> +	}
-> +
-> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
-> +	if (ret) {
-> +		dev_err(ctrl->dev, "%s: ICC disable failed for cpu: %d\n",
-> +				__func__, ret);
-> +		goto exit_probe_master_put;
-> +	}
-> +
->   	ret = platform_get_irq(pdev, 0);
->   	if (ret < 0)
->   		goto exit_probe_master_put;
-> @@ -511,9 +549,17 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
->   {
->   	struct spi_master *master = dev_get_drvdata(dev);
->   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
-> +	int ret;
->   
->   	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
->   
-> +	ret = icc_disable(ctrl->icc_path_cpu_to_qspi);
-> +	if (ret) {
-> +		dev_err_ratelimited(ctrl->dev, "%s: ICC disable failed for cpu: %d\n",
-> +			__func__, ret);
-> +		return ret;
-> +	}
-> +
->   	return 0;
->   }
->   
-> @@ -521,6 +567,14 @@ static int __maybe_unused qcom_qspi_runtime_resume(struct device *dev)
->   {
->   	struct spi_master *master = dev_get_drvdata(dev);
->   	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
-> +	int ret;
-> +
-> +	ret = icc_enable(ctrl->icc_path_cpu_to_qspi);
-> +	if (ret) {
-> +		dev_err_ratelimited(ctrl->dev, "%s: ICC enable failed for cpu: %d\n",
-> +			__func__, ret);
-> +		return ret;
-> +	}
->   
->   	return clk_bulk_prepare_enable(QSPI_NUM_CLKS, ctrl->clks);
->   }
+There is no point rebasing your stuff on a series which hasn't
+concluded or is accepted, at least logically.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
+viresh
