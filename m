@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BB4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD8BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18512206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7712080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMf5OWp/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USX+nXWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbgFORSA (ORCPT
+        id S1730961AbgFORTy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:18:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        Mon, 15 Jun 2020 13:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729682AbgFORSA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:18:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A21C05BD43
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:17:59 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id u5so7872747pgn.5
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:17:59 -0700 (PDT)
+        with ESMTP id S1729354AbgFORTv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:19:51 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA2FC05BD43
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:19:50 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id 35so1724578ple.0
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=4tBg685n+rvOlJARxC/GZpj7s58rUY4EPS7OgTBXC28=;
-        b=qMf5OWp/BZGBVGr6GzBckHt7yZutPv6Ww0rfvb7z0X6LV4pWqnPy6J1A3STjwKZMWi
-         nVBys61Vt7LoY86iMXOZtz8Cac6wHUA2uwAWybbItiJy9TChYqMS/gjHJq7rL09/sOEt
-         OesmI/6d7jNHv1UL/WtnVV2TkJ1V58mZCeuO+YMK4uWp9VM1H30g9Bn3c1JbNohJWFSI
-         csKqKPb8i+P6Mgo+G2Y4CwGRgBi6Vh+Y2RfjP2BhRdNoVTapT7y0zBIe3Ub5RALjtJkc
-         SQzsXAoZWDnwZnBThFKWfsLfnuezFzF4YfSabLLP3QzLPYn8qzqhyspUwgqqPjxetusa
-         4fHA==
+        bh=Qat0VxBbx1qTyHGu7NwCLTW4AxGPNYRNU1RfuxjjVJk=;
+        b=USX+nXWSBpUOlORPUb6eV1pZjK+NfQousCJT4ZEH1BnGmGJH0S84P3VN2A8tDZvpHX
+         ysxEvqnu4TTIyohsI5TCKKVVBGecKlT0z67LieLp8C2XCL4CBwnaLY00XKdFPtHMpE2i
+         IYhi00382FYJ3uofwQPLtMZXdV+WycvkBv/3c4fZiAvwrwMTdIa1qcILHeV+GStLtBM0
+         uylHjcYoC5p85SjVuxbW8aYugfW4cl35x4bfOCw42Uo80pLuYsKL52SRgtMkOcq5c/bv
+         jTdDMD6uvZ+6UfAy4GmaFXBlzzniP2Yl8vdGAf12mTm00pUUc1IqI26aR5vuyt3teNYI
+         HYpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4tBg685n+rvOlJARxC/GZpj7s58rUY4EPS7OgTBXC28=;
-        b=luB1/6UJsbREoETZktfZFXQZ8k3i8MwlxNwe9eNj5PjYpP06tCSds9XAp2F6EqdFJE
-         Jdhjj5xqRLutT38A7nPk0WN7i/EvqYLQUiIadNU7tAaQv/TvVnAN9a/mcKBr743uWTmS
-         ptuy0V9Ojf+maykulr1r153+9+OKjxkvudVFAEk1GUWlyrwTSUJJqZMmmMAIAhqoobjX
-         A/VHqrrF9y066EO6cdLgjAz/eAu5rGbKwXD6LiAo6SX+oX5foRQkKsasVaZHpIZcx2m2
-         Vo3Jl1miy7kA9h8VlzUjXC4rfeS28ByVDyhpfQVKKR99+2qZ9krlwxjFFkSddqoxoTkH
-         KIcg==
-X-Gm-Message-State: AOAM5326tF4um8jPjsMCPxKy2LQ3oC+wdixbACixbhaqwUUREce4LS7N
-        jO4egfiKUNfRV4VP3FyFHHmMpQ==
-X-Google-Smtp-Source: ABdhPJzDcXoNX77HGgl+fpRA2bt04/aYiGdDfkkyODxwlkE3OkNhPp/3uUdSH5iaHvmi/LICqc75gQ==
-X-Received: by 2002:a62:640b:: with SMTP id y11mr23794549pfb.195.1592241478412;
-        Mon, 15 Jun 2020 10:17:58 -0700 (PDT)
+        bh=Qat0VxBbx1qTyHGu7NwCLTW4AxGPNYRNU1RfuxjjVJk=;
+        b=Dmk05HUdde2F1I1aOQTdezk8N0xfzb2w9iquUOWvkZBYJqizwVnRB8CCjBQUgLDbyu
+         EsY8FsiT+KC122UL1+zWtu+JMyz8vHUbiTbKvWioviSc43roc6IU9R1dspu121xp74Mt
+         NID1pMOoXfTuzfINmWwZ4HLK8EtS76zCdfhxB8CLWaimj7dnP/hMtBnD5wqcl8z3zVwv
+         80crU8kDHMbitHDRHj/hGzZDD1nn88XB+2by0xYUzxL/sMmqhtY2CDeTUyPfFYGrJxDT
+         r+j5TOVL0S21kr2q9wb2fAMR5/GrMIVNO8VMoGcM/Y/B+GDsSlSTf1vSGRHwBSc9yuen
+         VPCw==
+X-Gm-Message-State: AOAM531NmyFqawbfUESg9tjmArOB3leczlZn8y1DkmEkLcJ3LlOYfvin
+        QAm3bgJjjmcApxEmRjmxSczwzd8NO/Q=
+X-Google-Smtp-Source: ABdhPJxsE8dB2Arh93h5l5pzvxY+LujvncHPdhLaxAIyxb4NTVE8BH9zgp7aNlPwFLC1D1gT4RXogQ==
+X-Received: by 2002:a17:90a:1a8a:: with SMTP id p10mr336840pjp.236.1592241589912;
+        Mon, 15 Jun 2020 10:19:49 -0700 (PDT)
 Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id i22sm14310258pfo.92.2020.06.15.10.17.56
+        by smtp.gmail.com with ESMTPSA id c194sm14225592pfc.212.2020.06.15.10.19.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:17:57 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 11:17:55 -0600
+        Mon, 15 Jun 2020 10:19:49 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 11:19:47 -0600
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -68,101 +68,44 @@ Cc:     Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 1/4] arm64: dts: qcom: sc7180: Add support to skip
- powering up of ETM
-Message-ID: <20200615171755.GA225607@xps15>
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: sc7180: Add support for context
+ losing replicator
+Message-ID: <20200615171947.GB225607@xps15>
 References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
+ <5072d94849cfaee46748d26ac997212fb2d783c2.1591708204.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <5072d94849cfaee46748d26ac997212fb2d783c2.1591708204.git.saiprakash.ranjan@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:00:28PM +0530, Sai Prakash Ranjan wrote:
-> Add "qcom,skip-power-up" property to skip powering up ETM
-> on SC7180 SoC to workaround a hardware errata where CPU
-> watchdog counter is stopped when ETM power up bit is set
-> (i.e., when TRCPDCR.PU = 1).
+On Tue, Jun 09, 2020 at 07:00:30PM +0530, Sai Prakash Ranjan wrote:
+> Add "qcom,replicator-loses-context" property to the replicator
+> in Always-on domain in SC7180 SoC to enable coresight replicator
+> driver to handle this variation of replicator designs.
 > 
 > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
 > 
-> Depends on ETM driver change here:
->  - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=159e248e75b1b548276b6571d7740a35cab1f5be 
+> Depends on coresight replicator change here:
+>  - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=1b6cddfb7ebb5ed293124698f147e914b15315a1
 > 
 > ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 7c2b79dda3d7..f684a0b87848 100644
+> index 9b38867740ca..0cbe322a30c9 100644
 > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
 > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1810,6 +1810,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
+> @@ -1784,6 +1784,7 @@
 >  
->  			out-ports {
->  				port {
-> @@ -1829,6 +1830,7 @@
 >  			clocks = <&aoss_qmp>;
 >  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
->  
->  			out-ports {
->  				port {
-> @@ -1848,6 +1850,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
->  
->  			out-ports {
->  				port {
-> @@ -1867,6 +1870,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
->  
->  			out-ports {
->  				port {
-> @@ -1886,6 +1890,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
->  
->  			out-ports {
->  				port {
-> @@ -1905,6 +1910,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
->  
->  			out-ports {
->  				port {
-> @@ -1924,6 +1930,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
->  
->  			out-ports {
->  				port {
-> @@ -1943,6 +1950,7 @@
->  			clocks = <&aoss_qmp>;
->  			clock-names = "apb_pclk";
->  			arm,coresight-loses-context-with-cpu;
-> +			qcom,skip-power-up;
+> +			qcom,replicator-loses-context;
 
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
