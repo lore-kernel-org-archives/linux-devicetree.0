@@ -2,97 +2,105 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F66BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA598C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC60720663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592237765;
-	bh=IT4BlGCT6eoyLvkeFOKrpMjBvHu7rSRaCjKpWgyUA00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PGPRNlA2oBXbmzgtCJ6DxfyqKUuU5f58lqkLoD27LMeRyAmuPmNbiyDdk+w0aysiK
-	 Qr/AS3AugbVLagEefEEpEcgD3FZgbuB+F+7jMwqYAQIPFcul4/M53z8E7ieL1EsMQ7
-	 RV3U7Rmddrp7OQxoPsAmJK6kXGEdLDIp5By5B4p8=
+	by mail.kernel.org (Postfix) with ESMTP id 855532078A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dx9RMEyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgFOQQE (ORCPT
+        id S1730845AbgFOQQS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:16:04 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34750 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbgFOQQD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 12:16:03 -0400
-Received: by mail-il1-f196.google.com with SMTP id x18so15870455ilp.1;
-        Mon, 15 Jun 2020 09:16:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LceDJi3HuuWFN2rUgpbq9GLOkPnvp0H8zJIFHXcribA=;
-        b=R8rWbmQQ1Ld2NioytF8AOE6s+UHsz3atLKm5HT9H5Fua52uJILAcgnM0R7v6gOgJ/7
-         Gi1tK+bikXadGd4FQld/WRA8ugGq5y8JERAr3p9mlXT+M7kj8xmdd5mjQi+B1pF4Z90p
-         nEgHFOQNkv9dMqUgSJemQWi6+2DU0eOHAbKJlSdrjbG5Tl02LSsV5uXVQa27O1Lwlxkw
-         lNfFJPJOE+yPr4S6gJX2MnKISJL8HQxPLOqWnmVBZk9NDwzdUsWR0h6BW9vA6a6o0Q/2
-         +7RY5zJnn219rlBr2XgI/ESjKSKVuroYE8k3fZYGfmUL21bdOslgXSPn1tyyMbkk6eMs
-         KvoA==
-X-Gm-Message-State: AOAM530PEcVF4AKFW/OQrNTeYnm+A9HZIVd4Mgw90KuDCEh2XHmHKkJu
-        rlE6ZSH9+7eo9pAt1HyW824Fgng=
-X-Google-Smtp-Source: ABdhPJyZayJnee33cEuYPLpvv8OyZZt5YkVa8FQA9aXv9nTs8vxc6i5A2MxwMGdecxLvtPyRUjxzAQ==
-X-Received: by 2002:a92:c6cb:: with SMTP id v11mr27435851ilm.206.1592237761673;
-        Mon, 15 Jun 2020 09:16:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id g15sm8158427ilr.5.2020.06.15.09.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:16:01 -0700 (PDT)
-Received: (nullmailer pid 1876770 invoked by uid 1000);
-        Mon, 15 Jun 2020 16:15:59 -0000
-Date:   Mon, 15 Jun 2020 10:15:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     linux-kernel@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: remoteproc: k3-dsp: Update bindings
- for C71x DSPs
-Message-ID: <20200615161559.GA1876521@bogus>
-References: <20200612225357.8251-1-s-anna@ti.com>
- <20200612225357.8251-2-s-anna@ti.com>
+        Mon, 15 Jun 2020 12:16:18 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1632 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729949AbgFOQQS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:16:18 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FGF0sD011191;
+        Mon, 15 Jun 2020 18:15:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Xkqzh+C6FWWTmU37LOuSdIhSb7PIonm3PgO/z5FgNvI=;
+ b=dx9RMEyVylmWbL5lXa3SYNQDq5f+d6Y9WE9r8Bt2mowHekYmFYSA8uDz97hu5nEjDJiR
+ xNot7L6wZ5Ri7nZHMz+6OhDs+KO4PoVouTv2UizzKPmHjKgLFAKC9JjIfkFadVf7hc3q
+ Kve2XkRskN3RCva7qEr7MhVVKpJP3ktxOJCRTTcqJ7WAQsDrJY1ZoZH1XfKb+uVEUD+/
+ FMfOwNkwUAoj2R06SqIEU4E7BPCkmW/p/yYOdTDBmmIAX3Sx+7ZNWnTA8QGCLUS1aZBm
+ ihdUgylbm28bGNvCrer0rFzpjhAPAoG04XkQJtHYSpKWu3mAW4poQGVToOJMG/FSYMRO jw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvthje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 18:15:54 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2178C10002A;
+        Mon, 15 Jun 2020 18:15:54 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1374B2C5ADA;
+        Mon, 15 Jun 2020 18:15:54 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 18:15:53
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 6/6] ARM: multi_v7_defconfig: enable STUSB160X Type-C port controller support
+Date:   Mon, 15 Jun 2020 18:15:12 +0200
+Message-ID: <20200615161512.19150-7-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200615161512.19150-1-amelie.delaunay@st.com>
+References: <20200615161512.19150-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612225357.8251-2-s-anna@ti.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_06:2020-06-15,2020-06-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 12 Jun 2020 17:53:56 -0500, Suman Anna wrote:
-> Some Texas Instruments K3 family of SoCs have one of more newer
-> generation TMS320C71x CorePac processor subsystem in addition to
-> the existing TMS320C66x CorePac processor subsystems. Update the
-> device tree bindings document for the C71x DSP devices.
-> 
-> The example is also updated to show the single C71 DSP present
-> on J721E SoCs.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> v3:
->  - Dropped Rob's previous Reviewed-by tag due to decent changes in the
->    patch
->  - Replaced the minItems and maxItems from reg with actual items list
->  - Dropped C71 reserved memory nodes from example
-> v2: https://patchwork.kernel.org/patch/11563231/
-> 
->  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 68 +++++++++++++++----
->  1 file changed, 55 insertions(+), 13 deletions(-)
-> 
+Enable support for the STMicroelectronics STUSB160X USB Type-C port
+controller driver by turning on CONFIG_TYPEC and CONFIG_TYPEC_STUSB160X as
+modules.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 95543914d3c7..f85ee102c9a3 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -821,6 +821,8 @@ CONFIG_USB_CONFIGFS_F_HID=y
+ CONFIG_USB_CONFIGFS_F_UVC=y
+ CONFIG_USB_CONFIGFS_F_PRINTER=y
+ CONFIG_USB_ETH=m
++CONFIG_TYPEC=m
++CONFIG_TYPEC_STUSB160X=m
+ CONFIG_MMC=y
+ CONFIG_MMC_BLOCK_MINORS=16
+ CONFIG_MMC_ARMMMCI=y
+-- 
+2.17.1
+
