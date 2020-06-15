@@ -2,187 +2,100 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3DEC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB58C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FB1208FE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65FE20679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 21:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUUBpWle"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhc1djqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731574AbgFOVGS (ORCPT
+        id S1731170AbgFOVYK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43012 "EHLO
+        Mon, 15 Jun 2020 17:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731170AbgFOVGR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 17:06:17 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3361AC061A0E;
-        Mon, 15 Jun 2020 14:06:17 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id gl26so18940875ejb.11;
-        Mon, 15 Jun 2020 14:06:17 -0700 (PDT)
+        with ESMTP id S1726207AbgFOVYJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 17:24:09 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688A1C061A0E;
+        Mon, 15 Jun 2020 14:24:09 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id k13so10219135vsm.13;
+        Mon, 15 Jun 2020 14:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=70CIEcja2iyHnz/U1cQIr7P6UHMVY2e5pchQ5AbwA7I=;
-        b=aUUBpWlet8KP9y4RqVMd1KAiGNAaB8U+KEIa068xc0e9oUZd8fBfHPvXaLp2M3Q750
-         I4nz2LNF5t2WXAFcOvOk+KioXYc0pV461xQRArmz2DtfEpDgMvCMjHNqW/t0sKaF0ZPh
-         7vY9N/YXd7e6tWdejjLfqIt+K+wGZx672tQC2R+ht+FgTMtAA0Q+7iEcyVU1l5Gk8oss
-         TQlfb6chlnO+6+HZU/tarSnXSf0L+Ds7SF4O0A2aNcEjcnWWK1TKDinXSQ3COeGU3N4Y
-         YiWx0msSf30KIvQEYrAeDZUdF8Wwc0i8A0zjIo/BAaAlar+N403YV7QuSA9kcXSFNT5m
-         A0/w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mdu8X+Q7CqBtC/GLB2icKvUv+XOLxvfh0ORFA3IvD2U=;
+        b=dhc1djqDcafE5BR0hNJ7YzYzE0xG3+kRVdlEAA7+5Vdy6rvya4U5eD/OBiqQr6yaIb
+         Q69HGbizyWmvOvLLVsjD7Re3mYqiTearF3vcfrmfW60mkafC8zGPiSFbm2j6QCwgecoN
+         Yv523l9WIBb4DlH+/LOsuq0CY06PDtpr21EjhWj5dsNZdlRozNlfoHGBRGrVpWQyUL7R
+         tGoVsWDsKy0v2+7PElbivcnBSfUw4hU4DSQKHdxlJyOxv3oUhzhEOlfK7hUi/iMit4wd
+         xbGhOI9Smc6JZeuoo9kFji/zIJRxSUMMPRGv8JbpHvDmSSEC4LgngYJozCG1cWXR5DXp
+         p4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=70CIEcja2iyHnz/U1cQIr7P6UHMVY2e5pchQ5AbwA7I=;
-        b=BPKvGJJ+dNAsUlMtuBoRfM85nl55SNMwTp767ve0nA4W8JfRetHlbDUGsT0imn6t/W
-         W9aM7mMkXGgnZ+WRyAXKvGSB+Q2vSBUX4+2PSHsfarMFcH2YZp7V716QRrsPGirwq9x5
-         XGSx1v2DQxju6a9iu5ILwLzrF72DfThmKojdUtnsfhKJoLTmgU1g7jn2mImtBk/8XMNP
-         5k49K+p0dZezXIOF4+HhvX6IJlH/n1NGHCo0/p1ADaaggBp0XDiynfaLDHeXrdOtdIAW
-         tPtadQzgFxa5GO8tTqxSujhua9/ytMocuDWo8Ac84RdbIMU+0lXT26VRbKHaoua6WCCN
-         dhCA==
-X-Gm-Message-State: AOAM531whbldT1zyG/7IZvuLLUzhmsmFlSqMZJuv9KzBm36KdWEH/44v
-        hi5NgcWzaGjAZvrrrFoOpTA=
-X-Google-Smtp-Source: ABdhPJyRrjPzruVe1Gxw/CIlAVa1L7yOXOSXYZcwcm/+5ZYvmlysatqkcHsdszCM9Ngh9OxTvuARMg==
-X-Received: by 2002:a17:907:369:: with SMTP id rs9mr26749297ejb.187.1592255175887;
-        Mon, 15 Jun 2020 14:06:15 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-95-238-254-39.retail.telecomitalia.it. [95.238.254.39])
-        by smtp.googlemail.com with ESMTPSA id d5sm9662226ejr.78.2020.06.15.14.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 14:06:15 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 01/12] PCI: qcom: Add missing ipq806x clocks in PCIe driver
-Date:   Mon, 15 Jun 2020 23:05:57 +0200
-Message-Id: <20200615210608.21469-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
-References: <20200615210608.21469-1-ansuelsmth@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mdu8X+Q7CqBtC/GLB2icKvUv+XOLxvfh0ORFA3IvD2U=;
+        b=JZnAgmRcTYbK0Oyh3BkIKbA57bHPPyLf+D0871IL8WQtyo4Ld+PCryczP+YcXn7ptk
+         zyCbSzKw3xf+bfAvw/QzJyex1qinjaLTwAqUck/8R3FgKWzMiZylhYvdaWi8wVTBJgjK
+         Z/KesZbaSfglk4QNlZExei2Jgjr23U5UclQ5shHFQBwBF0y+cjqIuulpsFFj215AEs65
+         KCdFm4EA3NLOe10w+SC1kPFKSFIZqIlnH9y1xaLfym6XFNFUg4RUJFupW8DRZX2fhDA5
+         Zjg0/6/dmOEWARaqTubgW2AV4IV5sjVXDbSoJw2tnFRk9qvpuxi719eilk1xuMC6Yo8p
+         OuiA==
+X-Gm-Message-State: AOAM531AZFrMIgaSE9xrCphg604NrExTNsB5GWja3kYNI2/AxMO4A3nl
+        X8/wSLhDxc2mKSMUvXXJoUq0wkY6wcgurpPphVI=
+X-Google-Smtp-Source: ABdhPJzXrIs+SUF0pylq1xp8/iremWFjDjUX4s9YS4mC3ANMJzk0FVhHmuVLovqwSKQhHNbapA9FF6FCdnfIK5ySESo=
+X-Received: by 2002:a67:b149:: with SMTP id z9mr20148246vsl.85.1592256248206;
+ Mon, 15 Jun 2020 14:24:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200610120131.3069-1-matthias.schiffer@ew.tq-group.com>
+ <20200610120131.3069-4-matthias.schiffer@ew.tq-group.com> <20200610145954.GA135509@ravnborg.org>
+ <44d3b82a11fc292f0aa3f60a8ccebd4e8ce5d3e8.camel@ew.tq-group.com>
+In-Reply-To: <44d3b82a11fc292f0aa3f60a8ccebd4e8ce5d3e8.camel@ew.tq-group.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Mon, 15 Jun 2020 22:20:27 +0100
+Message-ID: <CACvgo50UoeCQ7ta0VPCWbskKL+s=C1ADyEz8P9bEtgebYcTZ0Q@mail.gmail.com>
+Subject: Re: (EXT) Re: [PATCH 3/4] drm/panel: simple: add CDTech
+ S070PWS19HP-FC21 and S070SWV29HG-DC44
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Aux and Ref clk are missing in PCIe qcom driver. Add support for this
-optional clks for ipq8064/apq8064 SoC.
+Hi Matthias,
 
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+On Thu, 11 Jun 2020 at 08:54, Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
+> On Wed, 2020-06-10 at 16:59 +0200, Sam Ravnborg wrote:
+> > On Wed, Jun 10, 2020 at 02:01:30PM +0200, Matthias Schiffer wrote:
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 5ea527a6bd9f..4bf93ab8c7a7 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
- 	struct clk *phy_clk;
-+	struct clk *aux_clk;
-+	struct clk *ref_clk;
- 	struct reset_control *pci_reset;
- 	struct reset_control *axi_reset;
- 	struct reset_control *ahb_reset;
-@@ -246,6 +248,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
- 	if (IS_ERR(res->phy_clk))
- 		return PTR_ERR(res->phy_clk);
- 
-+	res->aux_clk = devm_clk_get_optional(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	res->ref_clk = devm_clk_get_optional(dev, "ref");
-+	if (IS_ERR(res->ref_clk))
-+		return PTR_ERR(res->ref_clk);
-+
- 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
- 	if (IS_ERR(res->pci_reset))
- 		return PTR_ERR(res->pci_reset);
-@@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
- 	clk_disable_unprepare(res->phy_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+	clk_disable_unprepare(res->ref_clk);
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- }
- 
-@@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		goto err_assert_ahb;
- 	}
- 
-+	ret = clk_prepare_enable(res->core_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_core;
-+	}
-+
- 	ret = clk_prepare_enable(res->phy_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable phy clock\n");
- 		goto err_clk_phy;
- 	}
- 
--	ret = clk_prepare_enable(res->core_clk);
-+	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_core;
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	ret = clk_prepare_enable(res->ref_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ref clock\n");
-+		goto err_clk_ref;
- 	}
- 
- 	ret = reset_control_deassert(res->ahb_reset);
-@@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	return 0;
- 
- err_deassert_ahb:
--	clk_disable_unprepare(res->core_clk);
--err_clk_core:
-+	clk_disable_unprepare(res->ref_clk);
-+err_clk_ref:
-+	clk_disable_unprepare(res->aux_clk);
-+err_clk_aux:
- 	clk_disable_unprepare(res->phy_clk);
- err_clk_phy:
-+	clk_disable_unprepare(res->core_clk);
-+err_clk_core:
- 	clk_disable_unprepare(res->iface_clk);
- err_assert_ahb:
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
--- 
-2.27.0.rc0
+> > > +   .vrefresh = 60,
+> >
+> > .vrefresh is no longer present, please drop.
+>
+> I based my patches on the branch drm-next of
+> https://cgit.freedesktop.org/drm/drm, should I have used a different
+> branch?
+>
+Small tip for the future:
 
+The best way to find the correct tree is to check with the MAINTAINERS
+file or via ./scripts/get_maintainer --scm ...
+
+-Emil
