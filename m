@@ -2,303 +2,204 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FACC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 01:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD84C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 02:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD68A20768
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 01:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B25720768
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 02:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="h49eDckZ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FMY32hJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgFOBoE (ORCPT
+        id S1728032AbgFOCM5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 21:44:04 -0400
-Received: from mail-eopbgr40051.outbound.protection.outlook.com ([40.107.4.51]:36934
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727946AbgFOBoE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 14 Jun 2020 21:44:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X4ldQ9wuKnImPWg70KlZ6RzHJHDsZL0D8tdQ5jHQp/LizWLQjvBYfr8BtqnWVPG+cnxHTRzh3yxu+5D13/XDKpkp+MHJPmNSvFooblG7azlSWZURpLjnUEj4YqvS0hT2zDMh2Ywb0FlvU1dyaFH1MJqW1ByhdUnznVMenP48BQM7qYcXohehIBzRvgVe85ZxhNpbsXwvl3pUBivkGs3mfUIttA02mX01L5Qn+RhkkzvY0WV03/e8SdmAtVbMVfGpuB3Cep7eJpTQQzRw+wISXFv4PF3/fiGRKF62AwRwJWfXXQaxLoDrFl8bRe6S+VG4Wflfdb9LmbRC2plzrHXWvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/vghfboLsFKfABaduR7Z+S06naU75Y/mNfqzAPql5k4=;
- b=nYzltESDd7eVfPm30mTPqEaq3NRFMdITNFTjUQFjcCvQZrKqUr5MRA3TzrjrJHDh05LEsBPKCURfPqoIeeI3H0zS3DRuLzcbQreWRzVD5pzaDteOnmYZ3gfi8ec+C3JQ4eBtPSL0VfksL4dcoywyr/3NiwnhBGVbWJIB11bv2JDyyey0fB0UUJClbwwDG+sP90MZArw2IGfQO9VJknRE/G+9OETnKyTQFdR+CiKfHaPB6R7F0lY9oUhF+zW6aAGPbzWaqqK9Tbvmpebzztbs7Gxyv86BDaxteQnOxY+0fGHbeKV5q4pP0ZJ23zozzcaaZ22/cy58Tr2rfs6weQXcsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/vghfboLsFKfABaduR7Z+S06naU75Y/mNfqzAPql5k4=;
- b=h49eDckZf1ors9LLE1ZpgbiKvB9DvVo0/c6K75nioOUQ5W9GMr5wjuMj8eXO3+Ex4eS9bo3yyeakliXfjoIN5yJPyO6k5L6VZLUVU63VTMgI8Qs303gwukWFhM0cOcUnp3D8qM46sHYlMCxdozsfq/aXHhO44NN5m+ZBX2tFSfQ=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM7PR04MB7111.eurprd04.prod.outlook.com (2603:10a6:20b:118::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
- 2020 01:44:00 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
- 01:44:00 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-CC:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 14 Jun 2020 22:12:57 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:34130 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727946AbgFOCM4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 22:12:56 -0400
+X-UUID: 690b28f5b27e407d934ee38653768bce-20200615
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Fvc+fkRNwbSozTKxjSC5R50RqwrOETtrM9MsGb8se4I=;
+        b=FMY32hJNFbKj++5/KW2rE83sAQhxbkNuqkxW83qIQDJDEJmqvn7ChJJlrdxxmRDRWIiDQkWBz7bvswOeqUc+ePBcd8XI694/wy5mkTxdHCk/ebB+/QNYa3xThNjR17ITwlcUBf8QVQ+NpoyIQmQBdT61AwvsAzg25K/g6ds5xD0=;
+X-UUID: 690b28f5b27e407d934ee38653768bce-20200615
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1991607920; Mon, 15 Jun 2020 10:12:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 15 Jun 2020 10:12:48 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 15 Jun 2020 10:12:42 +0800
+Message-ID: <1592187167.18525.3.camel@mtkswgap22>
+Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
-Thread-Topic: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
-Thread-Index: AQHWP/yk3Ds0XPnWRk2lm9dM/5Lml6jY7QUA
-Date:   Mon, 15 Jun 2020 01:43:59 +0000
-Message-ID: <20200615014423.GA14073@b29397-desktop>
-References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
- <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: codeaurora.org; dkim=none (message not signed)
- header.d=none;codeaurora.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 296e7fc9-883a-4190-7c15-08d810cd9384
-x-ms-traffictypediagnostic: AM7PR04MB7111:
-x-microsoft-antispam-prvs: <AM7PR04MB7111E54D6C6EA616BA735EE08B9C0@AM7PR04MB7111.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 04359FAD81
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /nmTThL4CBGIzdX7lUXLLGB/JYfeVLXIuWZrvlZrZXSBPE6mWXkTw7JPoD6kgrAJ62id7HQ+qHhLYkTb7/cX9Crz+Z1fUkp/YzvvKxm86iAVuNhVIPMpADecDuRL6aVDEbiFUCDAmQJaRwuPGemZogdEapNQWHRCMyHorAaux56yTBhAXnyo4AMZhMJ3OR3fWJ4I48Z+1kTwQPT4FSVvFqualjN80iKSqTyjNDC835H6KGtEO6dfV/VwrDDtYngycf/ZuMTDQUCoHES1TwDluP+uBlNPGhCgX0glhIQOFWIzYKMHjMJOyCm3Wij0kJ9DY4t2tiqfNpvFHktv6kxy3A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(186003)(7416002)(4326008)(71200400001)(8676002)(66556008)(9686003)(2906002)(6486002)(91956017)(8936002)(44832011)(76116006)(64756008)(6512007)(66946007)(66446008)(66476007)(15650500001)(6916009)(33656002)(33716001)(86362001)(5660300002)(26005)(53546011)(478600001)(83380400001)(1076003)(316002)(6506007)(54906003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: SSdGHJN1og3AQnE8snsBaaP9T2HLf5s8k03CO72WdUJusVUofhLIfRacWqXrqK9AU7EAsCsoywLJWzp8Z1so0u+XBVgv4plbZcK8jtkr6CjCP+S1TkqTCKNp6oP9O2AD3BI6xMuOO5BwGGoGv6Euir+1bGNqJLxlMTzoNYJ4rgp56emv6BvGvXILwqIiYeEwrIQxJClQHIISfMLHv0fWOpir7Ts3wuzcl0tbVN8vp7wxjexVvpsT+nk3aoQ/1BMeQ6/joehELF716bKBjXjrat22GnDQ91FbyfocSUSiwEVn/snHgLnfx9VsqejfWm5axWlqtaPOCGYdIzqyvQAqOjHsy/nrjQGulYVktObFIOy1kaSV+3cFKUqixNUPYZJXmQA0/Y1Z9rn2SYO310e2uxuR4eZfSirNAHlLW3yA4IAyeZEQ6XHMYQqF54y4DfRW5SH0LL0309o7X4liazqlYEIXOU7fQSs2zM0QOZI4GV0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <571B2A92D9B6F7488E811D1102381E4C@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 15 Jun 2020 10:12:47 +0800
+In-Reply-To: <CAAOTY__zXZvv1gcKgxnbpv2RjDLyuQ1NEz8Nr+dtn4GKE1cvMA@mail.gmail.com>
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
+         <1591867563.27949.9.camel@mtkswgap22>
+         <CAAOTY_8gOjr9nBUVA6oNu0v+D0Rc0AbhJ41wBCvDpMme+kuHmA@mail.gmail.com>
+         <1591931042.32738.26.camel@mtkswgap22>
+         <CAAOTY__zXZvv1gcKgxnbpv2RjDLyuQ1NEz8Nr+dtn4GKE1cvMA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 296e7fc9-883a-4190-7c15-08d810cd9384
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 01:44:00.0456
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 99wIwgKNnRhcUUH4TRfaCT5qhFwKxwDFi0Y+wvoGUU+Phf9YcvRRgzoVZbDbtla46q8kLD1D5zCTOd1uc4czxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7111
+X-TM-SNTS-SMTP: 4E316D16DA2B6E11B1D56A33408E80F3A733487E7613467A421F38EE6A4634C82000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-06-11 19:58:03, Sandeep Maheswaram wrote:
-> Avoiding phy powerdown in host mode so that it can be wake up by devices.
-> Set usb controller wakeup capable when wakeup capable devices are
-> connected to the host.
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
->  drivers/usb/dwc3/core.h      |  1 +
->  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----=
-------
->  3 files changed, 91 insertions(+), 23 deletions(-)
->=20
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..8370350 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,15 +31,19 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
-> =20
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
-> =20
->  #include "debug.h"
-> +#include "../host/xhci.h"
-> =20
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
-> =20
-> +bool need_phy_for_wakeup;
+SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBGcmksIDIwMjAtMDYtMTIgYXQgMjM6MjcgKzA4MDAsIENo
+dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
+QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ25pyIMTLml6Ug6YCx5LqUIOS4iuWNiDExOjA05a+r
+6YGT77yaDQo+ID4NCj4gPiBIaSBDaHVuLUt1YW5nLA0KPiA+DQo+ID4gW3NuaXBdDQo+ID4gPiA+
+ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiBkZXZhcGNfdmlvbGF0aW9uX2lycSAtIHRoZSBkZXZh
+cGMgSW50ZXJydXB0IFNlcnZpY2UgUm91dGluZSAoSVNSKSB3aWxsIGR1bXANCj4gPiA+ID4gPiA+
+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgdmlvbGF0aW9uIGluZm9ybWF0aW9uIGluY2x1ZGlu
+ZyB3aGljaCBtYXN0ZXIgdmlvbGF0ZXMNCj4gPiA+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAg
+ICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+ID4gK3N0YXRp
+YyBpcnFyZXR1cm5fdCBkZXZhcGNfdmlvbGF0aW9uX2lycShpbnQgaXJxX251bWJlciwgdm9pZCAq
+ZGV2X2lkKQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsgICAgICAgdTMyIHNsYXZlX3R5
+cGVfbnVtID0gbXRrX2RldmFwY19jdHgtPnNvYy0+c2xhdmVfdHlwZV9udW07DQo+ID4gPiA+ID4g
+PiArICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfZGV2aWNlX2luZm8gKipkZXZpY2VfaW5mbzsNCj4g
+PiA+ID4gPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvOw0K
+PiA+ID4gPiA+ID4gKyAgICAgICBpbnQgc2xhdmVfdHlwZSwgdmlvX2lkeCwgaW5kZXg7DQo+ID4g
+PiA+ID4gPiArICAgICAgIGNvbnN0IGNoYXIgKnZpb19tYXN0ZXI7DQo+ID4gPiA+ID4gPiArICAg
+ICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+ID4gPiArICAgICAgIGJvb2wgbm9ybWFs
+Ow0KPiA+ID4gPiA+ID4gKyAgICAgICB1OCBwZXJtOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
+ID4gKyAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmZGV2YXBjX2xvY2ssIGZsYWdzKTsNCj4gPiA+
+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgZGV2aWNlX2luZm8gPSBtdGtfZGV2YXBjX2N0
+eC0+c29jLT5kZXZpY2VfaW5mbzsNCj4gPiA+ID4gPiA+ICsgICAgICAgdmlvX2luZm8gPSBtdGtf
+ZGV2YXBjX2N0eC0+c29jLT52aW9faW5mbzsNCj4gPiA+ID4gPiA+ICsgICAgICAgbm9ybWFsID0g
+ZmFsc2U7DQo+ID4gPiA+ID4gPiArICAgICAgIHZpb19pZHggPSAtMTsNCj4gPiA+ID4gPiA+ICsg
+ICAgICAgaW5kZXggPSAtMTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgLyog
+VGhlcmUgYXJlIG11bHRpcGxlIERFVkFQQ19QRCAqLw0KPiA+ID4gPiA+ID4gKyAgICAgICBmb3Ig
+KHNsYXZlX3R5cGUgPSAwOyBzbGF2ZV90eXBlIDwgc2xhdmVfdHlwZV9udW07IHNsYXZlX3R5cGUr
+Kykgew0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGlmICghY2hlY2tfdHlwZTJfdmlvX3N0
+YXR1cyhzbGF2ZV90eXBlLCAmdmlvX2lkeCwgJmluZGV4KSkNCj4gPiA+ID4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIGlmICghbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoc2xhdmVfdHlwZSwg
+JnZpb19pZHgsDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICZpbmRleCkpDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAg
+ICAgICAgICAgICAgIC8qIEVuc3VyZSB0aGF0IHZpb2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuIGJl
+Zm9yZQ0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqIGZ1cnRoZXIgb3BlcmF0aW9ucw0K
+PiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
+ICAgIHNtcF9tYigpOw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG5vcm1hbCA9IHRydWU7
+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgbWFza19tb2R1bGVf
+aXJxKHNsYXZlX3R5cGUsIHZpb19pZHgsIHRydWUpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
+ID4gKyAgICAgICAgICAgICAgIGlmIChjbGVhcl92aW9fc3RhdHVzKHNsYXZlX3R5cGUsIHZpb19p
+ZHgpKQ0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHJfd2FybihQRlggIiVz
+LCAlczoweCV4LCAlczoweCV4XG4iLA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAiY2xlYXIgdmlvIHN0YXR1cyBmYWlsZWQiLA0KPiA+ID4gPiA+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAic2xhdmVfdHlwZSIsIHNsYXZlX3R5cGUsDQo+ID4g
+PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ2aW9faW5kZXgiLCB2aW9f
+aWR4KTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBwZXJtID0g
+Z2V0X3Blcm1pc3Npb24oc2xhdmVfdHlwZSwgaW5kZXgsIHZpb19pbmZvLT5kb21haW5faWQpOw0K
+PiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHZpb19tYXN0ZXIgPSBt
+dGtfZGV2YXBjX2N0eC0+c29jLT5tYXN0ZXJfZ2V0DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAodmlvX2luZm8tPm1hc3Rlcl9pZCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICB2aW9faW5mby0+dmlvX2FkZHIsDQo+ID4gPiA+ID4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgc2xhdmVfdHlwZSwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICB2aW9faW5mby0+c2hpZnRfc3RhX2JpdCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICB2aW9faW5mby0+ZG9tYWluX2lkKTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+
+IENhbGwgbXQ2ODczX2J1c19pZF90b19tYXN0ZXIoKSBkaXJlY3RseS4gRm9yIGZpcnN0IHBhdGNo
+LCBtYWtlIHRoaW5ncw0KPiA+ID4gPiA+IGFzIHNpbXBsZSBhcyBwb3NzaWJsZS4NCj4gPiA+ID4N
+Cj4gPiA+ID4gSW4gZGV2YXBjX3Zpb2xhdGlvbl9pcnEoKSBmdW5jdGlvbiwgd2UgdXNlIGNvbW1v
+biBmbG93IHRvIGhhbmRsZSBlYWNoDQo+ID4gPiA+IGRldmFwYyB2aW9sYXRpb24gb24gZGlmZmVy
+ZW50IHBsYXRmb3Jtcy4gVGhlIG1hc3Rlcl9nZXQoKSBoYXMgZGlmZmVyZW50DQo+ID4gPiA+IGlt
+cGxlbWVudGF0aW9uIG9uIGRpZmZlcmVudCBwbGF0Zm9ybXMsIHRoYXQgd2h5IGl0IGNhbGxlZCBp
+bmRpcmVjdGx5Lg0KPiA+ID4gPg0KPiA+ID4gPiBPbmNlIHdlIGhhdmUgbmV3IHBsYXRmb3JtLCB3
+ZSBvbmx5IGhhdmUgdG8gdXBkYXRlIGRldmFwYy1tdHh4eHguYw0KPiA+ID4gPiBpbnN0ZWFkIG9m
+IGNvbW1vbiBoYW5kbGVyIGZsb3cuDQo+ID4gPg0KPiA+ID4gWW91IGp1c3QgdXBzdHJlYW0gb25l
+IFNvQyBub3csIHNvIEkgaGF2ZSBubyBpbmZvcm1hdGlvbiBvZiAybmQgU29DLg0KPiA+ID4gV2l0
+aG91dCB0aGUgMm5kIFNvQywgaG93IGRvIHdlIGtub3cgd2hhdCBpcyBjb21tb24gYW5kIHdoYXQg
+aXMgU29DIHNwZWNpYWw/DQo+ID4gPiBTbyB0aGUgZmlyc3QgcGF0Y2ggc2hvdWxkIG5vdCBjb25z
+aWRlciB0aGUgdGhpbmdzIHdoaWNoIGRvZXMgbm90IGV4aXN0IHlldC4NCj4gPiA+DQo+ID4gPiBS
+ZWdhcmRzLA0KPiA+ID4gQ2h1bi1LdWFuZy4NCj4gPiA+DQo+ID4NCj4gPiBJdCBoYXMgbG90cyBv
+ZiByZWZhY3RvcmluZyB3b3JrIG5lZWQgdG8gZG8gaWYgeW91IHJlYWxseSB3YW50IG1ha2UgaXQN
+Cj4gPiAic2ltcGxlIi4gQ291bGQgSSBleHBsYWluIG1vcmUgZGV0YWlscyBhbmQgbGV0IHlvdSBq
+dWRnZSBpdCBpcyBzaW1wbGUNCj4gPiBlbm91Z2g/DQo+IA0KPiBNYWtpbmcgZHJpdmVyICJzaW1w
+bGUiIGlzIHZlcnkgaW1wb3J0YW50LCBzbyBpdCB3b3J0aCB0byBzcGVuZCBlZmZvcnQNCj4gdG8g
+bWFrZSB0aGluZ3Mgc2ltcGxlLiBFdmVyeWJvZHkgY291bGQgbW9kaWZ5IHRoaXMgZHJpdmVyLCBz
+byBtYWtlDQo+IHRoaXMgZHJpdmVyIHNpbXBsZSBhbmQgZXZlcnlib2R5IHdvdWxkIGpvaW4gdGhp
+cyBlYXNpbHkuDQo+IA0KPiA+IEZvciBtb3N0IE1lZGlhVGVrIERFVkFQQyBodywgdGhlIHZpb2xh
+dGlvbiBpbnRlcnJ1cHQgaGFuZGxpbmcgc2VxdWVuY2UNCj4gPiBpcyBzaG93biBiZWxvdy4NCj4g
+Pg0KPiA+IDEuIERvbWFpbiBwcm9jZXNzb3IgcmVjZWl2ZXMgYSBpbnRlcnJ1cHQgaXNzdWVkIGJ5
+IERFVkFQQy4NCj4gPiAyLiBTb2Z0d2FyZSByZWFkIHRoZSB2aW9sYXRpb24gc3RhdHVzIGFuZCBp
+ZGVudGlmeSBpdC4NCj4gPiAzLiBTb2Z0d2FyZSByZWFkIHRoZSBkZWJ1ZyBpbmZvcm1hdGlvbiB3
+aGljaCBhcmUgc3RvcmVkIGluIGh3IHJlZ2lzdGVyLg0KPiA+ICAgICAgICAgYS4gZGVidWcgaW5m
+b3JtYXRpb24gaW5jbHVkZXMgbWFzdGVyIElELCBkb21haW4gSUQsIHZpb2xhdGlvbg0KPiA+IGFk
+ZHJlc3MsIC4uLg0KPiA+IDQuIFRyYW5zZmVyIGRlYnVnIGluZm9ybWF0aW9uIHRvIGh1bWFuIHJl
+YWRhYmxlIHN0cmluZ3MuDQo+ID4gNS4gRXh0cmEgaGFuZGxlciB0byBkaXNwYXRjaCBvd25lciBk
+aXJlY3RseS4NCj4gDQo+IEkgZG9uJ3Qga25vdyB3aHkgbmVlZCBleHRyYSBoYW5kbGVyPyBXaGF0
+IGRvZXMgdGhpcyBleHRyYSBoYW5kbGVyIGNvdWxkIGRvPw0KPiBJZiBpbmRlZWQgbmVlZCBpdCwg
+c2VwYXJhdGUgZXh0cmEgaGFuZGxlciBwYXJ0IHRvIGFuIGluZGVwZW5kZW50IHBhdGNoLg0KDQpZ
+ZXMsIFlvdSBhcmUgcmlnaHQuIEknbGwgbWFrZSB0aGlzIGRyaXZlciBtb3JlIHNpbXBsZSBhbmQg
+bGV0IGV2ZXJ5Ym9keQ0KY2FuIGpvaW4gaXQgZWFzaWx5LiBUaGlzIGV4dHJhIGhhbmRsZXIgbWF5
+IG5vdCBiZSBuZWNlc3NhcnkgZm9yIHdob20gdHJ5DQp0byBlbmFibGUgdGhpcyBkcml2ZXIuDQoN
+Cj4gPg0KPiA+IFdoYXQgd2UgcmVhbGx5IGNhcmUgaXMgd2hpY2ggbWFzdGVyIHZpb2xhdGVzIHRo
+ZSBydWxlcywgYW5kIHdoaWNoIHNsYXZlDQo+ID4gaGFkIGJlZW4gYWNjZXNzZWQgdW5leHBlY3Rl
+ZGx5Lg0KPiA+DQo+ID4gSGVyZSBhcmUgcGxhdGZvcm0gc3BlY2lmaWMgaW5mb3JtYXRpb246DQo+
+ID4gMS4gU2xhdmVzIGxheW91dCAocGxhdGZvcm0gZGV2aWNlcykNCj4gPiAyLiBodyByZWdpc3Rl
+ciBsYXlvdXQgd2hpY2ggYXJlIHN0b3JlZCB2aW9sYXRpb24gaW5mb3JtYXRpb24NCj4gPiAzLiBN
+YXN0ZXIgSUQgbWFwcGluZyB0YWJsZQ0KPiA+IDQuIERvbWFpbiBJRCBtYXBwaW5nIHRhYmxlDQo+
+ID4NCj4gPiBIb3BlIHRoZXNlIHN0ZXBzIGNvdWxkIGhlbHAgeW91IHVuZGVyc3RhbmQgd2hhdCBp
+cyBjb21tb24gYW5kIHdoYXQgaXMNCj4gPiBTb0Mgc3BlY2lmaWMuIElmIHlvdSB3YW50IHRvIHNl
+ZSB0aGUgMm5kIFNvQydzIGRyaXZlciwgSSBjYW4gYWxzbyBzZW5kDQo+ID4gaXQgZm9yIHlvdSB0
+byB0YWtlIGEgbG9vay4NCj4gDQo+IFBsZWFzZSB1cHN0cmVhbSAybmQgU29DJ3MgZHJpdmVyLCBz
+byBJIGNvdWxkIHJldmlldyBjb21tb24gcGFydCBhbmQNCj4gU29DIHNwZWNpZmljIHBhcnQuDQo+
+IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBO
+ZWFsDQo+ID4NCj4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4g
+KyAgICAgICAgICAgICAgIGlmICghdmlvX21hc3Rlcikgew0KPiA+ID4gPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgcHJfd2FybihQRlggIm1hc3Rlcl9nZXQgZmFpbGVkXG4iKTsNCj4gPiA+
+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHZpb19tYXN0ZXIgPSAiVU5LTk9XTl9NQVNU
+RVIiOw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiA+ID4gPiA+ICsNCj4gPiA+
+ID4gPiA+ICsgICAgICAgICAgICAgICBwcl9pbmZvKFBGWCAiJXMgLSAlczoweCV4LCAlczoweCV4
+LCAlczoweCV4LCAlczoweCV4XG4iLA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgIlZpb2xhdGlvbiIsICJzbGF2ZV90eXBlIiwgc2xhdmVfdHlwZSwNCj4gPiA+ID4gPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICJzeXNfaW5kZXgiLA0KPiA+ID4gPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgZGV2aWNlX2luZm9bc2xhdmVfdHlwZV1baW5kZXhdLnN5c19pbmRleCwN
+Cj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICJjdHJsX2luZGV4IiwNCj4gPiA+
+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldmljZV9pbmZvW3NsYXZlX3R5cGVdW2lu
+ZGV4XS5jdHJsX2luZGV4LA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgInZp
+b19pbmRleCIsDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2VfaW5m
+b1tzbGF2ZV90eXBlXVtpbmRleF0udmlvX2luZGV4KTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiA+ICsgICAgICAgICAgICAgICBwcl9pbmZvKFBGWCAiJXMgJXMgJXMgJXNcbiIsDQo+ID4gPiA+
+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAiVmlvbGF0aW9uIC0gbWFzdGVyOiIsIHZpb19t
+YXN0ZXIsDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAiYWNjZXNzIHZpb2xh
+dGlvbiBzbGF2ZToiLA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNl
+X2luZm9bc2xhdmVfdHlwZV1baW5kZXhdLmRldmljZSk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+
+ID4gPiArICAgICAgICAgICAgICAgZGV2YXBjX3Zpb19yZWFzb24ocGVybSk7DQo+ID4gPiA+ID4g
+PiArDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgZGV2YXBjX2V4dHJhX2hhbmRsZXIoc2xh
+dmVfdHlwZSwgdmlvX21hc3RlciwgdmlvX2lkeCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB2aW9faW5mby0+dmlvX2FkZHIpOw0KPiA+ID4gPiA+ID4g
+Kw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShzbGF2ZV90eXBl
+LCB2aW9faWR4LCBmYWxzZSk7DQo+ID4gPiA+ID4gPiArICAgICAgIH0NCj4gPiA+ID4gPiA+ICsN
+Cj4gPiA+ID4gPiA+ICsgICAgICAgaWYgKG5vcm1hbCkgew0KPiA+ID4gPiA+ID4gKyAgICAgICAg
+ICAgICAgIHNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRldmFwY19sb2NrLCBmbGFncyk7DQo+ID4g
+PiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ID4gPiA+ID4g
+KyAgICAgICB9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgIHNwaW5fdW5sb2Nr
+X2lycXJlc3RvcmUoJmRldmFwY19sb2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiArICAgICAgIHJl
+dHVybiBJUlFfSEFORExFRDsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+
+DQo+ID4gPiA+IFtzbmlwXQ0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+DQoNCg==
 
-Global variable may not suitable.
-
-> +
->  /**
->   * dwc3_get_dr_mode - Validates and sets dr_mode
->   * @dwc: pointer to our context structure
-> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
-*dwc)
->  	return ret;
->  }
-> =20
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +	int i, num_ports;
-> +	u32 reg;
-> +	struct usb_hcd	*hcd =3D platform_get_drvdata(dwc->xhci);
-> +	struct xhci_hcd	*xhci_hcd =3D hcd_to_xhci(hcd);
-> +
-> +	dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
-> +
-> +	reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +	num_ports =3D HCS_MAX_PORTS(reg);
-> +	for (i =3D 0; i < num_ports; i++) {
-> +		reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
-> +		if (reg & PORT_PE) {
-> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_HS;
-> +			else if (DEV_LOWSPEED(reg))
-> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_LS;
-> +		}
-> +	}
-> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
-> +}
-> +
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
->  	unsigned long	flags;
->  	u32 reg;
-> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
-> =20
->  	switch (dwc->current_dr_role) {
->  	case DWC3_GCTL_PRTCAP_DEVICE:
-> @@ -1643,9 +1673,10 @@ static int dwc3_suspend_common(struct dwc3 *dwc, p=
-m_message_t msg)
->  		dwc3_core_exit(dwc);
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
-> +		dwc3_set_phy_speed_flags(dwc);
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			dwc3_core_exit(dwc);
-> -			break;
-> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +				need_phy_for_wakeup =3D true;
-
-You may only need to check device_may_wakeup(dwc->dev) for wakeup
-enabled since it is at controller driver, and we only need to let
-controller's wakeup feature be ready if needed.
-
-It is not easy for driver to judge if all /sys/../wakeup/enabled are
-true, consider the use case: there is a HUB with USB mouse on the
-controller, if the wakeup is not enabled for USB mouse, the controller
-will not be waken up through click the mouse.
-
->  		}
-> =20
->  		/* Let controller to suspend HSPHY before PHY driver suspends */
-> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
-m_message_t msg)
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			ret =3D dwc3_core_init_for_resume(dwc);
-> -			if (ret)
-> -				return ret;
-> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> -			break;
-> +			if (!need_phy_for_wakeup) {
-> +				ret =3D dwc3_core_init_for_resume(dwc);
-> +				if (ret)
-> +					return ret;
-> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> +				break;
-> +			}
->  		}
->  		/* Restore GUSB2PHYCFG bits that were modified in suspend */
->  		reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 013f42a..ff02d41 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -1094,6 +1094,7 @@ struct dwc3 {
->  	struct phy		*usb3_generic_phy;
-> =20
->  	bool			phys_ready;
-> +	int			hs_phy_flags;
-> =20
->  	struct ulpi		*ulpi;
->  	bool			ulpi_ready;
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1dfd024..ec183646 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-
-You may split core and glue changes as two patches.
-
-> @@ -19,6 +19,7 @@
->  #include <linux/usb/of.h>
->  #include <linux/reset.h>
->  #include <linux/iopoll.h>
-> +#include <linux/usb/hcd.h>
-> =20
->  #include "core.h"
-> =20
-> @@ -192,21 +193,34 @@ static int dwc3_qcom_register_extcon(struct dwc3_qc=
-om *qcom)
-> =20
->  	if (qcom->ss_phy_irq) {
->  		enable_irq(qcom->ss_phy_irq);
->  		enable_irq_wake(qcom->ss_phy_irq);
-> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
->  {
->  	u32 val;
->  	int i;
-> +	struct dwc3 *dwc =3D platform_get_drvdata(qcom->dwc3);
-> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
-> +
-> +	if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +		device_init_wakeup(qcom->dev, 1);
-
-You could let the glue layer wakeup entry always there through:
-device_set_wakeup_capable(dev, true), and the user could choose
-if the wakeup is enabled or not.
-
-Peter
-> =20
->  	if (qcom->is_suspended)
->  		return 0;
-> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->  	int ret;
->  	int i;
-> =20
-> +	device_init_wakeup(qcom->dev, 0);
-> +
->  	if (!qcom->is_suspended)
->  		return 0;
-> =20
-> --=20
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->=20
-
---=20
-
-Thanks,
-Peter Chen=
