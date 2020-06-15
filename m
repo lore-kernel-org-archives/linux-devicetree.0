@@ -2,248 +2,177 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75465C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2332C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48827207D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="NZ8/p+7g"
+	by mail.kernel.org (Postfix) with ESMTP id ACED4207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 14:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592230469;
+	bh=JhVFELtq+HwraQ3txLeGpqQa4Z+hkTxpQj+aKFCyq6E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BPtVZIQ6OVBwdr0FpuGFfMvd/ropq+jZyG/4ZMCRWX/h4ZY0g16sTtGEnJVzLYan0
+	 dz2ds+hj2MP1HEuZtSxwZVdljBka+PaJRVOGFyiOGwblCfeRyIgXr23QdZA24CBeK3
+	 f2B+hbNpryGU8ihBnufP6m1GYasN02+fa8cEq/cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgFOOG3 (ORCPT
+        id S1729733AbgFOOOX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOOG2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 10:06:28 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758A1C05BD43
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:06:27 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n24so17619055ejd.0
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 07:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=k4C/+/fRiSIFo4IwQCmhnSuHF4dvzSlHbziYd2q10mQ=;
-        b=NZ8/p+7g9oqbeQZ9B5d/f0cUBG4RZ75xNZh+kaEgvuG4T0Y5KIcXATW79vy8VHQHki
-         e3yWeeWTfYAGO510r+e/ojTL5lsR6vriuVpbvtDVjdR+ND72+xYPQpfGKqBxGFeL9bT5
-         Ij8Y67WRfNUbAZUGvhCkSj3ijJ9p1aMn2eXJHYhWB020oNjFgYAdaNOYRDxfG1d7y2Dm
-         YEBs3NJ6Ahbf2/Ir6/sw/R8U3c+l+y9vMwl1r3pTPKva9S/GmdfKNxeivNIpw6Q5nSn0
-         Q6EtqSpUJ1n622RtCppfZHake6HfduWk35qKczzCkrMWhYD3G7457U6jL2MplvqD0KV+
-         gUSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=k4C/+/fRiSIFo4IwQCmhnSuHF4dvzSlHbziYd2q10mQ=;
-        b=AWN730UGRqFjZJ87HlezbNAIfYiYg/siNm+Qgln1YGcdmLSxPu/DRrWO0tmwAaSLEI
-         egjKGeBbIbC+ssp8sYEsZcNxpiqQ2QWsSIYQIbZqKoNEpdFfvpsE43Y/d47+mmUIpvsY
-         3rSI2JpiwG0bXk5+oN7SH+uz0ErqBg0kxG43KyC9A0PqKqsK/FIgxqYWI7PViQdDjBuo
-         IDSdWPToFPjnnMc0vM5W1inDzp8RxCKNARj0/vSClGJh0Svllxl8D4SZBIykQxKp6ca4
-         xF9Ot+C5liL+cHR66Ab2SPB1scVFaCISLU35ZK15UbpP8gO8HJXy/0x4YFf7yFeB88Er
-         xt6w==
-X-Gm-Message-State: AOAM533PxMAneRsdf1YW/mxUwS0JFcnjP7EhHRGRuUDKFhFHhB/1h6U3
-        LIzJ+pmtnWyrN2MKE16QcMiGlIkDPw==
-X-Google-Smtp-Source: ABdhPJyuz3H0ISp8bnWfVL3IJF5WWI0Mfe4/Pv7NWPYiNpmsG89DIJEsajkV05rWnd4kfW88xq5z4g==
-X-Received: by 2002:a17:906:c150:: with SMTP id dp16mr25220134ejc.536.1592229985726;
-        Mon, 15 Jun 2020 07:06:25 -0700 (PDT)
-Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id n17sm1587294ejj.75.2020.06.15.07.06.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:06:25 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
-Subject: Re: [cadence-spi] daisy chain
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
- <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
- <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com>
- <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
- <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com>
-Message-ID: <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
-Date:   Mon, 15 Jun 2020 16:06:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        Mon, 15 Jun 2020 10:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730412AbgFOOOW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:14:22 -0400
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E3B02078E;
+        Mon, 15 Jun 2020 14:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592230462;
+        bh=JhVFELtq+HwraQ3txLeGpqQa4Z+hkTxpQj+aKFCyq6E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AiijIRJ4UelIyRo8/cpDKwnsCXTi60e0OblHB5dgoqQJFc1umpeUq0T4qsRSY8IQC
+         AQ+DkaMeEuDi9q2oJr3+LU+F6cqqNPWBvfNZErGZ/st/OsfkVeEpi3FddDIr5HQUra
+         /CeyW7hcqNKLdH+vYCM3mgiYQr8OYjr5gVgyKlqg=
+Received: by mail-ej1-f44.google.com with SMTP id l12so17581077ejn.10;
+        Mon, 15 Jun 2020 07:14:21 -0700 (PDT)
+X-Gm-Message-State: AOAM533tqcgOhRfp0Dtens97ZjDTRsBJUtmWgXZR2zlfyxWPPiaYU/AV
+        OHoHP9yOJtK0AG4oeIAYEwSxb2DKu00iQdZ5EA==
+X-Google-Smtp-Source: ABdhPJwz27xE0KprBz5Dxp0dk0PPSCniY+U8AR+9K4YZY3mAfmaN8khieD0hZijXEp2z/lCS73kpijNWPZrLwz9p0aI=
+X-Received: by 2002:a17:906:3041:: with SMTP id d1mr26425865ejd.7.1592230460539;
+ Mon, 15 Jun 2020 07:14:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+ <1591698261-22639-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8W7FLrjKbNt+WHXjsBzgn_E7n5stKjv94RBnF7ktVuiA@mail.gmail.com>
+ <1592188994.18525.11.camel@mtkswgap22>
+In-Reply-To: <1592188994.18525.11.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 15 Jun 2020 22:14:09 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8EFYoAtuAugkYuG=F6kkbu3yeBnyoKBGTnHzPJKHQ5EQ@mail.gmail.com>
+Message-ID: <CAAOTY_8EFYoAtuAugkYuG=F6kkbu3yeBnyoKBGTnHzPJKHQ5EQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sorry for the typo in the example device tree:
+Hi, Neal:
 
-On 15.06.2020 15:57, Adrian Fiergolski wrote:
-> Hi Geert,
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8815=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8810:43=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> Thank you for the quick reply.
+> Hi Chun-Kuang,
 >
-> On 15.06.2020 15:07, Geert Uytterhoeven wrote:
->> Hi Adrian,
->>
->> CC devicetree
->>
->> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
->> <adrian.fiergolski@fastree3d.com> wrote:
->>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
->>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
->>>> <adrian.fiergolski@fastree3d.com> wrote:
->>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
->>>> connected to a single chip select of the cadence-spi master. I have the
->>>> impression such a configuration is supported by none of those two
->>>> drivers. I could try to extend both, however, I haven't found any other
->>>> SPI driver, where I could find implementation inspiration. Is it
->>>> supported by kernel?
->>>>
->>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
->>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
->>>> "registers-number" DT property.
->>>>
->>>> So both drivers handle this in their SPI slave drivers.
->>>>
->>>> Of course this does not handle the mixed case, i.e. daisy-chaining
->>>> different types of devices.
->>>>
->>>> The documentation mentions only about the common 'daisy-chained-devices'
->>>> property (devicetree/bindings/common-properties.txt). However, in order
->>>> to try to implement it in the master driver, IMHO, the spi subsystem
->>>> would need to have a call 'no-operation' to other nodes on the
->>>> daisy-chain, which are not addressed by the given SPI access. Is there
->>>> any recommended approach to address this case?
->>>>
->>>> Supporting this in a generic way would indeed be nice, as it would mean
->>>> individual SPI slave drivers no longer have to care about it.
->>>> However, that may be difficult, as the master needs to known which
->>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
->>> In fact, the ultimate solution would be to have it solved at the level
->>> of the spi subsystem:
->>>
->>>   * /spi_device struct/ would contain extra callback which returns msg
->>>     to be sent for no operation.
->>>   * spi_device struct would contain a pointer to the list describing the
->>>     given daisy chain (list of spi_devices on the chain)
->>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
->>>     indicating length of a command of the addressed device if it's on
->>>     the daisy chain
->>>     For example, in case of the ltc2634 device, the regular message
->>>     consists of 24 bits, but when device is a part of a daisy chain, the
->>>     messages are 32 bits. This 32 would be stored in
->>>     /daisy_chain_msg_length./
->>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
->>>     /spi_message_init_with_transfer/ would create a msg of length equal
->>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
->>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
->>>     would be filled with the command of the addressed device on the
->>>     chain and no_operation content for all other devices on the chain
->>>     not being addressed
->> Sounds good to me.
->>
->>>   * I think in such a case, the /daisy-chained-devices /property would
->>>     be not used, as chains would be build basing on the assigned
->>>     chipselect (reg property).
->> So you still have to describe the chain in DT in some way.
->> As there can be only a single sub node with the same unit address
->> (= chip select), you probably need a container with that address, which
->> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
-> Good point. So maybe at the level of the device tree, it could be
-> described like that (based on the spi-cadence example):
 >
->         spi0: spi@ff040000 {
->             compatible = "cdns,spi-r1p6";
->             status = "disabled";
->             interrupt-parent = <&gic>;
->             interrupts = <0 19 4>;
->             reg = <0x0 0xff040000 0x0 0x1000>;
->             clock-names = "ref_clk", "pclk";
->             #address-cells = <1>;
->             #size-cells = <0>;
->             power-domains = <&zynqmp_firmware PD_SPI_0>;
->             daisy-chain0 : daisy_chain@0 {
->                #address-cells = <1>;
->                #size-cells = <0>;
->                reg = <0>;
->                daisy-chained-devices = 2;
+> On Sun, 2020-06-14 at 11:26 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:25=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > MT6873 bus frabric provides TrustZone security support and data
+> > > protection to prevent slaves from being accessed by unexpected
+> > > masters.
+> > > The security violations are logged and sent to the processor for
+> > > further analysis or countermeasures.
+> > >
+> > > Any occurrence of security violation would raise an interrupt, and
+> > > it will be handled by devapc-mt6873 driver. The violation
+> > > information is printed in order to find the murderer.
+> > >
+> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > ---
+> >
+> > [snip]
+> >
+> > > +
+> > > +       /* 50 */
+> > > +       {-1, -1, 50, "OOB_way_en", true},
+> > > +       {-1, -1, 51, "OOB_way_en", true},
+> > > +       {-1, -1, 52, "OOB_way_en", true},
+> > > +       {-1, -1, 53, "OOB_way_en", true},
+> > > +       {-1, -1, 54, "OOB_way_en", true},
+> > > +       {-1, -1, 55, "OOB_way_en", true},
+> > > +       {-1, -1, 56, "Decode_error", true},
+> > > +       {-1, -1, 57, "Decode_error", true},
+> > > +       {-1, -1, 58, "DISP_PWM", false},
+> > > +       {-1, -1, 59, "IMP_IIC_WRAP", false},
+> > > +
+> > > +       /* 60 */
+> > > +       {-1, -1, 60, "DEVICE_APC_PERI_PAR__AO", false},
+> > > +       {-1, -1, 61, "DEVICE_APC_PERI_PAR_PDN", false},
+> >
+> > You does not process the item whose enable_vio_irq is false, so I
+> > think you should remove these items and remove enable_vio_irq because
+> > the rest item's enable_vio_irq would always be true.
 >
->                dac0: ltc2632@0 {
->                    compatible = "lltc,ltc2634-l12";
->                    reg = <0>;
->                    spi-max-frequency = <1000000>;
->                };
->                dac1: ltc2632@1 {
->                    compatible = "lltc,ltc2634-l12";
->                    reg = <1>;
->                    spi-max-frequency = <2000000>;
->                };
->            };
->         };
+> In some users, they can decide which slaves they want to enable or
+> disable violation irq in different product. We remain this property for
+> compatibility.
 
-        spi0: spi@ff040000 {
-            compatible = "cdns,spi-r1p6";
-            status = "disabled";
-            interrupt-parent = <&gic>;
-            interrupts = <0 19 4>;
-            reg = <0x0 0xff040000 0x0 0x1000>;
-            clock-names = "ref_clk", "pclk";
-            #address-cells = <1>;
-            #size-cells = <0>;
-            power-domains = <&zynqmp_firmware PD_SPI_0>;
-            daisy-chain0 : daisy_chain@0 {
-               #address-cells = <1>;
-               #size-cells = <0>;
-               #daisy-chained-devices = <2>;
-
-               reg = <0>;
-               
-               dac0: ltc2632@0 {
-                   compatible = "lltc,ltc2634-l12";
-                   reg = <0>;
-                   spi-max-frequency = <1000000>;
-               };
-               dac1: ltc2632@1 {
-                   compatible = "lltc,ltc2634-l12";
-                   reg = <1>;
-                   spi-max-frequency = <2000000>;
-               };
-           };
-        };
+I think in upstream version, you could still remove enable_vio_irq and
+process all items. For downstream case, users could remove items they
+does not interest in.
 
 >
-> Once a node has daisy-chanied-devices property defined,
-> of_register_spi_device (spi.c) will interpret it as a daisy chain. I
-> will assume, that for the given chain the lowest frequency of the whole
-> chain should be used. When it comes to the mode, as in case of
-> incompatibility no much can be done anyway, the mode of the addressed
-> spi device will be used.
+> >
+> > > +};
+> > > +
+> > > +static struct mtk_device_num mtk6873_devices_num[] =3D {
+> > > +       {SLAVE_TYPE_INFRA, VIO_SLAVE_NUM_INFRA},
+> > > +       {SLAVE_TYPE_PERI, VIO_SLAVE_NUM_PERI},
+> > > +       {SLAVE_TYPE_PERI2, VIO_SLAVE_NUM_PERI2},
+> > > +       {SLAVE_TYPE_PERI_PAR, VIO_SLAVE_NUM_PERI_PAR},
+> > > +};
+> > > +
+> > > +static struct PERIAXI_ID_INFO peri_mi_id_to_master[] =3D {
+> > > +       {"THERM2",       { 0, 0, 0 } },
+> > > +       {"SPM",          { 0, 1, 0 } },
+> > > +       {"CCU",          { 0, 0, 1 } },
+> > > +       {"THERM",        { 0, 1, 1 } },
+> > > +       {"SPM_DRAMC",    { 1, 1, 0 } },
+> >
+> > The bits { 1, 1, 0 } equal to a number 0x3, I thiink you should use a
+> > number instead of bits and everything would be more easy.
 >
->>> If you agree with the above description, I could try to implement it. Of
->>> course any suggestion are welcome, however, I would like to have a
->>> working solution until end of this week, so I would appreciate an active
->>> feedback. As my SoC works with kernel v4.19, I would implement it for
->>> it, test it, and move it afterwards to the master version (I hope, there
->>> were no big changes in the SPI subsystem, right?).
->> Having something that works by the end of the week sounds doable to.
->> Getting it in shape for upstreaming is a different thing...
-> Let's try then. As I wrote earlier, I will try to implement it and test
-> it with 4.19. Afterwards, I will share it with you for a general concept
-> review. Once no comments, I will try to move it to the master and we can
-> start from there the upstreaming process.
->
-> Regards,
->
-> Adrian
->
->
+> We would like to keep it because the bit value contains more than 0/1,
+> it might be '2' in some cases. '2' means it can be 0 or 1. This totally
+> by hardware design & implementation.
+
+Upstream the patch that has dont-care-bits, otherwise, use a number for thi=
+s.
+Even there is dont-care-bits, I have a better way to process it. Here
+is an example that has dont-care-bits:
+
++ {"Tinysys",         { 0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0 } },
+
+I could use a { value, mask } pair for this case,
+
+value =3D 0x0002; /* value for care bits */
+mask =3D 0x3c02; /* mask for care bits */
+
+So the compare statement would be
+
+if ((bus_id & mask) =3D=3D value)
+
+So you could get rid of the second for-loop and reduce the processing
+time in irq handler.
+
+Regards,
+Chun-Kuang.
