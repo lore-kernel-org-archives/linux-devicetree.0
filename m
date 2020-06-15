@@ -2,126 +2,96 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0B5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DAFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11690206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E1020679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uBocQdrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgFOKY0 (ORCPT
+        id S1729040AbgFOKjs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:24:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:44816 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgFOKYZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:24:25 -0400
-IronPort-SDR: xTQoMOai+79a0VMSW6vB0JQ2mLh6f5u76zxCxoCKDMriqo4vIaKZTd3zuDeKz7uUFRfixzkUXJ
- N1s0U51xfpTg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 03:24:12 -0700
-IronPort-SDR: QHNkefPRDepG2BFbs+0Y3tudqdRM70isz34I66Nj59VSt0I2p9Zdf+zIemowO/QBeLIhyjg6m4
- BbuWOJYUhU6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="382505677"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 15 Jun 2020 03:24:09 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 15 Jun 2020 13:24:08 +0300
-Date:   Mon, 15 Jun 2020 13:24:08 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200615102408.GF3213128@kuha.fi.intel.com>
-References: <20200511204635.GC136540@google.com>
- <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
- <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <20200612124634.GD3213128@kuha.fi.intel.com>
- <CAL_Jsq+ORkzHchpD0qsH97zDJzXGj3jWy8=orXSVhNQd4kr9Kg@mail.gmail.com>
+        Mon, 15 Jun 2020 06:39:48 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37159 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728885AbgFOKjr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:39:47 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FAWmbh003202;
+        Mon, 15 Jun 2020 12:39:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=+F4jY1HeRhewZM8MzbOTtBBvHoX7iWPMn/pDhsYtkiM=;
+ b=uBocQdrSSSMoeRwxrI5NC2KcwfBXV8R+joFckdr9h6lID30OI0WKQ58EuGTsUgLPN+Eb
+ a4RZAyYxPgrZm0PEWmnJZsAwAUX6fRwGmgucsYVJvNuU4azLblG+PZjnSr5jCdtqLRAi
+ UxTcsJPrSQEgn1kdgCqB/MYkhndfq7JMebfav5j5vMDNXndEj5YEjWb5PWB64kwPCbsT
+ 4f+ZAlBJ1ACsDu99IzspOmQOCALzMLQWycO1YQwuXHmak7pbg6sDnVOEkwpBHMowYf9C
+ 5A19as0A0DbrgT9BAJcCUGhrEll+vVMv8+Gnw+MQPj7f1b5wkgLDijIQuuX6/8YLU//+ Ag== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvs5c4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:39:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4DBF210002A;
+        Mon, 15 Jun 2020 12:39:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D8BD20EAA2;
+        Mon, 15 Jun 2020 12:39:34 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
+ 2020 12:39:33 +0200
+Subject: Re: [PATCH 0/2] STM32 Fix uart nodes in stm32mp15-pinctrl
+To:     Erwan Le Ray <erwan.leray@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <20200528074003.24875-1-erwan.leray@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <b0c3a1f8-217c-968d-dfeb-484afd8eefd5@st.com>
+Date:   Mon, 15 Jun 2020 12:39:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+ORkzHchpD0qsH97zDJzXGj3jWy8=orXSVhNQd4kr9Kg@mail.gmail.com>
+In-Reply-To: <20200528074003.24875-1-erwan.leray@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Erwan
 
-> > Either I'm missing something, or the devicetree description of the
-> > Type-C connectors really is way too complex, way too "low level",
-> > causing us potential problems without providing anything that we could
-> > actually ever use in the operating system.
+On 5/28/20 9:40 AM, Erwan Le Ray wrote:
+> Fix uart nodes ordering and uart7_pins_a comments in stm32mp15-pinctrl.
 > 
-> Well, all bindings are a balancing act of being flexible enough vs.
-> high-level enough to be stable. What I need is something that's going
-> to work for everyone, not just CrOS. Adding a new property at time is
-> death by 1000 cuts and usually a sign of someone only fixing their own
-> immediate problem.
+> Erwan Le Ray (2):
+>    ARM: dts: stm32: fix uart nodes ordering in stm32mp15-pinctrl
+>    ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
+> 
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 130 +++++++++++------------
+>   1 file changed, 65 insertions(+), 65 deletions(-)
+> 
 
-If you referring to the phandles that are related to the muxes, then
-those we will need. Those phandles point to the components that can
-configure the muxes, but those components are not the muxes
-themselves. On these platforms the muxes can not be configured
-directly, and this is by the way the normal setup these days. I have
-even alternate mode adapters that do not configure the mux directly
-from the microcontroller. So we are not talking about the first
-platform with this setup here.
 
-The problem is that these components are not physically connected to
-the connector, so we can't place them to the OF graph. The mux should
-be placed into the graph (we may not be able to configure the muxes,
-but we may still be able to read their status), but these components
-should not.
+Series applied on stm32-next.
 
-I was really hoping that we could follow the "mux-controller"
-bindings, but it just did not feel it would work perfectly with these
-components that are not exactly the mux-controllers, but more like
-proxies to the actual mux-controllers. We could probable ignore that
-fact if the real mux-controllers were not visible to us, but
-unfortunately they are visible to us. More importantly, the "muxes"
-that we need to use with USB Type-C connectors will not always be
-actual muxes at all. Depending on the platform, for example the USB
-role switching will be handled by a mux, or a dual-role capable USB
-controller.
-
-But I'm open for suggestions here. The only thing that I can say for
-sure about this is that we can't rely on OF graph with the muxes.
-Right now I actually only have a wish that we had a reference array
-that would hold all the phandles to the components that can configure
-the lines behind the connector a bit like in mux bindings, but
-regardless of were they real muxes, "proxy" to the muxes, or
-anything else. Then we would need to define also somekind of device
-property for each known function, like "orientation", "role" and so
-on, that would return index to the component (mux, or what ever it is)
-in the reference array that can handle that particular function.
-
-I also don't feel comfortable using the name "mux" with these because,
-they really will not always be muxes. That's why I talk about switches,
-though I'm not sure if that's any better.
-
-Sorry about the long mail.
-
-thanks,
-
--- 
-heikki
+Regards
+Alex
