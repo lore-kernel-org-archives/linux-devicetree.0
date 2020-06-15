@@ -2,101 +2,114 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFCCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A2CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F03207DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3455B207DA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592242420;
+	bh=6SwHLWftixmqdKwVFIXJnIR9Mm1/0dijzowmmcd5v3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mun64WiAN/FdQQYKGLdv4folcW9mHFjfHO3ng8o0/QGqL4oPbgI2TAlSFZfjQlTHt
+	 UPrbe4RYERV/M4r2B0koGeh3vHxLT7vHCxSbL/o/AaPi+QKEoexxmJf0MxHZb5PluQ
+	 hAQG7Rx27a902TYagXeGHiJJFbwYUXxlGS/c2g0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgFORcD (ORCPT
+        id S1729892AbgFORdj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:32:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:52812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFORcD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:32:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B79C1F1;
-        Mon, 15 Jun 2020 10:32:02 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E3FC3F73C;
-        Mon, 15 Jun 2020 10:32:00 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     lukas@wunner.de,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608112840.GC4593@sirena.org.uk>
- <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
- <20200615170031.GA4447@sirena.org.uk>
- <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2f354ed0-9fb7-59ea-ddd1-78703d9c818e@arm.com>
-Date:   Mon, 15 Jun 2020 18:31:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 13:33:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43283 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729402AbgFORdj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:33:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id u13so1201735iol.10;
+        Mon, 15 Jun 2020 10:33:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=znZgzikhMiF0cbCjoL/7dPoO9dxXB49OkKB382FTvmg=;
+        b=fqFrv9XFPl6JtQT8QqsdD+LdQ9cKr/6lKqZwrH43x2abtqBjvSGC9ZQBdA+7lMpZTD
+         DxzusKYiownfVcfyyi65+HEczWuY63wsPh3qRVkfnfF0nbdkooADIoGGrtIiCRhjtukG
+         EiGwLZFOqfLVhkX90uebiwa2klduVc9/pFPoCJJ0fPlqBWt99aAV0+5D91H1eM9Mco/i
+         on7kh22R0XyYinFOebV6uRd46S6UfgSj10u/leB14cqtEHhSj1gYXqhaVjZKnYg6DClx
+         gUrDDse9TvyiF7qsQBp3ej36kIGTH3In66+cqUvUsfvSDGGjTn3T6igz2GY3yCF/iIja
+         KJNQ==
+X-Gm-Message-State: AOAM5308/ok95ZKsIKIkTia423qBKi5aaDBFhriDPxash+kjabpQyt/f
+        FaqBHgKG3cGVX3UYJnwC7g==
+X-Google-Smtp-Source: ABdhPJzXoSwMCaTACFLMwlk6gXQKI8aMZe4Phl8uJe8Gr4CHl70EOj8Q76+n5J1AZwaFmMG52CMW+w==
+X-Received: by 2002:a05:6638:a0a:: with SMTP id 10mr22203426jan.30.1592242418380;
+        Mon, 15 Jun 2020 10:33:38 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t189sm8209948iod.16.2020.06.15.10.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:33:37 -0700 (PDT)
+Received: (nullmailer pid 2004792 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:33:36 -0000
+Date:   Mon, 15 Jun 2020 11:33:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v6 1/4] dt-bindings: net: Add tx and rx internal
+ delays
+Message-ID: <20200615173336.GA2002437@bogus>
+References: <20200604111410.17918-1-dmurphy@ti.com>
+ <20200604111410.17918-2-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604111410.17918-2-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-15 18:04, Florian Fainelli wrote:
+On Thu, Jun 04, 2020 at 06:14:07AM -0500, Dan Murphy wrote:
+> tx-internal-delays and rx-internal-delays are a common setting for RGMII
+> capable devices.
 > 
+> These properties are used when the phy-mode or phy-controller is set to
+> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
+> controller that the PHY will add the internal delay for the connection.
 > 
-> On 6/15/2020 10:00 AM, Mark Brown wrote:
->> On Mon, Jun 15, 2020 at 09:34:58AM -0700, Florian Fainelli wrote:
->>
->>> OK, so this has been dropped for spi/for-next right? How do we move from
->>> there?
->>
->> Well, I actually have it queued up for applying so unless I pull it
->> before my scripts get that far through the stuff I queued over the merge
->> window it'll go in (I dropped it due to it not being a bugfix).  If it
->> were me I'd go with the two instruction hit from checking the flag TBH
->> but otherwise I guess __always_inline should work for compilers that
->> misoptimize.  None of this is getting in the way of the framework so if
->> everyone involved in the driver is happy to spend time optimising it
->> and dealing with the fragility then it's fine by me.
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/net/ethernet-phy.yaml       | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> OK, how about I send you an increment patch (would a fixup be okay?)
-> that adds __always_inline since we know from this thread that some
-> compilers may mis-optimize the function inlining?
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> index 9b1f1147ca36..edd0245d132b 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> @@ -162,6 +162,19 @@ properties:
+>      description:
+>        Specifies a reference to a node representing a SFP cage.
+>  
+> +
+> +  rx-internal-delay-ps:
+> +    $ref: /schemas/types.yaml#definitions/uint32
 
-Now that I've been inclined to go and look up the documentation, are we 
-sure this so-very-contentious check is even correct? From my reading of 
-things we're checking whether the RXR interrupt function is *enabled*, 
-which still says nothing about whether either condition for the 
-interrupt being *asserted* is true (RXR = 1 or DONE = 1). Thus if more 
-than one SPI instance is active at once we could still end up trying to 
-service an IRQ on a controller that didn't raise it.
+Standard units already have a type, so you can drop this.
 
-Robin.
+> +    description: |
+> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
+> +      PHY's that have configurable RX internal delays.
+> +
+> +  tx-internal-delay-ps:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description: |
+> +      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
+> +      PHY's that have configurable TX internal delays.
+> +
+>  required:
+>    - reg
+>  
+> -- 
+> 2.26.2
+> 
