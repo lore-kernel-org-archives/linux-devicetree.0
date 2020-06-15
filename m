@@ -4,100 +4,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84659C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EC5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 649DF2078A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA8F2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592243120;
-	bh=x7aWa3ERynTO62vC4sDxAGQx/aHtiEifeDzxKPdV7/E=;
+	s=default; t=1592243332;
+	bh=re2k6orV5gMuJ1pAo7uM+A/UuzHEsVckHe7VfIeBl0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M90n0R/5bVI6LivxiY2Js1ar38qa6foWNoAkMQRqflnkZ9S5BXnoNLojMPGmMJc5E
-	 2+evxtAnXmgqKvCS0L1EP3QUr4M9MW4g5E09p7kE3hWxo/jjADgRgra5IRp5RzJu2e
-	 MSNQ9mAG0I8M+ss77Xm86ih80VpxXVj9m+8eEzNk=
+	b=V6LNGpnWZC6kMnPqzR69/fx+w4fNavUTfYrce7WsUHF+Yq7CB8qPEbPuX5kzJY4Mr
+	 kmeThEwxbP+RMwmV4dPngG1euc/zmaA2t7lJgCkYg7OGpJDSFn/ARhabGlVt4Joq6D
+	 6idiLeeNPZnqkyn2MNY0H466BZnFXBj19yrP/7Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgFORpT (ORCPT
+        id S1731254AbgFORsv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:45:19 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40524 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgFORpT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:45:19 -0400
-Received: by mail-il1-f195.google.com with SMTP id t8so187996ilm.7;
-        Mon, 15 Jun 2020 10:45:18 -0700 (PDT)
+        Mon, 15 Jun 2020 13:48:51 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:32789 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFORsu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:48:50 -0400
+Received: by mail-il1-f193.google.com with SMTP id z2so16133450ilq.0;
+        Mon, 15 Jun 2020 10:48:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yY9vsdbUetvZHFE31+hfyR4zS8VWyOrgrboCYCv/8Es=;
-        b=Ad+HGS6IhiQAKe6aWHl9u1CsHcl2nBr2y9cFsNKUX07qldfl/lUKKGmoPIFsIjZbk0
-         ClsrbLeA6vKNI++uRbmqYKbalPsi6RZlEKDSaC0tEqLyh8h9wGSXF3R5J/7St+bLYXbU
-         775ZBLEIm9dN/3rxndWWFNVGPuilhl7LwFnaJXV5c0myQlQwMbvsXwrZ4TlGR5Js7krP
-         aNN/ctDoMKcunKDZ5k8BckAUTfMflqKQSR2KZIMK/c8hGBQTVTjeA1YgChS6IGKtbbMu
-         KnNhUbkbX0FCnGOUIPfP+s/Ij+gmC/+aHKFNsij2CvvIQEhNfCtFgZ6S+CpvzF0/0rg/
-         gySQ==
-X-Gm-Message-State: AOAM531te8qLfIqPnKI7o5KQ5dUOrkigk+BgJuG06HtENKqbJ7So3zjK
-        KvXGaZ4nYr60nmKjiGSBdA==
-X-Google-Smtp-Source: ABdhPJwOXqazAV/sM0GMJuEhVIuLysGJdm4vB1cY73m25QTyGn1nHq3E9zbNcU5wGs7GjtP99KP3sg==
-X-Received: by 2002:a92:c985:: with SMTP id y5mr28134527iln.50.1592243118446;
-        Mon, 15 Jun 2020 10:45:18 -0700 (PDT)
+        bh=7kn635n+A3EnYes4BFXu6QF7YNnmuVI9peNToiemopE=;
+        b=jzmCUB8gPiBXXg9Z+5ah+r/Gx3tI1u8/I3HTamCaM4GjS/MspRzVxABJWH3XBZj8dK
+         vuc7125g8kmjAi48zTc0ROdSR5bkzvDnCobiG/2Lbna2rl3WI1WMt/Zfhlke2t/tga4x
+         a4d/PsrWoLUMm+S3ZXW7LYYnUTGX47KNXm9C/8sxz+bZKVCLYbsYAYAg0F0yFUFOAmWt
+         6njmt7mbpY4NyD1Zjw604m/D+KrHAvQi8bGxb7aY7pSEX7Hn16xGYu+yfEp8pR/wXx9o
+         f1/mFTcGVmPqa6MHmhVZpJbiI0bAh6cVa2OoyPYiYNqky7DF4sQ4eopx+AAmSKA18Ok5
+         vDeA==
+X-Gm-Message-State: AOAM531zCMRioVhzWelZ2NwslpVRLnE5Cj7JkBph0qH9wnzZkkIn7qAx
+        YasmaZprMxEiCmPha7VFjA==
+X-Google-Smtp-Source: ABdhPJxw8ZUBrSdNoZ0KM84tqgOSaSJTSDg0ljmVjphSbOR1nFj9HkbHbjM55RFjiGVS/wkHkSpA7A==
+X-Received: by 2002:a92:c6cd:: with SMTP id v13mr26329867ilm.150.1592243329646;
+        Mon, 15 Jun 2020 10:48:49 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id z16sm8322579ilz.64.2020.06.15.10.45.17
+        by smtp.gmail.com with ESMTPSA id b13sm8297409ilq.20.2020.06.15.10.48.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:45:17 -0700 (PDT)
-Received: (nullmailer pid 2023356 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:45:16 -0000
-Date:   Mon, 15 Jun 2020 11:45:16 -0600
+        Mon, 15 Jun 2020 10:48:49 -0700 (PDT)
+Received: (nullmailer pid 2028876 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:48:48 -0000
+Date:   Mon, 15 Jun 2020 11:48:48 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
         Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: net: dsa: qca8k: document SGMII
- properties
-Message-ID: <20200615174516.GA2018349@bogus>
-References: <cover.1591380105.git.noodles@earth.li>
- <ca767d2dd00280f7c0826c133d1ff6f262b6736d.1591380105.git.noodles@earth.li>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/12] dt-bindings: PCI: Add bindings for more Brcmstb
+ chips
+Message-ID: <20200615174848.GA2023599@bogus>
+References: <20200605212706.7361-1-james.quinlan@broadcom.com>
+ <20200605212706.7361-4-james.quinlan@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ca767d2dd00280f7c0826c133d1ff6f262b6736d.1591380105.git.noodles@earth.li>
+In-Reply-To: <20200605212706.7361-4-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 07:10:02PM +0100, Jonathan McDowell wrote:
-> This patch documents the qca8k's SGMII related properties that allow
-> configuration of the SGMII port.
+On Fri, Jun 05, 2020 at 05:26:43PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+>   7211 (STB version of RPi4).
+> - add new property 'brcm,scb-sizes'
+> - add new property 'resets'
+> - add new property 'reset-names' for 7216 only
+> - allow 'ranges' and 'dma-ranges' to have more than one item and update
+>   the example to show this.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 > ---
->  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 58 ++++++++++++++++---
+>  1 file changed, 51 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> index ccbc6d89325d..9e7d74a248ad 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> @@ -11,7 +11,11 @@ Required properties:
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 8680a0f86c5a..4a012d77513f 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+>  maintainers:
+>    - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 >  
->  Optional properties:
+> -allOf:
+> -  - $ref: /schemas/pci/pci-bus.yaml#
+> -
+>  properties:
+>    compatible:
+> -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +    items:
+> +      - enum:
+> +          - brcm,bcm2711-pcie # The Raspberry Pi 4
+> +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
 >  
-> +- disable-serdes-autoneg: Boolean, disables auto-negotiation on the SerDes
->  - reset-gpios: GPIO to be used to reset the whole device
-> +- sgmii-delay: Boolean, presence delays SGMII clock by 2ns
-> +- sgmii-mode: String, operation mode of the SGMII interface.
-> +  Supported values are: "basex", "mac", "phy".
+>    reg:
+>      maxItems: 1
+> @@ -34,10 +37,12 @@ properties:
+>        - const: msi
+>  
+>    ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 4
+>  
+>    dma-ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 6
+>  
+>    clocks:
+>      maxItems: 1
+> @@ -58,8 +63,33 @@ properties:
+>  
+>    aspm-no-l0s: true
+>  
+> +  resets:
+> +    description: for "brcm,bcm7216-pcie", must be a valid reset
+> +      phandle pointing to the RESCAL reset controller provider node.
+> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> +
+> +  reset-names:
+> +    items:
+> +      - const: rescal
+> +
+> +  brcm,scb-sizes:
+> +    description: u64 giving the 64bit PCIe memory
+> +      viewport size of a memory controller.  There may be up to
+> +      three controllers, and each size must be a power of two
+> +      with a size greater or equal to the amount of memory the
+> +      controller supports.  Note that each memory controller
+> +      may have two component regions -- base and extended -- so
+> +      this information cannot be deduced from the dma-ranges.
+> +
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint64-array
+> +      - items:
+> +          minItems: 1
+> +          maxItems: 3
 
-Either these should be common properties and documented in a common 
-spot or they need vendor prefixes. They seem like they former to me 
-(though 'sgmii-delay' would need to be more general and take a time).
+This can be (dropping 'allOf'):
 
-Rob
+$ref: /schemas/types.yaml#/definitions/uint64-array
+minItems: 1
+maxItems: 3
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
