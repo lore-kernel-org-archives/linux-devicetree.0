@@ -2,63 +2,62 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC65C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01374C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E231120663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AAB20663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqXU/lM0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwBqsCO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbgFOJDI (ORCPT
+        id S1729129AbgFOJCi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:03:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
+        Mon, 15 Jun 2020 05:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgFOJCl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:02:41 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD3D0C061A0E;
-        Mon, 15 Jun 2020 02:02:40 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id j10so16226284wrw.8;
-        Mon, 15 Jun 2020 02:02:40 -0700 (PDT)
+        with ESMTP id S1728496AbgFOJCg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:02:36 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DA1C061A0E;
+        Mon, 15 Jun 2020 02:02:35 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id t18so16244350wru.6;
+        Mon, 15 Jun 2020 02:02:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ues0PsnnVMTN2sbMwsEgElj1LE6JXXdWEnRPN/tZ0o8=;
-        b=EqXU/lM0q9MIXJDBQ0s380kcW+nwN7WLe4/vY5JTK+vuhc0adCvlPshXYcSUe6mouY
-         Tx1ke6mDRM8b13Ft5Ssn+oAoadmjL5tyV18TEIIR+LwRbAqkBO/7rRDKmSDj2X5JiK8Y
-         6cqcJfNoYWswyhhwk/5fd8l31FJfO7J3g7rR7T3sfcxghvvpnbWJysrbwYWtB+XzfYaR
-         1H8haYAtvNUxTzIpHd+gPDtr0qci0ohLJspZtqG7TQk60/l40cr71P1Ub8KeaORyFnL+
-         WAMQhAQZsn/V7Cbd94D+Q4Bm/JtKi/8JBbvX+O4yC8DEtaDeg75HUPO1HjRF+Anthm0e
-         QgSg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KsmsxYavbvBSrD5sd3Cy2FdQfI+TGdNIP59/SdH1Mm4=;
+        b=XwBqsCO46r6OWhyhznF6Z/MhW6Ua8eoX38PDoHAEMn14q9mq59VjfkDz1eUN5y/yeg
+         mSkLoRQyrDTeF8AmMj14+2AhyRAswUUrQp2A8gLDGVDGNwfL5Lvcpa9CIHnyUUq/twgz
+         psPXqAvyG/7IoMQP0SuHOWH5oSJEFOmPt1toEtWojywbnueZb/IA1qu5aALFKiXVWdDC
+         AbcvfsqaGseFN7g3IKw0xRibgtp/vQWU0tp5TtCasjp+IeJ7gZPvpD4xC+JwFeUqvZku
+         TQ5JfcqArjlKbKKZWF+L6H57EvgMotIk0dKN277WMVaJ7KZAKkMQiSlfBvi22IApd3qw
+         lCqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ues0PsnnVMTN2sbMwsEgElj1LE6JXXdWEnRPN/tZ0o8=;
-        b=LWGYMPOhT09IkBIMiOap+77B7p4xmmi5oKoZY0+cOGE10oGoiVv0YPgQw9UIE4yIeu
-         FreJi3IClAItgaBq68on+MK3GKDkb8k1D5larAGuEx3Gc940XDRQh77ulPoeIMD9XGo0
-         EnPc8YDPbAZsT7ojBpFhGlUXlOOMMxUawl4rqk08E5ZLVjMA/QHJFf4l3Le/rYuOOYiG
-         x5MmIu3JfZWvdIBgYe6BuLV04hzY91yB7EgZfmDgTqkHtsHLEys2eLIBfKrMFNPQOq2C
-         /venu7m++Fj+Ln6NxC7azZ8dQzSvplCMrhDVMvWSRb9quTnBVML3R2VXGGdP2a14sDAL
-         aaVg==
-X-Gm-Message-State: AOAM5320LS675oUb9pWQmsUSCmEx6otnB/+9haTDSCAwfSGQrWp/qGY/
-        BojsLiR2OSa1/EzdPNqppzw=
-X-Google-Smtp-Source: ABdhPJyirIebTfKJActCxB0+Ojr4+xV+GSbhqF9ARgewihQbqIEyIQhSLHFoGV8d5Y2rDpjPg5sjpw==
-X-Received: by 2002:a05:6000:7:: with SMTP id h7mr29770003wrx.55.1592211759463;
-        Mon, 15 Jun 2020 02:02:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KsmsxYavbvBSrD5sd3Cy2FdQfI+TGdNIP59/SdH1Mm4=;
+        b=X4zvWwEAyU8LPz9T333TgyF1natnjvcEFVE6vG2p4Qkkw8xNN/5ZGsQidesB1sd9JS
+         rzaFe8Hk1HKmJvEd3S5wTgxhGqq/5WFp9rm6OFjxomvigYwGyE6EFm1QIE4PExes4qCu
+         LOD8vYXFz9XSGemv+L8CFJwVwZgGFNz8/wUj3q7rUH9UGi9t98vtE2II4YJcWbxJwEtr
+         WaitpTftN6hu1ak0SHX47rVSLpODOAUBToPhvDkoVBoyXk1ZTPIeu7+/gkeHxvZ8kb5a
+         zMQpr00gu8wHBQbva+5sRN9IAqOrnixsY6m4F5G6gLQlCA/TyaW8mePirrWny5CvLnV8
+         TeuA==
+X-Gm-Message-State: AOAM531JHzC3FVp3CtiMUNMIR+fWiRTD1Ebq1h8aQ9qyg2df/0muTdAP
+        Lv2EIMgT1gu0/nVqKaUCMPI=
+X-Google-Smtp-Source: ABdhPJz1qkel+LJCwlq+pVLtp371uDu4QDVVHHKTJSDLwykQvem70/CFBM7n0bsJ+1YdNRoatC4oWw==
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr27280895wru.309.1592211753326;
+        Mon, 15 Jun 2020 02:02:33 -0700 (PDT)
 Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
-        by smtp.gmail.com with ESMTPSA id o15sm24089516wrv.48.2020.06.15.02.02.38
+        by smtp.gmail.com with ESMTPSA id o15sm24089516wrv.48.2020.06.15.02.02.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 02:02:39 -0700 (PDT)
+        Mon, 15 Jun 2020 02:02:32 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     mturquette@baylibre.com, sboyd@kernel.org, f.fainelli@gmail.com,
@@ -68,12 +67,10 @@ To:     mturquette@baylibre.com, sboyd@kernel.org, f.fainelli@gmail.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH 4/8] mips: bmips: add BCM6358 clock definitions
-Date:   Mon, 15 Jun 2020 11:02:27 +0200
-Message-Id: <20200615090231.2932696-5-noltari@gmail.com>
+Subject: [PATCH 0/8] clk: bcm63xx-gate: introduce dt-bindings definitions
+Date:   Mon, 15 Jun 2020 11:02:23 +0200
+Message-Id: <20200615090231.2932696-1-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200615090231.2932696-1-noltari@gmail.com>
-References: <20200615090231.2932696-1-noltari@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -82,39 +79,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add header with BCM6358 definitions in order to be able to include it from
-device tree files.
+These patches add header files for bcm63xx-gate clock definitions in order
+to be able to use them in bcm63xx-gate controller driver and BMIPS device
+trees.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- include/dt-bindings/clock/bcm6358-clock.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+"clk: bcm63xx-gate: add BCM6318 support" is required to correctly apply
+these patches.
+
+Álvaro Fernández Rojas (8):
+  mips: bmips: add BCM3368 clock definitions
+  mips: bmips: add BCM6318 clock definitions
+  mips: bmips: add BCM6328 clock definitions
+  mips: bmips: add BCM6358 clock definitions
+  mips: bmips: add BCM6362 clock definitions
+  mips: bmips: add BCM6368 clock definitions
+  mips: bmips: add BCM63268 clock definitions
+  clk: bcm63xx-gate: switch to dt-bindings definitions
+
+ drivers/clk/bcm/clk-bcm63xx-gate.c         | 580 ++++++++++++++++-----
+ include/dt-bindings/clock/bcm3368-clock.h  |  24 +
+ include/dt-bindings/clock/bcm6318-clock.h  |  42 ++
+ include/dt-bindings/clock/bcm63268-clock.h |  30 ++
+ include/dt-bindings/clock/bcm6328-clock.h  |  19 +
+ include/dt-bindings/clock/bcm6358-clock.h  |  18 +
+ include/dt-bindings/clock/bcm6362-clock.h  |  26 +
+ include/dt-bindings/clock/bcm6368-clock.h  |  24 +
+ 8 files changed, 622 insertions(+), 141 deletions(-)
+ create mode 100644 include/dt-bindings/clock/bcm3368-clock.h
+ create mode 100644 include/dt-bindings/clock/bcm6318-clock.h
+ create mode 100644 include/dt-bindings/clock/bcm63268-clock.h
+ create mode 100644 include/dt-bindings/clock/bcm6328-clock.h
  create mode 100644 include/dt-bindings/clock/bcm6358-clock.h
+ create mode 100644 include/dt-bindings/clock/bcm6362-clock.h
+ create mode 100644 include/dt-bindings/clock/bcm6368-clock.h
 
-diff --git a/include/dt-bindings/clock/bcm6358-clock.h b/include/dt-bindings/clock/bcm6358-clock.h
-new file mode 100644
-index 000000000000..980c9cac4765
---- /dev/null
-+++ b/include/dt-bindings/clock/bcm6358-clock.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_BCM6358_H
-+#define __DT_BINDINGS_CLOCK_BCM6358_H
-+
-+#define BCM6358_CLK_ENET	4
-+#define BCM6358_CLK_ADSLPHY	5
-+#define BCM6358_CLK_PCM		8
-+#define BCM6358_CLK_SPI		9
-+#define BCM6358_CLK_USBS	10
-+#define BCM6358_CLK_SAR		11
-+#define BCM6358_CLK_EMUSB	17
-+#define BCM6358_CLK_ENET0	18
-+#define BCM6358_CLK_ENET1	19
-+#define BCM6358_CLK_USBSU	20
-+#define BCM6358_CLK_EPHY	21
-+
-+#endif /* __DT_BINDINGS_CLOCK_BCM6358_H */
 -- 
 2.27.0
 
