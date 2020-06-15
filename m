@@ -7,55 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30702C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04228C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07FCC207F5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC63E20757
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203750;
-	bh=WPe7/bYjKlBgbB2jve3JvxrAVd0G2R+iB0dbw6y3t5o=;
+	s=default; t=1592203772;
+	bh=yjXTSENaHEXOik+BgoWPkjMy3BLdPB1FWyZdAxP7ApU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xsSf0ctEok5dKSdLgxLNczT3hKgg7Ng7qk1ByCb7kd7fJfWi4ORXCW16/Tnk/mt+H
-	 RS5BSXIZFXM+3CqI9pbY29kXW6M4HlQdhi2+1FpTcqzTQTfmGV+sGyks715Qw88MkE
-	 j8MX0xhnC/Jyqk8swPPPyr8VS5CZQhLHWRG+Lzdg=
+	b=LUpY3ICZJMFUnVdh236xNq5Ntc3ktuqDTiLQUSIUhpcl5n40/scMvFz4pXTfoZrxS
+	 c25oGv4AlEGWlyNy3BWkQ9f14KGXajX1cercUhR1apwYScsVvL28USpy4xsLGKVgo4
+	 jS0dJSoqOzs+kKuj2hmxJwPkAcY6PBnPvvga8AW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgFOGtH (ORCPT
+        id S1728454AbgFOGtS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59952 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgFOGrN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728447AbgFOGrN (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 15 Jun 2020 02:47:13 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA8D920899;
+        by mail.kernel.org (Postfix) with ESMTPSA id ED91C208A9;
         Mon, 15 Jun 2020 06:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203632;
-        bh=WPe7/bYjKlBgbB2jve3JvxrAVd0G2R+iB0dbw6y3t5o=;
+        bh=yjXTSENaHEXOik+BgoWPkjMy3BLdPB1FWyZdAxP7ApU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPyCV8IGIfHhToINSgCHTx4MPNtSCMHYGFK94virHPa0vJW1MT2EZ1d+2+SGIN32l
-         Kn1A2N7d+13JN31Eoedept+vFEq5NIngvHa2uV+IaelYouYhOFT57d+4aPVYlFLR0Y
-         AFULx1U2H5zUClAKUZsADTGQE3fGj4LKqVRtmAmo=
+        b=D9uF61y75FcarwboE5xFIZSZhYXLgrV2Y4hCRmtGR/Vs6IKLhHPB+pI4OmkbHjMtE
+         488kGifAUhf/tP5oi5X4r5le1vIkq7gESoOze27GFoO3o8Rk6gJw7VcOuEJOZQbTnE
+         fRrf55JL/eQ+eH9U6ptJWHZCHT3jn2PV4kktv0Gc=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkith-009nmj-Oq; Mon, 15 Jun 2020 08:47:09 +0200
+        id 1jkith-009nn0-Sg; Mon, 15 Jun 2020 08:47:09 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 12/29] dt: update a reference for reneases pcar file renamed to yaml
-Date:   Mon, 15 Jun 2020 08:46:51 +0200
-Message-Id: <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
+        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org
+Subject: [PATCH 15/29] dt: fix reference to olpc,xo1.75-ec.txt
+Date:   Mon, 15 Jun 2020 08:46:54 +0200
+Message-Id: <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
@@ -66,28 +61,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This file was renamed, but its reference at pfc-pinctl.txt is
-still pointing to the old file.
+This file was converted and renamed.
 
-Fixes: 7f7d408e5a00 ("dt-bindings: gpio: rcar: Convert to json-schema")
+Fixes: 7882d822b3f9 ("dt-bindings: spi: Convert spi-pxa2xx to json-schema")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt         | 2 +-
+ Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index b68613188c19..1b8e8b4a6379 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -114,7 +114,7 @@ with values derived from the SoC user manual.
-    [flags]>
+diff --git a/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt b/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+index 8c4d649cdd8f..2d7cdf19a0d0 100644
+--- a/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
++++ b/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+@@ -8,7 +8,7 @@ The embedded controller requires the SPI controller driver to signal readiness
+ to receive a transfer (that is, when TX FIFO contains the response data) by
+ strobing the ACK pin with the ready signal. See the "ready-gpios" property of the
+ SSP binding as documented in:
+-<Documentation/devicetree/bindings/spi/spi-pxa2xx.txt>.
++<Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml>.
  
- On other mach-shmobile platforms GPIO is handled by the gpio-rcar driver.
--Please refer to Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+Please refer to Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
- for documentation of the GPIO device tree bindings on those platforms.
- 
- 
+ Example:
+ 	&ssp3 {
 -- 
 2.26.2
 
