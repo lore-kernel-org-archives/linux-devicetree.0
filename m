@@ -4,52 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAFEC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30702C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8A420776
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FCC207F5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203704;
-	bh=WD3XDwk3XqKTIwsDmt007pD/1JtEI2aiQpZ+KnRFd4Q=;
+	s=default; t=1592203750;
+	bh=WPe7/bYjKlBgbB2jve3JvxrAVd0G2R+iB0dbw6y3t5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J9ZQuAf+w0MetOl+4hZVbCHZv62ekPjMRS+8DnROw5XEtE2fUgiXx5paf1CBuayZN
-	 3O+ZQ1buarPVqhZDWuvxaGgHMxWtknLOzAStcnLzfzYe8An8Eh513oobrfXNb9g41D
-	 zJ7BzAQ7C+7lmP7njTT4KgyEHqE9YNmIs3+HlWDI=
+	b=xsSf0ctEok5dKSdLgxLNczT3hKgg7Ng7qk1ByCb7kd7fJfWi4ORXCW16/Tnk/mt+H
+	 RS5BSXIZFXM+3CqI9pbY29kXW6M4HlQdhi2+1FpTcqzTQTfmGV+sGyks715Qw88MkE
+	 j8MX0xhnC/Jyqk8swPPPyr8VS5CZQhLHWRG+Lzdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgFOGsX (ORCPT
+        id S1728745AbgFOGtH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60114 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbgFOGrO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:47:14 -0400
+        id S1728452AbgFOGrN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:47:13 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF6521475;
-        Mon, 15 Jun 2020 06:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA8D920899;
+        Mon, 15 Jun 2020 06:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203632;
-        bh=WD3XDwk3XqKTIwsDmt007pD/1JtEI2aiQpZ+KnRFd4Q=;
+        bh=WPe7/bYjKlBgbB2jve3JvxrAVd0G2R+iB0dbw6y3t5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOarKqjRszvDRsLiwYmZ0O5c1SK4VnSOniA/tgnh58gIXI15aJ1QBz/A6VXKmCiKY
-         Z4YGBobU0c0/m+FeHhrOzZzv6twuSZw5ap5gNYlAe48Z5v6POtir95iMVbGWJnCfxK
-         xFQzezr3yyFgaN6w8CBeyMRbhSFLfXj0DZv8UiQk=
+        b=dPyCV8IGIfHhToINSgCHTx4MPNtSCMHYGFK94virHPa0vJW1MT2EZ1d+2+SGIN32l
+         Kn1A2N7d+13JN31Eoedept+vFEq5NIngvHa2uV+IaelYouYhOFT57d+4aPVYlFLR0Y
+         AFULx1U2H5zUClAKUZsADTGQE3fGj4LKqVRtmAmo=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkiti-009nnz-92; Mon, 15 Jun 2020 08:47:10 +0200
+        id 1jkith-009nmj-Oq; Mon, 15 Jun 2020 08:47:09 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 27/29] docs: dt: minor adjustments at writing-schema.rst
-Date:   Mon, 15 Jun 2020 08:47:06 +0200
-Message-Id: <14fc680fd6596b277f94bb5a240cc9dfc41d59bf.1592203542.git.mchehab+huawei@kernel.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 12/29] dt: update a reference for reneases pcar file renamed to yaml
+Date:   Mon, 15 Jun 2020 08:46:51 +0200
+Message-Id: <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
@@ -60,41 +66,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two literal blocks that aren't mark as such. Mark them,
-in order to make the document to produce a better html output.
+This file was renamed, but its reference at pfc-pinctl.txt is
+still pointing to the old file.
 
-While here, also add a SPDX header to it.
-
+Fixes: 7f7d408e5a00 ("dt-bindings: gpio: rcar: Convert to json-schema")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/writing-schema.rst | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-index 220cf464ed77..8c74a99f95e2 100644
---- a/Documentation/devicetree/writing-schema.rst
-+++ b/Documentation/devicetree/writing-schema.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+index b68613188c19..1b8e8b4a6379 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -114,7 +114,7 @@ with values derived from the SoC user manual.
+    [flags]>
  
- Writing DeviceTree Bindings in json-schema
- ==========================================
-@@ -124,9 +124,12 @@ dtc must also be built with YAML output support enabled. This requires that
- libyaml and its headers be installed on the host system. For some distributions
- that involves installing the development package, such as:
+ On other mach-shmobile platforms GPIO is handled by the gpio-rcar driver.
+-Please refer to Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++Please refer to Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+ for documentation of the GPIO device tree bindings on those platforms.
  
--Debian:
-+Debian::
-+
-   apt-get install libyaml-dev
--Fedora:
-+
-+Fedora::
-+
-   dnf -y install libyaml-devel
  
- Running checks
 -- 
 2.26.2
 
