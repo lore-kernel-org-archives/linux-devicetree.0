@@ -2,96 +2,245 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DAFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB68C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E1020679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360A620663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uBocQdrS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dR554GJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgFOKjs (ORCPT
+        id S1729139AbgFOKob (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:39:48 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37159 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728885AbgFOKjr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:39:47 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FAWmbh003202;
-        Mon, 15 Jun 2020 12:39:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=+F4jY1HeRhewZM8MzbOTtBBvHoX7iWPMn/pDhsYtkiM=;
- b=uBocQdrSSSMoeRwxrI5NC2KcwfBXV8R+joFckdr9h6lID30OI0WKQ58EuGTsUgLPN+Eb
- a4RZAyYxPgrZm0PEWmnJZsAwAUX6fRwGmgucsYVJvNuU4azLblG+PZjnSr5jCdtqLRAi
- UxTcsJPrSQEgn1kdgCqB/MYkhndfq7JMebfav5j5vMDNXndEj5YEjWb5PWB64kwPCbsT
- 4f+ZAlBJ1ACsDu99IzspOmQOCALzMLQWycO1YQwuXHmak7pbg6sDnVOEkwpBHMowYf9C
- 5A19as0A0DbrgT9BAJcCUGhrEll+vVMv8+Gnw+MQPj7f1b5wkgLDijIQuuX6/8YLU//+ Ag== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mmjvs5c4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 12:39:34 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4DBF210002A;
-        Mon, 15 Jun 2020 12:39:34 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D8BD20EAA2;
-        Mon, 15 Jun 2020 12:39:34 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
- 2020 12:39:33 +0200
-Subject: Re: [PATCH 0/2] STM32 Fix uart nodes in stm32mp15-pinctrl
-To:     Erwan Le Ray <erwan.leray@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-References: <20200528074003.24875-1-erwan.leray@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <b0c3a1f8-217c-968d-dfeb-484afd8eefd5@st.com>
-Date:   Mon, 15 Jun 2020 12:39:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 06:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728815AbgFOKoa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 06:44:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7257C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 03:44:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l10so16559355wrr.10
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 03:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=STl0WSgH8gdPrNVl908k2Vddvy5AFuFoB4TQNkl6L5c=;
+        b=dR554GJo3lF8qbT4IoPwXgADwg2M0gh64ESXTwHoOU3HagSWhcfJQrRhztU/fldBNH
+         CtNftI/I5aN5xjGJwDLoSvLEWoS1MqoeuKIIvoMAqYz+7qCqNSJCDw7sbWpnPw+ZCGAh
+         AKYhGc/uicdbDy4Fc+G8NG/hRwH1yVkQLVj8n8OifvhY+hsec0Lq5ZHmSZaTj/KEvh7G
+         Y2V0zBb2KREz4B/ItEpC+BAO9UARrQfP/4LAu0SNxMSWqA2WCvg8qVS3yEjVcgMFmb6Y
+         TPRAEiGCBYXziFRHMLPKIfQoCZXxTvhE4mjunVzMr9QugeNRJCYx4/cT7tR/93Sn/TuF
+         eI4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=STl0WSgH8gdPrNVl908k2Vddvy5AFuFoB4TQNkl6L5c=;
+        b=uQSdwP8AI3MMYcl9TrwXdYDcZrEh3ZhBc/e0xZoDsy2ZNWlt4XhVnwmPpI/litWpwl
+         h+cbFTi1rI7lBK0ZEXmhCrz2weFVHX9MCj29urg3lFLFvSzc2RwedubMFLauO2Nz+yqT
+         P9OZnfJFiMQ54XjVSVFx7LI/PUuG94/nYw7zq63LSiislVEklLcR8bW1cDQUx28UvbsO
+         xGvTQ7CSpS59recESMjUIZyNXK2cBCnUnSQd3NdO+o+KYZ1K1Z2kdGR9PubaK17VpQdY
+         laIIh8ONJD3z/OkgDn/mgK1DUvZC2gIeSD9HJ8sBYpdHOPL7QXRxngzHT34hLsnHhMR3
+         iBhg==
+X-Gm-Message-State: AOAM531EYNc1SvG1BdHdGXLeU6jy7Uc6EmiwX6fsxBxvZRY1oIzWZSI5
+        IPrXgca65ifeT2ZA+oNcjUNzlDk8FRU=
+X-Google-Smtp-Source: ABdhPJyWJ5Lm4oZYuxKHZmjX+xqR2kjaG55OMowFZTVgK9OpNe4PNZlq+VYDLN5wigiUhtvmQnEcVg==
+X-Received: by 2002:adf:f251:: with SMTP id b17mr26925155wrp.289.1592217868512;
+        Mon, 15 Jun 2020 03:44:28 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id h7sm23129000wml.24.2020.06.15.03.44.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 03:44:27 -0700 (PDT)
+Subject: Re: [RFC v2 1/3] dt-bindings: nvmem: Add devicetree bindings for
+ qfprom-efuse
+To:     Doug Anderson <dianders@chromium.org>,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
+ <1591868882-16553-2-git-send-email-rbokka@codeaurora.org>
+ <CAD=FV=WjvAWVmq3fTh=_f2p1Dv+sXg1RV-CqZr8KRgHe8_wT0w@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <0ee1d7fa-0520-a347-6a55-6ab646284b1a@linaro.org>
+Date:   Mon, 15 Jun 2020 11:44:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200528074003.24875-1-erwan.leray@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAD=FV=WjvAWVmq3fTh=_f2p1Dv+sXg1RV-CqZr8KRgHe8_wT0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Erwan
 
-On 5/28/20 9:40 AM, Erwan Le Ray wrote:
-> Fix uart nodes ordering and uart7_pins_a comments in stm32mp15-pinctrl.
+
+On 12/06/2020 22:59, Doug Anderson wrote:
+> Hi,
 > 
-> Erwan Le Ray (2):
->    ARM: dts: stm32: fix uart nodes ordering in stm32mp15-pinctrl
->    ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
+> On Thu, Jun 11, 2020 at 2:49 AM Ravi Kumar Bokka <rbokka@codeaurora.org> wrote:
+>>
+>> This patch adds dt-bindings document for qfprom-efuse controller.
+>>
+>> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/nvmem/qfprom.yaml          | 52 ++++++++++++++++++++++
+>>   1 file changed, 52 insertions(+)
 > 
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 130 +++++++++++------------
->   1 file changed, 65 insertions(+), 65 deletions(-)
+> Overall comment: I reviewed your v1 series and so I'm obviously
+> interested in your series.  Please CC me on future versions.
 > 
+> I would also note that, since this is relevant to Qualcomm SoCs that
+> you probably should be CCing "linux-arm-msm@vger.kernel.org" on your
+> series.
+> 
+> 
+>>   create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
+>> new file mode 100644
+>> index 0000000..7c8fc31
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/nvmem/qfprom.yaml
+>> @@ -0,0 +1,52 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/nvmem/qfprom.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
+>> +
+>> +maintainers:
+>> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
+>> +
+>> +allOf:
+>> +  - $ref: "nvmem.yaml#"
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,qfprom
+> 
+> As per discussion in patch #1, I believe SoC compatible should be here
+> too in case it is ever needed.  This is standard practice for dts
+> files for IP blocks embedded in an SoC.  AKA, this should be:
+> 
+>      items:
+>        - enum:
+>            - qcom,apq8064-qfprom
+>            - qcom,apq8084-qfprom
+>            - qcom,msm8974-qfprom
+>            - qcom,msm8916-qfprom
+>            - qcom,msm8996-qfprom
+>            - qcom,msm8998-qfprom
+>            - qcom,qcs404-qfprom
+>            - qcom,sc7180-qfprom
+>            - qcom,sdm845-qfprom
 
 
-Series applied on stm32-next.
+Above is not required for now in this patchset, as we can attach data at 
+runtime specific to version of the qfprom.
 
-Regards
-Alex
+This can be added when required!
+
+>        - const: qcom,qfprom
+> 
+> NOTE: old SoCs won't have both of these and thus they will get flagged
+> with "dtbs_check", but I believe that's fine (Rob can correct me if
+> I'm wrong).  The code should still work OK if the SoC isn't there but
+> it would be good to fix old dts files to have the SoC specific string
+> too.
+> 
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 3
+> 
+> Please address feedback feedback on v1.  If you disagree with my
+> feedback it's OK to say so (I make no claims of being always right),
+> but silently ignoring my feedback and sending the next version doesn't
+> make me feel like it's a good use of my time to keep reviewing your
+> series.  Specifically I suggested that you actually add descriptions
+> rather than just putting "maxItems: 3".
+> 
+> With all that has been discussed, I think the current best thing to
+> put there is:
+> 
+>      # If the QFPROM is read-only OS image then only the corrected region
+>      # needs to be provided.  If the QFPROM is writable then all 3 regions
+>      # must be provided.
+>      oneOf:
+>        - items:
+>            - description: The start of the corrected region.
+>        - items:
+>            - description: The start of the raw region.
+>            - description: The start of the config region.
+>            - description: The start of the corrected region.
+> 
+>> +
+> 
+> You missed a bunch of things that you should document:
+> 
+>    # Clocks must be provided if QFPROM is writable from the OS image.
+>    clocks:
+>      maxItems: 1
+>    clock-names:
+>      const: sec
+> 
+>    # Supply reference must be provided if QFPROM is writable from the OS image.
+>    vcc-supply:
+>      description: Our power supply.
+> 
+>    # Needed if any child nodes are present.
+>    "#address-cells":
+>      const: 1
+>    "#size-cells":
+>      const: 1
+> 
+>> +required:
+>> +   - compatible
+>> +   - reg
+>> +   - reg-names
+> 
+> reg-names is discouraged.  Please remove.  I always point people here
+> as a reference:
+> 
+> https://lore.kernel.org/r/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com/
+> 
+> You can just figure out whether there are 3 register fields or 1 register field.
+
+Am not sure if I understand this correctly, reg-names are very useful in 
+this particular case as we are dealing with multiple memory ranges with 
+holes. I agree with not having this for cases where we have only one 
+resource.
+
+But having the ordering in DT without proper names associated with it 
+seems fragile to me! And it makes very difficult to debug issues with 
+wrong resource ordering in DT.
+
+Rob, Is this the guidance for new bindings?
+
+I have not seen any strong suggestion or guidance either in
+ 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/resource-names.txt?h=v5.8-rc1 
+  Or in ./drivers/of/address.c
+
+Am I missing anything here?
