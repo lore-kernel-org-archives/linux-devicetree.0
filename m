@@ -2,106 +2,173 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA987C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6A0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B4620707
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592219972;
-	bh=09YCLJTSpwXYksfyCYSJl2k+cwsJ7qFx3Cq3UzjbGyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0IAdP/L2otZ7wmaH+KmvkNxkL5KxGEpg+rYLjBaaYe3xtCnN50yhmijltxCiFlyEf
-	 72T9Qq79foiZBhe6ESNQ17b/O/7Nj4M7/zWbBwCC98AHboeNRcGrbh5OBv3n9lTPpl
-	 RNrJvHSQHgBZlJxX+3QDuRRWEF479a/pvaj+obxo=
+	by mail.kernel.org (Postfix) with ESMTP id 11BFE2068E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgFOLTa (ORCPT
+        id S1729629AbgFOLUE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgFOLT3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:19:29 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 058D020679;
-        Mon, 15 Jun 2020 11:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592219969;
-        bh=09YCLJTSpwXYksfyCYSJl2k+cwsJ7qFx3Cq3UzjbGyI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y9XD9p0MeL4taa2ELATHmZjnxuB2Qwom8k1ILpzM+ZKmgHncRSrZRkWHzXJoKUZYG
-         RVzFdcjhfF4+7tviRu0Z7J7pql7QVnbcy5lmyaFqXh1wKUMpINf6iGMDn+vhj+ObwV
-         iv9FZnGvAGdOWuUFB1fqKEZG7JlfMHbBDSJzRm08=
-Date:   Mon, 15 Jun 2020 12:19:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 13/29] dt: fix broken links due to txt->yaml renames
-Message-ID: <20200615111927.GC4447@sirena.org.uk>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WfZ7S8PLGjBY9Voh"
-Content-Disposition: inline
-In-Reply-To: <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 15 Jun 2020 07:20:04 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:36610 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728285AbgFOLUE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:20:04 -0400
+X-IronPort-AV: E=Sophos;i="5.73,514,1583161200"; 
+   d="scan'208";a="49507830"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 15 Jun 2020 20:20:02 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5F81940078B5;
+        Mon, 15 Jun 2020 20:20:02 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     prabhakar.mahadev-lad.rj@bp.renesas.com, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
+Date:   Mon, 15 Jun 2020 20:19:49 +0900
+Message-Id: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert renesas related part of usb-xhci to YAML.
 
---WfZ7S8PLGjBY9Voh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ .../devicetree/bindings/usb/renesas,usb-xhci.yaml  | 84 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 18 -----
+ 2 files changed, 84 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
 
-On Mon, Jun 15, 2020 at 08:46:52AM +0200, Mauro Carvalho Chehab wrote:
-> There are some new broken doc links due to yaml renames
-> at DT. Developers should really run:
+diff --git a/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
+new file mode 100644
+index 0000000..279413b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/renesas,usb-xhci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas USB xHCI controllers
++
++maintainers:
++  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++allOf:
++  - $ref: "usb-hcd.yaml"
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,xhci-r8a7742 # r8a7742 SoC
++              - renesas,xhci-r8a7743 # r8a7743 SoC
++              - renesas,xhci-r8a7744 # r8a7744 SoC
++              - renesas,xhci-r8a7790 # r8a7790 SoC
++              - renesas,xhci-r8a7791 # r8a7791 SoC
++              - renesas,xhci-r8a7793 # r8a7793 SoC
++          - const: renesas,rcar-gen2-xhci
++      - items:
++          - enum:
++              - renesas,xhci-r8a774a1 # r8a774a1 SoC
++              - renesas,xhci-r8a774b1 # r8a774b1 SoC
++              - renesas,xhci-r8a774c0 # r8a774c0 SoC
++              - renesas,xhci-r8a7795  # r8a7795 SoC
++              - renesas,xhci-r8a7796  # r8a77960 SoC
++              - renesas,xhci-r8a77961 # r8a77961 SoC
++              - renesas,xhci-r8a77965 # r8a77965 SoC
++              - renesas,xhci-r8a77990 # r8a77990 SoC
++          - const: renesas,rcar-gen3-xhci
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  phys:
++    maxItems: 1
++
++  phy-names:
++    maxItems: 1
++    items:
++      - const: usb
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7795-sysc.h>
++
++    xhci0: usb@ee000000 {
++        compatible = "renesas,xhci-r8a7795", "renesas,rcar-gen3-xhci";
++        reg = <0xee000000 0xc00>;
++        interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&cpg CPG_MOD 328>;
++        power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++        resets = <&cpg 328>;
++    };
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index b120dd6..0c5cff8 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -7,24 +7,6 @@ Required properties:
+     - "marvell,armada3700-xhci" for Armada 37xx SoCs
+     - "marvell,armada-375-xhci" for Armada 375 SoCs
+     - "marvell,armada-380-xhci" for Armada 38x SoCs
+-    - "renesas,xhci-r8a7742" for r8a7742 SoC
+-    - "renesas,xhci-r8a7743" for r8a7743 SoC
+-    - "renesas,xhci-r8a7744" for r8a7744 SoC
+-    - "renesas,xhci-r8a774a1" for r8a774a1 SoC
+-    - "renesas,xhci-r8a774b1" for r8a774b1 SoC
+-    - "renesas,xhci-r8a774c0" for r8a774c0 SoC
+-    - "renesas,xhci-r8a7790" for r8a7790 SoC
+-    - "renesas,xhci-r8a7791" for r8a7791 SoC
+-    - "renesas,xhci-r8a7793" for r8a7793 SoC
+-    - "renesas,xhci-r8a7795" for r8a7795 SoC
+-    - "renesas,xhci-r8a7796" for r8a77960 SoC
+-    - "renesas,xhci-r8a77961" for r8a77961 SoC
+-    - "renesas,xhci-r8a77965" for r8a77965 SoC
+-    - "renesas,xhci-r8a77990" for r8a77990 SoC
+-    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
+-      device
+-    - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
+-      device
+     - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
+     - "xhci-platform" (deprecated)
+ 
+-- 
+2.7.4
 
-I also previously acked this one in 20200504100822.GA5491@sirena.org.uk.
-Has anything changed here to cause the ack to be dropped?
-
---WfZ7S8PLGjBY9Voh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nWT4ACgkQJNaLcl1U
-h9BSJQf9FR8Vke3pe9Gs5pnWmw6vzxds7jfidCUpXIKPoosgfYfzYQrN1G9m2fSm
-pLlYWjhQBEAU+w9oq7WktfEZ8r736noKsRW4hd5a+Zf2koBr0M9O7ull4h7WlHvr
-asCHlWuqJvpVevxf1ag9x0dAA9NRMqh8xxd8ah/ENWTbXmzZPir0Pa6Q+9lzG2Ld
-aqgHcA+WbonAUk4BqLRSasRy6AkO3zUbYWqVecAV8xRPcVjiWd/PkhEQ/BV67wG9
-Kh/sFCs6+PalKQu5PDZP70apmaRPYHwPZmkNu5Y8rAUsjsQradS2JB1zFlWDSxZk
-0qIWVDJdY+FIcxlqt8Rda5akpjL2SQ==
-=51fv
------END PGP SIGNATURE-----
-
---WfZ7S8PLGjBY9Voh--
