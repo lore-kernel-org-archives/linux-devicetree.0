@@ -4,178 +4,191 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA72DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 02:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D30C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 05:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5632063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 02:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DF520714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 05:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wb+HHzhk"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="VnHovaYB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T6bPl0dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgFOCnX (ORCPT
+        id S1726006AbgFOFaB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 14 Jun 2020 22:43:23 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:12926 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727946AbgFOCnX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 14 Jun 2020 22:43:23 -0400
-X-UUID: 3be83243c00b407b955a782d028ed530-20200615
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=F81eFxwFaFjhxzulTpnf9IEFb7H1uEklfRGWWB3UhNo=;
-        b=Wb+HHzhknebGQQNkilN06LNfCNQ6vAwd5fuLirWpr1VlrcmpOBOBDN9wgqfuXIGmlUSRLyqlH6yBogDg0mZ1vcq55NCJw1mfeJLA3Sox4B/LgOmF8Rh5m26ji5dFfj4vRpQWLZY+o44479Ye0AUFU3Gp/4br7qmm4LySWJ1ZUa8=;
-X-UUID: 3be83243c00b407b955a782d028ed530-20200615
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1896897895; Mon, 15 Jun 2020 10:43:16 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 15 Jun 2020 10:43:15 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 15 Jun 2020 10:43:09 +0800
-Message-ID: <1592188994.18525.11.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 15 Jun 2020 10:43:14 +0800
-In-Reply-To: <CAAOTY_8W7FLrjKbNt+WHXjsBzgn_E7n5stKjv94RBnF7ktVuiA@mail.gmail.com>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
-         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_8W7FLrjKbNt+WHXjsBzgn_E7n5stKjv94RBnF7ktVuiA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 15 Jun 2020 01:30:01 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:40351 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725786AbgFOFaA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 01:30:00 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 11C7858015D;
+        Mon, 15 Jun 2020 01:29:59 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 15 Jun 2020 01:29:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=T
+        aA4E30QnHyeJ9whAqz+gQm0yiiY1N3IeCntOygSgK0=; b=VnHovaYBvVNQ5PB69
+        2joW6HWwNYxw+wLXn1HV058OUH4LUVjdRtUcukZZkSgJ5bp0VgMXUaZLpNfQ+VwE
+        Wd0GVbRcy6B+PqW998RP/0zpjkb/FyI5oBBzt9gpnPkhS/hROGqv4YLpOMzcIcxq
+        TJQL1Xv8t6WIo2ob5T6LjcaDwPlEVyU5ot92ibnwhuvOXKv6Vdc5JfcjvUmyCfW5
+        BU4YA9BpbtqGg8NjsYglD+Roerx5mi/qbpNwtqEeX6M5FoXjGjEIBZSgd26Ob+4i
+        n7E1j4daZ4TRFTe9ztm4Wuxv2vzXhUqciaS0pAZzjoqAB1gt/CwKxzbauG4VKLSR
+        6NIJg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=TaA4E30QnHyeJ9whAqz+gQm0yiiY1N3IeCntOygSg
+        K0=; b=T6bPl0dmmV+dSft3EEM3ybxMd1c/zRbCddAhVegeIYK6h2twX3hVO/12y
+        L9wfTjIZxSZmg4UxUA6/hjMjZWGQFhWGkP+wmA362R0DmTXGNzCueZyvVDlbKB6m
+        d1TZsa4OqjKUk3zTlcm/o0cFBN2cnQxWdNHu08VW9hg5bePFlGt3zdf0RhAqjxap
+        S9O6IYZNT2zyEL7FrmTdhWV0RuMRQNh6BOlz1Cn0OwJKqdhfWU0z+eYnGEDh0lqA
+        U3hC5ID2RB/VCpU+7Xnqfp3A3F7F0jPyTw54w7Pw+VYNoAMIN6c+NNqdqBnc2qb6
+        EX1FA+M1rSVZ9RjiFxCHbMenonGJw==
+X-ME-Sender: <xms:UAfnXgchR5EfKaztTnPmBJEqIwAJhjyy4s1u_RDLA6EBXk8q5KXEuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeijedgleekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
+    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
+    ftrfgrthhtvghrnhepuefhfffgveejjeevhfdukeejhedtiefhgeejfeeuuddtkedugeei
+    hfduteelffetnecuffhomhgrihhnpehlihhnuhigqdhsuhhngihirdhorhhgnecukfhppe
+    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
+    mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:UAfnXiN2X4_CmZVwRgc2hQ9c57zCzsCTMNu2VwPLWGK9a7NE8qEWCg>
+    <xmx:UAfnXhgXbQlQlWFfOYc2YwnRrfMGPI-ddUY8YxtMJLcqGQliEwJnKQ>
+    <xmx:UAfnXl_RNWWM8Nx-uvbY74bwSX1fkCMRrx0RI9d8g5fT-EvqgPOnbg>
+    <xmx:VwfnXuIHbrppvTvIufguNgabIuddsz8xtj8GMgOmr9F4WXgMBD0j6A>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A99B330618B7;
+        Mon, 15 Jun 2020 01:29:51 -0400 (EDT)
+Subject: Re: [PATCH v2 1/9] irqchip/sun6i-r: Use a stacked irqchip driver
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20200525041302.51213-1-samuel@sholland.org>
+ <20200525041302.51213-2-samuel@sholland.org>
+ <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <fcfe6d02-2500-37de-e795-664bf2c7b5ee@sholland.org>
+Date:   Mon, 15 Jun 2020 00:29:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: DC43965F8A5AED62EECDB05CF2C54323DC68131BA3F83EBF4170213E1C0F41562000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBTdW4sIDIwMjAtMDYtMTQgYXQgMTE6MjYgKzA4MDAsIENo
-dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ25pyIOeaXpSDpgLHkuowg5LiL5Y2INjoyNeWvq+mB
-k++8mg0KPiA+DQo+ID4gTVQ2ODczIGJ1cyBmcmFicmljIHByb3ZpZGVzIFRydXN0Wm9uZSBzZWN1
-cml0eSBzdXBwb3J0IGFuZCBkYXRhDQo+ID4gcHJvdGVjdGlvbiB0byBwcmV2ZW50IHNsYXZlcyBm
-cm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4gPiBtYXN0ZXJzLg0KPiA+IFRoZSBz
-ZWN1cml0eSB2aW9sYXRpb25zIGFyZSBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBm
-b3INCj4gPiBmdXJ0aGVyIGFuYWx5c2lzIG9yIGNvdW50ZXJtZWFzdXJlcy4NCj4gPg0KPiA+IEFu
-eSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBhbiBpbnRlcnJ1
-cHQsIGFuZA0KPiA+IGl0IHdpbGwgYmUgaGFuZGxlZCBieSBkZXZhcGMtbXQ2ODczIGRyaXZlci4g
-VGhlIHZpb2xhdGlvbg0KPiA+IGluZm9ybWF0aW9uIGlzIHByaW50ZWQgaW4gb3JkZXIgdG8gZmlu
-ZCB0aGUgbXVyZGVyZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5s
-aXVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiANCj4gW3NuaXBdDQo+IA0KPiA+ICsNCj4gPiAr
-ICAgICAgIC8qIDUwICovDQo+ID4gKyAgICAgICB7LTEsIC0xLCA1MCwgIk9PQl93YXlfZW4iLCB0
-cnVlfSwNCj4gPiArICAgICAgIHstMSwgLTEsIDUxLCAiT09CX3dheV9lbiIsIHRydWV9LA0KPiA+
-ICsgICAgICAgey0xLCAtMSwgNTIsICJPT0Jfd2F5X2VuIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7
-LTEsIC0xLCA1MywgIk9PQl93YXlfZW4iLCB0cnVlfSwNCj4gPiArICAgICAgIHstMSwgLTEsIDU0
-LCAiT09CX3dheV9lbiIsIHRydWV9LA0KPiA+ICsgICAgICAgey0xLCAtMSwgNTUsICJPT0Jfd2F5
-X2VuIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7LTEsIC0xLCA1NiwgIkRlY29kZV9lcnJvciIsIHRy
-dWV9LA0KPiA+ICsgICAgICAgey0xLCAtMSwgNTcsICJEZWNvZGVfZXJyb3IiLCB0cnVlfSwNCj4g
-PiArICAgICAgIHstMSwgLTEsIDU4LCAiRElTUF9QV00iLCBmYWxzZX0sDQo+ID4gKyAgICAgICB7
-LTEsIC0xLCA1OSwgIklNUF9JSUNfV1JBUCIsIGZhbHNlfSwNCj4gPiArDQo+ID4gKyAgICAgICAv
-KiA2MCAqLw0KPiA+ICsgICAgICAgey0xLCAtMSwgNjAsICJERVZJQ0VfQVBDX1BFUklfUEFSX19B
-TyIsIGZhbHNlfSwNCj4gPiArICAgICAgIHstMSwgLTEsIDYxLCAiREVWSUNFX0FQQ19QRVJJX1BB
-Ul9QRE4iLCBmYWxzZX0sDQo+IA0KPiBZb3UgZG9lcyBub3QgcHJvY2VzcyB0aGUgaXRlbSB3aG9z
-ZSBlbmFibGVfdmlvX2lycSBpcyBmYWxzZSwgc28gSQ0KPiB0aGluayB5b3Ugc2hvdWxkIHJlbW92
-ZSB0aGVzZSBpdGVtcyBhbmQgcmVtb3ZlIGVuYWJsZV92aW9faXJxIGJlY2F1c2UNCj4gdGhlIHJl
-c3QgaXRlbSdzIGVuYWJsZV92aW9faXJxIHdvdWxkIGFsd2F5cyBiZSB0cnVlLg0KDQpJbiBzb21l
-IHVzZXJzLCB0aGV5IGNhbiBkZWNpZGUgd2hpY2ggc2xhdmVzIHRoZXkgd2FudCB0byBlbmFibGUg
-b3INCmRpc2FibGUgdmlvbGF0aW9uIGlycSBpbiBkaWZmZXJlbnQgcHJvZHVjdC4gV2UgcmVtYWlu
-IHRoaXMgcHJvcGVydHkgZm9yDQpjb21wYXRpYmlsaXR5Lg0KDQo+IA0KPiA+ICt9Ow0KPiA+ICsN
-Cj4gPiArc3RhdGljIHN0cnVjdCBtdGtfZGV2aWNlX251bSBtdGs2ODczX2RldmljZXNfbnVtW10g
-PSB7DQo+ID4gKyAgICAgICB7U0xBVkVfVFlQRV9JTkZSQSwgVklPX1NMQVZFX05VTV9JTkZSQX0s
-DQo+ID4gKyAgICAgICB7U0xBVkVfVFlQRV9QRVJJLCBWSU9fU0xBVkVfTlVNX1BFUkl9LA0KPiA+
-ICsgICAgICAge1NMQVZFX1RZUEVfUEVSSTIsIFZJT19TTEFWRV9OVU1fUEVSSTJ9LA0KPiA+ICsg
-ICAgICAge1NMQVZFX1RZUEVfUEVSSV9QQVIsIFZJT19TTEFWRV9OVU1fUEVSSV9QQVJ9LA0KPiA+
-ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBQRVJJQVhJX0lEX0lORk8gcGVyaV9taV9p
-ZF90b19tYXN0ZXJbXSA9IHsNCj4gPiArICAgICAgIHsiVEhFUk0yIiwgICAgICAgeyAwLCAwLCAw
-IH0gfSwNCj4gPiArICAgICAgIHsiU1BNIiwgICAgICAgICAgeyAwLCAxLCAwIH0gfSwNCj4gPiAr
-ICAgICAgIHsiQ0NVIiwgICAgICAgICAgeyAwLCAwLCAxIH0gfSwNCj4gPiArICAgICAgIHsiVEhF
-Uk0iLCAgICAgICAgeyAwLCAxLCAxIH0gfSwNCj4gPiArICAgICAgIHsiU1BNX0RSQU1DIiwgICAg
-eyAxLCAxLCAwIH0gfSwNCj4gDQo+IFRoZSBiaXRzIHsgMSwgMSwgMCB9IGVxdWFsIHRvIGEgbnVt
-YmVyIDB4MywgSSB0aGlpbmsgeW91IHNob3VsZCB1c2UgYQ0KPiBudW1iZXIgaW5zdGVhZCBvZiBi
-aXRzIGFuZCBldmVyeXRoaW5nIHdvdWxkIGJlIG1vcmUgZWFzeS4NCg0KV2Ugd291bGQgbGlrZSB0
-byBrZWVwIGl0IGJlY2F1c2UgdGhlIGJpdCB2YWx1ZSBjb250YWlucyBtb3JlIHRoYW4gMC8xLA0K
-aXQgbWlnaHQgYmUgJzInIGluIHNvbWUgY2FzZXMuICcyJyBtZWFucyBpdCBjYW4gYmUgMCBvciAx
-LiBUaGlzIHRvdGFsbHkNCmJ5IGhhcmR3YXJlIGRlc2lnbiAmIGltcGxlbWVudGF0aW9uLg0KDQo+
-ID4gK307DQo+ID4gKw0KPiANCj4gW3NuaXBdDQo+IA0KPiA+ICsNCj4gPiArLyoNCj4gPiArICog
-bXRrX2RldmFwY192aW9fY2hlY2sgLSBjaGVjayB2aW9sYXRpb24gc2hpZnQgc3RhdHVzIGlzIHJh
-aXNlZCBvciBub3QuDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybnMgdGhlIHZhbHVlIG9mIHZpb2xh
-dGlvbiBzaGlmdCBzdGF0dXMgcmVnDQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCBtdGtfZGV2
-YXBjX3Zpb19jaGVjayhpbnQgc2xhdmVfdHlwZSwgaW50ICpzaGlmdF9iaXQpDQo+ID4gK3sNCj4g
-PiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bSA9IG10a19kZXZhcGNfY3R4LT5zb2MtPnNsYXZl
-X3R5cGVfbnVtOw0KPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19p
-bmZvOw0KPiA+ICsgICAgICAgdTMyIHZpb19zaGlmdF9zdGE7DQo+ID4gKyAgICAgICBpbnQgaTsN
-Cj4gPiArDQo+ID4gKyAgICAgICBpZiAoc2xhdmVfdHlwZSA+PSBzbGF2ZV90eXBlX251bSkgew0K
-PiANCj4gVGhpcyBuZXZlciBoYXBwZW4sIHNvIHJlbW92ZSBpdC4NCg0KSW5kZWVkLCB0aGFua3MN
-Cg0KPiANCj4gPiArICAgICAgICAgICAgICAgcHJfZXJyKFBGWCAiJXM6IHBhcmFtIGNoZWNrIGZh
-aWxlZCwgJXM6MHgleFxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgIF9fZnVuY19fLCAi
-c2xhdmVfdHlwZSIsIHNsYXZlX3R5cGUpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+
-ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgdmlvX2luZm8gPSBtdGtfZGV2YXBjX2N0
-eC0+c29jLT52aW9faW5mbzsNCj4gPiArICAgICAgIHZpb19zaGlmdF9zdGEgPSByZWFkbChtdGtf
-ZGV2YXBjX3BkX2dldChzbGF2ZV90eXBlLCBWSU9fU0hJRlRfU1RBLCAwKSk7DQo+ID4gKw0KPiA+
-ICsgICAgICAgaWYgKCF2aW9fc2hpZnRfc3RhKSB7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2lu
-Zm8oUEZYICJ2aW9sYXRpb24gaXMgdHJpZ2dlcmVkIGJlZm9yZS4gJXM6MHgleFxuIiwNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAic2hpZnRfYml0IiwgKnNoaWZ0X2JpdCk7DQo+ID4gKw0K
-PiA+ICsgICAgICAgfSBlbHNlIGlmICh2aW9fc2hpZnRfc3RhICYgKDB4MVVMIDw8ICpzaGlmdF9i
-aXQpKSB7DQo+ID4gKyAgICAgICAgICAgICAgIHByX2RlYnVnKFBGWCAiJXM6IDB4JXggaXMgbWF0
-Y2hlZCB3aXRoICVzOiVkXG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAidmlvX3No
-aWZ0X3N0YSIsIHZpb19zaGlmdF9zdGEsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICJz
-aGlmdF9iaXQiLCAqc2hpZnRfYml0KTsNCj4gPiArDQo+ID4gKyAgICAgICB9IGVsc2Ugew0KPiA+
-ICsgICAgICAgICAgICAgICBwcl9pbmZvKFBGWCAiJXM6IDB4JXggaXMgbm90IG1hdGNoZWQgd2l0
-aCAlczolZFxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAidmlvX3NoaWZ0X3N0YSIs
-IHZpb19zaGlmdF9zdGEsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgInNoaWZ0X2JpdCIs
-ICpzaGlmdF9iaXQpOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8
-IE1PRF9OT19JTl8xX0RFVkFQQyAqIDI7IGkrKykgew0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGlmICh2aW9fc2hpZnRfc3RhICYgKDB4MSA8PCBpKSkgew0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgKnNoaWZ0X2JpdCA9IGk7DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBicmVhazsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4g
-KyAgICAgICAgICAgICAgIH0NCj4gPiArICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICB2aW9f
-aW5mby0+c2hpZnRfc3RhX2JpdCA9ICpzaGlmdF9iaXQ7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
-YXRpYyB2b2lkIGRldmFwY19leHRyYWN0X3Zpb19kYmcoaW50IHNsYXZlX3R5cGUpDQo+ID4gK3sN
-Cj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bSA9IG10a19kZXZhcGNfY3R4LT5zb2MtPnNs
-YXZlX3R5cGVfbnVtOw0KPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICp2aW9fZGJnMF9yZWcsICp2
-aW9fZGJnMV9yZWcsICp2aW9fZGJnMl9yZWc7DQo+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgbXRr
-X2luZnJhX3Zpb19kYmdfZGVzYyAqdmlvX2RiZ3M7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbXRrX2Rl
-dmFwY192aW9faW5mbyAqdmlvX2luZm87DQo+ID4gKyAgICAgICB1MzIgZGJnMDsNCj4gPiArDQo+
-ID4gKyAgICAgICBpZiAoc2xhdmVfdHlwZSA+PSBzbGF2ZV90eXBlX251bSkgew0KPiANCj4gRGl0
-dG8uDQoNCkluZGVlZCwgdGhhbmtzDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IENodW4tS3VhbmcuDQo+
-IA0KPiA+ICsgICAgICAgICAgICAgICBwcl9lcnIoUEZYICIlczogcGFyYW0gY2hlY2sgZmFpbGVk
-LCAlczoweCV4XG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgX19mdW5jX18sICJzbGF2
-ZV90eXBlIiwgc2xhdmVfdHlwZSk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybjsNCj4gPiAr
-ICAgICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICB2aW9fZGJnMF9yZWcgPSBtdGtfZGV2YXBjX3Bk
-X2dldChzbGF2ZV90eXBlLCBWSU9fREJHMCwgMCk7DQo+ID4gKyAgICAgICB2aW9fZGJnMV9yZWcg
-PSBtdGtfZGV2YXBjX3BkX2dldChzbGF2ZV90eXBlLCBWSU9fREJHMSwgMCk7DQo+ID4gKyAgICAg
-ICB2aW9fZGJnMl9yZWcgPSBtdGtfZGV2YXBjX3BkX2dldChzbGF2ZV90eXBlLCBWSU9fREJHMiwg
-MCk7DQo+ID4gKw0KPiA+ICsgICAgICAgdmlvX2RiZ3MgPSBtdGtfZGV2YXBjX2N0eC0+c29jLT52
-aW9fZGJnczsNCj4gPiArICAgICAgIHZpb19pbmZvID0gbXRrX2RldmFwY19jdHgtPnNvYy0+dmlv
-X2luZm87DQo+ID4gKw0KPiA+ICsgICAgICAgLyogRXh0cmFjdCB2aW9sYXRpb24gaW5mb3JtYXRp
-b24gKi8NCj4gPiArICAgICAgIGRiZzAgPSByZWFkbCh2aW9fZGJnMF9yZWcpOw0KPiA+ICsgICAg
-ICAgdmlvX2luZm8tPm1hc3Rlcl9pZCA9IHJlYWRsKHZpb19kYmcxX3JlZyk7DQo+ID4gKyAgICAg
-ICB2aW9faW5mby0+dmlvX2FkZHIgPSByZWFkbCh2aW9fZGJnMl9yZWcpOw0KPiA+ICsNCj4gPiAr
-ICAgICAgIHZpb19pbmZvLT5kb21haW5faWQgPSAoZGJnMCAmIHZpb19kYmdzLT52aW9fZGJnX2Rt
-bmlkKQ0KPiA+ICsgICAgICAgICAgICAgICA+PiB2aW9fZGJncy0+dmlvX2RiZ19kbW5pZF9zdGFy
-dF9iaXQ7DQo+ID4gKyAgICAgICB2aW9faW5mby0+d3JpdGUgPSAoKGRiZzAgJiB2aW9fZGJncy0+
-dmlvX2RiZ193X3ZpbykNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICA+PiB2aW9fZGJncy0+
-dmlvX2RiZ193X3Zpb19zdGFydF9iaXQpID09IDE7DQo+ID4gKyAgICAgICB2aW9faW5mby0+cmVh
-ZCA9ICgoZGJnMCAmIHZpb19kYmdzLT52aW9fZGJnX3JfdmlvKQ0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgID4+IHZpb19kYmdzLT52aW9fZGJnX3JfdmlvX3N0YXJ0X2JpdCkgPT0gMTsNCj4g
-PiArICAgICAgIHZpb19pbmZvLT52aW9fYWRkcl9oaWdoID0gKGRiZzAgJiB2aW9fZGJncy0+dmlv
-X2FkZHJfaGlnaCkNCj4gPiArICAgICAgICAgICAgICAgPj4gdmlvX2RiZ3MtPnZpb19hZGRyX2hp
-Z2hfc3RhcnRfYml0Ow0KPiA+ICsNCj4gPiArICAgICAgIGRldmFwY192aW9faW5mb19wcmludCgp
-Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICsvKg0KDQo=
+On 6/8/20 3:48 AM, Maxime Ripard wrote:
+> On Sun, May 24, 2020 at 11:12:54PM -0500, Samuel Holland wrote:
+>> The R_INTC in the A31 and newer sun8i/sun50i SoCs is more similar to the
+>> original sun4i interrupt controller than the sun7i/sun9i NMI controller.
+>> It is used for two distinct purposes:
+>>  1) To control the trigger, latch, and mask for the NMI input pin
+>>  2) To provide the interrupt input for the ARISC coprocessor
+>>
+>> As this interrupt controller is not documented, information about it
+>> comes from vendor-provided ARISC firmware and from experimentation.
+>>
+>> Like the original sun4i interrupt controller, it has:
+>>  - A VECTOR_REG at 0x00 (configurable via the BASE_ADDR_REG at 0x04)
+>>  - A NMI_CTRL_REG, PENDING_REG, and ENABLE_REG as used by both the
+>>    sun4i and sunxi-nmi drivers
+>>  - A MASK_REG at 0x50
+>>  - A RESP_REG at 0x60
+>>
+>> Differences from the sun4i interrupt controller appear to be:
+>>  - It is only known to have one register of each kind (max 32 inputs)
+>>  - There is no FIQ-related logic
+>>  - There is no interrupt priority logic
+>>
+>> In order to fulfill its two purposes, this hardware block combines two
+>> types of IRQs. First, the NMI pin is routed to the "IRQ 0" input on this
+>> chip, with a trigger type controlled by the NMI_CTRL_REG. The "IRQ 0
+>> pending" output from this chip, if enabled, is then routed to a SPI IRQ
+>> input on the GIC, as IRQ_TYPE_LEVEL_HIGH. In other words, bit 0 of
+>> ENABLE_REG *does* affect the NMI IRQ seen at the GIC.
+>>
+>> The NMI is then followed by a contiguous block of (at least) 15 IRQ
+>> inputs that are connected in parallel to both R_INTC and the GIC. Or
+>> in other words, the other bits of ENABLE_REG *do not* affect the IRQs
+>> seen at the GIC.
+>>
+>> Finally, the global "IRQ pending" output from R_INTC, after being masked
+>> by MASK_REG and RESP_REG, is connected to the "external interrupt" input
+>> of the ARISC CPU (an OR1200). This path is not relevant to Linux.
+>>
+>> Because of the 1:1 correspondence between R_INTC and GIC inputs, this is
+>> a perfect scenario for using a stacked irqchip driver. We want to hook
+>> into enabling/disabling IRQs to add more features to the GIC
+>> (specifically to allow masking the NMI and setting its trigger type),
+>> but we don't need to actually handle the IRQ in this driver.
+>>
+>> And since R_INTC is in the always-on power domain, and its output is
+>> connected directly in to the power management coprocessor, a stacked
+>> irqchip driver provides a simple way to add wakeup support to this set
+>> of IRQs. That is a future patch; for now, just the NMI is moved over.
+>>
+>> This driver keeps the same DT binding as the existing driver. The
+>> "interrupt" property of the R_INTC node is used to determine 1) the
+>> offset between GIC and R_INTC hwirq numbers and 2) the type of trigger
+>> between the R_INTC "IRQ 0 pending" output and the GIC NMI input.
+>>
+>> This commit mostly reverts commit 173bda53b340 ("irqchip/sunxi-nmi:
+>> Support sun6i-a31-r-intc compatible").
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> 
+> As usual, thanks for that commit log (and the experiments you did to
+> write it in the first place).
+> 
+> Acked-by: Maxime Ripard <mripard@kernel.org>
+> 
+> Maxime
 
+I've done more experimenting, and I've learned what comes after the first 16
+IRQs: all of the other SPI IRQs, multiplexed in clusters of 8, with per-IRQ
+masks for the inputs to each cluster.
+
+In fact, the H6 has so many IRQs that it begins to use the the second register
+in each group (0x14, 0x44, 0x54). This means that more than one register in each
+group are in fact implemented.
+
+See https://linux-sunxi.org/INTC#IRQ_Mapping for more details.
+
+The ability to send other IRQs to the AR100 makes it possible to implement
+functionality like USB Remote Wakeup or Wake on LAN without adding complexity to
+the AR100 firmware.
+
+I will need to update the driver to take advantage of this ability, and it
+raises some questions about the binding. Since the NMI is not the
+lowest-numbered IRQ that can be mapped, the numbering scheme would need to
+change. Maybe the IRQ number should be the same as the GIC SPI IRQ number? But
+this would mean a new compatible.
+
+The other question is which devices should be routed through this irqchip
+driver? Anything that provides a wakeup source needs to go through it, so it can
+intercept irq_set_wake. Probably other devices should not, as 1) not quite all
+IRQs can even be sent to the AR100 for wakeup (e.g. the A64 appears to stop in
+the middle of the GPU IRQs), and 2) stacking on another irqchip driver adds a
+(tiny) overhead to masking/unmasking during IRQ handling.
+
+Thoughts?
+Samuel
