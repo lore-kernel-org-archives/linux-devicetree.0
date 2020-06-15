@@ -2,137 +2,114 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEA1C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301EEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31552068E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B282068E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgFOHsZ convert rfc822-to-8bit (ORCPT
+        id S1728950AbgFOH6n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:48:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgFOHsY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 03:48:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99ACDC05BD43
-        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 00:48:22 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jkjqg-0006Gk-PF; Mon, 15 Jun 2020 09:48:06 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jkjqe-000242-Ti; Mon, 15 Jun 2020 09:48:04 +0200
-Message-ID: <c544bcb8ea20dadcea68e22d33c160a713c7fe02.camel@pengutronix.de>
-Subject: Re: [PATCH 14/29] dt: Fix broken references to renamed docs
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mon, 15 Jun 2020 03:58:43 -0400
+Received: from smtp.asem.it ([151.1.184.197]:51429 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728932AbgFOH6m (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:58:42 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000317057.MSG 
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 09:58:39 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
+ Jun 2020 09:58:37 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Mon, 15 Jun 2020 09:58:37 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
-Date:   Mon, 15 Jun 2020 09:48:04 +0200
-In-Reply-To: <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org>
-         <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-csky@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v1] doc: devicetree: bindings: fix spelling mistake
+Date:   Mon, 15 Jun 2020 09:58:35 +0200
+Message-ID: <20200615075835.15202-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020A.5EE72A2D.0065,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-06-15 at 08:46 +0200, Mauro Carvalho Chehab wrote:
-> Some files got renamed. Those were all fixed automatically by
-> 
-> 	./scripts/documentation-file-ref-check --fix
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt   | 2 +-
->  Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt | 4 ++--
->  Documentation/devicetree/bindings/display/imx/ldb.txt         | 4 ++--
->  Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt  | 2 +-
->  MAINTAINERS                                                   | 4 ++--
->  5 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index 715047444391..10b8459e49f8 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -47,7 +47,7 @@ Required properties:
->  			  &lsio_mu1 1 2
->  			  &lsio_mu1 1 3
->  			  &lsio_mu1 3 3>;
-> -		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> +		See Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
->  		for detailed mailbox binding.
->  
->  Note: Each mu which supports general interrupt should have an alias correctly
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> index 5bf77f6dd19d..5a99490c17b9 100644
-> --- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> @@ -68,7 +68,7 @@ Required properties:
->    datasheet
->  - clocks : phandle to the PRE axi clock input, as described
->    in Documentation/devicetree/bindings/clock/clock-bindings.txt and
-> -  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-> +  Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
->  - clock-names: should be "axi"
->  - interrupts: should contain the PRE interrupt
->  - fsl,iram: phandle pointing to the mmio-sram device node, that should be
-> @@ -94,7 +94,7 @@ Required properties:
->    datasheet
->  - clocks : phandles to the PRG ipg and axi clock inputs, as described
->    in Documentation/devicetree/bindings/clock/clock-bindings.txt and
-> -  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-> +  Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
->  - clock-names: should be "ipg" and "axi"
->  - fsl,pres: phandles to the PRE units attached to this PRG, with the fixed
->    PRE as the first entry and the muxable PREs following.
-> diff --git a/Documentation/devicetree/bindings/display/imx/ldb.txt b/Documentation/devicetree/bindings/display/imx/ldb.txt
-> index 38c637fa39dd..8e6e7d797943 100644
-> --- a/Documentation/devicetree/bindings/display/imx/ldb.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/ldb.txt
-> @@ -30,8 +30,8 @@ Required properties:
->                  "di2_sel" - IPU2 DI0 mux
->                  "di3_sel" - IPU2 DI1 mux
->          The needed clock numbers for each are documented in
-> -        Documentation/devicetree/bindings/clock/imx5-clock.txt, and in
-> -        Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-> +        Documentation/devicetree/bindings/clock/imx5-clock.yaml, and in
-> +        Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
->  
->  Optional properties:
->   - pinctrl-names : should be "default" on i.MX53, not used on i.MX6q
+Fix typo: "triger" --> "trigger"
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Acked-by: Guo Ren <guoren@kernel.org>
+---
 
-regards
-Philipp
+v1: add Acked-by: Guo Ren <guoren@kernel.org>
+
+ Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
+ .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
+ Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+index ba455589f869..e1c49b660d3a 100644
+--- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+@@ -12,7 +12,7 @@ Required properties for the top level node:
+    Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+    interrupt. Should be 2. The first cell defines the interrupt number,
+-   the second encodes the triger flags encoded as described in
++   the second encodes the trigger flags encoded as described in
+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - compatible:
+   - "mediatek,mt7621-gpio" for Mediatek controllers
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+index e13405355166..e6bbcae4d07f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+@@ -10,7 +10,7 @@ Interrupt number definition:
+  16-31  : private  irq, and we use 16 as the co-processor timer.
+  31-1024: common irq for soc ip.
+ 
+-Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
++Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+  IRQ_TYPE_LEVEL_HIGH (default)
+  IRQ_TYPE_LEVEL_LOW
+  IRQ_TYPE_EDGE_RISING
+diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+index 15cfec08fbb8..f5c7e99cf52b 100644
+--- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
++++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+@@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
+  - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
+  - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
+  - PTIM_CCVR "cr<3, 14>" Current counter value reg.
+- - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
++ - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
+ 
+ ==============================
+ timer node bindings definition
+-- 
+2.17.1
+
