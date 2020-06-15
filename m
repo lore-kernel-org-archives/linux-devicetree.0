@@ -2,134 +2,103 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1497BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BF6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB482068E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 10:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A007A20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 11:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592219912;
+	bh=Kc5Uu2zfW16GC/jLDwOItAJ1ZCbBOhlBnC7jl4IzQzw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FH+IudgMZzeS5kC/AU84QMVJdZ8yHRwkSE7d7TffBTAUEOgdFn/wZLFUUCtYxB++1
+	 21uogAI+XEDVDgvIdFQtPuaTosoaSTtROYsPixGqzGHjCsti9BzEIgmXPMtkTScM6m
+	 eWXGQN9tufZlKuFP7s68xTsv+KqHyHZzK10qx3Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgFOKwC (ORCPT
+        id S1729643AbgFOLS2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728815AbgFOKwC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 06:52:02 -0400
-Received: from mail.net18.km6g.us (mail.net18.km6g.us [IPv6:2607:5300:203:24b0:3::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE625C061A0E;
-        Mon, 15 Jun 2020 03:52:00 -0700 (PDT)
-Received: from [2001:470:8afe:60:716b:c9b9:d55a:f6f1] (helo=balrog20.km6g.us)
-        by mail.net18.km6g.us with esmtp (Exim 4.94 (FreeBSD))
-        (envelope-from <kevin+linux@km6g.us>)
-        id 1jkmie-000N4M-4d; Mon, 15 Jun 2020 06:52:00 -0400
-From:   "Kevin P. Fleming" <kevin+linux@km6g.us>
-To:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     "Kevin P. Fleming" <kevin+linux@km6g.us>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 3/3 v3] rtc: abx80x: Add support for autocalibration filter capacitor
-Date:   Mon, 15 Jun 2020 06:51:14 -0400
-Message-Id: <20200615105113.57770-3-kevin+linux@km6g.us>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615105113.57770-1-kevin+linux@km6g.us>
-References: <20200615105113.57770-1-kevin+linux@km6g.us>
+        Mon, 15 Jun 2020 07:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728285AbgFOLS1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:18:27 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9183620679;
+        Mon, 15 Jun 2020 11:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592219907;
+        bh=Kc5Uu2zfW16GC/jLDwOItAJ1ZCbBOhlBnC7jl4IzQzw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CLqA0Otm5iTchqOJNuF5+TEvlduYM9+uHf6vsS1atI8wMe7S/kxYzvwUUWFsse4+8
+         sH1eDw9PbEF9rDtnc2aheYGa9DNhyAWCXgR4cJnGEviEeGugPmWRca0LUDu2E4mP8M
+         PRkjztkO40hmW00EQKRvCSNgeGSBOeUs/BCxQ00k=
+Date:   Mon, 15 Jun 2020 12:18:24 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 14/29] dt: Fix broken references to renamed docs
+Message-ID: <20200615111824.GB4447@sirena.org.uk>
+References: <cover.1592203542.git.mchehab+huawei@kernel.org>
+ <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
+Content-Disposition: inline
+In-Reply-To: <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All of the parts supported by this driver can make use of a
-small capacitor to improve the accuracy of the autocalibration
-process for their RC oscillators. If a capacitor is connected,
-a configuration register must be set to enable its use, so a
-new Device Tree property has been added for that purpose.
 
-Signed-off-by: Kevin P. Fleming <kevin+linux@km6g.us>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-To: linux-rtc@vger.kernel.org
-To: devicetree@vger.kernel.org
----
-v3: corrected failure to initialize variable
- drivers/rtc/rtc-abx80x.c | 36 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+--eAbsdosE1cNLO4uF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/rtc/rtc-abx80x.c b/drivers/rtc/rtc-abx80x.c
-index daa6f27040e61..1b428fe2029ef 100644
---- a/drivers/rtc/rtc-abx80x.c
-+++ b/drivers/rtc/rtc-abx80x.c
-@@ -77,6 +77,10 @@
- #define ABX8XX_CFG_KEY_OSC	0xa1
- #define ABX8XX_CFG_KEY_MISC	0x9d
- 
-+#define ABX8XX_REG_AFCTRL	0x26
-+#define ABX8XX_AUTOCAL_FILTER_DISABLE	0x00
-+#define ABX8XX_AUTOCAL_FILTER_ENABLE	0xa0
-+
- #define ABX8XX_REG_ID0		0x28
- 
- #define ABX8XX_REG_OUT_CTRL	0x30
-@@ -141,6 +145,26 @@ static int abx80x_is_rc_mode(struct i2c_client *client)
- 	return (flags & ABX8XX_OSS_OMODE) ? 1 : 0;
- }
- 
-+static int abx80x_set_autocal_filter(struct i2c_client *client, u8 filter_cfg)
-+{
-+	int err;
-+
-+	/*
-+	 * Write the configuration key register to enable access to the AFCTRL
-+	 * register
-+	 */
-+	if (abx80x_write_config_key(client, ABX8XX_CFG_KEY_MISC) < 0)
-+		return -EIO;
-+
-+	err = i2c_smbus_write_byte_data(client, ABX8XX_REG_AFCTRL, filter_cfg);
-+	if (err < 0) {
-+		dev_warn(&client->dev, "Unable to write autocal filter register\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- static int abx80x_enable_trickle_charger(struct i2c_client *client,
- 					 u8 trickle_cfg)
- {
-@@ -678,7 +702,8 @@ static int abx80x_probe(struct i2c_client *client,
- {
- 	struct device_node *np = client->dev.of_node;
- 	struct abx80x_priv *priv;
--	int i, data, err, trickle_cfg = -EINVAL;
-+	int i, data, err, filter_cfg;
-+	int trickle_cfg = -EINVAL;
- 	char buf[7];
- 	unsigned int part = id->driver_data;
- 	unsigned int partnumber;
-@@ -824,6 +849,15 @@ static int abx80x_probe(struct i2c_client *client,
- 			return err;
- 	}
- 
-+	if (of_property_read_u32(np, "abracon,autocal_filter", &filter_cfg) == 0) {
-+		err = abx80x_set_autocal_filter(client,
-+						filter_cfg ?
-+						ABX8XX_AUTOCAL_FILTER_ENABLE :
-+						ABX8XX_AUTOCAL_FILTER_DISABLE);
-+		if (err)
-+			return err;
-+	}
-+
- 	if (client->irq > 0) {
- 		dev_info(&client->dev, "IRQ %d supplied\n", client->irq);
- 		err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
--- 
-2.26.2
+On Mon, Jun 15, 2020 at 08:46:53AM +0200, Mauro Carvalho Chehab wrote:
+> Some files got renamed. Those were all fixed automatically by
+>=20
+> 	./scripts/documentation-file-ref-check --fix
 
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--eAbsdosE1cNLO4uF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nWQAACgkQJNaLcl1U
+h9CxiAgAhDSjkVNSd4C3SSNbhfInIakuxFRySdIdhdj0LEFFiDgpuSzr3Lod/jYy
+mKamyUcBQ6F3CafOHN8nf4MlH9u3CSElXbDvLZlah833W1ak+AWXqFDdqi3XM9Wg
+5enzsfi4JHeKxu/NGAt7YUqXKG2WxM4RL0iC1H/CsGsLII4ixSPSNHJ8BsGs2Ehx
+Dv2I9zYutWdH+3O8bk4vHtJHpZidjuobydynnmMgcHpeDXVSLPZx22W/LXsUAlfE
+HFaK+IberJIeSTebqFLV0fkB5+x9yri0Jg8SLWubAGmqiS/XEvVLx1tF0uU/ukk4
+dBx3qCxD+Vtqo7ZF4IYCIM1u5B64lg==
+=HhUo
+-----END PGP SIGNATURE-----
+
+--eAbsdosE1cNLO4uF--
