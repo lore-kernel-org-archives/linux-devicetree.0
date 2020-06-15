@@ -2,63 +2,118 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A6DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5172220714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0680120679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 09:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PhelqSKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgFOJIV (ORCPT
+        id S1728411AbgFOJJH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:08:21 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56679 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbgFOJIV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 05:08:21 -0400
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2F6D21C0014;
-        Mon, 15 Jun 2020 09:08:19 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: mtd: nand: Document the generic rb-gpios property
-Date:   Mon, 15 Jun 2020 11:08:17 +0200
-Message-Id: <20200615090818.26550-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200519232454.374081-2-boris.brezillon@collabora.com>
-References: 
+        Mon, 15 Jun 2020 05:09:07 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43104 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729267AbgFOJJG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:09:06 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F93vZX011755;
+        Mon, 15 Jun 2020 11:08:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=6AGPKZTlObc1ZPKgs7FhyKVk6uWShOigJZrNQVvB/pQ=;
+ b=PhelqSKTVsO9nZgxPwkhPrpVsE6gksTSuihQPK4G/z2nVgsBkuC4x58ewVjROKixHJ+C
+ W/4HBioio2gBS1c8S4MtZnCBLt05dArjTqB4g2zoZNivZMxri3hLhpEzw6k7btE0Uvh1
+ enZ56vrKTX5EdVl3HYI/E+Xvd+8rpBjQ/i58kX6S+UCHcMWZW1mzTeecE5Vx9ngJTgEu
+ O129wBWbL0/d2uzLwXvkXi0gJsQau8l59g74IMwVilDzwSEr0LaCFjP1/eCN6V6nQSVp
+ ZkHSj3MAZn1RPHvcwhIic8Oct4dc4F/l0aFb0Dg1Te+nU+DlOUXtDy3RaYoyxus2Obqz AQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mnph0hu0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 11:08:49 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E3F4D100034;
+        Mon, 15 Jun 2020 11:08:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D1F1A2BE22D;
+        Mon, 15 Jun 2020 11:08:48 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
+ 2020 11:08:48 +0200
+Subject: Re: [PATCH v4 0/4] Enable stmpe811 touch screen on stm32f429-disco
+ board
+To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <p.zabel@pengutronix.de>,
+        <pierre-yves.mordret@st.com>, <philippe.schenker@toradex.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <1591709203-12106-1-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <618d3fea-aa9f-dbf6-04a1-e9db621a6cd5@st.com>
+Date:   Mon, 15 Jun 2020 11:08:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: f454df020bcdb2ffbd1b0fc70ee1a7c60cafad94
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591709203-12106-1-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2020-05-19 at 23:24:52 UTC, Boris Brezillon wrote:
-> A few drivers use this property to describe GPIO pins used to sample
-> the NAND Ready/Busy state. Let's make it part of the generic binding
-> doc.
+Hi Dillon
+
+On 6/9/20 3:26 PM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> This patchset is intend to enable stmpe811 touch screen on stm32f429-disco
+> board with three dts and one i2c driver changes.
+> 
+> has been validated by ts_print tool
+> 
+> Changes log:
+> V4: indroduce 'IIC_LAST_BYTE_POS' to compatible with xipkernel boot
+> 
+> V3: just add change log in [PATCH V3 3/4] below ---
+> 
+> V2: remove id, blocks, irq-trigger from stmpe811 dts
+> 
+> V1:
+> ARM: dts: stm32: add I2C3 support on STM32F429 SoC
+> ARM: dts: stm32: Add pin map for I2C3 controller on stm32f4
+> ARM: dts: stm32: enable stmpe811 on stm32429-disco board
+> i2c: stm32f4: Fix stmpe811 get xyz data timeout issue
+> 
+> dillon min (4):
+>    ARM: dts: stm32: add I2C3 support on STM32F429 SoC
+>    ARM: dts: stm32: Add pin map for I2C3 controller on stm32f4
+>    ARM: dts: stm32: enable stmpe811 on stm32429-disco board
+>    i2c: stm32f4: Fix stmpe811 get xyz data timeout issue
+> 
+>   arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 12 +++++++++
+>   arch/arm/boot/dts/stm32f429-disco.dts  | 47 ++++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/stm32f429.dtsi       | 12 +++++++++
+>   drivers/i2c/busses/i2c-stm32f4.c       | 12 ++++++---
+>   4 files changed, 80 insertions(+), 3 deletions(-)
+> 
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+DT patches applied on stm32-next. I changed node ordering in patch 3.
 
-Miquel
+Thanks
+Alex
