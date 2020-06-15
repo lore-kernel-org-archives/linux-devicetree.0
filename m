@@ -6,66 +6,84 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A224CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 23:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A48C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C882080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 23:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560EE208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592264447;
-	bh=8Vkipt8UfbkmfZZK+DRY5P5ncOAbz5M/RzUt969ESmw=;
+	s=default; t=1592264484;
+	bh=bqkgpEtV0AWOIPCPj9PiP6DShiunetgdC6n3vDohao0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=jgcUkrgeDTDiDDgNqiFluXipUHHv8rzgh0F/Te1qWa5WFhYttiQCyjeuad2hhvpQs
-	 H/VMPEACKZfjQucXe7qEQDWzmpEAsnmwzcuAG9WBjn74UZBc+dsi8Nzr4jT3YQHCDv
-	 k59Ly1YUMzjZsAN9l0ZzSkjD290956fsmz579k/Y=
+	b=seOgyBEBaXZh8Q8hQjFL/+e9pUBmGNwjAsNguS9iHdgi0RK6GHOubpYC2yTrLEPSo
+	 k/XIVvUtwIag/mgq/68nMwggCz/Ld36mAaUSZ1qdIixe/0mlZ3MzBBnRS7g967rXdZ
+	 QYABZD/NnJUexaAfL8N0ACaF4hFGoiSma2KNsHfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgFOXkq (ORCPT
+        id S1727084AbgFOXlX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:40:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 19:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOXkq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:40:46 -0400
+        id S1725960AbgFOXlW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:41:22 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B40AD207D3;
-        Mon, 15 Jun 2020 23:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9742520714;
+        Mon, 15 Jun 2020 23:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592264446;
-        bh=8Vkipt8UfbkmfZZK+DRY5P5ncOAbz5M/RzUt969ESmw=;
+        s=default; t=1592264482;
+        bh=bqkgpEtV0AWOIPCPj9PiP6DShiunetgdC6n3vDohao0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=15OE0GfdU5anTbWdKV3yQxD6FHb7qhfPpu0vuE/CA69VJcF+/tLGCrMBOzYZ6oQWA
-         wsJqqLK098WW4nmCiacMnlxe2NI0+Ofzekk8uLtn4k61yPtHjSsGZoapaoU6xqug2x
-         nZXZ6qYoncvkvolJnI0q4XJXz21uEClolssSgqaI=
-Date:   Tue, 16 Jun 2020 00:40:44 +0100
+        b=WpSKBKw/jkVDxSpozeUjw+b5Q20jpDsbmG6j9QLYzHfE6QV6JGML3Y8Bu05o1H3fZ
+         E1fGGIqiyIzrSIhKYR9ASCLoVIZV8u26vGpDbe8amA9anugOS5kJS7RfrEuVaes0CI
+         Ozc/7F5Hb6zZLBaf1uIdc1CqPSe3RtQmxm6VeAYA=
+Date:   Tue, 16 Jun 2020 00:41:19 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org,
-        Steve Lee <steves.lee@maximintegrated.com>
-Cc:     ryans.lee@maximintegrated.com, steves.lee.maxim@gmail.com,
-        ryan.lee.maxim@gmail.com
-In-Reply-To: <20200602084337.22116-1-steves.lee@maximintegrated.com>
-References: <20200602084337.22116-1-steves.lee@maximintegrated.com>
-Subject: Re: [V7 PATCH] dt-bindings: Added device tree binding for max98390
-Message-Id: <159226439189.27409.1555596796262164094.b4-ty@kernel.org>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Yicheng Li <yichengli@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+In-Reply-To: <20200612040526.192878-1-pihsun@chromium.org>
+References: <20200612040526.192878-1-pihsun@chromium.org>
+Subject: Re: [PATCH v6 0/3] Add support for voltage regulator on ChromeOS EC.
+Message-Id: <159226447507.27673.12544473672334795721.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2 Jun 2020 17:43:37 +0900, Steve Lee wrote:
-> Add DT binding of max98390 amplifier driver.
+On Fri, 12 Jun 2020 12:05:17 +0800, Pi-Hsun Shih wrote:
+> Add support for controlling voltage regulator that is connected and
+> controlled by ChromeOS EC. Kernel controls these regulators through
+> newly added EC host commands.
+> 
+> Changes from v5:
+> * Move new host command to a separate patch.
+> * Use devm_regulator_register.
+> * Address review comments.
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] dt-bindings: Added device tree binding for max98390
-      commit: 6b76bf3e0ff66eee4b714921fbabd588f90ab1fb
+[1/3] dt-bindings: regulator: Add DT binding for cros-ec-regulator
+      commit: 54bd53b9c11ed856abeedbf1ce92a19b546f56cf
+[2/3] platform/chrome: cros_ec: Add command for regulator control.
+      commit: dff08caf35ecef4f7647f8b1e40877a254852a2b
+[3/3] regulator: Add driver for cros-ec-regulator
+      commit: 8d9f8d57e023893bfa708d83e3a787e77766a378
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
