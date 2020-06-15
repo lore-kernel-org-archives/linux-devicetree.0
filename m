@@ -2,192 +2,105 @@ Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1080BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69F1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E518E20842
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592241134;
-	bh=xZw3wFFs3EiOb5XtW46JuclA2MCo7BVAfYAO895nV6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n15ePf62yIZm1W5Zifk4kYTqdZGarPE7GddunXyNSYhP0ACMtSMbdkjuwsv+8wTZ8
-	 okVtI4+QU47HqdVMipBxR1enOEWGeqXW2UcuBGrN5mZt3OVAyZulCq9C+20t6GT0NU
-	 YUzYSzqU8VLCiC60zL44QYpxLyAjPTWj+qRUneZI=
+	by mail.kernel.org (Postfix) with ESMTP id 96CD920656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 17:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bGtDqsqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbgFORMO (ORCPT
+        id S1731210AbgFORNY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:12:14 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39766 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFORMO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:12:14 -0400
-Received: by mail-il1-f194.google.com with SMTP id p5so16032953ile.6;
-        Mon, 15 Jun 2020 10:12:12 -0700 (PDT)
+        Mon, 15 Jun 2020 13:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731206AbgFORNY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 13:13:24 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF44C05BD43
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:13:23 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id n188so4108949vkc.11
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rf7CL3fcSu5+k2Trl+OBC0MyNMMzie2yNiD78p0muS8=;
+        b=bGtDqsqdSjPjpiGYMLfCNmu3n84+4VDe7k+/FPtwYOiUSt1/qRT8ZL44Orm74WQs5m
+         1ILGRUY54Rim/0iEJvmoYw2qEddkH8nBtTEQkAAbh4B1VzuiQGwGUiPiGQQ+sZC8sy5P
+         Ifi11tJe8Kw71dYh64pCdIoQdlI2kojL0DhWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G5WGUPUAIcBwza0/xjtURoDyzwjIEB/Wr5gpuV9swD0=;
-        b=Fb5sDDB6HAlXnpW72K2SysMhHR6ikH+Ykhhe5p25LfdPbgbZU3KCUlvWMsslFZELKp
-         DtMBAItYor6zb9jFTUl8fiKIltN9olwQPiklKgmBTECXNSA6PWQjru2vIiSfDztDKfbF
-         Y+QguN10MtEVyGpCcOBLn9ujYjjq0Oj79fZsf9UFvcrv8pXQ9wJGOCIx9UJoNEc4ItOI
-         ufeDI7+VN8iBt+daO3PbA61Ga14YuqBxrbCJOC2FMIvY7u8BK0ng8vr7b2vIQPZsYqX8
-         r9MiFXVYWHZci//6BEZjOKiSXf64/K2vxYbFCWNV6M3xqmW9y4oyqg7K9gNOsmJaRCKO
-         k48A==
-X-Gm-Message-State: AOAM5335ITTZVqkEzSbq6JNhbwhasnj8HijusyMyXJ9ePCDn7QDuhB5E
-        wBDsjGBN60FQFUvhUqjLmg==
-X-Google-Smtp-Source: ABdhPJxkSrEaxMErK0l1AP6V19vUpDxfZBbTo5MTNzsZPQNLZcHrexQ20OfNYIzpl4S1RoaRPH6/Mg==
-X-Received: by 2002:a92:d845:: with SMTP id h5mr27854230ilq.4.1592241131756;
-        Mon, 15 Jun 2020 10:12:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id d71sm8551428ill.9.2020.06.15.10.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:12:11 -0700 (PDT)
-Received: (nullmailer pid 1970644 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:12:09 -0000
-Date:   Mon, 15 Jun 2020 11:12:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/3] dt-bindings: spi: Convert mxs spi to json-schema
-Message-ID: <20200615171209.GA1968084@bogus>
-References: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
- <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rf7CL3fcSu5+k2Trl+OBC0MyNMMzie2yNiD78p0muS8=;
+        b=knv/qZyscyC5TvF12I1Q7jN+AmLxa3LLAF2T17cRJ37fyf0A9UIidndfLTygfUoHMo
+         u2APcLbE5gnIwSF7LLC5rgfCDz69iQJTseQ9ZlxlWqaK7dp502wEnf3IJmSVMQLbUEAF
+         ygpwW61Rfc3ewUl+09Gl872qefXR/jbyfvvyUYi+pcdM0L8Xdrm3xyTvQpLNZqEWT16H
+         4yH1y0rWOHyFKyrQBpQSgnAmbou6g9IbTirTbIIAeUditoMmSCt5+/h4U/enCfjEUwBC
+         UY5iugIdJDj7z9bBpKIV3idzpfEOMgzjC8Qoa7Tnc5CuiPSaEA2P52WpjKaWgZSpT92Q
+         Mf6g==
+X-Gm-Message-State: AOAM533KGycIwvj4N0WY32tY4dBsx2wGEvjgTY9L7BTk+T/mnZE/qa06
+        UMLtAf0gfA/qN6vT7FlljsiW8RTmUTk=
+X-Google-Smtp-Source: ABdhPJwA+xsC3PHKrDV/6K6PFDu1N5j9sa5seKw5C/n5J8455Z3CXw54Zlwhd6a5ml9xFzXhYiDqmQ==
+X-Received: by 2002:a1f:b202:: with SMTP id b2mr19812100vkf.86.1592241202292;
+        Mon, 15 Jun 2020 10:13:22 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id b187sm1949502vsd.30.2020.06.15.10.13.21
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 10:13:21 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id j13so9810269vsn.3
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 10:13:21 -0700 (PDT)
+X-Received: by 2002:a67:1703:: with SMTP id 3mr21432512vsx.169.1592241200678;
+ Mon, 15 Jun 2020 10:13:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
+References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
+ <1591868882-16553-3-git-send-email-rbokka@codeaurora.org> <CAD=FV=XSfMPehyCLB25hct+GE8JtU=5J=04KyU4AoHfg9cs50A@mail.gmail.com>
+ <472dc7d7-2e23-0f1a-8e1a-839c4c9c1f7a@linaro.org>
+In-Reply-To: <472dc7d7-2e23-0f1a-8e1a-839c4c9c1f7a@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 15 Jun 2020 10:13:08 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VjgxvtwZVkq8nXRk_6aHDKQOGp3wp1YJBbsG=BZhVcKw@mail.gmail.com>
+Message-ID: <CAD=FV=VjgxvtwZVkq8nXRk_6aHDKQOGp3wp1YJBbsG=BZhVcKw@mail.gmail.com>
+Subject: Re: [RFC v2 2/3] drivers: nvmem: Add QTI qfprom-efuse support
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:55:29AM +0800, Anson Huang wrote:
-> Convert the MXS SPI binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- add "unevaluatedProperties: false".
-> ---
->  Documentation/devicetree/bindings/spi/mxs-spi.txt  | 26 ----------
->  Documentation/devicetree/bindings/spi/mxs-spi.yaml | 57 ++++++++++++++++++++++
->  2 files changed, 57 insertions(+), 26 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.txt b/Documentation/devicetree/bindings/spi/mxs-spi.txt
-> deleted file mode 100644
-> index 3499b73..0000000
-> --- a/Documentation/devicetree/bindings/spi/mxs-spi.txt
-> +++ /dev/null
-> @@ -1,26 +0,0 @@
-> -* Freescale MX233/MX28 SSP/SPI
-> -
-> -Required properties:
-> -- compatible: Should be "fsl,<soc>-spi", where soc is "imx23" or "imx28"
-> -- reg: Offset and length of the register set for the device
-> -- interrupts: Should contain SSP ERROR interrupt
-> -- dmas: DMA specifier, consisting of a phandle to DMA controller node
-> -  and SSP DMA channel ID.
-> -  Refer to dma.txt and fsl-mxs-dma.txt for details.
-> -- dma-names: Must be "rx-tx".
-> -
-> -Optional properties:
-> -- clock-frequency : Input clock frequency to the SPI block in Hz.
-> -		    Default is 160000000 Hz.
-> -
-> -Example:
-> -
-> -ssp0: ssp@80010000 {
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -	compatible = "fsl,imx28-spi";
-> -	reg = <0x80010000 0x2000>;
-> -	interrupts = <96>;
-> -	dmas = <&dma_apbh 0>;
-> -	dma-names = "rx-tx";
-> -};
-> diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.yaml b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
-> new file mode 100644
-> index 0000000..68c5d6d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/mxs-spi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale MX233/MX28 SSP/SPI
-> +
-> +maintainers:
-> +  - Marek Vasut <marex@denx.de>
-> +
-> +allOf:
-> +  - $ref: "/schemas/spi/spi-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx23-spi
-> +      - fsl,imx28-spi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 1
-> +
-> +  dma-names:
-> +    const: rx-tx
-> +
-> +  clock-frequency:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+Hi,
 
-Already has a type, drop.
+On Mon, Jun 15, 2020 at 3:44 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> > * Reading should still read "corrected", not "raw".  Added a sysfs
+> > knob to allow you to read "raw", though.
+>
+> We could create an additional nvmem read-only provider in future if
+> required to read raw!.
 
-With that,
+Makes sense.  For now module parameter (which can be tweaked from
+sysfs) seemed like at least an easy to get access to the raw values
+for testing.  Other than for checking that the driver works OK,
+though, I'm under the impression that you should never read the raw
+values back.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +    description: input clock frequency to the SPI block in Hz.
-> +    default: 160000000
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - dmas
-> +  - dma-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi@80010000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        compatible = "fsl,imx28-spi";
-> +        reg = <0x80010000 0x2000>;
-> +        interrupts = <96>;
-> +        dmas = <&dma_apbh 0>;
-> +        dma-names = "rx-tx";
-> +    };
-> -- 
-> 2.7.4
-> 
+-Doug
