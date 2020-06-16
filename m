@@ -2,102 +2,127 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB47C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54F8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FD220679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AB020707
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FB1eYizN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gbiR7iJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgFPJNL (ORCPT
+        id S1728188AbgFPJWR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:13:11 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:43142 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725896AbgFPJNI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:13:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592298785; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=OgDBzqqrEPPmIa2KUj3HnyS1zXMXu3Jcgi9sskDBZ9k=; b=FB1eYizN8KWmxabFt+FL16nfU7YvLdsoDlDvI0L479QqtIrt7b6PppLh+cb0zK+56SC86FSU
- w7uzwM0HFTFR9BXLCD6qktL5w/YdgeVJor8YA3iz0+dXyYcKted2zS3XxICVN6CbD8wRtd5U
- Ez6cdgAgOFz3Bc6NRrGYTCe2OTc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5ee88d214c9690533a25dbc3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 09:13:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7678C433CB; Tue, 16 Jun 2020 09:13:04 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B920C433CA;
-        Tue, 16 Jun 2020 09:13:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B920C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Anilkumar Kolli <akolli@codeaurora.org>
-Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] ath11k: Add IPQ6018 support
-References: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
-Date:   Tue, 16 Jun 2020 12:13:01 +0300
-In-Reply-To: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
-        (Anilkumar Kolli's message of "Tue, 9 Jun 2020 19:02:53 +0530")
-Message-ID: <87pn9zidb6.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 16 Jun 2020 05:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbgFPJWQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 05:22:16 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE02C03E97C
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 02:22:15 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id r1so6656879uam.6
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 02:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5DT2283QGSeLmNfRYosxvl4RnLSyjJEL1/ZqFVdUOJQ=;
+        b=gbiR7iJELkxNmdiFG9i0jMjxFEi2lb7SY5/bBgrWh11d1mz9Ty/etYm5giSxwegNQs
+         MRha2ZX2nS+57DDDxKnsIeqIUAysnFBvEJ9g2NrznEp48uFKw6y317kN/4oI2nbvfoYP
+         MtpvaX3EAU4PXUqz5tyr3CCTvZwrAorztgU7Ynwe/RHsDvnAMl27sI4cq70yGcCN6VLD
+         W1huILgMFI7IjGXsotocJGfn09BwBxuS8F7ihs1sLR4Jo7297v0roOgWxgcXMUY9tD6U
+         qgq0K68V23qnMt+3xvffDoPhJ3oXeEXabuKD5+bEV8SusiKKV0nZK4zXGiCgy5ggNkoE
+         Ozew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5DT2283QGSeLmNfRYosxvl4RnLSyjJEL1/ZqFVdUOJQ=;
+        b=e4vyUxo7u35F3/CKFwWAo+DLAVjOeXSSXNvBslVTXjQXvvANd4hqnLKectRQRvZrId
+         OR8FfQjiR1S2THIlCYBn9Cr8TM5P4EBSUR2G2XlUx2cuetRMY14N9YhAASBBBjlZ7QKD
+         aGutMb9OnMyR6/dcrNd9BAjsxDv2TO5d2axUk18DtraUyw7bXctEbeh5y6o0dTW+r+ze
+         yM/rTA0GGuLWFzLUdQXdJjMoR0RKHFeWmd+uvDyrIBqSKcgrG3379IDM4/swDR2+wHTJ
+         ntNbI4c7j92ZMNl1MviN+zKEyekJBM5zlHJB0emPLE/7hH+48gqbaAY6EMSvZeSLfoZt
+         YOvg==
+X-Gm-Message-State: AOAM530XFwc3va23ECrV1l6IgrYqHjO2mXuFkyHjLaJodKrgm04ycyWZ
+        Ym0I1ELBq/MJ5fl5h7Ic2YnlRqXY7aOyicQ1CiSfOA==
+X-Google-Smtp-Source: ABdhPJy0PnwHfzauVDw+Ug2b7tLfbgXqklE/dFIs6uKXZxsoJFcNcg5IvQkTzE3BVQgmfzvG6L2U8lbITGbUSMKo/AA=
+X-Received: by 2002:ab0:186d:: with SMTP id j45mr1143930uag.104.1592299334487;
+ Tue, 16 Jun 2020 02:22:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200604015317.31389-1-thara.gopinath@linaro.org> <20200604015317.31389-6-thara.gopinath@linaro.org>
+In-Reply-To: <20200604015317.31389-6-thara.gopinath@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 16 Jun 2020 11:21:38 +0200
+Message-ID: <CAPDyKFrBYx1dDK2UNvaZR1swB-9WiOy4V62hFU2-Ud_xm6gOoA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: power: Extend RPMh power controller
+ binding to describe thermal warming device
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Anilkumar Kolli <akolli@codeaurora.org> writes:
-
-> IPQ6018 has a 5G radio and 2G radio with 2x2
-> and shares IPQ8074 configuration.
+On Thu, 4 Jun 2020 at 03:53, Thara Gopinath <thara.gopinath@linaro.org> wrote:
 >
-> Tested on: IPQ6018 WLAN.HK.2.2-02134-QCAHKSWPL_SILICONZ-1
-> Tested on: IPQ8074 WLAN.HK.2.4.0.1-00009-QCAHKSWPL_SILICONZ-1 
+> RPMh power controller hosts mx domain that can be used as thermal warming
+> device. Add #cooling-cells property to the power domain provider node to
+> indicate this.
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-To get the multiple hw support faster in (I need them also for QCA6390
-patches) I split this into multiple sets:
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
->   ath11k: update firmware files read path
->   ath11k: rename default board file
+Kind regards
+Uffe
 
-These are now applied.
 
->   ath11k: define max_radios in hw_params
->   ath11k: add hw_ops for pdev id to hw_mac mapping
->   ath11k: Add bdf-addr in hw_params
-
-I'll modify these a bit, remove all IPQ6018 references from them and
-then submit them myself.
-
->   dt: bindings: net: update compatible for ath11k
->   ath11k: add ce services for IPQ6018
-
-Anil, please resubmit these as v3 based on the comments.
-
->   ath11k: add IPQ6018 support
-
-Anil, add this as the last patch in your v3 series. And do note that I
-will split the part adding ath11k_init_hw_params() function to a
-separate patch, so no need to include it in this patch anymore.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> ---
+>
+> v3->v4:
+>         - Removed subnode to indicate that mx power domain is a warming
+>           device. Instead #cooling-cells is used as a power domain
+>           provider property to indicate if the provider hosts a power
+>           domain that can be used as a warming device.
+>
+> v4->v5:
+>         Moved the property from .txt format to .yaml format.
+>
+>  Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+> index 8058955fb3b9..a4fbbd88ce18 100644
+> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+> @@ -28,6 +28,9 @@ properties:
+>    '#power-domain-cells':
+>      const: 1
+>
+> +  '#cooling-cells':
+> +    const: 2
+> +
+>    operating-points-v2: true
+>
+>    opp-table:
+> --
+> 2.20.1
+>
