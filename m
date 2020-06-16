@@ -2,93 +2,180 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F1BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA8AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA522098B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FCC21473
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:16:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cZnVL7gg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lMyV++gP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgFPNIU (ORCPT
+        id S1727804AbgFPNQO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:08:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:63348 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728549AbgFPNIU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:08:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592312899; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=7mR9zhmqvMVQR1lHebGTjVpWrCEe0+8oz+tu8osL53w=;
- b=cZnVL7ggHn5/W5cKiA3qlOzCx7Ejfa8XbaUNz0Om7nwaEUmOA6+3475a3S5kYGqTSIwGFQvw
- Gwc/fIgmvZYqCEuJULa18E8RzyHsepAKSe6NpWxkP6IuFlTzHosmUlYQqra56Kh13tXVmyil
- ZweOEYlkGnswkltnqvWweTWvDHQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ee8c4295866879c767a51f7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 13:07:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B379BC43387; Tue, 16 Jun 2020 13:07:53 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EE61C433C8;
-        Tue, 16 Jun 2020 13:07:53 +0000 (UTC)
+        Tue, 16 Jun 2020 09:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728549AbgFPNQL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 09:16:11 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A050C06174E
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 06:16:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l26so2843113wme.3
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 06:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9NeQqiMAuFvxtrOzPp09+0hkReargQ3L4b3prwQqFWs=;
+        b=lMyV++gPByIjhuuvn2wsK/E6klL79fbVx4ACxXxrHnu5At/8lS+6vpLTCO+WumvCb1
+         Btd4DCv1THnwBCG4id7qSDcH0KTr8RGBM5STEozGGKPTVPzbXhsaJf5fGrSIgHEBynR6
+         osWj5fyj4mQ1L5xGJVdkwJbuY4v1377rcu5Jq4sLk6859fcrU2fks+W6cDGJWjiN+naa
+         qPVu58rW8dbILiK6yl0uJWaPVKLFH5WStAXktelK95uejdkKJQce6ZH8lDI9q1TvmM+g
+         MmMS8mqTXaWgdtojc8ytx09R4ArfAHysepVCuNQwQfD/38aR+4SbqhONnPt16lRyzEFp
+         8SJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9NeQqiMAuFvxtrOzPp09+0hkReargQ3L4b3prwQqFWs=;
+        b=JCtuXvzuW3M9bdhid0zJqU1RNXytgAsf5tUB2Xkdn869CFTn6Bn++8T8rfn+k3wAyt
+         qBvCG8jTTUE284P8MaDQidYjiJCZy1x319tCGuCLNwNqyrQV9AKr+5z+SQdlWD8rfhQK
+         C/6AsMenaijbrRle/exUoPFfUmbroZo0MLQGhMhh01JoBgqvldYQcLNnulZjosmjCcE2
+         gafOFGpFY/CT4wi65LMlN9n6HfZ1acuNuAgQ0sz1VVQ5zf0RIYbkCStlIlKoTT4bZOI6
+         QpVaWn+z7dCOVrNP2JwfgATI1El4RnPtzYU0c5bLLZEKWmSl/FiZSL9pG/6yWY1/58rz
+         afnw==
+X-Gm-Message-State: AOAM531JrnG4mWV67pjMCSNUemcw7myk9y2sdvVLBur8M6lm1R6B6+rs
+        GrNIDuezL5bzPLP1/B3/4xD6jQ==
+X-Google-Smtp-Source: ABdhPJxXm+YEBOebjFL0T7eNx99jr7/JaArOdawU3v9M4AnaQqFhb5wqOc3kZdhNeoyRmtq7vpK93Q==
+X-Received: by 2002:a1c:541d:: with SMTP id i29mr3214543wmb.73.1592313369700;
+        Tue, 16 Jun 2020 06:16:09 -0700 (PDT)
+Received: from dell ([109.180.115.156])
+        by smtp.gmail.com with ESMTPSA id d2sm29670942wrs.95.2020.06.16.06.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 06:16:08 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 14:16:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360
+ PMIC
+Message-ID: <20200616131607.GQ2608702@dell>
+References: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 16 Jun 2020 18:37:53 +0530
-From:   ppvk@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc-owner@vger.kernel.org,
-        rnayak@codeaurora.org, sibis@codeaurora.org, matthias@chromium.org
-Subject: Re: [PATCH V4 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
- support
-In-Reply-To: <20200615231207.GX4525@google.com>
-References: <1591691846-7578-1-git-send-email-ppvk@codeaurora.org>
- <1591691846-7578-2-git-send-email-ppvk@codeaurora.org>
- <20200615231207.GX4525@google.com>
-Message-ID: <3681c3e2a49b5c8b832d277873b6fa49@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Tue, 16 Jun 2020, Gene Chen wrote:
 
-Thanks!
-
-On 2020-06-16 04:42, Matthias Kaehlcke wrote:
-> On Tue, Jun 09, 2020 at 02:07:25PM +0530, Pradeep P V K wrote:
->> Interconnect bandwidth scaling support is now added as a
->> part of OPP. So, make sure interconnect driver is ready
->> before handling interconnect scaling.
->> 
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+> From: Gene Chen <gene_chen@richtek.com>
 > 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> 
-> Do you plan to send also patches that add the necessary DT entries?
-> I'm particularly interested in SC7180.
+> Add devicetree binding document support Mediatek MT6360 PMIC
 
-Yes, we will send the DT entries soon.
+This should have been submitted with the driver.
+
+> Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6360.txt b/Documentation/devicetree/bindings/mfd/mt6360.txt
+> new file mode 100644
+> index 0000000..e25b5c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mt6360.txt
+> @@ -0,0 +1,53 @@
+> +MediaTek MT6360 Multifunction Device Driver
+
+No such thing as an MFD (we made it up!).
+
+Please describe the device.
+
+> +MT6360 is a multifunction device with the following sub modules:
+
+As above.  MFD is a Linuxisum which is not allowed in DT.
+
+> +- ADC
+> +- Battery Charger/OTG boost
+> +- Flash LED/RGB LED/moonlight LED
+> +- 2-channel Buck
+> +- 6-channel LDO
+> +- USB_PD
+> +
+> +It is interfaced to host controller using I2C interface.
+> +This document describes the binding for MFD device and its sub module.
+
+As above.  This sentence should be at the top in any case.
+
+> +Required properties:
+> +- compatible:	Must be "mediatek,mt6360_pmu"
+
+No '_'s in DT.
+
+> +- reg:			Specifies the I2C slave address of PMIC block, Must be <0x34>
+> +- interrupts:	I2C device IRQ line connected to the main SoC.
+> +
+> +Optional subnodes:
+> +- ADC
+> +	Required properties:
+> +		- compatible: "mediatek,mt6360_adc"
+> +- battery charger/OTG boost
+> +	Required properties:
+> +		- compatible: "mediatek,mt6360_chg"
+> +- Flash LED/RGB LED/moonlight LED
+> +	Required properties:
+> +		- compatible: "mediatek,mt6360_led"
+> +- 2-channel Buck
+> +	Required properties:
+> +		- compatible: "mediatek,mt6360_pmic"
+> +- 6-channel LDO
+> +	Required properties:
+> +		- compatible: "mediatek,mt6360_ldo"
+> +- USB_PD
+> +	Required properties:
+> +		- compatible: "mediatek,mt6360_tcpc"
+
+No '_'s.  Must be '-'.
+
+> +Example:
+> +
+> +	#include <dt-bindings/usb/pd.h>
+> +
+> +	pmu: mt6360_pmu@34 {
+> +		status = "ok";
+
+"okay" is more common I think.
+
+Should be at the bottom if not omitted altogether.
+
+> +		compatible = "mediatek,mt6360_pmu";
+> +		reg = <0x34>;
+> +		wakeup-source;
+> +		interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "IRQB";
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
