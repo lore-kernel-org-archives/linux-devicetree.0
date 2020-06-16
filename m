@@ -2,151 +2,124 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3DAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB1CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 15:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1BB208D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53795208B3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 15:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwDvYY/B"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SKbzkvZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgFPOvN (ORCPT
+        id S1728993AbgFPPd4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:51:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbgFPOvM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 10:51:12 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7508C061573;
-        Tue, 16 Jun 2020 07:51:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r15so3386007wmh.5;
-        Tue, 16 Jun 2020 07:51:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N5FrS7eLre6JCdPt9ClKcrCASb1Q1BMFMvVwKZtd/8M=;
-        b=jwDvYY/B3Led6A87gAIUeWlgkvR9hXxs21zGYsxqLv/xYV2ikUfYrT7w+Fd+0dbKgQ
-         uJxDRzefQnoSdtq16r+xnGwFk/WORMNK5RGDD2oe5JzfHA2xWHSgNZR2CFVkqVnasaMQ
-         mcI0IIw2DH9dUMU6eq0AibXYDtXdwW+inT+OeIQF28UEhVsDh/vSy87K4uALgvtt+iak
-         0CWveMjHq0+XpEDUmYB6KqA/p7ooFY5CGM2+q2gd33/z0lfuO9wGanvNuAbYmekorv7w
-         2TOsF3cnmY8vCfQklcPVRQYGHhYRaQxwzKQxQ++Is1gAw8J1ulukkKepcsjT2K8/pdCG
-         IkNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N5FrS7eLre6JCdPt9ClKcrCASb1Q1BMFMvVwKZtd/8M=;
-        b=gxE0zqb60AFSdwVRb/PPSuhtkt5f3LMv83amoZWhsgIatJfxQLElhIA+NxMDuMr8z/
-         Ao9lXc/E6h81U6L2/Razie3X/HjEA15lKbOirCfHVVgaT9u91WYVlv85fYcoNRgslVp7
-         Ya7+TO05V+cP21IzYwpo00Nw3ihzjXhi67auHl6T/MZnN1TgMCWREoO37uLwWLpfi+hV
-         bkIh3VQja4nzDwC5SyWXeZlWXWUeISGCeX36DJjv1yTUTjJQjkPYfV+9vmbAgIljXfld
-         bdejLCt5vsftk5bgLhVMZkYhMBXarHh7ZM7BmGw0HB6QJTxbfSsm7nH2dGmPOYT+AtqR
-         1e9g==
-X-Gm-Message-State: AOAM533rhxeBhUDJjUP2guyke//2czMOavQCAmtZz8x3MjStNjOSKghL
-        JSfDux8MG3czFSbpylSHoko=
-X-Google-Smtp-Source: ABdhPJxlfihhDdkqiAeVStkjK4MrFepxyKFZsU7N6657NRvw/Ds+0k46Kv4ICr24T8vtAxA74NYOuQ==
-X-Received: by 2002:a1c:814c:: with SMTP id c73mr3561366wmd.140.1592319070473;
-        Tue, 16 Jun 2020 07:51:10 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id u12sm29609898wrq.90.2020.06.16.07.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 07:51:09 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 16:51:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 07/38] dt-bindings: display: tegra: Convert to json-schema
-Message-ID: <20200616145108.GD3000485@ulmo>
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-8-thierry.reding@gmail.com>
- <b20cede8-a9ee-c70d-913d-d0a05d7826b0@gmail.com>
+        Tue, 16 Jun 2020 11:33:56 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45313 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728448AbgFPPd4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:33:56 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GFD1Et005397;
+        Tue, 16 Jun 2020 17:33:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=ywECLfS8RJnUvCXHRDqenH4W2P5mGI7YRrQh1zdXSqs=;
+ b=SKbzkvZ8Sh8AH5bW88BqONOypCrZFZCdlCxIv5kAzNuKFlU+HOUcNMI/OqCgpZraSC6Y
+ 6/jibWFEnMfpx+LCOJD2IEtbKiNRFSDWq13MmFX0TdF1aPS/lPX2/gAzvc6JXjTXkYjF
+ cLbYGA/zbJI7uw3SrKaYGTMycWh9OObAYos44B+jqFs1RZW9pJJoqRPyrfV+M+5jGujZ
+ sxeKePJ8Mi/VK5O2MY+oHQ//6Ey9NhhBC2sKNYUQhQjJ0GdrAe78wvcYNUbVkIZyXbjm
+ Vg8fQbwcA/ypu5Hl9oW+qtwrMlOHRpcZZ+EyuA2kkFQJdJZwxXbH5sZBZTeG+RrryVo2 pw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjw05cy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 17:33:41 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 075B010002A;
+        Tue, 16 Jun 2020 17:33:41 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E90032C890A;
+        Tue, 16 Jun 2020 17:33:40 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG6NODE3.st.com (10.75.127.18)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jun 2020 17:33:40
+ +0200
+From:   Patrick Delaunay <patrick.delaunay@st.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Patrick Delaunay <patrick.delaunay@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] ARM: dts: stm32: cosmetic update in stm32mp15-pinctrl.dtsi
+Date:   Tue, 16 Jun 2020 17:33:29 +0200
+Message-ID: <20200616153329.15148-1-patrick.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
-Content-Disposition: inline
-In-Reply-To: <b20cede8-a9ee-c70d-913d-d0a05d7826b0@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG6NODE3.st.com
+ (10.75.127.18)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Use tabs where possible and remove multiple blanks lines.
 
---EY/WZ/HvNxOox07X
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
+---
 
-On Fri, Jun 12, 2020 at 06:54:45PM +0300, Dmitry Osipenko wrote:
-> 12.06.2020 17:18, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > Convert the Tegra host1x controller bindings from the free-form text
-> > format to json-schema.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> ...
-> > +  memory-controllers:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +
-> > +required:
-> > +  - compatible
-> > +  - interrupts
-> > +  - interrupt-names
-> > +  - '#address-cells'
-> > +  - '#size-cells'
-> > +  - ranges
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - resets
-> > +  - reset-names
->=20
-> This memory-controllers property didn't exist before the conversion. So
-> this is not a pure conversion, which makes it a bit difficult to review
-> the changes. Could you please factor out the addition of new properties
-> into a separate patch?
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-The memory-controllers property was from an earlier draft of this series
-and is no longer needed. I'll remove it.
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 7eb858732d6d..7d351757f2f8 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -210,8 +210,8 @@
+ 				 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RGMII_TXD3 */
+ 				 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RGMII_TX_CTL */
+ 				 <STM32_PINMUX('C', 1, ANALOG)>, /* ETH_MDC */
+-			         <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
+-			         <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
++				 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
++				 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
+ 				 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RGMII_RXD1 */
+ 				 <STM32_PINMUX('H', 6, ANALOG)>, /* ETH_RGMII_RXD2 */
+ 				 <STM32_PINMUX('H', 7, ANALOG)>, /* ETH_RGMII_RXD3 */
+@@ -453,7 +453,7 @@
+ 	i2c5_pins_b: i2c5-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('D', 0, AF4)>, /* I2C5_SCL */
+-			         <STM32_PINMUX('D', 1, AF4)>; /* I2C5_SDA */
++				 <STM32_PINMUX('D', 1, AF4)>; /* I2C5_SDA */
+ 			bias-disable;
+ 			drive-open-drain;
+ 			slew-rate = <0>;
+@@ -463,7 +463,7 @@
+ 	i2c5_sleep_pins_b: i2c5-sleep-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('D', 0, ANALOG)>, /* I2C5_SCL */
+-			         <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SDA */
++				 <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SDA */
+ 		};
+ 	};
+ 
+@@ -1072,7 +1072,6 @@
+ 		};
+ 	};
+ 
+-
+ 	sai2a_pins_b: sai2a-1 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('I', 6, AF10)>,	/* SAI2_SD_A */
+-- 
+2.17.1
 
-In my opinion, these schema conversion patches are difficult to review
-in general, especially the likes of this one for host1x because they are
-fairly complex to begin with. All existing Tegra-based device trees do
-pass validation (although there's a small patch needed to support the
-unevaluatedProperties keyword that's new in json-schema draft-08), which
-gives me some confidence that they are at least correct from a content
-point of view.
-
-Thierry
-
---EY/WZ/HvNxOox07X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7o3FsACgkQ3SOs138+
-s6E+Fg/7B2Mg67amrSqKm2vNSvOzWyYs2Z/D6ReeV771HsvqioHA9WtYx/jGyuTd
-SZkOLaMO2Rx7S+LbR/Vybq930SGzX4syeMvB9ZQvQPBLxiYeHsbuMRjAxIfoX9F3
-fN5vD+0h0ateIPUPB7KnoBxZOkPLoaILXAd5TG9dRRjoyq3hoQonprlF5NbcSP6Z
-HkP5qo+4ImX7cCknNpAiIkYtIlbECmK2R8z0euX9p8qbIYJ3WmlNQZnB8csHdSLI
-PDKSICspFkZUuzS1bL2Q7W8qtXOGa+goFa5In8ncI1JONL8U/mAgSmdRTe5JWaN4
-xMFs2Yy1lJVcAbcMzH25hzaFulm1/s55JMDeIthE+/ucB5YrSDTUUfTPkknJT9oG
-RKz+HyKHnel8o6kPupt/B5sVCrVdUMyGxZUUv0gjZdq2VfqAjIUtjre2G4kV45jN
-HWzH51XPVefxocdcBUjp8xlHC9HSYr8CcGZAhd/kdTC6zgsEUBWYe+HS98vsjqf0
-gkdwVDe3dPkydvCM16cY5ZHYf0em7nR02vb4kVA4F5JHg2pctiMxxXvM6MgJU3Ae
-RnSYXLjmZtU00qOWP+GwF3Na+1N/6DN44c/uZk9As9sen+ipNeFmmmNQwjsiSi+m
-mmEATY3V1PXPCN5aYqOyhdgct0rXa3d3iGlYE9gDgcLJljJ+Ci8=
-=BqQz
------END PGP SIGNATURE-----
-
---EY/WZ/HvNxOox07X--
