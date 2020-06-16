@@ -2,192 +2,189 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFC4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8590DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C53A220776
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592282630;
-	bh=0vuss71wdq1FpQI0FDOdHdelFKNR2eYtS42myYNEQNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SEDNipgXpLZSr5byEiWfwmQ9xX1i1CUFseqA70cAiQ6BmDKF71J9o3/A610PqleGM
-	 L4RQeV8aGZHc6LqpcuaJz2EtoYna77tYOzLh4Tsp5o2QYn8Nhk5k9Ru7zv1lHdPFbN
-	 Q0MP4e+zqb11kDYgp+k9gSl2K8lrSMjhncscEv30=
+	by mail.kernel.org (Postfix) with ESMTP id 64FF720810
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mBJsEFW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgFPEnu (ORCPT
+        id S1725710AbgFPExT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:43:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35656 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgFPEnu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 00:43:50 -0400
-Received: by mail-io1-f67.google.com with SMTP id s18so232476ioe.2;
-        Mon, 15 Jun 2020 21:43:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LmzMHIvmvF58EZXJmekpQXD5nDdYxi6HKu1Pmlrtz+M=;
-        b=TXTHuxx/oqrxWKTqdzUByAoR+HU6GCBTzgrUQrRnqfnDEryP0pPNyTw6C18JbfWx3i
-         SbHWG2TyliSR11c/7b6W++YTGaS8KEkyCohbPl7bdkLxjm6j/SW77fODh5NnR4yVBfvL
-         rWBcHImSZNPDnXuUE4D0qPlWiH/qgJCgxHlri00DNltoCN9Rp0Rq/i7I8iMckH0urO6P
-         1c97aiy95KXbYvUHDKaytID/9tpJklKJHcNvL8yLODfaWtniffC1z2fbSzAElJpbl57D
-         iy+XlfvhjUVLcYUCpvysJKvg6piTYfNxhPKe3kmHw0tYGdhS6E9OGI0It/f1JMydw5lI
-         KCYA==
-X-Gm-Message-State: AOAM532k6GDni5IP25GA10i6wC9rSPTYltFdYIP4JpZv+poXTRMMHpm9
-        WJp2+mWl2Sp/XINzpUeG8wQ=
-X-Google-Smtp-Source: ABdhPJztXkJFcZT+mRv8x6WbAlQ2+knDwMSuXZBCslzSxlJCr1fZCeslAJy3cbCICzu0QKi5U0suaQ==
-X-Received: by 2002:a6b:8dd5:: with SMTP id p204mr864149iod.33.1592282628930;
-        Mon, 15 Jun 2020 21:43:48 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id r17sm9235940ilc.33.2020.06.15.21.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 21:43:48 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 21:43:47 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        Tue, 16 Jun 2020 00:53:19 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:52022 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726552AbgFPExP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 00:53:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592283194; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=TnM1d+LijmPwv3QcoivuaXlgi9UGoODJljwXJ93Cqh0=; b=mBJsEFW4bUsyq/ohndIBLHDlro/73Qbp+B74VAWFEtUHCyWikaOLn3kUhNs50C8mj15PknwT
+ CLJuFydgVKqiDGXa5NSR5DyXp5hh1yVey0J1BsXRYMSSjJ508K66Zq8oVfyCpuYNTh0fxR0C
+ e3MIGt+LHoIEg9gmUABc/lQjIDk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5ee8502aad153efa340722a1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 04:52:58
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BE0E2C43387; Tue, 16 Jun 2020 04:52:58 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E765C433C8;
+        Tue, 16 Jun 2020 04:52:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E765C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 5/5] fpga manager: xilinx-spi: check INIT_B pin during
- write_init
-Message-ID: <20200616044347.GB46300@epycbox.lan>
-References: <20200611211144.9421-1-luca@lucaceresoli.net>
- <20200611211144.9421-5-luca@lucaceresoli.net>
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
+ <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+ <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
+ <20200615194239.GW4525@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
+Date:   Tue, 16 Jun 2020 10:22:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611211144.9421-5-luca@lucaceresoli.net>
+In-Reply-To: <20200615194239.GW4525@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Luca,
 
-On Thu, Jun 11, 2020 at 11:11:44PM +0200, Luca Ceresoli wrote:
-> The INIT_B reports the status during startup and after the end of the
-> programming process. However the current driver completely ignores it.
-> 
-> Check the pin status during startup to make sure programming is never
-> started too early and also to detect any hardware issues in the FPGA
-> connection.
-> 
-> This is optional for backward compatibility. If INIT_B is not passed by
-> device tree, just fallback to the old udelays.
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  drivers/fpga/xilinx-spi.c | 54 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 53 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> index 799ae04301be..2710a15ed16b 100644
-> --- a/drivers/fpga/xilinx-spi.c
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -23,6 +23,7 @@
->  struct xilinx_spi_conf {
->  	struct spi_device *spi;
->  	struct gpio_desc *prog_b;
-> +	struct gpio_desc *init_b;
->  	struct gpio_desc *done;
->  };
->  
-> @@ -36,11 +37,44 @@ static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
->  	return FPGA_MGR_STATE_UNKNOWN;
->  }
->  
-> +/**
-> + * wait_for_init_b - wait for the INIT_B pin to have a given state, or wait
-> + * a given delay if the pin is unavailable
-> + *
-> + * @mgr        The FPGA manager object
-> + * @value      Value INIT_B to wait for (1 = asserted = low)
-> + * @act_udelay Delay to wait if the INIT_B pin is not available
-> + *
-> + * Returns 0 when the pin reached the given state or -ETIMEDOUT if too much
-> + * time passed waiting for that. If there is no INIT_B, always return 0.
-> + */
-> +static int wait_for_init_b(struct fpga_manager *mgr, int value,
-> +			   unsigned long backup_udelay)
-> +{
-> +	struct xilinx_spi_conf *conf = mgr->priv;
-> +	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-> +
-> +	if (conf->init_b) {
-> +		while (time_before(jiffies, timeout)) {
-> +			/* dump_state(conf, "wait for init_d .."); */
-> +			if (gpiod_get_value(conf->init_b) == value)
-> +				return 0;
-> +			usleep_range(100, 400);
-> +		}
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	udelay(backup_udelay);
-> +
-> +	return 0;
-> +}
-> +
->  static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  				 struct fpga_image_info *info,
->  				 const char *buf, size_t count)
->  {
->  	struct xilinx_spi_conf *conf = mgr->priv;
-> +	int err;
->  
->  	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->  		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> @@ -49,10 +83,21 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  
->  	gpiod_set_value(conf->prog_b, 1);
->  
-> -	udelay(1); /* min is 500 ns */
-> +	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
-> +		gpiod_set_value(conf->prog_b, 0);
-> +		return err;
-> +	}
->  
->  	gpiod_set_value(conf->prog_b, 0);
->  
-> +	err = wait_for_init_b(mgr, 0, 0);
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-> +		return err;
-> +	}
-> +
->  	if (gpiod_get_value(conf->done)) {
->  		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
->  		return -EIO;
-> @@ -154,6 +199,13 @@ static int xilinx_spi_probe(struct spi_device *spi)
->  		return PTR_ERR(conf->prog_b);
->  	}
->  
-> +	conf->init_b = devm_gpiod_get_optional(&spi->dev, "init_b", GPIOD_IN);
-> +	if (IS_ERR(conf->init_b)) {
-> +		dev_err(&spi->dev, "Failed to get INIT_B gpio: %ld\n",
-> +			PTR_ERR(conf->init_b));
-> +		return PTR_ERR(conf->init_b);
-> +	}
-> +
->  	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
->  	if (IS_ERR(conf->done)) {
->  		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
-> -- 
-> 2.27.0
-> 
+On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
+> On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
+>> Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
+>>> On 6/3/2020 11:06 PM, Stephen Boyd wrote:
+>>>> Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+>>>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>> index 1dfd024..d33ae86 100644
+>>>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>>>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>>>>>           return 0;
+>>>>>    }
+>>>>>    
+>>>>> +
+>>>>> +/**
+>>>>> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+>>>>> + * @qcom:                      Pointer to the concerned usb core.
+>>>>> + *
+>>>>> + */
+>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+>>>>> +{
+>>>>> +       struct device *dev = qcom->dev;
+>>>>> +       int ret;
+>>>>> +
+>>>>> +       if (!device_is_bound(&qcom->dwc3->dev))
+>>>>> +               return -EPROBE_DEFER;
+>>>> How is this supposed to work? I see that this was added in an earlier
+>>>> revision of this patch series but there isn't any mention of why
+>>>> device_is_bound() is used here. It would be great if there was a comment
+>>>> detailing why this is necessary. It sounds like maximum_speed is
+>>>> important?
+>>>>
+>>>> Furthermore, dwc3_qcom_interconnect_init() is called by
+>>>> dwc3_qcom_probe() which is the function that registers the device for
+>>>> qcom->dwc3->dev. If that device doesn't probe between the time it is
+>>>> registered by dwc3_qcom_probe() and this function is called then we'll
+>>>> fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+>>>> qcom->dwc3->dev device from the platform bus because we call
+>>>> of_platform_depopulate() on the error path of dwc3_qcom_probe().
+>>>>
+>>>> So isn't this whole thing racy and can potentially lead us to a driver
+>>>> probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+>>>> and we're trying to time it just right so that driver for dwc3 binds
+>>>> before we setup interconnects? I don't know if dwc3 can communicate to
+>>>> the wrapper but that would be more of a direct way to do this. Or maybe
+>>>> the wrapper should try to read the DT property for maximum speed and
+>>>> fallback to a worst case high bandwidth value if it can't figure it out
+>>>> itself without help from dwc3 core.
+>>>>
+>>> This was added in V4 to address comments from Matthias in V3
+>>>
+>>> https://patchwork.kernel.org/patch/11148587/
+>>>
+>> Yes, that why I said:
+>>
+>> "I see that this was added in an earlier
+>>   revision of this patch series but there isn't any mention of why
+>>   device_is_bound() is used here. It would be great if there was a comment
+>>   detailing why this is necessary. It sounds like maximum_speed is
+>>   important?"
+>>
+>> Can you please respond to the rest of my email?
+> I agree with Stephen that using device_is_bound() isn't a good option
+> in this case, when I suggested it I wasn't looking at the big picture
+> of how probing the core driver is triggered, sorry about that.
+>
+> Reading the speed from the DT with usb_get_maximum_speed() as Stephen
+> suggests would be an option, the inconvenient is that we then
+> essentially require the property to be defined, while the core driver
+> gets a suitable value from hardware registers. Not sure if the wrapper
+> driver could read from the same registers.
+>
+> One option could be to poll device_is_bound() for 100 ms (or so), with
+> sleeps between polls. It's not elegant but would probably work if we
+> don't find a better solution.
+if (np)
+         ret = dwc3_qcom_of_register_core(pdev);
+     else
+         ret = dwc3_qcom_acpi_register_core(pdev);
 
-Series looks good, will apply to for-next.
+     if (ret) {
+         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+         goto depopulate;
+     }
 
-Thanks,
-Moritz
+     ret = dwc3_qcom_interconnect_init(qcom);
+     if (ret)
+         goto depopulate;
+
+     qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+
+Before calling dwc3_qcom_interconnect_init we are checking
+
+     if (ret) {
+         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+         goto depopulate;
+     }
+
+Doesn't  this condition confirm the core driver is probed?
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
