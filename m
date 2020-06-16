@@ -2,94 +2,131 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2414CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 19:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893E7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 19:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0425620B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 19:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E89208B3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 19:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbgFPTHM (ORCPT
+        id S1730139AbgFPTbh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:07:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50650 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbgFPTHM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 15:07:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id AD5668030879;
-        Tue, 16 Jun 2020 19:07:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3Lnds3tUV9R1; Tue, 16 Jun 2020 22:07:04 +0300 (MSK)
-Date:   Tue, 16 Jun 2020 22:07:02 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/11] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200616190702.lf3wq4izevup26q7@mobilestation>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200602092734.6oekfmilbpx54y64@mobilestation>
- <20200616163242.GO2324254@vkoul-mobl>
+        Tue, 16 Jun 2020 15:31:37 -0400
+Received: from p54ae948c.dip0.t-ipconnect.de ([84.174.148.140]:52033 "EHLO
+        maeck.local" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729989AbgFPTbh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:31:37 -0400
+X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 15:31:37 EDT
+Received: by maeck.local (Postfix, from userid 501)
+        id A2D428E50DD0; Tue, 16 Jun 2020 21:25:44 +0200 (CEST)
+From:   Felix Fietkau <nbd@nbd.name>
+To:     linux-wireless@vger.kernel.org
+Cc:     shayne.chen@mediatek.com, evelyn.tsai@mediatek.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 1/4] dt-bindings: net: wireless: mt76: add power-limits node
+Date:   Tue, 16 Jun 2020 21:25:41 +0200
+Message-Id: <20200616192544.97938-1-nbd@nbd.name>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200616163242.GO2324254@vkoul-mobl>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:02:42PM +0530, Vinod Koul wrote:
-> Hi Serge,
-> 
-> On 02-06-20, 12:27, Serge Semin wrote:
-> > Vinod, Viresh
-> > 
-> > Andy's finished his review. So all the patches of the series (except one rather
-> > decorative, which we have different opinion of) are tagged by him. Since merge
-> > window is about to be opened please consider to merge the series in. I'll really
-> > need it to be in the kernel to provide the noLLP-problem fix for the Dw APB SSI
-> > in 5.8.
-> 
-> Sorry it was too late for 5.8.. merge window is closed now, i will
-> review it shortly
+This subnode can be used to set per-rate tx power limits either per
+country code / regdomain or globally.
+These limits are typically provided by the device manufacturers and are
+used to limit sideband emissions and stay within regulatory limits
 
-Yeah, alas It's too late now. On the other hand this is probably for better since
-I've discovered that the noLLP-related problem is more complicated than I thought
-in the first place. Yes, the interrupt handling latency will cause the problem
-with Rx FIFO overflow, but the overflow might still happen due to several other
-reasons (mostly due to our APB bus being too slow, but it can still be partly
-fixed, and I am looking for a convenient solution at the moment). So could you
-please merge the series in without the next patches:
-[PATCH v5 04/11] dmaengine: Introduce max SG list entries capability
-[PATCH v5 11/11] dmaengine: dw: Initialize max_sg_nents capability 
-If I manage to fix the problem in general then I'll send another series with
-those two patches being part of it. Otherwise they won't be much useful for my
-platform. Sorry for inconvenience and thanks for understanding.
+Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
+---
+v2:
+ - merge 802.11ax rate changes from Shayne's patch
+ - document txs-delta property
 
--Sergey
+ .../bindings/net/wireless/mediatek,mt76.txt   | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-> 
-> -- 
-> ~Vinod
+diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+index ab7e7a00e534..e4859c974ef4 100644
+--- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
++++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+@@ -36,6 +36,7 @@ Optional nodes:
+ - led: Properties for a connected LED
+   Optional properties:
+     - led-sources: See Documentation/devicetree/bindings/leds/common.txt
++- power-limits: contains per-regdomain/channel rate power limit subnodes
+ 
+ &pcie {
+ 	pcie0 {
+@@ -76,3 +77,61 @@ wmac: wmac@18000000 {
+ 
+ 	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
+ };
++
++
++Subnodes of power-limits:
++
++Properties:
++- country: One or more country codes, as used by the cfg80211 regdomain code
++- regdomain: "FCC", "ETSI" or "JP"
++
++If neither country, nor regdomain is specified, the power limits node is used
++as a fallback when no other subnode matches.
++
++Subnodes txpower-2g, txpower-5g:
++
++Properties:
++- channels: pairs of first and last channel number
++- cck: 4 half-dBm per-rate power limit values
++- ofdm: 8 half-dBm per-rate power limit values
++- mcs:
++	sets of per-rate power limit values for 802.11n/802.11ac rates for
++	multiple channel bandwidth settings.
++	Each set starts with the number of channel bandwidth settings for
++	which the rate set applies, followed by either 8 (MT7603/MT7628) or
++	10 (all other chips) power limit values.
++	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
++- ru:
++	sets of per-rate power limit values for 802.11ax rates for multiple
++	channel bandwidth or resource unit settings.
++	Each set starts with the number of channel bandwidth or resource unit
++	settings for which the rate set applies, followed by 12 power limit
++	values. The order of the channel resource unit settings is:
++	RU26, RU52, RU106, RU242/SU20, RU484/SU40, RU996/SU80, RU2x996/SU160.
++- txs-delta: half-dBm power delta for different numbers of antennas (1, 2, ...)
++
++
++power-limit example:
++
++power-limits {
++	r0 {
++		regdomain = "FCC";
++		txpower-5g {
++			r1 {
++				channels = <36 48>;
++				ofdm = <23 23 23 23 23 23 23 23>;
++				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
++					  <3 22 22 22 22 22 22 22 22 22 22>;
++				ru = <3 22 22 22 22 22 22 22 22 22 22 22 22>,
++				     <4 20 20 20 20 20 20 20 20 20 20 20 20>;
++			};
++			r2 {
++				channels = <100 181>;
++				ofdm = <14 14 14 14 14 14 14 14>;
++				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
++				txs-delta = <12 9 6>;
++				ru = <7 14 14 14 14 14 14 14 14 14 14 14 14>;
++			};
++		};
++	};
++};
+-- 
+2.24.0
+
