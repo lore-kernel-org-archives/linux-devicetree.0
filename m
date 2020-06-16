@@ -2,87 +2,82 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C17C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAA3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCA220882
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592325170;
-	bh=v1NEVGl2JZ+x6Y+VmJrgJFlKm7OXUpbzQ/E9bGRWjFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=irPxslN+jVs60SqjYFtbzj2Nux5kprf7lv3gm4SQbULbVrTcpLqdUkYnyr+GSGSzd
-	 2uC/pktXx1OxggA9P9CdSQGdqY6gsGmSIlonYlB4S3vK4m6cwfLSUNUMdrTRq1unRb
-	 jZznMpUhrxIW9OHjsvRIuQy5OzM5rvT7C9sO+bwM=
+	by mail.kernel.org (Postfix) with ESMTP id 5E94420679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbgFPQcr (ORCPT
+        id S1729250AbgFPQoV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33742 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:44:21 -0400
+Received: from mga03.intel.com ([134.134.136.65]:43680 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbgFPQcq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:32:46 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BD620882;
-        Tue, 16 Jun 2020 16:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592325166;
-        bh=v1NEVGl2JZ+x6Y+VmJrgJFlKm7OXUpbzQ/E9bGRWjFQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=khGHiJvcszZgXVCQrXtmKy8FXo7lOoT75j/6La/xCYBoAOLJN1hPDEyaIJR5HnaRT
-         sqHPvhlOFObJWLZkJwgHKl22dEpyHhpuGCDP5vsMzbL7TaBLKJhd/0qJr6T39obBAq
-         TPMUrPJxB7A3wi3RPTHF1GKB013UktuhDufa6KEc=
-Date:   Tue, 16 Jun 2020 22:02:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Viresh Kumar <vireshk@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/11] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200616163242.GO2324254@vkoul-mobl>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200602092734.6oekfmilbpx54y64@mobilestation>
+        id S1728861AbgFPQoV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:44:21 -0400
+IronPort-SDR: DU6ncOoptTtJz33SPGU/nw4MSnUNRCPP7Efz1LSJyyW7jSne/xF3Vb2rUHYc4Ard86/9D153mT
+ x6L5OxMVYtmQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 09:44:19 -0700
+IronPort-SDR: TJI5y5oij0AyPsuZ2yZQovBcZ85sh5U0/hxzsldUuarJzm84wllOs0erwwAzCd675W3z3Tht2Z
+ yMtDGbKMEKxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="298973699"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 09:44:17 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jlEhA-00DsK7-JB; Tue, 16 Jun 2020 19:44:20 +0300
+Date:   Tue, 16 Jun 2020 19:44:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        adrian.hunter@intel.com
+Subject: Re: [PATCH v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
+Message-ID: <20200616164420.GZ2428291@smile.fi.intel.com>
+References: <20200616143818.13579-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200616143818.13579-3-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602092734.6oekfmilbpx54y64@mobilestation>
+In-Reply-To: <20200616143818.13579-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Serge,
+On Tue, Jun 16, 2020 at 10:38:18PM +0800, Wan Ahmad Zainie wrote:
+> Add support for eMMC PHY on Intel Keem Bay SoC.
 
-On 02-06-20, 12:27, Serge Semin wrote:
-> Vinod, Viresh
-> 
-> Andy's finished his review. So all the patches of the series (except one rather
-> decorative, which we have different opinion of) are tagged by him. Since merge
-> window is about to be opened please consider to merge the series in. I'll really
-> need it to be in the kernel to provide the noLLP-problem fix for the Dw APB SSI
-> in 5.8.
+...
 
-Sorry it was too late for 5.8.. merge window is closed now, i will
-review it shortly
+> +	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
+> +				       dllrdy, IS_DLLRDY(dllrdy),
+> +				       0, 50 * USEC_PER_MSEC);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
+
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+
+return ret;
+
+(Since it's only one minor issue, it's up to maintainers to decide if new
+ version is needed)
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
