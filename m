@@ -2,125 +2,119 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31B2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD91EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E80E207C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592305434;
-	bh=D5VxNNsWQG7Dnro1Y+aM+B4Rod1A23KmuRCGJah97io=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hcEKpZcgVARZ1UP2CeFBDQ1itv1zpw5aWNLiTLXUqs9wpxbfrMz36Blz0i2eej2l1
-	 rMOd/N5oDXHITZ7uRLt8A9ly39eH+0niJnYsUXjoF7Poxjut613rDuaWKT3Yvcze0K
-	 OPzo43cZiXyGWD4hrkHns27q1x462b/zVoFr9dVE=
+	by mail.kernel.org (Postfix) with ESMTP id 988D92071A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:15:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X9LTNBZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgFPLDt (ORCPT
+        id S1728339AbgFPLPT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgFPLDs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:03:48 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53060207C4;
-        Tue, 16 Jun 2020 11:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592305427;
-        bh=D5VxNNsWQG7Dnro1Y+aM+B4Rod1A23KmuRCGJah97io=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QZOoTvElAW7imPfVPdHU3wzfLaqrPFIGRturrOTRFLQADTVSjWQbP5SqaNbBZD72+
-         fuK1KVqTF9OL7xXIj5AT8tu3USiek8qIpa1DjbfYoFzUnPrUKIp1nMIQtb8+VXfQSg
-         BOjg18+W4AIxefHpJJetfV1EhhguP/3vwOnlHu0w=
-Date:   Tue, 16 Jun 2020 12:03:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
- support
-Message-ID: <20200616110345.GM4447@sirena.org.uk>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200610110810.GD5005@sirena.org.uk>
- <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
- <20200610164928.GJ5005@sirena.org.uk>
- <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
- <20200611085004.GC4671@sirena.org.uk>
- <CAMuHMdUBp79ix5hPjXBARTrOokg-pWY+Rdno9-dd6dBTv+TRcw@mail.gmail.com>
+        Tue, 16 Jun 2020 07:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728326AbgFPLPQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 07:15:16 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CE3C08C5C4
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 04:15:14 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t7so9076862pgt.3
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 04:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=SgTOvbgxwA5VoaXVXVrIfLqGjYTA/hWr+DeE114p4Z8=;
+        b=X9LTNBZiXJJz9efMUp9iGtVr8fNdH3Q1LOojyeXv01dGysdbuy3KYNUUGT1uniXOUw
+         DjD9oOo8gHYvd5yg7NJnQUQpB+gjfjE6C0lTFbahQC+gzOd0JXwa/A41wgpLch45bIzZ
+         VJsNzKctIhTMbqLzq9G/apS+VOjcPgo72eD3s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=SgTOvbgxwA5VoaXVXVrIfLqGjYTA/hWr+DeE114p4Z8=;
+        b=alASrHiCAvDe3a56k8dgns1vteCbg7nR+Kt5jWXJFV3pYuJVEtpods2NngaZQV47Lb
+         w6lhM5naQ2KBRT9zk22/nG0Twyt+GTa/Nxv9TIcFrSyR+LhMiRCP7BsruKzr9a6l81u9
+         4ueXvWO2hPH4FSA8CwLdFX7WxSx0WdfMWjVXYGspfnt8XFbjyUqU/OPeGR+Ao435N4uz
+         lbinA6ue8x+9d7vXprVmmuxxMkm5DZc/7XlOkSAgUHry+U1gkyiHl88jdSmaJyI83bCw
+         FByynNasCzkFLFgycmajyCjr1XS0g0pLBizuiu4H5MIV/39DxdDCOEG8U9FSGLLhiMRv
+         fOJQ==
+X-Gm-Message-State: AOAM532sghgSo4aKBcQ+UsjD/UERqjNk01eZf71sCIhhPzOdy9eSnzsv
+        RibSqUN3UZq5ybAi/GWQ32AiXaqd9Yw=
+X-Google-Smtp-Source: ABdhPJydaKHWTiQS4tjTQ62P0i7l/8GnXMtSVp9/WiCYOl6NgtRjnVcqxnmh19tvXcq+VnLsQ8hwGw==
+X-Received: by 2002:a65:6703:: with SMTP id u3mr1653921pgf.179.1592306113834;
+        Tue, 16 Jun 2020 04:15:13 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 67sm13336068pga.44.2020.06.16.04.15.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 04:15:13 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="glNuw4S6NeIZr5j7"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUBp79ix5hPjXBARTrOokg-pWY+Rdno9-dd6dBTv+TRcw@mail.gmail.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200612015030.16072-2-tanmay@codeaurora.org>
+References: <20200612015030.16072-1-tanmay@codeaurora.org> <20200612015030.16072-2-tanmay@codeaurora.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, aravindh@codeaurora.org,
+        abhinavk@codeaurora.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>
+To:     Tanmay Shah <tanmay@codeaurora.org>, robh+dt@kernel.org,
+        sam@ravnborg.org
+Date:   Tue, 16 Jun 2020 04:15:12 -0700
+Message-ID: <159230611219.62212.8262135380349283774@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting Tanmay Shah (2020-06-11 18:50:26)
+> diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml=
+ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> new file mode 100644
+> index 000000000000..5fdb9153df00
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> @@ -0,0 +1,142 @@
+> +        data-lanes =3D <0 1>;
+> +
+> +        ports {
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <0>;
+> +
+> +            port@0 {
+> +                reg =3D <0>;
+> +                dp_in: endpoint {
+> +                    remote-endpoint =3D <&dpu_intf0_out>;
+> +                };
+> +            };
+> +
+> +            port@1 {
+> +                reg =3D <1>;
+> +                dp_out: endpoint {
 
---glNuw4S6NeIZr5j7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Just curious what is eventually connected here? This is possibly a
+question for Rob Herring, but I can't figure out how we're supposed to
+connect this to the USB type-c connector that is receiving the DP
+signal. Does the type-c connector binding support connecting to this end
+of the graph? Or should this connect to the DP phy and then the phy
+connects to the USB type-c connector node? Right now it is empty which
+seems wrong.
 
-On Thu, Jun 11, 2020 at 02:09:54PM +0200, Geert Uytterhoeven wrote:
-> On Thu, Jun 11, 2020 at 10:50 AM Mark Brown <broonie@kernel.org> wrote:
-
-> > I'm not sure it's a particular concern, especially since you'll be
-> > sending this stuff in the same series as a bindings update and an extra
-> > patch in a series makes very little difference.
-
-> Until the DT bindings are split off into their own project...
-> Listing unneeded compatible values in drivers also increases binary size.
-> For RSPI and MSIOF that would be +2.5 KiB each.  Times tens of drivers.
-
-> Considering the RSPI driver itself is only 9 KiB, and some RZ/A1 systems
-> are really memory-constrained, I think it's better to avoid that.
-
-That is an issue, though I can't help wondering if space constrained
-systems could use some sort of automatic compaction of the ID tables
-during install.  We're also bloating their DTs by adding fallbacks of
-course!
-
-> > > Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
-> > > binding, it will be flagged.
-
-> > For things that are upstream.
-
-> The DT bindings apply to out-of-tree DTS files, too ;-)
-> If they're not compliant, all odds are off.
-
-The point here is to improve robustness and make the interface less
-fragile.
-
---glNuw4S6NeIZr5j7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7opxAACgkQJNaLcl1U
-h9Clqgf+NXdGTDeyVuyK7mHfxG3TU29aQ6SxLfp1zChued6vIWJ467CxbXbKysTU
-Y90kMfKvPmR4Yx8yCB26tssThBUgY6z9HS1CgLUEHYJmeHN3qK7cgNJKydxW+wXr
-QoiIedUNg3qvg+5mmP+HW0KSl7iCYLe37TdZvFrXse0Jsh7uHKg6m8s568s75byG
-pl0WyBiRotsSsOUrPVFI1kQ3ofUiBecMmyWwL5SDV5fPfPnQLWZgf2KKgsFfeREo
-tfPgIK6ILBuH5mmSQ4xo3xVIkVg9MMwOG+47Gzm1pkG6p3JX/dv9DiESxmZSuc6W
-PpEoyXXzPoNbTny9qQTvmss7G3G2OQ==
-=5KTC
------END PGP SIGNATURE-----
-
---glNuw4S6NeIZr5j7--
+> +                };
+> +            };
+> +        };
+> +    };
