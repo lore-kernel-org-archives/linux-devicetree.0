@@ -2,82 +2,87 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAA3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A22AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 17:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E94420679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E8420B1F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 17:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="IFnTibco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbgFPQoV (ORCPT
+        id S1725979AbgFPRQB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:44:21 -0400
-Received: from mga03.intel.com ([134.134.136.65]:43680 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728861AbgFPQoV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:44:21 -0400
-IronPort-SDR: DU6ncOoptTtJz33SPGU/nw4MSnUNRCPP7Efz1LSJyyW7jSne/xF3Vb2rUHYc4Ard86/9D153mT
- x6L5OxMVYtmQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 09:44:19 -0700
-IronPort-SDR: TJI5y5oij0AyPsuZ2yZQovBcZ85sh5U0/hxzsldUuarJzm84wllOs0erwwAzCd675W3z3Tht2Z
- yMtDGbKMEKxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="298973699"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 09:44:17 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jlEhA-00DsK7-JB; Tue, 16 Jun 2020 19:44:20 +0300
-Date:   Tue, 16 Jun 2020 19:44:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        adrian.hunter@intel.com
-Subject: Re: [PATCH v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Message-ID: <20200616164420.GZ2428291@smile.fi.intel.com>
-References: <20200616143818.13579-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200616143818.13579-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Tue, 16 Jun 2020 13:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgFPRQB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 13:16:01 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DD7C061573;
+        Tue, 16 Jun 2020 10:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=dbQoMBtrvJc0duBMGogI6Q7i8MYxJOUerLAn0kA1v6A=; b=IFnTibcoYkhRgl0owbzd+OjLr2
+        KxHKhhfPdJtgiGhxvZtAjpC1PlZoVr9V5bJMz+Vc2EO8EWEE9b3MUkRmMHwjDmv4OThvEcQXbfJrH
+        KSZfIBCuKwHWNzvpV02JOUeF0ue+b1CM9qrhwI/auPhhPnYl0eI5iUDZ+oyfRK3T2S66vS2UtgaLG
+        XX9CdRH4WKq0T97IGCM/2KX9EN8TIxFsErgpQnapOTKrLgGOPpxAEmiz9UG6f8VRme+Evb+T4twW+
+        tBFodIS6sR+HbCsWIDPkqZepCJsj5Uc/NlZRqgjbyq7lTIsy6wFM5ex7JqIuQYbin3W5u26ohQd/R
+        MND8kOrA==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jlFBi-0001Vi-Ma; Tue, 16 Jun 2020 18:15:54 +0100
+Date:   Tue, 16 Jun 2020 18:15:54 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: qcom: add qfprom definition to ipq806x
+Message-ID: <20200616171554.GA5632@earth.li>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616143818.13579-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:38:18PM +0800, Wan Ahmad Zainie wrote:
-> Add support for eMMC PHY on Intel Keem Bay SoC.
+Add missing qfprom definition for ipq806x SoC
 
-...
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+---
+ arch/arm/boot/dts/qcom-ipq8064.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> +	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-> +				       dllrdy, IS_DLLRDY(dllrdy),
-> +				       0, 50 * USEC_PER_MSEC);
-> +	if (ret) {
-> +		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
-
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-
-return ret;
-
-(Since it's only one minor issue, it's up to maintainers to decide if new
- version is needed)
-
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index b912da9a3ff3..8f299cae2628 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -425,6 +425,13 @@
+ 			qcom,controller-type = "pmic-arbiter";
+ 		};
+ 
++		qfprom: qfprom@700000 {
++			compatible = "qcom,qfprom";
++			reg = <0x00700000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
+ 		gcc: clock-controller@900000 {
+ 			compatible = "qcom,gcc-ipq8064";
+ 			reg = <0x00900000 0x4000>;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
