@@ -5,204 +5,148 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3D0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A37C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3065820707
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FB9208B8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MtLodwT0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+M1vdMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgFPOOJ (ORCPT
+        id S1726606AbgFPOeF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60260 "EHLO
+        Tue, 16 Jun 2020 10:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbgFPOOF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 10:14:05 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AC7C061573;
-        Tue, 16 Jun 2020 07:14:04 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e4so23752726ljn.4;
-        Tue, 16 Jun 2020 07:14:04 -0700 (PDT)
+        with ESMTP id S1725775AbgFPOeE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 10:34:04 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8348AC061573;
+        Tue, 16 Jun 2020 07:34:03 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r15so3319941wmh.5;
+        Tue, 16 Jun 2020 07:34:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hek6dP2hX1DkgDYCqdcoJnb8OPxCsTSvr04uC6UyePo=;
-        b=MtLodwT052MO77CtPzvAlxsDAVhljp+66ljgns+U6+ZxI4qknX8gYGhnCMtG2gNZmr
-         NvRJ4uE5JLC41sk8ZjlywfNqcp1nxJrEmfbPpWkcwLvmez97GufcfRqa8slpX8cRZqOi
-         CZ/a2qI64/L8aeu1VTFEESTz546IYV3UJ50oEzANxAOj5NZPK3TSsrUJM3xuifnIYDKq
-         57h3HwrehB3endNr4326TQHFamVzsJoP//q8MPBdCk5wKezG+Knc2WaW3Z2IXDIuVIWT
-         dXsmDzBeJc6U08yJdOJxWTQj5qoFzlyC7plimVT7Wy2XRSrGmAJnqyah4KDx9xy0jcI1
-         Uoug==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1RXOsD4er6euNm4Y3pGIbFv5vsP1r8Shs/hjtRp0DZQ=;
+        b=r+M1vdMdp9zM/ddhm+2pI+amzmINTNFTgT0N5hsITl+b18n/XtBYnUPaCRZZBr2Izb
+         FPZwvyN+AnEafRpQW474cJoGmCTU5A2awd9vmT1csf57nZsNIIx4KnbnrwerRAxJOiz3
+         rPc17MDwsGSAf4jAToy0fk+jsloi6vAMhYt9oLz9P1jynwIxC10k25/20W9vYuM2P5QX
+         0+KSv06pPhJUzytEsf5r0lHjr3mKNsMZw88dX+HWYNyKM6boyvYL0Cdgmaz5T+Jv/M2J
+         uJGUuL7E8ieBAtyXmauntl7Tft4SDarx6VU1FOxZCm9OTJOSi2AgP8YRPcorpg/CIAB2
+         86Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hek6dP2hX1DkgDYCqdcoJnb8OPxCsTSvr04uC6UyePo=;
-        b=CB4Sh7iUuizMyRy7gmfA/mMoJsIWOXTqeaPXzSwoSeOtw07kQLnKakUXZplrX2b7HA
-         la22PBeBfek6ox2JdXcD9meZr5rPc4dbcxAOUeG9aq/rkC5iGmuw8+bqugtWrXYWPKfJ
-         ub9aKpP4VeRUWMbDcs8Su7M0xwXQGSIl7nZfpUaD/PK5vtYoTuklH2IEQfl/Im2A0r8U
-         4rbwoJxpap557cjJVes55FvtqJXIjU5AXeCAwvZKSC2RZKL7L8S8UaJ5RUVbP34ewDTc
-         3Cz2hLBrfz/5h+796jqQnC5que5py2S+9I2sLK3kSF/KpdpNDoicXVOsQIzRYZWSOWc0
-         B0gw==
-X-Gm-Message-State: AOAM533xDjKIpmUN77K8Rkd/379tKkN3k5Pn1FAbgnUucMfqVgeecV9X
-        W9aCwXLPpJbsTg1JTIUUoMV42B0h
-X-Google-Smtp-Source: ABdhPJw6i3nzmi8i8Yhv4m5YwTiNhrHSw2RE3pRuemxQAi1F/wEPq9D9lvAR1eJoOW8I3RYe4DtHGQ==
-X-Received: by 2002:a2e:571b:: with SMTP id l27mr1663467ljb.308.1592316842693;
-        Tue, 16 Jun 2020 07:14:02 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id h24sm4411484lji.115.2020.06.16.07.14.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 07:14:01 -0700 (PDT)
-Subject: Re: [PATCH v7 1/6] of_graph: add of_graph_get_local_port()
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200614172234.8856-1-digetx@gmail.com>
- <20200614172234.8856-2-digetx@gmail.com>
- <20200616012111.GE1629@pendragon.ideasonboard.com>
- <20200616012513.GF1629@pendragon.ideasonboard.com>
- <8b7c6395-edd8-cecd-7004-e9f3f22d61f2@gmail.com>
-Message-ID: <7c40f145-f31b-8397-ac23-601828c9f013@gmail.com>
-Date:   Tue, 16 Jun 2020 17:14:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1RXOsD4er6euNm4Y3pGIbFv5vsP1r8Shs/hjtRp0DZQ=;
+        b=XcthODQTxrEaxmPs2CnPBPVq31Dgx27cmMI653dbC0oZpFXc0Wh5bLNrLKRwwnp8S0
+         ZBmx1W4IAjNbU7JiiamiRu8CPZr/hUSP0+MZAoUsXgZfUUovnQTvcK+6PYQ5Ba01Jkj8
+         gUDhqsQ+aIC61GhF9DQD8I4HG3t405+DgX5j7vgIUch2Ug1Ydo6ScZZI04ShJUEcG3RA
+         j6r6CDJqbu6D4D7dcVjN7lv0Xhff+b2VtSU+a7XuOBOogh9M201Fkc0Jo9PDdfiYIAVf
+         EaYUxiuLR62KmFjWlXO2ii9tUxtDn9GwQ5xqGK37L0b8XjWAsa4hRMjEgHubRsK2jDIU
+         P9PQ==
+X-Gm-Message-State: AOAM533UIOWllW9qwcotjYU/lVDQo3ZymQs+tLfX26H0ubZf5jCuhEmH
+        rS7tkJXer6GjCvla5scHBU0=
+X-Google-Smtp-Source: ABdhPJyODwUr1UHdlJXlA27bJIg01l+fvkx6DQue3MN0m7C/40JhUAPnwR9jcOHemEuXExgWKYKHwg==
+X-Received: by 2002:a1c:c908:: with SMTP id f8mr3580666wmb.150.1592318042168;
+        Tue, 16 Jun 2020 07:34:02 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id y14sm4044126wma.25.2020.06.16.07.34.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 07:34:00 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 16:33:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 31/38] dt-bindings: panel: simple: Use
+ unevaluatedProperties
+Message-ID: <20200616143359.GA3000485@ulmo>
+References: <20200612141903.2391044-1-thierry.reding@gmail.com>
+ <20200612141903.2391044-32-thierry.reding@gmail.com>
+ <CAL_JsqKHkW8Q-prwEP_tkyWHUU5YuQHOipzjZ9MWa9M+uMoCkg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8b7c6395-edd8-cecd-7004-e9f3f22d61f2@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKHkW8Q-prwEP_tkyWHUU5YuQHOipzjZ9MWa9M+uMoCkg@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-16.06.2020 16:56, Dmitry Osipenko пишет:
-> 16.06.2020 04:25, Laurent Pinchart пишет:
->> On Tue, Jun 16, 2020 at 04:21:12AM +0300, Laurent Pinchart wrote:
->>> Hi Dmitry,
->>>
->>> Thank you for the patch.
->>>
->>> On Sun, Jun 14, 2020 at 08:22:29PM +0300, Dmitry Osipenko wrote:
->>>> In some case, like a DRM display code for example, it's useful to silently
->>>> check whether port node exists at all in a device-tree before proceeding
->>>> with parsing the graph.
->>>>
->>>> This patch adds of_graph_get_local_port() which returns pointer to a local
->>>> port node, or NULL if graph isn't specified in a device-tree for a given
->>>> device node.
->>>>
->>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/of/property.c    | 32 +++++++++++++++++++++++---------
->>>>  include/linux/of_graph.h |  7 +++++++
->>>>  2 files changed, 30 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/of/property.c b/drivers/of/property.c
->>>> index 1f2086f4e7ce..05c5f619b8bb 100644
->>>> --- a/drivers/of/property.c
->>>> +++ b/drivers/of/property.c
->>>> @@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
->>>>  	 * parent port node.
->>>>  	 */
->>>>  	if (!prev) {
->>>> -		struct device_node *node;
->>>> -
->>>> -		node = of_get_child_by_name(parent, "ports");
->>>> -		if (node)
->>>> -			parent = node;
->>>> -
->>>> -		port = of_get_child_by_name(parent, "port");
->>>> -		of_node_put(node);
->>>> -
->>>> +		port = of_graph_get_local_port(parent);
->>>>  		if (!port) {
->>>>  			pr_err("graph: no port node found in %pOF\n", parent);
->>>>  			return NULL;
->>>> @@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
->>>>  }
->>>>  EXPORT_SYMBOL(of_graph_get_remote_port);
->>>>  
->>>> +/**
->>>> + * of_graph_get_local_port() - get local port node
->>>> + * @node: pointer to a local endpoint device_node
->>>> + *
->>>> + * Return: First local port node associated with local endpoint node linked
->>>> + *	   to @node. Use of_node_put() on it when done.
->>>> + */
->>>> +struct device_node *of_graph_get_local_port(const struct device_node *node)
->>
->> I forgot to mention that, given that there could be multiple 'port'
->> nodes, this function would be better named
->> of_graph_get_first_local_port(). 'first' here would refer to the nodes
->> order in the device tree, which I believe may not match the port number.
->> For instance, in the following case
->>
->> 	ports {
->> 		#address-cells = <1>;
->> 		#size-cells = <1>;
->> 		port@1 {
->> 			reg = <1>;
->> 		};
->> 		port@0 {
->> 			reg = <0>;
->> 		};
->> 	};
->>
->> the function would I believe return port@1. It may be a good idea to
->> explain this in the documentation.
-> 
-> Hello Laurent,
-> 
-> It's correct that the port@1 will be returned in yours example.
-> 
-> I'll improve the doc and the function's name in the next revision, thank
-> you for the suggestions!
-> 
->> Depending on how you use this
->> function, if your only use case is to test for the presence of port
->> nodes, it may be best to return a bool and name it of_graph_has_port()
->> or something similar.
->>
->>>> +{
->>>> +	struct device_node *ports, *port;
->>>> +
->>>> +	ports = of_get_child_by_name(node, "ports");
->>>> +	if (ports)
->>>> +		node = ports;
->>>> +
->>>> +	port = of_get_child_by_name(node, "port");
->>>> +	of_node_put(ports);
->>>> +
->>>> +	return port;
->>>
->>> The implementation doesn't seem to match the documentation. If node is a
->>> pointer to an endpoint, it should not have any ports child.
-> 
-> Right, I'll reword the doc in v8. This function doesn't differentiate
-> between start / end points. It's up to a user of this function to check
-> whether node is endpoint or something else if needed.
-> 
-> Thank you very much for the comments!
-> 
 
-Although, I re-read the doc comment and compared it to the wording of
-the other of_graph_*() functions and it's already good as-is to me
-because the doc explicitly says the "Return: First local port associated
-with local endpoint...", which is exactly what this function does.
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But still the function name and it's brief description could be improved.
+On Fri, Jun 12, 2020 at 08:28:13AM -0600, Rob Herring wrote:
+> On Fri, Jun 12, 2020 at 8:20 AM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+> >
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > Using "additionalProperties: false" results in rejecting any of the
+> > properties defined in panel-common.yaml, whereas the intent is to
+> > inherit the common properties defined in that file.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-simp=
+le.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> > index 34fe3d42b829..c58bc90ffd43 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> > @@ -275,7 +275,7 @@ properties:
+> >    port: true
+> >    power-supply: true
+> >
+> > -additionalProperties: false
+> > +unevaluatedProperties: false
+>=20
+> But we've listed the properties we use here. Some of the common ones
+> may not be applicable. Maybe they are and if so, then you should drop
+> all the ones listed with 'true' with this change.
+
+Looks like the only one I need this for is ddc-i2c-bus, which is already
+contained in panel-common.yaml. unevaluatedProperties: false is able to
+look into that and hence doesn't flag this as extra.
+
+However, I can also work around that by adding a "ddc-i2c-bus: true" to
+panel-simple.yaml, which seems like it's the currently preferred way to
+do this. Is it expected that once jsonschema/dt-schema support the
+unevaluatedProperties keyword that we'd move towards using that instead?
+
+Thierry
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7o2FQACgkQ3SOs138+
+s6ExBw/9EB6cRu6J3S8O3Qku+EHrCFgikSr6SIclBZ6Rh/OQBVAWBUenyvEtBKRX
+R9wCmfiqtZZ07Zkjt5vrchKnnmkwKHnRb61Kf3STUxOKi4v7AwgUCu6KA/nUze0+
+pF5VpZU0EbsYHPdUn2Ho0YNXo6J6CnE7aCUerstpAnHaCbAFquGgVzQW4irPFYP6
+GYGf23qpN8JvCKokLC/Va+7vOw+ajh8Be6N8QG/V9nS+AJa+IcLcNvJUo9ZuU65q
+w4+4foKq2bJVe175RLAvWM8Nmu0Djdq6R/FUQAQSg6hXUCcxMLPmve6dUd5+B1i5
+Mo5PvG3hAr/pDZdgrlDmMG7pqOoJBxmOnFmp65GAIt8chH9/tHqp6QcajPMQdvl4
+VVrNiAeZ8Swm9momu+w0O1Fx9IsOCUCCU1pE1RjX3Swgm3BD2S9TI182bUFetC+N
+R0mJ/U9kkWV9cu/KbKrUBPxdcglGliXIhVgb7MUA3BMzY1/+jOUT89XjBlXeazGc
+WwtfG8Yb4LwgbpdXLNvJA4XOuT/F6DGGRbbncEAuBUpHxxjcVxjMegjB/p1xm7zC
+eCDSqVXewA8Gz9PP2XLi+Hp020w+seHaLYeC44P4wX1Bho5v38KOTL0hNcrFfwdu
+l85dl+MXcfhOK4NEd6jOg3JWDMdyIjhl52H/j0m7K1yH7bPV2AU=
+=hcVb
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
