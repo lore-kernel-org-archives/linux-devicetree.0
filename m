@@ -2,121 +2,125 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E338C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 10:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31B2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540B320786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 10:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E80E207C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592305434;
+	bh=D5VxNNsWQG7Dnro1Y+aM+B4Rod1A23KmuRCGJah97io=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hcEKpZcgVARZ1UP2CeFBDQ1itv1zpw5aWNLiTLXUqs9wpxbfrMz36Blz0i2eej2l1
+	 rMOd/N5oDXHITZ7uRLt8A9ly39eH+0niJnYsUXjoF7Poxjut613rDuaWKT3Yvcze0K
+	 OPzo43cZiXyGWD4hrkHns27q1x462b/zVoFr9dVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgFPK4S (ORCPT
+        id S1726467AbgFPLDt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:56:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64356 "EHLO mga05.intel.com"
+        Tue, 16 Jun 2020 07:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgFPK4R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:56:17 -0400
-IronPort-SDR: DWKtOVJW4SrR8JmzBLaarVAiVo1nzQ702c5yRsLNB8RgkbZHOA4nIlEzeZbCWGhxW0oU1pBdjt
- D8eqLyxgoCQA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 03:56:16 -0700
-IronPort-SDR: iS5GbzbjKPiXqDKhZpPrConT0bcq2eWASHaqzKGx4fvllcs2ZidupIXhxZrWjdC+Jga7qklkly
- S/l/9R7DZuJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="382837797"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 16 Jun 2020 03:56:12 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 16 Jun 2020 13:56:12 +0300
-Date:   Tue, 16 Jun 2020 13:56:12 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 2/6] usb: typec: add typec_find_pwr_opmode
-Message-ID: <20200616105612.GL3213128@kuha.fi.intel.com>
-References: <20200615161512.19150-1-amelie.delaunay@st.com>
- <20200615161512.19150-3-amelie.delaunay@st.com>
+        id S1725901AbgFPLDs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 07:03:48 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53060207C4;
+        Tue, 16 Jun 2020 11:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592305427;
+        bh=D5VxNNsWQG7Dnro1Y+aM+B4Rod1A23KmuRCGJah97io=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QZOoTvElAW7imPfVPdHU3wzfLaqrPFIGRturrOTRFLQADTVSjWQbP5SqaNbBZD72+
+         fuK1KVqTF9OL7xXIj5AT8tu3USiek8qIpa1DjbfYoFzUnPrUKIp1nMIQtb8+VXfQSg
+         BOjg18+W4AIxefHpJJetfV1EhhguP/3vwOnlHu0w=
+Date:   Tue, 16 Jun 2020 12:03:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: renesas,sh-msiof: Add r8a7742
+ support
+Message-ID: <20200616110345.GM4447@sirena.org.uk>
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591736054-568-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200610110810.GD5005@sirena.org.uk>
+ <CAMuHMdWCHeSB9mjpdSX_-qxwo33kMb1_1R93CjBtVBPFPKkEOg@mail.gmail.com>
+ <20200610164928.GJ5005@sirena.org.uk>
+ <CAMuHMdUNo0tMxWsnXi4q8NwubPWHqTvzGOA-0hOr7oo2cRvvUg@mail.gmail.com>
+ <20200611085004.GC4671@sirena.org.uk>
+ <CAMuHMdUBp79ix5hPjXBARTrOokg-pWY+Rdno9-dd6dBTv+TRcw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="glNuw4S6NeIZr5j7"
 Content-Disposition: inline
-In-Reply-To: <20200615161512.19150-3-amelie.delaunay@st.com>
+In-Reply-To: <CAMuHMdUBp79ix5hPjXBARTrOokg-pWY+Rdno9-dd6dBTv+TRcw@mail.gmail.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:15:08PM +0200, Amelie Delaunay wrote:
-> This patch adds a function that converts power operation mode string into
-> power operation mode value.
-> 
-> It is useful to configure power operation mode through device tree
-> property, as power capabilities may be linked to hardware design.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+--glNuw4S6NeIZr5j7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  drivers/usb/typec/class.c | 15 +++++++++++++++
->  include/linux/usb/typec.h |  1 +
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index c9234748537a..59e1837ef85e 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1448,6 +1448,21 @@ void typec_set_pwr_opmode(struct typec_port *port,
->  }
->  EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
->  
-> +/**
-> + * typec_find_pwr_opmode - Get the typec power operation mode capability
-> + * @name: power operation mode string
-> + *
-> + * This routine is used to find the typec_pwr_opmode by its string @name.
-> + *
-> + * Returns typec_pwr_opmode if success, otherwise negative error code.
-> + */
-> +int typec_find_pwr_opmode(const char *name)
-> +{
-> +	return match_string(typec_pwr_opmodes,
-> +			    ARRAY_SIZE(typec_pwr_opmodes), name);
-> +}
-> +EXPORT_SYMBOL_GPL(typec_find_pwr_opmode);
-> +
->  /**
->   * typec_find_orientation - Convert orientation string to enum typec_orientation
->   * @name: Orientation string
-> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-> index 5daa1c49761c..f7c63ee3d443 100644
-> --- a/include/linux/usb/typec.h
-> +++ b/include/linux/usb/typec.h
-> @@ -254,6 +254,7 @@ int typec_set_mode(struct typec_port *port, int mode);
->  
->  void *typec_get_drvdata(struct typec_port *port);
->  
-> +int typec_find_pwr_opmode(const char *name);
->  int typec_find_orientation(const char *name);
->  int typec_find_port_power_role(const char *name);
->  int typec_find_power_role(const char *name);
-> -- 
-> 2.17.1
+On Thu, Jun 11, 2020 at 02:09:54PM +0200, Geert Uytterhoeven wrote:
+> On Thu, Jun 11, 2020 at 10:50 AM Mark Brown <broonie@kernel.org> wrote:
 
-thanks,
+> > I'm not sure it's a particular concern, especially since you'll be
+> > sending this stuff in the same series as a bindings update and an extra
+> > patch in a series makes very little difference.
 
--- 
-heikki
+> Until the DT bindings are split off into their own project...
+> Listing unneeded compatible values in drivers also increases binary size.
+> For RSPI and MSIOF that would be +2.5 KiB each.  Times tens of drivers.
+
+> Considering the RSPI driver itself is only 9 KiB, and some RZ/A1 systems
+> are really memory-constrained, I think it's better to avoid that.
+
+That is an issue, though I can't help wondering if space constrained
+systems could use some sort of automatic compaction of the ID tables
+during install.  We're also bloating their DTs by adding fallbacks of
+course!
+
+> > > Nowadays we have "make dtbs_check", so if a DTS doesn't conform to the
+> > > binding, it will be flagged.
+
+> > For things that are upstream.
+
+> The DT bindings apply to out-of-tree DTS files, too ;-)
+> If they're not compliant, all odds are off.
+
+The point here is to improve robustness and make the interface less
+fragile.
+
+--glNuw4S6NeIZr5j7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7opxAACgkQJNaLcl1U
+h9Clqgf+NXdGTDeyVuyK7mHfxG3TU29aQ6SxLfp1zChued6vIWJ467CxbXbKysTU
+Y90kMfKvPmR4Yx8yCB26tssThBUgY6z9HS1CgLUEHYJmeHN3qK7cgNJKydxW+wXr
+QoiIedUNg3qvg+5mmP+HW0KSl7iCYLe37TdZvFrXse0Jsh7uHKg6m8s568s75byG
+pl0WyBiRotsSsOUrPVFI1kQ3ofUiBecMmyWwL5SDV5fPfPnQLWZgf2KKgsFfeREo
+tfPgIK6ILBuH5mmSQ4xo3xVIkVg9MMwOG+47Gzm1pkG6p3JX/dv9DiESxmZSuc6W
+PpEoyXXzPoNbTny9qQTvmss7G3G2OQ==
+=5KTC
+-----END PGP SIGNATURE-----
+
+--glNuw4S6NeIZr5j7--
