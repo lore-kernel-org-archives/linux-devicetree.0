@@ -2,97 +2,203 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD256C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE34C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B180F20B80
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7DA20B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="qYuLDE6c"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="o7eLERaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgFPMRU (ORCPT
+        id S1728598AbgFPMRM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
+        Tue, 16 Jun 2020 08:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728640AbgFPMRR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 08:17:17 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA1AC08C5C5
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:15 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id y17so8310913plb.8
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:15 -0700 (PDT)
+        with ESMTP id S1726452AbgFPMRL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 08:17:11 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E481C08C5C3
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:11 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x207so9421148pfc.5
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LJO92mvN8G5Ck3uoTs8tbtHokwelI/PjMZ8RoMwKBik=;
-        b=qYuLDE6cUJWd5a4DmxyscuvyFglYOxees6+5yxZbHCeW4dVK/TAHc5qEfavEUmqtku
-         4jynq09mMyw7LfQBSZ2XkmvVR0xQfwjDSx/aPlX3EdAOGqTBfN+Rd7VzMBFpksIDfWrd
-         jSI6ZMBqHU3nd1Kvqh3mtN33mVSeNv9oMvyIo=
+        bh=Ec3juquI4rhFjGOCuOnFrl/SFwl2x3S0xqJKp1FvXHk=;
+        b=o7eLERaO4Xamk0yOYrHaIOKvh1GxeOEGq6pNfS5NuJi0zP7sd3jEg2x/kjZAURz1d9
+         wd5Zht/OFOaJ/Ojts7vPstoMQNdmXmsFpixpiCke87sjkGTh9JlNv7Jqc3SBVgu4ClwR
+         0g0ZI2I2TAplj4UsBHeoOBF7uRJCPj3pxCXU4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LJO92mvN8G5Ck3uoTs8tbtHokwelI/PjMZ8RoMwKBik=;
-        b=LVFKlEWkNz7kibwyJC+cdL85Nmo3fbz6xyxz9i9mN/ow9bhB0fSabOsesZSX6A7qGu
-         UtsO2xHzKVbhSeuGRcSx39fFNreIjQa4leM0GQs3eQgft03K3IKxrVEi3qB8oimr7+qf
-         XWBfo2fpXoin2EEwYxXXtA5e9iQCcawYaBDTVQXBycdH1Ao44t9VedhIkdMMeEJLnnsB
-         I2S4qr7jiEcbW0MKoKpkegZRieJLX/X3ZPyHmi/MaLfR7ImNQYXk+c3TBp0gIKPq6SuH
-         gYnlpI9HuDNw7+lnkRVMHtR6YH3t/hNA/mGlr07qC/DmVaqZpdghKAi1qrq+kAIZHsEG
-         ldOA==
-X-Gm-Message-State: AOAM532UCQiWdqPeTWoiypWQ5Ds58pmLq8OfBNMsCido7KDXsyN38e8+
-        QQRuLVuHmDdvbxPtOODdTAqQ9A==
-X-Google-Smtp-Source: ABdhPJxh4mja4k9jxSfXKuDqMXATuL0/kxNng8htaYKY7QzDnrSNVuiHfGFh8qWBfZavfBpJSAz/kA==
-X-Received: by 2002:a17:902:9b92:: with SMTP id y18mr1756775plp.228.1592309834497;
-        Tue, 16 Jun 2020 05:17:14 -0700 (PDT)
+        bh=Ec3juquI4rhFjGOCuOnFrl/SFwl2x3S0xqJKp1FvXHk=;
+        b=i3jrRvbM7fy3ht96v5NIe7ST0PNg1VAXG/xTv/BLx2MVQk8YZHsmDRLO2JkdydVDbe
+         SbPBkMaAbVAuNWTIbi7ik11knpTi7GowjzJzp1OLXHGoN5X15Pdb4fEGjuRmH8a9AE0y
+         FoEVIy65Du1IbwNuKpFha0TRltE15ypgkyE9su4EQcd6AGh8vE5ffWFoxfEee8qv1f1R
+         4Wlse16GInqORZJX2S/XZX0Lj+DpP8eGp3VfpoOFRnqVwuyeQxai+O5R2bjmkfMmZBEe
+         3N+/He67s4zs2s7eKP0HtsfhqNxX1vmKrU2GxuPpRuVoW259N5ZVWbsMnh7LxMfbBm2V
+         UBUA==
+X-Gm-Message-State: AOAM531oOz3WB37E7XnGCZjUqvs+r6XfGlBN9oQhl5sDkV82sW+f+OoS
+        QKy3fxEh5lf4R96TnT2onTlOdCmpvzA=
+X-Google-Smtp-Source: ABdhPJw8jh3rGs+/j9cYByNMvBMKt3opLtcC8xfvAJvhW7BOCCL3NjEHklOfgERVUqetNVNk1VCYug==
+X-Received: by 2002:a62:fc52:: with SMTP id e79mr1861952pfh.5.1592309830081;
+        Tue, 16 Jun 2020 05:17:10 -0700 (PDT)
 Received: from shiro.work (p1285116-ipngn200805sizuokaden.shizuoka.ocn.ne.jp. [114.171.61.116])
-        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.12
+        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:17:13 -0700 (PDT)
+        Tue, 16 Jun 2020 05:17:09 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v4 02/12] dt-bindings: vendor-prefixes: Add sstar vendor prefix
-Date:   Tue, 16 Jun 2020 21:15:15 +0900
-Message-Id: <20200616121525.1409790-3-daniel@0x0f.com>
+Subject: [PATCH v4 00/12] Initial MStar/Sigmastar ARMv7 SoC support
+Date:   Tue, 16 Jun 2020 21:15:13 +0900
+Message-Id: <20200616121525.1409790-1-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200616121525.1409790-1-daniel@0x0f.com>
+In-Reply-To: <20200612130032.3905240-2-daniel@0x0f.com>
 References: <20200612130032.3905240-2-daniel@0x0f.com>
- <20200616121525.1409790-1-daniel@0x0f.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add prefix for Xiamen Xingchen Technology Co., Ltd
+This patch set adds initial support for MStar/Sigmastar's
+Armv7 based SoCs. There is just enough here to get to a shell
+with an initramfs but support for a lot of the hardware is
+in progress and will follow.
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+MStar also shipped chips with MIPS cores and ARM9 etc which
+are incompatible so I've tried to make the distinction in the
+code that this is strictly for the Armv7 based chips.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index b09b6c9911c3..ba5bd3b0ed9a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -986,6 +986,8 @@ patternProperties:
-     description: Spreadtrum Communications Inc.
-   "^sst,.*":
-     description: Silicon Storage Technology, Inc.
-+  "^sstar,.*":
-+    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd. (formerly part of MStar Semiconductor, Inc.)
-   "^st,.*":
-     description: STMicroelectronics
-   "^starry,.*":
+Sorry for the spamming this. I just really want to make some
+progress on this because I'm worried the other bits that are
+needed for these SoCs (Really old AT91 support in macb and
+the fotg210 usb host) will be lost or stop working in the meantime.
+This already happened in u-boot.
+
+Differences from v3:
+1. Fixed the issue with the mstar binding that Rob Herring's bot
+found.
+2. Fixed the filename for the midrived08 dts.
+
+Differences from v2:
+
+1. With Marc Zyngier's help the GIC node has been filled out properly.
+
+2. A comment was added to the arch timer node to explain why the
+clock-frequency is specified. Basically the vendor u-boot is old and
+broken.
+
+3. Based on Arnd Bergmann's feedback the heavy memory barrier is now
+implemented using a DT node to specify where the registers are instead
+of hardcoding their location. A binding description has been added for
+the new node.
+
+4. Expanded comments around the heavy memory barrier code so it's more
+obvious why it looks like it does.
+
+5. The heavy memory barrier init code was folded into the machine init
+function.
+
+6. Updated the device tree bindings and prefixes based on Andreas Färber's
+feedback. They have also been split out into a number of commits
+
+7. Based on Andreas Färber's feedback I've added the "riu" (register interface
+unit) internal bus that contains all of the peripheral registers and the proper
+ranges for the soc node. This bus has clocks, interrupts and some configuration
+register so it might get it's own driver in the future.
+
+8. I've dropped the pmu node for now as it's not needed to boot and I'm not
+sure of the relationship between the single core in most of the chips and
+the 4 documented interrupts.
+
+9. Numerous cosmetic changes based on Andreas Färber's feedback.
+
+Differences from v1:
+
+1. v1 only really supported two specific chips that were known
+at the time of submitting that patch series. Since then it's
+become apparent that there are a few families of SoCs based
+on the same ARMv7 core, clk blocks, interrupt controllers etc
+and this v2 attempts to make support more generic so in the future
+more SoCs from this lineage can be added. Support for some other
+chips is already in progress and will follow.
+
+2. v1 only added support for the BreadBee boards that I have been
+working on. v2 also adds support for a readily available car dash
+camera.
+
+3. Support for the BreadBee board has been split into two top level
+dts to cleanly support if either the msc313 or msc313e is mounted on
+the board. The chips are pin compatible but some of the internal
+hardware is different. The u-boot port for these SoCs can detect
+which chip it is running on and select the right dts so the user
+doesn't have to care which chip is mounted on their board.
+
+
+Daniel Palmer (12):
+  dt-bindings: vendor-prefixes: Add mstar vendor prefix
+  dt-bindings: vendor-prefixes: Add sstar vendor prefix
+  dt-bindings: vendor-prefixes: Add 70mai vendor prefix
+  dt-bindings: vendor-prefixes: Add thingy.jp prefix
+  dt-bindings: arm: Add mstar YAML schema
+  ARM: mstar: Add machine for MStar/Sigmastar Armv7 SoCs
+  ARM: mstar: Add binding details for mstar,l3bridge
+  ARM: mstar: Add Armv7 base dtsi
+  ARM: mstar: Add infinity/infinity3 family dtsis
+  ARM: mstar: Add mercury5 series dtsis
+  ARM: mstar: Add dts for msc313(e) based BreadBee boards
+  ARM: mstar: Add dts for 70mai midrive d08
+
+ .../devicetree/bindings/arm/mstar.yaml        | 34 ++++++++
+ .../bindings/misc/mstar,l3bridge.yaml         | 44 ++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  8 ++
+ MAINTAINERS                                   | 11 +++
+ arch/arm/Kconfig                              |  2 +
+ arch/arm/Makefile                             |  1 +
+ arch/arm/boot/dts/Makefile                    |  4 +
+ .../dts/infinity-msc313-breadbee_crust.dts    | 25 ++++++
+ arch/arm/boot/dts/infinity-msc313.dtsi        | 14 ++++
+ arch/arm/boot/dts/infinity.dtsi               |  7 ++
+ .../boot/dts/infinity3-msc313e-breadbee.dts   | 25 ++++++
+ arch/arm/boot/dts/infinity3-msc313e.dtsi      | 14 ++++
+ arch/arm/boot/dts/infinity3.dtsi              |  7 ++
+ .../boot/dts/mercury5-ssc8336n-midrived08.dts | 25 ++++++
+ arch/arm/boot/dts/mercury5-ssc8336n.dtsi      | 14 ++++
+ arch/arm/boot/dts/mercury5.dtsi               |  7 ++
+ arch/arm/boot/dts/mstar-v7.dtsi               | 83 +++++++++++++++++++
+ arch/arm/mach-mstar/Kconfig                   | 26 ++++++
+ arch/arm/mach-mstar/Makefile                  |  1 +
+ arch/arm/mach-mstar/mstarv7.c                 | 80 ++++++++++++++++++
+ 20 files changed, 432 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mstar.yaml
+ create mode 100644 Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
+ create mode 100644 arch/arm/boot/dts/infinity-msc313-breadbee_crust.dts
+ create mode 100644 arch/arm/boot/dts/infinity-msc313.dtsi
+ create mode 100644 arch/arm/boot/dts/infinity.dtsi
+ create mode 100644 arch/arm/boot/dts/infinity3-msc313e-breadbee.dts
+ create mode 100644 arch/arm/boot/dts/infinity3-msc313e.dtsi
+ create mode 100644 arch/arm/boot/dts/infinity3.dtsi
+ create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n-midrived08.dts
+ create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n.dtsi
+ create mode 100644 arch/arm/boot/dts/mercury5.dtsi
+ create mode 100644 arch/arm/boot/dts/mstar-v7.dtsi
+ create mode 100644 arch/arm/mach-mstar/Kconfig
+ create mode 100644 arch/arm/mach-mstar/Makefile
+ create mode 100644 arch/arm/mach-mstar/mstarv7.c
+
 -- 
 2.27.0.rc0
 
