@@ -2,234 +2,130 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F0CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428D1C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7055820734
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2267120707
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="flnq0CAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgFPECE (ORCPT
+        id S1725913AbgFPEVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:02:04 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44300 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgFPECD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 00:02:03 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 04E831A0579;
-        Tue, 16 Jun 2020 06:02:01 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D43861A053F;
-        Tue, 16 Jun 2020 06:01:55 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8A072402E8;
-        Tue, 16 Jun 2020 12:01:49 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linux@rempel-privat.de, kernel@pengutronix.de, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        wolfram@the-dreams.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 2/2] dt-bindings: i2c: Convert imx i2c to json-schema
-Date:   Tue, 16 Jun 2020 11:50:54 +0800
-Message-Id: <1592279454-32551-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592279454-32551-1-git-send-email-Anson.Huang@nxp.com>
-References: <1592279454-32551-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 16 Jun 2020 00:21:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:13300 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725562AbgFPEVr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 00:21:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592281306; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=VBaa9anjVyZuOVcnVhJ3bee8Mi6f3nkfkVONvj0umUQ=; b=flnq0CAxE0SRZLXXBR6AbjpVAOLgYfgtt0BBk9BLKPM2mXoZe1K5iY99zYs/NtmmkXu5dxVc
+ JXG2670I6gniVu1dCEILiPGtbk11ddm93ffrmgG1zIYcs2KcT6lkXvKtwP69ErGnPH/bUBqs
+ VGzxDPuSMPab/SC8mD0B0zB3OuY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5ee848c76bebe35debb63551 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 04:21:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F2AEAC433A1; Tue, 16 Jun 2020 04:21:26 +0000 (UTC)
+Received: from [10.110.37.174] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 62303C433C8;
+        Tue, 16 Jun 2020 04:21:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 62303C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v2 4/6] regulator: Add support for QCOM PMIC VBUS booster
+To:     Randy Dunlap <rdunlap@infradead.org>, robh+dt@kernel.org,
+        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        mark.rutland@arm.com, broonie@kernel.org, lgirdwood@gmail.com,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        lijun.kernel@gmail.com, jackp@codeaurora.org,
+        bryan.odonoghue@linaro.org
+References: <20200612231918.8001-1-wcheng@codeaurora.org>
+ <20200612231918.8001-5-wcheng@codeaurora.org>
+ <6d23c903-abec-e2f8-1e63-c062211748c3@infradead.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <b8fe3da7-4494-7d7e-f5f1-f94826ebb831@codeaurora.org>
+Date:   Mon, 15 Jun 2020 21:21:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <6d23c903-abec-e2f8-1e63-c062211748c3@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX I2C binding to DT schema format using json-schema,
-some improvements applied, such as update example based on latest DT
-file, add more compatible for existing SoCs, and remove unnecessary
-common property "pinctrl".
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- remove 'clock-frequency' property's type and use enum for it, ONLY support 100KHz/400KHz.
-	- remove *-gpios's typs/description, since it is already defined in i2c-gpio.yaml.
-	- fix space issue in example.
----
- Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ----------
- Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 103 +++++++++++++++++++++
- 2 files changed, 103 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-deleted file mode 100644
-index b967544..0000000
---- a/Documentation/devicetree/bindings/i2c/i2c-imx.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
--
--Required properties:
--- compatible :
--  - "fsl,imx1-i2c" for I2C compatible with the one integrated on i.MX1 SoC
--  - "fsl,imx21-i2c" for I2C compatible with the one integrated on i.MX21 SoC
--  - "fsl,vf610-i2c" for I2C compatible with the one integrated on Vybrid vf610 SoC
--- reg : Should contain I2C/HS-I2C registers location and length
--- interrupts : Should contain I2C/HS-I2C interrupt
--- clocks : Should contain the I2C/HS-I2C clock specifier
--
--Optional properties:
--- clock-frequency : Constains desired I2C/HS-I2C bus clock frequency in Hz.
--  The absence of the property indicates the default frequency 100 kHz.
--- dmas: A list of two dma specifiers, one for each entry in dma-names.
--- dma-names: should contain "tx" and "rx".
--- scl-gpios: specify the gpio related to SCL pin
--- sda-gpios: specify the gpio related to SDA pin
--- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
--  bus recovery, call it "gpio" state
--
--Examples:
--
--i2c@83fc4000 { /* I2C2 on i.MX51 */
--	compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
--	reg = <0x83fc4000 0x4000>;
--	interrupts = <63>;
--};
--
--i2c@70038000 { /* HS-I2C on i.MX51 */
--	compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
--	reg = <0x70038000 0x4000>;
--	interrupts = <64>;
--	clock-frequency = <400000>;
--};
--
--i2c0: i2c@40066000 { /* i2c0 on vf610 */
--	compatible = "fsl,vf610-i2c";
--	reg = <0x40066000 0x1000>;
--	interrupts =<0 71 0x04>;
--	dmas = <&edma0 0 50>,
--		<&edma0 0 51>;
--	dma-names = "rx","tx";
--	pinctrl-names = "default", "gpio";
--	pinctrl-0 = <&pinctrl_i2c1>;
--	pinctrl-1 = <&pinctrl_i2c1_gpio>;
--	scl-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
--	sda-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
--};
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-new file mode 100644
-index 0000000..869f2ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/i2c-imx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
-+
-+maintainers:
-+  - Wolfram Sang <wolfram@the-dreams.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: fsl,imx1-i2c
-+      - const: fsl,imx21-i2c
-+      - const: fsl,vf610-i2c
-+      - items:
-+          - const: fsl,imx35-i2c
-+          - const: fsl,imx1-i2c
-+      - items:
-+          - enum:
-+            - fsl,imx25-i2c
-+            - fsl,imx27-i2c
-+            - fsl,imx31-i2c
-+            - fsl,imx50-i2c
-+            - fsl,imx51-i2c
-+            - fsl,imx53-i2c
-+            - fsl,imx6q-i2c
-+            - fsl,imx6sl-i2c
-+            - fsl,imx6sx-i2c
-+            - fsl,imx6sll-i2c
-+            - fsl,imx6ul-i2c
-+            - fsl,imx7s-i2c
-+            - fsl,imx8mq-i2c
-+            - fsl,imx8mm-i2c
-+            - fsl,imx8mn-i2c
-+            - fsl,imx8mp-i2c
-+          - const: fsl,imx21-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: ipg
-+
-+  clock-frequency:
-+    enum: [ 100000, 400000 ]
-+
-+  dmas:
-+    items:
-+      - description: DMA controller phandle and request line for RX
-+      - description: DMA controller phandle and request line for TX
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+  sda-gpios:
-+    maxItems: 1
-+
-+  scl-gpios:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx5-clock.h>
-+    #include <dt-bindings/clock/vf610-clock.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    i2c@83fc4000 {
-+        compatible = "fsl,imx51-i2c", "fsl,imx21-i2c";
-+        reg = <0x83fc4000 0x4000>;
-+        interrupts = <63>;
-+        clocks = <&clks IMX5_CLK_I2C2_GATE>;
-+    };
-+
-+    i2c@40066000 {
-+        compatible = "fsl,vf610-i2c";
-+        reg = <0x40066000 0x1000>;
-+        interrupts = <71 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clks VF610_CLK_I2C0>;
-+        clock-names = "ipg";
-+        dmas = <&edma0 0 50>,
-+               <&edma0 0 51>;
-+        dma-names = "rx", "tx";
-+    };
+On 6/12/2020 8:28 PM, Randy Dunlap wrote:
+> On 6/12/20 4:19 PM, Wesley Cheng wrote:
+>> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+>> index 074a2ef55943..f9165f9f9051 100644
+>> --- a/drivers/regulator/Kconfig
+>> +++ b/drivers/regulator/Kconfig
+>> @@ -797,6 +797,16 @@ config REGULATOR_QCOM_SPMI
+>>  	  Qualcomm SPMI PMICs as a module. The module will be named
+>>  	  "qcom_spmi-regulator".
+>>  
+>> +config REGULATOR_QCOM_USB_VBUS
+>> +	tristate "Qualcomm USB Vbus regulator driver"
+>> +	depends on SPMI || COMPILE_TEST
+>> +	help
+>> +	  If you say yes to this option, support will be included for the
+>> +	  regulator used to enable the VBUS output.
+>> +
+>> +	  Say M here if you want to include support for enabling the VBUS output
+>> +	  as a module. The module will be named "qcom_usb-regulator".
+> 
+> Hi,
+> Shouldn't that module name match what is in the Makefile?
+> 
+> 
+
+Thanks, Randy.  Missed this as I was going back and forth on the file
+name.  Thanks for the catch.
+
+>> +
+>>  config REGULATOR_RC5T583
+>>  	tristate "RICOH RC5T583 Power regulators"
+>>  	depends on MFD_RC5T583
+>> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+>> index c0d6b96ebd78..cbab28aa7b56 100644
+>> --- a/drivers/regulator/Makefile
+>> +++ b/drivers/regulator/Makefile
+>> @@ -89,6 +89,7 @@ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+>>  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+>>  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+>>  obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
+>> +obj-$(CONFIG_REGULATOR_QCOM_USB_VBUS) += qcom_usb_vbus-regulator.o
+>>  obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+>>  obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
+>>  obj-$(CONFIG_REGULATOR_PV88060) += pv88060-regulator.o
+> 
+> 
+> thanks.
+> 
+
 -- 
-2.7.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
