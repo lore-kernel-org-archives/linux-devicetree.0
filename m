@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A21C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601FAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D55206D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453F5206F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgFPBLc (ORCPT
+        id S1726771AbgFPBM0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:11:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
+        Mon, 15 Jun 2020 21:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgFPBLc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 21:11:32 -0400
+        with ESMTP id S1726564AbgFPBM0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 21:12:26 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BC2C061A0E;
-        Mon, 15 Jun 2020 18:11:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BACC061A0E;
+        Mon, 15 Jun 2020 18:12:26 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AE61E12322A03;
-        Mon, 15 Jun 2020 18:11:30 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:11:29 -0700 (PDT)
-Message-Id: <20200615.181129.570239999533845176.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D78D91235822C;
+        Mon, 15 Jun 2020 18:12:25 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:12:25 -0700 (PDT)
+Message-Id: <20200615.181225.2016760272076151342.davem@davemloft.net>
 To:     heiko@sntech.de
 Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
         f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
@@ -40,42 +40,23 @@ Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
 Subject: Re: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a
  helper
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200615144501.1140870-1-heiko@sntech.de>
+In-Reply-To: <20200615.181129.570239999533845176.davem@davemloft.net>
 References: <20200615144501.1140870-1-heiko@sntech.de>
+        <20200615.181129.570239999533845176.davem@davemloft.net>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 18:11:31 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 18:12:26 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko@sntech.de>
-Date: Mon, 15 Jun 2020 16:44:59 +0200
+From: David Miller <davem@davemloft.net>
+Date: Mon, 15 Jun 2020 18:11:29 -0700 (PDT)
 
->  static int vsc8584_probe(struct phy_device *phydev)
->  {
->  	struct vsc8531_private *vsc8531;
-> +	int rc;
->  	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
->  	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
->  	   VSC8531_DUPLEX_COLLISION};
-> @@ -2005,32 +2015,24 @@ static int vsc8584_probe(struct phy_device *phydev)
->  		return -ENOTSUPP;
->  	}
->  
-> -	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
-> -	if (!vsc8531)
-> -		return -ENOMEM;
+> Because you removed this devm_kzalloc() code, vsc8531 is never initialized.
 
-Because you removed this devm_kzalloc() code, vsc8531 is never initialized.
-
-> +	return devm_phy_package_join(&phydev->mdio.dev, phydev,
-> +				     vsc8531->base_addr, 0);
-
-But it is still dereferenced here.
-
-Did the compiler really not warn you about this when you test built
-these changes?
+You also need to provide a proper header posting when you repost this series
+after fixing this bug.
