@@ -2,68 +2,79 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70214C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 21:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536D22082E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 21:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB695208B8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592345110;
+	bh=9bH3nkbMis+3M+lEU06ECFeAOUKxNtoZ5l6kTuWtHJ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=tQqjPQP/n/6foYaf7ai98wI7+Iq6onBGAjwe6+7yUBZnzfINupr+wTYOpcrch6gBP
+	 BMN6u8sBGwK0w5z1qcpRZ9sFkLD/pIcb+JEsahhKN2II01vBIz+TKOSV9aWEJ5aY6p
+	 HXl8MmmOn5Hz1+8dUQSMlN7A8owlQGjlS2npBnP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgFPVzO (ORCPT
+        id S1726541AbgFPWFH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:55:14 -0400
-Received: from v6.sk ([167.172.42.174]:48430 "EHLO v6.sk"
+        Tue, 16 Jun 2020 18:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgFPVzO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:55:14 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 98D7161634;
-        Tue, 16 Jun 2020 21:54:42 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 2/3] dt-bindings: phy: Allow BSD licensing of marvell,mmp3-hsic-phy.yaml
-Date:   Tue, 16 Jun 2020 23:54:34 +0200
-Message-Id: <20200616215435.987899-3-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616215435.987899-1-lkundrak@v3.sk>
-References: <20200616215435.987899-1-lkundrak@v3.sk>
+        id S1725790AbgFPWFG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:05:06 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70AC520739;
+        Tue, 16 Jun 2020 22:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592345105;
+        bh=9bH3nkbMis+3M+lEU06ECFeAOUKxNtoZ5l6kTuWtHJ4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NjFR2rOLvjf1Fl8aIw/KJ8pg7rdNAzn+ldbAARieoWv6tfX23tuZTCAG/lBok9e3H
+         sgtWezY0YeOjBEX/eyBS6rW1QM7IkGdvUIF4plMokntwY7lOSSWG+ay7TIm9Hv/iwb
+         tGfciR+AzZ5vTi9M3+jj17AmDOmEqBbHiBZRS5ps=
+Date:   Tue, 16 Jun 2020 17:05:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 03/12] dt-bindings: PCI: Add bindings for more Brcmstb
+ chips
+Message-ID: <20200616220504.GA1983902@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616205533.3513-4-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I wrote this binding and I'm fine with it being GPL + BSD dual-licensed,
-as is recommended for new DT bindings.
+On Tue, Jun 16, 2020 at 04:55:10PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+>   7211 (STB version of RPi4).
+> - add new property 'brcm,scb-sizes'
+> - add new property 'resets'
+> - add new property 'reset-names' for 7216 only
+> - allow 'ranges' and 'dma-ranges' to have more than one item and update
+>   the example to show this.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Rob Herring <robh@kernel.org>
-
----
-Changes since v2:
-- Add Rob's ack
-
- .../devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml          | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-index 30e290c579308..ff255aa4cc103 100644
---- a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
- # Copyright 2019 Lubomir Rintel <lkundrak@v3.sk>
- %YAML 1.2
- ---
--- 
-2.26.2
-
+Capitalize and add periods to the list items consistently.
