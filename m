@@ -2,114 +2,90 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8BFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686D4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FE120739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4650920739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FQSvnTVB"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qhD/lWgk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgFPB1R (ORCPT
+        id S1726447AbgFPBvn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54866 "EHLO
+        Mon, 15 Jun 2020 21:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgFPB1Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 21:27:16 -0400
+        with ESMTP id S1725747AbgFPBvn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 21:51:43 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FA5C061A0E;
-        Mon, 15 Jun 2020 18:27:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DABCC061A0E
+        for <devicetree@vger.kernel.org>; Mon, 15 Jun 2020 18:51:43 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 49F82F9;
-        Tue, 16 Jun 2020 03:27:14 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B4763F9;
+        Tue, 16 Jun 2020 03:51:41 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592270834;
-        bh=yVhdm4SmO3wkXqvKwAY69etuikCBZKRYuD4KmrUh1q0=;
+        s=mail; t=1592272301;
+        bh=peS4/uh5rv4eTufOqf33S/epmbRDzQUT067NfhNk4Dg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FQSvnTVBX3f5SqO3sC1FJmr87CZEgDB2GeYpJ6t1MWr7iPx3WCHsMIeMWAHX5JZcI
-         pOrrNnySCtO4QjgIPkebFxXT7BA54jdQ6PDbGpZsuuJ9yLFv1kNM3GFqVsnb47mXX7
-         O3+D9HQC4H79Ays/zPN9+DcJXivDaescPY1p2scA=
-Date:   Tue, 16 Jun 2020 04:26:52 +0300
+        b=qhD/lWgk8GRGpn0jQBo39ZH0IPDl9X7KKSAmNtTy78Rm7iG4AIYGQtjCyK3e0ym/+
+         d3pxV7r/+jUFiu5TSKPOGAnmOjv/TxGX20OIvBXxR/E5LyuJ6It99h5lghpyao/Lr7
+         0M7f5YRhZi0gc5fHakResb6lQC3l+t85cgo+9pk4=
+Date:   Tue, 16 Jun 2020 04:51:19 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/6] drm/of: Make drm_of_find_panel_or_bridge() to
- check graph's presence
-Message-ID: <20200616012652.GG1629@pendragon.ideasonboard.com>
-References: <20200614172234.8856-1-digetx@gmail.com>
- <20200614172234.8856-3-digetx@gmail.com>
+To:     Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     devicetree@vger.kernel.org, jason@lakedaemon.net, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
+        tomi.valkeinen@ti.com, kernel@collabora.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 5/5] dt-bindings: display: ti,tfp410.yaml: make the
+ ports node optional
+Message-ID: <20200616015119.GI1629@pendragon.ideasonboard.com>
+References: <20200611102356.31563-1-ricardo.canuelo@collabora.com>
+ <20200611102356.31563-6-ricardo.canuelo@collabora.com>
+ <20200611160817.GA6031@pendragon.ideasonboard.com>
+ <8ad9a397a5fa6cebd2a4e0170dfa96ad73907faf.camel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200614172234.8856-3-digetx@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ad9a397a5fa6cebd2a4e0170dfa96ad73907faf.camel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hi Ricardo,
 
-Thank you for the patch.
-
-On Sun, Jun 14, 2020 at 08:22:30PM +0300, Dmitry Osipenko wrote:
-> When graph isn't defined in a device-tree, the of_graph_get_remote_node()
-> prints a noisy error message, telling that port node is not found. This is
-> undesirable behaviour in our case because absence of a panel/bridge graph
-> is a valid case. Let's check presence of the local port in a device-tree
-> before proceeding with parsing the graph.
+On Mon, Jun 15, 2020 at 11:38:07AM +0200, Ricardo Cañuelo wrote:
+> On Thu, 2020-06-11 at 19:08 +0300, Laurent Pinchart wrote:
+> > On Thu, Jun 11, 2020 at 12:23:56PM +0200, Ricardo Cañuelo wrote:
+> > > Make the ports node optional, since there are some DTs that don't define
+> > > any ports for ti,tfp410.
+> > > 
+> > > Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+> > 
+> > Shouldn't we fix those DTs instead ? What's the point of a TFP410
+> > without ports in DT ?
 > 
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/gpu/drm/drm_of.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> This comes from the discussion in the previous version of this series.
 > 
-> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-> index b50b44e76279..e0652c38f357 100644
-> --- a/drivers/gpu/drm/drm_of.c
-> +++ b/drivers/gpu/drm/drm_of.c
-> @@ -239,13 +239,24 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
->  				struct drm_bridge **bridge)
->  {
->  	int ret = -EPROBE_DEFER;
-> -	struct device_node *remote;
-> +	struct device_node *local, *remote;
->  
->  	if (!panel && !bridge)
->  		return -EINVAL;
->  	if (panel)
->  		*panel = NULL;
->  
-> +	/*
-> +	 * of_graph_get_remote_node() produces a noisy error message if port
-> +	 * node isn't found and the absence of the port is a legit case here,
-> +	 * so at first we silently check presence of the local port.
-> +	 */
-> +	local = of_graph_get_local_port(np);
-> +	if (!local)
-> +		return -ENODEV;
-> +
-> +	of_node_put(local);
-> +
+> In the DTs that don't define any ports (it's dove-sbc-a510.dts only, actually)
+> it's not clear how to define the ports (I'm not familiar with this board).
+> Initially I defined a set of empty ports just to comply with the binding
+> requirements, but Rob suggested that we might as well declare them as optional,
+> since having an empty port definition with no remote endpoints is no better than
+> having no ports at all.
+> 
+> I understand both opinions but I just don't know which is the best option at
+> this point.
 
-The code looks fine, but you may want to take into account my proposal
-in 1/7 to instead create a of_graph_has_port() function. The could would
-be simpler here.
-
->  	remote = of_graph_get_remote_node(np, port, endpoint);
->  	if (!remote)
->  		return -ENODEV;
+How about keeping the ports mandatory, and leaving dove-sbc-a510.dts to
+be fixed later ?
 
 -- 
 Regards,
