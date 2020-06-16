@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A15C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A57C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853F520E65
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A22920B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="KzmWBsLy"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="sqZtwnwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgFPMSU (ORCPT
+        id S1728982AbgFPMST (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
+        Tue, 16 Jun 2020 08:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728751AbgFPMR2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 08:17:28 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B84C08C5C3
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:28 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n2so8300300pld.13
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:28 -0700 (PDT)
+        with ESMTP id S1728750AbgFPMRd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 08:17:33 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE198C08C5C6
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:32 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k2so1359048pjs.2
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BJ9zmkSGiRc0Ox6+pRK/p41cAOxjrOMSE4GBWh4e2nA=;
-        b=KzmWBsLyrtRflUXX/4QUXLtW0xoZRVMzE6WqoqeCj9rvHhboH4mpNqEUQwemXpfJ5P
-         zRz8Hfy49epMaaPMcTSVb3nJ9COZbfAVgdnlkG2QzRTePs1Vu9SCCRXKCXJisCc23dIc
-         4GDMDZJStGFgU+gQfYwLi34OmyOyA2gdby97o=
+        bh=3QNIUikvD5iyxTHk1gYVBrR3ob0+R8+y+UhbZ9LC4HI=;
+        b=sqZtwnwS2+hl5HB/Mtw0ss6MLDu3pD5SAEXhwXuKc6aC9vARfDQdEN0CUoXI/7yvYD
+         Ccb0NnHubg8xNdj0m7nhkSA4x/3EgrgoCWpfekQUS0sNLEMmxLroGM85ztzkKVaNV0TX
+         sV+C8/Ce5iG2ZZOTrWkG5T7/QVFkFT/0xetmc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BJ9zmkSGiRc0Ox6+pRK/p41cAOxjrOMSE4GBWh4e2nA=;
-        b=Dq32hlL+Zge291F2IuxdGZvqdPXJIQEIBbHRKSJUcs6A4TVat1V+gn52ThpA3oUgBL
-         MAxHpFXsSXQnX5drmub5yqCogI1980e/OAMiAz4GeO2HTJ9jQCcopfPMWqKw2tHpmev3
-         D2RAXpH6E1iUfGPHymLdRdtmzso5nuGIvDmJJk2Znrh4qoDXQNxFEEpWxRJWe7DzEG3z
-         +XMid5yjBIrnDcV6hr2/r3XSW/DIGZhCUMFIpuxeObDKBU8VnvIt2ctfbJDGtU8+ZcnR
-         Wv4w6Mez2NOsOOuB4O1mZs+J8XrMkjN6xUxz9uPtcIRw2NwL7Jpf+9qJQQzQXmhcvtub
-         6AGQ==
-X-Gm-Message-State: AOAM5313b6rDB6EvlpQWkRyqk0fS34w8dkGjL+rCTzY6I725VHNFuDvM
-        s0N0mRxW7+a3uwG3ToSvOMd4rByph0E=
-X-Google-Smtp-Source: ABdhPJy9kQPlGP5pMTXQtzWTqqIdiaj6kCIdrlt0fhTqMmsXUccVucFaZuqu8O9Gc3DZ6FeV5o1ywQ==
-X-Received: by 2002:a17:90b:46cf:: with SMTP id jx15mr2520556pjb.121.1592309847849;
-        Tue, 16 Jun 2020 05:17:27 -0700 (PDT)
+        bh=3QNIUikvD5iyxTHk1gYVBrR3ob0+R8+y+UhbZ9LC4HI=;
+        b=tHbuxlXxE9Ebnr38cNE0RUZ53P2EUkbkklZMGK2HvF8hctvb48jMD8WMs8FF3KsgmP
+         7IxvOHNe7CqeuSmaSLwKWf1PPXOCWEMxUORdfHsiHCneAypNCgpCRaK1E2QJGQmbXdDx
+         ftlUHYvsHQgH+btut17ubrX5v3R/HwgJmMMksR8W9dIpz2uVHq4lC3DDGFnpc6dxkngg
+         2C5g1od7KYyIJr3fPzoFJgwEmhwUsAHBxlZ9CCmb/WQVXeF5c1wChv3nxAMSNevuRLdf
+         9qxcxw8b6khcrIYNLAjaQ1fEg9uzd89ORSVpYksFPSncfPZSXyzMrQCJ4grUWDwQrQD9
+         x9CQ==
+X-Gm-Message-State: AOAM533mpo9XTGuG0M3SuIzcDGy6MJCXqOWz/kME29YEfKdhmekoKdqL
+        NBq3EQ2bzY3SMflSPQUIxBGtMA==
+X-Google-Smtp-Source: ABdhPJxkj1vvamQcbIq+GbZ7IKqORIqDltS0mXIbcsskYSDbh4JsuwGjaXSV6NAfNX1aQkC3UrPE8w==
+X-Received: by 2002:a17:90a:bf14:: with SMTP id c20mr2584276pjs.228.1592309852364;
+        Tue, 16 Jun 2020 05:17:32 -0700 (PDT)
 Received: from shiro.work (p1285116-ipngn200805sizuokaden.shizuoka.ocn.ne.jp. [114.171.61.116])
-        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.25
+        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:17:27 -0700 (PDT)
+        Tue, 16 Jun 2020 05:17:31 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v4 08/12] ARM: mstar: Add Armv7 base dtsi
-Date:   Tue, 16 Jun 2020 21:15:21 +0900
-Message-Id: <20200616121525.1409790-9-daniel@0x0f.com>
+Subject: [PATCH v4 10/12] ARM: mstar: Add mercury5 series dtsis
+Date:   Tue, 16 Jun 2020 21:15:23 +0900
+Message-Id: <20200616121525.1409790-11-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200616121525.1409790-1-daniel@0x0f.com>
 References: <20200612130032.3905240-2-daniel@0x0f.com>
@@ -73,119 +73,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds initial dtsi for the base MStar/Sigmastar Armv7 SoCs.
-
-These SoCs have very similar memory maps and this will avoid
-duplicating nodes across multiple dtsis.
+This adds a family level dtsi for the mercury5 and then a
+chip level dtsi for the ssc8336n chip.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- MAINTAINERS                     |  1 +
- arch/arm/boot/dts/mstar-v7.dtsi | 83 +++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
- create mode 100644 arch/arm/boot/dts/mstar-v7.dtsi
+ MAINTAINERS                              |  1 +
+ arch/arm/boot/dts/mercury5-ssc8336n.dtsi | 14 ++++++++++++++
+ arch/arm/boot/dts/mercury5.dtsi          |  7 +++++++
+ 3 files changed, 22 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mercury5-ssc8336n.dtsi
+ create mode 100644 arch/arm/boot/dts/mercury5.dtsi
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 3d31bc749f6d..54a2fc60a1d9 100644
+index 8c152e29877d..f0a2b7b3c0b6 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2123,6 +2123,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
+@@ -2124,6 +2124,7 @@ S:	Maintained
  W:	http://linux-chenxing.org/
  F:	Documentation/devicetree/bindings/arm/mstar.yaml
-+F:	arch/arm/boot/dts/mstar-v7.dtsi
+ F:	arch/arm/boot/dts/infinity*.dtsi
++F:	arch/arm/boot/dts/mercury*.dtsi
+ F:	arch/arm/boot/dts/mstar-v7.dtsi
  F:	arch/arm/mach-mstar/
  
- ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
-diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
+diff --git a/arch/arm/boot/dts/mercury5-ssc8336n.dtsi b/arch/arm/boot/dts/mercury5-ssc8336n.dtsi
 new file mode 100644
-index 000000000000..3b99bb435bb5
+index 000000000000..7d4a4630c25c
 --- /dev/null
-+++ b/arch/arm/boot/dts/mstar-v7.dtsi
-@@ -0,0 +1,83 @@
++++ b/arch/arm/boot/dts/mercury5-ssc8336n.dtsi
+@@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
 + * Copyright (c) 2020 thingy.jp.
 + * Author: Daniel Palmer <daniel@thingy.jp>
 + */
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "mercury5.dtsi"
 +
 +/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+	};
-+
-+	arch_timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2)
-+				| IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2)
-+				| IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2)
-+				| IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2)
-+				| IRQ_TYPE_LEVEL_LOW)>;
-+		/*
-+		 * we shouldn't need this but the vendor
-+		 * u-boot is broken
-+		 */
-+		clock-frequency = <6000000>;
-+	};
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x16001000 0x16001000 0x00007000>,
-+			 <0x1f000000 0x1f000000 0x00400000>;
-+
-+		gic: interrupt-controller@16001000 {
-+			compatible = "arm,cortex-a7-gic";
-+			reg = <0x16001000 0x1000>,
-+			      <0x16002000 0x2000>,
-+			      <0x16004000 0x2000>,
-+			      <0x16006000 0x2000>;
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2)
-+					| IRQ_TYPE_LEVEL_LOW)>;
-+		};
-+
-+		riu: bus@1f000000 {
-+			compatible = "simple-bus";
-+			reg = <0x1f000000 0x00400000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1f000000 0x00400000>;
-+
-+			l3bridge: l3bridge@204400 {
-+				compatible = "mstar,l3bridge";
-+				reg = <0x204400 0x200>;
-+			};
-+
-+			pm_uart: uart@221000 {
-+				compatible = "ns16550a";
-+				reg = <0x221000 0x100>;
-+				reg-shift = <3>;
-+				clock-frequency = <172000000>;
-+				status = "disabled";
-+			};
-+		};
++	memory@20000000 {
++		device_type = "memory";
++		reg = <0x20000000 0x4000000>;
 +	};
 +};
+diff --git a/arch/arm/boot/dts/mercury5.dtsi b/arch/arm/boot/dts/mercury5.dtsi
+new file mode 100644
+index 000000000000..f68e6d59c328
+--- /dev/null
++++ b/arch/arm/boot/dts/mercury5.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (c) 2020 thingy.jp.
++ * Author: Daniel Palmer <daniel@thingy.jp>
++ */
++
++#include "mstar-v7.dtsi"
 -- 
 2.27.0.rc0
 
