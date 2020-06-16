@@ -2,119 +2,146 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD91EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661F8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988D92071A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF832098B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X9LTNBZi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICJev4x2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgFPLPT (ORCPT
+        id S1727804AbgFPL2C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60516 "EHLO
+        Tue, 16 Jun 2020 07:28:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgFPLPQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 07:15:16 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CE3C08C5C4
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 04:15:14 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t7so9076862pgt.3
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 04:15:14 -0700 (PDT)
+        with ESMTP id S1725768AbgFPL2C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 07:28:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7218AC08C5C2;
+        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i12so1300787pju.3;
+        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=SgTOvbgxwA5VoaXVXVrIfLqGjYTA/hWr+DeE114p4Z8=;
-        b=X9LTNBZiXJJz9efMUp9iGtVr8fNdH3Q1LOojyeXv01dGysdbuy3KYNUUGT1uniXOUw
-         DjD9oOo8gHYvd5yg7NJnQUQpB+gjfjE6C0lTFbahQC+gzOd0JXwa/A41wgpLch45bIzZ
-         VJsNzKctIhTMbqLzq9G/apS+VOjcPgo72eD3s=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=C66Iy0udb87vhjoDYd71Ql6l2XA6eYACBYbwZNfMhzU=;
+        b=ICJev4x2OgJ6X7xmSzWcGWWwJAyPTOuhILDrFDfIxcor78l92hde85mv/ysyicxvef
+         iPNwenqBqzDbFYvb1JN0CUUfCD/bVIu8lN07+lYRk/zQ79/IhvUQXPkBOAMQHdCG5CLq
+         w5Sq6/CXDDYr0RG7p6vn79pM30Dl03IYtNXE4GfkD0tlZFOzpYLWUvcRW0T2WAK+H2/S
+         6dRw9Bh5DKve8/a1Nd85Gd7LTgTsOPUU1p2F6w3ozF/XkHf/bG/7J2lhs7lGUJtze0wc
+         f8CojXLI6JoBPREEVLMQjgXwOSuemXoDk4DjB7x7zXK9YgYMX8a87KK7rZeLaVKjY4Xk
+         I0ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=SgTOvbgxwA5VoaXVXVrIfLqGjYTA/hWr+DeE114p4Z8=;
-        b=alASrHiCAvDe3a56k8dgns1vteCbg7nR+Kt5jWXJFV3pYuJVEtpods2NngaZQV47Lb
-         w6lhM5naQ2KBRT9zk22/nG0Twyt+GTa/Nxv9TIcFrSyR+LhMiRCP7BsruKzr9a6l81u9
-         4ueXvWO2hPH4FSA8CwLdFX7WxSx0WdfMWjVXYGspfnt8XFbjyUqU/OPeGR+Ao435N4uz
-         lbinA6ue8x+9d7vXprVmmuxxMkm5DZc/7XlOkSAgUHry+U1gkyiHl88jdSmaJyI83bCw
-         FByynNasCzkFLFgycmajyCjr1XS0g0pLBizuiu4H5MIV/39DxdDCOEG8U9FSGLLhiMRv
-         fOJQ==
-X-Gm-Message-State: AOAM532sghgSo4aKBcQ+UsjD/UERqjNk01eZf71sCIhhPzOdy9eSnzsv
-        RibSqUN3UZq5ybAi/GWQ32AiXaqd9Yw=
-X-Google-Smtp-Source: ABdhPJydaKHWTiQS4tjTQ62P0i7l/8GnXMtSVp9/WiCYOl6NgtRjnVcqxnmh19tvXcq+VnLsQ8hwGw==
-X-Received: by 2002:a65:6703:: with SMTP id u3mr1653921pgf.179.1592306113834;
-        Tue, 16 Jun 2020 04:15:13 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 67sm13336068pga.44.2020.06.16.04.15.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 04:15:13 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200612015030.16072-2-tanmay@codeaurora.org>
-References: <20200612015030.16072-1-tanmay@codeaurora.org> <20200612015030.16072-2-tanmay@codeaurora.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        robdclark@gmail.com, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>, robh+dt@kernel.org,
-        sam@ravnborg.org
-Date:   Tue, 16 Jun 2020 04:15:12 -0700
-Message-ID: <159230611219.62212.8262135380349283774@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=C66Iy0udb87vhjoDYd71Ql6l2XA6eYACBYbwZNfMhzU=;
+        b=EdKzUrRfmbCbnmP49siiLiLPVE4Ex5tuQSJpIwaQKqb56z5lV3LOmNVz+jZ/OjMZll
+         Xs250XTMjceZ+YezbuNS6r05vPddbE4FPJZic6NbYG1riAAl+bEDre71qGoqAUs5SPtC
+         xVVvItWzj1YFNzBnJN6HmmzJRhrsFWpgLaPeRc0XrrAOtOZvG0a63gm7wqD17PIjkYaX
+         qmQdK4mh7nUTpp812OXl+QOqaS8Eg6AXEkxTdtSwG6yPW59auPni//4wFmBmNKMLU0KP
+         dlkueKLtgAEaJ4yOb7LWLek1sd1IX60i9qsUpDOhVttl8JH+ja4GZTQ7wkHYm9DpuLWJ
+         U8aw==
+X-Gm-Message-State: AOAM530Khz1/lnGEv1qJZP2OGElHGOq/4nqSmo5yojkF0ahUmjGYmYdy
+        swxaowYDbetV5BIAhsIDBcQ=
+X-Google-Smtp-Source: ABdhPJwaevj2Eg+de+5NM26vCPlyHzB6CcylDSU3H8uKvyfdS27T3gYBG5pWtcngruNnK1bLe2z5/A==
+X-Received: by 2002:a17:90a:c85:: with SMTP id v5mr2248738pja.114.1592306882003;
+        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
+Received: from localhost.localdomain ([101.12.205.96])
+        by smtp.gmail.com with ESMTPSA id b19sm16617701pft.74.2020.06.16.04.27.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 04:28:01 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     robh+dt@kernel.org, matthias.bgg@gmail.com
+Cc:     lee.jones@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360 PMIC
+Date:   Tue, 16 Jun 2020 19:27:56 +0800
+Message-Id: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tanmay Shah (2020-06-11 18:50:26)
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml=
- b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> new file mode 100644
-> index 000000000000..5fdb9153df00
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> @@ -0,0 +1,142 @@
-> +        data-lanes =3D <0 1>;
-> +
-> +        ports {
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <0>;
-> +
-> +            port@0 {
-> +                reg =3D <0>;
-> +                dp_in: endpoint {
-> +                    remote-endpoint =3D <&dpu_intf0_out>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg =3D <1>;
-> +                dp_out: endpoint {
+From: Gene Chen <gene_chen@richtek.com>
 
-Just curious what is eventually connected here? This is possibly a
-question for Rob Herring, but I can't figure out how we're supposed to
-connect this to the USB type-c connector that is receiving the DP
-signal. Does the type-c connector binding support connecting to this end
-of the graph? Or should this connect to the DP phy and then the phy
-connects to the USB type-c connector node? Right now it is empty which
-seems wrong.
+Add devicetree binding document support Mediatek MT6360 PMIC
 
-> +                };
-> +            };
-> +        };
-> +    };
+Signed-off-by: Gene Chen <gene_chen@richtek.com>
+---
+ Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/mt6360.txt b/Documentation/devicetree/bindings/mfd/mt6360.txt
+new file mode 100644
+index 0000000..e25b5c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/mt6360.txt
+@@ -0,0 +1,53 @@
++MediaTek MT6360 Multifunction Device Driver
++
++MT6360 is a multifunction device with the following sub modules:
++- ADC
++- Battery Charger/OTG boost
++- Flash LED/RGB LED/moonlight LED
++- 2-channel Buck
++- 6-channel LDO
++- USB_PD
++
++It is interfaced to host controller using I2C interface.
++This document describes the binding for MFD device and its sub module.
++
++Required properties:
++- compatible:	Must be "mediatek,mt6360_pmu"
++- reg:			Specifies the I2C slave address of PMIC block, Must be <0x34>
++- interrupts:	I2C device IRQ line connected to the main SoC.
++
++Optional subnodes:
++- ADC
++	Required properties:
++		- compatible: "mediatek,mt6360_adc"
++- battery charger/OTG boost
++	Required properties:
++		- compatible: "mediatek,mt6360_chg"
++- Flash LED/RGB LED/moonlight LED
++	Required properties:
++		- compatible: "mediatek,mt6360_led"
++- 2-channel Buck
++	Required properties:
++		- compatible: "mediatek,mt6360_pmic"
++- 6-channel LDO
++	Required properties:
++		- compatible: "mediatek,mt6360_ldo"
++- USB_PD
++	Required properties:
++		- compatible: "mediatek,mt6360_tcpc"
++
++Example:
++
++	#include <dt-bindings/usb/pd.h>
++
++	pmu: mt6360_pmu@34 {
++		status = "ok";
++		compatible = "mediatek,mt6360_pmu";
++		reg = <0x34>;
++		wakeup-source;
++		interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "IRQB";
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
+-- 
+2.7.4
+
