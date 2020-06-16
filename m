@@ -2,80 +2,262 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27095C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 20:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEDEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 20:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02642207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 20:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592339065;
-	bh=vq9MaBiMA1KgziPPPzEu+yXtjdr11f5SG3UPygJi278=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tLgewvxST5g8WBh9e7gO2mhudH1Ot9L3Qql2gHi2kyNvq3kmprK0qEutDFjzlx6+Y
-	 qUqwoZ97SqcwiUDfytc9CSt4QCeTsJHVk5v77XGh+D9TgyL7f4neU89hxI+EQaZVjM
-	 ZutKX4I8poDyS0ejZXFQxl+wnwDeDiZHGLSWd5BM=
+	by mail.kernel.org (Postfix) with ESMTP id A459C20776
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 20:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfKVNYLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbgFPUYY (ORCPT
+        id S1729804AbgFPUiw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgFPUYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:24:24 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 286572100A;
-        Tue, 16 Jun 2020 20:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592339063;
-        bh=vq9MaBiMA1KgziPPPzEu+yXtjdr11f5SG3UPygJi278=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6DLblw9BkOecaY/lF8ud4dHTdV1SdH4fTy6X5uN7UcZ6JaQKnXAlZl6XqTgARh4I
-         BqiyHh8eHrU+q3NaVM6dEG311LDdKC+QSgI6NY4VuJZObDi+wh3WUcxES3IPmufQhA
-         VxH+TmCPl3RuW98FDXg/VHGAHLG+wnG6h0PUYnTU=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-clk@vger.kernel.org
-Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
-Subject: [PATCH 3/3] clk: socfpga: agilex: mpu_l2ram_clk should be mpu_ccu_clk
-Date:   Tue, 16 Jun 2020 15:24:17 -0500
-Message-Id: <20200616202417.14376-3-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616202417.14376-1-dinguyen@kernel.org>
-References: <20200616202417.14376-1-dinguyen@kernel.org>
+        Tue, 16 Jun 2020 16:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgFPUiv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 16:38:51 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79546C06174E
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 13:38:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d8so8924199plo.12
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 13:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wpW7WQOPePDKMe4iZDKX0l11TokFWfmINzOLwuMIeCc=;
+        b=KfKVNYLiedCg1CnE06VLMC/PwK175OV5P5PHufSzCNh0nJ7KEXIUIU4wZkS/KMerT0
+         AbGvvBi0Yh6Yrxp20lOX+VF9h0OFkiXx2H7Xd1XbC6EX2nRfu36kfoVOpqEKG1vXwVl8
+         uKWii7dd1i8zzTsxssgv8F7xVl/wDR61ycV7k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wpW7WQOPePDKMe4iZDKX0l11TokFWfmINzOLwuMIeCc=;
+        b=L5nLsJIjOyeq4eOz6eA+huPIVQCOHUvNAPUT4gypT+LGQCONFWTQZl+37XomDQMwto
+         bBZiQ0cc951zGB8LUlRW40HoCICFJH1SEyitSRT/zT0e7ooBcy+WzCYDmCl017ewVFWg
+         wND9iyIKyGBbdtaWUttML5jVBS9/rU+c1uGKNUZxbhgIk2U42riye4zsCus0x9PNrilH
+         1hRxmoEcMzxuLIGBRmgljpI/NhkagKZ+cBZo6KXaVwezoQ2ELgJV/J9X3d1yURjA5tPL
+         OtKzXBEHI5eWbtDfy7yBtOFDzMig4M47zYTNYLU9sN9ga29AnArnZ8MletsFRFy2zLa7
+         bMGw==
+X-Gm-Message-State: AOAM532oIacA1czHluHC0ojqvsJQVq7AfRpdHDCQqGQZjcoVSrVP0nRg
+        yWERumMFcGQTnGoQLSJkr9Ybiw==
+X-Google-Smtp-Source: ABdhPJwY/p64B3ltGSHrZiAknPCYjQKtsT/wlseuFxUfBLRtgL2hch0z3uFzCPdDbvEx7sCnip96AQ==
+X-Received: by 2002:a17:902:9f90:: with SMTP id g16mr3672533plq.146.1592339930938;
+        Tue, 16 Jun 2020 13:38:50 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id t22sm3187788pjy.32.2020.06.16.13.38.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 13:38:50 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:38:49 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200616203849.GY4525@google.com>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
+ <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+ <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
+ <20200615194239.GW4525@google.com>
+ <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Preliminary documentation documented the mpu_l2ram_clk, but since then,
-the mpu_l2ram_clk is no longer documented. It's now referred to as
-mpu_ccu_clk.
+On Tue, Jun 16, 2020 at 10:22:47AM +0530, Sandeep Maheswaram (Temp) wrote:
+> 
+> On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
+> > On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
+> > > Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
+> > > > On 6/3/2020 11:06 PM, Stephen Boyd wrote:
+> > > > > Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+> > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > index 1dfd024..d33ae86 100644
+> > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+> > > > > >           return 0;
+> > > > > >    }
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+> > > > > > + * @qcom:                      Pointer to the concerned usb core.
+> > > > > > + *
+> > > > > > + */
+> > > > > > +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> > > > > > +{
+> > > > > > +       struct device *dev = qcom->dev;
+> > > > > > +       int ret;
+> > > > > > +
+> > > > > > +       if (!device_is_bound(&qcom->dwc3->dev))
+> > > > > > +               return -EPROBE_DEFER;
+> > > > > How is this supposed to work? I see that this was added in an earlier
+> > > > > revision of this patch series but there isn't any mention of why
+> > > > > device_is_bound() is used here. It would be great if there was a comment
+> > > > > detailing why this is necessary. It sounds like maximum_speed is
+> > > > > important?
+> > > > > 
+> > > > > Furthermore, dwc3_qcom_interconnect_init() is called by
+> > > > > dwc3_qcom_probe() which is the function that registers the device for
+> > > > > qcom->dwc3->dev. If that device doesn't probe between the time it is
+> > > > > registered by dwc3_qcom_probe() and this function is called then we'll
+> > > > > fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+> > > > > qcom->dwc3->dev device from the platform bus because we call
+> > > > > of_platform_depopulate() on the error path of dwc3_qcom_probe().
+> > > > > 
+> > > > > So isn't this whole thing racy and can potentially lead us to a driver
+> > > > > probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+> > > > > and we're trying to time it just right so that driver for dwc3 binds
+> > > > > before we setup interconnects? I don't know if dwc3 can communicate to
+> > > > > the wrapper but that would be more of a direct way to do this. Or maybe
+> > > > > the wrapper should try to read the DT property for maximum speed and
+> > > > > fallback to a worst case high bandwidth value if it can't figure it out
+> > > > > itself without help from dwc3 core.
+> > > > > 
+> > > > This was added in V4 to address comments from Matthias in V3
+> > > > 
+> > > > https://patchwork.kernel.org/patch/11148587/
+> > > > 
+> > > Yes, that why I said:
+> > > 
+> > > "I see that this was added in an earlier
+> > >   revision of this patch series but there isn't any mention of why
+> > >   device_is_bound() is used here. It would be great if there was a comment
+> > >   detailing why this is necessary. It sounds like maximum_speed is
+> > >   important?"
+> > > 
+> > > Can you please respond to the rest of my email?
+> > I agree with Stephen that using device_is_bound() isn't a good option
+> > in this case, when I suggested it I wasn't looking at the big picture
+> > of how probing the core driver is triggered, sorry about that.
+> > 
+> > Reading the speed from the DT with usb_get_maximum_speed() as Stephen
+> > suggests would be an option, the inconvenient is that we then
+> > essentially require the property to be defined, while the core driver
+> > gets a suitable value from hardware registers. Not sure if the wrapper
+> > driver could read from the same registers.
+> > 
+> > One option could be to poll device_is_bound() for 100 ms (or so), with
+> > sleeps between polls. It's not elegant but would probably work if we
+> > don't find a better solution.
+> if (np)
+>         ret = dwc3_qcom_of_register_core(pdev);
+>     else
+>         ret = dwc3_qcom_acpi_register_core(pdev);
+> 
+>     if (ret) {
+>         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+>         goto depopulate;
+>     }
+> 
+>     ret = dwc3_qcom_interconnect_init(qcom);
+>     if (ret)
+>         goto depopulate;
+> 
+>     qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+> 
+> Before calling dwc3_qcom_interconnect_init we are checking
+> 
+>     if (ret) {
+>         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
+>         goto depopulate;
+>     }
+> 
+> Doesn't  this condition confirm the core driver is probed?
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
- drivers/clk/socfpga/clk-agilex.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Not really:
 
-diff --git a/drivers/clk/socfpga/clk-agilex.c b/drivers/clk/socfpga/clk-agilex.c
-index 1b2e0ad01b24..8fb12cbe0208 100644
---- a/drivers/clk/socfpga/clk-agilex.c
-+++ b/drivers/clk/socfpga/clk-agilex.c
-@@ -252,7 +252,7 @@ static const struct stratix10_gate_clock agilex_gate_clks[] = {
- 	  0, 0, 0, 0, 0x30, 0, 0},
- 	{ AGILEX_MPU_PERIPH_CLK, "mpu_periph_clk", "mpu_clk", NULL, 1, 0, 0x24,
- 	  0, 0, 0, 0, 0, 0, 4},
--	{ AGILEX_MPU_L2RAM_CLK, "mpu_l2ram_clk", "mpu_clk", NULL, 1, 0, 0x24,
-+	{ AGILEX_MPU_CCU_CLK, "mpu_ccu_clk", "mpu_clk", NULL, 1, 0, 0x24,
- 	  0, 0, 0, 0, 0, 0, 2},
- 	{ AGILEX_L4_MAIN_CLK, "l4_main_clk", "noc_clk", NULL, 1, 0, 0x24,
- 	  1, 0x44, 0, 2, 0, 0, 0},
--- 
-2.17.1
+// called under the hood by of_platform_populate()
+static int really_probe(struct device *dev, struct device_driver *drv)
+{
+	...
 
+	if (dev->bus->probe) {
+		ret = dev->bus->probe(dev);
+		if (ret)
+			goto probe_failed;
+	} else if (drv->probe) {
+		ret = drv->probe(dev);
+	        if (ret)
+	       		goto probe_failed;
+        }
+
+	...
+
+probe_failed:
+	...
+
+	/*
+         * Ignore errors returned by ->probe so that the next driver can try
+         * its luck.
+         */
+        ret = 0;
+
+	...
+
+	return ret;
+}
+
+As a result of_platform_populate() in dwc3_qcom_of_register_core()
+returns 0 even when probing the device failed:
+
+[    0.244339] dwc3-qcom a6f8800.usb: DBG: populate
+[    0.244772] dwc3 a600000.dwc3: DBG: dwc3_probe
+[    0.245237] dwc3 a600000.dwc3: DBG: dwc3_probe err: -517
+[    0.245264] dwc3-qcom a6f8800.usb: DBG: populate (done)
+[    0.245317] dwc3-qcom a6f8800.usb: DBG: dwc3_qcom_interconnect_init() failed: -517
+
+Probe fails because the interconnect stuff isn't ready yet, otherwise
+it could access invalid data.
+
+A later _populate() is successful and the probing of the core is done
+synchronously, i.e. after _populate() the core driver is fully
+initialized:
+
+[    3.898106] dwc3-qcom a6f8800.usb: DBG: populate
+[    3.908356] dwc3 a600000.dwc3: DBG: dwc3_probe
+[    4.205104] dwc3 a600000.dwc3: DBG: dwc3_probe (done)
+[    4.210305] dwc3-qcom a6f8800.usb: DBG: populate (done)
+
+The synchronous probing in _populate() suggests that using device_is_bound()
+would actually be a valid option, either the core device was successfully
+probed or not, there should be no race.
+
+I sent a patch that adds this check to dwc3_qcom_of_register_core(), which
+is less confusing and makes clear that the core device is valid unless
+this function returns an error:
+
+  https://lore.kernel.org/patchwork/patch/1257279/
+
+It might make sense to add your "driver core:Export the symbol
+device_is_bound" patch, mine and this one to a single series.
+
+Thanks
+
+Matthias
