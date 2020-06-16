@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89622C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE0DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6737A20DD4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0D720DD4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 12:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="XYOS/3//"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="pRHoQGOi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgFPMRP (ORCPT
+        id S1728771AbgFPMRc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
+        Tue, 16 Jun 2020 08:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFPMRN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 08:17:13 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FACC08C5C3
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:12 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id k1so8214510pls.2
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:12 -0700 (PDT)
+        with ESMTP id S1728750AbgFPMR1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 08:17:27 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35BDAC08C5C8
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:26 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x22so9425464pfn.3
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 05:17:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Im+gWXwz9xrt/i5JNVHGmDB8gIP62Jly/iM3EIi0NBg=;
-        b=XYOS/3//CEA68v+h5ngRHMKXDOo7bWl8gOA4MxY7IFFhBr64ctPeOjbdTHTw+cO2i0
-         qSghunqiPGyKUL6GxCGttew8Tst+2b0tT+u444JO6vUfdlf03BIeFycb/Kt8E5xvo46Y
-         hbXIctmm+yhchgtjbUEFjTfyv7YPB169kf0+Y=
+        bh=WPc9wn7ciRL1/w7YcmkKxstKF3mhNYu9SS7UDFpaIkA=;
+        b=pRHoQGOibAbZ1yZhGC1VjydH6LsawBp9BOxAXHkYUj73VL61nHAE9LWaxMS5BnRLQD
+         U09DfnmpkPud8r6/qyDr6JHMNsS4fUKvpjRC9Ju7IeBMQu9uoxQdwH92a7pKmcZ8PSzP
+         EGhL6bYdu+H641fbEeINue5LO6RHJYIz8c0IM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Im+gWXwz9xrt/i5JNVHGmDB8gIP62Jly/iM3EIi0NBg=;
-        b=UcF/rhvouw8MDtJA7jfR1yHK1X3LS9gJ4BrWXFVjqRolzxWZjmHkqRZZp2eaY71+HW
-         Wtc1yiVP62db94ZZkqzKXKcyB+R1ZRiWwkoV8kucRwxk56it9PXrWJfgZ26zdTavo2iW
-         HZLNQm3yoxeYnOThNiynP3SgjglZvQW1Tj7Ji+JjFZ3TMJ6u2CPD5LzaEIDXcrKkxpO8
-         VOny6VBfxMSKNh2732FOL+EF5feuMwAup/xgSFVDHFXC5NP4RkPqW2KyszEd2IMRpk/E
-         xdrQR0DrQ+8q1jJg1XkRGe8ukg9xXch6iycq0nYrQSM7kPUOrQuNy+/Ble/mJNOy+q1Q
-         DCNg==
-X-Gm-Message-State: AOAM532x03GnaWuDm4W8bjjNaI6e545oyC6APs0gxnBpeSaqn9UE80hm
-        cLT3q1nGxl+yQhVwh8nF4513zQ==
-X-Google-Smtp-Source: ABdhPJwaPXD+3UGrbUOue2kQH1OEHemcgB9H5Q7Z04moIxoi/6LLQ2MgiaKS6I+q8uTmAUSpd8zc6Q==
-X-Received: by 2002:a17:902:848d:: with SMTP id c13mr1819369plo.289.1592309832346;
-        Tue, 16 Jun 2020 05:17:12 -0700 (PDT)
+        bh=WPc9wn7ciRL1/w7YcmkKxstKF3mhNYu9SS7UDFpaIkA=;
+        b=kmj/AQQFXn95E+fzJNWyO73Muu5nMz5qTgoLI+ZTvqlLQbd3hOIQ7v0DWwhL3f7lA6
+         7ellC3vyTLRAjMby64+t0AtqDQr6M1kKXgt1+ipzs7K6zXpQhuSHvbRxXLjjHmpmu15C
+         +QytiXlmJ6zKa4qx+NRYS+2/fVTzqwOaFNGZzWRykLbaSfdER6S9p+KRUMlvRVQbmZoy
+         xZ3MDIddkJn17lslIYQ+k1rX9whLvyHQXpqwDi+MPm4H7IUoK7Ald6k1180hspNe7T6N
+         2Ywg25VWEYcLao1tRxExajKPGFYLXGqYf0OdfnzUebx12K/kY/Qw9gPJLklpiJeKodq0
+         6Tbw==
+X-Gm-Message-State: AOAM530jtZoTqtgs34epvwUALqsQZXK0UMb4CDpBvnVWV9dI+RsLHvhC
+        tedRmBAwtpvVRARjTiVRJyXtTw==
+X-Google-Smtp-Source: ABdhPJwFji2rq0/TQPbi6zc2IyYD8PpzBsMwAjXHb3n4En8XrRpu37zMMSxM+h6TlaeDuyV620XM9A==
+X-Received: by 2002:a63:3e8d:: with SMTP id l135mr1833340pga.230.1592309845671;
+        Tue, 16 Jun 2020 05:17:25 -0700 (PDT)
 Received: from shiro.work (p1285116-ipngn200805sizuokaden.shizuoka.ocn.ne.jp. [114.171.61.116])
-        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.10
+        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:17:11 -0700 (PDT)
+        Tue, 16 Jun 2020 05:17:25 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v4 01/12] dt-bindings: vendor-prefixes: Add mstar vendor prefix
-Date:   Tue, 16 Jun 2020 21:15:14 +0900
-Message-Id: <20200616121525.1409790-2-daniel@0x0f.com>
+Subject: [PATCH v4 07/12] ARM: mstar: Add binding details for mstar,l3bridge
+Date:   Tue, 16 Jun 2020 21:15:20 +0900
+Message-Id: <20200616121525.1409790-8-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200616121525.1409790-1-daniel@0x0f.com>
 References: <20200612130032.3905240-2-daniel@0x0f.com>
@@ -73,26 +73,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add prefix for MStar Semiconductor, Inc.
+This adds a YAML description of the l3bridge node needed by the
+platform code for the MStar/SigmaStar Armv7 SoCs.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/misc/mstar,l3bridge.yaml         | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9aeab66be85f..b09b6c9911c3 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -680,6 +680,8 @@ patternProperties:
-     description: Microsemi Corporation
-   "^msi,.*":
-     description: Micro-Star International Co. Ltd.
-+  "^mstar,.*":
-+    description: MStar Semiconductor, Inc. (acquired by MediaTek Inc.)
-   "^mti,.*":
-     description: Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
-   "^multi-inno,.*":
+diff --git a/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml b/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
+new file mode 100644
+index 000000000000..cb7fd1cdfb1a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/mstar,l3bridge.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2020 thingy.jp.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/misc/mstar,l3bridge.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: MStar/SigmaStar Armv7 SoC l3bridge
++
++maintainers:
++  - Daniel Palmer <daniel@thingy.jp>
++
++description: |
++  MStar/SigmaStar's Armv7 SoCs have a pipeline in the interface
++  between the CPU and memory. This means that before DMA capable
++  devices are allowed to run the pipeline must be flushed to ensure
++  everything is in memory.
++
++  The l3bridge region contains registers that allow such a flush
++  to be triggered.
++
++  This node is used by the platform code to find where the registers
++  are and install a barrier that triggers the required pipeline flush.
++
++properties:
++  compatible:
++    items:
++      - const: mstar,l3bridge
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    l3bridge: l3bridge@1f204400 {
++        compatible = "mstar,l3bridge";
++        reg = <0x1f204400 0x200>;
++    };
 -- 
 2.27.0.rc0
 
