@@ -2,146 +2,177 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89764C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9D1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFC520707
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oP8HT6xP"
+	by mail.kernel.org (Postfix) with ESMTP id F3EDF20767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgFPJ15 (ORCPT
+        id S1728059AbgFPJfT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFPJ14 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 05:27:56 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20A2C05BD43;
-        Tue, 16 Jun 2020 02:27:56 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id x25so6780042edr.8;
-        Tue, 16 Jun 2020 02:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=x3QhgzPYsk4YXww5OnxJ96yfR+po6PyrH4a8GDqlKe8=;
-        b=oP8HT6xPm+Jd8PbfAnJfzBLJDQMtCiW9hmZNAZKWE8HMgB9EPpSEHL71WU9pKn9Arr
-         dPhLjNWwKgbY7muygCZZh2ynHlxcaASViVzRpgRwsBjIPLzx2RP8PvYsx628zblvh9NC
-         REIqD1Q18GODNR+fb5p3kx/zLM5eHsNKw58de5oUaRGQ08AoaHEpeNjPGBMyKk7UMMzu
-         7MGx2LJiJOl5kt/W0jEWbS4UoBYNXsggcskbAd8gr8MNi6Xov/1xHaue5xHFT0hVHzm6
-         ucMrcmix+hcukIsMqqjeGTpl4lLA3EpEm0P7SsV/fGWb8e+JE2c+WgtB/Ax4gh6eRMbO
-         i+SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=x3QhgzPYsk4YXww5OnxJ96yfR+po6PyrH4a8GDqlKe8=;
-        b=ZA5yR982d1j6RXCnRa4tuQRRbqz8Pf966576fI1OMfz/JIhDPB6tO+VYM/xagD0LDB
-         mFIFBP5mr64wYn5DxwbN6sp8iFtVzX5XVRtSz1BaAHViBo3Tn9gKlyybXAhO2l9dMrqF
-         GT49rnOoFmlU3wzwESs+n8Z6ZPlq7j2AUJ3JsWhFTmaWgY4wdTYbhx61eXqTqs1YXHd8
-         2h3gBGE/n6aBq3H5oQPphaLU/AqGd4xz4oGyjoso+3jTlb0t0BUgtVoaikLwK1+hDcXB
-         lgS6LhXxBK++DfjywEF3hRiu0qO7Lhq6rRu5Y4Vu/XQPQb2AzCCj3FA3/Nec9RITL0Mp
-         BPkA==
-X-Gm-Message-State: AOAM532Y/Q79k+SONReEd4Tj9JuJX+iTfRJXGoLulAfzkSWJsaGQtVOi
-        Ku/nfWI4GwjtILSWlvKIRJzT74z8gDhsN+3VmzGKYlId3AE=
-X-Google-Smtp-Source: ABdhPJxwxI3G8sOMPSW+QeQRyqvQfrtsLAnkaAz9/qX8rA1XrxLcxmluojj/DbY7j4zIshXelrpnqgGrpdDFAceaBH0=
-X-Received: by 2002:a05:6402:1c87:: with SMTP id cy7mr1757571edb.354.1592299675040;
- Tue, 16 Jun 2020 02:27:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522030743.10204-1-frank@allwinnertech.com>
- <20200522030743.10204-3-frank@allwinnertech.com> <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
- <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com> <20200605151306.kqmyj673kux4sbaa@gilmour.lan>
-In-Reply-To: <20200605151306.kqmyj673kux4sbaa@gilmour.lan>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Tue, 16 Jun 2020 17:26:01 +0800
-Message-ID: <CAEExFWutOjweJ_=WYKifebCPohStJdo0UJnHtmzvmhQ+VTb3kg@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IOWbnuWkje+8mltQQVRDSCAyLzRdIHBpbmN0cmw6IHN1bnhpOiBhZGQgc3VwcG9ydA==?=
-        =?UTF-8?B?IGZvciB0aGUgQWxsd2lubmVyIEExMDAgcGluIGNvbnRyb2xsZXI=?=
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     wens <wens@csie.org>,
-        =?UTF-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        "robh+dt" <robh+dt@kernel.org>,
-        mturquette <mturquette@baylibre.com>, sboyd <sboyd@kernel.org>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jun 2020 05:35:19 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45975 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727876AbgFPJfS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:35:18 -0400
+IronPort-SDR: SAApe2ws/+pz7zKg+6jWznAcF01tk8BFmjXmDIyKAs9AaUqL0zJr/CPAIAoYu2IVHfOjpyBORo
+ CwXz/C+oTw7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 02:35:17 -0700
+IronPort-SDR: tPIe9CrVZst9Nt2oJX8Dee4+DGxcICSrc10i1t2Ky1CZkP320jTN5cdZAu4YmUnUuQZpEytnvo
+ 4c1L9ptmqe4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="308403436"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga008.jf.intel.com with ESMTP; 16 Jun 2020 02:35:12 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com
+Cc:     richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [RESEND, v11 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Tue, 16 Jun 2020 17:33:30 +0800
+Message-Id: <20200616093332.53927-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-HI Chen-Yu,  Linus,
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-On Fri, Jun 5, 2020 at 11:13 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi Frank,
->
-> On Wed, Jun 03, 2020 at 05:44:36PM +0800, =E6=9D=8E=E6=89=AC=E9=9F=AC wro=
-te:
-> > >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
-> > >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
-> > >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
-> > >> +  SUNXI_FUNCTION(0x2, "mmc0"),  /* D1 */
-> > >> +  SUNXI_FUNCTION(0x3, "jtag"),  /* MS1 */
-> > >> +  SUNXI_FUNCTION(0x4, "jtag"),  /* MS_GPU */
-> > >
-> > >We should use another name here, since the code will just pick the fir=
-st one and
-> > >ignore the second. What about jtag-gpu?
-> >
-> > The underscores are used in front, so changing it to jtag_gpu may be mo=
-re consistent.
->
-> Yep, that makes sense
->
-> > >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
-> > >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
-> > >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
-> > >> +  SUNXI_FUNCTION(0x2, "spdif"),  /* DIN */
-> > >> +  SUNXI_FUNCTION(0x3, "i2s0"),  /* DOUT0 */
-> > >> +  SUNXI_FUNCTION(0x4, "i2s0"),  /* DIN1 */
-> > >
-> > >I guess the second one would be i2s1?
-> >
-> > No, each i2s may have many inputs and outputs.
-> >
-> >  SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
-> >      SUNXI_FUNCTION(0x0, "gpio_in"),
-> >               SUNXI_FUNCTION(0x1, "gpio_out"),
-> >               SUNXI_FUNCTION(0x2, "cir0"),          /* IN */
-> >               SUNXI_FUNCTION(0x3, "i2s3_dout3"),       /* DOUT3 */
-> >               SUNXI_FUNCTION(0x4, "i2s3_din3"),       /* DIN3 */
-> >               SUNXI_FUNCTION(0x5, "ledc"),
-> >               SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 19)),
-> >
-> > Considering that the same pin has multiple same functions,
-> > so add a suffix, like i2s3_dout3 and i2s3_din3?
-> >
-> > Or specify muxsel in the device tree may be another solution.
->
-> Having muxsel is not really an option. We have two sets of bindings to
-> maintain already, adding a third one would make it fairly hard to
-> maintain. And the second binding we support is the generic pinctrl
-> binding, so I'm not really sure why we would want to move away from
-> that.
->
-> And I'm not really fond of having a suffix either. It kind of breaks the
-> consistency we had so far, and ideally I'd like to keep that.
->
-> Chen-Yu, Linus? Any input on that one?
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-PING......
+NAND controller also supports in-built HW ECC engine.
+
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
+
+Thanks Boris, Andy, Arnd and Rob for the review comments and suggestions.
+---
+v11-resend:
+  - Rebase to v5.8-rc1
+v11:
+  - No Change
+v10:
+  - No Change
+v9:
+  - No change
+v8:
+  - fix the kbuild bot warnings
+  - correct the typo's
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+ 
+dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+---
+v11-resend:
+  - No change
+v11:
+  - Fixed the compatible issue with example
+10:
+  - fix bot errors
+v9:
+  - Rob's review comments address
+  - dual licensed
+  - compatible change
+  - add reg-names
+  - drop clock-names and clock-cells
+  - correct typo's
+v8:
+  No change
+v7:
+  - Rob's review comments addressed
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - add the example in YAML file
+v4:
+  - No change
+v3:
+  - No change
+v2:
+  YAML compatible string update to intel, lgm-nand-controller
+v1:
+  - initial version
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  99 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 747 +++++++++++++++++++++
+ 4 files changed, 855 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
+-- 
+2.11.0
+
