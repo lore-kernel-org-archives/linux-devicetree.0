@@ -1,98 +1,81 @@
-Return-Path: <SRS0=vQ7I=74=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C201C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A21C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB5220714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592264494;
-	bh=N1Ij/usB8zQH3UBOLC7sOuqSq5QNpKZThVTtUkokQlU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=FBo53IoBuwPVbn57yQ4a5qRjxMOjIErNZr7bmqCjunQuAq65vjRCeLtEzg5BApPLX
-	 PezJFj0TC8p+vyI94uUVeQZ7hyKmd7m4ze3qgX947952cmQd6+buThodzp3e6Anbo5
-	 Jyhtq/OYvqc4lteskF+WQQUHWetrRdFOFiW50CMc=
+	by mail.kernel.org (Postfix) with ESMTP id D4D55206D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 01:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgFOXld (ORCPT
+        id S1726562AbgFPBLc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgFOXld (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:41:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54BD52080D;
-        Mon, 15 Jun 2020 23:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592264492;
-        bh=N1Ij/usB8zQH3UBOLC7sOuqSq5QNpKZThVTtUkokQlU=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=kvFwLRFSbEs5scz61K7kuHQL196g5fyYJPoHYLKA+b/8sSSzZW+z0JTFrUwPYQ1it
-         l3zXX3FSQv2cQ6/9Dep7/KG1wkUqiJU5uF4WKW7zYSwH//iofye5WkOtT7cxxx+D0J
-         NMiwC4OSbciUwPUuyr3j0oBN/0W+xSoNk9tlvl6c=
-Date:   Tue, 16 Jun 2020 00:41:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-In-Reply-To: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 0/2] Add MSIOF support for R8A7742 SOC
-Message-Id: <159226448569.27735.1827248945903303044.b4-ty@kernel.org>
+        Mon, 15 Jun 2020 21:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgFPBLc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 15 Jun 2020 21:11:32 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BC2C061A0E;
+        Mon, 15 Jun 2020 18:11:31 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AE61E12322A03;
+        Mon, 15 Jun 2020 18:11:30 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:11:29 -0700 (PDT)
+Message-Id: <20200615.181129.570239999533845176.davem@davemloft.net>
+To:     heiko@sntech.de
+Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        heiko.stuebner@theobroma-systems.com
+Subject: Re: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a
+ helper
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200615144501.1140870-1-heiko@sntech.de>
+References: <20200615144501.1140870-1-heiko@sntech.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 18:11:31 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 9 Jun 2020 21:54:12 +0100, Lad Prabhakar wrote:
-> This patch series adds support for MSIOF on R8A7742 SOC.
-> 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (2):
->   dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
->   ARM: dts: r8a7742: Add MSIOF[0123] support
-> 
-> [...]
+From: Heiko Stuebner <heiko@sntech.de>
+Date: Mon, 15 Jun 2020 16:44:59 +0200
 
-Applied to
+>  static int vsc8584_probe(struct phy_device *phydev)
+>  {
+>  	struct vsc8531_private *vsc8531;
+> +	int rc;
+>  	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+>  	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+>  	   VSC8531_DUPLEX_COLLISION};
+> @@ -2005,32 +2015,24 @@ static int vsc8584_probe(struct phy_device *phydev)
+>  		return -ENOTSUPP;
+>  	}
+>  
+> -	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+> -	if (!vsc8531)
+> -		return -ENOMEM;
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Because you removed this devm_kzalloc() code, vsc8531 is never initialized.
 
-Thanks!
+> +	return devm_phy_package_join(&phydev->mdio.dev, phydev,
+> +				     vsc8531->base_addr, 0);
 
-[1/1] spi: renesas,sh-msiof: Add r8a7742 support
-      commit: 6383b118efafff8cce8fc8fa5b7e893a523b698f
+But it is still dereferenced here.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Did the compiler really not warn you about this when you test built
+these changes?
