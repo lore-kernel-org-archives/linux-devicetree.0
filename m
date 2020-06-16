@@ -2,73 +2,102 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56453C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB47C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F77220679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FD220679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FB1eYizN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgFPJKg (ORCPT
+        id S1728121AbgFPJNL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:10:36 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34534 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgFPJKg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:10:36 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jl7bw-0007eo-3o; Tue, 16 Jun 2020 11:10:28 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a helper
-Date:   Tue, 16 Jun 2020 11:10:27 +0200
-Message-ID: <1656001.WqWBulSbu3@diego>
-In-Reply-To: <20200615.181225.2016760272076151342.davem@davemloft.net>
-References: <20200615144501.1140870-1-heiko@sntech.de> <20200615.181129.570239999533845176.davem@davemloft.net> <20200615.181225.2016760272076151342.davem@davemloft.net>
+        Tue, 16 Jun 2020 05:13:11 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43142 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725896AbgFPJNI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:13:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592298785; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=OgDBzqqrEPPmIa2KUj3HnyS1zXMXu3Jcgi9sskDBZ9k=; b=FB1eYizN8KWmxabFt+FL16nfU7YvLdsoDlDvI0L479QqtIrt7b6PppLh+cb0zK+56SC86FSU
+ w7uzwM0HFTFR9BXLCD6qktL5w/YdgeVJor8YA3iz0+dXyYcKted2zS3XxICVN6CbD8wRtd5U
+ Ez6cdgAgOFz3Bc6NRrGYTCe2OTc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ee88d214c9690533a25dbc3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 09:13:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7678C433CB; Tue, 16 Jun 2020 09:13:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B920C433CA;
+        Tue, 16 Jun 2020 09:13:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B920C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Anilkumar Kolli <akolli@codeaurora.org>
+Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] ath11k: Add IPQ6018 support
+References: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
+Date:   Tue, 16 Jun 2020 12:13:01 +0300
+In-Reply-To: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
+        (Anilkumar Kolli's message of "Tue, 9 Jun 2020 19:02:53 +0530")
+Message-ID: <87pn9zidb6.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Anilkumar Kolli <akolli@codeaurora.org> writes:
 
-Am Dienstag, 16. Juni 2020, 03:12:25 CEST schrieb David Miller:
-> From: David Miller <davem@davemloft.net>
-> Date: Mon, 15 Jun 2020 18:11:29 -0700 (PDT)
-> > +	return devm_phy_package_join(&phydev->mdio.dev, phydev,
-> > +				     vsc8531->base_addr, 0);
-> 
-> But it is still dereferenced here.
-> 
-> Did the compiler really not warn you about this when you test built
-> these changes?
+> IPQ6018 has a 5G radio and 2G radio with 2x2
+> and shares IPQ8074 configuration.
+>
+> Tested on: IPQ6018 WLAN.HK.2.2-02134-QCAHKSWPL_SILICONZ-1
+> Tested on: IPQ8074 WLAN.HK.2.4.0.1-00009-QCAHKSWPL_SILICONZ-1 
 
-I'm wondering that myself ... it probably did and I overlooked it, which
-also is indicated by the fact that  I did add the declaration of the
-vsc8531 when rebasing.
+To get the multiple hw support faster in (I need them also for QCA6390
+patches) I split this into multiple sets:
 
-> > Because you removed this devm_kzalloc() code, vsc8531 is never initialized.
-> 
-> You also need to provide a proper header posting when you repost this series
-> after fixing this bug.
+>   ath11k: update firmware files read path
+>   ath11k: rename default board file
 
-not sure I understand what you mean with "header posting" here.
+These are now applied.
 
-Thanks
-Heiko
+>   ath11k: define max_radios in hw_params
+>   ath11k: add hw_ops for pdev id to hw_mac mapping
+>   ath11k: Add bdf-addr in hw_params
 
+I'll modify these a bit, remove all IPQ6018 references from them and
+then submit them myself.
 
+>   dt: bindings: net: update compatible for ath11k
+>   ath11k: add ce services for IPQ6018
+
+Anil, please resubmit these as v3 based on the comments.
+
+>   ath11k: add IPQ6018 support
+
+Anil, add this as the last patch in your v3 series. And do note that I
+will split the part adding ath11k_init_hw_params() function to a
+separate patch, so no need to include it in this patch anymore.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
