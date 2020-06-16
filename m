@@ -2,323 +2,482 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC843C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C09C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 23:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE3D207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E2A207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 23:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Hrv2EKWf"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TVHw9A6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725967AbgFPWfy (ORCPT
+        id S1725901AbgFPXNm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:35:54 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:27136 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725849AbgFPWfy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:35:54 -0400
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 18:35:52 EDT
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592346952; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=zIiyILVfFV4UeSP8Fb9UXjt+SpqTgZRRbkXg00ivuxQ=;
- b=Hrv2EKWftdXL1whkw+fPi3HSMgoVFLSauioUdInngy0p0UgS44SJxAWYn5xYMLHitdq3Jx+P
- CJAto2YAYVCCuYPWZRvAl/YsKq4SSCcxbbyygkMd6/6RXrSYfsEpdGKpa43HjvOUv5W8v89T
- 85RyNtBh+Ni5V7AJQSBz2N0+Qh0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5ee947fa5866879c76b64a08 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 22:30:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EEA39C433CB; Tue, 16 Jun 2020 22:30:17 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6F41C433C9;
-        Tue, 16 Jun 2020 22:30:16 +0000 (UTC)
+        Tue, 16 Jun 2020 19:13:42 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38320 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgFPXNl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 19:13:41 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 17712F9;
+        Wed, 17 Jun 2020 01:13:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592349218;
+        bh=tkznWIvn5yGPxhAASmcfLHvHXGuovs9T7JOthfPwJrk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TVHw9A6Bko6DeHO/N8H8Iom9KTq4fsvgH/q3Dc6YruZRuFnyXCk0q3aQpn81RgspZ
+         7nloG6r74NsoGrKZnUP91KMWdLPGtlJaAqVeovIoRtMAlAtgP2cSwEk7bSroMCq6es
+         uBhhJ5RUWd+OHzL7YLMReNqgNPJpJ+MJGveOelXw=
+Date:   Wed, 17 Jun 2020 02:13:15 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vsagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
+ Subsystem driver
+Message-ID: <20200616231315.GJ913@pendragon.ideasonboard.com>
+References: <20200429141705.18755-1-vishal.sagar@xilinx.com>
+ <20200429141705.18755-3-vishal.sagar@xilinx.com>
+ <20200506151142.GA15206@pendragon.ideasonboard.com>
+ <BY5PR02MB68671D6F4700A66F26562C54A7820@BY5PR02MB6867.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 16 Jun 2020 15:30:16 -0700
-From:   tanmay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, sam@ravnborg.org,
-        seanpaul@chromium.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, chandanu@codeaurora.org,
-        robdclark@gmail.com, abhinavk@codeaurora.org,
-        nganji@codeaurora.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Vara Reddy <varar@codeaurora.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
- driver for Snapdragon
-In-Reply-To: <159230492894.62212.17830740055624171310@swboyd.mtv.corp.google.com>
-References: <20200609033818.9028-1-tanmay@codeaurora.org>
- <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
- <d6db52a33ac787c0fe6134ca32c06007@codeaurora.org>
- <159230492894.62212.17830740055624171310@swboyd.mtv.corp.google.com>
-Message-ID: <339dea7850113f9721a1761e31902af5@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BY5PR02MB68671D6F4700A66F26562C54A7820@BY5PR02MB6867.namprd02.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Stephen for your answers.
+Hi Vishal,
 
-On 2020-06-16 03:55, Stephen Boyd wrote:
-> Quoting tanmay@codeaurora.org (2020-06-11 13:07:09)
->> On 2020-06-09 19:15, Stephen Boyd wrote:
->> > Quoting Tanmay Shah (2020-06-08 20:38:18)
->> >> diff --git
->> >> a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> >> b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> >> new file mode 100644
->> >> index 0000000..5fdb915
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
->> >
->> > Typically the file name matches the compatible string. But the
->> > compatible string is just qcom,dp-display. Maybe the compatible string
->> > should be qcom,sc7180-dp? Notice that the SoC number comes first as is
->> > preferred.
->> >
->> These bindings will be similar for upcoming SOC as well.
->> So just for understanding, when we add new SOC do we create new file
->> with same bidings
->> with SOC number in new file name?
->> Instead we can keep this file's name as qcom,dp-display.yaml (same as
->> compatible const) and we can include SOC number in compatible enum ?
->> some examples:
->> https://patchwork.kernel.org/patch/11448357/
->> https://patchwork.kernel.org/patch/11164619/
-> 
-> Yes that works too. It's really up to robh here.
-> 
->> >
->> >> @@ -0,0 +1,142 @@
->> >> +# SPDX-License-Identifier: (GPL-2.0-only  OR BSD-2-Clause)
->> >> +%YAML 1.2
->> >> +---
->> >> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
->> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> >> +
->> >> +title: Qualcomm Display Port Controller.
->> >> +
->> >> +maintainers:
->> >> +  - Chandan Uddaraju <chandanu@codeaurora.org>
->> >> +  - Vara Reddy <varar@codeaurora.org>
->> >> +  - Tanmay Shah <tanmay@codeaurora.org>
->> >> +
->> >> +description: |
->> >> +  Device tree bindings for MSM Display Port which supports DP host
->> >> controllers
->> >> +  that are compatible with VESA Display Port interface specification.
->> >> +
->> >> +properties:
->> >> +  compatible:
->> >> +    items:
->> >> +      - const: qcom,dp-display
->> >> +
->> >> +  cell-index:
->> >> +    description: Specifies the controller instance.
->> >> +
->> >> +  reg:
->> >> +    items:
->> >> +      - description: DP controller registers
->> >> +
->> >> +  interrupts:
->> >> +    description: The interrupt signal from the DP block.
->> >> +
->> >> +  clocks:
->> >> +    description: List of clock specifiers for clocks needed by the
->> >> device.
->> >> +    items:
->> >> +      - description: Display Port AUX clock
->> >> +      - description: Display Port Link clock
->> >> +      - description: Link interface clock between DP and PHY
->> >> +      - description: Display Port Pixel clock
->> >> +      - description: Root clock generator for pixel clock
->> >> +
->> >> +  clock-names:
->> >> +    description: |
->> >> +      Device clock names in the same order as mentioned in clocks
->> >> property.
->> >> +      The required clocks are mentioned below.
->> >> +    items:
->> >> +      - const: core_aux
->> >> +      - const: ctrl_link
->> >> +      - const: ctrl_link_iface
->> >> +      - const: stream_pixel
->> >> +      - const: pixel_rcg
->> >
->> > Why not just 'pixel'? And why is the root clk generator important? It
->> > looks like this binding should be using the assigned clock parents
->> > property instead so that it doesn't have to call clk_set_parent()
->> > explicitly.
->> >
->> Are we talking about renaming stream_pixel to pixel only?
->> We divide clocks in categories: core, control and stream clock.
->> Similar terminology will be used in subsequent driver patches as well.
->> 
->> We can remove pixel_rcg use assigned clock parents property and remove
->> clk_set_parent
->> from driver.
-> 
-> Cool. Using assigned clock parents is good.
-> 
->> 
->> >> +  "#clock-cells":
->> >> +    const: 1
->> >> +
->> >> +  vdda-1p2-supply:
->> >> +    description: phandle to vdda 1.2V regulator node.
->> >> +
->> >> +  vdda-0p9-supply:
->> >> +    description: phandle to vdda 0.9V regulator node.
->> >> +
->> >> +  data-lanes = <0 1>:
->> >
->> > Is this correct? We can have = <value> in the property name? Also feels
->> > generic and possibly should come from the phy binding instead of from
->> > the controller binding.
->> >
->> We are using this property in DP controller programming sequence such 
->> as
->> link training.
->> So I think we can keep this here.
->> You are right about <value>. <0 1> part should be in example only. It
->> was passing through dt_binding_check though.
->> Here it should be like:
->> data-lanes:
->> minItems:1
->> maxItems:4
+On Tue, Jun 09, 2020 at 06:23:43PM +0000, Vishal Sagar wrote:
+> On Wednesday, May 6, 2020 8:42 PM, Laurent Pinchart wrote:
+> > On Wed, Apr 29, 2020 at 07:47:04PM +0530, Vishal Sagar wrote:
+> > > The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
+> > > streams from SDI sources like SDI broadcast equipment like cameras and
+> > > mixers. This block outputs either native SDI, native video or
+> > > AXI4-Stream compliant data stream for further processing. Please refer
+> > > to PG290 for details.
+> > >
+> > > The driver is used to configure the IP to add framer, search for
+> > > specific modes, get the detected mode, stream parameters, errors, etc.
+> > > It also generates events for video lock/unlock, bridge over/under flow.
+> > >
+> > > The driver supports 10/12 bpc YUV 422 media bus format currently. It also
+> > > decodes the stream parameters based on the ST352 packet embedded in the
+> > > stream. In case the ST352 packet isn't present in the stream, the core's
+> > > detected properties are used to set stream properties.
+> > 
+> > As commented on patch 1/2, I don't see a mention of 12 bpc in the
+> > documentation. Let's discuss it as part of patch 1/2.
 > 
 > Ok.
 > 
->> 
->> >> +    type: object
->> >> +    description: Maximum number of lanes that can be used for Display
->> >> port.
->> >> +
->> >> +  ports:
->> >> +    description: |
->> >> +       Contains display port controller endpoint subnode.
->> >> +       remote-endpoint: |
->> >> +         For port@0, set to phandle of the connected panel/bridge's
->> >> +         input endpoint. For port@1, set to the DPU interface output.
->> >> +         Documentation/devicetree/bindings/graph.txt and
->> >> +
->> >> Documentation/devicetree/bindings/media/video-interfaces.txt.
->> >> +
->> >> +patternProperties:
->> >> +  "^aux-cfg([0-9])-settings$":
->> >> +    type: object
->> >> +    description: |
->> >> +      Specifies the DP AUX configuration [0-9] settings.
->> >> +      The first entry in this array corresponds to the register
->> >> offset
->> >> +      within DP AUX, while the remaining entries indicate the
->> >> +      programmable values.
->> >
->> > I'd prefer this was removed from the binding and hardcoded in the
->> > driver
->> > until we can understand what the values are. If they're not
->> > understandable then they most likely don't change and should be done in
->> > the driver.
->> >
->> Typically customers tune these values by working with vendor. So for
->> different boards it can be different. Even though it is hard for
->> customers to do this themselves, these are still board specific and
->> belong to dts. As requested earlier, we have added default values
->> already and made these properties optional but, we would like to keep 
->> it
->> in bindings so we can have option to tune them as required.
-> 
-> If they're in the binding then they should make sense instead of just
-> being random values. So please move the defaults to the driver and
-> have human understandable DT properties to tune these settings. This 
-> has
-> been done for the qcom USB phy already (see things like
-> qcom,hstx-trim-value for example).
-> 
-Ok. For now I will move these values to driver and later we will add dt 
-properties as required.
+> > > The driver currently supports only the AXI4-Stream IP configuration.
+> > >
+> > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > > ---
+> > > v2
+> > > - Added DV timing support based on Hans Verkuilś feedback
+> > > - More documentation to custom v4l controls and events
+> > > - Fixed Hyunś comments
+> > > - Added macro for masking and shifting as per Joe Perches comments
+> > > - Updated to latest as per Xilinx github repo driver like
+> > >   adding new DV timings not in mainline yet uptill 03/21/20
+> > >
+> > >  drivers/media/platform/xilinx/Kconfig         |   11 +
+> > >  drivers/media/platform/xilinx/Makefile        |    1 +
+> > >  .../media/platform/xilinx/xilinx-sdirxss.c    | 2162 +++++++++++++++++
+> > >  include/uapi/linux/xilinx-sdirxss.h           |  179 ++
+> > >  include/uapi/linux/xilinx-v4l2-controls.h     |   67 +
+> > >  5 files changed, 2420 insertions(+)
+> > >  create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > >  create mode 100644 include/uapi/linux/xilinx-sdirxss.h
 
->> >> +
->> >> +required:
->> >> +  - compatible
->> >> +  - cell-index
->> >> +  - reg
->> >> +  - interrupts
->> >> +  - clocks
->> >> +  - clock-names
->> >> +  - vdda-1p2-supply
->> >> +  - vdda-0p9-supply
->> >> +  - data-lanes
->> >> +  - ports
->> >> +
->> >> +examples:
->> >> +  - |
->> >> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> >> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
->> >> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->> >> +    msm_dp: displayport-controller@ae90000{
->> >> +        compatible = "qcom,dp-display";
->> >> +        cell-index = <0>;
->> >> +        reg = <0 0xae90000 0 0x1400>;
->> >> +        reg-names = "dp_controller";
->> >> +
->> >> +        interrupt-parent = <&display_subsystem>;
->> >> +        interrupts = <12 0>;
->> >> +
->> >> +        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
->> >> +                 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
->> >> +                 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
->> >> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
->> >> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->> >> +        clock-names = "core_aux",
->> >> +                      "ctrl_link",
->> >> +                      "ctrl_link_iface", "stream_pixel",
->> >> +                      "pixel_rcg";
->> >> +        #clock-cells = <1>;
->> >> +
->> >> +        vdda-1p2-supply = <&vreg_l3c_1p2>;
->> >> +        vdda-0p9-supply = <&vreg_l4a_0p8>;
->> >> +
->> >> +        data-lanes = <0 1>;
->> >> +
->> >> +        ports {
->> >> +            #address-cells = <1>;
->> >> +            #size-cells = <0>;
->> >> +
->> >> +            port@0 {
->> >> +                reg = <0>;
->> >> +                dp_in: endpoint {
->> >> +                    remote-endpoint = <&dpu_intf0_out>;
->> >> +                };
->> >> +            };
->> >> +
->> >> +            port@1 {
->> >> +                reg = <1>;
->> >> +                dp_out: endpoint {
->> >> +                };
->> >> +            };
->> >> +        };
->> >> +    };
->> >
->> > I believe there should be a '...' here.
->> I think you mean signature is missing? If not could you please 
->> explain?
+[snip]
+
+> > > diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > new file mode 100644
+> > > index 000000000000..c536ea3aaa0d
+> > > --- /dev/null
+> > > +++ b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > @@ -0,0 +1,2162 @@
+
+[snip]
+
+> > > +/* Maximum number of events per file handle. */
+> > > +#define XSDIRX_MAX_EVENTS	(128)
+> > 
+> > Do we really need such a high number ? How often are the overflow and
+> > underflow expected ?
 > 
-> No I mean there should be a triple dot at the end.
+> An overflow or underflow events will occur when a resolution / rate change occurs.
+> But since we are stopping the bridges in irq handler, these events will stop coming.
+> I can reduce this to 8 events but it is arbitrary. Is that ok?
+
+Yes, I think that's a better value.
+
+[snip]
+
+> > > +/**
+> > > + * struct xsdirxss_core - Core configuration SDI Rx Subsystem device structure
+> > > + * @dev: Platform structure
+> > > + * @iomem: Base address of subsystem
+> > > + * @irq: requested irq number
+> > > + * @include_edh: EDH processor presence
+> > > + * @mode: 3G/6G/12G mode
+> > > + * @clks: array of clocks
+> > > + * @num_clks: number of clocks
+> > > + * @bpc: Bits per component, can be 10 or 12
+> > > + */
+> > > +struct xsdirxss_core {
+> > > +	struct device *dev;
+> > > +	void __iomem *iomem;
+> > > +	int irq;
+> > > +	bool include_edh;
+> > > +	int mode;
+> > > +	struct clk_bulk_data *clks;
+> > > +	int num_clks;
+> > 
+> > num_clks is never negative, you can make it an unsigned int.
+> 
+> Ok. I will make num_clks as unsigned int.
+> So why devm_clk_bulk_get() and clk_bulk_prepare_enable() take in num_clks argument as int ?
+
+That's a good question. I assume that's because nobody has cared to make
+it unsigned. It makes little difference in practice (there's a small
+impact on code generation depending on what operation you perform on the
+value, but it's usually negligible). Where it makes a difference, I
+believe, is in expressing the intent. If you make field unsigned, you
+express that it doesn't make sense to assign it a negative value. It's
+API documentation in a way. It can also avoid some errors:
+
+struct foo {
+	u8 elements[16];
+};
+
+int zero_foo_elements(struct foo *foo, int num_elements)
+{
+	if (num_elements > ARRAY_SIZE(foo->elements))
+		return -EOVERFLOW;
+
+	memset(foo->elements, 0, num_elements);
+
+	return 0;
+}
+
+If called with a negative value, bad things will happen. If num_elements
+was unsigned, there would be no issue. Of course the function could be
+written
+
+int zero_foo_elements(struct foo *foo, int num_elements)
+{
+	if (num_elements < 0 || num_elements > ARRAY_SIZE(foo->elements))
+		return -EOVERFLOW;
+
+	memset(foo->elements, 0, num_elements);
+
+	return 0;
+}
+
+but it's easy to overlook the need for a < 0 check when there's no valid
+use case for passing a negative value.
+
+> > > +	u32 bpc;
+> > > +};
+
+[snip]
+
+> > > +/* TODO - Add YUV 444/420 and RBG 10/12 bpc mbus formats here */
+> > 
+> > s/RBG/RGB/ ?
+> > 
+> 
+> No RBG is correct because as per Xilinx User Guide 934 Figure 1-4 and Table 1-4, 
+> the Blue is middle component in the AXI4-Stream protocol followed by all Xilinx Video IPs.
+> https://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf
+
+Indeed, my bad. I wonder why the AXI4 stream protocol uses RBG, it's a
+quite unusual order.
+
+> We will add the RBG 10 and 12 bpc formats later.
+
+[snip]
+
+> > > +
+> > > +/**
+> > > + * xsdirxss_g_volatile_ctrl - get the Xilinx SDI Rx controls
+> > > + * @ctrl: Pointer to V4L2 control
+> > > + *
+> > > + * Return: 0 on success, errors otherwise
+> > > + */
+> > > +static int xsdirxss_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+> > > +{
+> > > +	u32 val;
+> > > +	struct xsdirxss_state *xsdirxss =
+> > > +		container_of(ctrl->handler,
+> > > +			     struct xsdirxss_state, ctrl_handler);
+> > > +	struct xsdirxss_core *core = &xsdirxss->core;
+> > > +	struct device *dev = core->dev;
+> > > +
+> > > +	switch (ctrl->id) {
+> > > +	case V4L2_CID_XILINX_SDIRX_MODE_DETECT:
+> > > +		if (!xsdirxss->vidlocked) {
+> > > +			dev_err(dev, "Can't get values when video not locked!\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		val = xsdirxss_read(core, XSDIRX_MODE_DET_STAT_REG);
+> > > +		val &= XSDIRX_MODE_DET_STAT_RX_MODE_MASK;
+> > > +
+> > > +		switch (val) {
+> > > +		case XSDIRX_MODE_SD_MASK:
+> > > +			ctrl->val = XSDIRX_MODE_SD_OFFSET;
+> > > +			break;
+> > > +		case XSDIRX_MODE_HD_MASK:
+> > > +			ctrl->val = XSDIRX_MODE_HD_OFFSET;
+> > > +			break;
+> > > +		case XSDIRX_MODE_3G_MASK:
+> > > +			ctrl->val = XSDIRX_MODE_3G_OFFSET;
+> > > +			break;
+> > > +		case XSDIRX_MODE_6G_MASK:
+> > > +			ctrl->val = XSDIRX_MODE_6G_OFFSET;
+> > > +			break;
+> > > +		case XSDIRX_MODE_12GI_MASK:
+> > > +			ctrl->val = XSDIRX_MODE_12GI_OFFSET;
+> > > +			break;
+> > > +		case XSDIRX_MODE_12GF_MASK:
+> > > +			ctrl->val = XSDIRX_MODE_12GF_OFFSET;
+> > > +			break;
+> > > +		}
+> > > +		break;
+> > 
+> > Hans commented that the dv timings structure will report whether the
+> > mode is interlaced, I wonder if reporting the SDI mode shouldn't go
+> > through that structure too.
+> > 
+> 
+> I don’t know about this. 
+> We may add a feature in V4L2 / DRM framework to set / get the SDI modes.
+
+I'd like to get Hans' opinion on this, he has more experience with DV
+timings than I do.
+
+> > > +	case V4L2_CID_XILINX_SDIRX_CRC:
+> > > +		ctrl->val = xsdirxss_read(core, XSDIRX_CRC_ERRCNT_REG);
+> > > +		xsdirxss_write(core, XSDIRX_CRC_ERRCNT_REG, 0xFFFF);
+> > > +		break;
+> > 
+> > Are CRC errors common (and recoverable), or are they rare and fatal
+> > errors ? In other words, does this report information that would be
+> > classified as link quality, or fatal errors ? In the later case I wonder
+> > if an event wouldn't make more sense. It could be reported as another
+> > bit in the overflow/underflow event.
+> 
+> CRC errors will reflect link quality. 
+> There is no interrupt for CRC errors. 
+> So driver software won't know when to read this register. 
+> Also this is specific to Xilinx implementation.
+
+Thanks for the clarification, this makes sense.
+
+> > > +	case V4L2_CID_XILINX_SDIRX_EDH_ERRCNT:
+> > > +		val = xsdirxss_read(core, XSDIRX_MODE_DET_STAT_REG);
+> > > +		val &= XSDIRX_MODE_DET_STAT_RX_MODE_MASK;
+> > > +		if (val == XSDIRX_MODE_SD_MASK) {
+> > > +			ctrl->val = xsdirxss_read(core, XSDIRX_EDH_ERRCNT_REG);
+> > > +		} else {
+> > > +			dev_dbg(dev, "%d - not in SD mode\n", ctrl->id);
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		break;
+> > 
+> > If my understanding of the datasheet is correct, this will be reset for
+> > every frame, right ? Reporting the information this way is thus quite
+> > racy. Isn't it better to send it through an event ?
+> 
+> This is not reset per frame. 
+> This is an error reporting mechanism that application can use to get errors in stream while 
+> running SD modes (720x487 and 720x576).
+> So I think it is ok to send it like this.
+
+I'm not sure why I thought it was reset per frame, sorry about the
+noise.
+
+> > > +	case V4L2_CID_XILINX_SDIRX_EDH_STATUS:
+> > > +		val = xsdirxss_read(core, XSDIRX_MODE_DET_STAT_REG);
+> > > +		val &= XSDIRX_MODE_DET_STAT_RX_MODE_MASK;
+> > > +		if (val == XSDIRX_MODE_SD_MASK) {
+> > > +			ctrl->val = xsdirxss_read(core, XSDIRX_EDH_STAT_REG);
+> > > +		} else {
+> > > +			dev_dbg(dev, "%d - not in SD mode\n", ctrl->id);
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		break;
+> > 
+> > Same here, seems quite racy.
+> > 
+> 
+> Same here as earlier about EDH Counter. There is no interrupt here too.
+> 
+> > > +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
+> > > +		if (!xsdirxss->vidlocked) {
+> > > +			dev_err(dev, "Can't get values when video not
+> > locked!\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		ctrl->val = xsdirxss->ts_is_interlaced;
+> > > +		break;
+> > > +	case V4L2_CID_XILINX_SDIRX_ACTIVE_STREAMS:
+> > > +		if (!xsdirxss->vidlocked) {
+> > > +			dev_err(dev, "Can't get values when video not
+> > locked!\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		val = xsdirxss_read(core, XSDIRX_MODE_DET_STAT_REG);
+> > > +		val &= XSDIRX_MODE_DET_STAT_ACT_STREAM_MASK;
+> > > +		val >>= XSDIRX_MODE_DET_STAT_ACT_STREAM_OFFSET;
+> > > +		ctrl->val = 1 << val;
+> > > +		break;
+> > > +	case V4L2_CID_XILINX_SDIRX_IS_3GB:
+> > > +		if (!xsdirxss->vidlocked) {
+> > > +			dev_err(dev, "Can't get values when video not
+> > locked!\n");
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		val = xsdirxss_read(core, XSDIRX_MODE_DET_STAT_REG);
+> > > +		val &= XSDIRX_MODE_DET_STAT_LVLB_3G_MASK;
+> > > +		ctrl->val = val ? true : false;
+> > > +		break;
+> > 
+> > Shouldn't this also go through DV timings ? If not, I think it should at
+> > least be combined with V4L2_CID_XILINX_SDIRX_MODE_DETECT.
+> 
+> I am trying to use the same values to set mode and detect it. 
+> As there is no different bit to specifically detect 3GB Mode, hence this differentiation is there.
+> I will try to combine this in later patch.
+> 
+> > > +	default:
+> > > +		dev_err(dev, "Get Invalid control id 0x%0x\n", ctrl->id);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	dev_dbg(dev, "Get ctrl id = 0x%08x val = 0x%08x\n", ctrl->id,
+> > > +		ctrl->val);
+> > 
+> > I would drop this line.
+> > 
+> 
+> Ok I will remove this in next patch.
+> 
+> > > +	return 0;
+> > > +}
+
+[snip]
+
+> > > +static int xsdirxss_parse_of(struct xsdirxss_state *xsdirxss)
+> > > +{
+> > > +	struct device_node *node = xsdirxss->core.dev->of_node;
+> > > +	struct xsdirxss_core *core = &xsdirxss->core;
+> > > +	struct device *dev = core->dev;
+> > > +	struct fwnode_handle *ep, *rep;
+> > > +	int ret;
+> > > +	const char *sdi_std;
+> > > +
+> > > +	core->include_edh = of_property_read_bool(node, "xlnx,include-edh");
+> > > +	dev_dbg(dev, "EDH property = %s\n",
+> > > +		core->include_edh ? "Present" : "Absent");
+> > > +
+> > > +	ret = of_property_read_string(node, "xlnx,line-rate", &sdi_std);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "xlnx,line-rate property not found\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	if (!strncmp(sdi_std, "12G_SDI_8DS", XSDIRX_MAX_STR_LENGTH)) {
+> > 
+> > Strings in DT are null-terminated, you can use strcmp() and drop
+> > XSDIRX_MAX_STR_LENGTH.
+> 
+> I will remove the strings from DT and have values 0, 1 and 2 to
+> represent 3G, 6G and 12G 8DS mode configurations.
+
+Then please add a header file in include/dt-bindings/media with macros
+for these values. An alternative would be to use 3, 6 and 12
+respectively, in which case we could do without macros I think. I'm
+fine with either option.
+
+> > > +		core->mode = XSDIRXSS_SDI_STD_12G_8DS;
+> > > +	} else if (!strncmp(sdi_std, "6G_SDI", XSDIRX_MAX_STR_LENGTH)) {
+> > > +		core->mode = XSDIRXSS_SDI_STD_6G;
+> > > +	} else if (!strncmp(sdi_std, "3G_SDI", XSDIRX_MAX_STR_LENGTH)) {
+> > > +		core->mode = XSDIRXSS_SDI_STD_3G;
+> > > +	} else {
+> > > +		dev_err(dev, "Invalid Line Rate\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	dev_dbg(dev, "SDI Rx Line Rate = %s, mode = %d\n", sdi_std,
+> > > +		core->mode);
+> > > +
+> > > +	ret = of_property_read_u32(node, "xlnx,bpp", &core->bpc);
+> > > +	if (ret < 0) {
+> > > +		dev_err(dev, "failed to get xlnx,bpp\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	if (core->bpc != 10 && core->bpc != 12) {
+> > > +		dev_err(dev, "bits per component=%u. Can be 10 or 12 only\n",
+> > > +			core->bpc);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev), 0, 0,
+> > > +					     FWNODE_GRAPH_ENDPOINT_NEXT);
+> > > +	if (!ep) {
+> > > +		dev_err(dev, "no source port found");
+> > > +		ret = -EINVAL;
+> > > +		goto dt_parse_done;
+> > > +	}
+> > > +
+> > > +	rep = fwnode_graph_get_remote_endpoint(ep);
+> > > +	if (!rep) {
+> > > +		dev_err(dev, "no remote sink endpoint found");
+> > > +		ret = -EINVAL;
+> > > +	}
+> > 
+> > I don't think you need to check this, the subdev won't be linked
+> > properly in the pipeline if there's no port anyway.
+> 
+> Ok. I thought it was subdev driver's responsibility to validate this too. Hence added. 
+> I will remove this parsing in the next version.
+> 
+> > > +
+> > > +	fwnode_handle_put(rep);
+> > > +dt_parse_done:
+> > > +	fwnode_handle_put(ep);
+> > > +	return ret;
+> > > +}
+
+[snip]
+
+-- 
+Regards,
+
+Laurent Pinchart
