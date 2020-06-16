@@ -2,131 +2,96 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893E7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 19:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 20:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69E89208B3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 19:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7D8206F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 20:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="WhqH5S0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgFPTbh (ORCPT
+        id S1730507AbgFPUA2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:31:37 -0400
-Received: from p54ae948c.dip0.t-ipconnect.de ([84.174.148.140]:52033 "EHLO
-        maeck.local" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729989AbgFPTbh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:31:37 -0400
-X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 15:31:37 EDT
-Received: by maeck.local (Postfix, from userid 501)
-        id A2D428E50DD0; Tue, 16 Jun 2020 21:25:44 +0200 (CEST)
-From:   Felix Fietkau <nbd@nbd.name>
-To:     linux-wireless@vger.kernel.org
-Cc:     shayne.chen@mediatek.com, evelyn.tsai@mediatek.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 1/4] dt-bindings: net: wireless: mt76: add power-limits node
-Date:   Tue, 16 Jun 2020 21:25:41 +0200
-Message-Id: <20200616192544.97938-1-nbd@nbd.name>
-X-Mailer: git-send-email 2.24.0
+        Tue, 16 Jun 2020 16:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731064AbgFPUA1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 16:00:27 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E3FC061755
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 13:00:25 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 9so8079ljc.8
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 13:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:organization:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=WhqH5S0fm4kJwR2Us6nTMFyavpr+p2ob9Rh92WurpdcnnW5dg4ylnEawx9M3rYu501
+         d4GfjWWMYHeTubZjlkm4f02fv5NNyjqtykLc+PaQIFEYXzuZ8q37LAxd71Yfce3XRm1E
+         agmR/gKyan3/H8rWKzJvDHDLW/cDk0Y8E1iguSPdKAECAJgAjD96Xat6TCetvIpDyOJ2
+         A9zPP4Gku7Nd4TI4lCddOFavCkmP+z6JUCfXrJbzslogeCEwe5GBtXxDY6835ZdMBZTs
+         SmDAl+uMz9DZT0zSNM3bLpOxSwCB2QmprJxY1rhM2mf1RmMGX5voK9sF7YGACEuKmaSj
+         T1xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=BmSBD7h3njitpLi5QsmTDnHJWiGkucDb02pMa3UrBRI=;
+        b=tI+zOYeoIwlmb5LOeKuAE1rjwuy5zRmmXHJ68X7oZy+JRB4GLXbFtBLTWZlSBURXYg
+         ka8asPq2C7AJN+P1q6/TkOtLjgZRlvZpLSh+DWPJ34fDEiNwpT6ocIVIZPA9xdl70zim
+         cbl6dXG702I/vt+uhxD9REB7gSCEPECEpLVC1JbSMQhdKeuZ9o/UVWJgojqz63dIm/zb
+         cIJpc5IvQIaprj/mKhCEyfGxci/9OXzTNXb15Sz3TL957lgjhsthvtwbaxOo1c+9z6qG
+         xsn8GE30Lz+J1ga3+LHDf8fClwhMVtj+JXIIMUPy/x9/1rziA3SyUp/nQBvCockDpO/l
+         K4CQ==
+X-Gm-Message-State: AOAM533vbsTrcxVXgLGvHgfg3TWskBQ5091NzVE3VpmjHePoD4FTeUK+
+        fQDHPEyF9buGa3cXqIMDzzyRGg==
+X-Google-Smtp-Source: ABdhPJy8D91PJpYVXRICr86OQToa9hkNd7RwcHACmvb8FHbjd7ERv0jv9sQ0T5ab4xzjIL4LEGIIZw==
+X-Received: by 2002:a2e:a495:: with SMTP id h21mr2286305lji.436.1592337622099;
+        Tue, 16 Jun 2020 13:00:22 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:44fe:a796:a57:d8fd:42a6:762c])
+        by smtp.gmail.com with ESMTPSA id b26sm5480405lfp.40.2020.06.16.13.00.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 13:00:21 -0700 (PDT)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v5 0/2] Add Renesas RPC-IF support
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Organization: Cogent Embedded
+Message-ID: <9969c8a1-e6be-38a9-ced5-ce8c5ff07046@cogentembedded.com>
+Date:   Tue, 16 Jun 2020 23:00:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This subnode can be used to set per-rate tx power limits either per
-country code / regdomain or globally.
-These limits are typically provided by the device manufacturers and are
-used to limit sideband emissions and stay within regulatory limits
+Hello!
 
-Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
----
-v2:
- - merge 802.11ax rate changes from Shayne's patch
- - document txs-delta property
+Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC
+to be accessed via the external address space read mode or the manual mode.
+The memory controller driver for RPC-IF registers either SPI or HyperFLash
+subdevice, depending on the contents of the device tree subnode; it also
+provides the abstract "back end" API that can be used by the "front end"
+SPI/MTD drivers to talk to the real hardware...
 
- .../bindings/net/wireless/mediatek,mt76.txt   | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-index ab7e7a00e534..e4859c974ef4 100644
---- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-@@ -36,6 +36,7 @@ Optional nodes:
- - led: Properties for a connected LED
-   Optional properties:
-     - led-sources: See Documentation/devicetree/bindings/leds/common.txt
-+- power-limits: contains per-regdomain/channel rate power limit subnodes
- 
- &pcie {
- 	pcie0 {
-@@ -76,3 +77,61 @@ wmac: wmac@18000000 {
- 
- 	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
- };
-+
-+
-+Subnodes of power-limits:
-+
-+Properties:
-+- country: One or more country codes, as used by the cfg80211 regdomain code
-+- regdomain: "FCC", "ETSI" or "JP"
-+
-+If neither country, nor regdomain is specified, the power limits node is used
-+as a fallback when no other subnode matches.
-+
-+Subnodes txpower-2g, txpower-5g:
-+
-+Properties:
-+- channels: pairs of first and last channel number
-+- cck: 4 half-dBm per-rate power limit values
-+- ofdm: 8 half-dBm per-rate power limit values
-+- mcs:
-+	sets of per-rate power limit values for 802.11n/802.11ac rates for
-+	multiple channel bandwidth settings.
-+	Each set starts with the number of channel bandwidth settings for
-+	which the rate set applies, followed by either 8 (MT7603/MT7628) or
-+	10 (all other chips) power limit values.
-+	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
-+- ru:
-+	sets of per-rate power limit values for 802.11ax rates for multiple
-+	channel bandwidth or resource unit settings.
-+	Each set starts with the number of channel bandwidth or resource unit
-+	settings for which the rate set applies, followed by 12 power limit
-+	values. The order of the channel resource unit settings is:
-+	RU26, RU52, RU106, RU242/SU20, RU484/SU40, RU996/SU80, RU2x996/SU160.
-+- txs-delta: half-dBm power delta for different numbers of antennas (1, 2, ...)
-+
-+
-+power-limit example:
-+
-+power-limits {
-+	r0 {
-+		regdomain = "FCC";
-+		txpower-5g {
-+			r1 {
-+				channels = <36 48>;
-+				ofdm = <23 23 23 23 23 23 23 23>;
-+				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
-+					  <3 22 22 22 22 22 22 22 22 22 22>;
-+				ru = <3 22 22 22 22 22 22 22 22 22 22 22 22>,
-+				     <4 20 20 20 20 20 20 20 20 20 20 20 20>;
-+			};
-+			r2 {
-+				channels = <100 181>;
-+				ofdm = <14 14 14 14 14 14 14 14>;
-+				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
-+				txs-delta = <12 9 6>;
-+				ru = <7 14 14 14 14 14 14 14 14 14 14 14 14>;
-+			};
-+		};
-+	};
-+};
--- 
-2.24.0
+[1/2] dt-bindings: memory: document Renesas RPC-IF bindings
+[2/2] memory: add Renesas RPC-IF driver
 
+MBR, Sergei
