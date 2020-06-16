@@ -2,79 +2,108 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07151C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 08:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22175C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 08:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D993D2078E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 08:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F1920739
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 08:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pjFgRUJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgFPIUm (ORCPT
+        id S1726856AbgFPI0K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:20:42 -0400
-Received: from v6.sk ([167.172.42.174]:47516 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgFPIUm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:20:42 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 0150061626;
-        Tue, 16 Jun 2020 08:20:09 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 10:20:05 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 15/29] dt: fix reference to olpc,xo1.75-ec.txt
-Message-ID: <20200616082005.GA931489@furthur.local>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
+        Tue, 16 Jun 2020 04:26:10 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:19830 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgFPI0K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 04:26:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592295970; x=1623831970;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pdUPZ7+Pu/NEXeETQG7AdYlCrLApBPSZGixeZ66Fvys=;
+  b=pjFgRUJHRMps3/KCxEleLCP7LIBdRfg6TSKaaJ9Ys63JsstM5ElLpyD9
+   SWh0NpcMn/+fQYvwvyYCvPoBXsbzw4flm3lnRfnYj3FOOdfZZ/ZuO3Nml
+   sQ1dxeqfFir87YLgAdrVj4N7Hps3nfPk8EWoxT5P3F51SqMBJNTaMwD1i
+   427rXGcm2VR/GYMF1dF4UR9KcJinLCsiHwCnO1HiseQTTV//NF0kSJ/wV
+   PUkHx784A+t4ADBoFF7tQGYZCegcOIhHlIhtO9DrufSgUHWJ+kU+RVvzJ
+   bTceWy/SRP02P2sQ9ti8Pl+BppAE4t7JjH0DwWIHZWQEaiIlzt6DnQSiP
+   Q==;
+IronPort-SDR: YcQAzRbALpE91uj+fDjLyhJYX/RMVfaIOHGR+8/8dHiOmYVMzdWjHPlVSty/KZqDBmkZ/vqR30
+ EGwopgrpB+EGNuOiIuYFzQJaIj8JdyJWadsaX8ryy4qwmBU44ZIF1MRI5BrXjIQpW++MJJ50Bv
+ J71rXEzXdlQkeunDpG5RyoyfNrr+qgRMy2xH2xYLlK06UiTZxVby7C7XtQKz3jqZt98F46dFjk
+ juc62I6iEsoC4yw8e3VTkxraBX9KKeJZo8GUrL2Przc2jZ/Gu+rkXaMZqEt1hHX62FMiXR0MzN
+ W/g=
+X-IronPort-AV: E=Sophos;i="5.73,518,1583218800"; 
+   d="scan'208";a="79621886"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Jun 2020 01:26:10 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 16 Jun 2020 01:26:09 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 16 Jun 2020 01:26:06 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 0/3] hwmon: Adding support for Microchip Sparx5 SoC
+Date:   Tue, 16 Jun 2020 10:25:53 +0200
+Message-ID: <20200616082556.27877-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:46:54AM +0200, Mauro Carvalho Chehab wrote:
-> This file was converted and renamed.
-> 
-> Fixes: 7882d822b3f9 ("dt-bindings: spi: Convert spi-pxa2xx to json-schema")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This is an add-on series to the main SoC Sparx5 series
+(Message-ID: <20200615133242.24911-1-lars.povlsen@microchip.com>
 
-Thank you,
+Changes in v3:
+- Enabled driver for COMPILE_TEST
+- Use "bitfield.h"
+- Trimmed #includes even more
+- Removed unnecessary devm_add_action()
+- Maintain sort order in Makefile
+- Minor cosmetics
 
-Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+Changes in v2:
+- Removed unnecessary #includes
+- Statement reordering in s5_read()
+- Replaced EINVAL with EIO
+- Add 'break' in default: case statement.
+- Removed extra ()
+- Removed superfluous initialization
 
-I'm wondering -- which tree is this targetted for? I may end up
-converting the XO-1.75 EC docs to YAML for 5.9, and I suppose I'd need
-to base it on this and send it in the same direction.
+Lars Povlsen (3):
+  dt-bindings: hwmon: Add Sparx5 temperature sensor
+  arm64: dts: sparx5: Add hwmon temperature sensor
+  hwmon: sparx5: Add Sparx5 SoC temperature driver
 
-Lubo
+ .../bindings/hwmon/microchip,sparx5-temp.yaml |  39 +++++
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |   6 +
+ drivers/hwmon/Kconfig                         |  10 ++
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sparx5-temp.c                   | 136 ++++++++++++++++++
+ 5 files changed, 192 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,sparx5-temp.yaml
+ create mode 100644 drivers/hwmon/sparx5-temp.c
 
+-- 
+2.27.0
 
-> ---
->  Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt b/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
-> index 8c4d649cdd8f..2d7cdf19a0d0 100644
-> --- a/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
-> +++ b/Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
-> @@ -8,7 +8,7 @@ The embedded controller requires the SPI controller driver to signal readiness
->  to receive a transfer (that is, when TX FIFO contains the response data) by
->  strobing the ACK pin with the ready signal. See the "ready-gpios" property of the
->  SSP binding as documented in:
-> -<Documentation/devicetree/bindings/spi/spi-pxa2xx.txt>.
-> +<Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml>.
->  
->  Example:
->  	&ssp3 {
-> -- 
-> 2.26.2
-> 
