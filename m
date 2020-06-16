@@ -2,265 +2,73 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAABC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145C1C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED77D207C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1FF21707
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323422;
+	bh=ZA8j5WqRei9ADYlTjOJG9AlPyaO9kaM1e46RYsUIRSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DoOoZQC715yyoWQQhzirH26UNnxSyMUQsqEprJrBvgu2rzANcoFrz9CY91NQ40fJQ
+	 X/CVMTN84/tXOZMI3hVyGxyl251xnO8PPrZlQ/oYbq1KmpuUP5apS+neo44fdojAGy
+	 ecBfObWis2oduTVE/7qJePHG9fWMzMLyN32FML+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733012AbgFPP45 (ORCPT
+        id S1732571AbgFPPuJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:56:57 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36618 "EHLO mga07.intel.com"
+        Tue, 16 Jun 2020 11:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732993AbgFPP4r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:56:47 -0400
-IronPort-SDR: P2mXqQHNrxPgqe0B8160aaF1LH0ohgBf9q1ngWwVNHOrBWFpI0cf3Ta6vCqPuXFtQfhsAp8Gpe
- fovAFxu2v8+w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 08:56:46 -0700
-IronPort-SDR: nzPcmt43wjvPio6T3fVA1CS4W5AduSmcR5lBh7PmeQXkiyKG7J8gtIFQ3pOL02RCHDOtKcS+Pp
- GNfpqOq8PrrA==
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="449888148"
-Received: from pperycz-mobl.ger.corp.intel.com (HELO dalessan-mobl1.ir.intel.com) ([10.213.235.69])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 08:56:43 -0700
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     linux-arm-kernel@lists.infradead.org,
+        id S1731672AbgFPPuH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:07 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02290214F1;
+        Tue, 16 Jun 2020 15:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322607;
+        bh=ZA8j5WqRei9ADYlTjOJG9AlPyaO9kaM1e46RYsUIRSA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hv7CDE1f09U9T8Dbm2NdIvxnDyzUKqh38iLINrGJ55qKG9Vyk5n9hxhPIaefZMunF
+         uYU6dQPT9/Iz22twkm217Kxwp6KY+Fr8qZJ7iGwGTxSOilsfjp09LvLxFmnd8YQ2eR
+         yAnek6/UmQfvax8A18Gyv9HwdAVah6vGFFrQOWOE=
+Date:   Tue, 16 Jun 2020 21:20:01 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     Paul Murphy <paul.j.murphy@intel.com>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 6/7] arm64: dts: keembay: Add device tree for Keem Bay SoC
-Date:   Tue, 16 Jun 2020 16:56:12 +0100
-Message-Id: <20200616155613.121242-7-daniele.alessandrelli@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
-References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 4/8] dt-bindings: dmaengine: renesas,usb-dmac: Add
+ binding for r8a7742
+Message-ID: <20200616155001.GH2324254@vkoul-mobl>
+References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590356277-19993-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590356277-19993-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+On 24-05-20, 22:37, Lad Prabhakar wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
 
-Add initial device tree for Intel Movidius SoC code-named Keem Bay.
+Applied, thanks
 
-This initial DT includes nodes for Cortex-A53 cores, UARTs, timers, GIC,
-PSCI, PMU, and Keem Bay SCMI mailbox.
-
-Reviewed-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
----
- MAINTAINERS                                |   1 +
- arch/arm64/boot/dts/intel/keembay-soc.dtsi | 172 +++++++++++++++++++++
- 2 files changed, 173 insertions(+)
- create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3b919aa8b1bd..610907bf391b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1959,6 +1959,7 @@ M:	Paul J. Murphy <paul.j.murphy@intel.com>
- M:	Daniele Alessandrelli <daniele.alessandrelli@intel.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/keembay.yaml
-+F:	arch/arm64/boot/dts/intel/keembay-soc.dtsi
- F:	include/dt-bindings/clock/keembay-clocks.h
- F:	include/dt-bindings/power/keembay-power.h
- 
-diff --git a/arch/arm64/boot/dts/intel/keembay-soc.dtsi b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
-new file mode 100644
-index 000000000000..bd0a48f24e09
---- /dev/null
-+++ b/arch/arm64/boot/dts/intel/keembay-soc.dtsi
-@@ -0,0 +1,172 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020, Intel Corporation.
-+ *
-+ * Device tree describing Keem Bay SoC.
-+ */
-+
-+#include <dt-bindings/clock/keembay-clocks.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/keembay-power.h>
-+
-+/ {
-+	compatible = "intel,keembay";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			clocks = <&scmi_dvfs 0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+			clocks = <&scmi_dvfs 0>;
-+		};
-+
-+		cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x2>;
-+			enable-method = "psci";
-+			clocks = <&scmi_dvfs 0>;
-+		};
-+
-+		cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x3>;
-+			enable-method = "psci";
-+			clocks = <&scmi_dvfs 0>;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	firmware: firmware {
-+
-+		scmi: scmi {
-+			compatible = "arm,scmi";
-+			mboxes = <&scmi_mailbox 0>;
-+			shmem = <&scmi_sec_shmem>;
-+			mbox-names = "tx";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			scmi_devpd: protocol@11 {
-+				reg = <0x11>;
-+				#power-domain-cells = <1>;
-+			};
-+
-+			scmi_dvfs: protocol@13 {
-+				reg = <0x13>;
-+				#clock-cells = <1>;
-+			};
-+
-+			scmi_clk: protocol@14 {
-+				reg = <0x14>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+	};
-+
-+	scmi_mailbox: scmi_mailbox {
-+		compatible = "intel,keembay-scmi-mailbox";
-+		#mbox-cells = <1>;
-+		memory-region = <&scmi_sec_shmem>;
-+		u-boot,dm-pre-reloc;
-+	};
-+
-+	gic: interrupt-controller@20500000 {
-+		compatible = "arm,gic-v3";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0x0 0x20500000 0x0 0x20000>,	/* GICD */
-+		      <0x0 0x20580000 0x0 0x80000>;	/* GICR */
-+		/* VGIC maintenance interrupt */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		/* Secure, non-secure, virtual, and hypervisor */
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 0x7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart0: serial@20150000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20150000 0x0 0x100>;
-+			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "baudclk", "apb_pclk";
-+			clocks = <&scmi_clk KEEM_BAY_PSS_AUX_UART0>,
-+				 <&scmi_clk KEEM_BAY_PSS_UART0>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@20160000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20160000 0x0 0x100>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "baudclk", "apb_pclk";
-+			clocks = <&scmi_clk KEEM_BAY_PSS_AUX_UART1>,
-+				 <&scmi_clk KEEM_BAY_PSS_UART1>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@20170000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20170000 0x0 0x100>;
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "baudclk", "apb_pclk";
-+			clocks = <&scmi_clk KEEM_BAY_PSS_AUX_UART2>,
-+				 <&scmi_clk KEEM_BAY_PSS_UART2>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@20180000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x0 0x20180000 0x0 0x100>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "baudclk", "apb_pclk";
-+			clocks = <&scmi_clk KEEM_BAY_PSS_AUX_UART3>,
-+				 <&scmi_clk KEEM_BAY_PSS_UART3>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+	};
-+};
 -- 
-2.26.2
-
+~Vinod
