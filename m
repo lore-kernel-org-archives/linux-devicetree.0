@@ -2,334 +2,231 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6135C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A97DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2B720B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE332098B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rfgAoG+d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuFAzfU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgFPOnm (ORCPT
+        id S1728553AbgFPOr6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36590 "EHLO
+        Tue, 16 Jun 2020 10:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgFPOnl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 10:43:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC392C061573;
-        Tue, 16 Jun 2020 07:43:41 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r18so9318071pgk.11;
-        Tue, 16 Jun 2020 07:43:41 -0700 (PDT)
+        with ESMTP id S1728501AbgFPOr6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 10:47:58 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94680C061573;
+        Tue, 16 Jun 2020 07:47:56 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id b82so3158178wmb.1;
+        Tue, 16 Jun 2020 07:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=teNA2ECLoe4uArXM7ZRonheeONiyGBUzqM9TJU/zCBE=;
-        b=rfgAoG+d9v2eRCytDibmeDPQTXO8GrmECpMocRAiZ1/YDKSuBVUpaW6Pr6L2dzZjp+
-         N6MX1UB7G3xXlHFJn4aUOn8JCiGYhj+qd+ZGENNlDxGfuj1CI/T0nQdQZ8fWuIqOmiB7
-         VaoTIlBdSuL8NV8Fv+xfsxjk79+UIX1+d5+h2TTi00aBftF/UwcEhqrKYV5wFzbM5EAg
-         Is/UBITBTCb6jO47EwgfDKnaA47oQvY8XJXIlkBARkStk3ykBQWf+DenTsJzx4MpakAZ
-         Ugw4NfNJlhKqk5nTGbxdizQcZ/VePX3qmq2A4+A7IfrS4AaGIWLUe/BwwfF5j6vdr8wC
-         +/8A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Lyw9ZzqOPjJY4HAOxqRLcYECnvae7XM/53xcqed98xs=;
+        b=AuFAzfU5U8yvoARHFE9BByJNPbj7Egv6NjctAXu6EaC74eDqwkYcOJiniQFqET5XqS
+         YyxwyVgwvqSwCAt7D6pt+aoSM7eZMeHiYaUA6blDysms00QTeyeTYHu5DRiAbKDGU8Zv
+         3qWjp65Sr3oRPbowYhJXFqvW23I+FjvXWr6a1pGIqaGMr64h2EXMFTUK+Z/Gqy2k74/4
+         +xjwMtlGu0M/LffiPn6Qaa1N5oyclY++/Scn+xXe1XQRjNpzujva+ktL7DULIIa2fvan
+         c4q8THUBI0VMCA4hUg2vO2qMS5iFD75SkksnbHBdcnYWnwEUpPdLNDn/0HorhTty/UE8
+         BR/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=teNA2ECLoe4uArXM7ZRonheeONiyGBUzqM9TJU/zCBE=;
-        b=j+AKIwZB6Olb+Wz+LybbMR9Dku9yJk4z2PcVGMzvRisPDd+5q4skKiFS+Da9QOsJkd
-         BxVOArmFGIQC88IDlLkfZonhxhlDlkH5LFWYoqC2ENPDwmEnqbQlnw+LxbJPJCN1cYE8
-         UBKMrWrAr166+tU23/Oni2GaGPnkJfpQERh1Vv3YwM25WxzQjW96M3bKTt5PHpY73Wk/
-         STv8gP52xtMYL8LceVcJs+RQs45yZl6VNWav+Ni05iWVz0SWz80VLE1fTMt7KZLzS4X4
-         6++7izfbwVOJBGT37q8EAJxvtJS0QmErJkLSBFQjvrNWhjI+Xq1yVw1g4xgOdRoVXdUQ
-         1zkA==
-X-Gm-Message-State: AOAM531cYNm8uvOh0w1V50PH9BLFx15t4H8kcFE4L0iEj7rK4rpIlU/H
-        D6GxDPXGFjAyvFMCc7JHHFs=
-X-Google-Smtp-Source: ABdhPJxJkbmOPoU7PGJc1tDn3jImcb3q/MB1iK31CaZXmrzorSXuncptlWBtS9czYc/KVnfemnSn1A==
-X-Received: by 2002:a63:e550:: with SMTP id z16mr2274000pgj.92.1592318621126;
-        Tue, 16 Jun 2020 07:43:41 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m15sm14735100pgv.45.2020.06.16.07.43.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 07:43:40 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-References: <20200616082556.27877-1-lars.povlsen@microchip.com>
- <20200616082556.27877-4-lars.povlsen@microchip.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <b44120d8-67fe-4ba3-bc76-80a5a0970dad@roeck-us.net>
-Date:   Tue, 16 Jun 2020 07:43:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lyw9ZzqOPjJY4HAOxqRLcYECnvae7XM/53xcqed98xs=;
+        b=AaosfnbDhJmwV5kWFjDdgtU8TRN5dzAwJPtQwJbpKIqgNKOZ1SQBC5N1saqbzVPkFg
+         al8/ovWRks66klByxDCJPlpFLvIPThfjQPwRgWQ68piAbmR4JjT4tX5LqfEFXRSurkXq
+         Y2RBjn6+EBQeqmV33ScdUFKVWwURVoBNkwzg433sz8UchtFYB1lbD9NHjZGa95O1qe/D
+         k5c+iehuFl8TwF2oJqZ8YvBw4yR7lj1DlShMHqkdAH1YmtptpOkEB7KJ5h2Ge8tRC+km
+         Vtrn8qNXTERBeCiUce8QtNFXNzeQ+DXYadk6v6yoJXYQsSYezi2/4eFw3q+bETpmLBkw
+         JYgw==
+X-Gm-Message-State: AOAM531yzDJprrndEvJubNvbYD0rtjiIHS7I9tEdKBB7JgXKv0wrkyZc
+        12mhLSBks8zy2bW4LbBIxeE=
+X-Google-Smtp-Source: ABdhPJyogHWFGVJS6VX4pvJHrdwtzHqzSkjhhPLl1NT8ItCN/D1Fj9e1QcSlMWO59+WLolTXUrDCPg==
+X-Received: by 2002:a1c:7c0e:: with SMTP id x14mr3457655wmc.1.1592318875308;
+        Tue, 16 Jun 2020 07:47:55 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id d24sm4201054wmb.45.2020.06.16.07.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 07:47:54 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 16:47:53 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 08/38] dt-bindings: display: tegra: Document interconnect
+ paths
+Message-ID: <20200616144753.GC3000485@ulmo>
+References: <20200612141903.2391044-1-thierry.reding@gmail.com>
+ <20200612141903.2391044-9-thierry.reding@gmail.com>
+ <82888e53-c539-7d61-666d-bd6dbc494bfe@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200616082556.27877-4-lars.povlsen@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+Content-Disposition: inline
+In-Reply-To: <82888e53-c539-7d61-666d-bd6dbc494bfe@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/16/20 1:25 AM, Lars Povlsen wrote:
-> This patch adds a temperature sensor driver to the Sparx5 SoC.
-> 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  drivers/hwmon/Kconfig       |  10 +++
->  drivers/hwmon/Makefile      |   1 +
->  drivers/hwmon/sparx5-temp.c | 136 ++++++++++++++++++++++++++++++++++++
 
-This will also require documentation in
-	Documentation/hwmon/sparx5-temp.rst
+--kVXhAStRUZ/+rrGn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  3 files changed, 147 insertions(+)
->  create mode 100644 drivers/hwmon/sparx5-temp.c
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 288ae9f63588c..7fb5e0c6c6306 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
->  	  This driver can also be built as a module. If so, the module
->  	  will be called i5k_amb.
->  
-> +config SENSORS_SPARX5
-> +	tristate "Sparx5 SoC temperature sensor"
-> +	depends on ARCH_SPARX5 || COMPILE_TEST
-> +	help
-> +	  If you say yes here you get support for temperature monitoring
-> +	  with the Microchip Sparx5 SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called sparx5-temp.
-> +
->  config SENSORS_F71805F
->  	tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
->  	depends on !PPC
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3e32c21f5efe3..857293f650412 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_SMM665)	+= smm665.o
->  obj-$(CONFIG_SENSORS_SMSC47B397)+= smsc47b397.o
->  obj-$(CONFIG_SENSORS_SMSC47M1)	+= smsc47m1.o
->  obj-$(CONFIG_SENSORS_SMSC47M192)+= smsc47m192.o
-> +obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
->  obj-$(CONFIG_SENSORS_STTS751)	+= stts751.o
->  obj-$(CONFIG_SENSORS_AMC6821)	+= amc6821.o
->  obj-$(CONFIG_SENSORS_TC74)	+= tc74.o
-> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
-> new file mode 100644
-> index 0000000000000..4ed8a2aec3ae9
-> --- /dev/null
-> +++ b/drivers/hwmon/sparx5-temp.c
-> @@ -0,0 +1,136 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/* Sparx5 SoC temperature sensor driver
-> + *
-> + * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/bitfield.h>
+On Fri, Jun 12, 2020 at 06:52:44PM +0300, Dmitry Osipenko wrote:
+> Hello Thierry,
+>=20
+> 12.06.2020 17:18, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > From: Thierry Reding <treding@nvidia.com>
+> Commit description is missing, checkpatch should warn about it.
+>=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  .../display/tegra/nvidia,tegra20-host1x.yaml  | 52 ++++++++++++++++---
+> >  1 file changed, 46 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,teg=
+ra20-host1x.yaml b/Documentation/devicetree/bindings/display/tegra/nvidia,t=
+egra20-host1x.yaml
+> > index 3347e1b3c8f0..684fe25641f1 100644
+> > --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-ho=
+st1x.yaml
+> > +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-ho=
+st1x.yaml
+> > @@ -97,8 +97,17 @@ properties:
+> >    iommus:
+> >      $ref: "/schemas/iommu/iommu.yaml#/properties/iommus"
+> > =20
+> > -  memory-controllers:
+> > -    $ref: /schemas/types.yaml#/definitions/phandle-array
+>=20
+> Why memory-controllers property is removed?
 
-Alphabetic order, please.
+Because it was accidentally added in patch 7. This is leftover from an
+earlier set of patches.
 
-> +
-> +#define TEMP_CTRL		0
-> +#define TEMP_CFG		4
-> +#define  TEMP_CFG_CYCLES	GENMASK(24, 15)
-> +#define  TEMP_CFG_ENA		BIT(0)
-> +#define TEMP_STAT		8
-> +#define  TEMP_STAT_VALID	BIT(12)
-> +#define  TEMP_STAT_TEMP		GENMASK(11, 0)
-> +
-> +struct s5_hwmon {
-> +	void __iomem *base;
-> +};
-> +
-> +static void s5_temp_enable(struct s5_hwmon *hwmon)
-> +{
-> +	u32 val = readl(hwmon->base + TEMP_CFG);
-> +	u32 clk = 250;
-> +
+> > +  interconnects:
+> > +    description: Description of the interconnect paths for the host1x
+> > +      controller; see ../interconnect/interconnect.txt for details.
+> > +    items:
+> > +      - description: memory read client for host1x
+> > +
+> > +  interconnect-names:
+> > +    description: A list of names identifying each entry listed in the
+> > +      "interconnects" property.
+> > +    items:
+> > +      - const: dma-mem # read
+>=20
+> Please notice that Host1x has two memory clients: one for DMA engine and
+> second I don't know what's for, maybe for indirect memory accesses. Why
+> you skipped the second path?
 
-Unnecessary variable, and magic number. It would be better to use a define
-or at least explain what the number is for. Also, if this is associated with
-a system clock, would it make sense to use the clock subsystem API to get
-the rate ?
+I'm primarily targetting Tegra186 and Tegra194 with these patches
+because we need the interconnects properties on those platforms in order
+to correctly set the DMA masks at a global scope. For Tegra186 and
+Tegra194 I can only see a single memory client for host1x.
 
-> +	val &= ~TEMP_CFG_CYCLES;
-> +	val |= FIELD_PREP(TEMP_CFG_CYCLES, clk);
-> +	val |= TEMP_CFG_ENA;
-> +
-> +	writel(val, hwmon->base + TEMP_CFG);
-> +}
-> +
-> +static int s5_read(struct device *dev, enum hwmon_sensor_types type,
-> +		   u32 attr, int channel, long *temp)
-> +{
-> +	struct s5_hwmon *hwmon = dev_get_drvdata(dev);
-> +	int rc = 0, value;
-> +	u32 stat;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		stat = readl_relaxed(hwmon->base + TEMP_STAT);
-> +		if (!(stat & TEMP_STAT_VALID))
-> +			return -EIO;
-> +		value = stat & TEMP_STAT_TEMP;
-> +		value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
+Looking at the register documentation, the host1xw and host1xr clients
+do exist on Tegra210 and earlier and they are used for indirect writes
+and reads, respectively.
 
-A comment describing the calculation would be useful, not only to help
-the reader but also to help me verify if the calculation is correct
-(especially since datasheets don't seem to be public).
+I don't think we use indirect reads/writes, so we can probably do
+without the corresponding memory clients. Alternatively we could
+conditionally add them on Tegra210 and earlier.
 
-> +		value *= 100;
-> +		*temp = value;
-> +		break;
-> +	default:
-> +		rc = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
-> +			     u32 attr, int channel)
-> +{
-> +	if (type != hwmon_temp)
-> +		return 0;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		return 0444;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static const struct hwmon_channel_info *s5_info[] = {
-> +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops s5_hwmon_ops = {
-> +	.is_visible = s5_is_visible,
-> +	.read = s5_read,
-> +};
-> +
-> +static const struct hwmon_chip_info s5_chip_info = {
-> +	.ops = &s5_hwmon_ops,
-> +	.info = s5_info,
-> +};
-> +
-> +static int s5_temp_probe(struct platform_device *pdev)
-> +{
-> +	struct device *hwmon_dev;
-> +	struct s5_hwmon *hwmon;
-> +
-> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-> +	if (!hwmon)
-> +		return -ENOMEM;
-> +
-> +	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(hwmon->base))
-> +		return PTR_ERR(hwmon->base);
-> +
-> +	s5_temp_enable(hwmon);
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +							 "s5_temp",
-> +							 hwmon,
-> +							 &s5_chip_info,
-> +							 NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +const struct of_device_id s5_temp_match[] = {
-> +	{ .compatible = "microchip,sparx5-temp" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, s5_temp_match);
-> +
-> +static struct platform_driver s5_temp_driver = {
-> +	.probe = s5_temp_probe,
-> +	.driver = {
-> +		.name = "sparx5-temp",
-> +		.of_match_table = s5_temp_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(s5_temp_driver);
-> +
-> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
-> +MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
-> +MODULE_LICENSE("GPL");
-> 
+Thierry
 
+> >  required:
+> >    - compatible
+> > @@ -489,6 +498,26 @@ allOf:
+> >              iommus:
+> >                $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> > =20
+> > +            #interconnects:
+> > +            #  items:
+> > +            #    - description: memory read client for window A
+> > +            #    - description: memory read client for window B
+> > +            #    - description: memory read client for window C
+> > +            #    - description: memory read client for cursor
+> > +            #    # disp only
+> > +            #    - description: memory read client for window T
+> > +            #    - description: memory read client for window D
+> > +
+> > +            #interconnect-names:
+> > +            #  items:
+> > +            #    - const: wina
+> > +            #    - const: winb
+> > +            #    - const: winc
+> > +            #    - const: cursor
+> > +            #    # disp only
+> > +            #    - const: wint
+> > +            #    - const: wind
+>=20
+> Is this really intended to be commented out? Looks like this is an
+> unfinished patch.
+
+I started adding this after finishing Tegra186 and Tegra194, but then I
+ran into various other issues and wanted to do this step by step, so I
+plan to go back to Tegra210 and earlier later on and stub them out.
+
+However, since I had already done the research I wanted to leave these
+in here for later reference, so I didn't have to go back and look this
+up again.
+
+> In the patch [1] I used memory client names for the interconnect paths.
+> I like yours variant of the naming, it is more intuitive.
+
+I only noticed after posting this series that you had sent out the
+series for interconnects and that it conflicted in the bindings.
+
+But yeah, I do also like the contextual names better because they are
+more intuitive.
+
+> [1]
+> https://patchwork.ozlabs.org/project/linux-tegra/patch/20200609131404.175=
+23-23-digetx@gmail.com/
+>=20
+> I'll rebase my series on top of yours patches once you'll get them into
+> linux-next. Looking forward to v2!
+
+There's quite a bit to review here, but I also have a couple of patches
+that depend on these, so yeah, it'd be great if this could go in sooner
+rather than later.
+
+Thierry
+
+--kVXhAStRUZ/+rrGn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7o25YACgkQ3SOs138+
+s6Eo/hAAwozV0hE0VB+QuRcHIfq8OEujXsQXxA+kDVCgbCwCF+2ymfSu4uzUhWnD
+73/a1MoHrnmEIHDsrTO9jSHlqVYWrD6GOK+ITW14Eckj3Z/T+rJWdflwrqMko9Z9
+gkaBmZ88cGIYQJiHalVXHIEAvAoNS7V8E4c27CQbjTq9QTdGaeMRAYDrWWLzd23P
+q3ibmsJZ2bhAzPXo9XSe8hmoNVhbmZI0q3+7y7e28q9UmimhyF48nY/rT4XTg4aY
+5N++oqAnDgWAV1NIXEdbS+KpFlzOxAN9oL6LAUILO0u9ANW8dDwq/Deb5N4HMmeg
+YPo/H0GcRnqESIkfOPJEX9DxPjpUElXhZTNzPAbiawvNFuy2gqrWw4mGrtwRTQDw
+mtvUvfXSo3sn3M99veGm/7Tl/L09mYJOzUl76+SmzVZDVoAaZaPRFm6ZJ+mmrrtW
+XuKzRyCz6Go2a9Of1uH98VDm+nm/38nFwlAeRvBnBaLEpP+Udt0Dkmmpx0gHZxbO
+x5OF2/v7UJ2yCw9av0q1sA5HTKVsOer31yDieCM9UlbrpavGWWbAP701zeuXHqbM
+w6/ZSMddU6hoPHWQWMwD5pCL+g9JkItudDir3cAVaRtYAGaPAFdduyZq0CQNrWXP
+OS2lKiOH2Imx0YaeCtQ0wunpnxPtimTtrjNnikQqlgHpmWyaECg=
+=bQCD
+-----END PGP SIGNATURE-----
+
+--kVXhAStRUZ/+rrGn--
