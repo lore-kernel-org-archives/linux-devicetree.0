@@ -2,295 +2,100 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19702C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 10:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5F2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 10:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09DE2074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 10:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E18E62074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 10:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastree3d-com.20150623.gappssmtp.com header.i=@fastree3d-com.20150623.gappssmtp.com header.b="omUo107s"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G/qvd/eV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgFPK0m (ORCPT
+        id S1728175AbgFPK12 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgFPK0F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 06:26:05 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C91C08C5C3
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 03:26:03 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id d15so13838774edm.10
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 03:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastree3d-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=uvWiDRpXyXmM380ZrN9zlV0oOXaMR/3vOUKFI6y1X4s=;
-        b=omUo107sz4rEVpoLq37pLdyMWkehlEpMoqjlJNnvSwwEjdRQcjQEnw997FE8bflTuP
-         WQbpt6Q0Q4MNkoDybpTKC4RJYNL020+Y8K47ZbPTPswE3aoFP/J7WsOhJ+iGOOtXtqHm
-         sj1wAqyoxOiuZlRXjqYuU7Ns9hKgZ6KDloltHZwYvLeWSrlBDqZEUyd7bAiWUoMMhFXM
-         iMwXWpgPKI+S+enDFxD677Pw0TWLQoLz1R5uv+i3cdgjJFjcba/EgFl0D2JjMAWFaGKn
-         pTI5m0ULduJ/07nsFnGsbyXZ7OSSTa/juJwEelUztBtJF6c51nSzp6h0sVSMRr9LCsax
-         Kejg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=uvWiDRpXyXmM380ZrN9zlV0oOXaMR/3vOUKFI6y1X4s=;
-        b=XBonGHcER+ftx7T3pX9W4pAYDqNQ3JohepDhnQPYzq18Zz5I75DFIsiaCE2mgYr14w
-         Zn0LlCto2nbSr6BNPhkI1G7McCHnlZLRxGwL1OwMaY+2TM1Vqf4gzeko0m2zURDS5n53
-         N99RWTunNKzQMrIMD1FAxkoqogC1WD2p/1kbOMs+f1eigAmLWAaK+UOZfBHpt0nmgWmL
-         3dQStlEAtS5v3CS3GLHO0KSkoHEseKGGxplOFkXjhwPLX/tcsDJia0nUGDB15NiZR1gp
-         VJ7xsuI3ylhD877+TreZ/u2Z65K6MSvsBVdgVJYLxh7I6S1/oWicezQolN78J4SjOjAu
-         jPsg==
-X-Gm-Message-State: AOAM531sh3F43WU1qQHDXUcmstdMFuznI4+g0EEkNw2zpp6o+dT+YT8w
-        5w1BVl2WtnFZ+AVXG6EjCZg5DWV+aQ==
-X-Google-Smtp-Source: ABdhPJzfQjX3Lir3Vo2rjjcSCHcSDhqDcZqB2Z9+UlZYt0fJcY4gMrh+oFOfj3B/sndP21M0h8zCSQ==
-X-Received: by 2002:a50:f289:: with SMTP id f9mr1846629edm.188.1592303157695;
-        Tue, 16 Jun 2020 03:25:57 -0700 (PDT)
-Received: from [192.168.33.195] (fastree1.epfl.ch. [192.26.37.52])
-        by smtp.gmail.com with ESMTPSA id l8sm11012270ejz.52.2020.06.16.03.25.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 03:25:57 -0700 (PDT)
-From:   Adrian Fiergolski <adrian.fiergolski@fastree3d.com>
-X-Google-Original-From: Adrian Fiergolski <Adrian.Fiergolski@fastree3d.com>
-Subject: Re: [cadence-spi] daisy chain
-To:     Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <7cddc1a3-f3a8-37dd-487a-cd2274b7941c@fastree3d.com>
- <CAMuHMdXzErU5z69=2gks5ySutkGw98O6+f7weiuPUp8uqTx63w@mail.gmail.com>
- <9bfce379-1878-e8e5-c452-0e24aa263cbb@fastree3d.com>
- <CAMuHMdWkbVihHqKywxDRW6ucNEySXMa-XEuaVu8Vbx2+kUU-aA@mail.gmail.com>
- <143d0505-33a2-b97f-0088-75def4c1e30d@fastree3d.com>
- <a1dd3e24-a393-0013-5ff7-a8e7cc7e0626@fastree3d.com>
- <CAMuHMdWPo6xDMipBg2noSOD3trYJjifDbSf-krtgPkA-XdbXZg@mail.gmail.com>
- <4311cc0a-016d-1a24-10f9-9dccc28ddd43@fastree3d.com>
- <CAMuHMdVHqNi9peLm8Lf+uSXDjzJP6eB9Kz1oM-Mr8RQ62+1uZg@mail.gmail.com>
- <CAL_JsqLuo4jB6B8eqwm3YQ1gxxndwC6o23=+tm0dugPcGxm6ww@mail.gmail.com>
-Message-ID: <335c3afa-dcab-12e1-a9f4-877a0a26c1b1@fastree3d.com>
-Date:   Tue, 16 Jun 2020 12:25:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        Tue, 16 Jun 2020 06:27:28 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49119 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728160AbgFPK1W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:27:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592303230; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=VgA3gFmeWcxzruBJ9AzJv71j3OzPukEsifDVgoIXzv4=; b=G/qvd/eV6j637ValtlExd8BvX3oy7/VI8j/ogmR8XAKUSQ6ny9ev2K2f6hPHKxYl+so5/OAY
+ dO62YO1/c+f0tG6NFKUPzb2wTZ+9mPNuF3bGWdEiZ0k2lV9klqyGoYhVYnnOM1jpX4gCL9YQ
+ gPdaBPXGpJwczCp0aeXhytz3ovo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5ee89e7ce144dd511590f0da (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 10:27:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D4F17C433C8; Tue, 16 Jun 2020 10:27:07 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [49.207.137.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB32FC433C8;
+        Tue, 16 Jun 2020 10:27:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB32FC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V3 0/5] Enable USB support in IPQ8074
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <5e392fe0-c8aa-4cef-d04b-0209b504c75d@codeaurora.org>
+Date:   Tue, 16 Jun 2020 15:57:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLuo4jB6B8eqwm3YQ1gxxndwC6o23=+tm0dugPcGxm6ww@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert and Rob,
+Ping!
 
-Thank you for your comments.
+Hi Vinod,
 
-On 16.06.2020 00:22, Rob Herring wrote:
-> On Mon, Jun 15, 2020 at 3:30 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> Hi Adrian,
->>
->> On Mon, Jun 15, 2020 at 6:05 PM Adrian Fiergolski
->> <adrian.fiergolski@fastree3d.com> wrote:
->>> On 15.06.2020 16:40, Geert Uytterhoeven wrote:
->>>> On Mon, Jun 15, 2020 at 4:06 PM Adrian Fiergolski
->>>> <adrian.fiergolski@fastree3d.com> wrote:
->>>>> Sorry for the typo in the example device tree:
->>>>>
->>>>> On 15.06.2020 15:57, Adrian Fiergolski wrote:
->>>>>> On 15.06.2020 15:07, Geert Uytterhoeven wrote:
->>>>>>> On Mon, Jun 15, 2020 at 3:01 PM Adrian Fiergolski
->>>>>>> <adrian.fiergolski@fastree3d.com> wrote:
->>>>>>>> On 13.06.2020 09:33, Geert Uytterhoeven wrote:
->>>>>>>>> On Fri, Jun 12, 2020 at 6:26 PM Adrian Fiergolski
->>>>>>>>> <adrian.fiergolski@fastree3d.com> wrote:
->>>>>>>>> I have a daisy chain of three ltc2634 slaves (iio/dac/ltc2632.c)
->>>>>>>>> connected to a single chip select of the cadence-spi master. I have the
->>>>>>>>> impression such a configuration is supported by none of those two
->>>>>>>>> drivers. I could try to extend both, however, I haven't found any other
->>>>>>>>> SPI driver, where I could find implementation inspiration. Is it
->>>>>>>>> supported by kernel?
->>>>>>>>>
->>>>>>>>> drivers/gpio/gpio-max3191x.c supports "#daisy-chained-devices".
->>>>>>>>> drivers/gpio/gpio-74x164.c supports multiple shift registers through the
->>>>>>>>> "registers-number" DT property.
->>>>>>>>>
->>>>>>>>> So both drivers handle this in their SPI slave drivers.
->>>>>>>>>
->>>>>>>>> Of course this does not handle the mixed case, i.e. daisy-chaining
->>>>>>>>> different types of devices.
->>>>>>>>>
->>>>>>>>> The documentation mentions only about the common 'daisy-chained-devices'
->>>>>>>>> property (devicetree/bindings/common-properties.txt). However, in order
->>>>>>>>> to try to implement it in the master driver, IMHO, the spi subsystem
->>>>>>>>> would need to have a call 'no-operation' to other nodes on the
->>>>>>>>> daisy-chain, which are not addressed by the given SPI access. Is there
->>>>>>>>> any recommended approach to address this case?
->>>>>>>>>
->>>>>>>>> Supporting this in a generic way would indeed be nice, as it would mean
->>>>>>>>> individual SPI slave drivers no longer have to care about it.
->>>>>>>>> However, that may be difficult, as the master needs to known which
->>>>>>>>> dummy (no-op) data is safe to shift through the non-addresses SPI slaves.
->>>>>>>> In fact, the ultimate solution would be to have it solved at the level
->>>>>>>> of the spi subsystem:
->>>>>>>>
->>>>>>>>   * /spi_device struct/ would contain extra callback which returns msg
->>>>>>>>     to be sent for no operation.
->>>>>>>>   * spi_device struct would contain a pointer to the list describing the
->>>>>>>>     given daisy chain (list of spi_devices on the chain)
->>>>>>>>   * /spi_device struct /would contain extra u8 daisy_chain_msg_length
->>>>>>>>     indicating length of a command of the addressed device if it's on
->>>>>>>>     the daisy chain
->>>>>>>>     For example, in case of the ltc2634 device, the regular message
->>>>>>>>     consists of 24 bits, but when device is a part of a daisy chain, the
->>>>>>>>     messages are 32 bits. This 32 would be stored in
->>>>>>>>     /daisy_chain_msg_length./
->>>>>>>>   * When /spi_write/ was called (include/linux/spi/spi.h), the
->>>>>>>>     /spi_message_init_with_transfer/ would create a msg of length equal
->>>>>>>>     to a sum of /daisy_chain_msg_length/ of all devices on the chain.
->>>>>>>>     Afterwards, in /spi_message_init_with_transfers/, the actual message
->>>>>>>>     would be filled with the command of the addressed device on the
->>>>>>>>     chain and no_operation content for all other devices on the chain
->>>>>>>>     not being addressed
->>>>>>> Sounds good to me.
->>>>>>>
->>>>>>>>   * I think in such a case, the /daisy-chained-devices /property would
->>>>>>>>     be not used, as chains would be build basing on the assigned
->>>>>>>>     chipselect (reg property).
->>>>>>> So you still have to describe the chain in DT in some way.
->>>>>>> As there can be only a single sub node with the same unit address
->>>>>>> (= chip select), you probably need a container with that address, which
->>>>>>> would contain all devices in the chain, in order (unit addresses 0, 1, ...).
->>>>>> Good point. So maybe at the level of the device tree, it could be
->>>>>> described like that (based on the spi-cadence example):
->>>>>>
->>>>>>         spi0: spi@ff040000 {
->>>>>>             compatible = "cdns,spi-r1p6";
->>>>>>             status = "disabled";
->>>>>>             interrupt-parent = <&gic>;
->>>>>>             interrupts = <0 19 4>;
->>>>>>             reg = <0x0 0xff040000 0x0 0x1000>;
->>>>>>             clock-names = "ref_clk", "pclk";
->>>>>>             #address-cells = <1>;
->>>>>>             #size-cells = <0>;
->>>>>>             power-domains = <&zynqmp_firmware PD_SPI_0>;
->>>>>>             daisy-chain0 : daisy_chain@0 {
->>>>>>                #address-cells = <1>;
->>>>>>                #size-cells = <0>;
->>>>>>                reg = <0>;
->>>>>>                daisy-chained-devices = 2;
->>>>>>
->>>>>>                dac0: ltc2632@0 {
->>>>>>                    compatible = "lltc,ltc2634-l12";
->>>>>>                    reg = <0>;
->>>>>>                    spi-max-frequency = <1000000>;
->>>>>>                };
->>>>>>                dac1: ltc2632@1 {
->>>>>>                    compatible = "lltc,ltc2634-l12";
->>>>>>                    reg = <1>;
->>>>>>                    spi-max-frequency = <2000000>;
->>>>>>                };
->>>>>>            };
->>>>>>         };
->>>>>         spi0: spi@ff040000 {
->>>>>             compatible = "cdns,spi-r1p6";
->>>>>             status = "disabled";
->>>>>             interrupt-parent = <&gic>;
->>>>>             interrupts = <0 19 4>;
->>>>>             reg = <0x0 0xff040000 0x0 0x1000>;
->>>>>             clock-names = "ref_clk", "pclk";
->>>>>             #address-cells = <1>;
->>>>>             #size-cells = <0>;
->>>>>             power-domains = <&zynqmp_firmware PD_SPI_0>;
->>>>>             daisy-chain0 : daisy_chain@0 {
->>>>>                #address-cells = <1>;
->>>>>                #size-cells = <0>;
->>>>>                #daisy-chained-devices = <2>;
->>>> You probably want a proper "compatible" value here instead.
->>>> I don't think "#daisy-chained-devices" is needed, it can be derived
->>>> from the number of subnodes.
-> This is not how '#daisy-chained-devices' works either. The chained
-> devices are represented as a single node and a single driver instance
-> handles multiple physical devices.
+can you please review this patch series?
+
+On 6/8/2020 7:41 PM, Sivaprakash Murugesan wrote:
+> IPQ8074 has two super speed USB ports, with QMP and QUSB2 PHYs.
+> This patch set enables the USB PHYs and USB dwc3 in IPQ8074.
 >
-> The above looks like mux'ed access rather than creating a 'super'
-> device. Would you want to program all N chips in one SPI transfer or
-> it's one device at a time? (We should be careful with the bindings
-> that we're not encoding that into the binding as that could evolve
-> with the OS.)
-
-Well, I think the described concept of the daisy chain doesn't apply
-here then. In principle, we can have different SPI devices, where each
-is served by a different driver. Together, they create a long register
-through which data is shifted. IMHO, the fact that the given device is
-on the daisy chain with other devices should be transparent for its SPI
-device driver and handled at the level of the SPI subsystem: at SPI
-write/read stage, the SPI subsystem would combine message of a addressed
-device with the specific no-operation pattern of all other devices being
-present on the chain (each device may have its specific no-operation
-pattern).
-
-At the moment, I wouldn't try to address a few SPI devices in a single
-access.
-
-As you can see, it's no really a mux access like in case of e.g. I2C:
-there, we have a physical device performing multiplexing. Once the I2C
-bus is switched, no extra effort is required in communication between
-the I2C master and I2C device (slave).
-
->>> compatible = "daisy_chain" or compatible ="simple-bus" would be better?
->> Not "simple-bus", as this is not a simple memory-mapped bus.
->> I'd use something like "spi,daisy-chain", to be validated by RobH.
-> Okay, but what makes it generic?
+> [V3]
+>   * Rebased patch 3 on 5.7 and linux-next tag next-20200608
+> [V2]
+>   * Added new device compatible qcom,ipq8074-qusb2-phy for qusb2
+>   * Addressed Bjorn's review comments on dts and binding
 >
-> What happens with power control of the child devices? While I'd think
-> the only sane design is shared supplies, resets, clocks, etc. (and
-> daisy-chained-devices certainly assumes that), it's certainly possible
-> some cross device control is needed.
+> Sivaprakash Murugesan (5):
+>    dt-bindings: phy: qcom,qmp: Add ipq8074 usb dt bindings
+>    dt-bindings: phy: qcom,qusb2: Add ipq8074 device compatible
+>    phy: qcom-qmp: Add USB QMP PHY support for IPQ8074
+>    phy: qcom-qusb2: Add ipq8074 device compatible
+>    arm64: dts: ipq8074: enable USB support
 >
->>> Both could be caught by of_register_spi_devices to populate the daisy
->>> chain. Do you agree that at that level the chip select could be defined?
->> Or by a separate SPI device driver that matches against "spi,daisy-chain",
->> and parse the subnodes.
-
-I have been thinking about it and came to a similar idea. However, I
-didn't find a straightforward way to associate the SPI devices with the
-abstract daisy-chain device which would then eventually be linked with
-the SPI controller. It would a simple and clean implementation then: SPI
-devices at write/read would call daisy-chain device which would create a
-full message and pass it to SPI controller. The issue is that the SPI
-device requires for all calls SPI controller. It implies that SPI
-daisy-chain would need to be SPI controller as well. However, I think
-currently the SPI concept in the kernel is fixed: SPI controller <-> SPI
-device and there is no place to implement SPI controller <-> SPI
-controller (daisy-chain device) <-> SPI device. Any suggestions on how
-to address it?
-
->>> The reg properties from the sub-nodes (defining actual spi devices)
->>> would be ignored, thus not even needed to be defined.
->> They are needed to determine the order in the chain.
-> Agreed, you need something to address a device. A better address might
-> be the bit position of the device in the chain. Then this could work
-> for any mixture of devices that support chaining (though you'd need to
-> know what's a nop for each device).
-
-Well, the idea was that the daisy chain will be populated basing on all
-sub-nodes and their order in the device tree. If we go for a reg
-numbering the device in the chain, I think we need then
-'#daisy-chained-devices' as well, such kernel knows a priori the length
-of the chain and can issue an error in case some reg values are missing
-on a given chain.
-
-Regards,
-
-Adrian
-
+>   .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   2 +
+>   .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    |   1 +
+>   arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |  24 +++
+>   arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 167 +++++++++++++++++++++
+>   drivers/phy/qualcomm/phy-qcom-qmp.c                | 102 +++++++++++++
+>   drivers/phy/qualcomm/phy-qcom-qusb2.c              |   3 +
+>   6 files changed, 299 insertions(+)
+>
