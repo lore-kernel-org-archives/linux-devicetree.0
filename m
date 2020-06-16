@@ -2,146 +2,138 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661F8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8558CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF832098B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCA720B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICJev4x2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CoYSUcHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgFPL2C (ORCPT
+        id S1727870AbgFPLcx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
+        Tue, 16 Jun 2020 07:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFPL2C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 07:28:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7218AC08C5C2;
-        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id i12so1300787pju.3;
-        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
+        with ESMTP id S1725843AbgFPLcu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 07:32:50 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948ACC08C5C2
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 04:32:49 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id r11so11226673vsj.5
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 04:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C66Iy0udb87vhjoDYd71Ql6l2XA6eYACBYbwZNfMhzU=;
-        b=ICJev4x2OgJ6X7xmSzWcGWWwJAyPTOuhILDrFDfIxcor78l92hde85mv/ysyicxvef
-         iPNwenqBqzDbFYvb1JN0CUUfCD/bVIu8lN07+lYRk/zQ79/IhvUQXPkBOAMQHdCG5CLq
-         w5Sq6/CXDDYr0RG7p6vn79pM30Dl03IYtNXE4GfkD0tlZFOzpYLWUvcRW0T2WAK+H2/S
-         6dRw9Bh5DKve8/a1Nd85Gd7LTgTsOPUU1p2F6w3ozF/XkHf/bG/7J2lhs7lGUJtze0wc
-         f8CojXLI6JoBPREEVLMQjgXwOSuemXoDk4DjB7x7zXK9YgYMX8a87KK7rZeLaVKjY4Xk
-         I0ew==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sot87bVdSsP/TMan7IAvrnTcCMriHtu18eIiUhQ78Qg=;
+        b=CoYSUcHNt/515MdFb+hId5Mr7muoIms7ZGnrlq6d/WiCBnGeBKMHVbCXKQBxNNH2T9
+         h5JWbF7sLq1SY5iw96WYIUr/8O2Io1HhxohjNCuQ3rEx087b57aVYkyQIAIFNtUiA+cy
+         PDTXiHN9LJMQ4ZyIkgE4e/EEnnpN/lXdu8IIGckumZ8oTWoP0ahVuCt8qCWZB8eVugu3
+         DKqttflCFH4XqIQDc25lsXZ6m1Y/dsET6LzYgLU4TVFACpqpABVRhmyqRadstioYflHL
+         NDL64bWs87bbgAysJz/g0iMDgPjiZxfosMUvC+5ZlqhmaaQHlTIijUOPaqlCifq7LASJ
+         KZzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C66Iy0udb87vhjoDYd71Ql6l2XA6eYACBYbwZNfMhzU=;
-        b=EdKzUrRfmbCbnmP49siiLiLPVE4Ex5tuQSJpIwaQKqb56z5lV3LOmNVz+jZ/OjMZll
-         Xs250XTMjceZ+YezbuNS6r05vPddbE4FPJZic6NbYG1riAAl+bEDre71qGoqAUs5SPtC
-         xVVvItWzj1YFNzBnJN6HmmzJRhrsFWpgLaPeRc0XrrAOtOZvG0a63gm7wqD17PIjkYaX
-         qmQdK4mh7nUTpp812OXl+QOqaS8Eg6AXEkxTdtSwG6yPW59auPni//4wFmBmNKMLU0KP
-         dlkueKLtgAEaJ4yOb7LWLek1sd1IX60i9qsUpDOhVttl8JH+ja4GZTQ7wkHYm9DpuLWJ
-         U8aw==
-X-Gm-Message-State: AOAM530Khz1/lnGEv1qJZP2OGElHGOq/4nqSmo5yojkF0ahUmjGYmYdy
-        swxaowYDbetV5BIAhsIDBcQ=
-X-Google-Smtp-Source: ABdhPJwaevj2Eg+de+5NM26vCPlyHzB6CcylDSU3H8uKvyfdS27T3gYBG5pWtcngruNnK1bLe2z5/A==
-X-Received: by 2002:a17:90a:c85:: with SMTP id v5mr2248738pja.114.1592306882003;
-        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
-Received: from localhost.localdomain ([101.12.205.96])
-        by smtp.gmail.com with ESMTPSA id b19sm16617701pft.74.2020.06.16.04.27.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 04:28:01 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     robh+dt@kernel.org, matthias.bgg@gmail.com
-Cc:     lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360 PMIC
-Date:   Tue, 16 Jun 2020 19:27:56 +0800
-Message-Id: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sot87bVdSsP/TMan7IAvrnTcCMriHtu18eIiUhQ78Qg=;
+        b=fgSMZ/KNNw3oOLiVo8ql9fDfLOWXXMrTT87+q9GRbs1OoP/oeLVVNDCq86xnS1KK6g
+         Dyz9+MmAgq3IV4q6bd48Kyai/0AzS8z6px4TxXRVv972w50ra82unmKf2tvj3bKjXvDm
+         g09rOW8AiPKyGMM37v21mpTPqKrQN3iMBU0ePkWxwtFeM030UMCXbKOA9TVprmN22NzL
+         JKBDCPt2XooJ4m62mbgqx4goprE3hS16Vj242gR40gF8gyzr31Dhbyay3G3469xGzPHK
+         tfxXTfXWxQHAq8gEHN/DPecGKF1WYEjYFcecNPXY5qf1cGrI8CbJ/fMgJu2+zKSvTw5O
+         ww7Q==
+X-Gm-Message-State: AOAM530rDjDIRX/JqX61Lj2ogqm3+dqxoJvh+wpsBWfInlksoxB1GtKV
+        4R5Z3Xq1VehdYyRnd9iTJAjgY7vONZza1IAM55ju+A==
+X-Google-Smtp-Source: ABdhPJx59T2Wps/nTk8kgN0o8VuzLM1bJSBOfHHK/JljmBTGCoe5QO6mrlabaGH6LSEdZ72YSS9AROzrMGNoviWY6+k=
+X-Received: by 2002:a67:903:: with SMTP id 3mr1154481vsj.191.1592307168732;
+ Tue, 16 Jun 2020 04:32:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <1591691846-7578-1-git-send-email-ppvk@codeaurora.org> <1591691846-7578-2-git-send-email-ppvk@codeaurora.org>
+In-Reply-To: <1591691846-7578-2-git-send-email-ppvk@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 16 Jun 2020 13:32:11 +0200
+Message-ID: <CAPDyKFpqk7bvv9pWR63maqfxvquQ5QHUq7ACswLj78qmsBkyqQ@mail.gmail.com>
+Subject: Re: [PATCH V4 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling support
+To:     Pradeep P V K <ppvk@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-mmc-owner@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        matthias@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+On Tue, 9 Jun 2020 at 10:38, Pradeep P V K <ppvk@codeaurora.org> wrote:
+>
+> Interconnect bandwidth scaling support is now added as a
+> part of OPP. So, make sure interconnect driver is ready
+> before handling interconnect scaling.
+>
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-Add devicetree binding document support Mediatek MT6360 PMIC
+Applied for next, thanks!
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
----
- Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
+Kind regards
+Uffe
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6360.txt b/Documentation/devicetree/bindings/mfd/mt6360.txt
-new file mode 100644
-index 0000000..e25b5c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mt6360.txt
-@@ -0,0 +1,53 @@
-+MediaTek MT6360 Multifunction Device Driver
-+
-+MT6360 is a multifunction device with the following sub modules:
-+- ADC
-+- Battery Charger/OTG boost
-+- Flash LED/RGB LED/moonlight LED
-+- 2-channel Buck
-+- 6-channel LDO
-+- USB_PD
-+
-+It is interfaced to host controller using I2C interface.
-+This document describes the binding for MFD device and its sub module.
-+
-+Required properties:
-+- compatible:	Must be "mediatek,mt6360_pmu"
-+- reg:			Specifies the I2C slave address of PMIC block, Must be <0x34>
-+- interrupts:	I2C device IRQ line connected to the main SoC.
-+
-+Optional subnodes:
-+- ADC
-+	Required properties:
-+		- compatible: "mediatek,mt6360_adc"
-+- battery charger/OTG boost
-+	Required properties:
-+		- compatible: "mediatek,mt6360_chg"
-+- Flash LED/RGB LED/moonlight LED
-+	Required properties:
-+		- compatible: "mediatek,mt6360_led"
-+- 2-channel Buck
-+	Required properties:
-+		- compatible: "mediatek,mt6360_pmic"
-+- 6-channel LDO
-+	Required properties:
-+		- compatible: "mediatek,mt6360_ldo"
-+- USB_PD
-+	Required properties:
-+		- compatible: "mediatek,mt6360_tcpc"
-+
-+Example:
-+
-+	#include <dt-bindings/usb/pd.h>
-+
-+	pmu: mt6360_pmu@34 {
-+		status = "ok";
-+		compatible = "mediatek,mt6360_pmu";
-+		reg = <0x34>;
-+		wakeup-source;
-+		interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "IRQB";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
--- 
-2.7.4
 
+> ---
+>
+> This change is based on
+> [1] [Patch v8] Introduce OPP bandwidth bindings
+> (https://lkml.org/lkml/2020/5/12/493)
+>
+> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+> for dev_pm_opp_of_add_table()
+> (https://lkml.org/lkml/2020/5/5/491)
+>
+>  drivers/mmc/host/sdhci-msm.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index b277dd7..15c42b0 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/interconnect.h>
+>
+>  #include "sdhci-pltfm.h"
+>  #include "cqhci.h"
+> @@ -2070,6 +2071,11 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>         }
+>         msm_host->bulk_clks[0].clk = clk;
+>
+> +        /* Check for optional interconnect paths */
+> +       ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
+> +       if (ret)
+> +               goto bus_clk_disable;
+> +
+>         msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>         if (IS_ERR(msm_host->opp_table)) {
+>                 ret = PTR_ERR(msm_host->opp_table);
+> --
+> 1.9.1
+>
