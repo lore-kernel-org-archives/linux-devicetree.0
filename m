@@ -2,173 +2,220 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15D2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 06:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE08C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 06:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A683E20810
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 06:19:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XaG+e2qq"
+	by mail.kernel.org (Postfix) with ESMTP id 076FC207E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 06:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592289414;
+	bh=MiClSic9tiH3exzOAeHVb53Fy19wA+P/5nm1SXYHs4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U33gz2GhbW7F4TEO7/XSDmeLxxHOcQ3d2yfaorJu4ndaPl+ptM/xbIHLd3CFjDEI5
+	 2VwZ3T2UvQChN+sxzg3CPgCOghdYFCI0t2b4B1lPXI8LSCMGTg/+O6eXBjQipb3nKH
+	 8g3F8/ehvmXYADsTkApseUzAgWoBQbvw1c5yufig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgFPGT4 (ORCPT
+        id S1725768AbgFPGgw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:19:56 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12906 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725775AbgFPGTz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 02:19:55 -0400
-X-UUID: 993fc058fd8d4f17803f657b693ff5a2-20200616
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W/ueputhDRkRPjBhF0TvVzqMTSqLl9GiuJKA6uNs9+c=;
-        b=XaG+e2qqIXL5d/DS0WB+Imw+s446JAvXj7No0oGDhmxMv4zqCfvyoDkgqOa5iOO7zflqYYZPDY2ElBD1aO+lrLrDGOH3p3D7cpyL5mJen7hsFblxVG53Oc/nuybXWVkrIY1cssPagz9e/PxrBZ/NNXdX0vsp7ecIpDyaDVbk0zU=;
-X-UUID: 993fc058fd8d4f17803f657b693ff5a2-20200616
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1161711656; Tue, 16 Jun 2020 14:19:48 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 16 Jun 2020 14:19:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 16 Jun 2020 14:19:42 +0800
-Message-ID: <1592288387.18012.8.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 16 Jun 2020 14:19:47 +0800
-In-Reply-To: <CAAOTY_-T7L5Cj3UOXDgwTo7jGw+PbcM9Fyy9StX35PwU533zLQ@mail.gmail.com>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
-         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_-T7L5Cj3UOXDgwTo7jGw+PbcM9Fyy9StX35PwU533zLQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 16 Jun 2020 02:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbgFPGgw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 02:36:52 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB0920734;
+        Tue, 16 Jun 2020 06:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592289411;
+        bh=MiClSic9tiH3exzOAeHVb53Fy19wA+P/5nm1SXYHs4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kUfxqYU6EGRPw1vd/VF4GAq4hpIDKPjfgIB0rXIUBWVI1jAPy2RAFf/M3GUll85cn
+         wIRDUz9ONdpzSFRrBBiSsM2Dcj1XSKsxxu74uuRm5BIlkuF9RMr+mUmbM2uZMrWALl
+         /zsp/DImZPBu7SgAT/dlqTZ4+Io8PiIIXXSPfZZI=
+Date:   Tue, 16 Jun 2020 12:06:44 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device
+ nodes
+Message-ID: <20200616063644.GA2324254@vkoul-mobl>
+References: <1586566362-21450-1-git-send-email-wcheng@codeaurora.org>
+ <1586566362-21450-3-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586566362-21450-3-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gTW9uLCAyMDIwLTA2LTE1IGF0IDIzOjUxICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0NuaciDnml6Ug6YCx5LqMIOS4i+WNiDY6MjXlr6vpgZPv
-vJoNCj4gPg0KPiA+IE1UNjg3MyBidXMgZnJhYnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2VjdXJp
-dHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJv
-bSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4gPiBUaGUgc2Vj
-dXJpdHkgdmlvbGF0aW9ucyBhcmUgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9jZXNzb3IgZm9y
-DQo+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4NCj4gPiBBbnkg
-b2NjdXJyZW5jZSBvZiBzZWN1cml0eSB2aW9sYXRpb24gd291bGQgcmFpc2UgYW4gaW50ZXJydXB0
-LCBhbmQNCj4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgZGV2YXBjLW10Njg3MyBkcml2ZXIuIFRo
-ZSB2aW9sYXRpb24NCj4gPiBpbmZvcm1hdGlvbiBpcyBwcmludGVkIGluIG9yZGVyIHRvIGZpbmQg
-dGhlIG11cmRlcmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArICAgICAgIHsx
-LCAwLCAyMiwgIk1NU1lTIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMSwgMjMsICJNTVNZU19E
-SVNQIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMiwgMjQsICJTTUkiLCB0cnVlfSwNCj4gPiAr
-ICAgICAgIHsxLCAzLCAyNSwgIlNNSSIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDQsIDI2LCAi
-U01JIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgNSwgMjcsICJNTVNZU19ESVNQIiwgdHJ1ZX0s
-DQo+ID4gKyAgICAgICB7MSwgNiwgMjgsICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKw0KPiA+
-ICsgICAgICAgLyogMzAgKi8NCj4gPiArICAgICAgIHsxLCA3LCAyOSwgIk1NU1lTX0RJU1AiLCB0
-cnVlfSwNCj4gPiArICAgICAgIHsxLCA4LCAzMCwgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gPiAr
-ICAgICAgIHsxLCA5LCAzMSwgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gPiArICAgICAgIHsxLCAx
-MCwgMzIsICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMTEsIDMzLCAiTU1T
-WVNfRElTUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDEyLCAzNCwgIk1NU1lTX0RJU1AiLCB0
-cnVlfSwNCj4gPiArICAgICAgIHsxLCAxMywgMzUsICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4g
-KyAgICAgICB7MSwgMTQsIDM2LCAiTU1TWVNfRElTUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEs
-IDE1LCAzNywgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gPiArICAgICAgIHsxLCAxNiwgMzgsICJN
-TVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKw0KPiA+ICsgICAgICAgLyogNDAgKi8NCj4gPiArICAg
-ICAgIHsxLCAxNywgMzksICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMTgs
-IDQwLCAiTU1TWVNfRElTUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDE5LCA0MSwgIk1NU1lT
-X0RJU1AiLCB0cnVlfSwNCj4gPiArICAgICAgIHsxLCAyMCwgNDIsICJNTVNZU19ESVNQIiwgdHJ1
-ZX0sDQo+ID4gKyAgICAgICB7MSwgMjEsIDQzLCAiTU1TWVNfRElTUCIsIHRydWV9LA0KPiA+ICsg
-ICAgICAgezEsIDIyLCA0NCwgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gDQo+IEkgdGhpbmsgdGhl
-IGRldmljZSBuYW1lLCBzdWNoIGFzICJNTVNZU19ESVNQIiBkb2VzIG5vdCBoZWxwIGZvciBkZWJ1
-Zy4NCj4gV2hlbiBEZXZBUEMgcHJpbnQgIk1NU1lTX0RJU1AiIGhhcyBlcnJvciwgaG93IGRvZXMg
-dXMga25vdyB0aGF0IHRvIGRvDQo+IG5leHQ/IFdIRVJFIGlzIHRoZSBjb2RlIG1heSByZWxhdGVk
-IHRvIHRoaXMgZXJyb3IsIGFuZCBXSE8gc2hvdWxkIHVzDQo+IHRvIGZpbmQgaGVscD8gSSB0aGlu
-ayB3ZSBqdXN0IG5lZWQgdmlvIGFkZHJlc3MuIFVzaW5nIG10ODE3MyBmb3INCj4gZXhhbXBsZSwg
-aWYgdGhlIHZpbyBhZGRyZXNzIGlzIDB4MTQwMGQwM2MsIHdlIGNvdWxkIGZpbmQgdGhlIGRldmlj
-ZSBpbg0KPiBtdDgxNzMuZHRzaSBbMV0sDQo+IA0KPiBvdmwxOiBvdmxAMTQwMGQwMDAgew0KPiAg
-ICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3Atb3ZsIjsNCj4gICAgICAg
-ICByZWcgPSA8MCAweDE0MDBkMDAwIDAgMHgxMDAwPjsNCj4gfTsNCj4gDQo+IHdlIGNvdWxkIGtu
-b3cgZXJyb3Igb2NjdXIgaW4gb3ZsMSwgYW5kIHdlIGNvdWxkIGZpbmQgdGhlIGNvbXBhdGlibGUN
-Cj4gc3RyaW5nICJtZWRpYXRlayxtdDgxNzMtZGlzcC1vdmwiIGluDQo+IGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jLCBzbyB3ZSBrbm93IFdIRVJFIGlzIHRoZSBjb2RlDQo+
-IG1heSByZWxhdGVkIHRvIHRoaXMgZXJyb3IuIEFuZCB3ZSBjb3VsZCBmaW5kIG1haW50YWluZXIg
-bGlzdCBbMl0gdG8NCj4gZmluZCBvdXQgdGhlIG1haW50YWluZXIgb2YgdGhpcyBjb2RlOg0KPiAN
-Cj4gRFJNIERSSVZFUlMgRk9SIE1FRElBVEVLDQo+IE06IENodW4tS3VhbmcgSHUgPGNodW5rdWFu
-Zy5odUBrZXJuZWwub3JnPg0KPiBNOiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
-LmRlPg0KPiBMOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+IFM6IFN1cHBvcnRl
-ZA0KPiBGOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRl
-ay8NCj4gRjogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrLw0KPiANCj4gYW5kIHdlIGtub3cgZmlu
-ZCBXSE8gZm9yIGhlbHAuDQo+IFNvIEkgdGhpbmsgd2Ugc2hvdWxkIGRyb3AgZGV2aWNlIG5hbWUg
-YW5kIGp1c3QgcHJpbnQgdmlvIGFkZHJlc3MgaXMNCj4gZW5vdWdoIGZvciBkZWJ1Zy4NCj4gDQo+
-IFsxXSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2
-YWxkcy9saW51eC5naXQvdHJlZS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5k
-dHNpP2g9djUuOC1yYzENCj4gWzJdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
-eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL01BSU5UQUlORVJTP2g9djUuOC1y
-YzENCj4gDQoNCllvdSBhcmUgcmlnaHQuIFRoaXMgaXMgYSB3YXkgdG8gZmluZCBXSE8gY2FuIGhl
-bHAgdGhpcyBpc3N1ZS4NCldlIGludGVncmF0ZWQgb3VyIGludGVybmFsIGRlYnVnIHN5c3RlbSB3
-aXRoIGRldmljZSBuYW1lLCBhbmQgaXQgY2FuDQpoZWxwIHVzIHRvIGZpbmQgbW9kdWxlIG93bmVy
-IGF1dG9tYXRpY2FsbHkgaW5zdGVhZCBvZiBzZWFyY2hpbmcgZHRzIGFuZA0Kc291cmNlIGNvZGUg
-bWFudWFsbHkuDQpCdXQgdGhpcyBraW5kcyBvZiBkZWJ1Z2dpbmcgZmxvdyBpcyBub3QgbmVjZXNz
-YXJ5IGZvciB1cHN0cmVhbS4gSSdsbCB0cnkNCnRvIHJlbW92ZSBpdC4NCg0KPiA+ICsgICAgICAg
-ezEsIDIzLCA0NSwgIk1NU1lTX01EUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDI0LCA0Niwg
-Ik1NU1lTX01EUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDI1LCA0NywgIk1NU1lTX01EUCIs
-IHRydWV9LA0KPiA+ICsgICAgICAgezEsIDI2LCA0OCwgIk1NU1lTX01EUCIsIHRydWV9LA0KPiA+
-ICsNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gK2ludCBtdGtfZGV2YXBjX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIHN0cnVjdCBtdGtfZGV2YXBjX3NvYyAqc29jKQ0K
-PiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBwZGV2LT5kZXYu
-b2Zfbm9kZTsNCj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bTsNCj4gPiArICAgICAgIGlu
-dCBzbGF2ZV90eXBlOw0KPiA+ICsgICAgICAgaW50IHJldDsNCj4gPiArDQo+ID4gKyAgICAgICBp
-ZiAoSVNfRVJSKG5vZGUpKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4g
-PiArDQo+ID4gKyAgICAgICBtdGtfZGV2YXBjX2N0eC0+c29jID0gc29jOw0KPiA+ICsgICAgICAg
-c2xhdmVfdHlwZV9udW0gPSBtdGtfZGV2YXBjX2N0eC0+c29jLT5zbGF2ZV90eXBlX251bTsNCj4g
-PiArDQo+ID4gKyAgICAgICBmb3IgKHNsYXZlX3R5cGUgPSAwOyBzbGF2ZV90eXBlIDwgc2xhdmVf
-dHlwZV9udW07IHNsYXZlX3R5cGUrKykgew0KPiA+ICsgICAgICAgICAgICAgICBtdGtfZGV2YXBj
-X2N0eC0+ZGV2YXBjX3BkX2Jhc2Vbc2xhdmVfdHlwZV0gPQ0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIG9mX2lvbWFwKG5vZGUsIHNsYXZlX3R5cGUpOw0KPiA+ICsgICAgICAgICAgICAgICBp
-ZiAoIW10a19kZXZhcGNfY3R4LT5kZXZhcGNfcGRfYmFzZVtzbGF2ZV90eXBlXSkNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArICAgICAgIH0NCj4gPiAr
-DQo+ID4gKyAgICAgICBtdGtfZGV2YXBjX2N0eC0+aW5mcmFjZmdfYmFzZSA9IG9mX2lvbWFwKG5v
-ZGUsIHNsYXZlX3R5cGVfbnVtICsgMSk7DQo+ID4gKyAgICAgICBpZiAoIW10a19kZXZhcGNfY3R4
-LT5pbmZyYWNmZ19iYXNlKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4g
-PiArDQo+ID4gKyAgICAgICBtdGtfZGV2YXBjX2N0eC0+ZGV2YXBjX2lycSA9IGlycV9vZl9wYXJz
-ZV9hbmRfbWFwKG5vZGUsIDApOw0KPiA+ICsgICAgICAgaWYgKCFtdGtfZGV2YXBjX2N0eC0+ZGV2
-YXBjX2lycSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+
-ICsgICAgICAgLyogQ0NGIChDb21tb24gQ2xvY2sgRnJhbWV3b3JrKSAqLw0KPiA+ICsgICAgICAg
-bXRrX2RldmFwY19jdHgtPmRldmFwY19pbmZyYV9jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRl
-diwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICJkZXZhcGMtaW5mcmEtY2xvY2siKTsNCj4gPiArDQo+ID4gKyAgICAgICBpZiAoSVNf
-RVJSKG10a19kZXZhcGNfY3R4LT5kZXZhcGNfaW5mcmFfY2xrKSkNCj4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+ICsgICAgICAgcHJvY19jcmVhdGUoImRldmFw
-Y19kYmciLCAwNjY0LCBOVUxMLCAmZGV2YXBjX2RiZ19mb3BzKTsNCj4gDQo+IEkgdGhpbmsgZGVi
-dWdmcyBpcyBub3QgYSBiYXNpYyBmdW5jdGlvbiwgc28gbW92ZSBkZWJ1Z2ZzIGZ1bmN0aW9uIHRv
-DQo+IGFub3RoZXIgcGF0Y2guDQo+IA0KDQpPa2F5LCBJJ2xsIHRyeSB0byByZW1vdmUgYW5kIHVw
-c3RyZWFtIGFnYWluLg0KDQo+IFJlZ2FyZHMsDQo+IENodW4tS3VhbmcuDQo+IA0KPiA+ICsNCj4g
-PiArICAgICAgIGlmIChjbGtfcHJlcGFyZV9lbmFibGUobXRrX2RldmFwY19jdHgtPmRldmFwY19p
-bmZyYV9jbGspKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+
-ID4gKyAgICAgICBzdGFydF9kZXZhcGMoKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXQgPSBkZXZt
-X3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIG10a19kZXZhcGNfY3R4LT5kZXZhcGNfaXJxLA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoaXJxX2hhbmRsZXJfdClkZXZhcGNfdmlv
-bGF0aW9uX2lycSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9UUklH
-R0VSX05PTkUsICJkZXZhcGMiLCBOVUxMKTsNCj4gPiArICAgICAgIGlmIChyZXQpIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgcHJfZXJyKFBGWCAicmVxdWVzdCBkZXZhcGMgaXJxIGZhaWxlZCwgcmV0
-OiVkXG4iLCByZXQpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAg
-ICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+ID4gK0VYUE9SVF9T
-WU1CT0xfR1BMKG10a19kZXZhcGNfcHJvYmUpOw0KPiA+ICsNCj4gPg0KDQo=
+On 10-04-20, 17:52, Wesley Cheng wrote:
+> From: Jack Pham <jackp@codeaurora.org>
+> 
+> Add device nodes for the USB3 controller, QMP SS PHY and
+> SNPS HS PHY.
 
+Bjorn, can you please review/pick this.. I dont see this in -rc1
+
+> 
+> Signed-off-by: Jack Pham <jackp@codeaurora.org>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Tested-by: Vinod Koul <vinod.koul@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
+>  2 files changed, 113 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> index 8ab1661..6c6325c 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -408,3 +408,24 @@
+>  	vdda-pll-supply = <&vreg_l3c_1p2>;
+>  	vdda-pll-max-microamp = <19000>;
+>  };
+> +
+> +&usb_1_hsphy {
+> +	status = "okay";
+> +	vdda-pll-supply = <&vdd_usb_hs_core>;
+> +	vdda33-supply = <&vdda_usb_hs_3p1>;
+> +	vdda18-supply = <&vdda_usb_hs_1p8>;
+> +};
+> +
+> +&usb_1_qmpphy {
+> +	status = "okay";
+> +	vdda-phy-supply = <&vreg_l3c_1p2>;
+> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+> +};
+> +
+> +&usb_1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_1_dwc3 {
+> +	dr_mode = "peripheral";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 141c21d..a36512d 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -621,6 +621,98 @@
+>  			};
+>  		};
+>  
+> +		usb_1_hsphy: phy@88e2000 {
+> +			compatible = "qcom,sm8150-usb-hs-phy",
+> +							"qcom,usb-snps-hs-7nm-phy";
+> +			reg = <0 0x088e2000 0 0x400>;
+> +			status = "disabled";
+> +			#phy-cells = <0>;
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "ref";
+> +
+> +			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> +		};
+> +
+> +		usb_1_qmpphy: phy@88e9000 {
+> +			compatible = "qcom,sm8150-qmp-usb3-phy";
+> +			reg = <0 0x088e9000 0 0x18c>,
+> +			      <0 0x088e8000 0 0x10>;
+> +			reg-names = "reg-base", "dp_com";
+> +			status = "disabled";
+> +			#clock-cells = <1>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +
+> +			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+> +				 <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+> +				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+> +			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
+> +
+> +			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
+> +				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
+> +			reset-names = "phy", "common";
+> +
+> +			usb_1_ssphy: lanes@88e9200 {
+> +				reg = <0 0x088e9200 0 0x200>,
+> +				      <0 0x088e9400 0 0x200>,
+> +				      <0 0x088e9c00 0 0x218>,
+> +				      <0 0x088e9600 0 0x200>,
+> +				      <0 0x088e9800 0 0x200>,
+> +				      <0 0x088e9a00 0 0x100>;
+> +				#phy-cells = <0>;
+> +				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+> +				clock-names = "pipe0";
+> +				clock-output-names = "usb3_phy_pipe_clk_src";
+> +			};
+> +		};
+> +
+> +		usb_1: usb@a6f8800 {
+> +			compatible = "qcom,sm8150-dwc3", "qcom,dwc3";
+> +			reg = <0 0x0a6f8800 0 0x400>;
+> +			status = "disabled";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			dma-ranges;
+> +
+> +			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+> +				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
+> +				 <&gcc GCC_USB3_SEC_CLKREF_CLK>;
+> +			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
+> +				      "sleep", "xo";
+> +
+> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+> +			assigned-clock-rates = <19200000>, <150000000>;
+> +
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+> +					  "dm_hs_phy_irq", "dp_hs_phy_irq";
+> +
+> +			power-domains = <&gcc USB30_PRIM_GDSC>;
+> +
+> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
+> +
+> +			usb_1_dwc3: dwc3@a600000 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0 0x0a600000 0 0xcd00>;
+> +				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +				snps,dis_u2_susphy_quirk;
+> +				snps,dis_enblslpm_quirk;
+> +				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+> +				phy-names = "usb2-phy", "usb3-phy";
+> +			};
+> +		};
+> +
+>  		aoss_qmp: power-controller@c300000 {
+>  			compatible = "qcom,sm8150-aoss-qmp";
+>  			reg = <0x0 0x0c300000 0x0 0x100000>;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+-- 
+~Vinod
