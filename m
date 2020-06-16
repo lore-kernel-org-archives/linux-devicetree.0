@@ -2,128 +2,146 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813B8C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89764C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8CD20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFC520707
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 09:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6RGY3u1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oP8HT6xP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgFPJW1 (ORCPT
+        id S1727837AbgFPJ15 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43034 "EHLO
+        Tue, 16 Jun 2020 05:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgFPJWJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 05:22:09 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1783C08C5C2
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 02:22:05 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id y23so1545635vkd.13
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 02:22:05 -0700 (PDT)
+        with ESMTP id S1725901AbgFPJ14 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 05:27:56 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20A2C05BD43;
+        Tue, 16 Jun 2020 02:27:56 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id x25so6780042edr.8;
+        Tue, 16 Jun 2020 02:27:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o6euDOY6oMlwJphirnftZK239m7I7dONOkGXOBDE+vU=;
-        b=F6RGY3u1eJHXOCkxT4S6ZQmyRcayoZV15ojB+VbxpgXjmicLw4N5nTEFG5Bx6XxzkZ
-         7C8vnOJlf6qDCgpmJaHxfQkxCcqyTvNp7+x95Eu4QAVHaYYPeSZ+LpmzXCbyiEi0No4V
-         zgkZHksKMfvzTDB6/nuVoeB4mv2sE8q18LKEtBlApAp9q445UoZv0Um6Nu1PC4ZgB+VQ
-         4gP2ZFLz5NJy0VqhK/DocxMwsOQ2g4K7/+UiGGWG3UHLQp5Pv2IvoWXZuOkETAADNLTk
-         895z2Mlfwc+8uMDdvJlzda2sBIczZr3b9Gs3rd6DWajdl1YXr0a831Shx7Lqbpuck7fP
-         6dWA==
+         :cc:content-transfer-encoding;
+        bh=x3QhgzPYsk4YXww5OnxJ96yfR+po6PyrH4a8GDqlKe8=;
+        b=oP8HT6xPm+Jd8PbfAnJfzBLJDQMtCiW9hmZNAZKWE8HMgB9EPpSEHL71WU9pKn9Arr
+         dPhLjNWwKgbY7muygCZZh2ynHlxcaASViVzRpgRwsBjIPLzx2RP8PvYsx628zblvh9NC
+         REIqD1Q18GODNR+fb5p3kx/zLM5eHsNKw58de5oUaRGQ08AoaHEpeNjPGBMyKk7UMMzu
+         7MGx2LJiJOl5kt/W0jEWbS4UoBYNXsggcskbAd8gr8MNi6Xov/1xHaue5xHFT0hVHzm6
+         ucMrcmix+hcukIsMqqjeGTpl4lLA3EpEm0P7SsV/fGWb8e+JE2c+WgtB/Ax4gh6eRMbO
+         i+SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o6euDOY6oMlwJphirnftZK239m7I7dONOkGXOBDE+vU=;
-        b=NMvl8vZ5W4LXOYumIcG+tFTTx7wPVZbCQmgU1YKYqrfDZG1VMUDcwDXYVzxidnAoiA
-         xu1VtJVujB3WhXjhiLRSDLqytF2j5V3OVB3GP9V60xSGxnUQ/mfgz2B24rHJgb3ldJAS
-         a1hSDOqrvtdivSQD5HEF4r9h5GuExr+bSzAX9m2PUqzju1eSNaRFM7qRzMnH/2zRInff
-         9kj5GWruR7Ccaf1CT7Yd70m6oiCwHGQQf3uGTqiizIqVUXXATDnHmgimG8bADlCp+1Gk
-         pARjJJ/FLACVbM8/eiW2w904/yshJi8sQ0AeUiGcZdYs08uXvfK/qiM6cWc1jX7Wi+4x
-         +4cQ==
-X-Gm-Message-State: AOAM5302IObOfTZsVs6RS/VKqHx6Z8bzHdr/rB9mlNLCRGUxvXgKdhgy
-        d9UItUYtluCSmCnU1xXLQY8Y6HGYjBc7J++/QzkocA==
-X-Google-Smtp-Source: ABdhPJx4g5jlxzibMSqCinB5QGUdXtaI/4SZQcjRun7bXCIPO5lQ1nNKPjmPF9UNMEBAB+iY7EfUZtiooEYHoixTD2k=
-X-Received: by 2002:a1f:c103:: with SMTP id r3mr822640vkf.25.1592299324309;
- Tue, 16 Jun 2020 02:22:04 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=x3QhgzPYsk4YXww5OnxJ96yfR+po6PyrH4a8GDqlKe8=;
+        b=ZA5yR982d1j6RXCnRa4tuQRRbqz8Pf966576fI1OMfz/JIhDPB6tO+VYM/xagD0LDB
+         mFIFBP5mr64wYn5DxwbN6sp8iFtVzX5XVRtSz1BaAHViBo3Tn9gKlyybXAhO2l9dMrqF
+         GT49rnOoFmlU3wzwESs+n8Z6ZPlq7j2AUJ3JsWhFTmaWgY4wdTYbhx61eXqTqs1YXHd8
+         2h3gBGE/n6aBq3H5oQPphaLU/AqGd4xz4oGyjoso+3jTlb0t0BUgtVoaikLwK1+hDcXB
+         lgS6LhXxBK++DfjywEF3hRiu0qO7Lhq6rRu5Y4Vu/XQPQb2AzCCj3FA3/Nec9RITL0Mp
+         BPkA==
+X-Gm-Message-State: AOAM532Y/Q79k+SONReEd4Tj9JuJX+iTfRJXGoLulAfzkSWJsaGQtVOi
+        Ku/nfWI4GwjtILSWlvKIRJzT74z8gDhsN+3VmzGKYlId3AE=
+X-Google-Smtp-Source: ABdhPJxwxI3G8sOMPSW+QeQRyqvQfrtsLAnkaAz9/qX8rA1XrxLcxmluojj/DbY7j4zIshXelrpnqgGrpdDFAceaBH0=
+X-Received: by 2002:a05:6402:1c87:: with SMTP id cy7mr1757571edb.354.1592299675040;
+ Tue, 16 Jun 2020 02:27:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604015317.31389-1-thara.gopinath@linaro.org> <20200604015317.31389-3-thara.gopinath@linaro.org>
-In-Reply-To: <20200604015317.31389-3-thara.gopinath@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 16 Jun 2020 11:21:27 +0200
-Message-ID: <CAPDyKFqxV20Fv2X7wJ5zKa_csDgSBL5KN9HtrA6+EFpgYPhxyg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve
- power domain performance state count
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200522030743.10204-1-frank@allwinnertech.com>
+ <20200522030743.10204-3-frank@allwinnertech.com> <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
+ <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com> <20200605151306.kqmyj673kux4sbaa@gilmour.lan>
+In-Reply-To: <20200605151306.kqmyj673kux4sbaa@gilmour.lan>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 16 Jun 2020 17:26:01 +0800
+Message-ID: <CAEExFWutOjweJ_=WYKifebCPohStJdo0UJnHtmzvmhQ+VTb3kg@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IOWbnuWkje+8mltQQVRDSCAyLzRdIHBpbmN0cmw6IHN1bnhpOiBhZGQgc3VwcG9ydA==?=
+        =?UTF-8?B?IGZvciB0aGUgQWxsd2lubmVyIEExMDAgcGluIGNvbnRyb2xsZXI=?=
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     wens <wens@csie.org>,
+        =?UTF-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>,
+        "linus.walleij" <linus.walleij@linaro.org>,
+        "robh+dt" <robh+dt@kernel.org>,
+        mturquette <mturquette@baylibre.com>, sboyd <sboyd@kernel.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 03:53, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Populate .get_performance_state_count in genpd ops to retrieve the count of
-> performance states supported by a rpmh power domain.
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+HI Chen-Yu,  Linus,
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+On Fri, Jun 5, 2020 at 11:13 PM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi Frank,
+>
+> On Wed, Jun 03, 2020 at 05:44:36PM +0800, =E6=9D=8E=E6=89=AC=E9=9F=AC wro=
+te:
+> > >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
+> > >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
+> > >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
+> > >> +  SUNXI_FUNCTION(0x2, "mmc0"),  /* D1 */
+> > >> +  SUNXI_FUNCTION(0x3, "jtag"),  /* MS1 */
+> > >> +  SUNXI_FUNCTION(0x4, "jtag"),  /* MS_GPU */
+> > >
+> > >We should use another name here, since the code will just pick the fir=
+st one and
+> > >ignore the second. What about jtag-gpu?
+> >
+> > The underscores are used in front, so changing it to jtag_gpu may be mo=
+re consistent.
+>
+> Yep, that makes sense
+>
+> > >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
+> > >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
+> > >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
+> > >> +  SUNXI_FUNCTION(0x2, "spdif"),  /* DIN */
+> > >> +  SUNXI_FUNCTION(0x3, "i2s0"),  /* DOUT0 */
+> > >> +  SUNXI_FUNCTION(0x4, "i2s0"),  /* DIN1 */
+> > >
+> > >I guess the second one would be i2s1?
+> >
+> > No, each i2s may have many inputs and outputs.
+> >
+> >  SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+> >      SUNXI_FUNCTION(0x0, "gpio_in"),
+> >               SUNXI_FUNCTION(0x1, "gpio_out"),
+> >               SUNXI_FUNCTION(0x2, "cir0"),          /* IN */
+> >               SUNXI_FUNCTION(0x3, "i2s3_dout3"),       /* DOUT3 */
+> >               SUNXI_FUNCTION(0x4, "i2s3_din3"),       /* DIN3 */
+> >               SUNXI_FUNCTION(0x5, "ledc"),
+> >               SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 19)),
+> >
+> > Considering that the same pin has multiple same functions,
+> > so add a suffix, like i2s3_dout3 and i2s3_din3?
+> >
+> > Or specify muxsel in the device tree may be another solution.
+>
+> Having muxsel is not really an option. We have two sets of bindings to
+> maintain already, adding a third one would make it fairly hard to
+> maintain. And the second binding we support is the generic pinctrl
+> binding, so I'm not really sure why we would want to move away from
+> that.
+>
+> And I'm not really fond of having a suffix either. It kind of breaks the
+> consistency we had so far, and ideally I'd like to keep that.
+>
+> Chen-Yu, Linus? Any input on that one?
 
-Kind regards
-Uffe
-
-
-> ---
->  drivers/soc/qcom/rpmhpd.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> index e72426221a69..a9c597143525 100644
-> --- a/drivers/soc/qcom/rpmhpd.c
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -362,6 +362,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
->         return dev_pm_opp_get_level(opp);
->  }
->
-> +static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
-> +{
-> +       struct rpmhpd *pd = domain_to_rpmhpd(domain);
-> +
-> +       return pd->level_count;
-> +}
-> +
->  static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
->  {
->         int i;
-> @@ -450,6 +457,7 @@ static int rpmhpd_probe(struct platform_device *pdev)
->                 rpmhpds[i]->pd.power_on = rpmhpd_power_on;
->                 rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
->                 rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
-> +               rpmhpds[i]->pd.get_performance_state_count = rpmhpd_performance_states_count;
->                 pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
->
->                 data->domains[i] = &rpmhpds[i]->pd;
-> --
-> 2.20.1
->
+PING......
