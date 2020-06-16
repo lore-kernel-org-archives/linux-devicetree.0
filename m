@@ -2,123 +2,79 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3488BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED9FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCD220707
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nRaYvM1L"
+	by mail.kernel.org (Postfix) with ESMTP id 27EEE20734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgFPE1d (ORCPT
+        id S1726489AbgFPEhX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:27:33 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36863 "EHLO m43-7.mailgun.net"
+        Tue, 16 Jun 2020 00:37:23 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47878 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgFPE1d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 00:27:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592281652; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=gGj1AtaJzmAOYRDgt6sxpRjS45WebWT4WO2xGcv/aok=; b=nRaYvM1LCXKVFgMPVgQ3ugMvL7O3+ChM1lxem8vl47gcZyXUf1dIqioI4nDtRG03v6YiGM5T
- 0I0b5JEM2IFvuY/rkY8h5YcujHRcJzDkAHi+eoC51sCllNJfmgof+1KanJbmU5I/nsvhqVD4
- SdQbawVTjeJ/xQmMeVTlTuxQn3Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ee84a1fc4bb4f886d2824fb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 04:27:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B57A1C433AD; Tue, 16 Jun 2020 04:27:10 +0000 (UTC)
-Received: from [10.110.37.174] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A508EC433CA;
-        Tue, 16 Jun 2020 04:27:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A508EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2 4/6] regulator: Add support for QCOM PMIC VBUS booster
-To:     Mark Brown <broonie@kernel.org>
-Cc:     robh+dt@kernel.org, heikki.krogerus@linux.intel.com,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        lgirdwood@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        lijun.kernel@gmail.com, rdunlap@infradead.org,
-        jackp@codeaurora.org, bryan.odonoghue@linaro.org
-References: <20200612231918.8001-1-wcheng@codeaurora.org>
- <20200612231918.8001-5-wcheng@codeaurora.org>
- <20200615120018.GI4447@sirena.org.uk>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <ba6420c5-37d3-205a-19e0-957e77f7e9f7@codeaurora.org>
-Date:   Mon, 15 Jun 2020 21:27:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200615120018.GI4447@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725306AbgFPEhX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 00:37:23 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 48B922004C6;
+        Tue, 16 Jun 2020 06:37:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E09A2003FE;
+        Tue, 16 Jun 2020 06:37:16 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04091402CF;
+        Tue, 16 Jun 2020 12:37:09 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        marex@denx.de, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 0/3] Convert mxs/imx spi/cspi/lpspi binding to json-schema
+Date:   Tue, 16 Jun 2020 12:26:12 +0800
+Message-Id: <1592281575-32708-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch series converts mxs/imx spi/cspi/lpspi binding to json-schema.
 
+In fsl-imx-cspi.yaml, also update compatible, remove obsolete properties
+"fsl,spi-num-chipselects" and update the example based on latest DT file;
 
-On 6/15/2020 5:00 AM, Mark Brown wrote:
-> On Fri, Jun 12, 2020 at 04:19:16PM -0700, Wesley Cheng wrote:
-> 
->> +++ b/drivers/regulator/qcom_usb_vbus-regulator.c
->> @@ -0,0 +1,147 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
-> 
-> Please make the entire comment a C++ one so things look more
-> intentional.
-> 
+In spi-fsl-lpspi.yaml, the original maintainer's email address pandy.gao@nxp.com
+is no longer valid, so I use mine.
 
-Hi Mark,
+Compared to V2, this patch series mainly removes redundant 'maxItems' in 'clocks'
+and 'clock-names' property, also drop "clock-frequency" property's type.
 
-Sure, will do.
+Anson Huang (3):
+  dt-bindings: spi: Convert mxs spi to json-schema
+  dt-bindings: spi: Convert imx cspi to json-schema
+  dt-bindings: spi: Convert imx lpspi to json-schema
 
->> +static int qcom_usb_vbus_enable(struct regulator_dev *rdev)
->> +{
-> 
->> +static int qcom_usb_vbus_disable(struct regulator_dev *rdev)
->> +{
-> 
->> +static int qcom_usb_vbus_is_enabled(struct regulator_dev *rdev)
->> +{
-> 
-> These operations can all be replaced by regulator_is_enabled_regmap()
-> and friends.
-> 
-
-Got it.  This simplifies the driver a lot.  Thanks for the tip.
-
->> +	init_data.constraints.valid_ops_mask |= REGULATOR_CHANGE_STATUS;
-> 
-> No, this is broken - regulators should not override the constraints the
-> machine sets.
-> 
-
-Understood.  I decided to go with of_get_regulator_init_data() to
-initialize the init_data parameter.  This should take care of the
-constraint settings.
-
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       | 56 -------------
+ .../devicetree/bindings/spi/fsl-imx-cspi.yaml      | 97 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/spi/mxs-spi.txt  | 26 ------
+ Documentation/devicetree/bindings/spi/mxs-spi.yaml | 56 +++++++++++++
+ .../devicetree/bindings/spi/spi-fsl-lpspi.txt      | 29 -------
+ .../devicetree/bindings/spi/spi-fsl-lpspi.yaml     | 60 +++++++++++++
+ 6 files changed, 213 insertions(+), 111 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
