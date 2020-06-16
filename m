@@ -2,113 +2,251 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1544FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 17:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0A1C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB95E208D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 17:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33409208D5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oyEHBZBt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/uiV1Ht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgFPRYZ (ORCPT
+        id S1727040AbgFPR3R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33344 "EHLO
+        Tue, 16 Jun 2020 13:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgFPRYY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 13:24:24 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B09CC061755
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 10:24:24 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id w1so19917627qkw.5
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 10:24:24 -0700 (PDT)
+        with ESMTP id S1729272AbgFPR3P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 13:29:15 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E31FC061573
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 10:29:15 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t194so3933661wmt.4
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 10:29:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wLz7l5oBTTWRrPJZo/ObezKhptZZKpKERaSHZ1hXdEw=;
-        b=oyEHBZBt8MKmPuGWBNEF4brHRUaiRePPVL0QfAls08WgpIjuFIYa6kB864rT/Vbf25
-         48gUSVw6ATmzjhX/wyCSwzwHozlA+TPfnPj3bX8nuKKD84+OKWm4OT3vkyVwwBCfT9yD
-         vFBrcemSctjrRxOQi1neixJQ+KgBmUa8HopxjjLxRYCMxK1ESVcFwS1yvIHfDWQPsIig
-         GQpwfaY4ccw8T202rJcnVgi244sbCojoHfqbouXxl2peytOjyoaR2dVMbOtZHkNDSNAB
-         QrXlr8NXaPf7w0CNnMASPVEyAIEZBbQGmFzXqpdg8HadXxQuBWloIvDAi6HPapw/bGcy
-         w5iQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LOu0n3RUGeuxEjMp2F5UGa7yErDx6HF4q3voQT9ZrEk=;
+        b=M/uiV1HtnpmWa6vznTJVZhsTnLtWaYLlOM0rCpKzs/0JNSLepkO5b6P2CRRDpTvgqL
+         5ymoNqekfqFvZFBk2I2yaxh3Erh6jKFRshf+X/waUBGuopFQLDxhs37bFqEcED95mUIg
+         7z02rAV/LzLm050rUf6eVq0p7yvVXJSXIbtTVYHe0pRp+/51qF4JUri4K5RCoinUXMqD
+         L7ao4BoWXcWn3P3h4GVD/Qcf90fBEroysgqmFizS1TgKyiQkO9joOsdstLXoZ3Y7EyAd
+         ylhCLneIMe2fyFpoUoId6F2lgrPknUm3FmHMldlVsKYbCZaNTG9xIpmOrgnXIiYVcynA
+         JTcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=wLz7l5oBTTWRrPJZo/ObezKhptZZKpKERaSHZ1hXdEw=;
-        b=Ric/yTX3rq/sMcl8sls+NC4sEtgTWp2WCpcOPfGSv/8Q0A2brRjBJQwV5ahKXlcWxl
-         v1L2RRQaWRYxHcFybxoDydwGo4XWGKyQyakD4v/u92/28ulh2tGT4Ny7KB55HApv4abj
-         NdBZYciOFF6lDICn6RZYsY2z+RGZJPITCOOQNq10xLcwZEnl9necgEt0lQTTGSjrzU7f
-         Chvs4u+INKrlKKw3VBusrrt6suqDuqq1SvHZMEylXt25I0J2t3DJBMUC7JFJ4peTSbSo
-         AwR3rwCoQnOSJpFYzQs2yYAeNAzIdN23TWhWle+yws2BepPqh6qU/RlOTLOdGFSpBnHZ
-         mkJw==
-X-Gm-Message-State: AOAM5325FeJbK5bbwH6U3K+1szREhgmcFhuXEjGZHvIglrylDJ356E7W
-        phpC3Oxb/Eo3GkoIXZCz4vfxPw==
-X-Google-Smtp-Source: ABdhPJwoXL0o8krQI9ycOghoOHGeNjAjXqPQZniw43Gw2Bb7ZaVEABjgZ/Mvt3KgOHJnO522R60wWg==
-X-Received: by 2002:a37:9586:: with SMTP id x128mr21268593qkd.312.1592328263452;
-        Tue, 16 Jun 2020 10:24:23 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id n25sm14066118qkk.76.2020.06.16.10.24.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 10:24:23 -0700 (PDT)
-Subject: Re: [PATCH v6 0/6] Introduce Power domain based warming device driver
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh@kernel.org, amit.kucheria@verdurent.com,
-        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200604015317.31389-1-thara.gopinath@linaro.org>
- <20200616105325.GH1718@bug>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <0eb2e140-9c9c-4777-9916-d81eddc793ca@linaro.org>
-Date:   Tue, 16 Jun 2020 13:24:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        bh=LOu0n3RUGeuxEjMp2F5UGa7yErDx6HF4q3voQT9ZrEk=;
+        b=i7dr8Vw1QizcJfsUU675E8yvXphYQuxt4YBvawG7F6/ZzF1YanxG8EqlgygO4EXOo6
+         u/Uo/CqghgW8UqokCcfZ5nd56V912l3HW4DIxfVlIrPRAkH5GWQJXe2OXhH7UP/+FiP4
+         PR0EP0zQWumjbH+XHHcUTrPQokzhaG75t6J9QMwGzXnOkA5zwWn+MdxzEDwgzCIhYxmh
+         78lWwjnSNbdZMujPODgQ/9q6deq0K1mYWXkoh3lP2COqWWGYd1zs/K6jPMnigbyX1GTF
+         3lpavajwcJ3eybLj9ucIkuQREkvEB5hJOXA7ez5J1uztJHSh812IxehM2NXW6KRXtPwD
+         Hq0w==
+X-Gm-Message-State: AOAM533z4wLu8/eE1gmU4zN1srnoy2xun143OVv6pIE7zViZqftiJ/v9
+        Sq24c2auTle+AJIlep5H5gpwng==
+X-Google-Smtp-Source: ABdhPJxjIS/eDvr9cU2j95v4CdQVYG3A3JM5PZLfD5mYzD4jjBMoqson+Wrwa5YWxruNQtFvyJBMVw==
+X-Received: by 2002:a1c:4857:: with SMTP id v84mr4194000wma.96.1592328553695;
+        Tue, 16 Jun 2020 10:29:13 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.167.65])
+        by smtp.gmail.com with ESMTPSA id z6sm29444739wrh.79.2020.06.16.10.29.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 10:29:13 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, arnd@arndb.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/1] mfd: Add I2C based System Configuaration (SYSCON) access
+Date:   Tue, 16 Jun 2020 18:29:04 +0100
+Message-Id: <20200616172904.373045-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200616105325.GH1718@bug>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The existing SYSCON implementation only supports MMIO (memory mapped)
+accesses, facilitated by Regmap.  This extends support for registers
+held behind I2C busses.
 
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/Kconfig            |  7 +++
+ drivers/mfd/Makefile           |  1 +
+ drivers/mfd/syscon-i2c.c       | 89 ++++++++++++++++++++++++++++++++++
+ include/linux/mfd/syscon-i2c.h | 26 ++++++++++
+ 4 files changed, 123 insertions(+)
+ create mode 100644 drivers/mfd/syscon-i2c.c
+ create mode 100644 include/linux/mfd/syscon-i2c.h
 
-On 6/16/20 6:53 AM, Pavel Machek wrote:
-> Hi!
-> 
->> Certain resources modeled as a generic power domain in linux kernel can be
->> used to warm up the SoC (mx power domain on sdm845) if the temperature
->> falls below certain threshold. These power domains can be considered as
->> thermal warming devices.  (opposite of thermal cooling devices).
-> 
-> Would you explain when this is needed?
-> 
-> I'd normally expect "too low" temperature to be a problem during power-on, but at
-> that time Linux is not running so it can not provide the heating...
-Hi Pavel,
-
-This is more in the scenario if the system in on and temperature is 
-dipping (I have been told in colder climates). Idea is to turn on 
-resources so as to prevent further dipping of temperature if possible.
-
-> 
-> Best regards,
-> 
-> 									Pavel
-> 
-
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 0a59249198d34..63ae78b92b086 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1300,6 +1300,13 @@ config MFD_SYSCON
+ 	  Select this option to enable accessing system control registers
+ 	  via regmap.
+ 
++config MFD_SYSCON_I2C
++	bool "System Controller Register R/W Based on I2C Regmap"
++	select REGMAP_I2C
++	help
++	  Select this option to enable accessing system control registers
++	  via I2C using regmap.
++
+ config MFD_DAVINCI_VOICECODEC
+ 	tristate
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f935d10cbf0fc..0aec1f42ac979 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -219,6 +219,7 @@ obj-$(CONFIG_MFD_RK808)		+= rk808.o
+ obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
+ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+ obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
++obj-$(CONFIG_MFD_SYSCON_I2C)	+= syscon-i2c.o
+ obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
+ obj-$(CONFIG_MFD_VEXPRESS_SYSREG)	+= vexpress-sysreg.o
+ obj-$(CONFIG_MFD_RETU)		+= retu-mfd.o
+diff --git a/drivers/mfd/syscon-i2c.c b/drivers/mfd/syscon-i2c.c
+new file mode 100644
+index 0000000000000..404e595d7646c
+--- /dev/null
++++ b/drivers/mfd/syscon-i2c.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * System Control Driver accessed over I2C
++ *
++ * Copyright (C) 2020 Linaro Ltd.
++ *
++ * Author: Lee Jones <lee.jones@linaro.org>
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/list.h>
++#include <linux/mfd/syscon-i2c.h>
++#include <linux/regmap.h>
++
++static DEFINE_SPINLOCK(syscon_i2c_list_slock);
++static LIST_HEAD(syscon_i2c_list);
++
++struct syscon {
++	struct device_node *np;
++	struct regmap *regmap;
++	struct list_head list;
++};
++
++static const struct regmap_config syscon_i2c_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
++static struct syscon *of_syscon_i2c_register(struct i2c_client *client)
++{
++	struct regmap_config syscon_config = syscon_i2c_regmap_config;
++	struct device_node *np = client->dev.of_node;
++	struct syscon *syscon;
++	struct regmap *regmap;
++	int ret;
++
++	syscon = devm_kzalloc(&client->dev, sizeof(*syscon), GFP_KERNEL);
++	if (!syscon)
++		return ERR_PTR(-ENOMEM);
++
++	syscon_config.name = of_node_full_name(np);
++
++	regmap = devm_regmap_init_i2c(client, &syscon_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&client->dev, "Failed to initialise Regmap I2C\n");
++		ret = PTR_ERR(regmap);
++		return ERR_PTR(ret);
++	}
++
++	syscon->regmap = regmap;
++	syscon->np = np;
++
++	spin_lock(&syscon_i2c_list_slock);
++	list_add_tail(&syscon->list, &syscon_i2c_list);
++	spin_unlock(&syscon_i2c_list_slock);
++
++	return syscon;
++}
++
++static struct regmap *i2c_device_node_get_regmap(struct i2c_client *client)
++{
++	struct device_node *np = client->dev.of_node;
++	struct syscon *entry, *syscon = NULL;
++
++	spin_lock(&syscon_i2c_list_slock);
++
++	list_for_each_entry(entry, &syscon_i2c_list, list)
++		if (entry->np == np) {
++			syscon = entry;
++			break;
++		}
++
++	spin_unlock(&syscon_i2c_list_slock);
++
++	if (!syscon)
++		syscon = of_syscon_i2c_register(client);
++
++	if (IS_ERR(syscon))
++		return ERR_CAST(syscon);
++
++	return syscon->regmap;
++}
++
++struct regmap *i2c_device_node_to_regmap(struct i2c_client *client)
++{
++	return i2c_device_node_get_regmap(client);
++}
++EXPORT_SYMBOL_GPL(i2c_device_node_to_regmap);
+diff --git a/include/linux/mfd/syscon-i2c.h b/include/linux/mfd/syscon-i2c.h
+new file mode 100644
+index 0000000000000..854e316fec93e
+--- /dev/null
++++ b/include/linux/mfd/syscon-i2c.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * System Control Driver accessed via I2C
++ *
++ * Copyright (C) 2020 Linaro Ltd.
++ *
++ * Author: Lee Jones <lee.jones@linaro.org>
++ */
++
++#ifndef __LINUX_MFD_SYSCON_I2C_H__
++#define __LINUX_MFD_SYSCON_I2C_H__
++
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <linux/i2c.h>
++
++#ifdef CONFIG_MFD_SYSCON_I2C
++extern struct regmap *i2c_device_node_to_regmap(struct i2c_client *client);
++#else
++static inline struct regmap *i2c_device_node_to_regmap(struct i2c_client *client)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
++#endif
++
++#endif /* __LINUX_MFD_SYSCON_I2C_H__ */
 -- 
-Warm Regards
-Thara
+2.25.1
+
