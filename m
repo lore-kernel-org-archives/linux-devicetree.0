@@ -2,79 +2,195 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4C1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB695208B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592345110;
-	bh=9bH3nkbMis+3M+lEU06ECFeAOUKxNtoZ5l6kTuWtHJ4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tQqjPQP/n/6foYaf7ai98wI7+Iq6onBGAjwe6+7yUBZnzfINupr+wTYOpcrch6gBP
-	 BMN6u8sBGwK0w5z1qcpRZ9sFkLD/pIcb+JEsahhKN2II01vBIz+TKOSV9aWEJ5aY6p
-	 HXl8MmmOn5Hz1+8dUQSMlN7A8owlQGjlS2npBnP0=
+	by mail.kernel.org (Postfix) with ESMTP id 3685D20DD4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgFPWFH (ORCPT
+        id S1726511AbgFPWeF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 18:34:05 -0400
+Received: from v6.sk ([167.172.42.174]:48566 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgFPWFG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:05:06 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70AC520739;
-        Tue, 16 Jun 2020 22:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592345105;
-        bh=9bH3nkbMis+3M+lEU06ECFeAOUKxNtoZ5l6kTuWtHJ4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NjFR2rOLvjf1Fl8aIw/KJ8pg7rdNAzn+ldbAARieoWv6tfX23tuZTCAG/lBok9e3H
-         sgtWezY0YeOjBEX/eyBS6rW1QM7IkGdvUIF4plMokntwY7lOSSWG+ay7TIm9Hv/iwb
-         tGfciR+AzZ5vTi9M3+jj17AmDOmEqBbHiBZRS5ps=
-Date:   Tue, 16 Jun 2020 17:05:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 03/12] dt-bindings: PCI: Add bindings for more Brcmstb
- chips
-Message-ID: <20200616220504.GA1983902@bjorn-Precision-5520>
+        id S1726025AbgFPWeE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:34:04 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 80E9A61636;
+        Tue, 16 Jun 2020 22:34:01 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 2/5] dt-bindings: i2c: Convert i2c-pxa to json-schema
+Date:   Wed, 17 Jun 2020 00:33:50 +0200
+Message-Id: <20200616223353.993567-3-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200616223353.993567-1-lkundrak@v3.sk>
+References: <20200616223353.993567-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616205533.3513-4-james.quinlan@broadcom.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:55:10PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
->   7211 (STB version of RPi4).
-> - add new property 'brcm,scb-sizes'
-> - add new property 'resets'
-> - add new property 'reset-names' for 7216 only
-> - allow 'ranges' and 'dma-ranges' to have more than one item and update
->   the example to show this.
+A conversion of the i2c-pxa binding to DT schema format using json-schema.
 
-Capitalize and add periods to the list items consistently.
+This also cleans ups some errors in the binding: The compatible string
+description suggested that "mmp" in "mrvl,mmp-twsi" is to be substituted
+with a processor model, which wouldn't be a right thing to do and indeed
+nobody seems to have been doing that. There also was "Recommended
+properties" section that included optional as well as mandatory
+properties. Missing mandatory properties were added to the example.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+
+---
+Changes since v2:
+- Add unevaluatedProperties: false
+
+Changes since v1:
+- Add default GPL-2.0-only license tag
+- Fill in maintainers from MAINTAINERS file
+
+ .../devicetree/bindings/i2c/i2c-pxa.txt       | 31 --------
+ .../devicetree/bindings/i2c/i2c-pxa.yaml      | 74 +++++++++++++++++++
+ 2 files changed, 74 insertions(+), 31 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+deleted file mode 100644
+index c30783c0eca03..0000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-* Marvell MMP I2C controller
+-
+-Required properties :
+-
+- - reg : Offset and length of the register set for the device
+- - compatible : should be "mrvl,mmp-twsi" where mmp is the name of a
+-   compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
+-   For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
+-   as shown in the example below.
+-   For the Armada 3700, the compatible should be "marvell,armada-3700-i2c".
+-
+-Recommended properties :
+-
+- - interrupts : the interrupt number
+- - mrvl,i2c-polling : Disable interrupt of i2c controller. Polling
+-   status register of i2c controller instead.
+- - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
+-
+-Examples:
+-	twsi1: i2c@d4011000 {
+-		compatible = "mrvl,mmp-twsi";
+-		reg = <0xd4011000 0x1000>;
+-		interrupts = <7>;
+-		mrvl,i2c-fast-mode;
+-	};
+-	
+-	twsi2: i2c@d4025000 {
+-		compatible = "mrvl,mmp-twsi";
+-		reg = <0xd4025000 0x1000>;
+-		interrupts = <58>;
+-	};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+new file mode 100644
+index 0000000000000..da6e8bdc40377
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i2c/i2c-pxa.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell MMP I2C controller bindings
++
++maintainers:
++  - Rob Herring <robh+dt@kernel.org>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++  - if:
++      not:
++        required:
++          - mrvl,i2c-polling
++    then:
++        required:
++          - interrupts
++
++properties:
++  compatible:
++    enum:
++      - mrvl,mmp-twsi
++      - mrvl,pxa-i2c
++      - marvell,armada-3700-i2c
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++
++  resets:
++    minItems: 1
++
++  mrvl,i2c-polling:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Disable interrupt of i2c controller. Polling status register of i2c
++      controller instead.
++
++  mrvl,i2c-fast-mode:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: Enable fast mode of i2c controller.
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - '#address-cells'
++  - '#size-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/marvell,mmp2.h>
++    i2c@d4011000 {
++        compatible = "mrvl,mmp-twsi";
++        reg = <0xd4011000 0x1000>;
++        interrupts = <7>;
++        clocks = <&soc_clocks MMP2_CLK_TWSI1>;
++        mrvl,i2c-fast-mode;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
++
++...
+-- 
+2.26.2
+
