@@ -2,320 +2,323 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBD7C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC843C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE1762100A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE3D207E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Hrv2EKWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgFPWee (ORCPT
+        id S1725967AbgFPWfy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:34:34 -0400
-Received: from v6.sk ([167.172.42.174]:48638 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726557AbgFPWed (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:34:33 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 5ABA561635;
-        Tue, 16 Jun 2020 22:33:59 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 1/5] dt-bindings: gpio: Convert mrvl-gpio to json-schema
-Date:   Wed, 17 Jun 2020 00:33:49 +0200
-Message-Id: <20200616223353.993567-2-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616223353.993567-1-lkundrak@v3.sk>
-References: <20200616223353.993567-1-lkundrak@v3.sk>
+        Tue, 16 Jun 2020 18:35:54 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:27136 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725849AbgFPWfy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:35:54 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 18:35:52 EDT
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592346952; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=zIiyILVfFV4UeSP8Fb9UXjt+SpqTgZRRbkXg00ivuxQ=;
+ b=Hrv2EKWftdXL1whkw+fPi3HSMgoVFLSauioUdInngy0p0UgS44SJxAWYn5xYMLHitdq3Jx+P
+ CJAto2YAYVCCuYPWZRvAl/YsKq4SSCcxbbyygkMd6/6RXrSYfsEpdGKpa43HjvOUv5W8v89T
+ 85RyNtBh+Ni5V7AJQSBz2N0+Qh0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5ee947fa5866879c76b64a08 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 22:30:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEA39C433CB; Tue, 16 Jun 2020 22:30:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6F41C433C9;
+        Tue, 16 Jun 2020 22:30:16 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 16 Jun 2020 15:30:16 -0700
+From:   tanmay@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, sam@ravnborg.org,
+        seanpaul@chromium.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, chandanu@codeaurora.org,
+        robdclark@gmail.com, abhinavk@codeaurora.org,
+        nganji@codeaurora.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, Vara Reddy <varar@codeaurora.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
+ driver for Snapdragon
+In-Reply-To: <159230492894.62212.17830740055624171310@swboyd.mtv.corp.google.com>
+References: <20200609033818.9028-1-tanmay@codeaurora.org>
+ <159175530931.242598.4696487926885071106@swboyd.mtv.corp.google.com>
+ <d6db52a33ac787c0fe6134ca32c06007@codeaurora.org>
+ <159230492894.62212.17830740055624171310@swboyd.mtv.corp.google.com>
+Message-ID: <339dea7850113f9721a1761e31902af5@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This converts the mrvl-gpio binding to DT schema format using json-schema.
+Thanks Stephen for your answers.
 
-Various fixes were done during the conversion, such as adding more
-properties that are in fact mandatory or extending the examples to
-include child nodes with extra GPIO blocks.
+On 2020-06-16 03:55, Stephen Boyd wrote:
+> Quoting tanmay@codeaurora.org (2020-06-11 13:07:09)
+>> On 2020-06-09 19:15, Stephen Boyd wrote:
+>> > Quoting Tanmay Shah (2020-06-08 20:38:18)
+>> >> diff --git
+>> >> a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+>> >> b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+>> >> new file mode 100644
+>> >> index 0000000..5fdb915
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+>> >
+>> > Typically the file name matches the compatible string. But the
+>> > compatible string is just qcom,dp-display. Maybe the compatible string
+>> > should be qcom,sc7180-dp? Notice that the SoC number comes first as is
+>> > preferred.
+>> >
+>> These bindings will be similar for upcoming SOC as well.
+>> So just for understanding, when we add new SOC do we create new file
+>> with same bidings
+>> with SOC number in new file name?
+>> Instead we can keep this file's name as qcom,dp-display.yaml (same as
+>> compatible const) and we can include SOC number in compatible enum ?
+>> some examples:
+>> https://patchwork.kernel.org/patch/11448357/
+>> https://patchwork.kernel.org/patch/11164619/
+> 
+> Yes that works too. It's really up to robh here.
+> 
+>> >
+>> >> @@ -0,0 +1,142 @@
+>> >> +# SPDX-License-Identifier: (GPL-2.0-only  OR BSD-2-Clause)
+>> >> +%YAML 1.2
+>> >> +---
+>> >> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
+>> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> >> +
+>> >> +title: Qualcomm Display Port Controller.
+>> >> +
+>> >> +maintainers:
+>> >> +  - Chandan Uddaraju <chandanu@codeaurora.org>
+>> >> +  - Vara Reddy <varar@codeaurora.org>
+>> >> +  - Tanmay Shah <tanmay@codeaurora.org>
+>> >> +
+>> >> +description: |
+>> >> +  Device tree bindings for MSM Display Port which supports DP host
+>> >> controllers
+>> >> +  that are compatible with VESA Display Port interface specification.
+>> >> +
+>> >> +properties:
+>> >> +  compatible:
+>> >> +    items:
+>> >> +      - const: qcom,dp-display
+>> >> +
+>> >> +  cell-index:
+>> >> +    description: Specifies the controller instance.
+>> >> +
+>> >> +  reg:
+>> >> +    items:
+>> >> +      - description: DP controller registers
+>> >> +
+>> >> +  interrupts:
+>> >> +    description: The interrupt signal from the DP block.
+>> >> +
+>> >> +  clocks:
+>> >> +    description: List of clock specifiers for clocks needed by the
+>> >> device.
+>> >> +    items:
+>> >> +      - description: Display Port AUX clock
+>> >> +      - description: Display Port Link clock
+>> >> +      - description: Link interface clock between DP and PHY
+>> >> +      - description: Display Port Pixel clock
+>> >> +      - description: Root clock generator for pixel clock
+>> >> +
+>> >> +  clock-names:
+>> >> +    description: |
+>> >> +      Device clock names in the same order as mentioned in clocks
+>> >> property.
+>> >> +      The required clocks are mentioned below.
+>> >> +    items:
+>> >> +      - const: core_aux
+>> >> +      - const: ctrl_link
+>> >> +      - const: ctrl_link_iface
+>> >> +      - const: stream_pixel
+>> >> +      - const: pixel_rcg
+>> >
+>> > Why not just 'pixel'? And why is the root clk generator important? It
+>> > looks like this binding should be using the assigned clock parents
+>> > property instead so that it doesn't have to call clk_set_parent()
+>> > explicitly.
+>> >
+>> Are we talking about renaming stream_pixel to pixel only?
+>> We divide clocks in categories: core, control and stream clock.
+>> Similar terminology will be used in subsequent driver patches as well.
+>> 
+>> We can remove pixel_rcg use assigned clock parents property and remove
+>> clk_set_parent
+>> from driver.
+> 
+> Cool. Using assigned clock parents is good.
+> 
+>> 
+>> >> +  "#clock-cells":
+>> >> +    const: 1
+>> >> +
+>> >> +  vdda-1p2-supply:
+>> >> +    description: phandle to vdda 1.2V regulator node.
+>> >> +
+>> >> +  vdda-0p9-supply:
+>> >> +    description: phandle to vdda 0.9V regulator node.
+>> >> +
+>> >> +  data-lanes = <0 1>:
+>> >
+>> > Is this correct? We can have = <value> in the property name? Also feels
+>> > generic and possibly should come from the phy binding instead of from
+>> > the controller binding.
+>> >
+>> We are using this property in DP controller programming sequence such 
+>> as
+>> link training.
+>> So I think we can keep this here.
+>> You are right about <value>. <0 1> part should be in example only. It
+>> was passing through dt_binding_check though.
+>> Here it should be like:
+>> data-lanes:
+>> minItems:1
+>> maxItems:4
+> 
+> Ok.
+> 
+>> 
+>> >> +    type: object
+>> >> +    description: Maximum number of lanes that can be used for Display
+>> >> port.
+>> >> +
+>> >> +  ports:
+>> >> +    description: |
+>> >> +       Contains display port controller endpoint subnode.
+>> >> +       remote-endpoint: |
+>> >> +         For port@0, set to phandle of the connected panel/bridge's
+>> >> +         input endpoint. For port@1, set to the DPU interface output.
+>> >> +         Documentation/devicetree/bindings/graph.txt and
+>> >> +
+>> >> Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> >> +
+>> >> +patternProperties:
+>> >> +  "^aux-cfg([0-9])-settings$":
+>> >> +    type: object
+>> >> +    description: |
+>> >> +      Specifies the DP AUX configuration [0-9] settings.
+>> >> +      The first entry in this array corresponds to the register
+>> >> offset
+>> >> +      within DP AUX, while the remaining entries indicate the
+>> >> +      programmable values.
+>> >
+>> > I'd prefer this was removed from the binding and hardcoded in the
+>> > driver
+>> > until we can understand what the values are. If they're not
+>> > understandable then they most likely don't change and should be done in
+>> > the driver.
+>> >
+>> Typically customers tune these values by working with vendor. So for
+>> different boards it can be different. Even though it is hard for
+>> customers to do this themselves, these are still board specific and
+>> belong to dts. As requested earlier, we have added default values
+>> already and made these properties optional but, we would like to keep 
+>> it
+>> in bindings so we can have option to tune them as required.
+> 
+> If they're in the binding then they should make sense instead of just
+> being random values. So please move the defaults to the driver and
+> have human understandable DT properties to tune these settings. This 
+> has
+> been done for the qcom USB phy already (see things like
+> qcom,hstx-trim-value for example).
+> 
+Ok. For now I will move these values to driver and later we will add dt 
+properties as required.
 
-The compatible strings are a mess. It is not clear why so many of them
-are needed; the driver doesn't really seem to differentiate between the
-models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
-are not used at all, so it's not known how many interrupts they utilize.
-On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
-doesn't end up in any actual DTB file.
-
-In any case -- the schema merely copies whatever was in the original
-binding document, so it's hopefully no more wrong that the original.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
----
-Changes since v2:
-- Don't make ranges property mandatory
-
-Changes since v1:
-- Drop marvell,pxa1928-gpio
-- Drop ranges from example with no gcb child nodes
-- Add default GPL-2.0-only license tag
-- Fill in maintainers from MAINTAINERS file
-
- .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
- .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 173 ++++++++++++++++++
- 2 files changed, 173 insertions(+), 48 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-deleted file mode 100644
-index 30fd2201b3d4c..0000000000000
---- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--* Marvell PXA GPIO controller
--
--Required properties:
--- compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
--		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
--		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
--		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
--- reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all gpio pins.
--  There're three gpio interrupts in arch-pxa, and they're gpio0,
--  gpio1 and gpio_mux. There're only one gpio interrupt in arch-mmp,
--  gpio_mux.
--- interrupt-names : Should be the names of irq resources. Each interrupt
--  uses its own interrupt name, so there should be as many interrupt names
--  as referenced interrupts.
--- interrupt-controller : Identifies the node as an interrupt controller.
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source.
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify flags. See gpio.txt for possible
--  values.
--
--Example for a MMP platform:
--
--	gpio: gpio@d4019000 {
--		compatible = "marvell,mmp-gpio";
--		reg = <0xd4019000 0x1000>;
--		interrupts = <49>;
--		interrupt-names = "gpio_mux";
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--      };
--
--Example for a PXA3xx platform:
--
--	gpio: gpio@40e00000 {
--		compatible = "intel,pxa3xx-gpio";
--		reg = <0x40e00000 0x10000>;
--		interrupt-names = "gpio0", "gpio1", "gpio_mux";
--		interrupts = <8 9 10>;
--		gpio-controller;
--		#gpio-cells = <0x2>;
--		interrupt-controller;
--		#interrupt-cells = <0x2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
-new file mode 100644
-index 0000000000000..4db3b8a3332c2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
-@@ -0,0 +1,173 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell PXA GPIO controller
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+  - Rob Herring <robh+dt@kernel.org>
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - intel,pxa25x-gpio
-+              - intel,pxa26x-gpio
-+              - intel,pxa27x-gpio
-+              - intel,pxa3xx-gpio
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 3
-+          maxItems: 3
-+        interrupt-names:
-+          items:
-+            - const: gpio0
-+            - const: gpio1
-+            - const: gpio_mux
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - marvell,mmp-gpio
-+              - marvell,mmp2-gpio
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        interrupt-names:
-+          items:
-+            - const: gpio_mux
-+
-+properties:
-+  $nodename:
-+    pattern: '^gpio@[0-9a-f]+$'
-+
-+  compatible:
-+    enum:
-+      - intel,pxa25x-gpio
-+      - intel,pxa26x-gpio
-+      - intel,pxa27x-gpio
-+      - intel,pxa3xx-gpio
-+      - marvell,mmp-gpio
-+      - marvell,mmp2-gpio
-+      - marvell,pxa93x-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  ranges: true
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+  interrupts: true
-+
-+  interrupt-names: true
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+patternProperties:
-+  '^gpio@[0-9a-f]*$':
-+    type: object
-+    properties:
-+      reg:
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - '#address-cells'
-+  - '#size-cells'
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - interrupts
-+  - interrupt-names
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/pxa-clock.h>
-+    gpio@40e00000 {
-+        compatible = "intel,pxa3xx-gpio";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        reg = <0x40e00000 0x10000>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupts = <8>, <9>, <10>;
-+        interrupt-names = "gpio0", "gpio1", "gpio_mux";
-+        clocks = <&clks CLK_GPIO>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
-+  - |
-+    #include <dt-bindings/clock/marvell,pxa910.h>
-+    gpio@d4019000 {
-+        compatible = "marvell,mmp-gpio";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        reg = <0xd4019000 0x1000>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupts = <49>;
-+        interrupt-names = "gpio_mux";
-+        clocks = <&soc_clocks PXA910_CLK_GPIO>;
-+        resets = <&soc_clocks PXA910_CLK_GPIO>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        ranges;
-+
-+        gpio@d4019000 {
-+            reg = <0xd4019000 0x4>;
-+        };
-+
-+        gpio@d4019004 {
-+            reg = <0xd4019004 0x4>;
-+        };
-+
-+        gpio@d4019008 {
-+            reg = <0xd4019008 0x4>;
-+        };
-+
-+        gpio@d4019100 {
-+            reg = <0xd4019100 0x4>;
-+        };
-+     };
-+
-+...
--- 
-2.26.2
-
+>> >> +
+>> >> +required:
+>> >> +  - compatible
+>> >> +  - cell-index
+>> >> +  - reg
+>> >> +  - interrupts
+>> >> +  - clocks
+>> >> +  - clock-names
+>> >> +  - vdda-1p2-supply
+>> >> +  - vdda-0p9-supply
+>> >> +  - data-lanes
+>> >> +  - ports
+>> >> +
+>> >> +examples:
+>> >> +  - |
+>> >> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> >> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+>> >> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> >> +    msm_dp: displayport-controller@ae90000{
+>> >> +        compatible = "qcom,dp-display";
+>> >> +        cell-index = <0>;
+>> >> +        reg = <0 0xae90000 0 0x1400>;
+>> >> +        reg-names = "dp_controller";
+>> >> +
+>> >> +        interrupt-parent = <&display_subsystem>;
+>> >> +        interrupts = <12 0>;
+>> >> +
+>> >> +        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
+>> >> +                 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
+>> >> +                 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
+>> >> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
+>> >> +                 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
+>> >> +        clock-names = "core_aux",
+>> >> +                      "ctrl_link",
+>> >> +                      "ctrl_link_iface", "stream_pixel",
+>> >> +                      "pixel_rcg";
+>> >> +        #clock-cells = <1>;
+>> >> +
+>> >> +        vdda-1p2-supply = <&vreg_l3c_1p2>;
+>> >> +        vdda-0p9-supply = <&vreg_l4a_0p8>;
+>> >> +
+>> >> +        data-lanes = <0 1>;
+>> >> +
+>> >> +        ports {
+>> >> +            #address-cells = <1>;
+>> >> +            #size-cells = <0>;
+>> >> +
+>> >> +            port@0 {
+>> >> +                reg = <0>;
+>> >> +                dp_in: endpoint {
+>> >> +                    remote-endpoint = <&dpu_intf0_out>;
+>> >> +                };
+>> >> +            };
+>> >> +
+>> >> +            port@1 {
+>> >> +                reg = <1>;
+>> >> +                dp_out: endpoint {
+>> >> +                };
+>> >> +            };
+>> >> +        };
+>> >> +    };
+>> >
+>> > I believe there should be a '...' here.
+>> I think you mean signature is missing? If not could you please 
+>> explain?
+> 
+> No I mean there should be a triple dot at the end.
