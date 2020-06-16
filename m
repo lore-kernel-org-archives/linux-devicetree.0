@@ -2,177 +2,123 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA8AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5FCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78FCC21473
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0B620FC3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 13:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lMyV++gP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTqbi7Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgFPNQO (ORCPT
+        id S1728557AbgFPNSP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51174 "EHLO
+        Tue, 16 Jun 2020 09:18:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbgFPNQL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 09:16:11 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A050C06174E
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 06:16:11 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so2843113wme.3
-        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 06:16:11 -0700 (PDT)
+        with ESMTP id S1728553AbgFPNSP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 09:18:15 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F153CC06174E
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 06:18:14 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r7so20767155wro.1
+        for <devicetree@vger.kernel.org>; Tue, 16 Jun 2020 06:18:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9NeQqiMAuFvxtrOzPp09+0hkReargQ3L4b3prwQqFWs=;
-        b=lMyV++gPByIjhuuvn2wsK/E6klL79fbVx4ACxXxrHnu5At/8lS+6vpLTCO+WumvCb1
-         Btd4DCv1THnwBCG4id7qSDcH0KTr8RGBM5STEozGGKPTVPzbXhsaJf5fGrSIgHEBynR6
-         osWj5fyj4mQ1L5xGJVdkwJbuY4v1377rcu5Jq4sLk6859fcrU2fks+W6cDGJWjiN+naa
-         qPVu58rW8dbILiK6yl0uJWaPVKLFH5WStAXktelK95uejdkKJQce6ZH8lDI9q1TvmM+g
-         MmMS8mqTXaWgdtojc8ytx09R4ArfAHysepVCuNQwQfD/38aR+4SbqhONnPt16lRyzEFp
-         8SJg==
+        bh=Ze0kyZ29y+iARyCZx88V33Mi0dNrmrq4icVH7Auu/rY=;
+        b=VTqbi7AgunRcG+Rhou6MsFpBPw37VdaO1Z5DHr86KTYHz/+QoM+/Z4dtJg4mE1WP8x
+         oxVDKAwoZE8hafGZnNu/7K6lOsnqBcddM++8NGwSboB6CbNMJQSplGWwXnE+a0Z9hOVX
+         ZZRqyh5R2a8cCTouoCGXGYy26/UpuFEYpYGpPMYmLFEntOu814hWWVlpxhGC5QhOo/8q
+         afdxO0Jd1AfdDqMxYQM5qiby4xeKVEjxze7THZg1YjN5SZ5Ea1KaRo2rZ8dq3ze9NJHL
+         pVG3JVU0oQ5h4WRvJ/RpAiprCC4SybB3tmWIMWjeukItMxYrcI6aNCe+Cu6BzXzzjfeW
+         oFYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=9NeQqiMAuFvxtrOzPp09+0hkReargQ3L4b3prwQqFWs=;
-        b=JCtuXvzuW3M9bdhid0zJqU1RNXytgAsf5tUB2Xkdn869CFTn6Bn++8T8rfn+k3wAyt
-         qBvCG8jTTUE284P8MaDQidYjiJCZy1x319tCGuCLNwNqyrQV9AKr+5z+SQdlWD8rfhQK
-         C/6AsMenaijbrRle/exUoPFfUmbroZo0MLQGhMhh01JoBgqvldYQcLNnulZjosmjCcE2
-         gafOFGpFY/CT4wi65LMlN9n6HfZ1acuNuAgQ0sz1VVQ5zf0RIYbkCStlIlKoTT4bZOI6
-         QpVaWn+z7dCOVrNP2JwfgATI1El4RnPtzYU0c5bLLZEKWmSl/FiZSL9pG/6yWY1/58rz
-         afnw==
-X-Gm-Message-State: AOAM531JrnG4mWV67pjMCSNUemcw7myk9y2sdvVLBur8M6lm1R6B6+rs
-        GrNIDuezL5bzPLP1/B3/4xD6jQ==
-X-Google-Smtp-Source: ABdhPJxXm+YEBOebjFL0T7eNx99jr7/JaArOdawU3v9M4AnaQqFhb5wqOc3kZdhNeoyRmtq7vpK93Q==
-X-Received: by 2002:a1c:541d:: with SMTP id i29mr3214543wmb.73.1592313369700;
-        Tue, 16 Jun 2020 06:16:09 -0700 (PDT)
+        bh=Ze0kyZ29y+iARyCZx88V33Mi0dNrmrq4icVH7Auu/rY=;
+        b=V/XqNTnNjwpqY+Fbv7yp36i1aTBE7DoNCL5vesWupJpL/y4QKyWLoRwwxmu87nz6Zy
+         mnd2Bk0A+lwCODL4EAzJhDSguFiyv7BfOtmA85vfzkvYEs/nsoHlRqhvSQM0NbRGqfhY
+         Tvs1QsABRuS4dEC3oBGwPuf/wY+x+2Kqd9qHglqqhBAl1x3vBfBET2sX75mpFLacx1es
+         RnlxCqP8WQ9ZjXQYW/92MN5eU9Tj6D+6hMlLWuhcY7PZdBpJ9DmqqaliDVLXcH71u1hP
+         1/8ho10Y3PINH7nxJC3SNkJCjfToP+jpK2nxSrFREeEXo9FeNuolt7P56xsoQCI2CV68
+         Sb3g==
+X-Gm-Message-State: AOAM532b+Iezotg5bN1QFA5iVJOKvzZ4f+Ci2CwD8QItEPNpHVBBZQCh
+        2cjZ6u2xmJ6hmXvTMV2aiTWYyw==
+X-Google-Smtp-Source: ABdhPJxqpKqsKZ/O9m5u2HJ1sllXpsbw+K74UxHuOlR2UOWeLkd2rY5NgIlELrm7Vqn3XEPpgKRt5w==
+X-Received: by 2002:adf:f0d2:: with SMTP id x18mr3022162wro.250.1592313493614;
+        Tue, 16 Jun 2020 06:18:13 -0700 (PDT)
 Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id d2sm29670942wrs.95.2020.06.16.06.16.08
+        by smtp.gmail.com with ESMTPSA id l1sm32956809wrb.31.2020.06.16.06.18.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 06:16:08 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:16:07 +0100
+        Tue, 16 Jun 2020 06:18:13 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 14:18:11 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360
- PMIC
-Message-ID: <20200616131607.GQ2608702@dell>
-References: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Subject: Re: [RESEND v2 2/4] mfd: Add for PMIC MT6359 registers definition
+Message-ID: <20200616131811.GR2608702@dell>
+References: <1582252746-8149-1-git-send-email-Wen.Su@mediatek.com>
+ <1582252746-8149-3-git-send-email-Wen.Su@mediatek.com>
+ <1592301485.30613.7.camel@mtkswgap22>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
+In-Reply-To: <1592301485.30613.7.camel@mtkswgap22>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 16 Jun 2020, Gene Chen wrote:
+On Tue, 16 Jun 2020, Wen Su wrote:
 
-> From: Gene Chen <gene_chen@richtek.com>
+> Dear Reviewers, 
 > 
-> Add devicetree binding document support Mediatek MT6360 PMIC
-
-This should have been submitted with the driver.
-
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> ---
->  Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
+> I am sorry to bother you. How should I proceed for this patch set ?
+> Since the regulator driver were applied and dropped because of the MFD
+> header file dependency on this patch.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6360.txt b/Documentation/devicetree/bindings/mfd/mt6360.txt
-> new file mode 100644
-> index 0000000..e25b5c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mt6360.txt
-> @@ -0,0 +1,53 @@
-> +MediaTek MT6360 Multifunction Device Driver
+> Will this mfd registers definition patch and regulator driver patch be
+> applied ? Please advice.
 
-No such thing as an MFD (we made it up!).
+Once you have all of your Acks, it should be applied as a set.
 
-Please describe the device.
+Best thing you can do is submit a [RESEND].
 
-> +MT6360 is a multifunction device with the following sub modules:
-
-As above.  MFD is a Linuxisum which is not allowed in DT.
-
-> +- ADC
-> +- Battery Charger/OTG boost
-> +- Flash LED/RGB LED/moonlight LED
-> +- 2-channel Buck
-> +- 6-channel LDO
-> +- USB_PD
-> +
-> +It is interfaced to host controller using I2C interface.
-> +This document describes the binding for MFD device and its sub module.
-
-As above.  This sentence should be at the top in any case.
-
-> +Required properties:
-> +- compatible:	Must be "mediatek,mt6360_pmu"
-
-No '_'s in DT.
-
-> +- reg:			Specifies the I2C slave address of PMIC block, Must be <0x34>
-> +- interrupts:	I2C device IRQ line connected to the main SoC.
-> +
-> +Optional subnodes:
-> +- ADC
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_adc"
-> +- battery charger/OTG boost
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_chg"
-> +- Flash LED/RGB LED/moonlight LED
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_led"
-> +- 2-channel Buck
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_pmic"
-> +- 6-channel LDO
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_ldo"
-> +- USB_PD
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_tcpc"
-
-No '_'s.  Must be '-'.
-
-> +Example:
-> +
-> +	#include <dt-bindings/usb/pd.h>
-> +
-> +	pmu: mt6360_pmu@34 {
-> +		status = "ok";
-
-"okay" is more common I think.
-
-Should be at the bottom if not omitted altogether.
-
-> +		compatible = "mediatek,mt6360_pmu";
-> +		reg = <0x34>;
-> +		wakeup-source;
-> +		interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "IRQB";
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
+> On Fri, 2020-02-21 at 10:39 +0800, Wen Su wrote:
+> > From: "Wen Su" <wen.su@mediatek.com>
+> > 
+> > This adds MediaTek PMIC MT6359 registers definition for the
+> > following sub modules:
+> > 
+> > - Regulator
+> > - RTC
+> > - Interrupt
+> > 
+> > Signed-off-by: Wen Su <wen.su@mediatek.com>
+> > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  include/linux/mfd/mt6359/registers.h | 531 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 531 insertions(+)
+> >  create mode 100644 include/linux/mfd/mt6359/registers.h
 
 -- 
 Lee Jones [李琼斯]
