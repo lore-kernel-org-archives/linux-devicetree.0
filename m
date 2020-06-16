@@ -2,26 +2,27 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE534C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD41FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26C7207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C7120B80
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgFPWe3 (ORCPT
+        id S1726625AbgFPWem (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:34:29 -0400
-Received: from v6.sk ([167.172.42.174]:48632 "EHLO v6.sk"
+        Tue, 16 Jun 2020 18:34:42 -0400
+Received: from v6.sk ([167.172.42.174]:48650 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgFPWe3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:34:29 -0400
+        id S1726594AbgFPWek (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:34:40 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 4C5BC61634;
-        Tue, 16 Jun 2020 22:33:57 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 1D83D61639;
+        Tue, 16 Jun 2020 22:34:08 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -34,11 +35,13 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] DT: Improve validation for Marvell SoCs
-Date:   Wed, 17 Jun 2020 00:33:48 +0200
-Message-Id: <20200616223353.993567-1-lkundrak@v3.sk>
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 5/5] dt-bindings: timer: Convert mrvl,mmp-timer to json-schema
+Date:   Wed, 17 Jun 2020 00:33:53 +0200
+Message-Id: <20200616223353.993567-6-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200616223353.993567-1-lkundrak@v3.sk>
+References: <20200616223353.993567-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -46,15 +49,97 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+A straightforward conversion of the mrvl,mmp-timer binding to DT schema
+format using json-schema.
 
-chained to this message is what remains of the patch set that converts
-binding documents for hardware used with Marvell MMP SoCs to JSON.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Compared to v2 there are fixes to the first two patches. Detailed
-changelogs are in the individual patches.
+---
+Changes since v1:
+- Add default GPL-2.0-only license tag
+- Fill in maintainers from MAINTAINERS file
 
-Thanks
-Lubo
+ .../bindings/timer/mrvl,mmp-timer.txt         | 17 -------
+ .../bindings/timer/mrvl,mmp-timer.yaml        | 46 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 17 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
 
+diff --git a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+deleted file mode 100644
+index b8f02c6635219..0000000000000
+--- a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-* Marvell MMP Timer controller
+-
+-Required properties:
+-- compatible : Should be "mrvl,mmp-timer".
+-- reg : Address and length of the register set of timer controller.
+-- interrupts : Should be the interrupt number.
+-
+-Optional properties:
+-- clocks : Should contain a single entry describing the clock input.
+-
+-Example:
+-	timer0: timer@d4014000 {
+-		compatible = "mrvl,mmp-timer";
+-		reg = <0xd4014000 0x100>;
+-		interrupts = <13>;
+-		clocks = <&coreclk 2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
+new file mode 100644
+index 0000000000000..1fbc260a0cbdf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/mrvl,mmp-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell MMP Timer bindings
++
++maintainers:
++  - Daniel Lezcano <daniel.lezcano@linaro.org>
++  - Thomas Gleixner <tglx@linutronix.de>
++  - Rob Herring <robh+dt@kernel.org>
++
++properties:
++  $nodename:
++    pattern: '^timer@[a-f0-9]+$'
++
++  compatible:
++    const: mrvl,mmp-timer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    timer@d4014000 {
++        compatible = "mrvl,mmp-timer";
++        reg = <0xd4014000 0x100>;
++        interrupts = <13>;
++        clocks = <&coreclk 2>;
++    };
++
++...
+-- 
+2.26.2
 
