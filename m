@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F48DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22479C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A6321527
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0189321508
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgFPSYK (ORCPT
+        id S1730063AbgFPSYM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:24:10 -0400
-Received: from v6.sk ([167.172.42.174]:47594 "EHLO v6.sk"
+        Tue, 16 Jun 2020 14:24:12 -0400
+Received: from v6.sk ([167.172.42.174]:47662 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729964AbgFPSYI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:24:08 -0400
+        id S1730018AbgFPSYK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:24:10 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id CF5746162D;
-        Tue, 16 Jun 2020 18:24:06 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id D952D6162E;
+        Tue, 16 Jun 2020 18:24:08 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 07/13] ARM: dts: mmp2: Add Audio Clock controller
-Date:   Tue, 16 Jun 2020 20:23:35 +0200
-Message-Id: <20200616182341.944473-8-lkundrak@v3.sk>
+Subject: [PATCH 08/13] ARM: dts: mmp2: Add SSPA nodes
+Date:   Tue, 16 Jun 2020 20:23:36 +0200
+Message-Id: <20200616182341.944473-9-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200616182341.944473-1-lkundrak@v3.sk>
 References: <20200616182341.944473-1-lkundrak@v3.sk>
@@ -40,32 +40,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This device generates the audio codec master clock and bit clock.
+There are two I2S-capable audio serial port blocks.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/mmp2.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index b349f4f35706b..dd7fba65799ea 100644
+index dd7fba65799ea..31592acd3ef4f 100644
 --- a/arch/arm/boot/dts/mmp2.dtsi
 +++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -210,6 +210,19 @@ adma1: dma-controller@d42a0900 {
- 				#dma-cells = <1>;
+@@ -223,6 +223,32 @@ audio_clk: clocks@d42a0c30 {
+ 				#clock-cells = <1>;
  				status = "disabled";
  			};
 +
-+			audio_clk: clocks@d42a0c30 {
-+				compatible = "marvell,mmp2-audio-clock";
-+				reg = <0xd42a0c30 0x10>;
-+				clock-names = "audio", "vctcxo", "i2s0", "i2s1";
++			sspa0: audio-controller@d42a0c00 {
++				compatible = "marvell,mmp-sspa";
++				reg = <0xd42a0c00 0x30>,
++				      <0xd42a0c80 0x30>;
++				interrupts = <2>;
++				clock-names = "audio", "bitclk";
 +				clocks = <&soc_clocks MMP2_CLK_AUDIO>,
-+					 <&soc_clocks MMP2_CLK_VCTCXO>,
-+					 <&soc_clocks MMP2_CLK_I2S0>,
-+					 <&soc_clocks MMP2_CLK_I2S1>;
++					 <&audio_clk 1>;
 +				power-domains = <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
-+				#clock-cells = <1>;
++				#sound-dai-cells = <0>;
++				status = "disabled";
++			};
++
++			sspa1: audio-controller@d42a0d00 {
++				compatible = "marvell,mmp-sspa";
++				reg = <0xd42a0d00 0x30>,
++				      <0xd42a0d80 0x30>;
++				interrupts = <3>;
++				clock-names = "audio", "bitclk";
++				clocks = <&soc_clocks MMP2_CLK_AUDIO>,
++					 <&audio_clk 2>;
++				power-domains = <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
++				#sound-dai-cells = <0>;
 +				status = "disabled";
 +			};
  		};
