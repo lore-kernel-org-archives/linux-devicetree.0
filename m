@@ -2,189 +2,215 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8590DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBD8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 05:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64FF720810
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 04:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mBJsEFW4"
+	by mail.kernel.org (Postfix) with ESMTP id 32425206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 05:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725710AbgFPExT (ORCPT
+        id S1725710AbgFPFmS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:53:19 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:52022 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726552AbgFPExP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Jun 2020 00:53:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592283194; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=TnM1d+LijmPwv3QcoivuaXlgi9UGoODJljwXJ93Cqh0=; b=mBJsEFW4bUsyq/ohndIBLHDlro/73Qbp+B74VAWFEtUHCyWikaOLn3kUhNs50C8mj15PknwT
- CLJuFydgVKqiDGXa5NSR5DyXp5hh1yVey0J1BsXRYMSSjJ508K66Zq8oVfyCpuYNTh0fxR0C
- e3MIGt+LHoIEg9gmUABc/lQjIDk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5ee8502aad153efa340722a1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 04:52:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BE0E2C43387; Tue, 16 Jun 2020 04:52:58 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E765C433C8;
-        Tue, 16 Jun 2020 04:52:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E765C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
- <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
- <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
- <20200615194239.GW4525@google.com>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
-Date:   Tue, 16 Jun 2020 10:22:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200615194239.GW4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Tue, 16 Jun 2020 01:42:18 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39878 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbgFPFmS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 01:42:18 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1782A1A0592;
+        Tue, 16 Jun 2020 07:42:16 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A2DB91A05CF;
+        Tue, 16 Jun 2020 07:42:10 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AB4B3402D0;
+        Tue, 16 Jun 2020 13:42:03 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     dmitry.torokhov@gmail.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        gnuiyl@gmail.com, olof@lixom.net, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 2/2] dt-bindings: input: Convert imx keypad to json-schema
+Date:   Tue, 16 Jun 2020 13:31:07 +0800
+Message-Id: <1592285467-18371-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592285467-18371-1-git-send-email-Anson.Huang@nxp.com>
+References: <1592285467-18371-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the i.MX KEYPAD binding to DT schema format using json-schema
 
-On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
-> On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
->> Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
->>> On 6/3/2020 11:06 PM, Stephen Boyd wrote:
->>>> Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
->>>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->>>>> index 1dfd024..d33ae86 100644
->>>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
->>>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->>>>> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->>>>>           return 0;
->>>>>    }
->>>>>    
->>>>> +
->>>>> +/**
->>>>> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
->>>>> + * @qcom:                      Pointer to the concerned usb core.
->>>>> + *
->>>>> + */
->>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
->>>>> +{
->>>>> +       struct device *dev = qcom->dev;
->>>>> +       int ret;
->>>>> +
->>>>> +       if (!device_is_bound(&qcom->dwc3->dev))
->>>>> +               return -EPROBE_DEFER;
->>>> How is this supposed to work? I see that this was added in an earlier
->>>> revision of this patch series but there isn't any mention of why
->>>> device_is_bound() is used here. It would be great if there was a comment
->>>> detailing why this is necessary. It sounds like maximum_speed is
->>>> important?
->>>>
->>>> Furthermore, dwc3_qcom_interconnect_init() is called by
->>>> dwc3_qcom_probe() which is the function that registers the device for
->>>> qcom->dwc3->dev. If that device doesn't probe between the time it is
->>>> registered by dwc3_qcom_probe() and this function is called then we'll
->>>> fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
->>>> qcom->dwc3->dev device from the platform bus because we call
->>>> of_platform_depopulate() on the error path of dwc3_qcom_probe().
->>>>
->>>> So isn't this whole thing racy and can potentially lead us to a driver
->>>> probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
->>>> and we're trying to time it just right so that driver for dwc3 binds
->>>> before we setup interconnects? I don't know if dwc3 can communicate to
->>>> the wrapper but that would be more of a direct way to do this. Or maybe
->>>> the wrapper should try to read the DT property for maximum speed and
->>>> fallback to a worst case high bandwidth value if it can't figure it out
->>>> itself without help from dwc3 core.
->>>>
->>> This was added in V4 to address comments from Matthias in V3
->>>
->>> https://patchwork.kernel.org/patch/11148587/
->>>
->> Yes, that why I said:
->>
->> "I see that this was added in an earlier
->>   revision of this patch series but there isn't any mention of why
->>   device_is_bound() is used here. It would be great if there was a comment
->>   detailing why this is necessary. It sounds like maximum_speed is
->>   important?"
->>
->> Can you please respond to the rest of my email?
-> I agree with Stephen that using device_is_bound() isn't a good option
-> in this case, when I suggested it I wasn't looking at the big picture
-> of how probing the core driver is triggered, sorry about that.
->
-> Reading the speed from the DT with usb_get_maximum_speed() as Stephen
-> suggests would be an option, the inconvenient is that we then
-> essentially require the property to be defined, while the core driver
-> gets a suitable value from hardware registers. Not sure if the wrapper
-> driver could read from the same registers.
->
-> One option could be to poll device_is_bound() for 100 ms (or so), with
-> sleeps between polls. It's not elegant but would probably work if we
-> don't find a better solution.
-if (np)
-         ret = dwc3_qcom_of_register_core(pdev);
-     else
-         ret = dwc3_qcom_acpi_register_core(pdev);
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- include matrix-keymap.yaml and "linux,keymap" is unnecessary now, remove it.
+---
+ .../devicetree/bindings/input/imx-keypad.txt       | 53 --------------
+ .../devicetree/bindings/input/imx-keypad.yaml      | 85 ++++++++++++++++++++++
+ 2 files changed, 85 insertions(+), 53 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/imx-keypad.txt
+ create mode 100644 Documentation/devicetree/bindings/input/imx-keypad.yaml
 
-     if (ret) {
-         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
-         goto depopulate;
-     }
-
-     ret = dwc3_qcom_interconnect_init(qcom);
-     if (ret)
-         goto depopulate;
-
-     qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
-
-Before calling dwc3_qcom_interconnect_init we are checking
-
-     if (ret) {
-         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
-         goto depopulate;
-     }
-
-Doesn't  this condition confirm the core driver is probed?
-
+diff --git a/Documentation/devicetree/bindings/input/imx-keypad.txt b/Documentation/devicetree/bindings/input/imx-keypad.txt
+deleted file mode 100644
+index 2ebaf7d..0000000
+--- a/Documentation/devicetree/bindings/input/imx-keypad.txt
++++ /dev/null
+@@ -1,53 +0,0 @@
+-* Freescale i.MX Keypad Port(KPP) device tree bindings
+-
+-The KPP is designed to interface with a keypad matrix with 2-point contact
+-or 3-point contact keys. The KPP is designed to simplify the software task
+-of scanning a keypad matrix. The KPP is capable of detecting, debouncing,
+-and decoding one or multiple keys pressed simultaneously on a keypad.
+-
+-Required SoC Specific Properties:
+-- compatible: Should be "fsl,<soc>-kpp".
+-
+-- reg: Physical base address of the KPP and length of memory mapped
+-  region.
+-
+-- interrupts: The KPP interrupt number to the CPU(s).
+-
+-- clocks: The clock provided by the SoC to the KPP. Some SoCs use dummy
+-clock(The clock for the KPP is provided by the SoCs automatically).
+-
+-Required Board Specific Properties:
+-- pinctrl-names: The definition can be found at
+-pinctrl/pinctrl-bindings.txt.
+-
+-- pinctrl-0: The definition can be found at
+-pinctrl/pinctrl-bindings.txt.
+-
+-- linux,keymap: The definition can be found at
+-bindings/input/matrix-keymap.txt.
+-
+-Example:
+-kpp: kpp@73f94000 {
+-	compatible = "fsl,imx51-kpp", "fsl,imx21-kpp";
+-	reg = <0x73f94000 0x4000>;
+-	interrupts = <60>;
+-	clocks = <&clks 0>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_kpp_1>;
+-	linux,keymap = <0x00000067	/* KEY_UP */
+-			0x0001006c	/* KEY_DOWN */
+-			0x00020072	/* KEY_VOLUMEDOWN */
+-			0x00030066	/* KEY_HOME */
+-			0x0100006a	/* KEY_RIGHT */
+-			0x01010069	/* KEY_LEFT */
+-			0x0102001c	/* KEY_ENTER */
+-			0x01030073	/* KEY_VOLUMEUP */
+-			0x02000040	/* KEY_F6 */
+-			0x02010042	/* KEY_F8 */
+-			0x02020043	/* KEY_F9 */
+-			0x02030044	/* KEY_F10 */
+-			0x0300003b	/* KEY_F1 */
+-			0x0301003c	/* KEY_F2 */
+-			0x0302003d	/* KEY_F3 */
+-			0x03030074>;	/* KEY_POWER */
+-};
+diff --git a/Documentation/devicetree/bindings/input/imx-keypad.yaml b/Documentation/devicetree/bindings/input/imx-keypad.yaml
+new file mode 100644
+index 0000000..7432c6e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/imx-keypad.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/imx-keypad.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX Keypad Port(KPP) device tree bindings
++
++maintainers:
++  - Liu Ying <gnuiyl@gmail.com>
++
++allOf:
++  - $ref: "/schemas/input/matrix-keymap.yaml#"
++
++description: |
++  The KPP is designed to interface with a keypad matrix with 2-point contact
++  or 3-point contact keys. The KPP is designed to simplify the software task
++  of scanning a keypad matrix. The KPP is capable of detecting, debouncing,
++  and decoding one or multiple keys pressed simultaneously on a keypad.
++
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,imx21-kpp
++      - items:
++          - enum:
++            - fsl,imx25-kpp
++            - fsl,imx27-kpp
++            - fsl,imx31-kpp
++            - fsl,imx35-kpp
++            - fsl,imx51-kpp
++            - fsl,imx53-kpp
++            - fsl,imx50-kpp
++            - fsl,imx6q-kpp
++            - fsl,imx6sx-kpp
++            - fsl,imx6sl-kpp
++            - fsl,imx6sll-kpp
++            - fsl,imx6ul-kpp
++            - fsl,imx7d-kpp
++          - const: fsl,imx21-kpp
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - linux,keymap
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    keypad@73f94000 {
++        compatible = "fsl,imx51-kpp", "fsl,imx21-kpp";
++        reg = <0x73f94000 0x4000>;
++        interrupts = <60>;
++        clocks = <&clks 0>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_kpp_1>;
++        linux,keymap = <0x00000067	/* KEY_UP */
++                        0x0001006c	/* KEY_DOWN */
++                        0x00020072	/* KEY_VOLUMEDOWN */
++                        0x00030066	/* KEY_HOME */
++                        0x0100006a	/* KEY_RIGHT */
++                        0x01010069	/* KEY_LEFT */
++                        0x0102001c	/* KEY_ENTER */
++                        0x01030073	/* KEY_VOLUMEUP */
++                        0x02000040	/* KEY_F6 */
++                        0x02010042	/* KEY_F8 */
++                        0x02020043	/* KEY_F9 */
++                        0x02030044	/* KEY_F10 */
++                        0x0300003b	/* KEY_F1 */
++                        0x0301003c	/* KEY_F2 */
++                        0x0302003d	/* KEY_F3 */
++                        0x03030074>;	/* KEY_POWER */
++    };
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
 
