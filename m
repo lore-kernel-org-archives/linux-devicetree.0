@@ -2,236 +2,112 @@ Return-Path: <SRS0=Wk2R=75=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB56C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6429BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8320920739
-	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484F9206F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 16 Jun 2020 14:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rwPO/s52"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LQlgpY2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgFPOAo (ORCPT
+        id S1728815AbgFPOHo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:00:44 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:37397 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729139AbgFPOAm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 16 Jun 2020 10:00:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592316042; x=1623852042;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xXlRuWDsgHzsC/cK9WaU+YzlpcD2wIPLoPF5OvjRa5Y=;
-  b=rwPO/s52fm32nCrgN/xl1n5gnb1DFierB2+JxDQBOFnQ1kl9HfNVrL66
-   v9l7bcCVK0W4MYLPfbDsxAueGNfs79UhqkKTtui6FOfR2tw8BoGXuhr2k
-   DEXjG+MGMhDGFjH+KaCYMXDACi2FU10b4VkCPopQKwnkIap4keRwReO2e
-   /3wBNBi20WWGRCWBmdXAfCEY7ytPI64Ia9GSibHDJ+IYRJDK0+7HX28hU
-   M0qP6kAsQwtotTcRycKOqNEgxgDBIXHt4n6EqU89GmEfxKkJAaD9fSZwi
-   gg39mfZ6ZBvvcvWIRlENpzufetdsQJUP0Exswn40Bc1om25H3WWge21Uc
-   g==;
-IronPort-SDR: uY6g/8+zHQx2OtaDYvTdpzDMcDYqcyFmfGRLTYLmbrghuptB1K/p3lOIexnQ7kgGtHeK7o+YVm
- IpT05gLi4DDdBvo1e285JX5oOauyxpYE59u2E7mLXGVHZgz+dgB8UvSSAaCWlub+TLP8neAuWY
- auOxweCzt+zq33PkKGYJa4dm8mjoD04WSKaW96jAcRIBriLr4kFqav5LKx5CwCOwPcS8GIAgkG
- PHVLdmG5fL61DrZ+o2F+9GVmmKYM/JpV+FeNwV/QtkH/kzK162fGhxtbO/AAhKL3cINj8aocx5
- rpU=
-X-IronPort-AV: E=Sophos;i="5.73,518,1583218800"; 
-   d="scan'208";a="15973195"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Jun 2020 07:00:40 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 16 Jun 2020 07:00:40 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 16 Jun 2020 07:00:34 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        SoC Team <soc@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
+        Tue, 16 Jun 2020 10:07:44 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:59705 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728557AbgFPOHo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:07:44 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GE2wij002436;
+        Tue, 16 Jun 2020 16:07:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=5Hcd79p5ovxHgR2Kw+vJ8ycKacohfcjtHYW/V9jWRZU=;
+ b=LQlgpY2PuUrJPpqbJ2bkNsqYx7LRUbCXYxr526KmqbAo6u6b+8mQreEakCrDmEQeFoKE
+ Wl1DDz98V9dTNm7gWmOKwBQ0zn2aBcADVyfvinxmpVrL0xAQs4k2qxXsAu4/BzPMCzBt
+ bFw6sZUCUUMKM8hP+kPh+W6Ypm4pW7pfZScttWpox8UDOBFhfuj0n3rDtuARZXq8P2ic
+ C0UZgoIbFsLAriSPDz84DMrdg4BYhUrJbtAZC53k0M+AGiVOylMSaUoFI/sEE3sDHGcO
+ 0L236C5TIVaxyMNqBos64ddV5zOcAa8/Fe/TW81sHv54yNIYSaZAg9LB4O1UjBAGm41p rA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvyrjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 16:07:28 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5F8DD10002A;
+        Tue, 16 Jun 2020 16:07:27 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 48A582B56B6;
+        Tue, 16 Jun 2020 16:07:27 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 16 Jun 2020 16:07:26
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 3/3] arm64: dts: sparx5: Add Sparx5 eMMC support
-Date:   Tue, 16 Jun 2020 16:00:27 +0200
-Message-ID: <20200616140027.4949-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616140027.4949-1-lars.povlsen@microchip.com>
-References: <20200616140027.4949-1-lars.povlsen@microchip.com>
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 0/3] Add USB role switch support to DWC2
+Date:   Tue, 16 Jun 2020 16:07:14 +0200
+Message-ID: <20200616140717.28465-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds eMMC support to the applicable Sparx5 board configuration
-files.
+When using usb-c connector (but it can also be the case with a micro-b
+connector), iddig, avalid, bvalid, vbusvalid input signals may not be
+connected to the DWC2 OTG controller.
+DWC2 OTG controller features an overriding control of the PHY voltage valid
+and ID input signals.
+So, missing signals can be forced using usb role from usb role switch and
+this override feature.
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 24 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb134_emmc.dts | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb135_emmc.dts | 23 ++++++++++++++++++
- 4 files changed, 93 insertions(+)
+This series adds support for usb role switch to dwc2, by using overriding
+control of the PHY voltage valid and ID input signals.
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 84bca999420ef..c9dbd1a8b22b6 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/microchip,sparx5.h>
- 
- / {
- 	compatible = "microchip,sparx5";
-@@ -162,6 +163,20 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		sdhci0: sdhci@600800000 {
-+			compatible = "microchip,dw-sparx5-sdhci";
-+			status = "disabled";
-+			reg = <0x6 0x00800000 0x1000>;
-+			pinctrl-0 = <&emmc_pins>;
-+			pinctrl-names = "default";
-+			clocks = <&clks CLK_ID_AUX1>;
-+			clock-names = "core";
-+			assigned-clocks = <&clks CLK_ID_AUX1>;
-+			assigned-clock-rates = <800000000>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+		};
-+
- 		gpio: pinctrl@6110101e0 {
- 			compatible = "microchip,sparx5-pinctrl";
- 			reg = <0x6 0x110101e0 0x90>, <0x6 0x10508010 0x100>;
-@@ -191,6 +206,15 @@ i2c2_pins: i2c2-pins {
- 				pins = "GPIO_28", "GPIO_29";
- 				function = "twi2";
- 			};
-+
-+			emmc_pins: emmc-pins {
-+				pins = "GPIO_34", "GPIO_35", "GPIO_36",
-+					"GPIO_37", "GPIO_38", "GPIO_39",
-+					"GPIO_40", "GPIO_41", "GPIO_42",
-+					"GPIO_43", "GPIO_44", "GPIO_45",
-+					"GPIO_46", "GPIO_47";
-+				function = "emmc";
-+			};
- 		};
- 
- 		i2c0: i2c@600101000 {
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 91ee5b6cfc37a..573309fe45823 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -16,6 +16,29 @@ memory@0 {
- 	};
- };
- 
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	bus-width = <8>;
-+	non-removable;
-+	pinctrl-0 = <&emmc_pins>;
-+	max-frequency = <8000000>;
-+	microchip,clock-delay = <10>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-index 10081a66961bb..bbb9852c1f151 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-index 741f0e12260e5..f82266fe2ad49 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
+It has been tested on stm32mp157c-dk2 [1], which has a Type-C connector
+managed by a Type-C port controller, and connected to USB OTG controller.
+
+[1] https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html
+
+Amelie Delaunay (3):
+  usb: dwc2: override PHY input signals with usb role switch support
+  usb: dwc2: don't use ID/Vbus detection if usb-role-switch on STM32MP15
+    SoCs
+  ARM: dts: stm32: enable usb-role-switch on USB OTG on stm32mp15xx-dkx
+
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi |   2 +-
+ drivers/usb/dwc2/Kconfig               |   1 +
+ drivers/usb/dwc2/Makefile              |   2 +-
+ drivers/usb/dwc2/core.h                |   8 ++
+ drivers/usb/dwc2/drd.c                 | 190 +++++++++++++++++++++++++
+ drivers/usb/dwc2/gadget.c              |   2 +-
+ drivers/usb/dwc2/params.c              |   4 +-
+ drivers/usb/dwc2/platform.c            |  13 ++
+ 8 files changed, 218 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/usb/dwc2/drd.c
+
 -- 
-2.27.0
+2.17.1
 
