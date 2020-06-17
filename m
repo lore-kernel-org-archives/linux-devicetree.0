@@ -6,120 +6,83 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDCDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F35C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679082088E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3AA214DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592425329;
-	bh=xNE9XSOvhghCOem7BB7ItlRidhpb63R/mvntoncsZiY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v6dPXkM77JAgD4L7B+HlCbNa0W+uNk8Jw5XLH3QLwGvYRjYr5FWtAnr08q1mUzFpx
-	 0l0afuP06VhbzQkONqpTgWBTJ2ONvl5zq+IVQaz5Z++WsD5bhxgLRC7XIvevbiqI+W
-	 cJ1kdEKE0OEz2DGpJnLnuvf+8HSIw8ZoxUf1twxU=
+	s=default; t=1592425610;
+	bh=3K9q4hVMpD/GOm5Mve5o07XFgVA+f8IeJ+DVYJy9Ye8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uxo+BGM9XmBmWP9nRPeVJr9LSf7Wz9+s2Pu13Q/fNManJBtRod9Ev/wXmwblAqvA3
+	 I8s2hf/A2BeegL35xV5o9MHj0Gs+6lvQz9SD6AjVGqjwGH8Eu7WPKhFWfI7wPieN9y
+	 jrAeAD2nR1OiA826YmglgM0qKgXrP162LgkCm6M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgFQUWI (ORCPT
+        id S1726763AbgFQU0t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgFQUWI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:22:08 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3124E217D9;
-        Wed, 17 Jun 2020 20:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592425327;
-        bh=xNE9XSOvhghCOem7BB7ItlRidhpb63R/mvntoncsZiY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cM/8adJS/CfoBabKgs5smCjZMrm8f4R2wBu/gfpLBZYw+kKE8o3U72M3S583OKTjP
-         PCrAgGaKQQvjKKN85m9N2/+zEAPa/OWP+SnRpU8VVUEdGURnzSYRgx2brhjdwglSNO
-         GbFlg7PGff1nb9Qr5CibEyTntz1Xma5RKY/dSU2Q=
-Received: by mail-oi1-f171.google.com with SMTP id 25so2927693oiy.13;
-        Wed, 17 Jun 2020 13:22:07 -0700 (PDT)
-X-Gm-Message-State: AOAM532aiIXPZdMvtpJZ2gGovaCO6Dvwr0lJz/dCgRp7hh1IkL2a6Htm
-        nUgm+B2EoEvxi43vRA4/vz3pfL8WZJ6k6ji05Q==
-X-Google-Smtp-Source: ABdhPJzi4G/SG7UPJZAtkdxWsR+QkKnM2jLwSEKoazMNV1MrKFH3VVff+tCgS2ag5HdiA3cWgQIOgK9y06+Tn3frHYE=
-X-Received: by 2002:aca:1e0b:: with SMTP id m11mr388478oic.147.1592425326440;
- Wed, 17 Jun 2020 13:22:06 -0700 (PDT)
+        Wed, 17 Jun 2020 16:26:49 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38028 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFQU0t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 16:26:49 -0400
+Received: by mail-il1-f193.google.com with SMTP id b5so3629415iln.5;
+        Wed, 17 Jun 2020 13:26:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FtYug0tUqxYyOmHYqIp7a6FmVIpDrS3WKwscxWj8W8I=;
+        b=p7GneibE4GORzXyKSbr1dCThkJHaHpH1oGlxGFuq5AJsV1MTf5wHrDGjMW3WSXVOvS
+         vZY9yC1+dy1UtEK13M5d/uh8C/3fQibK0fJXo3Rs+E6jDPVx6hBKfJdsrX8VwesCYjxn
+         sFrFnOHyc3AN0kbvTAvV+qomBtgS+5pT6lPsn0wjWSISX87ti7G+syYobtqgcqMjDAKL
+         XhdgR/wtefTrHoFt1TT/hDCg+0R4fxXbWwsO7yTSJhBzkps4zkJBtCfzt0L1fIFa3QC1
+         AnBS3ZqGCbUPj6FPCnEPjViLCCXpkNQjRvjNHnxnoqLvnBNGJQkpxaBwthPJJpcICQ3v
+         7aVQ==
+X-Gm-Message-State: AOAM5322BlBDfPdFg52rJfy1V8FvAXLQqc/kMRdyykLk0iyNfZ0qEf16
+        80Ouq62nIuzWv6FZNVy83CpeW5QjtA==
+X-Google-Smtp-Source: ABdhPJwkL0llprX5q916r2w2Emi9uTQIYlfJlzd54EYDj3cyOYjlfb3zwH9OsbYwfqHNtW/OwSKF+g==
+X-Received: by 2002:a92:1f15:: with SMTP id i21mr638013ile.61.1592425608616;
+        Wed, 17 Jun 2020 13:26:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id y12sm339197ili.83.2020.06.17.13.26.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 13:26:47 -0700 (PDT)
+Received: (nullmailer pid 2729183 invoked by uid 1000);
+        Wed, 17 Jun 2020 20:26:45 -0000
+Date:   Wed, 17 Jun 2020 14:26:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jeff Chase <jnchase@google.com>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, hverkuil-cisco@xs4all.nl,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: Add ch7322 media i2c device
+Message-ID: <20200617202645.GA2728573@bogus>
+References: <20200615193811.233737-1-jnchase@google.com>
+ <20200615193811.233737-2-jnchase@google.com>
 MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 17 Jun 2020 14:21:52 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+pZebUgG_fyQkhhbp2khVc+L-kJ2D2O8BiO6SyjfAK_Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+pZebUgG_fyQkhhbp2khVc+L-kJ2D2O8BiO6SyjfAK_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 006/105] dt-bindings: display: Convert VC4 bindings to schemas
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615193811.233737-2-jnchase@google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 9:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The BCM283x SoCs have a display pipeline composed of several controllers
-> with device tree bindings that are supported by Linux.
->
-> Now that we have the DT validation in place, let's split into separate
-> files and convert the device tree bindings for those controllers to
-> schemas.
->
-> This is just a 1:1 conversion though, and some bindings were incomplete so
-> it results in example validation warnings that are going to be addressed in
-> the following patches.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+On Mon, 15 Jun 2020 15:38:10 -0400, Jeff Chase wrote:
+> The ch7322 is a Chrontel CEC controller.
+> 
+> Signed-off-by: Jeff Chase <jnchase@google.com>
 > ---
->  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt              | 174 +------------------------------------------------------------------------
->  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml         |  66 +++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml        |  73 ++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml        |  75 +++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml         |  37 +++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml |  40 +++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml         |  37 +++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml         |  42 +++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml         |  34 ++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml         |  44 ++++++++++++++++++-
->  MAINTAINERS                                                             |   2 +-
->  11 files changed, 449 insertions(+), 175 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml
+>  .../bindings/media/i2c/chrontel,ch7322.yaml   | 67 +++++++++++++++++++
+>  MAINTAINERS                                   |  7 ++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
+> 
 
-Not sure why my checks didn't catch this, but now linux-next has these warnings:
 
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
-panel: compatible: Additional items are not allowed ('simple-panel'
-was unexpected)
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
-panel: compatible: ['ontat,yx700wv03', 'simple-panel'] is too long
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
-panel: 'power-supply' is a required property
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
+
