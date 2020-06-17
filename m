@@ -2,99 +2,85 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9954C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E7DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49142168B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1DF2070A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592430376;
-	bh=j3G2r2DDyAxDcJdA+lLN3PY+GwwTVW4qN2WUYT8Z7aM=;
+	s=default; t=1592430428;
+	bh=CNjWjSwj/oRHWDdfsfECWAfole8MdNdrGLveVtbPY70=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OCwIQSDm9LMZFpO4wTiw1GWAIM9G3/lPXoz9D7LheLIlT/Iwt6sWoWJCtUADY/kBf
-	 n1yhQY2CMltt/MbaVlZ/eekkWxNozeF6g8WUb+tU5Tl1gMbgfmPbqxUsYi7O7PkiiW
-	 0+HqH0/Ic+610j/Lfzx11mRZsisISD6RNuzJeiJo=
+	b=b79unboHJANesDgoc1eey4SGujgTYMT69x6SZsGrMxaL1oTE5QNBcXaeyFKnVQCBY
+	 bNGvmK2kI94xjD2DEZr4g+mYbkpWf14l9QYJAQLn3VeO81kzt+FifbtHjvCdPsyHU/
+	 rSTb6Kfn+SGnkVOUr5JBkDPI/T8hjOjbCj3JTLx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgFQVqQ (ORCPT
+        id S1726976AbgFQVrH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:46:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43185 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgFQVqP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:46:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id u13so4693451iol.10;
-        Wed, 17 Jun 2020 14:46:15 -0700 (PDT)
+        Wed, 17 Jun 2020 17:47:07 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46722 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQVrH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:47:07 -0400
+Received: by mail-il1-f196.google.com with SMTP id h3so3789095ilh.13;
+        Wed, 17 Jun 2020 14:47:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NbVAS6uqtetynyOgAaJxu9i9M19Zf5MQLT1mt0GDjtE=;
-        b=kfo/+HqJNop9/zHhe5dMv7X7avAAl+dkZydt4Nj5PIAPM9YBEkiYJagBkGuxt3W5Th
-         x2N3spW8tre0ejHVFLgmjG8mPhWegcHNiRqAMe9JMed0Dnz0giUAhVahonDslmA4FXbS
-         d7CGCNDrDQPMgqHFCRK1X49StZxPj3Hk1Rmm8ctXqjwFWoprboJQd/LPOuLDC3/rvrVq
-         GWFhiMxGXr7G69BRDTeYkrL6F3yUHe7/MeyGAYoiySxxOnRr8M7nyekhEO2dbWzC3VyX
-         YcEZGJA/Zwv3Eahi+4rZekgbtZD56DcTzwtTO2iwyI07+y1MvuPe6MAkq8mg3q/tqKGU
-         7tIg==
-X-Gm-Message-State: AOAM532CpPFBsHaXIq2cceLzg8ExtxkTVFDwOFyXETlb1JBzFt1jIVAj
-        Uy/4BL9Uq2CsnjI9HSRpCQ==
-X-Google-Smtp-Source: ABdhPJztFPH6mS1jXhotRIzgaImDXcXY7vO4PxBZBPtRhquqbIxZy/INpuYP+SEnOyPSd9pDfQT+Mw==
-X-Received: by 2002:a02:a78e:: with SMTP id e14mr1397253jaj.9.1592430374881;
-        Wed, 17 Jun 2020 14:46:14 -0700 (PDT)
+        bh=QOtalIRl7dJtF8bawMxSj4onvGztmuE6KHSorPmNNiQ=;
+        b=V148A2qW713f52gffD0TFLqQYonwvq7M6y00yZ5tS2MSy1wpkoFE4Rpu0PMhAFJfJ3
+         0t0X1kEtwn04RXn254y01KmWWizOh4ZuQANggRBqq1upBHFeaf3x031fLLWm3suv7aQo
+         9+YfnihUUPMwsd0+U2y8jzjKLWDGtDPpFQ6JFasz1ZcWvYXXajgjyRWIVcIL8I+s6JYv
+         q2giZS7+DVveD81xdVCx9tmg+4gK0tNXoxUu3uw2I9QcHXdrxMfyuJAxphTQlBc2PL8Q
+         pyHkrbH4ZaWRwl3rBrgQ7F3XkDvQkDltKG3EWI1A8xgGP1QE3rHEMFwPhNYQ/os263/8
+         m4HA==
+X-Gm-Message-State: AOAM5331VadJxlE6EUnfZWo6GuV/BI7mWTjjcPgapnAVcvI/0i5gM1Vw
+        oMl2fSMRqWRTDgHuGRvNsw==
+X-Google-Smtp-Source: ABdhPJyBDSEi43mBE+erhCt9ul6yKVvlnJFELUx209pjl/BDlB/3MXyAjCZJbUAeEV6872L5HmPo+Q==
+X-Received: by 2002:a05:6e02:1203:: with SMTP id a3mr1011013ilq.30.1592430426606;
+        Wed, 17 Jun 2020 14:47:06 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id j63sm503092ilg.50.2020.06.17.14.46.14
+        by smtp.gmail.com with ESMTPSA id c62sm484926ill.62.2020.06.17.14.47.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 14:46:14 -0700 (PDT)
-Received: (nullmailer pid 2883337 invoked by uid 1000);
-        Wed, 17 Jun 2020 21:46:13 -0000
-Date:   Wed, 17 Jun 2020 15:46:13 -0600
+        Wed, 17 Jun 2020 14:47:06 -0700 (PDT)
+Received: (nullmailer pid 2884760 invoked by uid 1000);
+        Wed, 17 Jun 2020 21:47:05 -0000
+Date:   Wed, 17 Jun 2020 15:47:05 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anilkumar Kolli <akolli@codeaurora.org>
-Cc:     ath11k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v2 1/8] dt: bindings: net: update compatible for ath11k
-Message-ID: <20200617214613.GA2882286@bogus>
-References: <1591709581-18039-1-git-send-email-akolli@codeaurora.org>
- <1591709581-18039-2-git-send-email-akolli@codeaurora.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: gateworks-gsc: add 16bit
+ pre-scaled voltage mode
+Message-ID: <20200617214705.GA2884703@bogus>
+References: <1591714640-10332-1-git-send-email-tharvey@gateworks.com>
+ <1591714640-10332-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591709581-18039-2-git-send-email-akolli@codeaurora.org>
+In-Reply-To: <1591714640-10332-2-git-send-email-tharvey@gateworks.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 07:02:54PM +0530, Anilkumar Kolli wrote:
-> Add IPQ6018 wireless driver support,
-> its based on ath11k driver.
+On Tue, 09 Jun 2020 07:57:19 -0700, Tim Harvey wrote:
+> add a 16-bit pre-scaled voltage mode to adc and clarify that existing
+> pre-scaled mode is 24bit.
 > 
-> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> index a1717db36dba..844edd87be20 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> @@ -17,7 +17,9 @@ description: |
->  
->  properties:
->    compatible:
-> -    const: qcom,ipq8074-wifi
-> +    oneOf:
-> +      - const: qcom,ipq8074-wifi
-> +      - const: qcom,ipq6018-wifi
 
-Use 'enum' rather than oneOf+const.
-
->  
->    reg:
->      maxItems: 1
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
