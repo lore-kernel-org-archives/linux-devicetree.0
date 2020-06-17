@@ -2,71 +2,107 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07886C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC244C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E076D2186A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94232184D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgFQVdj (ORCPT
+        id S1726909AbgFQVer (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:33:39 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48422 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726991AbgFQVdj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:33:39 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jlfgW-00063V-J4; Wed, 17 Jun 2020 23:33:28 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        christoph.muellner@theobroma-systems.com
-Subject: [PATCH v4 0/3] add clkout support to mscc phys
-Date:   Wed, 17 Jun 2020 23:33:23 +0200
-Message-Id: <20200617213326.1532365-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 17 Jun 2020 17:34:47 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54827 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQVer (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:34:47 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 90FF2C0003;
+        Wed, 17 Jun 2020 21:34:38 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 23:34:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        claudiu.beznea@microchip.com
+Subject: Re: [PATCH 3/3] Revert "ARM: at91/dt: sama5d2 Xplained: add pdmic
+ node"
+Message-ID: <20200617213438.GF3675@piout.net>
+References: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
+ <20200615095525.43414-3-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615095525.43414-3-codrin.ciubotariu@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The main part of this series is adding handling of the clkout
-controls some of the mscc phys have and while at it Andrew
-asked for some of the duplicated probe functionality to be
-factored out into a common function.
+Hi,
 
-changes in v4:
-- fix missing variable initialization in one probe function
-changes in v3:
-- adapt to 5.8 merge-window results
-- introduce a more generic enet-phy-property instead of
-  using a vsc8531,* one - suggested by Andrew
-changes in v2:
-- new probe factoring patch as suggested by Andrew
+The correct subject line prefix is "ARM: dts: at91:"
 
+On 15/06/2020 12:55:25+0300, Codrin Ciubotariu wrote:
+> There are no PDM microphones on SAMA5D2 Xplained, to exercize the
+> PDMIC.
+> 
+> This reverts commit ca6349a8c51f2e3d6f2acdb36431e7d7328261f7.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 ----------------
+>  1 file changed, 16 deletions(-)
+> 
 
-Heiko Stuebner (3):
-  net: phy: mscc: move shared probe code into a helper
-  dt-bindings: net: ethernet-phy: add enet-phy-clock-out-frequency
-  net: phy: mscc: handle the clkout control on some phy variants
+This patch doesn't apply and I think you'll have to motivate the removal
+a bit more because this seems like a change of policy to me.
 
- .../devicetree/bindings/net/ethernet-phy.yaml |   5 +
- drivers/net/phy/mscc/mscc.h                   |   9 +
- drivers/net/phy/mscc/mscc_main.c              | 211 ++++++++++++------
- 3 files changed, 155 insertions(+), 70 deletions(-)
+> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> index 54d96649da77..c0a255bda477 100644
+> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> @@ -109,16 +109,6 @@ timer1: timer@1 {
+>  				};
+>  			};
+>  
+> -			pdmic@f8018000 {
+> -				pinctrl-names = "default";
+> -				pinctrl-0 = <&pinctrl_pdmic_default>;
+> -				atmel,model = "PDMIC @ sama5d2_xplained";
+> -				atmel,mic-min-freq = <1000000>;
+> -				atmel,mic-max-freq = <3246000>;
+> -				atmel,mic-offset = <0x0>;
+> -				status = "okay";
+> -			};
+> -
+>  			uart1: serial@f8020000 {
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_uart1_default>;
+> @@ -533,12 +523,6 @@ pinctrl_macb0_phy_irq: macb0_phy_irq {
+>  					bias-disable;
+>  				};
+>  
+> -				pinctrl_pdmic_default: pdmic_default {
+> -					pinmux = <PIN_PB26__PDMIC_DAT>,
+> -						<PIN_PB27__PDMIC_CLK>;
+> -					bias-disable;
+> -				};
+> -
+>  				pinctrl_sdmmc0_default: sdmmc0_default {
+>  					cmd_data {
+>  						pinmux = <PIN_PA1__SDMMC0_CMD>,
+> -- 
+> 2.25.1
+> 
 
 -- 
-2.26.2
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
