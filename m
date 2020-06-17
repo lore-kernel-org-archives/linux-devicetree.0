@@ -5,138 +5,297 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0EDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27030C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77FD920FC3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014AD208B3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mngr/72j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP8lJR6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgFQKv2 (ORCPT
+        id S1726275AbgFQK6x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:51:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53332 "EHLO
+        Wed, 17 Jun 2020 06:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbgFQKuu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 06:50:50 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A2C06174E;
-        Wed, 17 Jun 2020 03:50:50 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q25so1498272wmj.0;
-        Wed, 17 Jun 2020 03:50:50 -0700 (PDT)
+        with ESMTP id S1725964AbgFQK6w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 06:58:52 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD7AC061573;
+        Wed, 17 Jun 2020 03:58:52 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id t9so2151222ioj.13;
+        Wed, 17 Jun 2020 03:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lkwxNYc8+p5wlTPi+QbFvKZuq2LERGtqK/cmyvg1WyU=;
-        b=mngr/72jBc/BYYoAmQIyE3RSfdIQ1RIU4J2Sawq9hUZzTjlXiL2QfJIEUWI8I+6It4
-         ormCefBOJNJ5UT64mERy1cGz3vfWp2CPIk1zQkoWe/VbSWL/UtUv2Pc4nR7Ivzm+MwDy
-         3vS/1TI75oA/YAVd5GAr73hoLETc0dfRthJODs9xqaRhJzaksbBXvb2PV4Nk4yzPznro
-         eZ7736OJoXfAw8vxH2+Hr23w4DRdCTJ/+GVdMDXxwW6v5LhEZ7B7QPlawdWs7S7udp8D
-         H+IYAOSBEy3FnivzC7uNsDsNqDF2SxG2haU66FqJ5gZQAFZV5fGQLDoNEAAXjsbFeg0d
-         eVAQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cxVn3H7ApYz8vWif68BPp34H///ZtB/ukWPL5m2+yH4=;
+        b=fP8lJR6BfimMtJ+TIxIyO7j0peG6PnIG1Up4/NdSC55WGXsK+lQkOHobB1WulLYmJ/
+         EJIzoxKpozvEwYSXXYp+LmtivDLQKBO+jY+0D70whboDt9CG7TH6RxsQ28uNkwHbwZSO
+         SPzkunITyA96XCitL0xEwUVvTZYNOYCMZQfsPViVWCtouMG0NsM7tcqpPyKUdYD1C6kP
+         2ezfkC04p/MUfGqTgulR1dX/RItTN+ApL0ZSF5cO4kEhsQ8SKtZv7xA/nUpYDBOAC5hP
+         pjD1tsorsfMOEGsnJrb56TWUpbLd6Coc/SihVgnW+Zag60GnJIEYtcFtzQCx4/M/JSSq
+         Qh5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lkwxNYc8+p5wlTPi+QbFvKZuq2LERGtqK/cmyvg1WyU=;
-        b=MUFJWogh256Tc/+pd34w2vQEmUnpVfl/ogslbIza3H0j0ZSr563gxMxS+mKCNn9bqE
-         ewdn3a1JcXKRSUsQb0h7tMS9RwaI2Nys2SfpHbH8oHMk+6Y43nn0RgKFDXDTOf8djLKB
-         sk8OMOAE6l5XYOhwRUybsl05N6ngfRIkQ3m/E+Aoaly7IN/4rmMiNrzyoJNbPz/n/7za
-         7Hon3BizxA9HX/25ju8Zu7Oxmk1neXRenxKBwwiPqGdU7tOYn9ycsUFQU5wVZgq0uMaA
-         +mpOLlWyEm8Zr6RAAqyjlTuI9urbAbI/KVYgrWfb6q0IRty48Eaq7rIIo+XZS98jkwG9
-         HT0g==
-X-Gm-Message-State: AOAM5316MUOxBV4NCU3MGcOtNNfaqVbJNmbfq/tOo/IEio6rqsXX2m+t
-        AdohsHUKG88P3lu755QkXXc=
-X-Google-Smtp-Source: ABdhPJyzc1TgIozo4EoM0qqori3t224XG/EQKxX5qj0nl582gZVhkYh9F1FMiHd6vg9utSmJD1vw1A==
-X-Received: by 2002:a1c:5445:: with SMTP id p5mr7557409wmi.115.1592391049055;
-        Wed, 17 Jun 2020 03:50:49 -0700 (PDT)
-Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id u12sm33331927wrq.90.2020.06.17.03.50.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cxVn3H7ApYz8vWif68BPp34H///ZtB/ukWPL5m2+yH4=;
+        b=mtOPdINvgRcErURuMTvToUwUvSIHxP5TRBU1FsCtMOjkg3YDgBss0f9JjmT+Ec2u+Z
+         y2k7EePnHR17dxe+WmNJHOkCMhHx2gz5nKVEFcdfPhT1+SCxOB3Wuu3eXh+QI9UgV8XQ
+         SiLsoGhIXeGEVwI6jZG3O0cYOh0yI2dYiWe6WiDattw/rJvvsdrIRkeod/u6YIq9da9g
+         UX0iiWaD/FyvzkkNHlsImjXF4Q0uRpaJfrDU8+zHQ4Cr072uWG1NSDGGWms+6Yv/fVwa
+         MT8SgFzRNqYPS20oXNHqKGhhzYpIL5xkoZ7Ak6sE5SO9CDStgcLV7U7Oq9JN91xZzjPv
+         Djrg==
+X-Gm-Message-State: AOAM533OtjxfHFKngtMZKkCrBYF7MgIo6LmBPJ4dVxk8ditiQFFL87bX
+        /1enagyJ2ajG6NAmhq9pGschq5xW3oo=
+X-Google-Smtp-Source: ABdhPJymwEQ9s0x9W06dBJhzO3V7m55SUhpi5g3msQyqJQ/h5l0aiAdHsG8drY69Uf0/zhy1Lf5/Ug==
+X-Received: by 2002:a05:6638:5b9:: with SMTP id b25mr29016622jar.68.1592391531332;
+        Wed, 17 Jun 2020 03:58:51 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id n17sm11166274ilq.13.2020.06.17.03.58.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 03:50:48 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
-        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v7 5/9] mips: bmips: dts: add BCM6358 reset controller support
-Date:   Wed, 17 Jun 2020 12:50:37 +0200
-Message-Id: <20200617105042.3824116-6-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200617105042.3824116-1-noltari@gmail.com>
-References: <20200617105042.3824116-1-noltari@gmail.com>
+        Wed, 17 Jun 2020 03:58:50 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: omap3: Migrate AES from hwmods to sysc-omap2
+Date:   Wed, 17 Jun 2020 05:58:40 -0500
+Message-Id: <20200617105840.22138-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM6358 SoCs have a reset controller for certain components.
+Various OMAP3 boards have two AES blocks, but only one is currently
+available, because the hwmods are only configured for one.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+This patch migrates the hwmods for the AES engine to sysc-omap2
+which allows the second AES crypto engine to become available.
+
+  omap-aes 480a6000.aes1: OMAP AES hw accel rev: 2.6
+  omap-aes 480a6000.aes1: will run requests pump with realtime priority
+  omap-aes 480c5000.aes2: OMAP AES hw accel rev: 2.6
+  omap-aes 480c5000.aes2: will run requests pump with realtime priority
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
- v7: no changes.
- v6: no changes.
- v5: no changes.
- v4: no changes.
- v3: add reset controller definitions header file.
- v2: no changes.
+V2:  Fix DMA for AES1, and remove from AM3517.
 
- arch/mips/boot/dts/brcm/bcm6358.dtsi      |  6 ++++++
- include/dt-bindings/reset/bcm6358-reset.h | 15 +++++++++++++++
- 2 files changed, 21 insertions(+)
- create mode 100644 include/dt-bindings/reset/bcm6358-reset.h
-
-diff --git a/arch/mips/boot/dts/brcm/bcm6358.dtsi b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-index f21176cac038..9d93e7f5e6fc 100644
---- a/arch/mips/boot/dts/brcm/bcm6358.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6358.dtsi
-@@ -82,6 +82,12 @@ periph_intc: interrupt-controller@fffe000c {
- 			interrupts = <2>, <3>;
+diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
+index dc8927f14b6c..6be310968c3a 100644
+--- a/arch/arm/boot/dts/am3517.dtsi
++++ b/arch/arm/boot/dts/am3517.dtsi
+@@ -10,6 +10,9 @@
+ 
+ #include "omap3.dtsi"
+ 
++/* AM3517 doesn't appear to have the crypto engines defined in omap3.dtsi */
++/delete-node/ &aes1_target;
++
+ / {
+ 	aliases {
+ 		serial3 = &uart4;
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 1296d0643943..6e874ed64009 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -157,13 +157,56 @@ omap3_pmx_wkup: pinmux@a00 {
+ 			};
  		};
  
-+		periph_rst: reset-controller@fffe0034 {
-+			compatible = "brcm,bcm6345-reset";
-+			reg = <0xfffe0034 0x4>;
-+			#reset-cells = <1>;
+-		aes: aes@480c5000 {
+-			compatible = "ti,omap3-aes";
+-			ti,hwmods = "aes";
+-			reg = <0x480c5000 0x50>;
+-			interrupts = <0>;
+-			dmas = <&sdma 65 &sdma 66>;
+-			dma-names = "tx", "rx";
++		aes1_target: target-module@480a6000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480a6044 0x4>,
++			      <0x480a6048 0x4>,
++			      <0x480a604c 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&aes1_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480a6000 0x2000>;
++
++			aes1: aes1@0 {
++				compatible = "ti,omap3-aes";
++				reg = <0 0x50>;
++				interrupts = <0>;
++				dmas = <&sdma 9 &sdma 10>;
++				dma-names = "tx", "rx";
++			};
 +		};
 +
- 		leds0: led-controller@fffe00d0 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/include/dt-bindings/reset/bcm6358-reset.h b/include/dt-bindings/reset/bcm6358-reset.h
-new file mode 100644
-index 000000000000..bda62ef84f5a
---- /dev/null
-+++ b/include/dt-bindings/reset/bcm6358-reset.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++		aes2_target: target-module@480c5000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480c5044 0x4>,
++			      <0x480c5048 0x4>,
++			      <0x480c504c 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&aes2_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480c5000 0x2000>;
 +
-+#ifndef __DT_BINDINGS_RESET_BCM6358_H
-+#define __DT_BINDINGS_RESET_BCM6358_H
-+
-+#define BCM6358_RST_SPI		0
-+#define BCM6358_RST_ENET	2
-+#define BCM6358_RST_MPI		3
-+#define BCM6358_RST_EPHY	6
-+#define BCM6358_RST_SAR		7
-+#define BCM6358_RST_USBH	12
-+#define BCM6358_RST_PCM		13
-+#define BCM6358_RST_ADSL	14
-+
-+#endif /* __DT_BINDINGS_RESET_BCM6358_H */
++			aes2: aes2@0 {
++				compatible = "ti,omap3-aes";
++				reg = <0 0x50>;
++				interrupts = <0>;
++				dmas = <&sdma 65 &sdma 66>;
++				dma-names = "tx", "rx";
++			};
+ 		};
+ 
+ 		prm: prm@48306000 {
+diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+index ca02f91237e3..b6c7d98a9eff 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+@@ -2342,44 +2342,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__sham = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* l4_core -> AES */
+-static struct omap_hwmod_class_sysconfig omap3_aes_sysc = {
+-	.rev_offs	= 0x44,
+-	.sysc_offs	= 0x48,
+-	.syss_offs	= 0x4c,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
+-			   SYSC_HAS_AUTOIDLE | SYSS_HAS_RESET_STATUS),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+-	.sysc_fields	= &omap3xxx_aes_sysc_fields,
+-};
+-
+-static struct omap_hwmod_class omap3xxx_aes_class = {
+-	.name	= "aes",
+-	.sysc	= &omap3_aes_sysc,
+-};
+-
+-
+-static struct omap_hwmod omap3xxx_aes_hwmod = {
+-	.name		= "aes",
+-	.main_clk	= "aes2_ick",
+-	.prcm		= {
+-		.omap2 = {
+-			.module_offs = CORE_MOD,
+-			.idlest_reg_id = 1,
+-			.idlest_idle_bit = OMAP3430_ST_AES2_SHIFT,
+-		},
+-	},
+-	.class		= &omap3xxx_aes_class,
+-};
+-
+-
+-static struct omap_hwmod_ocp_if omap3xxx_l4_core__aes = {
+-	.master		= &omap3xxx_l4_core_hwmod,
+-	.slave		= &omap3xxx_aes_hwmod,
+-	.clk		= "aes2_ick",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /*
+  * 'ssi' class
+  * synchronous serial interface (multichannel and full-duplex serial if)
+@@ -2473,20 +2435,11 @@ static struct omap_hwmod_ocp_if *omap34xx_sham_hwmod_ocp_ifs[] __initdata = {
+ 	NULL,
+ };
+ 
+-static struct omap_hwmod_ocp_if *omap34xx_aes_hwmod_ocp_ifs[] __initdata = {
+-	&omap3xxx_l4_core__aes,
+-	NULL,
+-};
+-
+ static struct omap_hwmod_ocp_if *omap36xx_sham_hwmod_ocp_ifs[] __initdata = {
+ 	&omap3xxx_l4_core__sham,
+ 	NULL
+ };
+ 
+-static struct omap_hwmod_ocp_if *omap36xx_aes_hwmod_ocp_ifs[] __initdata = {
+-	&omap3xxx_l4_core__aes,
+-	NULL
+-};
+ 
+ /*
+  * Apparently the SHA/MD5 and AES accelerator IP blocks are
+@@ -2501,11 +2454,6 @@ static struct omap_hwmod_ocp_if *am35xx_sham_hwmod_ocp_ifs[] __initdata = {
+ 	NULL
+ };
+ 
+-static struct omap_hwmod_ocp_if *am35xx_aes_hwmod_ocp_ifs[] __initdata = {
+-	/* &omap3xxx_l4_core__aes, */
+-	NULL,
+-};
+-
+ /* 3430ES1-only hwmod links */
+ static struct omap_hwmod_ocp_if *omap3430es1_hwmod_ocp_ifs[] __initdata = {
+ 	&omap3430es1_dss__l3,
+@@ -2641,7 +2589,6 @@ int __init omap3xxx_hwmod_init(void)
+ {
+ 	int r;
+ 	struct omap_hwmod_ocp_if **h = NULL, **h_sham = NULL;
+-	struct omap_hwmod_ocp_if **h_aes = NULL;
+ 	struct device_node *bus;
+ 	unsigned int rev;
+ 
+@@ -2664,16 +2611,13 @@ int __init omap3xxx_hwmod_init(void)
+ 	    rev == OMAP3430_REV_ES3_1 || rev == OMAP3430_REV_ES3_1_2) {
+ 		h = omap34xx_hwmod_ocp_ifs;
+ 		h_sham = omap34xx_sham_hwmod_ocp_ifs;
+-		h_aes = omap34xx_aes_hwmod_ocp_ifs;
+ 	} else if (rev == AM35XX_REV_ES1_0 || rev == AM35XX_REV_ES1_1) {
+ 		h = am35xx_hwmod_ocp_ifs;
+ 		h_sham = am35xx_sham_hwmod_ocp_ifs;
+-		h_aes = am35xx_aes_hwmod_ocp_ifs;
+ 	} else if (rev == OMAP3630_REV_ES1_0 || rev == OMAP3630_REV_ES1_1 ||
+ 		   rev == OMAP3630_REV_ES1_2) {
+ 		h = omap36xx_hwmod_ocp_ifs;
+ 		h_sham = omap36xx_sham_hwmod_ocp_ifs;
+-		h_aes = omap36xx_aes_hwmod_ocp_ifs;
+ 	} else {
+ 		WARN(1, "OMAP3 hwmod family init: unknown chip type\n");
+ 		return -EINVAL;
+@@ -2696,11 +2640,6 @@ int __init omap3xxx_hwmod_init(void)
+ 			goto put_node;
+ 	}
+ 
+-	if (h_aes && omap3xxx_hwmod_is_hs_ip_block_usable(bus, "aes")) {
+-		r = omap_hwmod_register_links(h_aes);
+-		if (r < 0)
+-			goto put_node;
+-	}
+ 	of_node_put(bus);
+ 
+ 	/*
 -- 
-2.27.0
+2.25.1
 
