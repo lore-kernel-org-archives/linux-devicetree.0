@@ -5,69 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024BAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72CAC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B0121789
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961502089D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SuWRHNm7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hd+jjA0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgFQQsb (ORCPT
+        id S1727798AbgFQQsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52738 "EHLO
+        Wed, 17 Jun 2020 12:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgFQQsa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:48:30 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B8EC061755;
-        Wed, 17 Jun 2020 09:48:29 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id t21so2476611edr.12;
-        Wed, 17 Jun 2020 09:48:29 -0700 (PDT)
+        with ESMTP id S1726496AbgFQQs2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:48:28 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0207C061755;
+        Wed, 17 Jun 2020 09:48:26 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l27so3159184ejc.1;
+        Wed, 17 Jun 2020 09:48:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lJKpt55I3R2NHkjVsgV/EWx4EQxkw9Y42GuSmQWOQXU=;
-        b=SuWRHNm7e/2dXvHjlXZn0QaZypCtAgtrifRw8rwQWgE54p1v4gdCeAV3HzELa0cOUT
-         NqjqJwR3GcIFqOIr2vEictKG/pCzUYfAVnataPnFzQnh0ANBCrrVnIgslT7RTyKQTOnj
-         vrKhJMHVZ7e5JPjeKsIYjLzTAX+uwIIHZEWzddzbwc73CnPVdeJl1N1jviZrlvBK35wr
-         0zJiSrVrU+oCgIc2G/yRZlev6qcHLFYXZW+GjCscUYokGMAa/FPB7nmlIcEPARgObtKx
-         SEvrzBB78PyZnVxKU7Jfa+USiKOlpvcb6xBrrlACe2DakKHp2yzaOIbQRmITI+tD+4M+
-         FIrA==
+        bh=q6IFxg4j69ZkwCCMUppVQGAEtuDflNuWjwBqcXu4yWc=;
+        b=Hd+jjA0qiCgPyGwq/YKCmOsq95TdCgNwNFdjCuMzvPQTq/LyAna+naHoNlOATqTcP0
+         LldVbflE35vwb66LKkudHfCX1ExzUEjmHLXKqMWgRIR56dwKfT4e0DELMkt0uTwM1cH7
+         Vck0R3qkeOx/esfrzVwRc9bPq0NbBWQGYQ1U1DYdWww62ZKWKlfdCrmti6hbuigUfxlZ
+         0fsdrYQfXv8F8ZYI1bP9KsMSuick6wwCBtwNC5fjSgizvx7HtncmwYJkqPFqAm1oJNYS
+         vS9MYfkiOuEdQgMjNXiSjrPVePovMCQRNhig4FaKr9fpXHIXrRedwLvZwO9AhkBDtKjf
+         mD8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lJKpt55I3R2NHkjVsgV/EWx4EQxkw9Y42GuSmQWOQXU=;
-        b=tVhyR/uINtZyjCF0Z3hRXXYcBkxVq0n14DmyWgbQwdrMQ1bkmB215yqlGzZIFkw2Yc
-         orpJBupaoF5WOkJqJ/EEknKQcvIsiLUA83eRmV2ZA7Om6svs4uaYdU6TrlRyCCCm7OSB
-         OhlLDsJbu+Kmke580tEYiqJnEMsAp745pzHdcX8rESc4u+dyRaCzPDmI+BpANCt4rnRa
-         ePxTEABP+Z+yqv3vX53Lkr4k0dPnkIsOvYtWsb/aGI33bmgepjxAeNEk9Nnclm7DFuiX
-         fYlqtxFjbARnY29u4pYf6+eZkwNRea21YiHr4wrhoWR53tENScGuIrv9NNN/teJ5QSR+
-         cf9A==
-X-Gm-Message-State: AOAM531+2p5ax6I4Bd8XWMB+/roy+qx3Of3WQuHJQN+MpwGkY71q7lcV
-        yaELhWFyVhCH9HTpKylOVKL4SX+x+x8=
-X-Google-Smtp-Source: ABdhPJzeRmr0uDJj/7U2GJ2r5I6AA3DS92T7LUZ/ga5mx5c0Ixaylw/uHtMWYjNSa4bQd2zTQrkEfA==
-X-Received: by 2002:a05:6402:307c:: with SMTP id bs28mr77851edb.3.1592412508568;
-        Wed, 17 Jun 2020 09:48:28 -0700 (PDT)
+        bh=q6IFxg4j69ZkwCCMUppVQGAEtuDflNuWjwBqcXu4yWc=;
+        b=SFlfpRcdx/0eXILdw99J17l98T91CV/7ZAdejwp9P+LdOvPWrmtcAVt/fGp9CRSWqz
+         DcWJDMAL8zl5Z3ByG0BdQbbraBgvMRPPaQFvrVUpnEoX7mL2dgulw94ntVSSOL3Jfs3J
+         uFn0BkmnfRCXi3Q4/V+0svR+Bcbea7MAtTo6HfPxEmwEnDxthwCgyTZAWo+nCzpf+rr/
+         SqtoeivfUf1x6858Ho5ruxsYCUU84C0SY+nIhZlNnNrQEY1fF1xrkYjpiUwfIdUT/Gdv
+         IX7y/+726YRbLyL6KMtZ61sVLRNtSyj4sluVZDBvJPdTceTgw1nDHTwUnk+t7jAYsMCT
+         KIFA==
+X-Gm-Message-State: AOAM532FtL+ZwfAxbe1L93AEIiHvFlOOUQbIsNsS7F6UTNoPqyKWCtPq
+        Oqi0T91/fk2PBD89Un3jOc0=
+X-Google-Smtp-Source: ABdhPJwdWbseXtvFP2fS4kLllfvqMBsrS/h//UWaCxJEWMISfQiPA6Y12StFp/40WvC6xV7yjZOueQ==
+X-Received: by 2002:a17:906:f913:: with SMTP id lc19mr79340ejb.286.1592412505425;
+        Wed, 17 Jun 2020 09:48:25 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.129.96])
-        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.27
+        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:48:27 -0700 (PDT)
+        Wed, 17 Jun 2020 09:48:25 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] arm: dts: owl-s500: Add Reset Controller support
-Date:   Wed, 17 Jun 2020 19:48:10 +0300
-Message-Id: <0722104f0a281ef8b628de384b6e6e52b75ae6b9.1592407030.git.cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-actions@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH 08/11] dt-bindings: reset: Add binding constants for Actions S500 RMU
+Date:   Wed, 17 Jun 2020 19:48:08 +0300
+Message-Id: <064369c282f06f1e114eb4d7a832e65376680a59.1592407030.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
 References: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
@@ -78,34 +79,88 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add reset controller property and bindings header for the
-Actions Semi S500 SoC DTS.
+Add device tree binding constants for Actions Semi S500 SoC Reset
+Management Unit (RMU).
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 ---
- arch/arm/boot/dts/owl-s500.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ .../dt-bindings/reset/actions,s500-reset.h    | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 include/dt-bindings/reset/actions,s500-reset.h
 
-diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
-index 0f4fc5487dad..0b7ba2926f0e 100644
---- a/arch/arm/boot/dts/owl-s500.dtsi
-+++ b/arch/arm/boot/dts/owl-s500.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/actions,s500-cmu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/owl-s500-powergate.h>
-+#include <dt-bindings/reset/actions,s500-reset.h>
- 
- / {
- 	compatible = "actions,s500";
-@@ -188,6 +189,7 @@ cmu: clock-controller@b0160000 {
- 			reg = <0xb0160000 0x8000>;
- 			clocks = <&hosc>, <&losc>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		timer: timer@b0168000 {
+diff --git a/include/dt-bindings/reset/actions,s500-reset.h b/include/dt-bindings/reset/actions,s500-reset.h
+new file mode 100644
+index 000000000000..f5d94176d10b
+--- /dev/null
++++ b/include/dt-bindings/reset/actions,s500-reset.h
+@@ -0,0 +1,67 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Device Tree binding constants for Actions Semi S500 Reset Management Unit
++ *
++ * Copyright (c) 2014 Actions Semi Inc.
++ * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
++ */
++
++#ifndef __DT_BINDINGS_ACTIONS_S500_RESET_H
++#define __DT_BINDINGS_ACTIONS_S500_RESET_H
++
++#define RESET_DMAC				0
++#define RESET_NORIF				1
++#define RESET_DDR				2
++#define RESET_NANDC				3
++#define RESET_SD0				4
++#define RESET_SD1				5
++#define RESET_PCM1				6
++#define RESET_DE				7
++#define RESET_LCD				8
++#define RESET_SD2				9
++#define RESET_DSI				10
++#define RESET_CSI				11
++#define RESET_BISP				12
++#define RESET_KEY				13
++#define RESET_GPIO				14
++#define RESET_AUDIO				15
++#define RESET_PCM0				16
++#define RESET_VDE				17
++#define RESET_VCE				18
++#define RESET_GPU3D				19
++#define RESET_NIC301				20
++#define RESET_LENS				21
++#define RESET_PERIPHRESET			22
++#define RESET_USB2_0				23
++#define RESET_TVOUT				24
++#define RESET_HDMI				25
++#define RESET_HDCP2TX				26
++#define RESET_UART6				27
++#define RESET_UART0				28
++#define RESET_UART1				29
++#define RESET_UART2				30
++#define RESET_SPI0				31
++#define RESET_SPI1				32
++#define RESET_SPI2				33
++#define RESET_SPI3				34
++#define RESET_I2C0				35
++#define RESET_I2C1				36
++#define RESET_USB3				37
++#define RESET_UART3				38
++#define RESET_UART4				39
++#define RESET_UART5				40
++#define RESET_I2C2				41
++#define RESET_I2C3				42
++#define RESET_ETHERNET				43
++#define RESET_CHIPID				44
++#define RESET_USB2_1				45
++#define RESET_WD0RESET				46
++#define RESET_WD1RESET				47
++#define RESET_WD2RESET				48
++#define RESET_WD3RESET				49
++#define RESET_DBG0RESET				50
++#define RESET_DBG1RESET				51
++#define RESET_DBG2RESET				52
++#define RESET_DBG3RESET				53
++
++#endif /* __DT_BINDINGS_ACTIONS_S500_RESET_H */
 -- 
 2.27.0
 
