@@ -2,87 +2,153 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75024C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 18:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B26C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 18:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E65212CC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 18:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394EC206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 18:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x092aJ7B"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R04g9HSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgFQS1O (ORCPT
+        id S1727105AbgFQSg4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:27:14 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38466 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgFQS1O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 14:27:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HIR966014994;
-        Wed, 17 Jun 2020 13:27:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592418429;
-        bh=q9IeiGcmHa7Cuowc/9kIPooap4gOmUa92yAlNd2M3p8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=x092aJ7BnaJt7pJkKNOofQh//IyubKji8DqWfcbUvWNN7M+XHlvf9kVUsRo90Qsl9
-         NaAP3aL/137rJlTVYXvxjxbjpTU7zramn7OOe2yz5aP4V99y7eaKwPjY2g1RPST9aj
-         FqYC+ZtmJTBgq/9GCTD/tCOONgzNkob112PzOaJ8=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HIR9eY022851
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 13:27:09 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 13:27:08 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 13:27:09 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HIR8gR010235;
-        Wed, 17 Jun 2020 13:27:08 -0500
-Subject: Re: [PATCH net-next v7 6/6] net: phy: DP83822: Add ability to
- advertise Fiber connection
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-7-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4efcd835-e4e2-ddfa-d0f8-9f29f574eb9e@ti.com>
-Date:   Wed, 17 Jun 2020 13:27:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 14:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgFQSgw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 14:36:52 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CC9C0613EE
+        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 11:36:52 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id t25so2669319oij.7
+        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 11:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m743QY4j4N0DmjtOs9fMZ2T8zbdzv+0xDLVnEkgz8Xs=;
+        b=R04g9HSVEDCQQpAj4Fk2rkQDJgelNkX6wYPlwKU4hWgdpTKguFVt0V0/I7rk+UWoC7
+         y16mWHOEbe169ktuBkCp5ctFMIQnGqToadXzfD5XQGYb/+gRjCqWJfua2tV/HuvWGNmP
+         EL9ZaGmrYL6uCuxqjTW4Uu36mEK9mu29OG+zh8dEJj2MKZTUGnOcT6bsRf3CwqdiGo5l
+         rEqQrRnZzWxfp33TrhalkbIM24y97ZOLaoRuyfEqfsFm2ZPjy2Kg7OT2b12zzSWgg7Tn
+         j7N6sWyQQoYrKctp+dnnTnqwJ0tFdObNQD+maCXc9VGKdFjrtD+nFF+2Tb6iCby/vR8A
+         KDqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m743QY4j4N0DmjtOs9fMZ2T8zbdzv+0xDLVnEkgz8Xs=;
+        b=sKu4VVOXZTHUr90CdLds6HAwPJR4IYkmKBhvLflsTsBBbmJp0n7EcsJalbaDkF6Ypk
+         6/AP8wktrSi5hQ0lxDbb8mQ1Mx3663+r1nBUGo0zyUs3Qgc3mfm/OzoZqisRyHTaxEQq
+         gGhkk78kRNzjwMVrCEunrbTzFGb1LBA9yYiYXVhoM+eOAhsnypzAWiPYqcAaFneXZuU5
+         E3m0F9sUBSjb6aoLbxnsYcahxkZsbUzwCck7GnU1awx3Jfu0RiWSbOex68V1NiiEBbTA
+         AkbM1W7kb4/N/FyL5MGd1gGwpV39s0xL/Z5NG5BFw/O07jwmD9QoHpC0f5c4GMA+4YTb
+         6ArA==
+X-Gm-Message-State: AOAM531c0ZJB1D5nuZQj+A5fdiEcA3E8Ociy5XK1a1N3q90kzWKDljJ6
+        guBtUlAvEGVbeowYcyzTq/gASVLT1q1a3vqiqwEIfA==
+X-Google-Smtp-Source: ABdhPJy1DeZtFko5KqEH1OkAXfc+QWxNhghwaA9TZRXvML2oplG4BdrzrsqYZHmUTIvdb3uTTchPN7CNviG7SM1cpt0=
+X-Received: by 2002:aca:530e:: with SMTP id h14mr86929oib.172.1592419011313;
+ Wed, 17 Jun 2020 11:36:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200617182019.6790-7-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
+ <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 17 Jun 2020 11:36:15 -0700
+Message-ID: <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
+ top level devices
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Ji Luo <ji.luo@nxp.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All
+Hi Geert,
 
-On 6/17/20 1:20 PM, Dan Murphy wrote:
-> The DP83822 can be configured to use the RGMII interface. There are
-> independent fixed 3.5ns clock shift (aka internal delay) for the TX and RX
-> paths. This allow either one to be set if the MII interface is RGMII and
-> the value is set in the firmware node.
+On Wed, Jun 17, 2020 at 5:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Saravana,
+>
+> On Fri, May 15, 2020 at 7:38 AM Saravana Kannan <saravanak@google.com> wrote:
+> > The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
+> > parsing of the device tree nodes when a lot of devices are added. This
+> > will significantly cut down parsing time (as much a 1 second on some
+> > systems). So, use them when adding devices for all the top level device
+> > tree nodes in a system.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>
+> This is now commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing
+> when adding all top level devices") in v5.8-rc1, and I have bisected a
+> regression to it: on r8a7740/armadillo and sh73a0/kzm9g, the system can
+> no longer be woken up from s2ram by a GPIO key. Reverting the commit
+> fixes the issue.
+>
+> On these systems, the GPIO/PFC block has its interrupt lines connected
+> to intermediate interrupt controllers (Renesas INTC), which are in turn
+> connected to the main interrupt controller (ARM GIC).  The INTC block is
+> part of a power and clock domain.  Hence if a GPIO is enabled as a
+> wake-up source, the INTC is part of the wake-up path, and thus must be
+> kept enabled when entering s2ram.
+>
+> While this commit has no impact on probe order for me (unlike in Marek's
+> case), it does have an impact on suspend order:
+>   - Before this commit:
+>       1. The keyboard (gpio-keys) is suspended, and calls
+>          enable_irq_wake() to inform the upstream interrupt controller
+>          (INTC) that it is part of the wake-up path,
+>       2. INTC is suspended, and calls device_set_wakeup_path() to inform
+>          the device core that it must be kept enabled,
+>       3. The system is woken by pressing a wake-up key.
+>
+>   - After this commit:
+>       1. INTC is suspended, and is not aware it is part of the wake-up
+>          path, so it is disabled by the device core,
+>       2. gpio-keys is suspended, and calls enable_irq_wake() in vain,
+>       3. Pressing a wake-up key has no effect, as INTC is disabled, and
+>          the interrupt does not come through.
+>
+> It looks like no device links are involved, as both gpio-keys and INTC have
+> no links.
+> Do you have a clue?
+>
+> Thanks!
 
-$subject is wrong.  I used the 83822 fiber patch as my base as it had 
-90% of the work done that I needed for the
+That patch of mine defers probe on all devices added by the
+of_platform_default_populate() call, and then once the call returns,
+it immediately triggers a deferred probe.
 
-internal delay.  I will fix it in v8 after review comments.
+So all these devices are being probed in parallel in the deferred
+probe workqueue while the main "initcall thread" continues down to
+further initcalls. It looks like some of the drivers in subsequent
+initcalls are assuming that devices in the earlier initcalls always
+probe and can't be deferred?
 
-Dan
+There are two options.
+1. Fix these drivers.
+2. Add a "flush deferred workqueue" in fw_devlink_resume()
 
+I'd rather we fix the drivers so that they handle deferred probes
+correctly. Thoughts?
+
+-Saravana
