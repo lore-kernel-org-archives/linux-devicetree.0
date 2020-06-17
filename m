@@ -2,220 +2,213 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EFDC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 04:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 05:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF7120786
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 04:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469E12073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 05:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sFW5yvIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgFQE7l (ORCPT
+        id S1725894AbgFQFx1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:59:41 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:46774 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725929AbgFQE7k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:59:40 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1883C1A09F3;
-        Wed, 17 Jun 2020 06:59:39 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9883A1A09DA;
-        Wed, 17 Jun 2020 06:59:33 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DCAA6402B3;
-        Wed, 17 Jun 2020 12:59:26 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] ASoC: fsl-asoc-card: Add MQS support
-Date:   Wed, 17 Jun 2020 12:48:25 +0800
-Message-Id: <918505decb7f757f12c38059c590984f28d2f3a4.1592369271.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <2185a3ec866bc59f82d93b73d1a732a896fd8f48.1592369271.git.shengjiu.wang@nxp.com>
-References: <2185a3ec866bc59f82d93b73d1a732a896fd8f48.1592369271.git.shengjiu.wang@nxp.com>
-In-Reply-To: <2185a3ec866bc59f82d93b73d1a732a896fd8f48.1592369271.git.shengjiu.wang@nxp.com>
-References: <2185a3ec866bc59f82d93b73d1a732a896fd8f48.1592369271.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 17 Jun 2020 01:53:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:18275 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725851AbgFQFx1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 01:53:27 -0400
+X-UUID: b2146c6af2314d6dacbebe5b0acc7bc5-20200617
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=oVpXGg2U7AQKunA+hsmMzQqdqyO7uOh2s2YhRzJO1cY=;
+        b=sFW5yvIkSXSY97G+GJw+Eb8VYAGekJI2KHKMX9mzrNuMzBUiAMAD7VIt+lIF2Bd7ihAx4WTeL9rdR6ZSmy96p6RFZw0GBbkJ5iHR1+ajhYpVT5jxOlSGBfSGLKmUfV6zQIHTqRVCY0TXcyM2z9FlktiJB/3PZTViso72zcgrGuQ=;
+X-UUID: b2146c6af2314d6dacbebe5b0acc7bc5-20200617
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <tiffany.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2120803201; Wed, 17 Jun 2020 13:53:18 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 17 Jun 2020 13:53:17 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 17 Jun 2020 13:53:16 +0800
+Message-ID: <1592373196.24313.1.camel@mtksdaap41>
+Subject: Re: [PATCH v4 01/17] media: dt-binding: mtk-vcodec: Separating
+ mtk-vcodec encode node.
+From:   Tiffany Lin <tiffany.lin@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+CC:     Rob Herring <robh@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Evan Green" <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Tomasz Figa" <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "Matthias Kaehlcke" <mka@chromium.org>, <anan.sun@mediatek.com>,
+        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
+        <ming-fan.chen@mediatek.com>, <eizan@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        "Hsin-Yi Wang" <hsinyi@chromium.org>,
+        Irui Wang <irui.wang@mediatek.com>
+Date:   Wed, 17 Jun 2020 13:53:16 +0800
+In-Reply-To: <1591774707.21260.14.camel@mtksdaap41>
+References: <1590826218-23653-1-git-send-email-yong.wu@mediatek.com>
+         <1590826218-23653-2-git-send-email-yong.wu@mediatek.com>
+         <20200609212102.GA1416099@bogus>
+         <CAPBb6MXdbEgWtOx_b5ab3hOTdyPPaGDQ2kA21pLjoLE-2sjuTg@mail.gmail.com>
+         <1591774707.21260.14.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The MQS codec isn't an i2c device, so use of_find_device_by_node
-to get platform device pointer.
-
-Because MQS only support playback, then add a new audio map.
-
-And there maybe "model" property or no "audio-routing" property in
-devicetree, so add some enhancement for these two property.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v2
-- update according Nicolin's comments.
-
- sound/soc/fsl/fsl-asoc-card.c | 78 +++++++++++++++++++++++++----------
- 1 file changed, 57 insertions(+), 21 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 00be73900888..d0543a53764e 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -119,6 +119,13 @@ static const struct snd_soc_dapm_route audio_map_ac97[] = {
- 	{"ASRC-Capture",  NULL, "AC97 Capture"},
- };
- 
-+static const struct snd_soc_dapm_route audio_map_tx[] = {
-+	/* 1st half -- Normal DAPM routes */
-+	{"Playback",  NULL, "CPU-Playback"},
-+	/* 2nd half -- ASRC DAPM routes */
-+	{"CPU-Playback",  NULL, "ASRC-Playback"},
-+};
-+
- /* Add all possible widgets into here without being redundant */
- static const struct snd_soc_dapm_widget fsl_asoc_card_dapm_widgets[] = {
- 	SND_SOC_DAPM_LINE("Line Out Jack", NULL),
-@@ -485,8 +492,9 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	struct platform_device *asrc_pdev = NULL;
- 	struct platform_device *cpu_pdev;
- 	struct fsl_asoc_card_priv *priv;
--	struct i2c_client *codec_dev;
-+	struct device *codec_dev = NULL;
- 	const char *codec_dai_name;
-+	const char *codec_dev_name;
- 	u32 width;
- 	int ret;
- 
-@@ -512,10 +520,23 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	}
- 
- 	codec_np = of_parse_phandle(np, "audio-codec", 0);
--	if (codec_np)
--		codec_dev = of_find_i2c_device_by_node(codec_np);
--	else
--		codec_dev = NULL;
-+	if (codec_np) {
-+		struct platform_device *codec_pdev;
-+		struct i2c_client *codec_i2c;
-+
-+		codec_i2c = of_find_i2c_device_by_node(codec_np);
-+		if (codec_i2c) {
-+			codec_dev = &codec_i2c->dev;
-+			codec_dev_name = codec_i2c->name;
-+		}
-+		if (!codec_dev) {
-+			codec_pdev = of_find_device_by_node(codec_np);
-+			if (codec_pdev) {
-+				codec_dev = &codec_pdev->dev;
-+				codec_dev_name = codec_pdev->name;
-+			}
-+		}
-+	}
- 
- 	asrc_np = of_parse_phandle(np, "audio-asrc", 0);
- 	if (asrc_np)
-@@ -523,7 +544,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 
- 	/* Get the MCLK rate only, and leave it controlled by CODEC drivers */
- 	if (codec_dev) {
--		struct clk *codec_clk = clk_get(&codec_dev->dev, NULL);
-+		struct clk *codec_clk = clk_get(codec_dev, NULL);
- 
- 		if (!IS_ERR(codec_clk)) {
- 			priv->codec_priv.mclk_freq = clk_get_rate(codec_clk);
-@@ -538,6 +559,11 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	/* Assign a default DAI format, and allow each card to overwrite it */
- 	priv->dai_fmt = DAI_FMT_BASE;
- 
-+	memcpy(priv->dai_link, fsl_asoc_card_dai,
-+	       sizeof(struct snd_soc_dai_link) * ARRAY_SIZE(priv->dai_link));
-+
-+	priv->card.dapm_routes = audio_map;
-+	priv->card.num_dapm_routes = ARRAY_SIZE(audio_map);
- 	/* Diversify the card configurations */
- 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
- 		codec_dai_name = "cs42888";
-@@ -573,6 +599,18 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		codec_dai_name = "ac97-hifi";
- 		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
-+		priv->card.dapm_routes = audio_map_ac97;
-+		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
-+	} else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
-+		codec_dai_name = "fsl-mqs-dai";
-+		priv->card.set_bias_level = NULL;
-+		priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
-+				SND_SOC_DAIFMT_CBS_CFS |
-+				SND_SOC_DAIFMT_NB_NF;
-+		priv->dai_link[1].dpcm_capture = 0;
-+		priv->dai_link[2].dpcm_capture = 0;
-+		priv->card.dapm_routes = audio_map_tx;
-+		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
- 	} else {
- 		dev_err(&pdev->dev, "unknown Device Tree compatible\n");
- 		ret = -EINVAL;
-@@ -601,19 +639,17 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->cpu_priv.sysclk_id[0] = FSL_SAI_CLK_MAST1;
- 	}
- 
--	snprintf(priv->name, sizeof(priv->name), "%s-audio",
--		 fsl_asoc_card_is_ac97(priv) ? "ac97" :
--		 codec_dev->name);
--
- 	/* Initialize sound card */
- 	priv->pdev = pdev;
- 	priv->card.dev = &pdev->dev;
--	priv->card.name = priv->name;
-+	ret = snd_soc_of_parse_card_name(&priv->card, "model");
-+	if (ret) {
-+		snprintf(priv->name, sizeof(priv->name), "%s-audio",
-+			 fsl_asoc_card_is_ac97(priv) ? "ac97" : codec_dev_name);
-+		priv->card.name = priv->name;
-+	}
- 	priv->card.dai_link = priv->dai_link;
--	priv->card.dapm_routes = fsl_asoc_card_is_ac97(priv) ?
--				 audio_map_ac97 : audio_map;
- 	priv->card.late_probe = fsl_asoc_card_late_probe;
--	priv->card.num_dapm_routes = ARRAY_SIZE(audio_map);
- 	priv->card.dapm_widgets = fsl_asoc_card_dapm_widgets;
- 	priv->card.num_dapm_widgets = ARRAY_SIZE(fsl_asoc_card_dapm_widgets);
- 
-@@ -621,13 +657,12 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	if (!asrc_pdev)
- 		priv->card.num_dapm_routes /= 2;
- 
--	memcpy(priv->dai_link, fsl_asoc_card_dai,
--	       sizeof(struct snd_soc_dai_link) * ARRAY_SIZE(priv->dai_link));
--
--	ret = snd_soc_of_parse_audio_routing(&priv->card, "audio-routing");
--	if (ret) {
--		dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
--		goto asrc_fail;
-+	if (of_property_read_bool(np, "audio-routing")) {
-+		ret = snd_soc_of_parse_audio_routing(&priv->card, "audio-routing");
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
-+			goto asrc_fail;
-+		}
- 	}
- 
- 	/* Normal DAI Link */
-@@ -724,6 +759,7 @@ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
- 	{ .compatible = "fsl,imx-audio-sgtl5000", },
- 	{ .compatible = "fsl,imx-audio-wm8962", },
- 	{ .compatible = "fsl,imx-audio-wm8960", },
-+	{ .compatible = "fsl,imx-audio-mqs", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_asoc_card_dt_ids);
--- 
-2.21.0
+T24gV2VkLCAyMDIwLTA2LTEwIGF0IDE1OjM4ICswODAwLCBUaWZmYW55IExpbiB3cm90ZToNCj4g
+T24gV2VkLCAyMDIwLTA2LTEwIGF0IDE1OjQ2ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
+ZToNCj4gPiBPbiBXZWQsIEp1biAxMCwgMjAyMCBhdCA2OjIxIEFNIFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IE9uIFNhdCwgTWF5IDMwLCAyMDIwIGF0
+IDA0OjEwOjAyUE0gKzA4MDAsIFlvbmcgV3Ugd3JvdGU6DQo+ID4gPiA+IEZyb206IE1hb2d1YW5n
+IE1lbmcgPG1hb2d1YW5nLm1lbmdAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBVcGRh
+dGUgYmluZGluZyBkb2N1bWVudCBzaW5jZSB0aGUgYXZjIGFuZCB2cDggaGFyZHdhcmUgZW5jb2Rl
+ciBpbg0KPiA+ID4gPiBtdDgxNzMgYXJlIG5vdyBzZXBhcmF0ZWQuIFNlcGFyYXRlICJtZWRpYXRl
+ayxtdDgxNzMtdmNvZGVjLWVuYyIgdG8NCj4gPiA+ID4gIm1lZGlhdGVrLG10ODE3My12Y29kZWMt
+dnA4LWVuYyIgYW5kICJtZWRpYXRlayxtdDgxNzMtdmNvZGVjLWF2Yy1lbmMiLg0KPiA+ID4NCj4g
+PiA+IFRoZSBoL3cgc3VkZGVubHkgc3BsaXQgaW4gMj8gWW91IGFyZSBicmVha2luZyBjb21wYXRp
+YmlsaXR5LiBVcCB0byB0aGUNCj4gPiA+IE1lZGlhdGVrIG1haW50YWluZXJzIHRvIGRlY2lkZSBp
+ZiB0aGF0J3Mgb2theSwgYnV0IHlvdSBuZWVkIHRvIHN0YXRlIHlvdQ0KPiA+ID4gYXJlIGJyZWFr
+aW5nIGNvbXBhdGliaWxpdHkgKGhlcmUgYW5kIGluIHRoZSBkcml2ZXIpIGFuZCB3aHkgdGhhdCBp
+cw0KPiA+ID4gb2theS4NCj4gPiANCj4gPiBJbiBteSB1bmRlcnN0YW5kaW5nIHRoZXJlIGlzIG5v
+IHJlYWwgaGFyZHdhcmUgdXNpbmcgdGhlIG9sZCBiaW5kaW5ncw0KPiA+IGF0IHRoZSBtb21lbnQs
+IGFuZCB0aGUgc3BsaXQgaXMgaW5kZWVkIGEgcmVmbGVjdGlvbiBvZiB0aGUgYWN0dWFsDQo+ID4g
+aGFyZHdhcmUgbGF5b3V0LiBUaWZmYW55LCBjYW4geW91IGdpdmUgeW91ciBhY2tlZC1ieSBpZiB0
+aGlzIGNoYW5nZSBpcw0KPiA+IG9rIHdpdGggeW91Pw0KPiA+IA0KPiANCj4gSW4gbXkgb3Bpbmlv
+biwgdGhlcmUgaXMgbm8gbmVlZCB0byBjaGFuZ2UgbXQ4MTczIGR0cyBmb3IgZHJpdmVyIHRvDQo+
+IHN1cHBvcnQgbXQ4MTgzLg0KPiBJIHNhdyBhbm90aGVyIHBhdGNoIHRoYXQgYWxyZWFkeSBtYWtl
+IGNoYW5nZSB0byBoYXZlIGVuY29kZXIgZHJpdmVyDQo+IHN1cHBvcnQgYm90aCBtdDgxNzMgYW5k
+IG10ODE4My4NCj4gQnV0IHRoZXkgZG9uZSBhIGxvdCB0byBwcm92ZSBoMjY0IGFuZCB2cDggZW5j
+b2RlciBjb3VsZCB3b3JrDQo+IGluZGVwZW5kZW50bHkgYW5kIHBhcmFsbGVsLg0KPiBJbiB0aGlz
+IGNhc2UsIEkgYW0gb2sgd2l0aCBpdCBiZWNhdXNlIGR0cyBzaG91bGQgYmUgYSByZWZsZWN0aW9u
+IG9mIHRoZQ0KPiBhY3R1YWwgaGFyZHdhcmUuDQo+IA0KPiANCj4gDQo+ID4gPg0KPiA+ID4gPg0K
+PiA+ID4gPiBUaGlzIGlzIGEgcHJlcGFyaW5nIHBhdGNoIGZvciBzbWkgY2xlYW5pbmcgdXAgIm1l
+ZGlhdGVrLGxhcmIiLg0KPiA+ID4gPg0KQWNrZWQtYnk6IFRpZmZhbnkgTGluIDx0aWZmYW55Lmxp
+bkBtZWRpYXRlay5jb20+DQoNCg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYW9ndWFuZyBNZW5n
+IDxtYW9ndWFuZy5tZW5nQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSHNp
+bi1ZaSBXYW5nIDxoc2lueWlAY2hyb21pdW0ub3JnPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBJ
+cnVpIFdhbmcgPGlydWkud2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
+IFlvbmcgV3UgPHlvbmcud3VAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLXZjb2RlYy50eHQgIHwgNTggKysr
+KysrKysrKysrLS0tLS0tLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlv
+bnMoKyksIDI3IGRlbGV0aW9ucygtKQ0KPiA+ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLXZjb2RlYy50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWstdmNvZGVj
+LnR4dA0KPiA+ID4gPiBpbmRleCA4MDkzMzM1Li4xMDIzNzQwIDEwMDY0NA0KPiA+ID4gPiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWstdmNvZGVj
+LnR4dA0KPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVk
+aWEvbWVkaWF0ZWstdmNvZGVjLnR4dA0KPiA+ID4gPiBAQCAtNCw3ICs0LDkgQEAgTWVkaWF0ZWsg
+VmlkZW8gQ29kZWMgaXMgdGhlIHZpZGVvIGNvZGVjIGh3IHByZXNlbnQgaW4gTWVkaWF0ZWsgU29D
+cyB3aGljaA0KPiA+ID4gPiAgc3VwcG9ydHMgaGlnaCByZXNvbHV0aW9uIGVuY29kaW5nIGFuZCBk
+ZWNvZGluZyBmdW5jdGlvbmFsaXRpZXMuDQo+ID4gPiA+DQo+ID4gPiA+ICBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPiA+ID4gPiAtLSBjb21wYXRpYmxlIDogIm1lZGlhdGVrLG10ODE3My12Y29kZWMt
+ZW5jIiBmb3IgTVQ4MTczIGVuY29kZXINCj4gPiA+ID4gKy0gY29tcGF0aWJsZSA6IG11c3QgYmUg
+b25lIG9mIHRoZSBmb2xsb3dpbmcgc3RyaW5nOg0KPiA+ID4gPiArICAibWVkaWF0ZWssbXQ4MTcz
+LXZjb2RlYy12cDgtZW5jIiBmb3IgbXQ4MTczIHZwOCBlbmNvZGVyLg0KPiA+ID4gPiArICAibWVk
+aWF0ZWssbXQ4MTczLXZjb2RlYy1hdmMtZW5jIiBmb3IgbXQ4MTczIGF2YyBlbmNvZGVyLg0KPiA+
+ID4gPiAgICAibWVkaWF0ZWssbXQ4MTgzLXZjb2RlYy1lbmMiIGZvciBNVDgxODMgZW5jb2Rlci4N
+Cj4gPiA+ID4gICAgIm1lZGlhdGVrLG10ODE3My12Y29kZWMtZGVjIiBmb3IgTVQ4MTczIGRlY29k
+ZXIuDQo+ID4gPiA+ICAtIHJlZyA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgdmlkZW8g
+Y29kZWMgcmVnaXN0ZXJzIGFuZCBsZW5ndGggb2YNCj4gPiA+ID4gQEAgLTEzLDEwICsxNSwxMSBA
+QCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAgLSBtZWRpYXRlayxsYXJiIDogbXVzdCBj
+b250YWluIHRoZSBsb2NhbCBhcmJpdGVycyBpbiB0aGUgY3VycmVudCBTb2NzLg0KPiA+ID4gPiAg
+LSBjbG9ja3MgOiBsaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMsIGNvcnJlc3BvbmRpbmcgdG8gZW50
+cmllcyBpbg0KPiA+ID4gPiAgICB0aGUgY2xvY2stbmFtZXMgcHJvcGVydHkuDQo+ID4gPiA+IC0t
+IGNsb2NrLW5hbWVzOiBlbmNvZGVyIG11c3QgY29udGFpbiAidmVuY19zZWxfc3JjIiwgInZlbmNf
+c2VsIiwsDQo+ID4gPiA+IC0gICJ2ZW5jX2x0X3NlbF9zcmMiLCAidmVuY19sdF9zZWwiLCBkZWNv
+ZGVyIG11c3QgY29udGFpbiAidmNvZGVjcGxsIiwNCj4gPiA+ID4gLSAgInVuaXZwbGxfZDIiLCAi
+Y2xrX2NjaTQwMF9zZWwiLCAidmRlY19zZWwiLCAidmRlY3BsbCIsICJ2ZW5jcGxsIiwNCj4gPiA+
+ID4gLSAgInZlbmNfbHRfc2VsIiwgInZkZWNfYnVzX2Nsa19zcmMiLg0KPiA+ID4gPiArLSBjbG9j
+ay1uYW1lczoNCj4gPiA+ID4gKyAgIGF2YyB2ZW5jIG11c3QgY29udGFpbiAidmVuY19zZWwiOw0K
+PiA+ID4gPiArICAgdnA4IHZlbmMgbXVzdCBjb250YWluICJ2ZW5jX2x0X3NlbCI7DQo+ID4gPiA+
+ICsgICBkZWNvZGVyICBtdXN0IGNvbnRhaW4gInZjb2RlY3BsbCIsICJ1bml2cGxsX2QyIiwgImNs
+a19jY2k0MDBfc2VsIiwNCj4gPiA+ID4gKyAgICJ2ZGVjX3NlbCIsICJ2ZGVjcGxsIiwgInZlbmNw
+bGwiLCAidmVuY19sdF9zZWwiLCAidmRlY19idXNfY2xrX3NyYyIuDQo+ID4gPiA+ICAtIGlvbW11
+cyA6IHNob3VsZCBwb2ludCB0byB0aGUgcmVzcGVjdGl2ZSBJT01NVSBibG9jayB3aXRoIG1hc3Rl
+ciBwb3J0IGFzDQo+ID4gPiA+ICAgIGFyZ3VtZW50LCBzZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2lvbW11L21lZGlhdGVrLGlvbW11LnR4dA0KPiA+ID4gPiAgICBmb3IgZGV0
+YWlscy4NCj4gPiA+ID4gQEAgLTgwLDE0ICs4MywxMCBAQCB2Y29kZWNfZGVjOiB2Y29kZWNAMTYw
+MDAwMDAgew0KPiA+ID4gPiAgICAgIGFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDA+LCA8MD4sIDww
+PiwgPDE0ODIwMDAwMDA+LCA8ODAwMDAwMDAwPjsNCj4gPiA+ID4gICAgfTsNCj4gPiA+ID4NCj4g
+PiA+ID4gLSAgdmNvZGVjX2VuYzogdmNvZGVjQDE4MDAyMDAwIHsNCj4gPiA+ID4gLSAgICBjb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My12Y29kZWMtZW5jIjsNCj4gPiA+ID4gLSAgICByZWcg
+PSA8MCAweDE4MDAyMDAwIDAgMHgxMDAwPiwgICAgLypWRU5DX1NZUyovDQo+ID4gPiA+IC0gICAg
+ICAgICAgPDAgMHgxOTAwMjAwMCAwIDB4MTAwMD47ICAgIC8qVkVOQ19MVF9TWVMqLw0KPiA+ID4g
+PiAtICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxOTggSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4g
+PiA+ID4gLSAgICAgICAgICAgICAgPEdJQ19TUEkgMjAyIElSUV9UWVBFX0xFVkVMX0xPVz47DQo+
+ID4gPiA+IC0gICAgbWVkaWF0ZWssbGFyYiA9IDwmbGFyYjM+LA0KPiA+ID4gPiAtICAgICAgICAg
+ICAgICAgICA8JmxhcmI1PjsNCj4gPiA+ID4gK3Zjb2RlY19lbmM6IHZjb2RlY0AxODAwMjAwMCB7
+DQo+ID4gPiA+ICsgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtdmNvZGVjLWF2Yy1l
+bmMiOw0KPiA+ID4gPiArICAgIHJlZyA9IDwwIDB4MTgwMDIwMDAgMCAweDEwMDA+Ow0KPiA+ID4g
+PiArICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxOTggSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4g
+PiA+ID4gICAgICBpb21tdXMgPSA8JmlvbW11IE00VV9QT1JUX1ZFTkNfUkNQVT4sDQo+ID4gPiA+
+ICAgICAgICAgICAgICAgPCZpb21tdSBNNFVfUE9SVF9WRU5DX1JFQz4sDQo+ID4gPiA+ICAgICAg
+ICAgICAgICAgPCZpb21tdSBNNFVfUE9SVF9WRU5DX0JTRE1BPiwNCj4gPiA+ID4gQEAgLTk4LDgg
+Kzk3LDIwIEBAIHZjb2RlY19kZWM6IHZjb2RlY0AxNjAwMDAwMCB7DQo+ID4gPiA+ICAgICAgICAg
+ICAgICAgPCZpb21tdSBNNFVfUE9SVF9WRU5DX1JFRl9MVU1BPiwNCj4gPiA+ID4gICAgICAgICAg
+ICAgICA8JmlvbW11IE00VV9QT1JUX1ZFTkNfUkVGX0NIUk9NQT4sDQo+ID4gPiA+ICAgICAgICAg
+ICAgICAgPCZpb21tdSBNNFVfUE9SVF9WRU5DX05CTV9SRE1BPiwNCj4gPiA+ID4gLSAgICAgICAg
+ICAgICA8JmlvbW11IE00VV9QT1JUX1ZFTkNfTkJNX1dETUE+LA0KPiA+ID4gPiAtICAgICAgICAg
+ICAgIDwmaW9tbXUgTTRVX1BPUlRfVkVOQ19SQ1BVX1NFVDI+LA0KPiA+ID4gPiArICAgICAgICAg
+ICAgIDwmaW9tbXUgTTRVX1BPUlRfVkVOQ19OQk1fV0RNQT47DQo+ID4gPiA+ICsgICAgbWVkaWF0
+ZWssbGFyYiA9IDwmbGFyYjM+Ow0KPiA+ID4gPiArICAgIG1lZGlhdGVrLHZwdSA9IDwmdnB1PjsN
+Cj4gPiA+ID4gKyAgICBjbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfVkVOQ19TRUw+Ow0KPiA+
+ID4gPiArICAgIGNsb2NrLW5hbWVzID0gInZlbmNfc2VsIjsNCj4gPiA+ID4gKyAgICBhc3NpZ25l
+ZC1jbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfVkVOQ19TRUw+Ow0KPiA+ID4gPiArICAgIGFz
+c2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JnRvcGNrZ2VuIENMS19UT1BfVkNPREVDUExMPjsNCj4g
+PiA+ID4gKyAgfTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArdmNvZGVjX2VuY19sdDogdmNvZGVjQDE5
+MDAyMDAwIHsNCj4gPiA+ID4gKyAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My12Y29k
+ZWMtdnA4LWVuYyI7DQo+ID4gPiA+ICsgICAgcmVnID0gIDwwIDB4MTkwMDIwMDAgMCAweDEwMDA+
+OyAgLyogVkVOQ19MVF9TWVMgKi8NCj4gPiA+ID4gKyAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MjAyIElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ID4gPiA+ICsgICAgaW9tbXVzID0gPCZpb21tdSBN
+NFVfUE9SVF9WRU5DX1JDUFVfU0VUMj4sDQo+ID4gPiA+ICAgICAgICAgICAgICAgPCZpb21tdSBN
+NFVfUE9SVF9WRU5DX1JFQ19GUk1fU0VUMj4sDQo+ID4gPiA+ICAgICAgICAgICAgICAgPCZpb21t
+dSBNNFVfUE9SVF9WRU5DX0JTRE1BX1NFVDI+LA0KPiA+ID4gPiAgICAgICAgICAgICAgIDwmaW9t
+bXUgTTRVX1BPUlRfVkVOQ19TVl9DT01BX1NFVDI+LA0KPiA+ID4gPiBAQCAtMTA4LDE3ICsxMTks
+MTAgQEAgdmNvZGVjX2RlYzogdmNvZGVjQDE2MDAwMDAwIHsNCj4gPiA+ID4gICAgICAgICAgICAg
+ICA8JmlvbW11IE00VV9QT1JUX1ZFTkNfQ1VSX0NIUk9NQV9TRVQyPiwNCj4gPiA+ID4gICAgICAg
+ICAgICAgICA8JmlvbW11IE00VV9QT1JUX1ZFTkNfUkVGX0xVTUFfU0VUMj4sDQo+ID4gPiA+ICAg
+ICAgICAgICAgICAgPCZpb21tdSBNNFVfUE9SVF9WRU5DX1JFQ19DSFJPTUFfU0VUMj47DQo+ID4g
+PiA+ICsgICAgbWVkaWF0ZWssbGFyYiA9IDwmbGFyYjU+Ow0KPiA+ID4gPiAgICAgIG1lZGlhdGVr
+LHZwdSA9IDwmdnB1PjsNCj4gPiA+ID4gLSAgICBjbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1Bf
+VkVOQ1BMTF9EMj4sDQo+ID4gPiA+IC0gICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX1ZF
+TkNfU0VMPiwNCj4gPiA+ID4gLSAgICAgICAgICAgICA8JnRvcGNrZ2VuIENMS19UT1BfVU5JVlBM
+TDFfRDI+LA0KPiA+ID4gPiAtICAgICAgICAgICAgIDwmdG9wY2tnZW4gQ0xLX1RPUF9WRU5DX0xU
+X1NFTD47DQo+ID4gPiA+IC0gICAgY2xvY2stbmFtZXMgPSAidmVuY19zZWxfc3JjIiwNCj4gPiA+
+ID4gLSAgICAgICAgICAgICAgICAgICJ2ZW5jX3NlbCIsDQo+ID4gPiA+IC0gICAgICAgICAgICAg
+ICAgICAidmVuY19sdF9zZWxfc3JjIiwNCj4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICJ2ZW5j
+X2x0X3NlbCI7DQo+ID4gPiA+IC0gICAgYXNzaWduZWQtY2xvY2tzID0gPCZ0b3Bja2dlbiBDTEtf
+VE9QX1ZFTkNfU0VMPiwNCj4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICA8JnRvcGNrZ2Vu
+IENMS19UT1BfVkVOQ19MVF9TRUw+Ow0KPiA+ID4gPiAtICAgIGFzc2lnbmVkLWNsb2NrLXBhcmVu
+dHMgPSA8JnRvcGNrZ2VuIENMS19UT1BfVkVOQ1BMTF9EMj4sDQo+ID4gPiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDwmdG9wY2tnZW4gQ0xLX1RPUF9VTklWUExMMV9EMj47DQo+ID4g
+PiA+ICsgICAgY2xvY2tzID0gPCZ0b3Bja2dlbiBDTEtfVE9QX1ZFTkNfTFRfU0VMPjsNCj4gPiA+
+ID4gKyAgICBjbG9jay1uYW1lcyA9ICJ2ZW5jX2x0X3NlbCI7DQo+ID4gPiA+ICsgICAgYXNzaWdu
+ZWQtY2xvY2tzID0gPCZ0b3Bja2dlbiBDTEtfVE9QX1ZFTkNfTFRfU0VMPjsNCj4gPiA+ID4gKyAg
+ICBhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZ0b3Bja2dlbiBDTEtfVE9QX1ZDT0RFQ1BMTF8z
+NzBQNT47DQo+ID4gPiA+ICAgIH07DQo+ID4gPiA+IC0tDQo+ID4gPiA+IDEuOS4xDQo+IA0KDQo=
 
