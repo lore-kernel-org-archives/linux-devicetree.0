@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FD1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09995C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD910218AC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5A02184D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/CVSkO2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sogBx8KF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgFQW2A (ORCPT
+        id S1726913AbgFQW2H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
+        Wed, 17 Jun 2020 18:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgFQW17 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:27:59 -0400
+        with ESMTP id S1727068AbgFQW2D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:28:03 -0400
 Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D817C06174E;
-        Wed, 17 Jun 2020 15:27:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i27so4808789ljb.12;
-        Wed, 17 Jun 2020 15:27:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CADC06174E;
+        Wed, 17 Jun 2020 15:28:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y11so4847894ljm.9;
+        Wed, 17 Jun 2020 15:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=h/buGMp+Ss9uiUTlhYkjRB/SevbvsV7Suq67TOhl6lM=;
-        b=D/CVSkO2CC++b8uBZgrP1E+qFdW4kJcztCNPpHH9x6AGt9kFw3c7ePV/phmO6Ng6ZB
-         SOztQqoE/nYP7nhphM/Mt7GHf61uh37odiZzuIGY8uwlBYzqZjlMt5XxrcGjMndKN4rK
-         qHPhSrd2y8guyLfFlejAen4aMP75xpwznOcKOZdsEXMK+GtsBkLGCSTKH6Ts+T6xYiKJ
-         DFw/cvwh5lsHR7uNk7jt+ZKNjaHwPR6Pp6+mMxeSvFpW2C2IVh8BOX73d7CussyW7Ufk
-         krsN2+lCDNs06zdNF5YvW4O53FVoAsjG+PHF/pi33iMXUUh/ys1cHePLnlpjE6vhuEem
-         AHAQ==
+        bh=IKFzNibCd7jzC+wKme/62sVxJsUZsrptVvulkctN6fc=;
+        b=sogBx8KF5qXKU6uIzglmpLtOwdnq8arZ4/R7HdxFWl9vEyg25TbvzNbcUG5pA7PTxu
+         +Y21qITF5l2IeoGbX8+uDtgy295BPargj9NdUoojpbkgn1HjN2SCkttS5sEeV73w6saM
+         lQut9MIEPs+qRJyP3MahcOMs7ZdAGaGGGpixTEHQfzJoUjI8IPCu6T/6Apst2DmMOBy/
+         KUO8dzCcRhMPS2jxwmOYrUeLehzEENLkwHe15tzosdjPEL44iaqVVBabhJPAmHrJMz4M
+         83Q694VYVrE3UFGfqvgWshqUx5wEp6r2E6qeGiZ5eA67Iax9eZVlDzkJJ/iD0iL2vq96
+         QKyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=h/buGMp+Ss9uiUTlhYkjRB/SevbvsV7Suq67TOhl6lM=;
-        b=W07HQDrOyuKeDwFylThKNtsJHU9xQLYG5HrNL/QhxljWhK/YMRxn7OhVp5GsKtA/2A
-         KJU3NCdUSrxLuEVgqOnO101wnxedvCL092J8DDf4AEYzp20/Gi3HKoM54PPXre5FJfVQ
-         xNG5ddXM5IbUE16s6nZ0/VjGCyOJF3M3WtaEm4wkD0xc4Hut99fPcS+BMLsk2FqAfmT8
-         URyFWV/cpJVqZ2KANg5HWNTB1H8UvQOTuxMmaeDwX+3CkENwtG6Sg+NZPzd7ncou8ul0
-         DJvpoaJfe2lgg4Gqn+yGlnwt4bkgZ3qhcI5ffoYOLNu/RE/1/8qzuec1zKdnm9SXWMxs
-         gGiA==
-X-Gm-Message-State: AOAM531NAcTN2e4QzhPMVjT27RlitvooDznGvVxajGNZok81+2E/5+Pn
-        ir+vIHdEw8Xm5L6rAdr7T+I=
-X-Google-Smtp-Source: ABdhPJz0MyoPM7RAlYae5zeKJonCtS9xXXa02ONOLAjERMK8yve0QEl8ro8GhLlHMxRQ43L058CrCg==
-X-Received: by 2002:a2e:8994:: with SMTP id c20mr719571lji.378.1592432877594;
-        Wed, 17 Jun 2020 15:27:57 -0700 (PDT)
+        bh=IKFzNibCd7jzC+wKme/62sVxJsUZsrptVvulkctN6fc=;
+        b=Rn7kc1PjAgXC846sVcmyjgVYZF3JR0tJY1gkxFfky6IoYPFa43QSs43JZvq9UzNcG7
+         fp55WhiFP3DsYFo+BZElnL6Z0dH/kaWik2fN/uk5/gKVcOQR7DWyjeB6Jjjwru2hBDyj
+         aKYEQxu5Q5JtnkvdVaVVefclGOVTtf8gzTMQfESeRJDnHRX10Dbkl1/nUsn8YpaflATz
+         lXjTfvpxAZ20hIQEDX6/u+GkkX1uk0TYzfLkLA6DbcpdW8Uvvr/UaRv74yshhpxBJC7a
+         YFhTEyQbifOsfPmhe4EXVUcNeVRLxYBZZLnaGS8pC2ciCPjW6DaYjLAQYexdWIZbhTtr
+         qJJQ==
+X-Gm-Message-State: AOAM533ZIQK2mSLH6Y0z9nDu+LjGIw36+/cOUvzUaozZ34tqnmFsSpK2
+        NjoSJs8F2mPtk8ObX4qBTzY=
+X-Google-Smtp-Source: ABdhPJwcUfeogdH2fdQoZn2uStj+lMY3N6d4lTg2ozcjT5sN41K76ccpr8S5r0ZJF0Z0vAo7B1CP+A==
+X-Received: by 2002:a2e:9810:: with SMTP id a16mr648149ljj.157.1592432881697;
+        Wed, 17 Jun 2020 15:28:01 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id a1sm210378ljk.133.2020.06.17.15.27.56
+        by smtp.gmail.com with ESMTPSA id a1sm210378ljk.133.2020.06.17.15.28.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:27:57 -0700 (PDT)
+        Wed, 17 Jun 2020 15:28:01 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 3/7] drm/tegra: output: Don't leak OF node on error
-Date:   Thu, 18 Jun 2020 01:26:59 +0300
-Message-Id: <20200617222703.17080-4-digetx@gmail.com>
+Subject: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for some panels
+Date:   Thu, 18 Jun 2020 01:27:03 +0300
+Message-Id: <20200617222703.17080-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200617222703.17080-1-digetx@gmail.com>
 References: <20200617222703.17080-1-digetx@gmail.com>
@@ -80,49 +80,94 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The OF node should be put before returning error in tegra_output_probe(),
-otherwise node's refcount will be leaked.
+The DRM panel bridge core requires connector type to be set up properly,
+otherwise it rejects the panel. The missing connector type problem popped
+up while I was trying to wrap CLAA070WP03XG panel into a DRM bridge in
+order to test whether panel's rotation property work properly using
+panel-simple driver on NVIDIA Tegra30 Nexus 7 tablet device, which uses
+CLAA070WP03XG display panel.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+The NVIDIA Tegra DRM driver recently gained DRM bridges support for the
+RGB output and now driver wraps directly-connected panels into DRM bridge.
+Hence all panels should have connector type set properly now, otherwise
+the panel's wrapping fails.
+
+This patch adds missing connector types for the LVDS panels that are found
+on NVIDIA Tegra devices:
+
+  1. AUO B101AW03
+  2. Chunghwa CLAA070WP03XG
+  3. Chunghwa CLAA101WA01A
+  4. Chunghwa CLAA101WB01
+  5. EDT ET057090DHU
+  6. Innolux N156BGE L21
+  7. Samsung LTN101NT05
+
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/output.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index e36e5e7c2f69..a6a711d54e88 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -102,10 +102,10 @@ int tegra_output_probe(struct tegra_output *output)
- 	panel = of_parse_phandle(output->of_node, "nvidia,panel", 0);
- 	if (panel) {
- 		output->panel = of_drm_find_panel(panel);
-+		of_node_put(panel);
-+
- 		if (IS_ERR(output->panel))
- 			return PTR_ERR(output->panel);
--
--		of_node_put(panel);
- 	}
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 6764ac630e22..9eb2dbb7bfa6 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -687,6 +687,7 @@ static const struct panel_desc auo_b101aw03 = {
+ 		.width = 223,
+ 		.height = 125,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
- 	output->edid = of_get_property(output->of_node, "nvidia,edid", &size);
-@@ -113,13 +113,12 @@ int tegra_output_probe(struct tegra_output *output)
- 	ddc = of_parse_phandle(output->of_node, "nvidia,ddc-i2c-bus", 0);
- 	if (ddc) {
- 		output->ddc = of_find_i2c_adapter_by_node(ddc);
-+		of_node_put(ddc);
-+
- 		if (!output->ddc) {
- 			err = -EPROBE_DEFER;
--			of_node_put(ddc);
- 			return err;
- 		}
--
--		of_node_put(ddc);
- 	}
+ static const struct display_timing auo_b101ean01_timing = {
+@@ -1340,6 +1341,7 @@ static const struct panel_desc chunghwa_claa070wp03xg = {
+ 		.width = 94,
+ 		.height = 150,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
- 	output->hpd_gpio = devm_gpiod_get_from_of_node(output->dev,
+ static const struct drm_display_mode chunghwa_claa101wa01a_mode = {
+@@ -1362,6 +1364,7 @@ static const struct panel_desc chunghwa_claa101wa01a = {
+ 		.width = 220,
+ 		.height = 120,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
+ static const struct drm_display_mode chunghwa_claa101wb01_mode = {
+@@ -1384,6 +1387,7 @@ static const struct panel_desc chunghwa_claa101wb01 = {
+ 		.width = 223,
+ 		.height = 125,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
+ static const struct drm_display_mode dataimage_scf0700c48ggu18_mode = {
+@@ -1573,6 +1577,7 @@ static const struct panel_desc edt_et057090dhu = {
+ 	},
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
+ static const struct drm_display_mode edt_etm0700g0dh6_mode = {
+@@ -2055,6 +2060,7 @@ static const struct panel_desc innolux_n156bge_l21 = {
+ 		.width = 344,
+ 		.height = 193,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
+ static const struct drm_display_mode innolux_p120zdg_bf1_mode = {
+@@ -3001,6 +3007,7 @@ static const struct panel_desc samsung_ltn101nt05 = {
+ 		.width = 223,
+ 		.height = 125,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
+ static const struct drm_display_mode samsung_ltn140at29_301_mode = {
 -- 
 2.26.0
 
