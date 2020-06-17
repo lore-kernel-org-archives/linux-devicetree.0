@@ -2,1007 +2,335 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92F1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 23:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B9DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 23:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83FF520734
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 23:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592435611;
-	bh=IwmLR/PMTzw1CuQt2iskzhtqnR57Epby5uhtQow2Log=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FGgJfI40drJuMobcfLVxHi28IWj73jnlleozeHuHlYo+ULHhX8WTwKpXACW7RofZi
-	 NrykZpgI5Mo8ew6Ie+c27o2+uoe990h1Mh7FpTH+fjYBuW0gnNES5oyVjJSfGGhiup
-	 DK2dQWjg5uxXJrPXXapS5wX27QocnJGcaAbJd54k=
+	by mail.kernel.org (Postfix) with ESMTP id DAAC421556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 23:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFQXNb (ORCPT
+        id S1727070AbgFQXkr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 19:13:31 -0400
-Received: from mail-io1-f45.google.com ([209.85.166.45]:36674 "EHLO
-        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgFQXNa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 19:13:30 -0400
-Received: by mail-io1-f45.google.com with SMTP id r77so4967679ior.3;
-        Wed, 17 Jun 2020 16:13:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x1LBJIoVa0S5h0qwSmPnttbs0NV6GKXT+GUjjVEk3Xw=;
-        b=d4BwlcqW5sDwqwLRnz2BQC/P6LZQAiD23WTCSkufc7R+PDthsu2ufE9sXdWs5g3xtG
-         nRD0boInVE00wojHSY1Ee6LmOnPpIS0C6wvaJgvudNGf+px9qB8RHvoVGvajK04jDsG2
-         JFEOtb7nbuCiJagkRbIZnjsJpSd9UhUFpAN8ZNaYWneN4EIWKkMKNh/AqmWmwPQ74Nkl
-         zM9nPRMDvO88zXx+A/izoayFrZkIkyw+Oa7pR9JAW8C9hNltKnps3PHs7L2GpMBE/P3N
-         ZTBUnRSGdoQD30DH+NP0M9zESPgLkMn17tiwmejBuZZRNR1rpJUlM2Hvc2vwJUCFzeog
-         dj+A==
-X-Gm-Message-State: AOAM531Zh9gMxC/4mtuM2pxCyEQSytXJg6IsnP8pNgAISVAY+NZXU5Ak
-        AXjlUOIGIDX+CH4aEEQF9l6W+zb1EA==
-X-Google-Smtp-Source: ABdhPJyBpTKw2ZGAsVdITShf36ad+U8flcQ/jSYCEb6xnOSw9BtBdIar5At3cu6u2yEgnj9NSs857g==
-X-Received: by 2002:a6b:1448:: with SMTP id 69mr1911127iou.83.1592435607408;
-        Wed, 17 Jun 2020 16:13:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id x12sm563430ilm.48.2020.06.17.16.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 16:13:26 -0700 (PDT)
-Received: (nullmailer pid 3021530 invoked by uid 1000);
-        Wed, 17 Jun 2020 23:13:26 -0000
-Date:   Wed, 17 Jun 2020 17:13:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 07/38] dt-bindings: display: tegra: Convert to json-schema
-Message-ID: <20200617231326.GD2975260@bogus>
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-8-thierry.reding@gmail.com>
+        Wed, 17 Jun 2020 19:40:47 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57762 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgFQXkq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 19:40:46 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 403C78030868;
+        Wed, 17 Jun 2020 23:40:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SBYTaD4tSKiH; Thu, 18 Jun 2020 02:40:37 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 1/9] dt-bindings: dma: dw: Convert DW DMAC to DT binding
+Date:   Thu, 18 Jun 2020 02:40:20 +0300
+Message-ID: <20200617234028.25808-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612141903.2391044-8-thierry.reding@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 04:18:32PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Convert the Tegra host1x controller bindings from the free-form text
-> format to json-schema.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  .../display/tegra/nvidia,tegra20-host1x.txt   |  516 ------
->  .../display/tegra/nvidia,tegra20-host1x.yaml  | 1418 +++++++++++++++++
->  2 files changed, 1418 insertions(+), 516 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->  create mode 100644 Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
+Modern device tree bindings are supposed to be created as YAML-files
+in accordance with dt-schema. This commit replaces the Synopsis
+Designware DMA controller legacy bare text bindings with YAML file.
+The only required prorties are "compatible", "reg", "#dma-cells" and
+"interrupts", which will be used by the driver to correctly find the
+controller memory region and handle its events. The rest of the properties
+are optional, since in case if either "dma-channels" or "dma-masters" isn't
+specified, the driver will attempt to auto-detect the IP core
+configuration.
 
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mips@vger.kernel.org
 
-> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
-> new file mode 100644
-> index 000000000000..3347e1b3c8f0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.yaml
-> @@ -0,0 +1,1418 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/tegra/nvidia,tegra20-host1x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NVIDIA Tegra host1x controller
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +
-> +description: The host1x top-level node defines a number of children, each
-> +  representing one of the host1x client modules defined in this binding.
-> +
-> +properties:
-> +  # required
-> +  compatible:
-> +    oneOf:
-> +      - description: NVIDIA Tegra20
-> +        items:
-> +          - const: nvidia,tegra20-host1x
-> +
-> +      - description: NVIDIA Tegra30
-> +        items:
-> +          - const: nvidia,tegra30-host1x
-> +
-> +      - description: NVIDIA Tegra114
-> +        items:
-> +          - const: nvidia,tegra114-host1x
-> +
-> +      - description: NVIDIA Tegra124
-> +        items:
-> +          - const: nvidia,tegra124-host1x
-> +
-> +      - description: NVIDIA Tegra132
-> +        items:
-> +          - const: nvidia,tegra132-host1x
-> +          - const: nvidia,tegra124-host1x
-> +
-> +      - description: NVIDIA Tegra210
-> +        items:
-> +          - const: nvidia,tegra210-host1x
-> +
-> +      - description: NVIDIA Tegra186
-> +        items:
-> +          - const: nvidia,tegra186-host1x
-> +
-> +      - description: NVIDIA Tegra194
-> +        items:
-> +          - const: nvidia,tegra194-host1x
+---
 
-I don't think the descriptions really add much. I'd rather see all the 
-single entry cases as 1 'enum'.
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do do with the
+  constraints.
+- Discard default settings defined out of the property enum constraint.
+- Replace "additionalProperties: false" with "unevaluatedProperties: false"
+  property.
+- Remove a label definition from the binding example.
+---
+ .../bindings/dma/snps,dma-spear1340.yaml      | 161 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 --------
+ 2 files changed, 161 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
 
-> +
-> +  interrupts:
-> +    items:
-> +      - description: host1x syncpoint interrupt
-> +      - description: host1x general interrupt
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: syncpt
-> +      - const: host1x
-> +
-> +  '#address-cells':
-> +    description: The number of cells used to represent physical base addresses
-> +      in the host1x address space.
-> +    enum: [1, 2]
-> +
-> +  '#size-cells':
-> +    description: The number of cells used to represent the size of an address
-> +      range in the host1x address space.
-> +    enum: [1, 2]
-> +
-> +  # required
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+new file mode 100644
+index 000000000000..e7611840a7cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -0,0 +1,161 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/snps,dma-spear1340.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys Designware DMA Controller
++
++maintainers:
++  - Viresh Kumar <vireshk@kernel.org>
++  - Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    const: snps,dma-spear1340
++
++  "#dma-cells":
++    const: 3
++    description: |
++      First cell is a phandle pointing to the DMA controller. Second one is
++      the DMA request line number. Third cell is the memory master identifier
++      for transfers on dynamically allocated channel. Fourth cell is the
++      peripheral master identifier for transfers on an allocated channel.
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    description: AHB interface reference clock.
++    const: hclk
++
++  dma-channels:
++    description: |
++      Number of DMA channels supported by the controller. In case if
++      not specified the driver will try to auto-detect this and
++      the rest of the optional parameters.
++    minimum: 1
++    maximum: 8
++
++  dma-requests:
++    minimum: 1
++    maximum: 16
++
++  dma-masters:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      Number of DMA masters supported by the controller. In case if
++      not specified the driver will try to auto-detect this and
++      the rest of the optional parameters.
++    minimum: 1
++    maximum: 4
++
++  chan_allocation_order:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      DMA channels allocation order specifier. Zero means ascending order
++      (first free allocated), while one - descending (last free allocated).
++    default: 0
++    enum: [0, 1]
++
++  chan_priority:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      DMA channels priority order. Zero means ascending channels priority
++      so the very first channel has the highest priority. While 1 means
++      descending priority (the last channel has the highest priority).
++    default: 0
++    enum: [0, 1]
++
++  block_size:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: Maximum block size supported by the DMA controller.
++    enum: [3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095]
++
++  data-width:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: Data bus width per each DMA master in bytes.
++    items:
++      maxItems: 4
++      items:
++        enum: [4, 8, 16, 32]
++
++  data_width:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    deprecated: true
++    description: |
++      Data bus width per each DMA master in (2^n * 8) bits. This property is
++      deprecated. It' usage is discouraged in favor of data-width one. Moreover
++      the property incorrectly permits to define data-bus width of 8 and 16
++      bits, which is impossible in accordance with DW DMAC IP-core data book.
++    items:
++      maxItems: 4
++      items:
++        enum:
++          - 0 # 8 bits
++          - 1 # 16 bits
++          - 2 # 32 bits
++          - 3 # 64 bits
++          - 4 # 128 bits
++          - 5 # 256 bits
++        default: 0
++
++  multi-block:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      LLP-based multi-block transfer supported by hardware per
++      each DMA channel.
++    items:
++      maxItems: 8
++      items:
++        enum: [0, 1]
++        default: 1
++
++  snps,dma-protection-control:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++      Bits one-to-one passed to the AHB HPROT[3:1] bus. Each bit setting
++      indicates the following features: bit 0 - privileged mode,
++      bit 1 - DMA is bufferable, bit 2 - DMA is cacheable.
++    default: 0
++    minimum: 0
++    maximum: 7
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - "#dma-cells"
++  - reg
++  - interrupts
++
++examples:
++  - |
++    dma-controller@fc000000 {
++      compatible = "snps,dma-spear1340";
++      reg = <0xfc000000 0x1000>;
++      interrupt-parent = <&vic1>;
++      interrupts = <12>;
++
++      dma-channels = <8>;
++      dma-requests = <16>;
++      dma-masters = <4>;
++      #dma-cells = <3>;
++
++      chan_allocation_order = <1>;
++      chan_priority = <1>;
++      block_size = <0xfff>;
++      data-width = <8 8>;
++      multi-block = <0 0 0 0 0 0 0 0>;
++      snps,max-burst-len = <16 16 4 4 4 4 4 4>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+deleted file mode 100644
+index 0bedceed1963..000000000000
+--- a/Documentation/devicetree/bindings/dma/snps-dma.txt
++++ /dev/null
+@@ -1,69 +0,0 @@
+-* Synopsys Designware DMA Controller
+-
+-Required properties:
+-- compatible: "snps,dma-spear1340"
+-- reg: Address range of the DMAC registers
+-- interrupt: Should contain the DMAC interrupt number
+-- dma-channels: Number of channels supported by hardware
+-- dma-requests: Number of DMA request lines supported, up to 16
+-- dma-masters: Number of AHB masters supported by the controller
+-- #dma-cells: must be <3>
+-- chan_allocation_order: order of allocation of channel, 0 (default): ascending,
+-  1: descending
+-- chan_priority: priority of channels. 0 (default): increase from chan 0->n, 1:
+-  increase from chan n->0
+-- block_size: Maximum block size supported by the controller
+-- data-width: Maximum data width supported by hardware per AHB master
+-  (in bytes, power of 2)
+-
+-
+-Deprecated properties:
+-- data_width: Maximum data width supported by hardware per AHB master
+-  (0 - 8bits, 1 - 16bits, ..., 5 - 256bits)
+-
+-
+-Optional properties:
+-- multi-block: Multi block transfers supported by hardware. Array property with
+-  one cell per channel. 0: not supported, 1 (default): supported.
+-- snps,dma-protection-control: AHB HPROT[3:1] protection setting.
+-  The default value is 0 (for non-cacheable, non-buffered,
+-  unprivileged data access).
+-  Refer to include/dt-bindings/dma/dw-dmac.h for possible values.
+-
+-Example:
+-
+-	dmahost: dma@fc000000 {
+-		compatible = "snps,dma-spear1340";
+-		reg = <0xfc000000 0x1000>;
+-		interrupt-parent = <&vic1>;
+-		interrupts = <12>;
+-
+-		dma-channels = <8>;
+-		dma-requests = <16>;
+-		dma-masters = <2>;
+-		#dma-cells = <3>;
+-		chan_allocation_order = <1>;
+-		chan_priority = <1>;
+-		block_size = <0xfff>;
+-		data-width = <8 8>;
+-	};
+-
+-DMA clients connected to the Designware DMA controller must use the format
+-described in the dma.txt file, using a four-cell specifier for each channel.
+-The four cells in order are:
+-
+-1. A phandle pointing to the DMA controller
+-2. The DMA request line number
+-3. Memory master for transfers on allocated channel
+-4. Peripheral master for transfers on allocated channel
+-
+-Example:
+-	
+-	serial@e0000000 {
+-		compatible = "arm,pl011", "arm,primecell";
+-		reg = <0xe0000000 0x1000>;
+-		interrupts = <0 35 0x4>;
+-		dmas = <&dmahost 12 0 1>,
+-			<&dmahost 13 1 0>;
+-		dma-names = "rx", "rx";
+-	};
+-- 
+2.26.2
 
-Odd comment...
-
-> +  ranges:
-> +    description: The mapping of the host1x address space to the CPU address
-> +      space.
-
-That's every 'ranges'. If you know how many entries, then define 
-'maxItems'. If not, 'ranges: true' is enough.
-
-> +
-> +  clocks:
-> +    description: Must contain one entry, for the module clock. See
-> +      ../clocks/clock-bindings.txt for details.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: host1x
-> +
-> +  resets:
-> +    description: Must contain an entry for each entry in reset-names. See
-> +      ../reset/reset.txt for details.
-> +
-> +  reset-names:
-> +    items:
-> +      - const: host1x
-> +
-> +  # optional
-> +  iommus:
-> +    $ref: "/schemas/iommu/iommu.yaml#/properties/iommus"
-
-This is already applied to every 'iommus' property, so you just need to 
-define how many entries.
-
-> +
-> +  memory-controllers:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - interrupt-names
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - ranges
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +
-> +unevaluatedProperties: false
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra186-host1x
-> +              - nvidia,tegra194-host1x
-> +    then:
-> +      properties:
-> +        reg-names:
-> +          items:
-> +            - const: hypervisor
-> +            - const: vm
-> +
-> +        reg:
-> +          items:
-> +            - description: physical base address and length of the register
-> +                region assigned to the VM
-> +            - description: physical base address and length of the register
-> +                region used by the hypervisor
-> +
-> +      required:
-> +        - reg-names
-> +    else:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            oneOf:
-> +              - const: nvidia,tegra20-host1x
-> +              - const: nvidia,tegra30-host1x
-> +              - const: nvidia,tegra114-host1x
-> +              - const: nvidia,tegra124-host1x
-
-Use 'enum'.
-
-> +
-> +    then:
-> +      patternProperties:
-> +        "^vi@[0-9a-f]+$":
-> +          description: video input
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              oneOf:
-> +                - const: nvidia,tegra20-vi
-> +                - const: nvidia,tegra30-vi
-> +                - const: nvidia,tegra114-vi
-> +                - const: nvidia,tegra124-vi
-
-Use a 'enum' for these 4.
-
-> +                - items:
-> +                    - const: nvidia,tegra132-vi
-> +                    - const: nvidia,tegra124-vi
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              maxItems: 1
-> +
-> +            resets: true
-> +
-> +            reset-names:
-> +              items:
-> +                - const: vi
-> +    else:
-> +      patternProperties:
-> +        "^vi@[0-9a-f]+$":
-> +          description: video input
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              oneOf:
-> +                - const: nvidia,tegra210-vi
-> +                - const: nvidia,tegra186-vi
-> +                - const: nvidia,tegra194-vi
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              maxItems: 1
-> +
-> +            power-domains: true
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            oneOf:
-> +              - const: nvidia,tegra210-host1x
-> +    then:
-> +      patternProperties:
-> +        "^vi@[0-9a-f]+$":
-
-type: object
-
-> +          patternProperties:
-> +            "^csi@[0-9a-f]+$":
-> +              description: camera sensor interface
-> +              type: object
-> +              properties:
-> +                compatible:
-> +                  enum:
-> +                    - nvidia,tegra210-csi
-> +
-> +                reg: true
-> +
-> +                clocks: true
-> +
-> +                clock-names:
-> +                  items:
-> +                    - const: csi
-> +                    - const: cilab
-> +                    - const: cilcd
-> +                    - const: cile
-> +                    - const: csi_tpg
-> +
-> +                power-domains: true
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra20-host1x
-> +              - nvidia,tegra30-host1x
-> +              - nvidia,tegra114-host1x
-> +    then:
-> +      patternProperties:
-> +        "^epp@[0-9a-f]+$":
-> +          description: encoder pre-processor
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - nvidia,tegra20-epp
-> +                - nvidia,tegra30-epp
-> +                - nvidia,tegra114-epp
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              maxItems: 1
-> +
-> +            resets:
-> +              items:
-> +                - description: module reset
-> +
-> +            reset-names:
-> +              items:
-> +                - const: epp
-> +
-> +            iommus:
-> +              $ref: "/schemas/iommu/iommu.yaml#/properties/iommus"
-> +
-> +          unevaluatedProperties: false
-
-I think 'additionalProperties: false' will work here.
-
-> +
-> +        "^mpe@[0-9a-f]+$":
-> +          description: video encoder
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - nvidia,tegra20-mpe
-> +                - nvidia,tegra30-mpe
-> +                - nvidia,tegra114-mpe
-> +
-> +            reg:
-> +              minItems: 1
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              minItems: 1
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              minItems: 1
-> +              maxItems: 1
-> +
-> +            resets:
-> +              minItems: 1
-> +              maxItems: 1
-> +
-> +            reset-names:
-> +              items:
-> +                - const: mpe
-> +
-> +            iommus:
-> +              $ref: "/schemas/iommu/iommu.yaml#/properties/iommus"
-> +
-> +          unevaluatedProperties: false
-> +
-> +        "^gr2d@[0-9a-f]+$":
-> +          description: 2D graphics engine
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - nvidia,tegra20-gr2d
-> +                - nvidia,tegra30-gr2d
-> +                - nvidia,tegra114-gr2d
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              maxItems: 1
-> +
-> +            resets:
-> +              items:
-> +                - description: module reset
-> +
-> +            reset-names:
-> +              items:
-> +                - const: 2d
-> +
-> +            iommus:
-> +              $ref: "/schemas/iommu/iommu.yaml#/properties/iommus"
-> +
-> +          unevaluatedProperties: false
-> +
-> +        "^gr3d@[0-9a-f]+$":
-> +          description: 3D graphics engine
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - nvidia,tegra20-gr3d
-> +                - nvidia,tegra30-gr3d
-> +                - nvidia,tegra114-gr3d
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            iommus:
-> +              $ref: "/schemas/iommu/iommu.yaml#/properties/iommus"
-> +
-> +          allOf:
-> +            - if:
-> +                properties:
-> +                  compatible:
-> +                    contains:
-> +                      const: nvidia,tegra30-gr3d
-> +              then:
-> +                properties:
-> +                  clocks:
-> +                    items:
-> +                      - description: primary module clock
-> +                      - description: secondary module clock
-> +
-> +                  clock-names:
-> +                    items:
-> +                      - const: 3d
-> +                      - const: 3d2
-> +
-> +                  resets:
-> +                    items:
-> +                      - description: primary module reset
-> +                      - description: secondary module reset
-> +
-> +                  reset-names:
-> +                    items:
-> +                      - const: 3d
-> +                      - const: 3d2
-> +              else:
-> +                properties:
-> +                  clocks:
-> +                    items:
-> +                      - description: module clock
-> +
-> +                  clock-names:
-> +                    items:
-> +                      - const: 3d
-> +
-> +                  resets:
-> +                    items:
-> +                      - description: module reset
-> +
-> +                  reset-names:
-> +                    items:
-> +                      - const: 3d
-> +
-> +          unevaluatedProperties: false
-> +
-> +        "^tvo@[0-9a-f]+$":
-> +          description: TV encoder output
-> +          type: object
-> +          properties:
-> +            # required
-> +            compatible:
-> +              enum:
-> +                - nvidia,tegra20-tvo
-> +                - nvidia,tegra30-tvo
-> +                - nvidia,tegra114-tvo
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              maxItems: 1
-> +
-> +            status:
-> +              $ref: "/schemas/dt-core.yaml#/properties/status"
-> +
-> +          unevaluatedProperties: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra20-host1x
-> +              - nvidia,tegra30-host1x
-> +              - nvidia,tegra114-host1x
-> +              - nvidia,tegra124-host1x
-> +              - nvidia,tegra132-host1x
-> +              - nvidia,tegra210-host1x
-> +    then:
-> +      patternProperties:
-> +        "^dc@[0-9a-f]+$":
-> +          description: display controller
-> +          type: object
-> +          properties:
-> +            compatible:
-> +              oneOf:
-> +                - const: nvidia,tegra20-dc
-> +                - const: nvidia,tegra30-dc
-> +                - const: nvidia,tegra114-dc
-> +                - const: nvidia,tegra124-dc
-> +                - items:
-> +                    - const: nvidia,tegra124-dc
-> +                    - const: nvidia,tegra132-dc
-> +                - const: nvidia,tegra210-dc
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              items:
-> +                - description: display controller pixel clock
-> +
-> +            clock-names:
-> +              items:
-> +                - const: dc
-> +
-> +            resets:
-> +              items:
-> +                - description: module reset
-> +
-> +            reset-names:
-> +              items:
-> +                - const: dc
-> +
-> +            iommus:
-> +              $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +            nvidia,head:
-> +              description: The number of the display controller head. This is
-> +                used to setup the various types of output to receive video
-> +                data from the given head.
-> +              $ref: "/schemas/types.yaml#/definitions/uint32"
-> +
-> +          allOf:
-> +            - if:
-> +                properties:
-> +                  compatible:
-> +                    contains:
-> +                      enum:
-> +                        - nvidia,tegra20-dc
-> +                        - nvidia,tegra30-dc
-> +                        - nvidia,tegra114-dc
-> +              then:
-> +                properties:
-> +                  rgb:
-> +                    description: Each display controller node has a child node,
-> +                      named "rgb", that represents the RGB output associated
-> +                      with the controller.
-> +                    type: object
-> +                    properties:
-> +                      nvidia,ddc-i2c-bus:
-> +                        description: phandle of an I2C controller used for DDC
-> +                          EDID probing
-> +                        $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +                      nvidia,hpd-gpio:
-> +                        description: specifies a GPIO used for hotplug
-> +                          detection
-> +                        $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +                      nvidia,edid:
-> +                        description: supplies a binary EDID blob
-> +                        $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +
-> +                      nvidia,panel:
-> +                        description: phandle of a display panel
-> +                        $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +          unevaluatedProperties: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra186-host1x
-> +              - nvidia,tegra194-host1x
-> +    then:
-> +      patternProperties:
-> +        "^display-hub@[0-9a-f]+$":
-> +          properties:
-> +            compatible:
-> +              oneOf:
-> +                - description: NVIDIA Tegra186
-> +                  const: nvidia,tegra186-display
-> +
-> +                - description: NVIDIA Tegra194
-> +                  const: nvidia,tegra194-display
-> +
-> +            '#address-cells':
-> +              const: 1
-> +
-> +            '#size-cells':
-> +              const: 1
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            ranges:
-> +              $ref: "/schemas/dt-core.yaml#/properties/ranges"
-> +
-> +            status:
-> +              $ref: "/schemas/dt-core.yaml#/properties/status"
-> +
-> +            resets:
-> +              items:
-> +                - description: display hub reset
-> +                - description: window group 0 reset
-> +                - description: window group 1 reset
-> +                - description: window group 2 reset
-> +                - description: window group 3 reset
-> +                - description: window group 4 reset
-> +                - description: window group 5 reset
-> +
-> +            reset-names:
-> +              items:
-> +                - const: misc
-> +                - const: wgrp0
-> +                - const: wgrp1
-> +                - const: wgrp2
-> +                - const: wgrp3
-> +                - const: wgrp4
-> +                - const: wgrp5
-> +
-> +            power-domains:
-> +              $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +          patternProperties:
-> +            "^display@[0-9a-f]+$":
-> +              description: display controller
-> +              type: object
-> +              properties:
-> +                compatible:
-> +                  enum:
-> +                    - nvidia,tegra186-dc
-> +                    - nvidia,tegra194-dc
-> +
-> +                reg:
-> +                  maxItems: 1
-> +
-> +                interrupts:
-> +                  maxItems: 1
-> +
-> +                clocks:
-> +                  items:
-> +                    - description: display controller pixel clock
-> +
-> +                clock-names:
-> +                  items:
-> +                    - const: dc
-> +
-> +                resets:
-> +                  items:
-> +                    - description: display controller reset
-> +
-> +                reset-names:
-> +                  items:
-> +                    - const: dc
-> +
-> +                power-domains:
-> +                  description: A list of phandle and specifiers that identify
-> +                    the power domains that this display controller is part of.
-> +                  $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +                iommus:
-> +                  description: a phandle and specifier identifying the SMMU
-> +                    master interface of this display controller.
-> +                  $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +                memory-controllers:
-> +                  $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +                nvidia,outputs:
-> +                  description: A list of phandles of outputs that this display
-> +                    controller can drive.
-> +                  $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +                nvidia,head:
-> +                  description: The number of the display controller head. This
-> +                    is used to setup the various types of output to receive
-> +                    video data from the given head.
-> +                  $ref: "/schemas/types.yaml#/definitions/uint32"
-> +
-> +              unevaluatedProperties: false
-> +
-> +          allOf:
-> +            - if:
-> +                properties:
-> +                  compatible:
-> +                    contains:
-> +                      const: nvidia,tegra186-display
-> +              then:
-> +                properties:
-> +                  clocks:
-> +                    items:
-> +                      - description: display core clock
-> +                      - description: display stream compression clock
-> +                      - description: display hub clock
-> +
-> +                  clock-names:
-> +                    items:
-> +                      - const: disp
-> +                      - const: dsc
-> +                      - const: hub
-> +              else:
-> +                properties:
-> +                  clocks:
-> +                    items:
-> +                      - description: display core clock
-> +                      - description: display hub clock
-> +
-> +                  clock-names:
-> +                    items:
-> +                      - const: disp
-> +                      - const: hub
-> +
-> +          unevaluatedProperties: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra20-host1x
-> +              - nvidia,tegra30-host1x
-> +              - nvidia,tegra114-host1x
-> +              - nvidia,tegra124-host1x
-> +    then:
-> +      patternProperties:
-> +        "^hdmi@[0-9a-f]+$":
-> +          description: High Definition Multimedia Interface
-> +          type: object
-> +          properties:
-> +            # required
-> +            compatible:
-> +              oneOf:
-> +                - const: nvidia,tegra20-hdmi
-> +                - const: nvidia,tegra30-hdmi
-> +                - const: nvidia,tegra114-hdmi
-> +                - const: nvidia,tegra124-hdmi
-> +                - items:
-> +                    - const: nvidia,tegra132-hdmi
-> +                    - const: nvidia,tegra124-hdmi
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            clocks:
-> +              items:
-> +                - description: module clock
-> +                - description: parent clock
-> +
-> +            clock-names:
-> +              items:
-> +                - const: hdmi
-> +                - const: parent
-> +
-> +            resets:
-> +              items:
-> +                - description: module reset
-> +
-> +            reset-names:
-> +              items:
-> +                - const: hdmi
-> +
-> +            hdmi-supply:
-> +              description: supply for the +5V HDMI connector pin
-> +
-> +            vdd-supply:
-> +              description: regulator for supply voltage
-> +
-> +            pll-supply:
-> +              description: regulator for PLL
-> +
-> +            # optional
-> +            nvidia,ddc-i2c-bus:
-> +              description: phandle of an I2C controller used for DDC EDID
-> +                probing
-> +              $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +            nvidia,hpd-gpio:
-> +              description: specifies a GPIO used for hotplug detection
-> +              $ref: "/schemas/types.yaml#/definitions/phandle-array"
-
-*-gpio has a type already. Just 'maxItems: 1' needed.
-
-> +
-> +            nvidia,edid:
-> +              description: supplies a binary EDID blob
-> +              $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +
-> +            nvidia,panel:
-> +              description: phandle of a display panel
-> +              $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +            status:
-> +              $ref: "/schemas/dt-core.yaml#/properties/status"
-> +
-> +            phandle:
-> +              $ref: "/schemas/types.yaml#/definitions/uint32"
-> +
-> +          unevaluatedProperties: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra124-host1x
-> +              - nvidia,tegra210-host1x
-> +              - nvidia,tegra186-host1x
-> +              - nvidia,tegra194-host1x
-> +    then:
-> +      patternProperties:
-> +        "^sor@[0-9a-f]+$":
-> +          description: |
-> +            The Serial Output Resource (SOR) can be used to drive HDMI, LVDS,
-> +            eDP and DP outputs.
-> +
-> +            See ../pinctrl/nvidia,tegra124-dpaux-padctl.txt for information
-> +            regarding the DPAUX pad controller bindings.
-> +          type: object
-> +          properties:
-> +            # required
-> +            compatible:
-> +              oneOf:
-> +                - const: nvidia,tegra124-sor
-> +                - items:
-> +                    - const: nvidia,tegra132-sor
-> +                    - const: nvidia,tegra124-sor
-> +                - const: nvidia,tegra210-sor
-> +                - const: nvidia,tegra210-sor1
-> +                - const: nvidia,tegra186-sor
-> +                - const: nvidia,tegra186-sor1
-> +                - const: nvidia,tegra194-sor
-> +
-> +            reg:
-> +              maxItems: 1
-> +
-> +            interrupts:
-> +              maxItems: 1
-> +
-> +            resets:
-> +              items:
-> +                - description: module reset
-> +
-> +            reset-names:
-> +              items:
-> +                - const: sor
-> +
-> +            status:
-> +              $ref: "/schemas/dt-core.yaml#/properties/status"
-
-'status' should never need to be listed.
-
-> +
-> +            power-domains:
-> +              $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +            avdd-io-hdmi-dp-supply:
-> +              description: I/O supply for HDMI/DP
-> +
-> +            vdd-hdmi-dp-pll-supply:
-> +              description: PLL supply for HDMI/DP
-> +
-> +            hdmi-supply:
-> +              description: +5.0V HDMI connector supply
-> +
-> +            # Tegra186 and later
-> +            nvidia,interface:
-> +              description: index of the SOR interface
-> +              $ref: "/schemas/types.yaml#/definitions/uint32"
-> +
-> +            # optional
-> +            nvidia,ddc-i2c-bus:
-> +              description: phandle of an I2C controller used for DDC EDID
-> +                probing
-> +              $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +            nvidia,hpd-gpio:
-> +              description: specifies a GPIO used for hotplug detection
-> +              $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +
-> +            nvidia,edid:
-> +              description: supplies a binary EDID blob
-> +              $ref: "/schemas/types.yaml#/definitions/uint8-array"
-> +
-> +            nvidia,panel:
-> +              description: phandle of a display panel
-> +              $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +            nvidia,xbar-cfg:
-> +              description: 5 cells containing the crossbar configuration.
-> +                Each lane of the SOR, identified by the cell's index, is
-> +                mapped via the crossbar to the pad specified by the cell's
-> +                value.
-> +              $ref: "/schemas/types.yaml#/definitions/uint32-array"
-> +
-> +            # optional when driving an eDP output
-> +            nvidia,dpaux:
-> +              description: phandle to a DispayPort AUX interface
-> +              $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +            pinctrl-names: true
-> +            phandle:
-> +              $ref: "/schemas/types.yaml#/definitions/uint32"
-
-'phandle' shouldn't need to be listed.
-
-> +
-> +          patternProperties:
-> +            "^pinctrl-[0-9]+$": true
-
-pinctrl properties are automatically added, but maybe not if under an 
-'if' schema. Really, I think probably either this should be split 
-into multiple schema files or all of these child nodes should be 
-described at the top-level. I'm not sure it's really important to define 
-which set of child nodes belong or not for each chip.
-
-I'm stopping there. I think the rest is more of the same comments.
-
-Rob
