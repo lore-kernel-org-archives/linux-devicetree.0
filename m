@@ -2,73 +2,40 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAD6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BBCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9817720C09
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TKxqhw0J"
+	by mail.kernel.org (Postfix) with ESMTP id DECC320786
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgFQIlq (ORCPT
+        id S1726044AbgFQIqC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgFQIlo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 04:41:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70140C061573
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 01:41:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l11so1425133wru.0
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 01:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZMa6DET1qb3XpdgoNbeTgpSZ2dO/+nB5dNSP35ZNe0=;
-        b=TKxqhw0Jcu71I/x6Ep+yjYVaT07kQc900R6ef8apklQGlr/MjfDbo04wbE9kuS9Cs8
-         57EVYUFjBEMJs+BftJD3oD4bxmDMsrh5gyA1oVaDpGOuqQYutoBDtVd98ZmIZrl8KLVS
-         z2/nJ5Kxyz7UD3mz0+jGd3YNysk/lab3vq0tzi8GUmPCd6ZGcKjb/jyD3mHkprZZQd8l
-         /xuKRurE3oGyxNB4dVClC0QgyePKySvFsF1NJwl0U5E/XNJyNnyiowKWt8Knn0umPoFp
-         2Ib+0mEMgD8zSIQ/JWysGmWy9RncnoFwhJdvF79XKpEme2JIDlAn5mgjS0hpx5E+AIfg
-         Opgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZMa6DET1qb3XpdgoNbeTgpSZ2dO/+nB5dNSP35ZNe0=;
-        b=OrMIipjMx+D7qPs1cYAtd1UwoHqlQtWmD5qDZxuMQbtr6CQ/ntCqbuCTDmEsrlcZm1
-         btDH3bKNBRQVykqb/1hs+5hKEsdkcR4YbdM0cZoUcrhwF5HNLDjRUKPNrRu2Y9uIgoY3
-         3KySn5/FeYyb/87YzaB9j+QBXS5B1N0swfmYaLnIrADSlcI1TqPk6BnLlC58JCmYUpgd
-         H8uAMyInf5ECedHJPPe4S0k2nPS9n6e9N72LuXtlxFkreUVpmhHDBnPKRxMnm5Bv41EQ
-         xamg/5Q3zJBxkoAy/2ddRcMHJ7DNsZ87qpTy6vKuu5rgwCsp/VwBNA2DXkknY7xcMQRP
-         dPEA==
-X-Gm-Message-State: AOAM530Z3Kv7bx3pVWNctHdrm4DzDrCQ7RsE9mTmDeNevzTwO3wealBU
-        7eBBo4nrZ3C2/yTZS/pYzLEXVBMtiuI=
-X-Google-Smtp-Source: ABdhPJyDYeOK6KU2e/POLcV+YDEeExmRMQdYE6NEwAD8K3mAvZyIodfGhIDKQqOIPcb+xqzcx+am9w==
-X-Received: by 2002:adf:9ccf:: with SMTP id h15mr7360121wre.275.1592383303080;
-        Wed, 17 Jun 2020 01:41:43 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.65])
-        by smtp.gmail.com with ESMTPSA id k14sm31635998wrq.97.2020.06.17.01.41.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 01:41:42 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 1/1] mfd: Add I2C based System Configuaration (SYSCON) access
-Date:   Wed, 17 Jun 2020 09:41:32 +0100
-Message-Id: <20200617084132.704549-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 17 Jun 2020 04:46:02 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43218 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgFQIqC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:46:02 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jlThn-00062C-UK; Wed, 17 Jun 2020 10:45:59 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: rename label and nodename pinctrl subnodes that end with gpio
+Date:   Wed, 17 Jun 2020 10:45:58 +0200
+Message-Id: <159238352489.1408655.17289334888304699451.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200524160636.16547-1-jbx6244@gmail.com>
+References: <20200524160636.16547-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,184 +43,24 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The existing SYSCON implementation only supports MMIO (memory mapped)
-accesses, facilitated by Regmap.  This extends support for registers
-held behind I2C busses.
+On Sun, 24 May 2020 18:06:35 +0200, Johan Jonker wrote:
+> A test with the command below gives for example this error:
+> 
+> arch/arm/boot/dts/rk3288-tinker.dt.yaml: tsadc: otp-gpio:
+> {'phandle': [[54]], 'rockchip,pins': [[0, 10, 0, 118]]}
+> is not of type 'array'
+> 
+> 'gpio' is a sort of reserved nodename and should not be used
+> for pinctrl in combination with 'rockchip,pins', so change
+> nodes that end with 'gpio' to end with 'pin' or 'pins'.
+> 
+> [...]
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
-Change log:
+Applied, thanks!
 
-v1 => v2
-  - Remove legacy references to OF
-  - Allow building as a module (fixes h8300 0-day issue)
+[1/2] ARM: dts: rockchip: rename label and nodename pinctrl subnodes that end with gpio
+      commit: fff987e7328951f7d6fb2d0545de8635ceafa89f
 
- drivers/mfd/Kconfig            |  7 +++
- drivers/mfd/Makefile           |  1 +
- drivers/mfd/syscon-i2c.c       | 90 ++++++++++++++++++++++++++++++++++
- include/linux/mfd/syscon-i2c.h | 26 ++++++++++
- 4 files changed, 124 insertions(+)
- create mode 100644 drivers/mfd/syscon-i2c.c
- create mode 100644 include/linux/mfd/syscon-i2c.h
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0a59249198d34..f25f80f68edca 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1300,6 +1300,13 @@ config MFD_SYSCON
- 	  Select this option to enable accessing system control registers
- 	  via regmap.
- 
-+config MFD_SYSCON_I2C
-+	tristate "System Controller Register R/W Based on I2C Regmap"
-+	select REGMAP_I2C
-+	help
-+	  Select this option to enable accessing system control registers
-+	  via I2C using regmap.
-+
- config MFD_DAVINCI_VOICECODEC
- 	tristate
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10cbf0fc..0aec1f42ac979 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -219,6 +219,7 @@ obj-$(CONFIG_MFD_RK808)		+= rk808.o
- obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
- obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-+obj-$(CONFIG_MFD_SYSCON_I2C)	+= syscon-i2c.o
- obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
- obj-$(CONFIG_MFD_VEXPRESS_SYSREG)	+= vexpress-sysreg.o
- obj-$(CONFIG_MFD_RETU)		+= retu-mfd.o
-diff --git a/drivers/mfd/syscon-i2c.c b/drivers/mfd/syscon-i2c.c
-new file mode 100644
-index 0000000000000..be20ff45ece07
---- /dev/null
-+++ b/drivers/mfd/syscon-i2c.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * System Control Driver accessed over I2C
-+ *
-+ * Copyright (C) 2020 Linaro Ltd.
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/list.h>
-+#include <linux/mfd/syscon-i2c.h>
-+#include <linux/regmap.h>
-+
-+static DEFINE_SPINLOCK(syscon_i2c_list_slock);
-+static LIST_HEAD(syscon_i2c_list);
-+
-+struct syscon {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct list_head list;
-+};
-+
-+static const struct regmap_config syscon_i2c_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static struct syscon *syscon_i2c_register(struct i2c_client *client)
-+{
-+	struct regmap_config syscon_config = syscon_i2c_regmap_config;
-+	struct device *dev = &client->dev;
-+	struct syscon *syscon;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	syscon = devm_kzalloc(dev, sizeof(*syscon), GFP_KERNEL);
-+	if (!syscon)
-+		return ERR_PTR(-ENOMEM);
-+
-+	syscon_config.name = dev_name(dev);
-+
-+	regmap = devm_regmap_init_i2c(client, &syscon_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to initialise Regmap I2C\n");
-+		ret = PTR_ERR(regmap);
-+		return ERR_PTR(ret);
-+	}
-+
-+	syscon->regmap = regmap;
-+	syscon->dev = dev;
-+
-+	spin_lock(&syscon_i2c_list_slock);
-+	list_add_tail(&syscon->list, &syscon_i2c_list);
-+	spin_unlock(&syscon_i2c_list_slock);
-+
-+	return syscon;
-+}
-+
-+static struct regmap *syscon_i2c_get_regmap(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct syscon *entry, *syscon = NULL;
-+
-+	spin_lock(&syscon_i2c_list_slock);
-+
-+	list_for_each_entry(entry, &syscon_i2c_list, list)
-+		if (entry->dev == dev) {
-+			syscon = entry;
-+			break;
-+		}
-+
-+	spin_unlock(&syscon_i2c_list_slock);
-+
-+	if (!syscon)
-+		syscon = syscon_i2c_register(client);
-+
-+	if (IS_ERR(syscon))
-+		return ERR_CAST(syscon);
-+
-+	return syscon->regmap;
-+}
-+
-+struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
-+{
-+	return syscon_i2c_get_regmap(client);
-+}
-+EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
-diff --git a/include/linux/mfd/syscon-i2c.h b/include/linux/mfd/syscon-i2c.h
-new file mode 100644
-index 0000000000000..e9ded6a363234
---- /dev/null
-+++ b/include/linux/mfd/syscon-i2c.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * System Control Driver accessed via I2C
-+ *
-+ * Copyright (C) 2020 Linaro Ltd.
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org>
-+ */
-+
-+#ifndef __LINUX_MFD_SYSCON_I2C_H__
-+#define __LINUX_MFD_SYSCON_I2C_H__
-+
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+
-+#ifdef CONFIG_MFD_SYSCON_I2C
-+extern struct regmap *syscon_i2c_to_regmap(struct i2c_client *client);
-+#else
-+static inline struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
-+#endif
-+
-+#endif /* __LINUX_MFD_SYSCON_I2C_H__ */
+Best regards,
 -- 
-2.25.1
-
+Heiko Stuebner <heiko@sntech.de>
