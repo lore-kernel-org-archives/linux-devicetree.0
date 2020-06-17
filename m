@@ -2,185 +2,114 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86BAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 15:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D5CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 15:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9446720888
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 15:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7REmT73"
+	by mail.kernel.org (Postfix) with ESMTP id 17F9220CC7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 15:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592408319;
+	bh=Mmp7l8nOqzeof+dCZUf8iwFZM9Tbqs2liNaByHyvJTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KlssUcuZK8t1ZohV7dstKzu2qFPRLQMIhg4EO0tyJRh048LD+93nqI+X+MpTaIOM0
+	 qy++GbEORKjwqsRtgXuY3wyXAVvCjDzDxWspgaRU4TV1rqhbMttkGT3knIZRMlrp8n
+	 MZVsdnX3H+QB3yvIju97vRdHxANuACQJoDXrperU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgFQPTF (ORCPT
+        id S1726840AbgFQPie (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQPTE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 11:19:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AB7C06174E
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 08:19:04 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c71so2226342wmd.5
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 08:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s8n+t7GKh3Gj29VbKmMJNzCidqU4PlfPQU8WVnQB0IA=;
-        b=I7REmT73IfDFvu63aqYDtJbNMihndgSlsHwxtwEaifjpmkJiPPPYmo/UmhKIreG01j
-         U1MCIyLANCzR3zsOFnAb4VdQiJHfPANnqXofkWP++8FiU/FRzt3hOP23SQkBB4zK8rVR
-         2EE7/0qNK2ZKCpEJ5F6q1Qaar/+q1Hc2wwwy0HBo9uw8F5lqHmvg+tesCc/zmASpcDQr
-         ef3BYwgN3Y6INjYRMHhdnusDXnEX9Xuscrabua6sBF7vlW22VYSKSSoj+06NUp51nl89
-         vfofMnX18zAFF4Uc80NV483Uf8oqUxadFMAzb66FwkvbAt1x34NFsY169zHLILCBMDT4
-         bHBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s8n+t7GKh3Gj29VbKmMJNzCidqU4PlfPQU8WVnQB0IA=;
-        b=GWcjDuae3uOQiXtl01pDho0W/dfDeY55L65AtpPNPwL1T1PDJIbQiXPi4ZRD8Sew1I
-         VX8c2M//Hz+q6fhC5bo4I6Rc/h/0p6Gx32AdotAGlZhDrS4xeOgQC1G/ENfB3Ml4glve
-         T663uSDPR3YKAwJcqERhVnwMH1+tCETLVAEt4/tXZVQgMreDF8g8jeZVCKDmG8Hymb0G
-         zALxJpNgwTKl42ujRIlKoF9tXVK1j2vc8qz0KzvNxJUNejFKauiYEE8ojuhNp4exI2N3
-         OuXvfUqQ3xQsmdnQ/CxI/N2mvaUXDJ5TCHAmFSMul9XkguBZgbeJyC9SUTXN2QtwzPGE
-         M5Pw==
-X-Gm-Message-State: AOAM532ET/BjDTBN8GgtFanSEh4b47d1MxK41FsETLBfUmSy3bEvrZxt
-        VAdQLg9n+97qMYETQIQUOyld6w==
-X-Google-Smtp-Source: ABdhPJwSJHXfP8SKdVG5+kRfmeZPSM3QIlEIPVrIYrhG2skOzNwr3S9gC6WwQGn/4TcLlQE8oJA2MA==
-X-Received: by 2002:a1c:4189:: with SMTP id o131mr8622246wma.183.1592407143164;
-        Wed, 17 Jun 2020 08:19:03 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id 89sm7171745wrg.56.2020.06.17.08.19.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 08:19:02 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] dt-bindings: nvmem: Add properties needed for
- blowing fuses
-To:     Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     dhavalp@codeaurora.org, mturney@codeaurora.org,
-        rnayak@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, saiprakash.ranjan@codeaurora.org,
-        sparate@codeaurora.org, mkurumel@codeaurora.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200617145116.247432-1-dianders@chromium.org>
- <20200617074930.v3.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <254998b9-c45e-bd6b-bc9a-b5934c0fea8e@linaro.org>
-Date:   Wed, 17 Jun 2020 16:19:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 17 Jun 2020 11:38:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgFQPid (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:38:33 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E0921527;
+        Wed, 17 Jun 2020 15:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592408313;
+        bh=Mmp7l8nOqzeof+dCZUf8iwFZM9Tbqs2liNaByHyvJTY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=USXaaW6m3HgNXWONtUd4GS+12X3vlrQ2BIvKWKCz+S7WUOSD+FgPuGUBLy+80HhnC
+         QQZlhSL97CRpS8wMlCVCmBYzPVGQeqxfK0ZOSHdVCQ5redR969T0BmYdNxZNYaehvO
+         5UNFUMqKg9dyyc8FECvUdiSMwisPSJDXrY4Ec1CU=
+Received: by mail-ot1-f45.google.com with SMTP id e5so1944121ote.11;
+        Wed, 17 Jun 2020 08:38:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533megbuNEP/iL4ZKX++IfcJPJWYdF0TAPYmzaMbRoP0cuQ2/z2R
+        bRIrGOhPIm0/N88h4Mn6U2iZhFVNJXWo50Vj3g==
+X-Google-Smtp-Source: ABdhPJx+PoYXKyeUx8MAjbYQ1LRx9EEpUKsbhPm2Dbg1Vw8A/V17ptpVa4zGODoB4OocpKHaH/C7MvTr0HCPXdlZSBA=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr7446929ots.192.1592408312183;
+ Wed, 17 Jun 2020 08:38:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200617074930.v3.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200612015030.16072-1-tanmay@codeaurora.org> <20200612015030.16072-2-tanmay@codeaurora.org>
+ <159230611219.62212.8262135380349283774@swboyd.mtv.corp.google.com>
+In-Reply-To: <159230611219.62212.8262135380349283774@swboyd.mtv.corp.google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 17 Jun 2020 09:38:20 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLsp6gR_=nA36usk67n7+EJOoxt-87R5zc1_DXpap5cag@mail.gmail.com>
+Message-ID: <CAL_JsqLsp6gR_=nA36usk67n7+EJOoxt-87R5zc1_DXpap5cag@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
+ driver for Snapdragon
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Tanmay Shah <tanmay@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, aravindh@codeaurora.org,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jun 16, 2020 at 5:15 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Tanmay Shah (2020-06-11 18:50:26)
+> > diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> > new file mode 100644
+> > index 000000000000..5fdb9153df00
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> > @@ -0,0 +1,142 @@
+> > +        data-lanes = <0 1>;
+> > +
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            port@0 {
+> > +                reg = <0>;
+> > +                dp_in: endpoint {
+> > +                    remote-endpoint = <&dpu_intf0_out>;
+> > +                };
+> > +            };
+> > +
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                dp_out: endpoint {
+>
+> Just curious what is eventually connected here? This is possibly a
+> question for Rob Herring, but I can't figure out how we're supposed to
+> connect this to the USB type-c connector that is receiving the DP
+> signal. Does the type-c connector binding support connecting to this end
+> of the graph? Or should this connect to the DP phy and then the phy
+> connects to the USB type-c connector node? Right now it is empty which
+> seems wrong.
 
+It should connect to the Type-C connector perhaps thru some sort of
+switching/muxing node, but that's not really flushed out though. See
+'dt-bindings: chrome: Add cros-ec-typec mux props' discussion with
+your CrOS colleagues.
 
-On 17/06/2020 15:51, Douglas Anderson wrote:
-> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> 
-> On some systems it's possible to actually blow the fuses in the qfprom
-> from the kernel.  Add properties to support that.
-> 
-> NOTE: Whether this is possible depends on the BIOS settings and
-> whether the kernel has permissions here, so not all boards will be
-> able to blow fuses in the kernel.
-> 
-> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
-> Changes in v3:
-> - Add an extra reg range (at 0x6000 offset for SoCs checked)
-> - Define two options for reg: 1 item or 4 items.
-> - No reg-names.
-> - Add "clocks" and "clock-names" to list of properties.
-> - Clock is now "sec", not "secclk".
-> - Add "vcc-supply" to list of properties.
-> - Fixed up example.
-> 
->   .../bindings/nvmem/qcom,qfprom.yaml           | 45 ++++++++++++++++++-
->   1 file changed, 43 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> index 5efa5e7c4d81..b195212c6193 100644
-> --- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> @@ -17,8 +17,27 @@ properties:
->       const: qcom,qfprom
->   
->     reg:
-> -    items:
-> -      - description: The corrected region.
-> +    # If the QFPROM is read-only OS image then only the corrected region
-> +    # needs to be provided.  If the QFPROM is writable then all 4 regions
-> +    # must be provided.
-> +    oneOf:
-> +      - items:
-> +          - description: The corrected region.
-> +      - items:
-> +          - description: The corrected region.
-> +          - description: The raw region.
-> +          - description: The config region.
-> +          - description: The security control region.
-> +
-> +  # Clock must be provided if QFPROM is writable from the OS image.
-> +  clocks:
-> +    maxItems: 1
-
-
-> +  clock-names:
-> +    const: sec
-
-Do we need clock-names for just one clock here?
-
-> +
-> +  # Supply reference must be provided if QFPROM is writable from the OS image.
-> +  vcc-supply:
-> +    description: Our power supply.
->   
->     # Needed if any child nodes are present.
->     "#address-cells":
-> @@ -31,6 +50,28 @@ required:
->      - reg
->   
->   examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +
-> +    efuse@784000 {
-> +      compatible = "qcom,qfprom";
-> +      reg = <0 0x00784000 0 0x8ff>,
-> +            <0 0x00780000 0 0x7a0>,
-> +            <0 0x00782000 0 0x100>,
-> +            <0 0x00786000 0 0x1fff>;
-> +      clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-> +      clock-names = "sec";
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +      vcc-supply = <&vreg_l11a_1p8>;
-> +
-> +      hstx-trim-primary@25b {
-> +        reg = <0x25b 0x1>;
-> +        bits = <1 3>;
-> +      };
-> +    };
-> +
->     - |
->       efuse@784000 {
->         compatible = "qcom,qfprom";
-> 
+Rob
