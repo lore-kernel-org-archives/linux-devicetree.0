@@ -2,148 +2,90 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 09:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CC1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6372520679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 09:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BBB20DD4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592388826;
+	bh=p1p1lrThYfCOemkuWNAPrSGsFSXxrA/pHOks15NZh64=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IQdDkBZ7D1QIzgOp3fYqxexFByv9zRQD7bMQeNnr2flP9kZ2LOX7NRlUwAL3zw26p
+	 v9b3Utm3WXv2xG5kmyuuYE6Bvpaa2UhuI3oWhyDINnXgZa+m1SFAVNIw/anyQj5Q2/
+	 VlJNG87uZBshRkSCtO1vwuat0zJZQPH2lDZlFwrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgFQJzj convert rfc822-to-8bit (ORCPT
+        id S1726303AbgFQKNm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgFQJzj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 05:55:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76CBC061573
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 02:55:38 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jlUn0-0003fS-7d; Wed, 17 Jun 2020 11:55:26 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jlUmx-0004Mo-Be; Wed, 17 Jun 2020 11:55:23 +0200
-Message-ID: <babff895a0b5e2cd63082bd38f087bd1bc345671.camel@pengutronix.de>
-Subject: Re: [PATCH v3 1/9] dt-bindings: reset: Add a binding for the RPi
- Firmware reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
-        lorenzo.pieralisi@arm.com, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Date:   Wed, 17 Jun 2020 11:55:23 +0200
-In-Reply-To: <20200612171334.26385-2-nsaenzjulienne@suse.de>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-2-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Wed, 17 Jun 2020 06:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgFQKNm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:13:42 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B932082F;
+        Wed, 17 Jun 2020 10:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592388821;
+        bh=p1p1lrThYfCOemkuWNAPrSGsFSXxrA/pHOks15NZh64=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V3ep8wDX8Fzm402JtqkeKS4v4iE//EcfZdZDtY6R4/kC+RaCXY9DBXlUMtCcG17/i
+         Zr9G/8nm/GPXzxrj8h/hkaoGlkHT2UA1bcsy6UCn9kSwCqR23NM/m/Ddpx44ci/+hT
+         5bG6J5WUtsvzr0x+yiJWFYvwkeznk19DV9PCynyU=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: bmc150_magn: Document missing compatibles
+Date:   Wed, 17 Jun 2020 12:12:59 +0200
+Message-Id: <20200617101259.12525-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+The driver supports also BMC156B and BMM150B so document the compatibles
+for these devices.
 
-On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
-> The firmware running on the RPi VideoCore can be used to reset and
-> initialize HW controlled by the firmware.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> ---
-> Changes since v2:
->  - Add include file for reset IDs
-> 
-> Changes since v1:
->  - Correct cells binding as per Florian's comment
->  - Change compatible string to be more generic
-> 
->  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
->  .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> index b48ed875eb8e..23a885af3a28 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-> @@ -39,6 +39,22 @@ properties:
->        - compatible
->        - "#clock-cells"
->  
-> +  reset:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: raspberrypi,firmware-reset
-> +
-> +      "#reset-cells":
-> +        const: 1
-> +        description: >
-> +          The argument is the ID of the firmware reset line to affect.
-> +
-> +    required:
-> +      - compatible
-> +      - "#reset-cells"
-> +
->      additionalProperties: false
->  
->  required:
-> @@ -55,5 +71,10 @@ examples:
->              compatible = "raspberrypi,firmware-clocks";
->              #clock-cells = <1>;
->          };
-> +
-> +        reset: reset {
-> +            compatible = "raspberrypi,firmware-reset";
-> +            #reset-cells = <1>;
-> +        };
->      };
->  ...
-> diff --git a/include/dt-bindings/reset/raspberrypi,firmware-reset.h b/include/dt-bindings/reset/raspberrypi,firmware-reset.h
-> new file mode 100644
-> index 000000000000..1a4f4c792723
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/raspberrypi,firmware-reset.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2020 Nicolas Saenz Julienne
-> + * Author: Nicolas Saenz Julienne <nsaenzjulienne@suse.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RASPBERRYPI_FIRMWARE_RESET_H
-> +#define _DT_BINDINGS_RASPBERRYPI_FIRMWARE_RESET_H
-> +
-> +#define RASPBERRYPI_FIRMWARE_RESET_ID_USB	0
-> +#define RASPBERRYPI_FIRMWARE_RESET_NUM_IDS	1
-> +
-> +#endif
+Fixes: 9d75db36df14 ("iio: magn: Add support for BMM150 magnetometer")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Are there going to be any more firmware controlled resets in the future?
+---
 
-regards
-Philipp
+The fixes tag is not accurate but at least offer some backporting.
+---
+ .../devicetree/bindings/iio/magnetometer/bmc150_magn.txt     | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+index fd5fca90fb39..7469073022db 100644
+--- a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
++++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+@@ -4,7 +4,10 @@ http://ae-bst.resource.bosch.com/media/products/dokumente/bmc150/BST-BMC150-DS00
+ 
+ Required properties:
+ 
+-  - compatible : should be "bosch,bmc150_magn"
++  - compatible : should be one of:
++                 "bosch,bmc150_magn"
++                 "bosch,bmc156_magn"
++                 "bosch,bmm150_magn"
+   - reg : the I2C address of the magnetometer
+ 
+ Optional properties:
+-- 
+2.17.1
+
