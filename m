@@ -2,269 +2,109 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E0BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3775DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2EC2184D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A2321841
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592428544;
-	bh=v7QKeSKgeC6EKbmPqKylS8p9g9Wks7kPioikxtWP80U=;
+	s=default; t=1592428614;
+	bh=RyiMy0SMVaFoLMTZSzw+BTB7kiyfiquzDb9CtKoNpEU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZoP74d06AyYlNkumxUows853NrjmKi/m2uT7H3OFhto8Wp23l7MwKoPlbC38w3QvO
-	 DztZy78pkeGJ4fY4Zpi070Ru86zW4MAXSH0OQTvACo4tkBYVT2z7S1D9R42Q54yt3C
-	 FZzL60vFYR3JtlHLLaxmXpxKMsWOqsQcjJgUvFv8=
+	b=VbsiCcgpamqW/hNU7OpfeD6r2BHsAwXlsBsTH9XWZ0L5nkNjKot9spA7N6b56vJnf
+	 2VnTSGvOVvNZexlgBtRYD/j054kP6s+PUdmJkporztp+wDqq81WL0UQ6jQlg1nIhyB
+	 Xp7lepSMduKyQ1+2rSMA5xThtAF0Z2lJ79yHISMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgFQVPn (ORCPT
+        id S1726955AbgFQVQx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:15:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45541 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgFQVPn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:15:43 -0400
-Received: by mail-io1-f68.google.com with SMTP id y5so4577386iob.12;
-        Wed, 17 Jun 2020 14:15:42 -0700 (PDT)
+        Wed, 17 Jun 2020 17:16:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45685 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQVQx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:16:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id y5so4581022iob.12;
+        Wed, 17 Jun 2020 14:16:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xI0mlKe2wRYjHDHCCF+79f1gMeJVs47ukTuRHuYoNXw=;
-        b=eo9VmYwsuC/jJIbUh3/iypCmjz09CdD/TssIKYreJkXx3FFH2JN8qgAxkNyL2SW9/c
-         64I7j6xLyiIrmrCB6y65OyIJ/wlW2KgOaXQ2K+simOndCkm4BTUGomG3Goy7iInROW+d
-         MYCv6fmT4zO65i6ru7kHUna1DQAG2ikB3MQ/zDyxCF6/Dkn6zhdqQwz1w+p9UDVVbzzZ
-         Rb9V9T81sNHBBUaULISQCZ437YbYx9Bh3Ib/vNrUcUxGZT2TtO46hwXSGCxHciBAfDLz
-         TjZvnS3sA5SCbJogmGib/KAEzagvk4BeRpljzRoWhhFZEZrp7wQHiiO91Yzea2JpOKYG
-         bn3w==
-X-Gm-Message-State: AOAM5315/9WkYjx5SdlIlIE1+8Yx/JO5Vl/2SNQnY1u6MRkaeD0FFXpj
-        5eO5Fu0ES2cGUpBYMhFFkg==
-X-Google-Smtp-Source: ABdhPJy9jNQ2ywvtsoluzmREgiIioIKxsPjeXA+erf0DpK8C5v435zxINloN/zcGsS3rvsY1j6EOLA==
-X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr1523265iot.44.1592428542398;
-        Wed, 17 Jun 2020 14:15:42 -0700 (PDT)
+        bh=j8CHgerKh+kCi8teLN3sFICipYAv2LGJo9hWRjpOE2w=;
+        b=LVhoXB2H0KQRHdIYezkyVYOfYuoqTZ129CmCXa47vCln+2NvKbnjNGfncha2RFZ54s
+         pFRdPeAfV3Ezlh1LF4NJ2KIoTrV2nmsVIVpyCqELOqPMMSyTjSkZsU589sB9LA8awqWR
+         RmCowH/zXJ16mXpaZ9nzbsPUqDNaNuXJ1JXDykjnlxKYGUS6mEKlpoIdH4fXwwztqkhC
+         sBNkorxbT25kYa8TzmFOEte8RQIoAWG4Rvl7AAhmPtW84cGh3wKGSl8LrzrxUFmzqUYO
+         nY30K3gqLYDCm2FIxootwMIm9NKW3geDj3lhzK+XOgThWZzD1b2VU6VcP9pMtpOSbCou
+         yYcg==
+X-Gm-Message-State: AOAM530vKO+CjWJx3FjnhMcvfSUKR/cnJd0pwbNH+5H6nlzqFlORkt9b
+        jx++0/5FA9yg/olXfxw+dw==
+X-Google-Smtp-Source: ABdhPJz4vmd5HW/ld1MMrmvl7UPaTLl7RJ4RvzL8jISwi+1GHLhCRTRT9B1g3Vta6QmIHKFwG4d3QQ==
+X-Received: by 2002:a6b:3805:: with SMTP id f5mr1450731ioa.41.1592428612080;
+        Wed, 17 Jun 2020 14:16:52 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id l16sm398139ilm.58.2020.06.17.14.15.41
+        by smtp.gmail.com with ESMTPSA id b73sm570734iof.13.2020.06.17.14.16.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 14:15:42 -0700 (PDT)
-Received: (nullmailer pid 2835354 invoked by uid 1000);
-        Wed, 17 Jun 2020 21:15:41 -0000
-Date:   Wed, 17 Jun 2020 15:15:41 -0600
+        Wed, 17 Jun 2020 14:16:51 -0700 (PDT)
+Received: (nullmailer pid 2837249 invoked by uid 1000);
+        Wed, 17 Jun 2020 21:16:49 -0000
+Date:   Wed, 17 Jun 2020 15:16:49 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Yifeng Zhao <yifeng.zhao@rock-chips.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] dt-bindings: mtd: Describe Rockchip RK3xxx NAND
- flash controller
-Message-ID: <20200617211541.GB2811091@bogus>
-References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
- <20200609074020.23860-2-yifeng.zhao@rock-chips.com>
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, andre.przywara@arm.com,
+        vkoul@kernel.org, linux-actions@lists.infradead.org,
+        cristian.ciocaltea@gmail.com, dan.j.williams@intel.com,
+        robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 05/10] dt-bindings: dmaengine: convert Actions Semi
+ Owl SoCs bindings to yaml
+Message-ID: <20200617211649.GA2837196@bogus>
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609074020.23860-2-yifeng.zhao@rock-chips.com>
+In-Reply-To: <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 03:40:18PM +0800, Yifeng Zhao wrote:
-> Documentation support for Rockchip RK3xxx NAND flash controllers
+On Tue, 09 Jun 2020 15:47:05 +0530, Amit Singh Tomar wrote:
+> Converts the device tree bindings for the Actions Semi Owl SoCs DMA
+> Controller over to YAML schemas.
 > 
-> Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+> It also adds new compatible string "actions,s700-dma".
+> 
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 > ---
+> Changes since v3:
+> 	* No change.
+> Changes since v2:
+>         * Addressed Rob's comments:
+>            - removed unnecessary description.
+>            - added unevaluatedProperties
+>            - added relevant information about
+>              dma-channels and dma-request
+>         * Added power-domain property.
+> Change since v1:
+>         * Updated the description field to reflect
+>           only the necessary information.
+>         * replaced the maxItems field with description for each
+>           controller attribute(except interrupts).
+>         * Replaced the clock macro with number to keep the example
+>           as independent as possible.
 > 
-> Changes in v6:
-> - Fix some wrong define
-> - Modified the definition of compatible
+>  New patch, was not there in RFC.
+> ---
+>  Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
+>  Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+), 47 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
 > 
-> Changes in v5:
-> - Fix some wrong define
-> - Add boot-medium define
-> - Remove some compatible define
-> 
-> Changes in v4:
-> - The compatible define with rkxx_nfc
-> - Add assigned-clocks
-> - Fix some wrong define
-> 
-> Changes in v3:
-> - Change the title for the dt-bindings
-> 
-> Changes in v2: None
-> 
->  .../mtd/rockchip,nand-controller.yaml         | 154 ++++++++++++++++++
->  1 file changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> new file mode 100644
-> index 000000000000..f753fe8248aa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nand-controller.yaml
-> @@ -0,0 +1,154 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/rockchip,nand-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip SoCs NAND FLASH Controller (NFC)
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml#"
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: rockchip,px30-nfc
-> +      - const: rockchip,rk2928-nfc
-> +      - const: rockchip,rv1108-nfc
-> +      - items:
-> +          - const: rockchip,rk3326-nfc
-> +          - const: rockchip,px30-nfc
-> +      - items:
-> +          - const: rockchip,rk3036-nfc
-> +          - const: rockchip,rk2928-nfc
-> +      - items:
-> +          - const: rockchip,rk3308-nfc
-> +          - const: rockchip,rv1108-nfc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    items:
-> +      - description: Bus Clock
-> +      - description: Module Clock
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    items:
-> +      - const: ahb
-> +      - const: nfc
-> +
-> +  assigned-clocks:
-> +    maxItems: 1
-> +
-> +  assigned-clock-rates:
-> +    maxItems: 1
-> +
-> +  pinctrl-0:
-> +    maxItems: 1
-> +
-> +  pinctrl-names:
-> +    const: default
-> +
-> +  power-domains:
-> +     maxItems: 1
-> +
-> +patternProperties:
-> +  "^nand@[a-f0-9]$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +      nand-ecc-mode:
-> +        const: hw
-> +
-> +      nand-ecc-step-size:
-> +        const: 1024
-> +
-> +      nand-ecc-strength:
-> +        enum: [16, 24, 40, 60, 70]
-> +        description:
 
-This needs a '|' at the end if you want the below line breaks preserved.
-
-> +          The ECC configurations that can be supported are as follows.
-> +          - NFCv900(PX30 and RK3326) support ecc strength 16, 40, 60 and 70.
-> +          - NFCv600(RK3066 and RK2928) support ecc strength 16, 24, 40 and 60.
-> +          - NFCv622(RK3036 and RK3128) support ecc strength 16, 24, 40 and 60.
-> +          - NFCv800(RK3308 and RV1108) support ecc strength 16.
-> +
-> +      nand-bus-width:
-> +        const: 8
-> +
-> +      rockchip,boot-blks:
-> +        minimum: 2
-> +        default: 16
-> +        allOf:
-> +        - $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          The NFC driver need this information to select ECC
-> +          algorithms supported by the BOOTROM.
-> +          Only used in combination with 'nand-is-boot-medium'.
-> +
-> +      rockchip,boot-ecc-strength:
-> +        enum: [16, 24, 40, 60, 70]
-> +        allOf:
-> +        - $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          If specified it indicates that a different BCH/ECC setting is
-> +          supported by the BOOTROM.
-> +          - NFCv900(PX30 and RK3326) support ecc strength 16 and 70.
-> +          - NFCv600(RK3066 and RK2928) support ecc strength 16, 24, 40 and 60.
-> +          - NFCv622(RK3036 and RK3128) support ecc strength 16, 24, 40 and 60.
-> +          - NFCv800(RK3308 and RV1108) support ecc strength 16.
-> +          Only used in combination with 'nand-is-boot-medium'.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3308-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    nfc: nand-controller@ff4b0000 {
-> +      compatible = "rockchip,rk3308-nfc",
-> +                   "rockchip,rv1108-nfc";
-> +      reg = <0x0 0xff4b0000 0x0 0x4000>;
-> +      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru HCLK_NANDC>, <&cru SCLK_NANDC>;
-> +      clock-names = "ahb", "nfc";
-> +      assigned-clocks = <&clks SCLK_NANDC>;
-> +      assigned-clock-rates = <150000000>;
-> +
-> +      pinctrl-0 = <&flash_ale &flash_bus8 &flash_cle &flash_csn0
-> +                   &flash_rdn &flash_rdy &flash_wrn>;
-> +      pinctrl-names = "default";
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      nand@0 {
-> +        reg = <0>;
-> +        label = "rk-nand";
-> +        nand-bus-width = <8>;
-> +        nand-ecc-mode = "hw";
-> +        nand-ecc-step-size = <1024>;
-> +        nand-ecc-strength = <16>;
-> +        nand-is-boot-medium;
-> +        rockchip,boot-blks = <8>;
-> +        rockchip,boot-ecc-strength = <16>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
-> 
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
