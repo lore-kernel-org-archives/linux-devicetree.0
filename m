@@ -2,219 +2,163 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01066C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D42FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEC8021532
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15F4208D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c97ISZU8"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="sNqB/fFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgFQQ1N (ORCPT
+        id S1726995AbgFQQ1u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:27:13 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:21786 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbgFQQ1E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:27:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592411223; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3kphDNNgXxmWAV6mi4fI4VHOf8JSRgD1IIPPeGHUYd0=; b=c97ISZU86FJYnO3rqCC8GoEbVJz4LqLZBaOQmVSNXF7QY+s2ZbFk61zqXy8ts7irafi/jOW2
- zmcqpNzno8EFVcaP82W1GtZ34XuPuvn1QbBTdw7wtHOh5BkjV+w7RrfT46erbTyCZXo8O5Sw
- LkqBqxqXqW8TkWiPjU/X6YlyCug=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5eea4448c4bb4f886d9c2700 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 16:26:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0A68CC4339C; Wed, 17 Jun 2020 16:26:46 +0000 (UTC)
-Received: from [10.50.9.163] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rbokka)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 315E0C433AD;
-        Wed, 17 Jun 2020 16:26:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 315E0C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rbokka@codeaurora.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     dhavalp@codeaurora.org, mturney@codeaurora.org,
-        rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        saiprakash.ranjan@codeaurora.org, sparate@codeaurora.org,
-        mkurumel@codeaurora.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200617145116.247432-1-dianders@chromium.org>
- <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
- <ed6d22a1-0d38-9874-d5cc-efe39f360baa@linaro.org>
-From:   "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>
-Message-ID: <0181cfe3-6627-e599-8f2f-1f433d9e0596@codeaurora.org>
-Date:   Wed, 17 Jun 2020 21:56:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 12:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgFQQ1r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:27:47 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6AB9C06174E
+        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 09:27:46 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id m21so2404695eds.13
+        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 09:27:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=0PeE1nNOhO8NzBOTfY/pdL8QsrWSh7rT+swmugwtigI=;
+        b=sNqB/fFnXRRSizIysZQ/7bQPvN3dI1sAubAzmXPjlp5zADcg3mFHnEhj4KpzI4rlRT
+         b0rXBfv2Leyc1LO9lG4qxGitWmak6FKoBKT4g43POIBQG/++rpoKsKoTPII/fiiBPcZ4
+         nhol/ldhYskiBz7ksJBQ9W7X36Ud195pCyKhr2fxjwYok3HHb3JoLM6hol9DVu8c0XaT
+         IrDZVH8Ne9ZwHErbNev4dNa6sCLZnMKaiZAZ17jz65bE2z46/CEosSbP3MB0bkOMXt9X
+         jdY+AP4M7yuHGaMmy6BTlRgPH5WXxySI36LtxDl12eLIp0A97DJs8zhMYnEqbY8ZpY8F
+         M2Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0PeE1nNOhO8NzBOTfY/pdL8QsrWSh7rT+swmugwtigI=;
+        b=Ayaqc1p168BiLssP6YxZD6Ec0WUxC8vOq54zjn2v94Xv+IG6L5I8CAoj+fZcw/IJxf
+         Cku++DOfUGgQiIutWpeikx9h1FwWuf6Ua/nYtnqtoASaSaFLbpQfv20NAoJKmbBZ2yPm
+         9Lfu4etaowmV6DeaY14+6NtX798a0W2qnMSV26bowXsZMLDbP+VkhRh0pX4tacwm+vg7
+         Gci+ts1jNqwLUlqH+o7+spzdSvSCsGarKQHZe2aToiRradNuzuyayUzyxOXDpzkpa+iC
+         H9COmihr+wipiZ3njjldZ/E8OsHbi9UPLG68eWnXRav75RXUY5rlJrS5NVTOB9q4sj1v
+         NLcA==
+X-Gm-Message-State: AOAM530fIWjoHLKxdkv+baTZk6Bocju31FDP1P9mBI+yoj+U917P+1kG
+        cTU6VZgDQkuu1ttFRbQK64fGYQ==
+X-Google-Smtp-Source: ABdhPJzcNlf5mAAzJmZXfW/N+4oUOHXbX6TDnTWRpql38l+PqLTIechB/LyMZ9YZXb3Wzr6JLXkDVA==
+X-Received: by 2002:aa7:df05:: with SMTP id c5mr25038edy.48.1592411265374;
+        Wed, 17 Jun 2020 09:27:45 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id h9sm312336ejc.96.2020.06.17.09.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 09:27:44 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 18:27:40 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, jkridner@beagleboard.org,
+        robertcnelson@gmail.com
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+Message-ID: <20200617162740.GA4181112@x1>
+References: <20200602131428.GA496390@x1>
+ <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+ <20200602135155.GE37466@atomide.com>
+ <20200602163458.GA847883@x1>
 MIME-Version: 1.0
-In-Reply-To: <ed6d22a1-0d38-9874-d5cc-efe39f360baa@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602163458.GA847883@x1>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jun 02, 2020 at 06:34:58PM +0200, Drew Fustini wrote:
+> On Tue, Jun 02, 2020 at 06:51:55AM -0700, Tony Lindgren wrote:
+> > * Grygorii Strashko <grygorii.strashko@ti.com> [200602 13:44]:
+> > > 
+> > > 
+> > > On 02/06/2020 16:14, Drew Fustini wrote:
+> > > > Add gpio-ranges properties to the gpio controller nodes.
+> > > > 
+> > > > These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> > > > REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> > > > 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> > > > A csv file with this data is available for reference [2].
+> > > 
+> > > It will be good if you can explain not only "what" is changed, but
+> > > also "why" it's needed in commit message.
+> > 
+> > Also, please check (again) that this is the same for all the am3
+> > variants. For omap3, we had different pad assignments even between
+> > SoC revisions. Different pad routings should be easy to deal with
+> > in the dts if needed though.
+> > 
+> > Regards,
+> > 
+> > Tony
+> 
+> It appears that the only usage of am33xx-l4.dtsi is for am335x for which
+> specific parts mentioned in those dtsi files are 3352, 3358, and 3359.
+> 
+> $ git grep am33xx-l4.dtsi 
+> arch/arm/boot/dts/am33xx.dtsi:#include "am33xx-l4.dtsi"
+> $ git grep -l '#include "am33xx.dtsi"' arch/ |wc -l
+> 27
+> $ git grep -l '#include "am33xx.dtsi"' arch/ |grep -v am335x |wc -l
+> 0
+> 
+> Also, it appears that the only AM33xx parts that actually exist are [0]:
+> 
+> AM3351, AM3352, AM3354, AM3356, AM3357, AM3358, AM3359
+> 
+> I clicked on the datasheet link for each product page and while the URL
+> has the specific part number in it [1], they all end up loading the
+> exact same PDF. The header states:
+> 
+> "AM3359, AM3358, AM3357, AM3356, AM3354, AM3352, AM3351
+> SPRS717L – OCTOBER 2011 – REVISED MARCH 2020"
+> 
+> Thus, I do believe all SoC's using am33xx-l4.dtsi would have the same
+> memory map for the pin control registers and the same relationshop from
+> pin to gpio line.  For example, GPMC_A0 has mode 7 and it is labeled
+> gpio1_16.  conf_gpmc_a0 is at offset 840h which makes it pin 16.
+> 
+> Maybe am33xx-l4.dtsi should have actually been named am335x-l4.dtsi?
+> 
+> Though I suppose there is no point in changing that now.
+> 
+> thanks,
+> drew
+> 
+> [0] http://www.ti.com/processors/sitara-arm/am335x-cortex-a8/overview.html
+> [1] https://www.ti.com/lit/ds/symlink/am3359.pdf
 
+Tony - 
 
-On 6/17/2020 8:48 PM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 17/06/2020 15:51, Douglas Anderson wrote:
->> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
->>
->> This switches the bindings over from txt to yaml.
->>
->> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>
->> Changes in v3:
->> - Split conversion to yaml into separate patch new in v3.
->> - Use 'const' for compatible instead of a 1-entry enum.
->> - Changed filename to match compatible string.
->> - Add #address-cells and #size-cells to list of properties.
->> - Fixed up example.
->>
->>   .../bindings/nvmem/qcom,qfprom.yaml           | 45 +++++++++++++++++++
->>   .../devicetree/bindings/nvmem/qfprom.txt      | 35 ---------------
->>   2 files changed, 45 insertions(+), 35 deletions(-)
->>   create mode 100644 
->> Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml 
->> b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->> new file mode 100644
->> index 000000000000..5efa5e7c4d81
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/nvmem/qcom,qfprom.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
->> +
->> +maintainers:
->> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
->> +
-> 
-> Am not sure this was intentional, but the old maintainer name is totally 
-> lost in this patch!
-> 
-> Please fix this!
-> 
+These gpio-ranges are correct for all the platforms that included
+am33xx-l4.dtsi.
 
-Hi Srinivas,
-The existed qfprom dt-bindings in .txt format.
-I will make it as it is to merge whole content in .yaml format once 
-confirm all the parameters with this new driver changes.
+I think it makes sense to add gpio-ranges properties as they describe
+the relationship between a gpio line and pin control register that
+exists in the hardware.
 
-> 
-> 
->> +allOf:
->> +  - $ref: "nvmem.yaml#"
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,qfprom
->> +
->> +  reg:
->> +    items:
->> +      - description: The corrected region.
->> +
->> +  # Needed if any child nodes are present.
->> +  "#address-cells":
->> +    const: 1
->> +  "#size-cells":
->> +    const: 1
->> +
->> +required:
->> +   - compatible
->> +   - reg
->> +
->> +examples:
->> +  - |
->> +    efuse@784000 {
->> +      compatible = "qcom,qfprom";
->> +      reg = <0 0x00784000 0 0x8ff>;
->> +      #address-cells = <1>;
->> +      #size-cells = <1>;
->> +
->> +      hstx-trim-primary@1eb {
->> +        reg = <0x1eb 0x1>;
->> +        bits = <1 4>;
->> +      };
->> +    };
->> diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.txt 
->> b/Documentation/devicetree/bindings/nvmem/qfprom.txt
->> deleted file mode 100644
->> index 26fe878d5c86..000000000000
->> --- a/Documentation/devicetree/bindings/nvmem/qfprom.txt
->> +++ /dev/null
->> @@ -1,35 +0,0 @@
->> -= Qualcomm QFPROM device tree bindings =
->> -
->> -This binding is intended to represent QFPROM which is found in most 
->> QCOM SOCs.
->> -
->> -Required properties:
->> -- compatible: should be "qcom,qfprom"
->> -- reg: Should contain registers location and length
->> -
->> -= Data cells =
->> -Are child nodes of qfprom, bindings of which as described in
->> -bindings/nvmem/nvmem.txt
->> -
->> -Example:
->> -
->> -    qfprom: qfprom@700000 {
->> -        compatible     = "qcom,qfprom";
->> -        reg        = <0x00700000 0x8000>;
->> -        ...
->> -        /* Data cells */
->> -        tsens_calibration: calib@404 {
->> -            reg = <0x4404 0x10>;
->> -        };
->> -    };
->> -
->> -
->> -= Data consumers =
->> -Are device nodes which consume nvmem data cells.
->> -
->> -For example:
->> -
->> -    tsens {
->> -        ...
->> -        nvmem-cells = <&tsens_calibration>;
->> -        nvmem-cell-names = "calibration";
->> -    };
->>
+Are there changes you would like to see in this patch?
 
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of the Code Aurora Forum, hosted by the Linux Foundation.
+Thanks,
+Drew
+
