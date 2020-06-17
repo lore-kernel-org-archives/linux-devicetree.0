@@ -8,123 +8,106 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D259C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5198FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C017217A0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC5A21532
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5U6u+Fw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkLw1Qi3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgFQQsU (ORCPT
+        id S1726511AbgFQQtO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52692 "EHLO
+        Wed, 17 Jun 2020 12:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgFQQsT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:48:19 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDD6C06174E;
-        Wed, 17 Jun 2020 09:48:18 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id w16so3130048ejj.5;
-        Wed, 17 Jun 2020 09:48:18 -0700 (PDT)
+        with ESMTP id S1727081AbgFQQsV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:48:21 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3580BC06174E;
+        Wed, 17 Jun 2020 09:48:21 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so3162325ejd.0;
+        Wed, 17 Jun 2020 09:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HbW3NKNom8juXI2NoyDjAEEkKyRH9dumXigRxuvNwKY=;
-        b=E5U6u+FwDamT/5MzUtw3K/1BEM1ZTiyttyrXEl1+8zSQWpBSc0B5FR4bIUQ1tonPZh
-         tQ7Sq8engNniJfbizfbR8YisCx9Ora1eTcK48UUUNsPyrrmYz7ttfMJUyDIqWfREp4x0
-         LT8uHcaKqqvZF70IgYU99gHaQCxC2cfAXiDO8ImYxJjaG5GtJKZ3Hfb1Q6NlVdmDbaZ8
-         QDB11E5nYjm0cIK1jEV4D3ONYHyoB5X7seBi/J8PU31002wRNLpWLEKw0yPRy0NRsvSu
-         nNp3fHo+x13H8YaQjGCkZbkO7eOeT90xaWFXuPE4kus7VDD8rQXbpeNqcWSXDawp1WUA
-         c/ZQ==
+        bh=q+5BoVRG0VffCCrfTH/S4zSbtLgUTIBUYTPvbWiSrIw=;
+        b=GkLw1Qi3/TTudWObG01QoJrFLKxkdf91mx1SL4oWeEOC8q6Gv/ljjmyt8pVbLHdDgq
+         3OWdR2KGw70+qrKXmtMD9Dj1U6QqT0QwZMe2fqPvA9wh7DzpH17z3QzMgUDhwKP8dAbK
+         5Thl1mj79F3RlP0hosvkJkBfjhvKNzKilAp8o2cMRog5w5lUwKjl3HA9DwS7UlF3rtbt
+         65TRG1tAO34jE5GgX3b93Qm1fNwFzmOeI5CmZ3fBOB21ntxet87PXhmNSkWo/2HYdDZM
+         dWP8u6vrcMoxXDbyZPaoqLJ3YbVRCV4ZDaneO8CTFeiPmpZyz3NEWd2LOBYUV/GOfq1p
+         CwIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HbW3NKNom8juXI2NoyDjAEEkKyRH9dumXigRxuvNwKY=;
-        b=kvFsVw+nUZj16udHUjUJQcdQj7VVgKeiC/Dx4tpTfwbpC0pqTtsQzlKdgI9cgixF4m
-         hcTDujOsGr8ZR2zTHHh3398jsoL9163S0Km7tEnpfdF4JtqgJJqoISOWDDdTg+HHfgvc
-         gbZplAPbOegMZSURZSCs6VjEQ0UNoj40S6lM6wjJx2ZquIT65MHr2KvhJnGm7jQvRY7R
-         BpZsOX6dD1jbrz8vcmoo0QONxHtuoj58zZzH1C5rWngPJzRHO7RZynidmnAbtl30TXBr
-         XXqMhUNvDfMeVTqBpz6Wktw8kzYOjnbM6auXDGaXrlRbkB/fEGq/uHShHmVuJqwiKrkZ
-         gF/w==
-X-Gm-Message-State: AOAM531KCndBkzLbbE6ecNNpDbwAnfHsmYO44mmNWTfYE4jH8Thdq+eA
-        cC+5qZ3ESjSp1+oFpcEKUTS8PJUccNw=
-X-Google-Smtp-Source: ABdhPJzPdiDhZzkiIEvfyQqMk9m00A48c6U0WPQZgrYyBMDstasrSBdif/z88ONABd5SplNm1UNgmA==
-X-Received: by 2002:a17:907:9484:: with SMTP id dm4mr106072ejc.56.1592412497436;
-        Wed, 17 Jun 2020 09:48:17 -0700 (PDT)
+        bh=q+5BoVRG0VffCCrfTH/S4zSbtLgUTIBUYTPvbWiSrIw=;
+        b=J08s87O4hvptKvecMrH+Z6Do1/jZjpPbiv72UeoBvR9kGwDZ/f3EpDUjQZRl5T6fno
+         IrU5dwp70IOx/TIt/p/gIOVYBz89ou7vwn4G4dyic06LztSPq6DB0oX6h0Ihbi5QUiRY
+         uRmjpWjrKzFzNJXQY4DaIsI4xwT4zRZbQDteGt4CGBfxWZ2Q2FFWgIC93dXPubeaa+by
+         ptA+eg7pCE6LH8BqGtw0/MPoJewDuS4oLhhEDJTefXskcb9FOY3e7j5xaHSxab2WeHOV
+         r5uDaqgQzGRPWD2W5/Ecu6TsJk7+dnh/U2w+FqvBm0SgheaXIprOqkz39SOV5SFObSCZ
+         8Dpg==
+X-Gm-Message-State: AOAM530X9nI/oPmrXrWIRlBlheO2R+XMAjWXo+mD/gykDHwr7uJjkaR2
+        lcOk0hZPzivqX6Vbhkgijew=
+X-Google-Smtp-Source: ABdhPJzya/QUz9hu7DpG378s/WItmQR2ysBmEx0/RnQh/KMg8YjHmMTNVtBDCdDe9YqjZVf+sNcS2A==
+X-Received: by 2002:a17:906:365a:: with SMTP id r26mr60093ejb.466.1592412499978;
+        Wed, 17 Jun 2020 09:48:19 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.129.96])
-        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.16
+        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:48:17 -0700 (PDT)
+        Wed, 17 Jun 2020 09:48:19 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/11] arm: dts: owl-s500: Add Clock Management Unit
-Date:   Wed, 17 Jun 2020 19:48:02 +0300
-Message-Id: <9dba1e4d779be27594859ea71131624bb20b1618.1592407030.git.cristian.ciocaltea@gmail.com>
+Subject: [PATCH 04/11] arm: dts: owl-s500-roseapplepi: Use UART clock from CMU
+Date:   Wed, 17 Jun 2020 19:48:04 +0300
+Message-Id: <255941aa76e1eec8224c7a88b99924f3bae2cec8.1592407030.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
 References: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Clock Management Unit for Actions Semi S500 SoC.
+Remove the UART fixed clock and enable using the one provided by CMU.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 ---
- arch/arm/boot/dts/owl-s500.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/owl-s500-roseapplepi.dts | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
-index 1dbe4e8b38ac..5d5ad9db549b 100644
---- a/arch/arm/boot/dts/owl-s500.dtsi
-+++ b/arch/arm/boot/dts/owl-s500.dtsi
-@@ -5,6 +5,7 @@
-  * Copyright (c) 2016-2017 Andreas Färber
-  */
- 
-+#include <dt-bindings/clock/actions,s500-cmu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/owl-s500-powergate.h>
- 
-@@ -70,6 +71,12 @@ hosc: hosc {
- 		#clock-cells = <0>;
+diff --git a/arch/arm/boot/dts/owl-s500-roseapplepi.dts b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
+index a2087e617cb2..800edf5d2d12 100644
+--- a/arch/arm/boot/dts/owl-s500-roseapplepi.dts
++++ b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
+@@ -25,12 +25,6 @@ memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000>; /* 2GB */
  	};
+-
+-	uart2_clk: uart2-clk {
+-		compatible = "fixed-clock";
+-		clock-frequency = <921600>;
+-		#clock-cells = <0>;
+-	};
+ };
  
-+	losc: losc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		#clock-cells = <0>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -169,6 +176,13 @@ uart6: serial@b012c000 {
- 			status = "disabled";
- 		};
+ &twd_timer {
+@@ -43,5 +37,4 @@ &timer {
  
-+		cmu: clock-controller@b0160000 {
-+			compatible = "actions,s500-cmu";
-+			reg = <0xb0160000 0x8000>;
-+			clocks = <&hosc>, <&losc>;
-+			#clock-cells = <1>;
-+		};
-+
- 		timer: timer@b0168000 {
- 			compatible = "actions,s500-timer";
- 			reg = <0xb0168000 0x8000>;
+ &uart2 {
+ 	status = "okay";
+-	clocks = <&uart2_clk>;
+ };
 -- 
 2.27.0
 
