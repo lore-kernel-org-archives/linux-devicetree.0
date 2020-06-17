@@ -2,107 +2,104 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7240C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 12:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DA6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 12:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C912098B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 12:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592397635;
-	bh=L++2pqqcClpU9mPgWdwwA260YxhqLgIQOBMLvdueqUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fioWC7gqfE5NrpYI/akEt76hTbv5S82VBBSyNXLDf1FefCVgx3Mpwtj0bIdVKq5FK
-	 1RP2D7CquG7S02SdAda2xb2ntm9+cDk4PkRvmBttr1gaJsOpvFTMQ3NvObnmtTEgMX
-	 U1qBEjJ6OpQ9z2Tremve3CYbyJPX+NBQ7TGoi+CM=
+	by mail.kernel.org (Postfix) with ESMTP id 844652098B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 12:53:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2DziLIZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgFQMke (ORCPT
+        id S1726211AbgFQMx4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgFQMke (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:40:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 703C620DD4;
-        Wed, 17 Jun 2020 12:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592397633;
-        bh=L++2pqqcClpU9mPgWdwwA260YxhqLgIQOBMLvdueqUU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wrdJkg1VSnmORU6g1UOqTFJAgbYx94MFEgjLYhzxh30EcpiMJB/0y95yHC8Rcm3uS
-         2mFdY38oT/rlih3MoIYqV2wsITqH3KOYSUhhvY1sUm/67FghxZAl/qrVEqvCAg3AON
-         XQmLu4xQT1zqs4FQNpVz+p8G4LXhvhZqs7XUnBQY=
-Date:   Wed, 17 Jun 2020 13:40:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 4/5] regulator: qcom: Add labibb driver
-Message-ID: <20200617124031.GG4613@sirena.org.uk>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-5-sumit.semwal@linaro.org>
- <20200602113241.GE5684@sirena.org.uk>
- <CAO_48GGgNUGosN2PiL=U5JkR3Bh5wNK3N4xYYML1UwmdfDPRww@mail.gmail.com>
- <20200602122554.GG5684@sirena.org.uk>
- <CAO_48GFwEHBGmz0QvN+pXFSyHC9+7=0aoJLHF4uupGSx2TcSvA@mail.gmail.com>
- <20200617114721.GD4613@sirena.org.uk>
- <CAO_48GF9pKZCCof170TvB0ubOkecDzcGhtUUuY_Td78L1J338A@mail.gmail.com>
- <20200617120601.GE4613@sirena.org.uk>
- <CAO_48GGhX-AxjvvvPKRMc+LQ_Uws1s_b4Q+aHokVv2RxcpObQw@mail.gmail.com>
+        Wed, 17 Jun 2020 08:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFQMxz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 08:53:55 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A21C06174E
+        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 05:53:55 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r7so2245135wro.1
+        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 05:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OUb64193SWqYIql7DIKLMy9V1uabiBdxixXk3fqRnNs=;
+        b=2DziLIZzTZeDGGUTlRaBxWRYbxmn6E+JLiHPzp1Mk53M3nNvoyxiNjIU+bIQV7aFI1
+         rZzChTIg3GCeTEAockNd7uXAD8MYY45FStielAJqB8cueELLXv/Do3yJV6c6YH7/zCbs
+         WPECD0nmen+IaZSwSZshVGFFTpN8AN677eCBYyZ9gZl/VVbsJUJjPbgbVh3K8AobF2Up
+         Lsyj5SefZrKalz21AG0xcpF7mYIwUCXoN/0UJOfBXYdkb/aUoKmKSXIbEoMcHVYVKCr5
+         F4BnAaM6p3OcGPizYpa1CfisBWhwy+3UZShh0O/n/bwEQ0EPAccE9+ZEk2C96/TwLKEc
+         misg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OUb64193SWqYIql7DIKLMy9V1uabiBdxixXk3fqRnNs=;
+        b=R34PuQAUaHRoPZxH0iDGH8QDqq73l+jgEEqXg/PkMm0HShOEPXCv0EMnJkgHnMzqm8
+         tiItHALznn77J3u0M3o/3NH8CnQdzsOsoG4ZuyBvuUtH5KH6DYaBGZlHbeZbBKD1fXC0
+         7DmcL8RML7R9epYq5Eg8gu0jXto8Hq5hbu+aEyPexGtw0TLFv7ITIsWyAkQsIushgBWX
+         hqnMsU1fgwWrXk3jZQRQ+Lfy9sNyMDpqfbdi2Bs2+czRB7b8CpeofYEWcWFYwVZRA2Hw
+         WQxuPfTRZh6WRa28qhveA+0ULT3PAifmTFc6Km/jVT+qHkkJIgAKO17gM06YfhP5nobB
+         hgfA==
+X-Gm-Message-State: AOAM5337zywzetSPTTpFEAwxVOuUWda5agoFzEL81Oj4FXx8eAUaBNRk
+        d/3tOv5RjbsFVPtANkjORq0wKb+i13w=
+X-Google-Smtp-Source: ABdhPJw8wkqbz32oAgpEFT7agRATCW2IXTTcvN5ZJw5GOdwURx9gtNd8s4EpB21kZp+UwN5ZuB65FQ==
+X-Received: by 2002:a5d:6751:: with SMTP id l17mr9020528wrw.179.1592398433677;
+        Wed, 17 Jun 2020 05:53:53 -0700 (PDT)
+Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id h29sm36233697wrc.78.2020.06.17.05.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 05:53:52 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: meson: add missing gxl rng clock
+Date:   Wed, 17 Jun 2020 14:53:46 +0200
+Message-Id: <20200617125346.1163527-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GUPx2O/K0ibUojHx"
-Content-Disposition: inline
-In-Reply-To: <CAO_48GGhX-AxjvvvPKRMc+LQ_Uws1s_b4Q+aHokVv2RxcpObQw@mail.gmail.com>
-X-Cookie: This fortune is false.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The peripheral clock of the RNG is missing for gxl while it is present
+for gxbb.
 
---GUPx2O/K0ibUojHx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Wed, Jun 17, 2020 at 05:39:26PM +0530, Sumit Semwal wrote:
-> On Wed, 17 Jun 2020 at 17:36, Mark Brown <broonie@kernel.org> wrote:
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index fc59c8534c0f..6c8b189884ca 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -337,6 +337,11 @@ clkc: clock-controller {
+ 	};
+ };
+ 
++&hwrng {
++	clocks = <&clkc CLKID_RNG0>;
++	clock-names = "core";
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
+-- 
+2.25.4
 
-> > That seems...  interesting.  Are you sure the regulator has fully ramped
-> > when STATUS1 starts flagging?
-
-> On a consumer device, I am not sure I have any way of checking that,
-> but if there's some way you'd like me to validate it, I'll be happy
-> to.
-
-Without any way of validating what's going on or information on the
-hardware I'd be inclined to go with whatever reports more slowly for
-safety.
-
---GUPx2O/K0ibUojHx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7qDz4ACgkQJNaLcl1U
-h9BUTQf+KRqV/mXMamOWLACdLW5gZH6Y09B9TTc3Tz2fPQsNFYJnIhlDLeu8fT1+
-9B1QCd6Uu+8YxtlaD9d013/bapXRVVrx+6Lge3xyghKGc4UYljifwI5aSnP/+KbK
-WdtJ803eBe1inc0yg03o5OzrwKtd3Q48bIaOJuApqz6Jww5o7bZ4lglbMfv56f0n
-HsD1z0i0zX83BewbLqxTWWxv8u4DrrS1+o3EqzzK2dgUwKFmCR/ZJ8RHZeVS20vJ
-WGHc8n8fV5EjIuUHlqJ5lOl/+C07FCI1UrLSYA+16MiAmPbmaWlEXzKl0/m3yj8k
-/FZh8gFCDt0cewJTYyDX/huTVOwNdA==
-=AigS
------END PGP SIGNATURE-----
-
---GUPx2O/K0ibUojHx--
