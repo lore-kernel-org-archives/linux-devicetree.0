@@ -8,66 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5426C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D9B217A0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3DE217A0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUcUY14X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CD8m14hn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgFQQtB (ORCPT
+        id S1726943AbgFQQtK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52722 "EHLO
+        Wed, 17 Jun 2020 12:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727101AbgFQQs0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:48:26 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FDBC06174E;
-        Wed, 17 Jun 2020 09:48:25 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t21so2476417edr.12;
-        Wed, 17 Jun 2020 09:48:25 -0700 (PDT)
+        with ESMTP id S1727091AbgFQQsX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 12:48:23 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E105C06174E;
+        Wed, 17 Jun 2020 09:48:22 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id x93so2495846ede.9;
+        Wed, 17 Jun 2020 09:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fOhYKXX9hi+9MVHQhHY4sI0Y8sLNLyLXejCOvgcKKQA=;
-        b=HUcUY14XiOkgINSgtEcMP6dwMeU1iUCpAavOYpWWvcVsh9XJTa5DtQjSFtnFPZZkj0
-         Oa7QNVwBIslc9t6Nh6P7i0srtKtpqD24pR8l2nFKt31ELaSdZj/Ycbe8cxhUKr9HKmpN
-         vOqvXiQOrmtlRHg3DWzvmyaSzf0bGKG7L1sDV0331ySBiCYWFWW4YNFQBe49jpYqxObU
-         mwEynxqcr8CHDGWoUwuDv/hijrkEjuULX/FaIeUoz5pu7o7TMksFy/jGDs4Uy66kQ5Wk
-         okV7lrH0CSJwnz9J3uMVyNBlawa+8iQwV9grYTcYJiVEXWU9fEkj73bl+9Ouk4dcS/y4
-         bgbg==
+        bh=3xz8Ly05gyeb5KBCpOokF5fCnIvNh3e8To5d/tCGw6s=;
+        b=CD8m14hnX7VcHXJMTVTmQVcGUeGMSX/ov8Q3OW7+n1RHPg/JvcAUOaeJa9NDKiphpk
+         ox57Km3KikGeVu/93qmYFniSmpU9y5Knn8zqVdv3siuOirND6juMH5cNWH0MnC4m0cNw
+         Gg2qMvgG2is4IrwdLr1zhlMgXJ+HTUPEWtU0P8fbQQ6L+/8r3qYmjO8L0WJ+S5YvX9bb
+         L6aEEfdsWdMD8X7ygGBP8tdeimjhtKZi+vhQZppIB52MDKCFvFVa37eRpNcJvYEWo2Kq
+         ggYDflt54E2Hv0mnSdfaG5DTf6dYUP6mc9ZgSO3eu7MM6tItMhYGzF4glnBU0SgEvqUH
+         zStA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fOhYKXX9hi+9MVHQhHY4sI0Y8sLNLyLXejCOvgcKKQA=;
-        b=CCA34oMwKRpCfuKjWNuoKNZXcuImQfVL6dlDG1dNKo434C1i34rwwtdEu+K4PL3DzI
-         XFstM+6Dy5yHaJEL/lYn/Y9Ocmru2o55WQQpHYxGDJ595IGcyN2Ejyerog812p5asx4d
-         pjHisF634IhiolAYd4Mkai3ws/UEooGiws7xEMEN6syGhtAKbq9yh/PGJN5H2PZPk1gG
-         lQqjociZ31T+go97qGsQ4DZazQ36SChjBu29eymD+u2xFuwFnEs6wn33StQbcBVXXSM8
-         P8PqSI0Y3JZFeZyIzk5DZC/NbrZr1vcF0Cc2T6bfQMPEP5liZTp9+YdL5VZoJG+XFY7D
-         hJgA==
-X-Gm-Message-State: AOAM530EeRXzaVj84yM5BzGCn5RIIGLabGk9cdT6HtmI/R5gjv/OEm3a
-        YEt4O/xNGLaD/Tdz1YhrrcE=
-X-Google-Smtp-Source: ABdhPJwGHl1xZxgFACdA/VlCPqa/bNkM9owgM5dNiTwaSed9JoosVOhxU8MsEZ5Dh2Qw0s1ywW03nw==
-X-Received: by 2002:a50:fc0d:: with SMTP id i13mr87504edr.260.1592412504023;
-        Wed, 17 Jun 2020 09:48:24 -0700 (PDT)
+        bh=3xz8Ly05gyeb5KBCpOokF5fCnIvNh3e8To5d/tCGw6s=;
+        b=jpwmVhkV0mwqTA1vf6touBA/4vz6pLlRyuEdFOIHz8PCzfNuKCpKw0Xh89nskJHegD
+         DcNcU6cOPlrinL7htI9jvspXmjj/j34aYCGMeRaNVjH+XT8voz3xF3Lx9+4b105q6CCS
+         X+Gq2QH9VFGNB6t4NqUX4zUzTx5qM0pW419h2pbeeWa1Oity6cr8o+n/Aixri997IImp
+         gLqtmmjY2LH/mCmAVxwL55mzhSdQZ0uBLvi2kC1t+5RFLF3ndbeEq0WdmD+qhSPOpDS6
+         dTIfXDVNeo+6Ldt+xK6SgrxV3hPvl1SNhrdi/p735ebjKfurFBlKbXLtdxAIs/o1TXpl
+         ncLw==
+X-Gm-Message-State: AOAM532F64Zr7F0JDFcSZnIMui7DssM7M62bXx1NRf4afgzUivLSiYLu
+        X6bsbxW9F2Me9ILxK8hrSMwOI+zHRFw=
+X-Google-Smtp-Source: ABdhPJw7R9J5akrcHX2/Jrnt76GIBJaqtZXz4ydlRGQJIySk9dkbir5UXWT8+JNL8Sp76H/boj9rnA==
+X-Received: by 2002:a05:6402:1153:: with SMTP id g19mr57339edw.127.1592412501173;
+        Wed, 17 Jun 2020 09:48:21 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.129.96])
-        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.22
+        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:48:23 -0700 (PDT)
+        Wed, 17 Jun 2020 09:48:20 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
 Cc:     linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] arm: dts: owl-s500: Add DMA controller
-Date:   Wed, 17 Jun 2020 19:48:07 +0300
-Message-Id: <5b942daad7854c50faabbc9ce8e24c2ade74f641.1592407030.git.cristian.ciocaltea@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 05/11] dt-bindings: clock: Add APB, DMAC, GPIO bindings for Actions S500 SoC
+Date:   Wed, 17 Jun 2020 19:48:05 +0300
+Message-Id: <00fe89cdca09f8d6cd510e558c754ec37ae303cb.1592407030.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
 References: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
@@ -78,37 +76,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DMA controller node for Actions Semi S500 SoC.
+Add the missing APB, DMAC and GPIO clock bindings constants for
+Actions Semi S500 SoC.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 ---
- arch/arm/boot/dts/owl-s500.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ include/dt-bindings/clock/actions,s500-cmu.h | 77 ++++++++++----------
+ 1 file changed, 40 insertions(+), 37 deletions(-)
 
-diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
-index ac3d04c75dd5..0f4fc5487dad 100644
---- a/arch/arm/boot/dts/owl-s500.dtsi
-+++ b/arch/arm/boot/dts/owl-s500.dtsi
-@@ -205,5 +205,19 @@ sps: power-controller@b01b0100 {
- 			reg = <0xb01b0100 0x100>;
- 			#power-domain-cells = <1>;
- 		};
-+
-+		dma: dma-controller@b0260000 {
-+			compatible = "actions,s900-dma";
-+			reg = <0xb0260000 0xd00>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			dma-channels = <12>;
-+			dma-requests = <46>;
-+			clocks = <&cmu CLK_DMAC>;
-+			power-domains = <&sps S500_PD_DMA>;
-+		};
- 	};
- };
+diff --git a/include/dt-bindings/clock/actions,s500-cmu.h b/include/dt-bindings/clock/actions,s500-cmu.h
+index 030981cd2d56..a391d1651257 100644
+--- a/include/dt-bindings/clock/actions,s500-cmu.h
++++ b/include/dt-bindings/clock/actions,s500-cmu.h
+@@ -33,45 +33,48 @@
+ #define CLK_BISP		15
+ #define CLK_VCE			16
+ #define CLK_VDE			17
++#define CLK_APB			18
++#define CLK_DMAC		19
+ 
+ /* peripheral device clock */
+-#define CLK_TIMER		18
+-#define CLK_I2C0		19
+-#define CLK_I2C1		20
+-#define CLK_I2C2		21
+-#define CLK_I2C3		22
+-#define CLK_PWM0		23
+-#define CLK_PWM1		24
+-#define CLK_PWM2		25
+-#define CLK_PWM3		26
+-#define CLK_PWM4		27
+-#define CLK_PWM5		28
+-#define CLK_SD0			29
+-#define CLK_SD1			30
+-#define CLK_SD2			31
+-#define CLK_SENSOR0		32
+-#define CLK_SENSOR1		33
+-#define CLK_SPI0		34
+-#define CLK_SPI1		35
+-#define CLK_SPI2		36
+-#define CLK_SPI3		37
+-#define CLK_UART0		38
+-#define CLK_UART1		39
+-#define CLK_UART2		40
+-#define CLK_UART3		41
+-#define CLK_UART4		42
+-#define CLK_UART5		43
+-#define CLK_UART6		44
+-#define CLK_DE1			45
+-#define CLK_DE2			46
+-#define CLK_I2SRX		47
+-#define CLK_I2STX		48
+-#define CLK_HDMI_AUDIO		49
+-#define CLK_HDMI		50
+-#define CLK_SPDIF		51
+-#define CLK_NAND		52
+-#define CLK_ECC			53
+-#define CLK_RMII_REF		54
++#define CLK_GPIO		20
++#define CLK_TIMER		21
++#define CLK_I2C0		22
++#define CLK_I2C1		23
++#define CLK_I2C2		24
++#define CLK_I2C3		25
++#define CLK_PWM0		26
++#define CLK_PWM1		27
++#define CLK_PWM2		28
++#define CLK_PWM3		29
++#define CLK_PWM4		30
++#define CLK_PWM5		31
++#define CLK_SD0			32
++#define CLK_SD1			33
++#define CLK_SD2			34
++#define CLK_SENSOR0		35
++#define CLK_SENSOR1		36
++#define CLK_SPI0		37
++#define CLK_SPI1		38
++#define CLK_SPI2		39
++#define CLK_SPI3		40
++#define CLK_UART0		41
++#define CLK_UART1		42
++#define CLK_UART2		43
++#define CLK_UART3		44
++#define CLK_UART4		45
++#define CLK_UART5		46
++#define CLK_UART6		47
++#define CLK_DE1			48
++#define CLK_DE2			49
++#define CLK_I2SRX		50
++#define CLK_I2STX		51
++#define CLK_HDMI_AUDIO		52
++#define CLK_HDMI		53
++#define CLK_SPDIF		54
++#define CLK_NAND		55
++#define CLK_ECC			56
++#define CLK_RMII_REF		57
+ 
+ #define CLK_NR_CLKS	       (CLK_RMII_REF + 1)
+ 
 -- 
 2.27.0
 
