@@ -2,134 +2,81 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30496C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 13:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98EDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 14:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFC221548
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 13:45:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYAkHByC"
+	by mail.kernel.org (Postfix) with ESMTP id 9B99F20776
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 14:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFQNpR (ORCPT
+        id S1726495AbgFQOBS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgFQNpQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 09:45:16 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C42C0613ED
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 06:45:16 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b6so2383605wrs.11
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 06:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZcfSh9+wW5N+Dlp3gMek+FnLdHyfPdEraPwakLbSEY=;
-        b=LYAkHByCGO57OGvCsKakDa/onsj0NNBFKEEvJ1Z7yYhTezhe8ecYidS+fkrK9VFrBz
-         SygBH0qJBjfg3qU3HPXeyU8qALRaERnoia1cSFiOruEduuKOrx8vuRg1Kl1WksZQCLMK
-         x/5nLL7+T2k0SU7zHsW7tdWl4RiwXAqkqs2Fy546cOoMY647WD5v1IQqNKWaqoQQDTo4
-         Fu93NL6f5TPFC+i9cCNmWKSL2uQnJg0vC4e+UvZuzF13cCeVrCAApkOOBlsVWXiytWqG
-         c5GFLY/NNOSig71fvwBpu2UfSn9tOl2xE27q9XngYXC+pEjbm45Ppje22FIen6vyjkGr
-         lRzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZcfSh9+wW5N+Dlp3gMek+FnLdHyfPdEraPwakLbSEY=;
-        b=qTwQrCx1F24dffSKilw09AfZmAgosOpxKhzEH92N3I6XBscVdvAjnlFuoSFJVMuade
-         XIveI9vmea06FsaIArokbmeYdWK65IhcxhqNWtkNdiU71gS4QNglrFqBd1YXq0J7ustW
-         X9Ce/v7BX5sqOInZnIjjWPiNq9ZIN7na9RVNwDVIpTV6IcpdYQ74nOlpDvCAQwn6P2w9
-         DzvI+yKXConhtQKw1Ddhk02Rz2iGgiUUzvdxO8THPvjfZWxT8YuAAx0/clL0bjuTO2Uq
-         NRlXDtvAtboGKQXMg6Cg/ijzQjqFDQTXHR6+rPuMJwnvLnFSRQZ1im2Qx+2HdzkjHR4P
-         Z1cw==
-X-Gm-Message-State: AOAM5330ov1iF5HeFlk+OpQqTHwym5ng7f5q9jqjGZqxPEWqrNKxADTu
-        u5qxoVdoZUWKetsYLrSLZ+ZmOg==
-X-Google-Smtp-Source: ABdhPJyjEYHOKxsSHo9Q9bM5sAOlNls27BPQ1cWgfi72kiXg1pUC1BOlnpNjFiDtsyLCGFq+QVwFTA==
-X-Received: by 2002:adf:9c12:: with SMTP id f18mr9306013wrc.105.1592401514854;
-        Wed, 17 Jun 2020 06:45:14 -0700 (PDT)
-Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id j14sm1251165wrs.75.2020.06.17.06.45.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 06:45:14 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH] arm64: dts: msm8916: Add interconnect provider DT nodes
-Date:   Wed, 17 Jun 2020 16:45:15 +0300
-Message-Id: <20200617134515.25229-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 17 Jun 2020 10:01:18 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55840 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgFQOBS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 10:01:18 -0400
+IronPort-SDR: KL9/j16fP0u6vgKM68IgxiOCtR2igPo7reZeLP6G7K5mgv/2a1pUz7wQ/0c50BvwNZa5xpgpxa
+ jU5PZ6noycbQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 07:01:07 -0700
+IronPort-SDR: pHhd1moQFCEilgzcaIfWOZxD8yIrsQ3v98hiX2jss36iUYAD6RfJld9ysOdQRNPLZfsTUncnNe
+ MXMrxxJ9wyMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="277283737"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2020 07:01:05 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jlYcl-00E41G-LW; Wed, 17 Jun 2020 17:01:07 +0300
+Date:   Wed, 17 Jun 2020 17:01:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        adrian.hunter@intel.com
+Subject: Re: [RESEND v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
+Message-ID: <20200617140107.GF2428291@smile.fi.intel.com>
+References: <20200616233252.15619-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200616233252.15619-3-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616233252.15619-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add nodes for the network-on-chip interconnect buses present on
-MSM8916-based platforms.
+On Wed, Jun 17, 2020 at 07:32:52AM +0800, Wan Ahmad Zainie wrote:
+> Add support for eMMC PHY on Intel Keem Bay SoC.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+...
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 32bd140ac9fd..6c57896d9836 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/arm/coresight-cti-dt.h>
-+#include <dt-bindings/interconnect/qcom,msm8916.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8916.h>
- #include <dt-bindings/reset/qcom,gcc-msm8916.h>
-@@ -406,11 +407,38 @@ soc: soc {
- 		ranges = <0 0 0 0xffffffff>;
- 		compatible = "simple-bus";
- 
-+		bimc: interconnect@400000 {
-+			compatible = "qcom,msm8916-bimc";
-+			reg = <0x00400000 0x62000>;
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-+				 <&rpmcc RPM_SMD_BIMC_A_CLK>;
-+		};
-+
- 		restart@4ab000 {
- 			compatible = "qcom,pshold";
- 			reg = <0x4ab000 0x4>;
- 		};
- 
-+		pcnoc: interconnect@500000 {
-+			compatible = "qcom,msm8916-pcnoc";
-+			reg = <0x00500000 0x11000>;
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_PCNOC_CLK>,
-+				 <&rpmcc RPM_SMD_PCNOC_A_CLK>;
-+		};
-+
-+		snoc: interconnect@580000 {
-+			compatible = "qcom,msm8916-snoc";
-+			reg = <0x00580000 0x14000>;
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-+				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
-+		};
-+
- 		msmgpio: pinctrl@1000000 {
- 			compatible = "qcom,msm8916-pinctrl";
- 			reg = <0x1000000 0x300000>;
+> +	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
+> +				       dllrdy, IS_DLLRDY(dllrdy),
+> +				       0, 50 * USEC_PER_MSEC);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+
+This has no changes.
+
+Are you sure the version is correct?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
