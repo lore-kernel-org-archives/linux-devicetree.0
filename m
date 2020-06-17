@@ -2,47 +2,45 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10664C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172A5C433E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC7F20B1F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0112920B1F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgFQWcQ (ORCPT
+        id S1726913AbgFQWch (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:32:16 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57334 "EHLO
+        Wed, 17 Jun 2020 18:32:37 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57420 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgFQWcQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:32:16 -0400
+        with ESMTP id S1726761AbgFQWcS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:32:18 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F3DBA8040A6A;
-        Wed, 17 Jun 2020 22:32:10 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4A0CC80045E4;
+        Wed, 17 Jun 2020 22:32:13 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nHQpljPh2UPG; Thu, 18 Jun 2020 01:32:07 +0300 (MSK)
+        with ESMTP id QblWbZzot7VM; Thu, 18 Jun 2020 01:32:12 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 1/6] dt-bindings: power: Convert mti,mips-cpc to DT schema
-Date:   Thu, 18 Jun 2020 01:31:55 +0300
-Message-ID: <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Date:   Thu, 18 Jun 2020 01:32:00 +0300
+Message-ID: <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,81 +52,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It's a Cluster Power Controller embedded into the MIPS IP cores.
-Currently the corresponding dts node is supposed to have compatible
-and reg properties.
+Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
+GIC timer and MIPS CPS CPUidle drivers.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Marc Zyngier <maz@kernel.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
 ---
 
-Changelog prev:
-- Reword the changelog summary - use shorter version.
-- Lowercase the example hex'es.
+Changelog v3:
+- Keep the files list alphabetically ordered.
+- Add Thomas as the co-maintainer of the designated drivers.
 ---
- .../bindings/power/mti,mips-cpc.txt           |  8 -----
- .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
- 2 files changed, 35 insertions(+), 8 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
- create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-deleted file mode 100644
-index c6b82511ae8a..000000000000
---- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-+++ /dev/null
-@@ -1,8 +0,0 @@
--Binding for MIPS Cluster Power Controller (CPC).
--
--This binding allows a system to specify where the CPC registers are
--located.
--
--Required properties:
--compatible : Should be "mti,mips-cpc".
--regs: Should describe the address & size of the CPC register region.
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-new file mode 100644
-index 000000000000..9cd92a57130c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..20532e0287d7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
+ F:	drivers/clk/imgtec/clk-boston.c
+ F:	include/dt-bindings/clock/boston-clock.h
+ 
++MIPS CORE DRIVERS
++M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
++M:	Serge Semin <fancer.lancer@gmail.com>
++L:	linux-mips@vger.kernel.org
++S:	Supported
++F:	drivers/bus/mips_cdmm.c
++F:	drivers/clocksource/mips-gic-timer.c
++F:	drivers/cpuidle/cpuidle-cps.c
++F:	drivers/irqchip/irq-mips-cpu.c
++F:	drivers/irqchip/irq-mips-gic.c
 +
-+title: MIPS Cluster Power Controller
-+
-+description: |
-+  Defines a location of the MIPS Cluster Power Controller registers.
-+
-+maintainers:
-+  - Paul Burton <paulburton@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: mti,mips-cpc
-+
-+  reg:
-+    description: |
-+      Base address and size of an unoccupied memory region, which will be
-+      used to map the MIPS CPC registers block.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cpc@1bde0000 {
-+      compatible = "mti,mips-cpc";
-+      reg = <0 0x1bde0000 0 0x8000>;
-+    };
-+...
+ MIPS GENERIC PLATFORM
+ M:	Paul Burton <paulburton@kernel.org>
+ L:	linux-mips@vger.kernel.org
 -- 
 2.26.2
 
