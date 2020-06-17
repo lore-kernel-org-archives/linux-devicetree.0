@@ -2,135 +2,124 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F59DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 19:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDCDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2BEE20884
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 19:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P2cQuGD/"
+	by mail.kernel.org (Postfix) with ESMTP id 679082088E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592425329;
+	bh=xNE9XSOvhghCOem7BB7ItlRidhpb63R/mvntoncsZiY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v6dPXkM77JAgD4L7B+HlCbNa0W+uNk8Jw5XLH3QLwGvYRjYr5FWtAnr08q1mUzFpx
+	 0l0afuP06VhbzQkONqpTgWBTJ2ONvl5zq+IVQaz5Z++WsD5bhxgLRC7XIvevbiqI+W
+	 cJ1kdEKE0OEz2DGpJnLnuvf+8HSIw8ZoxUf1twxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgFQTWd (ORCPT
+        id S1726758AbgFQUWI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:22:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45232 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgFQTWc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 15:22:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HJMJ0T074159;
-        Wed, 17 Jun 2020 14:22:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592421739;
-        bh=Bkn+lQ7tZTYAmQ+YAHSjbAZtH5GQl0iS1nrW8ZoWpTo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=P2cQuGD/oBIZXT7KVhuJSwqLsVKQT7n0b+rIdMBvgLV56NSUHJCUln3AI4NgOkioC
-         u3MsHavBkDxTnvb7TryTbVYZUTUr99SKLM+Wmj2uLOS2mM04d0R8R+2i2km3kHtSZ7
-         7l3YvvihLokfoeh5SRMlO6gQlrjP23xU3XLVt7mQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HJMJUj075690
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 14:22:19 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 14:22:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 14:22:18 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HJMIGC110715;
-        Wed, 17 Jun 2020 14:22:18 -0500
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     kernel test robot <lkp@intel.com>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
-Date:   Wed, 17 Jun 2020 14:22:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 16:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgFQUWI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 16:22:08 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3124E217D9;
+        Wed, 17 Jun 2020 20:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592425327;
+        bh=xNE9XSOvhghCOem7BB7ItlRidhpb63R/mvntoncsZiY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cM/8adJS/CfoBabKgs5smCjZMrm8f4R2wBu/gfpLBZYw+kKE8o3U72M3S583OKTjP
+         PCrAgGaKQQvjKKN85m9N2/+zEAPa/OWP+SnRpU8VVUEdGURnzSYRgx2brhjdwglSNO
+         GbFlg7PGff1nb9Qr5CibEyTntz1Xma5RKY/dSU2Q=
+Received: by mail-oi1-f171.google.com with SMTP id 25so2927693oiy.13;
+        Wed, 17 Jun 2020 13:22:07 -0700 (PDT)
+X-Gm-Message-State: AOAM532aiIXPZdMvtpJZ2gGovaCO6Dvwr0lJz/dCgRp7hh1IkL2a6Htm
+        nUgm+B2EoEvxi43vRA4/vz3pfL8WZJ6k6ji05Q==
+X-Google-Smtp-Source: ABdhPJzi4G/SG7UPJZAtkdxWsR+QkKnM2jLwSEKoazMNV1MrKFH3VVff+tCgS2ag5HdiA3cWgQIOgK9y06+Tn3frHYE=
+X-Received: by 2002:aca:1e0b:: with SMTP id m11mr388478oic.147.1592425326440;
+ Wed, 17 Jun 2020 13:22:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202006180032.JW0i39C6%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
+In-Reply-To: <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 17 Jun 2020 14:21:52 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+pZebUgG_fyQkhhbp2khVc+L-kJ2D2O8BiO6SyjfAK_Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+pZebUgG_fyQkhhbp2khVc+L-kJ2D2O8BiO6SyjfAK_Q@mail.gmail.com>
+Subject: Re: [PATCH v3 006/105] dt-bindings: display: Convert VC4 bindings to schemas
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pavel/Jacek
-
-On 6/17/20 11:28 AM, kernel test robot wrote:
-> Hi Dan,
+On Wed, May 27, 2020 at 9:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> I love your patch! Yet something to improve:
+> The BCM283x SoCs have a display pipeline composed of several controllers
+> with device tree bindings that are supported by Linux.
 >
-> [auto build test ERROR on pavel-linux-leds/for-next]
-> [cannot apply to j.anaszewski-leds/for-next]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> Now that we have the DT validation in place, let's split into separate
+> files and convert the device tree bindings for those controllers to
+> schemas.
 >
-> url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217
-> base:   git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git for-next
-> config: ia64-randconfig-r015-20200617 (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=ia64
+> This is just a 1:1 conversion though, and some bindings were incomplete so
+> it results in example validation warnings that are going to be addressed in
+> the following patches.
 >
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
->
-> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function `lp55xx_set_mc_brightness':
->>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to `led_mc_calc_color_components'
-> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function `devm_led_classdev_multicolor_register':
->>> include/linux/led-class-multicolor.h:74: undefined reference to `devm_led_classdev_multicolor_register_ext'
-> vim +146 drivers/leds/leds-lp55xx-common.c
->
->     138	
->     139	static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
->     140					    enum led_brightness brightness)
->     141	{
->     142		struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
->     143		struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->     144		struct lp55xx_device_config *cfg = led->chip->cfg;
->     145	
->   > 146		led_mc_calc_color_components(&led->mc_cdev, brightness);
->     147		return cfg->multicolor_brightness_fn(led);
->     148	
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt              | 174 +------------------------------------------------------------------------
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml         |  66 +++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml        |  73 ++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml        |  75 +++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml         |  37 +++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml |  40 +++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml         |  37 +++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml         |  42 +++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml         |  34 ++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml         |  44 ++++++++++++++++++-
+>  MAINTAINERS                                                             |   2 +-
+>  11 files changed, 449 insertions(+), 175 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml
 
-Well this was a mess to figure out.
+Not sure why my checks didn't catch this, but now linux-next has these warnings:
 
-The only fix I can figure out here is to remove the
-
-     depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
-
-from each child device and add
-
-     select LEDS_CLASS_MULTI_COLOR
-
-to the LP55XX_COMMON
-
-This way the Multi color framework will inherit the symbol that was set 
-by the COMMON flag which is inherited by majority from the child flags.
-
-Dan
-
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
+panel: compatible: Additional items are not allowed ('simple-panel'
+was unexpected)
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
+panel: compatible: ['ontat,yx700wv03', 'simple-panel'] is too long
+/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
+panel: 'power-supply' is a required property
