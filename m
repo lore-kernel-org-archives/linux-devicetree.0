@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E8DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9571C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D3621475
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A2120C09
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvRLet3i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgArmsFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgFQIdF (ORCPT
+        id S1726211AbgFQIdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
+        Wed, 17 Jun 2020 04:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbgFQIcn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 04:32:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28B2C06174E;
-        Wed, 17 Jun 2020 01:32:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u26so3931854wmn.1;
-        Wed, 17 Jun 2020 01:32:42 -0700 (PDT)
+        with ESMTP id S1726848AbgFQIcj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 04:32:39 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE4EC061573;
+        Wed, 17 Jun 2020 01:32:39 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id y20so1049340wmi.2;
+        Wed, 17 Jun 2020 01:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b2eLOglr5wT6BtuBEPMCmeaLyIB9an6mAhu13j3ZiIQ=;
-        b=RvRLet3in+m8wASu2yQA2GMSU5003FtENutnm1vt0mYT2Y4hmEmscxA+/XYg5FuVf3
-         t0n05E9i0oLw5b/2s933gBP2j7bY5eq70QGcXRL1LtYfaO99R+QPRLgZM1czEofjH0Mk
-         y3UFBNFsM0mww9KmjXZWlARoxiFhIixMOnMBwjyP3WCchyFFDHJTgb+sKbvkXLBznT82
-         uBUraneu0zWjNgzCqiC7ZXNpQ0+PwEC6hxmaS1K06c8aob2Nu1IArKA00yDxGmoqMRap
-         tJcNSaMW6rSMxK7DJDfCGuCFavkQZ7izwjY116QEbwza+8zFTXj6PftAfTk6dmwbaqep
-         /dGg==
+        bh=AADm8+jPwopqGrKKxP/w78VBLg3nPZe95QFE0auj6m8=;
+        b=FgArmsFLy2nwlgisGeTAt4/owTGITkMYo10qO995gaqHhpJoOYRm9zKi43zJ4x1r/A
+         LqC0vBgrLAHE6zmWLa90Vi05nyI5fx39/8hXlYJ3I724KN8Y3oChsib5o5uNC1Z7XNe9
+         gTbzZtfUNN+vyP9K5gdu3H4ATy6BBr4MwtCGIa0nvRlYBdCIrItZXtyPZfWeQVaIR83j
+         Lcx0ZafGVfOfy7HZluNgjtAzQZVgInhaUPgHhXRJlJt27HaVyAnDMEX+KOXMg1vcOOhW
+         BJ2QP0cLr7VOklWGo0ZNlnJYAmoVM2ruoxbaJ5MvNVqrq8RzLuwM4UkqroJdteYH13cv
+         888w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b2eLOglr5wT6BtuBEPMCmeaLyIB9an6mAhu13j3ZiIQ=;
-        b=efKNd5oGsdfNHQBs29XgueQ8/TCW5q8LV72xKrhgtmtCMnX6BWvTymbCCLcsv69OlS
-         7FpegJC3OXw+FmrjH4bxMDYqNcRKP5okRqHIyzDe/5+4uFW4C8WHE3V+GEuUwsT/JZpI
-         xr6zLP61FmlO51oCZXRTzZcj9ROa14Xp+rrSQ10wB17sOFp6gB6LEDNL8Tvepuj6fK99
-         +E4ZcbMFnAS1iwbydKD9YwOTV+c2f+ZSVj0vtZ1ADq1U/atxQ+ndLzgNRqnMe4gLe0Z1
-         +5U8k+juCHYahW2bC4elZcKtkubW62ncV4pbadwRdl7kqoQf08SI4zQ3SzSv5XuwS6cG
-         qyQQ==
-X-Gm-Message-State: AOAM53361qW/aGpE5dN8BvPAhBmR0GRacNpM3NfOFpuPnTRFJrM7AQT0
-        kY2efu9u84cTmzf7/hMYPnE=
-X-Google-Smtp-Source: ABdhPJz25m45suqv5UlI75P/d7Ko5z5s1uacoGbEKSKuNxWPssOx+WU64o4rIzf0swy7WRvK+UqN9g==
-X-Received: by 2002:a05:600c:2284:: with SMTP id 4mr7052517wmf.57.1592382761434;
-        Wed, 17 Jun 2020 01:32:41 -0700 (PDT)
+        bh=AADm8+jPwopqGrKKxP/w78VBLg3nPZe95QFE0auj6m8=;
+        b=W89ZgVRwxnG5J+oWF1wYSzp9m6j+BaVnpajj1NQOkZdO3xPAHnU2kc6fnLMTfrDCHW
+         JBlCukdwKPXIrGB5iOyRBQpO8ZoJdueio6vPrhal4VBY7IeGBJ8GzhuVPiap0E/fZ84+
+         icXe8iNd7X1EkEVmh4iZyaE/8VP0srUx3t5gfpdGPPwe7309pIKcW9urzvpmwENg2fzb
+         tWbj9vHPgDAwZxMXSZWc3WKl5mSbkDPzveB0KQExlClFuOeWivaiYibFXMIqI57SVwLl
+         Gt/Yir/qrItOOh6ek6kUa6S1gli0Ep4I/PqadbAA+x1bx+N8Wi0xTPVPE6popoQcZ0kK
+         tjpQ==
+X-Gm-Message-State: AOAM532B3qRR/vi33ZFBKobArfzjiMzrafdUxsIh+7VBfmf9HgsF9Dze
+        M4ql6h+kOfgZy+9G5i0m91JyWfGcKj4=
+X-Google-Smtp-Source: ABdhPJxA0V/6Xv5T0EzwZ4XUEOAnWfimiqZnv4hazxN7qFsbsCrEH+t8EbYtB/FXfU4RlsTxUFCplg==
+X-Received: by 2002:a1c:9d96:: with SMTP id g144mr7073223wme.126.1592382757987;
+        Wed, 17 Jun 2020 01:32:37 -0700 (PDT)
 Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id a16sm32596863wrx.8.2020.06.17.01.32.40
+        by smtp.gmail.com with ESMTPSA id a16sm32596863wrx.8.2020.06.17.01.32.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 01:32:41 -0700 (PDT)
+        Wed, 17 Jun 2020 01:32:37 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
@@ -68,9 +68,9 @@ To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
         bcm-kernel-feedback-list@broadcom.com
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v6 6/9] mips: bmips: dts: add BCM6362 reset controller support
-Date:   Wed, 17 Jun 2020 10:32:28 +0200
-Message-Id: <20200617083231.3699090-7-noltari@gmail.com>
+Subject: [PATCH v6 2/9] dt-bindings: reset: add BCM6345 reset controller bindings
+Date:   Wed, 17 Jun 2020 10:32:24 +0200
+Message-Id: <20200617083231.3699090-3-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200617083231.3699090-1-noltari@gmail.com>
 References: <20200617083231.3699090-1-noltari@gmail.com>
@@ -82,67 +82,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM6362 SoCs have a reset controller for certain components.
+Add device tree binding documentation for BCM6345 reset controller.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- v6: no changes.
- v5: no changes.
- v4: no changes.
- v3: add reset controller definitions header file.
- v2: no changes.
+ v6: no changes
+ v5: no changes
+ v4: change license and fix maxItems.
+ v3: no changes
+ v2: no changes
 
- arch/mips/boot/dts/brcm/bcm6362.dtsi      |  6 ++++++
- include/dt-bindings/reset/bcm6362-reset.h | 22 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 include/dt-bindings/reset/bcm6362-reset.h
+ .../bindings/reset/brcm,bcm6345-reset.yaml    | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
 
-diff --git a/arch/mips/boot/dts/brcm/bcm6362.dtsi b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-index 8ae6981735b8..443af6b4c838 100644
---- a/arch/mips/boot/dts/brcm/bcm6362.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm6362.dtsi
-@@ -70,6 +70,12 @@ reboot: syscon-reboot@10000008 {
- 			mask = <0x1>;
- 		};
- 
-+		periph_rst: reset-controller@10000010 {
-+			compatible = "brcm,bcm6345-reset";
-+			reg = <0x10000010 0x4>;
-+			#reset-cells = <1>;
-+		};
-+
- 		periph_intc: interrupt-controller@10000020 {
- 			compatible = "brcm,bcm6345-l1-intc";
- 			reg = <0x10000020 0x10>,
-diff --git a/include/dt-bindings/reset/bcm6362-reset.h b/include/dt-bindings/reset/bcm6362-reset.h
+diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
 new file mode 100644
-index 000000000000..7ebb0546e0ab
+index 000000000000..560cf6522cb8
 --- /dev/null
-+++ b/include/dt-bindings/reset/bcm6362-reset.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/reset/brcm,bcm6345-reset.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+#ifndef __DT_BINDINGS_RESET_BCM6362_H
-+#define __DT_BINDINGS_RESET_BCM6362_H
++title: BCM6345 reset controller
 +
-+#define BCM6362_RST_SPI		0
-+#define BCM6362_RST_IPSEC	1
-+#define BCM6362_RST_EPHY	2
-+#define BCM6362_RST_SAR		3
-+#define BCM6362_RST_ENETSW	4
-+#define BCM6362_RST_USBD	5
-+#define BCM6362_RST_USBH	6
-+#define BCM6362_RST_PCM		7
-+#define BCM6362_RST_PCIE_CORE	8
-+#define BCM6362_RST_PCIE	9
-+#define BCM6362_RST_PCIE_EXT	10
-+#define BCM6362_RST_WLAN_SHIM	11
-+#define BCM6362_RST_DDR_PHY	12
-+#define BCM6362_RST_FAP		13
-+#define BCM6362_RST_WLAN_UBUS	14
++description: This document describes the BCM6345 reset controller.
 +
-+#endif /* __DT_BINDINGS_RESET_BCM6362_H */
++maintainers:
++  - Álvaro Fernández Rojas <noltari@gmail.com>
++
++properties:
++  compatible:
++    const: brcm,bcm6345-reset
++
++  reg:
++    maxItems: 1
++
++  "#reset-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - "#reset-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    reset-controller@10000010 {
++      compatible = "brcm,bcm6345-reset";
++      reg = <0x10000010 0x4>;
++      #reset-cells = <1>;
++    };
 -- 
 2.27.0
 
