@@ -6,83 +6,77 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F35C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495A4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3AA214DB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA0620853
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 20:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592425610;
-	bh=3K9q4hVMpD/GOm5Mve5o07XFgVA+f8IeJ+DVYJy9Ye8=;
+	s=default; t=1592425879;
+	bh=B1YJNVezz+4ZMGoHs4RXcOFqtzQ+8swirTSFOqof3qQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uxo+BGM9XmBmWP9nRPeVJr9LSf7Wz9+s2Pu13Q/fNManJBtRod9Ev/wXmwblAqvA3
-	 I8s2hf/A2BeegL35xV5o9MHj0Gs+6lvQz9SD6AjVGqjwGH8Eu7WPKhFWfI7wPieN9y
-	 jrAeAD2nR1OiA826YmglgM0qKgXrP162LgkCm6M8=
+	b=tWF1/MZLSq4LpGO4L7Gt8C9m5U69SSUQmH+AF8OL2UfnwRTgNlwMUPYR8vVwwD3eB
+	 xn34IwUZ5ftH/t4Gdtwk8DcCYcxlhBwiFbvebcoiWhAlqGNeBeg3KWTfMRxM9NC8Ty
+	 S6i0yJd2f1/c0WeTBawTNfspdjRCDFu8ECedzRDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgFQU0t (ORCPT
+        id S1726833AbgFQUbS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:26:49 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38028 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQU0t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 16:26:49 -0400
-Received: by mail-il1-f193.google.com with SMTP id b5so3629415iln.5;
-        Wed, 17 Jun 2020 13:26:48 -0700 (PDT)
+        Wed, 17 Jun 2020 16:31:18 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:47009 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQUbS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 16:31:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id t9so4449006ioj.13;
+        Wed, 17 Jun 2020 13:31:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FtYug0tUqxYyOmHYqIp7a6FmVIpDrS3WKwscxWj8W8I=;
-        b=p7GneibE4GORzXyKSbr1dCThkJHaHpH1oGlxGFuq5AJsV1MTf5wHrDGjMW3WSXVOvS
-         vZY9yC1+dy1UtEK13M5d/uh8C/3fQibK0fJXo3Rs+E6jDPVx6hBKfJdsrX8VwesCYjxn
-         sFrFnOHyc3AN0kbvTAvV+qomBtgS+5pT6lPsn0wjWSISX87ti7G+syYobtqgcqMjDAKL
-         XhdgR/wtefTrHoFt1TT/hDCg+0R4fxXbWwsO7yTSJhBzkps4zkJBtCfzt0L1fIFa3QC1
-         AnBS3ZqGCbUPj6FPCnEPjViLCCXpkNQjRvjNHnxnoqLvnBNGJQkpxaBwthPJJpcICQ3v
-         7aVQ==
-X-Gm-Message-State: AOAM5322BlBDfPdFg52rJfy1V8FvAXLQqc/kMRdyykLk0iyNfZ0qEf16
-        80Ouq62nIuzWv6FZNVy83CpeW5QjtA==
-X-Google-Smtp-Source: ABdhPJwkL0llprX5q916r2w2Emi9uTQIYlfJlzd54EYDj3cyOYjlfb3zwH9OsbYwfqHNtW/OwSKF+g==
-X-Received: by 2002:a92:1f15:: with SMTP id i21mr638013ile.61.1592425608616;
-        Wed, 17 Jun 2020 13:26:48 -0700 (PDT)
+        bh=bBXYSk1/ATYeub4n9kMvAH2hmCPII0+QncDRP+7+Htw=;
+        b=bk65cOTNA43Ik1iHnbZlK7AuKOUFauOyqGDG+1JnsCzAFxz9vtZ6ZSbHVd+zS6I7Rm
+         TjpIvAfq/r2CrfriJZpD70WohnQNRLmxx/MePr4z+mL8p9/tX1FKG4NTw/99noHo7+ep
+         kj4I3fJcUFR1p1DH1OJWtY6zIbeezkjdpeLByWmbE5IYcEdJhQiwTM1oHK8SIMeszQNV
+         k1uiW/b2C3MkD8odV32SYqVgXqjCe4m5x9Teg9F6M5RBpqwAPzmg5q/8tQ14eQi4ZJ7G
+         T+ffCEeSX9RHoWkYDrFqh4iRPRrfskq4DVlFcxPH8anOJdQAL8GK//pSXOue0u5PDSJa
+         uZJg==
+X-Gm-Message-State: AOAM532UOxHdLKyYexu2N8UaK/ZdcnLNqn4MZDYF5eYY2td0naIT0gU4
+        0zwCXG0ykFNwM6VESPlxvSx1WY048w==
+X-Google-Smtp-Source: ABdhPJwJ3J48mh8YLrWWaH382tu/CTB8ZZ5/9hfRxSeLhpiWZor9+iKA/OgTvoX4RkqqBCty76mFxw==
+X-Received: by 2002:a6b:1785:: with SMTP id 127mr1302084iox.136.1592425877505;
+        Wed, 17 Jun 2020 13:31:17 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id y12sm339197ili.83.2020.06.17.13.26.47
+        by smtp.gmail.com with ESMTPSA id h23sm485548ioj.39.2020.06.17.13.31.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 13:26:47 -0700 (PDT)
-Received: (nullmailer pid 2729183 invoked by uid 1000);
-        Wed, 17 Jun 2020 20:26:45 -0000
-Date:   Wed, 17 Jun 2020 14:26:45 -0600
+        Wed, 17 Jun 2020 13:31:16 -0700 (PDT)
+Received: (nullmailer pid 2740358 invoked by uid 1000);
+        Wed, 17 Jun 2020 20:31:15 -0000
+Date:   Wed, 17 Jun 2020 14:31:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jeff Chase <jnchase@google.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, hverkuil-cisco@xs4all.nl,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: Add ch7322 media i2c device
-Message-ID: <20200617202645.GA2728573@bogus>
-References: <20200615193811.233737-1-jnchase@google.com>
- <20200615193811.233737-2-jnchase@google.com>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     andy.shevchenko@gmail.com, devicetree@vger.kernel.org,
+        pmeerw@pmeerw.net, jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v5 4/4] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200617203115.GA2740308@bogus>
+References: <20200607175812.95777-5-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615193811.233737-2-jnchase@google.com>
+In-Reply-To: <20200607175812.95777-5-tomasz.duszynski@octakon.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 15 Jun 2020 15:38:10 -0400, Jeff Chase wrote:
-> The ch7322 is a Chrontel CEC controller.
+On Sun, 07 Jun 2020 19:58:12 +0200, Tomasz Duszynski wrote:
+> Add SCD30 sensor binding file.
 > 
-> Signed-off-by: Jeff Chase <jnchase@google.com>
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 > ---
->  .../bindings/media/i2c/chrontel,ch7322.yaml   | 67 +++++++++++++++++++
->  MAINTAINERS                                   |  7 ++
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
+>  .../iio/chemical/sensirion,scd30.yaml         | 68 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
 > 
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
