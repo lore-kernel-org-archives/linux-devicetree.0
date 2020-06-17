@@ -2,81 +2,91 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB101C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD09C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B84BC21548
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56992168B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9gVA7VK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwLEhOqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgFQVlt (ORCPT
+        id S1726840AbgFQVov (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41566 "EHLO
+        Wed, 17 Jun 2020 17:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQVls (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:41:48 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50961C06174E;
-        Wed, 17 Jun 2020 14:41:48 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p20so4150855ejd.13;
-        Wed, 17 Jun 2020 14:41:48 -0700 (PDT)
+        with ESMTP id S1726763AbgFQVou (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:44:50 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACE1C06174E;
+        Wed, 17 Jun 2020 14:44:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y13so2229694lfe.9;
+        Wed, 17 Jun 2020 14:44:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cf3kkLok1ZPnk0qEHa7HqMsxq6OFGLjYN5CTh27kkEo=;
-        b=Z9gVA7VKLdv6qupqkJF1jLR6nSPpqDZ9dLJibhVqvReijtfSFJfbMdD9PPYoNR6Tze
-         RbNj3wNVh5qWZ58cHeGm/tPi67KC9UJ0B1PterfqQDQvd20UXdogvFirRp3tmI7HqQzg
-         iQS01DNZ+O+/W7fQHQCp9xwNcFqWRSTxMqs4DtQQ+Fg+yfOPG99s3ZEUUSz1z/Wd5vjm
-         6kHdTNW4Xj/eqi4Du//LWLvhFRtcH2kBQvBwnTo+apUAPg73yqAAF7pdk/QczBSj3s1x
-         atLgfXz10KMKNxp/2m4ce/a/g/fO52fzXlX6ZrY9D61gh1tN02apgIcxWZZ9LaaxU8i6
-         gYnw==
+        bh=3OcGAL2Kxv5orG1lDTHD0HoSJEXX60m7KQNoTqlPNKk=;
+        b=lwLEhOqZOSHhxFOByIhV3rIRcCYAe5MOnpIqr97dgc7IBAt8HUlXWmwTdUdVBN3Yil
+         AIXG+lz1A9GjtfbeHLTAy5ByAoKe/J69M23vj5LouDto33ur41WZ39+M8J+mBCOFKcd+
+         1SmI70N0Mrmbjy5L5BlR50PMzvgSqPW/hcw752TXc1QhhzcA2hAyAlG8uItDzTtLfvWP
+         zAF+ofnEx9TuOqfh/o/+sxuPVr9Id+gXCTfPU7hzrmt4+1n6H/9kaerxQtBvPNILRMvw
+         no479c9H+2B3pZ1fviV0iMhQBasoldZyLd8DJILVl3ETP/+am/FuGDcx8Xsf3ew2Refr
+         8ezw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=cf3kkLok1ZPnk0qEHa7HqMsxq6OFGLjYN5CTh27kkEo=;
-        b=c5uRaUJHkzCWvWPT6nZgKLOqiVwtQBiKH4JFlduUSOn073avGnBCU8VyAQnRouK1aJ
-         OCuOBp51Ry60Vu9+9c8bDBRkq2UqTOEamkfY2MuaaaCtUbHBc0V3N9o+SogzdsywPHr5
-         iv1p6RVnTJ9mA82VIdgjgJZBmZ51ExQvyDbIM4FCGZeZ3V28PKZmnGVkmHvOyriuJS6Q
-         1Vv25n4gUlW73opPrt3YsxjT14C7q2u8Q/JlNOljcNs0pyzPE93Z4ZYHHsAcWaQ1URYq
-         +yMgYl1FGZwSWbPt7p1RY9MwmprgLNHcOWtrC6CKdTySh8/n5kJ3SUZoHFMVj/dnX2XJ
-         3gMw==
-X-Gm-Message-State: AOAM530mjuFzE/znz8+sCkzSeuP9vYKDkCYoONpnd7gmJaSL03miGAfN
-        DMOzlVzYKwb+wp09+bvys8090pMo
-X-Google-Smtp-Source: ABdhPJz56pKG6gDWHVpqU/LtOwYyWyJ8Rz6y88kGeZInLamhVFQw3fPUi/5NzxgQ4IpK0I9gooSf5w==
-X-Received: by 2002:a17:906:cede:: with SMTP id si30mr1128605ejb.315.1592430106800;
-        Wed, 17 Jun 2020 14:41:46 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:54e4:c127:a142:2ade? ([2a01:110f:b59:fd00:54e4:c127:a142:2ade])
-        by smtp.gmail.com with ESMTPSA id b11sm743222eju.91.2020.06.17.14.41.45
+        bh=3OcGAL2Kxv5orG1lDTHD0HoSJEXX60m7KQNoTqlPNKk=;
+        b=B+CI5WdMk6mq5AF6pRX+14DOzdI6F5R43KhLVzWij4ZSUt+ecc5BSPGl2vdQKp0PoY
+         A01qV0kbg9yU4BDebC6l1yFWLe/+9MOrUO8S1MBsYAJJzMGE+8NZm77II0UPrBIAA72E
+         PLeqfbBrj7mOpXvi9enbkcWzjAU/2dZE0DFJ3Bp4MWypL2jMBbkUvUXWGWrtiqlU5Qde
+         zhb/FFeAU0lIE1JRQUjrGlGHIqUxuPJi7enpLS1oq2tX5z96mp8kdfNQ+3TGZDAYFozF
+         J3jgQ/BWVhSV660G80/gPXJh9jGVU8DxTTM07zF6DS73RPSrRaOvBeGTxAo0Dxgwbsus
+         tmuA==
+X-Gm-Message-State: AOAM531/OiBetVu4Z4fiBhSvY4ahbctNn7vcgTIJhouSpQa94+MI8rhG
+        2JmMPli0AY1TPqISgfkFpXLe8c/a
+X-Google-Smtp-Source: ABdhPJzfx2jrwUo9clrvUJN/nulC28AYYrDluu8sqWs/XPSON6lTZzIVrcMhZ9p6NJk0K/p4inYxsQ==
+X-Received: by 2002:a19:83c7:: with SMTP id f190mr528250lfd.14.1592430288655;
+        Wed, 17 Jun 2020 14:44:48 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id 11sm219650lfz.78.2020.06.17.14.44.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 14:41:46 -0700 (PDT)
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, kernel test robot <lkp@intel.com>,
-        pavel@ucw.cz, robh@kernel.org
-Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
- <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
-Date:   Wed, 17 Jun 2020 23:41:44 +0200
+        Wed, 17 Jun 2020 14:44:48 -0700 (PDT)
+Subject: Re: [PATCH v4 22/37] dt-bindings: host1x: Document new interconnect
+ properties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200609131404.17523-1-digetx@gmail.com>
+ <20200609131404.17523-23-digetx@gmail.com> <20200617213726.GA2837398@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5303317a-2cb6-d7a8-361a-30867fc6eab7@gmail.com>
+Date:   Thu, 18 Jun 2020 00:44:47 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20200617213726.GA2837398@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -84,99 +94,150 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dan,
+18.06.2020 00:37, Rob Herring Ð¿Ð¸ÑˆÐµÑ‚:
+> On Tue, Jun 09, 2020 at 04:13:49PM +0300, Dmitry Osipenko wrote:
+>> Most of Host1x devices have at least one memory client. These clients
+>> are directly connected to the memory controller. The new interconnect
+>> properties represent the memory client's connection to the memory
+>> controller.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../display/tegra/nvidia,tegra20-host1x.txt   | 68 +++++++++++++++++++
+>>  1 file changed, 68 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> index 47319214b5f6..ab4fbee7bccf 100644
+>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> @@ -20,6 +20,10 @@ Required properties:
+>>  - reset-names: Must include the following entries:
+>>    - host1x
+>>  
+>> +Each host1x client module having to perform DMA through the Memory Controller
+>> +should have the interconnect endpoints set to the Memory Client and External
+>> +Memory respectively.
+>> +
+>>  The host1x top-level node defines a number of children, each representing one
+>>  of the following host1x client modules:
+>>  
+>> @@ -36,6 +40,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - mpe
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the MPE memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - vi: video input
+>>  
+>>    Required properties:
+>> @@ -65,6 +75,12 @@ of the following host1x client modules:
+>>        - power-domains: Must include sor powergate node as csicil is in
+>>          SOR partition.
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the VI memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - epp: encoder pre-processor
+>>  
+>>    Required properties:
+>> @@ -78,6 +94,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - epp
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the EPP memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - isp: image signal processor
+>>  
+>>    Required properties:
+>> @@ -91,6 +113,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - isp
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the ISP memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - gr2d: 2D graphics engine
+>>  
+>>    Required properties:
+>> @@ -104,6 +132,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - 2d
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the GR2D memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - gr3d: 3D graphics engine
+>>  
+>>    Required properties:
+>> @@ -122,6 +156,12 @@ of the following host1x client modules:
+>>      - 3d
+>>      - 3d2 (Only required on SoCs with two 3D clocks)
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the GR3D memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - dc: display controller
+>>  
+>>    Required properties:
+>> @@ -149,6 +189,10 @@ of the following host1x client modules:
+>>    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
+>>    - nvidia,edid: supplies a binary EDID blob
+>>    - nvidia,panel: phandle of a display panel
+>> +  - interconnects: Must contain entry for the DC memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>>  
+>>  - hdmi: High Definition Multimedia Interface
+>>  
+>> @@ -297,6 +341,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - vic
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the VIC memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  Example:
+>>  
+>>  / {
+>> @@ -410,6 +460,15 @@ Example:
+>>  			resets = <&tegra_car 27>;
+>>  			reset-names = "dc";
+>>  
+>> +			interconnects = <&mc TEGRA20_MC_DISPLAY0A &emc>,
+>> +					<&mc TEGRA20_MC_DISPLAY0B &emc>,
+>> +					<&mc TEGRA20_MC_DISPLAY0C &emc>,
+>> +					<&mc TEGRA20_MC_DISPLAY1B &emc>;
+> 
+> This looks odd or wrong. Each entry has 2 phandles? 
 
-On 6/17/20 9:22 PM, Dan Murphy wrote:
-> Pavel/Jacek
-> 
-> On 6/17/20 11:28 AM, kernel test robot wrote:
->> Hi Dan,
->>
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on pavel-linux-leds/for-next]
->> [cannot apply to j.anaszewski-leds/for-next]
->> [if your patch is applied to the wrong git tree, please drop us a note 
->> to help
->> improve the system. BTW, we also suggest to use '--base' option to 
->> specify the
->> base tree in git format-patch, please see 
->> https://stackoverflow.com/a/37406982]
->>
->> url:    
->> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
->>
->> base:   
->> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
->> for-next
->> config: ia64-randconfig-r015-20200617 (attached as .config)
->> compiler: ia64-linux-gcc (GCC) 9.3.0
->> reproduce (this is a W=1 build):
->>          wget 
->> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->> -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # save the attached .config to linux build tree
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
->> make.cross ARCH=ia64
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>
->> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->> `lp55xx_set_mc_brightness':
->>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
->>>> `led_mc_calc_color_components'
->> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->> `devm_led_classdev_multicolor_register':
->>>> include/linux/led-class-multicolor.h:74: undefined reference to 
->>>> `devm_led_classdev_multicolor_register_ext'
->> vim +146 drivers/leds/leds-lp55xx-common.c
->>
->>     138
->>     139    static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
->>     140                        enum led_brightness brightness)
->>     141    {
->>     142        struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
->>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
->>     145
->>   > 146        led_mc_calc_color_components(&led->mc_cdev, brightness);
->>     147        return cfg->multicolor_brightness_fn(led);
->>     148
-> 
-> Well this was a mess to figure out.
-> 
-> The only fix I can figure out here is to remove the
-> 
->      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
-> 
-> from each child device and add
-> 
->      select LEDS_CLASS_MULTI_COLOR
-> 
-> to the LP55XX_COMMON
-> 
-> This way the Multi color framework will inherit the symbol that was set 
-> by the COMMON flag which is inherited by majority from the child flags.
+Each entry defines interconnect path, where MC is the start of the path
+and EMC is the end. So yes, 2 phandles for each path.
 
-Did you try this?
+Please see arm/boot/dts/qcom-msm8974.dtsi for another example [1].
 
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -398,6 +398,7 @@ config LEDS_LP50XX
-  config LEDS_LP55XX_COMMON
-         tristate "Common Driver for TI/National 
-LP5521/5523/55231/5562/8501"
-         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
-+       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
-         depends on OF
-         select FW_LOADER
-         select FW_LOADER_USER_HELPER
-
-
--- 
-Best regards,
-Jacek Anaszewski
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/qcom-msm8974.dtsi?h=v5.8-rc1#n1448
