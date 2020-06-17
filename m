@@ -2,32 +2,31 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A89BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12B4C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 664BD20DD4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01DD20DD4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="o0vX8nMP"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="TIuel8Qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgFQAcR (ORCPT
+        id S1726572AbgFQAcR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 16 Jun 2020 20:32:17 -0400
-Received: from vps.xff.cz ([195.181.215.36]:44182 "EHLO vps.xff.cz"
+Received: from vps.xff.cz ([195.181.215.36]:44112 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726505AbgFQAcQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1725894AbgFQAcQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Tue, 16 Jun 2020 20:32:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1592353934; bh=AevVvrXCG/6msnRbOhEC/03tKHisk5y4PX4d+SPQkuw=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=o0vX8nMPVcUPUCHAfRZce4ecgwFJ6TrWo0+s5nAauhfo5cRU4lBnRswBWKaN7+twi
-         jMrKSPl5KnNaduv4d2ZsR385eh/NO1UYrmbyyBHzfSUNhwktJw0/6lE58rDi5V1YEd
-         RYuzuIoIQ3cYi2+4ZON79kX++pWVTsGYZ8Dk+MCc=
+        t=1592353933; bh=3DltW7Xjb/ItNKdpuNJ0j4SFSJbomVCA6l+130ne/oQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TIuel8QmQBPWbMa5I/MdP4HRXX+hyBQg6/kjHEip4KK4sUL/lhZwT5ZgXEmPSFvJz
+         OqkBVhXwxewBCdd2r/qzfnEnyGw3SAalvQsDNvjIkBXxMe3jC7BEHcjnIHMEFHvCh7
+         NQcQPIbY8391ZxkBNH5B81PkUcuKGCex1xaO7fJs=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -39,18 +38,15 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 2/5] dt-bindings: panel: Add binding for Xingbangda XBD599 panel
-Date:   Wed, 17 Jun 2020 02:32:06 +0200
-Message-Id: <20200617003209.670819-3-megous@megous.com>
-In-Reply-To: <20200617003209.670819-1-megous@megous.com>
-References: <20200617003209.670819-1-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v4 0/5] Add support for PinePhone LCD panel
+Date:   Wed, 17 Jun 2020 02:32:04 +0200
+Message-Id: <20200617003209.670819-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -58,91 +54,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+This patchset adds support for the LCD panel of PinePhone.
 
-Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel. It is based on
-Sitronix ST7703 LCD controller.
+The first 3 patches are for the panel itself, and the last 2 patches are
+for enabling it on PinePhone.
 
-Add its device tree binding.
+I've tested this on PinePhone 1.0 and 1.2.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../display/panel/sitronix,st7703.yaml        | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
+Please take a look.
+
+thank you and regards,
+  Ondrej Jirman
+
+Changes in v4:
+- use ->type from the mode instead of hardcoding (Samuel)
+- move init_sequence to ->prepare (Samuel)
+- move anti-flicker delay to ->enable, explain it (Samuel)
+- add enter_sleep after display_off (Samuel)
+- drop ->disable (move code to ->unprepare)
+- add ID bytes dumping (Linus)
+  (I can't test it since allwinner DSI driver has a broken
+   dcs_read function, and I didn't manage to fix it.)
+- document magic bytes (Linus)
+- assert reset during powerup
+- cleanup powerup timings according to the datasheet
+
+Changes in v3:
+- Panel driver renamed to the name of the LCD controller
+- Re-organize the driver slightly to more easily support more panels
+  based on the same controller.
+- Add patch to enable the touchscreen to complete the LCD support
+  on PinePhone.
+- Dropped the "DSI fix" patch (the driver seems to work for me without it)
+- Improved brightness levels handling:
+  - PinePhone 1.0 uses default levels generated by the driver
+  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
+    default levels can't be used. Martijn Braam came up with a
+    list of duty cycle values that lead to perception of linear
+    brigtness level <-> light intensity on PinePhone 1.1
+- There was some feedback on v2 about this being similar to st7701.
+  It's only similar in name. Most of the "user commands" are different,
+  so I opted to keep this in a new driver instead of creating st770x.
+  
+  Anyone who likes to check the differences, here are datasheets:
+
+  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
+  - https://megous.com/dl/tmp/ST7701.pdf
+
+Changes in v2:
+- DT Example fix.
+- DT Format fix.
+- Raised copyright info to 2020.
+- Sort panel operation functions.
+- Sort inclusion.
+
+
+-- For phone owners: --
+
+There's an open question on how to set the backlight brightness values
+on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
+to backlight being black. It would be nice if more people can test
+the various backlight levels on 1.1 and 1.2 revision with this change
+in dts:
+
+       brightness-levels = <0 1000>;
+       num-interpolated-steps = <1000>;
+
+and report at what brightness level the backlight turns on. So far it
+seems this has a wide range. Lowest useable duty cycle for me is ~7%
+on 1.2 and for Martijn ~20% on 1.1.
+
+Icenowy Zheng (4):
+  dt-bindings: vendor-prefixes: Add Xingbangda
+  dt-bindings: panel: Add binding for Xingbangda XBD599 panel
+  drm: panel: Add Xingbangda XBD599 panel (ST7703 controller)
+  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+
+Ondrej Jirman (1):
+  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
+
+ .../display/panel/sitronix,st7703.yaml        |  63 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 ++
+ drivers/gpu/drm/panel/Kconfig                 |  10 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 535 ++++++++++++++++++
+ 7 files changed, 684 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml b/Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
-new file mode 100644
-index 000000000000..6e1606db4ab4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sitronix,st7703.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sitronix ST7703 MIPI DSI panel
-+
-+maintainers:
-+  - Icenowy Zheng <icenowy@aosc.io>
-+  - Ondrej Jirman <megous@megous.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - xingbangda,xbd599
-+      - const: sitronix,st7703
-+
-+  reg:
-+    description: DSI virtual channel used by that screen
-+    maxItems: 1
-+
-+  vcc-supply:
-+    description: regulator that supplies the VCC voltage
-+
-+  iovcc-supply:
-+    description: regulator that supplies the IOVCC voltage
-+
-+  reset-gpios: true
-+
-+  backlight: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - vcc-supply
-+  - iovcc-supply
-+  - reset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "xingbangda,xbd599", "sitronix,st7703";
-+            reg = <0>;
-+            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-+            iovcc-supply = <&reg_dldo2>;
-+            vcc-supply = <&reg_ldo_io0>;
-+            backlight = <&backlight>;
-+        };
-+    };
-+
 -- 
 2.27.0
 
