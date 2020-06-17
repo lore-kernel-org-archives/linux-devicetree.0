@@ -4,85 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C681C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C601CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7218E2073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972082082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592431532;
-	bh=JSeLug0sSnrq7o5yOmfaKokWEPo67TTSdR0YA461jao=;
+	s=default; t=1592431553;
+	bh=+pGgx0m53ChqrhLgUMQV4HKqd8guF0Ae4czGBvIp1Zk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pwxzrtRJB4aZFQIPol6Bhdvj0FQmcwePPPSHTFIsQ8iEpEpOBWfAdG2md+RGluQUC
-	 Q9TgYOnrlZYq9LgeflHY0Ms2RZY07Rgz+u8UufCtLJMpKsaxtDSsLClAFY8u2KWlCF
-	 23VhaYJRZvaJZwrF6lMVKv235fN+AXPUm8TOVOjE=
+	b=YpK9aP2BnK6INj+Lw/W4VW/9P4kSXhOn+UH2tIa8MjTQmq9gjb9276YWyG94OZCbF
+	 D1AYTCLBO+G3LYfaS0tAZagvSywqxkVKiBBDhBaqkLLQPN+H8nP9ZCo+eapvcJAT5v
+	 SgAwL7t5oolvGc4UYouMIRQZcOTwYhGmAzhyHGJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgFQWF2 (ORCPT
+        id S1727001AbgFQWFx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:05:28 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44461 "EHLO
+        Wed, 17 Jun 2020 18:05:53 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39452 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWF1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:05:27 -0400
-Received: by mail-io1-f67.google.com with SMTP id i4so1723693iov.11;
-        Wed, 17 Jun 2020 15:05:26 -0700 (PDT)
+        with ESMTP id S1726840AbgFQWFw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:05:52 -0400
+Received: by mail-io1-f67.google.com with SMTP id c8so4782284iob.6;
+        Wed, 17 Jun 2020 15:05:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=bIUyJbST3ILF2B5W5XHarSpDJ5TWO+TqPDggu/ATjbE=;
-        b=guWuXQDuUeyJW6wPzc6PCDL9wZl+rgRxAnT/Db17RfGQGPqDHghtxpcLUUB1wtCNSg
-         MOR30J74BV2zZDIwpxushvbugPNwj+d8k4OBfz309o9srqt62Z6ohuf+JBLCl6ZgsbKI
-         rM2E+bxM/My08EFc1rg+zehYtAey59GG3DAOAMI1FlqQGnOtwr+3rdfArimGQqRL8Vu7
-         eQoPocmWffdhYjzcOhusVD5XnT+pmbjw/Nf6sJAypO5iFnDEVOAvbD9fnOuxqzAZ0TWP
-         D4cpHqzuzIrlfocHnlLUibLJMxP0MPslEFTB1rhHvJRJ2BKcjtbqQALuJdFwC+3RmuwC
-         5Itg==
-X-Gm-Message-State: AOAM533ecF01Ahp0i3sRsmTzOF7zs193KDyONfpKUWk90nlWymjlMGuh
-        c14+YC/KN+qh3ivxBu/SODzTg+GH1g==
-X-Google-Smtp-Source: ABdhPJy+l4gL0/jpC1lHY9VpNr7LIfu5zc9ll9NHo0F7QdjgaK+SdSHKI5mgaI6ATemem9fRGF4/Iw==
-X-Received: by 2002:a02:3402:: with SMTP id x2mr1362929jae.11.1592431526609;
-        Wed, 17 Jun 2020 15:05:26 -0700 (PDT)
+        bh=LYeHqze5g0l30MtYSpo5dmNTjlZMFsKizX2Q4MTzYI0=;
+        b=YMK9A9X9sxheOYerd6idQnYhbUPh73Pde3LBYDC57ViO3PGZXVwY7XL0Hg0hoviUV1
+         GEwGTwF9xJkTxHE6SG8wOzgcAae/2a1Y9kICAEebw58i9KFSnoEZCN9jWdPIzpVe3ZLR
+         4Ehqf8KRQgEoZIHMEdfTk+tsmBGvbkjYVqyfwXAs41/HXgj2Qcr96w9ywIHKMkj0HK9U
+         9qjO+4q8ov8UiPIzPsHEmweZ+kVqjpzRbNqHMzkP8Azakoku9bC27T8+f2/7V35JE9pD
+         1gYKruCJH2o5kGk4I2wig3zHRqoNpZPavq/PT8T//Lt+MW5ha7iVkOM0VnYkuOJAUaiv
+         96CA==
+X-Gm-Message-State: AOAM532IpyO02glaJsw2g7DBJjgtcK+WPGcSLdQzZL+pGEOU1qDJc+ve
+        pvGdYeBNdBY1cyI6ElIV7A==
+X-Google-Smtp-Source: ABdhPJyKyP/RHyF4fF1V22V3F4JS67v39QDdMOJ6FMe0lOamSJ4eOYyOPKvd3Oll4W8SJ+OanpGqxA==
+X-Received: by 2002:a5d:9a81:: with SMTP id c1mr1676038iom.35.1592431552157;
+        Wed, 17 Jun 2020 15:05:52 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id d11sm636626iod.11.2020.06.17.15.05.25
+        by smtp.gmail.com with ESMTPSA id s71sm507067ili.44.2020.06.17.15.05.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:05:26 -0700 (PDT)
-Received: (nullmailer pid 2913414 invoked by uid 1000);
-        Wed, 17 Jun 2020 22:05:24 -0000
-Date:   Wed, 17 Jun 2020 16:05:24 -0600
+        Wed, 17 Jun 2020 15:05:51 -0700 (PDT)
+Received: (nullmailer pid 2914245 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:05:51 -0000
+Date:   Wed, 17 Jun 2020 16:05:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/8] dt-bindings: arm-smmu: Add sm8150 and sm8250
- compatible strings
-Message-ID: <20200617220524.GA2913365@bogus>
-References: <20200609194030.17756-1-jonathan@marek.ca>
- <20200609194030.17756-2-jonathan@marek.ca>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     devicetree@vger.kernel.org, jic23@kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: iio: chemical: add O2 EZO module
+ documentation
+Message-ID: <20200617220551.GA2914216@bogus>
+References: <20200609194117.5837-1-matt.ranostay@konsulko.com>
+ <20200609194117.5837-3-matt.ranostay@konsulko.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609194030.17756-2-jonathan@marek.ca>
+In-Reply-To: <20200609194117.5837-3-matt.ranostay@konsulko.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2020 15:40:19 -0400, Jonathan Marek wrote:
-> Add compatible strings for sm8150 and sm8250 iommus to documentation.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+On Tue, 09 Jun 2020 12:41:16 -0700, Matt Ranostay wrote:
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
 > ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 2 ++
+>  .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
 >  1 file changed, 2 insertions(+)
 > 
 
