@@ -2,75 +2,91 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96482C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 07:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0ABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC9721475
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 07:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AC72085B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgFQHio (ORCPT
+        id S1725979AbgFQI0R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:38:44 -0400
-Received: from comms.puri.sm ([159.203.221.185]:50900 "EHLO comms.puri.sm"
+        Wed, 17 Jun 2020 04:26:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62189 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgFQHio (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:38:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 05A07E0492;
-        Wed, 17 Jun 2020 00:38:44 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qdT0Dw1YBvgR; Wed, 17 Jun 2020 00:38:43 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
-        agx@sigxcpu.org, angus@akkea.ca, broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH v3 2/2] MAINTAINERS: Add Purism Librem 5 section to the list
-Date:   Wed, 17 Jun 2020 09:38:21 +0200
-Message-Id: <20200617073821.16737-2-martin.kepplinger@puri.sm>
-In-Reply-To: <20200617073821.16737-1-martin.kepplinger@puri.sm>
-References: <20200617073821.16737-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        id S1725846AbgFQI0R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:26:17 -0400
+IronPort-SDR: b03ebYzJCKEwVtyUb5q0ZLgQ5xsZNGE+oWUptTa1kaGdN+dyxk/RX5LbpMXC9arnu69fM1t/xV
+ c6jny6L4o4gA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:26:16 -0700
+IronPort-SDR: ClAgj9I4E/Zpn+F9GR6itX/rnw6INr5SQdLLl1eQalKV6+L1d4WJy+w7M8rd56H1uEBstktx0G
+ GHpO3Hj9hGIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="421061631"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2020 01:26:13 -0700
+From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, malliamireddy009@gmail.com,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>
+Subject: [PATCH v2 0/2] Add Intel LGM soc DMA support
+Date:   Wed, 17 Jun 2020 16:24:28 +0800
+Message-Id: <cover.1592381244.git.mallikarjunax.reddy@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add development information for the devicetree files for hardware
-by Purism SPC.
+Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+The main function of the DMA controller is the transfer of data from/to any
+DPlus compliant peripheral to/from the memory. A memory to memory copy
+capability can also be configured.
+This ldma driver is used for configure the device and channnels for data
+and control paths.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b045b70e54df..0f6f18c477db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13881,6 +13881,13 @@ T:	git git://linuxtv.org/media_tree.git
- F:	Documentation/admin-guide/media/pulse8-cec.rst
- F:	drivers/media/cec/usb/pulse8/
- 
-+PURISM LIBREM 5
-+M:	Purism Kernel Team <kernel@puri.sm>
-+S:	Supported
-+B:	https://source.puri.sm/Librem5/linux-next/issues
-+T:	https://source.puri.sm/Librem5/linux-next
-+F:	arch/arm64/boot/dts/freescale/imx8mq-librem5*
-+
- PVRUSB2 VIDEO4LINUX DRIVER
- M:	Mike Isely <isely@pobox.com>
- L:	pvrusb2@isely.net	(subscribers-only)
+These controllers provide DMA capabilities for a variety of on-chip
+devices such as SSC, HSNAND and GSWIP.
+
+-------------
+Future Plans:
+-------------
+LGM SOC also supports Hardware Memory Copy engine.
+The role of the HW Memory copy engine is to offload memory copy operations
+from the CPU.
+
+Amireddy Mallikarjuna reddy (2):
+  dt-bindings: dma: Add bindings for intel LGM SOC
+  Add Intel LGM soc DMA support.
+
+ .../devicetree/bindings/dma/intel,ldma.yaml        |  428 +++++
+ drivers/dma/Kconfig                                |    2 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/lgm/Kconfig                            |    9 +
+ drivers/dma/lgm/Makefile                           |    2 +
+ drivers/dma/lgm/lgm-dma.c                          | 1956 ++++++++++++++++++++
+ include/linux/dma/lgm_dma.h                        |   27 +
+ 7 files changed, 2425 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+ create mode 100644 drivers/dma/lgm/Kconfig
+ create mode 100644 drivers/dma/lgm/Makefile
+ create mode 100644 drivers/dma/lgm/lgm-dma.c
+ create mode 100644 include/linux/dma/lgm_dma.h
+
+
+base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
 -- 
-2.20.1
+2.11.0
 
