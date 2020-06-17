@@ -2,115 +2,87 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73134C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 06:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8323CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 07:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D411208C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 06:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECAA21475
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 07:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o0QumpCl"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="czESqLqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbgFQG47 (ORCPT
+        id S1726538AbgFQHF2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:56:59 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40438 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726629AbgFQG4z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:56:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592377015; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=QDAPNg4/kJBIPrrC24qiYUrNEkN8hgr7WOxOCGbJ8R4=;
- b=o0QumpClP6mQ8mJV9VTfgneykcsCPzNPrvzi6Po++74aaej3xmWsJ1X75g5UKSIgUj1XcoUN
- DS/ETVpOvUsPtWskG5W5ziJofORU2elDId74J8g0kkew0aqXD77KIIto7BpaL1l2jY2a1H4p
- VTM+RJgtvZM0noIqceAeYEiuquQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5ee9bea7567385e8e7c84e20 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 06:56:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 892ECC43395; Wed, 17 Jun 2020 06:56:38 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BF65C433C8;
-        Wed, 17 Jun 2020 06:56:38 +0000 (UTC)
+        Wed, 17 Jun 2020 03:05:28 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37498 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725929AbgFQHF1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 03:05:27 -0400
+X-UUID: a6463f1d09984b85af04282f377d90fc-20200617
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=dGXGiunHjZndJ6cHTy/bVaVcZvEJmUdgQt8u80wNGMc=;
+        b=czESqLqjMUhGALH0wM4ShHVkLFxstOMZxCF50Et/0QHS0WzXf8mhq+2pl+dvF95lRWsFdE1kISktsJkhj0OvORWQidC7E+C2qyHYIn6xXFRoFQuaY/FyB4pdnqcDaaVT8FzCdclSf0PeNL/Dakt8l94mNgzCGHsEu8RHuvXRQCI=;
+X-UUID: a6463f1d09984b85af04282f377d90fc-20200617
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1779332007; Wed, 17 Jun 2020 15:05:24 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 17 Jun 2020 15:05:21 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 17 Jun 2020 15:05:22 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Wendell Lin <wendell.lin@mediatek.com>
+Subject: [PATCH v16 01/11] dt-bindings: mediatek: Add property to mt8183 smi-common
+Date:   Wed, 17 Jun 2020 15:05:07 +0800
+Message-ID: <1592377517-14817-2-git-send-email-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1592377517-14817-1-git-send-email-weiyi.lu@mediatek.com>
+References: <1592377517-14817-1-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 17 Jun 2020 12:26:38 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-In-Reply-To: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
-Message-ID: <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Rm9yIHNjcHN5cyBkcml2ZXIgdXNpbmcgcmVnbWFwIGJhc2VkIHN5c2NvbiBkcml2ZXIgQVBJLg0K
+DQpTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8d2VpeWkubHVAbWVkaWF0ZWsuY29tPg0KQWNrZWQt
+Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZW1vcnktY29udHJvbGxlcnMvbWVkaWF0ZWssc21pLWNvbW1vbi50eHQgICAgICB8
+IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0K
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnktY29u
+dHJvbGxlcnMvbWVkaWF0ZWssc21pLWNvbW1vbi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL21lZGlhdGVrLHNtaS1jb21tb24udHh0DQpp
+bmRleCBiNDc4YWRlLi4wMTc0NGVjIDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9tZWRpYXRlayxzbWktY29tbW9uLnR4dA0K
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVy
+cy9tZWRpYXRlayxzbWktY29tbW9uLnR4dA0KQEAgLTIwLDcgKzIwLDcgQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoNCiAJIm1lZGlhdGVrLG10MjcxMi1zbWktY29tbW9uIg0KIAkibWVkaWF0ZWssbXQ3
+NjIzLXNtaS1jb21tb24iLCAibWVkaWF0ZWssbXQyNzAxLXNtaS1jb21tb24iDQogCSJtZWRpYXRl
+ayxtdDgxNzMtc21pLWNvbW1vbiINCi0JIm1lZGlhdGVrLG10ODE4My1zbWktY29tbW9uIg0KKwki
+bWVkaWF0ZWssbXQ4MTgzLXNtaS1jb21tb24iLCAic3lzY29uIg0KIC0gcmVnIDogdGhlIHJlZ2lz
+dGVyIGFuZCBzaXplIG9mIHRoZSBTTUkgYmxvY2suDQogLSBwb3dlci1kb21haW5zIDogYSBwaGFu
+ZGxlIHRvIHRoZSBwb3dlciBkb21haW4gb2YgdGhpcyBsb2NhbCBhcmJpdGVyLg0KIC0gY2xvY2tz
+IDogTXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNoIGVudHJ5IGluIGNsb2NrLW5hbWVzLg0K
+LS0gDQoxLjguMS4xLmRpcnR5DQo=
 
-On 2020-02-12 03:54, Sai Prakash Ranjan wrote:
-> This series converts QCOM watchdog timer bindings to YAML. Also
-> it adds the missing SoC-specific compatible for QCS404, SC7180,
-> SDM845 and SM8150 SoCs.
-> 
-> v1:
-> https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
-> v2:
-> https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
-> 
-> Changes since v2:
->  * Add missing compatibles to enum.
-> 
-> Changes since v1:
->  As per Rob's suggestion:
->   * Replaced oneOf+const with enum.
->   * Removed timeout-sec and included watchdog.yaml.
->   * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
-> 
-> Sai Prakash Ranjan (2):
->   dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
->   dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
->     SM8150
-> 
->  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
->  .../bindings/watchdog/qcom-wdt.yaml           | 48 +++++++++++++++++++
->  2 files changed, 48 insertions(+), 28 deletions(-)
->  delete mode 100644 
-> Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
->  create mode 100644 
-> Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-
-
-Gentle ping!
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
