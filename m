@@ -2,132 +2,153 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43448C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 18:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79ABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 19:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22981217A0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 18:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R4fqqVAu"
+	by mail.kernel.org (Postfix) with ESMTP id AAC9420884
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 19:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgFQSlv (ORCPT
+        id S1726854AbgFQTVg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:41:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:34697 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727015AbgFQSls (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:41:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592419307; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=P8b5JOxhRUXeY99+Bs74zgYrVahy5f7jYS7XTHseLgo=; b=R4fqqVAuCkmqdco3YQsRhWEF+qGDp4UAHfRfEDIr6E7iWinYgVgEfh8hRGIHOBwePvTOVWyk
- cskoWrAEWJheAGDCu+AUfA5Jsn51sp/s6pUVPGP3nbgIZvVz8z77P3/m+4Cs/QXyxktigUe6
- sksXTU1ZrJdW9Tux0K+ZUMnT9CU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5eea63dcc76a4e7a2aadc596 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 18:41:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0555CC433A0; Wed, 17 Jun 2020 18:41:30 +0000 (UTC)
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9342EC433C8;
-        Wed, 17 Jun 2020 18:41:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9342EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Wed, 17 Jun 2020 11:41:23 -0700
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     heikki.krogerus@linux.intel.com, mark.rutland@arm.com,
-        broonie@kernel.org, bjorn.andersson@linaro.org,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com, agross@kernel.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rdunlap@infradead.org,
-        bryan.odonoghue@linaro.org, lijun.kernel@gmail.com
-Subject: Re: [PATCH v3 6/6] arm64: boot: dts: qcom: pm8150b: Add DTS node for
- PMIC VBUS booster
-Message-ID: <20200617184123.GA24052@jackp-linux.qualcomm.com>
-References: <20200617180209.5636-1-wcheng@codeaurora.org>
- <20200617180209.5636-7-wcheng@codeaurora.org>
+        Wed, 17 Jun 2020 15:21:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34460 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgFQTVg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 15:21:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0E869ADC9;
+        Wed, 17 Jun 2020 19:21:38 +0000 (UTC)
+Message-ID: <9450f86c15ecd8435bcdbc395f8674172a975100.camel@suse.de>
+Subject: Re: [PATCH v3 4/9] ARM: dts: bcm2711: Add reset controller to xHCI
+ node
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, andy.shevchenko@gmail.com,
+        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
+        devicetree@vger.kernel.org, wahrenst@gmx.net,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Date:   Wed, 17 Jun 2020 21:21:31 +0200
+In-Reply-To: <20200612171334.26385-5-nsaenzjulienne@suse.de>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+         <20200612171334.26385-5-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-lfIoWXagrdDHMww3Jq4T"
+User-Agent: Evolution 3.36.3 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617180209.5636-7-wcheng@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Wesley,
 
-On Wed, Jun 17, 2020 at 11:02:09AM -0700, Wesley Cheng wrote:
-> Add the required DTS node for the USB VBUS output regulator, which is
-> available on PM8150B.  This will provide the VBUS source to connected
-> peripherals.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+--=-lfIoWXagrdDHMww3Jq4T
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi All,
+
+On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
+> The chip is hardwired to the board's PCIe bus and needs to be properly
+> setup trough a firmware routine after a PCI fundamental reset. Pass the
+> reset controller phandle that takes care of triggering the
+> initialization to the relevant PCI device.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>
 > ---
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 7 +++++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> index ec44a8bc2f84..b7274d9d7341 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -22,6 +22,12 @@ power-on@800 {
->  			status = "disabled";
->  		};
->  
-> +		qcom,dcdc@1100 {
-> +			compatible = "qcom,pm8150b-vbus-reg";
-> +			status = "disabled";
-> +			reg = <0x1100>;
-> +		};
+>
+> Changes since v2:
+>  - Use dt-bindings to access IDs
+>
+> Changes since v1:
+>  - Update to match new binding
+>
+>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> index 0cef95058fb0..e20979013414 100644
+> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> @@ -4,6 +4,8 @@
+>  #include "bcm2835-rpi.dtsi"
+>  #include "bcm283x-rpi-usb-peripheral.dtsi"
+>
+> +#include <dt-bindings/reset/raspberrypi,firmware-reset.h>
 > +
->  		qcom,typec@1500 {
->  			compatible = "qcom,pm8150b-usb-typec";
->  			status = "disabled";
-
-Don't you also need a "usb_vbus-supply" property here under the Type-C
-node pointing to the phandle of the vbus reg?
-
-Jack
-
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> index 6c6325c3af59..3845d19893eb 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-> @@ -426,6 +426,13 @@ &usb_1 {
->  	status = "okay";
+>  / {
+>  	compatible =3D "raspberrypi,4-model-b", "brcm,bcm2711";
+>  	model =3D "Raspberry Pi 4 Model B";
+> @@ -207,6 +209,13 @@ phy1: ethernet-phy@1 {
+>  	};
 >  };
->  
-> +&spmi_bus {
-> +	pmic@2 {
-> +		qcom,dcdc@1100 {
-> +			status = "okay";
-> +		};
+>
+> +&pcie0 {
+> +	usb@1,0 {
+> +		reg =3D <0 0 0 0 0>;
+> +		resets =3D <&reset RASPBERRYPI_FIRMWARE_RESET_ID_USB>;
+> +	};
 > +};
 > +
->  &usb_1_dwc3 {
->  	dr_mode = "peripheral";
->  };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+
+I'm now double-guessing this is correct. With this lspci -tv output:
+
+[0000:00]---00.0-[01]----00.0  VIA Technologies, Inc. VL805 USB 3.0 Host Co=
+ntroller
+
+The DT patch should be more like this:
+
++&pcie0 {
++       pci@0 {
++               #address-cells =3D <3>;
++               #size-cells =3D <2>;
++               ranges;
++
++               reg =3D <0 0 0 0 0>;
++
++               usb@1,0 {
++                       reg =3D <0x10000 0 0 0 0>;
++                       resets =3D <&reset RASPBERRYPI_FIRMWARE_RESET_ID_US=
+B>;
++               };
++       };
++};
+
+Small details aside I'm pretty confident this is the way to go, but would
+appreciate some comments/validation.
+
+Regards,
+Nicolas
+
+
+--=-lfIoWXagrdDHMww3Jq4T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7qbTsACgkQlfZmHno8
+x/4CVggAn3Z1hf15FCwZBqJ5vtu95aPDbATL/d0KQ7jGrs66dTwaOP6aBJFw48YF
+0wKRsvMe9LukIRSOBh9HluSEszmQj7/hUGRYcsXaBgmHeOVs9PCXDbJb0/XtgBwF
+3EvokrD1MRS9bcpXwVOCKsMu+wjaGMlCiiJ6wmvD2ffybDPtYA19Xci86XF3Y2WT
+PTeuhEXh+/+wADvH/z0Gi4ivdIAh6FGLbdaSSVgEpf1JChHkSH0anKhw78keHGWK
+WXifnT/7XqG9VtvNNmFvQ1+q7MoyyJlzCn/NXfNuhjmBV+A6gxhefrVRq+P2yeb7
+LzlXGvG8m8RsQQgt1TlpTQwfAjB8KQ==
+=jUpw
+-----END PGP SIGNATURE-----
+
+--=-lfIoWXagrdDHMww3Jq4T--
+
