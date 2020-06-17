@@ -2,99 +2,116 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204AAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC6EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26EC21548
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gnPSUYqc"
+	by mail.kernel.org (Postfix) with ESMTP id DD4DC21548
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 22:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592431950;
+	bh=3rdFk08bKi7OzEl5hTJw8eJyk3KLaAeFIAaT4IUqEwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LLAG8HEg4kLtDE0aRL5YajZG8h76TPIxclrM+SAtHIBi5tqT+KTTZHsiPbPzCcTsO
+	 0gqhC5kNeHCSiSYcbx7BY3RUPDaVxk+FQ04OTE9Gr7FMxgsAP/7Jo+HnQul1fSTZiR
+	 PrHeGQuHxS8v8vA2ARllc7mY0ZJkngGJI+e1cwAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgFQWHq (ORCPT
+        id S1727779AbgFQWMZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWHp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:07:45 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BC7C061755
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 15:07:43 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id k18so2030761ybm.13
-        for <devicetree@vger.kernel.org>; Wed, 17 Jun 2020 15:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y+nBmhNSgE5/KJgzUGIyU14Car0+dblfov0Gz+IxE+Y=;
-        b=gnPSUYqcV/QHB6lDj/49U8FH/Y2M6vfoPn4+JBtghQI1XLfhiH8LLgUSnfmksiYo3I
-         2P1UQv+mBcannQnF+aIAE6SwCxtZU5k16VUb29LJCtBZrjLCUSCYgr8hXYGmKkqxkzvT
-         /2v9/AQCRVbeaFt0k3Iu8GEM26/sQq7tFhKS+6h+HB7xjQnKGuG5qyk6YFDC985c80Hx
-         YmyOWLQhb+lvVJmcIHSKjwNy7xJG9BEB2OyV4xiD766tXLCaTK1NOl8U7gGSnubPDrrB
-         4PCtYhoRo4FaSlzvdJ7fsWEe/CCrtFqa0wH/dXP5hign3sp+n43z6DaBdfT/WIKmoYmT
-         PC6Q==
+        Wed, 17 Jun 2020 18:12:25 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40845 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgFQWMZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 18:12:25 -0400
+Received: by mail-io1-f68.google.com with SMTP id q8so4802196iow.7;
+        Wed, 17 Jun 2020 15:12:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y+nBmhNSgE5/KJgzUGIyU14Car0+dblfov0Gz+IxE+Y=;
-        b=Vg/4qsOmTgEIKzE9Z2Ybs2kvaIK8k8055+fOCG7TBBC4pPxi1f8poIDaYJtqbvn9LE
-         jzw2tY7g4ayuOTuuMsgsHlMtG2sLZvaL+fq3ox2CaKTOBQ1MF5J218/qNOUiQwAHvK1y
-         VPSqb2RPxXoxxsg3RCm06FWxKy/WyjHbrco+u/T0f34Tzi8DJr1tuqsnMgHE0/puPZyk
-         x+dgGvmTvDK6ttcARs0HhK6vA/s069NEMD9fucIjH8SIHsNdiw/snapfbGa3N3R630Md
-         YGa3siFdYba171l4J/QTI4CJ0hUoHvdZb3VqpHozzXpgGN/Os+GbZpX7WEA3Kr9fJQ/E
-         8kUQ==
-X-Gm-Message-State: AOAM531iuI7E6S2j928YO+tWpOX+5O/k5YOUKtAe8aYW+IiZ39IHnhPg
-        Vvk4nMSwX/dMYL09U/54w6ouWYIODWk+NWW4oKZaWg==
-X-Google-Smtp-Source: ABdhPJyfXGntakeTVfHZEfQG9XfX+r1JGGWMwayN2tLsGEeNCZVfjhh9l6O5KED7dswsY8IcAKjmmk3cbZ2V2+GTdc8=
-X-Received: by 2002:a25:ca45:: with SMTP id a66mr1830715ybg.164.1592431662324;
- Wed, 17 Jun 2020 15:07:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=imxMvOvJlozmeqMR5QpW6XP7ULKOHGHjkDRkymH0VEA=;
+        b=k9KChIsdaE8N3DMYhJctaRblmTAv1MNh8dI26/QLnT6iijQW9USxrhty2nRRP1/OJb
+         t4I4ow+1IIgawdkeeqs/sVpAFxpIe1tH25OeDbT05eYXYjZwlZu9VgJoAzxZGF8oFaG+
+         fajpYhrb9NxULyF78kyKCM/3e3IAO1gHMt5xgO1MOOWH941qsCpYdsrye95VmgcRbpaE
+         XVYMRP3DhEj/mzRsHarqk+3w8BTdTLMVymcaaMIiDRJtoQsxIFar2AxYVA5pf/kDVl2/
+         XBkwLau0lsRP7zmPEGSdU7dC4bASxbCyfEeD7YaFjtKRR+kzJQ+tJZuwYhayGT4jjcwi
+         kGXw==
+X-Gm-Message-State: AOAM533f8T6orclNXiaxe1cn/MYhuyUtLkC+q0qluNK6/JaxCTtMFEVl
+        Eo4qilHBeF4RdQe5Ta2a9w==
+X-Google-Smtp-Source: ABdhPJzq2uOS8ulYcMFuDLYaROr9I4HefNgaPH6AZsSpm3ffnOhiZokFTfzTV7XJsIU87yka+xhY1Q==
+X-Received: by 2002:a05:6602:2fc1:: with SMTP id v1mr1700468iow.39.1592431943179;
+        Wed, 17 Jun 2020 15:12:23 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id p15sm492523ilj.15.2020.06.17.15.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 15:12:22 -0700 (PDT)
+Received: (nullmailer pid 2924800 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:12:21 -0000
+Date:   Wed, 17 Jun 2020 16:12:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH v2 2/2] of: property: Improve cycle detection when one of
+ the devices is never added
+Message-ID: <20200617221221.GA2923473@bogus>
+References: <20200610011934.49795-1-saravanak@google.com>
+ <20200610011934.49795-3-saravanak@google.com>
 MIME-Version: 1.0
-References: <20200615193811.233737-1-jnchase@google.com> <20200615193811.233737-2-jnchase@google.com>
- <20200617202645.GA2728573@bogus>
-In-Reply-To: <20200617202645.GA2728573@bogus>
-From:   Jeff Chase <jnchase@google.com>
-Date:   Wed, 17 Jun 2020 15:07:31 -0700
-Message-ID: <CALTkaQ2q0=Z5bo4p5jwJcS9j9TikKq-TzSXhWLyP8P71n1m0Zw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: Add ch7322 media i2c device
-To:     Rob Herring <robh@kernel.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610011934.49795-3-saravanak@google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 1:26 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, 15 Jun 2020 15:38:10 -0400, Jeff Chase wrote:
-> > The ch7322 is a Chrontel CEC controller.
-> >
-> > Signed-off-by: Jeff Chase <jnchase@google.com>
-> > ---
-> >  .../bindings/media/i2c/chrontel,ch7322.yaml   | 67 +++++++++++++++++++
-> >  MAINTAINERS                                   |  7 ++
-> >  2 files changed, 74 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/chrontel,ch7322.yaml
-> >
->
->
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+On Tue, 09 Jun 2020 18:19:34 -0700, Saravana Kannan wrote:
+> Consider this example where -> means LHS device is a consumer of RHS
+> device and indentation represents "child of" of the previous device.
+> 
+> Device A -> Device C
+> 
+> Device B -> Device A
+> 	Device C
+> 
+> Without this commit:
+> 1. Device A is added.
+> 2. Device A is added to waiting for supplier list (Device C)
+> 3. Device B is added
+> 4. Device B is linked as a consumer to Device A
+> 5. Device A doesn't probe because it's waiting for Device C to be added.
+> 6. Device B doesn't probe because Device A hasn't probed.
+> 7. Device C will never be added because it's parent hasn't probed.
+> 
+> So, Device A, B and C will be in a probe/add deadlock.
+> 
+> This commit detects this scenario and stops trying to create a device
+> link between Device A and Device C since doing so would create the
+> following cycle:
+> Device A -> Devic C -(parent)-> Device B -> Device A.
+> 
+> With this commit:
+> 1. Device A is added.
+> 3. Device B is added
+> 4. Device B is linked as a consumer to Device A
+> 5. Device A probes.
+> 6. Device B probes because Device A has probed.
+> 7. Device C is added and probed.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/of/property.c | 62 ++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 56 insertions(+), 6 deletions(-)
+> 
 
-Sorry, still learning this process.
+Both patches applied.
 
-Hans, should I resubmit or would you add the Reviewed-by tag from v4?
-
-Thanks,
-Jeff
+Rob
