@@ -6,54 +6,64 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41C4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EE8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0ED2080D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BB921527
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 08:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbgFQIqF (ORCPT
+        id S1726339AbgFQI6a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:46:05 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:43224 "EHLO gloria.sntech.de"
+        Wed, 17 Jun 2020 04:58:30 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43348 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgFQIqD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:46:03 -0400
+        id S1725846AbgFQI63 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:58:29 -0400
 Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
         by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <heiko@sntech.de>)
-        id 1jlThn-00062C-Jl; Wed, 17 Jun 2020 10:45:59 +0200
+        id 1jlTtp-0006BR-SR; Wed, 17 Jun 2020 10:58:25 +0200
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        linux-rockchip@lists.infradead.org
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dianders@chromium.org, chromeos-bluetooth-upstreaming@chromium.org,
-        mka@chromium.org, devicetree@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Add marvell BT irq config
-Date:   Wed, 17 Jun 2020 10:45:57 +0200
-Message-Id: <159238352489.1408655.7330930491123467152.b4-ty@sntech.de>
+To:     robh+dt@kernel.org,
+        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
+        <mylene.josserand@collabora.com>, sboyd@kernel.org,
+        mturquette@baylibre.com
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-clk@vger.kernel.org,
+        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] ARM: Add Rockchip rk3288w support
+Date:   Wed, 17 Jun 2020 10:58:23 +0200
+Message-Id: <159238429476.1470505.6023847362048785737.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200612130219.v2.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
-References: <20200612130219.v2.1.I66864be898aa835ccb66b6cd5220d0b082338a81@changeid>
+In-Reply-To: <20200602080644.11333-1-mylene.josserand@collabora.com>
+References: <20200602080644.11333-1-mylene.josserand@collabora.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 12 Jun 2020 13:02:48 -0700, Abhishek Pandit-Subedi wrote:
-> Veyron Jaq and Mighty both use the Marvel 8897 WiFi+BT chip. Add wakeup
-> and pinctrl block to devicetree so the btmrvl driver can correctly
-> configure the wakeup interrupt.
+On Tue, 2 Jun 2020 10:06:42 +0200, Mylène Josserand wrote:
+> Context
+> -------
+> 
+> Here is my V4 of my patches that add the support for the Rockchip
+> RK3288w which is a revision of the RK3288. It is mostly the same SOC
+> except for, at least, one clock tree which is different.
+> This difference is only known by looking at the BSP kernel [1].
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] ARM: dts: rockchip: Add marvell BT irq config
-      commit: 6c2b99a2e7a073575b4ee91abf7d16470991c1f4
+[1/2] clk: rockchip: Handle clock tree for rk3288w variant
+      commit: 1627f683636df70fb25358b0a7b39a24e8fce5bf
+[2/2] dt-bindings: clocks: add rk3288w variant compatible
+      commit: 00bd404144241155653bb0d0c15be51e4e6983aa
 
 Best regards,
 -- 
