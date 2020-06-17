@@ -2,94 +2,105 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06643C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AE5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E59208B3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592389433;
-	bh=q4XtEUaNAPjAlHRDzfBXndousVziD4EzqeUrETXxBjM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FSbUl6kCwjt42u/WMeiEaqPZ3hWn6ADSLV3FoqAs8E06oDpoT1X9vUvKC3gt1A+KD
-	 qm/AwhO4FG9FmN2rBTC04a2XtNHb+bTMH7cQaHvL5GjuWvSZZGO8570jxGOmJv9Khi
-	 GpsIJKDsk4aOfnSAEEI0bkcTxackkQpo1XDezBEg=
+	by mail.kernel.org (Postfix) with ESMTP id 0171E208B3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 10:26:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REjFk9Pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgFQKXr (ORCPT
+        id S1726565AbgFQK0D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgFQKXP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:23:15 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C418214D8;
-        Wed, 17 Jun 2020 10:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592389394;
-        bh=q4XtEUaNAPjAlHRDzfBXndousVziD4EzqeUrETXxBjM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MCVuvHI4/1WTFEjLx/PerIQCGJWPkXUx8NmAPAuT+j6OWVH2KxRnjyvdt2jK8+s0
-         7ayqOmzHDqBByicUIi1G7WN6rwNZdX4ChqzQOGRlVZ9muaJ7ewvrGl8DKhbpe34EPM
-         MzliQlc5UYP6C7dFO4dXAxjMjubYHD0FWHaRvuYg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: power: supply: bq25890: Document required interrupt
-Date:   Wed, 17 Jun 2020 12:23:05 +0200
-Message-Id: <20200617102305.14241-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200617102305.14241-1-krzk@kernel.org>
-References: <20200617102305.14241-1-krzk@kernel.org>
+        Wed, 17 Jun 2020 06:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgFQK0B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 06:26:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A840C061573;
+        Wed, 17 Jun 2020 03:26:00 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c3so1710351wru.12;
+        Wed, 17 Jun 2020 03:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bUsNDRJx4UdhHJ9XZ2hWvZsvpKhRR87KicV5rBQcMlA=;
+        b=REjFk9PljVEzzc8bmjLN3vf+ZmWBNUGi/7sn+3Rw9k9s1UO32qTb5nIbKbMQ6j15sJ
+         IqSnMuNHZjEuGKuhFm7XR53lHucGJ8yVPgzNyeKhR5J2vKcc6MhDIH6EWOnpuPWR2hbu
+         Ql02vpK5F2WUrK5Zapm2RmgkwtMiBRYBBJ8C05PViIow0Su/oqlpqx80qCmfTkedgb+w
+         9leTVqNlADqzPADiijWc5h+4161ZBfc5/g8IMYgET5FH03vb4aqTstvNDnSllHiFg46U
+         6EUzorPt7IrzMFksl6KlnRGHW0NyvGBji6ywZS3BYmcDkTypvKjS5aKb+TQomeYTEdFL
+         fUKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bUsNDRJx4UdhHJ9XZ2hWvZsvpKhRR87KicV5rBQcMlA=;
+        b=c0cmcBPy8svecV8JynhLBWU80mQYquNXY25n7FHhbNGPswOGydEHzbYc2J2FnlA6pi
+         nnr65FEiw3ujh/Pu9T+WJeHZsIzgpNSYuPGVKKJvXHtxuQ63D7XnlFoyF4fEECpRowwl
+         umX+v6/bOtzimudVgxgLqA20GZ/KZG+b77Kwv9rWU3YbQI4xZseHo6V7ueb1uOX1FzF9
+         l9njx4RYT8V/qF0LM8FMntWnZQx5Y1/FnUgJWCbS87LqIHE5yDhFYpMHdrtqprcg+OTm
+         f+DGK/soWGUrGJ0BWqWE29joI+H1eqc3yAGIBzHgweurUv5sDxFXgdoyg2Qpi9rOJu3Z
+         tvSw==
+X-Gm-Message-State: AOAM532Evp6nr6L2p5be8gmcBnJfTXgtiNQfk1ns5/ujyH63q8TSsWEG
+        V3uctyw/K0pYcf6jdk6PTf0=
+X-Google-Smtp-Source: ABdhPJw/BV83JYk1Qad+8wyFBqupdYqj3LlDIYo3Vsn7/VdgTbvcdpxEfsQuXw7pA3hk0bdKQShlBw==
+X-Received: by 2002:a5d:4f0d:: with SMTP id c13mr8192114wru.357.1592389558982;
+        Wed, 17 Jun 2020 03:25:58 -0700 (PDT)
+Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
+        by smtp.gmail.com with ESMTPSA id z206sm7569847wmg.30.2020.06.17.03.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 03:25:58 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        jiaxun.yang@flygoat.com, paulburton@kernel.org, info@metux.net,
+        allison@lohutok.net, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, jonas.gorski@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH 0/3] mips: bmips: add BCM6328 PCIe support
+Date:   Wed, 17 Jun 2020 12:25:53 +0200
+Message-Id: <20200617102556.3792821-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The driver requires interrupts (fails probe if it is not provided) so
-document this requirement in bindings.
+BCM6328 PCIe host controller is found on BCM6328, BCM6362 and BCM63268 SoCs.
 
-Fixes: 4aeae9cb0dad ("power_supply: Add support for TI BQ25890 charger chip")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/power/supply/bq25890.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Álvaro Fernández Rojas (3):
+  mips: bmips: add PCI support
+  dt-bindings: Document BCM6328 PCIe Host Controller
+  pci: add BCM6328 PCIe controller support
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-index 51ecc756521f..3b4c69a7fa70 100644
---- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-+++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-@@ -10,6 +10,7 @@ Required properties:
-     * "ti,bq25895"
-     * "ti,bq25896"
- - reg: integer, i2c address of the device.
-+- interrupts: interrupt line;
- - ti,battery-regulation-voltage: integer, maximum charging voltage (in uV);
- - ti,charge-current: integer, maximum charging current (in uA);
- - ti,termination-current: integer, charge will be terminated when current in
-@@ -39,6 +40,9 @@ bq25890 {
- 	compatible = "ti,bq25890";
- 	reg = <0x6a>;
- 
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-+
- 	ti,battery-regulation-voltage = <4200000>;
- 	ti,charge-current = <1000000>;
- 	ti,termination-current = <50000>;
+ .../bindings/pci/brcm,bcm6328-pcie.yaml       | 109 ++++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/pci/Makefile                        |   1 +
+ arch/mips/pci/fixup-bmips.c                   |  17 +
+ drivers/pci/controller/Kconfig                |   8 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pcie-bcm6328.c         | 346 ++++++++++++++++++
+ 7 files changed, 483 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
+ create mode 100644 arch/mips/pci/fixup-bmips.c
+ create mode 100644 drivers/pci/controller/pcie-bcm6328.c
+
 -- 
-2.17.1
+2.27.0
 
