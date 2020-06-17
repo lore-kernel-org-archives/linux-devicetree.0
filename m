@@ -2,109 +2,101 @@ Return-Path: <SRS0=UIXH=76=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3775DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AC9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A2321841
-	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592428614;
-	bh=RyiMy0SMVaFoLMTZSzw+BTB7kiyfiquzDb9CtKoNpEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VbsiCcgpamqW/hNU7OpfeD6r2BHsAwXlsBsTH9XWZ0L5nkNjKot9spA7N6b56vJnf
-	 2VnTSGvOVvNZexlgBtRYD/j054kP6s+PUdmJkporztp+wDqq81WL0UQ6jQlg1nIhyB
-	 Xp7lepSMduKyQ1+2rSMA5xThtAF0Z2lJ79yHISMg=
+	by mail.kernel.org (Postfix) with ESMTP id 82E692098B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 17 Jun 2020 21:20:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B45A1JqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgFQVQx (ORCPT
+        id S1726909AbgFQVUm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:16:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45685 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQVQx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:16:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id y5so4581022iob.12;
-        Wed, 17 Jun 2020 14:16:52 -0700 (PDT)
+        Wed, 17 Jun 2020 17:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQVUm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 17:20:42 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FFDC06174E;
+        Wed, 17 Jun 2020 14:20:42 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e9so1887217pgo.9;
+        Wed, 17 Jun 2020 14:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=NohMyegEt9RgGZs2UzoxJxqN0gmHTgaywhB0Xzu/WmU=;
+        b=B45A1JqMbdGfNkFOLEr80Gd4T4cJHGZpD46j+2UPvaUhAxUwCPVP6oDMxAHHZdG0PP
+         NBSaOy58ayTiZ4z2IKWdPtBY/cMv1hW47Zb/k1+EDN//5NXSVRkRaz2k07Js4raYp3R7
+         qJXH4XaCod9zMWVAX4yu8DTNZvZIk8PFGvsKulS5pwpjkMcaXtBweTxC0gHUQS0QGwQb
+         9sGYmn2QrwjjB7oUm6hw7CYH4f5Ib1tZpcTeDldhHnuHlZIX0c4MxOx6jBmNp9uvr5BS
+         TwB3vBHW2H6ANhuqu0dPKqDfwcqLb56iaMALoRy8H1jb/N103Vxx6BG4lgQ7yzL1ZGM9
+         GzVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=j8CHgerKh+kCi8teLN3sFICipYAv2LGJo9hWRjpOE2w=;
-        b=LVhoXB2H0KQRHdIYezkyVYOfYuoqTZ129CmCXa47vCln+2NvKbnjNGfncha2RFZ54s
-         pFRdPeAfV3Ezlh1LF4NJ2KIoTrV2nmsVIVpyCqELOqPMMSyTjSkZsU589sB9LA8awqWR
-         RmCowH/zXJ16mXpaZ9nzbsPUqDNaNuXJ1JXDykjnlxKYGUS6mEKlpoIdH4fXwwztqkhC
-         sBNkorxbT25kYa8TzmFOEte8RQIoAWG4Rvl7AAhmPtW84cGh3wKGSl8LrzrxUFmzqUYO
-         nY30K3gqLYDCm2FIxootwMIm9NKW3geDj3lhzK+XOgThWZzD1b2VU6VcP9pMtpOSbCou
-         yYcg==
-X-Gm-Message-State: AOAM530vKO+CjWJx3FjnhMcvfSUKR/cnJd0pwbNH+5H6nlzqFlORkt9b
-        jx++0/5FA9yg/olXfxw+dw==
-X-Google-Smtp-Source: ABdhPJz4vmd5HW/ld1MMrmvl7UPaTLl7RJ4RvzL8jISwi+1GHLhCRTRT9B1g3Vta6QmIHKFwG4d3QQ==
-X-Received: by 2002:a6b:3805:: with SMTP id f5mr1450731ioa.41.1592428612080;
-        Wed, 17 Jun 2020 14:16:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id b73sm570734iof.13.2020.06.17.14.16.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 14:16:51 -0700 (PDT)
-Received: (nullmailer pid 2837249 invoked by uid 1000);
-        Wed, 17 Jun 2020 21:16:49 -0000
-Date:   Wed, 17 Jun 2020 15:16:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, andre.przywara@arm.com,
-        vkoul@kernel.org, linux-actions@lists.infradead.org,
-        cristian.ciocaltea@gmail.com, dan.j.williams@intel.com,
-        robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v4 05/10] dt-bindings: dmaengine: convert Actions Semi
- Owl SoCs bindings to yaml
-Message-ID: <20200617211649.GA2837196@bogus>
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NohMyegEt9RgGZs2UzoxJxqN0gmHTgaywhB0Xzu/WmU=;
+        b=rkxXikHLH6amxloveGcI1WNujaF/EGfgAMMcmh5ZbRzadsyYFAVdc/T+YWfHYAkVhn
+         8YIG0qYIhZ8IIxuW7yw/5AkbI75NmE/r3+YXcs0YD/IY51JLQuKm6csvtWRNQKKwX/TV
+         KG6CVhuj+Bl0EDlKOvriLBzHMwz2Vlt7HxfETbaRyncm70Ut01N0Kj3seg/5Flk9oH//
+         5pBR9nSOF9fJ/l0gBHWXvs1ca7lcapfg9IXGpcsAvp/nUuRDMbrDoD7OAmb3pQjcIW0v
+         gOZ/j+jamo4BA67sn/aQLFin75D2eoYRDDtyIZ3LOzPjAzbqBg17W6JsWo2m5Lnvho3j
+         s2tA==
+X-Gm-Message-State: AOAM530q1eJbFmJXfDCC44FX0T49LnKdfTiRDCoxrEIzlfneTlHnCbg4
+        geyzbUekpmndPCTOA+qDs2s=
+X-Google-Smtp-Source: ABdhPJxQCCLyJYuEEt75M86xwUznb39t3XLVtOTwq0j0vZiNuzlxohhOfMK2hQu9uIG/YI5GnyoJzg==
+X-Received: by 2002:a62:1654:: with SMTP id 81mr628850pfw.137.1592428841583;
+        Wed, 17 Jun 2020 14:20:41 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f191sm702000pfa.82.2020.06.17.14.20.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 14:20:40 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200616184542.3504965-1-noltari@gmail.com>
+ <20200616184542.3504965-2-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <7b82a18b-2939-9516-d68d-ddac41014da1@gmail.com>
+Date:   Wed, 17 Jun 2020 14:20:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
+In-Reply-To: <20200616184542.3504965-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 09 Jun 2020 15:47:05 +0530, Amit Singh Tomar wrote:
-> Converts the device tree bindings for the Actions Semi Owl SoCs DMA
-> Controller over to YAML schemas.
-> 
-> It also adds new compatible string "actions,s700-dma".
-> 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
-> ---
-> Changes since v3:
-> 	* No change.
-> Changes since v2:
->         * Addressed Rob's comments:
->            - removed unnecessary description.
->            - added unevaluatedProperties
->            - added relevant information about
->              dma-channels and dma-request
->         * Added power-domain property.
-> Change since v1:
->         * Updated the description field to reflect
->           only the necessary information.
->         * replaced the maxItems field with description for each
->           controller attribute(except interrupts).
->         * Replaced the clock macro with number to keep the example
->           as independent as possible.
-> 
->  New patch, was not there in RFC.
-> ---
->  Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
->  Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
->  2 files changed, 79 insertions(+), 47 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On 6/16/2020 11:45 AM, Álvaro Fernández Rojas wrote:
+> Document BCM63xx USBH PHY bindings.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+
+
+
+Since the USB PHY supports both roles (host and device) on a large
+number of SoCs, I would just remove "H" from the subject/binding/name
+accordingly. With that:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
