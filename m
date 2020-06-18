@@ -2,529 +2,840 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C4FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 14:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D2AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 14:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC3520734
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 14:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DF620739
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 14:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592489551;
+	bh=YzMGpPxwn9AB5Bi9LqHSOrGngjJIA4v8AX0yTeStR9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dQaQsBl/Pg4WlAGY2z2Vbtc/ZMP/7HtQLDxx5u6+mYNDwJWgoCuwnuwo6j+9eAf7i
+	 woUBjX+RiBuVghap1YjECJc781/niTye+7GzBOaSGkHwHkcgDvT6xqAPhc+b/e1+XR
+	 ab+qRG4th2A0rbIaPa90eNc0eZInHcfjCrsqS0IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgFROJM (ORCPT
+        id S1730512AbgFROMb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:09:12 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:57878 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728118AbgFROJM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 10:09:12 -0400
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 18 Jun 2020 07:09:10 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 18 Jun 2020 07:09:08 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 18 Jun 2020 19:38:44 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 209F14A0A; Thu, 18 Jun 2020 19:38:43 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] drm/msm/dpu: add support for clk and bw scaling for display
-Date:   Thu, 18 Jun 2020 19:38:41 +0530
-Message-Id: <1592489321-29213-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 18 Jun 2020 10:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730449AbgFROM1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:12:27 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90AD620739;
+        Thu, 18 Jun 2020 14:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592489546;
+        bh=YzMGpPxwn9AB5Bi9LqHSOrGngjJIA4v8AX0yTeStR9c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zs8iBuP/eY1tFldFscWOc3uxOGp48oxVTis0VVEghQPbRAS7kniEf9PykZBQIS6G6
+         ra7Hnl+Kdn8CIJwyVOmj/KQkKnCzQjzY2UiOLT8YiW401OzakXA0x/OMjbYk5wKzLA
+         Ir47h6gbE+M2ZdEcf/idTWGEAhSFnIt4pom5LDMo=
+Date:   Thu, 18 Jun 2020 22:12:20 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v8 1/5] ARM: dts: add Protonic PRTI6Q board
+Message-ID: <20200618141217.GA32496@dragon>
+References: <20200520154116.12909-1-o.rempel@pengutronix.de>
+ <20200520154116.12909-2-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520154116.12909-2-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This change adds support to scale src clk and bandwidth as
-per composition requirements.
+On Wed, May 20, 2020 at 05:41:12PM +0200, Oleksij Rempel wrote:
+> Protonic PRTI6Q is a development board and a base class for different
+> specific customer application boards based on the i.MX6 family of SoCs,
+> developed by Protonic Holland.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: David Jander <david@protonic.nl>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/Makefile            |   1 +
+>  arch/arm/boot/dts/imx6q-prti6q.dts    | 541 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6qdl-prti6q.dtsi | 165 ++++++++
+>  3 files changed, 707 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
+>  create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e8dd992013973..206a36a50575e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -538,6 +538,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6q-pico-nymph.dtb \
+>  	imx6q-pico-pi.dtb \
+>  	imx6q-pistachio.dtb \
+> +	imx6q-prti6q.dtb \
+>  	imx6q-rex-pro.dtb \
+>  	imx6q-sabreauto.dtb \
+>  	imx6q-sabrelite.dtb \
+> diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q-prti6q.dts
+> new file mode 100644
+> index 0000000000000..d8ea9a3f415a8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-prti6q.dts
+> @@ -0,0 +1,541 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+> +/*
+> + * Copyright (c) 2014 Protonic Holland
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx6q.dtsi"
+> +#include "imx6qdl-prti6q.dtsi"
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/sound/fsl-imx-audmux.h>
+> +
+> +/ {
+> +	model = "Protonic PRTI6Q board";
+> +	compatible = "prt,prti6q", "fsl,imx6q";
 
-Interconnect registration for bw has been moved to mdp
-device node from mdss to facilitate the scaling.
+Undocumented compatible?
 
-Changes in v1:
- - Address armv7 compilation issues with the patch (Rob)
+> +
+> +	memory@10000000 {
+> +		device_type = "memory";
+> +		reg = <0x10000000 0xf0000000>;
+> +	};
+> +
+> +	backlight_lcd: backlight-lcd {
+> +		compatible = "pwm-backlight";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_backlight>;
+> +		pwms = <&pwm1 0 5000000>;
+> +		brightness-levels = <0 16 64 255>;
+> +		num-interpolated-steps = <16>;
+> +		default-brightness-level = <16>;
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 109 +++++++++++++++++++++----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |   4 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  37 ++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c       |   9 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      |  84 +++++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h      |   4 +
- 8 files changed, 233 insertions(+), 23 deletions(-)
+It should be an index into brightness-levels.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-index 7c230f7..e52bc44 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -29,6 +29,74 @@ enum dpu_perf_mode {
- 	DPU_PERF_MODE_MAX
- };
- 
-+/**
-+ * @_dpu_core_perf_calc_bw() - to calculate BW per crtc
-+ * @kms -  pointer to the dpu_kms
-+ * @crtc - pointer to a crtc
-+ * Return: returns aggregated BW for all planes in crtc.
-+ */
-+static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
-+		struct drm_crtc *crtc)
-+{
-+	struct drm_plane *plane;
-+	struct dpu_plane_state *pstate;
-+	u64 crtc_plane_bw = 0;
-+	u32 bw_factor;
-+
-+	drm_atomic_crtc_for_each_plane(plane, crtc) {
-+		pstate = to_dpu_plane_state(plane->state);
-+		if (!pstate)
-+			continue;
-+
-+		crtc_plane_bw += pstate->plane_fetch_bw;
-+	}
-+
-+	bw_factor = kms->catalog->perf.bw_inefficiency_factor;
-+	if (bw_factor) {
-+		crtc_plane_bw *= bw_factor;
-+		do_div(crtc_plane_bw, 100);
-+	}
-+
-+	return crtc_plane_bw;
-+}
-+
-+/**
-+ * _dpu_core_perf_calc_clk() - to calculate clock per crtc
-+ * @kms -  pointer to the dpu_kms
-+ * @crtc - pointer to a crtc
-+ * @state - pointer to a crtc state
-+ * Return: returns max clk for all planes in crtc.
-+ */
-+static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
-+		struct drm_crtc *crtc, struct drm_crtc_state *state)
-+{
-+	struct drm_plane *plane;
-+	struct dpu_plane_state *pstate;
-+	struct drm_display_mode *mode;
-+	u64 crtc_clk;
-+	u32 clk_factor;
-+
-+	mode = &state->adjusted_mode;
-+
-+	crtc_clk = mode->vtotal * mode->hdisplay * drm_mode_vrefresh(mode);
-+
-+	drm_atomic_crtc_for_each_plane(plane, crtc) {
-+		pstate = to_dpu_plane_state(plane->state);
-+		if (!pstate)
-+			continue;
-+
-+		crtc_clk = max(pstate->plane_clk, crtc_clk);
-+	}
-+
-+	clk_factor = kms->catalog->perf.clk_inefficiency_factor;
-+	if (clk_factor) {
-+		crtc_clk *= clk_factor;
-+		do_div(crtc_clk, 100);
-+	}
-+
-+	return crtc_clk;
-+}
-+
- static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
- {
- 	struct msm_drm_private *priv;
-@@ -51,12 +119,7 @@ static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
- 	dpu_cstate = to_dpu_crtc_state(state);
- 	memset(perf, 0, sizeof(struct dpu_core_perf_params));
- 
--	if (!dpu_cstate->bw_control) {
--		perf->bw_ctl = kms->catalog->perf.max_bw_high *
--					1000ULL;
--		perf->max_per_pipe_ib = perf->bw_ctl;
--		perf->core_clk_rate = kms->perf.max_core_clk_rate;
--	} else if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
-+	if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
- 		perf->bw_ctl = 0;
- 		perf->max_per_pipe_ib = 0;
- 		perf->core_clk_rate = 0;
-@@ -64,6 +127,10 @@ static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
- 		perf->bw_ctl = kms->perf.fix_core_ab_vote;
- 		perf->max_per_pipe_ib = kms->perf.fix_core_ib_vote;
- 		perf->core_clk_rate = kms->perf.fix_core_clk_rate;
-+	} else {
-+		perf->bw_ctl = _dpu_core_perf_calc_bw(kms, crtc);
-+		perf->max_per_pipe_ib = kms->catalog->perf.min_dram_ib;
-+		perf->core_clk_rate = _dpu_core_perf_calc_clk(kms, crtc, state);
- 	}
- 
- 	DPU_DEBUG(
-@@ -115,11 +182,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
- 			DPU_DEBUG("crtc:%d bw:%llu ctrl:%d\n",
- 				tmp_crtc->base.id, tmp_cstate->new_perf.bw_ctl,
- 				tmp_cstate->bw_control);
--			/*
--			 * For bw check only use the bw if the
--			 * atomic property has been already set
--			 */
--			if (tmp_cstate->bw_control)
-+
- 				bw_sum_of_intfs += tmp_cstate->new_perf.bw_ctl;
- 		}
- 
-@@ -131,9 +194,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
- 
- 		DPU_DEBUG("final threshold bw limit = %d\n", threshold);
- 
--		if (!dpu_cstate->bw_control) {
--			DPU_DEBUG("bypass bandwidth check\n");
--		} else if (!threshold) {
-+		if (!threshold) {
- 			DPU_ERROR("no bandwidth limits specified\n");
- 			return -E2BIG;
- 		} else if (bw > threshold) {
-@@ -154,7 +215,11 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
- 					= dpu_crtc_get_client_type(crtc);
- 	struct drm_crtc *tmp_crtc;
- 	struct dpu_crtc_state *dpu_cstate;
--	int ret = 0;
-+	int i, ret = 0;
-+	u64 avg_bw;
-+
-+	if (!kms->num_paths)
-+		return -EINVAL;
- 
- 	drm_for_each_crtc(tmp_crtc, crtc->dev) {
- 		if (tmp_crtc->enabled &&
-@@ -165,10 +230,20 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
- 			perf.max_per_pipe_ib = max(perf.max_per_pipe_ib,
- 					dpu_cstate->new_perf.max_per_pipe_ib);
- 
--			DPU_DEBUG("crtc=%d bw=%llu\n", tmp_crtc->base.id,
--					dpu_cstate->new_perf.bw_ctl);
-+			perf.bw_ctl += dpu_cstate->new_perf.bw_ctl;
-+
-+			DPU_DEBUG("crtc=%d bw=%llu paths:%d\n",
-+				  tmp_crtc->base.id,
-+				  dpu_cstate->new_perf.bw_ctl, kms->num_paths);
- 		}
- 	}
-+
-+	avg_bw = perf.bw_ctl;
-+	do_div(avg_bw, (kms->num_paths * 1000)); /*Bps_to_icc*/
-+
-+	for (i = 0; i < kms->num_paths; i++)
-+		icc_set_bw(kms->path[i], avg_bw, perf.max_per_pipe_ib);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 29d4fde..8f2357d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -541,7 +541,8 @@
- 	.max_bw_high = 6800000,
- 	.min_core_ib = 2400000,
- 	.min_llcc_ib = 800000,
--	.min_dram_ib = 800000,
-+	.min_dram_ib = 1600000,
-+	.min_prefill_lines = 24,
- 	.danger_lut_tbl = {0xff, 0xffff, 0x0},
- 	.qos_lut_tbl = {
- 		{.nentry = ARRAY_SIZE(sc7180_qos_linear),
-@@ -558,6 +559,8 @@
- 		{.rd_enable = 1, .wr_enable = 1},
- 		{.rd_enable = 1, .wr_enable = 0}
- 	},
-+	.clk_inefficiency_factor = 105,
-+	.bw_inefficiency_factor = 120,
- };
- 
- /*************************************************************
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index f7de438..f2a5fe2 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -651,6 +651,8 @@ struct dpu_perf_cdp_cfg {
-  * @downscaling_prefill_lines  downscaling latency in lines
-  * @amortizable_theshold minimum y position for traffic shaping prefill
-  * @min_prefill_lines  minimum pipeline latency in lines
-+ * @clk_inefficiency_factor DPU src clock inefficiency factor
-+ * @bw_inefficiency_factor DPU axi bus bw inefficiency factor
-  * @safe_lut_tbl: LUT tables for safe signals
-  * @danger_lut_tbl: LUT tables for danger signals
-  * @qos_lut_tbl: LUT tables for QoS signals
-@@ -675,6 +677,8 @@ struct dpu_perf_cfg {
- 	u32 downscaling_prefill_lines;
- 	u32 amortizable_threshold;
- 	u32 min_prefill_lines;
-+	u32 clk_inefficiency_factor;
-+	u32 bw_inefficiency_factor;
- 	u32 safe_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
- 	u32 danger_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
- 	struct dpu_qos_lut_tbl qos_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index b8615d4..a5da7aa 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -303,6 +303,28 @@ static int dpu_kms_global_obj_init(struct dpu_kms *dpu_kms)
- 	return 0;
- }
- 
-+static int dpu_kms_parse_data_bus_icc_path(struct dpu_kms *dpu_kms)
-+{
-+	struct icc_path *path0;
-+	struct icc_path *path1;
-+	struct drm_device *dev = dpu_kms->dev;
-+
-+	path0 = of_icc_get(dev->dev, "mdp0-mem");
-+	path1 = of_icc_get(dev->dev, "mdp1-mem");
-+
-+	if (IS_ERR_OR_NULL(path0))
-+		return PTR_ERR_OR_ZERO(path0);
-+
-+	dpu_kms->path[0] = path0;
-+	dpu_kms->num_paths = 1;
-+
-+	if (!IS_ERR_OR_NULL(path1)) {
-+		dpu_kms->path[1] = path1;
-+		dpu_kms->num_paths++;
-+	}
-+	return 0;
-+}
-+
- static int dpu_kms_enable_vblank(struct msm_kms *kms, struct drm_crtc *crtc)
- {
- 	return dpu_crtc_vblank(crtc, true);
-@@ -972,6 +994,9 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
- 
- 	dpu_vbif_init_memtypes(dpu_kms);
- 
-+	if (of_device_is_compatible(dev->dev->of_node, "qcom,sc7180-mdss"))
-+		dpu_kms_parse_data_bus_icc_path(dpu_kms);
-+
- 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
- 
- 	return 0;
-@@ -1077,7 +1102,7 @@ static int dpu_dev_remove(struct platform_device *pdev)
- 
- static int __maybe_unused dpu_runtime_suspend(struct device *dev)
- {
--	int rc = -1;
-+	int i, rc = -1;
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
- 	struct dss_module_power *mp = &dpu_kms->mp;
-@@ -1086,6 +1111,9 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
- 	if (rc)
- 		DPU_ERROR("clock disable failed rc:%d\n", rc);
- 
-+	for (i = 0; i < dpu_kms->num_paths; i++)
-+		icc_set_bw(dpu_kms->path[i], 0, 0);
-+
- 	return rc;
- }
- 
-@@ -1097,8 +1125,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
- 	struct drm_encoder *encoder;
- 	struct drm_device *ddev;
- 	struct dss_module_power *mp = &dpu_kms->mp;
-+	int i;
- 
- 	ddev = dpu_kms->dev;
-+
-+	/* Min vote of BW is required before turning on AXI clk */
-+	for (i = 0; i < dpu_kms->num_paths; i++)
-+		icc_set_bw(dpu_kms->path[i], 0,
-+			dpu_kms->catalog->perf.min_dram_ib);
-+
- 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
- 	if (rc) {
- 		DPU_ERROR("clock enable failed rc:%d\n", rc);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index 4e32d04..94410ca 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -8,6 +8,8 @@
- #ifndef __DPU_KMS_H__
- #define __DPU_KMS_H__
- 
-+#include <linux/interconnect.h>
-+
- #include <drm/drm_drv.h>
- 
- #include "msm_drv.h"
-@@ -137,6 +139,8 @@ struct dpu_kms {
- 	 * when disabled.
- 	 */
- 	atomic_t bandwidth_ref;
-+	struct icc_path *path[2];
-+	u32 num_paths;
- };
- 
- struct vsync_info {
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-index 80d3cfc..df0a983 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-@@ -8,7 +8,6 @@
- #include <linux/irqdesc.h>
- #include <linux/irqchip/chained_irq.h>
- #include "dpu_kms.h"
--#include <linux/interconnect.h>
- 
- #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
- 
-@@ -315,9 +314,11 @@ int dpu_mdss_init(struct drm_device *dev)
- 	}
- 	dpu_mdss->mmio_len = resource_size(res);
- 
--	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
--	if (ret)
--		return ret;
-+	if (!of_device_is_compatible(dev->dev->of_node, "qcom,sc7180-mdss")) {
-+		ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	mp = &dpu_mdss->mp;
- 	ret = msm_dss_parse_clock(pdev, mp);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 3b9c33e..6379fe1 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -132,6 +132,86 @@ static struct dpu_kms *_dpu_plane_get_kms(struct drm_plane *plane)
- }
- 
- /**
-+ * _dpu_plane_calc_bw - calculate bandwidth required for a plane
-+ * @Plane: Pointer to drm plane.
-+ * Result: Updates calculated bandwidth in the plane state.
-+ * BW Equation: src_w * src_h * bpp * fps * (v_total / v_dest)
-+ * Prefill BW Equation: line src bytes * line_time
-+ */
-+static void _dpu_plane_calc_bw(struct drm_plane *plane,
-+	struct drm_framebuffer *fb)
-+{
-+	struct dpu_plane *pdpu = to_dpu_plane(plane);
-+	struct dpu_plane_state *pstate;
-+	struct drm_display_mode *mode;
-+	const struct dpu_format *fmt = NULL;
-+	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
-+	int src_width, src_height, dst_height, fps;
-+	u64 plane_prefill_bw;
-+	u64 plane_bw;
-+	u32 hw_latency_lines;
-+	u64 scale_factor;
-+	int vbp, vpw;
-+
-+	pstate = to_dpu_plane_state(plane->state);
-+	mode = &plane->state->crtc->mode;
-+
-+	fmt = dpu_get_dpu_format_ext(fb->format->format, fb->modifier);
-+
-+	src_width = drm_rect_width(&pdpu->pipe_cfg.src_rect);
-+	src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
-+	dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
-+	fps = drm_mode_vrefresh(mode);
-+	vbp = mode->vtotal - mode->vsync_end;
-+	vpw = mode->vsync_end - mode->vsync_start;
-+	hw_latency_lines =  dpu_kms->catalog->perf.min_prefill_lines;
-+	scale_factor = src_height > dst_height ?
-+		mult_frac(src_height, 1, dst_height) : 1;
-+
-+	plane_bw =
-+		src_width * mode->vtotal * fps * fmt->bpp *
-+		scale_factor;
-+
-+	plane_prefill_bw =
-+		src_width * hw_latency_lines * fps * fmt->bpp *
-+		scale_factor * mode->vtotal;
-+
-+	do_div(plane_prefill_bw, (vbp+vpw));
-+
-+	pstate->plane_fetch_bw = max(plane_bw, plane_prefill_bw);
-+}
-+
-+/**
-+ * _dpu_plane_calc_clk - calculate clock required for a plane
-+ * @Plane: Pointer to drm plane.
-+ * Result: Updates calculated clock in the plane state.
-+ * Clock equation: dst_w * v_total * fps * (src_h / dst_h)
-+ */
-+static void _dpu_plane_calc_clk(struct drm_plane *plane)
-+{
-+	struct dpu_plane *pdpu = to_dpu_plane(plane);
-+	struct dpu_plane_state *pstate;
-+	struct drm_display_mode *mode;
-+	int dst_width, src_height, dst_height, fps;
-+
-+	pstate = to_dpu_plane_state(plane->state);
-+	mode = &plane->state->crtc->mode;
-+
-+	src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
-+	dst_width = drm_rect_width(&pdpu->pipe_cfg.dst_rect);
-+	dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
-+	fps = drm_mode_vrefresh(mode);
-+
-+	pstate->plane_clk =
-+		dst_width * mode->vtotal * fps;
-+
-+	if (src_height > dst_height) {
-+		pstate->plane_clk *= src_height;
-+		do_div(pstate->plane_clk, dst_height);
-+	}
-+}
-+
-+/**
-  * _dpu_plane_calc_fill_level - calculate fill level of the given source format
-  * @plane:		Pointer to drm plane
-  * @fmt:		Pointer to source buffer format
-@@ -1102,6 +1182,10 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
- 	}
- 
- 	_dpu_plane_set_qos_remap(plane);
-+
-+	_dpu_plane_calc_bw(plane, fb);
-+
-+	_dpu_plane_calc_clk(plane);
- }
- 
- static void _dpu_plane_atomic_disable(struct drm_plane *plane)
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-index 4569497..ca83b87 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-@@ -25,6 +25,8 @@
-  * @scaler3_cfg: configuration data for scaler3
-  * @pixel_ext: configuration data for pixel extensions
-  * @cdp_cfg:	CDP configuration
-+ * @plane_fetch_bw: calculated BW per plane
-+ * @plane_clk: calculated clk per plane
-  */
- struct dpu_plane_state {
- 	struct drm_plane_state base;
-@@ -39,6 +41,8 @@ struct dpu_plane_state {
- 	struct dpu_hw_pixel_ext pixel_ext;
- 
- 	struct dpu_hw_pipe_cdp_cfg cdp_cfg;
-+	u64 plane_fetch_bw;
-+	u64 plane_clk;
- };
- 
- /**
--- 
-1.9.1
+> +		power-supply = <&reg_3v3>;
+> +		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	can_osc: can-osc {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_leds>;
+> +
+> +		led-debug0 {
+> +			function = LED_FUNCTION_STATUS;
+> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		led-debug1 {
+> +			function = LED_FUNCTION_SD;
+> +			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "disk-activity";
+> +		};
+> +	};
+> +
+> +	panel {
+> +		compatible = "kyo,tcg121xglp";
+> +		backlight = <&backlight_lcd>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&lvds0_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_1v8: regulator-1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1v8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
 
+What's the point of having always-on property for a regulator without
+on/off control?
+
+> +	};
+> +
+> +	reg_wifi: regulator-wifi {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_wifi_npd>;
+> +		enable-active-high;
+> +		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-name = "regulator-WL12xx";
+> +		startup-delay-us = <70000>;
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "prti6q-sgtl5000";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,widgets =
+> +			"Microphone", "Microphone Jack",
+> +			"Line", "Line In Jack",
+> +			"Headphone", "Headphone Jack",
+> +			"Speaker", "External Speaker";
+> +		simple-audio-card,routing =
+> +			"MIC_IN", "Microphone Jack",
+> +			"LINE_IN", "Line In Jack",
+> +			"Headphone Jack", "HP_OUT",
+> +			"External Speaker", "LINE_OUT";
+> +
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&ssi1>;
+> +			system-clock-frequency = <0>;
+> +		};
+> +
+> +		simple-audio-card,codec {
+> +			sound-dai = <&sgtl5000>;
+> +			bitclock-master;
+> +			frame-master;
+> +		};
+> +	};
+> +
+> +	sound-spdif {
+> +		compatible = "fsl,imx-audio-spdif";
+> +		model = "imx-spdif";
+> +		spdif-controller = <&spdif>;
+> +		spdif-in;
+> +		spdif-out;
+> +	};
+> +};
+> +
+> +&audmux {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_audmux>;
+> +	status = "okay";
+> +
+> +	mux_ssi1 {
+
+We recommend to use hyphen than underscore in node name.
+
+> +		fsl,audmux-port = <0>;
+> +		fsl,port-config = <
+> +			IMX_AUDMUX_V2_PTCR_SYN		0
+> +			IMX_AUDMUX_V2_PTCR_TFSEL(2)	0
+> +			IMX_AUDMUX_V2_PTCR_TCSEL(2)	0
+> +			IMX_AUDMUX_V2_PTCR_TFSDIR	0
+> +			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
+> +		>;
+> +	};
+> +
+> +	mux_pins3 {
+> +		fsl,audmux-port = <2>;
+> +		fsl,port-config = <
+> +			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
+> +			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
+> +		>;
+> +	};
+> +};
+> +
+> +&can2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_can2>;
+> +	status = "okay";
+> +};
+> +
+> +&ecspi1 {
+> +	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <20000000>;
+> +	};
+> +};
+> +
+> +&ecspi2 {
+> +	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>, <&gpio4 25 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi2 &pinctrl_ecspi2_cs>;
+> +	status = "okay";
+> +
+> +	can@0 {
+> +		compatible = "microchip,mcp2515";
+> +		reg = <0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_can3>;
+> +		clocks = <&can_osc>;
+> +		interrupts-extended = <&gpio3 20 IRQ_TYPE_LEVEL_LOW>;
+> +		spi-max-frequency = <5000000>;
+> +	};
+> +
+> +	adc@1 {
+> +		compatible = "ti,adc128s052";
+> +		reg = <1>;
+> +		spi-max-frequency = <2000000>;
+> +		vref-supply = <&reg_3v3>;
+> +	};
+> +};
+> +
+> +&ecspi3 {
+> +	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi3>;
+> +	status = "okay";
+> +};
+> +
+> +&can1 {
+
+It's out of alphabetic order.
+
+> +	pinctrl-0 = <&pinctrl_can1>;
+> +};
+> +
+> +&fec {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet>;
+> +	phy-mode = "rgmii-id";
+> +	phy-handle = <&rgmii_phy>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* Microchip KSZ9031RNX PHY */
+> +		rgmii_phy: ethernet-phy@0 {
+> +			reg = <0>;
+> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
+> +			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+> +			reset-assert-us = <10000>;
+> +			reset-deassert-us = <300>;
+> +		};
+> +	};
+> +};
+> +
+> +&hdmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hdmi>;
+> +	ddc-i2c-bus = <&i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	sgtl5000: audio-codec@a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0xa>;
+> +		#sound-dai-cells = <0>;
+> +		clocks = <&clks 201>;
+> +		VDDA-supply = <&reg_3v3>;
+> +		VDDIO-supply = <&reg_3v3>;
+> +		VDDD-supply = <&reg_1v8>;
+> +	};
+> +};
+> +
+> +/* DDC */
+> +&i2c2 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	adc@49 {
+> +		compatible = "ti,ads1015";
+> +		reg = <0x49>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* can2_l */
+> +		channel@4 {
+> +			reg = <4>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +
+> +		/* can2_h */
+> +		channel@5 {
+> +			reg = <5>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +
+> +		/* can1_l */
+> +		channel@6 {
+> +			reg = <6>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +
+> +		/* can1_h */
+> +		channel@7 {
+> +			reg = <7>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +	};
+> +};
+> +
+> +&pcie {
+> +	status = "okay";
+> +};
+> +
+> +&pwm1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm1>;
+> +	status = "okay";
+> +};
+> +
+> +&ldb {
+> +	status = "okay";
+> +
+> +	lvds-channel@0 {
+> +		status = "okay";
+> +
+> +		port@4 {
+> +			reg = <4>;
+> +
+> +			lvds0_out: endpoint {
+> +				remote-endpoint = <&panel_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +};
+> +
+> +&snvs_poweroff {
+> +	status = "okay";
+> +};
+> +
+> +&spdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_spdif>;
+> +	status = "okay";
+> +};
+> +
+> +&ssi1 {
+> +	#sound-dai-cells = <0>;
+> +	fsl,mode = "ac97-slave";
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	status = "okay";
+> +};
+> +
+> +&uart5 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart5>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg {
+> +	pinctrl-0 = <&pinctrl_usbotg &pinctrl_usbotg_id>;
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	non-removable;
+> +	vmmc-supply = <&reg_wifi>;
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +
+> +	wifi {
+> +		compatible = "ti,wl1271";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_wifi>;
+> +		interrupts-extended = <&gpio1 30 IRQ_TYPE_LEVEL_HIGH>;
+> +		ref-clock-frequency = "38400000";
+> +		tcxo-clock-frequency = "19200000";
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_audmux: audmuxgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
+> +			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
+> +			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
+> +			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
+> +			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_backlight: backlightgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT7__GPIO4_IO28	0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_can2: can2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
+> +			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
+
+Code proper pin configuration value.
+
+> +		>;
+> +	};
+> +
+> +	pinctrl_can3: can3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi1: ecspi1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
+> +			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
+> +			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
+> +			/* CS */
+> +			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi2: ecspi2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
+> +			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
+> +			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
+> +			MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi2_cs: ecspi2csgrp {
+> +		fsl,pins = <
+> +			/* ADC128S022 CS */
+> +			MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi3: ecspi3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
+> +			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
+> +			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
+> +			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x000b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet: enetgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
+> +			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
+> +			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
+> +			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
+> +			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
+> +			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
+> +			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x10030
+> +			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x10030
+> +			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x10030
+> +			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x10030
+> +			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x10030
+> +			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x10030
+> +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x10030
+> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
+> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
+> +
+> +			/* Phy reset */
+> +			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0
+> +			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_hdmi: hdmigrp {
+> +		fsl,pins = <
+> +			/* NOTE: DDC is done via I2C2, so DON'T
+> +			 * configure DDC pins for HDMI!
+> +			 */
+> +			MX6QDL_PAD_EIM_A25__HDMI_TX_CEC_LINE	0x1f8b0
+> +		>;
+> +	};
+> +
+> +	/* DDC */
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
+> +			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_leds: ledsgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
+> +			MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm1: pwm1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_spdif: spdifgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_16__SPDIF_IN		0x1b0b0
+> +			MX6QDL_PAD_GPIO_19__SPDIF_OUT		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D26__UART2_RX_DATA	0x1b0b1
+> +			MX6QDL_PAD_EIM_D27__UART2_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_EIM_D28__UART2_DTE_CTS_B	0x1b0b1
+> +			MX6QDL_PAD_EIM_D29__UART2_DTE_RTS_B	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart5: uart5grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg_id: usbotgidgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x1f058
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
+> +			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
+> +			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
+> +			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
+> +			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
+> +			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_wifi: wifigrp {
+> +		fsl,pins = <
+> +			/* WL12xx IRQ */
+> +			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x10880
+> +		>;
+> +	};
+> +
+> +	pinctrl_wifi_npd: wifinpd {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b8b0
+> +		>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl-prti6q.dtsi b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+> new file mode 100644
+> index 0000000000000..b9ac70b9a4513
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+> @@ -0,0 +1,165 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+> +/*
+> + * Copyright (c) 2014 Protonic Holland
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	chosen {
+> +		stdout-path = &uart4;
+> +	};
+> +
+> +	reg_3v3: regulator-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_h1_vbus: regulator-h1-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "h1-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_otg_vbus: regulator-otg-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "otg-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +};
+> +
+> +&can1 {
+> +	pinctrl-names = "default";
+> +	status = "okay";
+
+It doesn't make a lot of sense and hurts the readability.  Merge it
+into can1 in imx6q-prti6q.dts.
+
+Shawn
+
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c3>;
+> +	status = "okay";
+> +
+> +	temperature-sensor@70 {
+> +		compatible = "ti,tmp103";
+> +		reg = <0x70>;
+> +	};
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	status = "okay";
+> +};
+> +
+> +&usbh1 {
+> +	vbus-supply = <&reg_usb_h1_vbus>;
+> +	phy_type = "utmi";
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usbotg {
+> +	vbus-supply = <&reg_usb_otg_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg>;
+> +	phy_type = "utmi";
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_can1: can1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x80000000
+> +			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x80000000
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001f8b1
+> +			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001f8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c3: i2c3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001b8b1
+> +			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_CMD__SD1_CMD		0x170f9
+> +			MX6QDL_PAD_SD1_CLK__SD1_CLK		0x100f9
+> +			MX6QDL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
+> +			MX6QDL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
+> +			MX6QDL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
+> +			MX6QDL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
+> +			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3: usdhc3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17099
+> +			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10099
+> +			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17099
+> +			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17099
+> +			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17099
+> +			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17099
+> +			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17099
+> +			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17099
+> +			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17099
+> +			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17099
+> +			MX6QDL_PAD_SD3_RST__SD3_RESET		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg: usbotggrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D21__USB_OTG_OC	0x1b0b0
+> +			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x1b0b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.26.2
+> 
