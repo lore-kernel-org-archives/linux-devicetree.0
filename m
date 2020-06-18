@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242A8C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D4C433E0
 	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC1621534
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9263421534
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592448237;
-	bh=/bBd9Kcib72Nd6qfjvx5eG/CuEwIcQlkINsGTgx75Ao=;
+	bh=FHh/Lq9YZNROzvpJtdQYpz4bIgDSQXre0exYLtvbXsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qIprSQCcyRMis36acZ8WiRgDhSlSJ6tMWvoDzNwLf1VldyKOqVFlxOmIWo0on0wvt
-	 mgy46ddoHx7Zv2pHzMgmEJa29mW1MfPPpjvcGSLMzvPtcQRLNCVtbR5KV30HiZ+7ei
-	 jHYlsbcI169kyh7fDdKk3tn6u9Z45N798vmrNHVY=
+	b=QQoZbtGgK5WrQrcFMu09DpzhJiVi16xuewEZr3KUFB4UWQiBwNqKRXJtq807zKY3y
+	 UEA9+N18TGXwpFwsPpYj1eMgLK9ie4FU1seH1qRMdZ5fbiTxYcVCPbkEKEQppbEUZe
+	 EwpiGhvcAIMnYd4lq3H5ta3HE8gmO/FS+WWSVBlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgFRCnz (ORCPT
+        id S1731651AbgFRCn4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgFRBLX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:23 -0400
+        id S1728729AbgFRBLW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A68C221E6;
-        Thu, 18 Jun 2020 01:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2328120CC7;
+        Thu, 18 Jun 2020 01:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442683;
-        bh=/bBd9Kcib72Nd6qfjvx5eG/CuEwIcQlkINsGTgx75Ao=;
+        s=default; t=1592442681;
+        bh=FHh/Lq9YZNROzvpJtdQYpz4bIgDSQXre0exYLtvbXsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ns3rK1tZ6XHSDw7xXPPannKP8YoonB3nYh4YAD5zYmLw7jP9DD8n53aTuQAiRWwx1
-         RDiwRgMPOmLfexCrFMv4wJkxXZy+35xWDq8JgWOM+9RJffwkbdc+5ARyNoDEUAf3q9
-         fw2xJCj69vl8VlROJsd2LvseZmN+HG48I9D2x6iQ=
+        b=QNwnLXJtfsBVJ5KNChqS+rxrGQRZn64ikAZSSHT7DWzyfCc++yfGapbr2KOilfeks
+         KmFtX6kbp7J3C0sKgoicvs8llEYgONLGDmSy2aTzw+pRtGsJY0C6mdlNLf2FOKC6vR
+         qUSduY6ds25UkjefFwVIT5MeBwa6F486C02C9wpM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Saravana Kannan <saravanak@google.com>,
         Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 150/388] of: property: Do not link to disabled devices
-Date:   Wed, 17 Jun 2020 21:04:07 -0400
-Message-Id: <20200618010805.600873-150-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 149/388] of: property: Fix create device links for all child-supplier dependencies
+Date:   Wed, 17 Jun 2020 21:04:06 -0400
+Message-Id: <20200618010805.600873-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,52 +62,41 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 7456427af9def0fec5508dd8b861556038ee96a8 ]
+[ Upstream commit ed3655729182a59b9bef1b564c6fc2dcbbbe954e ]
 
-When creating a consumer/supplier relationship between two devices,
-make sure the supplier node is actually active. Otherwise this will
-create a link relationship that will never be fulfilled. This, in the
-worst case scenario, will hang the system during boot.
+Upon adding a new device from a DT node, we scan its properties and its
+children's properties in order to create a consumer/supplier
+relationship between the device and the property provider.
 
-Note that, in practice, the fact that a device-tree represented
-consumer/supplier relationship isn't fulfilled will not prevent devices
-from successfully probing.
+That said, it's possible for some of the node's children to be disabled,
+which will create links that'll never be fulfilled.
 
-Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
+To get around this, use the for_each_available_child_of_node() function
+instead of for_each_available_node() when iterating over the node's
+children.
+
+Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Reviewed-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/property.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/of/property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/of/property.c b/drivers/of/property.c
-index a8c2b13521b2..6dc542af5a70 100644
+index b4916dcc9e72..a8c2b13521b2 100644
 --- a/drivers/of/property.c
 +++ b/drivers/of/property.c
-@@ -1045,8 +1045,20 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
- 	 * Find the device node that contains the supplier phandle.  It may be
- 	 * @sup_np or it may be an ancestor of @sup_np.
- 	 */
--	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-+	while (sup_np) {
-+
-+		/* Don't allow linking to a disabled supplier */
-+		if (!of_device_is_available(sup_np)) {
-+			of_node_put(sup_np);
-+			sup_np = NULL;
-+		}
-+
-+		if (of_find_property(sup_np, "compatible", NULL))
-+			break;
-+
- 		sup_np = of_get_next_parent(sup_np);
-+	}
-+
- 	if (!sup_np) {
- 		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
- 		return -ENODEV;
+@@ -1296,7 +1296,7 @@ static int of_link_to_suppliers(struct device *dev,
+ 		if (of_link_property(dev, con_np, p->name))
+ 			ret = -ENODEV;
+ 
+-	for_each_child_of_node(con_np, child)
++	for_each_available_child_of_node(con_np, child)
+ 		if (of_link_to_suppliers(dev, child) && !ret)
+ 			ret = -EAGAIN;
+ 
 -- 
 2.25.1
 
