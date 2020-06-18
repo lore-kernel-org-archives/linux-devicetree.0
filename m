@@ -2,402 +2,234 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A185C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AE2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5942207E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:29:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="rrS09ECq"
+	by mail.kernel.org (Postfix) with ESMTP id 0C1E3207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592505202;
+	bh=Wa43T7w4Pf81pk4qHW8JXP2v08fY04xx7ru8epXTzJg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HanKU1nF4v1wdkCysAA0epxDz8jRQA46yk7io4fbOGnaBnoJBmt0zMFARANBJVUQ4
+	 aY4ksw+gI3rs0Q9OPTZkJI1nG02QhtSHLV0BHFZK7PoTf2aqwtbdkuG+7t+8DSYjy1
+	 rh3fpZMLjT9FZq9aU2y+Au6xeSulUcEyBP2Bh5T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgFRS33 (ORCPT
+        id S1729878AbgFRSdV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgFRS32 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 14:29:28 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21415C06174E
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:29:28 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l10so7096456wrr.10
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=vo7w29lsBcSDoW2N5qG5AVVoUYgKzcWReg2SqHjHNcQ=;
-        b=rrS09ECqOM8xEq7ahZa+FDM7V0LgH9NZLueHGnE5kkG5lYSdj99w52+tDTRV61Q5dM
-         7UHWR5N/eTYzxS9Z/HBO7tweK5CsWsbYG3z2+gHSWDqJep3z0uUJ7rEUyeCCYOWWSn7b
-         m2OqK5ueviuvyxLwia68ngHAaRdMeJnM53uxkew+lx2YV8ex5oQJXkI7guSLBdL6t/zf
-         4CL8Puej23FIs8lQ/zBAoR2qUCihtidBi1OnSALpB8Ltpfmjlt65GwEVydM1h2ZZBMer
-         b42B0rlIz9h1qZiEXMeokaLOeMfPtNTxjY3dMfruA0sMWMxGKJeot+rU+f4cIFDAHtYE
-         LcUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=vo7w29lsBcSDoW2N5qG5AVVoUYgKzcWReg2SqHjHNcQ=;
-        b=NFM1Z7zRFdglGCuCHvEN+NuKsCAQZs6T/48u6zD/IxGAhuOv2gno4/zhWa4U0DGFk+
-         o5KRnb+2/eYAurjtrrcv6fXxKmMTDKVr9iB0Se8L4dwpDXFgtKRv4Cj0No44kI+gaXfg
-         lbPVbNKnD4u3wZvStrShQ3dA/ajQcNmNc4+c44LyrELtCPNZYAUPYJSY9kJ7xG8DkF8y
-         uZNeK9n/BEWDZC8D6GQWOgTi3XHzQNCM4QhhuSf/cBAYPVEBcZup7vHTRTbJixTfKAR4
-         nryTEjhVSWQjJuEG9e+7lbc5kks9hMrsj3wqs89QKaw4xGqoZ5+KarljJVdCim9pTiS7
-         8owA==
-X-Gm-Message-State: AOAM532ysguOCov/4KKs5WExe7wl76knZjeJlcQBSNJDddSfVfj1/Zd9
-        atNwLZtN8Ag16YACxtO7gtC+3g==
-X-Google-Smtp-Source: ABdhPJxsxL67XldUe3owCLSLl3S03QbQPM6E/VpbEPBo26YDgs8EetsXk7zzHHXQSSpIpSLGpoxxlw==
-X-Received: by 2002:adf:e887:: with SMTP id d7mr5893522wrm.62.1592504966671;
-        Thu, 18 Jun 2020 11:29:26 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id u3sm4411776wmg.38.2020.06.18.11.29.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 11:29:25 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 20:29:21 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        bcousson@baylibre.com, Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: [PATCH v2] arm: dts: am335x-pocketbeagle: add gpio-line-names
-Message-ID: <20200618182921.GA61509@x1>
+        Thu, 18 Jun 2020 14:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729862AbgFRSdU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:33:20 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC1F20DD4;
+        Thu, 18 Jun 2020 18:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592505199;
+        bh=Wa43T7w4Pf81pk4qHW8JXP2v08fY04xx7ru8epXTzJg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ecX5Ld1C7sjO0SKydvTx6QgyY74RFFqkiWnwMkxD4jX71EmRFAZbRf1SerGyIli3R
+         RZl95VzhTjcClNC29YOwPoiGgk7m7vhs8a1gruUkjU0bfitz0O1/8qARf5cXGIDbju
+         zjjHj9YihPIoZu0HkGVQjpeneXBfdHEM4Q05d4L8=
+Received: by mail-ot1-f44.google.com with SMTP id v13so5345603otp.4;
+        Thu, 18 Jun 2020 11:33:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532oj0Lz6d7z6RBJL/UzqyzCpdjBDjNcid6/gwdCeNKAPD6q5QkG
+        QIjrSJprmw2HlEW2TPUUP32f/F4UWI1LwwnhrA==
+X-Google-Smtp-Source: ABdhPJx+Rb+JwD1PIWMOTJ6UqjOwSRAy1TpYrAkSXPkBhtxEkdRG5n3IX0zx8pWKa9xRNHPUxS5L8u5iKcFIdAX3nNk=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr68860ots.192.1592505199060;
+ Thu, 18 Jun 2020 11:33:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200617180209.5636-1-wcheng@codeaurora.org> <20200617180209.5636-3-wcheng@codeaurora.org>
+In-Reply-To: <20200617180209.5636-3-wcheng@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 18 Jun 2020 12:33:07 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com>
+Message-ID: <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
+ controller dt-binding
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jack Pham <jackp@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Jun Li <lijun.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
-many of the TI AM3358 SoC balls to stacking expansion boards called
-"capes", or to other external connections like jumper wires connected
-to a breadboard.
+On Wed, Jun 17, 2020 at 12:02 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
+>
+> Introduce the dt-binding for enabling USB type C orientation and role
+> detection using the PM8150B.  The driver will be responsible for receiving
+> the interrupt at a state change on the CC lines, reading the orientation/role,
+> and communicating this information to the remote clients, which can include
+> a role switch node and a type C switch.
+>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  .../bindings/usb/qcom,pmic-typec.yaml         | 117 ++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> new file mode 100644
+> index 000000000000..085b4547d75a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm PMIC based USB type C Detection Driver
+> +
+> +maintainers:
+> +  - Wesley Cheng <wcheng@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm PMIC Type C Detect
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,pm8150b-usb-typec
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Type C base address
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: CC change interrupt from PMIC
+> +
+> +  connector:
+> +    description: Connector type for remote endpoints
+> +    type: object
 
-Note: the AM3358 die is actually embedded inside of the OSD335x-SM
-System-in-Package (SiP) [1] but that is irrelevant to the gpio driver.
+You are duplicating everything in usb-connector.yaml. You should have
+a $ref to it.
 
-Many of the P1 and P2 header pins can muxed to a GPIO line.  The
-gpio-line-names describe which P1 or P2 pin that line goes to and the
-default mux for that P1 or P2 pin if it is not GPIO.
-    
-Some GPIO lines are named "[NC]" as the corresponding balls are not
-routed to anything on the PCB.
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - usb-c-connector
+> +
+> +      power-role:
+> +       enum:
+> +         - dual
+> +         - source
+> +         - sink
+> +
+> +      data-role:
+> +        enum:
+> +          - dual
+> +          - host
+> +          - device
+> +
+> +      port:
+> +        description: Remote endpoint connections
+> +        type: object
+> +
+> +        properties:
+> +          endpoint@0:
+> +            description: Connection to USB type C mux node
 
-The goal for these names is to make it easier for a user viewing the
-output of gpioinfo to determine which P1 or P2 pin is connected to a
-GPIO line.  The output of gpioinfo on a PocketBeagle would be:
+This is wrong. The connector binding says port 0 is the connection the
+USB HS controller.
 
-gpiochip0 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:       "[NC]"       unused   input  active-high 
-	line   2: "P1.08 [SPI0_CLK]" unused input active-high 
-	line   3: "P1.10 [SPI0_MISO]" unused input active-high 
-	line   4: "P1.12 [SPI0_MOSI]" unused input active-high 
-	line   5: "P1.06 [SPI0_CS]" unused input active-high 
-	line   6:  "[MMC0_CD]"         "cd"   input   active-low [used]
-	line   7: "P2.29 [SPI1_CLK]" unused input active-high 
-	line   8:  "[SYSBOOT]"       unused   input  active-high 
-	line   9:  "[SYSBOOT]"       unused   input  active-high 
-	line  10:  "[SYSBOOT]"       unused   input  active-high 
-	line  11:  "[SYSBOOT]"       unused   input  active-high 
-	line  12: "P1.26 [I2C2_SDA]" unused input active-high 
-	line  13: "P1.28 [I2C2_SCL]" unused input active-high 
-	line  14: "P2.11 [I2C1_SDA]" unused input active-high 
-	line  15: "P2.09 [I2C1_SCL]" unused input active-high 
-	line  16:       "[NC]"       unused   input  active-high 
-	line  17:       "[NC]"       unused   input  active-high 
-	line  18:       "[NC]"       unused   input  active-high 
-	line  19: "P2.31 [SPI1_CS]" unused input active-high 
-	line  20: "P1.20 [PRU0.16]" unused input active-high 
-	line  21:       "[NC]"       unused   input  active-high 
-	line  22:       "[NC]"       unused   input  active-high 
-	line  23:      "P2.03"       unused   input  active-high 
-	line  24:       "[NC]"       unused   input  active-high 
-	line  25:       "[NC]"       unused   input  active-high 
-	line  26:      "P1.34"       unused   input  active-high 
-	line  27:      "P2.19"       unused   input  active-high 
-	line  28:       "[NC]"       unused   input  active-high 
-	line  29:       "[NC]"       unused   input  active-high 
-	line  30: "P2.05 [UART4_RX]" unused input active-high 
-	line  31: "P2.07 [UART4_TX]" unused input active-high 
-gpiochip1 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:       "[NC]"       unused   input  active-high 
-	line   2:       "[NC]"       unused   input  active-high 
-	line   3:       "[NC]"       unused   input  active-high 
-	line   4:       "[NC]"       unused   input  active-high 
-	line   5:       "[NC]"       unused   input  active-high 
-	line   6:       "[NC]"       unused   input  active-high 
-	line   7:       "[NC]"       unused   input  active-high 
-	line   8:       "[NC]"       unused   input  active-high 
-	line   9: "P2.25 [SPI1_MOSI]" unused input active-high 
-	line  10: "P1.32 [UART0_RX]" unused input active-high 
-	line  11: "P1.30 [UART0_TX]" unused input active-high 
-	line  12:      "P2.24"       unused   input  active-high 
-	line  13:      "P2.33"       unused   input  active-high 
-	line  14:      "P2.22"       unused   input  active-high 
-	line  15:      "P2.18"       unused   input  active-high 
-	line  16:       "[NC]"       unused   input  active-high 
-	line  17:       "[NC]"       unused   input  active-high 
-	line  18: "P2.01 [PWM1A]" unused input active-high 
-	line  19:       "[NC]"       unused   input  active-high 
-	line  20:      "P2.10"       unused   input  active-high 
-	line  21: "[USR LED 0]" "beaglebone:green:usr0" output active-high [used]
-	line  22: "[USR LED 1]" "beaglebone:green:usr1" output active-high [used]
-	line  23: "[USR LED 2]" "beaglebone:green:usr2" output active-high [used]
-	line  24: "[USR LED 3]" "beaglebone:green:usr3" output active-high [used]
-	line  25:      "P2.06"       unused   input  active-high 
-	line  26:      "P2.04"       unused   input  active-high 
-	line  27:      "P2.02"       unused   input  active-high 
-	line  28:      "P2.08"       unused   input  active-high 
-	line  29:       "[NC]"       unused   input  active-high 
-	line  30:       "[NC]"       unused   input  active-high 
-	line  31:       "[NC]"       unused   input  active-high 
-gpiochip2 - 32 lines:
-	line   0:      "P2.20"       unused   input  active-high 
-	line   1:      "P2.17"       unused   input  active-high 
-	line   2:       "[NC]"       unused   input  active-high 
-	line   3:       "[NC]"       unused   input  active-high 
-	line   4:       "[NC]"       unused   input  active-high 
-	line   5: "[EEPROM_WP]" unused input active-high 
-	line   6:  "[SYSBOOT]"       unused   input  active-high 
-	line   7:  "[SYSBOOT]"       unused   input  active-high 
-	line   8:  "[SYSBOOT]"       unused   input  active-high 
-	line   9:  "[SYSBOOT]"       unused   input  active-high 
-	line  10:  "[SYSBOOT]"       unused   input  active-high 
-	line  11:  "[SYSBOOT]"       unused   input  active-high 
-	line  12:  "[SYSBOOT]"       unused   input  active-high 
-	line  13:  "[SYSBOOT]"       unused   input  active-high 
-	line  14:  "[SYSBOOT]"       unused   input  active-high 
-	line  15:  "[SYSBOOT]"       unused   input  active-high 
-	line  16:  "[SYSBOOT]"       unused   input  active-high 
-	line  17:  "[SYSBOOT]"       unused   input  active-high 
-	line  18:       "[NC]"       unused   input  active-high 
-	line  19:       "[NC]"       unused   input  active-high 
-	line  20:       "[NC]"       unused   input  active-high 
-	line  21:       "[NC]"       unused   input  active-high 
-	line  22: "P2.35 [AIN5]" unused input active-high 
-	line  23: "P1.02 [AIN6]" unused input active-high 
-	line  24: "P1.35 [PRU1.10]" unused input active-high 
-	line  25: "P1.04 [PRU1.11]" unused input active-high 
-	line  26: "[MMC0_DAT3]" unused input active-high 
-	line  27: "[MMC0_DAT2]" unused input active-high 
-	line  28: "[MMC0_DAT1]" unused input active-high 
-	line  29: "[MMC0_DAT0]" unused input active-high 
-	line  30: "[MMC0_CLK]"       unused   input  active-high 
-	line  31: "[MMC0_CMD]"       unused   input  active-high 
-gpiochip3 - 32 lines:
-	line   0:       "[NC]"       unused   input  active-high 
-	line   1:       "[NC]"       unused   input  active-high 
-	line   2:       "[NC]"       unused   input  active-high 
-	line   3:       "[NC]"       unused   input  active-high 
-	line   4:       "[NC]"       unused   input  active-high 
-	line   5: "[I2C0_SDA]"       unused   input  active-high 
-	line   6: "[I2C0_SCL]"       unused   input  active-high 
-	line   7:     "[JTAG]"       unused   input  active-high 
-	line   8:     "[JTAG]"       unused   input  active-high 
-	line   9:       "[NC]"       unused   input  active-high 
-	line  10:       "[NC]"       unused   input  active-high 
-	line  11:       "[NC]"       unused   input  active-high 
-	line  12:       "[NC]"       unused   input  active-high 
-	line  13: "P1.03 [USB1]" unused input active-high 
-	line  14: "P1.36 [PWM0A]" unused input active-high 
-	line  15: "P1.33 [PRU0.1]" unused input active-high 
-	line  16: "P2.32 [PRU0.2]" unused input active-high 
-	line  17: "P2.30 [PRU0.3]" unused input active-high 
-	line  18: "P1.31 [PRU0.4]" unused input active-high 
-	line  19: "P2.34 [PRU0.5]" unused input active-high 
-	line  20: "P2.28 [PRU0.6]" unused input active-high 
-	line  21: "P1.29 [PRU0.7]" unused input active-high 
-	line  22:       "[NC]"       unused   input  active-high 
-	line  23:       "[NC]"       unused   input  active-high 
-	line  24:       "[NC]"       unused   input  active-high 
-	line  25:       "[NC]"       unused   input  active-high 
-	line  26:       "[NC]"       unused   input  active-high 
-	line  27:       "[NC]"       unused   input  active-high 
-	line  28:       "[NC]"       unused   input  active-high 
-	line  29:       "[NC]"       unused   input  active-high 
-	line  30:       "[NC]"       unused   input  active-high 
-	line  31:       "[NC]"       unused   input  active-high 
+What's a type C mux node? Is there a binding for that? There's an
+ongoing discussion with the CrOS folks on how to describe Alt mode
+mux/switches.
 
-[0] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#71_Expansion_Header_Connectors
-[1] https://octavosystems.com/app_notes/osd335x-family-pin-assignments/
+> +            type: object
+> +
+> +            properties:
+> +              remote-endpoint:
+> +                maxItems: 1
+> +                description: Node reference to the type C mux
+> +
+> +          endpoint@1:
+> +            description: Connection to role switch node
 
-Reviewed-by: Jason Kridner <jason@beagleboard.org>
-Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-v2 changes:
-- correct the names for gpio1.[3-5] lines to [NC]
-- correct the name for gpio2.0 lines to P2.20
-- rename lines used for sysboot from [NC] to [SYSBOOT]
-- change all letters to upper case
+Again, what's this?
 
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 144 ++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index 4da719098028..e08b5f73ccb5 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -59,6 +59,150 @@ vmmcsd_fixed: fixedregulator0 {
- 	};
- };
- 
-+&gpio0 {
-+	gpio-line-names =
-+		"[NC]",
-+		"[NC]",
-+		"P1.08 [SPI0_CLK]",
-+		"P1.10 [SPI0_MISO]",
-+		"P1.12 [SPI0_MOSI]",
-+		"P1.06 [SPI0_CS]",
-+		"[MMC0_CD]",
-+		"P2.29 [SPI1_CLK]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"P1.26 [I2C2_SDA]",
-+		"P1.28 [I2C2_SCL]",
-+		"P2.11 [I2C1_SDA]",
-+		"P2.09 [I2C1_SCL]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.31 [SPI1_CS]",
-+		"P1.20 [PRU0.16]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.03",
-+		"[NC]",
-+		"[NC]",
-+		"P1.34",
-+		"P2.19",
-+		"[NC]",
-+		"[NC]",
-+		"P2.05 [UART4_RX]",
-+		"P2.07 [UART4_TX]";
-+};
-+
-+&gpio1 {
-+	gpio-line-names =
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.25 [SPI1_MOSI]",
-+		"P1.32 [UART0_RX]",
-+		"P1.30 [UART0_TX]",
-+		"P2.24",
-+		"P2.33",
-+		"P2.22",
-+		"P2.18",
-+		"[NC]",
-+		"[NC]",
-+		"P2.01 [PWM1A]",
-+		"[NC]",
-+		"P2.10",
-+		"[USR LED 0]",
-+		"[USR LED 1]",
-+		"[USR LED 2]",
-+		"[USR LED 3]",
-+		"P2.06",
-+		"P2.04",
-+		"P2.02",
-+		"P2.08",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]";
-+};
-+
-+&gpio2 {
-+	gpio-line-names =
-+		"P2.20",
-+		"P2.17",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[EEPROM_WP]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[SYSBOOT]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P2.35 [AIN5]",
-+		"P1.02 [AIN6]",
-+		"P1.35 [PRU1.10]",
-+		"P1.04 [PRU1.11]",
-+		"[MMC0_DAT3]",
-+		"[MMC0_DAT2]",
-+		"[MMC0_DAT1]",
-+		"[MMC0_DAT0]",
-+		"[MMC0_CLK]",
-+		"[MMC0_CMD]";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[I2C0_SDA]",
-+		"[I2C0_SCL]",
-+		"[JTAG]",
-+		"[JTAG]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P1.03 [USB1]",
-+		"P1.36 [PWM0A]",
-+		"P1.33 [PRU0.1]",
-+		"P2.32 [PRU0.2]",
-+		"P2.30 [PRU0.3]",
-+		"P1.31 [PRU0.4]",
-+		"P2.34 [PRU0.5]",
-+		"P2.28 [PRU0.6]",
-+		"P1.29 [PRU0.7]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]";
-+};
-+
- &am33xx_pinmux {
- 	i2c2_pins: pinmux-i2c2-pins {
- 		pinctrl-single,pins = <
--- 
-2.25.1
+> +            type: object
+> +
+> +            properties:
+> +              remote-endpoint:
+> +                maxItems: 1
+> +                description: Node reference to the role switch node
+> +
+> +    required:
+> +      - compatible
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - connector
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    pm8150b {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        qcom,typec@1500 {
+> +            compatible = "qcom,pm8150b-usb-typec";
+> +            reg = <0x1500>;
+> +            interrupts =
+> +                <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
+> +
+> +            connector {
+> +                compatible = "usb-c-connector";
+> +                power-role = "dual";
+> +                data-role = "dual";
+> +                port {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +                    usb3_data_ss: endpoint@0 {
+> +                        reg = <0>;
+> +                        remote-endpoint =
+> +                                <&qmp_ss_mux>;
+> +                    };
+> +
+> +                    usb3_role: endpoint@1 {
+> +
+> +                        reg = <1>;
+> +                        remote-endpoint =
+> +                                <&dwc3_drd_switch>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
