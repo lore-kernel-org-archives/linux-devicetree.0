@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D63C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C694920885
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86DC20885
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446875;
-	bh=iJLj1a92L/XXEgvAOBI4sMQdUEW6CU5xEvBS+HESanE=;
+	s=default; t=1592446914;
+	bh=wM5/3fhrr5hm7+nYevMQXH53D3Fdmtgqhuy6Kc3sOwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZkAqXmei43a0dSjw6ds88Zr8lX2ZhiJof3jIaQ2DNjSw76CptHwkkWFsevdSMnhZH
-	 xkC89IghEg3v2R5WrrtHcCJ3oSb9Y1tfFZcKKi6HxElA7vukzgGgWmiA+bbY/r+4T/
-	 1oyH2P+p0i6OtWlORNbUW0bkefEy84xAhQh62j/0=
+	b=m4QypIw3tBMTSVwuGsDNQQEHiSkSlkkhxj24IyjTRdBCoqY59gR2GpdQDBKayCWot
+	 3+p0Wz7hrDyMgckd8qHrqqBIXpC6IlyulAesuj73Jw3fZZwoWF6+/8eQZ/m/S5cdV3
+	 VJj7540htf+LPfVkFJXTWLPdAX3AQgCfHtIb6RcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgFRBSo (ORCPT
+        id S1729968AbgFRBSf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:18:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50246 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729997AbgFRBSn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:43 -0400
+        id S1729472AbgFRBSe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7F7521D7E;
-        Thu, 18 Jun 2020 01:18:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B47E21D79;
+        Thu, 18 Jun 2020 01:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443123;
-        bh=iJLj1a92L/XXEgvAOBI4sMQdUEW6CU5xEvBS+HESanE=;
+        s=default; t=1592443114;
+        bh=wM5/3fhrr5hm7+nYevMQXH53D3Fdmtgqhuy6Kc3sOwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJ7PzburPzm/pmVV4L39O2fDSAYne9kHtuqQIqZYWvRqg6LIxvRJc2cn4bFFRfxEC
-         ImIfEqbt6T268963E9IYmI5O7LaDy7Tb1ImfQ+pw8zzqGOEy5mkIFgpLSMxin6ppEy
-         EHCaJXkyoqxHZDUJGKT8RzBUQwT1+RRfYVS/GW/E=
+        b=ibpGB3pVbZx/49Lygs9q/VY0XWrzskyx3k8/3OoRkC8ipHz//P9U/0QQFD+qPb/Yq
+         sGK7rTBs27EgCq32zUAuE4bSsFnjowuarkeGvMiOH4n33ISJqadWuv1OWUExGomZQ+
+         9CtvnwqYc2xTLgv0Di+9BJsK0ZdJOmqaSQnLqD5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 097/266] arm64: dts: qcom: fix pm8150 gpio interrupts
-Date:   Wed, 17 Jun 2020 21:13:42 -0400
-Message-Id: <20200618011631.604574-97-sashal@kernel.org>
+Cc:     =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 090/266] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: Fix led polarity
+Date:   Wed, 17 Jun 2020 21:13:35 -0400
+Message-Id: <20200618011631.604574-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,105 +63,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Vincent Stehlé <vincent.stehle@laposte.net>
 
-[ Upstream commit 61d2ca503d0b55d2849fd656ce51d8e1e9ba0b6c ]
+[ Upstream commit 34b6826df7462c541752cf8b1de2691b26d78ae0 ]
 
-This was mistakenly copied from the downstream dts, however the upstream
-driver works differently.
+The PWR-LED on the bananapi m2 zero board is on when gpio PL10 is low.
+This has been verified on a board and in the schematics [1].
 
-I only tested this with the pm8150_gpios node (used with volume button),
-but the 2 others should be the same.
+[1]: http://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO#Documents
 
-Fixes: e92b61c8e775 ("arm64: dts: qcom: pm8150l: Add base dts file")
-Fixes: 229d5bcad0d0 ("arm64: dts: qcom: pm8150b: Add base dts file")
-Fixes: 5101f22a5c37 ("arm64: dts: qcom: pm8150: Add base dts file")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Link: https://lore.kernel.org/r/20200420153543.14512-1-jonathan@marek.ca
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 8b8061fcbfae ("ARM: dts: sun8i: h2+: add support for Banana Pi M2 Zero board")
+Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
+Cc: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/pm8150.dtsi  | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150b.dtsi | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150l.dtsi | 14 ++------------
- 3 files changed, 6 insertions(+), 36 deletions(-)
+ arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-index b6e304748a57..c0b197458665 100644
---- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-@@ -73,18 +73,8 @@ pm8150_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x0 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index d277d043031b..4c6704e4c57e 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -31,7 +31,7 @@ leds {
+ 
+ 		pwr_led {
+ 			label = "bananapi-m2-zero:red:pwr";
+-			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_LOW>; /* PL10 */
+ 			default-state = "on";
  		};
  	};
- 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-index 322379d5c31f..40b5d75a4a1d 100644
---- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -62,18 +62,8 @@ pm8150b_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-index eb0e9a090e42..cf05e0685d10 100644
---- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-@@ -56,18 +56,8 @@ pm8150l_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
 -- 
 2.25.1
 
