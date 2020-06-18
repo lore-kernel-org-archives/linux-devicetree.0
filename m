@@ -2,202 +2,82 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77619C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0402AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D61120899
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1E420899
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgFRHw0 (ORCPT
+        id S1728343AbgFRH4t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:52:26 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:38880 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgFRHw0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 03:52:26 -0400
-Received: by mail-oo1-f67.google.com with SMTP id f2so980402ooo.5;
-        Thu, 18 Jun 2020 00:52:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2g14foByc+A7fQIJ9TIZ/xOZIvsF0Ad4rMLm45u9jeQ=;
-        b=g1M14E+XY5aXOiaE5gVhl6JJZELgiVGBUoqDHcR+W76b49hNOVN/LySIcJmxjpFds5
-         9FOaZySL2fpDjGn1vPXISVxNprPUAex7rsn+3pXVak4vZcePLKMpuEJ5tlR5L+ARhAIf
-         48AAgIjJImi/dPmmn3uIJw1FR1rsiXwCiNu3Lcr60V/on49Q2SKke1j5W/GGeyWvjUJG
-         nRuRHBQQwj6opKTvNme36ea408cSbE0X3o2i3akIreEVr3DbF1Cmx+5XK43f9vufMNWv
-         GUnzRLJvsiOMKJba8undkVa24Z6Nb03XIca5PH2t0h7Q58tEvUso0lhjxSL6CqRV9K29
-         aJ1g==
-X-Gm-Message-State: AOAM533lKy5FjmQ0STyNhO06xrKsOP13/5dsQO7iTRKuBZ6EYvDiM+mM
-        lIgXo7raS4yMQKVdzTchozrv0EoF08DojXwiJacaTmom
-X-Google-Smtp-Source: ABdhPJyDBrolq3n1DGktc9NyaQNoeQYIeopEKFBkgzL3zscuSe+w0m+g6EhJZ1GjqDuTg/qeHA3gZAjk5s3LN0oj3Lc=
-X-Received: by 2002:a4a:b804:: with SMTP id g4mr2942903oop.40.1592466745472;
- Thu, 18 Jun 2020 00:52:25 -0700 (PDT)
+        Thu, 18 Jun 2020 03:56:49 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:60432 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728340AbgFRH4t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:56:49 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jlpPQ-00023D-Nn; Thu, 18 Jun 2020 17:56:29 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 18 Jun 2020 17:56:28 +1000
+Date:   Thu, 18 Jun 2020 17:56:28 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Olivier Sobrie <olivier.sobrie@silexinsight.com>
+Cc:     Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Waleed Ziad <waleed94ziad@gmail.com>,
+        sebastien.rabou@silexinsight.com
+Subject: Re: [PATCH v2 0/2] hwrng: add support for Silex Insight BA431
+Message-ID: <20200618075628.GB10091@gondor.apana.org.au>
+References: <20200601142740.443548-1-olivier.sobrie@silexinsight.com>
 MIME-Version: 1.0
-References: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 18 Jun 2020 09:52:14 +0200
-Message-ID: <CAMuHMdWd_nRhYZoHGdC+OJuB3edNUZ=pcNERDRkOwr+n=43Yeg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601142740.443548-1-olivier.sobrie@silexinsight.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+On Mon, Jun 01, 2020 at 04:27:38PM +0200, Olivier Sobrie wrote:
+> Hello all,
+> 
+> This set of patches aims at introducing a linux hwrng driver for the
+> Silex Insight BA431 IP which is available for various FPGA.
+> This hardware is for instance present in Silex Insight Viper OEM boards.
+> 
+> The first patch documents the device tree bindings.
+> The second one contains the BA431 hwrng driver.
+> 
+> Olivier Sobrie (2):
+>   dt-bindings: rng: document Silex Insight BA431 hwrng
+>   hwrng: ba431-rng: add support for BA431 hwrng
+> 
+>  .../bindings/rng/silex-insight,ba431-rng.yaml |  36 +++
+>  drivers/char/hw_random/Kconfig                |  12 +
+>  drivers/char/hw_random/Makefile               |   1 +
+>  drivers/char/hw_random/ba431-rng.c            | 234 ++++++++++++++++++
+>  4 files changed, 283 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/silex-insight,ba431-rng.yaml
+>  create mode 100644 drivers/char/hw_random/ba431-rng.c
+> 
+> Changes in v2:
+>   - Dropped the first patch that has been applied by Rob.
+>   - Added Rob's review tag in the first patch.
+>   - Fixed copyright header.
+>   - Added missing endpoint and "If unsure, say Y" in the Kconfig like it is
+>     done for the other rng drivers.
+>   - Replaced the udelay() loop by readx_poll_timeout() in the driver.
+>   - Added Arnd's ack in the second patch.
 
-On Mon, Jun 15, 2020 at 1:21 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Convert renesas related part of usb-xhci to YAML.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Thanks for your patch!
-
-[reordering diff for easier commenting]
-
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -7,24 +7,6 @@ Required properties:
->      - "marvell,armada3700-xhci" for Armada 37xx SoCs
->      - "marvell,armada-375-xhci" for Armada 375 SoCs
->      - "marvell,armada-380-xhci" for Armada 38x SoCs
-> -    - "renesas,xhci-r8a7742" for r8a7742 SoC
-> -    - "renesas,xhci-r8a7743" for r8a7743 SoC
-> -    - "renesas,xhci-r8a7744" for r8a7744 SoC
-> -    - "renesas,xhci-r8a774a1" for r8a774a1 SoC
-> -    - "renesas,xhci-r8a774b1" for r8a774b1 SoC
-> -    - "renesas,xhci-r8a774c0" for r8a774c0 SoC
-> -    - "renesas,xhci-r8a7790" for r8a7790 SoC
-> -    - "renesas,xhci-r8a7791" for r8a7791 SoC
-> -    - "renesas,xhci-r8a7793" for r8a7793 SoC
-> -    - "renesas,xhci-r8a7795" for r8a7795 SoC
-> -    - "renesas,xhci-r8a7796" for r8a77960 SoC
-> -    - "renesas,xhci-r8a77961" for r8a77961 SoC
-> -    - "renesas,xhci-r8a77965" for r8a77965 SoC
-> -    - "renesas,xhci-r8a77990" for r8a77990 SoC
-> -    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
-> -      device
-> -    - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
-> -      device
->      - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
->      - "xhci-platform" (deprecated)
-
-So you're just extracting the Renesas parts...
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
-
-... and putting them in a separate file.
-Would it make sense to keep them combined in a single document?
-Or are there too many differences?
-
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/renesas,usb-xhci.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas USB xHCI controllers
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> +
-> +allOf:
-> +  - $ref: "usb-hcd.yaml"
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,xhci-r8a7742 # r8a7742 SoC
-> +              - renesas,xhci-r8a7743 # r8a7743 SoC
-> +              - renesas,xhci-r8a7744 # r8a7744 SoC
-> +              - renesas,xhci-r8a7790 # r8a7790 SoC
-> +              - renesas,xhci-r8a7791 # r8a7791 SoC
-> +              - renesas,xhci-r8a7793 # r8a7793 SoC
-
-These comments don't add much value, as they just duplicate the SoC part
-numbers.  What about using SoC part names (e.g. R-Car H2) instead, like
-is done in other bindings?
-
-> +          - const: renesas,rcar-gen2-xhci
-
-# R-Car Gen2 and RZ/G1
-
-> +      - items:
-> +          - enum:
-> +              - renesas,xhci-r8a774a1 # r8a774a1 SoC
-> +              - renesas,xhci-r8a774b1 # r8a774b1 SoC
-> +              - renesas,xhci-r8a774c0 # r8a774c0 SoC
-> +              - renesas,xhci-r8a7795  # r8a7795 SoC
-> +              - renesas,xhci-r8a7796  # r8a77960 SoC
-> +              - renesas,xhci-r8a77961 # r8a77961 SoC
-> +              - renesas,xhci-r8a77965 # r8a77965 SoC
-> +              - renesas,xhci-r8a77990 # r8a77990 SoC
-
-Likewise
-
-> +          - const: renesas,rcar-gen3-xhci
-
-# R-Car Gen3 and RZ/G2
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: usb
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-
-Missing power-domains and resets.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+All applied.  Thanks.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
