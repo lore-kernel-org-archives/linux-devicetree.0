@@ -2,76 +2,122 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880EAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6883C206D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0AF206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wHpyRT6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgFRHjY (ORCPT
+        id S1728072AbgFRHkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:39:24 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43296 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgFRHjY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 03:39:24 -0400
-Received: by mail-oi1-f194.google.com with SMTP id j189so4219548oih.10;
-        Thu, 18 Jun 2020 00:39:23 -0700 (PDT)
+        Thu, 18 Jun 2020 03:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgFRHkD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 03:40:03 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51AFC0613ED
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 00:40:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q11so4943515wrp.3
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 00:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=s/8DkSI65X40wSJ2wJgW7rhkfE2WrLXMAQ1mczpC6zc=;
+        b=wHpyRT6g48UW/2VXK4Vlqpp8IdBVoxvfm7hbnHoGqXqCjcWMt6OjnjC0rOX3gwVWts
+         CLtUGBGE6vad+ibfxaicPD/sIMOJD68RzNyGnf+1r0JdWkXwXI9ont46uDWDYJAwEceO
+         wlqNwz4FlUo1BipYuyqxlumxcHgPp/x2UVL9Rei+ttRe410xPlxd42rDurT/o7l/PtWi
+         78hcrsBrTwGr8bON5Uu9RG8gAJXxac8Nasy8ACpAXSOobGFMWW+EqW42O3T0ctfYgGuK
+         bOsPXyue9KhNA9HLKghAG1/VXSbLRz0MOxZPd0AllO8Veeup7EVzoYbJ9pJAC4q+mbN5
+         ubaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JPQ/PH3aH+rlKhf78bS3JYd7KhJYAAclpBwrav1LP0c=;
-        b=soRpjfKFJcDkBxNZ2kQMdeOKZfbNgFVG/CQsafxGrA7Xzv0L3sMpXHWDXSGsglREXD
-         Tk9lyDm0K16qXH43QKzMX09febfi0DSVici+jvjo6TT0jZLOc2BhzXZR2V+tFCV+BvuX
-         wIxIiekEFlLNqwbD6exG5grFUFc3oe7pqxEdn3H2mTpMInFiHvYS6SW3LY3dAr6PZ20Z
-         UJFWRUpINkt9F3kqh81mcWp4p1/B4sBYfuVdAuEcK5/bnh04YpSwhoW2bowPszQZ7ZHb
-         wVceamBQ8kwFaCoqghtH8xZvPuJ/qLTVl9mDM6AsQa/jbZXPZZ4ZH2UZUG0sF96S233C
-         KzCQ==
-X-Gm-Message-State: AOAM532ordZOa9ljWFVxkP8RsSDCXyoru0VTuVXHZJxitXpJO2FtZs/e
-        66i0Mo+IK1Rwb86wrZqcqjeGNSNVGMLi2hI00jU=
-X-Google-Smtp-Source: ABdhPJy4yUnPGoDLOCCQPH7S491o6IyHC9WENjbj4u6y5OalCmoE+8y/bCOTmagHYhARE+BM4ZATmE0eAZ6ulNI3An4=
-X-Received: by 2002:aca:849:: with SMTP id 70mr1816387oii.153.1592465963424;
- Thu, 18 Jun 2020 00:39:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=s/8DkSI65X40wSJ2wJgW7rhkfE2WrLXMAQ1mczpC6zc=;
+        b=PNGCWkIVK9Ntq2PmxItmOdPQNNmgccRChM3W54F0t5swFLfIzLo6P1Tb6BVnosu3fN
+         5kS2UyUj+5QmXZfNf+DMlPOp2PqqXwOtxDZ+hdZ4DYCm1N4rd0KkXHbYBuDMPUOhgwDu
+         0hYOsFdNiEMEUUZhGu1v/vIJuuWcu0hwI6w+XOaT9tXpSXoMMKyByw7VRQp6+bV6OEd2
+         UrdN02bfax5ACgBcsVw7CC3oG9j9HNk8aGEXnzocBT9VeAcXWGH3dUKOShWTsEPqWgZq
+         VblwvAXTWyH6dSMJGMEbDQfuYhGu/d9T+1PUZaTxFY1ZVYSmlIk/4q7Vob3eWIG9U4d9
+         6wQA==
+X-Gm-Message-State: AOAM532qL0CxjOaFXyeZaYWrXk2hKgjMRlfFbMpDlJ1qx46nn+EoC/hU
+        ymk5TMoanbTfSkn+eI4/UT93Gg==
+X-Google-Smtp-Source: ABdhPJxwjDquDAcT4g/jpcs1pS9o3jDdghMMVIQd0ngpDgfkG3HO7xafJGF9xrjnE6lQmQDojILE2g==
+X-Received: by 2002:adf:f083:: with SMTP id n3mr446448wro.297.1592466001358;
+        Thu, 18 Jun 2020 00:40:01 -0700 (PDT)
+Received: from dell ([95.149.164.118])
+        by smtp.gmail.com with ESMTPSA id w13sm2368365wrr.67.2020.06.18.00.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 00:40:00 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 08:39:59 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Robert Jones <rjones@gateworks.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: gateworks-gsc: add 16bit
+ pre-scaled voltage mode
+Message-ID: <20200618073959.GX2608702@dell>
+References: <1591714640-10332-1-git-send-email-tharvey@gateworks.com>
+ <1591714640-10332-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-References: <1591873830-10128-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1591873830-10128-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1591873830-10128-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 18 Jun 2020 09:39:12 +0200
-Message-ID: <CAMuHMdUnwgYhVo0jjRcHrmnOFi3Dokdu6cL26=mQ7DudS5+QZw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iommu: renesas,ipmmu-vmsa: add r8a77961 support
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591714640-10332-2-git-send-email-tharvey@gateworks.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 1:11 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Add support for r8a77961 (R-Car M3-W+).
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On Tue, 09 Jun 2020, Tim Harvey wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> add a 16-bit pre-scaled voltage mode to adc and clarify that existing
+> pre-scaled mode is 24bit.
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Gr{oetje,eeting}s,
+Fixed the grammar in the subject and commit message.
 
-                        Geert
+Patch applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> index 487a844..ceec33f 100644
+> --- a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> @@ -79,11 +79,12 @@ properties:
+>              description: |
+>                conversion mode:
+>                  0 - temperature, in C*10
+> -                1 - pre-scaled voltage value
+> +                1 - pre-scaled 24-bit voltage value
+>                  2 - scaled voltage based on an optional resistor divider
+>                      and optional offset
+> +                3 - pre-scaled 16-bit voltage value
+>              $ref: /schemas/types.yaml#/definitions/uint32
+> -            enum: [0, 1, 2]
+> +            enum: [0, 1, 2, 3]
+>  
+>            gw,voltage-divider-ohms:
+>              description: Values of resistors for divider on raw ADC input
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
