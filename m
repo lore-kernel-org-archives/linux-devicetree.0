@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77A1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431A8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C7121D94
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1673F221F3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443057;
-	bh=y7fxfotTlOnXluKVTV4AayibhTWYQl/IVgmeQ0l5TAs=;
+	s=default; t=1592443173;
+	bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nx0/zxqURfLxMdw9zOmQ9ctKYGkYZX3+KpQnuIwft79z6pAYLDO39DHTr47yYvcDB
-	 5U5ISGer4Q1E/dREXIhUnmIQHiaYeJgTVw1nptZaubLaiH0HON4n4YffDDywXE2s7W
-	 Oyx0PuNSfEGxTZYvbtRyR7BlV0DgJ2NKRGh/3Lzc=
+	b=dKLx9sZPC6hdKNraMU6nCbd+rloKFQO77os/7UnDsZCZDUYt2LPAaRnGRQ9l70L7b
+	 HN4Wktjy2awZQqL+F4yToVkL9YIq8lP0HgjsWuMFafj8ow0yy7qyJtFg8iA2wKQlfP
+	 jZxfs/vjcRJlFVxuNcxVKzGDE4gPrcSKxctSPqW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgFRBRg (ORCPT
+        id S1730133AbgFRBT3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48714 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:19:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729005AbgFRBRd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:33 -0400
+        id S1730124AbgFRBT0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E0B206F1;
-        Thu, 18 Jun 2020 01:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BBE821D79;
+        Thu, 18 Jun 2020 01:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443052;
-        bh=y7fxfotTlOnXluKVTV4AayibhTWYQl/IVgmeQ0l5TAs=;
+        s=default; t=1592443165;
+        bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Afbe4DscnBkXY5dGbmNd7BX2Krv6vD5vSrRBsl9/iNAswZ02Wad2YOW/M3Z3AVbqV
-         /sVCyu5gfPd0QIAbFQlJ1kqlxASz7A8svYCoBOupv2UR6J23uOMmDD6kcnroxFHBqo
-         fA8AHz+SzN6PQjNf3i2rhQAe+tvA3zcgODCy1FM0=
+        b=aWLJOzxNrJOkNTCGdOzYgiRymgtMiwoptONz1Wiha8jsFqtEC0z00tNhCMIfYPi/b
+         a1T25rFymSt21n7afP0JaDvQUzwcZZp0EN/4Lx4e220COWxuEE0HQ9XODKH+BtlNml
+         /2ISsHgOzCvrp6y1VK7fbC8m8dWAbWe9LPCOtelY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 045/266] arm64: dts: fvp/juno: Fix node address fields
-Date:   Wed, 17 Jun 2020 21:12:50 -0400
-Message-Id: <20200618011631.604574-45-sashal@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 131/266] arm64: dts: msm8996: Fix CSI IRQ types
+Date:   Wed, 17 Jun 2020 21:14:16 -0400
+Message-Id: <20200618011631.604574-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,170 +60,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit bb5cce12ac717c7462217cd493ed701d12d6dbce ]
+[ Upstream commit 4a4a26317ec8aba575f6b85789a42639937bc1a4 ]
 
-The Arm Ltd. boards were using an outdated address convention in the DT
-node names, by separating the high from the low 32-bits of an address by
-a comma.
+Each IRQ_TYPE_NONE interrupt causes a warning at boot.
+Fix that by defining an appropriate type.
 
-Remove the comma from the node name suffix to be DT spec compliant.
-
-Link: https://lore.kernel.org/r/20200513103016.130417-3-andre.przywara@arm.com
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: e0531312e78f ("arm64: dts: qcom: msm8996: Add CAMSS support")
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Link: https://lore.kernel.org/r/1587470425-13726-1-git-send-email-loic.poulain@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
- arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index dfae90adbb7c..ce64bfb22f22 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -31,7 +31,7 @@ motherboard {
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			nor_flash: flash@0,00000000 {
-+			nor_flash: flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
-@@ -41,13 +41,13 @@ partitions {
- 				};
- 			};
- 
--			psram@1,00000000 {
-+			psram@100000000 {
- 				compatible = "arm,vexpress-psram", "mtd-ram";
- 				reg = <1 0x00000000 0x02000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -59,14 +59,14 @@ ethernet@2,02000000 {
- 				vddvario-supply = <&v2m_fixed_3v3>;
- 			};
- 
--			usb@2,03000000 {
-+			usb@203000000 {
- 				compatible = "nxp,usb-isp1761";
- 				reg = <2 0x03000000 0x20000>;
- 				interrupts = <16>;
- 				port1-otg;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 2a6aa43241b3..05d1657170b4 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -151,7 +151,7 @@ smb@8000000 {
- 				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
--		ethernet@2,02000000 {
-+		ethernet@202000000 {
- 			compatible = "smsc,lan91c111";
- 			reg = <2 0x02000000 0x10000>;
- 			interrupts = <15>;
-@@ -178,7 +178,7 @@ v2m_refclk32khz: refclk32khz {
- 			clock-output-names = "v2m:refclk32khz";
- 		};
- 
--		iofpga@3,00000000 {
-+		iofpga@300000000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index 9f60dacb4f80..1234a8cfc0a9 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -103,7 +103,7 @@ nmi-button {
- 				};
- 			};
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>;
-@@ -120,7 +120,7 @@ partitions {
- 				};
- 			};
- 
--			ethernet@2,00000000 {
-+			ethernet@200000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x00000000 0x10000>;
- 				interrupts = <3>;
-@@ -133,7 +133,7 @@ ethernet@2,00000000 {
- 				vddvario-supply = <&mb_fixed_3v3>;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-index 57b0b9d7f3fa..29e6962c70bd 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-@@ -9,7 +9,7 @@ smb@8000000 {
- 		motherboard {
- 			arm,v2m-memory-map = "rs2";
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				virtio-p9@140000 {
- 					compatible = "virtio,mmio";
- 					reg = <0x140000 0x200>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index 03a7bf079c8f..ad20076357f5 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -17,14 +17,14 @@ motherboard {
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan91c111";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -51,7 +51,7 @@ v2m_refclk32khz: refclk32khz {
- 				clock-output-names = "v2m:refclk32khz";
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index fbb8ce78f95b..d303df3887d9 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1681,16 +1681,16 @@ camss: camss@a00000 {
+ 				"csi_clk_mux",
+ 				"vfe0",
+ 				"vfe1";
+-			interrupts = <GIC_SPI 78 0>,
+-				<GIC_SPI 79 0>,
+-				<GIC_SPI 80 0>,
+-				<GIC_SPI 296 0>,
+-				<GIC_SPI 297 0>,
+-				<GIC_SPI 298 0>,
+-				<GIC_SPI 299 0>,
+-				<GIC_SPI 309 0>,
+-				<GIC_SPI 314 0>,
+-				<GIC_SPI 315 0>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 80 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 315 IRQ_TYPE_EDGE_RISING>;
+ 			interrupt-names = "csiphy0",
+ 				"csiphy1",
+ 				"csiphy2",
 -- 
 2.25.1
 
