@@ -2,32 +2,33 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CD8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D95C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02FED21BE5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7232214DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgFRIi3 (ORCPT
+        id S1728849AbgFRIic (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:38:29 -0400
-Received: from mx.socionext.com ([202.248.49.38]:19334 "EHLO mx.socionext.com"
+        Thu, 18 Jun 2020 04:38:32 -0400
+Received: from mx.socionext.com ([202.248.49.38]:19364 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbgFRIiZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:38:25 -0400
+        id S1728824AbgFRIi2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:38:28 -0400
 Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:23 +0900
+  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:26 +0900
 Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 4B19960066;
-        Thu, 18 Jun 2020 17:38:23 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:23 +0900
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id E406C60057;
+        Thu, 18 Jun 2020 17:38:26 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:26 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id D588B1A12AD;
-        Thu, 18 Jun 2020 17:38:22 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 5E0AB1A12AD;
+        Thu, 18 Jun 2020 17:38:26 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -41,60 +42,42 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v5 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller
-Date:   Thu, 18 Jun 2020 17:38:07 +0900
-Message-Id: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v5 4/6] PCI: uniphier: Add iATU register support
+Date:   Thu, 18 Jun 2020 17:38:11 +0900
+Message-Id: <1592469493-1549-5-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds some features for UniPhier PCIe host controller.
+This gets iATU register area from reg property. In Synopsys DWC version
+4.80 or later, since iATU register area is separated from core register
+area, this area is necessary to get from DT independently.
 
-- Add support for PME and AER invoked by MSI interrupt
-- Add iATU register view support for PCIe version >= 4.80
-- Add an error message when failing to get phy driver
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ drivers/pci/controller/dwc/pcie-uniphier.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This adds a new function called by MSI handler in DesignWare PCIe framework,
-that invokes PME and AER funcions to detect the factor from SoC-dependent
-registers.
-
-Changes since v4:
-- Add Acked-by: line to dwc patch
-
-Changes since v3:
-- Move msi_host_isr() call into dw_handle_msi_irq()
-- Move uniphier_pcie_misc_isr() call into the guard of chained_irq
-- Use a bool argument is_msi instead of pci_msi_enabled()
-- Consolidate handler calls for the same interrupt
-- Fix typos in commit messages
-
-Changes since v2:
-- Avoid printing phy error message in case of EPROBE_DEFER
-- Fix iATU register mapping method
-- dt-bindings: Add Acked-by: line
-- Fix typos in commit messages
-- Use devm_platform_ioremap_resource_byname()
-
-Changes since v1:
-- Add check if struct resource is NULL
-- Fix warning in the type of dev_err() argument
-
-Kunihiko Hayashi (6):
-  PCI: dwc: Add msi_host_isr() callback
-  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
-  dt-bindings: PCI: uniphier: Add iATU register description
-  PCI: uniphier: Add iATU register support
-  PCI: uniphier: Add error message when failed to get phy
-  PCI: uniphier: Use devm_platform_ioremap_resource_byname()
-
- .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
- drivers/pci/controller/dwc/pcie-designware-host.c  |  3 +
- drivers/pci/controller/dwc/pcie-designware.h       |  1 +
- drivers/pci/controller/dwc/pcie-uniphier.c         | 73 +++++++++++++++++-----
- 4 files changed, 63 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index 5ce2479..c37a968 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -451,6 +451,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->pci.dbi_base))
+ 		return PTR_ERR(priv->pci.dbi_base);
+ 
++	priv->pci.atu_base =
++		devm_platform_ioremap_resource_byname(pdev, "atu");
++	if (IS_ERR(priv->pci.atu_base))
++		priv->pci.atu_base = NULL;
++
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+ 	priv->base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(priv->base))
 -- 
 2.7.4
 
