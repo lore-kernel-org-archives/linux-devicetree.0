@@ -2,214 +2,170 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D030EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24EAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD987208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8376E207DD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P4LNQCpx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L4it2v0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgFRSqB (ORCPT
+        id S1726948AbgFRS7Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:46:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38360 "EHLO
+        Thu, 18 Jun 2020 14:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbgFRSqA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 14:46:00 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE24EC0613ED
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:45:58 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so6162161wmh.4
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:45:58 -0700 (PDT)
+        with ESMTP id S1726969AbgFRS7V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 14:59:21 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB93C06174E
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:59:20 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id x22so3220085pfn.3
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=om0q/0j+ZqIugQgaYYIuFIhrC2pXMmtAQ/IXYYyteLk=;
-        b=P4LNQCpxRN8jCvdEjmGgNPLfQuIQ7KZuO5ExMbN7DTYZY2tsLbyMP2q0l0gYkSlD9u
-         +p7svDC5EcuBVpD4M+r6rNupo6F/0dqcAa+2krVJTOePsmpmT+TF8f6R9Rupnvgk39Bv
-         QlUvHpOz3JGN+Cm5foXSAvGMv59wReg1IuLMc=
+        bh=RRvnn8Ty+J9ub0ve3U5qnJId2gPE+UnHi9QjuB+a3bk=;
+        b=L4it2v0+jYIWtjtIU214aSZCTKymyjr06cEV2JW+C2tIA5O4sm3lhnsGQWQHlFZTWO
+         Yir/6c9W37u6Hpel/cIyXg1hhFjbTGnS+EqW/oCI1BdEgbh8voShcNvC/3PVIG3Tv8E1
+         gOFeDwv+OA5S6Xn/9tzja0s3260x01qBU/A3s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=om0q/0j+ZqIugQgaYYIuFIhrC2pXMmtAQ/IXYYyteLk=;
-        b=CuLmBJ2YSP5JchZl0TyjyDpg4UCAMBjGqSgD5aBMPTR1q76TJ107ZZHX6VFp3lyEGN
-         4uTS31FSWz7tCL+n96Se4SG0ZjPDGMG0hUD8KYgT6d2V/paOrEH8f/4n7fdG/8VkBHnf
-         YXax/c4kan1qEpdmewEMzKhryo6272dxkF7zeAFETcB+Ems32RcFcdRW2W7uZUm+kajw
-         l/Nqx0LRc2KtS0kZ3TgAhOsdGH17VakNwDIdnN/y0t+Z5um3IWIezSXurwRJdt1WyPp4
-         3UfzOd/r+FVuZpGMfnguxkH8R2Tw9FYZ9UW/T7eIsLEy1aWI48WSezfc5JUlEBNONul3
-         bF0A==
-X-Gm-Message-State: AOAM533ycRvoLBZWtQPF3HT+0+Mm7N9jD19b1AK+A5V4T1XSXxHH/j/F
-        R+LtWGNJ5Wo5roHdbuKqMKxuSg==
-X-Google-Smtp-Source: ABdhPJxsKDOMgOezBCKzn3QqTjUHEzvRe1U6V8whyLVhKxoQ3O7dQu/6dQjOFtvoke2We8fHAwb8Xw==
-X-Received: by 2002:a1c:f301:: with SMTP id q1mr5480382wmq.110.1592505957214;
-        Thu, 18 Jun 2020 11:45:57 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id g18sm4511520wme.17.2020.06.18.11.45.56
+        bh=RRvnn8Ty+J9ub0ve3U5qnJId2gPE+UnHi9QjuB+a3bk=;
+        b=eqHUqWxfuJ/jn8uabF5V2FYGc/L5W8JYJ1tRbiAj/GD97SKbRKg+YI7SZCnjQdjRHe
+         VB5JWsaH/JRPX7GiWToPcD3tbCxXxszDsbPwnfIoN5JZqYavoI+ogpQ7Xcrn3yoln6lM
+         cjOHUVbuJ/Dm9isuS1tMKNkehEtEaTrqVGbq62wBQ4xU3O0UxBd737Z79axonSblmi/f
+         LxtHP8Nq52AcWr/1g8dATutstk+hbqHoCtXWTcZz1nCguy8n3OUXYN58AGOYMj/JakKL
+         AyufcQaBKqslufdhdgv2d4tJrZkjBUSLzRcwul/+mabdFHru1oLvA+8/yKNh9ieBFCpY
+         um8g==
+X-Gm-Message-State: AOAM533GIxHxshYXmSpITzzGL+8NShXlAjVB+V29GFR/JWp5IcQ/5jVU
+        aq5TkEGHPBur3kvfxQ3VeNpfeQ==
+X-Google-Smtp-Source: ABdhPJzBi1TYAB9JtNn9rVlZhSSeLNic/mp1y3SuZM3ZOZR6SAmerOHr5vQdEZy+m1Sa+pNGKHnnAw==
+X-Received: by 2002:a62:52d6:: with SMTP id g205mr4931409pfb.78.1592506759889;
+        Thu, 18 Jun 2020 11:59:19 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id a3sm3618635pfi.77.2020.06.18.11.59.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 11:45:56 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 18:45:54 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        mchehab@kernel.org, andriy.shevchenko@linux.intel.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [PATCH V8 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-Message-ID: <20200618184554.GA68039@chromium.org>
-References: <20200616125531.31671-1-dongchun.zhu@mediatek.com>
- <20200616125531.31671-3-dongchun.zhu@mediatek.com>
+        Thu, 18 Jun 2020 11:59:19 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 11:59:18 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Rajmohan Mani <rajmohan.mani@intel.com>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <20200618185918.GB255826@google.com>
+References: <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
+ <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
+ <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
+ <20200609235740.GA154315@google.com>
+ <20200610153356.GC3213128@kuha.fi.intel.com>
+ <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
+ <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
+ <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
+ <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
+ <20200615132207.GG3213128@kuha.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616125531.31671-3-dongchun.zhu@mediatek.com>
+In-Reply-To: <20200615132207.GG3213128@kuha.fi.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:55:31PM +0800, Dongchun Zhu wrote:
-> Add a V4L2 sub-device driver for DW9768 voice coil motor,
-> providing control to set the desired focus via IIC serial interface.
+Hi Heikki and Rob,
+
+(trimming text):
+On Mon, Jun 15, 2020 at 04:22:07PM +0300, Heikki Krogerus wrote:
+> On Fri, Jun 12, 2020 at 10:34:06AM -0700, Prashant Malani wrote:
+> > Hi Rob,
+> > > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
+> > 
+> > Ack.
+> > 
+> > Let's go with "-switch" ? That's what the connector class uses and it
+> > conveys the meaning (unless that is a reserved keyword in DT).
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> ---
->  MAINTAINERS                |   1 +
->  drivers/media/i2c/Kconfig  |  12 +
->  drivers/media/i2c/Makefile |   1 +
->  drivers/media/i2c/dw9768.c | 553 +++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 567 insertions(+)
->  create mode 100644 drivers/media/i2c/dw9768.c
-[snip]
-> +static int dw9768_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct dw9768 *dw9768;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	dw9768 = devm_kzalloc(dev, sizeof(*dw9768), GFP_KERNEL);
-> +	if (!dw9768)
-> +		return -ENOMEM;
-> +
-> +	/* Initialize subdev */
-> +	v4l2_i2c_subdev_init(&dw9768->sd, client, &dw9768_ops);
-> +
-> +	dw9768->aac_mode = DW9768_AAC_MODE_DEFAULT;
-> +	dw9768->aac_timing = DW9768_AAC_TIME_DEFAULT;
-> +	dw9768->clock_presc = DW9768_CLOCK_PRE_SCALE_DEFAULT;
-> +
-> +	/* Optional indication of AAC mode select */
-> +	fwnode_property_read_u32(dev_fwnode(dev), "dongwoon,aac-mode",
-> +				 &dw9768->aac_mode);
-> +
-> +	/* Optional indication of clock pre-scale select */
-> +	fwnode_property_read_u32(dev_fwnode(dev), "dongwoon,clock-presc",
-> +				 &dw9768->clock_presc);
-> +
-> +	/* Optional indication of AAC Timing */
-> +	fwnode_property_read_u32(dev_fwnode(dev), "dongwoon,aac-timing",
-> +				 &dw9768->aac_timing);
-> +
-> +	dw9768->move_delay_us = dw9768_cal_move_delay(dw9768->aac_mode,
-> +						      dw9768->clock_presc,
-> +						      dw9768->aac_timing) / 100;
+> Just as a clarification here, we should not be even talking about
+> signal routing here. We are talking about functions that an external
+> components perform from the connector's perspective. It depends on the
+> platform does that function require changing the routing of the lines
+> from the connector. For example, data role swapping does not require
+> muxing on platforms that have single dual-role USB controller, but
+> platforms that have separate IPs for the USB host and USB device
+> controllers will need a mux.
+> 
+> Note, that it is even possible that switching from USB to DisplayPort
+> mode does not require any pin reconfiguration from the mux, even if
+> the platform has one, because the PHY can be shared between USB3 and
+> DP. Then the PHY just needs to be told that it is now in DP mode when
+> DP alt mode is entered instead of the mux.
+> 
+> > > > Would this block the addition of the "*-switch" properties? IIUC the
+> > > > two are related but not dependent on each other.
+> > > >
+> > > > The *-switch properties are phandles which the Type C connector class
+> > > > framework expects (and uses to get handles to those switches).
+> > > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
+> > >
+> > > You don't need them though. Walk the graph. You get the connector
+> > > port@1 remote endpoint and then get its parent.
+> > >
+> > 
+> > I see; would it be something along the lines of this? (DT example
+> > follows; search for "example_end" to jump to bottom):
+> 
+> I just realized that you have in practice placed the mux-agent into
+> the graph below, right? That we can not do, because it is not
+> physically connected to the connector.
 
-nit: Could we make the function return the value in us already? One would
-expect the function to return the value in a standard unit, so this
-division by 100 here is confusing.
+Is this a requirement? I read through the graph.txt file [1] and I couldn't
+find anything stating that a physical connection between two devices was
+required (but I may be misinterpreting that document)
 
-> +
-> +	for (i = 0; i < ARRAY_SIZE(dw9768_supply_names); i++)
-> +		dw9768->supplies[i].supply = dw9768_supply_names[i];
-> +
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dw9768_supply_names),
-> +				      dw9768->supplies);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get regulators\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Initialize controls */
-> +	ret = dw9768_init_controls(dw9768);
-> +	if (ret)
-> +		goto err_free_handler;
-> +
-> +	/* Initialize subdev */
-> +	dw9768->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	dw9768->sd.internal_ops = &dw9768_int_ops;
-> +
-> +	ret = media_entity_pads_init(&dw9768->sd.entity, 0, NULL);
-> +	if (ret < 0)
-> +		goto err_free_handler;
-> +
-> +	dw9768->sd.entity.function = MEDIA_ENT_F_LENS;
-> +
-> +	pm_runtime_enable(dev);
-> +	if (!pm_runtime_enabled(dev)) {
-> +		ret = dw9768_runtime_resume(dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "failed to power on: %d\n", ret);
-> +			goto err_clean_entity;
-> +		}
-> +	}
-> +
-> +	ret = v4l2_async_register_subdev(&dw9768->sd);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register V4L2 subdev: %d", ret);
-> +		goto err_power_off;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_power_off:
-> +	pm_runtime_disable(dev);
-> +	if (!pm_runtime_enabled(dev))
+[1]:
+https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/graph.txt
 
-We just disabled runtime PM in the line above, so this check would be
-always true. Need to call pm_runtime_disable() after this if.
-
-> +		dw9768_runtime_suspend(dev);
-> +err_clean_entity:
-> +	media_entity_cleanup(&dw9768->sd.entity);
-> +err_free_handler:
-> +	v4l2_ctrl_handler_free(&dw9768->ctrls);
-> +
-> +	return ret;
-> +}
-> +
-> +static int dw9768_remove(struct i2c_client *client)
-> +{
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct dw9768 *dw9768 = sd_to_dw9768(sd);
-> +
-> +	v4l2_async_unregister_subdev(&dw9768->sd);
-> +	v4l2_ctrl_handler_free(&dw9768->ctrls);
-> +	media_entity_cleanup(&dw9768->sd.entity);
-> +	pm_runtime_disable(&client->dev);
-> +	if (!pm_runtime_suspended(&client->dev))
-
-Oops, I just realized that my suggestion about the function to use here
-was incorrect. pm_runtime_status_suspended() should be the correct function
-here. Sorry for the confusion.
-
-This is because we only have 2 cases here:
- - runtime PM compiled out - the stubs function is used, which returns
-   false, so the condition is true,
- - runtime PM compiled in - we enabled runtime PM in probe, so here we
-   don't need to consider the enable state.
+> 
+> > <example_start>
+> > 
+> > <example_end>
+> > 
+> > Would this be conformant to OF graph and usb-connector bindings
+> > requirements? We'll certainly send out a format PATCH/RFC series for
+> > this, but I was hoping to gauge whether we're thinking along the right lines.
+> > 
+> > So, in effect this would mean:
+> > - New bindings(and compatible strings) to be added for:
+> >   typec-{orientation,data-role,mode}-switch.
+> > - Handling in Type C connector class to parse switches from OF graph.
+> > - Handling in Type C connector class for distinct switches for port@1
+> >   (SS lines) and port@2 (SBU lines).
+> > 
+> > The only thing I'm confused about is how we can define these switch
+> > remote-endpoint bindings in usb-connector.yaml; the port can have an
+> > remote-endpoint, but can we specify what the parent of the remote-endpoint
+> > should have as a compatible string? Or do we not need to?
+> 
+> thanks,
+> 
+> -- 
+> heikki
 
 Best regards,
-Tomasz
+
+-Prashant
