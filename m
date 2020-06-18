@@ -2,95 +2,82 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA51C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E33C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F246B20899
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA06B2083B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448658;
-	bh=sEhelHlSYwzp798DVVNLwasxQDBLxiPB58/bU1SM2PY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ShoiYU/XXfBedqcitBQNmdDREWgu9LrDJT16EgdvDYJCxbFcbE/AVMaf8oalbqQDq
-	 etQD5ZPIagYeejbhRVo7RDwXO1kCRIKKmuN0gIbi1rrd9qQc5sxFze5huAcqoS9j1R
-	 LNaaHtCMUrKmJCWYSL5TiCUdphMkgxHcj1GF417Y=
+	s=default; t=1592448705;
+	bh=o5nt36zkyVqDgCG1kHxBckdnWOYFAYpdKtcPMRjyBuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1kHW3RJVXozqQkGnNnB2HPJ3fW5ainPtAONWB1z9C2+nCkgsFq/amEKUJdqTcEXCn
+	 kRxp6emSwmnM8RY9wRaiAlRSawkBFVlpFwXidGb3bz04K18GkYlhqbu8MWFRIECftJ
+	 IbzE3lJ8zkPe3ilryOglZEyUyXCZLkzpbJXPEzWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgFRCuw (ORCPT
+        id S1729117AbgFRCvp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgFRBJK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:10 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E5D721D7D;
-        Thu, 18 Jun 2020 01:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442550;
-        bh=sEhelHlSYwzp798DVVNLwasxQDBLxiPB58/bU1SM2PY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w8zQqtXBfnOdON2n0aU89fy1OBl7ZH7/1MOxWnIaHO2CR5KuX48OrEutTCYfiPwQL
-         hElaTmPLo55v20UOZfQl6KuSnSl5jDFl8JmEZk1I7UJxzuk/iVxm3QagyOrA/g31XI
-         Cw1zFsJwuQCgBivz0CquKRwF8p2FLOR9N7PchxkA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 048/388] arm64: dts: armada-3720-turris-mox: forbid SDR104 on SDIO for FCC purposes
-Date:   Wed, 17 Jun 2020 21:02:25 -0400
-Message-Id: <20200618010805.600873-48-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        Wed, 17 Jun 2020 22:51:45 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46284 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729447AbgFRCvo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 22:51:44 -0400
+Received: by mail-il1-f196.google.com with SMTP id h3so4333714ilh.13;
+        Wed, 17 Jun 2020 19:51:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=14EvOj4oVkS3uh3SmKA36b5RuYlxBdOyXHl1LJGal0g=;
+        b=QPib9ojFw9F0nOE1eVeIPmphXkZ1qyZYIfbblfDoYE7pQV2zOAcBmHUJujTonpzIef
+         u3XOauUPrZtbLhiD/hTZ/QGsgYchbLtjOgjsCyuD5LXWXSPYBxC5uW8WYU8v4OkEZ5zB
+         /oiyPc8inuBkPITETNwLcv9fsDWF/5cxpW72M3Oo7vcodG4cyMtZflOKZbG5uw3SQnMJ
+         w01aIodhGd6WPa98oCerfUHBXq+CZjXG3zq/audrPXsYtCjREzcgDt34yrQfcxJAIET7
+         oLqpqH9JVWv2SQv6bNfBEjvmW/dnhg8L9WH6yDjrQQAKpKJEN8jVMXg8ViqiTwSYOeIj
+         HJ/w==
+X-Gm-Message-State: AOAM533g3LUc++vJWFPbv78o0k68oGNENDWBACpehJ4bERT0rL3lgI3e
+        UrI28eU23Mj6tMRemIWkRw==
+X-Google-Smtp-Source: ABdhPJz2aSVwD0CNf8249CB/24p8/BxBVl5rZnECN+dcFbBorsYbKnBVhhXqk3Kvgtf59tP9SpTAwg==
+X-Received: by 2002:a92:7901:: with SMTP id u1mr2167340ilc.52.1592448703066;
+        Wed, 17 Jun 2020 19:51:43 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id t63sm846364ill.54.2020.06.17.19.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 19:51:42 -0700 (PDT)
+Received: (nullmailer pid 3390371 invoked by uid 1000);
+        Thu, 18 Jun 2020 02:51:40 -0000
+Date:   Wed, 17 Jun 2020 20:51:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 37/38] dt-bindings: pwm: Explicitly include pwm.yaml
+Message-ID: <20200618025140.GB3378010@bogus>
+References: <20200612141903.2391044-1-thierry.reding@gmail.com>
+ <20200612141903.2391044-38-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612141903.2391044-38-thierry.reding@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+On Fri, Jun 12, 2020 at 04:19:02PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> For PWM controller device tree bindings, make sure that they include the
+> pwm.yaml controller core bindings explicitly. This prevents the tooling
+> from matching on the $nodename pattern, which can falsely match things
+> like pinmux nodes, etc.
 
-[ Upstream commit 7a2c36b039d2343cc29fec6102da839477b8dc60 ]
+My preference here is to clean-up the mess that is pinmux nodes.
 
-Use sdhci-caps-mask to forbid SDR104 mode on the SDIO capable SDHCI
-controller. Without this the device cannot pass electromagnetic
-interference certifications.
+This has the side effect of no longer checking pwm nodes that didn't 
+have explicit schema. Perhaps that's of somewhat limited value.
 
-Fixes: 7109d817db2e ("arm64: dts: marvell: add DTS for Turris Mox")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index bb42d1e6a4e9..47fee66c70cb 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -179,6 +179,8 @@ &sdhci1 {
- 	marvell,pad-type = "sd";
- 	vqmmc-supply = <&vsdio_reg>;
- 	mmc-pwrseq = <&sdhci1_pwrseq>;
-+	/* forbid SDR104 for FCC purposes */
-+	sdhci-caps-mask = <0x2 0x0>;
- 	status = "okay";
- };
- 
--- 
-2.25.1
-
+Rob
