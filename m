@@ -2,111 +2,185 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C66FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 09:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FB3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 09:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE7B21548
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 09:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592473837;
-	bh=F0mHrmIfDX6Kuk9+3Hgh9PYce9TZgz8bGDX3F2Xq7yg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MwlPJDgMTfHwuZ3ZiUffGPSLmaZtAgidPBxIHldWnYg8jGWZ0tS7dKIPPkOXttvyt
-	 dHs9xTkOdFTiSC6fKN0AFWHYUnYMWVj+NE/ZCHWtpP7fA8UMbk17CqeNGYyn5Iripi
-	 0YbzAbxyVovn6DuFzxe6rYuxJgQ+ZC2grZeOX8YI=
+	by mail.kernel.org (Postfix) with ESMTP id BB6C1217A0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 09:52:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtXMobp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgFRJuh (ORCPT
+        id S1729329AbgFRJwG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgFRJuf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:50:35 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD63204EA;
-        Thu, 18 Jun 2020 09:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592473834;
-        bh=F0mHrmIfDX6Kuk9+3Hgh9PYce9TZgz8bGDX3F2Xq7yg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yi/kPSWjPKq7vjvVPdM8ROse+MVAcIlqSfhz+akzk8JbIpIvCPW1iGgMM+7NoXyPa
-         8fwS2TTiUIvUqGdjM06a5kgBR1T3PtM2KV2csFREIvvqP7w2ouLbekxclP/58tOMbD
-         +YCsgdxEu5hx97TeLGI6/mPjfdZ8dgOfY6wBXmoY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jlrBp-0047dq-3G; Thu, 18 Jun 2020 10:50:33 +0100
+        Thu, 18 Jun 2020 05:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729320AbgFRJwC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 05:52:02 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B845C06174E;
+        Thu, 18 Jun 2020 02:52:02 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l63so2662754pge.12;
+        Thu, 18 Jun 2020 02:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=rlTaG4vEHV6obr/G85MD+Ik1qzQppM95dWbM2mQ30No=;
+        b=XtXMobp1DssYwYeOkZQeegBQpybQHz6LYBfWFI/gC6jPaWEtCcHLm3SBm7d7l5QOTd
+         sJjI4oNVfdezgxwoD7ebdbVqmFUJvleHwbrT99mP4y56Il/Ckp7z1p3ciPiEiAsj+3kT
+         DQIR1nQJidTkiy3DYumYEOojMX08Giz8wF3Hf6odDCcNkVm+HY8776ExTFg9rfRDKG52
+         pCUjJ40t9LwJ2fKXVW/9YGtS5DNRyTcQxNZFRFMTQaVjf38FhnFU51h0RsSbZ9xx9o8m
+         Gp8boKfUoJtcL2gMOCgB4lZfsK0Bkh27YV6nv7CJ1q3JleSVIfcf9M7OrAxPKSWG67Ld
+         24gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rlTaG4vEHV6obr/G85MD+Ik1qzQppM95dWbM2mQ30No=;
+        b=BUyMArRuVEUmEEusOB0z2pYGBstv/qUeSPqyYrpMKBbbMBayEGBcrdVaqD5tvr1AQl
+         H3zcJVvXcPNIOPUyIazV9/lvHR6CZmABQB7nsydg8xeGiDJmHmFtkqgJQlgdLr/t0Ugr
+         HYovY36boKnL2lg9nC1pgR+80NCmjnI8jpKlO6iHsSfaJi23ntOHmgd1d7jKkdZlU1wH
+         4flAwn6BrgC9Fh5CcpfCVA7Su5lCmiaKTTI0GHc7cvGciJfWXlV47VpGAYF7q/Pj7GMk
+         VhYAFXmRE4c19kXPvV6kTJ/VEOEj7p90WJmf9cNieRYlCmAU7dm66VaDQuxOM0qUkyeJ
+         laEg==
+X-Gm-Message-State: AOAM53027K/RCyC6OZ6MTCcF6NvXaJ2sq7jBjCC0UCPP/qCCCT9ckQT1
+        HR0NsFUOzjqTdK+l7EPxgpM=
+X-Google-Smtp-Source: ABdhPJyDgvg6arfypbKJjGrfCEVPwrJXeBR3QGkGNPtYZc4CCDRysB90RjiOBS4/5HzvwK83G4SfGQ==
+X-Received: by 2002:a62:5ec2:: with SMTP id s185mr2954274pfb.0.1592473921435;
+        Thu, 18 Jun 2020 02:52:01 -0700 (PDT)
+Received: from home-desktop ([114.204.138.55])
+        by smtp.gmail.com with ESMTPSA id s26sm2045206pga.80.2020.06.18.02.51.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jun 2020 02:52:00 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 18:51:55 +0900
+From:   Hyeonki Hong <hhk7734@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: odroid: add spicc0 controller node
+Message-ID: <20200618095150.GA9713@home-desktop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 18 Jun 2020 10:50:32 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Julius Werner <jwerner@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD?= =?UTF-8?Q?=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Jose.Marinho@arm.com
-Subject: Re: Security Random Number Generator support
-In-Reply-To: <1591170857.19414.5.camel@mtkswgap22>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
- <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
- <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
- <1591169342.4878.9.camel@mtkswgap22>
- <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
- <1591170857.19414.5.camel@mtkswgap22>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <c3d5d4a79c7fe158cae117ff79ab332b@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: neal.liu@mediatek.com, jwerner@google.com, ardb@kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, Crystal.Guo@mediatek.com, linux-arm-kernel@lists.infradead.org, Jose.Marinho@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-03 08:54, Neal Liu wrote:
+Add enabled spicc0 controller node with annotations describing the
+physical SPI0 pin number based on the 40 pin header on the Odroid
+board.
 
-Hi Neal,
+Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
+---
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 26 +++++++++++++++++--
+ .../boot/dts/amlogic/meson-sm1-odroid-c4.dts  | 24 ++++++++++++++++-
+ 2 files changed, 47 insertions(+), 3 deletions(-)
 
-> Do you know which ARM expert could edict this standard?
-> Or is there any chance that we can make one? And be reviewed by
-> maintainers?
-
-It appears that ARM just released a beta version of the spec at [1].
-
-I'd encourage you (and anyone else) to have a look at it and provide 
-feedback to ARM.
-
-Thanks,
-
-         M.
-
-[1] 
-https://developer.arm.com/-/media/Files/pdf/DEN0098-True_Random_Number_Generator_Firmware_Interface-1.0BET2.pdf
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 169ea283d4ee..ec6d345caaae 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -16,8 +16,9 @@
+ 	model = "Hardkernel ODROID-N2";
+ 
+ 	aliases {
+-		serial0 = &uart_AO;
+ 		ethernet0 = &ethmac;
++		serial0 = &uart_AO;
++		spi0 = &spicc0
+ 	};
+ 
+ 	chosen {
+@@ -328,7 +329,7 @@
+ 
+ &ext_mdio {
+ 	external_phy: ethernet-phy@0 {
+-		/* Realtek RTL8211F (0x001cc916) */	
++		/* Realtek RTL8211F (0x001cc916) */
+ 		reg = <0>;
+ 		max-speed = <1000>;
+ 
+@@ -451,6 +452,27 @@
+ 	vqmmc-supply = <&flash_1v8>;
+ };
+ 
++&spicc0 {
++	status = "okay";
++
++	/*
++	 * 40 Pin Header : MOSI(GPIOX.8->19 Pin),
++	 *		   MISO(GPIOX.9->21 Pin),
++	 *		   SPI0_CLK(GPIOX.11->23 Pin)
++	 *		   SPI_CE0(GPIOX.10->24 Pin),
++	 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&spicc0_x_pins>, <&spicc0_ss0_x_pins>;
++
++	spidev@0 {
++		compatible = "spidev";
++		status = "okay";
++		/* spi default max clock 100Mhz */
++		spi-max-frequency = <100000000>;
++		reg = <0>;
++	};
++};
++
+ /*
+  * EMMC_D4, EMMC_D5, EMMC_D6 and EMMC_D7 pins are shared between SPI NOR pins
+  * and eMMC Data 4 to 7 pins.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts
+index 00d90b30f8b4..f809b2ba6b15 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dts
+@@ -14,8 +14,9 @@
+ 	model = "Hardkernel ODROID-C4";
+ 
+ 	aliases {
+-		serial0 = &uart_AO;
+ 		ethernet0 = &ethmac;
++		serial0 = &uart_AO;
++		spi0 = &spicc0;
+ 	};
+ 
+ 	chosen {
+@@ -381,6 +382,27 @@
+ 	vqmmc-supply = <&flash_1v8>;
+ };
+ 
++&spicc0 {
++	status = "okay";
++
++	/*
++	 * 40 Pin Header : MOSI(GPIOX.8->19 Pin),
++	 *		   MISO(GPIOX.9->21 Pin),
++	 *		   SPI0_CLK(GPIOX.11->23 Pin)
++	 *		   SPI_CE0(GPIOX.10->24 Pin),
++	 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&spicc0_x_pins>, <&spicc0_ss0_x_pins>;
++
++	spidev@0 {
++		compatible = "spidev";
++		status = "okay";
++		/* spi default max clock 100Mhz */
++		spi-max-frequency = <100000000>;
++		reg = <0>;
++	};
++};
++
+ &uart_AO {
+ 	status = "okay";
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
