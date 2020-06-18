@@ -2,116 +2,156 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21348C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D36C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17C2208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193D920707
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="J9LyKS1t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Lu6yjyZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgFRQdl (ORCPT
+        id S1731882AbgFRQk1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:33:41 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:36147 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728523AbgFRQdk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:33:40 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id lxTqj4kzMOn2BlxTtjr68t; Thu, 18 Jun 2020 18:33:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1592498017; bh=vtKr0QJM4YQXYVakz3PAt/mbhJX5PkE3qB6K3H3yOvU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=J9LyKS1thEawyu9GhMKQvu6sYFHjlbrKeBdhchSUfggNrEZ6bowPpzF+1ez1nwKFJ
-         qblPDJf0slg3FgDlT39zDGvichFGqDRNNi39VyT8yvRbVlKPCiuIov0VCeuXESQhCF
-         R1q5COrVDw9So6pnifER8eRXgywxh1yyTunOGmT/TjW6rYI+fbwbGbpK93Q47LPe+f
-         cMkFjHZ6vk6pqyzE8LmESzejpxEHNQ5geg6ZZFQnUZ7Dvysr9KqPmlUOef5V9gRMmW
-         yRFuXGQLb3A0f4VxLHTYLebc8nm0f4I0hm4MkhOqRrouKacQqgzk+nldKS+vjPzfNU
-         xTRxTO7zU4M2Q==
-Subject: Re: [PATCH v5 2/2] media: cec: i2c: ch7322: Add ch7322 CEC controller
- driver
-To:     Jeff Chase <jnchase@google.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <20200615193811.233737-1-jnchase@google.com>
- <20200615193811.233737-3-jnchase@google.com>
- <3aefc5c4-2af1-59f2-0797-9a5baf91482e@xs4all.nl>
- <CALTkaQ3n30nS-b1XuMiu_Z4+FfD0horJDagCPBaUqCCx4JhtdA@mail.gmail.com>
- <e45bf5a1-3862-66a2-213b-f7e5563e5a5d@xs4all.nl>
- <CALTkaQ02_ttD52h=74hGos09a0ihQwv-rQS5vwpDsrdnK_rYrg@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <72ea0f61-5fd4-47b6-4b0f-db620ee661db@xs4all.nl>
-Date:   Thu, 18 Jun 2020 18:33:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 12:40:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728929AbgFRQk0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 12:40:26 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D679C06174E;
+        Thu, 18 Jun 2020 09:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wQ51QMPUtPEJr0c4bhMM9pVdyp44hbpF1rlza5L8bD0=; b=Lu6yjyZ/5efCrXL0CtuLzVu9g
+        qPOM+X6SutLQNYojPjT9criSA3ZvjhBsV5sIM5cq2z4dVsCaOR9rz939y5mkw49ER+ii8hPdsMNPE
+        EsQ3OEZBJEcSPJm6+Njq2P7o6LBVwpIahOPhqxCC5SHDhtp+0SmFYDYxSClrUBXbIL86LNhD8dLHm
+        9PfAr+4pd/CejL30nIxOYuGUh9Ifn2m/YnQxOrfF1tbgimkk2JXuyAOS79MoM4PbHGqaEYTy42D6w
+        2SrTzsZF1sToyWYiGoCHY0k8+4ZB91S7+khNH5EdpUaCKlP5jCxNyq/Ao4zjMyUTBD3SabDouPXtk
+        kIugdRPFg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58792)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jlxaN-0005Pg-NF; Thu, 18 Jun 2020 17:40:19 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jlxaJ-0004ra-WC; Thu, 18 Jun 2020 17:40:16 +0100
+Date:   Thu, 18 Jun 2020 17:40:15 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, kuba@kernel.org,
+        robh+dt@kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some
+ phy variants
+Message-ID: <20200618164015.GF1551@shell.armlinux.org.uk>
+References: <20200618121139.1703762-1-heiko@sntech.de>
+ <2277698.LFZWc9m3Y3@diego>
+ <20200618154748.GE1551@shell.armlinux.org.uk>
+ <1723854.ZAnHLLU950@diego>
 MIME-Version: 1.0
-In-Reply-To: <CALTkaQ02_ttD52h=74hGos09a0ihQwv-rQS5vwpDsrdnK_rYrg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEg9Fnp5dNVyyXieynelS/dpB4wvcDOi8fTMtjfdMvpYuOB89rpIizCnaS5UL6XXQTwlvKK4gwXHgHi4AP28TCQOvgjYigwr5+WnGX1VWEn2O+r8tD9W
- LOiv81vX0EJLHWoz0umvCou11cQnsuk4vwiBVjWD1UKkLRv1MOb17+zeBb/HvnGWDkqNLYX9Ln7/+zFLO1bmk2Ym4Rec1BMbn5+5GRkN7A+retpt4gXMEzNN
- EW66c9A0I9G6bMi/PA9Hit4ZMWaaaERbxHaKL9wKEMk31+5lxITmKU8C7R+cqm2iNqYBW2Kgkw6hP9ktFgxyCA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1723854.ZAnHLLU950@diego>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18/06/2020 18:25, Jeff Chase wrote:
-> On Thu, Jun 18, 2020 at 3:05 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->>
->> On 18/06/2020 10:59, Jeff Chase wrote:
->>> Hi Hans,
->>>
->>> We are using two of these in an Intel-based Chromebox. I see that the
->>> cros-ec and seco drivers just statically define the PCI BDF of the
->>> Intel graphics device for their boards. I don't see an example of ACPI
->>> passing this information. I can copy cros-ec and seco by adding a
->>> board table and then use the UID of each device to select the correct
->>> port. Adding board-specific configuration to the driver doesn't seem
->>> ideal but I'm not sure what the proper way to pass this using ACPI is.
->>
->> You are right, it's not ACPI, it's using DMI matching.
->>
->> I have zero knowledge about ACPI, so I have no idea if there is some standard
->> method of retrieving this association via ACPI.
+On Thu, Jun 18, 2020 at 06:01:29PM +0200, Heiko Stübner wrote:
+> Am Donnerstag, 18. Juni 2020, 17:47:48 CEST schrieb Russell King - ARM Linux admin:
+> > On Thu, Jun 18, 2020 at 05:41:54PM +0200, Heiko Stübner wrote:
+> > > Though I'm not sure how this fits in the whole bringup of ethernet phys.
+> > > Like the phy is dependent on the underlying ethernet controller to
+> > > actually turn it on.
+> > > 
+> > > I guess we should check the phy-state and if it's not accessible, just
+> > > keep the values and if it's in a suitable state do the configuration.
+> > > 
+> > > Calling a vsc8531_config_clkout() from both the vsc8531_config_init()
+> > > as well as the clk_(un-)prepare  and clk_set_rate functions and being
+> > > protected by a check against phy_is_started() ?
+> > 
+> > It sounds like it doesn't actually fit the clk API paradym then.  I
+> > see that Rob suggested it, and from the DT point of view, it makes
+> > complete sense, but then if the hardware can't actually be used in
+> > the way the clk API expects it to be used, then there's a semantic
+> > problem.
+> > 
+> > What is this clock used for?
 > 
-> I'm not very familiar with ACPI either. I looked for but did not find
-> an ACPI equivalent of_get_mac_address().
+> It provides a source for the mac-clk for the actual transfers, here to
+> provide the 125MHz clock needed for the RGMII interface .
 > 
-> I believe it's possible to reference the PCI node but it would take a
-> bit of work on both the coreboot and linux side.
+> So right now the old rk3368-lion devicetree just declares a stub
+> fixed-clock and instructs the soc's clock controller to use it [0] .
+> And in the cover-letter here, I show the update variant with using
+> the clock defined here.
 > 
->>
->> This particular chip can actually be used both with DMI matching but also
->> on an ARM with device tree, but since you can't test this on an ARM board,
->> there is no point in adding support for that.
->>
->> However, compared to the cros-ec and seco drivers you can do something a bit
->> different here: those drivers just return -ENODEV if there is no match, but
->> since this driver reads the EDID it can just continue as long as it does not
->> set the CEC_CAP_CONNECTOR_INFO capability.
 > 
-> Is it necessary to add support if we don't set CEC_CAP_CONNECTOR_INFO?
+> I've added the idea from my previous mail like shown below [1].
+> which would take into account the phy-state.
+> 
+> But I guess I'll wait for more input before spamming people with v6.
 
-It is very desirable. Otherwise userspace will not know which CEC device is associated
-with which HDMI device. Since you are using two of these chips for a Chromebox, I
-suspect that you actually need to support this.
+Let's get a handle on exactly what this is.
 
-Also, I am (slowly) working on wiring support for this in all CEC transmitter drivers,
-so I prefer not to add CEC drivers without support for this.
+The RGMII bus has two clocks: RXC and TXC, which are clocked at one
+of 125MHz, 25MHz or 2.5MHz depending on the RGMII data rate.  Some
+PHYs replace TXC with GTX clock, which always runs at 125MHz.  These
+clocks are not what you're referring to.
 
-I really should have noticed much earlier that support for this was missing. My
-apologies for that.
+You are referring to another commonly provided clock between the MAC
+and the PHY, something which is not unique to your PHY.
 
-Regards,
+We seem to be heading down a path where different PHYs end up doing
+different things in DT for what is basically the same hardware setup,
+which really isn't good. :(
 
-	Hans
+We have at803x using:
+
+qca,clk-out-frequency
+qca,clk-out-strength
+qca,keep-pll-enabled
+
+which are used to control the CLK_25M output pin on the device, which
+may be used to provide a reference clock for the MAC side, selecting
+between 25M, 50M, 62.5M and 125MHz.  This was introduced in November
+2019, so not that long ago.
+
+Broadcom PHYs configure their 125MHz clock through the PHY device
+flags passed from the MAC at attach/connect time.
+
+There's the dp83867 and dp83869 configuration (I'm not sure I can
+make sense of it from reading the code) using ti,clk-output-sel -
+but it looks like it's the same kind of thing.  Introduced February
+2018 into one driver, and November 2019 in the other.
+
+It seems the Micrel PHYs produce a 125MHz clock irrespective of any
+configuration (maybe configured by firmware, or hardware strapping?)
+
+So it seems we have four ways of doing the same thing today, and now
+the suggestion is to implement a fifth different way.  I think there
+needs to be some consolidation here, maybe choosing one approach and
+sticking with it.
+
+Hence, I disagree with Rob - we don't need a fifth approach, we need
+to choose one approach and decide that's our policy for this and
+apply it evenly across the board, rather than making up something
+different each time a new PHY comes along.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
