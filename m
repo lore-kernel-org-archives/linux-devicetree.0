@@ -6,93 +6,78 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF79C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D251C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4146220890
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F54208C7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592500021;
-	bh=fSXyVJpq4LliuaVVRtFRy6ntuuevuN5BAwdZD5jR6HE=;
+	s=default; t=1592500747;
+	bh=8AEuRVh4Skv/+czwOlC7m8ptCHs6J6vxTFoUKr/uswg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ciGps5v73nyqec5HHVk+dl765Js5qW4m56IAB2lMwQ45MVNji19c1SDkQC7uvkAIg
-	 P62mWvu8i3HXLK7esythfuOjbBtAYTxVpevbgfa6OlGaZNvyIsInR6s9LHETtyWznA
-	 P8g4x2eLjzQIHsWAY+LfvrzgPgYk41fuinP8e2Tg=
+	b=iQVnr795tQwD0Y2INxyt/kNFSX3UpeTY611eRkyk/Nol2jSmaC0A5TsFw/J/MIU4C
+	 NomYvxrLZXNmi9QdMOQWF6caquJTk3aFLvl15cfsmZEhLc1Ob27zXttFaD45oTkE6R
+	 uTDzjnPNQjVPWHZj+pZAnJGZ+B5EhJE5CfrrQNwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgFRRHA (ORCPT
+        id S1729779AbgFRRTG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:07:00 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33257 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbgFRRHA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 13:07:00 -0400
-Received: by mail-il1-f195.google.com with SMTP id z2so6517112ilq.0;
-        Thu, 18 Jun 2020 10:06:59 -0700 (PDT)
+        Thu, 18 Jun 2020 13:19:06 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37973 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgFRRTG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 13:19:06 -0400
+Received: by mail-il1-f193.google.com with SMTP id b5so6560023iln.5;
+        Thu, 18 Jun 2020 10:19:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ifwduw78OWeOcpzj0vaqe6BciVp2voLLjsFlxgZqSlI=;
-        b=JHUT5IuTFXlykRmFf993LPpHeY84f9UfxnycAL5sweTuCkNh98U36/T0sO+dQ/T1yR
-         SrBmzZK5rIGec74gvDq9q8btyX5u8JaSTfisHCZI+MweXev/H9L35JTQqnVZG4pT9GMA
-         FpLvqAXGXVZIl5BVExL7sZJh1Wy5Uix6uxdZ2vtZmXHCzVlX0vhMzOuzOXPIZgy6r+Kv
-         dDl3UzV9wgkpox/pST18rz4nXS1NQj2IGRG9Pc5O/l007LEsDvPUuqPBMKl6G1L1YxHo
-         cxNCp42rI7jFxydLPGpsbSEkNRIJOOr3xrYC50ABXnHP5loHKT4RIMBFOL+NAuJqjxkO
-         JLjA==
-X-Gm-Message-State: AOAM530/GGuU9f+AJpM+1iJsgz3KiBI3HO8aT7lihLzYYsWt2QC3RASj
-        05CEt9wOB8OQ817Mhw8nlg==
-X-Google-Smtp-Source: ABdhPJw81b3DAZIj3aCC5G7vPDZFbqJcRdJgtLBQ9xQ+fmU3vdQcz/N22q4w5tMZcBkmXm4va6tTMA==
-X-Received: by 2002:a92:35dd:: with SMTP id c90mr5272835ilf.103.1592500019001;
-        Thu, 18 Jun 2020 10:06:59 -0700 (PDT)
+        bh=Db7i8O4GZYzUo4BrwYG9krZWxE26JRhniK91bgJunXc=;
+        b=JaT+KhVs65hHvdSWjhIYVNrzqqqs9ObDY8JWUlpd7yJhIPw2tzMceWIP79O9EvcEGx
+         OmoMk8XfBGJzUOcnXU3mhtDE1fvzHJC30FRQagkhlfKyFq4frAZBOzJQQh+1FVvqENtH
+         fqSOSmg4uHH3cwBTy/023HKxRr5A8u/pBT3Q6UYrSczUA/0HyEslYRE69ZMyqR61xgCC
+         +mGqoAwrYmfdZq2bstFgIRYSZGMoADUcdUVJaVcrYFMQoCU5TipT5Kc0dvLOunenZeP/
+         92LKTZS3s9k+RW9SYqWHbAEUqzmoDxocvnbqv97rQteHwiAg0myBnZPFMSJFCSvpiVF7
+         nNeg==
+X-Gm-Message-State: AOAM530XOxZxfmYzOhRLx28A0dSFHz3oq28cNEuRnGAiEwWZy18HyJjk
+        Buf5UCY6+x8V7YAh2LZHQ12KXRYizw==
+X-Google-Smtp-Source: ABdhPJz3Zg035OcmSJh4DRlnfpp0v68/rA3fvCKm4Bt2OSeRUyPPDg/rT57SAqLcuDxpv3iguKojYg==
+X-Received: by 2002:a92:d3c8:: with SMTP id c8mr5114952ilh.57.1592500745724;
+        Thu, 18 Jun 2020 10:19:05 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id x18sm1732593ilq.46.2020.06.18.10.06.57
+        by smtp.gmail.com with ESMTPSA id v11sm1804090ile.61.2020.06.18.10.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 10:06:58 -0700 (PDT)
-Received: (nullmailer pid 539747 invoked by uid 1000);
-        Thu, 18 Jun 2020 17:06:56 -0000
-Date:   Thu, 18 Jun 2020 11:06:56 -0600
+        Thu, 18 Jun 2020 10:19:05 -0700 (PDT)
+Received: (nullmailer pid 558701 invoked by uid 1000);
+        Thu, 18 Jun 2020 17:19:03 -0000
+Date:   Thu, 18 Jun 2020 11:19:03 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Brown <broonie@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+Cc:     Rob Herring <robh+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
         Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-spi@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 14/29] dt: Fix broken references to renamed docs
-Message-ID: <20200618170656.GA539608@bogus>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 15/29] dt: fix reference to olpc,xo1.75-ec.txt
+Message-ID: <20200618171903.GA558613@bogus>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
+ <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
+In-Reply-To: <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 15 Jun 2020 08:46:53 +0200, Mauro Carvalho Chehab wrote:
-> Some files got renamed. Those were all fixed automatically by
+On Mon, 15 Jun 2020 08:46:54 +0200, Mauro Carvalho Chehab wrote:
+> This file was converted and renamed.
 > 
-> 	./scripts/documentation-file-ref-check --fix
-> 
+> Fixes: 7882d822b3f9 ("dt-bindings: spi: Convert spi-pxa2xx to json-schema")
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt   | 2 +-
->  Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt | 4 ++--
->  Documentation/devicetree/bindings/display/imx/ldb.txt         | 4 ++--
->  Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt  | 2 +-
->  MAINTAINERS                                                   | 4 ++--
->  5 files changed, 8 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Applied, thanks!
