@@ -2,86 +2,99 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BF0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDBAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F220F22203
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146232222C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592445800;
+	bh=6xPYoE8X7XkNTACLzWGx9psDyOiI/Nu4/wzkklbhQnI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nXdXv47/K0lhDyRuRT3s7gafMsgN+aBfX7k5r0FJOuY2/OKKjcpkLp+7QbF/v//eQ
+	 trkr3KrDCHGxtxY3ugFtaID3PvbznYr1GBty9yp5ImNWC3DSChZtLr2wYQ2cjpBrow
+	 wCSjBVtzYCVs4UN7QZz/sZPP6NzYiKlP16HAha4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgFRCBP (ORCPT
+        id S1731008AbgFRBXf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:01:15 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45760 "EHLO vps0.lunn.ch"
+        Wed, 17 Jun 2020 21:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732982AbgFRCBI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 22:01:08 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jljrR-0013W0-TW; Thu, 18 Jun 2020 04:01:01 +0200
-Date:   Thu, 18 Jun 2020 04:01:01 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v7 1/6] dt-bindings: net: Add tx and rx internal
- delays
-Message-ID: <20200618020101.GJ249144@lunn.ch>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-2-dmurphy@ti.com>
+        id S1730996AbgFRBXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C538521D82;
+        Thu, 18 Jun 2020 01:23:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443413;
+        bh=6xPYoE8X7XkNTACLzWGx9psDyOiI/Nu4/wzkklbhQnI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p9Hhi0dJ7HyaJG8bDOnZQzN2bASs+7a6XnWSYapbz+st4OHJb3pnq2O37FnDAcLpR
+         zhEOcP1JooJ9J06cYpr9/djQg/WHDNiebo16VTMzRROXKBMI9GJGlw1aFNGW3KQTt6
+         KGje+IEyP61qM1LzOLxp++FSnyd0c6wpktBhVbgM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 056/172] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: Fix led polarity
+Date:   Wed, 17 Jun 2020 21:20:22 -0400
+Message-Id: <20200618012218.607130-56-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617182019.6790-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:20:14PM -0500, Dan Murphy wrote:
-> tx-internal-delays and rx-internal-delays are a common setting for RGMII
-> capable devices.
-> 
-> These properties are used when the phy-mode or phy-controller is set to
-> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
-> controller that the PHY will add the internal delay for the connection.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/net/ethernet-phy.yaml         | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index 9b1f1147ca36..b2887476fe6a 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -162,6 +162,17 @@ properties:
->      description:
->        Specifies a reference to a node representing a SFP cage.
->  
-> +
-> +  rx-internal-delay-ps:
-> +    description: |
-> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
-> +      PHY's that have configurable RX internal delays.
-> +
-> +  tx-internal-delay-ps:
-> +    description: |
-> +      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
-> +      PHY's that have configurable TX internal delays.
-> +
+From: Vincent Stehlé <vincent.stehle@laposte.net>
 
-So in a later patch you have:
+[ Upstream commit 34b6826df7462c541752cf8b1de2691b26d78ae0 ]
 
-default: 2000
+The PWR-LED on the bananapi m2 zero board is on when gpio PL10 is low.
+This has been verified on a board and in the schematics [1].
 
-That seems to apply that these values only apply when the phy mode
-indicates a delay is needed. It would be good to document that here,
-when each of these properties will be used. Also, that they default to
-2000 when not present.
+[1]: http://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO#Documents
 
-     Andrew
+Fixes: 8b8061fcbfae ("ARM: dts: sun8i: h2+: add support for Banana Pi M2 Zero board")
+Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
+Cc: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index 1db2541135a7..00e0d6940c30 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -32,7 +32,7 @@ leds {
+ 
+ 		pwr_led {
+ 			label = "bananapi-m2-zero:red:pwr";
+-			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_LOW>; /* PL10 */
+ 			default-state = "on";
+ 		};
+ 	};
+-- 
+2.25.1
+
