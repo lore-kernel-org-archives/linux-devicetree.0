@@ -2,189 +2,671 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C31C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F056BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DABF12166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F3320899
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="2SiiPOFX";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="qVnMjZgh"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="bCyjspbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgFRHnt (ORCPT
+        id S1728310AbgFRHv2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:43:49 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:9631 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgFRHns (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 03:43:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592466228; x=1624002228;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=6zBcD/OMQsQAIqopT8RwD1CDsifKqFwdPPPlulh9Q98=;
-  b=2SiiPOFXQck9WHpQXo8uuFGl2oK9d7gn427Hg5h9NEhrAqp+bmVQ1GQl
-   9SzxNHmSYCbyLSD0vdv6PaWy3N+Q8vgFndwOGNDaGfhtfRgCPXyWKEp44
-   ckbTGT/M/Hz8kDzxECsS0+AAhS+/ggpogyA0AAE2K5KLHFxGgGEbc1dTj
-   DJWO2cheV69ohVQwU8uHGzmOhwy1ZLdPq8X6XxSN0qdLrs9ylu/0Ed3IB
-   ZhO1AwfRf/XIMPhxlQznRLB27TkvfndT3noKOlVgs2MxkAIgR7njelrUz
-   i/Nw9KJSywHasfGqhXBS8joU2XrPVJTwD8CrTS2IL/25h8O+zhtrJT5Wb
-   Q==;
-IronPort-SDR: vr3tecl/zb4toRvmLA8fHEgrgi+0cxVUSA9nAMtaY2ht9Y1h730OQ1dT7LmADJTBJpQO23Bb47
- 2PptiQOVFEHPgZuuSxVZTe14WrVeIJCmqTLTZkdlsdBPxBHKm40bjlp1ZFbgcF4PhuONG8uZH/
- yLA1OJpmddakYUjJbj2BeitpBQXrpxUxQcZFiTX2sBkWuR6LB3M47v6nvVAcn4sHvnDA4vMQZe
- TOocZ6PQxp1znBtGfWJJJe2+AkhfIePEukcXtekK2l/SjM8pLFbyAz0n/xEnVc4gxsxZn+53YI
- CIo=
-X-IronPort-AV: E=Sophos;i="5.73,525,1583218800"; 
-   d="scan'208";a="80592316"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 00:43:45 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 18 Jun 2020 00:43:44 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Thu, 18 Jun 2020 00:43:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GKaW0MklgpRKKCws6UA4ZrNxfpaoawKQwaSEhvvVU1XZ/sToWN4MJDX4b7TZwbihrTyEKQaGwJdQOya9SLXLOPhDVQOawreaWOp5+cdnifZlPenVG7A9DjBbuHvd/opuqP5h+UA/k4E6qavGd+SBaHhNBiu+A2RZM2SI+0g9crvMFlFJ7kioGxxbpG5u0mbd99Sko1UGBXqoa9f6jF5y5KOu4zOQHmpSdCtpGv8U5AGQQl/ldFb/TiiPcJtkKVLXCehk4adkf5/6GtvTREs3tFjrpAj69BBSZTqTtUHW7fwkxp9j8rnepEnajDRNVZKVw5jdQObg48X0UCmD1fFDYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6zBcD/OMQsQAIqopT8RwD1CDsifKqFwdPPPlulh9Q98=;
- b=a/HD9o8dAgk4bSvjeAETiygH88wNDuEmoeNLFdfMgiiKJja0kqfy//Ho+qZgay6z/NRj7IbOX2fwPS3HGpKW+q6CAlDLCsYsloPl8ldAMncJ+t6DqrHMN4woqmLYa6BFWvxRJuZqK+9dD08ptwVyWoXMIA62D7v6/I5/rc/jH29BUQ3S0SyYrlnhTWuWB8nWgQ+Dn6m+JotGEmI8fK9AOts0DSyO73U6EhYDm/0W1j8q6L/wXQI83ncOkUcIKp4UbsQEOeAEy5dfVg9nWp7yz6/HnAbTxUcc26QDVKy+4tX3bGOWfvgDTCbgaWSLuSmmV7YwWbJDPLQNAaHBhsj5UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6zBcD/OMQsQAIqopT8RwD1CDsifKqFwdPPPlulh9Q98=;
- b=qVnMjZghl4OCPXnFiMj5/OFhvVW7IWfIQMCZkqvqSCK+pkbsyzGtwztM7DxWpqQIvpqQM9Tzd5zERSCyWXdXPGw4+8gjXx8DVLhhuHdX1ynxOQ7NBLyP79sBeX/aq4x/xzYCh5QOvDjQADIktc0AfD3zkkDoMQ5rCwdXMIWTKZA=
-Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
- by SN6PR11MB2766.namprd11.prod.outlook.com (2603:10b6:805:53::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Thu, 18 Jun
- 2020 07:43:41 +0000
-Received: from SN6PR11MB3504.namprd11.prod.outlook.com
- ([fe80::40f4:d52a:5ca3:d94a]) by SN6PR11MB3504.namprd11.prod.outlook.com
- ([fe80::40f4:d52a:5ca3:d94a%2]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
- 07:43:41 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <alexandre.belloni@bootlin.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
-        <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 3/3] Revert "ARM: at91/dt: sama5d2 Xplained: add pdmic
- node"
-Thread-Topic: [PATCH 3/3] Revert "ARM: at91/dt: sama5d2 Xplained: add pdmic
- node"
-Thread-Index: AQHWQvsltRwqmvwlWECdTj/YRpFtOKjdWD0AgACqK4A=
-Date:   Thu, 18 Jun 2020 07:43:41 +0000
-Message-ID: <92a22b2e-f710-c8fd-04a7-68a09d71e570@microchip.com>
-References: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
- <20200615095525.43414-3-codrin.ciubotariu@microchip.com>
- <20200617213438.GF3675@piout.net>
-In-Reply-To: <20200617213438.GF3675@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-authentication-results: bootlin.com; dkim=none (message not signed)
- header.d=none;bootlin.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [84.232.220.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 368296ec-ac2f-4b13-c72f-08d8135b525d
-x-ms-traffictypediagnostic: SN6PR11MB2766:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB276686267C4C6038B650DD5BE79B0@SN6PR11MB2766.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:404;
-x-forefront-prvs: 0438F90F17
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ArqDseejJ3Tak1g5A8PsBdbXmXdYXveYc4lahoAkTeFEC6+IW1f+8BTGbUG+Qbmosl/x3yJlcEGmgxhIqeKUwNayWE4cWbHiNcj1J0BXM1RCFXCesfcDKsU9aKDaKukBEcuKbUFShYFKSAdlyF+MaKlZr7Uke/vfaNbLO+6ftUMlx3O3nWcnCmtqcDQ314t/38tlcYeyn4xHmSPklQHL6+ULZrHOrzZgx0HuLchz5x2QOHqGK7e2gv8XR643vJBhJ9MGOFhuLq4Y5t9Ukv2+BL1MZ5FPp61xxr7/grICX1aW0PKzaMhP3c0gkOEuZxXaHpHOpr7CqKGYDR9DwGIS77M0XWmAXkR07hBP5U0rPIdF4noJt2lCrJF7tpPlcKbXlEjNmfAm81TSjlJuaQVPDSQuB92/1UokEMmKjnXOQIv4mpP4njhNYJqfLuF0bi9fCUYM7L57dSGZ3hyqhfc83w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(396003)(376002)(39860400002)(346002)(66446008)(6506007)(53546011)(6916009)(6486002)(107886003)(31686004)(83380400001)(66946007)(76116006)(2906002)(8676002)(8936002)(66476007)(966005)(71200400001)(26005)(5660300002)(66556008)(31696002)(64756008)(6512007)(186003)(86362001)(316002)(478600001)(2616005)(4326008)(91956017)(36756003)(54906003)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: fyp0v9Dq62Ui/3FuNamqn9NmaKW7kMEYZM5RHQCNZ4wF+nI8Qmr7tY+jiHRxfkJUjugwGSqXSiZB218NHyQ6GGDLHQnxWFpfEbsJNEt/NMPr7oCkQrxmzMAAP1DEzreNsa+aoTutUzr1YATCLFLtYd9Kn76F8OR9c7YOHjE423vd/GcgTNWI1aTNAwhujjDwkwc23Fgo8Scb79Dir5YlIe/ijnWEDJhUVofV4/wxnQhheZvI5b6p/lAQ2O/6sZKtAT98dbngIbCWcZAAqLnLW7hZkTL8bd3RZpun7yNvVE2ehjqhkTOd8OUl7ugvUtR1iT7JNSW3mIEmYR54MWJCnBUTaXPDz8r2YiNocyIoBdO6cvgwTGKs7ZRjoeaHBNv70ZuIt74d36iM90a0HNzJABANWHikKOuZsuJIG184/oXRgzA9R/ZjrWbR7e4cUFl2RftpoSwrwfzRHy03p7V/COz/sLFgCuIgzv2UIRmItvvc7iIrKdSeUvegbbRytYj1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2A1B5FC81242C346B047C581D02D9457@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 18 Jun 2020 03:51:28 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:47037 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728193AbgFRHv0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:51:26 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id lpKQjcRbalCoGlpKUj6fKv; Thu, 18 Jun 2020 09:51:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1592466682; bh=hTxaqWw2IoQApxGqYObGNr3ye4q8D+mjWeihjWnI51Q=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=bCyjspbsZEi7RuSktNGpa40RHADBlWgHzr4HR9QSRVLoIZHyn3teDqSyvLHNqTD41
+         ZWF79WzqT0JND8rK/IVbL//plqZKnXFj9yn7Ccw5mMJ7a45e3QJouwoA+TVhy+72VL
+         KnWIvAm9qVNmKJDyRJh5SR9Oe7KA2/tr9xqm4z+G+I0vbWwax8WGolzsYoBOagW/1E
+         NvxiUlV8xZV9J02wUSPlmnKMiIUv4nxFGFOR3RyhCo8Qc3k007iWmmsYToB6E1YVwO
+         8mWF+D6FByg6ZfpVirZ25csUitwXfG1rugrn2VOW3gcccwPBStTw6sAiJDNMZfOOds
+         hjNLSMt3bAc2A==
+Subject: Re: [PATCH v5 2/2] media: cec: i2c: ch7322: Add ch7322 CEC controller
+ driver
+To:     Jeff Chase <jnchase@google.com>, linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20200615193811.233737-1-jnchase@google.com>
+ <20200615193811.233737-3-jnchase@google.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <3aefc5c4-2af1-59f2-0797-9a5baf91482e@xs4all.nl>
+Date:   Thu, 18 Jun 2020 09:51:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 368296ec-ac2f-4b13-c72f-08d8135b525d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 07:43:41.6357
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jNMnjIYVzkjtdWS8zZ4gYbtKKoLwIFN7JorZoXzan0SoX8ZN+12jMa1k7ZDtPVcvWq7nltto1Tc1/PshBSkCz2CdHR+Cwqt8zGzZlkTwdnw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2766
+In-Reply-To: <20200615193811.233737-3-jnchase@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfLmUTyfBS9r1hv8vkWYW71/jgvI3Bjx2MTh5nD/tdVNh2wSfurfakcUeqgvOehEIg0CBLXMJ0kpoSpdN9ndtiDRq3aN0/CNCnP3Hit5/ROcSvKa0L35k
+ p5pGum3dDoiJzSBTARrY12isGwZITI3u7FusiTYbVhqxV5tyqrzxCaU8dJzJ0gz2RAaHD0nYxZ33vfzclQKnZP071+TWKdBxftHCaOqpzsxuqYTiP+P6o4v3
+ i5R5B9dlbK7O1VzmTqK6mzGWYDplyE0YuMq0FYW7IE8qFPXwz4fAcHoaCjfRRLLZUrQaIumpmZYwVijp3jhfZw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMTguMDYuMjAyMCAwMDozNCwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+IEhpLA0KPiAN
-Cj4gVGhlIGNvcnJlY3Qgc3ViamVjdCBsaW5lIHByZWZpeCBpcyAiQVJNOiBkdHM6IGF0OTE6Ig0K
-DQpJIGp1c3QgcmV2ZXJ0ZWQgdGhlIG9yaWdpbmFsIHBhdGNoLiBJIGNhbiBtYWtlIGl0IGEgbm9y
-bWFsIGNvbW1pdCBpZiB5b3UgDQp3YW50Lg0KDQo+IA0KPiBPbiAxNS8wNi8yMDIwIDEyOjU1OjI1
-KzAzMDAsIENvZHJpbiBDaXVib3Rhcml1IHdyb3RlOg0KPj4gVGhlcmUgYXJlIG5vIFBETSBtaWNy
-b3Bob25lcyBvbiBTQU1BNUQyIFhwbGFpbmVkLCB0byBleGVyY2l6ZSB0aGUNCj4+IFBETUlDLg0K
-Pj4NCj4+IFRoaXMgcmV2ZXJ0cyBjb21taXQgY2E2MzQ5YThjNTFmMmUzZDZmMmFjZGIzNjQzMWU3
-ZDczMjgyNjFmNy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDb2RyaW4gQ2l1Ym90YXJpdSA8Y29k
-cmluLmNpdWJvdGFyaXVAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gICBhcmNoL2FybS9ib290
-L2R0cy9hdDkxLXNhbWE1ZDJfeHBsYWluZWQuZHRzIHwgMTYgLS0tLS0tLS0tLS0tLS0tLQ0KPj4g
-ICAxIGZpbGUgY2hhbmdlZCwgMTYgZGVsZXRpb25zKC0pDQo+Pg0KPiANCj4gVGhpcyBwYXRjaCBk
-b2Vzbid0IGFwcGx5IGFuZCBJIHRoaW5rIHlvdSdsbCBoYXZlIHRvIG1vdGl2YXRlIHRoZSByZW1v
-dmFsDQo+IGEgYml0IG1vcmUgYmVjYXVzZSB0aGlzIHNlZW1zIGxpa2UgYSBjaGFuZ2Ugb2YgcG9s
-aWN5IHRvIG1lLg0KDQpUaGUgUERNSUMgbmVlZHMgUERNIG1pY3JvcGhvbmVzIHRvIHdvcmsuIHNh
-bWE1ZDIgeHBsYWluZWQgZG9lc24ndCBoYXZlIA0Kc3VjaCBtaWNyb3Bob25lcywgc28gdGhlcmUg
-aXMgbm8gcmVhc29uIHRvIGVuYWJsZSBQRE1JQyBhbmQgdGFrZSBzb21lIA0KcGlucyBzaW5jZSB0
-aGVyZSBpcyBuby1vbmUgdXNpbmcgdGhlbS4gSXNuJ3QgaXQgdGhlIHBvbGljeSB0byBlbmFibGUg
-DQpvbmx5IHdoYXQgaXMgcHJlc2VudCBvbiBhIGJvYXJkPw0KDQo+IA0KPj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl94cGxhaW5lZC5kdHMgYi9hcmNoL2FybS9i
-b290L2R0cy9hdDkxLXNhbWE1ZDJfeHBsYWluZWQuZHRzDQo+PiBpbmRleCA1NGQ5NjY0OWRhNzcu
-LmMwYTI1NWJkYTQ3NyAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2Ft
-YTVkMl94cGxhaW5lZC5kdHMNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVk
-Ml94cGxhaW5lZC5kdHMNCj4+IEBAIC0xMDksMTYgKzEwOSw2IEBAIHRpbWVyMTogdGltZXJAMSB7
-DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4+ICAgICAgICAgICAgICAg
-ICAgICAgICAgfTsNCj4+DQo+PiAtICAgICAgICAgICAgICAgICAgICAgcGRtaWNAZjgwMTgwMDAg
-ew0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbmN0cmwtMCA9IDwmcGlu
-Y3RybF9wZG1pY19kZWZhdWx0PjsNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0
-bWVsLG1vZGVsID0gIlBETUlDIEAgc2FtYTVkMl94cGxhaW5lZCI7DQo+PiAtICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBhdG1lbCxtaWMtbWluLWZyZXEgPSA8MTAwMDAwMD47DQo+PiAtICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBhdG1lbCxtaWMtbWF4LWZyZXEgPSA8MzI0NjAwMD47
-DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdG1lbCxtaWMtb2Zmc2V0ID0gPDB4
-MD47DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAib2theSI7DQo+
-PiAtICAgICAgICAgICAgICAgICAgICAgfTsNCj4+IC0NCj4+ICAgICAgICAgICAgICAgICAgICAg
-ICAgdWFydDE6IHNlcmlhbEBmODAyMDAwMCB7DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdWFydDFfZGVmYXVsdD47DQo+PiBAQCAt
-NTMzLDEyICs1MjMsNiBAQCBwaW5jdHJsX21hY2IwX3BoeV9pcnE6IG1hY2IwX3BoeV9pcnEgew0K
-Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYmlhcy1kaXNhYmxlOw0K
-Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+Pg0KPj4gLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcGluY3RybF9wZG1pY19kZWZhdWx0OiBwZG1pY19kZWZhdWx0IHsN
-Cj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGlubXV4ID0gPFBJTl9Q
-QjI2X19QRE1JQ19EQVQ+LA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDxQSU5fUEIyN19fUERNSUNfQ0xLPjsNCj4+IC0gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgYmlhcy1kaXNhYmxlOw0KPj4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfTsNCj4+IC0NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaW5j
-dHJsX3NkbW1jMF9kZWZhdWx0OiBzZG1tYzBfZGVmYXVsdCB7DQo+PiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjbWRfZGF0YSB7DQo+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBpbm11eCA9IDxQSU5fUEExX19TRE1NQzBfQ01E
-PiwNCj4+IC0tDQo+PiAyLjI1LjENCj4+DQo+IA0KPiAtLQ0KPiBBbGV4YW5kcmUgQmVsbG9uaSwg
-Qm9vdGxpbg0KPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nDQo+IGh0dHBz
-Oi8vYm9vdGxpbi5jb20NCj4gDQoNCg==
+Hi Jeff,
+
+I realized that there is one thing missing here: there is no way to
+associate this CEC device with the corresponding HDMI interface.
+
+Typically this is done either via the device tree (hdmi-phandle property,
+see cec_notifier_parse_hdmi_phandle()) or ACPI (see cros-ec or seco drivers).
+
+How is this ch7322 used? Chromebooks? Intel or ARM based?
+
+The link with the HDMI interface is needed for the CEC_ADAP_G_CONNECTOR_INFO
+ioctl implementation. See:
+
+https://hverkuil.home.xs4all.nl/spec/userspace-api/cec/cec-ioc-adap-g-conn-info.html
+
+Regards,
+
+	Hans
+
+On 15/06/2020 21:38, Jeff Chase wrote:
+> Add a CEC device driver for the Chrontel ch7322 CEC conroller.
+> This is an I2C device capable of sending and receiving CEC messages.
+> 
+> Signed-off-by: Jeff Chase <jnchase@google.com>
+> ---
+>  MAINTAINERS                    |   1 +
+>  drivers/media/cec/Kconfig      |   1 +
+>  drivers/media/cec/Makefile     |   2 +-
+>  drivers/media/cec/i2c/Kconfig  |  14 +
+>  drivers/media/cec/i2c/Makefile |   5 +
+>  drivers/media/cec/i2c/ch7322.c | 503 +++++++++++++++++++++++++++++++++
+>  6 files changed, 525 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/media/cec/i2c/Kconfig
+>  create mode 100644 drivers/media/cec/i2c/Makefile
+>  create mode 100644 drivers/media/cec/i2c/ch7322.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c1c17ca17830..e2341eaaaf5e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4107,6 +4107,7 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media_tree.git
+>  F:	Documentation/devicetree/bindings/media/i2c/chontel,ch7322.yaml
+> +F:	drivers/media/cec/i2c/ch7322.c
+>  
+>  CIRRUS LOGIC AUDIO CODEC DRIVERS
+>  M:	James Schulman <james.schulman@cirrus.com>
+> diff --git a/drivers/media/cec/Kconfig b/drivers/media/cec/Kconfig
+> index 7e830444bdbb..9ba3a00dce31 100644
+> --- a/drivers/media/cec/Kconfig
+> +++ b/drivers/media/cec/Kconfig
+> @@ -33,6 +33,7 @@ menuconfig MEDIA_CEC_SUPPORT
+>  	  adapter that supports HDMI CEC.
+>  
+>  if MEDIA_CEC_SUPPORT
+> +source "drivers/media/cec/i2c/Kconfig"
+>  source "drivers/media/cec/platform/Kconfig"
+>  source "drivers/media/cec/usb/Kconfig"
+>  endif
+> diff --git a/drivers/media/cec/Makefile b/drivers/media/cec/Makefile
+> index 74e80e1b3571..23539339bc81 100644
+> --- a/drivers/media/cec/Makefile
+> +++ b/drivers/media/cec/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-y += core/ platform/ usb/
+> +obj-y += core/ i2c/ platform/ usb/
+> diff --git a/drivers/media/cec/i2c/Kconfig b/drivers/media/cec/i2c/Kconfig
+> new file mode 100644
+> index 000000000000..e445ca2110b3
+> --- /dev/null
+> +++ b/drivers/media/cec/i2c/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# I2C drivers
+> +
+> +config CEC_CH7322
+> +	tristate "Chrontel CH7322 CEC controller"
+> +	select I2C
+> +	select REGMAP_I2C
+> +	select CEC_CORE
+> +	help
+> +	  This is a driver for the Chrontel CH7322 CEC controller. It uses the
+> +	  generic CEC framework interface.
+> +	  CEC bus is present in the HDMI connector and enables communication
+> +	  between compatible devices.
+> diff --git a/drivers/media/cec/i2c/Makefile b/drivers/media/cec/i2c/Makefile
+> new file mode 100644
+> index 000000000000..d7496dfd0fa4
+> --- /dev/null
+> +++ b/drivers/media/cec/i2c/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for the CEC I2C device drivers.
+> +#
+> +obj-$(CONFIG_CEC_CH7322) += ch7322.o
+> diff --git a/drivers/media/cec/i2c/ch7322.c b/drivers/media/cec/i2c/ch7322.c
+> new file mode 100644
+> index 000000000000..4e6976a51774
+> --- /dev/null
+> +++ b/drivers/media/cec/i2c/ch7322.c
+> @@ -0,0 +1,503 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for the Chrontel CH7322 CEC Controller
+> + *
+> + * Copyright 2020 Google LLC.
+> + */
+> +
+> +/*
+> + * Notes
+> + *
+> + * - This device powers on in Auto Mode which has limited functionality. This
+> + *   driver disables Auto Mode when it attaches.
+> + *
+> + */
+> +
+> +#include <linux/cec.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <media/cec.h>
+> +
+> +#define CH7322_WRITE		0x00
+> +#define CH7322_WRITE_MSENT		0x80
+> +#define CH7322_WRITE_BOK		0x40
+> +#define CH7322_WRITE_NMASK		0x0f
+> +
+> +/* Write buffer is 0x01-0x10 */
+> +#define CH7322_WRBUF		0x01
+> +#define CH7322_WRBUF_LEN	0x10
+> +
+> +#define CH7322_READ		0x40
+> +#define CH7322_READ_NRDT		0x80
+> +#define CH7322_READ_MSENT		0x20
+> +#define CH7322_READ_NMASK		0x0f
+> +
+> +/* Read buffer is 0x41-0x50 */
+> +#define CH7322_RDBUF		0x41
+> +#define CH7322_RDBUF_LEN	0x10
+> +
+> +#define CH7322_MODE		0x11
+> +#define CH7322_MODE_AUTO		0x78
+> +#define CH7322_MODE_SW			0xb5
+> +
+> +#define CH7322_RESET		0x12
+> +#define CH7322_RESET_RST		0x00
+> +
+> +#define CH7322_POWER		0x13
+> +#define CH7322_POWER_FPD		0x04
+> +
+> +#define CH7322_CFG0		0x17
+> +#define CH7322_CFG0_EOBEN		0x40
+> +#define CH7322_CFG0_PEOB		0x20
+> +#define CH7322_CFG0_CLRSPP		0x10
+> +#define CH7322_CFG0_FLOW		0x08
+> +
+> +#define CH7322_CFG1		0x1a
+> +#define CH7322_CFG1_STDBYO		0x04
+> +#define CH7322_CFG1_HPBP		0x02
+> +#define CH7322_CFG1_PIO			0x01
+> +
+> +#define CH7322_INTCTL		0x1b
+> +#define CH7322_INTCTL_INTPB		0x80
+> +#define CH7322_INTCTL_STDBY		0x40
+> +#define CH7322_INTCTL_HPDFALL		0x20
+> +#define CH7322_INTCTL_HPDRISE		0x10
+> +#define CH7322_INTCTL_RXMSG		0x08
+> +#define CH7322_INTCTL_TXMSG		0x04
+> +#define CH7322_INTCTL_NEWPHA		0x02
+> +#define CH7322_INTCTL_ERROR		0x01
+> +
+> +#define CH7322_DVCLKFNH	0x1d
+> +#define CH7322_DVCLKFNL	0x1e
+> +
+> +#define CH7322_CTL		0x31
+> +#define CH7322_CTL_FSTDBY		0x80
+> +#define CH7322_CTL_PLSEN		0x40
+> +#define CH7322_CTL_PLSPB		0x20
+> +#define CH7322_CTL_SPADL		0x10
+> +#define CH7322_CTL_HINIT		0x08
+> +#define CH7322_CTL_WPHYA		0x04
+> +#define CH7322_CTL_H1T			0x02
+> +#define CH7322_CTL_S1T			0x01
+> +
+> +#define CH7322_PAWH		0x32
+> +#define CH7322_PAWL		0x33
+> +
+> +#define CH7322_ADDLW		0x34
+> +#define CH7322_ADDLW_MASK	0xf0
+> +
+> +#define CH7322_ADDLR		0x3d
+> +#define CH7322_ADDLR_HPD		0x80
+> +#define CH7322_ADDLR_MASK		0x0f
+> +
+> +#define CH7322_INTDATA		0x3e
+> +#define CH7322_INTDATA_MODE		0x80
+> +#define CH7322_INTDATA_STDBY		0x40
+> +#define CH7322_INTDATA_HPDFALL		0x20
+> +#define CH7322_INTDATA_HPDRISE		0x10
+> +#define CH7322_INTDATA_RXMSG		0x08
+> +#define CH7322_INTDATA_TXMSG		0x04
+> +#define CH7322_INTDATA_NEWPHA		0x02
+> +#define CH7322_INTDATA_ERROR		0x01
+> +
+> +#define CH7322_EVENT		0x3F
+> +#define CH7322_EVENT_TXERR		0x80
+> +#define CH7322_EVENT_HRST		0x40
+> +#define CH7322_EVENT_HFST		0x20
+> +#define CH7322_EVENT_PHACHG		0x10
+> +#define CH7322_EVENT_ACTST		0x08
+> +#define CH7322_EVENT_PHARDY		0x04
+> +#define CH7322_EVENT_BSOK		0x02
+> +#define CH7322_EVENT_ERRADCF		0x01
+> +
+> +#define CH7322_DID		0x51
+> +#define CH7322_DID_CH7322		0x5b
+> +#define CH7322_DID_CH7323		0x5f
+> +
+> +#define CH7322_REVISIONID	0x52
+> +
+> +#define CH7322_PARH		0x53
+> +#define CH7322_PARL		0x54
+> +
+> +#define CH7322_IOCFG2		0x75
+> +#define CH7322_IOCFG_CIO		0x80
+> +#define CH7322_IOCFG_IOCFGMASK		0x78
+> +#define CH7322_IOCFG_AUDIO		0x04
+> +#define CH7322_IOCFG_SPAMST		0x02
+> +#define CH7322_IOCFG_SPAMSP		0x01
+> +
+> +#define CH7322_CTL3		0x7b
+> +#define CH7322_CTL3_SWENA		0x80
+> +#define CH7322_CTL3_FC_INIT		0x40
+> +#define CH7322_CTL3_SML_FL		0x20
+> +#define CH7322_CTL3_SM_RDST		0x10
+> +#define CH7322_CTL3_SPP_CIAH		0x08
+> +#define CH7322_CTL3_SPP_CIAL		0x04
+> +#define CH7322_CTL3_SPP_ACTH		0x02
+> +#define CH7322_CTL3_SPP_ACTL		0x01
+> +
+> +/* BOK status means NACK */
+> +#define CH7322_TX_FLAG_NACK	BIT(0)
+> +/* Device will retry automatically */
+> +#define CH7322_TX_FLAG_RETRY	BIT(1)
+> +
+> +struct ch7322 {
+> +	struct i2c_client *i2c;
+> +	struct regmap *regmap;
+> +	struct cec_adapter *cec;
+> +	struct mutex mutex;	/* device access mutex */
+> +	u8 tx_flags;
+> +};
+> +
+> +static const struct regmap_config ch7322_regmap = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0x7f,
+> +	.disable_locking = true,
+> +
+> +};
+> +
+> +static int ch7322_send_message(struct ch7322 *ch7322, const struct cec_msg *msg)
+> +{
+> +	unsigned int val;
+> +	unsigned int len = msg->len;
+> +	int ret;
+> +	int i;
+> +
+> +	WARN_ON(!mutex_is_locked(&ch7322->mutex));
+> +
+> +	if (len > CH7322_WRBUF_LEN || len < 1)
+> +		return -EINVAL;
+> +
+> +	ret = regmap_read(ch7322->regmap, CH7322_WRITE, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Buffer not ready */
+> +	if (!(val & CH7322_WRITE_MSENT))
+> +		return -EBUSY;
+> +
+> +	if (cec_msg_opcode(msg) == -1 &&
+> +	    cec_msg_initiator(msg) == cec_msg_destination(msg)) {
+> +		ch7322->tx_flags = CH7322_TX_FLAG_NACK | CH7322_TX_FLAG_RETRY;
+> +	} else if (cec_msg_is_broadcast(msg)) {
+> +		ch7322->tx_flags = CH7322_TX_FLAG_NACK;
+> +	} else {
+> +		ch7322->tx_flags = CH7322_TX_FLAG_RETRY;
+> +	}
+> +
+> +	ret = regmap_write(ch7322->regmap, CH7322_WRITE, len - 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < len; i++) {
+> +		ret = regmap_write(ch7322->regmap,
+> +				   CH7322_WRBUF + i, msg->msg[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ch7322_receive_message(struct ch7322 *ch7322, struct cec_msg *msg)
+> +{
+> +	unsigned int val;
+> +	int ret = 0;
+> +	int i;
+> +
+> +	WARN_ON(!mutex_is_locked(&ch7322->mutex));
+> +
+> +	ret = regmap_read(ch7322->regmap, CH7322_READ, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Message not ready */
+> +	if (!(val & CH7322_READ_NRDT))
+> +		return -EIO;
+> +
+> +	msg->len = (val & CH7322_READ_NMASK) + 1;
+> +
+> +	/* Read entire RDBUF to clear state */
+> +	for (i = 0; i < CH7322_RDBUF_LEN; i++) {
+> +		ret = regmap_read(ch7322->regmap, CH7322_RDBUF + i, &val);
+> +		if (ret)
+> +			return ret;
+> +		msg->msg[i] = (u8)val;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void ch7322_tx_done(struct ch7322 *ch7322)
+> +{
+> +	int ret;
+> +	unsigned int val;
+> +	u8 status, flags;
+> +
+> +	mutex_lock(&ch7322->mutex);
+> +	ret = regmap_read(ch7322->regmap, CH7322_WRITE, &val);
+> +	flags = ch7322->tx_flags;
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	/*
+> +	 * The device returns a one-bit OK status which usually means ACK but
+> +	 * actually means NACK when sending a logical address query or a
+> +	 * broadcast.
+> +	 */
+> +	if (ret)
+> +		status = CEC_TX_STATUS_ERROR;
+> +	else if ((val & CH7322_WRITE_BOK) && (flags & CH7322_TX_FLAG_NACK))
+> +		status = CEC_TX_STATUS_NACK;
+> +	else if (val & CH7322_WRITE_BOK)
+> +		status = CEC_TX_STATUS_OK;
+> +	else if (flags & CH7322_TX_FLAG_NACK)
+> +		status = CEC_TX_STATUS_OK;
+> +	else
+> +		status = CEC_TX_STATUS_NACK;
+> +
+> +	if (status == CEC_TX_STATUS_NACK && (flags & CH7322_TX_FLAG_RETRY))
+> +		status |= CEC_TX_STATUS_MAX_RETRIES;
+> +
+> +	cec_transmit_attempt_done(ch7322->cec, status);
+> +}
+> +
+> +static void ch7322_rx_done(struct ch7322 *ch7322)
+> +{
+> +	struct cec_msg msg;
+> +	int ret;
+> +
+> +	mutex_lock(&ch7322->mutex);
+> +	ret = ch7322_receive_message(ch7322, &msg);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	if (ret)
+> +		dev_err(&ch7322->i2c->dev, "cec receive error: %d\n", ret);
+> +	else
+> +		cec_received_msg(ch7322->cec, &msg);
+> +}
+> +
+> +/*
+> + * This device can either monitor the DDC lines to obtain the physical address
+> + * or it can allow the host to program it. This driver lets the device obtain
+> + * it.
+> + */
+> +static void ch7322_phys_addr(struct ch7322 *ch7322)
+> +{
+> +	unsigned int pah, pal;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&ch7322->mutex);
+> +	ret |= regmap_read(ch7322->regmap, CH7322_PARH, &pah);
+> +	ret |= regmap_read(ch7322->regmap, CH7322_PARL, &pal);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	if (ret)
+> +		dev_err(&ch7322->i2c->dev, "phys addr error\n");
+> +	else
+> +		cec_s_phys_addr(ch7322->cec, pal | (pah << 8), false);
+> +}
+> +
+> +static void ch7322_handle_events(struct ch7322 *ch7322)
+> +{
+> +	unsigned int data = 0;
+> +
+> +	mutex_lock(&ch7322->mutex);
+> +	regmap_read(ch7322->regmap, CH7322_INTDATA, &data);
+> +	regmap_write(ch7322->regmap, CH7322_INTDATA, data);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	if (data & CH7322_INTDATA_HPDFALL)
+> +		cec_phys_addr_invalidate(ch7322->cec);
+> +
+> +	if (data & CH7322_INTDATA_TXMSG)
+> +		ch7322_tx_done(ch7322);
+> +
+> +	if (data & CH7322_INTDATA_RXMSG)
+> +		ch7322_rx_done(ch7322);
+> +
+> +	if (data & CH7322_INTDATA_NEWPHA)
+> +		ch7322_phys_addr(ch7322);
+> +
+> +	if (data & CH7322_INTDATA_ERROR)
+> +		dev_dbg(&ch7322->i2c->dev, "unknown error\n");
+> +}
+> +
+> +static irqreturn_t ch7322_irq(int irq, void *dev)
+> +{
+> +	struct ch7322 *ch7322 = dev;
+> +
+> +	ch7322_handle_events(ch7322);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/* This device is always enabled */
+> +static int ch7322_cec_adap_enable(struct cec_adapter *adap, bool enable)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int ch7322_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
+> +{
+> +	struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> +	int ret;
+> +
+> +	mutex_lock(&ch7322->mutex);
+> +	ret = regmap_update_bits(ch7322->regmap, CH7322_ADDLW,
+> +				 CH7322_ADDLW_MASK, log_addr << 4);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ch7322_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
+> +				    u32 signal_free_time, struct cec_msg *msg)
+> +{
+> +	struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> +	int ret;
+> +
+> +	mutex_lock(&ch7322->mutex);
+> +	ret = ch7322_send_message(ch7322, msg);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct cec_adap_ops ch7322_cec_adap_ops = {
+> +	.adap_enable = ch7322_cec_adap_enable,
+> +	.adap_log_addr = ch7322_cec_adap_log_addr,
+> +	.adap_transmit = ch7322_cec_adap_transmit,
+> +};
+> +
+> +static int ch7322_probe(struct i2c_client *client)
+> +{
+> +	struct ch7322 *ch7322;
+> +	int ret;
+> +	unsigned int val;
+> +
+> +	ch7322 = devm_kzalloc(&client->dev, sizeof(*ch7322), GFP_KERNEL);
+> +	if (!ch7322)
+> +		return -ENOMEM;
+> +
+> +	ch7322->regmap = devm_regmap_init_i2c(client, &ch7322_regmap);
+> +	if (IS_ERR(ch7322->regmap))
+> +		return PTR_ERR(ch7322->regmap);
+> +
+> +	ret = regmap_read(ch7322->regmap, CH7322_DID, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val != CH7322_DID_CH7322)
+> +		return -ENOTSUPP;
+> +
+> +	mutex_init(&ch7322->mutex);
+> +	ch7322->i2c = client;
+> +	ch7322->tx_flags = 0;
+> +
+> +	i2c_set_clientdata(client, ch7322);
+> +
+> +	/* Disable auto mode */
+> +	ret = regmap_write(ch7322->regmap, CH7322_MODE, CH7322_MODE_SW);
+> +	if (ret)
+> +		goto err_mutex;
+> +
+> +	/* Enable logical address register */
+> +	ret = regmap_update_bits(ch7322->regmap, CH7322_CTL,
+> +				 CH7322_CTL_SPADL, CH7322_CTL_SPADL);
+> +	if (ret)
+> +		goto err_mutex;
+> +
+> +	ch7322->cec = cec_allocate_adapter(&ch7322_cec_adap_ops, ch7322,
+> +					   dev_name(&client->dev),
+> +					   CEC_CAP_DEFAULTS, 1);
+> +
+> +	if (IS_ERR(ch7322->cec)) {
+> +		ret = PTR_ERR(ch7322->cec);
+> +		goto err_mutex;
+> +	}
+> +
+> +	ret = cec_register_adapter(ch7322->cec, &client->dev);
+> +	if (ret) {
+> +		cec_delete_adapter(ch7322->cec);
+> +		goto err_mutex;
+> +	}
+> +
+> +	/* Configure and mask interrupt */
+> +	ret = regmap_write(ch7322->regmap, CH7322_CFG1, 0);
+> +	if (ret)
+> +		goto err_cec;
+> +
+> +	ret = regmap_write(ch7322->regmap, CH7322_INTCTL, CH7322_INTCTL_INTPB);
+> +	if (ret)
+> +		goto err_cec;
+> +
+> +	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> +					ch7322_irq,
+> +					IRQF_ONESHOT | IRQF_TRIGGER_RISING,
+> +					client->name, ch7322);
+> +	if (ret)
+> +		goto err_cec;
+> +
+> +	ch7322_handle_events(ch7322);
+> +
+> +	/* Unmask interrupt */
+> +	mutex_lock(&ch7322->mutex);
+> +	ret = regmap_write(ch7322->regmap, CH7322_INTCTL, 0xff);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	if (ret)
+> +		goto err_cec;
+> +
+> +	dev_info(&client->dev, "device registered\n");
+> +
+> +	return 0;
+> +
+> +err_cec:
+> +	cec_unregister_adapter(ch7322->cec);
+> +
+> +err_mutex:
+> +	mutex_destroy(&ch7322->mutex);
+> +	return ret;
+> +}
+> +
+> +static int ch7322_remove(struct i2c_client *client)
+> +{
+> +	struct ch7322 *ch7322 = i2c_get_clientdata(client);
+> +
+> +	/* Mask interrupt */
+> +	mutex_lock(&ch7322->mutex);
+> +	regmap_write(ch7322->regmap, CH7322_INTCTL, CH7322_INTCTL_INTPB);
+> +	mutex_unlock(&ch7322->mutex);
+> +
+> +	cec_unregister_adapter(ch7322->cec);
+> +	mutex_destroy(&ch7322->mutex);
+> +
+> +	dev_info(&client->dev, "device unregistered\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ch7322_of_match[] = {
+> +	{ .compatible = "chrontel,ch7322", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ch7322_of_match);
+> +
+> +static struct i2c_driver ch7322_i2c_driver = {
+> +	.driver = {
+> +		.name = "ch7322",
+> +		.of_match_table = of_match_ptr(ch7322_of_match),
+> +	},
+> +	.probe_new	= ch7322_probe,
+> +	.remove		= ch7322_remove,
+> +};
+> +
+> +module_i2c_driver(ch7322_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("Chrontel CH7322 CEC Controller Driver");
+> +MODULE_AUTHOR("Jeff Chase <jnchase@google.com>");
+> +MODULE_LICENSE("GPL");
+> 
+
