@@ -2,61 +2,137 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD656C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5606EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8256206E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7AC206E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592447891;
+	bh=J2w+gquTMvhqzqlR0tLvqdneEX5xmKscX23mghhpHwU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P4N0ySOswnDZBUQMpXrDRY4ykd+W1nXb+/QyPb+o1uwu4HDAR+zgj6Xbcr4wZaVVh
+	 lqeJRttOGWKVQWij8ksUBvtYeRtYjGPREybuIKTxyAjx2Z/oiIuJ68G//ZxaM3/tlG
+	 fMIjKakW+8jsgnatVT7HxQXHWHA6KkaAHYa3+bRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgFRBNh (ORCPT
+        id S1729139AbgFRBNa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45354 "EHLO vps0.lunn.ch"
+        Wed, 17 Jun 2020 21:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgFRBNg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:36 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jlj7O-0012r4-Tx; Thu, 18 Jun 2020 03:13:26 +0200
-Date:   Thu, 18 Jun 2020 03:13:26 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v4 1/3] net: phy: mscc: move shared probe code into a
- helper
-Message-ID: <20200618011326.GA249144@lunn.ch>
-References: <20200617213326.1532365-1-heiko@sntech.de>
- <20200617213326.1532365-2-heiko@sntech.de>
+        id S1728892AbgFRBN3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32BBB21924;
+        Thu, 18 Jun 2020 01:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442809;
+        bh=J2w+gquTMvhqzqlR0tLvqdneEX5xmKscX23mghhpHwU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oJJvqkPe1ud1HW6xC4HoaXI0TJ95S8rxMD9tE9jzwJ/uiR6KCkVdFKqKGecF4VrPY
+         4IYPXTRqHeZe+c+tDtFnCXU2/kaCAZIggUcscMNBzAgBtB2/ElTt5FtumZ75P1mTim
+         q/Ea9arF3g8bRtW/tdcT6ncU7MMpTGHbZGH0D9Pw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 248/388] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
+Date:   Wed, 17 Jun 2020 21:05:45 -0400
+Message-Id: <20200618010805.600873-248-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617213326.1532365-2-heiko@sntech.de>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 11:33:24PM +0200, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> The different probe functions share a lot of code, so move the
-> common parts into a helper to reduce duplication.
-> 
-> This moves the devm_phy_package_join below the general allocation
-> but as all components just allocate things, this should be ok.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
 
-    Andrew
+Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+represent 64-bit resources.
+
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index f4ede86e32b4..3c928360f4ed 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1387,7 +1387,7 @@ pcie@14100000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1432,7 +1432,7 @@ pcie@14120000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1477,7 +1477,7 @@ pcie@14140000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1522,7 +1522,7 @@ pcie@14160000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1567,7 +1567,7 @@ pcie@14180000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1616,7 +1616,7 @@ pcie@141a0000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+-- 
+2.25.1
+
