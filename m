@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D622C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9EC020884
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF8020853
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446434;
-	bh=Z41N+cIfPZq6+16FIiby5DDwyV51obckIwKxYJuq+4g=;
+	s=default; t=1592446602;
+	bh=TogEAhgnlz9coIcwuqlwV9XAxrdprUke7v0OJQo1jR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2CqQPvQAgstyH4ql2ydSQkdk5h8itpFP19Ji8BQRf2NFvxzHla6fUP01Jkneu5usp
-	 WpHGxcwkGGqca9AF1nedXXDhsW31DiWlx5PdqG574Wkob34qFoj0wejwtPKZNh/+vj
-	 plOpwEaTS5pU0tZp37ZkBUrij6HxrmJ69Nz/SfUI=
+	b=IKQzonEbJA31MdG0KmBoj+dbaey1G4FH72xt+b83o+ojzLYj/AC4NMdJtX9krQ/Y+
+	 YxeNmy3+oXlKTcxwlBCRxEdIs/IrCF0ZlDvQpG1kLxUXkLW3S8XwaQq4frKf1ESj+v
+	 pD5lxE9/y5jEhUepDFIY31Aw/nxK5pQTOe1eeMGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbgFRCNt (ORCPT
+        id S2387556AbgFRCQh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730421AbgFRBU5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:57 -0400
+        id S1729313AbgFRBUO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C27E421927;
-        Thu, 18 Jun 2020 01:20:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3038E221F3;
+        Thu, 18 Jun 2020 01:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443257;
-        bh=Z41N+cIfPZq6+16FIiby5DDwyV51obckIwKxYJuq+4g=;
+        s=default; t=1592443214;
+        bh=TogEAhgnlz9coIcwuqlwV9XAxrdprUke7v0OJQo1jR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MpO/2vFNxXlDDrqgE81vbNOiazHkoJGq9GrUMlI1CPn8uEwA38QVmI6QOC8gcZoY
-         shaLueZyqtxUg++1npy3vuVMuQIfeiyBf4BWK5oSfCyJm1JLNGT0OW2t4csrFh9Fhv
-         jq5/2aYGJ7lp4+lZQJudrYUyLVH0Da8f5oPTOoMU=
+        b=do+N+GZbPFtwy0fCHP2vfvXhy8t2lYEmAgliCU+hG3tpV3sYOKMpTIxTxTalzHiYe
+         4GhVtBpzlLxSC/2lfFjEBNq+6GzpV43HNuFLVjITZJdgwKxUf8tgs7ry0FXP8uHl4b
+         naWe1IaiezVMgpxmeOrheuK/g0xryPmAiNSC4SCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 205/266] of: Fix a refcounting bug in __of_attach_node_sysfs()
-Date:   Wed, 17 Jun 2020 21:15:30 -0400
-Message-Id: <20200618011631.604574-205-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 170/266] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
+Date:   Wed, 17 Jun 2020 21:14:55 -0400
+Message-Id: <20200618011631.604574-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,43 +60,78 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 8a325dd06f2358ea0888e4ff1c9ca4bc23bd53f3 ]
+[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
 
-The problem in this code is that if kobject_add() fails, then it should
-call of_node_put(np) to drop the reference count.  I've actually moved
-the of_node_get(np) later in the function to avoid needing to do clean
-up.
+Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+represent 64-bit resources.
 
-Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/kobj.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index c72eef988041..a32e60b024b8 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -134,8 +134,6 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	if (!name)
- 		return -ENOMEM;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 457b815d57f4..2f3926719434 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1192,7 +1192,7 @@ pcie@14100000 {
  
--	of_node_get(np);
--
- 	rc = kobject_add(&np->kobj, parent, "%s", name);
- 	kfree(name);
- 	if (rc)
-@@ -144,6 +142,7 @@ int __of_attach_node_sysfs(struct device_node *np)
- 	for_each_property_of_node(np, pp)
- 		__of_add_property_sysfs(np, pp);
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
  
-+	of_node_get(np);
- 	return 0;
- }
+@@ -1238,7 +1238,7 @@ pcie@14120000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1284,7 +1284,7 @@ pcie@14140000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1330,7 +1330,7 @@ pcie@14160000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1376,7 +1376,7 @@ pcie@14180000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1426,7 +1426,7 @@ pcie@141a0000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
  
 -- 
 2.25.1
