@@ -2,119 +2,129 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79777C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8E0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDF420885
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8964420707
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="TiuuX/Sd"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WVz26Pwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbgFRMwA (ORCPT
+        id S1729709AbgFRNHP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730030AbgFRMvx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 08:51:53 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C22BC0613EE
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:53 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t194so5516838wmt.4
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+0u89dpmgvQy4plYwwslEmSBiru+bR25mmVExT9ZnYw=;
-        b=TiuuX/SdtqRxO1POZ1JiW5Hy2GFaKV93vyNQMVQOy5teZ9AgCJLGPSSnXyOmCDBEUz
-         bs6Q6tC8Q8QCv/hVDRI53LLBfuHJ/0nBs/NAsvTv4lmXuJhKByZy1gzQS8bGO4fwryaA
-         lHQYWy7p59e61ydNP0aYDMdjz2DklMtM/+9QBq7DYEpM9dsABml7vbZG10g//W1+YA1A
-         CxneXxP6sZGKnfhQIs+3Ua56kKThzmDJwIyivVu20LsjbQG6TnR3my9Jq+fI4SAKbUjW
-         C5XM251MVSf5ukXeYVaYERqX/D4WohOdPlT2zv+ly2ORU4yqREvY0CWUcgF+yV6Q1wgM
-         jEQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+0u89dpmgvQy4plYwwslEmSBiru+bR25mmVExT9ZnYw=;
-        b=NKgWr6EyN2QT2NF/Qbn6e4TNsHzBS7eLqutzaWxbbvlojw9JAOEZ+zMO5OscQZrEg/
-         qYOgl4pab+eFrB5nX9PB7JrMnI+/LpCAw5iaq/utOtMKBlvBlPaCEZssgplKbewIdfOC
-         Nvn+5V0W/ow3JwqU4ggNCz6BF8L20aMIg9hg46g4B4tLE7cN7ZwMck7KSov+Eei5ItAI
-         PlpUKU50ap/AkQwNhWh3/hvr7/+8GZJdpdK/KsVBdE/KGSHUBEBCmKM5n6C7wbEw+nyu
-         O3BPdiiHMBe/81uEN9ostOR5HbYzmv+qWvGIqRQEtKr+NOgHi9/XisROVpPjYjwhN11b
-         IcgA==
-X-Gm-Message-State: AOAM531L/KeWjpotJszMvD/lc5s0MHd442QEMxVPA0SZFcMZf+7EEqKr
-        ujdRV4HV87R3kTHWCNi/CCYPfw==
-X-Google-Smtp-Source: ABdhPJzZfibMUZiL+eVz9fIQNUlgeCf8L/u/t5OdsJBEcZqoBou07CPY4UPJL2CC9XruVrC+oYqBvg==
-X-Received: by 2002:a1c:ddc1:: with SMTP id u184mr3705202wmg.115.1592484712360;
-        Thu, 18 Jun 2020 05:51:52 -0700 (PDT)
-Received: from localhost.localdomain (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id v27sm3714151wrv.81.2020.06.18.05.51.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 05:51:51 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH 3/3] pinctrl: single: parse #pinctrl-cells = 2
-Date:   Thu, 18 Jun 2020 14:50:57 +0200
-Message-Id: <20200618125057.41252-4-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618125057.41252-1-drew@beagleboard.org>
-References: <20200618125057.41252-1-drew@beagleboard.org>
+        Thu, 18 Jun 2020 09:07:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57000 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728303AbgFRNHO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:07:14 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ID2ZvO030173;
+        Thu, 18 Jun 2020 15:07:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=Vziesq9T1Vwi7upsEQvfvn3cU0cCEod7h3VYJIhC8yg=;
+ b=WVz26PwolGQWQ6MfULl5J9dxPXVnVtSR10s6/VnqukL6XpgLwVtTIjcGdIShtqct/Zcl
+ sbPVRldel/J1tmJ7eD09KdcLXzIL/ysv64VJNkGznrZ+pSyGyGhpTHZkj0G+O3/MeuVY
+ YRF/AahQuUT+uAvlQftqrYm2xcEapDarXs2VXjq/OVIgh7q0eWVYs5XvAbKnoKx8SxKz
+ AcbnB2en62xFRFW6V96U3b89aLWyh6FANEXRebq5JWdSpPox81PNCiwasxZN/udGWrNL
+ VvFkYTFmpCugm6wXqtbgaHbNqUacbRjnOBrP7m1MNwu55JH+4N7LxfOav9k75w+6XMIP 5A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31q64cb3fv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 15:07:02 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E4367100039;
+        Thu, 18 Jun 2020 15:07:01 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6A452B8A0D;
+        Thu, 18 Jun 2020 15:07:01 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun 2020 15:07:01
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 4/5] ARM: dts: stm32: add uart7 support to stm32mp15xx-dkx boards
+Date:   Thu, 18 Jun 2020 15:06:50 +0200
+Message-ID: <20200618130651.29836-5-erwan.leray@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200618130651.29836-1-erwan.leray@st.com>
+References: <20200618130651.29836-1-erwan.leray@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_12:2020-06-18,2020-06-18 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
-pcs_parse_one_pinctrl_entry() does an OR operation on to get the
-value to store in the register.
+Adds uart7 node to stm32mp15xx-dkx and uart7 alias to stm32mp157a-dk1 and
+stm32mp157c-dk2 boards. uart7 pins are connected to Arduino connector.
+uart7 is disabled by default.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- drivers/pinctrl/pinctrl-single.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 02f677eb1d53..e6d1cf25782c 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -1017,10 +1017,17 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
- 			break;
- 		}
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index 65ee61b7667a..4c8be9c8eb20 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -19,6 +19,7 @@
+ 		ethernet0 = &ethernet0;
+ 		serial0 = &uart4;
+ 		serial1 = &usart3;
++		serial2 = &uart7;
+ 	};
  
--		/* Index plus one value cell */
- 		offset = pinctrl_spec.args[0];
- 		vals[found].reg = pcs->base + offset;
--		vals[found].val = pinctrl_spec.args[1];
+ 	chosen {
+diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+index fb690a817e28..ffbae4a8753d 100644
+--- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
++++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+@@ -20,6 +20,7 @@
+ 		ethernet0 = &ethernet0;
+ 		serial0 = &uart4;
+ 		serial1 = &usart3;
++		serial2 = &uart7;
+ 	};
+ 
+ 	chosen {
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index 243aa4b2063d..cfbe3e2afef2 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -591,6 +591,14 @@
+ 	status = "okay";
+ };
+ 
++&uart7 {
++	pinctrl-names = "default", "sleep", "idle";
++	pinctrl-0 = <&uart7_pins_c>;
++	pinctrl-1 = <&uart7_sleep_pins_c>;
++	pinctrl-2 = <&uart7_idle_pins_c>;
++	status = "disabled";
++};
 +
-+		switch (pinctrl_spec.args_count) {
-+		case 2:
-+			vals[found].val = pinctrl_spec.args[1];
-+			break;
-+		case 3:
-+			vals[found].val = (pinctrl_spec.args[1] | pinctrl_spec.args[2]);
-+			break;
-+		}
- 
- 		dev_dbg(pcs->dev, "%pOFn index: 0x%x value: 0x%x\n",
- 			pinctrl_spec.np, offset, pinctrl_spec.args[1]);
+ &usart3 {
+ 	pinctrl-names = "default", "sleep", "idle";
+ 	pinctrl-0 = <&usart3_pins_c>;
 -- 
-2.25.1
+2.17.1
 
