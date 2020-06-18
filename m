@@ -2,213 +2,304 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6792BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 21:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 21:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4484B208C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 21:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpdV418D"
+	by mail.kernel.org (Postfix) with ESMTP id 1FBE4208D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 21:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592516179;
+	bh=FdXArNlOB0a4SDD87jaMCdex3U6cqGK9MVm02lJxTSE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WMUb0RfyP/sfaWhi9h9DirhDr9Qs+OfRm5tAFiI7uPht83acHGYP4G/NZq9PEGZb2
+	 rdGFX+uVc6iuD6xJDmuvzCJp+i/w/EEnKpHQ0sz1Uzho8YMwIQtunVsqS0M6jSPhcV
+	 mXtiFMASHL+vgD+EEp7JKIxZQSsmAf7iHPhyNrjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbgFRVVu (ORCPT
+        id S1728036AbgFRVgS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgFRVVt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 17:21:49 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E47C06174E;
-        Thu, 18 Jun 2020 14:21:49 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g1so5979956edv.6;
-        Thu, 18 Jun 2020 14:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S00DplogylNiA0T4Pe75roWISOkz/iw7/rEJT8hejec=;
-        b=CpdV418D2hQQ6t/RwsOXzuKBkNmHAGVkqH5yLsCfZZz55gn3s3Gn/WS7WuW8jY7pGg
-         CHZWk7AXatPUDoZ0+DWQV4J/C2Nw7JdOzfbpsQTIp6hlct2IxFtZczS3L7jvNxyQyB8V
-         sBkW7/eVwOiyIo5qOkAsuuYBX/NxbiyU3Lx80/s/q93Z66i9Pc2h9eAUcB0Omrd0sSKJ
-         5x2FwWdcXSFg5lPAXT1BaVKH33c8U9tFypsdCp408Y9HRS6YGAUe+J7g1YTsFzTz+4Xi
-         8lfs1lvoxDS1DD8IWr001slLru0kB7AKSuA0+r8gG8Dvn434YNtsFCEstX83RTCT7eSF
-         WH4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S00DplogylNiA0T4Pe75roWISOkz/iw7/rEJT8hejec=;
-        b=RAQ5KfL5C7hghzyHCh0HaAhOzfK92glP8tr5tU4xwKVvkAzrpr+u/dGx55ia++13Xy
-         /Z2x9J4r0KyjHNlaHylS4cIqg4t2ADFKZaePERdWE1cP9Sgl09im4QOPJcNuKLKlbsV7
-         HYZjM7kmvHbrPOYIWoUPf81hi64+RqB68RPV7Y9Byw7IqrWl/4UTvBttg68UETMWpw8z
-         LmCaYVWrQ1quNI2j2QAUBKhh8qBtu9yxzXEkuNXJVj5UmdTEoDosPhOxoH2ImQzgqEir
-         DcHTJ0qYVsR91mxe7YboWfv4hDo/uYLUiuvuxaqoo+KGUv8w5JzO1Oc1vaxAV34StHMs
-         LHbg==
-X-Gm-Message-State: AOAM533HPrszmPTZdSocqZgXV7Rb6sPO+FhK0j69rhftHv2xHp4izGqp
-        mSxHWbkSEnA97qzq/0OSrUV/E89Q
-X-Google-Smtp-Source: ABdhPJwspAvjjYU4Nki8mod9pnSftP3TwRynoN/XZgkn5cZG9yobGJW3W/s2RhKWUcFLTZYxSuAGzg==
-X-Received: by 2002:aa7:da4f:: with SMTP id w15mr182828eds.384.1592515307830;
-        Thu, 18 Jun 2020 14:21:47 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:d835:117d:5af6:d9c? ([2a01:110f:b59:fd00:d835:117d:5af6:d9c])
-        by smtp.gmail.com with ESMTPSA id oq28sm3137415ejb.12.2020.06.18.14.21.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 14:21:47 -0700 (PDT)
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh@kernel.org
-Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
- <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
- <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
- <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
-Date:   Thu, 18 Jun 2020 23:21:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 17:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgFRVgS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 17:36:18 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41E55208C3;
+        Thu, 18 Jun 2020 21:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592516177;
+        bh=FdXArNlOB0a4SDD87jaMCdex3U6cqGK9MVm02lJxTSE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=beeDmxTP1FFdQ3fvaOLfntCXvqSjM3gB0ixl7YhxxFGB/mfix17N8JFG/UjJrYG3g
+         6lvMLng2x6l2hVHi2tl35XW4q49P4rxa2+1KBsca738X6+70/pLG9iaaG1wZ1qRCjB
+         pE40dTIfIrnvWuKQ4u6tseDX82wTkRlK6KDebxAc=
+Received: by mail-ot1-f53.google.com with SMTP id d4so5765447otk.2;
+        Thu, 18 Jun 2020 14:36:17 -0700 (PDT)
+X-Gm-Message-State: AOAM532zS7R+0gYIxgbdx09hosojqjOHhHvvWyqtSt+d0+QToo4G248w
+        FoC+KQeMdTNKx+QiSYN0LZzsDmhPYeSsivL1Cw==
+X-Google-Smtp-Source: ABdhPJyK9lNDKrCs4w4FjkehZE7UEcLoAPbiczZmKhA3RVLvDbYsghyBlmLbtquEkOgGmeQG/6IBs3D5jEV5pBdXu0Y=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr681576ots.192.1592516176577;
+ Thu, 18 Jun 2020 14:36:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200618202447.872851-1-robh@kernel.org> <20200618205922.GA89738@ravnborg.org>
+In-Reply-To: <20200618205922.GA89738@ravnborg.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 18 Jun 2020 15:36:05 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+dm-YRtTkQNbNh2JSD_qhf0Do9jP74wKp32=BYgOVRYQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+dm-YRtTkQNbNh2JSD_qhf0Do9jP74wKp32=BYgOVRYQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: Convert connectors to DT schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <mripard@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dan,
+On Thu, Jun 18, 2020 at 2:59 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Rob.
+>
+> On Thu, Jun 18, 2020 at 02:24:47PM -0600, Rob Herring wrote:
+> > Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
+> > format.
+> >
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> > Cc: Maxime Ripard <mripard@kernel.org>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > I put myself as maintainer, but would be happy if someone else was like
+> > one of the Cc'ed people.
+> I nominate Laurent for this....
+>
+> See some comments in the following.
+> Mostly related to required - I may have missed something.
+>
+>         Sam
+> >
+> >  .../display/connector/analog-tv-connector.txt | 31 --------
+> >  .../connector/analog-tv-connector.yaml        | 47 ++++++++++++
+> >  .../display/connector/dvi-connector.txt       | 36 ---------
+> >  .../display/connector/dvi-connector.yaml      | 75 +++++++++++++++++++
+> >  .../display/connector/hdmi-connector.txt      | 31 --------
+> >  .../display/connector/hdmi-connector.yaml     | 63 ++++++++++++++++
+> >  .../display/connector/vga-connector.txt       | 36 ---------
+> >  .../display/connector/vga-connector.yaml      | 42 +++++++++++
+> >  8 files changed, 227 insertions(+), 134 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+> > deleted file mode 100644
+> > index 883bcb2604c7..000000000000
+> > --- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
+> > +++ /dev/null
+> > @@ -1,31 +0,0 @@
+> > -Analog TV Connector
+> > -===================
+> > -
+> > -Required properties:
+> > -- compatible: "composite-video-connector" or "svideo-connector"
+> > -
+> > -Optional properties:
+> > -- label: a symbolic name for the connector
+> > -- sdtv-standards: limit the supported TV standards on a connector to the given
+> > -                  ones. If not specified all TV standards are allowed.
+> > -                  Possible TV standards are defined in
+> > -                  include/dt-bindings/display/sdtv-standards.h.
+> > -
+> > -Required nodes:
+> > -- Video port for TV input
+> > -
+> > -Example
+> > --------
+> > -#include <dt-bindings/display/sdtv-standards.h>
+> > -
+> > -tv: connector {
+> > -     compatible = "composite-video-connector";
+> > -     label = "tv";
+> > -     sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
+> > -
+> > -     port {
+> > -             tv_connector_in: endpoint {
+> > -                     remote-endpoint = <&venc_out>;
+> > -             };
+> > -     };
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
+> > new file mode 100644
+> > index 000000000000..d9ac42cb7e04
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
+> > @@ -0,0 +1,47 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/connector/analog-tv-connector.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog TV Connector
+> > +
+> > +maintainers:
+> > +  - Rob Herring <robh@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - composite-video-connector
+> > +      - svideo-connector
+> > +
+> > +  label: true
+> > +
+> > +  sdtv-standards:
+> > +    description: Limit the supported TV standards on a connector to the given
+> > +      ones. If not specified all TV standards are allowed. Possible TV
+> > +      standards are defined in include/dt-bindings/display/sdtv-standards.h.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  port:
+> > +    description: Connection to controller providing analog TV signals
+> required:
+>   - compatible
+>   - port
+>
+> ??
 
-On 6/18/20 12:33 AM, Dan Murphy wrote:
-> Jacek
-> 
-> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 6/17/20 9:22 PM, Dan Murphy wrote:
->>> Pavel/Jacek
->>>
->>> On 6/17/20 11:28 AM, kernel test robot wrote:
->>>> Hi Dan,
->>>>
->>>> I love your patch! Yet something to improve:
->>>>
->>>> [auto build test ERROR on pavel-linux-leds/for-next]
->>>> [cannot apply to j.anaszewski-leds/for-next]
->>>> [if your patch is applied to the wrong git tree, please drop us a 
->>>> note to help
->>>> improve the system. BTW, we also suggest to use '--base' option to 
->>>> specify the
->>>> base tree in git format-patch, please see 
->>>> https://stackoverflow.com/a/37406982]
->>>>
->>>> url: 
->>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
->>>>
->>>> base: 
->>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
->>>> for-next
->>>> config: ia64-randconfig-r015-20200617 (attached as .config)
->>>> compiler: ia64-linux-gcc (GCC) 9.3.0
->>>> reproduce (this is a W=1 build):
->>>>          wget 
->>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->>>> -O ~/bin/make.cross
->>>>          chmod +x ~/bin/make.cross
->>>>          # save the attached .config to linux build tree
->>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
->>>> make.cross ARCH=ia64
->>>>
->>>> If you fix the issue, kindly add following tag as appropriate
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>
->>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>>>
->>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>>> `lp55xx_set_mc_brightness':
->>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
->>>>>> `led_mc_calc_color_components'
->>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>>> `devm_led_classdev_multicolor_register':
->>>>>> include/linux/led-class-multicolor.h:74: undefined reference to 
->>>>>> `devm_led_classdev_multicolor_register_ext'
->>>> vim +146 drivers/leds/leds-lp55xx-common.c
->>>>
->>>>     138
->>>>     139    static int lp55xx_set_mc_brightness(struct led_classdev 
->>>> *cdev,
->>>>     140                        enum led_brightness brightness)
->>>>     141    {
->>>>     142        struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
->>>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->>>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
->>>>     145
->>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
->>>>     147        return cfg->multicolor_brightness_fn(led);
->>>>     148
->>>
->>> Well this was a mess to figure out.
->>>
->>> The only fix I can figure out here is to remove the
->>>
->>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>>
->>> from each child device and add
->>>
->>>      select LEDS_CLASS_MULTI_COLOR
->>>
->>> to the LP55XX_COMMON
->>>
->>> This way the Multi color framework will inherit the symbol that was 
->>> set by the COMMON flag which is inherited by majority from the child 
->>> flags.
->>
->> Did you try this?
->>
->> --- a/drivers/leds/Kconfig
->> +++ b/drivers/leds/Kconfig
->> @@ -398,6 +398,7 @@ config LEDS_LP50XX
->>  config LEDS_LP55XX_COMMON
->>         tristate "Common Driver for TI/National 
->> LP5521/5523/55231/5562/8501"
->>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
->> LEDS_LP8501
->> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>         depends on OF
->>         select FW_LOADER
->>         select FW_LOADER_USER_HELPER
->>
->>
-> Yes I did
-> 
-> That gave unmet dependencies.
-> 
-> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
->    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || LEDS_LP5523 
-> [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && (LEDS_CLASS_MULTI_COLOR 
-> [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && OF [=y]
->    Selected by [y]:
->    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
->    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
->    Selected by [m]:
->    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y] && 
-> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
-> 
+compatible is implicitly required as that has to be there to match on.
+So if it was the only thing, I just omitted it. Maybe better to just
+list it.
 
-When I was testing that yesterday I also had the same warning at some
-point of testing different Kconfig setups, but with what I showed above
-it ceased to appear. Now every time I am doing "make oldconfig" the
-CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
-from the test bot.
+I was thinking port is optional on all these as it could just be the
+parent node.
 
--- 
-Best regards,
-Jacek Anaszewski
+>
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/display/sdtv-standards.h>
+> > +
+> > +    connector {
+> > +      compatible = "composite-video-connector";
+> > +      label = "tv";
+> > +      sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
+> > +
+> > +      port {
+> > +        tv_connector_in: endpoint {
+> > +          remote-endpoint = <&venc_out>;
+> > +        };
+> > +      };
+> > +    };
+> My personal preference is 4 space indent.
+> Easier to read for me.
+
+Sure.
+
+> But we discussed this before - would be good
+> with a recommendation so we know what to expect.
+
+I don't really care until we have a way to automatically check it.
+Then it will be the Law.
+
+>
+> Oh, and example-schema uses 6 spaces :-(
+
+Humm...
+
+> > +
+> > +...
+> > diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
+> > deleted file mode 100644
+> > index 207e42e9eba0..000000000000
+> > --- a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
+> > +++ /dev/null
+> > @@ -1,36 +0,0 @@
+> > -DVI Connector
+> > -==============
+> > -
+> > -Required properties:
+> > -- compatible: "dvi-connector"
+> > -
+> > -Optional properties:
+> > -- label: a symbolic name for the connector
+> > -- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
+> > -- analog: the connector has DVI analog pins
+> > -- digital: the connector has DVI digital pins
+> > -- dual-link: the connector has pins for DVI dual-link
+> > -- hpd-gpios: HPD GPIO number
+> > -
+> > -Required nodes:
+> > -- Video port for DVI input
+> > -
+> > -Note: One (or both) of 'analog' or 'digital' must be set.
+> > -
+> > -Example
+> > --------
+> > -
+> > -dvi0: connector@0 {
+> > -     compatible = "dvi-connector";
+> > -     label = "dvi";
+> > -
+> > -     digital;
+> > -
+> > -     ddc-i2c-bus = <&i2c3>;
+> > -
+> > -     port {
+> > -             dvi_connector_in: endpoint {
+> > -                     remote-endpoint = <&tfp410_out>;
+> > -             };
+> > -     };
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
+> > new file mode 100644
+> > index 000000000000..aaf61bce64ca
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
+> > @@ -0,0 +1,75 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/connector/dvi-connector.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: DVI Connector
+> > +
+> > +maintainers:
+> > +  - Rob Herring <robh@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: dvi-connector
+> > +
+> > +  type:
+> > +    description: The HDMI connector type
+> > +    enum:
+> > +      - a   # Standard full size
+> > +      - b   # Never deployed?
+> > +      - c   # Mini
+> > +      - d   # Micro
+> > +      - e   # automotive
+> type looks like something that was copied from another binding.
+> It is not part of the .txt binding.
+
+Err, copy-n-paste from hdmi...
+
+Rob
