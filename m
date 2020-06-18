@@ -2,109 +2,185 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69240C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CCBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435AF20897
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="l5f/pokG"
+	by mail.kernel.org (Postfix) with ESMTP id 0D3B1207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgFRNHc (ORCPT
+        id S1730150AbgFRN23 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:07:32 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27214 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730077AbgFRNHX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:07:23 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ID4Ihk012640;
-        Thu, 18 Jun 2020 15:07:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Q6db3X4dxlS6qvbPYnAd4zoz3ZPexCGcUlqOVKKA23Y=;
- b=l5f/pokGAVl0Lj4IK20biU6p2wz2JLJBZGY0PTKzqWBZ37o1f0X4TIwOZbe0AGuvZEW/
- M2q1Ty7x1UxAaqduanZNnbOek4PHbFLwuH1mMtbcI+tHmrsTdYJLt+9IR0ZVGqO2gLaO
- UN6Hdz9cqpg/vJsN95nE5GtR2sKc3gVYVMJVr569Iob19AzWsiWKaZ+PkMyRoOehOi0d
- VOTLl1KOHD/08bd6aAQY4qkQNESKGCBx2DvL3QY0jc5TQ7JmXGogID4AUbQ2+mOTTmBh
- DjDNNEd9/N86vXIyqdt1gQhnSXW7jl2xB+GdnOqxWXqLD8V4SmxnpOdkG/WopEeFO50d MQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31q64ak3hx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 15:07:03 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A6BD9100038;
-        Thu, 18 Jun 2020 15:07:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9A25B2B8A0D;
-        Thu, 18 Jun 2020 15:07:02 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun 2020 15:07:02
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Erwan Le Ray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 5/5] ARM: dts: stm32: add usart2 node to stm32mp157c-dk2
-Date:   Thu, 18 Jun 2020 15:06:51 +0200
-Message-ID: <20200618130651.29836-6-erwan.leray@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200618130651.29836-1-erwan.leray@st.com>
-References: <20200618130651.29836-1-erwan.leray@st.com>
+        Thu, 18 Jun 2020 09:28:29 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46684 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbgFRN22 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:28:28 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jluac-0017L3-KI; Thu, 18 Jun 2020 15:28:22 +0200
+Date:   Thu, 18 Jun 2020 15:28:22 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some
+ phy variants
+Message-ID: <20200618132822.GN249144@lunn.ch>
+References: <20200618121139.1703762-1-heiko@sntech.de>
+ <20200618121139.1703762-4-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-18_12:2020-06-18,2020-06-18 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618121139.1703762-4-heiko@sntech.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds the usart2 node to stm32mp157c-dk2 board. usart2 pins are connected
-to Bluetooth component. usart2 is disabled by default.
+On Thu, Jun 18, 2020 at 02:11:39PM +0200, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> At least VSC8530/8531/8540/8541 contain a clock output that can emit
+> a predefined rate of 25, 50 or 125MHz.
+> 
+> This may then feed back into the network interface as source clock.
+> So expose a clock-provider from the phy using the common clock framework
+> to allow setting the rate.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  drivers/net/phy/mscc/mscc.h      |  13 +++
+>  drivers/net/phy/mscc/mscc_main.c | 182 +++++++++++++++++++++++++++++--
+>  2 files changed, 187 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+> index fbcee5fce7b2..94883dab5cc1 100644
+> --- a/drivers/net/phy/mscc/mscc.h
+> +++ b/drivers/net/phy/mscc/mscc.h
+> @@ -218,6 +218,13 @@ enum rgmii_clock_delay {
+>  #define INT_MEM_DATA_M			  0x00ff
+>  #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
+>  
+> +#define MSCC_CLKOUT_CNTL		  13
+> +#define CLKOUT_ENABLE			  BIT(15)
+> +#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
+> +#define CLKOUT_FREQ_25M			  (0x0 << 13)
+> +#define CLKOUT_FREQ_50M			  (0x1 << 13)
+> +#define CLKOUT_FREQ_125M		  (0x2 << 13)
+> +
+>  #define MSCC_PHY_PROC_CMD		  18
+>  #define PROC_CMD_NCOMPLETED		  0x8000
+>  #define PROC_CMD_FAILED			  0x4000
+> @@ -360,6 +367,12 @@ struct vsc8531_private {
+>  	 */
+>  	unsigned int base_addr;
+>  
+> +#ifdef CONFIG_COMMON_CLK
+> +	struct clk_hw clkout_hw;
+> +#endif
+> +	u32 clkout_rate;
+> +	int clkout_enabled;
+> +
+>  #if IS_ENABLED(CONFIG_MACSEC)
+>  	/* MACsec fields:
+>  	 * - One SecY per device (enforced at the s/w implementation level)
+> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+> index 5d2777522fb4..727a9dd58403 100644
+> --- a/drivers/net/phy/mscc/mscc_main.c
+> +++ b/drivers/net/phy/mscc/mscc_main.c
+> @@ -7,6 +7,7 @@
+>   * Copyright (c) 2016 Microsemi Corporation
+>   */
+>  
+> +#include <linux/clk-provider.h>
+>  #include <linux/firmware.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+> @@ -431,7 +432,6 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+>  
+>  	return led_mode;
+>  }
+> -
+>  #else
+>  static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+>  {
+> @@ -1508,6 +1508,43 @@ static int vsc85xx_config_init(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> +static int vsc8531_config_init(struct phy_device *phydev)
+> +{
+> +	struct vsc8531_private *vsc8531 = phydev->priv;
+> +	u16 val;
+> +	int rc;
+> +
+> +	rc = vsc85xx_config_init(phydev);
+> +	if (rc)
+> +		return rc;
+> +
+> +#ifdef CONFIG_COMMON_CLK
+> +	switch (vsc8531->clkout_rate) {
+> +	case 25000000:
+> +		val = CLKOUT_FREQ_25M;
+> +		break;
+> +	case 50000000:
+> +		val = CLKOUT_FREQ_50M;
+> +		break;
+> +	case 125000000:
+> +		val = CLKOUT_FREQ_125M;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (vsc8531->clkout_enabled)
+> +		val |= CLKOUT_ENABLE;
+> +
+> +	rc = phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
+> +			     MSCC_CLKOUT_CNTL, val);
+> +	if (rc)
+> +		return rc;
+> +#endif
+> +
+> +	return 0;
+> +}
+> +
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+> +static int vsc8531_clkout_prepare(struct clk_hw *hw)
+> +{
+> +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
+> +
+> +	vsc8531->clkout_enabled = true;
+> +	return 0;
+> +}
+> +
+> +static void vsc8531_clkout_unprepare(struct clk_hw *hw)
+> +{
+> +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
+> +
+> +	vsc8531->clkout_enabled = false;
+> +}
+> +
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index ffbae4a8753d..045636555ddd 100644
---- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-@@ -21,6 +21,7 @@
- 		serial0 = &uart4;
- 		serial1 = &usart3;
- 		serial2 = &uart7;
-+		serial3 = &usart2;
- 	};
- 
- 	chosen {
-@@ -86,3 +87,11 @@
- 		};
- 	};
- };
-+
-+&usart2 {
-+	pinctrl-names = "default", "sleep", "idle";
-+	pinctrl-0 = <&usart2_pins_c>;
-+	pinctrl-1 = <&usart2_sleep_pins_c>;
-+	pinctrl-2 = <&usart2_idle_pins_c>;
-+	status = "disabled";
-+};
--- 
-2.17.1
+> +static const struct clk_ops vsc8531_clkout_ops = {
+> +	.prepare = vsc8531_clkout_prepare,
+> +	.unprepare = vsc8531_clkout_unprepare,
+> +	.is_prepared = vsc8531_clkout_is_prepared,
+> +	.recalc_rate = vsc8531_clkout_recalc_rate,
+> +	.round_rate = vsc8531_clkout_round_rate,
+> +	.set_rate = vsc8531_clkout_set_rate,
 
+I'm not sure this is the expected behaviour. The clk itself should
+only start ticking when the enable callback is called. But this code
+will enable the clock when config_init() is called. I think you should
+implement the enable and disable methods.
+
+	  Andrew
