@@ -2,234 +2,95 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AE2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3984C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1E3207E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9836B2083B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592505202;
-	bh=Wa43T7w4Pf81pk4qHW8JXP2v08fY04xx7ru8epXTzJg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HanKU1nF4v1wdkCysAA0epxDz8jRQA46yk7io4fbOGnaBnoJBmt0zMFARANBJVUQ4
-	 aY4ksw+gI3rs0Q9OPTZkJI1nG02QhtSHLV0BHFZK7PoTf2aqwtbdkuG+7t+8DSYjy1
-	 rh3fpZMLjT9FZq9aU2y+Au6xeSulUcEyBP2Bh5T0=
+	s=default; t=1592505424;
+	bh=IHSg7lrBwuQ14jZuv3YABsiAz3/2MFfyoMLk+VJ10Yo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kjrHXXC1LU6pqVBkJF9cINzzVeJwfVQF6I0kARO2ThSuAq9v+xYh/FlzMlsGzxUPc
+	 PUJn+1cBSErWcZ276+ozUjkGl/Q5WmDtoTwnI4k90owjUzLClfdp15FFr88Xdg+dA2
+	 RbOART8oLaL7fERCrKwDkIMLK/hE7ycyq/UC5ij4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbgFRSdV (ORCPT
+        id S1728171AbgFRShE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:33:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgFRSdU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:33:20 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC1F20DD4;
-        Thu, 18 Jun 2020 18:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592505199;
-        bh=Wa43T7w4Pf81pk4qHW8JXP2v08fY04xx7ru8epXTzJg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ecX5Ld1C7sjO0SKydvTx6QgyY74RFFqkiWnwMkxD4jX71EmRFAZbRf1SerGyIli3R
-         RZl95VzhTjcClNC29YOwPoiGgk7m7vhs8a1gruUkjU0bfitz0O1/8qARf5cXGIDbju
-         zjjHj9YihPIoZu0HkGVQjpeneXBfdHEM4Q05d4L8=
-Received: by mail-ot1-f44.google.com with SMTP id v13so5345603otp.4;
-        Thu, 18 Jun 2020 11:33:19 -0700 (PDT)
-X-Gm-Message-State: AOAM532oj0Lz6d7z6RBJL/UzqyzCpdjBDjNcid6/gwdCeNKAPD6q5QkG
-        QIjrSJprmw2HlEW2TPUUP32f/F4UWI1LwwnhrA==
-X-Google-Smtp-Source: ABdhPJx+Rb+JwD1PIWMOTJ6UqjOwSRAy1TpYrAkSXPkBhtxEkdRG5n3IX0zx8pWKa9xRNHPUxS5L8u5iKcFIdAX3nNk=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr68860ots.192.1592505199060;
- Thu, 18 Jun 2020 11:33:19 -0700 (PDT)
+        Thu, 18 Jun 2020 14:37:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38879 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgFRShD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 14:37:03 -0400
+Received: by mail-io1-f65.google.com with SMTP id h4so590595ior.5;
+        Thu, 18 Jun 2020 11:37:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wygYqTNT6G3QvAJfF7oyk+ZOc5oZNOBZOOgIykuzly8=;
+        b=unuRsbLiDXvXXT4IYidu/5EkWcPMQFSxjt5hnnLEKBV5bIJwNGn3CpjiuJhFC9r4QU
+         7p1OVF0/JU5gpuccqE77VqIn1PUeQEFm/Ws3yuybb/jOAyuEGycCSvUFSk9I5NHsj3UD
+         udWG3BEH+IRvy1R7s0f12EfqJ4AvRnmBlea4OzIGB9KJPmdzHjlyrAdqAnjcgrWFsIEU
+         9mSVZ2koLW96gpFhhgCtGGW/axwnhEEdzIhI1O6LL1eJt8xI8ZBTFiYloGyILdBqz2uU
+         6IZXcLvjY0fAQkQqnlMtYx891zqN+qEZUcYLrcgYEqDzTHCsnDNWjh6rqZYXUFr1rM59
+         QCtA==
+X-Gm-Message-State: AOAM53043od1TP61ZvFsiqL1DegUmM6l7Wp0wuSdzVd94XwW69O0mmbT
+        r3358PgRij8v0sbcHSpv8A==
+X-Google-Smtp-Source: ABdhPJx7xeR3+HQ8b4NxOi/J+ZFJIhmbXIg3/1OQ2uZoV0cZx8iWwPc1ZPoV9VCjHN+gnoYYhdUOlw==
+X-Received: by 2002:a02:844d:: with SMTP id l13mr5723498jah.105.1592505422376;
+        Thu, 18 Jun 2020 11:37:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id b8sm2065295ior.35.2020.06.18.11.37.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 11:37:01 -0700 (PDT)
+Received: (nullmailer pid 679615 invoked by uid 1000);
+        Thu, 18 Jun 2020 18:36:59 -0000
+Date:   Thu, 18 Jun 2020 12:36:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     linux-gpio@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Guo Ren <guoren@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1] doc: devicetree: bindings: fix spelling mistake
+Message-ID: <20200618183659.GA679453@bogus>
+References: <20200615075835.15202-1-f.suligoi@asem.it>
 MIME-Version: 1.0
-References: <20200617180209.5636-1-wcheng@codeaurora.org> <20200617180209.5636-3-wcheng@codeaurora.org>
-In-Reply-To: <20200617180209.5636-3-wcheng@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 18 Jun 2020 12:33:07 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com>
-Message-ID: <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
- controller dt-binding
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jack Pham <jackp@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Jun Li <lijun.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615075835.15202-1-f.suligoi@asem.it>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 12:02 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
->
-> Introduce the dt-binding for enabling USB type C orientation and role
-> detection using the PM8150B.  The driver will be responsible for receiving
-> the interrupt at a state change on the CC lines, reading the orientation/role,
-> and communicating this information to the remote clients, which can include
-> a role switch node and a type C switch.
->
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+On Mon, 15 Jun 2020 09:58:35 +0200, Flavio Suligoi wrote:
+> Fix typo: "triger" --> "trigger"
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> Acked-by: Guo Ren <guoren@kernel.org>
 > ---
->  .../bindings/usb/qcom,pmic-typec.yaml         | 117 ++++++++++++++++++
->  1 file changed, 117 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
->
-> diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> new file mode 100644
-> index 000000000000..085b4547d75a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
-> @@ -0,0 +1,117 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm PMIC based USB type C Detection Driver
-> +
-> +maintainers:
-> +  - Wesley Cheng <wcheng@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm PMIC Type C Detect
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,pm8150b-usb-typec
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Type C base address
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: CC change interrupt from PMIC
-> +
-> +  connector:
-> +    description: Connector type for remote endpoints
-> +    type: object
+> 
+> v1: add Acked-by: Guo Ren <guoren@kernel.org>
+> 
+>  Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
+>  .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
+>  Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
 
-You are duplicating everything in usb-connector.yaml. You should have
-a $ref to it.
-
-> +
-> +    properties:
-> +      compatible:
-> +        enum:
-> +          - usb-c-connector
-> +
-> +      power-role:
-> +       enum:
-> +         - dual
-> +         - source
-> +         - sink
-> +
-> +      data-role:
-> +        enum:
-> +          - dual
-> +          - host
-> +          - device
-> +
-> +      port:
-> +        description: Remote endpoint connections
-> +        type: object
-> +
-> +        properties:
-> +          endpoint@0:
-> +            description: Connection to USB type C mux node
-
-This is wrong. The connector binding says port 0 is the connection the
-USB HS controller.
-
-What's a type C mux node? Is there a binding for that? There's an
-ongoing discussion with the CrOS folks on how to describe Alt mode
-mux/switches.
-
-> +            type: object
-> +
-> +            properties:
-> +              remote-endpoint:
-> +                maxItems: 1
-> +                description: Node reference to the type C mux
-> +
-> +          endpoint@1:
-> +            description: Connection to role switch node
-
-Again, what's this?
-
-> +            type: object
-> +
-> +            properties:
-> +              remote-endpoint:
-> +                maxItems: 1
-> +                description: Node reference to the role switch node
-> +
-> +    required:
-> +      - compatible
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - connector
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    pm8150b {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        qcom,typec@1500 {
-> +            compatible = "qcom,pm8150b-usb-typec";
-> +            reg = <0x1500>;
-> +            interrupts =
-> +                <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
-> +
-> +            connector {
-> +                compatible = "usb-c-connector";
-> +                power-role = "dual";
-> +                data-role = "dual";
-> +                port {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +                    usb3_data_ss: endpoint@0 {
-> +                        reg = <0>;
-> +                        remote-endpoint =
-> +                                <&qmp_ss_mux>;
-> +                    };
-> +
-> +                    usb3_role: endpoint@1 {
-> +
-> +                        reg = <1>;
-> +                        remote-endpoint =
-> +                                <&dwc3_drd_switch>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+Applied, thanks!
