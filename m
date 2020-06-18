@@ -2,155 +2,79 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DF8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01001C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A47212CC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C359321548
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 07:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592465672;
+	bh=bEC66nH8uZxGBs2rC/8tpmwdwNE+LS0BOwxCUu2uoG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BBQICxF6VQrFw24EPvwgdd+zp89zR097ihfpGU0NrqpErYVeeW07Sewd4rzHezxH1
+	 MfYer5dRSOo4lbcEeYG0ca70LxhtnpelViTP6jWosqLe9dEf2sFbomIHUiDYhWabL2
+	 d/stZFZ4jraxQ+G5atSOc5y+fhHYaG9ohCZy3z8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgFRHcK (ORCPT
+        id S1727010AbgFRHec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:32:10 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41656 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728096AbgFRHcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 03:32:10 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k15so3780769otp.8;
-        Thu, 18 Jun 2020 00:32:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KEd1sSUwdgNZZk5MhGirM5YmWviEJTOtC4NnWjH7dvs=;
-        b=JgZzxUhwYl2Oo1Y5a2+Y8lVtmKr9ba0dl2S8Zr8HxiIv19FlMPOI/N2pMb/eaC0oSf
-         4tjY8OFZld1MeXJWrYXQMp4yqSVfzZe+anLZPoZuhuEbcpD+C8mZ5qO81nCXFAWDg0qZ
-         1s/bQRuMNuJ4Dhp1CqM+P9W1E1b3IvZ07wxESuve4RkOmcqK1OxnffOkQa0gNYKzZVyJ
-         qMDtDgsktFDJeFdYwsod29Eo3gskFSLBOZahCRREVDgaKLCwV5Kb2PdH3wiurEvckN53
-         w4+FvBhLiwcvAkbKdrkQUpDyjOh25LOe+g1VKMk9S89/v06ORulhpd0/IrAAKJtejhvX
-         +d1w==
-X-Gm-Message-State: AOAM530dKxiQ2n7T9rraLR9cfskMnXTu0TYjhq65MePO0KXNXFZsiIDK
-        jG4y5Z9RxUBzf0BTLNtbdWpDIpnUZKj9EULsmXU0eU6c
-X-Google-Smtp-Source: ABdhPJzv7NazxpQziK4ICo68wZfq8CFtvcli0G2OvLQydZwJFlaOxvB3Z1eIrjApn1tJkAreg7GGVY1NGQagEfYp5l0=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr2368151otp.250.1592465527028;
- Thu, 18 Jun 2020 00:32:07 -0700 (PDT)
+        Thu, 18 Jun 2020 03:34:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727812AbgFRHea (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:34:30 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C749421548;
+        Thu, 18 Jun 2020 07:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592465670;
+        bh=bEC66nH8uZxGBs2rC/8tpmwdwNE+LS0BOwxCUu2uoG8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=esE3gT0WCOAF3EwvdaIE2d4NeW0f9Do5pdZRhB0v68ja2WyD9FmEVe0gPl1UGJ4Wg
+         JB71y6g9AOTC056v6WK+2+LiV28kxPrH3xriYvPSnKr6OoSuT/d5MZ3bomRJ4TrcjC
+         kOn8C+FNivEdEnr52+ASEz9LFKgM7IaOpwqStR1c=
+Date:   Thu, 18 Jun 2020 15:34:24 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        anson.huang@nxp.com, peng.fan@nxp.com, leonard.crestez@nxp.com,
+        aisheng.dong@nxp.com, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage
+ range
+Message-ID: <20200618073423.GF30139@dragon>
+References: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
- <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com> <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
-In-Reply-To: <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 18 Jun 2020 09:31:55 +0200
-Message-ID: <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
- top level devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590144291-18526-1-git-send-email-yibin.gong@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Saravana,
+On Fri, May 22, 2020 at 06:44:50PM +0800, Robin Gong wrote:
+> Correct ldo1 voltage range from wrong high group(3.0V~3.3V) to low group
+> (1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
+> have been supported at bd718x7-regulator driver, hence, just corrrect the
+> voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
+> Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mm
+> datasheet as the below warning log in kernel:
+> 
+> [    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+> [    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
+> 
+> Fixes: 78cc25fa265d ("arm64: dts: imx8mm-evk: Add BD71847 PMIC")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-On Wed, Jun 17, 2020 at 8:36 PM Saravana Kannan <saravanak@google.com> wrote:
-> On Wed, Jun 17, 2020 at 5:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Fri, May 15, 2020 at 7:38 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
-> > > parsing of the device tree nodes when a lot of devices are added. This
-> > > will significantly cut down parsing time (as much a 1 second on some
-> > > systems). So, use them when adding devices for all the top level device
-> > > tree nodes in a system.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > This is now commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing
-> > when adding all top level devices") in v5.8-rc1, and I have bisected a
-> > regression to it: on r8a7740/armadillo and sh73a0/kzm9g, the system can
-> > no longer be woken up from s2ram by a GPIO key. Reverting the commit
-> > fixes the issue.
-> >
-> > On these systems, the GPIO/PFC block has its interrupt lines connected
-> > to intermediate interrupt controllers (Renesas INTC), which are in turn
-> > connected to the main interrupt controller (ARM GIC).  The INTC block is
-> > part of a power and clock domain.  Hence if a GPIO is enabled as a
-> > wake-up source, the INTC is part of the wake-up path, and thus must be
-> > kept enabled when entering s2ram.
-> >
-> > While this commit has no impact on probe order for me (unlike in Marek's
-> > case), it does have an impact on suspend order:
-> >   - Before this commit:
-> >       1. The keyboard (gpio-keys) is suspended, and calls
-> >          enable_irq_wake() to inform the upstream interrupt controller
-> >          (INTC) that it is part of the wake-up path,
-> >       2. INTC is suspended, and calls device_set_wakeup_path() to inform
-> >          the device core that it must be kept enabled,
-> >       3. The system is woken by pressing a wake-up key.
-> >
-> >   - After this commit:
-> >       1. INTC is suspended, and is not aware it is part of the wake-up
-> >          path, so it is disabled by the device core,
-> >       2. gpio-keys is suspended, and calls enable_irq_wake() in vain,
-> >       3. Pressing a wake-up key has no effect, as INTC is disabled, and
-> >          the interrupt does not come through.
-> >
-> > It looks like no device links are involved, as both gpio-keys and INTC have
-> > no links.
-> > Do you have a clue?
-> >
-> > Thanks!
->
-> That patch of mine defers probe on all devices added by the
-> of_platform_default_populate() call, and then once the call returns,
-> it immediately triggers a deferred probe.
->
-> So all these devices are being probed in parallel in the deferred
-> probe workqueue while the main "initcall thread" continues down to
-> further initcalls. It looks like some of the drivers in subsequent
-> initcalls are assuming that devices in the earlier initcalls always
-> probe and can't be deferred?
->
-> There are two options.
-> 1. Fix these drivers.
-> 2. Add a "flush deferred workqueue" in fw_devlink_resume()
->
-> I'd rather we fix the drivers so that they handle deferred probes
-> correctly. Thoughts?
-
-While the affected drivers should handle deferred probe fine, none of
-the affected drivers is subject to deferred probing: they all probe
-successfully on first try (I had added debug prints to
-platform_drv_probe() to be sure).
-The affected drivers are still probed in the same order (INTC is one of
-the earliest drivers probed, gpio-keys is the last). However, during
-system suspend, gpio-keys is suspended before INTC, which is wrong, as
-gpio-keys uses an interrupt provided by INTC.
-
-Perhaps the "in parallel" is the real culprit, and there is a race
-condition somewhere?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Applied both, thanks.
