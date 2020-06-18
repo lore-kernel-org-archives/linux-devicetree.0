@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7A8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C64FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6636221534
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB4220776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448306;
-	bh=iJLj1a92L/XXEgvAOBI4sMQdUEW6CU5xEvBS+HESanE=;
+	s=default; t=1592448355;
+	bh=OeDBeLcNk9Jymm8syCr+lEMv51GWrupM4856RcZCB9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ASxU6/u8bnr2giH9c97CqlaHb3NGoHHzPe9mRZDVA3hQYYbCkpxO3Xgx/pp17Vtoa
-	 gDFXb35PSZvhKz/+ybEtt/EN3F3fUn0syB5XAUj7JjeLUSzYA10AmbY18P3dvXdFhP
-	 32OWnXsV3SsBwC1pZVZ+9C6FZ36MHck1httcxaFA=
+	b=YAADIkwfX/AqcagNpwDrx0MLQ5gCY0rNafjdr880Pa5yhnD63B3byJEf5pJgPkOFL
+	 y7hPFLdGpxaTaXgVngOxxcDGOMWx9r71BERDIl4rsiGKFeUWURksWU1Ohy1zGFUKf3
+	 1aWvTcipAVMxULSiwlgHUEC+a6HsuKeKbuTIFn+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgFRCou (ORCPT
+        id S1728622AbgFRBKt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38814 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728699AbgFRBLD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:03 -0400
+        id S1728609AbgFRBKs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BF18221E8;
-        Thu, 18 Jun 2020 01:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC9B214DB;
+        Thu, 18 Jun 2020 01:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442662;
-        bh=iJLj1a92L/XXEgvAOBI4sMQdUEW6CU5xEvBS+HESanE=;
+        s=default; t=1592442647;
+        bh=OeDBeLcNk9Jymm8syCr+lEMv51GWrupM4856RcZCB9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tA6GOo0WPns80Nmh1rkbcGN5b4ROfv0b4F1tZqTqUgi43m9473cqoELB3iZneN4NY
-         fw3dTJZLId9cpkGnSLoz32Y0gGZSlrwjXUDFj7vHgoemPECdWHBVQp9HqJZx1TcxfH
-         svB8wXUS2jFOFugY5nQKWFw/5sicJGhMawbUA1pc=
+        b=aaOyxYij5SBkvwxxO48xe1hEWbTIRzWGXh19QZHw3DHJFwbfdinfyrikGgLfj7RjU
+         1cohyafayB7LkdmOUysJjbasSSgOU2r1guwt0fVEF6vlvMrlkLh9wD16tHt0j85sgZ
+         sKw0OZNu6LRTeIPDV/l4ov0SXvgNi/E/cCmd2wGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonathan Marek <jonathan@marek.ca>,
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 133/388] arm64: dts: qcom: fix pm8150 gpio interrupts
-Date:   Wed, 17 Jun 2020 21:03:50 -0400
-Message-Id: <20200618010805.600873-133-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 121/388] arm64: dts: qcom: msm8916: remove unit name for thermal trip points
+Date:   Wed, 17 Jun 2020 21:03:38 -0400
+Message-Id: <20200618010805.600873-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,105 +60,82 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Amit Kucheria <amit.kucheria@linaro.org>
 
-[ Upstream commit 61d2ca503d0b55d2849fd656ce51d8e1e9ba0b6c ]
+[ Upstream commit fe2aff0c574d206f34f1864d5a0b093694c27142 ]
 
-This was mistakenly copied from the downstream dts, however the upstream
-driver works differently.
+The thermal trip points have unit name but no reg property, so we can
+remove them. It also fixes the following warnings from 'make dtbs_check'
+after adding the thermal yaml bindings.
 
-I only tested this with the pm8150_gpios node (used with volume button),
-but the 2 others should be the same.
+arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
 
-Fixes: e92b61c8e775 ("arm64: dts: qcom: pm8150l: Add base dts file")
-Fixes: 229d5bcad0d0 ("arm64: dts: qcom: pm8150b: Add base dts file")
-Fixes: 5101f22a5c37 ("arm64: dts: qcom: pm8150: Add base dts file")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Link: https://lore.kernel.org/r/20200420153543.14512-1-jonathan@marek.ca
+arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Link: https://lore.kernel.org/r/2d3d045c18a2fb85b28cf304aa11ae6e6538d75e.1585562459.git.amit.kucheria@linaro.org
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/pm8150.dtsi  | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150b.dtsi | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150l.dtsi | 14 ++------------
- 3 files changed, 6 insertions(+), 36 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-index b6e304748a57..c0b197458665 100644
---- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-@@ -73,18 +73,8 @@ pm8150_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x0 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index a88a15f2352b..5548d7b5096c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -261,7 +261,7 @@ cpu2_3-thermal {
+ 			thermal-sensors = <&tsens 4>;
  
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-index 322379d5c31f..40b5d75a4a1d 100644
---- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -62,18 +62,8 @@ pm8150b_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
+ 			trips {
+-				cpu2_3_alert0: trip-point@0 {
++				cpu2_3_alert0: trip-point0 {
+ 					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+@@ -291,7 +291,7 @@ gpu-thermal {
+ 			thermal-sensors = <&tsens 2>;
  
-diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-index eb0e9a090e42..cf05e0685d10 100644
---- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-@@ -56,18 +56,8 @@ pm8150l_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
+ 			trips {
+-				gpu_alert0: trip-point@0 {
++				gpu_alert0: trip-point0 {
+ 					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+@@ -311,7 +311,7 @@ camera-thermal {
+ 			thermal-sensors = <&tsens 1>;
  
+ 			trips {
+-				cam_alert0: trip-point@0 {
++				cam_alert0: trip-point0 {
+ 					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -326,7 +326,7 @@ modem-thermal {
+ 			thermal-sensors = <&tsens 0>;
+ 
+ 			trips {
+-				modem_alert0: trip-point@0 {
++				modem_alert0: trip-point0 {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
 -- 
 2.25.1
 
