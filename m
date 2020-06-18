@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D622C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF8020853
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81858208D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446602;
-	bh=TogEAhgnlz9coIcwuqlwV9XAxrdprUke7v0OJQo1jR8=;
+	s=default; t=1592446630;
+	bh=2ea4JsC+sY4iWnGh/32E3G6zl/4cxW/h4Nbqj6WnDJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKQzonEbJA31MdG0KmBoj+dbaey1G4FH72xt+b83o+ojzLYj/AC4NMdJtX9krQ/Y+
-	 YxeNmy3+oXlKTcxwlBCRxEdIs/IrCF0ZlDvQpG1kLxUXkLW3S8XwaQq4frKf1ESj+v
-	 pD5lxE9/y5jEhUepDFIY31Aw/nxK5pQTOe1eeMGA=
+	b=lIBzBl4ZDmhfsVnN3vhfjQRhOlV/KCyfXdXzuq45u5xhfMU3m6Cv99Bw8DlD0M4UX
+	 mVWg5ygGTFvOgv2KWyssy8nlYUc2jOdmR+0CUIWSOeCZ2+VC/elFrFY4BcKdwTC9iz
+	 OBkidTLq4m1c5OyI7bP9LycPdA+/8dccsQvQeoCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387556AbgFRCQh (ORCPT
+        id S1730254AbgFRBUH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbgFRBUO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:14 -0400
+        id S1728336AbgFRBUE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3038E221F3;
-        Thu, 18 Jun 2020 01:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AEBB21D80;
+        Thu, 18 Jun 2020 01:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443214;
-        bh=TogEAhgnlz9coIcwuqlwV9XAxrdprUke7v0OJQo1jR8=;
+        s=default; t=1592443204;
+        bh=2ea4JsC+sY4iWnGh/32E3G6zl/4cxW/h4Nbqj6WnDJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=do+N+GZbPFtwy0fCHP2vfvXhy8t2lYEmAgliCU+hG3tpV3sYOKMpTIxTxTalzHiYe
-         4GhVtBpzlLxSC/2lfFjEBNq+6GzpV43HNuFLVjITZJdgwKxUf8tgs7ry0FXP8uHl4b
-         naWe1IaiezVMgpxmeOrheuK/g0xryPmAiNSC4SCE=
+        b=COup8ectbCdJ5tGyCTpjCGUQwQRTVf00UABC1b+ZRp+pZrZjiCatl9OmevybFz6Au
+         v/9sDvjSEjdK1NA15l4h4iKmIMidf/ldYsAxqhOXrAxD17cotwEUONtPT0npH5IBTA
+         FVutV1PMfPxzs7LULxtBqw2C8P1L0WH/PovTdayI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 170/266] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
-Date:   Wed, 17 Jun 2020 21:14:55 -0400
-Message-Id: <20200618011631.604574-170-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 162/266] ARM: dts: meson: Switch existing boards with RGMII PHY to "rgmii-id"
+Date:   Wed, 17 Jun 2020 21:14:47 -0400
+Message-Id: <20200618011631.604574-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,79 +61,70 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
+[ Upstream commit 005231128e9e97461e81fa32421957a7664317ca ]
 
-Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
-represent 64-bit resources.
+Let the PHY generate the RX and TX delay on the Odroid-C1 and MXIII
+Plus.
 
-Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Previously we did not know that these boards used an RX delay. We
+assumed that setting the TX delay on the MAC side It turns out that
+these boards also require an RX delay of 2ns (verified on Odroid-C1,
+but the u-boot code uses the same setup on both boards). Ethernet only
+worked because u-boot added this RX delay on the MAC side.
+
+The 4ns TX delay was also wrong and the result of using an unsupported
+RGMII TX clock divider setting. This has been fixed in the driver with
+commit bd6f48546b9cb7 ("net: stmmac: dwmac-meson8b: Fix the RGMII TX
+delay on Meson8b/8m2 SoCs").
+
+Switch to phy-mode "rgmii-id" to let the PHY side handle all the delays,
+(as recommended by the Ethernet maintainers anyways) to correctly
+describe the need for a 2ns RX as well as 2ns TX delay on these boards.
+This fixes the Ethernet performance on Odroid-C1 where there was a huge
+amount of packet loss when transmitting data due to the incorrect TX
+delay.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200512215148.540322-3-martin.blumenstingl@googlemail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/meson8b-odroidc1.dts    | 3 +--
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 457b815d57f4..2f3926719434 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1192,7 +1192,7 @@ pcie@14100000 {
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index a24eccc354b9..10f6d601eadb 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -202,9 +202,8 @@ &ethmac {
+ 	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
  
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
+-	phy-mode = "rgmii";
+ 	phy-handle = <&eth_phy>;
+-	amlogic,tx-delay-ns = <4>;
++	phy-mode = "rgmii-id";
  
-@@ -1238,7 +1238,7 @@ pcie@14120000 {
+ 	nvmem-cells = <&ethernet_mac_address>;
+ 	nvmem-cell-names = "mac-address";
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+index d54477b1001c..cc498191ddd1 100644
+--- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -69,9 +69,7 @@ &ethmac {
+ 	pinctrl-names = "default";
  
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
+ 	phy-handle = <&eth_phy0>;
+-	phy-mode = "rgmii";
+-
+-	amlogic,tx-delay-ns = <4>;
++	phy-mode = "rgmii-id";
  
-@@ -1284,7 +1284,7 @@ pcie@14140000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1330,7 +1330,7 @@ pcie@14160000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1376,7 +1376,7 @@ pcie@14180000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1426,7 +1426,7 @@ pcie@141a0000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
+ 	mdio {
+ 		compatible = "snps,dwmac-mdio";
 -- 
 2.25.1
 
