@@ -2,101 +2,321 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9297BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9263421534
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6889B21534
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448237;
-	bh=FHh/Lq9YZNROzvpJtdQYpz4bIgDSQXre0exYLtvbXsI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QQoZbtGgK5WrQrcFMu09DpzhJiVi16xuewEZr3KUFB4UWQiBwNqKRXJtq807zKY3y
-	 UEA9+N18TGXwpFwsPpYj1eMgLK9ie4FU1seH1qRMdZ5fbiTxYcVCPbkEKEQppbEUZe
-	 EwpiGhvcAIMnYd4lq3H5ta3HE8gmO/FS+WWSVBlg=
+	s=default; t=1592448276;
+	bh=GdT17N5r/3jwiKAt5W56jvzEMMTd+N7TLZHJAut2KUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hNny9+9uTrz6UIdx/fJ5s8r4tOtwvCgWjtTbc/ruu/KYJYR2s12cT8rddIidITapG
+	 m9gGpUQ2n36pMPJ+8N110QqzssbFxpbv8S8eZe6qsry2kw5Uetrr6I8qzqk8grVCdx
+	 6NA8/y7zMQa9CH34ZJLiOjM61FMI+QZ4naGprybY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgFRCn4 (ORCPT
+        id S1728118AbgFRCoe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728729AbgFRBLW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2328120CC7;
-        Thu, 18 Jun 2020 01:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442681;
-        bh=FHh/Lq9YZNROzvpJtdQYpz4bIgDSQXre0exYLtvbXsI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QNwnLXJtfsBVJ5KNChqS+rxrGQRZn64ikAZSSHT7DWzyfCc++yfGapbr2KOilfeks
-         KmFtX6kbp7J3C0sKgoicvs8llEYgONLGDmSy2aTzw+pRtGsJY0C6mdlNLf2FOKC6vR
-         qUSduY6ds25UkjefFwVIT5MeBwa6F486C02C9wpM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 149/388] of: property: Fix create device links for all child-supplier dependencies
-Date:   Wed, 17 Jun 2020 21:04:06 -0400
-Message-Id: <20200618010805.600873-149-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        Wed, 17 Jun 2020 22:44:34 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33412 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgFRCod (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 22:44:33 -0400
+Received: by mail-io1-f67.google.com with SMTP id i25so5416330iog.0;
+        Wed, 17 Jun 2020 19:44:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2R/tYpzMeP9U8u3e3E/ere57dVcY6RkaR8eMth+C4lk=;
+        b=gC2dczKV6eYg64lbS3t+pZIPzsrTSLYEp8Sy9jgREQykrWdyBrg5iSUWz2TjlFDyFH
+         yC5kZaKe3QWrrfxDGKn/sTbmeEPXWYhKeGdXlqaRahunmH8CBq0qU/3X6ieqWXoxLDYf
+         P2neawEQQc5ylBF+xt9dBovWjjUX4EovdKV94zVJgxRl+0213nsjx48wio+NL6+remea
+         u3GcMwPyr6gkWAAI3J+9cyZbQoa1qwouS4vdT0OhEu02/r3vxokkjQ1LQ7xkKerllcrC
+         3Htye/LzO3sMLYaQHIHxA0KAtxPjYPUORp4vMMxRKzJIFbsqmdXz34v5DgwrR/SpBlOH
+         K//A==
+X-Gm-Message-State: AOAM5305EEL+b48cWgby2tOOYbvCFlo0TIiUrObNr2fB0f7p3ap4HrqY
+        qSvUfXV3bGxBJk0p/Q6K8w==
+X-Google-Smtp-Source: ABdhPJzCXV4SpFi2ugaR1hChbreTKnaY8V3eNcM8FZoQHHbc5hRdjPJkhOt9ZCUUbL008D99wXQXvQ==
+X-Received: by 2002:a6b:b788:: with SMTP id h130mr1156828iof.177.1592448271721;
+        Wed, 17 Jun 2020 19:44:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id 18sm931730ion.17.2020.06.17.19.44.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 19:44:31 -0700 (PDT)
+Received: (nullmailer pid 3376621 invoked by uid 1000);
+        Thu, 18 Jun 2020 02:44:29 -0000
+Date:   Wed, 17 Jun 2020 20:44:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 23/38] dt-bindings: gpio: tegra186: Convert to json-schema
+Message-ID: <20200618024429.GB3363480@bogus>
+References: <20200612141903.2391044-1-thierry.reding@gmail.com>
+ <20200612141903.2391044-24-thierry.reding@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612141903.2391044-24-thierry.reding@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Fri, Jun 12, 2020 at 04:18:48PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Convert the Tegra186 GPIO controller device tree bindings from free-form
+> text format to json-schema.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../bindings/gpio/nvidia,tegra186-gpio.txt    | 165 --------------
+>  .../bindings/gpio/nvidia,tegra186-gpio.yaml   | 215 ++++++++++++++++++
+>  2 files changed, 215 insertions(+), 165 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
 
-[ Upstream commit ed3655729182a59b9bef1b564c6fc2dcbbbe954e ]
 
-Upon adding a new device from a DT node, we scan its properties and its
-children's properties in order to create a consumer/supplier
-relationship between the device and the property provider.
+> diff --git a/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml b/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
+> new file mode 100644
+> index 000000000000..94cf164c9abf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
+> @@ -0,0 +1,215 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/nvidia,tegra186-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NVIDIA Tegra GPIO Controller (Tegra186 and later)
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Jon Hunter <jonathanh@nvidia.com>
+> +
+> +description: |
+> +  Tegra186 contains two GPIO controllers; a main controller and an "AON"
+> +  controller. This binding document applies to both controllers. The register
+> +  layouts for the controllers share many similarities, but also some
+> +  significant differences. Hence, this document describes closely related but
+> +  different bindings and compatible values.
+> +
+> +  The Tegra186 GPIO controller allows software to set the IO direction of,
+> +  and read/write the value of, numerous GPIO signals. Routing of GPIO signals
+> +  to package balls is under the control of a separate pin controller hardware
+> +  block. Two major sets of registers exist:
+> +
+> +    a) Security registers, which allow configuration of allowed access to the
+> +       GPIO register set. These registers exist in a single contiguous block
+> +       of physical address space. The size of this block, and the security
+> +       features available, varies between the different GPIO controllers.
+> +
+> +       Access to this set of registers is not necessary in all circumstances.
+> +       Code that wishes to configure access to the GPIO registers needs access
+> +       to these registers to do so. Code which simply wishes to read or write
+> +       GPIO data does not need access to these registers.
+> +
+> +    b) GPIO registers, which allow manipulation of the GPIO signals. In some
+> +       GPIO controllers, these registers are exposed via multiple "physical
+> +       aliases" in address space, each of which access the same underlying
+> +       state. See the hardware documentation for rationale. Any particular
+> +       GPIO client is expected to access just one of these physical aliases.
+> +
+> +    Tegra HW documentation describes a unified naming convention for all GPIOs
+> +    implemented by the SoC. Each GPIO is assigned to a port, and a port may
+> +    control a number of GPIOs. Thus, each GPIO is named according to an
+> +    alphabetical port name and an integer GPIO name within the port. For
+> +    example, GPIO_PA0, GPIO_PN6, or GPIO_PCC3.
+> +
+> +    The number of ports implemented by each GPIO controller varies. The number
+> +    of implemented GPIOs within each port varies. GPIO registers within a
+> +    controller are grouped and laid out according to the port they affect.
+> +
+> +    The mapping from port name to the GPIO controller that implements that
+> +    port, and the mapping from port name to register offset within a
+> +    controller, are both extremely non-linear. The header file
+> +    <dt-bindings/gpio/tegra186-gpio.h> describes the port-level mapping. In
+> +    that file, the naming convention for ports matches the HW documentation.
+> +    The values chosen for the names are alphabetically sorted within a
+> +    particular controller. Drivers need to map between the DT GPIO IDs and HW
+> +    register offsets using a lookup table.
+> +
+> +    Each GPIO controller can generate a number of interrupt signals. Each
+> +    signal represents the aggregate status for all GPIOs within a set of
+> +    ports. Thus, the number of interrupt signals generated by a controller
+> +    varies as a rough function of the number of ports it implements. Note
+> +    that the HW documentation refers to both the overall controller HW
+> +    module and the sets-of-ports as "controllers".
+> +
+> +    Each GPIO controller in fact generates multiple interrupts signals for
+> +    each set of ports. Each GPIO may be configured to feed into a specific
+> +    one of the interrupt signals generated by a set-of-ports. The intent is
+> +    for each generated signal to be routed to a different CPU, thus allowing
+> +    different CPUs to each handle subsets of the interrupts within a port.
+> +    The status of each of these per-port-set signals is reported via a
+> +    separate register. Thus, a driver needs to know which status register to
+> +    observe. This binding currently defines no configuration mechanism for
+> +    this. By default, drivers should use register
+> +    GPIO_${port}_INTERRUPT_STATUS_G1_0. Future revisions to the binding could
+> +    define a property to configure this.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nvidia,tegra186-gpio
+> +      - nvidia,tegra186-gpio-aon
+> +      - nvidia,tegra194-gpio
+> +      - nvidia,tegra194-gpio-aon
+> +
+> +  reg-names:
+> +    items:
+> +      - const: security
+> +      - const: gpio
 
-That said, it's possible for some of the node's children to be disabled,
-which will create links that'll never be fulfilled.
+Wrong order? Doesn't match 'reg' description.
 
-To get around this, use the for_each_available_child_of_node() function
-instead of for_each_available_node() when iterating over the node's
-children.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: |
+> +          GPIO control registers. This may cover either:
+> +
+> +            a) The single physical alias that this OS should use.
+> +            b) All physical aliases that exist in the controller. This is
+> +               appropriate when the OS is responsible for managing assignment
+> +               of the physical aliases.
+> +      - description: Security configuration registers.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    description: The interrupt outputs from the HW block, one per set of
+> +      ports, in the order the HW manual describes them. The number of entries
+> +      required varies depending on compatible value.
+> +
+> +  gpio-controller:
+> +    description: Marks the device node as a GPIO controller/provider.
+> +    type: boolean
 
-Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/of/property.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just: 
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index b4916dcc9e72..a8c2b13521b2 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1296,7 +1296,7 @@ static int of_link_to_suppliers(struct device *dev,
- 		if (of_link_property(dev, con_np, p->name))
- 			ret = -ENODEV;
- 
--	for_each_child_of_node(con_np, child)
-+	for_each_available_child_of_node(con_np, child)
- 		if (of_link_to_suppliers(dev, child) && !ret)
- 			ret = -EAGAIN;
- 
--- 
-2.25.1
+gpio-controller: true
 
+> +
+> +  "#gpio-cells":
+> +    description: |
+> +      Indicates how many cells are used in a consumer's GPIO specifier. In the
+> +      specifier:
+> +
+> +        - The first cell is the pin number.
+> +          See <dt-bindings/gpio/tegra186-gpio.h>.
+> +        - The second cell contains flags:
+> +          - Bit 0 specifies polarity
+> +            - 0: Active-high (normal).
+> +            - 1: Active-low (inverted).
+> +    const: 2
+> +
+> +  interrupt-controller:
+> +    description: Marks the device node as an interrupt controller/provider.
+> +    type: boolean
+
+Just:
+
+interrupt-controller: true
+
+> +
+> +  "#interrupt-cells":
+> +    description: |
+> +      Indicates how many cells are used in a consumer's interrupt specifier.
+> +      In the specifier:
+> +
+> +        - The first cell is the GPIO number.
+> +          See <dt-bindings/gpio/tegra186-gpio.h>.
+> +        - The second cell is contains flags:
+> +          - Bits [3:0] indicate trigger type and level:
+> +            - 1: Low-to-high edge triggered.
+> +            - 2: High-to-low edge triggered.
+> +            - 4: Active high level-sensitive.
+> +            - 8: Active low level-sensitive.
+> +
+> +            Valid combinations are 1, 2, 3, 4, 8.
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra186-gpio
+> +              - nvidia,tegra194-gpio
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 6
+> +          maxItems: 6
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra186-gpio-aon
+> +              - nvidia,tegra194-gpio-aon
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 1
+> +          maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    gpio@2200000 {
+> +        compatible = "nvidia,tegra186-gpio";
+> +        reg-names = "security", "gpio";
+> +        reg = <0x0 0x2200000 0x0 0x10000>,
+> +              <0x0 0x2210000 0x0 0x10000>;
+> +        interrupts = <0 47 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 50 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 53 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 56 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 59 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 180 IRQ_TYPE_LEVEL_HIGH>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +    };
+> +
+> +    gpio@c2f0000 {
+> +        compatible = "nvidia,tegra186-gpio-aon";
+> +        reg-names = "security", "gpio";
+> +        reg = <0x0 0xc2f0000 0x0 0x1000>,
+> +              <0x0 0xc2f1000 0x0 0x1000>;
+> +        interrupts = <0 60 IRQ_TYPE_LEVEL_HIGH>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +    };
+> -- 
+> 2.24.1
+> 
