@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69988C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FF7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 428AD20884
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6457320884
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="TRVf5p71"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="OMeUBDJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgFRMvq (ORCPT
+        id S1730055AbgFRMvx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
+        Thu, 18 Jun 2020 08:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729905AbgFRMvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 08:51:44 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3443C06174E
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:43 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so5088108wmj.0
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:43 -0700 (PDT)
+        with ESMTP id S1730030AbgFRMvu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 08:51:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A236C0613ED
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:50 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e1so5944129wrt.5
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kre93dd6hT4pYBC6xQN9FkazTNYBQtZr78iwLPfwCF4=;
-        b=TRVf5p71/Ag4UNdwc/kW3lZlfblIowK80W+zyKByyru7UHXDqLeD7vCHyYGEpt4SE8
-         3feY5JsWedJKgdl+5OIez+/8F1tBVDJ/4VA824OzPcsTBPPvCrjYcFFz+5R42CWGMpFk
-         mlGZ12sNiwhEH5GEti9o1QKOKAO3W7nFkr8QTy+Z1+eE7pHgMptcgUtDt7tXkhGRvw4n
-         cx+fObyf5nAwwcDb3tVugVuQRdrGOCmLMqYP/S8rptL6ZYej0IPNQtAirgnNgm1sqRxL
-         vxooeW/Khk5NA3xdrlKD4ZmJ/mz/QX4rgry57toQ8SIDlnksSH7oTPVxq5NIWkRvVkpJ
-         4NpA==
+        bh=EF3uQr3RQED1YKYkNKEVE2Xoq5JyRRd7hiTR6pRsTG4=;
+        b=OMeUBDJHDfZzZVviBggQhXIHuiwJmDOMy0CPdLEzndgfIdnbwbIia7/VkAQm+c3TxQ
+         OiAMSw+fc04yJwyx0S1da8QV881RvWFzWywcwlloVnhl8JQWdo4iypxayB6QLQKJdJ4O
+         Pzgh5z4k0b3PE7HPSb1Mp+VVxMHCP0zgbSonNqufOsk7XaxdcCFu8fj/0m2WXk1OVZAV
+         klAT3/qRRzQz/DBZ9cCBkctkcDxryrzlD2Es4ZIzjGFHPLxE3pN4wsDJV9WP6Wg0yzLh
+         r2HKh3mmp93uHIm/60MuEj5oaXfDVOh8KX864DhgR1IZsCdWw2lzIwMSaCGs6ip7UUea
+         E2OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kre93dd6hT4pYBC6xQN9FkazTNYBQtZr78iwLPfwCF4=;
-        b=TD3Q6IjsADl9/9KoxfbQ94d96yZ2IiY8jN0pQUNTZTT7GHA5o2JOxY4xR1bR5ucL94
-         yisSsLlOyLGCv/XGgzx6QyJyrIHGSFzNRuYKv1tk+Z+gmLFpGdhe/oWS8FZazo8KDDmS
-         oeOtWBXaji8co5qNbiKCoJFhCXTxKRolBa8qjPrF/ccU8LlUkkOYSodFVt/xLze3gTKq
-         KHaP+beAIoY+ut0aRn3i02XG0eFCXvQYtX44UflNyMRgSREbJh3+/hbWpY2LPWeVW+bb
-         ZDX5wffnSLE0BlpHYNW28nC81PG6082nt2nDjZREBz4q0HM3KqPL7ya/e1muGypy+UUi
-         ugCw==
-X-Gm-Message-State: AOAM530E0fd1dPQO1w82MC57ykykXXAYOrGagT7nb//ddPRF+V49TK8x
-        7FUyRguTEyReZo1cRptnOCOJtA==
-X-Google-Smtp-Source: ABdhPJx5wChPkJh3wqqQH8t9n3fY00xH6TQW/iPEoWFdYFr16TgedzvEFOTdfZ9BL2dZZbmQXlZ/4w==
-X-Received: by 2002:a1c:44c3:: with SMTP id r186mr3831425wma.67.1592484702734;
-        Thu, 18 Jun 2020 05:51:42 -0700 (PDT)
+        bh=EF3uQr3RQED1YKYkNKEVE2Xoq5JyRRd7hiTR6pRsTG4=;
+        b=gvvyvDU84wuD/WLsrF3z8dDJJA7nbHbdmQbSt2CvTiHNxvt1ByONPtlAFpvhqFpfPx
+         fVHwMlZq5ZO8lHbvx+wLS6DVFkJ6+VUSLHx3brinVIY2+rI9K+for0ZLm5q7m4IgtCIC
+         DjcrqTmdZPGZrCQY/GwSAnLEfirDEDPl4Vuqw441nED8iBm0ooeIEwiZANxrAqFzCoOc
+         ahFT1azrbpHArr/efLVIk7G71WFtiKD07wFRbIY/zxijaGk3QdAQYT2ah8UQ9EGRVRvi
+         Xg7fq05BI5M/qe7ohP+/89hIOX4x7kFsJvcepMgOjS9Z6Z7HOLTY1IZ1bwX39Qlk+jUF
+         hAeg==
+X-Gm-Message-State: AOAM533Mc73nIi5g/xa4FuUIhLqME2M8qKToqp9zD8UXKVAUtuQIG5tq
+        TfbZ0fzIjvR+EhBubEx7D4dbOA==
+X-Google-Smtp-Source: ABdhPJzzzLWwoDV3nLbm6Ab2sMpnqVmB2wmFgALKaTLgflrv17b82hlrx/jr+hAILSCqeDm4B/VMmA==
+X-Received: by 2002:adf:d0d0:: with SMTP id z16mr4597420wrh.308.1592484709011;
+        Thu, 18 Jun 2020 05:51:49 -0700 (PDT)
 Received: from localhost.localdomain (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id v27sm3714151wrv.81.2020.06.18.05.51.40
+        by smtp.gmail.com with ESMTPSA id v27sm3714151wrv.81.2020.06.18.05.51.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 05:51:41 -0700 (PDT)
+        Thu, 18 Jun 2020 05:51:48 -0700 (PDT)
 From:   Drew Fustini <drew@beagleboard.org>
 To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
         linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -69,9 +69,9 @@ To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
         Jason Kridner <jkridner@beagleboard.org>,
         Robert Nelson <robertcnelson@gmail.com>
 Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH 1/3] ARM: dts: change AM33XX_PADCONF macro separate conf and mux
-Date:   Thu, 18 Jun 2020 14:50:55 +0200
-Message-Id: <20200618125057.41252-2-drew@beagleboard.org>
+Subject: [PATCH 2/3] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
+Date:   Thu, 18 Jun 2020 14:50:56 +0200
+Message-Id: <20200618125057.41252-3-drew@beagleboard.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618125057.41252-1-drew@beagleboard.org>
 References: <20200618125057.41252-1-drew@beagleboard.org>
@@ -82,31 +82,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-AM33XX_PADCONF macro is modified to keep pin conf and pin mux separate.
+This requires AM33XX_PADCONF macro in omap.h to be modified to keep pin
+conf and pin mux values separate.
 
-This requires #pinctrl-cells = 2 in am33xx-l4.dtsi
-
-pinctrl-single.c but also be changed to support "pinctrl-single,pins"
-with 3 arguments (offset, conf, mux)
+pinctrl-single.c must also be changed to support "pinctrl-single,pins"
+with 3 arguments (offset, conf, mux).
 
 Signed-off-by: Drew Fustini <drew@beagleboard.org>
 ---
- include/dt-bindings/pinctrl/omap.h | 2 +-
+ arch/arm/boot/dts/am33xx-l4.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
-index 625718042413..a0974923bb1b 100644
---- a/include/dt-bindings/pinctrl/omap.h
-+++ b/include/dt-bindings/pinctrl/omap.h
-@@ -65,7 +65,7 @@
- #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
--#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
-+#define AM33XX_PADCONF(pa, conf, mux)	(OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux))
- 
- /*
-  * Macros to allow using the offset from the padconf physical address
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 340ea331e54d..f9b99cfa93b6 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -290,7 +290,7 @@ scm: scm@0 {
+ 				am33xx_pinmux: pinmux@800 {
+ 					compatible = "pinctrl-single";
+ 					reg = <0x800 0x238>;
+-					#pinctrl-cells = <1>;
++					#pinctrl-cells = <2>;
+ 					pinctrl-single,register-width = <32>;
+ 					pinctrl-single,function-mask = <0x7f>;
+ 				};
 -- 
 2.25.1
 
