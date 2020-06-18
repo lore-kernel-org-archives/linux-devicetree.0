@@ -2,211 +2,116 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E20C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF82C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5F40206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5CB2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592495177;
+	bh=DT0upM96HqMPQgMBB/CBDR/hHIvxmmHmwQeiDFEQokc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hHhwdCA5SQkM5HTb2smREtZ+9UfVE3R8mNXYwePKxXNAihwaoA/V7pyEH6qwdE0gN
+	 m5iUjQfW4iUW3aw93pSAjBs/3Ae3KmDOSa6iDHwnmYShSOABRqRKUSFmaiS/pPufIY
+	 puks2TJmT2Ba7gPJUtyPARQgeSqUt/T6vsVOVNUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgFRPmH (ORCPT
+        id S1730208AbgFRPqR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:42:07 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:55232 "EHLO gloria.sntech.de"
+        Thu, 18 Jun 2020 11:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731863AbgFRPmG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:42:06 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jlwfr-0001YL-55; Thu, 18 Jun 2020 17:41:55 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, kuba@kernel.org,
-        robh+dt@kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some phy variants
-Date:   Thu, 18 Jun 2020 17:41:54 +0200
-Message-ID: <2277698.LFZWc9m3Y3@diego>
-In-Reply-To: <20200618134102.GA1551@shell.armlinux.org.uk>
-References: <20200618121139.1703762-1-heiko@sntech.de> <20200618132822.GN249144@lunn.ch> <20200618134102.GA1551@shell.armlinux.org.uk>
+        id S1728171AbgFRPqQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:46:16 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B7F206FA;
+        Thu, 18 Jun 2020 15:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592495176;
+        bh=DT0upM96HqMPQgMBB/CBDR/hHIvxmmHmwQeiDFEQokc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GXcSUll+dNeAUO+jNzYafwo2c1CS45mcRu+sfDjFtuinyWXojtby8XnVdiQuOFZdg
+         RYDNGhBa+rLBC36+h5uwX37Aivz4t88QB741IQtelI03Wm6iydkR7tLBqwBjPa/ohF
+         DDEKzE4l6Oa1sgDyJ/doI5lqsYp64jp+u15+y1x8=
+Date:   Thu, 18 Jun 2020 08:46:14 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 3/9] net: dsa: hellcreek: Add PTP clock support
+Message-ID: <20200618084614.7ef6b35c@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200618064029.32168-4-kurt@linutronix.de>
+References: <20200618064029.32168-1-kurt@linutronix.de>
+        <20200618064029.32168-4-kurt@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Donnerstag, 18. Juni 2020, 15:41:02 CEST schrieb Russell King - ARM Linux admin:
-> On Thu, Jun 18, 2020 at 03:28:22PM +0200, Andrew Lunn wrote:
-> > On Thu, Jun 18, 2020 at 02:11:39PM +0200, Heiko Stuebner wrote:
-> > > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > > 
-> > > At least VSC8530/8531/8540/8541 contain a clock output that can emit
-> > > a predefined rate of 25, 50 or 125MHz.
-> > > 
-> > > This may then feed back into the network interface as source clock.
-> > > So expose a clock-provider from the phy using the common clock framework
-> > > to allow setting the rate.
-> > > 
-> > > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > > ---
-> > >  drivers/net/phy/mscc/mscc.h      |  13 +++
-> > >  drivers/net/phy/mscc/mscc_main.c | 182 +++++++++++++++++++++++++++++--
-> > >  2 files changed, 187 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-> > > index fbcee5fce7b2..94883dab5cc1 100644
-> > > --- a/drivers/net/phy/mscc/mscc.h
-> > > +++ b/drivers/net/phy/mscc/mscc.h
-> > > @@ -218,6 +218,13 @@ enum rgmii_clock_delay {
-> > >  #define INT_MEM_DATA_M			  0x00ff
-> > >  #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
-> > >  
-> > > +#define MSCC_CLKOUT_CNTL		  13
-> > > +#define CLKOUT_ENABLE			  BIT(15)
-> > > +#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
-> > > +#define CLKOUT_FREQ_25M			  (0x0 << 13)
-> > > +#define CLKOUT_FREQ_50M			  (0x1 << 13)
-> > > +#define CLKOUT_FREQ_125M		  (0x2 << 13)
-> > > +
-> > >  #define MSCC_PHY_PROC_CMD		  18
-> > >  #define PROC_CMD_NCOMPLETED		  0x8000
-> > >  #define PROC_CMD_FAILED			  0x4000
-> > > @@ -360,6 +367,12 @@ struct vsc8531_private {
-> > >  	 */
-> > >  	unsigned int base_addr;
-> > >  
-> > > +#ifdef CONFIG_COMMON_CLK
-> > > +	struct clk_hw clkout_hw;
-> > > +#endif
-> > > +	u32 clkout_rate;
-> > > +	int clkout_enabled;
-> > > +
-> > >  #if IS_ENABLED(CONFIG_MACSEC)
-> > >  	/* MACsec fields:
-> > >  	 * - One SecY per device (enforced at the s/w implementation level)
-> > > diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-> > > index 5d2777522fb4..727a9dd58403 100644
-> > > --- a/drivers/net/phy/mscc/mscc_main.c
-> > > +++ b/drivers/net/phy/mscc/mscc_main.c
-> > > @@ -7,6 +7,7 @@
-> > >   * Copyright (c) 2016 Microsemi Corporation
-> > >   */
-> > >  
-> > > +#include <linux/clk-provider.h>
-> > >  #include <linux/firmware.h>
-> > >  #include <linux/jiffies.h>
-> > >  #include <linux/kernel.h>
-> > > @@ -431,7 +432,6 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
-> > >  
-> > >  	return led_mode;
-> > >  }
-> > > -
-> > >  #else
-> > >  static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
-> > >  {
-> > > @@ -1508,6 +1508,43 @@ static int vsc85xx_config_init(struct phy_device *phydev)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int vsc8531_config_init(struct phy_device *phydev)
-> > > +{
-> > > +	struct vsc8531_private *vsc8531 = phydev->priv;
-> > > +	u16 val;
-> > > +	int rc;
-> > > +
-> > > +	rc = vsc85xx_config_init(phydev);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +
-> > > +#ifdef CONFIG_COMMON_CLK
-> > > +	switch (vsc8531->clkout_rate) {
-> > > +	case 25000000:
-> > > +		val = CLKOUT_FREQ_25M;
-> > > +		break;
-> > > +	case 50000000:
-> > > +		val = CLKOUT_FREQ_50M;
-> > > +		break;
-> > > +	case 125000000:
-> > > +		val = CLKOUT_FREQ_125M;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	if (vsc8531->clkout_enabled)
-> > > +		val |= CLKOUT_ENABLE;
-> > > +
-> > > +	rc = phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
-> > > +			     MSCC_CLKOUT_CNTL, val);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +#endif
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > 
-> > > +static int vsc8531_clkout_prepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
-> > > +
-> > > +	vsc8531->clkout_enabled = true;
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void vsc8531_clkout_unprepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
-> > > +
-> > > +	vsc8531->clkout_enabled = false;
-> > > +}
-> > > +
-> > 
-> > > +static const struct clk_ops vsc8531_clkout_ops = {
-> > > +	.prepare = vsc8531_clkout_prepare,
-> > > +	.unprepare = vsc8531_clkout_unprepare,
-> > > +	.is_prepared = vsc8531_clkout_is_prepared,
-> > > +	.recalc_rate = vsc8531_clkout_recalc_rate,
-> > > +	.round_rate = vsc8531_clkout_round_rate,
-> > > +	.set_rate = vsc8531_clkout_set_rate,
-> > 
-> > I'm not sure this is the expected behaviour. The clk itself should
-> > only start ticking when the enable callback is called. But this code
-> > will enable the clock when config_init() is called. I think you should
-> > implement the enable and disable methods.
-> 
-> That is actually incorrect.  The whole "prepare" vs "enable" difference
-> is that prepare can schedule, enable isn't permitted.  So, if you need
-> to sleep to enable the clock, then enabling the clock in the prepare
-> callback is the right thing to do.
-> 
-> However, the above driver just sets a flag, which only gets used when
-> the PHY's config_init method is called; that really doesn't seem to be
-> sane - the clock is available from the point that the PHY has been
-> probed, and it'll be expected that once the clock is published, it can
-> be made functional.
+On Thu, 18 Jun 2020 08:40:23 +0200 Kurt Kanzenbach wrote:
+> From: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
+>=20
+> The switch has internal PTP hardware clocks. Add support for it. There ar=
+e three
+> clocks:
+>=20
+>  * Synchronized
+>  * Syntonized
+>  * Free running
+>=20
+> Currently the synchronized clock is exported to user space which is a good
+> default for the beginning. The free running clock might be exported later
+> e.g. for implementing 802.1AS-2011/2020 Time Aware Bridges (TAB). The swi=
+tch
+> also supports cross time stamping for that purpose.
+>=20
+> The implementation adds support setting/getting the time as well as offse=
+t and
+> frequency adjustments. However, the clock only holds a partial timeofday
+> timestamp. This is why we track the seconds completely in software (see o=
+verflow
+> work and last_ts).
+>=20
+> Furthermore, add the PTP multicast addresses into the FDB to forward that
+> packages only to the CPU port where they are processed by a PTP program.
+>=20
+> Signed-off-by: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
 
-Though I'm not sure how this fits in the whole bringup of ethernet phys.
-Like the phy is dependent on the underlying ethernet controller to
-actually turn it on.
+Please make sure each patch in the series builds cleanly with the W=3D1
+C=3D1 flags. Here we have:
 
-I guess we should check the phy-state and if it's not accessible, just
-keep the values and if it's in a suitable state do the configuration.
+../drivers/net/dsa/hirschmann/hellcreek_ptp.c: In function =C3=A2=E2=82=AC=
+=CB=9C__hellcreek_ptp_clock_read=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/net/dsa/hirschmann/hellcreek_ptp.c:30:28: warning: variable =C3=
+=A2=E2=82=AC=CB=9Csech=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-b=
+ut-set-variable]
+   30 |  u16 nsl, nsh, secl, secm, sech;
+      |                            ^~~~
+../drivers/net/dsa/hirschmann/hellcreek_ptp.c:30:22: warning: variable =C3=
+=A2=E2=82=AC=CB=9Csecm=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-b=
+ut-set-variable]
+   30 |  u16 nsl, nsh, secl, secm, sech;
+      |                      ^~~~
+../drivers/net/dsa/hirschmann/hellcreek_ptp.c:30:16: warning: variable =C3=
+=A2=E2=82=AC=CB=9Csecl=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-b=
+ut-set-variable]
+   30 |  u16 nsl, nsh, secl, secm, sech;
+      |                ^~~~
 
-Calling a vsc8531_config_clkout() from both the vsc8531_config_init()
-as well as the clk_(un-)prepare  and clk_set_rate functions and being
-protected by a check against phy_is_started() ?
-
-
-Heiko
-
-
+Next patch adds a few more.
