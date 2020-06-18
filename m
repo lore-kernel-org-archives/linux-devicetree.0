@@ -2,102 +2,115 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6AFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B795C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 453022083B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaC02oSh"
+	by mail.kernel.org (Postfix) with ESMTP id 54262206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592519041;
+	bh=suc9pm53OLkf5+tDTVTkktvXVOKJj7lJ6p6vf0fAzPU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gkoYXAQwY9hqsoln2ItsquYw6792ofSAtN0t54KGOznDM4Gl6ejrU7+2aQ6kqpYIM
+	 bhIRXjc2nxaUoJBJPfEWN2gwcM+XMEdrJRKd/wT11ukDIVyDi65VAVnZDEgc1uJkN5
+	 O1s0pwVDFMs82HEdqhnoL3KMRyOCneuSErvugXoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbgFRWMe (ORCPT
+        id S1728718AbgFRWYA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgFRWMe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 18:12:34 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9018C06174E;
-        Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t18so7728274wru.6;
-        Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=POBgBl3MI/dA6mNJ5+hGlqrhujuUmmxFrJ0pjJyUNc8=;
-        b=UaC02oShpxtI/MNfXzOqezN5e2CQ6fHyVgspS3Qf6YhYFCaq3LEhRQ+l2MfPPlnO1p
-         bvxQzuJgfDsAPSt4CRMaWsNHSdAqUc4EBV9Wy6eygFu68NNNGaE35eDA+U+EqIsvltl1
-         iUy5ALjPu6x9FrY1K9obF4jW55in+nio1robfbEM2zb7AAnczyLBp2bD5XBmUMZFmpvi
-         NOsfeBFemydvFxA7pMkHJI+5MS6HqxALBiD/vYUTgckQwMy4JQxUZ2qgFGG8wo/gbx/+
-         +o83wVSYbJHpQ/i8H7ER2YDYBp4Z0UBxzh2soQkz5eaZ+gS7oegrDmjsKd0xHWQOOn85
-         jpag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=POBgBl3MI/dA6mNJ5+hGlqrhujuUmmxFrJ0pjJyUNc8=;
-        b=qhkezecl1sWGt3JatMgmx6kci/uajdY8vYpxMkoUvyF2iHt8qpEXLtWSfqAElVTrZT
-         /t4vfBgITaf3EqNzLyLBRkHkLgazn+CU3DUU4lAgZD21BaaWUuRbE0eQsFim8/cwJ7t/
-         QPfQzUYYJPSB9IXmUI7SQBPrnWhOglpmTi8HuCKw5YB02xN7zitsEv6ifzSj+zy1qPVd
-         13gJtZQbNA3NVdLzVtID1iyM8pYiImy040PNweEdgTV17FnVlFHiXRZ/Lg1BhWf6wYXY
-         SXArhD5vB1d83zqh8BRX6Wg+4mkhGKJiKQXKWlwyCX5HjqO9hiJ7VIqtDqxt1CuPot30
-         St+g==
-X-Gm-Message-State: AOAM531LhMXwhdQWses0zKMmwdgUTf1cspIBovpTN7Aswitotqrvje6d
-        e95xWUFvopj6ZCL4fHsQlpU=
-X-Google-Smtp-Source: ABdhPJx8hy6wOubeqxfTx/fn/AnNUMOEzQ6xLh5Mglw12uW4b0wv42gO0zYOEw+mTUgB1GWSiSN/Ig==
-X-Received: by 2002:a5d:4009:: with SMTP id n9mr575240wrp.97.1592518352590;
-        Thu, 18 Jun 2020 15:12:32 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id e25sm5677317wrc.69.2020.06.18.15.12.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 15:12:31 -0700 (PDT)
-Subject: Re: [PATCH net-next] of: mdio: preserve phy dev_flags in
- of_phy_connect()
-To:     rentao.bupt@gmail.com, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-References: <20200618220444.5064-1-rentao.bupt@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <f57e5c7f-88f0-d033-6f63-ab53addf9e20@gmail.com>
-Date:   Thu, 18 Jun 2020 15:12:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Thu, 18 Jun 2020 18:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgFRWX7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:23:59 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A9E20732;
+        Thu, 18 Jun 2020 22:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592519039;
+        bh=suc9pm53OLkf5+tDTVTkktvXVOKJj7lJ6p6vf0fAzPU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YoqsdiIMkAkW5I7KL3asxk7dZW8YFot/9qO7uTYjFzZYlNMbb11jjIgzofi+vfWSN
+         QCx0PuMoe8ViFXtMUz04+1oUI/FDzn8h+pd4DmLqh3inuLt+lAscX5c2Uzz64ieJPr
+         iELIJNlCKYeczmr4JEPtg6Hoq04HkahOuC/b010Q=
+Received: by mail-oi1-f181.google.com with SMTP id 25so6580396oiy.13;
+        Thu, 18 Jun 2020 15:23:58 -0700 (PDT)
+X-Gm-Message-State: AOAM531skErlZ5b0asHZpQCIcxg4oztRK8kWvoMIkcLu2Px+DrS7OeZD
+        236rAXW37F9Q09CGsM4gTTc6+GjLszNJ5E0RTA==
+X-Google-Smtp-Source: ABdhPJw1K2OvzxLmNVbzVFc6bTX+uL3GtdpnvRebeJA5Th13K0T4h+C+0pOQ+rfRUWnRUcvWCYUGc3DRbledxdgoUFs=
+X-Received: by 2002:aca:d454:: with SMTP id l81mr939987oig.152.1592519038311;
+ Thu, 18 Jun 2020 15:23:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200618220444.5064-1-rentao.bupt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200617180209.5636-1-wcheng@codeaurora.org> <20200617180209.5636-3-wcheng@codeaurora.org>
+ <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com> <fb448691-2bda-ada6-799f-ee389e647710@codeaurora.org>
+In-Reply-To: <fb448691-2bda-ada6-799f-ee389e647710@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 18 Jun 2020 16:23:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLGWY_bBUzr6r0czxH32vvDnsR6=MzS=zH4tJ-5PEobZw@mail.gmail.com>
+Message-ID: <CAL_JsqLGWY_bBUzr6r0czxH32vvDnsR6=MzS=zH4tJ-5PEobZw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
+ controller dt-binding
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jack Pham <jackp@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Jun Li <lijun.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Jun 18, 2020 at 2:09 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
+>
+>
+> On 6/18/2020 11:33 AM, Rob Herring wrote:
+> > On Wed, Jun 17, 2020 at 12:02 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
+> >
+> > You are duplicating everything in usb-connector.yaml. You should have
+> > a $ref to it.
+> >
+>
+> Hi Rob,
+>
+> Sure, I will add a reference to that doc.
+>
+> >
+> > This is wrong. The connector binding says port 0 is the connection the
+> > USB HS controller.
+> >
+> > What's a type C mux node? Is there a binding for that? There's an
+> > ongoing discussion with the CrOS folks on how to describe Alt mode
+> > mux/switches.
+>
+> I reviewed the connector binding previously, and couldn't seem to come
+> up with a model which fit a design where the type C controller (ie the
+> entity which does the CC orientation and role detection) does not have
+> the SS lane mux included.  The SS lane mux is the HW which handles the
+> selection of the SS lanes to utilize based on cable orientation.
 
+The intent was the controller would be the parent node of the connector.
 
-On 6/18/2020 3:04 PM, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> Replace assignment "=" with OR "|=" for "phy->dev_flags" so "dev_flags"
-> configured in phy probe() function can be preserved.
-> 
-> The idea is similar to commit e7312efbd5de ("net: phy: modify assignment
-> to OR for dev_flags in phy_attach_direct").
-> 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+How the SS lane mux is represented is what needs to be figured out. I
+don't know what that looks like, but it needs to be something that
+works for multiple designs. Ideally, that's an extension of the
+existing 'usb-c-connector' binding, but if there's good reasons to
+redesign it that can happen.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Rob
