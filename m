@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C051C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4744C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED6AF2083B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDD420776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448603;
-	bh=GPCQ9o9OX610tutUcHN29RME33dv4QpzreXiArdMxI4=;
+	s=default; t=1592448625;
+	bh=FgERd5sewvBMOH5a47mfPFwGkB1P6KA+Fm1olXzkvko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ak/RFR0UBZgQNZaPC3vA4+gm8qGVD40IPifYAUNcrh2r/zSVo4f92mFx8+xpUvbUL
-	 TlOAOS5btQdopYz+ScBJlV4d826KdNhDh4n8FVDSeuB5vVSX6tyNrt2uk8ZtIrmG/o
-	 htB4Chn6XjbJCGcH3aqdNpQUr71SoDLzCUSPAh9g=
+	b=K7nkvn3OvWihgbl5GaWFxd2r2rYbuxBggIWIphfghTkb7V9fBa8BwJtimmBA3t+zH
+	 yVsdezEXkJ0wmT/d+Rp+9dc1fJPcgVMzdMwHO297T1AGR/Dob/NUgzeJoPxFAcUOL2
+	 ykgIhH8v0IXjRyvaAv+CkYRcZCM5l7/GNmZ7DnJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgFRCuC (ORCPT
+        id S1728408AbgFRCuR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:50:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:50:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgFRBJZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:25 -0400
+        id S1728119AbgFRBJV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C086F21974;
-        Thu, 18 Jun 2020 01:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AD5721D90;
+        Thu, 18 Jun 2020 01:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442564;
-        bh=GPCQ9o9OX610tutUcHN29RME33dv4QpzreXiArdMxI4=;
+        s=default; t=1592442560;
+        bh=FgERd5sewvBMOH5a47mfPFwGkB1P6KA+Fm1olXzkvko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Enf5E4lBLeV3zH8HIXGanKZ3trM/usw74hTVpi8lgdNI/a0CGKDsdMF7s39Z16qW9
-         ousyKx3kbChuBSkDhskUdDzH9HYycIsRihsef7snhotmZztj3fPY6Gqv7SpZehdy0E
-         B6O3/FD5axWECG4vAzYb12iyYwu7UDeKI6oji5nM=
+        b=f462k587s7Wf2m5+NhkPNgvIwOZreZEKUhPi4g9Qe3I3rFJVfKBwPeinnOAfy/Pkw
+         sqg5Q3pV0bJ3yMe/M2tkcY6XWdY459TvcOK9+JfqB+5TOl710Yl1Sj1e0o686/KV+x
+         0jvNw7Q+4G4S0biu6LUEUCL7ObIgmOqtYXqHCk7k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Andre Przywara <andre.przywara@arm.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 059/388] arm64: dts: fvp/juno: Fix node address fields
-Date:   Wed, 17 Jun 2020 21:02:36 -0400
-Message-Id: <20200618010805.600873-59-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 056/388] arm64: dts: fvp: Fix GIC child nodes
+Date:   Wed, 17 Jun 2020 21:02:33 -0400
+Message-Id: <20200618010805.600873-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,168 +62,167 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit bb5cce12ac717c7462217cd493ed701d12d6dbce ]
+[ Upstream commit 78631aecc52c4b2adcf611769df2ff9c67ac16d0 ]
 
-The Arm Ltd. boards were using an outdated address convention in the DT
-node names, by separating the high from the low 32-bits of an address by
-a comma.
+The GIC DT nodes for the fastmodels were not fully compliant with the
+DT binding, which has certain expectations about child nodes and their
+size and address cells values.
 
-Remove the comma from the node name suffix to be DT spec compliant.
+Use smaller #address-cells and #size-cells values, as the binding
+requests, and adjust the reg properties accordingly.
+This requires adjusting the interrupt nexus nodes as well, as one
+field of the interrupt-map property depends on the GIC's address-size.
 
-Link: https://lore.kernel.org/r/20200513103016.130417-3-andre.przywara@arm.com
+Since the .dts files share interrupt nexus nodes across different
+interrupt controllers (GICv2 vs. GICv3), we need to use the only
+commonly allowed #address-size value of <1> for both.
+
+Link: https://lore.kernel.org/r/20200513103016.130417-11-andre.przywara@arm.com
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
- arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ .../boot/dts/arm/foundation-v8-gicv2.dtsi     |  2 +-
+ .../boot/dts/arm/foundation-v8-gicv3.dtsi     |  8 +-
+ arch/arm64/boot/dts/arm/foundation-v8.dtsi    | 86 +++++++++----------
+ 3 files changed, 48 insertions(+), 48 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index 5c183483ec3b..8010cdcdb37a 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -31,7 +31,7 @@ motherboard {
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			nor_flash: flash@0,00000000 {
-+			nor_flash: flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
-@@ -41,13 +41,13 @@ partitions {
- 				};
- 			};
- 
--			psram@1,00000000 {
-+			psram@100000000 {
- 				compatible = "arm,vexpress-psram", "mtd-ram";
- 				reg = <1 0x00000000 0x02000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -59,14 +59,14 @@ ethernet@2,02000000 {
- 				vddvario-supply = <&v2m_fixed_3v3>;
- 			};
- 
--			usb@2,03000000 {
-+			usb@203000000 {
- 				compatible = "nxp,usb-isp1761";
- 				reg = <2 0x03000000 0x20000>;
- 				interrupts = <16>;
- 				port1-otg;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+index 15fe81738e94..dfb23dfc0b0f 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
++++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv2.dtsi
+@@ -8,7 +8,7 @@ / {
+ 	gic: interrupt-controller@2c001000 {
+ 		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
+-		#address-cells = <2>;
++		#address-cells = <1>;
+ 		interrupt-controller;
+ 		reg = <0x0 0x2c001000 0 0x1000>,
+ 		      <0x0 0x2c002000 0 0x2000>,
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi b/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi
+index f2c75c756039..906f51935b36 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi
++++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dtsi
+@@ -8,9 +8,9 @@ / {
+ 	gic: interrupt-controller@2f000000 {
+ 		compatible = "arm,gic-v3";
+ 		#interrupt-cells = <3>;
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x2f000000 0x100000>;
+ 		interrupt-controller;
+ 		reg =	<0x0 0x2f000000 0x0 0x10000>,
+ 			<0x0 0x2f100000 0x0 0x200000>,
+@@ -22,7 +22,7 @@ gic: interrupt-controller@2f000000 {
+ 		its: its@2f020000 {
+ 			compatible = "arm,gic-v3-its";
+ 			msi-controller;
+-			reg = <0x0 0x2f020000 0x0 0x20000>;
++			reg = <0x20000 0x20000>;
+ 		};
+ 	};
+ };
 diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 60ec37d6c9d3..e2da63f78298 100644
+index 12f039fa3dad..60ec37d6c9d3 100644
 --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
 +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -151,7 +151,7 @@ bus@8000000 {
- 				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+@@ -107,49 +107,49 @@ bus@8000000 {
  
--		ethernet@2,02000000 {
-+		ethernet@202000000 {
+ 		#interrupt-cells = <1>;
+ 		interrupt-map-mask = <0 0 63>;
+-		interrupt-map = <0 0  0 &gic 0 0 GIC_SPI  0 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  1 &gic 0 0 GIC_SPI  1 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  2 &gic 0 0 GIC_SPI  2 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  3 &gic 0 0 GIC_SPI  3 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  4 &gic 0 0 GIC_SPI  4 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  5 &gic 0 0 GIC_SPI  5 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  6 &gic 0 0 GIC_SPI  6 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  7 &gic 0 0 GIC_SPI  7 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  8 &gic 0 0 GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0  9 &gic 0 0 GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 10 &gic 0 0 GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 11 &gic 0 0 GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 12 &gic 0 0 GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 13 &gic 0 0 GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 14 &gic 0 0 GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 15 &gic 0 0 GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 16 &gic 0 0 GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 17 &gic 0 0 GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 18 &gic 0 0 GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 19 &gic 0 0 GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 20 &gic 0 0 GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 21 &gic 0 0 GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 22 &gic 0 0 GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 23 &gic 0 0 GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 24 &gic 0 0 GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 25 &gic 0 0 GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 26 &gic 0 0 GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 27 &gic 0 0 GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 28 &gic 0 0 GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 29 &gic 0 0 GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 30 &gic 0 0 GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 31 &gic 0 0 GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 32 &gic 0 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 33 &gic 0 0 GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 34 &gic 0 0 GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 35 &gic 0 0 GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 36 &gic 0 0 GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 37 &gic 0 0 GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 38 &gic 0 0 GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 39 &gic 0 0 GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 40 &gic 0 0 GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 41 &gic 0 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 42 &gic 0 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map = <0 0  0 &gic 0 GIC_SPI  0 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  1 &gic 0 GIC_SPI  1 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  2 &gic 0 GIC_SPI  2 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  3 &gic 0 GIC_SPI  3 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  4 &gic 0 GIC_SPI  4 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  5 &gic 0 GIC_SPI  5 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  6 &gic 0 GIC_SPI  6 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  7 &gic 0 GIC_SPI  7 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  8 &gic 0 GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0  9 &gic 0 GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 10 &gic 0 GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 11 &gic 0 GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 12 &gic 0 GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 13 &gic 0 GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 14 &gic 0 GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 15 &gic 0 GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 16 &gic 0 GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 17 &gic 0 GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 18 &gic 0 GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 19 &gic 0 GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 20 &gic 0 GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 21 &gic 0 GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 22 &gic 0 GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 23 &gic 0 GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 24 &gic 0 GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 25 &gic 0 GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 26 &gic 0 GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 27 &gic 0 GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 28 &gic 0 GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 29 &gic 0 GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 30 &gic 0 GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 31 &gic 0 GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 32 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 33 &gic 0 GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 34 &gic 0 GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 35 &gic 0 GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 36 &gic 0 GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 37 &gic 0 GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 38 &gic 0 GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 39 &gic 0 GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 40 &gic 0 GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		ethernet@2,02000000 {
  			compatible = "smsc,lan91c111";
- 			reg = <2 0x02000000 0x10000>;
- 			interrupts = <15>;
-@@ -178,7 +178,7 @@ v2m_refclk32khz: refclk32khz {
- 			clock-output-names = "v2m:refclk32khz";
- 		};
- 
--		iofpga@3,00000000 {
-+		iofpga@300000000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index e3983ded3c3c..d5cefddde08c 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -103,7 +103,7 @@ nmi-button {
- 				};
- 			};
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>;
-@@ -120,7 +120,7 @@ partitions {
- 				};
- 			};
- 
--			ethernet@2,00000000 {
-+			ethernet@200000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x00000000 0x10000>;
- 				interrupts = <3>;
-@@ -133,7 +133,7 @@ ethernet@2,00000000 {
- 				vddvario-supply = <&mb_fixed_3v3>;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-index 60703b5763c6..350cbf17e8b4 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-@@ -9,7 +9,7 @@ bus@8000000 {
- 		motherboard {
- 			arm,v2m-memory-map = "rs2";
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				virtio-p9@140000 {
- 					compatible = "virtio,mmio";
- 					reg = <0x140000 0x200>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index e333c8d2d0e4..d1bfa62ca073 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -17,14 +17,14 @@ motherboard {
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan91c111";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -51,7 +51,7 @@ v2m_refclk32khz: refclk32khz {
- 				clock-output-names = "v2m:refclk32khz";
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
 -- 
 2.25.1
 
