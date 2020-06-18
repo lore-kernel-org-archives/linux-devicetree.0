@@ -2,110 +2,101 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27200C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61308C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1EC9221F0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3618D2224A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592445467;
+	bh=Z41N+cIfPZq6+16FIiby5DDwyV51obckIwKxYJuq+4g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q1nHiuMGZ5/RNHz9Ecmxytz6MfO9fNWi5NMpiK1B3149TYebesQxtIT0Xc7JOGW+F
+	 VYgfvVdGpJD86DYAEcWYPGwmNK1VrWEBHGSwAuEH+dHTk01N8O3tGymSIYX03oc+z8
+	 78TRIjSsp27cNG0qy5sjYMafcT1O/f2xKS/uP/e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbgFRBvz (ORCPT
+        id S1730775AbgFRB5p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:51:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45682 "EHLO vps0.lunn.ch"
+        Wed, 17 Jun 2020 21:57:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732198AbgFRBvx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:51:53 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jljiV-0013N7-K9; Thu, 18 Jun 2020 03:51:47 +0200
-Date:   Thu, 18 Jun 2020 03:51:47 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v7 2/6] net: phy: Add a helper to return the
- index for of the internal delay
-Message-ID: <20200618015147.GH249144@lunn.ch>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-3-dmurphy@ti.com>
+        id S1731349AbgFRBZF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86387221EB;
+        Thu, 18 Jun 2020 01:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443505;
+        bh=Z41N+cIfPZq6+16FIiby5DDwyV51obckIwKxYJuq+4g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Uu94Fvic27skO+Ng7LieYt2IWXloXekIPgJSFkYwQnwc68/LHUdscKWi5fYMdwFOj
+         qWltOfH74NChIOWP9mLmxV1CS18vu7Am9ezesV5ekyGlwb7BmHyBUgV6drZPC3ZOnB
+         kGKbDBbyXAWLL7nw/SmPbQbQL3YqEs3xHlK+UHaI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 130/172] of: Fix a refcounting bug in __of_attach_node_sysfs()
+Date:   Wed, 17 Jun 2020 21:21:36 -0400
+Message-Id: <20200618012218.607130-130-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617182019.6790-3-dmurphy@ti.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:20:15PM -0500, Dan Murphy wrote:
-> Add a helper function that will return the index in the array for the
-> passed in internal delay value.  The helper requires the array, size and
-> delay value.
-> 
-> The helper will then return the index for the exact match or return the
-> index for the index to the closest smaller value.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/net/phy/phy_device.c | 68 ++++++++++++++++++++++++++++++++++++
->  include/linux/phy.h          |  4 +++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 04946de74fa0..611d4e68e3c6 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -31,6 +31,7 @@
->  #include <linux/mdio.h>
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
-> +#include <linux/property.h>
->  
->  MODULE_DESCRIPTION("PHY library");
->  MODULE_AUTHOR("Andy Fleming");
-> @@ -2657,6 +2658,73 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
->  }
->  EXPORT_SYMBOL(phy_get_pause);
->  
-> +/**
-> + * phy_get_delay_index - returns the index of the internal delay
-> + * @phydev: phy_device struct
-> + * @dev: pointer to the devices device struct
-> + * @delay_values: array of delays the PHY supports
-> + * @size: the size of the delay array
-> + * @is_rx: boolean to indicate to get the rx internal delay
-> + *
-> + * Returns the index within the array of internal delay passed in.
-> + * Or if size == 0 then the delay read from the firmware is returned.
-> + * The array must be in ascending order.
-> + * Return errno if the delay is invalid or cannot be found.
-> + */
-> +s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
-> +			   const int *delay_values, int size, bool is_rx)
-> +{
-> +	int ret;
-> +	int i;
-> +	s32 delay;
-> +
-> +	if (is_rx)
-> +		ret = device_property_read_u32(dev, "rx-internal-delay-ps",
-> +					       &delay);
-> +	else
-> +		ret = device_property_read_u32(dev, "tx-internal-delay-ps",
-> +					       &delay);
-> +	if (ret) {
-> +		phydev_err(phydev, "internal delay not defined\n");
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-This is an optional property. So printing an error message seems heavy
-handed.
+[ Upstream commit 8a325dd06f2358ea0888e4ff1c9ca4bc23bd53f3 ]
 
-Maybe it would be better to default to 0 if the property is not found,
-and continue with the lookup in the table to find what value should be
-written for a 0ps delay?
+The problem in this code is that if kobject_add() fails, then it should
+call of_node_put(np) to drop the reference count.  I've actually moved
+the of_node_get(np) later in the function to avoid needing to do clean
+up.
 
-	Andrew
+Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/of/kobj.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
+index c72eef988041..a32e60b024b8 100644
+--- a/drivers/of/kobj.c
++++ b/drivers/of/kobj.c
+@@ -134,8 +134,6 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	if (!name)
+ 		return -ENOMEM;
+ 
+-	of_node_get(np);
+-
+ 	rc = kobject_add(&np->kobj, parent, "%s", name);
+ 	kfree(name);
+ 	if (rc)
+@@ -144,6 +142,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 	for_each_property_of_node(np, pp)
+ 		__of_add_property_sysfs(np, pp);
+ 
++	of_node_get(np);
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
