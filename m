@@ -6,78 +6,80 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D251C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA4AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F54208C7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A835D21655
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 17:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592500747;
-	bh=8AEuRVh4Skv/+czwOlC7m8ptCHs6J6vxTFoUKr/uswg=;
+	s=default; t=1592500856;
+	bh=gQ5nDAf/oiHGfaluw9ZDydOEIYrhctuUkCR/rgi4JJg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iQVnr795tQwD0Y2INxyt/kNFSX3UpeTY611eRkyk/Nol2jSmaC0A5TsFw/J/MIU4C
-	 NomYvxrLZXNmi9QdMOQWF6caquJTk3aFLvl15cfsmZEhLc1Ob27zXttFaD45oTkE6R
-	 uTDzjnPNQjVPWHZj+pZAnJGZ+B5EhJE5CfrrQNwQ=
+	b=p3WvEWmqKwItgkthxAa/tndm2I76Cr7mUFZ/CHHUbjqUj+YQ+1yCoR2hGgVvWYSz5
+	 aTrwVDjrrxC4x4g8C0O9QqR51Ne/8zvWuAUIS2TvnvmJcpbpuSSKKIpL1ZkouN0Zj+
+	 MQVLUcDIT61qI0WpDG6+YDHgHxaQ1bMyyLhdhDeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgFRRTG (ORCPT
+        id S1732091AbgFRRU4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:19:06 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37973 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgFRRTG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 13:19:06 -0400
-Received: by mail-il1-f193.google.com with SMTP id b5so6560023iln.5;
-        Thu, 18 Jun 2020 10:19:06 -0700 (PDT)
+        Thu, 18 Jun 2020 13:20:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43539 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732087AbgFRRUz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 13:20:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id u13so7921097iol.10;
+        Thu, 18 Jun 2020 10:20:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Db7i8O4GZYzUo4BrwYG9krZWxE26JRhniK91bgJunXc=;
-        b=JaT+KhVs65hHvdSWjhIYVNrzqqqs9ObDY8JWUlpd7yJhIPw2tzMceWIP79O9EvcEGx
-         OmoMk8XfBGJzUOcnXU3mhtDE1fvzHJC30FRQagkhlfKyFq4frAZBOzJQQh+1FVvqENtH
-         fqSOSmg4uHH3cwBTy/023HKxRr5A8u/pBT3Q6UYrSczUA/0HyEslYRE69ZMyqR61xgCC
-         +mGqoAwrYmfdZq2bstFgIRYSZGMoADUcdUVJaVcrYFMQoCU5TipT5Kc0dvLOunenZeP/
-         92LKTZS3s9k+RW9SYqWHbAEUqzmoDxocvnbqv97rQteHwiAg0myBnZPFMSJFCSvpiVF7
-         nNeg==
-X-Gm-Message-State: AOAM530XOxZxfmYzOhRLx28A0dSFHz3oq28cNEuRnGAiEwWZy18HyJjk
-        Buf5UCY6+x8V7YAh2LZHQ12KXRYizw==
-X-Google-Smtp-Source: ABdhPJz3Zg035OcmSJh4DRlnfpp0v68/rA3fvCKm4Bt2OSeRUyPPDg/rT57SAqLcuDxpv3iguKojYg==
-X-Received: by 2002:a92:d3c8:: with SMTP id c8mr5114952ilh.57.1592500745724;
-        Thu, 18 Jun 2020 10:19:05 -0700 (PDT)
+        bh=VH8S2v7O8diZS51/azFiEAEdYRzI1ehg79BFv839KHc=;
+        b=GvqDJdsTQuUHRHA2BBO2DzswubLbXGgWNk0opG9MK4spBA9O5Qj089dAIHq4Ozt22C
+         cpkjIo2XtlCJyMzcs9WWyEb9eUbaLnJjBu5W5SqaAf/eeixWjo9OY6lDhkjJ2Av+cWQU
+         577P9rahSOt/5Zf309QUXP67pajxUMq+4lYxqkeE20VTK6GDFEnWhVbY1iYNkWhyaHzB
+         ZfNlfkHKNKo0HjFle0oWvpYY+r5zAaj8dUqRAKIhP0iiNxWCzmkAIk1qaT2bjDgK11lO
+         DVl8GK3g2zTW2YDGM/laFYn7ep/ex39irjkUu0ktmCrBeiZPXi/bxnBPOx+YbvF26rox
+         KcIQ==
+X-Gm-Message-State: AOAM5332v9yt/+rOjjLuLMUXaQyNfWiRMT7jpsrDZ1sV7kcWHSaFzQ7h
+        f8r8mLkVU3OVV1vzVONP7A==
+X-Google-Smtp-Source: ABdhPJyxO5bc/mOKqhGBEaIj5NAcpWG9wYgFOjedTsxJz93sZ6cHC5TNkIg0xUBUJ1tUVM5f+CLABw==
+X-Received: by 2002:a05:6602:13c6:: with SMTP id o6mr5924431iov.84.1592500854999;
+        Thu, 18 Jun 2020 10:20:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id v11sm1804090ile.61.2020.06.18.10.19.04
+        by smtp.gmail.com with ESMTPSA id v11sm1806720ile.61.2020.06.18.10.20.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 10:19:05 -0700 (PDT)
-Received: (nullmailer pid 558701 invoked by uid 1000);
-        Thu, 18 Jun 2020 17:19:03 -0000
-Date:   Thu, 18 Jun 2020 11:19:03 -0600
+        Thu, 18 Jun 2020 10:20:54 -0700 (PDT)
+Received: (nullmailer pid 561584 invoked by uid 1000);
+        Thu, 18 Jun 2020 17:20:52 -0000
+Date:   Thu, 18 Jun 2020 11:20:52 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 15/29] dt: fix reference to olpc,xo1.75-ec.txt
-Message-ID: <20200618171903.GA558613@bogus>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 27/29] docs: dt: minor adjustments at writing-schema.rst
+Message-ID: <20200618172052.GA561010@bogus>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
+ <14fc680fd6596b277f94bb5a240cc9dfc41d59bf.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d0262854582ee754e4b8bd80677d96b3e098ea5c.1592203542.git.mchehab+huawei@kernel.org>
+In-Reply-To: <14fc680fd6596b277f94bb5a240cc9dfc41d59bf.1592203542.git.mchehab+huawei@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 15 Jun 2020 08:46:54 +0200, Mauro Carvalho Chehab wrote:
-> This file was converted and renamed.
+On Mon, Jun 15, 2020 at 08:47:06AM +0200, Mauro Carvalho Chehab wrote:
+> There are two literal blocks that aren't mark as such. Mark them,
+> in order to make the document to produce a better html output.
 > 
-> Fixes: 7882d822b3f9 ("dt-bindings: spi: Convert spi-pxa2xx to json-schema")
+> While here, also add a SPDX header to it.
+> 
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+>  Documentation/devicetree/writing-schema.rst | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
-Applied, thanks!
+Applied, thanks.
+
+Rob
