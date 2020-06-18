@@ -2,100 +2,65 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74427C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 05:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53394C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4862100A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 05:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384C8217A0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgFRFrj (ORCPT
+        id S1726969AbgFRGPB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 01:47:39 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:52128 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725837AbgFRFrj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 01:47:39 -0400
-Received: from [37.162.76.16] (port=34618 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jlnOg-000Fdz-JC; Thu, 18 Jun 2020 07:47:34 +0200
-Subject: Re: [PATCH 4/5] dt-bindings: fpga: xilinx-slave-serial: add optional
- INIT_B GPIO
-To:     Rob Herring <robh@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-References: <20200611211144.9421-1-luca@lucaceresoli.net>
- <20200611211144.9421-4-luca@lucaceresoli.net>
- <20200617223955.GA2967317@bogus>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <b2c064c0-9a52-890d-b026-9cc1f4cab7d0@lucaceresoli.net>
-Date:   Thu, 18 Jun 2020 07:47:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200617223955.GA2967317@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Thu, 18 Jun 2020 02:15:01 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:46938 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbgFRGPB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 02:15:01 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D33D61A0E3C;
+        Thu, 18 Jun 2020 08:14:59 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0EA441A00D4;
+        Thu, 18 Jun 2020 08:14:56 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 048B64024F;
+        Thu, 18 Jun 2020 14:14:50 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/5] Add audio support for imx6sx platform
+Date:   Thu, 18 Jun 2020 14:03:44 +0800
+Message-Id: <cover.1592460381.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob, Moritz,
+Add audio support for imx6sx platform.
+Enable ASRC, ESAI, SPDIF, MQS.
 
-On 18/06/20 00:39, Rob Herring wrote:
-> On Thu, Jun 11, 2020 at 11:11:43PM +0200, Luca Ceresoli wrote:
->> The INIT_B is used by the 6 and 7 series to report the programming status,
->> providing more control and information about programming errors.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> ---
->>  .../devicetree/bindings/fpga/xilinx-slave-serial.txt       | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
->> index 9f103f3872e8..a049082e1513 100644
->> --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
->> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
->> @@ -16,6 +16,10 @@ Required properties:
->>  - prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
->>  - done-gpios: config status pin (referred to as DONE in the manual)
->>  
->> +Optional properties:
->> +- init_b-gpios: initialization status and configuration error pin
->> +                (referred to as INIT_B in the manual)
-> 
-> Don't use '_' in property names:
-> 
-> init-b-gpios
+Shengjiu Wang (5):
+  ARM: dts: imx6sx: Enable ASRC device
+  ARM: dts: imx6sx-sdb: Add MQS support
+  ARM: dts: imx6sx-sdb: Add SPDIF support
+  ARM: dts: imx6sx-sabreauto: Add SPDIF support
+  ARM: dts: imx6sx-sabreauto: Add cs42888 sound card support
 
-OK, will fix.
+ arch/arm/boot/dts/Makefile             |  1 +
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 96 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6sx-sdb-mqs.dts   | 48 +++++++++++++
+ arch/arm/boot/dts/imx6sx-sdb.dtsi      | 30 ++++++++
+ arch/arm/boot/dts/imx6sx.dtsi          | 36 +++++++---
+ 5 files changed, 203 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb-mqs.dts
 
-Moritz, please don't apply this version of patches 4 and 5 if you still
-haven't done so.
-
-Now what about the existing prog_b-gpios property? Should we just leave
-it as is for backward compatibility, or is there a migration path to fix
-it as well?
-
-Thanks.
 -- 
-Luca
+2.21.0
+
