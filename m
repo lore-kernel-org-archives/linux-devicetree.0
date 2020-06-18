@@ -2,131 +2,94 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D969AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC07C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5EE620776
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FED21D81
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448447;
-	bh=T0Sv3wT+dT74jRdWu8LOci8r1WY3fQdMgEU5r6Qkr1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s0Vsxo+jlL+//UMdbT8HQQgwobxVbOfWkTZZ3LxyktojHVjomP+7qNCbBjwQ21uWc
-	 Ve0nURjNhnZoP9IxzJxD9JTQQNkhzhEqZY9h2DVmsPz3zL6hC3qgf1E7vrEk1N8iHC
-	 uRPQqaZgQ2mK92Mas0cBTCNIy/Ub1dwEvLTWK1eg=
+	s=default; t=1592448598;
+	bh=BCck0kQnMhAfG7wmIdj+cka0AdBZOnZe4nLqeQw3x8M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gsUKqXXbv/H8OV6vo3Sq/Ki7cjZZFH+Z43HlbW5uQt14xDIlBkKxaDmTQ4fbFdAv8
+	 eQkQZogsLKjCVGTLQO2gVRxkdG9TM3c7dsIO92+3JfiqLC9vHWaRDV2tbcKST7Z9A7
+	 flDVkKC7WKxgk5kDtBaL6cC+7WX+H7Rwvzf5TpW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgFRCrZ (ORCPT
+        id S1728184AbgFRBJa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:47:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42616 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387877AbgFRCrY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 22:47:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id x189so5334545iof.9;
-        Wed, 17 Jun 2020 19:47:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9QRZO0p1S/TZyIxm27KirPnxEPk9KFFLztxOs5Nfy3I=;
-        b=twqHcQx0agJbMVtgHi3A3qBPILD1kScarMOMNFh3eMAKdNoMSGphiVS/mRne62YM8B
-         41WHzW+Ql7zoQTfNZqQWfE6f54RaH+oGW9M1tw7gAKMCeWZQb7d57FmjBZBv27UUnrx3
-         JDZu0RaIbLKwqcvB++KUcqM4sC2N85N9t9VyHgohWDtQ5keti55vl4WVPwJqVjDs1KiW
-         V/nysC5umk33pWOLDRKFrNLeDqXkF+FzLslGc0gXyAEuTuiC64PvhW5mT+zKJH3NjDSd
-         fYdkvTcSFAuk4Sqx287/AFsRhPeX7D6568/Wx2tsyiBuvc4KyLuhJfBdw+fsxaf9YUOF
-         JN0w==
-X-Gm-Message-State: AOAM532fMXUQxmb9uV9rcwvncFdFGWZxpdwWWo3DkNdc+7kvzThecYVf
-        jlnESE5lDNnEcLy7ILuTDA==
-X-Google-Smtp-Source: ABdhPJxHsQlXF/93wL8nTFoLoVXH/u6pmds+JtsdnfUfHNeKWFHdU9c2HXDGqXc13dHxSSi/eSQmiQ==
-X-Received: by 2002:a05:6638:272:: with SMTP id x18mr2366174jaq.122.1592448443093;
-        Wed, 17 Jun 2020 19:47:23 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id e25sm949562ios.0.2020.06.17.19.47.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 19:47:22 -0700 (PDT)
-Received: (nullmailer pid 3383625 invoked by uid 1000);
-        Thu, 18 Jun 2020 02:47:21 -0000
-Date:   Wed, 17 Jun 2020 20:47:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 38/38] dt-bindings: serial: Document Tegra-specific
- properties
-Message-ID: <20200618024721.GA3378010@bogus>
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-39-thierry.reding@gmail.com>
+        Wed, 17 Jun 2020 21:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728170AbgFRBJ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31D5321BE5;
+        Thu, 18 Jun 2020 01:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442567;
+        bh=BCck0kQnMhAfG7wmIdj+cka0AdBZOnZe4nLqeQw3x8M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YfFhefDlkiYbAMIMTLE2SROWppImYqa0AevDdoZFlJZvnVfh/GqBoMmLG4mmLtdJm
+         nEVRjA+NTJ/MW8V5YaCwv0JDWS18ATdIxpa8/dI856W5KqYQuswG54DlxXNtLOAKHm
+         VzXU/NqNygKWNVoZqKEXQu5B8iReZTzRB6ZB8Rk0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 061/388] arm64: dts: qcom: sc7180: Correct the pdc interrupt ranges
+Date:   Wed, 17 Jun 2020 21:02:38 -0400
+Message-Id: <20200618010805.600873-61-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612141903.2391044-39-thierry.reding@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 04:19:03PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> On Tegra the UART is described using additional properties, such as
-> clock-names, reset-names, dmas and dma-names. Document them in the
-> bindings so that Tegra device trees are properly validated.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  .../devicetree/bindings/serial/8250.yaml      | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
-> index c1d4c196f005..9c8fad27c3f3 100644
-> --- a/Documentation/devicetree/bindings/serial/8250.yaml
-> +++ b/Documentation/devicetree/bindings/serial/8250.yaml
-> @@ -28,6 +28,32 @@ allOf:
->            const: 2
->        required:
->          - reg-shift
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - nvidia,tegra20-uart
+From: Maulik Shah <mkshah@codeaurora.org>
 
-Can use 'const' here instead.
+[ Upstream commit 7d2f29e49477aa51339e719cf73f0945c39c8a9e ]
 
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          $ref: "/schemas/types.yaml#/definitions/string-array"
+Few PDC interrupts do not map to respective parent GIC interrupt.
+Fix this by correcting the pdc interrupt map.
 
-Don't need type.
+Fixes: 22f185ee81d2 ("arm64: dts: qcom: sc7180: Add pdc interrupt controller")
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Link: https://lore.kernel.org/r/1589804402-27130-1-git-send-email-mkshah@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> +          items:
-> +            - const: serial
-> +
-> +        dmas:
-> +          $ref: "/schemas/types.yaml#/definitions/phandle-array"
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 998f101ad623..eea92b314fc6 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1657,8 +1657,7 @@ dispcc: clock-controller@af00000 {
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+-			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
+-					  <119 634 4>, <124 639 1>;
++			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
+ 			#interrupt-cells = <2>;
+ 			interrupt-parent = <&intc>;
+ 			interrupt-controller;
+-- 
+2.25.1
 
-How many?
-
-> +
-> +        dma-names:
-> +          $ref: "/schemas/types.yaml#/definitions/string-array"
-> +          items:
-> +            - const: rx
-> +            - const: tx
-> +
-> +        reset-names:
-> +          $ref: "/schemas/types.yaml#/definitions/string-array"
-> +          items:
-> +            - const: serial
->    - if:
->        not:
->          properties:
-> -- 
-> 2.24.1
-> 
