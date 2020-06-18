@@ -2,183 +2,199 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1380C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 05:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB805C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 05:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9FF121852
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 05:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81789217A0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 05:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JUYL0bXs"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="EEMSb4/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFRF3P (ORCPT
+        id S1726987AbgFRFd1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 01:29:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:62916 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725982AbgFRF3P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 01:29:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592458154; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Dk0aGUdOPthT8VlN9Qh+Ev+sNukDGkYigjembz8orGk=; b=JUYL0bXsv/YjnjgW4vPylDQWMTeMJlSG7WvUFiAYpa0ysPIo50UXrj+iKDXy3UyU/nQ9UJp9
- WPYFbQdSgk0768zdaXjTRvffKxInmrLLe/i7WmsO5AUL/TEWmGJpUJBRK/HRF7vh6+4eMTyi
- CqfvnbaG/Fo7cdOjW1hcSvo5TVA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5eeafb8efe1db4db894ef1f8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 05:28:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8BF0CC433C8; Thu, 18 Jun 2020 05:28:46 +0000 (UTC)
-Received: from vnaralas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akolli)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8E670C433C9;
-        Thu, 18 Jun 2020 05:28:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8E670C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akolli@codeaurora.org
-From:   Anilkumar Kolli <akolli@codeaurora.org>
-To:     ath11k@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Anilkumar Kolli <akolli@codeaurora.org>
-Subject: [PATCH v3 2/3] ath11k: copy ce service configs to hw_params
-Date:   Thu, 18 Jun 2020 10:58:23 +0530
-Message-Id: <1592458104-2961-3-git-send-email-akolli@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
-References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
+        Thu, 18 Jun 2020 01:33:27 -0400
+Received: from mail-eopbgr680058.outbound.protection.outlook.com ([40.107.68.58]:26382
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbgFRFd1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 01:33:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PsNKslWv9U45p6ljNG8U3a+Pe4xWXTFG3jl89qoNhajClpvFqEh8FQEWcMbazCHeWlo4bG5MkKzgOK2TNUKA1rx9uNhjsjGbpuRmR+wBcoYtZYF2ai0kWmJu9D5w+bWNZ98E2zk90m5rMHh8NsNVbzHzTsFskmaMWIRIpcMKHqQePiXw7TViIKBrvmNep16wAdbW/uXEllajT3hyCRdEK7T5pwc3ZQbgO/U7y8szbdnQIfH2TusqlbMdHtzEr1z+Nf47msJdWkRftlLGabLyBAal+feY+ZIPgf7KNMHknArILWcckYzNyn3LjRaDsfPAaonaxX3iKawneNoLoXmB7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Di/y+TR4fQ58FL6K53Ajp8ljwMwKDiwkPfzFDiDUQak=;
+ b=devzsOEvULhXJX7b19rQIWIaYsLEx+v0zDYQp+t9NSk/rcjSKJwNchGS5nNItxhNPRk0d/it90x+gusDV9AHVaQLTdcBvLOcHIRksob4KVlvQFUw3syVFbf1p30QJKQsFTqtkYR5/U1uxuEWv3NMBQ9do2mLlhGL/OHAO+C3Yb4ChdwJc5QUdLduE3cctInpU+BITh5v4VPHqWn9GEjw1RAHKsbdZwyBmAJ6xpx9hv0q116KpiIRr9FnB5vhrNGQV8YT21OgrePNRtsNczibZltWCfDglTlNGBOcla2/gzppPcHHL8A13GxJTt2qh6HQ3qwyW+T4gOJhGbuNWFQaPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Di/y+TR4fQ58FL6K53Ajp8ljwMwKDiwkPfzFDiDUQak=;
+ b=EEMSb4/srdz5+yug4xWKZC43v8DWhtdWxyQBHk016fWMcjyHoUADIYgkvyhuwy55lk0YoDITAM1d+K5zS10Yk07IBBtLt4u/SVqSixQHHOQp8b6sZyP5sXl8DSshquqPvH/I5hP5mg67z+nEvhknlW8rDipcZ90y4c1S4rL2mQE=
+Received: from SN1PR12CA0099.namprd12.prod.outlook.com (2603:10b6:802:21::34)
+ by BN6PR02MB2179.namprd02.prod.outlook.com (2603:10b6:404:34::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
+ 2020 05:33:23 +0000
+Received: from SN1NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:802:21:cafe::32) by SN1PR12CA0099.outlook.office365.com
+ (2603:10b6:802:21::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
+ Transport; Thu, 18 Jun 2020 05:33:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; ideasonboard.com; dkim=none (message not signed)
+ header.d=none;ideasonboard.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT035.mail.protection.outlook.com (10.152.72.145) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Thu, 18 Jun 2020 05:33:22
+ +0000
+Received: from [149.199.38.66] (port=58928 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jln9s-0006yp-GM; Wed, 17 Jun 2020 22:32:16 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jlnAv-0003RZ-Qn; Wed, 17 Jun 2020 22:33:21 -0700
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <vishal.sagar@xilinx.com>)
+        id 1jlnAp-0003Ok-4g; Wed, 17 Jun 2020 22:33:15 -0700
+From:   Vishal Sagar <vishal.sagar@xilinx.com>
+To:     hyunk@xilinx.com, laurent.pinchart@ideasonboard.com,
+        hverkuil@xs4all.nl, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, michals@xilinx.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        joe@perches.com
+Cc:     sandipk@xilinx.com, dineshk@xilinx.com,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH v3 1/3] v4l2-dv-timings: Add timings for 1920x1080P48 and 4KP48
+Date:   Thu, 18 Jun 2020 11:03:02 +0530
+Message-Id: <20200618053304.14551-2-vishal.sagar@xilinx.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(396003)(376002)(136003)(46966005)(83380400001)(478600001)(7696005)(426003)(81166007)(5660300002)(336012)(6666004)(356005)(47076004)(316002)(7416002)(70586007)(107886003)(70206006)(9786002)(82310400002)(186003)(26005)(4326008)(8676002)(2906002)(82740400003)(2616005)(8936002)(44832011)(1076003)(36756003)(921003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: e5982b77-bd07-4e7c-a0a2-08d813491d84
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2179:
+X-Microsoft-Antispam-PRVS: <BN6PR02MB2179F938B00DC82227CD72A6A79B0@BN6PR02MB2179.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:751;
+X-Forefront-PRVS: 0438F90F17
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: b9HA6V2IF/tKY4unC2RNXCak5vfHm6aXa9eo52e4XEiC6IOPpxrlXPu1LROJ25cKjwyPhMG+HUYbaUPRUyXFRtSD1qwiRXe7hMKlZAiNuag8zwhVJKdDK0a1VYRUcHXBMWngfMVqiFKysHWiycDvC8vcJWQAl593X34abwso2Nf7cHPIqmzGjTfK/IeITY/MS5R4JfR+rbIjNU2zcu0m81FoUznJauSxY97RGdoYXKyddTtI2Qxe2w/GxCKIY2jZAc6mWYbealMoudv7mSFSNcOhs2i2k7bB1G/pJ8+r6Fxk9GlEcwqyTygZuqvGGxe+KmyeWe0Vcy42FldR/Uhp/CVyEAzzwbfPyT+lOc367QgUWWzHK7UWdl9fM9IuCBF78coKnxH27XTu6oKHDWh8/2bYL61T5Bp9MDT5O+/0Voo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2020 05:33:22.1556
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5982b77-bd07-4e7c-a0a2-08d813491d84
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2179
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-No functional changes, added target ce service configurations
-to hw_params.
+Add the timing entry for 1920x1080p48, 3840x2160p48 and 4096x2160p48
+from CTA-861-G.
+1920x1080p48 is VIC 111.
+3840x2160P48 is VIC 114.
+4096x2160P48 is VIC 115.
 
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
 ---
-V3:
- - added ce svc configs in hw_params
+v3
+- Added for first time
 
- drivers/net/wireless/ath/ath11k/ahb.c  | 20 +++++++++++++++-----
- drivers/net/wireless/ath/ath11k/core.c |  8 +-------
- drivers/net/wireless/ath/ath11k/core.h |  1 +
- drivers/net/wireless/ath/ath11k/hw.h   |  2 ++
- 4 files changed, 19 insertions(+), 12 deletions(-)
+ include/uapi/linux/v4l2-dv-timings.h | 31 +++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index 7e9bfeaaf4d2..aa74d27e5871 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -152,7 +152,7 @@ static const struct ce_pipe_config target_ce_config_wlan[] = {
-  * This table is derived from the CE_PCI TABLE, above.
-  * It is passed to the Target at startup for use by firmware.
-  */
--static const struct service_to_pipe target_service_to_ce_map_wlan[] = {
-+static const struct service_to_pipe target_service_to_ce_map_wlan_ipq8074[] = {
- 	{
- 		.service_id = __cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
- 		.pipedir = __cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-@@ -644,8 +644,8 @@ static void ath11k_ahb_init_qmi_ce_config(struct ath11k_base *ab)
- 
- 	cfg->tgt_ce_len = ARRAY_SIZE(target_ce_config_wlan) - 1;
- 	cfg->tgt_ce = target_ce_config_wlan;
--	cfg->svc_to_ce_map_len = ARRAY_SIZE(target_service_to_ce_map_wlan);
--	cfg->svc_to_ce_map = target_service_to_ce_map_wlan;
-+	cfg->svc_to_ce_map_len = ab->hw_params.svc_to_ce_map_len;
-+	cfg->svc_to_ce_map = ab->hw_params.svc_to_ce_map;
+diff --git a/include/uapi/linux/v4l2-dv-timings.h b/include/uapi/linux/v4l2-dv-timings.h
+index b52b67c62562..6ceaa7841923 100644
+--- a/include/uapi/linux/v4l2-dv-timings.h
++++ b/include/uapi/linux/v4l2-dv-timings.h
+@@ -167,6 +167,16 @@
+ 		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 20) \
  }
  
- static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
-@@ -853,8 +853,8 @@ static int ath11k_ahb_map_service_to_pipe(struct ath11k_base *ab, u16 service_id
- 	bool ul_set = false, dl_set = false;
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan); i++) {
--		entry = &target_service_to_ce_map_wlan[i];
-+	for (i = 0; i < ab->hw_params.svc_to_ce_map_len; i++) {
-+		entry = &ab->hw_params.svc_to_ce_map[i];
- 
- 		if (__le32_to_cpu(entry->service_id) != service_id)
- 			continue;
-@@ -950,6 +950,16 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
- 		goto err_hal_srng_deinit;
- 	}
- 
-+	ret = ath11k_init_hw_params(ab);
-+	if (ret) {
-+		ath11k_err(ab, "failed to get hw params %d\n", ret);
-+		return ret;
-+	}
++#define V4L2_DV_BT_CEA_1920X1080P48 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		148500000, 638, 44, 148, 4, 5, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, \
++		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
++		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 111) \
++}
 +
-+	ab->hw_params.svc_to_ce_map_len =
-+			ARRAY_SIZE(target_service_to_ce_map_wlan_ipq8074);
-+	ab->hw_params.svc_to_ce_map = target_service_to_ce_map_wlan_ipq8074;
-+
- 	ath11k_ahb_init_qmi_ce_config(ab);
- 
- 	ret = ath11k_core_init(ab);
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index 38e830a2395b..0bf8bb1674dc 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -703,7 +703,7 @@ static void ath11k_core_restart(struct work_struct *work)
- 	complete(&ab->driver_recovery);
+ #define V4L2_DV_BT_CEA_1920X1080P50 { \
+ 	.type = V4L2_DV_BT_656_1120, \
+ 	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
+@@ -229,6 +239,16 @@
+ 		{ 0, 0 }, 95, 1) \
  }
  
--static int ath11k_init_hw_params(struct ath11k_base *ab)
-+int ath11k_init_hw_params(struct ath11k_base *ab)
- {
- 	const struct ath11k_hw_params *hw_params = NULL;
- 	int i;
-@@ -746,12 +746,6 @@ int ath11k_core_init(struct ath11k_base *ab)
- 	}
- 	ab->tgt_rproc = prproc;
++#define V4L2_DV_BT_CEA_3840X2160P48 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		594000000, 1276, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, \
++		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
++		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 114) \
++}
++
+ #define V4L2_DV_BT_CEA_3840X2160P50 { \
+ 	.type = V4L2_DV_BT_656_1120, \
+ 	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, \
+@@ -278,6 +298,16 @@
+ 		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 100) \
+ }
  
--	ret = ath11k_init_hw_params(ab);
--	if (ret) {
--		ath11k_err(ab, "failed to get hw params %d\n", ret);
--		return ret;
--	}
++#define V4L2_DV_BT_CEA_4096X2160P48 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		594000000, 1020, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, \
++		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_IS_CE_VIDEO | \
++		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 115) \
++}
++
+ #define V4L2_DV_BT_CEA_4096X2160P50 { \
+ 	.type = V4L2_DV_BT_656_1120, \
+ 	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, \
+@@ -297,7 +327,6 @@
+ 		V4L2_DV_FL_HAS_CEA861_VIC, { 0, 0 }, 102) \
+ }
+ 
 -
- 	ret = ath11k_core_soc_create(ab);
- 	if (ret) {
- 		ath11k_err(ab, "failed to create soc core: %d\n", ret);
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index b6ccd9f93853..98b994984c25 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -852,6 +852,7 @@ struct ath11k_peer *ath11k_peer_find_by_id(struct ath11k_base *ab, int peer_id);
- int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab);
- int ath11k_core_init(struct ath11k_base *ath11k);
- void ath11k_core_deinit(struct ath11k_base *ath11k);
-+int ath11k_init_hw_params(struct ath11k_base *ab);
- struct ath11k_base *ath11k_core_alloc(struct device *dev, size_t priv_size,
- 				      enum ath11k_bus bus);
- void ath11k_core_free(struct ath11k_base *ath11k);
-diff --git a/drivers/net/wireless/ath/ath11k/hw.h b/drivers/net/wireless/ath/ath11k/hw.h
-index f31d53f6adb8..388cfb42ef93 100644
---- a/drivers/net/wireless/ath/ath11k/hw.h
-+++ b/drivers/net/wireless/ath/ath11k/hw.h
-@@ -116,6 +116,8 @@ struct ath11k_hw_params {
- 	} fw;
+ /* VESA Discrete Monitor Timings as per version 1.0, revision 12 */
  
- 	const struct ath11k_hw_ops *hw_ops;
-+	const struct service_to_pipe *svc_to_ce_map;
-+	int svc_to_ce_map_len;
- };
- 
- extern const struct ath11k_hw_ops ipq8074_ops;
+ #define V4L2_DV_BT_DMT_640X350P85 { \
 -- 
-2.7.4
+2.21.0
 
