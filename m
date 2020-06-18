@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431A8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB79C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1673F221F3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C1C20FC3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443173;
-	bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
+	s=default; t=1592443218;
+	bh=SYjxq2NnQ6NVLLeeOjwRvqZ6WebUD/LLJocRXJ3vrPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKLx9sZPC6hdKNraMU6nCbd+rloKFQO77os/7UnDsZCZDUYt2LPAaRnGRQ9l70L7b
-	 HN4Wktjy2awZQqL+F4yToVkL9YIq8lP0HgjsWuMFafj8ow0yy7qyJtFg8iA2wKQlfP
-	 jZxfs/vjcRJlFVxuNcxVKzGDE4gPrcSKxctSPqW8=
+	b=leOuhHF0rACQjqpr9xx3IcxkKP4yGfwpjFCs3LH8pSZumBNm7H1S6fyPrri5FAWgh
+	 1W+rXrPNTtout65VlucnC4hTXSvSLvvM0Ft12z3iRmCKDmdar872MQfWqLC61L4DZZ
+	 RpxWrJ8Hoi3GkDkvxKxC7Zd36ctRoTUdy5H7zmio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgFRBT3 (ORCPT
+        id S1730277AbgFRBUO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbgFRBT0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:26 -0400
+        id S1727092AbgFRBUN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BBE821D79;
-        Thu, 18 Jun 2020 01:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A6A21941;
+        Thu, 18 Jun 2020 01:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443165;
-        bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
+        s=default; t=1592443212;
+        bh=SYjxq2NnQ6NVLLeeOjwRvqZ6WebUD/LLJocRXJ3vrPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aWLJOzxNrJOkNTCGdOzYgiRymgtMiwoptONz1Wiha8jsFqtEC0z00tNhCMIfYPi/b
-         a1T25rFymSt21n7afP0JaDvQUzwcZZp0EN/4Lx4e220COWxuEE0HQ9XODKH+BtlNml
-         /2ISsHgOzCvrp6y1VK7fbC8m8dWAbWe9LPCOtelY=
+        b=oUo9LUyxzZNj4TGVpTSBpR7vGMWkVHMS4n3yo8TBNW2cpXvS5nu3f4+ox0oe0DjKD
+         A5UoFeCPfBgp21i5utR1TDfMHIxfsapkM4Lg+WI9vfivaXxnRZzzxnVSFRWQQW2OCh
+         4x32oGswRexQqlWRbWvn5Cg3rvftx5xel5BkHUKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 131/266] arm64: dts: msm8996: Fix CSI IRQ types
-Date:   Wed, 17 Jun 2020 21:14:16 -0400
-Message-Id: <20200618011631.604574-131-sashal@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 169/266] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
+Date:   Wed, 17 Jun 2020 21:14:54 -0400
+Message-Id: <20200618011631.604574-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,53 +60,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 4a4a26317ec8aba575f6b85789a42639937bc1a4 ]
+[ Upstream commit bba25915b172c72f6fa635f091624d799e3c9cae ]
 
-Each IRQ_TYPE_NONE interrupt causes a warning at boot.
-Fix that by defining an appropriate type.
+The 'phy-mode' property is currently defined as 'rgmii' for Jetson
+Xavier. This indicates that the RGMII RX and TX delays are set by the
+MAC and the internal delays set by the PHY are not used.
 
-Fixes: e0531312e78f ("arm64: dts: qcom: msm8996: Add CAMSS support")
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Link: https://lore.kernel.org/r/1587470425-13726-1-git-send-email-loic.poulain@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+If the Marvell PHY driver is enabled, such that it is used and not the
+generic PHY, ethernet failures are seen (DHCP is failing to obtain an
+IP address) and this is caused because the Marvell PHY driver is
+disabling the internal RX and TX delays. For Jetson Xavier the internal
+PHY RX and TX delay should be used and so fix this by setting the
+'phy-mode' to 'rgmii-id' and not 'rgmii'.
+
+Fixes: f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index fbb8ce78f95b..d303df3887d9 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1681,16 +1681,16 @@ camss: camss@a00000 {
- 				"csi_clk_mux",
- 				"vfe0",
- 				"vfe1";
--			interrupts = <GIC_SPI 78 0>,
--				<GIC_SPI 79 0>,
--				<GIC_SPI 80 0>,
--				<GIC_SPI 296 0>,
--				<GIC_SPI 297 0>,
--				<GIC_SPI 298 0>,
--				<GIC_SPI 299 0>,
--				<GIC_SPI 309 0>,
--				<GIC_SPI 314 0>,
--				<GIC_SPI 315 0>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 80 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 315 IRQ_TYPE_EDGE_RISING>;
- 			interrupt-names = "csiphy0",
- 				"csiphy1",
- 				"csiphy2",
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+index 02909a48dfcd..7899759a12f8 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+@@ -32,7 +32,7 @@ ethernet@2490000 {
+ 
+ 			phy-reset-gpios = <&gpio TEGRA194_MAIN_GPIO(G, 5) GPIO_ACTIVE_LOW>;
+ 			phy-handle = <&phy>;
+-			phy-mode = "rgmii";
++			phy-mode = "rgmii-id";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
 -- 
 2.25.1
 
