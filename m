@@ -2,260 +2,171 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8497CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290DAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FB820890
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:32:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d/s0QMsj"
+	by mail.kernel.org (Postfix) with ESMTP id 013AC206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592494620;
+	bh=jlMdP1cuQV6STiVvBbVS7Mq9pJuMwVMDdrlCY1KLLEo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fnq80rakAiGpQhgAOqiBR7eLCZ2LlLjQYfISahpjRBBji09ZegfAQFZu5112tEC/O
+	 DNjMza+l85A+EEaZ0qRiq8KYJxarzCj+DpFsWeaZFwtDJlB9GyaWE1PRowFKLICWQk
+	 n4aIt6Sx76uSNsIBxsXEZkt5/wEHK2398iiROd+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgFRPcg (ORCPT
+        id S1728050AbgFRPg7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:32:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgFRPcg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 11:32:36 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E21C06174E
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 08:32:36 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id r9so2141705ual.1
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 08:32:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9oZMKeC4utgl0CIoXcDw/AVYW+JLy1inJu/qLK1E0rs=;
-        b=d/s0QMsjBiHwZlUjTpvheqikuQN0gf96atNeo2FcX6n8t5wgQJT5vqUidxqWydjds+
-         wkLtTkz9/J83+L+KflKRQzGRezRXQ2ia0Cv5dglMC8elv6LQs/A1svNdxwDEz4Gcm59H
-         gbvjQU+d19X2IVDeGYliNv3X+nsf5IGlghYn4=
+        Thu, 18 Jun 2020 11:36:59 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36441 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbgFRPg7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 11:36:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id r77so7541104ior.3;
+        Thu, 18 Jun 2020 08:36:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9oZMKeC4utgl0CIoXcDw/AVYW+JLy1inJu/qLK1E0rs=;
-        b=hpbulBfhE1KROvwXk1vhuu7/H3m9q4vpF4l1Ht46iQsZ3ugyu7GaKy8Z2canvLArKK
-         7HU2vg5fgBD5SkKEcxsd0XvdrLlDQPF8ryUH2tCNC6lfHl2r5JN8eHnCEf6fsMyb3WC4
-         rgMndIqopH0jc9XHQ5Sq6u9EOHU+0oLNbfYSDLGEMdOa9XdlnOvmXIgUYMhDVjqJ7GKv
-         0cyKRddpYDMwz1hPGfzyfULomamb9140a2O1ql9ou1/Rx602lWV21XA7Asdw058j4Bnm
-         Ju7XJvFkKEdD8nLFS7aaSVYNe1JanHmS2X0vC4DK4oawwKUnv++iuHSAOzLaoouicJkL
-         SNDA==
-X-Gm-Message-State: AOAM530mEkdEkhNdKw3J84uIUZplz/qiTonFm9awYtsV9XYkyMunHFP5
-        oellwBvc+HtB+llmkzJFgvs5kdNAmTk=
-X-Google-Smtp-Source: ABdhPJxrEWYM1Tqo/FgAVXyCJSFLoWE3vi0CTdbfLCxYtH4tdF7m6z198hwyACJgWOrr2xLX58e8IQ==
-X-Received: by 2002:ab0:4107:: with SMTP id j7mr3551105uad.124.1592494354571;
-        Thu, 18 Jun 2020 08:32:34 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id m17sm377380vsj.22.2020.06.18.08.32.33
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 08:32:33 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id g129so3770214vsc.4
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 08:32:33 -0700 (PDT)
-X-Received: by 2002:a67:8881:: with SMTP id k123mr3844642vsd.198.1592494352448;
- Thu, 18 Jun 2020 08:32:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3aEkhJUrZmS5V0KXN7Cf2MSQUI9Kjw+gs+DgWQ746D8=;
+        b=ncHFYYeV2L2UJWjJrzXeEwQagbi4kIJo36xDLbRbYAdBFS03gBZLuBJU1FpA/+30c8
+         856EwCI/891JLkrI1hq+1XQU3MKbZhLOT74l0+634dtgZn2lVCALeH/JHMXjgTNXk89X
+         bzhDSVhfrDSVRjal64jnnxRMysL5l01fwFqpMaJNMxt0LFgVzrGszPRa3nkDbumEaN1Y
+         ID2K/sXo5HogzoLIbV0x3iEDBDszOego/O3esR1dzRrEenLjWFdaA6SCfO3DJqXtBVTl
+         uDkyPeCWh73SPW2WaFj64e3pvJJsmiXRq+M9K59Et1LFp4D0BceJFGIM6RBo3Il4B2RR
+         WkwA==
+X-Gm-Message-State: AOAM532M+G6DaPkSjortotwSEJyOHWjHMnKxuBdoUMEbPoMBkwJLywXR
+        FGlJ53IkX6enXzU9ycADlg==
+X-Google-Smtp-Source: ABdhPJyn118DZlPJ+hufDbtS9UEk7yc4YAcjLX5q312zt2xocQXal6ECxd0a2b92b/if5lLG1MBx+w==
+X-Received: by 2002:a6b:bbc3:: with SMTP id l186mr5623717iof.186.1592494617763;
+        Thu, 18 Jun 2020 08:36:57 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id j63sm1748029ilg.50.2020.06.18.08.36.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 08:36:57 -0700 (PDT)
+Received: (nullmailer pid 398703 invoked by uid 1000);
+        Thu, 18 Jun 2020 15:36:56 -0000
+Date:   Thu, 18 Jun 2020 09:36:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 35/38] dt-bindings: memory: Update Tegra210 EMC bindings
+Message-ID: <20200618153656.GA389512@bogus>
+References: <20200612141903.2391044-1-thierry.reding@gmail.com>
+ <20200612141903.2391044-36-thierry.reding@gmail.com>
 MIME-Version: 1.0
-References: <20200617145116.247432-1-dianders@chromium.org>
- <20200617074930.v3.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
- <254998b9-c45e-bd6b-bc9a-b5934c0fea8e@linaro.org> <CAD=FV=Vec5FVrDVkmUQTfa6bP+1d3yOtj_FsgVAFdHLLbZ8VDA@mail.gmail.com>
- <db6cc914-0520-5286-f852-473fc63bd6c7@linaro.org> <CAD=FV=UZAtJY42jwSZy+Z+O3AdZqDxnjY1zzOswqQRDY91uPpA@mail.gmail.com>
- <0b0b52db-da8c-e958-d72e-797e319bbe9c@linaro.org>
-In-Reply-To: <0b0b52db-da8c-e958-d72e-797e319bbe9c@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 18 Jun 2020 08:32:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UShR-a8kEvpNEx5gGkUr=DhX-=kzcBQ1SegQTQMoCyKw@mail.gmail.com>
-Message-ID: <CAD=FV=UShR-a8kEvpNEx5gGkUr=DhX-=kzcBQ1SegQTQMoCyKw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: nvmem: Add properties needed for
- blowing fuses
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, dhavalp@codeaurora.org,
-        mturney@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        sparate@codeaurora.org, mkurumel@codeaurora.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612141903.2391044-36-thierry.reding@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Jun 12, 2020 at 04:19:00PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The Tegra210 EMC is a cooling device because it can throttle the EMC
+> frequency if the chip gets too hot. The device tree node therefore needs
+> to contain the "#cooling-cells" property. Furthermore, multiple reserved
+> memory regions can now be attached to the EMC device tree node, and the
+> new memory-region-names property can be used to differentiate between
+> them.
+> 
+> While at it, update the example to make it more fully-featured.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../nvidia,tegra210-emc.yaml                  | 34 ++++++++++++++-----
+>  1 file changed, 26 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+> index 49ab09252e52..4e8f659f1a7c 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
+> @@ -34,16 +34,25 @@ properties:
+>        - description: EMC general interrupt
+>  
+>    memory-region:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> -    description:
+> -      phandle to a reserved memory region describing the table of EMC
+> -      frequencies trained by the firmware
+> +    description: List of phandles to reserved memory regions describing the
+> +      nominal and derated tables of EMC frequencies trained by the firmware.
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +
+> +  memory-region-names:
+> +    $ref: "/schemas/types.yaml#/definitions/string-array"
 
-On Thu, Jun 18, 2020 at 7:01 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 18/06/2020 14:48, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Jun 18, 2020 at 3:10 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >> +Adding SBoyd.
-> >>
-> >> On 17/06/2020 18:22, Doug Anderson wrote:
-> >>> Hi,
-> >>>
-> >>> On Wed, Jun 17, 2020 at 8:19 AM Srinivas Kandagatla
-> >>> <srinivas.kandagatla@linaro.org> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 17/06/2020 15:51, Douglas Anderson wrote:
-> >>>>> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> >>>>>
-> >>>>> On some systems it's possible to actually blow the fuses in the qfprom
-> >>>>> from the kernel.  Add properties to support that.
-> >>>>>
-> >>>>> NOTE: Whether this is possible depends on the BIOS settings and
-> >>>>> whether the kernel has permissions here, so not all boards will be
-> >>>>> able to blow fuses in the kernel.
-> >>>>>
-> >>>>> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> >>>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >>>>> ---
-> >>>>>
-> >>>>> Changes in v3:
-> >>>>> - Add an extra reg range (at 0x6000 offset for SoCs checked)
-> >>>>> - Define two options for reg: 1 item or 4 items.
-> >>>>> - No reg-names.
-> >>>>> - Add "clocks" and "clock-names" to list of properties.
-> >>>>> - Clock is now "sec", not "secclk".
-> >>>>> - Add "vcc-supply" to list of properties.
-> >>>>> - Fixed up example.
-> >>>>>
-> >>>>>     .../bindings/nvmem/qcom,qfprom.yaml           | 45 ++++++++++++++++++-
-> >>>>>     1 file changed, 43 insertions(+), 2 deletions(-)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >>>>> index 5efa5e7c4d81..b195212c6193 100644
-> >>>>> --- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >>>>> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >>>>> @@ -17,8 +17,27 @@ properties:
-> >>>>>         const: qcom,qfprom
-> >>>>>
-> >>>>>       reg:
-> >>>>> -    items:
-> >>>>> -      - description: The corrected region.
-> >>>>> +    # If the QFPROM is read-only OS image then only the corrected region
-> >>>>> +    # needs to be provided.  If the QFPROM is writable then all 4 regions
-> >>>>> +    # must be provided.
-> >>>>> +    oneOf:
-> >>>>> +      - items:
-> >>>>> +          - description: The corrected region.
-> >>>>> +      - items:
-> >>>>> +          - description: The corrected region.
-> >>>>> +          - description: The raw region.
-> >>>>> +          - description: The config region.
-> >>>>> +          - description: The security control region.
-> >>>>> +
-> >>>>> +  # Clock must be provided if QFPROM is writable from the OS image.
-> >>>>> +  clocks:
-> >>>>> +    maxItems: 1
-> >>>>
-> >>>>
-> >>>>> +  clock-names:
-> >>>>> +    const: sec
-> >>>>
-> >>>> Do we need clock-names for just one clock here?
-> >>>
-> >>> I think technically you can get by without, but convention is that
-> >>> clock-names are always provided for clocks.  It's talked about in the
-> >>> same link I sent that talked about reg-names:
-> >>>
-> >>> https://lore.kernel.org/r/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com/
-> >>>
-> >>
-> >> TBH, This is total confusion!!!
-> >>
-> >> when to use "*-names" Device tree bindings is totally depended on Linux
-> >> Subsystem interfaces!
-> >>
-> >> And what is the starting point to draw this line?
-> >
-> > Definitely confusing and mostly because the dts stuff grew organically
-> > for a while there.  It does feel like Rob is pretty clear on the
-> > current state of things and the policy in the link I provided, though.
-> >
-> >
-> >>> Specifically, Rob said:
-> >>>
-> >>>> That probably is because the clock binding has had clock-names from
-> >>>> the start (it may have been the first one). That was probably partly
-> >>>> due to the clock API also was mainly by name already if we want to
-> >>>> admit Linux influence on bindings
-> >>>
-> >>> Basically the standard way for getting clocks in Linux is
-> >>> clk_get(name).  With just one clock you can call clk_get(NULL) and I
-> >>> believe that works, but when you add the 2nd clock then you have to
-> >>> switch APIs to one of the less-commonly-used variants.
-> >>
-> >> In previous NON-DT life clk_get api name argument comes from the clk
-> >> names that clk provider registered the clocks with.
-> >>
-> >> If I remember this correctly, the name that is refereed here for
-> >> clk_get() is old clkdev api based on clk_lookups and is not the same as
-> >> clk-names that we have in Device tree. Atleast in this case!
-> >>
-> >> clk-names has two objectives in DT:
-> >> 1> To find the index of the clock in the clocks DT property.
-> >>
-> >> 2> If actual clk name is specified then if "1" fails then name could
-> >> potentially fallback to use old clkdev based clk_lookups.
-> >>
-> >> In this specific case we have "sec" as clock-names which is totally used
-> >> for indexing into clocks property and it can not be used for (2) as
-> >> there is no clk named "sec" registered by any of the clk providers.
-> >>
-> >> So this does not justify the reasoning why "clock-names" should be used
-> >> while "reg-names" should not be used!. Both of them are going to be
-> >> finally used for indexing into there respective properties.
-> >
-> > Right, you just have to accept the fact that logic doesn't come into
-> > play here.  For clocks, always use "clk-names" but also always use a
-> > consistent order (which is now more enforced by the schema checker).
-> > For "reg" almost never use "reg-names".
-> >
->
-> On the other note:
->
-> clock-names are not mandatory according to
-> Documentation/devicetree/bindings/clock/clock-bindings.txt
->
-> For this particular case where clock-names = "sec" is totally used for
-> indexing and nothing else!
+*-names has a type, so can be dropped.
 
-So I guess in the one-clock case it's more optional and if you feel
-strongly I'll get rid of clk-names here.  ...but if we ever need
-another clock we probably will want to add it back and (I could be
-corrected) I believe it's convention to specify clk-names even with
-one clock.
+> +    items:
+> +      - const: nominal
+> +      - const: derated
+>  
+>    nvidia,memory-controller:
+> -    $ref: /schemas/types.yaml#/definitions/phandle
+> +    $ref: "/schemas/types.yaml#/definitions/phandle"
 
-I won't say it's impossible to get by without clock-names when you
-have more than one clock, but (almost) nobody does it.  It's hard to
-quickly come up with a good way to search for this, but skimming
-through:
+Quotes aren't needed here. (We haven't been consistent on this).
 
-git grep -C5 'clocks.*,' -- arch/arm64/boot/dts
+>      description:
+>        phandle of the memory controller node
+>  
+> +  "#cooling-cells":
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> +    const: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -51,7 +60,10 @@ required:
+>    - clock-names
+>    - nvidia,memory-controller
+>  
+> -additionalProperties: false
+> +dependencies:
+> +  memory-region-names: [ memory-region ]
 
-...you don't find too many examples of no clock-names and you find
-_lots_ of examples where clock-names are specified.  One example that
-_does_ have multiple clocks and doesn't specify clock-names is
-"simple-framebuffer".  Looking at the Linux driver you can see they
-have to use the special "of_clk_get()" variant to handle it.
+The core schema should handle this (probably needs to be added).
 
-
--Doug
+> +
+> +unevaluatedProperties: false
+>  
+>  examples:
+>    - |
+> @@ -63,10 +75,15 @@ examples:
+>          #size-cells = <1>;
+>          ranges;
+>  
+> -        emc_table: emc-table@83400000 {
+> +        nominal: emc-table@83400000 {
+>              compatible = "nvidia,tegra210-emc-table";
+>              reg = <0x83400000 0x10000>;
+>          };
+> +
+> +        derated: emc-table@83410000 {
+> +            compatible = "nvidia,tegar210-emc-table";
+> +            reg = <0x83410000 0x10000>;
+> +        };
+>      };
+>  
+>      external-memory-controller@7001b000 {
+> @@ -77,6 +94,7 @@ examples:
+>          clocks = <&tegra_car TEGRA210_CLK_EMC>;
+>          clock-names = "emc";
+>          interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> -        memory-region = <&emc_table>;
+> +        memory-region-names = "nominal", "derated";
+> +        memory-region = <&nominal>, <&derated>;
+>          nvidia,memory-controller = <&mc>;
+>      };
+> -- 
+> 2.24.1
+> 
