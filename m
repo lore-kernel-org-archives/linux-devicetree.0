@@ -2,105 +2,122 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8048DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193D1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 603E020663
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE6521852
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgFRGPG (ORCPT
+        id S1726952AbgFRGkm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:15:06 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:47232 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbgFRGPF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:15:05 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 576C51A0E58;
-        Thu, 18 Jun 2020 08:15:03 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7ED171A0E44;
-        Thu, 18 Jun 2020 08:14:59 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CB493402CF;
-        Thu, 18 Jun 2020 14:14:54 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/5] ARM: dts: imx6sx-sabreauto: Add SPDIF support
-Date:   Thu, 18 Jun 2020 14:03:48 +0800
-Message-Id: <11b9a66f521aade999731477282de99cbbf6b0ad.1592460381.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1592460381.git.shengjiu.wang@nxp.com>
-References: <cover.1592460381.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1592460381.git.shengjiu.wang@nxp.com>
-References: <cover.1592460381.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 18 Jun 2020 02:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgFRGkm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 02:40:42 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6F0C06174E;
+        Wed, 17 Jun 2020 23:40:42 -0700 (PDT)
+Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=localhost.localdomain)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt@linutronix.de>)
+        id 1jloE0-0000xD-AA; Thu, 18 Jun 2020 08:40:36 +0200
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Kurt Kanzenbach <kurt@linutronix.de>
+Subject: [RFC PATCH 0/9] Hirschmann Hellcreek DSA driver
+Date:   Thu, 18 Jun 2020 08:40:20 +0200
+Message-Id: <20200618064029.32168-1-kurt@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add SPDIF support.
+Hi,
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+this series adds a DSA driver for the Hirschmann Hellcreek TSN switch
+IP. Characteristics of that IP:
 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 825924448ab4..772b8ac5d637 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -66,6 +66,13 @@
- 		enable-active-high;
- 		vin-supply = <&reg_can_en>;
- 	};
-+
-+	sound-spdif {
-+		compatible = "fsl,imx-audio-spdif";
-+		model = "imx-spdif";
-+		spdif-controller = <&spdif>;
-+		spdif-in;
-+	};
- };
- 
- &anaclk2 {
-@@ -227,6 +234,12 @@
- 		>;
- 	};
- 
-+	pinctrl_spdif: spdifgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET2_COL__SPDIF_IN           0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX6SX_PAD_GPIO1_IO04__UART1_DCE_TX		0x1b0b1
-@@ -454,6 +467,14 @@
- 	};
- };
- 
-+&spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spdif>;
-+	assigned-clocks = <&clks IMX6SX_CLK_SPDIF_PODF>;
-+	assigned-clock-rates = <24576000>;
-+	status = "okay";
-+};
-+
- &wdog1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_wdog>;
+ * Full duplex Ethernet interface at 100/1000 Mbps on three ports
+ * IEEE 802.1Q-compliant Ethernet Switch
+ * IEEE 802.1Qbv Time-Aware scheduling support
+ * IEEE 1588 and IEEE 802.1AS support
+
+That IP is used e.g. in
+
+ https://www.arrow.com/en/campaigns/arrow-kairos
+
+Due to the hardware setup the switch driver is implemented using DSA. A special
+tagging protocol is leveraged. Furthermore, this driver supports PTP, hardware
+timestamping and TAPRIO offloading.
+
+This work is part of the AccessTSN project: https://www.accesstsn.com/
+
+If there are any objections let me know.
+
+Thanks,
+Kurt
+
+Kamil Alkhouri (2):
+  net: dsa: hellcreek: Add PTP clock support
+  net: dsa: hellcreek: Add support for hardware timestamping
+
+Kurt Kanzenbach (7):
+  net: dsa: Add tag handling for Hirschmann Hellcreek switches
+  net: dsa: Add DSA driver for Hirschmann Hellcreek switches
+  net: dsa: hellcreek: Add TAPRIO offloading support
+  net: dsa: hellcreek: Add debugging mechanisms
+  net: dsa: hellcreek: Add PTP status LEDs
+  dt-bindings: Add vendor prefix for Hirschmann
+  dt-bindings: net: dsa: Add documentation for Hellcreek switches
+
+ .../devicetree/bindings/net/dsa/hellcreek.txt |   72 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/net/dsa/Kconfig                       |    2 +
+ drivers/net/dsa/Makefile                      |    1 +
+ drivers/net/dsa/hirschmann/Kconfig            |    7 +
+ drivers/net/dsa/hirschmann/Makefile           |    5 +
+ drivers/net/dsa/hirschmann/hellcreek.c        | 1751 +++++++++++++++++
+ drivers/net/dsa/hirschmann/hellcreek.h        |  302 +++
+ .../net/dsa/hirschmann/hellcreek_hwtstamp.c   |  492 +++++
+ .../net/dsa/hirschmann/hellcreek_hwtstamp.h   |   58 +
+ drivers/net/dsa/hirschmann/hellcreek_ptp.c    |  369 ++++
+ drivers/net/dsa/hirschmann/hellcreek_ptp.h    |   76 +
+ include/net/dsa.h                             |    2 +
+ net/dsa/Kconfig                               |    6 +
+ net/dsa/Makefile                              |    1 +
+ net/dsa/tag_hellcreek.c                       |  101 +
+ 16 files changed, 3247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.txt
+ create mode 100644 drivers/net/dsa/hirschmann/Kconfig
+ create mode 100644 drivers/net/dsa/hirschmann/Makefile
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek.c
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek.h
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_ptp.c
+ create mode 100644 drivers/net/dsa/hirschmann/hellcreek_ptp.h
+ create mode 100644 net/dsa/tag_hellcreek.c
+
 -- 
-2.21.0
+2.20.1
 
