@@ -2,82 +2,142 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E33C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA06B2083B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC40820776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448705;
-	bh=o5nt36zkyVqDgCG1kHxBckdnWOYFAYpdKtcPMRjyBuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1kHW3RJVXozqQkGnNnB2HPJ3fW5ainPtAONWB1z9C2+nCkgsFq/amEKUJdqTcEXCn
-	 kRxp6emSwmnM8RY9wRaiAlRSawkBFVlpFwXidGb3bz04K18GkYlhqbu8MWFRIECftJ
-	 IbzE3lJ8zkPe3ilryOglZEyUyXCZLkzpbJXPEzWA=
+	s=default; t=1592448737;
+	bh=LxL7S9dAh4/os9b+6g3X1dJuv95ULz6V2uieImdNiH4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HW+rESavPWWcQYWsaZYiweAN36ToUqqcH2nai3xHo9etu4WKK7vzBEOCFqddycJxA
+	 thNJRVq4kW+q3Ix3hlq8fYpc4d9++sUxswnAZe+6fNJw6ZX0oYV7SIrs4CpRsO/Aa1
+	 27IXtTBIBw9T6UTAbr0B6DO2/q8kvGdLgJlzPAio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgFRCvp (ORCPT
+        id S1728192AbgFRCwR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:51:45 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46284 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729447AbgFRCvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 22:51:44 -0400
-Received: by mail-il1-f196.google.com with SMTP id h3so4333714ilh.13;
-        Wed, 17 Jun 2020 19:51:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=14EvOj4oVkS3uh3SmKA36b5RuYlxBdOyXHl1LJGal0g=;
-        b=QPib9ojFw9F0nOE1eVeIPmphXkZ1qyZYIfbblfDoYE7pQV2zOAcBmHUJujTonpzIef
-         u3XOauUPrZtbLhiD/hTZ/QGsgYchbLtjOgjsCyuD5LXWXSPYBxC5uW8WYU8v4OkEZ5zB
-         /oiyPc8inuBkPITETNwLcv9fsDWF/5cxpW72M3Oo7vcodG4cyMtZflOKZbG5uw3SQnMJ
-         w01aIodhGd6WPa98oCerfUHBXq+CZjXG3zq/audrPXsYtCjREzcgDt34yrQfcxJAIET7
-         oLqpqH9JVWv2SQv6bNfBEjvmW/dnhg8L9WH6yDjrQQAKpKJEN8jVMXg8ViqiTwSYOeIj
-         HJ/w==
-X-Gm-Message-State: AOAM533g3LUc++vJWFPbv78o0k68oGNENDWBACpehJ4bERT0rL3lgI3e
-        UrI28eU23Mj6tMRemIWkRw==
-X-Google-Smtp-Source: ABdhPJz2aSVwD0CNf8249CB/24p8/BxBVl5rZnECN+dcFbBorsYbKnBVhhXqk3Kvgtf59tP9SpTAwg==
-X-Received: by 2002:a92:7901:: with SMTP id u1mr2167340ilc.52.1592448703066;
-        Wed, 17 Jun 2020 19:51:43 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id t63sm846364ill.54.2020.06.17.19.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 19:51:42 -0700 (PDT)
-Received: (nullmailer pid 3390371 invoked by uid 1000);
-        Thu, 18 Jun 2020 02:51:40 -0000
-Date:   Wed, 17 Jun 2020 20:51:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 37/38] dt-bindings: pwm: Explicitly include pwm.yaml
-Message-ID: <20200618025140.GB3378010@bogus>
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-38-thierry.reding@gmail.com>
+        Wed, 17 Jun 2020 22:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727857AbgFRBIk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42EF22193E;
+        Thu, 18 Jun 2020 01:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442519;
+        bh=LxL7S9dAh4/os9b+6g3X1dJuv95ULz6V2uieImdNiH4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AAyZD+CtvDXX3NXhh0Mc4sTe3c7fzfYaNNyVghCnHmisAS3SBpvy6sOb/X+7sKHUj
+         +VzdCH+cDN970k1d4amziub/GPi5CSjhgTAnA5gbX9aylCsE46efGp6zzxKrYoM/ID
+         dkS/jIAxSBFBUFn0NoAomwGPKRnmzLrMG6D3wy+A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 024/388] arm64: dts: meson: fixup SCP sram nodes
+Date:   Wed, 17 Jun 2020 21:02:01 -0400
+Message-Id: <20200618010805.600873-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612141903.2391044-38-thierry.reding@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 04:19:02PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> For PWM controller device tree bindings, make sure that they include the
-> pwm.yaml controller core bindings explicitly. This prevents the tooling
-> from matching on the $nodename pattern, which can falsely match things
-> like pinmux nodes, etc.
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-My preference here is to clean-up the mess that is pinmux nodes.
+[ Upstream commit 9ecded10b4b6af238da0c86197b0418912e7513e ]
 
-This has the side effect of no longer checking pwm nodes that didn't 
-have explicit schema. Perhaps that's of somewhat limited value.
+The GX and AXG SCP sram nodes were using invalid compatible and
+node names for the sram entries.
 
-Rob
+Fixup the sram entries node names, and use proper compatible for them.
+
+It notably fixes:
+sram@c8000000: 'scp-shmem@0', 'scp-shmem@200' do not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200326165958.19274-3-narmstrong@baylibre.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  6 +++---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index aace3d32a3df..8e6281c685fa 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1735,18 +1735,18 @@ sd_emmc_c: mmc@7000 {
+ 		};
+ 
+ 		sram: sram@fffc0000 {
+-			compatible = "amlogic,meson-axg-sram", "mmio-sram";
++			compatible = "mmio-sram";
+ 			reg = <0x0 0xfffc0000 0x0 0x20000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0 0x0 0xfffc0000 0x20000>;
+ 
+-			cpu_scp_lpri: scp-shmem@13000 {
++			cpu_scp_lpri: scp-sram@13000 {
+ 				compatible = "amlogic,meson-axg-scp-shmem";
+ 				reg = <0x13000 0x400>;
+ 			};
+ 
+-			cpu_scp_hpri: scp-shmem@13400 {
++			cpu_scp_hpri: scp-sram@13400 {
+ 				compatible = "amlogic,meson-axg-scp-shmem";
+ 				reg = <0x13400 0x400>;
+ 			};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 03f79fe045b7..e2bb68ec8502 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -398,20 +398,20 @@ gic: interrupt-controller@c4301000 {
+ 		};
+ 
+ 		sram: sram@c8000000 {
+-			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
++			compatible = "mmio-sram";
+ 			reg = <0x0 0xc8000000 0x0 0x14000>;
+ 
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0 0x0 0xc8000000 0x14000>;
+ 
+-			cpu_scp_lpri: scp-shmem@0 {
+-				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
++			cpu_scp_lpri: scp-sram@0 {
++				compatible = "amlogic,meson-gxbb-scp-shmem";
+ 				reg = <0x13000 0x400>;
+ 			};
+ 
+-			cpu_scp_hpri: scp-shmem@200 {
+-				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
++			cpu_scp_hpri: scp-sram@200 {
++				compatible = "amlogic,meson-gxbb-scp-shmem";
+ 				reg = <0x13400 0x400>;
+ 			};
+ 		};
+-- 
+2.25.1
+
