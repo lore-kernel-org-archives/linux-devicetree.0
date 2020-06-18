@@ -2,132 +2,212 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF38C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89A8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA5A2207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED12208B3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uP9Q5txu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ceY3GOfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFRXmf (ORCPT
+        id S1728190AbgFRXo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:42:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42272 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgFRXmf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 19:42:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05INgOWb106387;
-        Thu, 18 Jun 2020 18:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592523744;
-        bh=WqB3gWaQP6mPg47uckt0LvQ0Gj/lq4E6tx3hHJW7j0A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uP9Q5txuOubqoYf960FLd5xNqb1sxbiRiPdWXeAxd9o0XxQivdZ9Fr+GwJqcaTO4F
-         UpBGypviIGXTgScxQMCB1gif+pobTVC5Etn7IwF63jmvQuST3CoFxQcXSvH4tBjRNx
-         YTn4H/Ps1Gwi3yRFiVUZVmMMnp7AnReBXktXirEM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05INgOeI113983
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 18:42:24 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
- Jun 2020 18:42:24 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 18 Jun 2020 18:42:24 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05INgNkh067455;
-        Thu, 18 Jun 2020 18:42:23 -0500
-Subject: Re: [PATCH net-next v8 2/5] net: phy: Add a helper to return the
- index for of the internal delay
-To:     kernel test robot <lkp@intel.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <kbuild-all@lists.01.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200618211011.28837-3-dmurphy@ti.com>
- <202006190753.uZWR7VTH%lkp@intel.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <83735f8a-efe6-5648-4925-d4a945e0c070@ti.com>
-Date:   Thu, 18 Jun 2020 18:42:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 19:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgFRXoZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 19:44:25 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD94C06174E
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 16:44:24 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d10so1264509pls.5
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 16:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yvMb0a2c10861vhwKbOrdUepqOFkOOTrJVCk2dRfuZY=;
+        b=ceY3GOfJpNh0ZC/Fk/jOULWNhQVbB5DWH9hsXiIJPYBcRUoNpbt1Qsj/70w29kdaD+
+         Wl7AaXV1XouuHHR8bDaZ++vSMCCFR4atOHlv7cRBBxVkOKKkaeKN54Pc3hJsrRvL15XB
+         L0o+v/kLgFBNzOCDuE/RR/SdvLQIchUdVhIhwMifEVe0Zzy5lhyreetnLITGYGsnqaBP
+         bNDkldIDaNGYip8xamFAVWn3Wz1D7aSrUEVUe7YeaavLcmxNRF91YY7AEDcJNYCG9Rnf
+         t/w8tOcnYbO3kh1D/edX4na0mJuVD7Y0LUmTeh1GX5SV2ExvQrWX7AuO7rSRBNk0ftr4
+         YEdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yvMb0a2c10861vhwKbOrdUepqOFkOOTrJVCk2dRfuZY=;
+        b=SXJ2xNlRsPqCkcKn0haJJkTIWO+B1mirnKIN3jNeuf4mcjfWwQue7R71Iby7I+g7WL
+         WJ37PYr+ciCEZLJ91KY3DmIwVIayTdMHGhH7BNU3mvPONelZ/qEJPxbTwSrl7b9u+X/v
+         2M2P+s0BS2GRsxjKbEHUFXlpMD0M2M8l52ig9iTQYNDfGxGNx/eq0CO1nPyfcffOIhTG
+         vAyN75HvgklGH6LzhiX8Ykh5hSa716qII/ckQLNeW3PjVD/85D2vptwC9qoy1G3lw0WO
+         4bPCcrRtDp8u/2/Mvc62VedcFRTwk4sor84Hlp0hLbSxFzIui2zkpHJG3YNzgDWGlzpZ
+         BCcg==
+X-Gm-Message-State: AOAM5333d9Rhl4dir8gbcA/xRUdrm9uhf27xkzFQsrfbva41O2zslmRT
+        mqH6uCBcMLaOBMbiRiy515PDeg==
+X-Google-Smtp-Source: ABdhPJyNWW8E/cNTuVgEqsGVFJm/OQSR0fcdze58ugdAUPV3L4aNzeiuPCG4YmpZJ7ubSzIfsKricQ==
+X-Received: by 2002:a17:902:b216:: with SMTP id t22mr5527631plr.181.1592523863778;
+        Thu, 18 Jun 2020 16:44:23 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h9sm3967767pfe.32.2020.06.18.16.44.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 16:44:22 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 16:44:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH v4 1/5] regulator: Allow regulators to verify enabled
+ during enable()
+Message-ID: <20200618234420.GI11847@yoga>
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <202006190753.uZWR7VTH%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602100924.26256-2-sumit.semwal@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
+On Tue 02 Jun 03:09 PDT 2020, Sumit Semwal wrote:
 
-On 6/18/20 6:29 PM, kernel test robot wrote:
-> Hi Dan,
->
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on net-next/master]
->
-> url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/RGMII-Internal-delay-common-property/20200619-051238
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git cb8e59cc87201af93dfbb6c3dccc8fcad72a09c2
-> config: i386-defconfig (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> reproduce (this is a W=1 build):
->          # save the attached .config to linux build tree
->          make W=1 ARCH=i386
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->     drivers/net/phy/phy_device.c: In function 'phy_get_int_delay_property':
->>> drivers/net/phy/phy_device.c:2678:1: error: expected ';' before '}' token
->      2678 | }
->           | ^
->
-> vim +2678 drivers/net/phy/phy_device.c
->
->    2660	
->    2661	#if IS_ENABLED(CONFIG_OF_MDIO)
->    2662	static int phy_get_int_delay_property(struct device *dev, const char *name)
->    2663	{
->    2664		s32 int_delay;
->    2665		int ret;
->    2666	
->    2667		ret = device_property_read_u32(dev, name, &int_delay);
->    2668		if (ret)
->    2669			return ret;
->    2670	
->    2671		return int_delay;
->    2672	}
->    2673	#else
->    2674	static inline int phy_get_int_delay_property(struct device *dev,
->    2675						     const char *name)
->    2676	{
->    2677		return -EINVAL
-
-Ack missed compiling this use case.
-
-Dan
-
->> 2678	}
->    2679	#endif
->    2680	
->
+> Some regulators might need to verify that they have indeed been enabled
+> after the enable() call is made and enable_time delay has passed.
+> 
+> This is implemented by repeatedly checking is_enabled() upto
+> poll_enabled_time, waiting for the already calculated enable delay in
+> each iteration.
+> 
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> --
+> v2: Address review comments, including swapping enable_time and poll_enabled_time.
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>  drivers/regulator/core.c         | 58 +++++++++++++++++++++++++++++++-
+>  include/linux/regulator/driver.h |  5 +++
+>  2 files changed, 62 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index 7486f6e4e613..d9ab888da95f 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -2347,6 +2347,32 @@ static void _regulator_enable_delay(unsigned int delay)
+>  		udelay(us);
+>  }
+>  
+> +/* _regulator_check_status_enabled
+
+Please make all your kerneldoc follow:
+https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#function-documentation
+
+> + *
+> + * returns:
+> + *          1 if status shows regulator is in enabled state
+> + *          0 if not enabled state
+> + *          else, error value as received from ops->get_status()
+> + */
+> +static inline int _regulator_check_status_enabled(struct regulator_dev *rdev)
+> +{
+> +	int ret = rdev->desc->ops->get_status(rdev);
+> +
+> +	if (ret < 0) {
+> +		rdev_info(rdev, "get_status returned error: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	switch (ret) {
+> +	case REGULATOR_STATUS_OFF:
+> +	case REGULATOR_STATUS_ERROR:
+> +	case REGULATOR_STATUS_UNDEFINED:
+> +		return 0;
+> +	default:
+> +		return 1;
+> +	}
+> +}
+> +
+>  static int _regulator_do_enable(struct regulator_dev *rdev)
+>  {
+>  	int ret, delay;
+> @@ -2407,7 +2433,37 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
+>  	 * together.  */
+>  	trace_regulator_enable_delay(rdev_get_name(rdev));
+>  
+> -	_regulator_enable_delay(delay);
+> +	/* If poll_enabled_time is set, poll upto the delay calculated
+> +	 * above, delaying poll_enabled_time uS to check if the regulator
+> +	 * actually got enabled.
+> +	 * If the regulator isn't enabled after enable_delay has
+> +	 * expired, return -ETIMEDOUT.
+> +	 */
+> +	if (rdev->desc->poll_enabled_time) {
+> +		unsigned int time_remaining = delay;
+> +
+> +		while (time_remaining > 0) {
+> +			_regulator_enable_delay(rdev->desc->poll_enabled_time);
+> +
+> +			if (rdev->desc->ops->get_status) {
+> +				ret = _regulator_check_status_enabled(rdev);
+> +				if (ret < 0)
+> +					return ret;
+> +				else if (ret)
+> +					break;
+> +			} else if (rdev->desc->ops->is_enabled(rdev))
+> +				break;
+> +
+> +			time_remaining -= rdev->desc->poll_enabled_time;
+> +		}
+> +
+> +		if (time_remaining <= 0) {
+> +			rdev_err(rdev, "Enabled check failed.\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +	} else {
+> +		_regulator_enable_delay(delay);
+> +	}
+>  
+>  	trace_regulator_enable_complete(rdev_get_name(rdev));
+>  
+> diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+> index 29d920516e0b..bb50e943010f 100644
+> --- a/include/linux/regulator/driver.h
+> +++ b/include/linux/regulator/driver.h
+> @@ -322,6 +322,9 @@ enum regulator_type {
+>   * @enable_time: Time taken for initial enable of regulator (in uS).
+>   * @off_on_delay: guard time (in uS), before re-enabling a regulator
+>   *
+> + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
+> + *                          actually enabled, after enable() call
+
+I read this as "how long should we stay in the poll loop". I think it
+would be better describes as something like "The polling interval to use
+while checking that the regulator was actually enabled".
+
+Regards,
+Bjorn
+
+> + *
+>   * @of_map_mode: Maps a hardware mode defined in a DeviceTree to a standard mode
+>   */
+>  struct regulator_desc {
+> @@ -389,6 +392,8 @@ struct regulator_desc {
+>  
+>  	unsigned int off_on_delay;
+>  
+> +	unsigned int poll_enabled_time;
+> +
+>  	unsigned int (*of_map_mode)(unsigned int mode);
+>  };
+>  
+> -- 
+> 2.26.2
+> 
