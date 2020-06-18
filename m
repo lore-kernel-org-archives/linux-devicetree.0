@@ -2,185 +2,65 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CCBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A23C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3B1207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD9E207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgFRN23 (ORCPT
+        id S1730146AbgFRNhi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:28:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46684 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbgFRN22 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:28:28 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jluac-0017L3-KI; Thu, 18 Jun 2020 15:28:22 +0200
-Date:   Thu, 18 Jun 2020 15:28:22 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some
- phy variants
-Message-ID: <20200618132822.GN249144@lunn.ch>
-References: <20200618121139.1703762-1-heiko@sntech.de>
- <20200618121139.1703762-4-heiko@sntech.de>
+        Thu, 18 Jun 2020 09:37:38 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:14363 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgFRNhh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 09:37:37 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.lan (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 6448F24000D;
+        Thu, 18 Jun 2020 13:37:33 +0000 (UTC)
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Jacopo Mondi <jacopo@jmondi.org>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        dave.stevenson@raspberrypi.com, dongchun.zhu@mediatek.com,
+        laurent.pinchart@ideasonboard.com,
+        roman.kovalivskyi@globallogic.com
+Subject: [PATCH 0/2] dt-bidings: media: ov5647 bindings + small fix
+Date:   Thu, 18 Jun 2020 15:40:43 +0200
+Message-Id: <20200618134045.151532-1-jacopo@jmondi.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618121139.1703762-4-heiko@sntech.de>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 02:11:39PM +0200, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> At least VSC8530/8531/8540/8541 contain a clock output that can emit
-> a predefined rate of 25, 50 or 125MHz.
-> 
-> This may then feed back into the network interface as source clock.
-> So expose a clock-provider from the phy using the common clock framework
-> to allow setting the rate.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
->  drivers/net/phy/mscc/mscc.h      |  13 +++
->  drivers/net/phy/mscc/mscc_main.c | 182 +++++++++++++++++++++++++++++--
->  2 files changed, 187 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-> index fbcee5fce7b2..94883dab5cc1 100644
-> --- a/drivers/net/phy/mscc/mscc.h
-> +++ b/drivers/net/phy/mscc/mscc.h
-> @@ -218,6 +218,13 @@ enum rgmii_clock_delay {
->  #define INT_MEM_DATA_M			  0x00ff
->  #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
->  
-> +#define MSCC_CLKOUT_CNTL		  13
-> +#define CLKOUT_ENABLE			  BIT(15)
-> +#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
-> +#define CLKOUT_FREQ_25M			  (0x0 << 13)
-> +#define CLKOUT_FREQ_50M			  (0x1 << 13)
-> +#define CLKOUT_FREQ_125M		  (0x2 << 13)
-> +
->  #define MSCC_PHY_PROC_CMD		  18
->  #define PROC_CMD_NCOMPLETED		  0x8000
->  #define PROC_CMD_FAILED			  0x4000
-> @@ -360,6 +367,12 @@ struct vsc8531_private {
->  	 */
->  	unsigned int base_addr;
->  
-> +#ifdef CONFIG_COMMON_CLK
-> +	struct clk_hw clkout_hw;
-> +#endif
-> +	u32 clkout_rate;
-> +	int clkout_enabled;
-> +
->  #if IS_ENABLED(CONFIG_MACSEC)
->  	/* MACsec fields:
->  	 * - One SecY per device (enforced at the s/w implementation level)
-> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-> index 5d2777522fb4..727a9dd58403 100644
-> --- a/drivers/net/phy/mscc/mscc_main.c
-> +++ b/drivers/net/phy/mscc/mscc_main.c
-> @@ -7,6 +7,7 @@
->   * Copyright (c) 2016 Microsemi Corporation
->   */
->  
-> +#include <linux/clk-provider.h>
->  #include <linux/firmware.h>
->  #include <linux/jiffies.h>
->  #include <linux/kernel.h>
-> @@ -431,7 +432,6 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
->  
->  	return led_mode;
->  }
-> -
->  #else
->  static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
->  {
-> @@ -1508,6 +1508,43 @@ static int vsc85xx_config_init(struct phy_device *phydev)
->  	return 0;
->  }
->  
-> +static int vsc8531_config_init(struct phy_device *phydev)
-> +{
-> +	struct vsc8531_private *vsc8531 = phydev->priv;
-> +	u16 val;
-> +	int rc;
-> +
-> +	rc = vsc85xx_config_init(phydev);
-> +	if (rc)
-> +		return rc;
-> +
-> +#ifdef CONFIG_COMMON_CLK
-> +	switch (vsc8531->clkout_rate) {
-> +	case 25000000:
-> +		val = CLKOUT_FREQ_25M;
-> +		break;
-> +	case 50000000:
-> +		val = CLKOUT_FREQ_50M;
-> +		break;
-> +	case 125000000:
-> +		val = CLKOUT_FREQ_125M;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (vsc8531->clkout_enabled)
-> +		val |= CLKOUT_ENABLE;
-> +
-> +	rc = phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
-> +			     MSCC_CLKOUT_CNTL, val);
-> +	if (rc)
-> +		return rc;
-> +#endif
-> +
-> +	return 0;
-> +}
-> +
+While converting the ov5647 bindings to dt-schema I noticed the remote-endpoint
+property was not documented in the only 2 existing image sensor bindings.
 
-> +static int vsc8531_clkout_prepare(struct clk_hw *hw)
-> +{
-> +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
-> +
-> +	vsc8531->clkout_enabled = true;
-> +	return 0;
-> +}
-> +
-> +static void vsc8531_clkout_unprepare(struct clk_hw *hw)
-> +{
-> +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
-> +
-> +	vsc8531->clkout_enabled = false;
-> +}
-> +
+Convert the ov5647 bindings and add remote-endpoint as required property to
+the existing ones.
 
-> +static const struct clk_ops vsc8531_clkout_ops = {
-> +	.prepare = vsc8531_clkout_prepare,
-> +	.unprepare = vsc8531_clkout_unprepare,
-> +	.is_prepared = vsc8531_clkout_is_prepared,
-> +	.recalc_rate = vsc8531_clkout_recalc_rate,
-> +	.round_rate = vsc8531_clkout_round_rate,
-> +	.set_rate = vsc8531_clkout_set_rate,
+Jacopo Mondi (2):
+  dt-bindings: media: ov5647: Convert to json-schema
+  dt-bindings: media: i2c: Document 'remote-endpoint'
 
-I'm not sure this is the expected behaviour. The clk itself should
-only start ticking when the enable callback is called. But this code
-will enable the clock when config_init() is called. I think you should
-implement the enable and disable methods.
+ .../devicetree/bindings/media/i2c/imx219.yaml |  5 ++
+ .../devicetree/bindings/media/i2c/ov5647.txt  | 35 --------
+ .../devicetree/bindings/media/i2c/ov5647.yaml | 82 +++++++++++++++++++
+ .../devicetree/bindings/media/i2c/ov8856.yaml |  5 ++
+ 4 files changed, 92 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.yaml
 
-	  Andrew
+--
+2.27.0
+
