@@ -2,87 +2,165 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B2DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF6CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4989B206E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEDF720EDD
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447913;
-	bh=Ug0a3DCl82otFSCO5CSKZQAZvIa4YNz0UGpFjGZQZFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2lig6BnawaTM5EiwOb71VwWe6t6fuMS5iPi7zrBnbdh+yPO+uFGeahFn1mjWF1Dpz
-	 ac26kzSYNyXYXnaCHk8tT/LrhfJygCCZ5G5g5mq1c8T7sncq4V/GnQBBRID/b9cli/
-	 ccYGiVm99yOwpuRC6myvAds8uaaBed75mG2dApPA=
+	s=default; t=1592448020;
+	bh=EErdMN8eKgwLm5pu88Mv/t1aZoo7WuwsMT7n55tqxVQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A7Du6hoabGyrXJYk1LBiqQ0SHTWRhPDeOgRF2TG0HzP92Dlrkwlh/GX2ZuMuWJiRl
+	 v69YEW3c78uOKtKWGa3ijD0bqmimcYcgJO6ITMFZ9mZChBoALObGojYCaQbEiky0nU
+	 TUKQE7T4t1va6pxI5WCzNUFEd1UIN7pwFeJ2l4J8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733083AbgFRCib (ORCPT
+        id S2387431AbgFRCkI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:38:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39586 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387785AbgFRCi3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 22:38:29 -0400
-Received: by mail-io1-f67.google.com with SMTP id c8so5346997iob.6;
-        Wed, 17 Jun 2020 19:38:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wocT9hb5rjpFV+FaWvJBTHDmZ+hLPyEALvZ8AqS2xlM=;
-        b=ANuRvBTXF6PF8Qs7FjxssyGY1BHWb/djOjfUUmEoup0+noUlpkJ2WGbvJPD5+WX5N5
-         sEd/ynb8drd/vMbQDmiO6s99lJJ16l8IBNI77c5gDj3BRanzNKex3JtynEzSkO6AqupM
-         IlppiyYr+ArkHOiNsIG+0YTNiC0k/4xKbtbIBWrG8rZbuFVs/NfiNRygcb2nDvblPM28
-         FRc6a6U9eUFEldGqGLcD47Xx2H9/+n9MSD1+A0nZoBzeMRDPWieGlAmPFMys4lfM+1I6
-         DlDJCwcG+xQhm7eNWrzxXHlBzq52MumL85hF7mOX0sEaMkD2n+t+LVt56Xj92KVS8wZd
-         hsPw==
-X-Gm-Message-State: AOAM532K7AcbM0OByrmKer23IdYDV0nINEULt1SJ93ck9As1TrATLXu7
-        sUdIpV3O00dLg9REUhLHOA==
-X-Google-Smtp-Source: ABdhPJwKXElRw26wcSntPOMhBn3XUNq94TQyw/vRXg7VSPBcUcHDu3ByMYkYaNdfhVLNqowkIfIbtA==
-X-Received: by 2002:a05:6602:164f:: with SMTP id y15mr2707850iow.210.1592447907661;
-        Wed, 17 Jun 2020 19:38:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id q5sm806664ile.37.2020.06.17.19.38.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 19:38:27 -0700 (PDT)
-Received: (nullmailer pid 3363238 invoked by uid 1000);
-        Thu, 18 Jun 2020 02:38:26 -0000
-Date:   Wed, 17 Jun 2020 20:38:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 28/38] dt-bindings: phy: tegra-xusb: Convert to
- json-schema
-Message-ID: <20200618023826.GB3343853@bogus>
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-29-thierry.reding@gmail.com>
+        Wed, 17 Jun 2020 22:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728983AbgFRBMq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 271E920CC7;
+        Thu, 18 Jun 2020 01:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442765;
+        bh=EErdMN8eKgwLm5pu88Mv/t1aZoo7WuwsMT7n55tqxVQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xy4urPlQc8UKHFK1qjMOG2lDva6peclOHmdk/WUmUthSemOV9NhIzUb3yaLLekvTP
+         QbnBmmBRHvvVIWU+CAijPWFqdxio8JZcCCX4h+BUMg9NemYzeyNTzJdtFxNsDAio+y
+         g8dYfGzXdywEI7kLhhhfWJzakeT+3rG5b8KSToBE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 214/388] arm64: dts: marvell: armada-37xx: Set pcie_reset_pin to gpio function
+Date:   Wed, 17 Jun 2020 21:05:11 -0400
+Message-Id: <20200618010805.600873-214-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612141903.2391044-29-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 04:18:53PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Convert the Tegra XUSB pad controller bindings from free-form text
-> format to json-schema.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  .../phy/nvidia,tegra124-xusb-padctl.txt       |  778 -----
->  .../phy/nvidia,tegra124-xusb-padctl.yaml      | 2800 +++++++++++++++++
->  2 files changed, 2800 insertions(+), 778 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.yaml
+From: Marek Behún <marek.behun@nic.cz>
 
-This one I definitely think should be split up into multiple schema 
-files. There's very little shared.
+[ Upstream commit 715878016984b2617f6c1f177c50039e12e7bd5b ]
 
-Rob
+We found out that we are unable to control the PERST# signal via the
+default pin dedicated to be PERST# pin (GPIO2[3] pin) on A3700 SOC when
+this pin is in EP_PCIE1_Resetn mode. There is a register in the PCIe
+register space called PERSTN_GPIO_EN (D0088004[3]), but changing the
+value of this register does not change the pin output when measuring
+with voltmeter.
+
+We do not know if this is a bug in the SOC, or if it works only when
+PCIe controller is in a certain state.
+
+Commit f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready
+before training link") says that when this pin changes pinctrl mode
+from EP_PCIE1_Resetn to GPIO, the PERST# signal is asserted for a brief
+moment.
+
+So currently the situation is that on A3700 boards the PERST# signal is
+asserted in U-Boot (because the code in U-Boot issues reset via this pin
+via GPIO mode), and then in Linux by the obscure and undocumented
+mechanism described by the above mentioned commit.
+
+We want to issue PERST# signal in a known way, therefore this patch
+changes the pcie_reset_pin function from "pcie" to "gpio" and adds the
+reset-gpios property to the PCIe node in device tree files of
+EspressoBin and Armada 3720 Dev Board (Turris Mox device tree already
+has this property and uDPU does not have a PCIe port).
+
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Remi Pommarel <repk@triplefau.lt>
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/marvell/armada-3720-db.dts           | 3 +++
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 1 +
+ arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts   | 4 ----
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi             | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+index f2cc00594d64..3e5789f37206 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+@@ -128,6 +128,9 @@ phy1: ethernet-phy@1 {
+ 
+ /* CON15(V2.0)/CON17(V1.4) : PCIe / CON15(V2.0)/CON12(V1.4) :mini-PCIe */
+ &pcie0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
++	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+index 42e992f9c8a5..c92ad664cb0e 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+@@ -47,6 +47,7 @@ &pcie0 {
+ 	phys = <&comphy1 0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
++	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+ };
+ 
+ /* J6 */
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+index 0e0491ca2930..1452c821f8c0 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+@@ -128,10 +128,6 @@ rtc@6f {
+ 	};
+ };
+ 
+-&pcie_reset_pins {
+-	function = "gpio";
+-};
+-
+ &pcie0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index 000c135e39b7..7909c146eabf 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -317,7 +317,7 @@ sdio_pins: sdio-pins {
+ 
+ 				pcie_reset_pins: pcie-reset-pins {
+ 					groups = "pcie1";
+-					function = "pcie";
++					function = "gpio";
+ 				};
+ 
+ 				pcie_clkreq_pins: pcie-clkreq-pins {
+-- 
+2.25.1
+
