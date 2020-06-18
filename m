@@ -2,502 +2,402 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668A9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A185C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358832083B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592504274;
-	bh=bUv8c6W2bPssoBwckBN9AE/adRasS6vNTfc+UGkrRTM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MNCpf79YIMZ98bobXZLETYGThfm7JHiGuV+8aRewXjp6GgBnRSr7Gfns5MEVTEahe
-	 4K3duns1gBGsj2Zg53JCgXlrmqWxxCc+c8oG6P5wxdKTcdllqmd2vekGM02Kwc2Pjj
-	 1LLZ4fSe78NS41te15mMBWlc5XomHgJ6EiVPEs6U=
+	by mail.kernel.org (Postfix) with ESMTP id D5942207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 18:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="rrS09ECq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgFRSRx (ORCPT
+        id S1728287AbgFRS33 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgFRSRx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:17:53 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E8B7207DD;
-        Thu, 18 Jun 2020 18:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592504271;
-        bh=bUv8c6W2bPssoBwckBN9AE/adRasS6vNTfc+UGkrRTM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y55o95Wj125BVO76TuDVdqWtxXLhkLiDFXaZpaFebiYGfANiVHSyBS+uB3dkAakxq
-         of0yyNzoWwII6OV07c6GkL5aXm6srvJdUFWhoXcaUquLmo6OqKY7GClGmRftuegFFm
-         Joxoz4Xmt0vw7UpOqWER6lLvryRITPmLguEYUUOM=
-Received: by mail-ot1-f41.google.com with SMTP id v13so5307313otp.4;
-        Thu, 18 Jun 2020 11:17:51 -0700 (PDT)
-X-Gm-Message-State: AOAM53089E7srHS7USEbiCC8S7S1d5xUZQDaPchPWJiRaT2NgnE9xT6q
-        L57NP40mEZwlS+HEtoDktziQ2r55XZKTyEKj2w==
-X-Google-Smtp-Source: ABdhPJxcu3GZZOOWWmnCJrl5CUi2Nk3vXGopMzstbq7IRmVeSZEsyW0e0k+HVd56cPyIZVSkBgKGjdYJriE7+f26x58=
-X-Received: by 2002:a9d:c29:: with SMTP id 38mr4434135otr.107.1592504270576;
- Thu, 18 Jun 2020 11:17:50 -0700 (PDT)
+        Thu, 18 Jun 2020 14:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgFRS32 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 14:29:28 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21415C06174E
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:29:28 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l10so7096456wrr.10
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 11:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=vo7w29lsBcSDoW2N5qG5AVVoUYgKzcWReg2SqHjHNcQ=;
+        b=rrS09ECqOM8xEq7ahZa+FDM7V0LgH9NZLueHGnE5kkG5lYSdj99w52+tDTRV61Q5dM
+         7UHWR5N/eTYzxS9Z/HBO7tweK5CsWsbYG3z2+gHSWDqJep3z0uUJ7rEUyeCCYOWWSn7b
+         m2OqK5ueviuvyxLwia68ngHAaRdMeJnM53uxkew+lx2YV8ex5oQJXkI7guSLBdL6t/zf
+         4CL8Puej23FIs8lQ/zBAoR2qUCihtidBi1OnSALpB8Ltpfmjlt65GwEVydM1h2ZZBMer
+         b42B0rlIz9h1qZiEXMeokaLOeMfPtNTxjY3dMfruA0sMWMxGKJeot+rU+f4cIFDAHtYE
+         LcUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=vo7w29lsBcSDoW2N5qG5AVVoUYgKzcWReg2SqHjHNcQ=;
+        b=NFM1Z7zRFdglGCuCHvEN+NuKsCAQZs6T/48u6zD/IxGAhuOv2gno4/zhWa4U0DGFk+
+         o5KRnb+2/eYAurjtrrcv6fXxKmMTDKVr9iB0Se8L4dwpDXFgtKRv4Cj0No44kI+gaXfg
+         lbPVbNKnD4u3wZvStrShQ3dA/ajQcNmNc4+c44LyrELtCPNZYAUPYJSY9kJ7xG8DkF8y
+         uZNeK9n/BEWDZC8D6GQWOgTi3XHzQNCM4QhhuSf/cBAYPVEBcZup7vHTRTbJixTfKAR4
+         nryTEjhVSWQjJuEG9e+7lbc5kks9hMrsj3wqs89QKaw4xGqoZ5+KarljJVdCim9pTiS7
+         8owA==
+X-Gm-Message-State: AOAM532ysguOCov/4KKs5WExe7wl76knZjeJlcQBSNJDddSfVfj1/Zd9
+        atNwLZtN8Ag16YACxtO7gtC+3g==
+X-Google-Smtp-Source: ABdhPJxsxL67XldUe3owCLSLl3S03QbQPM6E/VpbEPBo26YDgs8EetsXk7zzHHXQSSpIpSLGpoxxlw==
+X-Received: by 2002:adf:e887:: with SMTP id d7mr5893522wrm.62.1592504966671;
+        Thu, 18 Jun 2020 11:29:26 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id u3sm4411776wmg.38.2020.06.18.11.29.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 11:29:25 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:29:21 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        bcousson@baylibre.com, Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH v2] arm: dts: am335x-pocketbeagle: add gpio-line-names
+Message-ID: <20200618182921.GA61509@x1>
 MIME-Version: 1.0
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-7-thierry.reding@gmail.com> <20200617225506.GC2975260@bogus>
- <20200618102736.GA3659851@ulmo>
-In-Reply-To: <20200618102736.GA3659851@ulmo>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 18 Jun 2020 12:17:36 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKgJa0iEfnJO9KfS=sB23bT0E0szB7SwShh2kxWEsxgdA@mail.gmail.com>
-Message-ID: <CAL_JsqKgJa0iEfnJO9KfS=sB23bT0E0szB7SwShh2kxWEsxgdA@mail.gmail.com>
-Subject: Re: [PATCH 06/38] dt-bindings: display: tegra: Document display-hub
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 4:27 AM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> On Wed, Jun 17, 2020 at 04:55:06PM -0600, Rob Herring wrote:
-> > On Fri, Jun 12, 2020 at 04:18:31PM +0200, Thierry Reding wrote:
-> > > From: Thierry Reding <treding@nvidia.com>
-> > >
-> > > Tegra186 and later have an additional component in the display pipeline
-> > > called the display hub. Document the bindings which were missing.
-> >
-> > I'd rather this be after the conversion or I'm reviewing it twice.
->
-> Okay, I'll reorder the patches accordingly.
->
-> > >
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > >  .../display/tegra/nvidia,tegra20-host1x.txt   | 50 +++++++++++++++++++
-> > >  1 file changed, 50 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> > > index 47319214b5f6..2cf3cc4893da 100644
-> > > --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> > > +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> > > @@ -297,6 +297,56 @@ of the following host1x client modules:
-> > >    - reset-names: Must include the following entries:
-> > >      - vic
-> > >
-> > > +- display-hub: display controller hub
-> > > +  Required properties:
-> > > +  - compatible: "nvidia,tegra<chip>-display"
-> > > +  - reg: Physical base address and length of the controller's registers.
-> > > +  - interrupts: The interrupt outputs from the controller.
-> > > +  - clocks: Must contain an entry for each entry in clock-names.
-> > > +    See ../clocks/clock-bindings.txt for details.
-> > > +  - clock-names: Must include the following entries:
-> > > +    - disp
-> > > +    - dsc
-> > > +    - hub
-> > > +  - resets: Must contain an entry for each entry in reset-names.
-> > > +    See ../reset/reset.txt for details.
-> > > +  - reset-names: Must include the following entries:
-> > > +    - misc
-> > > +    - wgrp0
-> > > +    - wgrp1
-> > > +    - wgrp2
-> > > +    - wgrp3
-> > > +    - wgrp4
-> > > +    - wgrp5
-> > > +  - power-domains: A list of phandle and specifiers identifying the power
-> > > +    domains that the display hub is part of.
-> > > +  - ranges: Range of registers used for the display controllers.
-> > > +
-> > > +  Each subnode of the display hub represents one of the display controllers
-> > > +  available:
-> > > +
-> > > +  - display: display controller
-> > > +    - compatible: "nvidia,tegra<chip>-dc"
-> > > +    - reg: Physical base address and length of the controller's registers.
-> > > +    - interrupts: The interrupt outputs from the controller.
-> > > +    - clocks: Must contain an entry for each entry in clock-names.
-> > > +      See ../clocks/clock-bindings.txt for details.
-> > > +    - clock-names: Must include the following entries:
-> > > +      - dc
-> > > +    - resets: Must contain an entry for each entry in reset-names.
-> > > +      See ../reset/reset.txt for details.
-> > > +    - reset-names: Must include the following entries:
-> > > +      - dc
-> > > +    - power-domains: A list of phandle and specifiers that identify the power
-> > > +      domains that this display controller is part of.
-> > > +    - iommus: A phandle and specifier identifying the SMMU master interface of
-> > > +      this display controller.
-> > > +    - nvidia,outputs: A list of phandles of outputs that this display
-> > > +      controller can drive.
-> >
-> > Seems like an OF graph should describe this?
->
-> The above documents the current state of affairs. I don't recall exactly
-> why we never merged the bindings, but we've been using this
-> nvidia,outputs property for almost three years now. Changing this would
-> break ABI, although I guess you could say that since this was never
-> documented it can't be ABI. Still, changing this is going to cause old
-> device trees to fail with new kernels. Unless of course if we add some
-> backwards-compatibility mechanism in the driver. But in that case, what
-> exactly do we gain by switching to an OF graph?
+The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
+many of the TI AM3358 SoC balls to stacking expansion boards called
+"capes", or to other external connections like jumper wires connected
+to a breadboard.
 
-Probably nothing at this point. More I was just curious how we ended
-up with something different.
+Note: the AM3358 die is actually embedded inside of the OSD335x-SM
+System-in-Package (SiP) [1] but that is irrelevant to the gpio driver.
 
-> Historically, I think nvidia,outputs was introduced before OF graphs
-> were "a thing", at least in DRM. According to the git log, the helpers
-> for graphs were introduced a couple of years before nvidia,outputs was
-> used, but I guess they must not have been widespread enough for me to
-> have been aware of them.
+Many of the P1 and P2 header pins can muxed to a GPIO line.  The
+gpio-line-names describe which P1 or P2 pin that line goes to and the
+default mux for that P1 or P2 pin if it is not GPIO.
+    
+Some GPIO lines are named "[NC]" as the corresponding balls are not
+routed to anything on the PCB.
 
-There was a period display subsystem bindings were pretty much un-reviewed...
+The goal for these names is to make it easier for a user viewing the
+output of gpioinfo to determine which P1 or P2 pin is connected to a
+GPIO line.  The output of gpioinfo on a PocketBeagle would be:
 
-> Anyway, irrespective of the compatibility issues, I tried to use an OF
-> graph to describe this and here's what I came up with:
->
-> --- >8 ---
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 170 ++++++++++++++++++++++++++++++-
->  drivers/gpu/drm/tegra/dc.c               |  15 +--
->  drivers/gpu/drm/tegra/dc.h               |   1 -
->  drivers/gpu/drm/tegra/output.c           |  12 +--
->  4 files changed, 172 insertions(+), 26 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> index 58100fb9cd8b..a3dcf2437976 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> @@ -994,8 +994,38 @@ display@15200000 {
->                                 power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISP>;
->                                 iommus = <&smmu TEGRA186_SID_NVDISPLAY>;
->
-> -                               nvidia,outputs = <&dsia &dsib &sor0 &sor1>;
->                                 nvidia,head = <0>;
-> +
-> +                               ports {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +
-> +                                       dc0_out: port@0 {
-> +                                               #address-cells = <1>;
-> +                                               #size-cells = <0>;
-> +                                               reg = <0>;
-> +
-> +                                               dc0_out_dsia: endpoint@0 {
-> +                                                       reg = <0>;
-> +                                                       remote-endpoint = <&dsia_in_dc0>;
-> +                                               };
-> +
-> +                                               dc0_out_dsib: endpoint@1 {
-> +                                                       reg = <1>;
-> +                                                       remote-endpoint = <&dsib_in_dc0>;
-> +                                               };
-> +
-> +                                               dc0_out_sor0: endpoint@2 {
-> +                                                       reg = <2>;
-> +                                                       remote-endpoint = <&sor0_in_dc0>;
-> +                                               };
-> +
-> +                                               dc0_out_sor1: endpoint@3 {
-> +                                                       reg = <3>;
-> +                                                       remote-endpoint = <&sor1_in_dc0>;
-> +                                               };
-> +                                       };
-> +                               };
->                         };
->
->                         display@15210000 {
-> @@ -1010,8 +1040,38 @@ display@15210000 {
->                                 power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISPB>;
->                                 iommus = <&smmu TEGRA186_SID_NVDISPLAY>;
->
-> -                               nvidia,outputs = <&dsia &dsib &sor0 &sor1>;
->                                 nvidia,head = <1>;
-> +
-> +                               ports {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +
-> +                                       dc1_out: port@0 {
-> +                                               #address-cells = <1>;
-> +                                               #size-cells = <0>;
-> +                                               reg = <0>;
-> +
-> +                                               dc1_out_dsia: endpoint@0 {
-> +                                                       reg = <0>;
-> +                                                       remote-endpoint = <&dsia_in_dc1>;
-> +                                               };
-> +
-> +                                               dc1_out_dsib: endpoint@1 {
-> +                                                       reg = <1>;
-> +                                                       remote-endpoint = <&dsib_in_dc1>;
-> +                                               };
-> +
-> +                                               dc1_out_sor0: endpoint@2 {
-> +                                                       reg = <2>;
-> +                                                       remote-endpoint = <&sor0_in_dc1>;
-> +                                               };
-> +
-> +                                               dc1_out_sor1: endpoint@3 {
-> +                                                       reg = <3>;
-> +                                                       remote-endpoint = <&sor1_in_dc1>;
-> +                                               };
-> +                                       };
-> +                               };
->                         };
->
->                         display@15220000 {
-> @@ -1026,8 +1086,28 @@ display@15220000 {
->                                 power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISPC>;
->                                 iommus = <&smmu TEGRA186_SID_NVDISPLAY>;
->
-> -                               nvidia,outputs = <&sor0 &sor1>;
->                                 nvidia,head = <2>;
-> +
-> +                               ports {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +
-> +                                       dc2_out: port@0 {
-> +                                               #address-cells = <1>;
-> +                                               #size-cells = <0>;
-> +                                               reg = <0>;
-> +
-> +                                               dc2_out_sor0: endpoint@0 {
-> +                                                       reg = <0>;
-> +                                                       remote-endpoint = <&sor0_in_dc2>;
-> +                                               };
-> +
-> +                                               dc2_out_sor1: endpoint@1 {
-> +                                                       reg = <1>;
-> +                                                       remote-endpoint = <&sor1_in_dc2>;
-> +                                               };
-> +                                       };
-> +                               };
->                         };
->                 };
->
-> @@ -1044,6 +1124,25 @@ dsia: dsi@15300000 {
->                         status = "disabled";
->
->                         power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISP>;
-> +
-> +                       ports {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               dsia_in: port@0 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       reg = <0>;
-> +
-> +                                       dsia_in_dc0: endpoint@0 {
-> +                                               remote-endpoint = <&dc0_out_dsia>;
-> +                                       };
-> +
-> +                                       dsia_in_dc1: endpoint@1 {
-> +                                               remote-endpoint = <&dc1_out_dsia>;
-> +                                       };
-> +                               };
-> +                       };
->                 };
->
->                 vic@15340000 {
-> @@ -1072,6 +1171,25 @@ dsib: dsi@15400000 {
->                         status = "disabled";
->
->                         power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISP>;
-> +
-> +                       ports {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               dsib_in: port@0 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       reg = <0>;
-> +
-> +                                       dsib_in_dc0: endpoint@0 {
-> +                                               remote-endpoint = <&dc0_out_dsib>;
-> +                                       };
-> +
-> +                                       dsib_in_dc1: endpoint@1 {
-> +                                               remote-endpoint = <&dc1_out_dsib>;
-> +                                       };
-> +                               };
-> +                       };
->                 };
->
->                 sor0: sor@15540000 {
-> @@ -1096,6 +1214,29 @@ sor0: sor@15540000 {
->
->                         power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISP>;
->                         nvidia,interface = <0>;
-> +
-> +                       ports {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               sor0_in: port@0 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       reg = <0>;
-> +
-> +                                       sor0_in_dc0: endpoint@0 {
-> +                                               remote-endpoint = <&dc0_out_sor0>;
-> +                                       };
-> +
-> +                                       sor0_in_dc1: endpoint@1 {
-> +                                               remote-endpoint = <&dc1_out_sor0>;
-> +                                       };
-> +
-> +                                       sor0_in_dc2: endpoint@2 {
-> +                                               remote-endpoint = <&dc2_out_sor0>;
-> +                                       };
-> +                               };
-> +                       };
->                 };
->
->                 sor1: sor@15580000 {
-> @@ -1120,6 +1261,29 @@ sor1: sor@15580000 {
->
->                         power-domains = <&bpmp TEGRA186_POWER_DOMAIN_DISP>;
->                         nvidia,interface = <1>;
-> +
-> +                       ports {
-> +                               #address-cells = <1>;
-> +                               #size-cells = <0>;
-> +
-> +                               sor1_in: port@0 {
-> +                                       #address-cells = <1>;
-> +                                       #size-cells = <0>;
-> +                                       reg = <0>;
-> +
-> +                                       sor1_in_dc0: endpoint@0 {
-> +                                               remote-endpoint = <&dc0_out_sor1>;
-> +                                       };
-> +
-> +                                       sor1_in_dc1: endpoint@1 {
-> +                                               remote-endpoint = <&dc1_out_sor1>;
-> +                                       };
-> +
-> +                                       sor1_in_dc2: endpoint@2 {
-> +                                               remote-endpoint = <&dc2_out_sor1>;
-> +                                       };
-> +                               };
-> +                       };
->                 };
->
->                 dpaux: dpaux@155c0000 {
-> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-> index 04d6848d19fc..4adb64c083c8 100644
-> --- a/drivers/gpu/drm/tegra/dc.c
-> +++ b/drivers/gpu/drm/tegra/dc.c
-> @@ -10,6 +10,7 @@
->  #include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_graph.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/reset.h>
->
-> @@ -86,19 +87,6 @@ static inline void tegra_plane_writel(struct tegra_plane *plane, u32 value,
->         tegra_dc_writel(plane->dc, value, tegra_plane_offset(plane, offset));
->  }
->
-> -bool tegra_dc_has_output(struct tegra_dc *dc, struct device *dev)
-> -{
-> -       struct device_node *np = dc->dev->of_node;
-> -       struct of_phandle_iterator it;
-> -       int err;
-> -
-> -       of_for_each_phandle(&it, err, np, "nvidia,outputs", NULL, 0)
-> -               if (it.node == dev->of_node)
-> -                       return true;
-> -
-> -       return false;
-> -}
-> -
->  /*
->   * Double-buffered registers have two copies: ASSEMBLY and ACTIVE. When the
->   * *_ACT_REQ bits are set the ASSEMBLY copy is latched into the ACTIVE copy.
-> @@ -2061,6 +2049,7 @@ static int tegra_dc_init(struct host1x_client *client)
->         if (err < 0)
->                 goto cleanup;
->
-> +       dc->base.port = of_graph_get_port_by_id(dc->dev->of_node, 0);
->         drm_crtc_helper_add(&dc->base, &tegra_crtc_helper_funcs);
->
->         /*
-> diff --git a/drivers/gpu/drm/tegra/dc.h b/drivers/gpu/drm/tegra/dc.h
-> index 3d8ddccd758f..9e4ae77e6270 100644
-> --- a/drivers/gpu/drm/tegra/dc.h
-> +++ b/drivers/gpu/drm/tegra/dc.h
-> @@ -144,7 +144,6 @@ struct tegra_dc_window {
->  };
->
->  /* from dc.c */
-> -bool tegra_dc_has_output(struct tegra_dc *dc, struct device *dev);
->  void tegra_dc_commit(struct tegra_dc *dc);
->  int tegra_dc_state_setup_clock(struct tegra_dc *dc,
->                                struct drm_crtc_state *crtc_state,
-> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-> index e36e5e7c2f69..b09935cdf397 100644
-> --- a/drivers/gpu/drm/tegra/output.c
-> +++ b/drivers/gpu/drm/tegra/output.c
-> @@ -5,6 +5,7 @@
->   */
->
->  #include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_of.h>
->  #include <drm/drm_panel.h>
->  #include <drm/drm_simple_kms_helper.h>
->
-> @@ -229,16 +230,9 @@ void tegra_output_find_possible_crtcs(struct tegra_output *output,
->                                       struct drm_device *drm)
->  {
->         struct device *dev = output->dev;
-> -       struct drm_crtc *crtc;
-> -       unsigned int mask = 0;
-> -
-> -       drm_for_each_crtc(crtc, drm) {
-> -               struct tegra_dc *dc = to_tegra_dc(crtc);
-> -
-> -               if (tegra_dc_has_output(dc, dev))
-> -                       mask |= drm_crtc_mask(crtc);
-> -       }
-> +       u32 mask;
->
-> +       mask = drm_of_find_possible_crtcs(drm, dev->of_node);
->         if (mask == 0) {
->                 dev_warn(dev, "missing output definition for heads in DT\n");
->                 mask = 0x3;
-> --- >8 ---
->
-> I do see the benefit of using standard bindings where available, but in
-> this case I think that's hardly an improvement over the current binding,
-> even though it's undocumented.
->
-> > > +    - nvidia,head: The number of the display controller head. This is used to
-> > > +      setup the various types of output to receive video data from the given
-> > > +      head.
-> >
-> > Not really clear what this is...
->
-> This is the same as for the display controller in older Tegra devices.
-> The value is the index of the display controller head, or the instance
-> number of the IP, if that's any clearer. We need this in some places
-> for register programming. We can't always safely derive it in some
-> other way.
+gpiochip0 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:       "[NC]"       unused   input  active-high 
+	line   2: "P1.08 [SPI0_CLK]" unused input active-high 
+	line   3: "P1.10 [SPI0_MISO]" unused input active-high 
+	line   4: "P1.12 [SPI0_MOSI]" unused input active-high 
+	line   5: "P1.06 [SPI0_CS]" unused input active-high 
+	line   6:  "[MMC0_CD]"         "cd"   input   active-low [used]
+	line   7: "P2.29 [SPI1_CLK]" unused input active-high 
+	line   8:  "[SYSBOOT]"       unused   input  active-high 
+	line   9:  "[SYSBOOT]"       unused   input  active-high 
+	line  10:  "[SYSBOOT]"       unused   input  active-high 
+	line  11:  "[SYSBOOT]"       unused   input  active-high 
+	line  12: "P1.26 [I2C2_SDA]" unused input active-high 
+	line  13: "P1.28 [I2C2_SCL]" unused input active-high 
+	line  14: "P2.11 [I2C1_SDA]" unused input active-high 
+	line  15: "P2.09 [I2C1_SCL]" unused input active-high 
+	line  16:       "[NC]"       unused   input  active-high 
+	line  17:       "[NC]"       unused   input  active-high 
+	line  18:       "[NC]"       unused   input  active-high 
+	line  19: "P2.31 [SPI1_CS]" unused input active-high 
+	line  20: "P1.20 [PRU0.16]" unused input active-high 
+	line  21:       "[NC]"       unused   input  active-high 
+	line  22:       "[NC]"       unused   input  active-high 
+	line  23:      "P2.03"       unused   input  active-high 
+	line  24:       "[NC]"       unused   input  active-high 
+	line  25:       "[NC]"       unused   input  active-high 
+	line  26:      "P1.34"       unused   input  active-high 
+	line  27:      "P2.19"       unused   input  active-high 
+	line  28:       "[NC]"       unused   input  active-high 
+	line  29:       "[NC]"       unused   input  active-high 
+	line  30: "P2.05 [UART4_RX]" unused input active-high 
+	line  31: "P2.07 [UART4_TX]" unused input active-high 
+gpiochip1 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:       "[NC]"       unused   input  active-high 
+	line   2:       "[NC]"       unused   input  active-high 
+	line   3:       "[NC]"       unused   input  active-high 
+	line   4:       "[NC]"       unused   input  active-high 
+	line   5:       "[NC]"       unused   input  active-high 
+	line   6:       "[NC]"       unused   input  active-high 
+	line   7:       "[NC]"       unused   input  active-high 
+	line   8:       "[NC]"       unused   input  active-high 
+	line   9: "P2.25 [SPI1_MOSI]" unused input active-high 
+	line  10: "P1.32 [UART0_RX]" unused input active-high 
+	line  11: "P1.30 [UART0_TX]" unused input active-high 
+	line  12:      "P2.24"       unused   input  active-high 
+	line  13:      "P2.33"       unused   input  active-high 
+	line  14:      "P2.22"       unused   input  active-high 
+	line  15:      "P2.18"       unused   input  active-high 
+	line  16:       "[NC]"       unused   input  active-high 
+	line  17:       "[NC]"       unused   input  active-high 
+	line  18: "P2.01 [PWM1A]" unused input active-high 
+	line  19:       "[NC]"       unused   input  active-high 
+	line  20:      "P2.10"       unused   input  active-high 
+	line  21: "[USR LED 0]" "beaglebone:green:usr0" output active-high [used]
+	line  22: "[USR LED 1]" "beaglebone:green:usr1" output active-high [used]
+	line  23: "[USR LED 2]" "beaglebone:green:usr2" output active-high [used]
+	line  24: "[USR LED 3]" "beaglebone:green:usr3" output active-high [used]
+	line  25:      "P2.06"       unused   input  active-high 
+	line  26:      "P2.04"       unused   input  active-high 
+	line  27:      "P2.02"       unused   input  active-high 
+	line  28:      "P2.08"       unused   input  active-high 
+	line  29:       "[NC]"       unused   input  active-high 
+	line  30:       "[NC]"       unused   input  active-high 
+	line  31:       "[NC]"       unused   input  active-high 
+gpiochip2 - 32 lines:
+	line   0:      "P2.20"       unused   input  active-high 
+	line   1:      "P2.17"       unused   input  active-high 
+	line   2:       "[NC]"       unused   input  active-high 
+	line   3:       "[NC]"       unused   input  active-high 
+	line   4:       "[NC]"       unused   input  active-high 
+	line   5: "[EEPROM_WP]" unused input active-high 
+	line   6:  "[SYSBOOT]"       unused   input  active-high 
+	line   7:  "[SYSBOOT]"       unused   input  active-high 
+	line   8:  "[SYSBOOT]"       unused   input  active-high 
+	line   9:  "[SYSBOOT]"       unused   input  active-high 
+	line  10:  "[SYSBOOT]"       unused   input  active-high 
+	line  11:  "[SYSBOOT]"       unused   input  active-high 
+	line  12:  "[SYSBOOT]"       unused   input  active-high 
+	line  13:  "[SYSBOOT]"       unused   input  active-high 
+	line  14:  "[SYSBOOT]"       unused   input  active-high 
+	line  15:  "[SYSBOOT]"       unused   input  active-high 
+	line  16:  "[SYSBOOT]"       unused   input  active-high 
+	line  17:  "[SYSBOOT]"       unused   input  active-high 
+	line  18:       "[NC]"       unused   input  active-high 
+	line  19:       "[NC]"       unused   input  active-high 
+	line  20:       "[NC]"       unused   input  active-high 
+	line  21:       "[NC]"       unused   input  active-high 
+	line  22: "P2.35 [AIN5]" unused input active-high 
+	line  23: "P1.02 [AIN6]" unused input active-high 
+	line  24: "P1.35 [PRU1.10]" unused input active-high 
+	line  25: "P1.04 [PRU1.11]" unused input active-high 
+	line  26: "[MMC0_DAT3]" unused input active-high 
+	line  27: "[MMC0_DAT2]" unused input active-high 
+	line  28: "[MMC0_DAT1]" unused input active-high 
+	line  29: "[MMC0_DAT0]" unused input active-high 
+	line  30: "[MMC0_CLK]"       unused   input  active-high 
+	line  31: "[MMC0_CMD]"       unused   input  active-high 
+gpiochip3 - 32 lines:
+	line   0:       "[NC]"       unused   input  active-high 
+	line   1:       "[NC]"       unused   input  active-high 
+	line   2:       "[NC]"       unused   input  active-high 
+	line   3:       "[NC]"       unused   input  active-high 
+	line   4:       "[NC]"       unused   input  active-high 
+	line   5: "[I2C0_SDA]"       unused   input  active-high 
+	line   6: "[I2C0_SCL]"       unused   input  active-high 
+	line   7:     "[JTAG]"       unused   input  active-high 
+	line   8:     "[JTAG]"       unused   input  active-high 
+	line   9:       "[NC]"       unused   input  active-high 
+	line  10:       "[NC]"       unused   input  active-high 
+	line  11:       "[NC]"       unused   input  active-high 
+	line  12:       "[NC]"       unused   input  active-high 
+	line  13: "P1.03 [USB1]" unused input active-high 
+	line  14: "P1.36 [PWM0A]" unused input active-high 
+	line  15: "P1.33 [PRU0.1]" unused input active-high 
+	line  16: "P2.32 [PRU0.2]" unused input active-high 
+	line  17: "P2.30 [PRU0.3]" unused input active-high 
+	line  18: "P1.31 [PRU0.4]" unused input active-high 
+	line  19: "P2.34 [PRU0.5]" unused input active-high 
+	line  20: "P2.28 [PRU0.6]" unused input active-high 
+	line  21: "P1.29 [PRU0.7]" unused input active-high 
+	line  22:       "[NC]"       unused   input  active-high 
+	line  23:       "[NC]"       unused   input  active-high 
+	line  24:       "[NC]"       unused   input  active-high 
+	line  25:       "[NC]"       unused   input  active-high 
+	line  26:       "[NC]"       unused   input  active-high 
+	line  27:       "[NC]"       unused   input  active-high 
+	line  28:       "[NC]"       unused   input  active-high 
+	line  29:       "[NC]"       unused   input  active-high 
+	line  30:       "[NC]"       unused   input  active-high 
+	line  31:       "[NC]"       unused   input  active-high 
 
-Index, humm. I'll pretend I didn't ask...
+[0] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#71_Expansion_Header_Connectors
+[1] https://octavosystems.com/app_notes/osd335x-family-pin-assignments/
 
-Rob
+Reviewed-by: Jason Kridner <jason@beagleboard.org>
+Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+v2 changes:
+- correct the names for gpio1.[3-5] lines to [NC]
+- correct the name for gpio2.0 lines to P2.20
+- rename lines used for sysboot from [NC] to [SYSBOOT]
+- change all letters to upper case
+
+ arch/arm/boot/dts/am335x-pocketbeagle.dts | 144 ++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index 4da719098028..e08b5f73ccb5 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -59,6 +59,150 @@ vmmcsd_fixed: fixedregulator0 {
+ 	};
+ };
+ 
++&gpio0 {
++	gpio-line-names =
++		"[NC]",
++		"[NC]",
++		"P1.08 [SPI0_CLK]",
++		"P1.10 [SPI0_MISO]",
++		"P1.12 [SPI0_MOSI]",
++		"P1.06 [SPI0_CS]",
++		"[MMC0_CD]",
++		"P2.29 [SPI1_CLK]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"P1.26 [I2C2_SDA]",
++		"P1.28 [I2C2_SCL]",
++		"P2.11 [I2C1_SDA]",
++		"P2.09 [I2C1_SCL]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P2.31 [SPI1_CS]",
++		"P1.20 [PRU0.16]",
++		"[NC]",
++		"[NC]",
++		"P2.03",
++		"[NC]",
++		"[NC]",
++		"P1.34",
++		"P2.19",
++		"[NC]",
++		"[NC]",
++		"P2.05 [UART4_RX]",
++		"P2.07 [UART4_TX]";
++};
++
++&gpio1 {
++	gpio-line-names =
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P2.25 [SPI1_MOSI]",
++		"P1.32 [UART0_RX]",
++		"P1.30 [UART0_TX]",
++		"P2.24",
++		"P2.33",
++		"P2.22",
++		"P2.18",
++		"[NC]",
++		"[NC]",
++		"P2.01 [PWM1A]",
++		"[NC]",
++		"P2.10",
++		"[USR LED 0]",
++		"[USR LED 1]",
++		"[USR LED 2]",
++		"[USR LED 3]",
++		"P2.06",
++		"P2.04",
++		"P2.02",
++		"P2.08",
++		"[NC]",
++		"[NC]",
++		"[NC]";
++};
++
++&gpio2 {
++	gpio-line-names =
++		"P2.20",
++		"P2.17",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[EEPROM_WP]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[SYSBOOT]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P2.35 [AIN5]",
++		"P1.02 [AIN6]",
++		"P1.35 [PRU1.10]",
++		"P1.04 [PRU1.11]",
++		"[MMC0_DAT3]",
++		"[MMC0_DAT2]",
++		"[MMC0_DAT1]",
++		"[MMC0_DAT0]",
++		"[MMC0_CLK]",
++		"[MMC0_CMD]";
++};
++
++&gpio3 {
++	gpio-line-names =
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[I2C0_SDA]",
++		"[I2C0_SCL]",
++		"[JTAG]",
++		"[JTAG]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P1.03 [USB1]",
++		"P1.36 [PWM0A]",
++		"P1.33 [PRU0.1]",
++		"P2.32 [PRU0.2]",
++		"P2.30 [PRU0.3]",
++		"P1.31 [PRU0.4]",
++		"P2.34 [PRU0.5]",
++		"P2.28 [PRU0.6]",
++		"P1.29 [PRU0.7]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]";
++};
++
+ &am33xx_pinmux {
+ 	i2c2_pins: pinmux-i2c2-pins {
+ 		pinctrl-single,pins = <
+-- 
+2.25.1
