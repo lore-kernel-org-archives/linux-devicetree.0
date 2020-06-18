@@ -8,74 +8,69 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8499CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E248BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CDA2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 15:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48432075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNHlrM0A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9cuHroT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731487AbgFRPv1 (ORCPT
+        id S1728095AbgFRQAK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        Thu, 18 Jun 2020 12:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgFRPvY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 11:51:24 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF429C06174E;
-        Thu, 18 Jun 2020 08:51:23 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l10so6572104wrr.10;
-        Thu, 18 Jun 2020 08:51:23 -0700 (PDT)
+        with ESMTP id S1728090AbgFRQAJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 12:00:09 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D4BC06174E;
+        Thu, 18 Jun 2020 09:00:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a6so4659773wrm.4;
+        Thu, 18 Jun 2020 09:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gH7qzcCxjfKEx0xjjm7740rxj015q9ytvZGcKdLLIio=;
-        b=YNHlrM0Ay9bRne1mOhLxToB7acw3MVdBAYT8260307zdvNpTq62DySLiwpbfqoBCiw
-         IBZDjY3iCERWhWzX095O/qhP1q1WSBzZ7JwjTDPwFr2a+y9Cdi7fM7FKQ4E6fFBoS0wf
-         GCEHKxr++Xx35L1Y58gxglo1UhaaeyhsGkwgXMHIJTuF63edgD2LDofQO3OIAV9f85Lv
-         THJRO2Hoyffh698fVHZvAoda9jLE3GhJDN8WflFGszkuhAc3PGGDJFIb63Qfa/AkAaHt
-         9E6Gst0mv0qcjL8GgUJBOESimCv4xEhHtrpvfqOPLaOwqswo8EWY+n/At+Uo5uApEc25
-         YPMA==
+        bh=x3LA7sp3dOy30DhOnl4vpK+38g2VcseF6kbs7o6qdjU=;
+        b=n9cuHroTaFNZCY7THCnqo0RHhaYu1VILKqV9Ta+oZGnTyGLAn3KCcu3YReAqfvpV1q
+         N7VVJpTcGduU9REUvFc7RUIEe/TM1wowrVm4XJmaELRjI+oapelT979yU22XzwXnSCXT
+         aWdGGRhKscciAHpGv+174b81TiDq4ja9JTBtXGpgqUocWGYsQUGBlEec8WOOGkwsE9FQ
+         nibMp7KLfce4L4ze7oR5sZgieTUOcKIAFZJi4EiS506QpiFha5N31jTE+s0zv82XNUXC
+         W1Bi5gmfmwqqvwHtmmdsISqdJHA6nI6uYu5jXODGN+LFBL0VyAJx4y5jUlT/63TFjjK7
+         fiIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=gH7qzcCxjfKEx0xjjm7740rxj015q9ytvZGcKdLLIio=;
-        b=S8EveUXgFT78ZYuKlfOyNx9UDenpgMMsd7egeFbRnLAQeFDCUUOQQJGTrQJ6K0IOhl
-         EBu1H+WEkmX3bEiOB39q0GBu1JEXny5bYqsR1VpkupVb8T82m0MmFWrHCXWmd98fauJS
-         rNZm9c959QojW1gwDOMKIeuV3/QCCGVUQIbwKsuGCBbWDXs+jAAZ9uLQ16EmcY4EMZBa
-         HXX22B0wl+gkcC0NJnOSjpnvEy2h2nfAEZNyrhAgYkBXQVTfrqnxSZR1+e12IlOrMWTc
-         AO9CMCuOH/g1qZIo+1stGeoWrnX+ueG/PvJckcwMK/LUDG2rsY1Kx4YPQFkceuQkBh1L
-         Imxg==
-X-Gm-Message-State: AOAM531uTN+/vEJu9k7KlXPs5ptAF3gs54QYEzvZixPJ2bjWj96FrmXY
-        2D4px3tP32jRvqN7e3SBVDs08WAa
-X-Google-Smtp-Source: ABdhPJzFa9kq3Ql8Nhmf2B0ep4sk8iA+d3i5dXbYqEXMV5Gx+8bSyBe62/pwam8m4beO6khgPr6SNw==
-X-Received: by 2002:adf:f3cb:: with SMTP id g11mr2820956wrp.142.1592495481322;
-        Thu, 18 Jun 2020 08:51:21 -0700 (PDT)
+        bh=x3LA7sp3dOy30DhOnl4vpK+38g2VcseF6kbs7o6qdjU=;
+        b=r+ra46q9ZyoI3vjuJZ284Xjv8NjqazAPZ1RqMk0IdL/xQL402QU8n/2JjI5pTnDR7a
+         I+jKhfL1iKb7h0zmZNV1GaA+69aQMezN+7sq5Zvj03+Gxx/IQzUYaXmD29yE8/XDb6qR
+         LEOkr960pq9UnZD1+NCRkDiVdN3F5lBWf+N13VNEhpOCzctAF3shlQdYx2Co5JTHT7nH
+         4KSOqaBEGBLB1vfRQoU/ucZiNEFu4iqZ6otKrNJYiu7pNsiKdmjfY/+5F8i+u/gjQ9kS
+         k4WAaUyYg3Jb/UMWa8UiRclsQPizb38XHaFa1TRvjqA8++eBY7zdp2kjlBd+X8QCRtSf
+         xrAw==
+X-Gm-Message-State: AOAM531BVZ+L5J1fTEb40hU2yZ/QFIwy1MvBBnbugdX3z2Cupjl8oq10
+        m07srLw2hFDxBZXN1GdxwSs+q3j1
+X-Google-Smtp-Source: ABdhPJz+7F0EbRzsmpp//fFKGQX4eSnlBsnREIubb7/IkgjJyYeYoA5oBjWwUsxu479ZxwsrZTgfzQ==
+X-Received: by 2002:a5d:6b8c:: with SMTP id n12mr5343092wrx.61.1592496007103;
+        Thu, 18 Jun 2020 09:00:07 -0700 (PDT)
 Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
-        by smtp.gmail.com with ESMTPSA id m24sm4047732wmi.14.2020.06.18.08.51.19
+        by smtp.gmail.com with ESMTPSA id b187sm4062266wmd.26.2020.06.18.09.00.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 08:51:20 -0700 (PDT)
-Subject: Re: [PATCH v6 6/7] clk: mediatek: add UART0 clock support
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
- <1592480018-3340-7-git-send-email-hanks.chen@mediatek.com>
+        Thu, 18 Jun 2020 09:00:06 -0700 (PDT)
+Subject: Re: [PATCH v4 7/7] iommu/mediatek: Add mt6779 basic support
+To:     chao hao <Chao.Hao@mediatek.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Yong Wu <yong.wu@mediatek.com>, FY Yang <fy.yang@mediatek.com>
+References: <20200617030029.4082-1-chao.hao@mediatek.com>
+ <20200617030029.4082-8-chao.hao@mediatek.com>
+ <64f63ccc-92a4-191c-3566-de00c9e04ca2@gmail.com>
+ <1592481247.12647.9.camel@mbjsdccf07>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -151,12 +146,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <a61ed70c-a360-f3af-e215-6377ea25a6ab@gmail.com>
-Date:   Thu, 18 Jun 2020 17:51:18 +0200
+Message-ID: <9618cc95-99ac-63d0-f502-335e38819842@gmail.com>
+Date:   Thu, 18 Jun 2020 18:00:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1592480018-3340-7-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1592481247.12647.9.camel@mbjsdccf07>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -167,34 +162,139 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 18/06/2020 13:33, Hanks Chen wrote:
-> Add MT6779 UART0 clock support.
+On 18/06/2020 13:54, chao hao wrote:
+> On Wed, 2020-06-17 at 11:33 +0200, Matthias Brugger wrote:
+>>
+>> On 17/06/2020 05:00, Chao Hao wrote:
+>>> 1. Start from mt6779, INVLDT_SEL move to offset=0x2c, so we add
+>>>    REG_MMU_INV_SEL_GEN2 definition and mt6779 uses it.
+>>> 2. Change PROTECT_PA_ALIGN from 128 byte to 256 byte.
+>>> 3. For REG_MMU_CTRL_REG register, we only need to change bit[2:0],
+>>>    others bits keep default value, ex: enable victim tlb.
+>>> 4. Add mt6779_data to support mm_iommu HW init.
+>>>
+>>> Change since v3:
+>>> 1. When setting MMU_CTRL_REG, we don't need to include mt8173.
+>>>
+>>> Cc: Yong Wu <yong.wu@mediatek.com>
+>>> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+>>> ---
+>>>  drivers/iommu/mtk_iommu.c | 20 ++++++++++++++++++--
+>>>  drivers/iommu/mtk_iommu.h |  1 +
+>>>  2 files changed, 19 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+>>> index c706bca6487e..def2e996683f 100644
+>>> --- a/drivers/iommu/mtk_iommu.c
+>>> +++ b/drivers/iommu/mtk_iommu.c
+>>> @@ -37,6 +37,11 @@
+>>>  #define REG_MMU_INVLD_START_A			0x024
+>>>  #define REG_MMU_INVLD_END_A			0x028
+>>>  
+>>> +/* In latest Coda, MMU_INV_SEL's offset is changed to 0x02c.
+>>> + * So we named offset = 0x02c to "REG_MMU_INV_SEL_GEN2"
+>>> + * and offset = 0x038 to "REG_MMU_INV_SEL_GEN1".
+>>> + */
+>>
+>> Please delete the comment, this should be understandable from the git history
+> 
+> ok, thanks
+> 
+>>
+>>> +#define REG_MMU_INV_SEL_GEN2			0x02c
+>>>  #define REG_MMU_INV_SEL_GEN1			0x038
+>>>  #define F_INVLD_EN0				BIT(0)
+>>>  #define F_INVLD_EN1				BIT(1)
+>>> @@ -98,7 +103,7 @@
+>>>  #define F_MMU_INT_ID_LARB_ID(a)			(((a) >> 7) & 0x7)
+>>>  #define F_MMU_INT_ID_PORT_ID(a)			(((a) >> 2) & 0x1f)
+>>>  
+>>> -#define MTK_PROTECT_PA_ALIGN			128
+>>> +#define MTK_PROTECT_PA_ALIGN			256
+>>
+>> Do we need 512 bytes for all gen2 IOMMUs?
+>> I'm not sure if we should add this in plat_data or if we should just bump up the
+>> value for all SoCs.
+>> In both cases this should be a separate patch.
+>>
+> From mt6779, MTK_PROTECT_PA_ALIGN is extend to 256 bytes and don't be
+> changed for a long time from our HW designer comment. The legacy iommu
+> also can use it, mabye it doesn't set it by platform.
 > 
 
-Please a dd fixes tag:
+Ok then just bump it to 256 in a new patch. Thanks for clarification.
 
-Fixes: 710774e04861 ("clk: mediatek: Add MT6779 clock support")
-
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> Signed-off-by: mtk01761 <wendell.lin@mediatek.com>
-
-Must be a real name not "mtk01761"
-
-> ---
->  drivers/clk/mediatek/clk-mt6779.c |    2 ++
->  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/clk/mediatek/clk-mt6779.c b/drivers/clk/mediatek/clk-mt6779.c
-> index 9766ccc..6e0d3a1 100644
-> --- a/drivers/clk/mediatek/clk-mt6779.c
-> +++ b/drivers/clk/mediatek/clk-mt6779.c
-> @@ -919,6 +919,8 @@
->  		    "pwm_sel", 19),
->  	GATE_INFRA0(CLK_INFRA_PWM, "infra_pwm",
->  		    "pwm_sel", 21),
-> +	GATE_INFRA0(CLK_INFRA_UART0, "infra_uart0",
-> +		    "uart_sel", 22),
->  	GATE_INFRA0(CLK_INFRA_UART1, "infra_uart1",
->  		    "uart_sel", 23),
->  	GATE_INFRA0(CLK_INFRA_UART2, "infra_uart2",
+>>>  
+>>>  /*
+>>>   * Get the local arbiter ID and the portid within the larb arbiter
+>>> @@ -543,11 +548,12 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>>>  		return ret;
+>>>  	}
+>>>  
+>>> +	regval = readl_relaxed(data->base + REG_MMU_CTRL_REG);
+>>>  	if (data->plat_data->m4u_plat == M4U_MT8173)
+>>>  		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
+>>>  			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
+>>>  	else
+>>> -		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
+>>> +		regval |= F_MMU_TF_PROT_TO_PROGRAM_ADDR;
+>>
+>> Why do we change this, is it that the bootloader for mt6779 set some values in
+>> the register we have to keep? In this case I think we should update the regval
+>> accordingly.
+> 
+> For REG_MMU_CTRL_REG, bit[12] represents victim_tlb_en feature and
+> victim_tlb is enable defaultly(bit[12]=1),but if we use "regval =
+> F_MMU_TF_PROT_TO_PROGRAM_ADDR", victim_tlb will disable, it will drop
+> iommu performace for mt6779
+> 
+
+Got it. Please put that in a separate patch then.
+
+Regards,
+Matthias
+
+> 
+>>
+>>>  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+>>>  
+>>>  	regval = F_L2_MULIT_HIT_EN |
+>>> @@ -797,6 +803,15 @@ static const struct mtk_iommu_plat_data mt2712_data = {
+>>>  	.larbid_remap   = {{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}},
+>>>  };
+>>>  
+>>> +static const struct mtk_iommu_plat_data mt6779_data = {
+>>> +	.m4u_plat      = M4U_MT6779,
+>>> +	.has_sub_comm  = true,
+>>> +	.has_wr_len    = true,
+>>> +	.has_misc_ctrl = true,
+>>> +	.inv_sel_reg   = REG_MMU_INV_SEL_GEN2,
+>>> +	.larbid_remap  = {{0}, {1}, {2}, {3}, {5}, {7, 8}, {10}, {9}},
+>>> +};
+>>> +
+>>>  static const struct mtk_iommu_plat_data mt8173_data = {
+>>>  	.m4u_plat     = M4U_MT8173,
+>>>  	.has_4gb_mode = true,
+>>> @@ -815,6 +830,7 @@ static const struct mtk_iommu_plat_data mt8183_data = {
+>>>  
+>>>  static const struct of_device_id mtk_iommu_of_ids[] = {
+>>>  	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
+>>> +	{ .compatible = "mediatek,mt6779-m4u", .data = &mt6779_data},
+>>>  	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
+>>>  	{ .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
+>>>  	{}
+>>> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+>>> index 9971cedd72ea..fb79e710c8d9 100644
+>>> --- a/drivers/iommu/mtk_iommu.h
+>>> +++ b/drivers/iommu/mtk_iommu.h
+>>> @@ -31,6 +31,7 @@ struct mtk_iommu_suspend_reg {
+>>>  enum mtk_iommu_plat {
+>>>  	M4U_MT2701,
+>>>  	M4U_MT2712,
+>>> +	M4U_MT6779,
+>>>  	M4U_MT8173,
+>>>  	M4U_MT8183,
+>>>  };
+>>>
 > 
