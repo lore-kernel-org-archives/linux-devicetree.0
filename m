@@ -2,61 +2,62 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B344C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69988C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59209206F7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428AD20884
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 12:51:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="s92ydCNN"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="TRVf5p71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgFRMve (ORCPT
+        id S1729966AbgFRMvq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:51:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39992 "EHLO
+        Thu, 18 Jun 2020 08:51:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729709AbgFRMvd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 08:51:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0701C06174E
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so5955801wru.0
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:32 -0700 (PDT)
+        with ESMTP id S1729905AbgFRMvo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 08:51:44 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3443C06174E
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:43 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l17so5088108wmj.0
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 05:51:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bj6HAykfSXciPD/Bc+zws1F4Dix7NK9KOE5ziMSlP18=;
-        b=s92ydCNNUB8tBaQKFHde4jqHuN6R3JyXh0Nhc/3Txlz3PLg16gHdMvxkf9nm/Way1i
-         IE7qKAasmH7/Az0BAzvtq3Wsks+24nV/BS2+NF/XmhKz36t2pBn5d9mDERBAdK2cKVO4
-         XmpdPEXNkPDJdAmixppQgrBSPkKlLe/4a6ueUlC4KvoMHcjAfmwrusiaepK/fmjFdQgE
-         GpnmI8vOqTLlxolUIEFyLIUWO3+oZVRzviNhDgRC/iDdNmjhJPHNv75+OgZ6sbRYhiWE
-         dFCnNVj49d8/VUo6Xi3HoF8nHG33h7EODXuDug7DnsqqOOUTyYCd0beyqtE9SEB+C7sV
-         svEg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=kre93dd6hT4pYBC6xQN9FkazTNYBQtZr78iwLPfwCF4=;
+        b=TRVf5p71/Ag4UNdwc/kW3lZlfblIowK80W+zyKByyru7UHXDqLeD7vCHyYGEpt4SE8
+         3feY5JsWedJKgdl+5OIez+/8F1tBVDJ/4VA824OzPcsTBPPvCrjYcFFz+5R42CWGMpFk
+         mlGZ12sNiwhEH5GEti9o1QKOKAO3W7nFkr8QTy+Z1+eE7pHgMptcgUtDt7tXkhGRvw4n
+         cx+fObyf5nAwwcDb3tVugVuQRdrGOCmLMqYP/S8rptL6ZYej0IPNQtAirgnNgm1sqRxL
+         vxooeW/Khk5NA3xdrlKD4ZmJ/mz/QX4rgry57toQ8SIDlnksSH7oTPVxq5NIWkRvVkpJ
+         4NpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bj6HAykfSXciPD/Bc+zws1F4Dix7NK9KOE5ziMSlP18=;
-        b=NTxuPJz+TFD5tlZa4HwhdY9270P6R3uyQFym3j+Omj5nKcfKGkj9DT6h2YapvG+hNG
-         53BxrQWzV/p06ptmvHZaInO6sdoMUgaV5T6cwFEX+10nH/u6sYLr/tW3Jvh13ybasE3L
-         PTKEsjH08RBbwKi1t0Hsrc/+3Bi7xST12JSipUdYDLqRvH5PvKyDVcSTzSvaB95Gnxk2
-         cJkKB2/dals0Kto0oNpNB+9m2Zex+pl2N5OJCxPdUxmDC6RRnHV7QTW/+hqh+yNOamMJ
-         G9ipmcQkM6qqrRdQOCAnOrhJybb8u10e9ofXL1mIBFhMWLYPGVWKoEC664V+YEb19RX0
-         d8ww==
-X-Gm-Message-State: AOAM532fTSvwKCbg1ZEEFpcfmFc4i3D/Gt6yQRqkldLHbVLpv55xDCuZ
-        RzL8PenQxutbBw2hhPGQEFyyPg==
-X-Google-Smtp-Source: ABdhPJwC8zsRiXLYSbgOC9p59MOglG+3EnihCVEse/KhZppHDY52tveh0j6s0v6RHp6PmoAniAxHPA==
-X-Received: by 2002:adf:9163:: with SMTP id j90mr4376829wrj.65.1592484691632;
-        Thu, 18 Jun 2020 05:51:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=kre93dd6hT4pYBC6xQN9FkazTNYBQtZr78iwLPfwCF4=;
+        b=TD3Q6IjsADl9/9KoxfbQ94d96yZ2IiY8jN0pQUNTZTT7GHA5o2JOxY4xR1bR5ucL94
+         yisSsLlOyLGCv/XGgzx6QyJyrIHGSFzNRuYKv1tk+Z+gmLFpGdhe/oWS8FZazo8KDDmS
+         oeOtWBXaji8co5qNbiKCoJFhCXTxKRolBa8qjPrF/ccU8LlUkkOYSodFVt/xLze3gTKq
+         KHaP+beAIoY+ut0aRn3i02XG0eFCXvQYtX44UflNyMRgSREbJh3+/hbWpY2LPWeVW+bb
+         ZDX5wffnSLE0BlpHYNW28nC81PG6082nt2nDjZREBz4q0HM3KqPL7ya/e1muGypy+UUi
+         ugCw==
+X-Gm-Message-State: AOAM530E0fd1dPQO1w82MC57ykykXXAYOrGagT7nb//ddPRF+V49TK8x
+        7FUyRguTEyReZo1cRptnOCOJtA==
+X-Google-Smtp-Source: ABdhPJx5wChPkJh3wqqQH8t9n3fY00xH6TQW/iPEoWFdYFr16TgedzvEFOTdfZ9BL2dZZbmQXlZ/4w==
+X-Received: by 2002:a1c:44c3:: with SMTP id r186mr3831425wma.67.1592484702734;
+        Thu, 18 Jun 2020 05:51:42 -0700 (PDT)
 Received: from localhost.localdomain (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id v27sm3714151wrv.81.2020.06.18.05.51.30
+        by smtp.gmail.com with ESMTPSA id v27sm3714151wrv.81.2020.06.18.05.51.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 05:51:30 -0700 (PDT)
+        Thu, 18 Jun 2020 05:51:41 -0700 (PDT)
 From:   Drew Fustini <drew@beagleboard.org>
 To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
         linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -68,10 +69,12 @@ To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
         Jason Kridner <jkridner@beagleboard.org>,
         Robert Nelson <robertcnelson@gmail.com>
 Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH 0/3] pinctrl: single: support #pinctrl-cells = 2
-Date:   Thu, 18 Jun 2020 14:50:54 +0200
-Message-Id: <20200618125057.41252-1-drew@beagleboard.org>
+Subject: [PATCH 1/3] ARM: dts: change AM33XX_PADCONF macro separate conf and mux
+Date:   Thu, 18 Jun 2020 14:50:55 +0200
+Message-Id: <20200618125057.41252-2-drew@beagleboard.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618125057.41252-1-drew@beagleboard.org>
+References: <20200618125057.41252-1-drew@beagleboard.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,27 +82,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, pinctrl-single only allows #pinctrl-cells = 1.
+AM33XX_PADCONF macro is modified to keep pin conf and pin mux separate.
 
-This series will allow pinctrl-single to also support #pinctrl-cells = 2
+This requires #pinctrl-cells = 2 in am33xx-l4.dtsi
 
-If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
-pcs_parse_one_pinctrl_entry() does an OR operation on to get the
-value to store in the register.
-    
-To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
-omap.h is modified to keep pin conf and pin mux values separate.
+pinctrl-single.c but also be changed to support "pinctrl-single,pins"
+with 3 arguments (offset, conf, mux)
 
-Drew Fustini (3):
-  ARM: dts: change AM33XX_PADCONF macro separate conf and mux
-  ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-  pinctrl: single: parse #pinctrl-cells = 2
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ include/dt-bindings/pinctrl/omap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/boot/dts/am33xx-l4.dtsi   |  2 +-
- drivers/pinctrl/pinctrl-single.c   | 11 +++++++++--
- include/dt-bindings/pinctrl/omap.h |  2 +-
- 3 files changed, 11 insertions(+), 4 deletions(-)
-
+diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
+index 625718042413..a0974923bb1b 100644
+--- a/include/dt-bindings/pinctrl/omap.h
++++ b/include/dt-bindings/pinctrl/omap.h
+@@ -65,7 +65,7 @@
+ #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+ #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+ #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+-#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
++#define AM33XX_PADCONF(pa, conf, mux)	(OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux))
+ 
+ /*
+  * Macros to allow using the offset from the padconf physical address
 -- 
 2.25.1
 
