@@ -2,169 +2,173 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8355DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EFDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F5A2071A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F251F20888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 23:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bm5i5THm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YPWN20eE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgFRXKf (ORCPT
+        id S1727880AbgFRXWL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgFRXKd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 19:10:33 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87675C06174E;
-        Thu, 18 Jun 2020 16:10:30 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t74so4481030lff.2;
-        Thu, 18 Jun 2020 16:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jhny5BIdzMCArxR5VVXdJjK2vn4kS8RKmRFpsfCevPo=;
-        b=bm5i5THmxV5QUrZXYzYo6o5ytzJhgUz2H49bve/mjYyKH76R9UA1HnIjSTMyoyIsEy
-         rQxwk78x/zmFthZ8e3EDTouF05bgbSpKjEAXhHS4+T3QhLP8rl3Gp8ijZA9pQXzNsLRi
-         7zG8WJkOHmKWKbIhdGuTfdTUCk5p1tzvF9DqkqCq3cMJEsnhlHejESGAKix4klGgMLPl
-         20v6oxpUPVkem9Nmj7zoQZM7b/SHEKYRx1N2xfBhHB7H0iQR24Xrc3FTEC91DFGj0rWs
-         Q3X/ZFhnEq2LOmhgsUhTq+NeJTmX8ziIQoG4sdodcp4Nh5SjdCB11I+DjHJxwiV83mNW
-         eHMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jhny5BIdzMCArxR5VVXdJjK2vn4kS8RKmRFpsfCevPo=;
-        b=RUyvarIXE4sjufpmrVZsoS+jyUtZ8vK1/UGuE/QD6dQM08Qwqov1rHX4yG0Fpajg8M
-         Q9bZHGvFMoD5iOn02z0lnTkHnNPYzPEaeDnGGppkErHdp7tw2jHXscOgFbmCsewEFk77
-         uabdmV0ClRAEApvzCEyo27GSKfwJiKSu+aCSNOB6QmXnAfMgzuoSu9V6HRoeeAdest/I
-         qcwbWqru4cYvMfXbmhJfJ1KwAdWnhFZBdkF//zLIYzL0p+6jT0xHomzU6zTBqfqvxyw8
-         WJwRwwqaAELligxEPagJJp+D3Rfc9KLUNCQfiZyQarAk7t0dQY8DRELALO+x7KY4G8kO
-         crRQ==
-X-Gm-Message-State: AOAM5332bd+i5O0uUHO8e8L22PXKfuwih1UL3j/FAx9PuICN2j86eZDb
-        lbCI3XknuBF5rM+C0Lt+zF3RBDJZ1jxGNO0LT+3oblW7
-X-Google-Smtp-Source: ABdhPJxDnjpMRhq/eJg4kRFm09A/NnAr44oJEByVLHxxQunIkaqHoi5JHmFlbFSMGdMrejPcfBgRzLLwUkRCozq0dHA=
-X-Received: by 2002:a05:6512:3049:: with SMTP id b9mr320804lfb.44.1592521828993;
- Thu, 18 Jun 2020 16:10:28 -0700 (PDT)
+        Thu, 18 Jun 2020 19:22:11 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16204 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727961AbgFRXWL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:22:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592522530; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=uxcHy6A4lpfudbGIOzAULZVoTBqGZXltcTorJ7R9H/M=; b=YPWN20eEnICykuZh2Tw5KpNgMfsGDnkwCUyRTh7XywA3Q5BLDKgXO5YrtpHzPHb2bwIFfLki
+ puAf2FPoNtJGY0T4hu5KiXUtHJ+NLykfWZIrRu+TQ5K2xHu9/dhdgEv8XdGwBqt48zAoUpyl
+ ELY40mvJJd25DXC8HBbYCe94S+Q=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5eebf70f6f2ee827da895a84 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 23:21:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7A250C433A0; Thu, 18 Jun 2020 23:21:51 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07B1FC433C8;
+        Thu, 18 Jun 2020 23:21:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07B1FC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     swboyd@chromium.org, agross@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, dianders@chromium.org,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        bjorn.andersson@linaro.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: qcom: sc7180: Add Display Port dt node
+Date:   Thu, 18 Jun 2020 16:21:13 -0700
+Message-Id: <20200618232113.22687-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org> <1592458104-2961-3-git-send-email-akolli@codeaurora.org>
-In-Reply-To: <1592458104-2961-3-git-send-email-akolli@codeaurora.org>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Fri, 19 Jun 2020 09:10:17 +1000
-Message-ID: <CAGRGNgV74fCD1gb=rXEe1BMN5+5stYeX3W6eKc4-do76TBmFqA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] ath11k: copy ce service configs to hw_params
-To:     Anilkumar Kolli <akolli@codeaurora.org>
-Cc:     ath11k@lists.infradead.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-wireless@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anilkumar,
+Enable DP driver for sc7180.
 
-On Thu, Jun 18, 2020 at 3:31 PM Anilkumar Kolli <akolli@codeaurora.org> wrote:
->
-> No functional changes, added target ce service configurations
-> to hw_params.
->
-> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-> ---
-> V3:
->  - added ce svc configs in hw_params
->
->  drivers/net/wireless/ath/ath11k/ahb.c  | 20 +++++++++++++++-----
->  drivers/net/wireless/ath/ath11k/core.c |  8 +-------
->  drivers/net/wireless/ath/ath11k/core.h |  1 +
->  drivers/net/wireless/ath/ath11k/hw.h   |  2 ++
->  4 files changed, 19 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-> index 7e9bfeaaf4d2..aa74d27e5871 100644
-> --- a/drivers/net/wireless/ath/ath11k/ahb.c
-> +++ b/drivers/net/wireless/ath/ath11k/ahb.c
-> @@ -152,7 +152,7 @@ static const struct ce_pipe_config target_ce_config_wlan[] = {
->   * This table is derived from the CE_PCI TABLE, above.
->   * It is passed to the Target at startup for use by firmware.
->   */
-> -static const struct service_to_pipe target_service_to_ce_map_wlan[] = {
-> +static const struct service_to_pipe target_service_to_ce_map_wlan_ipq8074[] = {
->         {
->                 .service_id = __cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
->                 .pipedir = __cpu_to_le32(PIPEDIR_OUT),  /* out = UL = host -> target */
-> @@ -644,8 +644,8 @@ static void ath11k_ahb_init_qmi_ce_config(struct ath11k_base *ab)
->
->         cfg->tgt_ce_len = ARRAY_SIZE(target_ce_config_wlan) - 1;
->         cfg->tgt_ce = target_ce_config_wlan;
-> -       cfg->svc_to_ce_map_len = ARRAY_SIZE(target_service_to_ce_map_wlan);
-> -       cfg->svc_to_ce_map = target_service_to_ce_map_wlan;
-> +       cfg->svc_to_ce_map_len = ab->hw_params.svc_to_ce_map_len;
-> +       cfg->svc_to_ce_map = ab->hw_params.svc_to_ce_map;
->  }
->
->  static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
-> @@ -853,8 +853,8 @@ static int ath11k_ahb_map_service_to_pipe(struct ath11k_base *ab, u16 service_id
->         bool ul_set = false, dl_set = false;
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan); i++) {
-> -               entry = &target_service_to_ce_map_wlan[i];
-> +       for (i = 0; i < ab->hw_params.svc_to_ce_map_len; i++) {
-> +               entry = &ab->hw_params.svc_to_ce_map[i];
->
->                 if (__le32_to_cpu(entry->service_id) != service_id)
->                         continue;
-> @@ -950,6 +950,16 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
->                 goto err_hal_srng_deinit;
->         }
->
-> +       ret = ath11k_init_hw_params(ab);
-> +       if (ret) {
-> +               ath11k_err(ab, "failed to get hw params %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       ab->hw_params.svc_to_ce_map_len =
-> +                       ARRAY_SIZE(target_service_to_ce_map_wlan_ipq8074);
-> +       ab->hw_params.svc_to_ce_map = target_service_to_ce_map_wlan_ipq8074;
+This change depends-on following series:
+https://patchwork.freedesktop.org/series/78583/
+and https://patchwork.freedesktop.org/patch/351990/
 
-I think you misunderstood my point about this, the point wasn't to
-copy the svc map to hw_params, but define it in hw_params:
+Changes in v2:
 
-+       {
-+               .hw_rev = ATH11K_HW_IPQ6018,
-+               .name = "ipq6018 hw1.0",
-+               .fw = {
-+                       .dir = "IPQ6018/hw1.0",
-+                       .board_size = 256 * 1024,
-+                       .cal_size = 256 * 1024,
-+               },
-+               .max_radios = 2,
-+               .bdf_addr = 0x4ABC0000,
-+               .hw_ops = &ipq6018_ops,
-+               .svc_to_ce_map_len =
-ARRAY_SIZE(target_service_to_ce_map_wlan_ipq6018,
-+               .svc_to_ce_map = target_service_to_ce_map_wlan_ipq6018,
-+       },
+- Add assigned-clocks and assigned-clock-parents
+- Remove cell-index and pixel_rcg
+- Change compatible to qcom,sc7180-dp
 
-That completely eliminates special case code based on the hardware ID
-in the driver.
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 ++++++++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 4 deletions(-)
 
-Thanks,
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 916401f7e87c..26fe623e3b0f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2216,10 +2216,19 @@ ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 
++					port@1 {
++						reg = <1>;
++						dpu_intf1_out: endpoint {
++							remote-endpoint =
++								 <&dsi0_in>;
++						};
++					};
++
+ 					port@0 {
+ 						reg = <0>;
+-						dpu_intf1_out: endpoint {
+-							remote-endpoint = <&dsi0_in>;
++						dpu_intf0_out: endpoint {
++							remote-endpoint =
++								 <&dp_in>;
+ 						};
+ 					};
+ 				};
+@@ -2293,6 +2302,46 @@ dsi_phy: dsi-phy@ae94400 {
+ 			};
+ 		};
+ 
++		msm_dp: displayport-controller@ae90000{
++			status = "ok";
++			compatible = "qcom,sc7180-dp";
++
++			reg = <0 0xae90000 0 0x1400>;
++			reg-names = "dp_controller";
++
++			interrupt-parent = <&mdss>;
++			interrupts = <12 0>;
++
++			clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
++				 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
++				 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
++				 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
++			clock-names = "core_aux", "ctrl_link",
++				      "ctrl_link_iface", "stream_pixel";
++			#clock-cells = <1>;
++			assigned-clocks = <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
++			assigned-clock-parents = <&msm_dp 1>;
++
++			data-lanes = <0 1>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@0 {
++					reg = <0>;
++					dp_in: endpoint {
++						remote-endpoint =
++							 <&dpu_intf0_out>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					dp_out: endpoint { };
++				};
++			};
++		};
++
+ 		dispcc: clock-controller@af00000 {
+ 			compatible = "qcom,sc7180-dispcc";
+ 			reg = <0 0x0af00000 0 0x200000>;
+@@ -2300,8 +2349,8 @@ dispcc: clock-controller@af00000 {
+ 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+ 				 <&dsi_phy 0>,
+ 				 <&dsi_phy 1>,
+-				 <0>,
+-				 <0>;
++				 <&msm_dp 0>,
++				 <&msm_dp 1>;
+ 			clock-names = "bi_tcxo",
+ 				      "gcc_disp_gpll0_clk_src",
+ 				      "dsi0_phy_pll_out_byteclk",
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
---
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
