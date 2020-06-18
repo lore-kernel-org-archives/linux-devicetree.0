@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBBAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242A8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B9E21534
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC1621534
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448212;
-	bh=MYYcJRFJPTB06V+ucjirZVyjIZQZP5RMckIncZ00mjo=;
+	s=default; t=1592448237;
+	bh=/bBd9Kcib72Nd6qfjvx5eG/CuEwIcQlkINsGTgx75Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0BQVJ8fjc/ApDNeanp6nZRxmmItCrQ2Cl9QqUmojiHzcilshOGK9gPwu+kgVfJuM
-	 VZUZJbh9c9/6re+2WFKU2hyE1gifKAgmfokmH0dPrxZUmuHE83R97FewjIitzw0mAL
-	 xvoIAGKPMiog7d2+TKW0zkd3mFdWuSuM/y1zRwXE=
+	b=qIprSQCcyRMis36acZ8WiRgDhSlSJ6tMWvoDzNwLf1VldyKOqVFlxOmIWo0on0wvt
+	 mgy46ddoHx7Zv2pHzMgmEJa29mW1MfPPpjvcGSLMzvPtcQRLNCVtbR5KV30HiZ+7ei
+	 jHYlsbcI169kyh7fDdKk3tn6u9Z45N798vmrNHVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgFRCnb (ORCPT
+        id S1729000AbgFRCnz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39580 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbgFRBLg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:36 -0400
+        id S1727964AbgFRBLX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE6F214DB;
-        Thu, 18 Jun 2020 01:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A68C221E6;
+        Thu, 18 Jun 2020 01:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442695;
-        bh=MYYcJRFJPTB06V+ucjirZVyjIZQZP5RMckIncZ00mjo=;
+        s=default; t=1592442683;
+        bh=/bBd9Kcib72Nd6qfjvx5eG/CuEwIcQlkINsGTgx75Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYKmRgzQDA1Su8UNz95DfumaK2EjDgvbNUWZcpXBdU4tPywoj4za++4v4copBvfA3
-         j+jQb76dc8d24fg76iMvKRutg7H6ri+IVBR3WUikv8z8hl02QQkhObdoNydbppKOHM
-         vMOaankdj1YxIabGUxfUpmxux/fyZozzSED+dGuw=
+        b=ns3rK1tZ6XHSDw7xXPPannKP8YoonB3nYh4YAD5zYmLw7jP9DD8n53aTuQAiRWwx1
+         RDiwRgMPOmLfexCrFMv4wJkxXZy+35xWDq8JgWOM+9RJffwkbdc+5ARyNoDEUAf3q9
+         fw2xJCj69vl8VlROJsd2LvseZmN+HG48I9D2x6iQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 159/388] arm64: dts: meson: fix leds subnodes name
-Date:   Wed, 17 Jun 2020 21:04:16 -0400
-Message-Id: <20200618010805.600873-159-sashal@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 150/388] of: property: Do not link to disabled devices
+Date:   Wed, 17 Jun 2020 21:04:07 -0400
+Message-Id: <20200618010805.600873-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,229 +60,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 08dc0e5dd9aabd52cff9e94febe6b282d29deca4 ]
+[ Upstream commit 7456427af9def0fec5508dd8b861556038ee96a8 ]
 
-Fix the leds subnode names to match (^led-[0-9a-f]$|led)
+When creating a consumer/supplier relationship between two devices,
+make sure the supplier node is actually active. Otherwise this will
+create a link relationship that will never be fulfilled. This, in the
+worst case scenario, will hang the system during boot.
 
-It fixes:
-meson-g12b-a311d-khadas-vim3.dt.yaml: leds: 'red', 'white' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-g12b-s922x-khadas-vim3.dt.yaml: leds: 'red', 'white' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-g12b-odroid-n2.dt.yaml: leds: 'blue' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-nanopi-k2.dt.yaml: leds: 'stat' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-nexbox-a95x.dt.yaml: leds: 'blue' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-odroidc2.dt.yaml: leds: 'blue' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-vega-s95-pro.dt.yaml: leds: 'blue' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-vega-s95-meta.dt.yaml: leds: 'blue' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-vega-s95-telos.dt.yaml: leds: 'blue' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-wetek-hub.dt.yaml: leds: 'system' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxbb-wetek-play2.dt.yaml: leds: 'ethernet', 'system', 'wifi' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxl-s905x-libretech-cc.dt.yaml: leds: 'blue', 'system' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxl-s905d-libretech-pc.dt.yaml: leds: 'blue', 'green' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxm-rbox-pro.dt.yaml: leds: 'blue', 'red' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-gxm-s912-libretech-pc.dt.yaml: leds: 'blue', 'green' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-sm1-sei610.dt.yaml: leds: 'bluetooth' does not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
-meson-sm1-khadas-vim3l.dt.yaml: leds: 'red', 'white' do not match any of the regexes: '(^led-[0-9a-f]$|led)', 'pinctrl-[0-9]+'
+Note that, in practice, the fact that a device-tree represented
+consumer/supplier relationship isn't fulfilled will not prevent devices
+from successfully probing.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200326165958.19274-6-narmstrong@baylibre.com
+Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx-libretech-pc.dtsi       | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts         | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts       | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts          | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi         | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts       | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi            | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts           | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi           | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts             | 2 +-
- 11 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/of/property.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-libretech-pc.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-libretech-pc.dtsi
-index 248b018c83d5..b1da36fdeac6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-libretech-pc.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-libretech-pc.dtsi
-@@ -96,14 +96,14 @@ dc_in: regulator-dc_in {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		green {
-+		led-green {
- 			color = <LED_COLOR_ID_GREEN>;
- 			function = LED_FUNCTION_DISK_ACTIVITY;
- 			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "disk-activity";
- 		};
- 
--		blue {
-+		led-blue {
- 			color = <LED_COLOR_ID_BLUE>;
- 			function = LED_FUNCTION_STATUS;
- 			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index d6ca684e0e61..7be3e354093b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -29,7 +29,7 @@ memory@0 {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		stat {
-+		led-stat {
- 			label = "nanopi-k2:blue:stat";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 65ec7dea828c..67d901ed2fa3 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -31,7 +31,7 @@ memory@0 {
- 
- 	leds {
- 		compatible = "gpio-leds";
--		blue {
-+		led-blue {
- 			label = "a95x:system-status";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "heartbeat";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index b46ef985bb44..70fcfb7b0683 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -49,7 +49,7 @@ usb_otg_pwr: regulator-usb-pwrs {
- 
- 	leds {
- 		compatible = "gpio-leds";
--		blue {
-+		led-blue {
- 			label = "c2:blue:alive";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "heartbeat";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 45cb83625951..222ee8069cfa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -20,7 +20,7 @@ chosen {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		blue {
-+		led-blue {
- 			label = "vega-s95:blue:on";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-index 1d32d1f6d032..2ab8a3d10079 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-@@ -14,13 +14,13 @@ / {
- 	model = "WeTek Play 2";
- 
- 	leds {
--		wifi {
-+		led-wifi {
- 			label = "wetek-play:wifi-status";
- 			gpios = <&gpio GPIODV_26 GPIO_ACTIVE_HIGH>;
- 			default-state = "off";
- 		};
- 
--		ethernet {
-+		led-ethernet {
- 			label = "wetek-play:ethernet-status";
- 			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
- 			default-state = "off";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-index dee51cf95223..d6133af09d64 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-@@ -25,7 +25,7 @@ memory@0 {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		system {
-+		led-system {
- 			label = "wetek-play:system-status";
- 			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index e8348b2728db..a4a71c13891b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -54,14 +54,14 @@ hdmi_connector_in: endpoint {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		system {
-+		led-system {
- 			label = "librecomputer:system-status";
- 			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
- 			panic-indicator;
- 		};
- 
--		blue {
-+		led-blue {
- 			label = "librecomputer:blue";
- 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-index 420a88e9a195..c89c9f846fb1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-@@ -36,13 +36,13 @@ memory@0 {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		blue {
-+		led-blue {
- 			label = "rbox-pro:blue:on";
- 			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
- 			default-state = "on";
- 		};
- 
--		red {
-+		led-red {
- 			label = "rbox-pro:red:standby";
- 			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
- 			default-state = "off";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 094ecf2222bb..1ef1e3672b96 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -39,13 +39,13 @@ button-function {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		white {
-+		led-white {
- 			label = "vim3:white:sys";
- 			gpios = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "heartbeat";
- 		};
- 
--		red {
-+		led-red {
- 			label = "vim3:red";
- 			gpios = <&gpio_expander 5 GPIO_ACTIVE_LOW>;
- 		};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-index dfb2438851c0..5ab139a34c01 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-@@ -104,7 +104,7 @@ hdmi_connector_in: endpoint {
- 	leds {
- 		compatible = "gpio-leds";
- 
--		bluetooth {
-+		led-bluetooth {
- 			label = "sei610:blue:bt";
- 			gpios = <&gpio GPIOC_7 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
- 			default-state = "off";
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index a8c2b13521b2..6dc542af5a70 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1045,8 +1045,20 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 	 * Find the device node that contains the supplier phandle.  It may be
+ 	 * @sup_np or it may be an ancestor of @sup_np.
+ 	 */
+-	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
++	while (sup_np) {
++
++		/* Don't allow linking to a disabled supplier */
++		if (!of_device_is_available(sup_np)) {
++			of_node_put(sup_np);
++			sup_np = NULL;
++		}
++
++		if (of_find_property(sup_np, "compatible", NULL))
++			break;
++
+ 		sup_np = of_get_next_parent(sup_np);
++	}
++
+ 	if (!sup_np) {
+ 		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
+ 		return -ENODEV;
 -- 
 2.25.1
 
