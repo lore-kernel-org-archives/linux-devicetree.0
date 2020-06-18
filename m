@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B65EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CDBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA8621924
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AD121974
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442642;
-	bh=PAdD7kghUO96P8C/+xHGK6WZnHxci/xvKvwN8bHF4cg=;
+	s=default; t=1592442802;
+	bh=o7jQeRpPUwhbbMSmXYLCbTuET0qoCT5C8qjj9tJ+f9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WbFRqnkS9jJDyF4FNxNyUt7I1m7BqM/uvuNrrtDJ/oe7NBV0C9llbXzYyNK1fnThS
-	 YN4+jvWtwCOHEKGTmbVKapQjsj5j1nwJNl4+XUzIX5qbkouMUlL0GmMVGpNjXQlKkc
-	 7muU9C+YaFV3YUIbkmyYwVjxtcTNkESodeyr3uXQ=
+	b=aCQs5lmJqlJbeVkHoZgU1wCu4Li3bbv521o/xi7uUOjW6AY2qyxjd/buFizJMxlv2
+	 qBkzkmb1b4jHYOTgmcBPrXO7lR/SmfkX91YtirFQDaId03nRpCuR7+EsdNuvwu7d0F
+	 qK6tfpFaCFVFfFjh5Di9anDBrFBk3HGFaXMPpvxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgFRBKl (ORCPT
+        id S1729097AbgFRBNV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38048 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbgFRBKl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:41 -0400
+        id S1728877AbgFRBNS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 588E921924;
-        Thu, 18 Jun 2020 01:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5479C21974;
+        Thu, 18 Jun 2020 01:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442640;
-        bh=PAdD7kghUO96P8C/+xHGK6WZnHxci/xvKvwN8bHF4cg=;
+        s=default; t=1592442798;
+        bh=o7jQeRpPUwhbbMSmXYLCbTuET0qoCT5C8qjj9tJ+f9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mLc5w3+yDpQAL+KGPxE7ggQNKTgObHywR4xeebhOMC8hhaZirFwG0wadLuvVxaDYc
-         M1Gza333BkZQuEmwXcR6rlTtqKAichzRaQ11yIbiJoTjlKA1bj92iINELPuYX5+g4O
-         zuNq9icmvcQSpNjciUoz6XlpA/oQZ6AYSbOMQOdk=
+        b=sDI9CgYH/MZrcBK7yWFVhgpLodROJmMfrWux7187D+dye1yZxHtwl2wpSgpDPH4hE
+         Byiu6skEslryl71TTGAm3S6ADHmry3lZzf33sIb67tdPit4mylqUM5eVLzJEzFNpDU
+         LkJeNuiCxVuchWgGqN3eTeybNA/SH06aNpdjO0w0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-realtek-soc@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 115/388] arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
-Date:   Wed, 17 Jun 2020 21:03:32 -0400
-Message-Id: <20200618010805.600873-115-sashal@kernel.org>
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 239/388] ARM: dts: meson: Switch existing boards with RGMII PHY to "rgmii-id"
+Date:   Wed, 17 Jun 2020 21:05:36 -0400
+Message-Id: <20200618010805.600873-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,97 +61,70 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andreas Färber <afaerber@suse.de>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 31888c8be1486daf2c34ba6c58129635e49d564a ]
+[ Upstream commit 005231128e9e97461e81fa32421957a7664317ca ]
 
-Convert from GIC_CPU_MASK_RAW() to GIC_CPU_MASK_SIMPLE().
+Let the PHY generate the RX and TX delay on the Odroid-C1 and MXIII
+Plus.
 
-In case of RTD1293 adjust the arch timer and VGIC interrupts'
-CPU masks to its smaller number of CPUs.
+Previously we did not know that these boards used an RX delay. We
+assumed that setting the TX delay on the MAC side It turns out that
+these boards also require an RX delay of 2ns (verified on Odroid-C1,
+but the u-boot code uses the same setup on both boards). Ethernet only
+worked because u-boot added this RX delay on the MAC side.
 
-Fixes: cf976f660ee8 ("arm64: dts: realtek: Add RTD1293 and Synology DS418j")
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+The 4ns TX delay was also wrong and the result of using an unsupported
+RGMII TX clock divider setting. This has been fixed in the driver with
+commit bd6f48546b9cb7 ("net: stmmac: dwmac-meson8b: Fix the RGMII TX
+delay on Meson8b/8m2 SoCs").
+
+Switch to phy-mode "rgmii-id" to let the PHY side handle all the delays,
+(as recommended by the Ethernet maintainers anyways) to correctly
+describe the need for a 2ns RX as well as 2ns TX delay on these boards.
+This fixes the Ethernet performance on Odroid-C1 where there was a huge
+amount of packet loss when transmitting data due to the incorrect TX
+delay.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200512215148.540322-3-martin.blumenstingl@googlemail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/realtek/rtd1293.dtsi | 12 ++++++++----
- arch/arm64/boot/dts/realtek/rtd1295.dtsi |  8 ++++----
- arch/arm64/boot/dts/realtek/rtd1296.dtsi |  8 ++++----
- 3 files changed, 16 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/meson8b-odroidc1.dts    | 3 +--
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/realtek/rtd1293.dtsi b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
-index bd4e22723f7b..2d92b56ac94d 100644
---- a/arch/arm64/boot/dts/realtek/rtd1293.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
-@@ -36,16 +36,20 @@ l2: l2-cache {
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index a2a47804fc4a..cb21ac9f517c 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -202,9 +202,8 @@ &ethmac {
+ 	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
  
- &arm_pmu {
- 	interrupt-affinity = <&cpu0>, <&cpu1>;
- };
-+
-+&gic {
-+	interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-index 93f0e1d97721..34f6cc6f16fe 100644
---- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
-@@ -61,13 +61,13 @@ tee@10100000 {
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
+-	phy-mode = "rgmii";
+ 	phy-handle = <&eth_phy>;
+-	amlogic,tx-delay-ns = <4>;
++	phy-mode = "rgmii-id";
  
-diff --git a/arch/arm64/boot/dts/realtek/rtd1296.dtsi b/arch/arm64/boot/dts/realtek/rtd1296.dtsi
-index 0f9e59cac086..fb864a139c97 100644
---- a/arch/arm64/boot/dts/realtek/rtd1296.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd1296.dtsi
-@@ -50,13 +50,13 @@ l2: l2-cache {
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 14
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10
--			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
+ 	nvmem-cells = <&ethernet_mac_address>;
+ 	nvmem-cell-names = "mac-address";
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+index d54477b1001c..cc498191ddd1 100644
+--- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -69,9 +69,7 @@ &ethmac {
+ 	pinctrl-names = "default";
  
+ 	phy-handle = <&eth_phy0>;
+-	phy-mode = "rgmii";
+-
+-	amlogic,tx-delay-ns = <4>;
++	phy-mode = "rgmii-id";
+ 
+ 	mdio {
+ 		compatible = "snps,dwmac-mdio";
 -- 
 2.25.1
 
