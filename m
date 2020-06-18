@@ -2,155 +2,110 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED12C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F125C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD17207D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yXxZCazH"
+	by mail.kernel.org (Postfix) with ESMTP id 517C5207D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 13:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgFRNlV (ORCPT
+        id S1728436AbgFRNmp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:41:21 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51426 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbgFRNlS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 09:41:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05IDfBcT103253;
-        Thu, 18 Jun 2020 08:41:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592487671;
-        bh=ERMtClxbRNNwU0KyzUuGCxjmkXA6DigVdcnAOu6beUQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yXxZCazHpogUs2wcqqEIg9WWNozXLJWaGVqhn7hxmVsZhTsIv7AkM+eL1EVMKtdLJ
-         erNc+c1LJ+7YIJm7yoQchUr9DKxePaNMxZQsFY8BEBOkk2vVBzqrzWQpbGmEc0e0iH
-         QXVC1NfgKLqjadRVPApTSMOUGoQp+W2hOGg+aEFY=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05IDfBKZ122464
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 08:41:11 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
- Jun 2020 08:41:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 18 Jun 2020 08:41:11 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05IDfAQS120824;
-        Thu, 18 Jun 2020 08:41:10 -0500
-Subject: Re: [PATCH net-next v7 2/6] net: phy: Add a helper to return the
- index for of the internal delay
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-3-dmurphy@ti.com> <20200618015147.GH249144@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a4ec4680-096f-2efa-0475-acf4b96e1017@ti.com>
-Date:   Thu, 18 Jun 2020 08:41:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 09:42:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46734 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbgFRNmn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:42:43 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jluoR-0017Sl-Au; Thu, 18 Jun 2020 15:42:39 +0200
+Date:   Thu, 18 Jun 2020 15:42:39 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 1/9] net: dsa: Add tag handling for Hirschmann
+ Hellcreek switches
+Message-ID: <20200618134239.GP249144@lunn.ch>
+References: <20200618064029.32168-1-kurt@linutronix.de>
+ <20200618064029.32168-2-kurt@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200618015147.GH249144@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618064029.32168-2-kurt@linutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Andrew
+On Thu, Jun 18, 2020 at 08:40:21AM +0200, Kurt Kanzenbach wrote:
+> The Hirschmann Hellcreek TSN switches have a special tagging protocol for frames
+> exchanged between the CPU port and the master interface. The format is a one
+> byte trailer indicating the destination or origin port.
+> 
+> It's quite similar to the Micrel KSZ tagging. That's why the implementation is
+> based on that code.
+> 
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> ---
+>  include/net/dsa.h       |   2 +
+>  net/dsa/Kconfig         |   6 +++
+>  net/dsa/Makefile        |   1 +
+>  net/dsa/tag_hellcreek.c | 101 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 110 insertions(+)
+>  create mode 100644 net/dsa/tag_hellcreek.c
+> 
+> diff --git a/include/net/dsa.h b/include/net/dsa.h
+> index 50389772c597..2784c4851d92 100644
+> --- a/include/net/dsa.h
+> +++ b/include/net/dsa.h
+> @@ -44,6 +44,7 @@ struct phylink_link_state;
+>  #define DSA_TAG_PROTO_KSZ8795_VALUE		14
+>  #define DSA_TAG_PROTO_OCELOT_VALUE		15
+>  #define DSA_TAG_PROTO_AR9331_VALUE		16
+> +#define DSA_TAG_PROTO_HELLCREEK_VALUE		17
+>  
+>  enum dsa_tag_protocol {
+>  	DSA_TAG_PROTO_NONE		= DSA_TAG_PROTO_NONE_VALUE,
+> @@ -63,6 +64,7 @@ enum dsa_tag_protocol {
+>  	DSA_TAG_PROTO_KSZ8795		= DSA_TAG_PROTO_KSZ8795_VALUE,
+>  	DSA_TAG_PROTO_OCELOT		= DSA_TAG_PROTO_OCELOT_VALUE,
+>  	DSA_TAG_PROTO_AR9331		= DSA_TAG_PROTO_AR9331_VALUE,
+> +	DSA_TAG_PROTO_HELLCREEK		= DSA_TAG_PROTO_HELLCREEK_VALUE,
+>  };
+>  
+>  struct packet_type;
+> diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
+> index d5bc6ac599ef..edc0c3ab6a4e 100644
+> --- a/net/dsa/Kconfig
+> +++ b/net/dsa/Kconfig
+> @@ -121,4 +121,10 @@ config NET_DSA_TAG_TRAILER
+>  	  Say Y or M if you want to enable support for tagging frames at
+>  	  with a trailed. e.g. Marvell 88E6060.
+>  
+> +config NET_DSA_TAG_HELLCREEK
+> +	tristate "Tag driver for Hirschmann Hellcreek TSN switches"
+> +	help
+> +	  Say Y or M if you want to enable support for tagging frames
+> +	  for the Hirschmann Hellcreek TSN switches.
+> +
 
-On 6/17/20 8:51 PM, Andrew Lunn wrote:
-> On Wed, Jun 17, 2020 at 01:20:15PM -0500, Dan Murphy wrote:
->> Add a helper function that will return the index in the array for the
->> passed in internal delay value.  The helper requires the array, size and
->> delay value.
->>
->> The helper will then return the index for the exact match or return the
->> index for the index to the closest smaller value.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/phy_device.c | 68 ++++++++++++++++++++++++++++++++++++
->>   include/linux/phy.h          |  4 +++
->>   2 files changed, 72 insertions(+)
->>
->> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->> index 04946de74fa0..611d4e68e3c6 100644
->> --- a/drivers/net/phy/phy_device.c
->> +++ b/drivers/net/phy/phy_device.c
->> @@ -31,6 +31,7 @@
->>   #include <linux/mdio.h>
->>   #include <linux/io.h>
->>   #include <linux/uaccess.h>
->> +#include <linux/property.h>
->>   
->>   MODULE_DESCRIPTION("PHY library");
->>   MODULE_AUTHOR("Andy Fleming");
->> @@ -2657,6 +2658,73 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
->>   }
->>   EXPORT_SYMBOL(phy_get_pause);
->>   
->> +/**
->> + * phy_get_delay_index - returns the index of the internal delay
->> + * @phydev: phy_device struct
->> + * @dev: pointer to the devices device struct
->> + * @delay_values: array of delays the PHY supports
->> + * @size: the size of the delay array
->> + * @is_rx: boolean to indicate to get the rx internal delay
->> + *
->> + * Returns the index within the array of internal delay passed in.
->> + * Or if size == 0 then the delay read from the firmware is returned.
->> + * The array must be in ascending order.
->> + * Return errno if the delay is invalid or cannot be found.
->> + */
->> +s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
->> +			   const int *delay_values, int size, bool is_rx)
->> +{
->> +	int ret;
->> +	int i;
->> +	s32 delay;
->> +
->> +	if (is_rx)
->> +		ret = device_property_read_u32(dev, "rx-internal-delay-ps",
->> +					       &delay);
->> +	else
->> +		ret = device_property_read_u32(dev, "tx-internal-delay-ps",
->> +					       &delay);
->> +	if (ret) {
->> +		phydev_err(phydev, "internal delay not defined\n");
-> This is an optional property. So printing an error message seems heavy
-> handed.
+Hi Kurt
 
-I will change this to phydev_info
+This file is roughly in alphabetic order based on the tristate
+string. Please move this before "Tag driver for Lantiq / Intel GSWIP
+switches" to keep with the sorting.
 
+Otherwise this looks good.
 
-> Maybe it would be better to default to 0 if the property is not found,
-> and continue with the lookup in the table to find what value should be
-> written for a 0ps delay?
-
-If the property is not found what would we look up?  The property 
-missing to me indicates that the phy is not adding the delay for that path.
-
-If these properties are not present then the delay should not be set by 
-the device driver.
-
-This is why I return -EINVAL.  Maybe I should return -ENODATA instead.
-
-Dan
-
->
-> 	Andrew
+	  Andrew
