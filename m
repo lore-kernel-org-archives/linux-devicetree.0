@@ -2,137 +2,698 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B573AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52002C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF182166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190122186A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="G7ACgFy2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VGyTF/XB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgFRIw1 (ORCPT
+        id S1728774AbgFRI7a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:52:27 -0400
-Received: from mail-dm6nam11on2068.outbound.protection.outlook.com ([40.107.223.68]:6016
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728452AbgFRIwZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:52:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lFE9MirtL046gGRMAq9Dp/a2vK0SGIx5X11dKRCWT+8PFzpAccKuC9uAQE86+2uKEF9tL7n9FEQVlSbNP3F4nGuHsX1Rly96r1rAaByIcP8486UfZw5WfSckIzi9dlsH7R2jQqsy+v1FE67n5Eci8fwXghkEsD6BPxpz5bqU6YW6rKkTtWtg93V617F4iMLYkvXxYV9qcpoJZi/DWWRCE6SSYvy+m76KrG+b97p9Al297UMpwy/VKIUIQ4hf3vAQsGx70DPQkalkXqeOmeXwLrluBGBQWnR6iDadevr9u02B7EHKoCnO6VPd3wseCu8iiqXrX7w2ndWkoncwIJRmqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ffB1lzgZxCR1LCJC6OT09gnPCL0YmhbLBfU/MVyWW0U=;
- b=NSCLooCSDMQSQNFRwEVeD1Vz9w+QUmQXnB3agSAu4QBfk3iLKrNcw3n62E9gXqvd6JrrDkc9G6es9pG2hbym9S9tl1TWmL+YjF/LA27+9OdKU/OdUTzCTV17M4Az1XIy+3Hm53JrltnhLZb82Zp27cAxtgCJB+IDv6JPNi4G6aWAnpS+ba/WLJyj1dVTUaS9HiZHXbP9VB/ATjs2bRtGOCtbnL7tgiyNBk3ZvJc7GCqHk3KQJjBw4zREw2ozEt/cwx7hqPEj/56iI2VHkQIgv20NQvp3M654Yonxig5dUsxKEQPVlSPSlAPMeCkejGMU4DU5tQM5n+vabHJ9aEJHkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Thu, 18 Jun 2020 04:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728452AbgFRI7Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 04:59:25 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D67C06174E
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 01:59:23 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id k18so2720062ybm.13
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 01:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ffB1lzgZxCR1LCJC6OT09gnPCL0YmhbLBfU/MVyWW0U=;
- b=G7ACgFy2voLaUP9KIHD19nUpYVSAN3R/QQMEaxghJ7OZfClUSSACpkXzhbVqZAeQbrvdPCmnWbWJgudgzNmrbz2Lr7pwibP97UMCx+LbnEB7mt7UAxCQGUvhADfFWkM7rJnwgEQSZ+KLzsP2UIons2S/8CP7ChWevxwXzTOOim8=
-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BY5PR03MB5186.namprd03.prod.outlook.com (2603:10b6:a03:221::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
- 2020 08:52:21 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3088.028; Thu, 18 Jun 2020
- 08:52:21 +0000
-Date:   Thu, 18 Jun 2020 16:52:07 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mmc: pwrseq: Fix syntax errors in device tree
- examples
-Message-ID: <20200618165207.512dc59f@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR01CA0073.jpnprd01.prod.outlook.com
- (2603:1096:404:2c::13) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RkDaPbo1jX7kw4IWdR7jX34KGGnIlvcWbJru/d9LhDU=;
+        b=VGyTF/XBYhSW01+7DXD+s5bavqJ34VLAO1NU1xTtPxp13WOxjvv5zxGyIy9X7TiKsW
+         92IYwWNCRsj9czTkp8QPCp2RfkzgXpKNEbM4Y5WjvWXQi2fZHd1sYTtVc7pcMlwM5e1O
+         Q8EC5XFMi6EUvKvoTMw5TzLpUVzdzHOCHJnZnjTAm1SzdncFx+ToKaiMJFQfkVglEcWQ
+         lWYEnlPEpyFtwYaQGRlUPFfd5QJBHrvZ5dBT7IE3/tyFgSglR5i5Mwce7kWe3nbkfLNj
+         /uepOVsKy/VRVePdxnB55awrAFDq4/pXTo/FxbQ+0sv0sm+afgHy0l97pmtvDyg1pmyE
+         +WXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RkDaPbo1jX7kw4IWdR7jX34KGGnIlvcWbJru/d9LhDU=;
+        b=Gx27nylTyXDqTuVa5bcMiyTqiHh+QXVmryNeXxsFr2NfWYogqpGUUC8D1ySL2Qb5Rn
+         cmfzCzQN8uJHsLe+dExmdcQ6RntzjTC5VsBgqmZZmJ1nkmxPP2PuMQT+m2eC+5dwvT/9
+         Ao9MrjCxQ87yXYgDFKVf9MQrU7fcB22rVaNG231CqLIE4sRGFhHrQQasCPO0qLiFtFqz
+         3macvUeLk+Hjx008tjmW9xbzavrzdardcSwNGhFoOsLL9ttE/KZcVb30ipwqjw6J2xMJ
+         OGHXcTbBCLneDLTWYWjkti565NjZBIh7TLkOpxbyxuIHsx3uuD/AaVF/DXKPDXeIJFId
+         QExw==
+X-Gm-Message-State: AOAM533UjLOdhfhO2AXcYWhAKm7T2dIhyP+wU2gejIw3ZlIqUvqfvY4l
+        HrB5yARjnd8Tg7wt4cOWTC880IZiyOUw22p7ubWoAg==
+X-Google-Smtp-Source: ABdhPJxsUki4YAVz/07LWl7W2N/Y79KJEgDINgyBk9vISJy/kK4YCQGugGPyulIDyxG4R6nh8MilR1Xsk8c2OqQiohc=
+X-Received: by 2002:a25:10d4:: with SMTP id 203mr5023024ybq.250.1592470761330;
+ Thu, 18 Jun 2020 01:59:21 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0073.jpnprd01.prod.outlook.com (2603:1096:404:2c::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Thu, 18 Jun 2020 08:52:19 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1585ed13-5909-4262-5368-08d81364e991
-X-MS-TrafficTypeDiagnostic: BY5PR03MB5186:
-X-Microsoft-Antispam-PRVS: <BY5PR03MB5186AA9928B0AA44FED50235ED9B0@BY5PR03MB5186.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
-X-Forefront-PRVS: 0438F90F17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o80C70TE/2pXw6eyGCLGbAEQDT1PovMNRPLMVSIFEWV0ywIrSCX4L54iMZZuvHUDMfhoLk/Z/uIrhZ0l4His2WCewaTIvUuSaflQH5eSwIjyAwgJne1b88XHtdEHliSc5WmWmUyGHPdN+HJ3JPVb7IfytIXF/oFXeWpp5hBmk8oNrpNV4QP/SPI69RwxpWwuxHkqfwdBemScODUnUGulRt6E6tiPHKSeSQ7PtAUaB/3SQjtxY3Og/LchrVdv63jSLZ6/NN5i6gDB/qporkELS/oPDkLIEX7JBdmVVgnht47HHBbPohadKldTFsDgNx9ES+vbtATADDlNVhAOpXsOUw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(346002)(376002)(366004)(39860400002)(956004)(83380400001)(6506007)(478600001)(86362001)(1076003)(8676002)(8936002)(52116002)(6666004)(7696005)(55016002)(186003)(26005)(2906002)(4326008)(9686003)(66556008)(110136005)(5660300002)(316002)(66946007)(16526019)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Y424hfWP5YzXq1cG4Y5EsOB6hokx6nyTsKWHSehqfk936mrxkXM+frPLkcbAIEe0PDVRXJ8fCoONK6TEvMKiki1oMnOpT8SHrc0+6HtChbjLc6CbgwScbLSt/XO5YIfqUu5pVpB5cScN5wabGigIF24R8EIZalUmhdlRYKj1pg9v+d2pi5RgWKGZoA56dtBNI17TsnvrYWtS58sdH6W8rohcxK84whuX5segM4DzWTIOMOn9peeMzJ2xCZYuiibRlt5QlW5eH/ZubXayEsbT898Nj4srJClLKQymB6EmYB0IZt8Q+gEc8BxkB3yRRgy+4saZKzHXvp5+Ue2ghSu6XJr0f+FBjCbYnYfKNoBaNUG+C7V1Lt7O4DG72uCdQf1fCyLwxEgIj1yzOguSyFn/fo88/ZzD2cZCo0/yt37SGXJFMfKsoOV3PiAK8Ks45cdCKNkXbmij0aV3xokdfLAlstobJ4KSFj6pdR67yITxcwjsvQIZrSYwiJ84aadJ2kxx
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1585ed13-5909-4262-5368-08d81364e991
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2020 08:52:21.2276
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f6GkZbpqdJ8p8KH20i5Bmwi4LtimrCDq1HU1RYNO7J/bN66Gbtegy92Q6vmfX3YqkYkQyfpf1XeD1aTFkbAWSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5186
+References: <20200615193811.233737-1-jnchase@google.com> <20200615193811.233737-3-jnchase@google.com>
+ <3aefc5c4-2af1-59f2-0797-9a5baf91482e@xs4all.nl>
+In-Reply-To: <3aefc5c4-2af1-59f2-0797-9a5baf91482e@xs4all.nl>
+From:   Jeff Chase <jnchase@google.com>
+Date:   Thu, 18 Jun 2020 01:59:09 -0700
+Message-ID: <CALTkaQ3n30nS-b1XuMiu_Z4+FfD0horJDagCPBaUqCCx4JhtdA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] media: cec: i2c: ch7322: Add ch7322 CEC controller driver
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A ";" is missing in the pwrseq dt examples, fix them.
+Hi Hans,
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt   | 2 +-
- Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt | 2 +-
- Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+We are using two of these in an Intel-based Chromebox. I see that the
+cros-ec and seco drivers just statically define the PCI BDF of the
+Intel graphics device for their boards. I don't see an example of ACPI
+passing this information. I can copy cros-ec and seco by adding a
+board table and then use the UID of each device to select the correct
+port. Adding board-specific configuration to the driver doesn't seem
+ideal but I'm not sure what the proper way to pass this using ACPI is.
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-index 3d965d57e00b..c4fb06bf0bc2 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
-@@ -22,4 +22,4 @@ Example:
- 	sdhci0_pwrseq {
- 		compatible = "mmc-pwrseq-emmc";
- 		reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
--	}
-+	};
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-index 22e9340e4ba2..8204374546e1 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-@@ -13,4 +13,4 @@ Example:
- 		compatible = "mmc-pwrseq-sd8787";
- 		powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
- 		reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
--	}
-+	};
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-index 9029b45b8a22..bcbe8e947459 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-@@ -28,4 +28,4 @@ Example:
- 		reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
- 		clocks = <&clk_32768_ck>;
- 		clock-names = "ext_clock";
--	}
-+	};
--- 
-2.27.0
+Thanks,
+Jeff
 
+On Thu, Jun 18, 2020 at 12:51 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>
+> Hi Jeff,
+>
+> I realized that there is one thing missing here: there is no way to
+> associate this CEC device with the corresponding HDMI interface.
+>
+> Typically this is done either via the device tree (hdmi-phandle property,
+> see cec_notifier_parse_hdmi_phandle()) or ACPI (see cros-ec or seco drivers).
+>
+> How is this ch7322 used? Chromebooks? Intel or ARM based?
+>
+> The link with the HDMI interface is needed for the CEC_ADAP_G_CONNECTOR_INFO
+> ioctl implementation. See:
+>
+> https://hverkuil.home.xs4all.nl/spec/userspace-api/cec/cec-ioc-adap-g-conn-info.html
+>
+> Regards,
+>
+>         Hans
+>
+> On 15/06/2020 21:38, Jeff Chase wrote:
+> > Add a CEC device driver for the Chrontel ch7322 CEC conroller.
+> > This is an I2C device capable of sending and receiving CEC messages.
+> >
+> > Signed-off-by: Jeff Chase <jnchase@google.com>
+> > ---
+> >  MAINTAINERS                    |   1 +
+> >  drivers/media/cec/Kconfig      |   1 +
+> >  drivers/media/cec/Makefile     |   2 +-
+> >  drivers/media/cec/i2c/Kconfig  |  14 +
+> >  drivers/media/cec/i2c/Makefile |   5 +
+> >  drivers/media/cec/i2c/ch7322.c | 503 +++++++++++++++++++++++++++++++++
+> >  6 files changed, 525 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/media/cec/i2c/Kconfig
+> >  create mode 100644 drivers/media/cec/i2c/Makefile
+> >  create mode 100644 drivers/media/cec/i2c/ch7322.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c1c17ca17830..e2341eaaaf5e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4107,6 +4107,7 @@ L:      linux-media@vger.kernel.org
+> >  S:   Maintained
+> >  T:   git git://linuxtv.org/media_tree.git
+> >  F:   Documentation/devicetree/bindings/media/i2c/chontel,ch7322.yaml
+> > +F:   drivers/media/cec/i2c/ch7322.c
+> >
+> >  CIRRUS LOGIC AUDIO CODEC DRIVERS
+> >  M:   James Schulman <james.schulman@cirrus.com>
+> > diff --git a/drivers/media/cec/Kconfig b/drivers/media/cec/Kconfig
+> > index 7e830444bdbb..9ba3a00dce31 100644
+> > --- a/drivers/media/cec/Kconfig
+> > +++ b/drivers/media/cec/Kconfig
+> > @@ -33,6 +33,7 @@ menuconfig MEDIA_CEC_SUPPORT
+> >         adapter that supports HDMI CEC.
+> >
+> >  if MEDIA_CEC_SUPPORT
+> > +source "drivers/media/cec/i2c/Kconfig"
+> >  source "drivers/media/cec/platform/Kconfig"
+> >  source "drivers/media/cec/usb/Kconfig"
+> >  endif
+> > diff --git a/drivers/media/cec/Makefile b/drivers/media/cec/Makefile
+> > index 74e80e1b3571..23539339bc81 100644
+> > --- a/drivers/media/cec/Makefile
+> > +++ b/drivers/media/cec/Makefile
+> > @@ -1,2 +1,2 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > -obj-y += core/ platform/ usb/
+> > +obj-y += core/ i2c/ platform/ usb/
+> > diff --git a/drivers/media/cec/i2c/Kconfig b/drivers/media/cec/i2c/Kconfig
+> > new file mode 100644
+> > index 000000000000..e445ca2110b3
+> > --- /dev/null
+> > +++ b/drivers/media/cec/i2c/Kconfig
+> > @@ -0,0 +1,14 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# I2C drivers
+> > +
+> > +config CEC_CH7322
+> > +     tristate "Chrontel CH7322 CEC controller"
+> > +     select I2C
+> > +     select REGMAP_I2C
+> > +     select CEC_CORE
+> > +     help
+> > +       This is a driver for the Chrontel CH7322 CEC controller. It uses the
+> > +       generic CEC framework interface.
+> > +       CEC bus is present in the HDMI connector and enables communication
+> > +       between compatible devices.
+> > diff --git a/drivers/media/cec/i2c/Makefile b/drivers/media/cec/i2c/Makefile
+> > new file mode 100644
+> > index 000000000000..d7496dfd0fa4
+> > --- /dev/null
+> > +++ b/drivers/media/cec/i2c/Makefile
+> > @@ -0,0 +1,5 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Makefile for the CEC I2C device drivers.
+> > +#
+> > +obj-$(CONFIG_CEC_CH7322) += ch7322.o
+> > diff --git a/drivers/media/cec/i2c/ch7322.c b/drivers/media/cec/i2c/ch7322.c
+> > new file mode 100644
+> > index 000000000000..4e6976a51774
+> > --- /dev/null
+> > +++ b/drivers/media/cec/i2c/ch7322.c
+> > @@ -0,0 +1,503 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Driver for the Chrontel CH7322 CEC Controller
+> > + *
+> > + * Copyright 2020 Google LLC.
+> > + */
+> > +
+> > +/*
+> > + * Notes
+> > + *
+> > + * - This device powers on in Auto Mode which has limited functionality. This
+> > + *   driver disables Auto Mode when it attaches.
+> > + *
+> > + */
+> > +
+> > +#include <linux/cec.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/regmap.h>
+> > +#include <media/cec.h>
+> > +
+> > +#define CH7322_WRITE         0x00
+> > +#define CH7322_WRITE_MSENT           0x80
+> > +#define CH7322_WRITE_BOK             0x40
+> > +#define CH7322_WRITE_NMASK           0x0f
+> > +
+> > +/* Write buffer is 0x01-0x10 */
+> > +#define CH7322_WRBUF         0x01
+> > +#define CH7322_WRBUF_LEN     0x10
+> > +
+> > +#define CH7322_READ          0x40
+> > +#define CH7322_READ_NRDT             0x80
+> > +#define CH7322_READ_MSENT            0x20
+> > +#define CH7322_READ_NMASK            0x0f
+> > +
+> > +/* Read buffer is 0x41-0x50 */
+> > +#define CH7322_RDBUF         0x41
+> > +#define CH7322_RDBUF_LEN     0x10
+> > +
+> > +#define CH7322_MODE          0x11
+> > +#define CH7322_MODE_AUTO             0x78
+> > +#define CH7322_MODE_SW                       0xb5
+> > +
+> > +#define CH7322_RESET         0x12
+> > +#define CH7322_RESET_RST             0x00
+> > +
+> > +#define CH7322_POWER         0x13
+> > +#define CH7322_POWER_FPD             0x04
+> > +
+> > +#define CH7322_CFG0          0x17
+> > +#define CH7322_CFG0_EOBEN            0x40
+> > +#define CH7322_CFG0_PEOB             0x20
+> > +#define CH7322_CFG0_CLRSPP           0x10
+> > +#define CH7322_CFG0_FLOW             0x08
+> > +
+> > +#define CH7322_CFG1          0x1a
+> > +#define CH7322_CFG1_STDBYO           0x04
+> > +#define CH7322_CFG1_HPBP             0x02
+> > +#define CH7322_CFG1_PIO                      0x01
+> > +
+> > +#define CH7322_INTCTL                0x1b
+> > +#define CH7322_INTCTL_INTPB          0x80
+> > +#define CH7322_INTCTL_STDBY          0x40
+> > +#define CH7322_INTCTL_HPDFALL                0x20
+> > +#define CH7322_INTCTL_HPDRISE                0x10
+> > +#define CH7322_INTCTL_RXMSG          0x08
+> > +#define CH7322_INTCTL_TXMSG          0x04
+> > +#define CH7322_INTCTL_NEWPHA         0x02
+> > +#define CH7322_INTCTL_ERROR          0x01
+> > +
+> > +#define CH7322_DVCLKFNH      0x1d
+> > +#define CH7322_DVCLKFNL      0x1e
+> > +
+> > +#define CH7322_CTL           0x31
+> > +#define CH7322_CTL_FSTDBY            0x80
+> > +#define CH7322_CTL_PLSEN             0x40
+> > +#define CH7322_CTL_PLSPB             0x20
+> > +#define CH7322_CTL_SPADL             0x10
+> > +#define CH7322_CTL_HINIT             0x08
+> > +#define CH7322_CTL_WPHYA             0x04
+> > +#define CH7322_CTL_H1T                       0x02
+> > +#define CH7322_CTL_S1T                       0x01
+> > +
+> > +#define CH7322_PAWH          0x32
+> > +#define CH7322_PAWL          0x33
+> > +
+> > +#define CH7322_ADDLW         0x34
+> > +#define CH7322_ADDLW_MASK    0xf0
+> > +
+> > +#define CH7322_ADDLR         0x3d
+> > +#define CH7322_ADDLR_HPD             0x80
+> > +#define CH7322_ADDLR_MASK            0x0f
+> > +
+> > +#define CH7322_INTDATA               0x3e
+> > +#define CH7322_INTDATA_MODE          0x80
+> > +#define CH7322_INTDATA_STDBY         0x40
+> > +#define CH7322_INTDATA_HPDFALL               0x20
+> > +#define CH7322_INTDATA_HPDRISE               0x10
+> > +#define CH7322_INTDATA_RXMSG         0x08
+> > +#define CH7322_INTDATA_TXMSG         0x04
+> > +#define CH7322_INTDATA_NEWPHA                0x02
+> > +#define CH7322_INTDATA_ERROR         0x01
+> > +
+> > +#define CH7322_EVENT         0x3F
+> > +#define CH7322_EVENT_TXERR           0x80
+> > +#define CH7322_EVENT_HRST            0x40
+> > +#define CH7322_EVENT_HFST            0x20
+> > +#define CH7322_EVENT_PHACHG          0x10
+> > +#define CH7322_EVENT_ACTST           0x08
+> > +#define CH7322_EVENT_PHARDY          0x04
+> > +#define CH7322_EVENT_BSOK            0x02
+> > +#define CH7322_EVENT_ERRADCF         0x01
+> > +
+> > +#define CH7322_DID           0x51
+> > +#define CH7322_DID_CH7322            0x5b
+> > +#define CH7322_DID_CH7323            0x5f
+> > +
+> > +#define CH7322_REVISIONID    0x52
+> > +
+> > +#define CH7322_PARH          0x53
+> > +#define CH7322_PARL          0x54
+> > +
+> > +#define CH7322_IOCFG2                0x75
+> > +#define CH7322_IOCFG_CIO             0x80
+> > +#define CH7322_IOCFG_IOCFGMASK               0x78
+> > +#define CH7322_IOCFG_AUDIO           0x04
+> > +#define CH7322_IOCFG_SPAMST          0x02
+> > +#define CH7322_IOCFG_SPAMSP          0x01
+> > +
+> > +#define CH7322_CTL3          0x7b
+> > +#define CH7322_CTL3_SWENA            0x80
+> > +#define CH7322_CTL3_FC_INIT          0x40
+> > +#define CH7322_CTL3_SML_FL           0x20
+> > +#define CH7322_CTL3_SM_RDST          0x10
+> > +#define CH7322_CTL3_SPP_CIAH         0x08
+> > +#define CH7322_CTL3_SPP_CIAL         0x04
+> > +#define CH7322_CTL3_SPP_ACTH         0x02
+> > +#define CH7322_CTL3_SPP_ACTL         0x01
+> > +
+> > +/* BOK status means NACK */
+> > +#define CH7322_TX_FLAG_NACK  BIT(0)
+> > +/* Device will retry automatically */
+> > +#define CH7322_TX_FLAG_RETRY BIT(1)
+> > +
+> > +struct ch7322 {
+> > +     struct i2c_client *i2c;
+> > +     struct regmap *regmap;
+> > +     struct cec_adapter *cec;
+> > +     struct mutex mutex;     /* device access mutex */
+> > +     u8 tx_flags;
+> > +};
+> > +
+> > +static const struct regmap_config ch7322_regmap = {
+> > +     .reg_bits = 8,
+> > +     .val_bits = 8,
+> > +     .max_register = 0x7f,
+> > +     .disable_locking = true,
+> > +
+> > +};
+> > +
+> > +static int ch7322_send_message(struct ch7322 *ch7322, const struct cec_msg *msg)
+> > +{
+> > +     unsigned int val;
+> > +     unsigned int len = msg->len;
+> > +     int ret;
+> > +     int i;
+> > +
+> > +     WARN_ON(!mutex_is_locked(&ch7322->mutex));
+> > +
+> > +     if (len > CH7322_WRBUF_LEN || len < 1)
+> > +             return -EINVAL;
+> > +
+> > +     ret = regmap_read(ch7322->regmap, CH7322_WRITE, &val);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Buffer not ready */
+> > +     if (!(val & CH7322_WRITE_MSENT))
+> > +             return -EBUSY;
+> > +
+> > +     if (cec_msg_opcode(msg) == -1 &&
+> > +         cec_msg_initiator(msg) == cec_msg_destination(msg)) {
+> > +             ch7322->tx_flags = CH7322_TX_FLAG_NACK | CH7322_TX_FLAG_RETRY;
+> > +     } else if (cec_msg_is_broadcast(msg)) {
+> > +             ch7322->tx_flags = CH7322_TX_FLAG_NACK;
+> > +     } else {
+> > +             ch7322->tx_flags = CH7322_TX_FLAG_RETRY;
+> > +     }
+> > +
+> > +     ret = regmap_write(ch7322->regmap, CH7322_WRITE, len - 1);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     for (i = 0; i < len; i++) {
+> > +             ret = regmap_write(ch7322->regmap,
+> > +                                CH7322_WRBUF + i, msg->msg[i]);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ch7322_receive_message(struct ch7322 *ch7322, struct cec_msg *msg)
+> > +{
+> > +     unsigned int val;
+> > +     int ret = 0;
+> > +     int i;
+> > +
+> > +     WARN_ON(!mutex_is_locked(&ch7322->mutex));
+> > +
+> > +     ret = regmap_read(ch7322->regmap, CH7322_READ, &val);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Message not ready */
+> > +     if (!(val & CH7322_READ_NRDT))
+> > +             return -EIO;
+> > +
+> > +     msg->len = (val & CH7322_READ_NMASK) + 1;
+> > +
+> > +     /* Read entire RDBUF to clear state */
+> > +     for (i = 0; i < CH7322_RDBUF_LEN; i++) {
+> > +             ret = regmap_read(ch7322->regmap, CH7322_RDBUF + i, &val);
+> > +             if (ret)
+> > +                     return ret;
+> > +             msg->msg[i] = (u8)val;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void ch7322_tx_done(struct ch7322 *ch7322)
+> > +{
+> > +     int ret;
+> > +     unsigned int val;
+> > +     u8 status, flags;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = regmap_read(ch7322->regmap, CH7322_WRITE, &val);
+> > +     flags = ch7322->tx_flags;
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     /*
+> > +      * The device returns a one-bit OK status which usually means ACK but
+> > +      * actually means NACK when sending a logical address query or a
+> > +      * broadcast.
+> > +      */
+> > +     if (ret)
+> > +             status = CEC_TX_STATUS_ERROR;
+> > +     else if ((val & CH7322_WRITE_BOK) && (flags & CH7322_TX_FLAG_NACK))
+> > +             status = CEC_TX_STATUS_NACK;
+> > +     else if (val & CH7322_WRITE_BOK)
+> > +             status = CEC_TX_STATUS_OK;
+> > +     else if (flags & CH7322_TX_FLAG_NACK)
+> > +             status = CEC_TX_STATUS_OK;
+> > +     else
+> > +             status = CEC_TX_STATUS_NACK;
+> > +
+> > +     if (status == CEC_TX_STATUS_NACK && (flags & CH7322_TX_FLAG_RETRY))
+> > +             status |= CEC_TX_STATUS_MAX_RETRIES;
+> > +
+> > +     cec_transmit_attempt_done(ch7322->cec, status);
+> > +}
+> > +
+> > +static void ch7322_rx_done(struct ch7322 *ch7322)
+> > +{
+> > +     struct cec_msg msg;
+> > +     int ret;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = ch7322_receive_message(ch7322, &msg);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     if (ret)
+> > +             dev_err(&ch7322->i2c->dev, "cec receive error: %d\n", ret);
+> > +     else
+> > +             cec_received_msg(ch7322->cec, &msg);
+> > +}
+> > +
+> > +/*
+> > + * This device can either monitor the DDC lines to obtain the physical address
+> > + * or it can allow the host to program it. This driver lets the device obtain
+> > + * it.
+> > + */
+> > +static void ch7322_phys_addr(struct ch7322 *ch7322)
+> > +{
+> > +     unsigned int pah, pal;
+> > +     int ret = 0;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret |= regmap_read(ch7322->regmap, CH7322_PARH, &pah);
+> > +     ret |= regmap_read(ch7322->regmap, CH7322_PARL, &pal);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     if (ret)
+> > +             dev_err(&ch7322->i2c->dev, "phys addr error\n");
+> > +     else
+> > +             cec_s_phys_addr(ch7322->cec, pal | (pah << 8), false);
+> > +}
+> > +
+> > +static void ch7322_handle_events(struct ch7322 *ch7322)
+> > +{
+> > +     unsigned int data = 0;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     regmap_read(ch7322->regmap, CH7322_INTDATA, &data);
+> > +     regmap_write(ch7322->regmap, CH7322_INTDATA, data);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     if (data & CH7322_INTDATA_HPDFALL)
+> > +             cec_phys_addr_invalidate(ch7322->cec);
+> > +
+> > +     if (data & CH7322_INTDATA_TXMSG)
+> > +             ch7322_tx_done(ch7322);
+> > +
+> > +     if (data & CH7322_INTDATA_RXMSG)
+> > +             ch7322_rx_done(ch7322);
+> > +
+> > +     if (data & CH7322_INTDATA_NEWPHA)
+> > +             ch7322_phys_addr(ch7322);
+> > +
+> > +     if (data & CH7322_INTDATA_ERROR)
+> > +             dev_dbg(&ch7322->i2c->dev, "unknown error\n");
+> > +}
+> > +
+> > +static irqreturn_t ch7322_irq(int irq, void *dev)
+> > +{
+> > +     struct ch7322 *ch7322 = dev;
+> > +
+> > +     ch7322_handle_events(ch7322);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+> > +
+> > +/* This device is always enabled */
+> > +static int ch7322_cec_adap_enable(struct cec_adapter *adap, bool enable)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +static int ch7322_cec_adap_log_addr(struct cec_adapter *adap, u8 log_addr)
+> > +{
+> > +     struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> > +     int ret;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = regmap_update_bits(ch7322->regmap, CH7322_ADDLW,
+> > +                              CH7322_ADDLW_MASK, log_addr << 4);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int ch7322_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
+> > +                                 u32 signal_free_time, struct cec_msg *msg)
+> > +{
+> > +     struct ch7322 *ch7322 = cec_get_drvdata(adap);
+> > +     int ret;
+> > +
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = ch7322_send_message(ch7322, msg);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct cec_adap_ops ch7322_cec_adap_ops = {
+> > +     .adap_enable = ch7322_cec_adap_enable,
+> > +     .adap_log_addr = ch7322_cec_adap_log_addr,
+> > +     .adap_transmit = ch7322_cec_adap_transmit,
+> > +};
+> > +
+> > +static int ch7322_probe(struct i2c_client *client)
+> > +{
+> > +     struct ch7322 *ch7322;
+> > +     int ret;
+> > +     unsigned int val;
+> > +
+> > +     ch7322 = devm_kzalloc(&client->dev, sizeof(*ch7322), GFP_KERNEL);
+> > +     if (!ch7322)
+> > +             return -ENOMEM;
+> > +
+> > +     ch7322->regmap = devm_regmap_init_i2c(client, &ch7322_regmap);
+> > +     if (IS_ERR(ch7322->regmap))
+> > +             return PTR_ERR(ch7322->regmap);
+> > +
+> > +     ret = regmap_read(ch7322->regmap, CH7322_DID, &val);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (val != CH7322_DID_CH7322)
+> > +             return -ENOTSUPP;
+> > +
+> > +     mutex_init(&ch7322->mutex);
+> > +     ch7322->i2c = client;
+> > +     ch7322->tx_flags = 0;
+> > +
+> > +     i2c_set_clientdata(client, ch7322);
+> > +
+> > +     /* Disable auto mode */
+> > +     ret = regmap_write(ch7322->regmap, CH7322_MODE, CH7322_MODE_SW);
+> > +     if (ret)
+> > +             goto err_mutex;
+> > +
+> > +     /* Enable logical address register */
+> > +     ret = regmap_update_bits(ch7322->regmap, CH7322_CTL,
+> > +                              CH7322_CTL_SPADL, CH7322_CTL_SPADL);
+> > +     if (ret)
+> > +             goto err_mutex;
+> > +
+> > +     ch7322->cec = cec_allocate_adapter(&ch7322_cec_adap_ops, ch7322,
+> > +                                        dev_name(&client->dev),
+> > +                                        CEC_CAP_DEFAULTS, 1);
+> > +
+> > +     if (IS_ERR(ch7322->cec)) {
+> > +             ret = PTR_ERR(ch7322->cec);
+> > +             goto err_mutex;
+> > +     }
+> > +
+> > +     ret = cec_register_adapter(ch7322->cec, &client->dev);
+> > +     if (ret) {
+> > +             cec_delete_adapter(ch7322->cec);
+> > +             goto err_mutex;
+> > +     }
+> > +
+> > +     /* Configure and mask interrupt */
+> > +     ret = regmap_write(ch7322->regmap, CH7322_CFG1, 0);
+> > +     if (ret)
+> > +             goto err_cec;
+> > +
+> > +     ret = regmap_write(ch7322->regmap, CH7322_INTCTL, CH7322_INTCTL_INTPB);
+> > +     if (ret)
+> > +             goto err_cec;
+> > +
+> > +     ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> > +                                     ch7322_irq,
+> > +                                     IRQF_ONESHOT | IRQF_TRIGGER_RISING,
+> > +                                     client->name, ch7322);
+> > +     if (ret)
+> > +             goto err_cec;
+> > +
+> > +     ch7322_handle_events(ch7322);
+> > +
+> > +     /* Unmask interrupt */
+> > +     mutex_lock(&ch7322->mutex);
+> > +     ret = regmap_write(ch7322->regmap, CH7322_INTCTL, 0xff);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     if (ret)
+> > +             goto err_cec;
+> > +
+> > +     dev_info(&client->dev, "device registered\n");
+> > +
+> > +     return 0;
+> > +
+> > +err_cec:
+> > +     cec_unregister_adapter(ch7322->cec);
+> > +
+> > +err_mutex:
+> > +     mutex_destroy(&ch7322->mutex);
+> > +     return ret;
+> > +}
+> > +
+> > +static int ch7322_remove(struct i2c_client *client)
+> > +{
+> > +     struct ch7322 *ch7322 = i2c_get_clientdata(client);
+> > +
+> > +     /* Mask interrupt */
+> > +     mutex_lock(&ch7322->mutex);
+> > +     regmap_write(ch7322->regmap, CH7322_INTCTL, CH7322_INTCTL_INTPB);
+> > +     mutex_unlock(&ch7322->mutex);
+> > +
+> > +     cec_unregister_adapter(ch7322->cec);
+> > +     mutex_destroy(&ch7322->mutex);
+> > +
+> > +     dev_info(&client->dev, "device unregistered\n");
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct of_device_id ch7322_of_match[] = {
+> > +     { .compatible = "chrontel,ch7322", },
+> > +     {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ch7322_of_match);
+> > +
+> > +static struct i2c_driver ch7322_i2c_driver = {
+> > +     .driver = {
+> > +             .name = "ch7322",
+> > +             .of_match_table = of_match_ptr(ch7322_of_match),
+> > +     },
+> > +     .probe_new      = ch7322_probe,
+> > +     .remove         = ch7322_remove,
+> > +};
+> > +
+> > +module_i2c_driver(ch7322_i2c_driver);
+> > +
+> > +MODULE_DESCRIPTION("Chrontel CH7322 CEC Controller Driver");
+> > +MODULE_AUTHOR("Jeff Chase <jnchase@google.com>");
+> > +MODULE_LICENSE("GPL");
+> >
+>
