@@ -2,157 +2,93 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7997C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4E5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEBEA208C7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAB0207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 16:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tDcZvIQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgFRQPz (ORCPT
+        id S1728713AbgFRQRA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:15:55 -0400
-Received: from david.siemens.de ([192.35.17.14]:37673 "EHLO david.siemens.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbgFRQPz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:15:55 -0400
-X-Greylist: delayed 317 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jun 2020 12:15:53 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 05IG9r1B018927
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jun 2020 18:09:54 +0200
-Received: from [167.87.74.25] ([167.87.74.25])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 05IG9p9m011107;
-        Thu, 18 Jun 2020 18:09:51 +0200
-Subject: Re: [PATCHv4 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
- watchdog
-To:     Tero Kristo <t-kristo@ti.com>, wim@linux-watchdog.org,
-        linux@roeck-us.net, linux-watchdog@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        devicetree@vger.kernel.org
-References: <20200312095808.19907-1-t-kristo@ti.com>
- <20200312095808.19907-2-t-kristo@ti.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <d576a40f-46fb-7ad9-7bfe-11891f9867a6@siemens.com>
-Date:   Thu, 18 Jun 2020 18:09:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 12:17:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:47517 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727114AbgFRQQ7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 12:16:59 -0400
+X-UUID: 8d6f9d2f59bf434f80a7ae0cf05ec8f9-20200619
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Iw5MdckpEx2wQHfZxi4v7hZqKr+61I5sVoMJrktXj5o=;
+        b=tDcZvIQhLEnEvjxHAC9mX7MyH6/x23QUaGzFMqfZ1bXIsFRxYiExxRGUKQJBDkqZUjRcfLgBpyfu/K+OSZq0wv9psDK9EZ4+L0XX1OnIRzWal5fxF96dX1XOvtqqe+YMY2/C39RWxpA3XnQGnrmw/Rvts3uAaMHXnr+EK/ZfdPM=;
+X-UUID: 8d6f9d2f59bf434f80a7ae0cf05ec8f9-20200619
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1131090570; Fri, 19 Jun 2020 00:16:57 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 19 Jun 2020 00:16:52 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 19 Jun 2020 00:16:51 +0800
+Message-ID: <1592497015.10773.21.camel@mtkswgap22>
+Subject: Re: [PATCH v6 6/7] clk: mediatek: add UART0 clock support
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Fri, 19 Jun 2020 00:16:55 +0800
+In-Reply-To: <a61ed70c-a360-f3af-e215-6377ea25a6ab@gmail.com>
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
+         <1592480018-3340-7-git-send-email-hanks.chen@mediatek.com>
+         <a61ed70c-a360-f3af-e215-6377ea25a6ab@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200312095808.19907-2-t-kristo@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: BF32A141C01CA4CBE6F5B3E0BD896765BF1D1AEE3E31B59103E3586B8D6FC1572000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12.03.20 10:58, Tero Kristo wrote:
-> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
-> used to implement a windowed watchdog functionality. Windowed watchdog
-> will generate an error if it is petted outside the time window, either
-> too early or too late.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
-> v4:
->   * changed license to dual
->   * added documentation for missing properties
->   * added ref to watchdog.yaml
->   * renamed main_rti0 to watchdog0 in example
-> 
->  .../bindings/watchdog/ti,rti-wdt.yaml         | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-> new file mode 100644
-> index 000000000000..e83026fef2e9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments K3 SoC Watchdog Timer
-> +
-> +maintainers:
-> +  - Tero Kristo <t-kristo@ti.com>
-> +
-> +description:
-> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
-> +  Interrupt) IP module. This timer adds a support for windowed watchdog
-> +  mode, which will signal an error if it is pinged outside the watchdog
-> +  time window, meaning either too early or too late. The error signal
-> +  generated can be routed to either interrupt a safety controller or
-> +  to directly reset the SoC.
-> +
-> +allOf:
-> +  - $ref: "watchdog.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,j7-rti-wdt
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  assigned-clocks:
-> +    maxItems: 1
-> +
-> +  assigned-clocks-parents:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - power-domains
-> +
-> +examples:
-> +  - |
-> +    /*
-> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
-> +     * select the source clock for the watchdog, forcing it to tick with
-> +     * a 32kHz clock in this case.
-> +     */
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +    watchdog0: rti@2200000 {
-> +        compatible = "ti,rti-wdt";
+T24gVGh1LCAyMDIwLTA2LTE4IGF0IDE3OjUxICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMTgvMDYvMjAyMCAxMzozMywgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiBBZGQg
+TVQ2Nzc5IFVBUlQwIGNsb2NrIHN1cHBvcnQuDQo+ID4gDQo+IA0KPiBQbGVhc2UgYSBkZCBmaXhl
+cyB0YWc6DQo+IA0KPiBGaXhlczogNzEwNzc0ZTA0ODYxICgiY2xrOiBtZWRpYXRlazogQWRkIE1U
+Njc3OSBjbG9jayBzdXBwb3J0IikNCg0KR290IGl0LCBJJ2xsIGFkZCBpdCBpbiBuZXh0IHZlcnNp
+b24uDQoNCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRp
+YXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogbXRrMDE3NjEgPHdlbmRlbGwubGluQG1lZGlh
+dGVrLmNvbT4NCj4gDQo+IE11c3QgYmUgYSByZWFsIG5hbWUgbm90ICJtdGswMTc2MSINCg0KT29w
+cywgSSdsbCB1cGRhdGUgaGlzIG5hbWUuIA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudC4N
+Cg0KPiANCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3OS5jIHwg
+ICAgMiArKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyBiL2RyaXZlcnMv
+Y2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYw0KPiA+IGluZGV4IDk3NjZjY2MuLjZlMGQzYTEgMTAw
+NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3OS5jDQo+ID4gKysr
+IGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc3OS5jDQo+ID4gQEAgLTkxOSw2ICs5MTks
+OCBAQA0KPiA+ICAJCSAgICAicHdtX3NlbCIsIDE5KSwNCj4gPiAgCUdBVEVfSU5GUkEwKENMS19J
+TkZSQV9QV00sICJpbmZyYV9wd20iLA0KPiA+ICAJCSAgICAicHdtX3NlbCIsIDIxKSwNCj4gPiAr
+CUdBVEVfSU5GUkEwKENMS19JTkZSQV9VQVJUMCwgImluZnJhX3VhcnQwIiwNCj4gPiArCQkgICAg
+InVhcnRfc2VsIiwgMjIpLA0KPiA+ICAJR0FURV9JTkZSQTAoQ0xLX0lORlJBX1VBUlQxLCAiaW5m
+cmFfdWFydDEiLA0KPiA+ICAJCSAgICAidWFydF9zZWwiLCAyMyksDQo+ID4gIAlHQVRFX0lORlJB
+MChDTEtfSU5GUkFfVUFSVDIsICJpbmZyYV91YXJ0MiIsDQo+ID4gDQoNCg==
 
-At some stage, you changed the compatible string to something
-J721e-specific. This one wasn't updated.
-
-> +        reg = <0x0 0x2200000 0x0 0x100>;
-> +        clocks = <&k3_clks 252 1>;
-> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
-> +        assigned-clocks = <&k3_clks 252 1>;
-> +        assigned-clock-parents = <&k3_clks 252 5>;
-> +    };
-> 
-
-And where is the binding for the AM65x? I know that PG1 has nice
-erratum, but I would expect PG2 to be fine and register-wise compatible, no?
-
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
