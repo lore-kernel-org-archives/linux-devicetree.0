@@ -2,100 +2,303 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74657C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 11:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC4BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 11:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45CF32078D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 11:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592478737;
-	bh=9s6Wyhe9pYAC3VVIw7629js9Jb5aKrb4IUxiFgGqm3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LA8KIGRhp36xyeP9bDXhq+QhC5MUI37qU+dVRjgFanUeo6Erf/XjQzLGoqW0n5SG9
-	 SX4yM+yxAzY2f8nirH5KbDEvxEnKNMR8sjS2DAp+Pj+ZqpGTcUTLUheThV8fU9+s4W
-	 hJtu9mfbUkShu7mR8/w5BESJpQym2G7KOvbk0WZQ=
+	by mail.kernel.org (Postfix) with ESMTP id EC77520734
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 11:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nN8dMAPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgFRLMK (ORCPT
+        id S1729433AbgFRLba (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 07:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbgFRLKI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 07:10:08 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9BFA2078D;
-        Thu, 18 Jun 2020 11:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592478607;
-        bh=9s6Wyhe9pYAC3VVIw7629js9Jb5aKrb4IUxiFgGqm3Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OHjUyyZk77g7rFyiuxjkusPCBhr/N/W80fCNPiHfTXD+yTBEM4XeG/A2vaDYps12W
-         hNvWB5yakMJTVxQrH12IyG7PYYVTKxeLLD3z7qCH/B8LH8/WBBZ2HtAOHQXMAhsuRW
-         i7BIMbX1AU4/Ax/qZs5rS+3q4ulVdkjT0j+ht3Lw=
-Date:   Thu, 18 Jun 2020 12:10:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, michael@walle.cc,
-        Rob Herring <robh+dt@kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-Message-ID: <20200618111004.GF5789@sirena.org.uk>
-References: <20200618080223.951737-1-lee.jones@linaro.org>
- <CAK8P3a3iRmXC2jDj92QHKqyD+x_UJ7rWU_KcGt=MFOD9UW38RA@mail.gmail.com>
- <20200618100704.GC954398@dell>
+        Thu, 18 Jun 2020 07:31:30 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:30401 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbgFRLb3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 07:31:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592479889; x=1624015889;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=fDjMVXtMTZ2HWY9E00w48WZpz44oyO+oc1cgMEc4zbo=;
+  b=nN8dMAPmPrrCsB6ymB945ORnBGmi5VHuHshOwudgIqegy+EBhNcTUzKW
+   QZKJdQRqJmFaPzUAHoDWPd5+8oSP0jygfwwO5roArAIXMcDvRRwkz+XnH
+   Ac27yJR3+wmTRo1leBrRTpHgYSpXvne0//TNLuIRhUV+MjAmTFQlpveir
+   95hL05MFy79ZqgNCKS11z3VraP0NAijHZQjxkZRcp6hdPYHgCCrcE0lMX
+   U4LZjCy7PsYcXVV5ppfzQuiLYMBJZWUgDxda01j0ahidItwL1BnmPN+wS
+   KsP11/FDCE9x93kNIR5Ip4LttkuaA871ub0kXRTC3/zjWNO0ZidVbCkjc
+   A==;
+IronPort-SDR: gvlMpEiR3kTqMCQ+dV6NdL/esUxVuocXP1AeqEbyxu1npCzRzbdK8z2zOG+e/SYFQLGd2uunbH
+ p00mHThX6/jwwxLe4xvLBq1NjxIuFa5BAlwgSjowFWCJyjJyebF1fmjiTJ71QPHR5dVSwneZ8l
+ O5CDBeA8wpD+cet1lIu/FZHlRzf38ZbR8yhAyzy0xY+v+ZFV1HXxmw+yLouAzs8fu40Kjfri1+
+ 7Aqag/bVSuIyQRwQhibQWrJFGjIGBzN6wrH0aB7rhgkTLfquguXu8a0ete6xKM7ekvSBQiPOF6
+ fns=
+X-IronPort-AV: E=Sophos;i="5.73,526,1583218800"; 
+   d="scan'208";a="79965936"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 04:31:29 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 18 Jun 2020 04:31:21 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Thu, 18 Jun 2020 04:31:19 -0700
+References: <20200616082556.27877-1-lars.povlsen@microchip.com> <20200616082556.27877-4-lars.povlsen@microchip.com> <b44120d8-67fe-4ba3-bc76-80a5a0970dad@roeck-us.net>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v3 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
+In-Reply-To: <b44120d8-67fe-4ba3-bc76-80a5a0970dad@roeck-us.net>
+Date:   Thu, 18 Jun 2020 13:31:24 +0200
+Message-ID: <87ftaswqyb.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wtjvnLv0o8UUzur2"
-Content-Disposition: inline
-In-Reply-To: <20200618100704.GC954398@dell>
-X-Cookie: Androphobia:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---wtjvnLv0o8UUzur2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Guenter Roeck writes:
 
-On Thu, Jun 18, 2020 at 11:07:04AM +0100, Lee Jones wrote:
+> On 6/16/20 1:25 AM, Lars Povlsen wrote:
+>> This patch adds a temperature sensor driver to the Sparx5 SoC.
+>>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  drivers/hwmon/Kconfig       |  10 +++
+>>  drivers/hwmon/Makefile      |   1 +
+>>  drivers/hwmon/sparx5-temp.c | 136 ++++++++++++++++++++++++++++++++++++
+>
+> This will also require documentation in
+>         Documentation/hwmon/sparx5-temp.rst
+>
+>>  3 files changed, 147 insertions(+)
+>>  create mode 100644 drivers/hwmon/sparx5-temp.c
+>>
+>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>> index 288ae9f63588c..7fb5e0c6c6306 100644
+>> --- a/drivers/hwmon/Kconfig
+>> +++ b/drivers/hwmon/Kconfig
+>> @@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
+>>         This driver can also be built as a module. If so, the module
+>>         will be called i5k_amb.
+>>
+>> +config SENSORS_SPARX5
+>> +     tristate "Sparx5 SoC temperature sensor"
+>> +     depends on ARCH_SPARX5 || COMPILE_TEST
+>> +     help
+>> +       If you say yes here you get support for temperature monitoring
+>> +       with the Microchip Sparx5 SoC.
+>> +
+>> +       This driver can also be built as a module. If so, the module
+>> +       will be called sparx5-temp.
+>> +
+>>  config SENSORS_F71805F
+>>       tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
+>>       depends on !PPC
+>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>> index 3e32c21f5efe3..857293f650412 100644
+>> --- a/drivers/hwmon/Makefile
+>> +++ b/drivers/hwmon/Makefile
+>> @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_SMM665)      += smm665.o
+>>  obj-$(CONFIG_SENSORS_SMSC47B397)+= smsc47b397.o
+>>  obj-$(CONFIG_SENSORS_SMSC47M1)       += smsc47m1.o
+>>  obj-$(CONFIG_SENSORS_SMSC47M192)+= smsc47m192.o
+>> +obj-$(CONFIG_SENSORS_SPARX5) += sparx5-temp.o
+>>  obj-$(CONFIG_SENSORS_STTS751)        += stts751.o
+>>  obj-$(CONFIG_SENSORS_AMC6821)        += amc6821.o
+>>  obj-$(CONFIG_SENSORS_TC74)   += tc74.o
+>> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
+>> new file mode 100644
+>> index 0000000000000..4ed8a2aec3ae9
+>> --- /dev/null
+>> +++ b/drivers/hwmon/sparx5-temp.c
+>> @@ -0,0 +1,136 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/* Sparx5 SoC temperature sensor driver
+>> + *
+>> + * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/hwmon.h>
+>> +#include <linux/io.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/bitfield.h>
+>
+> Alphabetic order, please.
 
-> Does Regmap let you register/initialise an I2C address more than once?
+Ack.
 
-> When I attempt it, I get:
+>
+>> +
+>> +#define TEMP_CTRL            0
+>> +#define TEMP_CFG             4
+>> +#define  TEMP_CFG_CYCLES     GENMASK(24, 15)
+>> +#define  TEMP_CFG_ENA                BIT(0)
+>> +#define TEMP_STAT            8
+>> +#define  TEMP_STAT_VALID     BIT(12)
+>> +#define  TEMP_STAT_TEMP              GENMASK(11, 0)
+>> +
+>> +struct s5_hwmon {
+>> +     void __iomem *base;
+>> +};
+>> +
+>> +static void s5_temp_enable(struct s5_hwmon *hwmon)
+>> +{
+>> +     u32 val = readl(hwmon->base + TEMP_CFG);
+>> +     u32 clk = 250;
+>> +
+>
+> Unnecessary variable, and magic number. It would be better to use a define
+> or at least explain what the number is for. Also, if this is associated with
+> a system clock, would it make sense to use the clock subsystem API to get
+> the rate ?
+>
 
-> [    0.522988] i2c i2c-0: Failed to register i2c client tmp105 at 0x32 (-16)
+Yes, valid point. Changed to reference the system AHB clock, so DT and
+bindings updated as well. (The magic number is clock ticks per 1us).
 
-That's not regmap, that's the I2C core.
+I am sending an update asap.
 
---wtjvnLv0o8UUzur2
-Content-Type: application/pgp-signature; name="signature.asc"
+Thank you for your comments, they are highly appreciated!
 
------BEGIN PGP SIGNATURE-----
+Cheers,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7rS4sACgkQJNaLcl1U
-h9Dl1gf/Zr4G4iqC1b7LIlHVA5rpT17+P/nHXKbb2jLXw2yw+gvkK03x4xEbGurw
-ZUP2iZyCovu56VFHlIQeDUEJyVDt+8HKl2pcYxZMvTjs1xagjVPOJAeo1rjKgYaN
-STH6iacWeUejdQN3HkcwqF4NbapIqoFXoxG9rLQnbNxrLt+QGPzzJNiPkCaWqdkd
-FWxzU2l+/4pmVprMkBcG+j3FLqpZqy0G3U6Xxmf81ufaD4yqRtBsY7JEAinijAh/
-57ypLQbhP4LSjNE0bAwK1xbD51J7e22Ev+HGPbLALcYRElVKLw96GjCLikXrXoIm
-Do1MeaNZ+RuWEjn8xUBhzyEstiFHRA==
-=JFIi
------END PGP SIGNATURE-----
+---Lars
 
---wtjvnLv0o8UUzur2--
+>> +     val &= ~TEMP_CFG_CYCLES;
+>> +     val |= FIELD_PREP(TEMP_CFG_CYCLES, clk);
+>> +     val |= TEMP_CFG_ENA;
+>> +
+>> +     writel(val, hwmon->base + TEMP_CFG);
+>> +}
+>> +
+>> +static int s5_read(struct device *dev, enum hwmon_sensor_types type,
+>> +                u32 attr, int channel, long *temp)
+>> +{
+>> +     struct s5_hwmon *hwmon = dev_get_drvdata(dev);
+>> +     int rc = 0, value;
+>> +     u32 stat;
+>> +
+>> +     switch (attr) {
+>> +     case hwmon_temp_input:
+>> +             stat = readl_relaxed(hwmon->base + TEMP_STAT);
+>> +             if (!(stat & TEMP_STAT_VALID))
+>> +                     return -EIO;
+>> +             value = stat & TEMP_STAT_TEMP;
+>> +             value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
+>
+> A comment describing the calculation would be useful, not only to help
+> the reader but also to help me verify if the calculation is correct
+> (especially since datasheets don't seem to be public).
+>
+
+I have added the register docs and commented the calculations.
+
+>> +             value *= 100;
+>> +             *temp = value;
+>> +             break;
+>> +     default:
+>> +             rc = -EOPNOTSUPP;
+>> +             break;
+>> +     }
+>> +
+>> +     return rc;
+>> +}
+>> +
+>> +static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
+>> +                          u32 attr, int channel)
+>> +{
+>> +     if (type != hwmon_temp)
+>> +             return 0;
+>> +
+>> +     switch (attr) {
+>> +     case hwmon_temp_input:
+>> +             return 0444;
+>> +     default:
+>> +             return 0;
+>> +     }
+>> +}
+>> +
+>> +static const struct hwmon_channel_info *s5_info[] = {
+>> +     HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
+>> +     HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
+>> +     NULL
+>> +};
+>> +
+>> +static const struct hwmon_ops s5_hwmon_ops = {
+>> +     .is_visible = s5_is_visible,
+>> +     .read = s5_read,
+>> +};
+>> +
+>> +static const struct hwmon_chip_info s5_chip_info = {
+>> +     .ops = &s5_hwmon_ops,
+>> +     .info = s5_info,
+>> +};
+>> +
+>> +static int s5_temp_probe(struct platform_device *pdev)
+>> +{
+>> +     struct device *hwmon_dev;
+>> +     struct s5_hwmon *hwmon;
+>> +
+>> +     hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+>> +     if (!hwmon)
+>> +             return -ENOMEM;
+>> +
+>> +     hwmon->base = devm_platform_ioremap_resource(pdev, 0);
+>> +     if (IS_ERR(hwmon->base))
+>> +             return PTR_ERR(hwmon->base);
+>> +
+>> +     s5_temp_enable(hwmon);
+>> +
+>> +     hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+>> +                                                      "s5_temp",
+>> +                                                      hwmon,
+>> +                                                      &s5_chip_info,
+>> +                                                      NULL);
+>> +
+>> +     return PTR_ERR_OR_ZERO(hwmon_dev);
+>> +}
+>> +
+>> +const struct of_device_id s5_temp_match[] = {
+>> +     { .compatible = "microchip,sparx5-temp" },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, s5_temp_match);
+>> +
+>> +static struct platform_driver s5_temp_driver = {
+>> +     .probe = s5_temp_probe,
+>> +     .driver = {
+>> +             .name = "sparx5-temp",
+>> +             .of_match_table = s5_temp_match,
+>> +     },
+>> +};
+>> +
+>> +module_platform_driver(s5_temp_driver);
+>> +
+>> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
+>> +MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
+>> +MODULE_LICENSE("GPL");
+>>
+
+-- 
+Lars Povlsen,
+Microchip
