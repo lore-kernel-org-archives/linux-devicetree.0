@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA1CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D6BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2510E20FC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B8221BE5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 06:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgFRGkp (ORCPT
+        id S1727929AbgFRGks (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39252 "EHLO
+        Thu, 18 Jun 2020 02:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgFRGkp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 02:40:45 -0400
+        with ESMTP id S1727884AbgFRGkr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 02:40:47 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF5BCC06174E;
-        Wed, 17 Jun 2020 23:40:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED1CC06174E;
+        Wed, 17 Jun 2020 23:40:47 -0700 (PDT)
 Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=localhost.localdomain)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <kurt@linutronix.de>)
-        id 1jloE1-0000xD-4O; Thu, 18 Jun 2020 08:40:37 +0200
+        id 1jloE7-0000xD-Qz; Thu, 18 Jun 2020 08:40:44 +0200
 From:   Kurt Kanzenbach <kurt@linutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Vivien Didelot <vivien.didelot@gmail.com>,
@@ -38,9 +38,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Richard Cochran <richardcochran@gmail.com>,
         Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
         ilias.apalodimas@linaro.org, Kurt Kanzenbach <kurt@linutronix.de>
-Subject: [RFC PATCH 1/9] net: dsa: Add tag handling for Hirschmann Hellcreek switches
-Date:   Thu, 18 Jun 2020 08:40:21 +0200
-Message-Id: <20200618064029.32168-2-kurt@linutronix.de>
+Subject: [RFC PATCH 7/9] net: dsa: hellcreek: Add PTP status LEDs
+Date:   Thu, 18 Jun 2020 08:40:27 +0200
+Message-Id: <20200618064029.32168-8-kurt@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200618064029.32168-1-kurt@linutronix.de>
 References: <20200618064029.32168-1-kurt@linutronix.de>
@@ -54,176 +54,167 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Hirschmann Hellcreek TSN switches have a special tagging protocol for frames
-exchanged between the CPU port and the master interface. The format is a one
-byte trailer indicating the destination or origin port.
+The switch has two controllable I/Os which are usually connected to LEDs. This
+is useful to immediately visually see the PTP status.
 
-It's quite similar to the Micrel KSZ tagging. That's why the implementation is
-based on that code.
+These provide two signals:
+
+ * is_gm
+
+   This LED can be activated if the current device is the grand master in that
+   PTP domain.
+
+ * sync_good
+
+   This LED can be activated if the current device is in sync with the network
+   time.
+
+Expose these via the LED framework to be controlled via user space
+e.g. linuxptp.
 
 Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
 ---
- include/net/dsa.h       |   2 +
- net/dsa/Kconfig         |   6 +++
- net/dsa/Makefile        |   1 +
- net/dsa/tag_hellcreek.c | 101 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 110 insertions(+)
- create mode 100644 net/dsa/tag_hellcreek.c
+ drivers/net/dsa/hirschmann/hellcreek.h     |  4 ++
+ drivers/net/dsa/hirschmann/hellcreek_ptp.c | 70 ++++++++++++++++++++++
+ drivers/net/dsa/hirschmann/hellcreek_ptp.h |  3 +
+ 3 files changed, 77 insertions(+)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 50389772c597..2784c4851d92 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -44,6 +44,7 @@ struct phylink_link_state;
- #define DSA_TAG_PROTO_KSZ8795_VALUE		14
- #define DSA_TAG_PROTO_OCELOT_VALUE		15
- #define DSA_TAG_PROTO_AR9331_VALUE		16
-+#define DSA_TAG_PROTO_HELLCREEK_VALUE		17
+diff --git a/drivers/net/dsa/hirschmann/hellcreek.h b/drivers/net/dsa/hirschmann/hellcreek.h
+index 59cc7b59ff2c..18e78d7e0a55 100644
+--- a/drivers/net/dsa/hirschmann/hellcreek.h
++++ b/drivers/net/dsa/hirschmann/hellcreek.h
+@@ -17,6 +17,7 @@
+ #include <linux/timecounter.h>
+ #include <linux/spinlock.h>
+ #include <linux/hrtimer.h>
++#include <linux/leds.h>
+ #include <net/dsa.h>
  
- enum dsa_tag_protocol {
- 	DSA_TAG_PROTO_NONE		= DSA_TAG_PROTO_NONE_VALUE,
-@@ -63,6 +64,7 @@ enum dsa_tag_protocol {
- 	DSA_TAG_PROTO_KSZ8795		= DSA_TAG_PROTO_KSZ8795_VALUE,
- 	DSA_TAG_PROTO_OCELOT		= DSA_TAG_PROTO_OCELOT_VALUE,
- 	DSA_TAG_PROTO_AR9331		= DSA_TAG_PROTO_AR9331_VALUE,
-+	DSA_TAG_PROTO_HELLCREEK		= DSA_TAG_PROTO_HELLCREEK_VALUE,
+ /* Ports:
+@@ -281,6 +282,8 @@ struct hellcreek {
+ 	struct hellcreek_port ports[4];
+ 	struct delayed_work overflow_work;
+ 	struct dentry *debug_dir;
++	struct led_classdev led_is_gm;
++	struct led_classdev led_sync_good;
+ 	spinlock_t reg_lock;	/* Switch IP register lock */
+ 	spinlock_t ptp_lock;	/* PTP IP register lock */
+ 	void __iomem *base;
+@@ -288,6 +291,7 @@ struct hellcreek {
+ 	u8 *vidmbrcfg;		/* vidmbrcfg shadow */
+ 	u64 seconds;		/* PTP seconds */
+ 	u64 last_ts;		/* Used for overflow detection */
++	u16 status_out;		/* ptp.status_out shadow */
+ 	size_t fdb_entries;
  };
  
- struct packet_type;
-diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
-index d5bc6ac599ef..edc0c3ab6a4e 100644
---- a/net/dsa/Kconfig
-+++ b/net/dsa/Kconfig
-@@ -121,4 +121,10 @@ config NET_DSA_TAG_TRAILER
- 	  Say Y or M if you want to enable support for tagging frames at
- 	  with a trailed. e.g. Marvell 88E6060.
+diff --git a/drivers/net/dsa/hirschmann/hellcreek_ptp.c b/drivers/net/dsa/hirschmann/hellcreek_ptp.c
+index 2fab998cbb12..6161ab821308 100644
+--- a/drivers/net/dsa/hirschmann/hellcreek_ptp.c
++++ b/drivers/net/dsa/hirschmann/hellcreek_ptp.c
+@@ -236,6 +236,57 @@ static void hellcreek_ptp_overflow_check(struct work_struct *work)
+ 			      HELLCREEK_OVERFLOW_PERIOD);
+ }
  
-+config NET_DSA_TAG_HELLCREEK
-+	tristate "Tag driver for Hirschmann Hellcreek TSN switches"
-+	help
-+	  Say Y or M if you want to enable support for tagging frames
-+	  for the Hirschmann Hellcreek TSN switches.
-+
- endif
-diff --git a/net/dsa/Makefile b/net/dsa/Makefile
-index 108486cfdeef..ed72f4ea899b 100644
---- a/net/dsa/Makefile
-+++ b/net/dsa/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_NET_DSA_TAG_BRCM_COMMON) += tag_brcm.o
- obj-$(CONFIG_NET_DSA_TAG_DSA) += tag_dsa.o
- obj-$(CONFIG_NET_DSA_TAG_EDSA) += tag_edsa.o
- obj-$(CONFIG_NET_DSA_TAG_GSWIP) += tag_gswip.o
-+obj-$(CONFIG_NET_DSA_TAG_HELLCREEK) += tag_hellcreek.o
- obj-$(CONFIG_NET_DSA_TAG_KSZ) += tag_ksz.o
- obj-$(CONFIG_NET_DSA_TAG_LAN9303) += tag_lan9303.o
- obj-$(CONFIG_NET_DSA_TAG_MTK) += tag_mtk.o
-diff --git a/net/dsa/tag_hellcreek.c b/net/dsa/tag_hellcreek.c
-new file mode 100644
-index 000000000000..0895eda94bb5
---- /dev/null
-+++ b/net/dsa/tag_hellcreek.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * net/dsa/tag_hellcreek.c - Hirschmann Hellcreek switch tag format handling
-+ *
-+ * Copyright (C) 2019,2020 Linutronix GmbH
-+ * Author Kurt Kanzenbach <kurt@linutronix.de>
-+ *
-+ * Based on tag_ksz.c.
-+ */
-+
-+#include <linux/etherdevice.h>
-+#include <linux/list.h>
-+#include <linux/slab.h>
-+#include <net/dsa.h>
-+
-+#include "dsa_priv.h"
-+
-+#define HELLCREEK_TAG_LEN	1
-+
-+static struct sk_buff *hellcreek_xmit(struct sk_buff *skb,
-+				      struct net_device *dev)
++static enum led_brightness hellcreek_get_brightness(struct hellcreek *hellcreek,
++						    int led)
 +{
-+	struct dsa_port *dp = dsa_slave_to_port(dev);
-+	struct sk_buff *nskb;
-+	int padlen;
-+	u8 *tag;
-+
-+	padlen = (skb->len >= ETH_ZLEN) ? 0 : ETH_ZLEN - skb->len;
-+
-+	if (skb_tailroom(skb) >= padlen + HELLCREEK_TAG_LEN) {
-+		/* Let dsa_slave_xmit() free skb */
-+		if (__skb_put_padto(skb, skb->len + padlen, false))
-+			return NULL;
-+
-+		nskb = skb;
-+	} else {
-+		nskb = alloc_skb(NET_IP_ALIGN + skb->len +
-+				 padlen + HELLCREEK_TAG_LEN, GFP_ATOMIC);
-+		if (!nskb)
-+			return NULL;
-+		skb_reserve(nskb, NET_IP_ALIGN);
-+
-+		skb_reset_mac_header(nskb);
-+		skb_set_network_header(nskb,
-+				       skb_network_header(skb) - skb->head);
-+		skb_set_transport_header(nskb,
-+					 skb_transport_header(skb) - skb->head);
-+		skb_copy_and_csum_dev(skb, skb_put(nskb, skb->len));
-+
-+		/* Let skb_put_padto() free nskb, and let dsa_slave_xmit() free
-+		 * skb
-+		 */
-+		if (skb_put_padto(nskb, nskb->len + padlen))
-+			return NULL;
-+
-+		consume_skb(skb);
-+	}
-+
-+	if (!nskb)
-+		return NULL;
-+
-+	/* Tag encoding */
-+	tag  = skb_put(nskb, HELLCREEK_TAG_LEN);
-+	*tag = BIT(dp->index);
-+
-+	return nskb;
++	return (hellcreek->status_out & led) ? 1 : 0;
 +}
 +
-+static struct sk_buff *hellcreek_rcv(struct sk_buff *skb,
-+				     struct net_device *dev,
-+				     struct packet_type *pt)
++static void hellcreek_set_brightness(struct hellcreek *hellcreek, int led,
++				     enum led_brightness b)
 +{
-+	/* Tag decoding */
-+	u8 *tag = skb_tail_pointer(skb) - HELLCREEK_TAG_LEN;
-+	unsigned int port = tag[0] & 0x03;
++	spin_lock(&hellcreek->ptp_lock);
 +
-+	skb->dev = dsa_master_find_slave(dev, 0, port);
-+	if (!skb->dev) {
-+		netdev_warn(dev, "Failed to get source port: %d\n", port);
-+		return NULL;
-+	}
++	if (b)
++		hellcreek->status_out |= led;
++	else
++		hellcreek->status_out &= ~led;
 +
-+	pskb_trim_rcsum(skb, skb->len - HELLCREEK_TAG_LEN);
++	hellcreek_ptp_write(hellcreek, hellcreek->status_out, STATUS_OUT);
 +
-+	skb->offload_fwd_mark = true;
-+
-+	return skb;
++	spin_unlock(&hellcreek->ptp_lock);
 +}
 +
-+static const struct dsa_device_ops hellcreek_netdev_ops = {
-+	.name	  = "hellcreek",
-+	.proto	  = DSA_TAG_PROTO_HELLCREEK,
-+	.xmit	  = hellcreek_xmit,
-+	.rcv	  = hellcreek_rcv,
-+	.overhead = HELLCREEK_TAG_LEN,
-+};
++static void hellcreek_led_sync_good_set(struct led_classdev *ldev,
++					enum led_brightness b)
++{
++	struct hellcreek *hellcreek = led_to_hellcreek(ldev, led_sync_good);
 +
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_ALIAS_DSA_TAG_DRIVER(DSA_TAG_PROTO_HELLCREEK);
++	hellcreek_set_brightness(hellcreek, STATUS_OUT_SYNC_GOOD, b);
++}
 +
-+module_dsa_tag_driver(hellcreek_netdev_ops);
++static enum led_brightness hellcreek_led_sync_good_get(struct led_classdev *ldev)
++{
++	struct hellcreek *hellcreek = led_to_hellcreek(ldev, led_sync_good);
++
++	return hellcreek_get_brightness(hellcreek, STATUS_OUT_SYNC_GOOD);
++}
++
++static void hellcreek_led_is_gm_set(struct led_classdev *ldev,
++				    enum led_brightness b)
++{
++	struct hellcreek *hellcreek = led_to_hellcreek(ldev, led_is_gm);
++
++	hellcreek_set_brightness(hellcreek, STATUS_OUT_IS_GM, b);
++}
++
++static enum led_brightness hellcreek_led_is_gm_get(struct led_classdev *ldev)
++{
++	struct hellcreek *hellcreek = led_to_hellcreek(ldev, led_is_gm);
++
++	return hellcreek_get_brightness(hellcreek, STATUS_OUT_IS_GM);
++}
++
+ int hellcreek_ptp_setup(struct hellcreek *hellcreek)
+ {
+ 	u16 status;
+@@ -285,6 +336,23 @@ int hellcreek_ptp_setup(struct hellcreek *hellcreek)
+ 	hellcreek_ptp_write(hellcreek, status | PR_CLOCK_STATUS_C_ENA_DRIFT,
+ 			    PR_CLOCK_STATUS_C);
+ 
++	/* LED setup */
++	hellcreek->led_sync_good.name		= "sync_good";
++	hellcreek->led_sync_good.brightness	= hellcreek_get_brightness(hellcreek, STATUS_OUT_SYNC_GOOD);
++	hellcreek->led_sync_good.max_brightness = 1;
++	hellcreek->led_sync_good.brightness_set = hellcreek_led_sync_good_set;
++	hellcreek->led_sync_good.brightness_get = hellcreek_led_sync_good_get;
++	led_classdev_register(hellcreek->dev, &hellcreek->led_sync_good);
++
++	hellcreek->led_is_gm.name	    = "is_gm";
++	hellcreek->led_is_gm.brightness	    = hellcreek_get_brightness(hellcreek, STATUS_OUT_IS_GM);
++	hellcreek->led_is_gm.max_brightness = 1;
++	hellcreek->led_is_gm.brightness_set = hellcreek_led_is_gm_set;
++	hellcreek->led_is_gm.brightness_get = hellcreek_led_is_gm_get;
++	led_classdev_register(hellcreek->dev, &hellcreek->led_is_gm);
++
++	hellcreek->status_out = 0;
++
+ 	schedule_delayed_work(&hellcreek->overflow_work,
+ 			      HELLCREEK_OVERFLOW_PERIOD);
+ 
+@@ -293,6 +361,8 @@ int hellcreek_ptp_setup(struct hellcreek *hellcreek)
+ 
+ void hellcreek_ptp_free(struct hellcreek *hellcreek)
+ {
++	led_classdev_unregister(&hellcreek->led_is_gm);
++	led_classdev_unregister(&hellcreek->led_sync_good);
+ 	cancel_delayed_work_sync(&hellcreek->overflow_work);
+ 	ptp_clock_unregister(hellcreek->ptp_clock);
+ 	hellcreek->ptp_clock = NULL;
+diff --git a/drivers/net/dsa/hirschmann/hellcreek_ptp.h b/drivers/net/dsa/hirschmann/hellcreek_ptp.h
+index 169fafb3ab6a..42988291ba4c 100644
+--- a/drivers/net/dsa/hirschmann/hellcreek_ptp.h
++++ b/drivers/net/dsa/hirschmann/hellcreek_ptp.h
+@@ -70,4 +70,7 @@ u64 __hellcreek_ptp_gettime_seconds(struct hellcreek *hellcreek, u64 ns);
+ #define dw_overflow_to_hellcreek(dw)				\
+ 	container_of(dw, struct hellcreek, overflow_work)
+ 
++#define led_to_hellcreek(ldev, led)				\
++	container_of(ldev, struct hellcreek, led)
++
+ #endif /* _HELLCREEK_PTP_H_ */
 -- 
 2.20.1
 
