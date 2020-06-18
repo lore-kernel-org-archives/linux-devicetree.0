@@ -2,148 +2,102 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F49C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6AFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E30C212CC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453022083B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lVrFJvl5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaC02oSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731681AbgFRWJc (ORCPT
+        id S1731130AbgFRWMe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:09:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
+        Thu, 18 Jun 2020 18:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728683AbgFRWJb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 18:09:31 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5123C0613EE
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 15:09:28 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id k13so4467380vsm.13
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 15:09:28 -0700 (PDT)
+        with ESMTP id S1727827AbgFRWMe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 18:12:34 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9018C06174E;
+        Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t18so7728274wru.6;
+        Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rIJ2X6dOzoq0wY6kg8iKEYYmkTTN8+C1IDuvViUAAlw=;
-        b=lVrFJvl5mDjocLA105kchQDYwRR/Mq9nlcXy/owwADieAZYgAuGsjK3xpftm0NXclu
-         BDh1QPoJU1TPpXMWq0DmrgoRSIGzBPlrIy8he0In3LWP8m83XqE+r0HZadf/sXAFVj2e
-         IayO8IVxHmcZK2mLywOzCBqLmikiRhPA0Z8ME=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=POBgBl3MI/dA6mNJ5+hGlqrhujuUmmxFrJ0pjJyUNc8=;
+        b=UaC02oShpxtI/MNfXzOqezN5e2CQ6fHyVgspS3Qf6YhYFCaq3LEhRQ+l2MfPPlnO1p
+         bvxQzuJgfDsAPSt4CRMaWsNHSdAqUc4EBV9Wy6eygFu68NNNGaE35eDA+U+EqIsvltl1
+         iUy5ALjPu6x9FrY1K9obF4jW55in+nio1robfbEM2zb7AAnczyLBp2bD5XBmUMZFmpvi
+         NOsfeBFemydvFxA7pMkHJI+5MS6HqxALBiD/vYUTgckQwMy4JQxUZ2qgFGG8wo/gbx/+
+         +o83wVSYbJHpQ/i8H7ER2YDYBp4Z0UBxzh2soQkz5eaZ+gS7oegrDmjsKd0xHWQOOn85
+         jpag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rIJ2X6dOzoq0wY6kg8iKEYYmkTTN8+C1IDuvViUAAlw=;
-        b=QdMZjUyBuVKllyvsIzd8mwRGoUvKdDZbGNhbiugOFkD40jFVgl9jt8o53eaqhcu3GO
-         wZZAAWPsRVjN82G3nXsfH7SsaOS1q2eFNGnEOEmxoZqa0x3zIBdhi6RUVdYnGrx7Wtpv
-         8GEXtkFw8mM0dHnh1knI7w/CXFUBmP+hGca/kIS2YnWvkVaovgcVcmSZfb1O2NicZAUt
-         b+2K0d3JMbzLqySh1OOM5wYoA8v7J8OgAbarH2EUqM2HiPnM5ZOVuv20Uh+zIVRjx1We
-         hsyucb7GLUX2XmnTjOR7vBvXBxfVsdHGGlCMrdD6yw9Rw5qdwPkbOw8Z5NRTjdOQ7DIA
-         kDCA==
-X-Gm-Message-State: AOAM532EPZUneYyH9UWEms8CJn7Br9CrT/QDk0th0QaX7ChkY9xcDX6G
-        OJW+m3NHPmEgUFfsI07JA4nL4oaGJZU=
-X-Google-Smtp-Source: ABdhPJxRGiUkGAjOdq3pv0mIDnC8xgJh7SXTJmFox6bvDy/6K0q2/ty7EcMpCndkICAPNdidVrEeRQ==
-X-Received: by 2002:a67:e0d7:: with SMTP id m23mr5738771vsl.221.1592518167338;
-        Thu, 18 Jun 2020 15:09:27 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id r134sm464354vke.26.2020.06.18.15.09.25
-        for <devicetree@vger.kernel.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=POBgBl3MI/dA6mNJ5+hGlqrhujuUmmxFrJ0pjJyUNc8=;
+        b=qhkezecl1sWGt3JatMgmx6kci/uajdY8vYpxMkoUvyF2iHt8qpEXLtWSfqAElVTrZT
+         /t4vfBgITaf3EqNzLyLBRkHkLgazn+CU3DUU4lAgZD21BaaWUuRbE0eQsFim8/cwJ7t/
+         QPfQzUYYJPSB9IXmUI7SQBPrnWhOglpmTi8HuCKw5YB02xN7zitsEv6ifzSj+zy1qPVd
+         13gJtZQbNA3NVdLzVtID1iyM8pYiImy040PNweEdgTV17FnVlFHiXRZ/Lg1BhWf6wYXY
+         SXArhD5vB1d83zqh8BRX6Wg+4mkhGKJiKQXKWlwyCX5HjqO9hiJ7VIqtDqxt1CuPot30
+         St+g==
+X-Gm-Message-State: AOAM531LhMXwhdQWses0zKMmwdgUTf1cspIBovpTN7Aswitotqrvje6d
+        e95xWUFvopj6ZCL4fHsQlpU=
+X-Google-Smtp-Source: ABdhPJx8hy6wOubeqxfTx/fn/AnNUMOEzQ6xLh5Mglw12uW4b0wv42gO0zYOEw+mTUgB1GWSiSN/Ig==
+X-Received: by 2002:a5d:4009:: with SMTP id n9mr575240wrp.97.1592518352590;
+        Thu, 18 Jun 2020 15:12:32 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id e25sm5677317wrc.69.2020.06.18.15.12.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 15:09:25 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id r1so2522771uam.6
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 15:09:25 -0700 (PDT)
-X-Received: by 2002:a9f:3b1c:: with SMTP id i28mr501831uah.22.1592518164952;
- Thu, 18 Jun 2020 15:09:24 -0700 (PDT)
+        Thu, 18 Jun 2020 15:12:31 -0700 (PDT)
+Subject: Re: [PATCH net-next] of: mdio: preserve phy dev_flags in
+ of_phy_connect()
+To:     rentao.bupt@gmail.com, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+References: <20200618220444.5064-1-rentao.bupt@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f57e5c7f-88f0-d033-6f63-ab53addf9e20@gmail.com>
+Date:   Thu, 18 Jun 2020 15:12:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200609120455.20458-1-harigovi@codeaurora.org>
-In-Reply-To: <20200609120455.20458-1-harigovi@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 18 Jun 2020 15:09:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XHHAAWNkJGMJESf4C=hcbaswFamGVeyMJ9eRd6dWAy8Q@mail.gmail.com>
-Message-ID: <CAD=FV=XHHAAWNkJGMJESf4C=hcbaswFamGVeyMJ9eRd6dWAy8Q@mail.gmail.com>
-Subject: Re: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens
- during PM sleep
-To:     Harigovindan P <harigovi@codeaurora.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200618220444.5064-1-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On Tue, Jun 9, 2020 at 5:05 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> ti-sn65dsi86 bridge is enumerated as a runtime device. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend will not be called
-> and it kept the bridge regulators and gpios ON which resulted
-> in platform not entering into XO shutdown.
->
-> Add changes to force suspend on the runtime device during pm sleep.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->
-> Changes in v2:
->         - Include bridge name in the commit message and
->         remove dependent patchwork link from the commit
->         text as bridge is independent of OEM(Stephen Boyd)
->
-> Changes in v3:
->         - Updating changelog to explain the need for patch
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
->  1 file changed, 2 insertions(+)
 
-I think this patch is good to go now (has both Stephen's and my
-reviews).  I noticed that Neil landed my other patches to this driver
-recently (thanks!) and wondered why he didn't land this one.  Then, I
-realized that you didn't send it to him or the other bridge
-maintainer.  :(  Have you tried running get_maintainer?
+On 6/18/2020 3:04 PM, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Replace assignment "=" with OR "|=" for "phy->dev_flags" so "dev_flags"
+> configured in phy probe() function can be preserved.
+> 
+> The idea is similar to commit e7312efbd5de ("net: phy: modify assignment
+> to OR for dev_flags in phy_attach_direct").
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 
-$ ./scripts/get_maintainer.pl -f drivers/gpu/drm/bridge/ti-sn65dsi86.c
-Andrzej Hajda <a.hajda@samsung.com> (maintainer:DRM DRIVERS FOR BRIDGE CHIPS)
-Neil Armstrong <narmstrong@baylibre.com> (maintainer:DRM DRIVERS FOR
-BRIDGE CHIPS)
-Laurent Pinchart <Laurent.pinchart@ideasonboard.com> (reviewer:DRM
-DRIVERS FOR BRIDGE CHIPS)
-Jonas Karlman <jonas@kwiboo.se> (reviewer:DRM DRIVERS FOR BRIDGE CHIPS)
-Jernej Skrabec <jernej.skrabec@siol.net> (reviewer:DRM DRIVERS FOR BRIDGE CHIPS)
-David Airlie <airlied@linux.ie> (maintainer:DRM DRIVERS)
-Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
-dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-linux-kernel@vger.kernel.org (open list)
-
-In any case, unless someone has extra feedback on this patch I think
-it's ready to land.
-
-Neil: If you're willing to land this patch too, can you let
-Harigovindan know if it needs to be re-sent with you in the "To:" list
-or if you can find it on the dri-devel list?
-
-Thanks!
-
--Doug
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
