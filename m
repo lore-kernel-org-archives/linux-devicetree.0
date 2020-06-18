@@ -2,86 +2,139 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B24C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 00:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A443C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 00:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9372420FC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 00:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592438451;
-	bh=O0Ojn64QE9TAUNMg1Czyk7vrOv6xiPBYlaWVb0X35x8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OCoO70IDDExdDQwXxuDxeTXOIaHpBjU0nuH3XtusqQmtyZXBjy18eoGOdb98AwV7L
-	 TTn2I7+jo2RsTedT7ex5AmdUg4ID+UjVRSiJdqKSZWY0tXGG8/mZOJxRKayb5S1m3j
-	 qQ9icfh5R2XurSqCf4xanKLzp/OXeNJS8HQFkEiI=
+	by mail.kernel.org (Postfix) with ESMTP id 146072080D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 00:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oj+wKzcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgFRAAv (ORCPT
+        id S1726920AbgFRA1m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgFRAAv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:00:51 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515B820B1F;
-        Thu, 18 Jun 2020 00:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592438450;
-        bh=O0Ojn64QE9TAUNMg1Czyk7vrOv6xiPBYlaWVb0X35x8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gntkbq/YBvvPhhPey0eMwmZnvFqAA0xmCm33NsY2GTKj8dJSY1qe2aD0wauUxNDFa
-         A3SoEyYovNwwrk0zB7RyggJLgYgL3F7NZ3BXDno9GM7tPtHMTiHCdwmXQccU6fl3Nd
-         br1RA6J8hvuQNwKsAK1zy7WXq97Uw8aosdT2/WpY=
-Date:   Wed, 17 Jun 2020 17:00:48 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH net-next v7 6/6] net: phy: DP83822: Add ability to
- advertise Fiber connection
-Message-ID: <20200617170048.3501848a@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200617182019.6790-7-dmurphy@ti.com>
-References: <20200617182019.6790-1-dmurphy@ti.com>
-        <20200617182019.6790-7-dmurphy@ti.com>
+        Wed, 17 Jun 2020 20:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgFRA1l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 20:27:41 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AE1C06174E;
+        Wed, 17 Jun 2020 17:27:41 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q19so5125939lji.2;
+        Wed, 17 Jun 2020 17:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rq/E/19LmZnfaik86wPXedWKtuvz2N6trRDZr1KcBB0=;
+        b=oj+wKzcMU4xmQ8YezB0HM2rn2rQs8YMekF0qTjRrXdc2C+dB168pSjp4kZr1ZRX3SL
+         r2IyE/SLg9KFXpE2zZF/B7d6WKCDhkwO+Tfx876cxyjnlvmpl109teVTh1lZ/KetbUaC
+         3uGtFilcmL61xITYKBbUVgjnJcMDI/iR20EJ4d25SMGLL45etoNCfgErKsFnJvNiCUKV
+         vAml4yrP544gUvZRj5BVsJ/ltAwA0UO8R4bPVl7dGH+sc/uI2NnxDWMDrQ9YO3FHUDum
+         nM9m3FAMf+NsisMkYEQ5je/BnDC9OThKPcNRSppTsYe+wC6SqQ86j/6qA/wlHr0zFDew
+         imvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rq/E/19LmZnfaik86wPXedWKtuvz2N6trRDZr1KcBB0=;
+        b=Wlnu+OluA7+GxW0O/qhHVw4KYU/TPRHl53VGzK6N5lW0uf9L8NEhATENK90WE1HBL0
+         wCjRDlX+QgoaqHm0PTWGmggJ/XzgfoldY4lBDLZa8MKsqJuTOhZOViAK3/kpaMS5pIzn
+         9W0lTNYlC5e4MLhvBklJ97gQBhBtRzgm/TRZyG3qa4XX5nkqzSb33a7c+tEbErTwgD2Q
+         EmjnIRaqCKL6F6zdq5QBJxDXY4CM53sXuv71m1PL8jATvKqTmwdPj8qovT6vZV312/lm
+         RJcFrnyZyiM2BWMcCTDuAMngFiQywZp3OmuA7ws9Ug6CF9+Ay2YaYAXaloolXqmzmo1Q
+         hGyw==
+X-Gm-Message-State: AOAM533KaQOan0og1YlAvzj9QviTFz52/yFZHw629bI24PabJ3KidosF
+        gpFqxCFbyRDweXx7uT7Tf5Awq9FR
+X-Google-Smtp-Source: ABdhPJxwYkNYDNJrwfnlX7YFsBxVWp2WpQw2Bc1wOmh074hF1cO3hSBmpCJDJzKW3LGFMvpMOS9w1g==
+X-Received: by 2002:a2e:b615:: with SMTP id r21mr867334ljn.1.1592440059598;
+        Wed, 17 Jun 2020 17:27:39 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u26sm357818lfq.72.2020.06.17.17.27.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 17:27:38 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 13/18] gpu: host1x: mipi: Update
+ tegra_mipi_request() to be node based
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-14-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9a0a0a02-0d02-15ae-85de-e752ecdd0ae1@gmail.com>
+Date:   Thu, 18 Jun 2020 03:27:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1592358094-23459-14-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2020 13:20:19 -0500 Dan Murphy wrote:
-> +static int dp83822_config_init(struct phy_device *phydev)
-> +{
-> +	struct dp83822_private *dp83822 = phydev->priv;
-> +	int rgmii_delay;
-> +	int err = 0;
-> +
-> +	if (phy_interface_is_rgmii(phydev)) {
-> +		if (dp83822->rx_int_delay)
-> +			rgmii_delay = DP83822_RX_CLK_SHIFT;
-> +
-> +		if (dp83822->tx_int_delay)
-> +			rgmii_delay |= DP83822_TX_CLK_SHIFT;
-> +
-> +		if (rgmii_delay)
-> +			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
-> +					       MII_DP83822_RCSR, rgmii_delay);
-> +	}
-> +
-> +	return dp8382x_disable_wol(phydev);
-> +}
+17.06.2020 04:41, Sowjanya Komatineni пишет:
+> Tegra CSI driver need a separate MIPI device for each channel as
+> calibration of corresponding MIPI pads for each channel should
+> happen independently.
+> 
+> So, this patch updates tegra_mipi_request() API to add a device_node
+> pointer argument to allow creating mipi device for specific device
+> node rather than a device.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/gpu/drm/tegra/dsi.c | 2 +-
+>  drivers/gpu/host1x/mipi.c   | 7 +++++--
+>  include/linux/host1x.h      | 3 ++-
+>  3 files changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+> index 38beab9..0443589 100644
+> --- a/drivers/gpu/drm/tegra/dsi.c
+> +++ b/drivers/gpu/drm/tegra/dsi.c
+> @@ -1618,7 +1618,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+>  	if (IS_ERR(dsi->regs))
+>  		return PTR_ERR(dsi->regs);
+>  
+> -	dsi->mipi = tegra_mipi_request(&pdev->dev);
+> +	dsi->mipi = tegra_mipi_request(&pdev->dev, NULL);
+>  	if (IS_ERR(dsi->mipi))
+>  		return PTR_ERR(dsi->mipi);
+>  
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> index e00809d..93b354b 100644
+> --- a/drivers/gpu/host1x/mipi.c
+> +++ b/drivers/gpu/host1x/mipi.c
+> @@ -206,13 +206,16 @@ static int tegra_mipi_power_down(struct tegra_mipi *mipi)
+>  	return 0;
+>  }
+>  
+> -struct tegra_mipi_device *tegra_mipi_request(struct device *device)
+> +struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+> +					     struct device_node *np)
+>  {
+> -	struct device_node *np = device->of_node;
+>  	struct tegra_mipi_device *dev;
+>  	struct of_phandle_args args;
+>  	int err;
+>  
+> +	if (!np)
+> +		np = device->of_node;
 
-
-drivers/net/phy/dp83822.c: In function dp83822_config_init:
-drivers/net/phy/dp83822.c:282:6: warning: variable err set but not used [-Wunused-but-set-variable]
-  282 |  int err = 0;
-      |      ^~~
+Will be nicer if DSI panel could pass the device's node directly,
+instead of this.
