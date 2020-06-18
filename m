@@ -2,115 +2,207 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B795C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FDBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54262206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592519041;
-	bh=suc9pm53OLkf5+tDTVTkktvXVOKJj7lJ6p6vf0fAzPU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gkoYXAQwY9hqsoln2ItsquYw6792ofSAtN0t54KGOznDM4Gl6ejrU7+2aQ6kqpYIM
-	 bhIRXjc2nxaUoJBJPfEWN2gwcM+XMEdrJRKd/wT11ukDIVyDi65VAVnZDEgc1uJkN5
-	 O1s0pwVDFMs82HEdqhnoL3KMRyOCneuSErvugXoE=
+	by mail.kernel.org (Postfix) with ESMTP id 20A3E208D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GyOtOFGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgFRWYA (ORCPT
+        id S1732063AbgFRW1F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 18:27:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:10506 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgFRWX7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:23:59 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728157AbgFRW1D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:27:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592519222; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=c9n1umGkoncSZRzNPgw5Ef58qoJ8UehY4+SX9LXN1t8=; b=GyOtOFGb44yqMiIxrSKI4hELdfGXt95V4bbbB0cyebWUt/EvKkU/pkDYshlhxxhLfh9lRBEc
+ VTENj2RV8Q8yULZic4hR7JooRogDXmiy9RuuVHETrfiJsltiUnAXPcrdyD08zomP3mx+vzw0
+ Sl24KnGpkUUOTo1PUl5bRjEbtfM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5eebea2aa6e154319f3ebb53 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 22:26:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 90136C433A0; Thu, 18 Jun 2020 22:26:49 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02A9E20732;
-        Thu, 18 Jun 2020 22:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592519039;
-        bh=suc9pm53OLkf5+tDTVTkktvXVOKJj7lJ6p6vf0fAzPU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YoqsdiIMkAkW5I7KL3asxk7dZW8YFot/9qO7uTYjFzZYlNMbb11jjIgzofi+vfWSN
-         QCx0PuMoe8ViFXtMUz04+1oUI/FDzn8h+pd4DmLqh3inuLt+lAscX5c2Uzz64ieJPr
-         iELIJNlCKYeczmr4JEPtg6Hoq04HkahOuC/b010Q=
-Received: by mail-oi1-f181.google.com with SMTP id 25so6580396oiy.13;
-        Thu, 18 Jun 2020 15:23:58 -0700 (PDT)
-X-Gm-Message-State: AOAM531skErlZ5b0asHZpQCIcxg4oztRK8kWvoMIkcLu2Px+DrS7OeZD
-        236rAXW37F9Q09CGsM4gTTc6+GjLszNJ5E0RTA==
-X-Google-Smtp-Source: ABdhPJw1K2OvzxLmNVbzVFc6bTX+uL3GtdpnvRebeJA5Th13K0T4h+C+0pOQ+rfRUWnRUcvWCYUGc3DRbledxdgoUFs=
-X-Received: by 2002:aca:d454:: with SMTP id l81mr939987oig.152.1592519038311;
- Thu, 18 Jun 2020 15:23:58 -0700 (PDT)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3A70C433CA;
+        Thu, 18 Jun 2020 22:26:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3A70C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     robh+dt@kernel.org, swboyd@chromium.org, sam@ravnborg.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        chandanu@codeaurora.org, varar@codeaurora.org,
+        Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v7 0/6] Add support for DisplayPort driver on SnapDragon
+Date:   Thu, 18 Jun 2020 15:26:08 -0700
+Message-Id: <20200618222614.14061-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200617180209.5636-1-wcheng@codeaurora.org> <20200617180209.5636-3-wcheng@codeaurora.org>
- <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com> <fb448691-2bda-ada6-799f-ee389e647710@codeaurora.org>
-In-Reply-To: <fb448691-2bda-ada6-799f-ee389e647710@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 18 Jun 2020 16:23:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLGWY_bBUzr6r0czxH32vvDnsR6=MzS=zH4tJ-5PEobZw@mail.gmail.com>
-Message-ID: <CAL_JsqLGWY_bBUzr6r0czxH32vvDnsR6=MzS=zH4tJ-5PEobZw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
- controller dt-binding
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jack Pham <jackp@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Jun Li <lijun.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 2:09 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
->
->
-> On 6/18/2020 11:33 AM, Rob Herring wrote:
-> > On Wed, Jun 17, 2020 at 12:02 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
-> >
-> > You are duplicating everything in usb-connector.yaml. You should have
-> > a $ref to it.
-> >
->
-> Hi Rob,
->
-> Sure, I will add a reference to that doc.
->
-> >
-> > This is wrong. The connector binding says port 0 is the connection the
-> > USB HS controller.
-> >
-> > What's a type C mux node? Is there a binding for that? There's an
-> > ongoing discussion with the CrOS folks on how to describe Alt mode
-> > mux/switches.
->
-> I reviewed the connector binding previously, and couldn't seem to come
-> up with a model which fit a design where the type C controller (ie the
-> entity which does the CC orientation and role detection) does not have
-> the SS lane mux included.  The SS lane mux is the HW which handles the
-> selection of the SS lanes to utilize based on cable orientation.
+These patches add Display-Port driver on SnapDragon/msm hardware.
+This series also contains device-tree bindings for msm DP driver.
+It also contains Makefile and Kconfig changes to compile msm DP driver.
 
-The intent was the controller would be the parent node of the connector.
+The block diagram of DP driver is shown below:
 
-How the SS lane mux is represented is what needs to be figured out. I
-don't know what that looks like, but it needs to be something that
-works for multiple designs. Ideally, that's an extension of the
-existing 'usb-c-connector' binding, but if there's good reasons to
-redesign it that can happen.
 
-Rob
+                 +-------------+
+                 |DRM FRAMEWORK|
+                 +------+------+
+                        |
+                   +----v----+
+                   | DP DRM  |
+                   +----+----+
+                        |
+                   +----v----+
+     +------------+|   DP    +----------++------+
+     +        +---+| DISPLAY |+---+      |      |
+     |        +    +-+-----+-+    |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     v        v      v     v      v      v      v
+ +------+ +------+ +---+ +----+ +----+ +---+ +-----+
+ |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
+ |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
+ +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
+    |                              |     |
+ +--v---+                         +v-----v+
+ |DEVICE|                         |  DP   |
+ | TREE |                         |CATALOG|
+ +------+                         +---+---+
+                                      |
+                                  +---v----+
+                                  |CTRL/PHY|
+                                  |   HW   |
+                                  +--------+
+
+This series depends-on:
+https://patchwork.freedesktop.org/patch/366159/
+
+Changes in v7:
+
+- Modify cover letter description and fix title.
+- Introduce dp-controller.yaml for common bindings across SOC
+- Rename dp-sc7180.yaml to dp-controller-sc7180.yaml for SC7180 bindings
+- Rename compatible string to qcom,sc7180-dp
+- Add assigned-clocks and assigned-clock-parents properties in bindings
+- Remove redundant code from driver
+- Extend series to include HPD detection logic
+
+This series depends-on:
+	https://patchwork.freedesktop.org/patch/366159/
+
+
+Chandan Uddaraju (4):
+  dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+  drm: add constant N value in helper file
+  drm/msm/dp: add displayPort driver support
+  drm/msm/dp: add support for DP PLL driver
+
+Jeykumar Sankaran (1):
+  drm/msm/dpu: add display port support in DPU
+
+Tanmay Shah (1):
+  drm/msm/dp: Add Display Port HPD feature
+
+ .../display/msm/dp-controller-sc7180.yaml     |  147 ++
+ .../bindings/display/msm/dp-controller.yaml   |   59 +
+ .../bindings/display/msm/dpu-sc7180.yaml      |   11 +
+ drivers/gpu/drm/i915/display/intel_display.c  |    2 +-
+ drivers/gpu/drm/msm/Kconfig                   |   16 +
+ drivers/gpu/drm/msm/Makefile                  |   14 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |   29 +-
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |    8 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   83 +-
+ drivers/gpu/drm/msm/dp/dp_aux.c               |  530 +++++
+ drivers/gpu/drm/msm/dp/dp_aux.h               |   35 +
+ drivers/gpu/drm/msm/dp/dp_catalog.c           | 1065 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_catalog.h           |   89 +
+ drivers/gpu/drm/msm/dp/dp_ctrl.c              | 1707 +++++++++++++++++
+ drivers/gpu/drm/msm/dp/dp_ctrl.h              |   35 +
+ drivers/gpu/drm/msm/dp/dp_display.c           | 1006 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_display.h           |   31 +
+ drivers/gpu/drm/msm/dp/dp_drm.c               |  170 ++
+ drivers/gpu/drm/msm/dp/dp_drm.h               |   18 +
+ drivers/gpu/drm/msm/dp/dp_hpd.c               |   69 +
+ drivers/gpu/drm/msm/dp/dp_hpd.h               |   79 +
+ drivers/gpu/drm/msm/dp/dp_link.c              | 1216 ++++++++++++
+ drivers/gpu/drm/msm/dp/dp_link.h              |  132 ++
+ drivers/gpu/drm/msm/dp/dp_panel.c             |  491 +++++
+ drivers/gpu/drm/msm/dp/dp_panel.h             |   95 +
+ drivers/gpu/drm/msm/dp/dp_parser.c            |  268 +++
+ drivers/gpu/drm/msm/dp/dp_parser.h            |  202 ++
+ drivers/gpu/drm/msm/dp/dp_pll.c               |   93 +
+ drivers/gpu/drm/msm/dp/dp_pll.h               |   59 +
+ drivers/gpu/drm/msm/dp/dp_pll_10nm.c          |  884 +++++++++
+ drivers/gpu/drm/msm/dp/dp_pll_private.h       |  103 +
+ drivers/gpu/drm/msm/dp/dp_power.c             |  392 ++++
+ drivers/gpu/drm/msm/dp/dp_power.h             |  103 +
+ drivers/gpu/drm/msm/dp/dp_reg.h               |  517 +++++
+ drivers/gpu/drm/msm/msm_drv.c                 |    2 +
+ drivers/gpu/drm/msm/msm_drv.h                 |   59 +-
+ include/drm/drm_dp_helper.h                   |    1 +
+ 37 files changed, 9801 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/msm/dp-controller-sc7180.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_private.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_reg.h
+
+
+base-commit: 66057dd1d1cf2149e0f5fdaee58d6ea69bc98048
+prerequisite-patch-id: 8058026a54241aa728a91dd1685419afb249959e
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
