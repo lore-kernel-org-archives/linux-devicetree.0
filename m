@@ -2,141 +2,120 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B07C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2226DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B4C2166E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024402166E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 08:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDW1fPwu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s8BNjNGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgFRIWM (ORCPT
+        id S1728657AbgFRI2j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54892 "EHLO
+        Thu, 18 Jun 2020 04:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgFRIWJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 04:22:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201CCC06174E;
-        Thu, 18 Jun 2020 01:22:07 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k1so2146636pls.2;
-        Thu, 18 Jun 2020 01:22:07 -0700 (PDT)
+        with ESMTP id S1728137AbgFRI2h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 18 Jun 2020 04:28:37 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C724BC0613ED
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 01:28:36 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r15so4695493wmh.5
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 01:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5va4+zAz3Y84F8I+jfwGK7kVZgA+OWKUCO/DBzqZ2lk=;
-        b=cDW1fPwusXFzGuCl5MLlwj3Weok2y/3zDATZakbo/QxGCfddQPnP9+2vX2AwQ7pOCU
-         WO7ztjrphuOdlaWUCyCendYSCETu3ckX0m+nG+esOVlkRgTCNW7IyvIZS+ptQGtMAQYY
-         BXLd8pI1mh8TBLJ8yWa+ZtEFKB252rKhjqGdLRJK5w19fvKuLyB6J9YmhHO0vYyO2zS4
-         DY6PJbKGD6Z9sNQ+Wcva2R90nSOstl+3TkSQx8qHoJKBH0yLeVdbTs91CbeM/lv7p2Sj
-         1Q8MkQ3YLnT0fshzg2HkNSmtQh5YJXuaBiNe8Rzi1w7Fm7JCQAkFpGMR9ini0g/Qudel
-         1nEA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=pNtXBIvU5TL09qsEeDfkPWacil/hALuNwYF0M4VqVIA=;
+        b=s8BNjNGF1UTKkjVDS8nWIdgDRjlFSXgMAcIi75k+nM41dr3jATR3IzMMp0joVXktiF
+         WfFxvjaUbCtc4l4lwbnZBCYJNYXEdV0b08HTjKy8RwmC/H54jxGYXY44sO4moMFcFVzH
+         +avE69VbK06HsLaoeqHXueOof2z43MmEh4BME2CRgKsP0plFGt3WhU7DDq1vC7bu6jrU
+         N469wRpA5We3mztUXKE93mihM9/6Q68YyqfzYe2Qn6KqETb8SJbHHBOoqbq3kXDaXQgG
+         PuW6LF5HO9W4P2gufa6mQgD2fP4muGjfl/rJgP/2Ll7fhBinj6vWOZFHSHU8nMKzrg1+
+         ll1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5va4+zAz3Y84F8I+jfwGK7kVZgA+OWKUCO/DBzqZ2lk=;
-        b=DqRlM1zo4YbQCJc8uA92q2L+QmRJXEfmhxqi18bgebJNRJdr2emXuzvRcK+f8ONu5y
-         HI0cqBzpt7VFBOtsC5g/e8rZ+ZjDQcwgQGXxuiOTA38BCYIi+2yfzmuBT4tO9sWrWz7k
-         dEQwP9alvivbX1uaIDXiPgnojdAnUSo9rde4/AZVgya5ZVKoGM/LO6kXd6JkPQnGE85l
-         okANFXSq8O0G74XjUIJfciQ0oKhDeN6vc46pFaOmgj1ryXQG61O0LnzpiQciiqdvnziB
-         bxfT1RDymJkP01pv4HF7ZpgNMScsR2vhMUmaiL1aqq6CgUwxRjydxOteDO6kPJheV8lj
-         CT9A==
-X-Gm-Message-State: AOAM532wctvWeYA5k/cUQXhfgnIHxKu13/wLp6O4//8YODpyuGG+AWlG
-        XgGTF9c59qOeI6ylvPhyfGv3e5imj8vN3AXfUCk=
-X-Google-Smtp-Source: ABdhPJxX08N8JTeQWAXqBjqWujBqYCDSdKV6HtPJTrJdC6PtGGZb5xiN1DV0gsb2hPJw/LyrQK9UVr140CiNu7pAebo=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr3196269pjq.228.1592468526692;
- Thu, 18 Jun 2020 01:22:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=pNtXBIvU5TL09qsEeDfkPWacil/hALuNwYF0M4VqVIA=;
+        b=FFvfOHolJV9QJqLG0KNhEjoviCry0MVXbEa86o4kdBWvSaZhXNfROyG9qZeaKz0G+e
+         EdZfc14Xac5MQUF5C2HyFEESwTO5LD7Kp/gU6Io95fsCZcDA0kcLFov4s+5DnDxxKwAh
+         05uYhS6yEjDNdbI4WLfDO44JbCtIKPwdnxBeVYWZjtKyGktiF0R4KnyCs0jXmgRowfq3
+         9aFCmRvfyTj2Erkheuz4+U0qtU1uGqn4nEgrVqiHJPdGP3mtSSehzhFyAfdg0ZRQRbQj
+         H5mMSltYfg06q7okF4MPPVFJUmS9fu9PL55BYlls9El/41nadM+gjHO0pHX69eTNM2e9
+         hl6A==
+X-Gm-Message-State: AOAM531lCAjdJBUkfaTRycsZ1Ini+QIzzZK2iWEmX681HTAekd8p6TGz
+        KJ46IsBGR54ipDEJaI3ZyOJ7kA==
+X-Google-Smtp-Source: ABdhPJx0bssLzs0IUMEdhcrZYDyS44UMQ45eyj2LaifO2XUGoS2al0i8+FuiMCxAwozRQz4kCay5Gw==
+X-Received: by 2002:a1c:ddc1:: with SMTP id u184mr2658284wmg.115.1592468915449;
+        Thu, 18 Jun 2020 01:28:35 -0700 (PDT)
+Received: from dell ([95.149.164.118])
+        by smtp.gmail.com with ESMTPSA id j5sm2501138wrq.39.2020.06.18.01.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 01:28:34 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 09:28:32 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: max77620: Convert to json-schema
+Message-ID: <20200618082832.GA954398@dell>
+References: <20200609162621.1769610-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-References: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru> <20200617234028.25808-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200617234028.25808-2-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 18 Jun 2020 11:21:53 +0300
-Message-ID: <CAHp75Vd+3ZN51geXg+KiQYVpBZN7F+kgt-2Snw7VDiKiYVqX=A@mail.gmail.com>
-Subject: Re: [PATCH v6 1/9] dt-bindings: dma: dw: Convert DW DMAC to DT binding
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609162621.1769610-1-thierry.reding@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 2:43 AM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces the Synopsis
-> Designware DMA controller legacy bare text bindings with YAML file.
-> The only required prorties are "compatible", "reg", "#dma-cells" and
-> "interrupts", which will be used by the driver to correctly find the
-> controller memory region and handle its events. The rest of the properties
-> are optional, since in case if either "dma-channels" or "dma-masters" isn't
-> specified, the driver will attempt to auto-detect the IP core
-> configuration.
->
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
+On Tue, 09 Jun 2020, Thierry Reding wrote:
 
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Convert the Maxim MAX77620 PMIC device tree bindings from free-form text
+> format to json-schema.
+> 
+> This also pulls in the GPIO, regulator, pinmux and thermal bindings for
+> the corresponding subdevices into the top-level binding so that it can
+> be described more consistently.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  .../bindings/gpio/gpio-max77620.txt           |  25 -
+>  .../devicetree/bindings/mfd/max77620.txt      | 162 -----
+>  .../devicetree/bindings/mfd/max77620.yaml     | 662 ++++++++++++++++++
+>  .../bindings/pinctrl/pinctrl-max77620.txt     | 127 ----
+>  .../bindings/regulator/regulator-max77620.txt | 222 ------
+>  .../bindings/thermal/max77620_thermal.txt     |  70 --
+>  6 files changed, 662 insertions(+), 606 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/regulator-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/max77620_thermal.txt
 
-Rob, here are questions to you.
+Wow, what a beast.  I can see why Rob is putting this one off!
 
-> +  dma-channels:
-> +    description: |
-> +      Number of DMA channels supported by the controller. In case if
-> +      not specified the driver will try to auto-detect this and
-> +      the rest of the optional parameters.
-> +    minimum: 1
-> +    maximum: 8
-
-...
-
-> +  multi-block:
-
-> +      maxItems: 8
-
-This maximum is defined by above dma-channels property. Is there any
-way to put it in the schema?
-
-...
-
-> +  snps,dma-protection-control:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +      Bits one-to-one passed to the AHB HPROT[3:1] bus. Each bit setting
-> +      indicates the following features: bit 0 - privileged mode,
-> +      bit 1 - DMA is bufferable, bit 2 - DMA is cacheable.
-> +    default: 0
-> +    minimum: 0
-> +    maximum: 7
-
-AFAIR this is defined by bit flags, does schema have a mechanism to
-define flags-like entries?
+Changes look okay to me, but Rob and Linus should review.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
