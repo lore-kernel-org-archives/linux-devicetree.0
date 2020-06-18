@@ -2,126 +2,156 @@ Return-Path: <SRS0=Lhmw=77=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49951C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 00:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B65EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DC221556
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 00:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oq6rqjjV"
+	by mail.kernel.org (Postfix) with ESMTP id DFA8621924
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592442642;
+	bh=PAdD7kghUO96P8C/+xHGK6WZnHxci/xvKvwN8bHF4cg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WbFRqnkS9jJDyF4FNxNyUt7I1m7BqM/uvuNrrtDJ/oe7NBV0C9llbXzYyNK1fnThS
+	 YN4+jvWtwCOHEKGTmbVKapQjsj5j1nwJNl4+XUzIX5qbkouMUlL0GmMVGpNjXQlKkc
+	 7muU9C+YaFV3YUIbkmyYwVjxtcTNkESodeyr3uXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgFRAfZ (ORCPT
+        id S1728583AbgFRBKl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:35:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgFRAfZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 17 Jun 2020 20:35:25 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A6DC06174E;
-        Wed, 17 Jun 2020 17:35:24 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id c17so5088804lji.11;
-        Wed, 17 Jun 2020 17:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aVNC1BmCPpKa2GzBW7dZAnKvPYTYo+NPkmNdX8JLnR4=;
-        b=oq6rqjjV490TaHz7ljJj2OKmweYzMHSHXI8CX9EksQ7PVkG8UJip1AAb/GSVvL+jDM
-         gNNMfBwQesoftmWn4/qvZ2jKf5u7uk8Cs4e5s0Edu0eD+CMDuR93LP7yhtqBTwsBUkdL
-         n3C4c3+y06dbDvQixw9hRQrwAJWg63+r7eNfztdqITbNFJ9ec/IQ0ugOVpI2xqaKVAoi
-         yKFZ5HJxuVr/EFBDmT/IRtiP3zDo06T17G7f5qK3ajHCKn31FETW1T3ONoJoBPiyLv5f
-         jrW80a951reSe6OyyD74jlnbJpI4k/EeAvx8jTtCbIkaAvX/tI8tdDCmNJo3lDcm4j8W
-         ojzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aVNC1BmCPpKa2GzBW7dZAnKvPYTYo+NPkmNdX8JLnR4=;
-        b=TuJoKgWqgqrfpRb3Usrdnle8RJFmHND1NkzPec9kR6XlyfSU6eeacKA0E0nR6Ysejj
-         4qOiHUvjSTXk+QdHSm40EOhaZWLy4UWNsJjr4/HTpf/jjJkDwOKDRSPOP4oKMcWs8yNG
-         z55VOS3SJU5pGqCig+g9LIe0qhbgGA3MhiY8S+HxlLfTovfvRRXijDEOfOCNjPxDwoBC
-         KGpe5M4fed0M8PxMRRWqhjNss0+fCfea1RSEByzHNajFZF7nD2nh6hQseARRNFiDeEGY
-         +QTm48+me3EAZAakT2U+dD+bke2Wy9OpUBpe0ssZ6JHrrQ3eis7Qjsbpf3Aehsgv1IC6
-         6tMw==
-X-Gm-Message-State: AOAM531tZIOKR+CGD3TT7W+A8V9SCO8G5bp6qYNe1MgWVFjUzFEF6+cZ
-        373eX8FJ+5oLn+vcYm8+iUdKuo2p
-X-Google-Smtp-Source: ABdhPJySoj+3HX79azrckkO5FfjiF1ZkiNatXCo3k3yqzun4HMezlgP82x/GEbVO5pYeo7L78Uwfjg==
-X-Received: by 2002:a2e:b4b9:: with SMTP id q25mr919864ljm.313.1592440522621;
-        Wed, 17 Jun 2020 17:35:22 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id o19sm267788ljc.23.2020.06.17.17.35.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 17:35:21 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 14/18] gpu: host1x: mipi: Split
- tegra_mipi_calibrate and tegra_mipi_wait
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-15-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <457e3754-c783-0ec4-068c-8b5f5ff8de0a@gmail.com>
-Date:   Thu, 18 Jun 2020 03:35:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 17 Jun 2020 21:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728576AbgFRBKl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:41 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588E921924;
+        Thu, 18 Jun 2020 01:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442640;
+        bh=PAdD7kghUO96P8C/+xHGK6WZnHxci/xvKvwN8bHF4cg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mLc5w3+yDpQAL+KGPxE7ggQNKTgObHywR4xeebhOMC8hhaZirFwG0wadLuvVxaDYc
+         M1Gza333BkZQuEmwXcR6rlTtqKAichzRaQ11yIbiJoTjlKA1bj92iINELPuYX5+g4O
+         zuNq9icmvcQSpNjciUoz6XlpA/oQZ6AYSbOMQOdk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-realtek-soc@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 115/388] arm64: dts: realtek: rtd129x: Fix GIC CPU masks for RTD1293
+Date:   Wed, 17 Jun 2020 21:03:32 -0400
+Message-Id: <20200618010805.600873-115-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1592358094-23459-15-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-17.06.2020 04:41, Sowjanya Komatineni пишет:
-...
-> -static int tegra_mipi_wait(struct tegra_mipi *mipi)
-> +int tegra_mipi_wait(struct tegra_mipi_device *device)
->  {
-> +	struct tegra_mipi *mipi = device->mipi;
->  	unsigned long timeout = jiffies + msecs_to_jiffies(250);
->  	u32 value;
-> +	int err;
-> +
-> +	err = clk_enable(device->mipi->clk);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	mutex_lock(&device->mipi->lock);
+From: Andreas Färber <afaerber@suse.de>
 
-The timeout variable should be assigned *after* taking the lock.
+[ Upstream commit 31888c8be1486daf2c34ba6c58129635e49d564a ]
 
-It will be better if you could use the read_poll_timeout() or
-readl_relaxed_poll_timeout() here.
+Convert from GIC_CPU_MASK_RAW() to GIC_CPU_MASK_SIMPLE().
 
->  	while (time_before(jiffies, timeout)) {
->  		value = tegra_mipi_readl(mipi, MIPI_CAL_STATUS);
->  		if ((value & MIPI_CAL_STATUS_ACTIVE) == 0 &&
->  		    (value & MIPI_CAL_STATUS_DONE) != 0)
-> -			return 0;
-> +			goto done;
->  
->  		usleep_range(10, 50);
->  	}
->  
-> -	return -ETIMEDOUT;
-> +	err = -ETIMEDOUT;
-> +done:
-> +	mutex_unlock(&device->mipi->lock);
-> +	clk_disable(device->mipi->clk);
-> +	return err;
->  }
-> +EXPORT_SYMBOL(tegra_mipi_wait);
+In case of RTD1293 adjust the arch timer and VGIC interrupts'
+CPU masks to its smaller number of CPUs.
+
+Fixes: cf976f660ee8 ("arm64: dts: realtek: Add RTD1293 and Synology DS418j")
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/realtek/rtd1293.dtsi | 12 ++++++++----
+ arch/arm64/boot/dts/realtek/rtd1295.dtsi |  8 ++++----
+ arch/arm64/boot/dts/realtek/rtd1296.dtsi |  8 ++++----
+ 3 files changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/realtek/rtd1293.dtsi b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
+index bd4e22723f7b..2d92b56ac94d 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1293.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
+@@ -36,16 +36,20 @@ l2: l2-cache {
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 14
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 11
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
++			(GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ };
+ 
+ &arm_pmu {
+ 	interrupt-affinity = <&cpu0>, <&cpu1>;
+ };
++
++&gic {
++	interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
++};
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295.dtsi b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+index 93f0e1d97721..34f6cc6f16fe 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1295.dtsi
+@@ -61,13 +61,13 @@ tee@10100000 {
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 14
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 11
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ };
+ 
+diff --git a/arch/arm64/boot/dts/realtek/rtd1296.dtsi b/arch/arm64/boot/dts/realtek/rtd1296.dtsi
+index 0f9e59cac086..fb864a139c97 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1296.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd1296.dtsi
+@@ -50,13 +50,13 @@ l2: l2-cache {
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 14
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 11
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10
+-			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ };
+ 
+-- 
+2.25.1
+
