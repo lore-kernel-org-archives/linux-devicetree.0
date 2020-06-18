@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2197AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C700DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6B2C21534
-	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F07E21534
+	for <linux-devicetree@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448192;
-	bh=civejUupUvfmmfhwDBpeah7dotAHq5OcLCZlFNcAbfU=;
+	s=default; t=1592448199;
+	bh=HyWkwtaU0/RoTtrJwEMQ2IOLdNbG66utKfyAaE3FH+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7k7HVWMwa7OsQ+xMiaysoe8F8dNFnXfop2xQeIs3DexpnSAu3Ojv97YJwT6R0N5K
-	 caPgl4KaE35jPhoV6H5rAc8KmPrmW0w+yB6aNb9B0p1zL85061x2hmPFYRdkO6Wyt9
-	 9hgBGKrGgjsXD+VUFM4C3x/gAnlAwjVULk7TO1CM=
+	b=DAuL4EBdtAXLB6AdMgFoGE6BC6CSNOdI36+Sjoiqz6fFyUtuR1P6/HxufW1kH1V4P
+	 kfG1duOR0mLgQchHrGl7wixLrHXw72EuBDZWa2vyybebTsYb3u16G+XE+aeVaB8w8l
+	 ygCEp9Ew8jddjuXQnrNWTNHmsVTneoSIhdvaL2h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgFRBLq (ORCPT
+        id S1728784AbgFRBLp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39790 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728778AbgFRBLo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:44 -0400
+        id S1728770AbgFRBLm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D44E214DB;
-        Thu, 18 Jun 2020 01:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2062320B1F;
+        Thu, 18 Jun 2020 01:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442703;
-        bh=civejUupUvfmmfhwDBpeah7dotAHq5OcLCZlFNcAbfU=;
+        s=default; t=1592442702;
+        bh=HyWkwtaU0/RoTtrJwEMQ2IOLdNbG66utKfyAaE3FH+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxasFqCcmzPxPRt2rIv4OreBP0Em0gy0MaU1cbWe0VVAeEXs9qu2CivN4pmXhhDO+
-         KvYOgYluTRF00HdpHBCKuYGlVKjYIbhtJjZQray7Vr2/xbvB0jqr5xfqqIJI/ErBlr
-         fb+b0xOu18nN7SU6UZkZUpKuskHVuVzpuTwYpt3M=
+        b=cUF3JzZ3cCUoQpbPWImubojPtFYTPfi8wT4uIpw20TjE8Kml/ZWFCnowBTIWQGPFW
+         TFpNH9HMaYOtZ9rM+qnC56QpPjmVMWD1G9luDcpqo2RLK4pKxh7hEdRonrxXJiOKhE
+         hAoPW0Gr8BB+mgwTkSL6RdUbY7lef8pmlQJy8gS8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
+Cc:     Eddie James <eajames@linux.ibm.com>, Joel Stanley <joel@jms.id.au>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 165/388] ARM: dts: aspeed: Change KCS nodes to v2 binding
-Date:   Wed, 17 Jun 2020 21:04:22 -0400
-Message-Id: <20200618010805.600873-165-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 164/388] ARM: dts: aspeed: ast2600: Set arch timer always-on
+Date:   Wed, 17 Jun 2020 21:04:21 -0400
+Message-Id: <20200618010805.600873-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,145 +59,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit fa4c8ec6feaa3237f5d44cb8c6d0aa0dff6e1bcc ]
+[ Upstream commit c998f40f2ae6a48e93206e2c1ea0691479989611 ]
 
-Fixes the following warnings for both g5 and g6 SoCs:
+According to ASPEED, FTTMR010 is not intended to be used in the AST2600.
+The arch timer should be used, but Linux doesn't enable high-res timers
+without being assured that the arch timer is always on, so set that
+property in the devicetree.
 
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning
-    (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node
-    has a unit name, but no reg property
+The FTTMR010 device is described by set to disabled.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+This fixes highres timer support for AST2600.
+
+Fixes: 2ca5646b5c2f ("ARM: dts: aspeed: Add AST2600 and EVB")
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
- arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
- arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
- 3 files changed, 26 insertions(+), 25 deletions(-)
+ arch/arm/boot/dts/aspeed-g6.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index 5d7cbd9164d4..669980c690f9 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -112,13 +112,13 @@ &uart5 {
- &kcs2 {
- 	// BMC KCS channel 2
- 	status = "okay";
--	kcs_addr = <0xca8>;
-+	aspeed,lpc-io-reg = <0xca8>;
- };
- 
- &kcs3 {
- 	// BMC KCS channel 3
- 	status = "okay";
--	kcs_addr = <0xca2>;
-+	aspeed,lpc-io-reg = <0xca2>;
- };
- 
- &mac0 {
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index f12ec04d3cbc..bc92d3db7b78 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -426,22 +426,22 @@ lpc_bmc: lpc-bmc@0 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -455,10 +455,10 @@ lpc_host: lpc-host@80 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
 diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index fd0e483737a0..a2d2ac720a51 100644
+index 0a29b3b57a9d..fd0e483737a0 100644
 --- a/arch/arm/boot/dts/aspeed-g6.dtsi
 +++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -435,22 +435,23 @@ lpc_bmc: lpc-bmc@0 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
+@@ -65,6 +65,7 @@ timer {
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+ 		clocks = <&syscon ASPEED_CLK_HPLL>;
+ 		arm,cpu-registers-not-fw-configured;
++		always-on;
+ 	};
  
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -464,10 +465,10 @@ lpc_host: lpc-host@80 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
+ 	ahb {
+@@ -368,6 +369,7 @@ timer: timer@1e782000 {
+ 						<&gic  GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&syscon ASPEED_CLK_APB1>;
+ 				clock-names = "PCLK";
++				status = "disabled";
+                         };
  
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
+ 			uart1: serial@1e783000 {
 -- 
 2.25.1
 
