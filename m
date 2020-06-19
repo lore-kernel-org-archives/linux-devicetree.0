@@ -2,50 +2,49 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCCBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33006C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D9C214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136BF20885
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbgFSIXA (ORCPT
+        id S1731384AbgFSIXR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:23:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:47018 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 04:23:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:47150 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731247AbgFSIVH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1731332AbgFSIVH (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 19 Jun 2020 04:21:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08EA413D5;
-        Fri, 19 Jun 2020 01:20:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1598A13FD;
+        Fri, 19 Jun 2020 01:21:02 -0700 (PDT)
 Received: from red-moon.arm.com (unknown [10.57.58.158])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8296D3F71F;
-        Fri, 19 Jun 2020 01:20:40 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E8613F71F;
+        Fri, 19 Jun 2020 01:20:59 -0700 (PDT)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+Cc:     Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Joerg Roedel <joro@8bytes.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v2 05/12] ACPI/IORT: Add an input ID to acpi_dma_configure()
-Date:   Fri, 19 Jun 2020 09:20:06 +0100
-Message-Id: <20200619082013.13661-6-lorenzo.pieralisi@arm.com>
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v2 12/12] bus: fsl-mc: Add ACPI support for fsl-mc
+Date:   Fri, 19 Jun 2020 09:20:13 +0100
+Message-Id: <20200619082013.13661-13-lorenzo.pieralisi@arm.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
 References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
@@ -57,253 +56,361 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some HW devices are created as child devices of proprietary busses,
-that have a bus specific policy defining how the child devices
-wires representing the devices ID are translated into IOMMU and
-IRQ controllers device IDs.
+From: Makarand Pawagi <makarand.pawagi@nxp.com>
 
-Current IORT code provides translations for:
+Add ACPI support in the fsl-mc driver. Driver parses MC DSDT table to
+extract memory and other resources.
 
-- PCI devices, where the device ID is well identified at bus level
-  as the requester ID (RID)
-- Platform devices that are endpoint devices where the device ID is
-  retrieved from the ACPI object IORT mappings (Named components single
-  mappings). A platform device is represented in IORT as a named
-  component node
+Interrupt (GIC ITS) information is extracted from the MADT table
+by drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c.
 
-For devices that are child devices of proprietary busses the IORT
-firmware represents the bus node as a named component node in IORT
-and it is up to that named component node to define in/out bus
-specific ID translations for the bus child devices that are
-allocated and created in a bus specific manner.
+IORT table is parsed to configure DMA.
 
-In order to make IORT ID translations available for proprietary
-bus child devices, the current ACPI (and IORT) code must be
-augmented to provide an additional ID parameter to acpi_dma_configure()
-representing the child devices input ID. This ID is bus specific
-and it is retrieved in bus specific code.
-
-By adding an ID parameter to acpi_dma_configure(), the IORT
-code can map the child device ID to an IOMMU stream ID through
-the IORT named component representing the bus in/out ID mappings.
-
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
+Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/acpi/arm64/iort.c | 59 +++++++++++++++++++++++++++++----------
- drivers/acpi/scan.c       |  8 ++++--
- include/acpi/acpi_bus.h   |  9 ++++--
- include/linux/acpi.h      |  7 +++++
- include/linux/acpi_iort.h |  7 +++--
- 5 files changed, 67 insertions(+), 23 deletions(-)
+ drivers/bus/fsl-mc/fsl-mc-bus.c             | 73 ++++++++++++----
+ drivers/bus/fsl-mc/fsl-mc-msi.c             | 37 +++++----
+ drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c | 92 ++++++++++++++++-----
+ 3 files changed, 150 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 421c6976ab81..ec782e4a0fe4 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -978,19 +978,54 @@ static void iort_named_component_init(struct device *dev,
- 					   nc->node_flags);
+diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+index 824ff77bbe86..324d49d6df89 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-bus.c
++++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+@@ -18,6 +18,8 @@
+ #include <linux/bitops.h>
+ #include <linux/msi.h>
+ #include <linux/dma-mapping.h>
++#include <linux/acpi.h>
++#include <linux/iommu.h>
+ 
+ #include "fsl-mc-private.h"
+ 
+@@ -38,6 +40,7 @@ struct fsl_mc {
+ 	struct fsl_mc_device *root_mc_bus_dev;
+ 	u8 num_translation_ranges;
+ 	struct fsl_mc_addr_translation_range *translation_ranges;
++	void *fsl_mc_regs;
+ };
+ 
+ /**
+@@ -56,6 +59,10 @@ struct fsl_mc_addr_translation_range {
+ 	phys_addr_t start_phys_addr;
+ };
+ 
++#define FSL_MC_FAPR	0x28
++#define MC_FAPR_PL	BIT(18)
++#define MC_FAPR_BMT	BIT(17)
++
+ /**
+  * fsl_mc_bus_match - device to driver matching callback
+  * @dev: the fsl-mc device to match against
+@@ -124,7 +131,10 @@ static int fsl_mc_dma_configure(struct device *dev)
+ 	while (dev_is_fsl_mc(dma_dev))
+ 		dma_dev = dma_dev->parent;
+ 
+-	return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
++	if (dev_of_node(dma_dev))
++		return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
++
++	return acpi_dma_configure_id(dev, DEV_DMA_COHERENT, &input_id);
  }
  
-+static int iort_nc_iommu_map(struct device *dev, struct acpi_iort_node *node)
+ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+@@ -865,8 +875,11 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 	struct fsl_mc_io *mc_io = NULL;
+ 	int container_id;
+ 	phys_addr_t mc_portal_phys_addr;
+-	u32 mc_portal_size;
+-	struct resource res;
++	u32 mc_portal_size, mc_stream_id;
++	struct resource *plat_res;
++
++	if (!iommu_present(&fsl_mc_bus_type))
++		return -EPROBE_DEFER;
+ 
+ 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
+ 	if (!mc)
+@@ -874,19 +887,33 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, mc);
+ 
++	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	mc->fsl_mc_regs = devm_ioremap_resource(&pdev->dev, plat_res);
++	if (IS_ERR(mc->fsl_mc_regs))
++		return PTR_ERR(mc->fsl_mc_regs);
++
++	if (IS_ENABLED(CONFIG_ACPI) && !dev_of_node(&pdev->dev)) {
++		mc_stream_id = readl(mc->fsl_mc_regs + FSL_MC_FAPR);
++		/*
++		 * HW ORs the PL and BMT bit, places the result in bit 15 of
++		 * the StreamID and ORs in the ICID. Calculate it accordingly.
++		 */
++		mc_stream_id = (mc_stream_id & 0xffff) |
++				((mc_stream_id & (MC_FAPR_PL | MC_FAPR_BMT)) ?
++					0x4000 : 0);
++		error = acpi_dma_configure_id(&pdev->dev, DEV_DMA_COHERENT,
++					      &mc_stream_id);
++		if (error)
++			dev_warn(&pdev->dev, "failed to configure dma: %d.\n",
++				 error);
++	}
++
+ 	/*
+ 	 * Get physical address of MC portal for the root DPRC:
+ 	 */
+-	error = of_address_to_resource(pdev->dev.of_node, 0, &res);
+-	if (error < 0) {
+-		dev_err(&pdev->dev,
+-			"of_address_to_resource() failed for %pOF\n",
+-			pdev->dev.of_node);
+-		return error;
+-	}
+-
+-	mc_portal_phys_addr = res.start;
+-	mc_portal_size = resource_size(&res);
++	plat_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	mc_portal_phys_addr = plat_res->start;
++	mc_portal_size = resource_size(plat_res);
+ 	error = fsl_create_mc_io(&pdev->dev, mc_portal_phys_addr,
+ 				 mc_portal_size, NULL,
+ 				 FSL_MC_IO_ATOMIC_CONTEXT_PORTAL, &mc_io);
+@@ -903,11 +930,13 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 	dev_info(&pdev->dev, "MC firmware version: %u.%u.%u\n",
+ 		 mc_version.major, mc_version.minor, mc_version.revision);
+ 
+-	error = get_mc_addr_translation_ranges(&pdev->dev,
+-					       &mc->translation_ranges,
+-					       &mc->num_translation_ranges);
+-	if (error < 0)
+-		goto error_cleanup_mc_io;
++	if (dev_of_node(&pdev->dev)) {
++		error = get_mc_addr_translation_ranges(&pdev->dev,
++						&mc->translation_ranges,
++						&mc->num_translation_ranges);
++		if (error < 0)
++			goto error_cleanup_mc_io;
++	}
+ 
+ 	error = dprc_get_container_id(mc_io, 0, &container_id);
+ 	if (error < 0) {
+@@ -934,6 +963,7 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 		goto error_cleanup_mc_io;
+ 
+ 	mc->root_mc_bus_dev = mc_bus_dev;
++	mc_bus_dev->dev.fwnode = pdev->dev.fwnode;
+ 	return 0;
+ 
+ error_cleanup_mc_io:
+@@ -967,11 +997,18 @@ static const struct of_device_id fsl_mc_bus_match_table[] = {
+ 
+ MODULE_DEVICE_TABLE(of, fsl_mc_bus_match_table);
+ 
++static const struct acpi_device_id fsl_mc_bus_acpi_match_table[] = {
++	{"NXP0008", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, fsl_mc_bus_acpi_match_table);
++
+ static struct platform_driver fsl_mc_bus_driver = {
+ 	.driver = {
+ 		   .name = "fsl_mc_bus",
+ 		   .pm = NULL,
+ 		   .of_match_table = fsl_mc_bus_match_table,
++		   .acpi_match_table = fsl_mc_bus_acpi_match_table,
+ 		   },
+ 	.probe = fsl_mc_bus_probe,
+ 	.remove = fsl_mc_bus_remove,
+diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
+index e7bbff445a83..8edadf05cbb7 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-msi.c
++++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+@@ -13,6 +13,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/msi.h>
++#include <linux/acpi_iort.h>
+ 
+ #include "fsl-mc-private.h"
+ 
+@@ -179,25 +180,31 @@ struct irq_domain *fsl_mc_msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 
+ struct irq_domain *fsl_mc_find_msi_domain(struct device *dev)
+ {
+-	struct irq_domain *msi_domain = NULL;
++	struct device *root_dprc_dev;
++	struct device *bus_dev;
++	struct irq_domain *msi_domain;
+ 	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
+ 
+-	msi_domain = of_msi_map_get_device_domain(dev, mc_dev->icid,
++	fsl_mc_get_root_dprc(dev, &root_dprc_dev);
++	bus_dev = root_dprc_dev->parent;
++
++	if (bus_dev->of_node) {
++		msi_domain = of_msi_map_get_device_domain(dev,
++						  mc_dev->icid,
+ 						  DOMAIN_BUS_FSL_MC_MSI);
+ 
+-	/*
+-	 * if the msi-map property is missing assume that all the
+-	 * child containers inherit the domain from the parent
+-	 */
+-	if (!msi_domain) {
+-		struct device *root_dprc_dev;
+-		struct device *bus_dev;
+-
+-		fsl_mc_get_root_dprc(dev, &root_dprc_dev);
+-		bus_dev = root_dprc_dev->parent;
+-		msi_domain = of_msi_get_domain(bus_dev,
+-					       bus_dev->of_node,
+-					       DOMAIN_BUS_FSL_MC_MSI);
++		/*
++		 * if the msi-map property is missing assume that all the
++		 * child containers inherit the domain from the parent
++		 */
++		if (!msi_domain)
++
++			msi_domain = of_msi_get_domain(bus_dev,
++						bus_dev->of_node,
++						DOMAIN_BUS_FSL_MC_MSI);
++	} else {
++		msi_domain = iort_get_device_domain(dev, mc_dev->icid,
++						    DOMAIN_BUS_FSL_MC_MSI);
+ 	}
+ 
+ 	return msi_domain;
+diff --git a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+index a5c8d577e424..634263dfd7b5 100644
+--- a/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
++++ b/drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c
+@@ -7,6 +7,8 @@
+  *
+  */
+ 
++#include <linux/acpi.h>
++#include <linux/acpi_iort.h>
+ #include <linux/of_device.h>
+ #include <linux/of_address.h>
+ #include <linux/irq.h>
+@@ -30,7 +32,8 @@ static u32 fsl_mc_msi_domain_get_msi_id(struct irq_domain *domain,
+ 	u32 out_id;
+ 
+ 	of_node = irq_domain_get_of_node(domain);
+-	out_id = of_msi_map_id(&mc_dev->dev, of_node, mc_dev->icid);
++	out_id = of_node ? of_msi_map_id(&mc_dev->dev, of_node, mc_dev->icid) :
++			iort_msi_map_id(&mc_dev->dev, mc_dev->icid);
+ 
+ 	return out_id;
+ }
+@@ -79,12 +82,71 @@ static const struct of_device_id its_device_id[] = {
+ 	{},
+ };
+ 
+-static int __init its_fsl_mc_msi_init(void)
++static void __init its_fsl_mc_msi_init_one(struct fwnode_handle *handle,
++					  const char *name)
+ {
+-	struct device_node *np;
+ 	struct irq_domain *parent;
+ 	struct irq_domain *mc_msi_domain;
+ 
++	parent = irq_find_matching_fwnode(handle, DOMAIN_BUS_NEXUS);
++	if (!parent || !msi_get_domain_info(parent)) {
++		pr_err("%s: unable to locate ITS domain\n", name);
++		return;
++	}
++
++	mc_msi_domain = fsl_mc_msi_create_irq_domain(handle,
++						&its_fsl_mc_msi_domain_info,
++						parent);
++	if (!mc_msi_domain) {
++		pr_err("%s: unable to create fsl-mc domain\n", name);
++		return;
++	}
++
++	pr_info("fsl-mc MSI: %s domain created\n", name);
++}
++
++#ifdef CONFIG_ACPI
++static int __init
++its_fsl_mc_msi_parse_madt(union acpi_subtable_headers *header,
++			  const unsigned long end)
 +{
-+	struct acpi_iort_node *parent;
-+	int err = -ENODEV, i = 0;
-+	u32 streamid = 0;
++	struct acpi_madt_generic_translator *its_entry;
++	struct fwnode_handle *dom_handle;
++	const char *node_name;
++	int err = 0;
 +
-+	do {
++	its_entry = (struct acpi_madt_generic_translator *)header;
++	node_name = kasprintf(GFP_KERNEL, "ITS@0x%lx",
++			      (long)its_entry->base_address);
 +
-+		parent = iort_node_map_platform_id(node, &streamid,
-+						   IORT_IOMMU_TYPE,
-+						   i++);
++	dom_handle = iort_find_domain_token(its_entry->translation_id);
++	if (!dom_handle) {
++		pr_err("%s: Unable to locate ITS domain handle\n", node_name);
++		err = -ENXIO;
++		goto out;
++	}
 +
-+		if (parent)
-+			err = iort_iommu_xlate(dev, parent, streamid);
-+	} while (parent && !err);
++	its_fsl_mc_msi_init_one(dom_handle, node_name);
 +
++out:
++	kfree(node_name);
 +	return err;
 +}
 +
-+static int iort_nc_iommu_map_id(struct device *dev,
-+				struct acpi_iort_node *node,
-+				const u32 *in_id)
++
++static void __init its_fsl_mc_acpi_msi_init(void)
 +{
-+	struct acpi_iort_node *parent;
-+	u32 streamid;
++	acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_TRANSLATOR,
++			      its_fsl_mc_msi_parse_madt, 0);
++}
++#else
++static inline void its_fsl_mc_acpi_msi_init(void) { }
++#endif
 +
-+	parent = iort_node_map_id(node, *in_id, &streamid, IORT_IOMMU_TYPE);
-+	if (parent)
-+		return iort_iommu_xlate(dev, parent, streamid);
++static void __init its_fsl_mc_of_msi_init(void)
++{
++	struct device_node *np;
 +
-+	return -ENODEV;
+ 	for (np = of_find_matching_node(NULL, its_device_id); np;
+ 	     np = of_find_matching_node(np, its_device_id)) {
+ 		if (!of_device_is_available(np))
+@@ -92,23 +154,15 @@ static int __init its_fsl_mc_msi_init(void)
+ 		if (!of_property_read_bool(np, "msi-controller"))
+ 			continue;
+ 
+-		parent = irq_find_matching_host(np, DOMAIN_BUS_NEXUS);
+-		if (!parent || !msi_get_domain_info(parent)) {
+-			pr_err("%pOF: unable to locate ITS domain\n", np);
+-			continue;
+-		}
+-
+-		mc_msi_domain = fsl_mc_msi_create_irq_domain(
+-						 of_node_to_fwnode(np),
+-						 &its_fsl_mc_msi_domain_info,
+-						 parent);
+-		if (!mc_msi_domain) {
+-			pr_err("%pOF: unable to create fsl-mc domain\n", np);
+-			continue;
+-		}
+-
+-		pr_info("fsl-mc MSI: %pOF domain created\n", np);
++		its_fsl_mc_msi_init_one(of_node_to_fwnode(np),
++					np->full_name);
+ 	}
 +}
 +
-+
- /**
-- * iort_iommu_configure - Set-up IOMMU configuration for a device.
-+ * iort_iommu_configure_id - Set-up IOMMU configuration for a device.
-  *
-  * @dev: device to configure
-+ * @id_in: optional input id const value pointer
-  *
-  * Returns: iommu_ops pointer on configuration success
-  *          NULL on configuration failure
-  */
--const struct iommu_ops *iort_iommu_configure(struct device *dev)
-+const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
-+						const u32 *id_in)
- {
--	struct acpi_iort_node *node, *parent;
-+	struct acpi_iort_node *node;
- 	const struct iommu_ops *ops;
--	u32 streamid = 0;
- 	int err = -ENODEV;
- 
- 	/*
-@@ -1019,21 +1054,13 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 		if (fwspec && iort_pci_rc_supports_ats(node))
- 			fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
- 	} else {
--		int i = 0;
--
- 		node = iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
- 				      iort_match_node_callback, dev);
- 		if (!node)
- 			return NULL;
- 
--		do {
--			parent = iort_node_map_platform_id(node, &streamid,
--							   IORT_IOMMU_TYPE,
--							   i++);
--
--			if (parent)
--				err = iort_iommu_xlate(dev, parent, streamid);
--		} while (parent && !err);
-+		err = id_in ? iort_nc_iommu_map_id(dev, node, id_in) :
-+			      iort_nc_iommu_map(dev, node);
- 
- 		if (!err)
- 			iort_named_component_init(dev, node);
-@@ -1058,6 +1085,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
- 
- 	return ops;
- }
-+
- #else
- static inline const struct iommu_ops *iort_fwspec_iommu_ops(struct device *dev)
- { return NULL; }
-@@ -1066,7 +1094,8 @@ static inline int iort_add_device_replay(const struct iommu_ops *ops,
- { return 0; }
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
- { return 0; }
--const struct iommu_ops *iort_iommu_configure(struct device *dev)
-+const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
-+						const u32 *input_id)
- { return NULL; }
- #endif
- 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 8777faced51a..2142f1554761 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1457,8 +1457,10 @@ int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
-  * acpi_dma_configure - Set-up DMA configuration for the device.
-  * @dev: The pointer to the device
-  * @attr: device dma attributes
-+ * @input_id: input device id const value pointer
-  */
--int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
-+int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
-+			  const u32 *input_id)
- {
- 	const struct iommu_ops *iommu;
- 	u64 dma_addr = 0, size = 0;
-@@ -1470,7 +1472,7 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
- 
- 	iort_dma_setup(dev, &dma_addr, &size);
- 
--	iommu = iort_iommu_configure(dev);
-+	iommu = iort_iommu_configure_id(dev, input_id);
- 	if (PTR_ERR(iommu) == -EPROBE_DEFER)
- 		return -EPROBE_DEFER;
- 
-@@ -1479,7 +1481,7 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
++static int __init its_fsl_mc_msi_init(void)
++{
++	its_fsl_mc_of_msi_init();
++	its_fsl_mc_acpi_msi_init();
  
  	return 0;
  }
--EXPORT_SYMBOL_GPL(acpi_dma_configure);
-+EXPORT_SYMBOL_GPL(acpi_dma_configure_id);
- 
- static void acpi_init_coherency(struct acpi_device *adev)
- {
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 5afb6ceb284f..a3abcc4b7d9f 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -588,8 +588,13 @@ bool acpi_dma_supported(struct acpi_device *adev);
- enum dev_dma_attr acpi_get_dma_attr(struct acpi_device *adev);
- int acpi_dma_get_range(struct device *dev, u64 *dma_addr, u64 *offset,
- 		       u64 *size);
--int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr);
--
-+int acpi_dma_configure_id(struct device *dev, enum dev_dma_attr attr,
-+			   const u32 *input_id);
-+static inline int acpi_dma_configure(struct device *dev,
-+				     enum dev_dma_attr attr)
-+{
-+	return acpi_dma_configure_id(dev, attr, NULL);
-+}
- struct acpi_device *acpi_find_child_device(struct acpi_device *parent,
- 					   u64 address, bool check_children);
- int acpi_is_root_bridge(acpi_handle);
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d661cd0ee64d..6d2c47489d90 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -905,6 +905,13 @@ static inline int acpi_dma_configure(struct device *dev,
- 	return 0;
- }
- 
-+static inline int acpi_dma_configure_id(struct device *dev,
-+					enum dev_dma_attr attr,
-+					const u32 *input_id)
-+{
-+	return 0;
-+}
-+
- #define ACPI_PTR(_ptr)	(NULL)
- 
- static inline void acpi_device_set_enumerated(struct acpi_device *adev)
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index e51425e083da..20a32120bb88 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -35,7 +35,8 @@ void acpi_configure_pmsi_domain(struct device *dev);
- int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
- /* IOMMU interface */
- void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *size);
--const struct iommu_ops *iort_iommu_configure(struct device *dev);
-+const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
-+						const u32 *id_in);
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
- #else
- static inline void acpi_iort_init(void) { }
-@@ -48,8 +49,8 @@ static inline void acpi_configure_pmsi_domain(struct device *dev) { }
- /* IOMMU interface */
- static inline void iort_dma_setup(struct device *dev, u64 *dma_addr,
- 				  u64 *size) { }
--static inline const struct iommu_ops *iort_iommu_configure(
--				      struct device *dev)
-+static inline const struct iommu_ops *iort_iommu_configure_id(
-+				      struct device *dev, const u32 *id_in)
- { return NULL; }
- static inline
- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
 -- 
 2.26.1
 
