@@ -2,62 +2,60 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C6BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 04:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E68C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 04:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175A7208C7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 04:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AF0208C7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 04:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjhitqHw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qpBa2Lee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgFSEsU (ORCPT
+        id S1725820AbgFSEsL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 00:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
+        Fri, 19 Jun 2020 00:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgFSEsR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 00:48:17 -0400
+        with ESMTP id S1725290AbgFSEsL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 00:48:11 -0400
 Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F491C06174E;
-        Thu, 18 Jun 2020 21:48:17 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id cy7so29876edb.5;
-        Thu, 18 Jun 2020 21:48:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CBA6C06174E;
+        Thu, 18 Jun 2020 21:48:11 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id o26so6585630edq.0;
+        Thu, 18 Jun 2020 21:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z6pjZcvuC6hfoI30JKSQEs1lxYUwr1VGXrh+ISodyNY=;
-        b=EjhitqHwM0Ddc1lu+b7bk7/9gwOyrLf50KXySN2IHjKuH90HwRdgaXJhtnkIAU1sbh
-         hlSn+B1ZIN2iCaToSbDBIZ6YmgdUvjZ9gThOmkC4PrY9ZrHgpCRsj8ozR9E8gsR5mXnR
-         /pqL99KNleodPg+XYOAMBFZU7B3v1v2ookoCOjD2/ozYx3xf17RdRFyDB1gSrJU7uJVz
-         WU604RVnKVQ8G3YYLkyjiOxiATVfZl9U/OzFK0Bx0BiVhAejDK5QBNmbxyle6p8/nS4V
-         9eqoGXrFZUm/hFw/qCrlvtwVbhZ9FZNStqZBz3Ch2wf48Wp9dLB7zQAGFk7awGUmZYMh
-         1EGw==
+        h=from:to:cc:subject:date:message-id;
+        bh=Ig2R/GH+geDbBcQc05MQOh9FfNnoXhYYjeBjy90BgIs=;
+        b=qpBa2Leew5PV1KT37qWkid+SvbFBEMIIWf+oK559wigtq//I3dJq8D6Of9TqJq9bsR
+         PxmtEJ4dxXTfMVdHf9jjMsATC6Q9gH7pxNqsWROrCbxnUIzb+gOXshOHIiFXIGUzsJM6
+         9nVGjzGVbK9FLT1SGWrgAbe7Pjq0M1YxQ4juq1tJevon74O4j/Tm9+IZbp5hYmpSuBM4
+         nAd5oxWyhdCm0BcunM6RRNp2bSojAWAPtmNpwQS/Rz8kbzMD3hrbmdMswgAbPNk0+n6S
+         Wcwm3wwxmRFlVZ9BEww5t0NZlJD/vdnywvIPJP3zN7wLoiFgzojFkinT22Wg7NvpyXho
+         IaGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=z6pjZcvuC6hfoI30JKSQEs1lxYUwr1VGXrh+ISodyNY=;
-        b=SIrjbM0nYP+nv1CaM/9dNCObH9k8f2JcKCHZZHkY9/ZqidPv0mW019mz2laq/YOgFw
-         YhNHPBExmS+dEpxTzlBtvrcr3fLvSTn6B8PHEKD8lmAxJXycLV03RozUf5Zf2OIzj/zG
-         redLlMNsktKpkaBkLVZ9hA01tcTgboGcVTKEi/YZo6M+SfHvYfX7U8j1giq+dZhvJ/n5
-         5pFYiYtuqIULqgteHHyqBOZIvApyAEMys6dUF+UBP29PtOjGr25FCYBvQ82JU7D6d6/r
-         cXhOHZ3pasKH6L8jDOlPBOYLz+fqb68o71dV0joPY65VKc1e2S8ywDIUWAeE4uLgfcNH
-         SKTw==
-X-Gm-Message-State: AOAM530EzwUCzmeW9aN0JpDmzL8oj4di+xM6jZ6Mvpagfa/0wDa3PqwF
-        pxG4U5de7A2Fno7UcpE0QKUetoOI
-X-Google-Smtp-Source: ABdhPJz4RJRXfOqvp2LISkOtvFVlDLIIFMYK9X3zJZqq+YkzWTe+hOEXhgfqbMS5LOi76Wg/XgP+2w==
-X-Received: by 2002:aa7:d7cc:: with SMTP id e12mr1475006eds.70.1592542095630;
-        Thu, 18 Jun 2020 21:48:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ig2R/GH+geDbBcQc05MQOh9FfNnoXhYYjeBjy90BgIs=;
+        b=jCPgkfDmnEHtjYbIjqxnYBK0BTgYGhRpxEGlfYPDNXjZJeZZkDfETZQX8JKLnVHF2f
+         e5kmxISQLILYiKrpyBzVankRmn0oYrDttPO9i8J6nOP/Q+Y3P41YSxtAxdvARepMIxZZ
+         G89NZ1yRBwaA2qIeRf4lRH2rjvw105b7u0Uu+rmgkRE83OXnJNj13Pgla8B2baMeUoM3
+         Ks69cvIWMZEN2U+/3OjL4ctbW2ETv1u7ykMjpwmJHlg84t1esmDQcfABUhUWdJZV1XVW
+         XlF0Uo1xYI8MyWZFYGY8jQ8iJ7WYTDbEAqIwiLtXpOIZbmpaj16Dvlcn2qhRtdTQxYKl
+         yGig==
+X-Gm-Message-State: AOAM530QCgwtKRxyGcsUJDnKJVNb3ujTTenDW1vhxGFWGwAvK+edm7tD
+        XxIHM6AOhKfU0KwQKUx6UG3sp/NY
+X-Google-Smtp-Source: ABdhPJyvIze5msj6fBLxxtN9Z1WwMo1aOjRf1c8HWUd/t+O8n/Ns7PDTwrOwSsemhrVbI2V5ihOKZA==
+X-Received: by 2002:a05:6402:3c1:: with SMTP id t1mr1512789edw.350.1592542089518;
+        Thu, 18 Jun 2020 21:48:09 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id ew9sm3867852ejb.121.2020.06.18.21.48.12
+        by smtp.gmail.com with ESMTPSA id ew9sm3867852ejb.121.2020.06.18.21.48.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 21:48:15 -0700 (PDT)
+        Thu, 18 Jun 2020 21:48:08 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -73,57 +71,30 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-kernel@vger.kernel.org (open list),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE)
-Subject: [PATCH net 2/2] net: phy: Check harder for errors in get_phy_id()
-Date:   Thu, 18 Jun 2020 21:47:59 -0700
-Message-Id: <20200619044759.11387-3-f.fainelli@gmail.com>
+Subject: [PATCH net 0/2] net: phy: MDIO bus scanning fixes
+Date:   Thu, 18 Jun 2020 21:47:57 -0700
+Message-Id: <20200619044759.11387-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619044759.11387-1-f.fainelli@gmail.com>
-References: <20200619044759.11387-1-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 02a6efcab675 ("net: phy: allow scanning busses with missing
-phys") added a special condition to return -ENODEV in case -ENODEV or
--EIO was returned from the first read of the MII_PHYSID1 register.
+Hi all,
 
-In case the MDIO bus data line pull-up is not strong enough, the MDIO
-bus controller will not flag this as a read error. This can happen when
-a pluggable daughter card is not connected and weak internal pull-ups
-are used (since that is the only option, otherwise the pins are
-floating).
+This patch series fixes two problems with the current MDIO bus scanning
+logic which was identified while moving from 4.9 to 5.4 on devices that
+do rely on scanning the MDIO bus at runtime because they use pluggable
+cards.
 
-The second read of MII_PHYSID2 will be correctly flagged an error
-though, but now we will return -EIO which will be treated as a hard
-error, thus preventing MDIO bus scanning loops to continue succesfully.
+Florian Fainelli (2):
+  of: of_mdio: Correct loop scanning logic
+  net: phy: Check harder for errors in get_phy_id()
 
-Apply the same logic to both register reads, thus allowing the scanning
-logic to proceed.
-
-Fixes: 02a6efcab675 ("net: phy: allow scanning busses with missing phys")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
  drivers/net/phy/phy_device.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/of/of_mdio.c         | 5 +++--
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 04946de74fa0..85ba95b598b5 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -794,8 +794,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
- 
- 	/* Grab the bits from PHYIR2, and put them in the lower half */
- 	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
--	if (phy_reg < 0)
--		return -EIO;
-+	if (phy_reg < 0) {
-+		/* returning -ENODEV doesn't stop bus scanning */
-+		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
-+	}
- 
- 	*phy_id |= phy_reg;
- 
 -- 
 2.17.1
 
