@@ -2,51 +2,50 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDBFC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E81C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCC8020890
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3831120890
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbgFSIXb (ORCPT
+        id S1731184AbgFSIXf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:23:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:47072 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 04:23:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:46866 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731219AbgFSIVH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 04:21:07 -0400
+        id S1731181AbgFSIUd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:20:33 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEF0211B3;
-        Fri, 19 Jun 2020 01:20:53 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7289101E;
+        Fri, 19 Jun 2020 01:20:30 -0700 (PDT)
 Received: from red-moon.arm.com (unknown [10.57.58.158])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78AC73F71F;
-        Fri, 19 Jun 2020 01:20:51 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F6D23F71F;
+        Fri, 19 Jun 2020 01:20:28 -0700 (PDT)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
-Cc:     Diana Craciun <diana.craciun@oss.nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
         Hanjun Guo <guohanjun@huawei.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
         Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v2 09/12] of/irq: make of_msi_map_get_device_domain() bus agnostic
-Date:   Fri, 19 Jun 2020 09:20:10 +0100
-Message-Id: <20200619082013.13661-10-lorenzo.pieralisi@arm.com>
+Subject: [PATCH v2 01/12] ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for NC
+Date:   Fri, 19 Jun 2020 09:20:02 +0100
+Message-Id: <20200619082013.13661-2-lorenzo.pieralisi@arm.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
 References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
@@ -58,88 +57,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Diana Craciun <diana.craciun@oss.nxp.com>
+When the iort_match_node_callback is invoked for a named component
+the match should be executed upon a device with an ACPI companion.
 
-of_msi_map_get_device_domain() is PCI specific but it need not be and
-can be easily changed to be bus agnostic in order to be used by other
-busses by adding an IRQ domain bus token as an input parameter.
+For devices with no ACPI companion set-up the ACPI device tree must be
+walked in order to find the first parent node with a companion set and
+check the parent node against the named component entry to check whether
+there is a match and therefore an IORT node describing the in/out ID
+translation for the device has been found.
 
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # pci/msi.c
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 ---
- drivers/of/irq.c       | 8 +++++---
- drivers/pci/msi.c      | 2 +-
- include/linux/of_irq.h | 5 +++--
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/acpi/arm64/iort.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index d632bc5b3a2d..1005e4f349ef 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -613,18 +613,20 @@ u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
-  * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
-  * @dev: device for which the mapping is to be done.
-  * @rid: Requester ID for the device.
-+ * @bus_token: Bus token
-  *
-  * Walk up the device hierarchy looking for devices with a "msi-map"
-  * property.
-  *
-  * Returns: the MSI domain for this device (or NULL on failure)
-  */
--struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 rid)
-+struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
-+						u32 bus_token)
- {
- 	struct device_node *np = NULL;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 28a6b387e80e..5eee81758184 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -264,15 +264,31 @@ static acpi_status iort_match_node_callback(struct acpi_iort_node *node,
  
--	__of_msi_map_rid(dev, &np, rid);
--	return irq_find_matching_host(np, DOMAIN_BUS_PCI_MSI);
-+	__of_msi_map_rid(dev, &np, id);
-+	return irq_find_matching_host(np, bus_token);
- }
+ 	if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT) {
+ 		struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
+-		struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
++		struct acpi_device *adev;
+ 		struct acpi_iort_named_component *ncomp;
++		struct device *nc_dev = dev;
++
++		/*
++		 * Walk the device tree to find a device with an
++		 * ACPI companion; there is no point in scanning
++		 * IORT for a device matching a named component if
++		 * the device does not have an ACPI companion to
++		 * start with.
++		 */
++		do {
++			adev = ACPI_COMPANION(nc_dev);
++			if (adev)
++				break;
++
++			nc_dev = nc_dev->parent;
++		} while (nc_dev);
  
- /**
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 77f48b95e277..b4bfe0b03b2d 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1556,7 +1556,7 @@ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
- 	u32 rid = pci_dev_id(pdev);
+ 		if (!adev)
+ 			goto out;
  
- 	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
--	dom = of_msi_map_get_device_domain(&pdev->dev, rid);
-+	dom = of_msi_map_get_device_domain(&pdev->dev, rid, DOMAIN_BUS_PCI_MSI);
- 	if (!dom)
- 		dom = iort_get_device_domain(&pdev->dev, rid,
- 					     DOMAIN_BUS_PCI_MSI);
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 1214cabb2247..7142a3722758 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -52,7 +52,8 @@ extern struct irq_domain *of_msi_get_domain(struct device *dev,
- 					    struct device_node *np,
- 					    enum irq_domain_bus_token token);
- extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
--						       u32 rid);
-+							u32 id,
-+							u32 bus_token);
- extern void of_msi_configure(struct device *dev, struct device_node *np);
- u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
- #else
-@@ -85,7 +86,7 @@ static inline struct irq_domain *of_msi_get_domain(struct device *dev,
- 	return NULL;
- }
- static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
--							      u32 rid)
-+						u32 id, u32 bus_token)
- {
- 	return NULL;
- }
+ 		status = acpi_get_name(adev->handle, ACPI_FULL_PATHNAME, &buf);
+ 		if (ACPI_FAILURE(status)) {
+-			dev_warn(dev, "Can't get device full path name\n");
++			dev_warn(nc_dev, "Can't get device full path name\n");
+ 			goto out;
+ 		}
+ 
 -- 
 2.26.1
 
