@@ -2,59 +2,59 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C89CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4396C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C97E218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A262E217A0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AliZagCg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VgLFVUOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394308AbgFSQSm (ORCPT
+        id S2391008AbgFSQTG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:18:42 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49480 "EHLO
+        Fri, 19 Jun 2020 12:19:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49464 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405618AbgFSQSl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 12:18:41 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIaLR008227;
-        Fri, 19 Jun 2020 11:18:36 -0500
+        with ESMTP id S2405581AbgFSQSg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 12:18:36 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIVeh008207;
+        Fri, 19 Jun 2020 11:18:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592583516;
-        bh=eStPcoULgEZG94PVJtakxpfbyK9RyeLhnZbJP2L7ZFo=;
+        s=ti-com-17Q1; t=1592583511;
+        bh=eShyx82GLaQ3xsgsj9ve463coidBb5dHGAfrzfcrN0w=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AliZagCgf0d80XMVZYdSlLllnANBUYrsDVKXnYrCD4EeftsX9cWCkvpApN0XA7SBJ
-         qtwVzRq+/vt8Bv2cuGu1edyrfBg1NWMuAZJbNOA1prgdoK1HEkhL+4nSn0c0DA4KPm
-         67ighbOn55aEkFgi+h/OlNhZtetTFKzPBex/Hx4U=
+        b=VgLFVUOA7txOkd46W98qaiC5poAp05crEOnfj6Q+OqWZEKb7IN4fRnXFDdHzPazeg
+         RyzlcineoQOZ/6fO3rh6tsCz9MMPOnkWIQcUGfJoI5RdEZBpJRndUdd8bc88JCUzgX
+         TKLp1s0rGqV2j2BRV/2Mas0/QVM+y5AI7ganKCuI=
 Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIaOc046633;
-        Fri, 19 Jun 2020 11:18:36 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JGIVpw122286
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 19 Jun 2020 11:18:31 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
  (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
- Jun 2020 11:18:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 11:18:31 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 19 Jun 2020 11:18:36 -0500
+ Frontend Transport; Fri, 19 Jun 2020 11:18:30 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIae7091288;
-        Fri, 19 Jun 2020 11:18:36 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIUwc026762;
+        Fri, 19 Jun 2020 11:18:31 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <robh@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v9 5/5] net: phy: DP83822: Add setting the fixed internal delay
-Date:   Fri, 19 Jun 2020 11:18:13 -0500
-Message-ID: <20200619161813.2716-6-dmurphy@ti.com>
+Subject: [PATCH net-next v9 3/5] dt-bindings: net: Add RGMII internal delay for DP83869
+Date:   Fri, 19 Jun 2020 11:18:11 -0500
+Message-ID: <20200619161813.2716-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200619161813.2716-1-dmurphy@ti.com>
 References: <20200619161813.2716-1-dmurphy@ti.com>
@@ -67,144 +67,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The DP83822 can be configured to use the RGMII interface. There are
-independent fixed 3.5ns clock shift (aka internal delay) for the TX and RX
-paths. This allow either one to be set if the MII interface is RGMII and
-the value is set in the firmware node.
+Add the internal delay values into the header and update the binding
+with the internal delay properties.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/net/phy/dp83822.c | 79 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 69 insertions(+), 10 deletions(-)
+ .../devicetree/bindings/net/ti,dp83869.yaml      | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 1dd19d0cb269..37643c468e19 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -26,7 +26,9 @@
- #define MII_DP83822_PHYSCR	0x11
- #define MII_DP83822_MISR1	0x12
- #define MII_DP83822_MISR2	0x13
-+#define MII_DP83822_RCSR	0x17
- #define MII_DP83822_RESET_CTRL	0x1f
-+#define MII_DP83822_GENCFG	0x465
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+index 5b69ef03bbf7..71e90a3e4652 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
++++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+@@ -8,7 +8,7 @@ $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+ title: TI DP83869 ethernet PHY
  
- #define DP83822_HW_RESET	BIT(15)
- #define DP83822_SW_RESET	BIT(14)
-@@ -77,6 +79,10 @@
- #define DP83822_WOL_INDICATION_SEL BIT(8)
- #define DP83822_WOL_CLR_INDICATION BIT(11)
+ allOf:
+-  - $ref: "ethernet-controller.yaml#"
++  - $ref: "ethernet-phy.yaml#"
  
-+/* RSCR bits */
-+#define DP83822_RX_CLK_SHIFT	BIT(12)
-+#define DP83822_TX_CLK_SHIFT	BIT(11)
-+
- static int dp83822_ack_interrupt(struct phy_device *phydev)
- {
- 	int err;
-@@ -255,7 +261,7 @@ static int dp83822_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_DP83822_PHYSCR, physcr_status);
- }
+ maintainers:
+   - Dan Murphy <dmurphy@ti.com>
+@@ -64,6 +64,18 @@ properties:
+        Operational mode for the PHY.  If this is not set then the operational
+        mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
  
--static int dp83822_config_init(struct phy_device *phydev)
-+static int dp8382x_disable_wol(struct phy_device *phydev)
- {
- 	int value = DP83822_WOL_EN | DP83822_WOL_MAGIC_EN |
- 		    DP83822_WOL_SECURE_ON;
-@@ -264,6 +270,46 @@ static int dp83822_config_init(struct phy_device *phydev)
- 				  MII_DP83822_WOL_CFG, value);
- }
++  rx-internal-delay-ps:
++    description: Delay is in pico seconds
++    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
++            3250, 3500, 3750, 4000 ]
++    default: 2000
++
++  tx-internal-delay-ps:
++    description: Delay is in pico seconds
++    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
++            3250, 3500, 3750, 4000 ]
++    default: 2000
++
+ required:
+   - reg
  
-+static int dp83822_config_init(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	int rgmii_delay;
-+	s32 rx_int_delay;
-+	s32 tx_int_delay;
-+	int err = 0;
-+
-+	if (phy_interface_is_rgmii(phydev)) {
-+		rx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
-+						      true);
-+
-+		if (rx_int_delay <= 0)
-+			rgmii_delay = 0;
-+		else
-+			rgmii_delay = DP83822_RX_CLK_SHIFT;
-+
-+		tx_int_delay = phy_get_internal_delay(phydev, dev, NULL, 0,
-+						      false);
-+		if (tx_int_delay <= 0)
-+			rgmii_delay &= ~DP83822_TX_CLK_SHIFT;
-+		else
-+			rgmii_delay |= DP83822_TX_CLK_SHIFT;
-+
-+		if (rgmii_delay) {
-+			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
-+					       MII_DP83822_RCSR, rgmii_delay);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	return dp8382x_disable_wol(phydev);
-+}
-+
-+static int dp8382x_config_init(struct phy_device *phydev)
-+{
-+	return dp8382x_disable_wol(phydev);
-+}
-+
- static int dp83822_phy_reset(struct phy_device *phydev)
- {
- 	int err;
-@@ -272,9 +318,7 @@ static int dp83822_phy_reset(struct phy_device *phydev)
- 	if (err < 0)
- 		return err;
- 
--	dp83822_config_init(phydev);
--
--	return 0;
-+	return phydev->drv->config_init(phydev);
- }
- 
- static int dp83822_suspend(struct phy_device *phydev)
-@@ -318,14 +362,29 @@ static int dp83822_resume(struct phy_device *phydev)
- 		.resume = dp83822_resume,			\
- 	}
- 
-+#define DP8382X_PHY_DRIVER(_id, _name)				\
-+	{							\
-+		PHY_ID_MATCH_MODEL(_id),			\
-+		.name		= (_name),			\
-+		/* PHY_BASIC_FEATURES */			\
-+		.soft_reset	= dp83822_phy_reset,		\
-+		.config_init	= dp8382x_config_init,		\
-+		.get_wol = dp83822_get_wol,			\
-+		.set_wol = dp83822_set_wol,			\
-+		.ack_interrupt = dp83822_ack_interrupt,		\
-+		.config_intr = dp83822_config_intr,		\
-+		.suspend = dp83822_suspend,			\
-+		.resume = dp83822_resume,			\
-+	}
-+
- static struct phy_driver dp83822_driver[] = {
- 	DP83822_PHY_DRIVER(DP83822_PHY_ID, "TI DP83822"),
--	DP83822_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
--	DP83822_PHY_DRIVER(DP83826C_PHY_ID, "TI DP83826C"),
--	DP83822_PHY_DRIVER(DP83826NC_PHY_ID, "TI DP83826NC"),
--	DP83822_PHY_DRIVER(DP83825S_PHY_ID, "TI DP83825S"),
--	DP83822_PHY_DRIVER(DP83825CM_PHY_ID, "TI DP83825M"),
--	DP83822_PHY_DRIVER(DP83825CS_PHY_ID, "TI DP83825CS"),
-+	DP8382X_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
-+	DP8382X_PHY_DRIVER(DP83826C_PHY_ID, "TI DP83826C"),
-+	DP8382X_PHY_DRIVER(DP83826NC_PHY_ID, "TI DP83826NC"),
-+	DP8382X_PHY_DRIVER(DP83825S_PHY_ID, "TI DP83825S"),
-+	DP8382X_PHY_DRIVER(DP83825CM_PHY_ID, "TI DP83825M"),
-+	DP8382X_PHY_DRIVER(DP83825CS_PHY_ID, "TI DP83825CS"),
- };
- module_phy_driver(dp83822_driver);
- 
+@@ -80,5 +92,7 @@ examples:
+         ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
+         ti,max-output-impedance = "true";
+         ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
++        rx-internal-delay-ps = <2000>;
++        tx-internal-delay-ps = <2000>;
+       };
+     };
 -- 
 2.26.2
 
