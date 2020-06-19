@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC62C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA9BC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C99421527
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE96204EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585095;
-	bh=PcpT25rK7rYNhpCqz1U5PiI8V6SO18bbgHhxO/L2RUQ=;
+	s=default; t=1592585374;
+	bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x73BEroH8BO/dzOwQeWQVMlOsPc/k0iVcbGtfJH3Vm4s/sRhPzXDAdgfD8QI2s9FM
-	 SYNo81M08+R92IJ5dU4pUFboSHzQ/LPtREnnf+iqkyrEf3lVz+TkkngNZAc0oHlddz
-	 LISjIZYuIl2rGiFU1dFy6V1nbqu2z/1sLbmPryms=
+	b=wJtz4wVRHrv10aO0XOW1MhZtvMB+gAmCTpWUFoe/3GXUUvI8S0PTKOdtV7D2i5pqz
+	 YBXgxhkSrl04p3LxS0B8OBkrLbXgszQaQICuKRDgTjAXyYfh+PlZQz12UP1gj4MHJQ
+	 CzwZYwM++4JkLeudGu+k9RIPIxFnwO2jd9f07Kb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388413AbgFSOmx (ORCPT
+        id S2388043AbgFSOjf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388407AbgFSOmr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:42:47 -0400
+        id S2388035AbgFSOjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1157020CC7;
-        Fri, 19 Jun 2020 14:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24DDD20CC7;
+        Fri, 19 Jun 2020 14:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577766;
-        bh=PcpT25rK7rYNhpCqz1U5PiI8V6SO18bbgHhxO/L2RUQ=;
+        s=default; t=1592577571;
+        bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElikhKG1+iN9twsPnWy0HHuifgCatuZXAJNy5oDXPwS9JYTg+/QtwrIsYe2qFLUiB
-         mP2yQknn3+3oTjqbpnjb4qcdb55JqFJZZ6AV+TYQwuE58MJV60mvoo4HdslB2PJtkz
-         FdB+Nqc82bynO3cbqv0UsQfz5vWyD7KgSwuqGleE=
+        b=vP4GRk+M1/tO6DODghujz7zAPt+7iEyoT2+O1hLBrd/PoZ0u3hK5Mw6NmX1tjXOo6
+         sEq5F8TMTHMuHu+VpwhPU4GDs+Y8iTPFH8ah1+mHXyQC96oxSt3u6lnQW23uqAJRg6
+         ZT/yatm3zXs8x5UnL3qnLeoRHEH+4dNku1jP6Yn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,12 +51,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 080/128] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Fri, 19 Jun 2020 16:32:54 +0200
-Message-Id: <20200619141624.395317897@linuxfoundation.org>
+Subject: [PATCH 4.4 063/101] mips: cm: Fix an invalid error code of INTVN_*_ERR
+Date:   Fri, 19 Jun 2020 16:32:52 +0200
+Message-Id: <20200619141617.359180596@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
-References: <20200619141620.148019466@linuxfoundation.org>
+In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
+References: <20200619141614.001544111@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -95,7 +95,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 60177a612cb1..df65516778a2 100644
+index 76f18c56141c..3458d23d230c 100644
 --- a/arch/mips/kernel/mips-cm.c
 +++ b/arch/mips/kernel/mips-cm.c
 @@ -123,9 +123,9 @@ static char *cm2_causes[32] = {
