@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808E9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79081C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7252078D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED0D214DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UfAfSrIC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aw02MwLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgFSHGK (ORCPT
+        id S1730122AbgFSHFo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:06:10 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:22952 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727916AbgFSHFt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:05:49 -0400
+        Fri, 19 Jun 2020 03:05:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:19511 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729714AbgFSHFm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:05:42 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592550349; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1592550340; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=7CtM3ABzZRen6H6ak/iY6UbUQKKrC7O86F6qhtQjSfk=; b=UfAfSrICY3pwwpwb60q9VVPVYQkfS7KXXRwnzeg7N6sgJK8fJm1TaEFynwKiWHtJjzvREpU0
- WGUgMHBGdWmsGU55yf03qUNp7e/aijXrdb60dylBydr1q3YN8yz+zbu+7bGZ4j8eo/dnQ+lK
- HhYPafg8cXPUxotwKpyOZqTScEE=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ bh=rLhkpcNoaqnuBhepX0TolrS1gJHVZEfwyfQsThRNrBw=; b=aw02MwLJhUm7JC79RBnA0WdyVP0mUA5DFJEj6fX9mwBMqhohC9gpq1vlxs5BqXs2mglwX0XX
+ dS4yC2Syp0SiQAycaJXS380PAOCbFUplYTeSOw1+ftsae2f7iLymD2GuaPNPvJFihsaoWy24
+ e8gA9dIqfDewhAyygrd6vJ56w18=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5eec63b83a8a8b20b88ae605 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 07:05:28
+ smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
+ 5eec63c4e144dd5115d5e80b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 07:05:40
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CBBA5C43391; Fri, 19 Jun 2020 07:05:28 +0000 (UTC)
+        id 2690BC433CB; Fri, 19 Jun 2020 07:05:40 +0000 (UTC)
 Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F837C433CA;
-        Fri, 19 Jun 2020 07:05:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F837C433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA2D3C433C9;
+        Fri, 19 Jun 2020 07:05:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA2D3C433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
 From:   Kathiravan T <kathirav@codeaurora.org>
@@ -54,9 +53,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
 Cc:     sivaprak@codeaurora.org
-Subject: [PATCH 1/6] dt-bindings: soc: qcom: add YAML schema for SMD-RPM driver
-Date:   Fri, 19 Jun 2020 12:35:02 +0530
-Message-Id: <1592550307-11040-2-git-send-email-kathirav@codeaurora.org>
+Subject: [PATCH 4/6] dt-bindings: regulator: add YAML schema for QCOM SMD-RPM regulator
+Date:   Fri, 19 Jun 2020 12:35:05 +0530
+Message-Id: <1592550307-11040-5-git-send-email-kathirav@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
 References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
@@ -65,67 +64,308 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add YAML schema for the devitree properties used in the SMD-RPM driver.
+Add the YAML schema for the devicetree properties used in the QCOM
+SMD-RPM driver.
 
 Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
 ---
- .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  | 62 ---------------
- .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml | 91 ++++++++++++++++++++++
- 2 files changed, 91 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 320 ---------------------
+ .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 105 +++++++
+ 2 files changed, 105 insertions(+), 320 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
 deleted file mode 100644
-index 616fddc..00000000
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+index dea4384..00000000
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
 +++ /dev/null
-@@ -1,62 +0,0 @@
--Qualcomm Resource Power Manager (RPM) over SMD
+@@ -1,320 +0,0 @@
+-QCOM SMD RPM REGULATOR
 -
--This driver is used to interface with the Resource Power Manager (RPM) found in
--various Qualcomm platforms. The RPM allows each component in the system to vote
--for state of the system resources, such as clocks, regulators and bus
--frequencies.
+-The Qualcomm RPM over SMD regulator is modelled as a subdevice of the RPM.
+-Because SMD is used as the communication transport mechanism, the RPM resides as
+-a subnode of the SMD.  As such, the SMD-RPM regulator requires that the SMD and
+-RPM nodes be present.
 -
--The SMD information for the RPM edge should be filled out.  See qcom,smd.txt for
--the required edge properties.  All SMD related properties will reside within the
--RPM node itself.
+-Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt for
+-information pertaining to the SMD node.
 -
--= SUBDEVICES
+-Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt for
+-information regarding the RPM node.
 -
--The RPM exposes resources to its subnodes.  The rpm_requests node must be
--present and this subnode may contain children that designate regulator
--resources.
+-== Regulator
+-
+-Regulator nodes are identified by their compatible:
 -
 -- compatible:
 -	Usage: required
 -	Value type: <string>
 -	Definition: must be one of:
--		    "qcom,rpm-apq8084"
--		    "qcom,rpm-msm8916"
--		    "qcom,rpm-msm8974"
--		    "qcom,rpm-msm8976"
--		    "qcom,rpm-msm8998"
--		    "qcom,rpm-sdm660"
--		    "qcom,rpm-qcs404"
+-		    "qcom,rpm-pm8841-regulators"
+-		    "qcom,rpm-pm8916-regulators"
+-		    "qcom,rpm-pm8941-regulators"
+-		    "qcom,rpm-pm8950-regulators"
+-		    "qcom,rpm-pm8994-regulators"
+-		    "qcom,rpm-pm8998-regulators"
+-		    "qcom,rpm-pma8084-regulators"
+-		    "qcom,rpm-pmi8994-regulators"
+-		    "qcom,rpm-pmi8998-regulators"
+-		    "qcom,rpm-pms405-regulators"
 -
--- qcom,smd-channels:
--	Usage: required
--	Value type: <string>
--	Definition: must be "rpm_requests"
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_s5-supply:
+-- vdd_s6-supply:
+-- vdd_s7-supply:
+-- vdd_s8-supply:
+-	Usage: optional (pm8841 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
 -
--Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
--for information on the regulator subnodes that can exist under the rpm_requests.
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_l1_l2_l3-supply:
+-- vdd_l4_l5_l6-supply:
+-- vdd_l7-supply:
+-- vdd_l8_l9_l10_l11_l12_l13_l14_l15_l16_l17_l18-supply:
+-	Usage: optional (pm8916 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
 -
--Example:
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_s4-supply:
+-- vdd_s5-supply:
+-- vdd_s6-supply:
+-- vdd_l1_l19-supply:
+-- vdd_l2_l23-supply:
+-- vdd_l3-supply:
+-- vdd_l4_l5_l6_l7_l16-supply:
+-- vdd_l8_l11_l12_l17_l22-supply:
+-- vdd_l9_l10_l13_l14_l15_l18-supply:
+-- vdd_l20-supply:
+-- vdd_l21-supply:
+-	Usage: optional (pm8950 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
 -
--	soc {
--		apcs: syscon@f9011000 {
--			compatible = "syscon";
--			reg = <0xf9011000 0x1000>;
--		};
--	};
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_l1_l3-supply:
+-- vdd_l2_lvs1_2_3-supply:
+-- vdd_l4_l11-supply:
+-- vdd_l5_l7-supply:
+-- vdd_l6_l12_l14_l15-supply:
+-- vdd_l8_l16_l18_l19-supply:
+-- vdd_l9_l10_l17_l22-supply:
+-- vdd_l13_l20_l23_l24-supply:
+-- vdd_l21-supply:
+-- vin_5vs-supply:
+-	Usage: optional (pm8941 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_s5-supply:
+-- vdd_s6-supply:
+-- vdd_s7-supply:
+-- vdd_s8-supply:
+-- vdd_s9-supply:
+-- vdd_s10-supply:
+-- vdd_s11-supply:
+-- vdd_s12-supply:
+-- vdd_l1-supply:
+-- vdd_l2_l26_l28-supply:
+-- vdd_l3_l11-supply:
+-- vdd_l4_l27_l31-supply:
+-- vdd_l5_l7-supply:
+-- vdd_l6_l12_l32-supply:
+-- vdd_l5_l7-supply:
+-- vdd_l8_l16_l30-supply:
+-- vdd_l9_l10_l18_l22-supply:
+-- vdd_l9_l10_l18_l22-supply:
+-- vdd_l3_l11-supply:
+-- vdd_l6_l12_l32-supply:
+-- vdd_l13_l19_l23_l24-supply:
+-- vdd_l14_l15-supply:
+-- vdd_l14_l15-supply:
+-- vdd_l8_l16_l30-supply:
+-- vdd_l17_l29-supply:
+-- vdd_l9_l10_l18_l22-supply:
+-- vdd_l13_l19_l23_l24-supply:
+-- vdd_l20_l21-supply:
+-- vdd_l20_l21-supply:
+-- vdd_l9_l10_l18_l22-supply:
+-- vdd_l13_l19_l23_l24-supply:
+-- vdd_l13_l19_l23_l24-supply:
+-- vdd_l25-supply:
+-- vdd_l2_l26_l28-supply:
+-- vdd_l4_l27_l31-supply:
+-- vdd_l2_l26_l28-supply:
+-- vdd_l17_l29-supply:
+-- vdd_l8_l16_l30-supply:
+-- vdd_l4_l27_l31-supply:
+-- vdd_l6_l12_l32-supply:
+-- vdd_lvs1_2-supply:
+-	Usage: optional (pm8994 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_bst_byp-supply:
+-	Usage: optional (pmi8994 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_s5-supply:
+-- vdd_s6-supply:
+-- vdd_s7-supply:
+-- vdd_s8-supply:
+-- vdd_s9-supply:
+-- vdd_s10-supply:
+-- vdd_s11-supply:
+-- vdd_s12-supply:
+-- vdd_s13-supply:
+-- vdd_l1_l27-supply:
+-- vdd_l20_l24-supply:
+-- vdd_l26-supply:
+-- vdd_l2_l8_l17-supply:
+-- vdd_l3_l11-supply:
+-- vdd_l4_l5-supply:
+-- vdd_l6-supply:
+-- vdd_l7_l12_l14_l15-supply:
+-- vdd_l9-supply:
+-- vdd_l10_l23_l25-supply:
+-- vdd_l13_l19_l21-supply:
+-- vdd_l16_l28-supply:
+-- vdd_l18_l22-supply:
+-- vdd_lvs1_lvs2-supply:
+-	Usage: optional (pmi8998 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_s5-supply:
+-- vdd_s6-supply:
+-- vdd_s7-supply:
+-- vdd_s8-supply:
+-- vdd_s9-supply:
+-- vdd_s10-supply:
+-- vdd_s11-supply:
+-- vdd_s12-supply:
+-- vdd_l1_l11-supply:
+-- vdd_l2_l3_l4_l27-supply:
+-- vdd_l5_l7-supply:
+-- vdd_l6_l12_l14_l15_l26-supply:
+-- vdd_l8-supply:
+-- vdd_l9_l10_l13_l20_l23_l24-supply:
+-- vdd_l16_l25-supply:
+-- vdd_l17-supply:
+-- vdd_l18-supply:
+-- vdd_l19-supply:
+-- vdd_l21-supply:
+-- vdd_l22-supply:
+-	Usage: optional (pma8084 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-- vdd_bob-supply:
+-	Usage: optional (pmi8998 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-- vdd_s1-supply:
+-- vdd_s2-supply:
+-- vdd_s3-supply:
+-- vdd_s4-supply:
+-- vdd_s5-supply:
+-- vdd_l1_l2-supply:
+-- vdd_l3_l8-supply:
+-- vdd_l4-supply:
+-- vdd_l5_l6-supply:
+-- vdd_l7-supply:
+-- vdd_l3_l8-supply:
+-- vdd_l9-supply:
+-- vdd_l10_l11_l12_l13-supply:
+-	Usage: optional (pms405 only)
+-	Value type: <phandle>
+-	Definition: reference to regulator supplying the input pin, as
+-		    described in the data sheet
+-
+-The regulator node houses sub-nodes for each regulator within the device. Each
+-sub-node is identified using the node's name, with valid values listed for each
+-of the pmics below.
+-
+-pm8841:
+-	s1, s2, s3, s4, s5, s6, s7, s8
+-
+-pm8916:
+-	s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13,
+-	l14, l15, l16, l17, l18
+-
+-pm8941:
+-	s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13,
+-	l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
+-	lvs3, 5vs1, 5vs2
+-
+-pm8994:
+-	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
+-	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+-	l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
+-
+-pm8998:
+-	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, l1, l2, l3, l4,
+-	l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
+-	l20, l21, l22, l23, l24, l25, l26, l27, l28, lvs1, lvs2
+-
+-pma8084:
+-	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
+-	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+-	l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
+-
+-pmi8994:
+-	s1, s2, s3, boost-bypass
+-
+-pmi8998:
+-	bob
+-
+-pms405:
+-	s1, s2, s3, s4, s5, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
+-	l13
+-
+-The content of each sub-node is defined by the standard binding for regulators -
+-see regulator.txt.
+-
+-= EXAMPLE
 -
 -	smd {
 -		compatible = "qcom,smd";
@@ -139,41 +379,85 @@ index 616fddc..00000000
 -				compatible = "qcom,rpm-msm8974";
 -				qcom,smd-channels = "rpm_requests";
 -
--				...
+-				pm8941-regulators {
+-					compatible = "qcom,rpm-pm8941-regulators";
+-					vdd_l13_l20_l23_l24-supply = <&pm8941_boost>;
+-
+-					pm8941_s3: s3 {
+-						regulator-min-microvolt = <1800000>;
+-						regulator-max-microvolt = <1800000>;
+-					};
+-
+-					pm8941_boost: s4 {
+-						regulator-min-microvolt = <5000000>;
+-						regulator-max-microvolt = <5000000>;
+-					};
+-
+-					pm8941_l20: l20 {
+-						regulator-min-microvolt = <2950000>;
+-						regulator-max-microvolt = <2950000>;
+-					};
+-				};
 -			};
 -		};
 -	};
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
 new file mode 100644
-index 00000000..5b33def
+index 00000000..cb0bd7b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-@@ -0,0 +1,91 @@
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
+@@ -0,0 +1,105 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/soc/qcom/qcom,smd-rpm.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/regulator/qcom,smd-rpm-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Qualcomm Resource Power Manager (RPM) over SMD
++title: QCOM SMD RPM REGULATOR
 +
-+description: |
-+  This driver is used to interface with the Resource Power Manager (RPM) found
-+  in various Qualcomm platforms. The RPM allows each component in the system
-+  to vote for state of the system resources, such as clocks, regulators and bus
-+  frequencies.
++description:
++  The Qualcomm RPM over SMD regulator is modelled as a subdevice of the RPM.
++  Because SMD is used as the communication transport mechanism, the RPM
++  resides as a subnode of the SMD.  As such, the SMD-RPM regulator requires
++  that the SMD and RPM nodes be present.
 +
-+  The SMD information for the RPM edge should be filled out.  See qcom,smd.txt
-+  for the required edge properties.  All SMD related properties will reside
-+  within the RPM node itself.
++  Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt for
++  information pertaining to the SMD node.
 +
-+  The RPM exposes resources to its subnodes.  The rpm_requests node must be
-+  present and this subnode may contain children that designate regulator
-+  resources.
++  Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
++  for information regarding the RPM node.
 +
-+  Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-+  for information on the regulator subnodes that can exist under the
-+  rpm_requests.
++  The regulator node houses sub-nodes for each regulator within the device.
++  Each sub-node is identified using the node's name, with valid values listed
++  for each of the pmics below.
++
++  For pm8841, s1, s2, s3, s4, s5, s6, s7, s8
++
++  For pm8916, s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
++  l12, l13, l14, l15, l16, l17, l18
++
++  For pm8941, s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
++  l12, l13, l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
++  lvs3, 5vs1, 5vs2
++
++  For pm8994, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3,
++  l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
++  l20, l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
++
++  For pm8998, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, l1, l2,
++  l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
++  l20, l21, l22, l23, l24, l25, l26, l27, l28, lvs1, lvs2
++
++  For pma8084, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3,
++  l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
++  l20, l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
++
++  For pmi8994, s1, s2, s3, boost-bypass
++
++  For pmi8998, bob
++
++  For pms405, s1, s2, s3, s4, s5, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
++  l12, l13
 +
 +maintainers:
 +  - Kathiravan T <kathirav@codeaurora.org>
@@ -181,64 +465,52 @@ index 00000000..5b33def
 +properties:
 +  compatible:
 +    enum:
-+      - qcom,rpm-apq8084
-+      - qcom,rpm-msm8916
-+      - qcom,rpm-msm8974
-+      - qcom,rpm-msm8976
-+      - qcom,rpm-msm8996
-+      - qcom,rpm-msm8998
-+      - qcom,rpm-sdm660
-+      - qcom,rpm-qcs404
++      - qcom,rpm-pm8841-regulators
++      - qcom,rpm-pm8916-regulators
++      - qcom,rpm-pm8941-regulators
++      - qcom,rpm-pm8950-regulators
++      - qcom,rpm-pm8994-regulators
++      - qcom,rpm-pm8998-regulators
++      - qcom,rpm-pma8084-regulators
++      - qcom,rpm-pmi8994-regulators
++      - qcom,rpm-pmi8998-regulators
++      - qcom,rpm-pms405-regulators
 +
-+  qcom,smd-channels:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: Channel name used for the RPM communication
-+    items:
-+      - const: rpm_requests
++patternProperties:
++  ".*-supply$":
++    description: Input supply phandle(s) for this node
 +
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - qcom,rpm-apq8084
-+          - qcom,rpm-msm8916
-+          - qcom,rpm-msm8974
-+then:
-+  required:
-+    - qcom,smd-channels
++  "^((s|l|lvs|5vs)[0-9]*)|(boost-bypass)|(bob)$":
++    description: List of regulators and its properties
++    allOf:
++     - $ref: regulator.yaml#
++
++additionalProperties: false
 +
 +required:
 +  - compatible
 +
-+additionalProperties: false
-+
 +examples:
 +  - |
-+    soc {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        apcs: syscon@f9011000 {
-+              compatible = "syscon";
-+              reg = <0xf9011000 0x1000>;
++    pm8941-regulators {
++        compatible = "qcom,rpm-pm8941-regulators";
++        vdd_l13_l20_l23_l24-supply = <&pm8941_boost>;
++
++        pm8941_s3: s3 {
++            regulator-min-microvolt = <1800000>;
++            regulator-max-microvolt = <1800000>;
++        };
++
++        pm8941_boost: s4 {
++            regulator-min-microvolt = <5000000>;
++            regulator-max-microvolt = <5000000>;
++        };
++
++        pm8941_l20: l20 {
++            regulator-min-microvolt = <2950000>;
++            regulator-max-microvolt = <2950000>;
 +        };
 +    };
-+    smd {
-+        compatible = "qcom,smd";
-+
-+        rpm {
-+            interrupts = <0 168 1>;
-+            qcom,ipc = <&apcs 8 0>;
-+            qcom,smd-edge = <15>;
-+
-+                rpm_requests {
-+                        compatible = "qcom,rpm-msm8974";
-+                        qcom,smd-channels = "rpm_requests";
-+
-+                        /* Regulator nodes to follow */
-+                };
-+            };
-+     };
 +...
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
