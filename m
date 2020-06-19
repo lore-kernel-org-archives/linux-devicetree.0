@@ -2,145 +2,179 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75454C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DC6C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5C92168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583891;
-	bh=stJzp+0uDkiYIjALJsrQp9bsVu0wkK33koz/CtwL74o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjZzHnivn0+/Nng3q1+d7azQ3MOZkVQFgzd/xv5J3w0lfEJlOk2l8lRDnybWbqNDV
-	 fJBE7InxE8MhGQ3DESRC4ldvWLOj4Qtr7cBq+17AEiIJiKn/gP3g5hy0J2qez/vA+F
-	 /CQiKoz8QZ0yv9AvvaIciEeiKtp9YkwJCDdUYhLo=
+	by mail.kernel.org (Postfix) with ESMTP id 50DF42168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e81kJ2zI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394804AbgFSQYu (ORCPT
+        id S2394732AbgFSQY6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53312 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:24:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11064 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389898AbgFSO5v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2394808AbgFSQYz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:24:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592583893; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=mXJdDC2hfvuYe5kBaaVL6RFz62vgkC1W/BsD+CIz5dM=;
+ b=e81kJ2zI+SgxBruoglyz+obkeE8npO/JYtF57jqdPuEY4dt/Lsolm6tZ6S494CLQYR9rSLxC
+ aIh3waVDfs094Xhy42bpEItQl8rczEgg4fcNcY4GSRvyv8uUZ3XIbf/ZwuoFjCnKQfxPqxkZ
+ u5MKBw5z9THusPXnZRvarVPf1r0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5eece6cd567385e8e7000d89 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 16:24:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2511BC433C8; Fri, 19 Jun 2020 16:24:44 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F4521835;
-        Fri, 19 Jun 2020 14:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578671;
-        bh=stJzp+0uDkiYIjALJsrQp9bsVu0wkK33koz/CtwL74o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTnmdRBDmcEeIKlOu9GEN6wlvhqqqT8Yrpe+hQMKhbZG9wG1ohhx01SfZ0hjiJYFc
-         8Zo4qMQMvl/WLbz6D4Md71uB++36WNES+w4Zcd/gG1E9mxTCFHYkMHPU/4DlYvUu1f
-         GXGocqQqgGiK34nZ3RwQZkzC2ZTptwXUcoPn9Fkk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/267] clocksource: dw_apb_timer: Make CPU-affiliation being optional
-Date:   Fri, 19 Jun 2020 16:31:36 +0200
-Message-Id: <20200619141654.178893412@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: akolli)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40995C433A0;
+        Fri, 19 Jun 2020 16:24:43 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 19 Jun 2020 21:54:42 +0530
+From:   akolli@codeaurora.org
+To:     Julian Calaby <julian.calaby@gmail.com>
+Cc:     ath11k@lists.infradead.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] ath11k: copy ce service configs to hw_params
+In-Reply-To: <CAGRGNgV74fCD1gb=rXEe1BMN5+5stYeX3W6eKc4-do76TBmFqA@mail.gmail.com>
+References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
+ <1592458104-2961-3-git-send-email-akolli@codeaurora.org>
+ <CAGRGNgV74fCD1gb=rXEe1BMN5+5stYeX3W6eKc4-do76TBmFqA@mail.gmail.com>
+Message-ID: <34ed705f28b40fab493b8c888138e6a7@codeaurora.org>
+X-Sender: akolli@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On 2020-06-19 04:40, Julian Calaby wrote:
+> Hi Anilkumar,
+> 
+> On Thu, Jun 18, 2020 at 3:31 PM Anilkumar Kolli <akolli@codeaurora.org> 
+> wrote:
+>> 
+>> No functional changes, added target ce service configurations
+>> to hw_params.
+>> 
+>> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+>> ---
+>> V3:
+>>  - added ce svc configs in hw_params
+>> 
+>>  drivers/net/wireless/ath/ath11k/ahb.c  | 20 +++++++++++++++-----
+>>  drivers/net/wireless/ath/ath11k/core.c |  8 +-------
+>>  drivers/net/wireless/ath/ath11k/core.h |  1 +
+>>  drivers/net/wireless/ath/ath11k/hw.h   |  2 ++
+>>  4 files changed, 19 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/drivers/net/wireless/ath/ath11k/ahb.c 
+>> b/drivers/net/wireless/ath/ath11k/ahb.c
+>> index 7e9bfeaaf4d2..aa74d27e5871 100644
+>> --- a/drivers/net/wireless/ath/ath11k/ahb.c
+>> +++ b/drivers/net/wireless/ath/ath11k/ahb.c
+>> @@ -152,7 +152,7 @@ static const struct ce_pipe_config 
+>> target_ce_config_wlan[] = {
+>>   * This table is derived from the CE_PCI TABLE, above.
+>>   * It is passed to the Target at startup for use by firmware.
+>>   */
+>> -static const struct service_to_pipe target_service_to_ce_map_wlan[] = 
+>> {
+>> +static const struct service_to_pipe 
+>> target_service_to_ce_map_wlan_ipq8074[] = {
+>>         {
+>>                 .service_id = 
+>> __cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
+>>                 .pipedir = __cpu_to_le32(PIPEDIR_OUT),  /* out = UL = 
+>> host -> target */
+>> @@ -644,8 +644,8 @@ static void ath11k_ahb_init_qmi_ce_config(struct 
+>> ath11k_base *ab)
+>> 
+>>         cfg->tgt_ce_len = ARRAY_SIZE(target_ce_config_wlan) - 1;
+>>         cfg->tgt_ce = target_ce_config_wlan;
+>> -       cfg->svc_to_ce_map_len = 
+>> ARRAY_SIZE(target_service_to_ce_map_wlan);
+>> -       cfg->svc_to_ce_map = target_service_to_ce_map_wlan;
+>> +       cfg->svc_to_ce_map_len = ab->hw_params.svc_to_ce_map_len;
+>> +       cfg->svc_to_ce_map = ab->hw_params.svc_to_ce_map;
+>>  }
+>> 
+>>  static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
+>> @@ -853,8 +853,8 @@ static int ath11k_ahb_map_service_to_pipe(struct 
+>> ath11k_base *ab, u16 service_id
+>>         bool ul_set = false, dl_set = false;
+>>         int i;
+>> 
+>> -       for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan); 
+>> i++) {
+>> -               entry = &target_service_to_ce_map_wlan[i];
+>> +       for (i = 0; i < ab->hw_params.svc_to_ce_map_len; i++) {
+>> +               entry = &ab->hw_params.svc_to_ce_map[i];
+>> 
+>>                 if (__le32_to_cpu(entry->service_id) != service_id)
+>>                         continue;
+>> @@ -950,6 +950,16 @@ static int ath11k_ahb_probe(struct 
+>> platform_device *pdev)
+>>                 goto err_hal_srng_deinit;
+>>         }
+>> 
+>> +       ret = ath11k_init_hw_params(ab);
+>> +       if (ret) {
+>> +               ath11k_err(ab, "failed to get hw params %d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ab->hw_params.svc_to_ce_map_len =
+>> +                       
+>> ARRAY_SIZE(target_service_to_ce_map_wlan_ipq8074);
+>> +       ab->hw_params.svc_to_ce_map = 
+>> target_service_to_ce_map_wlan_ipq8074;
+> 
+> I think you misunderstood my point about this, the point wasn't to
+> copy the svc map to hw_params, but define it in hw_params:
+> 
+> +       {
+> +               .hw_rev = ATH11K_HW_IPQ6018,
+> +               .name = "ipq6018 hw1.0",
+> +               .fw = {
+> +                       .dir = "IPQ6018/hw1.0",
+> +                       .board_size = 256 * 1024,
+> +                       .cal_size = 256 * 1024,
+> +               },
+> +               .max_radios = 2,
+> +               .bdf_addr = 0x4ABC0000,
+> +               .hw_ops = &ipq6018_ops,
+> +               .svc_to_ce_map_len =
+> ARRAY_SIZE(target_service_to_ce_map_wlan_ipq6018,
+> +               .svc_to_ce_map = target_service_to_ce_map_wlan_ipq6018,
+> +       },
+> 
+> That completely eliminates special case code based on the hardware ID
+> in the driver.
+> 
+The static array of structures target_service_to_ce_map_wlan_ipq6018[] 
+is defined in ahb.c and hw_params are initialised in core.c, this will 
+not work. no?
 
-[ Upstream commit cee43dbf2ee3f430434e2b66994eff8a1aeda889 ]
-
-Currently the DW APB Timer driver binds each clockevent timers to a
-particular CPU. This isn't good for multiple reasons. First of all seeing
-the device is placed on APB bus (which makes it accessible from any CPU
-core), accessible over MMIO and having the DYNIRQ flag set we can be sure
-that manually binding the timer to any CPU just isn't correct. By doing
-so we just set an extra limitation on device usage. This also doesn't
-reflect the device actual capability, since by setting the IRQ affinity
-we can make it virtually local to any CPU. Secondly imagine if you had a
-real CPU-local timer with the same rating and the same CPU-affinity.
-In this case if DW APB timer was registered first, then due to the
-clockevent framework tick-timer selection procedure we'll end up with the
-real CPU-local timer being left unselected for clock-events tracking. But
-on most of the platforms (MIPS/ARM/etc) such timers are normally embedded
-into the CPU core and are accessible with much better performance then
-devices placed on APB. For instance in MIPS architectures there is
-r4k-timer, which is CPU-local, assigned with the same rating, and normally
-its clockevent device is registered after the platform-specific one.
-
-So in order to fix all of these issues let's make the DW APB Timer CPU
-affinity being optional and deactivated by passing a negative CPU id,
-which will effectively set the DW APB clockevent timer cpumask to
-'cpu_possible_mask'.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200521204818.25436-5-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clocksource/dw_apb_timer.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clocksource/dw_apb_timer.c b/drivers/clocksource/dw_apb_timer.c
-index 1f5f734e4919..a018199575e3 100644
---- a/drivers/clocksource/dw_apb_timer.c
-+++ b/drivers/clocksource/dw_apb_timer.c
-@@ -225,7 +225,8 @@ static int apbt_next_event(unsigned long delta,
- /**
-  * dw_apb_clockevent_init() - use an APB timer as a clock_event_device
-  *
-- * @cpu:	The CPU the events will be targeted at.
-+ * @cpu:	The CPU the events will be targeted at or -1 if CPU affiliation
-+ *		isn't required.
-  * @name:	The name used for the timer and the IRQ for it.
-  * @rating:	The rating to give the timer.
-  * @base:	I/O base for the timer registers.
-@@ -260,7 +261,7 @@ dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
- 	dw_ced->ced.max_delta_ticks = 0x7fffffff;
- 	dw_ced->ced.min_delta_ns = clockevent_delta2ns(5000, &dw_ced->ced);
- 	dw_ced->ced.min_delta_ticks = 5000;
--	dw_ced->ced.cpumask = cpumask_of(cpu);
-+	dw_ced->ced.cpumask = cpu < 0 ? cpu_possible_mask : cpumask_of(cpu);
- 	dw_ced->ced.features = CLOCK_EVT_FEAT_PERIODIC |
- 				CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
- 	dw_ced->ced.set_state_shutdown = apbt_shutdown;
--- 
-2.25.1
-
-
-
+Thanks
+Anil
