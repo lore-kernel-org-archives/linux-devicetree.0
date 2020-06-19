@@ -2,214 +2,305 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CE7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B588C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 22:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B8720679
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A9022265
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 22:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DvBY4mHJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4UFXog3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgFSVzN (ORCPT
+        id S1729005AbgFSWKJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:55:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:37751 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728218AbgFSVzM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 17:55:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592603711; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=wam1wyE1W3Of+tegUUPP3NeNpIntvTygPj4lrZBjm+o=;
- b=DvBY4mHJAMR54XhbJHfUjFQ+xy6ZtduwK8l0DCMt714uS87O078UnW3hjFNyEOlcSGdzU9NC
- Ux8amxCHnde0dhnlsjpLYaGTXhjPLZLc1hKNhrEcz+KPhYVrApuR20Pp2fJwFHud/LNJM+cH
- MmcVFlfTTNLeaDc3jQxc93XhwzI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5eed343d6bebe35deb2df76f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 21:55:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5208EC43387; Fri, 19 Jun 2020 21:55:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C819C433CA;
-        Fri, 19 Jun 2020 21:55:08 +0000 (UTC)
+        Fri, 19 Jun 2020 18:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728906AbgFSWKI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 18:10:08 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66AEDC06174E;
+        Fri, 19 Jun 2020 15:10:08 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p20so11746286ejd.13;
+        Fri, 19 Jun 2020 15:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U9kuTO2iPn0ptZqewG7UxF5Sm1BcoMAYjmIFd+9dDpE=;
+        b=N4UFXog3hNaZNw71eWcAdiWUH9c+CT/LnRwj2Zpv/+3vf0wf3iBL3jRYQOhiYTgtzN
+         +V+XbdeOyGVWXzFNHJ70n8PC6/yORz1FjDi0Wk4JznMRPYn9Zj7kmCmp2059GP5EBdk4
+         1ZZmwW+8XbQjYN8oyM/k1iWMiZB1UfJwP5pkFJ4oZQ5R4PwfLH9Bxf1DwfjgB5Dinw7t
+         vISoqRccR2KZwnbZnHnen4haPanIHeCX9hPjtLBxRdMB/sadNoTLH8X2D5g8CpteF0zj
+         hlTZEeoTt1Eh5VV5N48N3HNy00XR6SKMF2DBjM4h/HHtVxxA0qNyl3uknppvxkw5CGjL
+         0A1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U9kuTO2iPn0ptZqewG7UxF5Sm1BcoMAYjmIFd+9dDpE=;
+        b=Hf7ycqOex9vWjQ562qpiDi5qyXENnWw8/qgVal512/NFlH1XHbi7L7jA2Bwc8JDyjt
+         MiWd3dc1WU1j5ACfuHO6bbaRFxhFNeKXX2URj0tyaZHEvHZrfePYN0XpPV2eO6crZQUV
+         er0APpFvDHzevyKl4Sj2RyHvNQTQOdBYC05YhZwJFnw3z8gmJX1pjtuE2o9XAg1kOXie
+         mKZPXrRC9mzYZNQ0tyhf30fMJsxZtOC+oCwUszy4Y8Dv9WxmuCba223w5Q+dDx3fbWyL
+         /WrqdudfBGXcncJMVVU1XIiIijpAmaVaxG6pDrqzNvRk9R3amcGfM7PXe7G/fkPXdqZP
+         fmwQ==
+X-Gm-Message-State: AOAM530pj11frtNanM3326P1NzEUKQcHwdYhtSLdaeau5tdVhmSBKuIh
+        ZczFOaeMybCa/7Pgc5QHG6XJGJXf
+X-Google-Smtp-Source: ABdhPJxp7XR9gdmWkCR8RfqyT/37oQUAuibX+I95xkrKcKR8QCpP3fg/esHudEPKDeINSzkQOuOZkA==
+X-Received: by 2002:a17:906:7043:: with SMTP id r3mr5535688ejj.270.1592604606732;
+        Fri, 19 Jun 2020 15:10:06 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:98c8:c0f7:fd90:a9ec? ([2a01:110f:b59:fd00:98c8:c0f7:fd90:a9ec])
+        by smtp.gmail.com with ESMTPSA id c4sm5649983ejb.17.2020.06.19.15.10.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 15:10:06 -0700 (PDT)
+Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
+ support to lp55xx
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh@kernel.org
+Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615201522.19677-12-dmurphy@ti.com>
+ <202006180032.JW0i39C6%lkp@intel.com>
+ <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+ <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
+ <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
+ <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
+ <56823113-4875-4813-8627-84b0d1792391@ti.com>
+ <bd603f01-2c1b-6167-d88c-3895c1bfdf6c@gmail.com>
+ <fad98aa3-cec6-3cde-951f-fa2b57c26d03@gmail.com>
+ <04473d1d-5cd8-7d1f-7c5d-8d8b582df464@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <1f5dd2f9-01c7-1f74-9b93-0ae2a6dac915@gmail.com>
+Date:   Sat, 20 Jun 2020 00:10:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 19 Jun 2020 14:55:08 -0700
-From:   tanmay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, robdclark@gmail.com, dianders@chromium.org,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        bjorn.andersson@linaro.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add Display Port dt node
-In-Reply-To: <159252916745.62212.16228625951632835694@swboyd.mtv.corp.google.com>
-References: <20200618232113.22687-1-tanmay@codeaurora.org>
- <159252916745.62212.16228625951632835694@swboyd.mtv.corp.google.com>
-Message-ID: <c110cd89a3144a20b21ec392f50eee68@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <04473d1d-5cd8-7d1f-7c5d-8d8b582df464@ti.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Stephen for reviews.
-I will post new change addressing your all comments.
+Dan,
 
-On 2020-06-18 18:12, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-06-18 16:21:13)
->> Enable DP driver for sc7180.
+On 6/19/20 6:35 PM, Dan Murphy wrote:
+> Jacek
 > 
-> Add DP device node on sc7180? This isn't a driver.
+> On 6/18/20 6:26 PM, Jacek Anaszewski wrote:
+>> On 6/19/20 12:09 AM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 6/18/20 11:44 PM, Dan Murphy wrote:
+>>>> Jacek
+>>>>
+>>>> On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
+>>>>> Dan,
+>>>>>
+>>>>> On 6/18/20 12:33 AM, Dan Murphy wrote:
+>>>>>> Jacek
+>>>>>>
+>>>>>> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
+>>>>>>> Dan,
+>>>>>>>
+>>>>>>> On 6/17/20 9:22 PM, Dan Murphy wrote:
+>>>>>>>> Pavel/Jacek
+>>>>>>>>
+>>>>>>>> On 6/17/20 11:28 AM, kernel test robot wrote:
+>>>>>>>>> Hi Dan,
+>>>>>>>>>
+>>>>>>>>> I love your patch! Yet something to improve:
+>>>>>>>>>
+>>>>>>>>> [auto build test ERROR on pavel-linux-leds/for-next]
+>>>>>>>>> [cannot apply to j.anaszewski-leds/for-next]
+>>>>>>>>> [if your patch is applied to the wrong git tree, please drop us 
+>>>>>>>>> a note to help
+>>>>>>>>> improve the system. BTW, we also suggest to use '--base' option 
+>>>>>>>>> to specify the
+>>>>>>>>> base tree in git format-patch, please see 
+>>>>>>>>> https://stackoverflow.com/a/37406982]
+>>>>>>>>>
+>>>>>>>>> url: 
+>>>>>>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
+>>>>>>>>>
+>>>>>>>>> base: 
+>>>>>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
+>>>>>>>>> for-next
+>>>>>>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
+>>>>>>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
+>>>>>>>>> reproduce (this is a W=1 build):
+>>>>>>>>>          wget 
+>>>>>>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
+>>>>>>>>> -O ~/bin/make.cross
+>>>>>>>>>          chmod +x ~/bin/make.cross
+>>>>>>>>>          # save the attached .config to linux build tree
+>>>>>>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
+>>>>>>>>> make.cross ARCH=ia64
+>>>>>>>>>
+>>>>>>>>> If you fix the issue, kindly add following tag as appropriate
+>>>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>>>>
+>>>>>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>>>>>>>>
+>>>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>>>>>> `lp55xx_set_mc_brightness':
+>>>>>>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
+>>>>>>>>>>> `led_mc_calc_color_components'
+>>>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>>>>>> `devm_led_classdev_multicolor_register':
+>>>>>>>>>>> include/linux/led-class-multicolor.h:74: undefined reference 
+>>>>>>>>>>> to `devm_led_classdev_multicolor_register_ext'
+>>>>>>>>> vim +146 drivers/leds/leds-lp55xx-common.c
+>>>>>>>>>
+>>>>>>>>>     138
+>>>>>>>>>     139    static int lp55xx_set_mc_brightness(struct 
+>>>>>>>>> led_classdev *cdev,
+>>>>>>>>>     140                        enum led_brightness brightness)
+>>>>>>>>>     141    {
+>>>>>>>>>     142        struct led_classdev_mc *mc_dev = 
+>>>>>>>>> lcdev_to_mccdev(cdev);
+>>>>>>>>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
+>>>>>>>>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
+>>>>>>>>>     145
+>>>>>>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
+>>>>>>>>>     147        return cfg->multicolor_brightness_fn(led);
+>>>>>>>>>     148
+>>>>>>>>
+>>>>>>>> Well this was a mess to figure out.
+>>>>>>>>
+>>>>>>>> The only fix I can figure out here is to remove the
+>>>>>>>>
+>>>>>>>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>>>>>>
+>>>>>>>> from each child device and add
+>>>>>>>>
+>>>>>>>>      select LEDS_CLASS_MULTI_COLOR
+>>>>>>>>
+>>>>>>>> to the LP55XX_COMMON
+>>>>>>>>
+>>>>>>>> This way the Multi color framework will inherit the symbol that 
+>>>>>>>> was set by the COMMON flag which is inherited by majority from 
+>>>>>>>> the child flags.
+>>>>>>>
+>>>>>>> Did you try this?
+>>>>>>>
+>>>>>>> --- a/drivers/leds/Kconfig
+>>>>>>> +++ b/drivers/leds/Kconfig
+>>>>>>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
+>>>>>>>  config LEDS_LP55XX_COMMON
+>>>>>>>         tristate "Common Driver for TI/National 
+>>>>>>> LP5521/5523/55231/5562/8501"
+>>>>>>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
+>>>>>>> LEDS_LP8501
+>>>>>>> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>>>>>         depends on OF
+>>>>>>>         select FW_LOADER
+>>>>>>>         select FW_LOADER_USER_HELPER
+>>>>>>>
+>>>>>>>
+>>>>>> Yes I did
+>>>>>>
+>>>>>> That gave unmet dependencies.
+>>>>>>
+>>>>>> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
+>>>>>>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || 
+>>>>>> LEDS_LP5523 [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
+>>>>>> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && 
+>>>>>> OF [=y]
+>>>>>>    Selected by [y]:
+>>>>>>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
+>>>>>>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
+>>>>>>    Selected by [m]:
+>>>>>>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C 
+>>>>>> [=y] && (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
+>>>>>>
+>>>>>
+>>>>> When I was testing that yesterday I also had the same warning at some
+>>>>> point of testing different Kconfig setups, but with what I showed 
+>>>>> above
+>>>>> it ceased to appear. Now every time I am doing "make oldconfig" the
+>>>>> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
+>>>>> from the test bot.
+>>>>>
+>>>> That is not what I saw in my testing especially after doing a distclean
+>>>
+>>> Could you please give your exact steps after "make distclean" and
+>>> copying test bot config to the kernel root directory?
+>>>
+>>> Also, please share the toolchain you're using for tests.
+>>
+>> Actually at this stage the toolchain is of lesser relevance.
+>>
+>> I've tried once more and indeed the problem shows up.
+>>
+>> It is caused by the driver entries doing
+>>
+>> "select LEDS_LP55XX_COMMON".
+>>
+>> Select sets config to "y" so it conflicts with
+>> "depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR"
+>> in the "config LEDS_LP55XX_COMMON".
+>>
+>> Your proposed fix will block the possibility of building
+>> LED_CLASS_MULTI_COLOR as a module when LP55XX drivers
+>> are enabled so this is also not an option.
+>>
+>> Solving this riddle will require some more thinking.
+>> I haven't analyzed it in detail but maybe "imply" statement from
+>> kconfig-language.rst could help somehow here. 
 > 
-Done.
->> 
->> This change depends-on following series:
->> https://patchwork.freedesktop.org/series/78583/
->> and https://patchwork.freedesktop.org/patch/351990/
->> 
->> Changes in v2:
->> 
->> - Add assigned-clocks and assigned-clock-parents
->> - Remove cell-index and pixel_rcg
->> - Change compatible to qcom,sc7180-dp
->> 
->> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 
->> ++++++++++++++++++++++++++--
->>  1 file changed, 53 insertions(+), 4 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 916401f7e87c..26fe623e3b0f 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -2216,10 +2216,19 @@ ports {
->>                                         #address-cells = <1>;
->>                                         #size-cells = <0>;
->> 
->> +                                       port@1 {
->> +                                               reg = <1>;
->> +                                               dpu_intf1_out: 
->> endpoint {
->> +                                                       
->> remote-endpoint =
->> +                                                                
->> <&dsi0_in>;
->> +                                               };
->> +                                       };
->> +
->>                                         port@0 {
->>                                                 reg = <0>;
->> -                                               dpu_intf1_out: 
->> endpoint {
->> -                                                       
->> remote-endpoint = <&dsi0_in>;
->> +                                               dpu_intf0_out: 
->> endpoint {
->> +                                                       
->> remote-endpoint =
->> +                                                                
->> <&dp_in>;
->>                                                 };
->>                                         };
->>                                 };
+> The multicolor framework will build as a module if the LED_CLASS is 
+> defined as a module.
 > 
-> I thought this wasn't supposed to change? At least according to the
-> binding it shouldn't be needed.
-> 
-Thanks. Yes it should be port@2 as per new dpu-sc7180.yaml bindings in 
-below patch.
-https://patchwork.freedesktop.org/patch/371087/?series=78583&rev=1
+> See attached test_defconfig
 
->> @@ -2293,6 +2302,46 @@ dsi_phy: dsi-phy@ae94400 {
->>                         };
->>                 };
->> 
->> +               msm_dp: displayport-controller@ae90000{
->> +                       status = "ok";
-> 
-> Please use status = "disabled";
-> 
-Ok got it. Board's DT will enable it.
+But it will be impossible to enable CONFIG_LEDS_LP50XX without
+CONFIG_LEDS_CLASS_MULTI_COLOR if you will remove
 
->> +                       compatible = "qcom,sc7180-dp";
->> +
->> +                       reg = <0 0xae90000 0 0x1400>;
->> +                       reg-names = "dp_controller";
->> +
->> +                       interrupt-parent = <&mdss>;
+depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR.
+
+This is actually why the above entry was needed.
+
+LP55XX drivers have to work also without multicolor class.
+
 > 
-> Any reason why this isn't under the mdss node like the other display
-> device nodes?
+> defconfig contents
 > 
-Done. Moved msm_dp node under mdss.
->> +                       interrupts = <12 0>;
->> +
->> +                       clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
->> +                                <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
->> +                                <&dispcc 
->> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
->> +                                <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
->> +                       clock-names = "core_aux", "ctrl_link",
->> +                                     "ctrl_link_iface", 
->> "stream_pixel";
->> +                       #clock-cells = <1>;
->> +                       assigned-clocks = <&dispcc 
->> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->> +                       assigned-clock-parents = <&msm_dp 1>;
->> +
->> +                       data-lanes = <0 1>;
+> CONFIG_NEW_LEDS=y
+> CONFIG_LEDS_CLASS=y
+> CONFIG_LEDS_CLASS_MULTI_COLOR=m
+> CONFIG_LEDS_LP50XX=m
+> CONFIG_LEDS_LP55XX_COMMON=y
+> CONFIG_LEDS_LP5523=m
+> CONFIG_LEDS_LP5562=m
+> CONFIG_LEDS_LP8501=m
 > 
-> This can and should be left to the board files. At the SoC level my
-> understanding is that there are four lanes possible, so no need to
-> artificially limit it here.
+> Output is
 > 
-Removed from here. Driver changes I will be posting accordingly.
->> +
->> +                       ports {
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +                               port@0 {
->> +                                       reg = <0>;
->> +                                       dp_in: endpoint {
->> +                                               remote-endpoint =
->> +                                                        
->> <&dpu_intf0_out>;
+> CONFIG_NEW_LEDS=y
+> CONFIG_LEDS_CLASS=y
+> CONFIG_LEDS_CLASS_MULTI_COLOR=m
+> CONFIG_LEDS_LP50XX=m
+> CONFIG_LEDS_LP55XX_COMMON=m
+> CONFIG_LEDS_LP5523=m
+> CONFIG_LEDS_LP5562=m
+> CONFIG_LEDS_LP8501=m
 > 
-> I'd prefer these were on one line, regardless of the 80 character line
-> limit/suggestion.
+> If any of the children are built in then the MC framework must be built 
+> in as well.
 > 
-ok done.
->> +                                       };
->> +                               };
->> +
->> +                               port@1 {
->> +                                       reg = <1>;
->> +                                       dp_out: endpoint { };
->> +                               };
->> +                       };
->> +               };
->> +
->>                 dispcc: clock-controller@af00000 {
->>                         compatible = "qcom,sc7180-dispcc";
->>                         reg = <0 0x0af00000 0 0x200000>;
+> Dan
+> 
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
