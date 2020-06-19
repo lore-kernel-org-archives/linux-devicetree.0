@@ -2,128 +2,170 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951FAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 18:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C1BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77991214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 18:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjOsRP8H"
+	by mail.kernel.org (Postfix) with ESMTP id 3E3D920C09
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436704AbgFSSsH (ORCPT
+        id S1733132AbgFSTQJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 14:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34482 "EHLO
+        Fri, 19 Jun 2020 15:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436700AbgFSSsE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 14:48:04 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDBEC06174E;
-        Fri, 19 Jun 2020 11:48:04 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g75so1247345wme.5;
-        Fri, 19 Jun 2020 11:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=G4jQ6kaCkE/80qgTVUSP+xSjKBqbEkPDRdzVI2XfgOE=;
-        b=rjOsRP8HXYUbAJBz91Wx4xofztB1QvF9d59K1qUs1S9v2ooDfvehxRkwQ8Dw0ak2xU
-         H/jrdk7lTxk+tiUYdhx6HyMmNnvvkKnOStFwuMqSoVoMzXke4CoezioYaHcs5t3BWSzX
-         w+Aw6uzOyjUfdsHa+LvrMK4+OnhJpcR59sZhDM5AyDKr9eEXbPqRefOw9c48Ci+F4ll1
-         gfBv+WOly552IdqrMAJUeafFAiBT57DMdeSPPV4CZqVc7tbEOdFCBCFUJcI1Vf1rDWCO
-         VsjT0yp7XZ3KTdbjTh5J3eC/MiFVlDB8T9mlpBd/QvfkYKNE5ZGJXeTezdAD/3Yq1tdc
-         tN9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=G4jQ6kaCkE/80qgTVUSP+xSjKBqbEkPDRdzVI2XfgOE=;
-        b=diEYGdE5sZDEAfVA1/OnXkbFXXTyJj0TyjTHf0LU/GFWFirKsAJbVTHHPzKio1VP6J
-         fRIYunAj9obM+owXwsBbQAMv4Yj6AWE0glFWa6X7Iq87CKhgUCuhmGpzrukkVdD7M+Q9
-         nDdWDNZ7eHWZTkHGw8a3RZQgNKmd5s3LLfjK37m4QnuB6nTUm6m6Lh+9hx96dtGUmkTZ
-         J/cdsskjCMWuVJptjRJmn/tHL6c+j+Wk/7K5+IfO6ZWdFQpNngvCK8n9kEoxsLr2Jydb
-         YwoX39SABH2WBd3juN881lGl/GBEPQUy8ZY3u3yfBT/TcU3zUiyfN6opqgiEPPYMay/1
-         0lrQ==
-X-Gm-Message-State: AOAM532DzwvS3HFlxLnJx0bMNZxf1DqSjdLDGSeLUP5XHOJU6F5QqELz
-        +uj3btwQ4tbpICkgIARwM+V1JHPZ
-X-Google-Smtp-Source: ABdhPJzRHeeqIMjoxbEf0ea72owHYeM6kJFmPMdXWT2or3nwSiZHgIF94WMxLDG3FWgVux2sfk+VjQ==
-X-Received: by 2002:a1c:964d:: with SMTP id y74mr5341747wmd.154.1592592482659;
-        Fri, 19 Jun 2020 11:48:02 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l17sm7283143wmi.3.2020.06.19.11.47.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 11:48:02 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
+        with ESMTP id S1733117AbgFSTQI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 15:16:08 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AF4C0613EE
+        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:16:06 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e0be:48f2:cba4:1407])
+        by albert.telenet-ops.be with bizsmtp
+        id t7Fx220074UASYb067Fx5f; Fri, 19 Jun 2020 21:16:04 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jmMUX-0002JW-3p; Fri, 19 Jun 2020 21:15:57 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jmMUX-0006VE-2f; Fri, 19 Jun 2020 21:15:57 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Dajun Jin <adajunjin@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org (open list),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE)
-Subject: [PATCH net v2 1/2] of: of_mdio: Correct loop scanning logic
-Date:   Fri, 19 Jun 2020 11:47:46 -0700
-Message-Id: <20200619184747.16606-2-f.fainelli@gmail.com>
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 3/5] ravb: Add support for explicit internal clock delay configuration
+Date:   Fri, 19 Jun 2020 21:15:52 +0200
+Message-Id: <20200619191554.24942-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619184747.16606-1-f.fainelli@gmail.com>
-References: <20200619184747.16606-1-f.fainelli@gmail.com>
+In-Reply-To: <20200619191554.24942-1-geert+renesas@glider.be>
+References: <20200619191554.24942-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
-introduced a break of the loop on the premise that a successful
-registration should exit the loop. The premise is correct but not to
-code, because rc && rc != -ENODEV is just a special error condition,
-that means we would exit the loop even with rc == -ENODEV which is
-absolutely not correct since this is the error code to indicate to the
-MDIO bus layer that scanning should continue.
+Some EtherAVB variants support internal clock delay configuration, which
+can add larger delays than the delays that are typically supported by
+the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
+properties).
 
-Fix this by explicitly checking for rc = 0 as the only valid condition
-to break out of the loop.
+Historically, the EtherAVB driver configured these delays based on the
+"rgmii-*id" PHY mode.  This caused issues with PHY drivers that
+implement PHY internal delays properly[1].  Hence a backwards-compatible
+workaround was added by masking the PHY mode[2].
 
-Fixes: 209c65b61d94 ("drivers/of/of_mdio.c:fix of_mdiobus_register()")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Add proper support for explicit configuration of the MAC internal clock
+delays using the new "renesas,[rt]xc-delay-ps" properties.
+Fall back to the old handling if none of these properties is present.
+
+[1] Commit bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for
+    the KSZ9031 PHY")
+[2] Commit 9b23203c32ee02cd ("ravb: Mask PHY mode to avoid inserting
+    delays twice").
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/of/of_mdio.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/renesas/ravb.h      |  1 +
+ drivers/net/ethernet/renesas/ravb_main.c | 35 ++++++++++++++++++------
+ 2 files changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index a04afe79529c..ef6f818ce5b3 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -314,10 +314,15 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 				 child, addr);
+diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+index e5ca12ce93c730a9..7453b17a37a2c8d0 100644
+--- a/drivers/net/ethernet/renesas/ravb.h
++++ b/drivers/net/ethernet/renesas/ravb.h
+@@ -1038,6 +1038,7 @@ struct ravb_private {
+ 	unsigned wol_enabled:1;
+ 	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
+ 	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
++	unsigned rgmii_override:1;	/* Deprecated rgmii-*id behavior */
+ 	int num_tx_desc;		/* TX descriptors per packet */
+ };
  
- 			if (of_mdiobus_child_is_phy(child)) {
-+				/* -ENODEV is the return code that PHYLIB has
-+				 * standardized on to indicate that bus
-+				 * scanning should continue.
-+				 */
- 				rc = of_mdiobus_register_phy(mdio, child, addr);
--				if (rc && rc != -ENODEV)
-+				if (!rc)
-+					break;
-+				if (rc != -ENODEV)
- 					goto unregister;
--				break;
- 			}
- 		}
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index f326234d1940f43e..0582846bec7726b6 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1034,11 +1034,7 @@ static int ravb_phy_init(struct net_device *ndev)
+ 		pn = of_node_get(np);
  	}
+ 
+-	iface = priv->phy_interface;
+-	if (priv->chip_id != RCAR_GEN2 && phy_interface_mode_is_rgmii(iface)) {
+-		/* ravb_set_delay_mode() takes care of internal delay mode */
+-		iface = PHY_INTERFACE_MODE_RGMII;
+-	}
++	iface = priv->rgmii_override ? PHY_INTERFACE_MODE_RGMII : priv->phy_interface;
+ 	phydev = of_phy_connect(ndev, pn, ravb_adjust_link, 0, iface);
+ 	of_node_put(pn);
+ 	if (!phydev) {
+@@ -1967,20 +1963,41 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
+ };
+ 
+ /* Set tx and rx clock internal delay modes */
+-static void ravb_parse_delay_mode(struct net_device *ndev)
++static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
+ {
+ 	struct ravb_private *priv = netdev_priv(ndev);
++	bool explicit_delay = false;
++	u32 delay;
++
++	if (!of_property_read_u32(np, "renesas,rxc-delay-ps", &delay)) {
++		/* Valid values are 0 and 1800, according to DT bindings */
++		priv->rxcidm = !!delay;
++		explicit_delay = true;
++	}
++	if (!of_property_read_u32(np, "renesas,txc-delay-ps", &delay)) {
++		/* Valid values are 0 and 2000, according to DT bindings */
++		priv->txcidm = !!delay;
++		explicit_delay = true;
++	}
+ 
++	if (explicit_delay)
++		return;
++
++	/* Fall back to legacy rgmii-*id behavior */
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
++	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+ 		priv->rxcidm = true;
++		priv->rgmii_override = true;
++	}
+ 
+ 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
+ 			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
+-			  phy_modes(priv->phy_interface)))
++			  phy_modes(priv->phy_interface))) {
+ 			priv->txcidm = true;
++			priv->rgmii_override = true;
++		}
+ 	}
+ }
+ 
+@@ -2126,7 +2143,7 @@ static int ravb_probe(struct platform_device *pdev)
+ 	ravb_modify(ndev, GCCR, GCCR_LTI, GCCR_LTI);
+ 
+ 	if (priv->chip_id != RCAR_GEN2) {
+-		ravb_parse_delay_mode(ndev);
++		ravb_parse_delay_mode(np, ndev);
+ 		ravb_set_delay_mode(ndev);
+ 	}
+ 
 -- 
 2.17.1
 
