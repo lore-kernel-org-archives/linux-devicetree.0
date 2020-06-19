@@ -2,101 +2,197 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42701C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26601C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232352080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2BA20885
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqnt56rM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgFSG3W (ORCPT
+        id S1725820AbgFSGlq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 02:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
+        Fri, 19 Jun 2020 02:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgFSG3V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 02:29:21 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08ADC06174E
-        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 23:29:20 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jmAWY-0003kI-Qf; Fri, 19 Jun 2020 08:29:14 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jmAWX-00047V-Cg; Fri, 19 Jun 2020 08:29:13 +0200
-Date:   Fri, 19 Jun 2020 08:29:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200619062913.ynpcue3rsyk66i5g@taurus.defre.kleine-koenig.org>
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
- <20200619060213.ldvun5y4tgnz55hh@taurus.defre.kleine-koenig.org>
+        with ESMTP id S1727074AbgFSGlq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 02:41:46 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D61C0613EE
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 23:41:45 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t194so8017768wmt.4
+        for <devicetree@vger.kernel.org>; Thu, 18 Jun 2020 23:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zjTgpvlZoTMqly8ZeswQThHMqwpruwtDmzNEvVZw/qQ=;
+        b=vqnt56rMvv8CFA31p493VSrcPev/9lBxJ3mwGDNEJqQ+Q69v+8vNZw5F8G7bzOo7Kg
+         rlOqJYsSlI/Cu98RDZCPCxqTCaGNDdGEGEOvLAOdQF6juGmAxXhjvsJUkhC0rjBMZJPn
+         YEpxOrDp8z7X1s/bGM8yYn89B2lnKhUh3aCXBe8RsevQ1AyrZ2KfOdvIm/NL7zi5DNW1
+         vk7ymnv5xLKTPW8MeoDMv+rmL6wC6QSu7SxTSllIltkBT3dqCkBZZTdniAYENrNMQsTg
+         L/4FghH8cUAe7L2LnvldLWprP8X1EOwrJuPRPykpeUK6xwEzr43RCrU0h1dm46SvwR2V
+         f50w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zjTgpvlZoTMqly8ZeswQThHMqwpruwtDmzNEvVZw/qQ=;
+        b=rpUD1/ogYVPypJTXNwnZfNQk1K6jV+/B5qWfg8QNrVnSY29/9cXDOb6L2WVyNN+DBl
+         POn6564FY+M3xw8054rSCDkyMOOdHoNb3I56So4UcrLYDxEu8OpHlhWqN4qJEwTiqADy
+         nTTynosoSPuWAQxs0xoED0gMKMsQv4rxPdWjnMtX0Nyh3N6l7ypA5XVs2KYipoIYmLeZ
+         zoYgow4elU8tCOU4uiJt+/A8aIU4NBG9ZTJOptDnn44rtTv2lQxTxV6ygOa6M5XSrARc
+         BOgkLhIfwqll0re75NEbKlVdeMITSYh05iQhbPJj1aDsU0WCe3mdHX5z3anZtHtU1Z9A
+         4Rfw==
+X-Gm-Message-State: AOAM5310fa3Z0aEwTuWDNhml/zKJv7aVcO/tU/NhsGnzwquCHiKc2ZQ2
+        81ligVDESwSBLgjWhpzfqkS1FA==
+X-Google-Smtp-Source: ABdhPJxLzoPL6ztzrQ12+0O9ZkYOHQowqhk0hClejeA2lTwZpJsYkV7bKmLIgtLySZqrkaKQ6wd8Ng==
+X-Received: by 2002:a1c:4189:: with SMTP id o131mr2164427wma.110.1592548903958;
+        Thu, 18 Jun 2020 23:41:43 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id f11sm6157182wrj.2.2020.06.18.23.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 23:41:43 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 07:41:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, DTML <devicetree@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        michael@walle.cc, Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/1] mfd: Add I2C based System Configuaration (SYSCON)
+ access
+Message-ID: <20200619064141.GK954398@dell>
+References: <20200618080223.951737-1-lee.jones@linaro.org>
+ <CAK8P3a3iRmXC2jDj92QHKqyD+x_UJ7rWU_KcGt=MFOD9UW38RA@mail.gmail.com>
+ <20200618100704.GC954398@dell>
+ <CAGb2v67GJUzomptOzzvafcQ-wAqrJvNNeEZsY7gVQ_kByqBT8w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zcja3pmebqldofsq"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200619060213.ldvun5y4tgnz55hh@taurus.defre.kleine-koenig.org>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v67GJUzomptOzzvafcQ-wAqrJvNNeEZsY7gVQ_kByqBT8w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 19 Jun 2020, Chen-Yu Tsai wrote:
 
---zcja3pmebqldofsq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Thu, Jun 18, 2020 at 6:07 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Thu, 18 Jun 2020, Arnd Bergmann wrote:
+> >
+> > > On Thu, Jun 18, 2020 at 10:03 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > The existing SYSCON implementation only supports MMIO (memory mapped)
+> > > > accesses, facilitated by Regmap.  This extends support for registers
+> > > > held behind I2C busses.
+> > > >
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > >
+> > > The implementation looks fine to me, but can you explain how this is going to
+> > > be used, and what the advantage is over open-coding the devm_regmap_init_i2c()
+> > > in each driver that would use this?
+> >
+> > Does Regmap let you register/initialise an I2C address more than once?
+> >
+> > When I attempt it, I get:
+> >
+> > [    0.522988] i2c i2c-0: Failed to register i2c client tmp105 at 0x32 (-16)
+> > [    0.523341] i2c i2c-0: of_i2c: Failure registering /bus@4000000/motherboard/iofpga@7,00000000/i2c@16000/temp@32
+> > [    0.523691] i2c i2c-0: Failed to create I2C device for /bus@4000000/motherboard/iofpga@7,00000000/i2c@16000/temp@32
+> >
+> > > Is this about using proper locking through the regmap framework for
+> > > shared i2c clients, or to reduce memory consumption when lots of drivers
+> > > access the same regmap?
+> >
+> > All of those things are valid.
+> >
+> > My use-case is regarding MFDs sharing an I2C interfaced address space
+> > with their children.
+> 
+> Is that an issue with the standard mfd + regmap pattern?
 
-Hello again,
+There is no relationship between MFD and Regmap.  It is not more
+closely related to Regmap than it is any other public API provided
+within the kernel.  *Some* parent drivers initialise one large,
+encompassing Regmap address space and pass it to their children, but
+this isn't suitable in all cases.
 
-On Fri, Jun 19, 2020 at 08:02:13AM +0200, Uwe Kleine-K=F6nig wrote:
-> You had concerns about my review feedback that I don't like the fan
-> stuff in the PWM driver. I still think that the fan part doesn't belong
-> here.
+> For the AXP20x PMICs, we register the regmap in the parent mfd driver [1],
+> and store that in dev_data for child drivers to fetch [2]. You could
+> easily just fetch the regmap with dev_get_regmap() and a pointer to the
+> parent device.
 
-I suggest splitting the patch. First introduce a generic PWM driver and
-in a second patch add the fan stuff. This way you can get an ack from me
-at least for a part. Also it makes it more obvious that there is going
-on something special and we can have a dedicated discussion about it and
-a concious decision made at the end.
+Remember, not all use-cases are the same.  Just because your H/W fits
+well within the current framework, doesn't mean all will.
 
-Best regards
-Uwe
+Initialising in the parent is no problem if the driver is meaningful
+in other ways, but what if that's all the parent driver does?  In
+these cases Syscon can be used instead, rendering the driver
+superfluous. Meaning it can (and *should*) then be omitted.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> > > My impression of the existing syscon code is that the main value-add over
+> > > other ways of doing the same is the syscon_regmap_lookup_by_phandle()
+> > > interface that gives other drivers a much simpler way of getting the
+> > > regmap just based on the DT node. Are you planning to add something
+> > > like that here as well? An ideal driver interface might allow
+> > > syscon_regmap_lookup_by_phandle() to work for both mmio and i2c
+> > > based syscons, or additional ones as well, but implementing this would
+> > > be rather tricky when the i2c core is a loadable module.
+> 
+> The current MMIO syscon is decoupled from the DM, and there is no way
+> for drivers to export or register a syscon, meaning I have to open code
+> syscon_regmap_lookup_by_phandle() [3] if I want to only expose certain
+> registers and not the full address range, or if I want to share the
+> regmap with the existing driver (for locking purposes), or both [4].
 
---zcja3pmebqldofsq
-Content-Type: application/pgp-signature; name="signature.asc"
+Not sure I understand the problem.
 
------BEGIN PGP SIGNATURE-----
+Could you explain why the current implementation doesn't work for you?
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7sWzYACgkQwfwUeK3K
-7AkVtQgAiH0/d2UedzwsoLV9fKLCcPwQT24HKh/jR61f5Gl/bIWJWI2ffoaxBVSC
-y+bPENDDkwaLE3hQTvOlRZvHK4rjVYw6poTUh662eHuDCDAhWSiB/vvEHS5iWSe7
-HdMkjzvMsZEYvcM2Ibe3o6om3F1I0OUxnu5l3Bz6PhkVl+ATqcV1IKrzQwMAFW68
-Cvz86eHBz2KeCZ+AnxJvvM8uibDnDwSxPzHVqReoR22bLJvoZ6IOzp5T95NhlDd2
-MeM+5Tz29z7Wdk+VXmjAX/oQomlRYLuffxtXIhi+Ex03wEklNSFgIsC65DtSGIEm
-0wszuzFBBaHS/3gIZwTVJmE/XZ9fSA==
-=okrZ
------END PGP SIGNATURE-----
+Open coding your own implementation of Syscon is non-optimal.
 
---zcja3pmebqldofsq--
+> Maybe there's room for improvement here? The same applies to the new
+> I2C case, and likely any other future syscon variants.
+> 
+> IMHO people are getting it wrong if they have both a syscon and a driver
+> for the same device.
+
+Syscon is just a means to obtain a group of registers either a)
+without a dedicated driver OR b) to share amongst more than 1,
+potentially unrelated, user.  So in the case of a) which appears to
+sit well with-in your use-case and expectations, you are correct.
+Whereas in the case of b) you are not.
+
+I hope that helps clarity the situation somewhat.
+
+> > I expect the API would be expanded to cover other use-cases.  This is
+> > a bare bones implementation which has been kept as atomic as possible
+> > for ease of review.
+> 
+> Regards
+> ChenYu
+> 
+> [1] https://elixir.bootlin.com/linux/latest/source/drivers/mfd/axp20x-i2c.c#L43
+> [2] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/pinctrl-axp209.c#L433
+> [3] https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c#L1093
+> [4] https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng/ccu-sun8i-r40.c#L1333
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
