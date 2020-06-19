@@ -7,32 +7,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B0CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CA7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A00892080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B232080C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732453AbgFSK3S (ORCPT
+        id S1732456AbgFSK3V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:29:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57262 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732377AbgFSK2K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 06:28:10 -0400
+        Fri, 19 Jun 2020 06:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732320AbgFSK2H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 06:28:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EDCC0613EF;
+        Fri, 19 Jun 2020 03:28:06 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 572C62A5201
+        with ESMTPSA id 425E12A51F9
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
         matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH 5/7] arm64: dts: mt8183-evb: Fix unit name warnings
-Date:   Fri, 19 Jun 2020 12:27:55 +0200
-Message-Id: <20200619102757.1358675-6-enric.balletbo@collabora.com>
+Subject: [PATCH 1/7] dt-bindings: arm64: dts: mediatek: Add mt8183-kukui-krane-sku176
+Date:   Fri, 19 Jun 2020 12:27:51 +0200
+Message-Id: <20200619102757.1358675-2-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619102757.1358675-1-enric.balletbo@collabora.com>
 References: <20200619102757.1358675-1-enric.balletbo@collabora.com>
@@ -43,40 +48,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the unit address from the DT nodes that doesn't have a reg
-property. This fixes the following unit name warnings:
-
-    Warning (unit_address_vs_reg): /soc/pinctrl@10005000/mmc0@0: node has a unit name, but no reg or ranges property
-    Warning (unit_address_vs_reg): /soc/pinctrl@10005000/mmc1@0: node has a unit name, but no reg or ranges property
+The krane-sku176 is the Lenovo IdeaPad Duet Chromebook. A 2-in-1
+detachable device using the MediaTek MT8183 SoC.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index afd6ddbcbdf2c..ae405bd8f06b0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -205,7 +205,7 @@ pins_rst {
- 		};
- 	};
- 
--	mmc0_pins_uhs: mmc0@0{
-+	mmc0_pins_uhs: mmc0 {
- 		pins_cmd_dat {
- 			pinmux = <PINMUX_GPIO123__FUNC_MSDC0_DAT0>,
- 				 <PINMUX_GPIO128__FUNC_MSDC0_DAT1>,
-@@ -264,7 +264,7 @@ pins_pmu {
- 		};
- 	};
- 
--	mmc1_pins_uhs: mmc1@0{
-+	mmc1_pins_uhs: mmc1 {
- 		pins_cmd_dat {
- 			pinmux = <PINMUX_GPIO31__FUNC_MSDC1_CMD>,
- 				   <PINMUX_GPIO32__FUNC_MSDC1_DAT0>,
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index abc544dde6920..30908963ae261 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -114,4 +114,9 @@ properties:
+           - enum:
+               - mediatek,mt8183-evb
+           - const: mediatek,mt8183
++      - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
++        items:
++          - const: google,krane-sku176
++          - const: google,krane
++          - const: mediatek,mt8183
+ ...
 -- 
 2.27.0
 
