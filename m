@@ -2,134 +2,101 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE798C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E992C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB3420809
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6992158C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="W+x4CClX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/BjF00/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733115AbgFSTQd (ORCPT
+        id S2389252AbgFSTif (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
+        Fri, 19 Jun 2020 15:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733272AbgFSTQc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 15:16:32 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BA5C06174E
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:16:31 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y18so4288424plr.4
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:16:31 -0700 (PDT)
+        with ESMTP id S2389188AbgFSTif (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 15:38:35 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74E2C0613EE
+        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:38:34 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gl26so11342201ejb.11
+        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QpjsOQ81m2+7Vf1tKhbI0NPMb57wPuYHIHejUZfeOx0=;
-        b=W+x4CClX3BaHnLSt/1xtF5HA5oIJlM8A+EGmUOOouefvbHiG6YC0Wsg8b7CB6Pp8f5
-         pEyFrNb9aZk1QdlliapBCUCIem9PZnRIF1pNDG541eEWKTNagxIBWk/a5ThEjdUHubXI
-         O2fstgpGQQrTlufuHR2nutPWOwG7k0KKO0UPw=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GpwwnZrnzSnEb6bDojOEsD8rwL4chvZZSUmpcx7QESw=;
+        b=T/BjF00/RfXCtXbTEbblGcsobBcy62kNibhE+cavYfetTcgA5YdXgur/ga8X5zQghb
+         hsd4iiX0KBUkF5pIsqDGpUkLmzrL9q00L6jJZpziMbidEpUtQDMJwx2/vMRowF5KuoZm
+         Zxby3Gqk+RCyAtudVPW/ioX1Hj55tXL1bpih1m9iV4esPl0OFS052IsMjUIm9pqGcA4p
+         coAcvO4vkujWqnXV5KXU42eCp9VglBqur0cKBSpmkJZqCzkp/xFH9iZ3+otuNj0Maz8a
+         GIQxTmx+QagHUb6fABybYI3UR58wQTg6xV6xEUbyBHbqrROer6jQQKuq2TXCoRt4tbsj
+         kddQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QpjsOQ81m2+7Vf1tKhbI0NPMb57wPuYHIHejUZfeOx0=;
-        b=OZOV5odt9nI2BLrH8tdpL5eRP1n1IvQC5a1RVOX6hvAzZla/E2Hb/kcSDSPu+macNZ
-         O8ILBRJKs2ik7Xb1ODrefhGgAPc+DCMvVH/HutiuWeOBYsEVainJtLVDx3yh8JX/Rhmt
-         sQDUwMnhtDsag9g8PxfIUnaR15M/9ONLMgvvauOmS5mvAlr6WU/yT3hp2JnK9WBRcB7z
-         PboUCpvKz7rkIra38+RI8AEIbNj1P7fmEHzJR9eU7j41fqLcxuY0ZODxSMvNsSqQOlTO
-         8Z20Kd6JJLEoAWBbE+/wPnFRbv7KYc++wZSbDHeebD+93lYdUrMXiw3NfflQbfEi+Rcv
-         wMNA==
-X-Gm-Message-State: AOAM531HFY+ZTjknYmLoyo5zqjdbzjDurbkb491e8/pAmEDtjKvO6CiY
-        8+MOKPHeNKubrAMbV563eFaMCw==
-X-Google-Smtp-Source: ABdhPJwNurzM+LygEC0YiX0wuysnxgJPszpw0mtEo9Y7176XsIpQNBKYeTFSdYlDE/YRvgnE/WhMHg==
-X-Received: by 2002:a17:90b:50d:: with SMTP id r13mr4895894pjz.94.1592594190698;
-        Fri, 19 Jun 2020 12:16:30 -0700 (PDT)
-Received: from localhost.localdomain ([42.111.138.30])
-        by smtp.gmail.com with ESMTPSA id 12sm6482743pfj.149.2020.06.19.12.16.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 12:16:30 -0700 (PDT)
-From:   Suniel Mahesh <sunil@amarulasolutions.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        gregkh@linuxfoundation.org, sashal@kernel.org
-Cc:     jagan@amarulasolutions.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] arch: arm: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-Date:   Sat, 20 Jun 2020 00:46:13 +0530
-Message-Id: <1592594173-13497-1-git-send-email-sunil@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GpwwnZrnzSnEb6bDojOEsD8rwL4chvZZSUmpcx7QESw=;
+        b=fkLMr+RgjDBep15NSUlzmeJMUWF/UpZEQHpdHpycz8/j3LlNG20AOzJU5wDZUx1Swi
+         qN/g28GDGQ++NECfV49oDqakCb513wzsF9ebjKLyMpyU39l8UVHIqGe+0Kajxupf5HuP
+         vg7KBPvMIIMRx5spP7oezzdyl+VPVOdpDvAIrahjey5d6DbBBPQufHNh1/Mb0xjDR9VN
+         Ae7FI7g28UxzfjRjO8/Gvb1Lap8WljN/3JOrO6OGvuXC0GwUt+JGuTWU0ANigi2rTta9
+         kKVs/Cid5DJw51pRqwt7rAXdapHuAgwpu01JJIe/vKkK+Txw+x+FuuiMyK2no9eyQRTU
+         GRjQ==
+X-Gm-Message-State: AOAM5316APCG/UABkhLqWAd+nIZy8erCCtKaVhJlb7XvFoOl3KprkP2r
+        B7DZhzOIf2QLs/+X2IQHWjMFSg==
+X-Google-Smtp-Source: ABdhPJxuJXgPP5jW3b107fI8sRQCwDQUpcmePVvJrmhw9aFDTDubdtWZDNme31ly8sscFs/ISEmkrA==
+X-Received: by 2002:a17:907:b05:: with SMTP id h5mr4547315ejl.499.1592595513560;
+        Fri, 19 Jun 2020 12:38:33 -0700 (PDT)
+Received: from localhost.localdomain (ppp089210109128.access.hol.gr. [89.210.109.128])
+        by smtp.gmail.com with ESMTPSA id dn17sm5310125edb.26.2020.06.19.12.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 12:38:33 -0700 (PDT)
+From:   Pantelis Antoniou <pantelis.antoniou@linaro.org>
+To:     alsa-devel@alsa-project.org
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matt Porter <mporter@konsulko.com>,
+        Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH 0/2] ASoC: qcom: add apq8039 sound card and bindings
+Date:   Fri, 19 Jun 2020 22:38:29 +0300
+Message-Id: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+Add support for the apq8039 sound card along with device tree
+bindings for it.
 
-The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
-but the TRM mentions GPIO_1 pad is muxed for card detetcion,
-because of which when card is inserted, usb otg is enumerated
-and the card is never detected.
+A notable feature of this patchset is the capability to aggregate
+arbitrary ALSA controls sequences into functions that are exposed
+via a single enum ALSA control.
 
-[   64.492645] cfg80211: failed to load regulatory.db
-[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
-[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
-[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
-[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
-[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
-[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[   76.412763] usb usb2: Product: EHCI Host Controller
-[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
-[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
-[   76.431755] hub 2-0:1.0: USB hub found
-[   76.435862] hub 2-0:1.0: 1 port detected
+Detailed information for this mechanism is presented in the DT binding
+document.
 
-Fix the pin muxing as per TRM by muxing ENET_RX_ER pad for USB_OTG_ID
-and GPIO_1 pad for card detect.
+Pantelis Antoniou (2):
+  dt-bindings: sound: Device tree bindings for the apq8039 sound complex
+  ASoC: qcom: add apq8039 sound card support
 
-[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
-[   22.459992] mmc0: new high speed SDHC card at address 0001
-[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-[   22.478856]  mmcblk0: p1 p2
+ .../bindings/sound/qcom,apq8039.yaml          |  370 ++++++
+ sound/soc/qcom/Kconfig                        |    9 +
+ sound/soc/qcom/Makefile                       |    2 +
+ sound/soc/qcom/apq8039.c                      | 1126 +++++++++++++++++
+ 4 files changed, 1507 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
+ create mode 100644 sound/soc/qcom/apq8039.c
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
----
-NOTE:
-- patch tested on i.Core 1.5 MX6 DL
----
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 756f3a9..12997da 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -397,7 +397,7 @@
- 
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
--			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
- 		>;
- 	};
- 
-@@ -409,6 +409,7 @@
- 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
- 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
- 		>;
- 	};
- 
 -- 
-2.7.4
+2.20.1
 
