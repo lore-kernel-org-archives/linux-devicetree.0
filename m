@@ -2,51 +2,49 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BE5C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA93C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF10820885
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1E120885
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbgFSIXs (ORCPT
+        id S1731341AbgFSIX2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:23:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:47098 "EHLO foss.arm.com"
+        Fri, 19 Jun 2020 04:23:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:47044 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731286AbgFSIVH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1731271AbgFSIVH (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 19 Jun 2020 04:21:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACA8E1396;
-        Fri, 19 Jun 2020 01:20:56 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AF64101E;
+        Fri, 19 Jun 2020 01:20:48 -0700 (PDT)
 Received: from red-moon.arm.com (unknown [10.57.58.158])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34C783F71F;
-        Fri, 19 Jun 2020 01:20:54 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 076663F71F;
+        Fri, 19 Jun 2020 01:20:45 -0700 (PDT)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>,
         Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v2 10/12] of/irq: Make of_msi_map_rid() PCI bus agnostic
-Date:   Fri, 19 Jun 2020 09:20:11 +0100
-Message-Id: <20200619082013.13661-11-lorenzo.pieralisi@arm.com>
+        Diana Craciun <diana.craciun@oss.nxp.com>
+Subject: [PATCH v2 07/12] of/device: Add input id to of_dma_configure()
+Date:   Fri, 19 Jun 2020 09:20:08 +0100
+Message-Id: <20200619082013.13661-8-lorenzo.pieralisi@arm.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
 References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
@@ -58,134 +56,265 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is nothing PCI bus specific in the of_msi_map_rid()
-implementation other than the requester ID tag for the input
-ID space. Rename requester ID to a more generic ID so that
-the translation code can be used by all busses that require
-input/output ID translations.
+Devices sitting on proprietary busses have a device ID space that
+is owned by the respective bus and related firmware bindings. In order
+to let the generic OF layer handle the input translations to
+an IOMMU id, for such busses the current of_dma_configure() interface
+should be extended in order to allow the bus layer to provide the
+device input id parameter - that is retrieved/assigned in bus
+specific code and firmware.
 
-No functional change intended.
+Augment of_dma_configure() to add an optional input_id parameter,
+leaving current functionality unchanged.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/of/irq.c       | 28 ++++++++++++++--------------
- drivers/pci/msi.c      |  2 +-
- include/linux/of_irq.h |  8 ++++----
- 3 files changed, 19 insertions(+), 19 deletions(-)
+ drivers/bus/fsl-mc/fsl-mc-bus.c |  4 +-
+ drivers/iommu/of_iommu.c        | 81 ++++++++++++++++++---------------
+ drivers/of/device.c             |  8 ++--
+ include/linux/of_device.h       | 16 ++++++-
+ include/linux/of_iommu.h        |  6 ++-
+ 5 files changed, 70 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 1005e4f349ef..25d17b8a1a1a 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -576,43 +576,43 @@ void __init of_irq_init(const struct of_device_id *matches)
- 	}
- }
- 
--static u32 __of_msi_map_rid(struct device *dev, struct device_node **np,
--			    u32 rid_in)
-+static u32 __of_msi_map_id(struct device *dev, struct device_node **np,
-+			    u32 id_in)
+diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+index 40526da5c6a6..8ead3f0238f2 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-bus.c
++++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+@@ -118,11 +118,13 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+ static int fsl_mc_dma_configure(struct device *dev)
  {
- 	struct device *parent_dev;
--	u32 rid_out = rid_in;
-+	u32 id_out = id_in;
+ 	struct device *dma_dev = dev;
++	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
++	u32 input_id = mc_dev->icid;
  
- 	/*
- 	 * Walk up the device parent links looking for one with a
- 	 * "msi-map" property.
- 	 */
- 	for (parent_dev = dev; parent_dev; parent_dev = parent_dev->parent)
--		if (!of_map_id(parent_dev->of_node, rid_in, "msi-map",
--				"msi-map-mask", np, &rid_out))
-+		if (!of_map_id(parent_dev->of_node, id_in, "msi-map",
-+				"msi-map-mask", np, &id_out))
- 			break;
--	return rid_out;
-+	return id_out;
+ 	while (dev_is_fsl_mc(dma_dev))
+ 		dma_dev = dma_dev->parent;
+ 
+-	return of_dma_configure(dev, dma_dev->of_node, 0);
++	return of_dma_configure_id(dev, dma_dev->of_node, 0, &input_id);
  }
  
- /**
-- * of_msi_map_rid - Map a MSI requester ID for a device.
-+ * of_msi_map_id - Map a MSI ID for a device.
-  * @dev: device for which the mapping is to be done.
-  * @msi_np: device node of the expected msi controller.
-- * @rid_in: unmapped MSI requester ID for the device.
-+ * @id_in: unmapped MSI ID for the device.
+ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 016316244737..e505b9130a1c 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -118,46 +118,66 @@ static int of_iommu_xlate(struct device *dev,
+ 	return ret;
+ }
+ 
+-struct of_pci_iommu_alias_info {
+-	struct device *dev;
+-	struct device_node *np;
+-};
+-
+-static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
++static int of_iommu_configure_dev_id(struct device_node *master_np,
++				     struct device *dev,
++				     const u32 *id)
+ {
+-	struct of_pci_iommu_alias_info *info = data;
+ 	struct of_phandle_args iommu_spec = { .args_count = 1 };
+ 	int err;
+ 
+-	err = of_map_id(info->np, alias, "iommu-map", "iommu-map-mask",
+-			 &iommu_spec.np, iommu_spec.args);
++	err = of_map_id(master_np, *id, "iommu-map",
++			 "iommu-map-mask", &iommu_spec.np,
++			 iommu_spec.args);
+ 	if (err)
+ 		return err == -ENODEV ? NO_IOMMU : err;
+ 
+-	err = of_iommu_xlate(info->dev, &iommu_spec);
++	err = of_iommu_xlate(dev, &iommu_spec);
+ 	of_node_put(iommu_spec.np);
+ 	return err;
+ }
+ 
+-static int of_fsl_mc_iommu_init(struct fsl_mc_device *mc_dev,
+-				struct device_node *master_np)
++static int of_iommu_configure_dev(struct device_node *master_np,
++				  struct device *dev)
+ {
+-	struct of_phandle_args iommu_spec = { .args_count = 1 };
+-	int err;
+-
+-	err = of_map_id(master_np, mc_dev->icid, "iommu-map",
+-			 "iommu-map-mask", &iommu_spec.np,
+-			 iommu_spec.args);
+-	if (err)
+-		return err == -ENODEV ? NO_IOMMU : err;
++	struct of_phandle_args iommu_spec;
++	int err = NO_IOMMU, idx = 0;
++
++	while (!of_parse_phandle_with_args(master_np, "iommus",
++					   "#iommu-cells",
++					   idx, &iommu_spec)) {
++		err = of_iommu_xlate(dev, &iommu_spec);
++		of_node_put(iommu_spec.np);
++		idx++;
++		if (err)
++			break;
++	}
+ 
+-	err = of_iommu_xlate(&mc_dev->dev, &iommu_spec);
+-	of_node_put(iommu_spec.np);
+ 	return err;
+ }
+ 
++struct of_pci_iommu_alias_info {
++	struct device *dev;
++	struct device_node *np;
++};
++
++static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
++{
++	struct of_pci_iommu_alias_info *info = data;
++	u32 input_id = alias;
++
++	return of_iommu_configure_dev_id(info->np, info->dev, &input_id);
++}
++
++static int of_iommu_configure_device(struct device_node *master_np,
++				     struct device *dev, const u32 *id)
++{
++	return (id) ? of_iommu_configure_dev_id(master_np, dev, id) :
++		      of_iommu_configure_dev(master_np, dev);
++}
++
+ const struct iommu_ops *of_iommu_configure(struct device *dev,
+-					   struct device_node *master_np)
++					   struct device_node *master_np,
++					   const u32 *id)
+ {
+ 	const struct iommu_ops *ops = NULL;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+@@ -188,21 +208,8 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 		pci_request_acs();
+ 		err = pci_for_each_dma_alias(to_pci_dev(dev),
+ 					     of_pci_iommu_init, &info);
+-	} else if (dev_is_fsl_mc(dev)) {
+-		err = of_fsl_mc_iommu_init(to_fsl_mc_device(dev), master_np);
+ 	} else {
+-		struct of_phandle_args iommu_spec;
+-		int idx = 0;
+-
+-		while (!of_parse_phandle_with_args(master_np, "iommus",
+-						   "#iommu-cells",
+-						   idx, &iommu_spec)) {
+-			err = of_iommu_xlate(dev, &iommu_spec);
+-			of_node_put(iommu_spec.np);
+-			idx++;
+-			if (err)
+-				break;
+-		}
++		err = of_iommu_configure_device(master_np, dev, id);
+ 
+ 		fwspec = dev_iommu_fwspec_get(dev);
+ 		if (!err && fwspec)
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 27203bfd0b22..b439c1e05434 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -78,6 +78,7 @@ int of_device_add(struct platform_device *ofdev)
+  * @np:		Pointer to OF node having DMA configuration
+  * @force_dma:  Whether device is to be set up by of_dma_configure() even if
+  *		DMA capability is not explicitly described by firmware.
++ * @id:		Optional const pointer value input id
   *
-  * Walk up the device hierarchy looking for devices with a "msi-map"
-- * property.  If found, apply the mapping to @rid_in.
-+ * property.  If found, apply the mapping to @id_in.
-  *
-- * Returns the mapped MSI requester ID.
-+ * Returns the mapped MSI ID.
+  * Try to get devices's DMA configuration from DT and update it
+  * accordingly.
+@@ -86,7 +87,8 @@ int of_device_add(struct platform_device *ofdev)
+  * can use a platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE events
+  * to fix up DMA configuration.
   */
--u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in)
-+u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in)
+-int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
++int of_dma_configure_id(struct device *dev, struct device_node *np,
++			bool force_dma, const u32 *id)
  {
--	return __of_msi_map_rid(dev, &msi_np, rid_in);
-+	return __of_msi_map_id(dev, &msi_np, id_in);
+ 	u64 dma_addr, paddr, size = 0;
+ 	int ret;
+@@ -160,7 +162,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 	dev_dbg(dev, "device is%sdma coherent\n",
+ 		coherent ? " " : " not ");
+ 
+-	iommu = of_iommu_configure(dev, np);
++	iommu = of_iommu_configure(dev, np, id);
+ 	if (PTR_ERR(iommu) == -EPROBE_DEFER)
+ 		return -EPROBE_DEFER;
+ 
+@@ -171,7 +173,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(of_dma_configure);
++EXPORT_SYMBOL_GPL(of_dma_configure_id);
+ 
+ int of_device_register(struct platform_device *pdev)
+ {
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 8d31e39dd564..07ca187fc5e4 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -55,9 +55,15 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ 	return of_node_get(cpu_dev->of_node);
  }
  
- /**
-  * of_msi_map_get_device_domain - Use msi-map to find the relevant MSI domain
-  * @dev: device for which the mapping is to be done.
-- * @rid: Requester ID for the device.
-+ * @id: Device ID.
-  * @bus_token: Bus token
-  *
-  * Walk up the device hierarchy looking for devices with a "msi-map"
-@@ -625,7 +625,7 @@ struct irq_domain *of_msi_map_get_device_domain(struct device *dev, u32 id,
- {
- 	struct device_node *np = NULL;
+-int of_dma_configure(struct device *dev,
++int of_dma_configure_id(struct device *dev,
+ 		     struct device_node *np,
+-		     bool force_dma);
++		     bool force_dma, const u32 *id);
++static inline int of_dma_configure(struct device *dev,
++				   struct device_node *np,
++				   bool force_dma)
++{
++	return of_dma_configure_id(dev, np, force_dma, NULL);
++}
+ #else /* CONFIG_OF */
  
--	__of_msi_map_rid(dev, &np, id);
-+	__of_msi_map_id(dev, &np, id);
- 	return irq_find_matching_host(np, bus_token);
+ static inline int of_driver_match_device(struct device *dev,
+@@ -106,6 +112,12 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ 	return NULL;
  }
  
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index b4bfe0b03b2d..19aeadb22f11 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1535,7 +1535,7 @@ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev)
- 	pci_for_each_dma_alias(pdev, get_msi_id_cb, &rid);
++static inline int of_dma_configure_id(struct device *dev,
++				   struct device_node *np,
++				   bool force_dma)
++{
++	return 0;
++}
+ static inline int of_dma_configure(struct device *dev,
+ 				   struct device_node *np,
+ 				   bool force_dma)
+diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+index f3d40dd7bb66..16f4b3e87f20 100644
+--- a/include/linux/of_iommu.h
++++ b/include/linux/of_iommu.h
+@@ -13,7 +13,8 @@ extern int of_get_dma_window(struct device_node *dn, const char *prefix,
+ 			     size_t *size);
  
- 	of_node = irq_domain_get_of_node(domain);
--	rid = of_node ? of_msi_map_rid(&pdev->dev, of_node, rid) :
-+	rid = of_node ? of_msi_map_id(&pdev->dev, of_node, rid) :
- 			iort_msi_map_id(&pdev->dev, rid);
+ extern const struct iommu_ops *of_iommu_configure(struct device *dev,
+-					struct device_node *master_np);
++					struct device_node *master_np,
++					const u32 *id);
  
- 	return rid;
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 7142a3722758..e8b78139f78c 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -55,7 +55,7 @@ extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
- 							u32 id,
- 							u32 bus_token);
- extern void of_msi_configure(struct device *dev, struct device_node *np);
--u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
-+u32 of_msi_map_id(struct device *dev, struct device_node *msi_np, u32 id_in);
  #else
- static inline int of_irq_count(struct device_node *dev)
- {
-@@ -93,10 +93,10 @@ static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev
- static inline void of_msi_configure(struct device *dev, struct device_node *np)
- {
- }
--static inline u32 of_msi_map_rid(struct device *dev,
--				 struct device_node *msi_np, u32 rid_in)
-+static inline u32 of_msi_map_id(struct device *dev,
-+				 struct device_node *msi_np, u32 id_in)
- {
--	return rid_in;
-+	return id_in;
- }
- #endif
  
+@@ -25,7 +26,8 @@ static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
+ }
+ 
+ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+-					 struct device_node *master_np)
++					 struct device_node *master_np,
++					 const u32 *id)
+ {
+ 	return NULL;
+ }
 -- 
 2.26.1
 
