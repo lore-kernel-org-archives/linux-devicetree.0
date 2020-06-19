@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FCDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D78CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E66172168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B78A21D79
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577795;
-	bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
+	s=default; t=1592578117;
+	bh=U2ApDPJj7HqXeaaoWwL68rF6gEYm+1YdSFa/hATOdHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lfGgRuX8+vGWx7nZv6BqhB0LrqRL9rWDRLHDBhyAUDy34IeQWFMVQliZ9YQxEnez
-	 IAGgfHe59yrbjGh2Ez9NX43zN2xPrAIEtQcBxKYhiuk6Y7pziPFjOwet0a9LjReVTB
-	 oB0mMHsgEbtBUIBvoKRAU6isjp3HcvIts2CfRizc=
+	b=IH+Zug/NVpg6hCoKkeCQt03pLiaXW76OABdUiBI+eK0d0Ty3PmnHXWSVq4k/1tNCr
+	 W7FojBjv+5Y4jGDYkdS11RAJwQYf9yT4/9RyL8aLdI53GgNL6GqMndECbZ0XB2jeqU
+	 kTZt8ObQTWszL4otoIHrGegAukxMGM/sWuvRgYCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388448AbgFSOnN (ORCPT
+        id S2389095AbgFSOsf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388106AbgFSOnK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:43:10 -0400
+        id S2389058AbgFSOse (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:48:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA70C20A8B;
-        Fri, 19 Jun 2020 14:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30432083B;
+        Fri, 19 Jun 2020 14:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577790;
-        bh=jvgDU4OgHH6FPAhZagqdz9JWTDQuMLbTPZ0oS5ISs+c=;
+        s=default; t=1592578113;
+        bh=U2ApDPJj7HqXeaaoWwL68rF6gEYm+1YdSFa/hATOdHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvRdasyP/IPi4I2FMJ+t+JUYuZstl/7pleBQauce0FKKOXEs7hIYJ6M+wYpDm8vUt
-         rCAT3U3ipNzXWceCZpbCkZhEhHhCBgYQAygdzNI8rFJAWse9K/4LsEfvMN3stz+K3Q
-         r+NQCaunjpBSQPTsWviz4hV3Y96UdIrLpKkxG7mA=
+        b=cy1kj9B20HupGqEU98mfCYLkM3VOwsB41AnStBHLF0qiMfsAL3QPOlCbErZh/JE4I
+         CQfYXxtvYbaI4kBcRhgGZGtPNo/OansU65fGZ32wJ0d+88IR1QVdccrRJyMqiV2ZKU
+         7e5LLYsI0GZpRY2IDm5yjlrXR/OldyP+juhzWyZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -55,12 +55,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
         devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 061/128] spi: dw: Enable interrupts in accordance with DMA xfer mode
-Date:   Fri, 19 Jun 2020 16:32:35 +0200
-Message-Id: <20200619141623.446644845@linuxfoundation.org>
+Subject: [PATCH 4.14 087/190] spi: dw: Enable interrupts in accordance with DMA xfer mode
+Date:   Fri, 19 Jun 2020 16:32:12 +0200
+Message-Id: <20200619141637.934344550@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
-References: <20200619141620.148019466@linuxfoundation.org>
+In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
+References: <20200619141633.446429600@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -101,7 +101,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index f77d03b658ab..fe0ca3848d35 100644
+index 4f41d44e8b4c..c4244d2f1ee3 100644
 --- a/drivers/spi/spi-dw-mid.c
 +++ b/drivers/spi/spi-dw-mid.c
 @@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
