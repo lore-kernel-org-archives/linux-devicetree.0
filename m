@@ -2,65 +2,116 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1560EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 20:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF498C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E800121919
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 20:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA37D20739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390136AbgFSUk0 (ORCPT
+        id S2391862AbgFSVHW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 16:40:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390097AbgFSUk0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 16:40:26 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECBCC06174E;
-        Fri, 19 Jun 2020 13:40:26 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5AF6C120ED481;
-        Fri, 19 Jun 2020 13:40:25 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 13:40:24 -0700 (PDT)
-Message-Id: <20200619.134024.2085536608235933676.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, kuba@kernel.org, robh+dt@kernel.org,
-        frowand.list@gmail.com, adajunjin@gmail.com,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH net v2 0/2] net: phy: MDIO bus scanning fixes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200619184747.16606-1-f.fainelli@gmail.com>
-References: <20200619184747.16606-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 19 Jun 2020 13:40:25 -0700 (PDT)
+        Fri, 19 Jun 2020 17:07:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50614 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391572AbgFSVHV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 17:07:21 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0A47C1C0C12; Fri, 19 Jun 2020 23:07:20 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 23:07:19 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
+ the dma_transfer callback
+Message-ID: <20200619210719.GB12233@amd>
+References: <20200619141648.840376470@linuxfoundation.org>
+ <20200619141657.498868116@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Content-Disposition: inline
+In-Reply-To: <20200619141657.498868116@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Fri, 19 Jun 2020 11:47:45 -0700
 
-> This patch series fixes two problems with the current MDIO bus scanning
-> logic which was identified while moving from 4.9 to 5.4 on devices that
-> do rely on scanning the MDIO bus at runtime because they use pluggable
-> cards.
-> 
-> Changes in v2:
-> 
-> - added comment explaining the special value of -ENODEV
-> - added Andrew's Reviewed-by tag
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Series applied and queued up for -stable, thanks.
+On Fri 2020-06-19 16:32:47, Greg Kroah-Hartman wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>=20
+> [ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
+>=20
+> DW APB SSI DMA-part of the driver may need to perform the requested
+> SPI-transfer synchronously. In that case the dma_transfer() callback
+> will return 0 as a marker of the SPI transfer being finished so the
+> SPI core doesn't need to wait and may proceed with the SPI message
+> trasnfers pumping procedure. This will be needed to fix the problem
+> when DMA transactions are finished, but there is still data left in
+> the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
+> to return 1 as the normal dw_spi_transfer_one() method.
+
+As far as I understand, this is support for new SoC, not a fix?
+
+> +++ b/drivers/spi/spi-dw.c
+> @@ -383,11 +383,8 @@ static int dw_spi_transfer_one(struct spi_controller=
+ *master,
+> =20
+>  	spi_enable_chip(dws, 1);
+> =20
+> -	if (dws->dma_mapped) {
+> -		ret =3D dws->dma_ops->dma_transfer(dws, transfer);
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> +	if (dws->dma_mapped)
+> +		return dws->dma_ops->dma_transfer(dws, transfer);
+> =20
+>  	if (chip->poll_mode)
+>  		return poll_transfer(dws);
+
+Mainline patch simply changes return value, but code is different in
+v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
+that a problem?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7tKQcACgkQMOfwapXb+vJ1sgCeOJVyrkyrloM2p+RmL54QRIPJ
+CLQAn1uKYJOgsc+yYzmNLkQTUJ86pN4t
+=lPtX
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
