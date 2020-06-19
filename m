@@ -2,179 +2,138 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DC6C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F927C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DF42168B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e81kJ2zI"
+	by mail.kernel.org (Postfix) with ESMTP id 6F4182168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:25:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583913;
+	bh=Q2Jr5bwK7AWpm1F1YiVCtAdICbovuPznWwL2R1tA0v8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m6qg2grg1S5lhVOWR/rhOQV5QxkL7DI5kZA4xx+4OXdaTFAQ2sJvlrr/AZAtKi4d1
+	 aA2Yjk0c3LhDaYQ7UCTvTs7cnvws5Ng6wBOikPZWVQfCqpHc/nolZeGOijMLoLqB6b
+	 ZfmYJkJCv+JD6uGgGe22y+/S8FXRRIq1Ko0N0rQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394732AbgFSQY6 (ORCPT
+        id S2390039AbgFSQZD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:24:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11064 "EHLO m43-7.mailgun.net"
+        Fri, 19 Jun 2020 12:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394808AbgFSQYz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 12:24:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592583893; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=mXJdDC2hfvuYe5kBaaVL6RFz62vgkC1W/BsD+CIz5dM=;
- b=e81kJ2zI+SgxBruoglyz+obkeE8npO/JYtF57jqdPuEY4dt/Lsolm6tZ6S494CLQYR9rSLxC
- aIh3waVDfs094Xhy42bpEItQl8rczEgg4fcNcY4GSRvyv8uUZ3XIbf/ZwuoFjCnKQfxPqxkZ
- u5MKBw5z9THusPXnZRvarVPf1r0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5eece6cd567385e8e7000d89 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 16:24:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2511BC433C8; Fri, 19 Jun 2020 16:24:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S2390294AbgFSO5t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:57:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akolli)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40995C433A0;
-        Fri, 19 Jun 2020 16:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 667A2217D8;
+        Fri, 19 Jun 2020 14:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578668;
+        bh=Q2Jr5bwK7AWpm1F1YiVCtAdICbovuPznWwL2R1tA0v8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tLGpzBM1wh/53WuyyNhjs+xjAthjBGhWvKzhr0bRLyDRbKBnfA3Mnf83rLQ6+KlZ+
+         nrGC+WAGeFKPNrT+BPkKr/FiHW/Mfwzfk8XWZ+r/RLTwTrFLM+EPQv9Gw1BGxR5UZx
+         v9OMAz2Zf0ENba/H7ghyhzm/q6c54MVpyowZxQuc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 110/267] spi: dw: Enable interrupts in accordance with DMA xfer mode
+Date:   Fri, 19 Jun 2020 16:31:35 +0200
+Message-Id: <20200619141654.134104301@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 19 Jun 2020 21:54:42 +0530
-From:   akolli@codeaurora.org
-To:     Julian Calaby <julian.calaby@gmail.com>
-Cc:     ath11k@lists.infradead.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] ath11k: copy ce service configs to hw_params
-In-Reply-To: <CAGRGNgV74fCD1gb=rXEe1BMN5+5stYeX3W6eKc4-do76TBmFqA@mail.gmail.com>
-References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
- <1592458104-2961-3-git-send-email-akolli@codeaurora.org>
- <CAGRGNgV74fCD1gb=rXEe1BMN5+5stYeX3W6eKc4-do76TBmFqA@mail.gmail.com>
-Message-ID: <34ed705f28b40fab493b8c888138e6a7@codeaurora.org>
-X-Sender: akolli@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-19 04:40, Julian Calaby wrote:
-> Hi Anilkumar,
-> 
-> On Thu, Jun 18, 2020 at 3:31 PM Anilkumar Kolli <akolli@codeaurora.org> 
-> wrote:
->> 
->> No functional changes, added target ce service configurations
->> to hw_params.
->> 
->> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
->> ---
->> V3:
->>  - added ce svc configs in hw_params
->> 
->>  drivers/net/wireless/ath/ath11k/ahb.c  | 20 +++++++++++++++-----
->>  drivers/net/wireless/ath/ath11k/core.c |  8 +-------
->>  drivers/net/wireless/ath/ath11k/core.h |  1 +
->>  drivers/net/wireless/ath/ath11k/hw.h   |  2 ++
->>  4 files changed, 19 insertions(+), 12 deletions(-)
->> 
->> diff --git a/drivers/net/wireless/ath/ath11k/ahb.c 
->> b/drivers/net/wireless/ath/ath11k/ahb.c
->> index 7e9bfeaaf4d2..aa74d27e5871 100644
->> --- a/drivers/net/wireless/ath/ath11k/ahb.c
->> +++ b/drivers/net/wireless/ath/ath11k/ahb.c
->> @@ -152,7 +152,7 @@ static const struct ce_pipe_config 
->> target_ce_config_wlan[] = {
->>   * This table is derived from the CE_PCI TABLE, above.
->>   * It is passed to the Target at startup for use by firmware.
->>   */
->> -static const struct service_to_pipe target_service_to_ce_map_wlan[] = 
->> {
->> +static const struct service_to_pipe 
->> target_service_to_ce_map_wlan_ipq8074[] = {
->>         {
->>                 .service_id = 
->> __cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
->>                 .pipedir = __cpu_to_le32(PIPEDIR_OUT),  /* out = UL = 
->> host -> target */
->> @@ -644,8 +644,8 @@ static void ath11k_ahb_init_qmi_ce_config(struct 
->> ath11k_base *ab)
->> 
->>         cfg->tgt_ce_len = ARRAY_SIZE(target_ce_config_wlan) - 1;
->>         cfg->tgt_ce = target_ce_config_wlan;
->> -       cfg->svc_to_ce_map_len = 
->> ARRAY_SIZE(target_service_to_ce_map_wlan);
->> -       cfg->svc_to_ce_map = target_service_to_ce_map_wlan;
->> +       cfg->svc_to_ce_map_len = ab->hw_params.svc_to_ce_map_len;
->> +       cfg->svc_to_ce_map = ab->hw_params.svc_to_ce_map;
->>  }
->> 
->>  static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
->> @@ -853,8 +853,8 @@ static int ath11k_ahb_map_service_to_pipe(struct 
->> ath11k_base *ab, u16 service_id
->>         bool ul_set = false, dl_set = false;
->>         int i;
->> 
->> -       for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan); 
->> i++) {
->> -               entry = &target_service_to_ce_map_wlan[i];
->> +       for (i = 0; i < ab->hw_params.svc_to_ce_map_len; i++) {
->> +               entry = &ab->hw_params.svc_to_ce_map[i];
->> 
->>                 if (__le32_to_cpu(entry->service_id) != service_id)
->>                         continue;
->> @@ -950,6 +950,16 @@ static int ath11k_ahb_probe(struct 
->> platform_device *pdev)
->>                 goto err_hal_srng_deinit;
->>         }
->> 
->> +       ret = ath11k_init_hw_params(ab);
->> +       if (ret) {
->> +               ath11k_err(ab, "failed to get hw params %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       ab->hw_params.svc_to_ce_map_len =
->> +                       
->> ARRAY_SIZE(target_service_to_ce_map_wlan_ipq8074);
->> +       ab->hw_params.svc_to_ce_map = 
->> target_service_to_ce_map_wlan_ipq8074;
-> 
-> I think you misunderstood my point about this, the point wasn't to
-> copy the svc map to hw_params, but define it in hw_params:
-> 
-> +       {
-> +               .hw_rev = ATH11K_HW_IPQ6018,
-> +               .name = "ipq6018 hw1.0",
-> +               .fw = {
-> +                       .dir = "IPQ6018/hw1.0",
-> +                       .board_size = 256 * 1024,
-> +                       .cal_size = 256 * 1024,
-> +               },
-> +               .max_radios = 2,
-> +               .bdf_addr = 0x4ABC0000,
-> +               .hw_ops = &ipq6018_ops,
-> +               .svc_to_ce_map_len =
-> ARRAY_SIZE(target_service_to_ce_map_wlan_ipq6018,
-> +               .svc_to_ce_map = target_service_to_ce_map_wlan_ipq6018,
-> +       },
-> 
-> That completely eliminates special case code based on the hardware ID
-> in the driver.
-> 
-The static array of structures target_service_to_ce_map_wlan_ipq6018[] 
-is defined in ahb.c and hw_params are initialised in core.c, this will 
-not work. no?
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Thanks
-Anil
+[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
+
+It's pointless to track the Tx overrun interrupts if Rx-only SPI
+transfer is issued. Similarly there is no need in handling the Rx
+overrun/underrun interrupts if Tx-only SPI transfer is executed.
+So lets unmask the interrupts only if corresponding SPI
+transactions are implied.
+
+Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-dw-mid.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index f7ec8b98e6db..e1b34ef9a31c 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+ 
+ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+-	u16 dma_ctrl = 0;
++	u16 imr = 0, dma_ctrl = 0;
+ 
+ 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
+ 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
+ 
+-	if (xfer->tx_buf)
++	if (xfer->tx_buf) {
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+-	if (xfer->rx_buf)
++		imr |= SPI_INT_TXOI;
++	}
++	if (xfer->rx_buf) {
+ 		dma_ctrl |= SPI_DMA_RDMAE;
++		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
++	}
+ 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
+ 
+ 	/* Set the interrupt mask */
+-	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
++	spi_umask_intr(dws, imr);
+ 
+ 	dws->transfer_handler = dma_transfer;
+ 
+-- 
+2.25.1
+
+
+
