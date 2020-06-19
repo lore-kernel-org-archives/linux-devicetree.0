@@ -2,117 +2,138 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA9BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B672C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE96204EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6804204EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592585374;
-	bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJtz4wVRHrv10aO0XOW1MhZtvMB+gAmCTpWUFoe/3GXUUvI8S0PTKOdtV7D2i5pqz
-	 YBXgxhkSrl04p3LxS0B8OBkrLbXgszQaQICuKRDgTjAXyYfh+PlZQz12UP1gj4MHJQ
-	 CzwZYwM++4JkLeudGu+k9RIPIxFnwO2jd9f07Kb8=
+	s=default; t=1592585400;
+	bh=GhmndpCx0NtSvR5PEsSvK9su8y7F9B9W/85J59fhrTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xiJP4aL4Gpr7VCO/8gHzOjlESisYe5hxaxmisnBS8jkPaJhK26z+OYV9rPqmzML3T
+	 7z5NiwtGYEhPzC0VU6EJwIuarPk6x8KbZ01V76ocBFeWXu2uwl84rt8kIGun5NUHNq
+	 XgXNaldZCznP4l/9WtGsQcaHih5PmtAgl26oQ164=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388043AbgFSOjf (ORCPT
+        id S2387983AbgFSQtz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388035AbgFSOjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:39:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2387986AbgFSOjJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:09 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24DDD20CC7;
-        Fri, 19 Jun 2020 14:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 673B320DD4;
+        Fri, 19 Jun 2020 14:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577571;
-        bh=6kMPdUFE150+BlX703K5Ki/VlX6lvcj6VOQhqc0pvzY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vP4GRk+M1/tO6DODghujz7zAPt+7iEyoT2+O1hLBrd/PoZ0u3hK5Mw6NmX1tjXOo6
-         sEq5F8TMTHMuHu+VpwhPU4GDs+Y8iTPFH8ah1+mHXyQC96oxSt3u6lnQW23uqAJRg6
-         ZT/yatm3zXs8x5UnL3qnLeoRHEH+4dNku1jP6Yn8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 063/101] mips: cm: Fix an invalid error code of INTVN_*_ERR
-Date:   Fri, 19 Jun 2020 16:32:52 +0200
-Message-Id: <20200619141617.359180596@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
-References: <20200619141614.001544111@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592577548;
+        bh=GhmndpCx0NtSvR5PEsSvK9su8y7F9B9W/85J59fhrTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b6Q4n+E5Dk+L+BUYxW++OziNU6+ncxzIZSDlPwNkoW0CxkAggKh8nfcXgFXLzxuDx
+         EJ/7nNdgDgcw81Mjo+PHn4VfVxOsxOopZmTnRo56r2nc44BOoraHqojrIopiFOUiUt
+         vAjcvxaaljitJIN4Mfu9h37y+E93LduiyX1ThH3Q=
+Received: by earth.universe (Postfix, from userid 1000)
+        id C348B3C08CD; Fri, 19 Jun 2020 16:39:06 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 16:39:06 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@intel.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: power: supply: bq25890: Document
+ required interrupt
+Message-ID: <20200619143906.33twapu6mgyay4yr@earth.universe>
+References: <20200617102305.14241-1-krzk@kernel.org>
+ <20200617102305.14241-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gyqjsa47ulgkpkl2"
+Content-Disposition: inline
+In-Reply-To: <20200617102305.14241-2-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 8a0efb8b101665a843205eab3d67ab09cb2d9a8d ]
+--gyqjsa47ulgkpkl2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Commit 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache
-errors") adds cm2_causes[] array with map of error type ID and
-pointers to the short description string. There is a mistake in
-the table, since according to MIPS32 manual CM2_ERROR_TYPE = {17,18}
-correspond to INTVN_WR_ERR and INTVN_RD_ERR, while the table
-claims they have {0x17,0x18} codes. This is obviously hex-dec
-copy-paste bug. Moreover codes {0x18 - 0x1a} indicate L2 ECC errors.
+Hi,
 
-Fixes: 3885c2b463f6 ("MIPS: CM: Add support for reporting CM cache errors")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/kernel/mips-cm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Wed, Jun 17, 2020 at 12:23:05PM +0200, Krzysztof Kozlowski wrote:
+> The driver requires interrupts (fails probe if it is not provided) so
+> document this requirement in bindings.
+>=20
+> Fixes: 4aeae9cb0dad ("power_supply: Add support for TI BQ25890 charger ch=
+ip")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 76f18c56141c..3458d23d230c 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -123,9 +123,9 @@ static char *cm2_causes[32] = {
- 	"COH_RD_ERR", "MMIO_WR_ERR", "MMIO_RD_ERR", "0x07",
- 	"0x08", "0x09", "0x0a", "0x0b",
- 	"0x0c", "0x0d", "0x0e", "0x0f",
--	"0x10", "0x11", "0x12", "0x13",
--	"0x14", "0x15", "0x16", "INTVN_WR_ERR",
--	"INTVN_RD_ERR", "0x19", "0x1a", "0x1b",
-+	"0x10", "INTVN_WR_ERR", "INTVN_RD_ERR", "0x13",
-+	"0x14", "0x15", "0x16", "0x17",
-+	"0x18", "0x19", "0x1a", "0x1b",
- 	"0x1c", "0x1d", "0x1e", "0x1f"
- };
- 
--- 
-2.25.1
+Thanks, queued.
 
+-- Sebastian
 
+>  Documentation/devicetree/bindings/power/supply/bq25890.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b=
+/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> index 51ecc756521f..3b4c69a7fa70 100644
+> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>      * "ti,bq25895"
+>      * "ti,bq25896"
+>  - reg: integer, i2c address of the device.
+> +- interrupts: interrupt line;
+>  - ti,battery-regulation-voltage: integer, maximum charging voltage (in u=
+V);
+>  - ti,charge-current: integer, maximum charging current (in uA);
+>  - ti,termination-current: integer, charge will be terminated when curren=
+t in
+> @@ -39,6 +40,9 @@ bq25890 {
+>  	compatible =3D "ti,bq25890";
+>  	reg =3D <0x6a>;
+> =20
+> +	interrupt-parent =3D <&gpio1>;
+> +	interrupts =3D <16 IRQ_TYPE_EDGE_FALLING>;
+> +
+>  	ti,battery-regulation-voltage =3D <4200000>;
+>  	ti,charge-current =3D <1000000>;
+>  	ti,termination-current =3D <50000>;
+> --=20
+> 2.17.1
+>=20
 
+--gyqjsa47ulgkpkl2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7szgoACgkQ2O7X88g7
++pobjw/8Cpw1OzyHiGjyxlvzVKNvp4LndLYSD4J8cdqGPeSNEAHae4sCqmae3G89
+ZCd2Zohd2LwXXire9sQtIXJb96o+1ocWQIzR3wMIypCO8dy83IZqqy+SfZW4ivGW
+K2KmQChB/8os3O74Jw9DSPc4UfK0ISy+7HR4Ot8kyfhg1Dvm9z4NVnId2dHohXoL
+EOn4KYAvjSrevUfXSRwIadCxLxLW7dA1IV1+AS13p0XHdjq4OGQ5dsxNoqYd/X1Q
+MyF3f01Dfic0PDQE3StBTYKW8sYaXI73IftAxZ3gPTcPjS7AzFj+3wpXVEKjfxqR
+e7G40IJYwKtXiyIBg0aQhXOvC3/32LQV4c7suPNmNez4tSn6BkrnFvBOPiVeNZRq
+PLrFNdtatoX3otvbuJEoULD7jLIgSg3Oi8Fkbxu3zmpeCO8yNDPGTmZdhHyxfk7s
+xxUTNlOr7f5rbxYGVe2q0Vz7o5H6s5ukgjSsiqCSMZrNkJd2DYfnvPsSL6Ymd+jP
+SCdfiauLIwrXOzoX/lJXHj/fGzmJGUnU7ogW7OWqclWIGoTxAjIuen+lEWXNIjOH
+L/sAxLp/Sp1gS4rTRFJSite5x8A6h4QGxmsCN1mxuiKgeu9Lyrw4JmKEo40hYa8S
+Ayr385VFbX//luhm435eFe27tMPikUC1GdQwu/tFJk+mkoq5XVs=
+=XIWY
+-----END PGP SIGNATURE-----
+
+--gyqjsa47ulgkpkl2--
