@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC215C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F5AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB771217D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C975F21974
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 15:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578238;
-	bh=zwlOws2GadoztOB2aiNuInG59VzfDeL+ZhRhdn78KxI=;
+	s=default; t=1592579192;
+	bh=JEpojcDeRUFRhtqfPkpM7dkcBOM+fYZjhiPZv8l6EuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3m0P+TATxNuFyCaH6u/bIZeP6QvUS24ZvZIxwr9eB8W3oXNUHqWlNIa+GrQEpHTp
-	 L74K2erXkulj+0ZX76mLLx1SKBd7ecjETiWCM3qd/Q3HVll1eza6P2OtfRRFRlLv5c
-	 VMBYhEogFPaGkW8mSnEf6dc0n37Xfgf4+rKmnRGQ=
+	b=CFKdMtl//AQWjHB9FHz8QrFoD7DQBaOzyqLHWsACX1JqItYzIV2wK28Xwxsi+GwJi
+	 jD2jcb8WPWsAhLM2bO6769/UtDxu7xVhZy1M7/l+/CMcvBnylktYE0rWs294EZvMFT
+	 wR4UO6KHMnst46ajmMWsW/xbAjoVb44gR2VKWe/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389329AbgFSOuh (ORCPT
+        id S2391439AbgFSPG3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389311AbgFSOuf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:50:35 -0400
+        id S2391419AbgFSPG3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:06:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 417B120DD4;
-        Fri, 19 Jun 2020 14:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA32E21941;
+        Fri, 19 Jun 2020 15:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578235;
-        bh=zwlOws2GadoztOB2aiNuInG59VzfDeL+ZhRhdn78KxI=;
+        s=default; t=1592579188;
+        bh=JEpojcDeRUFRhtqfPkpM7dkcBOM+fYZjhiPZv8l6EuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0QJxnrTIWGMl+dzxSYQnG1KxK/T6/JhYSl2sb9RZU4Xh0SBLDmXuGrTPdkfOf0JV
-         aoKyUrur3P6ZGJg9dbcU3H13HiGXfUgx9v517e6dBDnz0W2Md0hsVXjLuXtE4bhFBS
-         MWyQvm6gqLZqDHHJkhkIeQ8dfUJiHux5ahGzTM0U=
+        b=QPkxo+1nOZPS/arvmgo09SNIMLFqRSCzl/DdMEFQpooZCKWHfzbIW7zy7r2KKERUH
+         BVoHWHDR24gFvia3fDL/apLjKip3QSaDG97na1PAAxGfAWaxtHDhAP4AmYhG6Drz7S
+         dTHSYp2Z07g7OELl2fEKPHZm0Tzie/ueNEDh6xW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
         Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
         devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 136/190] spi: dw: Return any value retrieved from the dma_transfer callback
-Date:   Fri, 19 Jun 2020 16:33:01 +0200
-Message-Id: <20200619141640.426662883@linuxfoundation.org>
+Subject: [PATCH 5.4 041/261] spi: dw: Enable interrupts in accordance with DMA xfer mode
+Date:   Fri, 19 Jun 2020 16:30:52 +0200
+Message-Id: <20200619141651.899324097@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
-References: <20200619141633.446429600@linuxfoundation.org>
+In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
+References: <20200619141649.878808811@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,67 +72,66 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
+[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
 
-DW APB SSI DMA-part of the driver may need to perform the requested
-SPI-transfer synchronously. In that case the dma_transfer() callback
-will return 0 as a marker of the SPI transfer being finished so the
-SPI core doesn't need to wait and may proceed with the SPI message
-trasnfers pumping procedure. This will be needed to fix the problem
-when DMA transactions are finished, but there is still data left in
-the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
-to return 1 as the normal dw_spi_transfer_one() method.
+It's pointless to track the Tx overrun interrupts if Rx-only SPI
+transfer is issued. Similarly there is no need in handling the Rx
+overrun/underrun interrupts if Tx-only SPI transfer is executed.
+So lets unmask the interrupts only if corresponding SPI
+transactions are implied.
 
+Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
 Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529131205.31838-3-Sergey.Semin@baikalelectronics.ru
+Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 2 +-
- drivers/spi/spi-dw.c     | 7 ++-----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/spi/spi-dw-mid.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index c4244d2f1ee3..cb268cc4ba2b 100644
+index 242ac2768518..b044d4071690 100644
 --- a/drivers/spi/spi-dw-mid.c
 +++ b/drivers/spi/spi-dw-mid.c
-@@ -274,7 +274,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 		dma_async_issue_pending(dws->txchan);
- 	}
+@@ -220,19 +220,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
  
--	return 0;
-+	return 1;
- }
+ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+-	u16 dma_ctrl = 0;
++	u16 imr = 0, dma_ctrl = 0;
  
- static void mid_spi_dma_stop(struct dw_spi *dws)
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 9fcee7273a79..d2428a8809c1 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -384,11 +384,8 @@ static int dw_spi_transfer_one(struct spi_master *master,
+ 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
+ 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
  
- 	spi_enable_chip(dws, 1);
+-	if (xfer->tx_buf)
++	if (xfer->tx_buf) {
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+-	if (xfer->rx_buf)
++		imr |= SPI_INT_TXOI;
++	}
++	if (xfer->rx_buf) {
+ 		dma_ctrl |= SPI_DMA_RDMAE;
++		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
++	}
+ 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
  
--	if (dws->dma_mapped) {
--		ret = dws->dma_ops->dma_transfer(dws, transfer);
--		if (ret < 0)
--			return ret;
--	}
-+	if (dws->dma_mapped)
-+		return dws->dma_ops->dma_transfer(dws, transfer);
+ 	/* Set the interrupt mask */
+-	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
++	spi_umask_intr(dws, imr);
  
- 	if (chip->poll_mode)
- 		return poll_transfer(dws);
+ 	dws->transfer_handler = dma_transfer;
+ 
 -- 
 2.25.1
 
