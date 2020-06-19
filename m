@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69293C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 05:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EAAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 05:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF4020707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 05:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B24207DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 05:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgFSFf1 (ORCPT
+        id S1728597AbgFSFnA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 01:35:27 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:32345 "EHLO
+        Fri, 19 Jun 2020 01:43:00 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:3515 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725820AbgFSFf1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728554AbgFSFnA (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 01:35:27 -0400
-Date:   19 Jun 2020 14:35:26 +0900
+        Fri, 19 Jun 2020 01:43:00 -0400
+Date:   19 Jun 2020 14:42:59 +0900
 X-IronPort-AV: E=Sophos;i="5.75,253,1589209200"; 
-   d="scan'208";a="49865930"
+   d="scan'208";a="49866578"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 19 Jun 2020 14:35:26 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 19 Jun 2020 14:42:59 +0900
 Received: from mercury.renesas.com (unknown [10.166.252.133])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 7026341A6914;
-        Fri, 19 Jun 2020 14:35:26 +0900 (JST)
-Message-ID: <87pn9v39eo.wl-kuninori.morimoto.gx@renesas.com>
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3D02B41A88B5;
+        Fri, 19 Jun 2020 14:42:59 +0900 (JST)
+Message-ID: <87o8pf3923.wl-kuninori.morimoto.gx@renesas.com>
 From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH] ASoC: dt-bindings: renesas,fsi: use patternProperties for FSI-A/B
+Subject: [PATCH] ASoC: dt-bindings: ak4613: switch to yaml base Documentation
 User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
@@ -44,53 +44,108 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-FSI has FSI-A and FSI-B, and has fsia-xxx/fsib-xxx properties.
-This patch uses patternProperties, and reduce verbose settings.
+This patch switches from .txt base to .yaml base Document.
 
 Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 ---
- .../bindings/sound/renesas,fsi.yaml           | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+v1 -> v2
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,fsi.yaml b/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-index 8a4406be387a..0dd3f7361399 100644
---- a/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-+++ b/Documentation/devicetree/bindings/sound/renesas,fsi.yaml
-@@ -43,30 +43,19 @@ properties:
-   '#sound-dai-cells':
-     const: 1
- 
--  fsia,spdif-connection:
+	- use patternProperties
+
+ .../devicetree/bindings/sound/ak4613.txt      | 27 ----------
+ .../devicetree/bindings/sound/ak4613.yaml     | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/ak4613.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ak4613.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/ak4613.txt b/Documentation/devicetree/bindings/sound/ak4613.txt
+deleted file mode 100644
+index 49a2e74fd9cb..000000000000
+--- a/Documentation/devicetree/bindings/sound/ak4613.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-AK4613 I2C transmitter
+-
+-This device supports I2C mode only.
+-
+-Required properties:
+-
+-- compatible : "asahi-kasei,ak4613"
+-- reg : The chip select number on the I2C bus
+-
+-Optional properties:
+-- asahi-kasei,in1-single-end	: Boolean. Indicate input / output pins are single-ended.
+-- asahi-kasei,in2-single-end	  rather than differential.
+-- asahi-kasei,out1-single-end
+-- asahi-kasei,out2-single-end
+-- asahi-kasei,out3-single-end
+-- asahi-kasei,out4-single-end
+-- asahi-kasei,out5-single-end
+-- asahi-kasei,out6-single-end
+-
+-Example:
+-
+-&i2c {
+-	ak4613: ak4613@10 {
+-		compatible = "asahi-kasei,ak4613";
+-		reg = <0x10>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ak4613.yaml b/Documentation/devicetree/bindings/sound/ak4613.yaml
+new file mode 100644
+index 000000000000..eb915377bc5d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ak4613.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/ak4613.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AK4613 I2C transmitter Device Tree Bindings
++
++maintainers:
++  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
++
++properties:
++  compatible:
++    const: asahi-kasei,ak4613
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#sound-dai-cells":
++    const: 0
++
 +patternProperties:
-+  "^fsi(a|b),spdif-connection$":
-     $ref: /schemas/types.yaml#/definitions/flag
-     description: FSI is connected by S/PDIF
- 
--  fsia,stream-mode-support:
-+  "^fsi(a|b),stream-mode-support$":
-     $ref: /schemas/types.yaml#/definitions/flag
-     description: FSI supports 16bit stream mode
- 
--  fsia,use-internal-clock:
-+  "^fsi(a|b),use-internal-clock$":
-     $ref: /schemas/types.yaml#/definitions/flag
-     description: FSI uses internal clock when master mode
- 
--  fsib,spdif-connection:
--    $ref: /schemas/types.yaml#/definitions/flag
--    description: same as fsia
--
--  fsib,stream-mode-support:
--    $ref: /schemas/types.yaml#/definitions/flag
--    description: same as fsia
--
--  fsib,use-internal-clock:
--    $ref: /schemas/types.yaml#/definitions/flag
--    description: same as fsia
--
- required:
-   - compatible
-   - reg
++  "^asahi-kasei,in[1-2]-single-end$":
++    description: Input Pin 1 - 2.
++    $ref: /schemas/types.yaml#/definitions/flag
++
++  "^asahi-kasei,out[1-6]-single-end$":
++    description: Output Pin 1 - 6.
++    $ref: /schemas/types.yaml#/definitions/flag
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        ak4613: ak4613@10 {
++            compatible = "asahi-kasei,ak4613";
++            reg = <0x10>;
++        };
++    };
 -- 
 2.25.1
 
