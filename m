@@ -2,516 +2,242 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79081C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2344EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED0D214DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:06:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aw02MwLJ"
+	by mail.kernel.org (Postfix) with ESMTP id EF55D2073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 07:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592552656;
+	bh=UdDU2Ya8vvambIemCpJSHDyYc3tTlgjpyYV4GqGjg7c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1p9t6kK/cS6qTGfsVeij3hECiIm8Bowqsj1kGXPTY4DSHC2nGsN+n+a1fFssNUnoW
+	 nLM0KZqiKezP3tl94B34ML6e3NTMmkauyO1OENuELBBS8DWrxdHxCOFhKDUdGOZDTz
+	 ekbERqYPxzX6YWU6RDwEd0H97eHCD/dfGMVIvgLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgFSHFo (ORCPT
+        id S1730725AbgFSHoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 03:05:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19511 "EHLO m43-7.mailgun.net"
+        Fri, 19 Jun 2020 03:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729714AbgFSHFm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 03:05:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592550340; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=rLhkpcNoaqnuBhepX0TolrS1gJHVZEfwyfQsThRNrBw=; b=aw02MwLJhUm7JC79RBnA0WdyVP0mUA5DFJEj6fX9mwBMqhohC9gpq1vlxs5BqXs2mglwX0XX
- dS4yC2Syp0SiQAycaJXS380PAOCbFUplYTeSOw1+ftsae2f7iLymD2GuaPNPvJFihsaoWy24
- e8gA9dIqfDewhAyygrd6vJ56w18=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5eec63c4e144dd5115d5e80b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 07:05:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2690BC433CB; Fri, 19 Jun 2020 07:05:40 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1731047AbgFSHoN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 03:44:13 -0400
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA2D3C433C9;
-        Fri, 19 Jun 2020 07:05:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA2D3C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, kathirav@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     sivaprak@codeaurora.org
-Subject: [PATCH 4/6] dt-bindings: regulator: add YAML schema for QCOM SMD-RPM regulator
-Date:   Fri, 19 Jun 2020 12:35:05 +0530
-Message-Id: <1592550307-11040-5-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
-References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CD72208DB;
+        Fri, 19 Jun 2020 07:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592552652;
+        bh=UdDU2Ya8vvambIemCpJSHDyYc3tTlgjpyYV4GqGjg7c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x4gR7SivjA0NaN3zVriYZxI06Of4cPLXFhY7saGIN+j0SGoA/uS6U3hEhXvrCvQGp
+         zvUIrIwCWpKO52kedNkvexEt8/110ih9j03LnJ82GqFUI3WyIfgyg9BFs6RYiu+0c3
+         NzvyYl/NLT94Yf3vnqKVdKMx6hcFWXpI2vUq3E2w=
+Received: by mail-lj1-f170.google.com with SMTP id z9so10341469ljh.13;
+        Fri, 19 Jun 2020 00:44:12 -0700 (PDT)
+X-Gm-Message-State: AOAM533FH2WCH5W0SAZ4EAr8JjCyVDANlPPPoe2eN/413yaAbPptkzI8
+        KtwrpYGg6xFD2qrKrB0HTlU5BhEIGWmuYzIPc6A=
+X-Google-Smtp-Source: ABdhPJxpgPxVbsbdq4U2Eaj5lpIoQ25R0xdkESNoUt3toyGEX1pPhSRtMLztuyplRf2KFBgpuHYhG9cYIJBoEC1f1Mo=
+X-Received: by 2002:a2e:8896:: with SMTP id k22mr1087416lji.331.1592552650603;
+ Fri, 19 Jun 2020 00:44:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200618080223.951737-1-lee.jones@linaro.org> <CAK8P3a3iRmXC2jDj92QHKqyD+x_UJ7rWU_KcGt=MFOD9UW38RA@mail.gmail.com>
+ <20200618100704.GC954398@dell> <CAGb2v67GJUzomptOzzvafcQ-wAqrJvNNeEZsY7gVQ_kByqBT8w@mail.gmail.com>
+ <20200619064141.GK954398@dell>
+In-Reply-To: <20200619064141.GK954398@dell>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Fri, 19 Jun 2020 15:43:57 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65aAAegOCdMYF=VkTT8pWwuT9d=mhVKCSwztecMJa-ung@mail.gmail.com>
+Message-ID: <CAGb2v65aAAegOCdMYF=VkTT8pWwuT9d=mhVKCSwztecMJa-ung@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] mfd: Add I2C based System Configuaration (SYSCON) access
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        DTML <devicetree@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        michael@walle.cc, Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the YAML schema for the devicetree properties used in the QCOM
-SMD-RPM driver.
+On Fri, Jun 19, 2020 at 2:41 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Fri, 19 Jun 2020, Chen-Yu Tsai wrote:
+>
+> > On Thu, Jun 18, 2020 at 6:07 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Thu, 18 Jun 2020, Arnd Bergmann wrote:
+> > >
+> > > > On Thu, Jun 18, 2020 at 10:03 AM Lee Jones <lee.jones@linaro.org> w=
+rote:
+> > > > >
+> > > > > The existing SYSCON implementation only supports MMIO (memory map=
+ped)
+> > > > > accesses, facilitated by Regmap.  This extends support for regist=
+ers
+> > > > > held behind I2C busses.
+> > > > >
+> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > >
+> > > > The implementation looks fine to me, but can you explain how this i=
+s going to
+> > > > be used, and what the advantage is over open-coding the devm_regmap=
+_init_i2c()
+> > > > in each driver that would use this?
+> > >
+> > > Does Regmap let you register/initialise an I2C address more than once=
+?
+> > >
+> > > When I attempt it, I get:
+> > >
+> > > [    0.522988] i2c i2c-0: Failed to register i2c client tmp105 at 0x3=
+2 (-16)
+> > > [    0.523341] i2c i2c-0: of_i2c: Failure registering /bus@4000000/mo=
+therboard/iofpga@7,00000000/i2c@16000/temp@32
+> > > [    0.523691] i2c i2c-0: Failed to create I2C device for /bus@400000=
+0/motherboard/iofpga@7,00000000/i2c@16000/temp@32
+> > >
+> > > > Is this about using proper locking through the regmap framework for
+> > > > shared i2c clients, or to reduce memory consumption when lots of dr=
+ivers
+> > > > access the same regmap?
+> > >
+> > > All of those things are valid.
+> > >
+> > > My use-case is regarding MFDs sharing an I2C interfaced address space
+> > > with their children.
+> >
+> > Is that an issue with the standard mfd + regmap pattern?
+>
+> There is no relationship between MFD and Regmap.  It is not more
+> closely related to Regmap than it is any other public API provided
+> within the kernel.  *Some* parent drivers initialise one large,
+> encompassing Regmap address space and pass it to their children, but
+> this isn't suitable in all cases.
+>
+> > For the AXP20x PMICs, we register the regmap in the parent mfd driver [=
+1],
+> > and store that in dev_data for child drivers to fetch [2]. You could
+> > easily just fetch the regmap with dev_get_regmap() and a pointer to the
+> > parent device.
+>
+> Remember, not all use-cases are the same.  Just because your H/W fits
+> well within the current framework, doesn't mean all will.
+>
+> Initialising in the parent is no problem if the driver is meaningful
+> in other ways, but what if that's all the parent driver does?  In
+> these cases Syscon can be used instead, rendering the driver
+> superfluous. Meaning it can (and *should*) then be omitted.
 
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 320 ---------------------
- .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 105 +++++++
- 2 files changed, 105 insertions(+), 320 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
+I'm guessing in your use case there isn't a need for a parent driver,
+and you are looking for something like "simple-mfd", but for listing
+sub-devices within an I2C slave device? In that case I understand.
 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-deleted file mode 100644
-index dea4384..00000000
---- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-+++ /dev/null
-@@ -1,320 +0,0 @@
--QCOM SMD RPM REGULATOR
--
--The Qualcomm RPM over SMD regulator is modelled as a subdevice of the RPM.
--Because SMD is used as the communication transport mechanism, the RPM resides as
--a subnode of the SMD.  As such, the SMD-RPM regulator requires that the SMD and
--RPM nodes be present.
--
--Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt for
--information pertaining to the SMD node.
--
--Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt for
--information regarding the RPM node.
--
--== Regulator
--
--Regulator nodes are identified by their compatible:
--
--- compatible:
--	Usage: required
--	Value type: <string>
--	Definition: must be one of:
--		    "qcom,rpm-pm8841-regulators"
--		    "qcom,rpm-pm8916-regulators"
--		    "qcom,rpm-pm8941-regulators"
--		    "qcom,rpm-pm8950-regulators"
--		    "qcom,rpm-pm8994-regulators"
--		    "qcom,rpm-pm8998-regulators"
--		    "qcom,rpm-pma8084-regulators"
--		    "qcom,rpm-pmi8994-regulators"
--		    "qcom,rpm-pmi8998-regulators"
--		    "qcom,rpm-pms405-regulators"
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_s5-supply:
--- vdd_s6-supply:
--- vdd_s7-supply:
--- vdd_s8-supply:
--	Usage: optional (pm8841 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_l1_l2_l3-supply:
--- vdd_l4_l5_l6-supply:
--- vdd_l7-supply:
--- vdd_l8_l9_l10_l11_l12_l13_l14_l15_l16_l17_l18-supply:
--	Usage: optional (pm8916 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_s4-supply:
--- vdd_s5-supply:
--- vdd_s6-supply:
--- vdd_l1_l19-supply:
--- vdd_l2_l23-supply:
--- vdd_l3-supply:
--- vdd_l4_l5_l6_l7_l16-supply:
--- vdd_l8_l11_l12_l17_l22-supply:
--- vdd_l9_l10_l13_l14_l15_l18-supply:
--- vdd_l20-supply:
--- vdd_l21-supply:
--	Usage: optional (pm8950 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_l1_l3-supply:
--- vdd_l2_lvs1_2_3-supply:
--- vdd_l4_l11-supply:
--- vdd_l5_l7-supply:
--- vdd_l6_l12_l14_l15-supply:
--- vdd_l8_l16_l18_l19-supply:
--- vdd_l9_l10_l17_l22-supply:
--- vdd_l13_l20_l23_l24-supply:
--- vdd_l21-supply:
--- vin_5vs-supply:
--	Usage: optional (pm8941 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_s5-supply:
--- vdd_s6-supply:
--- vdd_s7-supply:
--- vdd_s8-supply:
--- vdd_s9-supply:
--- vdd_s10-supply:
--- vdd_s11-supply:
--- vdd_s12-supply:
--- vdd_l1-supply:
--- vdd_l2_l26_l28-supply:
--- vdd_l3_l11-supply:
--- vdd_l4_l27_l31-supply:
--- vdd_l5_l7-supply:
--- vdd_l6_l12_l32-supply:
--- vdd_l5_l7-supply:
--- vdd_l8_l16_l30-supply:
--- vdd_l9_l10_l18_l22-supply:
--- vdd_l9_l10_l18_l22-supply:
--- vdd_l3_l11-supply:
--- vdd_l6_l12_l32-supply:
--- vdd_l13_l19_l23_l24-supply:
--- vdd_l14_l15-supply:
--- vdd_l14_l15-supply:
--- vdd_l8_l16_l30-supply:
--- vdd_l17_l29-supply:
--- vdd_l9_l10_l18_l22-supply:
--- vdd_l13_l19_l23_l24-supply:
--- vdd_l20_l21-supply:
--- vdd_l20_l21-supply:
--- vdd_l9_l10_l18_l22-supply:
--- vdd_l13_l19_l23_l24-supply:
--- vdd_l13_l19_l23_l24-supply:
--- vdd_l25-supply:
--- vdd_l2_l26_l28-supply:
--- vdd_l4_l27_l31-supply:
--- vdd_l2_l26_l28-supply:
--- vdd_l17_l29-supply:
--- vdd_l8_l16_l30-supply:
--- vdd_l4_l27_l31-supply:
--- vdd_l6_l12_l32-supply:
--- vdd_lvs1_2-supply:
--	Usage: optional (pm8994 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_bst_byp-supply:
--	Usage: optional (pmi8994 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_s5-supply:
--- vdd_s6-supply:
--- vdd_s7-supply:
--- vdd_s8-supply:
--- vdd_s9-supply:
--- vdd_s10-supply:
--- vdd_s11-supply:
--- vdd_s12-supply:
--- vdd_s13-supply:
--- vdd_l1_l27-supply:
--- vdd_l20_l24-supply:
--- vdd_l26-supply:
--- vdd_l2_l8_l17-supply:
--- vdd_l3_l11-supply:
--- vdd_l4_l5-supply:
--- vdd_l6-supply:
--- vdd_l7_l12_l14_l15-supply:
--- vdd_l9-supply:
--- vdd_l10_l23_l25-supply:
--- vdd_l13_l19_l21-supply:
--- vdd_l16_l28-supply:
--- vdd_l18_l22-supply:
--- vdd_lvs1_lvs2-supply:
--	Usage: optional (pmi8998 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_s5-supply:
--- vdd_s6-supply:
--- vdd_s7-supply:
--- vdd_s8-supply:
--- vdd_s9-supply:
--- vdd_s10-supply:
--- vdd_s11-supply:
--- vdd_s12-supply:
--- vdd_l1_l11-supply:
--- vdd_l2_l3_l4_l27-supply:
--- vdd_l5_l7-supply:
--- vdd_l6_l12_l14_l15_l26-supply:
--- vdd_l8-supply:
--- vdd_l9_l10_l13_l20_l23_l24-supply:
--- vdd_l16_l25-supply:
--- vdd_l17-supply:
--- vdd_l18-supply:
--- vdd_l19-supply:
--- vdd_l21-supply:
--- vdd_l22-supply:
--	Usage: optional (pma8084 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_bob-supply:
--	Usage: optional (pmi8998 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--- vdd_s1-supply:
--- vdd_s2-supply:
--- vdd_s3-supply:
--- vdd_s4-supply:
--- vdd_s5-supply:
--- vdd_l1_l2-supply:
--- vdd_l3_l8-supply:
--- vdd_l4-supply:
--- vdd_l5_l6-supply:
--- vdd_l7-supply:
--- vdd_l3_l8-supply:
--- vdd_l9-supply:
--- vdd_l10_l11_l12_l13-supply:
--	Usage: optional (pms405 only)
--	Value type: <phandle>
--	Definition: reference to regulator supplying the input pin, as
--		    described in the data sheet
--
--The regulator node houses sub-nodes for each regulator within the device. Each
--sub-node is identified using the node's name, with valid values listed for each
--of the pmics below.
--
--pm8841:
--	s1, s2, s3, s4, s5, s6, s7, s8
--
--pm8916:
--	s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13,
--	l14, l15, l16, l17, l18
--
--pm8941:
--	s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13,
--	l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
--	lvs3, 5vs1, 5vs2
--
--pm8994:
--	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
--	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
--	l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
--
--pm8998:
--	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, l1, l2, l3, l4,
--	l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
--	l20, l21, l22, l23, l24, l25, l26, l27, l28, lvs1, lvs2
--
--pma8084:
--	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
--	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
--	l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
--
--pmi8994:
--	s1, s2, s3, boost-bypass
--
--pmi8998:
--	bob
--
--pms405:
--	s1, s2, s3, s4, s5, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
--	l13
--
--The content of each sub-node is defined by the standard binding for regulators -
--see regulator.txt.
--
--= EXAMPLE
--
--	smd {
--		compatible = "qcom,smd";
--
--		rpm {
--			interrupts = <0 168 1>;
--			qcom,ipc = <&apcs 8 0>;
--			qcom,smd-edge = <15>;
--
--			rpm_requests {
--				compatible = "qcom,rpm-msm8974";
--				qcom,smd-channels = "rpm_requests";
--
--				pm8941-regulators {
--					compatible = "qcom,rpm-pm8941-regulators";
--					vdd_l13_l20_l23_l24-supply = <&pm8941_boost>;
--
--					pm8941_s3: s3 {
--						regulator-min-microvolt = <1800000>;
--						regulator-max-microvolt = <1800000>;
--					};
--
--					pm8941_boost: s4 {
--						regulator-min-microvolt = <5000000>;
--						regulator-max-microvolt = <5000000>;
--					};
--
--					pm8941_l20: l20 {
--						regulator-min-microvolt = <2950000>;
--						regulator-max-microvolt = <2950000>;
--					};
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
-new file mode 100644
-index 00000000..cb0bd7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/qcom,smd-rpm-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: QCOM SMD RPM REGULATOR
-+
-+description:
-+  The Qualcomm RPM over SMD regulator is modelled as a subdevice of the RPM.
-+  Because SMD is used as the communication transport mechanism, the RPM
-+  resides as a subnode of the SMD.  As such, the SMD-RPM regulator requires
-+  that the SMD and RPM nodes be present.
-+
-+  Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt for
-+  information pertaining to the SMD node.
-+
-+  Please refer to Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
-+  for information regarding the RPM node.
-+
-+  The regulator node houses sub-nodes for each regulator within the device.
-+  Each sub-node is identified using the node's name, with valid values listed
-+  for each of the pmics below.
-+
-+  For pm8841, s1, s2, s3, s4, s5, s6, s7, s8
-+
-+  For pm8916, s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
-+  l12, l13, l14, l15, l16, l17, l18
-+
-+  For pm8941, s1, s2, s3, s4, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
-+  l12, l13, l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
-+  lvs3, 5vs1, 5vs2
-+
-+  For pm8994, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3,
-+  l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
-+  l20, l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
-+
-+  For pm8998, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, l1, l2,
-+  l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
-+  l20, l21, l22, l23, l24, l25, l26, l27, l28, lvs1, lvs2
-+
-+  For pma8084, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3,
-+  l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19,
-+  l20, l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
-+
-+  For pmi8994, s1, s2, s3, boost-bypass
-+
-+  For pmi8998, bob
-+
-+  For pms405, s1, s2, s3, s4, s5, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
-+  l12, l13
-+
-+maintainers:
-+  - Kathiravan T <kathirav@codeaurora.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,rpm-pm8841-regulators
-+      - qcom,rpm-pm8916-regulators
-+      - qcom,rpm-pm8941-regulators
-+      - qcom,rpm-pm8950-regulators
-+      - qcom,rpm-pm8994-regulators
-+      - qcom,rpm-pm8998-regulators
-+      - qcom,rpm-pma8084-regulators
-+      - qcom,rpm-pmi8994-regulators
-+      - qcom,rpm-pmi8998-regulators
-+      - qcom,rpm-pms405-regulators
-+
-+patternProperties:
-+  ".*-supply$":
-+    description: Input supply phandle(s) for this node
-+
-+  "^((s|l|lvs|5vs)[0-9]*)|(boost-bypass)|(bob)$":
-+    description: List of regulators and its properties
-+    allOf:
-+     - $ref: regulator.yaml#
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    pm8941-regulators {
-+        compatible = "qcom,rpm-pm8941-regulators";
-+        vdd_l13_l20_l23_l24-supply = <&pm8941_boost>;
-+
-+        pm8941_s3: s3 {
-+            regulator-min-microvolt = <1800000>;
-+            regulator-max-microvolt = <1800000>;
-+        };
-+
-+        pm8941_boost: s4 {
-+            regulator-min-microvolt = <5000000>;
-+            regulator-max-microvolt = <5000000>;
-+        };
-+
-+        pm8941_l20: l20 {
-+            regulator-min-microvolt = <2950000>;
-+            regulator-max-microvolt = <2950000>;
-+        };
-+    };
-+...
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> > > > My impression of the existing syscon code is that the main value-ad=
+d over
+> > > > other ways of doing the same is the syscon_regmap_lookup_by_phandle=
+()
+> > > > interface that gives other drivers a much simpler way of getting th=
+e
+> > > > regmap just based on the DT node. Are you planning to add something
+> > > > like that here as well? An ideal driver interface might allow
+> > > > syscon_regmap_lookup_by_phandle() to work for both mmio and i2c
+> > > > based syscons, or additional ones as well, but implementing this wo=
+uld
+> > > > be rather tricky when the i2c core is a loadable module.
+> >
+> > The current MMIO syscon is decoupled from the DM, and there is no way
+> > for drivers to export or register a syscon, meaning I have to open code
+> > syscon_regmap_lookup_by_phandle() [3] if I want to only expose certain
+> > registers and not the full address range, or if I want to share the
+> > regmap with the existing driver (for locking purposes), or both [4].
+>
+> Not sure I understand the problem.
+>
+> Could you explain why the current implementation doesn't work for you?
+>
+> Open coding your own implementation of Syscon is non-optimal.
 
+For the DWMAC Ethernet controllers, the platform glue almost always has
+a register for tuning the delays of the TX and RX clocks. In almost all
+later Allwinner chips, this is in a separate area, which we use a syscon
+for. However in one hybrid chip, this is located in the clock controller.
+We deemed it risky to also have the whole clock controller address range
+mapped as a syscon, and so we export a custom regmap.
+
+The Ethernet driver has to deal with both cases.
+
+Looking at it again, since syscon still has a platform driver, maybe I
+should just use the dev_get_regmap() route for both cases.
+
+> > Maybe there's room for improvement here? The same applies to the new
+> > I2C case, and likely any other future syscon variants.
+> >
+> > IMHO people are getting it wrong if they have both a syscon and a drive=
+r
+> > for the same device.
+>
+> Syscon is just a means to obtain a group of registers either a)
+> without a dedicated driver OR b) to share amongst more than 1,
+> potentially unrelated, user.  So in the case of a) which appears to
+> sit well with-in your use-case and expectations, you are correct.
+> Whereas in the case of b) you are not.
+>
+> I hope that helps clarity the situation somewhat.
+
+The concern was mostly due to the commit message of
+
+    bdb0066df96e mfd: syscon: Decouple syscon interface from platform devic=
+es
+
+which mentions
+
+   there is a need to have a dedicated driver for such system controller
+   but also share registers with other drivers. The latter is where the
+   syscon interface is helpful.
+
+But does not provide any sort of coordination between the dedicated driver
+and the syscon. I suppose the intention might have been that the driver
+would get a syscon using its own device node. We avoided that but I wonder
+if the extra code is worth it or not. Other platforms seem to do ok.
+
+Thank you for helping me clear things up.
+
+
+Regards
+ChenYu
+
+> > > I expect the API would be expanded to cover other use-cases.  This is
+> > > a bare bones implementation which has been kept as atomic as possible
+> > > for ease of review.
+> >
+> > Regards
+> > ChenYu
+> >
+> > [1] https://elixir.bootlin.com/linux/latest/source/drivers/mfd/axp20x-i=
+2c.c#L43
+> > [2] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/pinc=
+trl-axp209.c#L433
+> > [3] https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet=
+/stmicro/stmmac/dwmac-sun8i.c#L1093
+> > [4] https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng=
+/ccu-sun8i-r40.c#L1333
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
