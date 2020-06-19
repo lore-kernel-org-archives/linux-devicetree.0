@@ -2,84 +2,93 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FD8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEEF2080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0784207FC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 10:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592563373;
+	bh=3YwGEO6C6OlOhnJ1+8PAKyD5+7GTC3afKx5ypttFhIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UMu2VDL0op5srwP2vz2Ee5Dtqrz6EMwZ0yRqZs4vL/Bfkfr6PmKIP4/gVWhUXSPPD
+	 /ArqtwBuoEnqwWGxg2IoJdLlc16GNudSArL95vSc6H2gvLHCrPApTJwVQ3btUsYwvl
+	 TzvwgjDrsedvpcQwiLkFJoBDR4bqL+4xDaBvnXSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732454AbgFSK3U (ORCPT
+        id S1732608AbgFSKmp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 06:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732225AbgFSK2J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 06:28:09 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A96C061794;
-        Fri, 19 Jun 2020 03:28:09 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 55E3C2A5248
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH 4/7] arm64: dts: mt8183: Fix unit name warnings
-Date:   Fri, 19 Jun 2020 12:27:54 +0200
-Message-Id: <20200619102757.1358675-5-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619102757.1358675-1-enric.balletbo@collabora.com>
-References: <20200619102757.1358675-1-enric.balletbo@collabora.com>
+        Fri, 19 Jun 2020 06:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732670AbgFSKl4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 06:41:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E73207FC;
+        Fri, 19 Jun 2020 10:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592563315;
+        bh=3YwGEO6C6OlOhnJ1+8PAKyD5+7GTC3afKx5ypttFhIM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YsIZMBK1wcmTJxMxC4VejuhKgeTofC9rXDevluPriFFEWYzbv4gNb8Wpq3oIJHFci
+         fcapG4pnt1Av5STNGfL2FWfP8N7fRTgCYrB69e8TLpvyNMNxliK0HJbCsX4VYALD0M
+         NUkTR8C4wXQF23JwV1b00Cl0fznJnHCkJaRJznOI=
+Date:   Fri, 19 Jun 2020 11:41:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sivaprak@codeaurora.org
+Subject: Re: [PATCH 4/6] dt-bindings: regulator: add YAML schema for QCOM
+ SMD-RPM regulator
+Message-ID: <20200619104152.GC5396@sirena.org.uk>
+References: <1592550307-11040-1-git-send-email-kathirav@codeaurora.org>
+ <1592550307-11040-5-git-send-email-kathirav@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
+Content-Disposition: inline
+In-Reply-To: <1592550307-11040-5-git-send-email-kathirav@codeaurora.org>
+X-Cookie: Robot, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the unit address from the DT nodes that doesn't have a reg
-property. This fixes the following unit name warnings:
 
-  Warning (unit_address_vs_reg): /cpus/idle-states/cluster-sleep@0: node has a unit name, but no reg or ranges property
-  Warning (unit_address_vs_reg): /cpus/idle-states/cluster-sleep@1: node has a unit name, but no reg or ranges property
+--ctP54qlpMx3WjD+/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+On Fri, Jun 19, 2020 at 12:35:05PM +0530, Kathiravan T wrote:
+> Add the YAML schema for the devicetree properties used in the QCOM
+> SMD-RPM driver.
 
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please make YAML binding conversions the last thing you do in any series
+that includes them, they often require quite a few revisions and there
+is often quite a backlog in YAML binding reviews which means that
+everything else gets delayed.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 00137ec61164d..e356076749148 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -168,7 +168,7 @@ CPU_SLEEP: cpu-sleep {
- 				min-residency-us = <800>;
- 			};
- 
--			CLUSTER_SLEEP0: cluster-sleep@0 {
-+			CLUSTER_SLEEP0: cluster-sleep0 {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
- 				arm,psci-suspend-param = <0x01010001>;
-@@ -176,7 +176,7 @@ CLUSTER_SLEEP0: cluster-sleep@0 {
- 				exit-latency-us = <400>;
- 				min-residency-us = <1000>;
- 			};
--			CLUSTER_SLEEP1: cluster-sleep@1 {
-+			CLUSTER_SLEEP1: cluster-sleep1 {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
- 				arm,psci-suspend-param = <0x01010001>;
--- 
-2.27.0
+--ctP54qlpMx3WjD+/
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7slm8ACgkQJNaLcl1U
+h9Dd0gf6AvYZf/j5cZUt1nnFr5XfdUsrgQYIIoXX10tbrF+bkcbNe/ZByIBhtOAQ
+NTvsaNTYONT3GGTX8reXfe6ey7qv4twCMDB3TwQHpV426YLGaCX670yaguZ1lmKP
+eKWt1PI1PZtQip315X1uOIozdcMUIRO97humVzxUo5bSGwVgVyxjWz8OoHs5GI7K
+EztGbaiCMsx1LwTqv7mMWEEj0xe6d7cXCBHNiJLYeKly1DG8qGRwcSyq5p9VAYMe
+lm5aXKh3bJQj37BhsZezGwwnklAIy2uY0XKzI3i9rzjMZ3y38GDSI3nwVcSQ2cGI
+3k9iEvKHvykY0NeU/FfxEMPFnnt7Zg==
+=sR3l
+-----END PGP SIGNATURE-----
+
+--ctP54qlpMx3WjD+/--
