@@ -3,137 +3,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E76C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11211C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CE8207FC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E424220885
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 08:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgFSIPG (ORCPT
+        id S1731230AbgFSIVM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 04:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729548AbgFSIN0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 04:13:26 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB37C06174E;
-        Fri, 19 Jun 2020 01:13:25 -0700 (PDT)
-Received: from [5.158.153.52] (helo=kurt)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt@linutronix.de>)
-        id 1jmC9L-0003ir-MM; Fri, 19 Jun 2020 10:13:23 +0200
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [RFC PATCH 3/9] net: dsa: hellcreek: Add PTP clock support
-In-Reply-To: <20200618084614.7ef6b35c@kicinski-fedora-PC1C0HJN>
-References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-4-kurt@linutronix.de> <20200618084614.7ef6b35c@kicinski-fedora-PC1C0HJN>
-Date:   Fri, 19 Jun 2020 10:13:22 +0200
-Message-ID: <87bllfqxr1.fsf@kurt>
+        Fri, 19 Jun 2020 04:21:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:46846 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731241AbgFSIUd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 04:20:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E408E2B;
+        Fri, 19 Jun 2020 01:20:27 -0700 (PDT)
+Received: from red-moon.arm.com (unknown [10.57.58.158])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6990E3F71F;
+        Fri, 19 Jun 2020 01:20:25 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping APIs
+Date:   Fri, 19 Jun 2020 09:20:01 +0100
+Message-Id: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+This series is a v2 of a previous posting:
 
-Hi Jakub,
+v1 -> v2
 
-On Thu Jun 18 2020, Jakub Kicinski wrote:
-> On Thu, 18 Jun 2020 08:40:23 +0200 Kurt Kanzenbach wrote:
->> From: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
->>=20
->> The switch has internal PTP hardware clocks. Add support for it. There a=
-re three
->> clocks:
->>=20
->>  * Synchronized
->>  * Syntonized
->>  * Free running
->>=20
->> Currently the synchronized clock is exported to user space which is a go=
-od
->> default for the beginning. The free running clock might be exported later
->> e.g. for implementing 802.1AS-2011/2020 Time Aware Bridges (TAB). The sw=
-itch
->> also supports cross time stamping for that purpose.
->>=20
->> The implementation adds support setting/getting the time as well as offs=
-et and
->> frequency adjustments. However, the clock only holds a partial timeofday
->> timestamp. This is why we track the seconds completely in software (see =
-overflow
->> work and last_ts).
->>=20
->> Furthermore, add the PTP multicast addresses into the FDB to forward that
->> packages only to the CPU port where they are processed by a PTP program.
->>=20
->> Signed-off-by: Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>
->> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
->
-> Please make sure each patch in the series builds cleanly with the W=3D1
-> C=3D1 flags. Here we have:
->
-> ../drivers/net/dsa/hirschmann/hellcreek_ptp.c: In function =C3=A2=E2=82=
-=AC=CB=9C__hellcreek_ptp_clock_read=C3=A2=E2=82=AC=E2=84=A2:
-> ../drivers/net/dsa/hirschmann/hellcreek_ptp.c:30:28: warning: variable =
-=C3=A2=E2=82=AC=CB=9Csech=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunuse=
-d-but-set-variable]
->    30 |  u16 nsl, nsh, secl, secm, sech;
->       |                            ^~~~
-> ../drivers/net/dsa/hirschmann/hellcreek_ptp.c:30:22: warning: variable =
-=C3=A2=E2=82=AC=CB=9Csecm=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunuse=
-d-but-set-variable]
->    30 |  u16 nsl, nsh, secl, secm, sech;
->       |                      ^~~~
-> ../drivers/net/dsa/hirschmann/hellcreek_ptp.c:30:16: warning: variable =
-=C3=A2=E2=82=AC=CB=9Csecl=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunuse=
-d-but-set-variable]
->    30 |  u16 nsl, nsh, secl, secm, sech;
->       |                ^~~~
->
-> Next patch adds a few more.
+- Removed _rid() wrappers
+- Fixed !CONFIG_ACPI compilation issue
+- Converted of_pci_iommu_init() to use of_iommu_configure_dev_id()
 
-Sorry, I did test with C=3D1 only. I'll fix it.
+v1: https://lore.kernel.org/linux-arm-kernel/20200521130008.8266-1-lorenzo.pieralisi@arm.com/
 
-Thanks,
-Kurt
+Original cover letter
+---------------------
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Firmware bindings provided in the ACPI IORT table[1] and device tree
+bindings define rules to carry out input/output ID mappings - ie
+retrieving an IOMMU/MSI controller input ID for a device with a given
+ID.
 
------BEGIN PGP SIGNATURE-----
+At the moment these firmware bindings are used exclusively for PCI
+devices and their requester ID to IOMMU/MSI id mapping but there is
+nothing PCI specific in the ACPI and devicetree bindings that prevent
+the firmware and kernel from using the firmware bindings to traslate
+device IDs for any bus that requires its devices to carry out
+input/output id translations.
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7sc6IACgkQeSpbgcuY
-8Kab/g//bnuFMwcRYTeeq+oslsXbELr8IchBtrL9xstckxXlqpzjmto23W4hbQik
-FnpQG+RCeLoE9SiVR9b2KL8ei2zX0uCU/lT5Vq75HycMJoCOuiN27FvuJx3QSVGz
-ph/dU6gl1ZZS44vIGMm351MSQX6DRMhm4pXzG9Fmk2Sent2h69gYtHDj/OPFnvze
-+625SHxqH+6lDSYTqc7Es/TavKRrLBivlgr6rqm6SVwHUR1pOBACxxjqIHHPionl
-hmha5Inzxuy7Qcwi7f1ocaHzq5F4enEtjtr8WbrxoOV6+vRTGQMLcJeO3ixnJtx9
-TmHFRgwFkzjzMw1+an3Qn4aKXrB00eIRtQQp7Vdqrg3qFOhrxiZ8iepS5lsahgD6
-7HAY9vmZ8OWEwaMEtiR5SBZwbwejRU6RLeyPKnfg/FeJ/nsEQ327O36Uinw6hY2O
-jQzI87jmpAO+AE+SPgZjalHw7fnI8GtoGkogkdWdQ1NIGCyfJpH6ewzEVxUob8Ql
-/SWeT9tdYWvEYtWvaZ6ovcLhFI5rSbbtIw825buIFDTy2k4pmzYmU17/+DsjI2Jn
-8C4GTew37u8g0k/196LHjjgOdYqABqXf0ilYW9bkeu7cIxwG+NnQ7qd+FTuDfmjg
-8QncvcSu5LthzwWqWcCQRe3r0rVDX5HPovBoU0s3wKdBz4/Euds=
-=7JQD
------END PGP SIGNATURE-----
---=-=-=--
+The Freescale FSL bus is an example whereby the input/output ID
+translation kernel code put in place for PCI can be reused for devices
+attached to the bus that are not PCI devices.
+
+This series updates the kernel code to make the MSI/IOMMU input/output
+ID translation PCI agnostic and apply the resulting changes to the
+device ID space provided by the Freescale FSL bus.
+
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "Joerg Roedel <joro@8bytes.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+
+Diana Craciun (2):
+  of/irq: make of_msi_map_get_device_domain() bus agnostic
+  bus/fsl-mc: Refactor the MSI domain creation in the DPRC driver
+
+Laurentiu Tudor (1):
+  dt-bindings: arm: fsl: Add msi-map device-tree binding for fsl-mc bus
+
+Lorenzo Pieralisi (8):
+  ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for
+    NC
+  ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
+  ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
+  ACPI/IORT: Remove useless PCI bus walk
+  ACPI/IORT: Add an input ID to acpi_dma_configure()
+  of/iommu: Make of_map_rid() PCI agnostic
+  of/device: Add input id to of_dma_configure()
+  of/irq: Make of_msi_map_rid() PCI bus agnostic
+
+Makarand Pawagi (1):
+  bus: fsl-mc: Add ACPI support for fsl-mc
+
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt |  50 +++++++-
+ drivers/acpi/arm64/iort.c                     | 108 ++++++++++++------
+ drivers/acpi/scan.c                           |   8 +-
+ drivers/bus/fsl-mc/dprc-driver.c              |  31 ++---
+ drivers/bus/fsl-mc/fsl-mc-bus.c               |  79 +++++++++----
+ drivers/bus/fsl-mc/fsl-mc-msi.c               |  36 ++++--
+ drivers/bus/fsl-mc/fsl-mc-private.h           |   6 +-
+ drivers/iommu/of_iommu.c                      |  81 +++++++------
+ drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c   | 105 ++++++++++++++---
+ drivers/of/base.c                             |  42 +++----
+ drivers/of/device.c                           |   8 +-
+ drivers/of/irq.c                              |  34 +++---
+ drivers/pci/msi.c                             |   9 +-
+ include/acpi/acpi_bus.h                       |   9 +-
+ include/linux/acpi.h                          |   7 ++
+ include/linux/acpi_iort.h                     |  20 ++--
+ include/linux/of.h                            |   4 +-
+ include/linux/of_device.h                     |  16 ++-
+ include/linux/of_iommu.h                      |   6 +-
+ include/linux/of_irq.h                        |  13 ++-
+ 20 files changed, 451 insertions(+), 221 deletions(-)
+
+-- 
+2.26.1
+
