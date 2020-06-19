@@ -2,102 +2,138 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA0AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10564C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF678217A0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:19:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JubHsdyN"
+	by mail.kernel.org (Postfix) with ESMTP id E4AC7217A0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 16:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592583662;
+	bh=Pg7o7hR6OuF3WqB28s1pOE/hk0d383YdOIRcUIRuGsg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tq//7B3TKGSHtFiEWKvgwrq54Kiom38wsEjWnmv6QWvwifpkH4WFjpdlzgVyInC7X
+	 n6jHFUj3MULD7Q0/3ijf5JmtIq6uAkm6dqJhDXfbf0/aLKwRJ8y0daGSh48NA+vJHp
+	 +muyoh8jfEt17r5O5UK/+aZCZgHpFhHxcgjUrpxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394551AbgFSQTY (ORCPT
+        id S2390675AbgFSPA7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:19:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49442 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390777AbgFSQSY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 12:18:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIFpK008140;
-        Fri, 19 Jun 2020 11:18:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592583496;
-        bh=qGP6MS6+eG2DFpGVz1IWcoA6j9uBqfJ/c06oHe2JZGk=;
-        h=From:To:CC:Subject:Date;
-        b=JubHsdyNuL+CBY1m5AuqIfsbDEcOLDsJKcXUkqoCF7t29DDyKSK4OCt8nLu8/evaB
-         iHdv5L5fVJWXM3c/NDNWSyK/mgdOhSdcofw1idFBiSQdUJV6KiqawOVTHjglM5XhHN
-         3MaHalTAjHjyCi6KExoKVBFo0N/BeWbn7CLek6ss=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05JGIFI1026425
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Jun 2020 11:18:15 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 19
- Jun 2020 11:18:15 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 19 Jun 2020 11:18:15 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05JGIF2Y034554;
-        Fri, 19 Jun 2020 11:18:15 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v9 0/5] RGMII Internal delay common property
-Date:   Fri, 19 Jun 2020 11:18:08 -0500
-Message-ID: <20200619161813.2716-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 19 Jun 2020 11:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390671AbgFSPA6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:00:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84DE020734;
+        Fri, 19 Jun 2020 15:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592578858;
+        bh=Pg7o7hR6OuF3WqB28s1pOE/hk0d383YdOIRcUIRuGsg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f2LVDoNa45YBAG9lbXrTibHbHAkGdI/umi2h6DPNOabQa3Lw2QibgDUI5Ptt6uteL
+         4kbUZ3cqzhtCQ9D/rFeK1b8SOxX61+jDjZkcDDtP0BIk8pyiNxEiwgQsnHH3bGJL7I
+         rZSQdmQTuglTjCzF6/yb6L8yzsUzJ2vvnhHwvteU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from the dma_transfer callback
+Date:   Fri, 19 Jun 2020 16:32:47 +0200
+Message-Id: <20200619141657.498868116@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-The RGMII internal delay is a common setting found in most RGMII capable PHY
-devices.  It was found that many vendor specific device tree properties exist
-to do the same function. This creates a common property to be used for PHY's
-that have internal delays for the Rx and Tx paths.
+[ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
 
-If the internal delay is tunable then the caller needs to pass the internal
-delay array and the return will be the index in the array that was found in
-the firmware node.
+DW APB SSI DMA-part of the driver may need to perform the requested
+SPI-transfer synchronously. In that case the dma_transfer() callback
+will return 0 as a marker of the SPI transfer being finished so the
+SPI core doesn't need to wait and may proceed with the SPI message
+trasnfers pumping procedure. This will be needed to fix the problem
+when DMA transactions are finished, but there is still data left in
+the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
+to return 1 as the normal dw_spi_transfer_one() method.
 
-If the internal delay is fixed then the caller only needs to indicate which
-delay to return.  There is no need for a fixed delay to add device properties
-since the value is not configurable. Per the ethernet-controller.yaml the
-interface type indicates that the PHY should provide the delay.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200529131205.31838-3-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-dw-mid.c | 2 +-
+ drivers/spi/spi-dw.c     | 7 ++-----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-This series contains examples of both a configurable delay and a fixed delay.
-
-Dan Murphy (5):
-  dt-bindings: net: Add tx and rx internal delays
-  net: phy: Add a helper to return the index for of the internal delay
-  dt-bindings: net: Add RGMII internal delay for DP83869
-  net: dp83869: Add RGMII internal delay configuration
-  net: phy: DP83822: Add setting the fixed internal delay
-
- .../devicetree/bindings/net/ethernet-phy.yaml |  13 +++
- .../devicetree/bindings/net/ti,dp83869.yaml   |  16 ++-
- drivers/net/phy/dp83822.c                     |  79 ++++++++++++--
- drivers/net/phy/dp83869.c                     |  53 +++++++++-
- drivers/net/phy/phy_device.c                  | 100 ++++++++++++++++++
- include/linux/phy.h                           |   4 +
- 6 files changed, 251 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index e1b34ef9a31c..10f328558d55 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -274,7 +274,7 @@ static int mid_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 		dma_async_issue_pending(dws->txchan);
+ 	}
+ 
+-	return 0;
++	return 1;
+ }
+ 
+ static void mid_spi_dma_stop(struct dw_spi *dws)
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 3fbd6f01fb10..b1c137261d0f 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -383,11 +383,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 
+ 	spi_enable_chip(dws, 1);
+ 
+-	if (dws->dma_mapped) {
+-		ret = dws->dma_ops->dma_transfer(dws, transfer);
+-		if (ret < 0)
+-			return ret;
+-	}
++	if (dws->dma_mapped)
++		return dws->dma_ops->dma_transfer(dws, transfer);
+ 
+ 	if (chip->poll_mode)
+ 		return poll_transfer(dws);
 -- 
-2.26.2
+2.25.1
+
+
 
