@@ -2,116 +2,91 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF498C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B885CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA37D20739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7CC21941
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 21:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391862AbgFSVHW (ORCPT
+        id S1726899AbgFSVeW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 17:07:22 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50614 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391572AbgFSVHV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 17:07:21 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0A47C1C0C12; Fri, 19 Jun 2020 23:07:20 +0200 (CEST)
-Date:   Fri, 19 Jun 2020 23:07:19 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Fri, 19 Jun 2020 17:34:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34216 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgFSVeW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 17:34:22 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 682E81A02C5;
+        Fri, 19 Jun 2020 23:34:20 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 59E9E1A02BB;
+        Fri, 19 Jun 2020 23:34:20 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B9BB204B6;
+        Fri, 19 Jun 2020 23:34:19 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200619210719.GB12233@amd>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] hwrng: add support for i.MX6 rngb
+Date:   Sat, 20 Jun 2020 00:33:43 +0300
+Message-Id: <20200619213347.27826-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
-Content-Disposition: inline
-In-Reply-To: <20200619141657.498868116@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add support for RNGB found in some i.MX6 SoCs (6SL, 6SLL, 6ULL, 6ULZ),
+based on RNGC driver (drivers/char/hw_random/imx-rngc.c).
 
---NMuMz9nt05w80d4+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This driver claims support also for RNGB (besides RNGC),
+and is currently used only by i.MX25.
 
-On Fri 2020-06-19 16:32:47, Greg Kroah-Hartman wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->=20
-> [ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
->=20
-> DW APB SSI DMA-part of the driver may need to perform the requested
-> SPI-transfer synchronously. In that case the dma_transfer() callback
-> will return 0 as a marker of the SPI transfer being finished so the
-> SPI core doesn't need to wait and may proceed with the SPI message
-> trasnfers pumping procedure. This will be needed to fix the problem
-> when DMA transactions are finished, but there is still data left in
-> the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
-> to return 1 as the normal dw_spi_transfer_one() method.
+Note:
 
-As far as I understand, this is support for new SoC, not a fix?
+All the i.MX6 SoCs with RNGB have a DCP (Data Co-Processor)
+crypto accelerator.
 
-> +++ b/drivers/spi/spi-dw.c
-> @@ -383,11 +383,8 @@ static int dw_spi_transfer_one(struct spi_controller=
- *master,
-> =20
->  	spi_enable_chip(dws, 1);
-> =20
-> -	if (dws->dma_mapped) {
-> -		ret =3D dws->dma_ops->dma_transfer(dws, transfer);
-> -		if (ret < 0)
-> -			return ret;
-> -	}
-> +	if (dws->dma_mapped)
-> +		return dws->dma_ops->dma_transfer(dws, transfer);
-> =20
->  	if (chip->poll_mode)
->  		return poll_transfer(dws);
+Several NXP SoC from QorIQ family (P1010, P1023, P4080, P3041, P5020)
+also have a RNGB, however it's part of the CAAM
+(Cryptograhic Accelerator and Assurance Module) crypto accelerator.
+In this case, RNGB is managed in the caam driver
+(drivers/crypto/caam/), since it's tightly related to
+the caam "job ring" interface.
 
-Mainline patch simply changes return value, but code is different in
-v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
-that a problem?
+Horia Geantă (4):
+  ARM: dts: imx6sl: fix rng node
+  ARM: dts: imx6sll: add rng
+  ARM: dts: imx6ull: add rng
+  hwrng: imx-rngc: enable driver for i.MX6
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+ arch/arm/boot/dts/imx6sl.dtsi  | 2 ++
+ arch/arm/boot/dts/imx6sll.dtsi | 7 +++++++
+ arch/arm/boot/dts/imx6ull.dtsi | 7 +++++++
+ drivers/char/hw_random/Kconfig | 2 +-
+ 4 files changed, 17 insertions(+), 1 deletion(-)
 
---NMuMz9nt05w80d4+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-- 
+2.17.1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7tKQcACgkQMOfwapXb+vJ1sgCeOJVyrkyrloM2p+RmL54QRIPJ
-CLQAn1uKYJOgsc+yYzmNLkQTUJ86pN4t
-=lPtX
------END PGP SIGNATURE-----
-
---NMuMz9nt05w80d4+--
