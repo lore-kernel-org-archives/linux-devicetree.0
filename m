@@ -2,145 +2,183 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470BEC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B40C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2152221532
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712FF21532
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 15:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592582368;
-	bh=Kjt7P2a4tbw5TuKZhyerlZXQZ4Y6YzQHMoiX4ctDvCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OojsAuuXWG0OFVzvlrQjyNpc0Xy+K2V+PDzdxXQJIJYEHkM0W06MvFgIDcJXiXvw7
-	 9aIo757OKOXYljXVjtehRDnwKcXQ546lNrjYKR17ugbbdb3Px/CJKUpnoj8OnSCudD
-	 QbxoCMQbHhOKyL8tCd1PFK6pTfZ/oYfJpqaeiqsU=
+	s=default; t=1592582383;
+	bh=UdAAVUQMEBiEpCD4MXsZgJzJtZHLX2UhG3YcmAjq8Uw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xjhmJLosmGh7Pw3fNX9EYVGU5aaFQeHI8YwAsb/SfTktjxyrxzxMReaM7iu0d5tMg
+	 C/m+934BIVMuusYCghZxvFNRmEBdxttNl96NHVXm/8ZYlUfsa6mP7Ou+Euv1bkaU+j
+	 gw7SCzrQRFJODeguwwPhsmEgcrmVLZIrPJkfheQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392192AbgFSPTM (ORCPT
+        id S2392662AbgFSP7l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:19:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392598AbgFSPS4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:18:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2390420AbgFSP7k (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:59:40 -0400
+Received: from earth.universe (dyndsl-037-138-190-043.ewe-ip-backbone.de [37.138.190.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B9A52158C;
-        Fri, 19 Jun 2020 15:18:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5066421532;
+        Fri, 19 Jun 2020 15:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579934;
-        bh=Kjt7P2a4tbw5TuKZhyerlZXQZ4Y6YzQHMoiX4ctDvCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhCxhHjZV3hBKJbljR/erFnDBxkl75WPxnGtOZw9oWb+KODHjO+0x/Ccr/UuNa8kC
-         AusmEXFTS6qEEFOdlehOO2ELSEas2MBRVBZS1U8lq1IZ5pGXx3izuFhx8L4B2f9NT8
-         u13SW0KCYo8m5/5amZAOsVu2c2fDJiYmd1xbBIsQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 060/376] clocksource: dw_apb_timer: Make CPU-affiliation being optional
-Date:   Fri, 19 Jun 2020 16:29:38 +0200
-Message-Id: <20200619141713.194570064@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
-References: <20200619141710.350494719@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592582380;
+        bh=UdAAVUQMEBiEpCD4MXsZgJzJtZHLX2UhG3YcmAjq8Uw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v5qb+Okl8HpMGjMLT4z2sVV9LbSenYCJ9N27jRxc2bqEvTgdGjehWYBHUH7YXZID6
+         k3zcODj0BLcgAmrNLlTz87J0vPhxT+UC+Y3xYBwBh4yNl2cE+B0ofAq9ikmcrAP565
+         mUlyb1xWBrfMwSSDmYJgYI/IFKfQlEV5tlVFk6gI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A7D123C08CD; Fri, 19 Jun 2020 17:59:38 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 17:59:38 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: Document max17040
+ extensions
+Message-ID: <20200619155938.tpyeerqdn7dqcvw4@earth.universe>
+References: <20200618101340.2671020-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dees7qf6ak23f6zn"
+Content-Disposition: inline
+In-Reply-To: <20200618101340.2671020-1-iskren.chernev@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit cee43dbf2ee3f430434e2b66994eff8a1aeda889 ]
+--dees7qf6ak23f6zn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently the DW APB Timer driver binds each clockevent timers to a
-particular CPU. This isn't good for multiple reasons. First of all seeing
-the device is placed on APB bus (which makes it accessible from any CPU
-core), accessible over MMIO and having the DYNIRQ flag set we can be sure
-that manually binding the timer to any CPU just isn't correct. By doing
-so we just set an extra limitation on device usage. This also doesn't
-reflect the device actual capability, since by setting the IRQ affinity
-we can make it virtually local to any CPU. Secondly imagine if you had a
-real CPU-local timer with the same rating and the same CPU-affinity.
-In this case if DW APB timer was registered first, then due to the
-clockevent framework tick-timer selection procedure we'll end up with the
-real CPU-local timer being left unselected for clock-events tracking. But
-on most of the platforms (MIPS/ARM/etc) such timers are normally embedded
-into the CPU core and are accessible with much better performance then
-devices placed on APB. For instance in MIPS architectures there is
-r4k-timer, which is CPU-local, assigned with the same rating, and normally
-its clockevent device is registered after the platform-specific one.
+Hi,
 
-So in order to fix all of these issues let's make the DW APB Timer CPU
-affinity being optional and deactivated by passing a negative CPU id,
-which will effectively set the DW APB clockevent timer cpumask to
-'cpu_possible_mask'.
+On Thu, Jun 18, 2020 at 01:13:39PM +0300, Iskren Chernev wrote:
+> Maxim max17040 is a fuel gauge from a larger family utilising the Model
+> Gauge technology. Document all different compatible strings that the
+> max17040 driver recognizes.
+>=20
+> Some devices in the wild report double the capacity. The
+> maxim,double-soc (from State-Of-Charge) property fixes that.
+>=20
+> Complete device reset might lead to very inaccurate readings. Specify
+> maxim,skip-reset to avoid that.
+>=20
+> To compensate for the battery chemistry and operating conditions the
+> chips support a compensation value. Specify one or two byte compensation
+> via the maxim,rcomp byte array.
+>=20
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+> ---
+> v1: https://lkml.org/lkml/2020/6/8/682
+>=20
+> Changes in v2:
+> - add maxim,skip-reset
+> - remove 2 byte rcomp from example, the specified compat string supports =
+1 byte
+>   rcomp
+>=20
+>  .../power/supply/max17040_battery.txt         | 24 ++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_batt=
+ery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.t=
+xt
+> index 4e0186b8380fa..3ee91c295027f 100644
+> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -2,7 +2,9 @@ max17040_battery
+>  ~~~~~~~~~~~~~~~~
+> =20
+>  Required properties :
+> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
+> + 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
+> +		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+>   - reg: i2c slave address
+> =20
+>  Optional properties :
+> @@ -11,6 +13,18 @@ Optional properties :
+>  				generated. Can be configured from 1 up to 32
+>  				(%). If skipped the power up default value of
+>  				4 (%) will be used.
+> +- maxim,double-soc : 		Certain devices return double the capacity.
+> +				Specify this boolean property to divide the
+> +				reported value in 2 and thus normalize it.
+> +				SOC =3D=3D State of Charge =3D=3D Capacity.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200521204818.25436-5-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clocksource/dw_apb_timer.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Can this be derived from the compatible?
 
-diff --git a/drivers/clocksource/dw_apb_timer.c b/drivers/clocksource/dw_apb_timer.c
-index b207a77b0831..f5f24a95ee82 100644
---- a/drivers/clocksource/dw_apb_timer.c
-+++ b/drivers/clocksource/dw_apb_timer.c
-@@ -222,7 +222,8 @@ static int apbt_next_event(unsigned long delta,
- /**
-  * dw_apb_clockevent_init() - use an APB timer as a clock_event_device
-  *
-- * @cpu:	The CPU the events will be targeted at.
-+ * @cpu:	The CPU the events will be targeted at or -1 if CPU affiliation
-+ *		isn't required.
-  * @name:	The name used for the timer and the IRQ for it.
-  * @rating:	The rating to give the timer.
-  * @base:	I/O base for the timer registers.
-@@ -257,7 +258,7 @@ dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
- 	dw_ced->ced.max_delta_ticks = 0x7fffffff;
- 	dw_ced->ced.min_delta_ns = clockevent_delta2ns(5000, &dw_ced->ced);
- 	dw_ced->ced.min_delta_ticks = 5000;
--	dw_ced->ced.cpumask = cpumask_of(cpu);
-+	dw_ced->ced.cpumask = cpu < 0 ? cpu_possible_mask : cpumask_of(cpu);
- 	dw_ced->ced.features = CLOCK_EVT_FEAT_PERIODIC |
- 				CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
- 	dw_ced->ced.set_state_shutdown = apbt_shutdown;
--- 
-2.25.1
+> +- maxim,skip-reset :		Do not reset device on driver initialization.
+> +				Some devices report extremely inaccurately after
+> +				a hard reset.
 
+Same question.
 
+-- Sebastian
 
+> +- maxim,rcomp :			A value to compensate readings for various
+> +				battery chemistries and operating temperatures.
+> +				max17040,41 have 2 byte rcomp, default to
+> +				0x97 0x00. All other devices have one byte
+> +				rcomp, default to 0x97.
+>  - interrupts : 			Interrupt line see Documentation/devicetree/
+>  				bindings/interrupt-controller/interrupts.txt
+>  - wakeup-source :		This device has wakeup capabilities. Use this
+> @@ -31,3 +45,11 @@ Example:
+>  		interrupts =3D <2 IRQ_TYPE_EDGE_FALLING>;
+>  		wakeup-source;
+>  	};
+> +
+> +	battery-fuel-gauge@36 {
+> +		compatible =3D "maxim,max17048";
+> +		reg =3D <0x36>;
+> +		maxim,rcomp =3D /bits/ 8 <0x97>;
+> +		maxim,alert-low-soc-level =3D <10>;
+> +		maxim,double-soc;
+> +	};
+>=20
+> base-commit: 1713116fa907cc7290020f0d8632ec646d2936f8
+> --=20
+> 2.27.0
+>=20
+
+--dees7qf6ak23f6zn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7s4N8ACgkQ2O7X88g7
++ppQsw/9H03iCYsTY1HV4fuj+8NGhTz2RFdmtvWWLNqO7xOGtiHld3HXBVSzeyoT
+9KFGMqY7m5zMJNwq1z2xHeEjbBz70ufd1BPFmqDqj9MdD2eO5N363WCWlTKNGJSU
+rhcV7ESr/h5RVAvUcUv/KRukIxADyWS8udoO82ohz8vwZzr+FwVxJ8kmhTx2AGWd
+ocwT25ck6MElRsO2p4xRXffGQtmmzwz5hJ0x9rtT6S/Nenc5GY0+RWbKMHFcc/qb
+Er0/7nFxEhAh/whlqXn28VTc5ncCZzQjDO/0q5wOee47sZ5ulcaxTS8EIzQtEHOz
+sMgLJKvU0slLwO90OCD5q8Qu4Innlva+P2Ez1XeQE2qXXGrtf0hIAGOzhV3Tdf1F
+LmlX1RHxtPpMAg8MgsaU+M+YrJ1GR7lV77TnJFDdAWiapeoWGDpI0WHQGRkh15kw
+/Wie2A739WJNCLyUIoI1ka3wTdGJO/BgbemvEmDrqY0wZqX5L/Zry6RAzna+s5Rg
+D58GjiiETtCYzszcRFsUlV8xdT8bTmMGeE/aHj0ham3Vid1W2jn71nctaMMGLel4
+coMIPxKZqyEa7Qv8jUHwio8rwxBhdkvM47p1Te6BNJADPexhhMadunZhGVUTFHXh
+t2178P5UkEqXC3l0HdkikgxRh7XeUkXnKKmiHLg9lobTWQc93I8=
+=nB5j
+-----END PGP SIGNATURE-----
+
+--dees7qf6ak23f6zn--
