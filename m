@@ -2,128 +2,99 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20E8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ACEC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7152080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+i/3gXS"
+	by mail.kernel.org (Postfix) with ESMTP id 81CA120707
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 06:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgFSGpz (ORCPT
+        id S1725806AbgFSGqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 02:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgFSGpw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 02:45:52 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26732C06174E;
-        Thu, 18 Jun 2020 23:45:52 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id f7so8999823ejq.6;
-        Thu, 18 Jun 2020 23:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AEDd6hxbLbIBkD6d8B+e/wTQavBsFlwRrIYg3M0sa6I=;
-        b=V+i/3gXSzTHb0HDLDeAxUJys8lXcNwm3nsiJEMPouuljyv876n/pArPh/CjdnuS4D/
-         YIxQSky94uO6iD53jqMO1vqARQGR8EvqFU5Vgf4sOOPi2C1Bxsz+fSXfqnL4U0n9SYlK
-         sKM4cvlIzeezf34Zd3u8q/Qs1yMb8M9gcuEQBe1Q9dsgd2IlCJtWBgoPLpEvHzMWklDN
-         BZaJI8YjtLckW6Tk7Iw1SQtuo6vvoDBDr0pnMGFu9r905kDmwvunWKkONToZ75jzL3MV
-         lqEEOn0gz6ML67iqlYfOLtdRrRqkJrSJXpGsNPxRVPkma14F0Ku1ru5zKgCOOxdc4Aq4
-         F15g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AEDd6hxbLbIBkD6d8B+e/wTQavBsFlwRrIYg3M0sa6I=;
-        b=NmAoeWjI/3mAajnzJI9EK+3ntS/foQQmyTMfxPegvrGsIe4lIwYaQoi/SeDZ2+pHFl
-         f5bXUj0Ozu4TIn9W/52CEKkLznjdoPc3yBRKx5JEvrvpdf7l5026v+TJQ2ogVOGeUk1a
-         48PGJsvkjdOdHBMQgCP6Bcr6Qd8wKS7Elvok29cqWGk9BijLPwL0RHS1Y8HFm5GiypLw
-         9yHXdf0poIG32VnsVYiZRuSrVc3bmbCe3XmznwdqARP2Hr0zijkl0ez4Z6Uum8QT2Zuw
-         +8i6YgSueRB5E4Xb7M7NH7FSLoDFocFAE/bqZnK2MC5AO3H7wxHHmshwyuKSF2MZ6Fs7
-         Hp9Q==
-X-Gm-Message-State: AOAM531l6klkNWGtg6SyGBSIXKTf3BcwbLNaViYLhoSdbrZhGPyMzDoz
-        brdttjWpRaOT7HZnPkNlgoVWqdVO
-X-Google-Smtp-Source: ABdhPJyfB2ZTCQwmqjB4sOChObRXViuNjxdAcxapInEo0FKgva+KAs/lmhSCN72uPVsLQAynWE7G8g==
-X-Received: by 2002:a17:906:4b50:: with SMTP id j16mr2364772ejv.415.1592549150942;
-        Thu, 18 Jun 2020 23:45:50 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id n25sm3971417edo.56.2020.06.18.23.45.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 23:45:49 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 08:45:48 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 26/38] dt-bindings: pci: iommu: Convert to json-schema
-Message-ID: <20200619064548.GB3704347@ulmo>
-References: <20200612141903.2391044-1-thierry.reding@gmail.com>
- <20200612141903.2391044-27-thierry.reding@gmail.com>
- <20200618023457.GA3343853@bogus>
+        Fri, 19 Jun 2020 02:46:24 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:59148 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbgFSGqY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 02:46:24 -0400
+Received: from p5b127c2f.dip0.t-ipconnect.de ([91.18.124.47] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jmAn1-0007yi-Au; Fri, 19 Jun 2020 08:46:15 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
+        andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH v5 2/3] dt-bindings: net: mscc-vsc8531: add optional clock properties
+Date:   Fri, 19 Jun 2020 08:46:14 +0200
+Message-ID: <1876004.CZoxnk3e8W@phil>
+In-Reply-To: <a877e41d-4c3c-c4c2-1875-71e1e08cf977@gmail.com>
+References: <20200618121139.1703762-1-heiko@sntech.de> <20200618121139.1703762-3-heiko@sntech.de> <a877e41d-4c3c-c4c2-1875-71e1e08cf977@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
-Content-Disposition: inline
-In-Reply-To: <20200618023457.GA3343853@bogus>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---8P1HSweYDcXXzwPJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 17, 2020 at 08:34:57PM -0600, Rob Herring wrote:
-> On Fri, Jun 12, 2020 at 04:18:51PM +0200, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > Convert the PCI IOMMU device tree bindings from free-form text format to
-> > json-schema.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+Am Freitag, 19. Juni 2020, 07:01:58 CEST schrieb Florian Fainelli:
+> 
+> On 6/18/2020 5:11 AM, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > 
+> > Some mscc ethernet phys have a configurable clock output, so describe the
+> > generic properties to access them in devicetrees.
+> > 
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > > ---
-> >  .../devicetree/bindings/pci/pci-iommu.txt     | 171 ------------------
-> >  .../devicetree/bindings/pci/pci-iommu.yaml    | 168 +++++++++++++++++
-> >  2 files changed, 168 insertions(+), 171 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.yaml
->=20
-> This needs to come before you use it.
+> >  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > index 5ff37c68c941..67625ba27f53 100644
+> > --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > @@ -1,6 +1,8 @@
+> >  * Microsemi - vsc8531 Giga bit ethernet phy
+> >  
+> >  Optional properties:
+> > +- clock-output-names	: Name for the exposed clock output
+> > +- #clock-cells		: should be 0
+> >  - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
+> >  			  in the first row of Table 1 (below).
+> >  			  This property is only used in combination
+> > 
+> 
+> With that approach, you also need to be careful as a driver writer to
+> ensure that you have at least probed the MDIO bus to ensure that the PHY
+> device has been created (and therefore it is available as a clock
+> provider) if that same Ethernet MAC is a consumer of that clock (which
+> it appears to be). Otherwise you may just never probe and be trapped in
+> a circular dependency.
 
-Good point, I'll reorder it.
+Yep - although without anything like this, the phy won't emit any clock
+at all. Even when enabling the clock output in u-boot already, when the
+kernel starts that config is lost,  so no existing board should break.
 
-Thierry
 
---8P1HSweYDcXXzwPJ
-Content-Type: application/pgp-signature; name="signature.asc"
+As you can see in the discussion about patch 3/3 the wanted solution
+is not so clear cut as well. With Rob suggesting this clock-provider way
+and Russell strongly encouraging taking a second look.
 
------BEGIN PGP SIGNATURE-----
+[My first iteration (till v4) was doing it like other phys by specifying
+a property to just tell the phy what frequency to output]
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7sXxwACgkQ3SOs138+
-s6E2QhAAhmMVuu7UBgGoT0iLKZpZr7XBF43fJFTpH8OD9A9cHbiHatTNkoLvaXxy
-U+TNMBNF1lWTH/939YvPEaVv4uH7Y7YspcUnTqaSDGGMJgySh9+3uPAauXsZUUow
-Xcelnw41elrHbj+kEJTocUjT4WjvcO2YlHHsMX29nVYzi2FylR7BqJa90zbleJaV
-K3bQge5K0Q7Xgjnn8dEUwHlo6wlYRwBAQmLx3bVmXwKp9nVIz8LXPIJSTMz4HlmQ
-87kpEKDt5GCVjhRbcFlDZ0aZhKtim7t+xPGC9CqqS7R+chXvu6IsCIPNr6GJOcFk
-dPHfwq3ftGQTytp/fLW+eN85ooKrEVqoQ9bSJqD+L5IPIYumnItYmOTImt90Yrm2
-eE6MIpL1hgZeYOz/QlTAxCl/bbjY+tFX/RN3sN4cJZivKBaD8FveH5TPMP7CdzEW
-K6gx/yoRmw4PYw1+L1VLIjJFqI97IZwD+jYiJXhUOMcWVt55jtppT/agalacI8+Y
-E7+upZwgooxkedU2yKNj0g6gFMqT41UhY3VgptgSHNpGX8BZuJO4QzjAZxU7+SvX
-6kdnrSiLyuDz+BY1COVjWji3hjYhCYgJ1jeq1HY6UiVLsCk7cKMt5J6Y/oYfyN49
-OkoryNOt/kaQKPpLvF++n2H4EsPMMX/xNhiw6vSQ9aeny7doZzw=
-=3bjo
------END PGP SIGNATURE-----
+I don't really have a preference for one or the other, so
+maybe you can also give a vote over there ;-)
 
---8P1HSweYDcXXzwPJ--
+Heiko
+
+
+
