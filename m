@@ -2,141 +2,134 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AA8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE798C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDFD20C09
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB3420809
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 19:16:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="W+x4CClX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbgFSTQJ (ORCPT
+        id S1733115AbgFSTQd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 15:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
+        Fri, 19 Jun 2020 15:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733123AbgFSTQI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 15:16:08 -0400
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D3CC0613F0
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:16:06 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:e0be:48f2:cba4:1407])
-        by laurent.telenet-ops.be with bizsmtp
-        id t7Fx220094UASYb017Fxtf; Fri, 19 Jun 2020 21:16:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jmMUX-0002JU-33; Fri, 19 Jun 2020 21:15:57 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jmMUX-0006VA-1v; Fri, 19 Jun 2020 21:15:57 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 2/5] ravb: Split delay handling in parsing and applying
-Date:   Fri, 19 Jun 2020 21:15:51 +0200
-Message-Id: <20200619191554.24942-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619191554.24942-1-geert+renesas@glider.be>
-References: <20200619191554.24942-1-geert+renesas@glider.be>
+        with ESMTP id S1733272AbgFSTQc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 15:16:32 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BA5C06174E
+        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:16:31 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y18so4288424plr.4
+        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 12:16:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=QpjsOQ81m2+7Vf1tKhbI0NPMb57wPuYHIHejUZfeOx0=;
+        b=W+x4CClX3BaHnLSt/1xtF5HA5oIJlM8A+EGmUOOouefvbHiG6YC0Wsg8b7CB6Pp8f5
+         pEyFrNb9aZk1QdlliapBCUCIem9PZnRIF1pNDG541eEWKTNagxIBWk/a5ThEjdUHubXI
+         O2fstgpGQQrTlufuHR2nutPWOwG7k0KKO0UPw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QpjsOQ81m2+7Vf1tKhbI0NPMb57wPuYHIHejUZfeOx0=;
+        b=OZOV5odt9nI2BLrH8tdpL5eRP1n1IvQC5a1RVOX6hvAzZla/E2Hb/kcSDSPu+macNZ
+         O8ILBRJKs2ik7Xb1ODrefhGgAPc+DCMvVH/HutiuWeOBYsEVainJtLVDx3yh8JX/Rhmt
+         sQDUwMnhtDsag9g8PxfIUnaR15M/9ONLMgvvauOmS5mvAlr6WU/yT3hp2JnK9WBRcB7z
+         PboUCpvKz7rkIra38+RI8AEIbNj1P7fmEHzJR9eU7j41fqLcxuY0ZODxSMvNsSqQOlTO
+         8Z20Kd6JJLEoAWBbE+/wPnFRbv7KYc++wZSbDHeebD+93lYdUrMXiw3NfflQbfEi+Rcv
+         wMNA==
+X-Gm-Message-State: AOAM531HFY+ZTjknYmLoyo5zqjdbzjDurbkb491e8/pAmEDtjKvO6CiY
+        8+MOKPHeNKubrAMbV563eFaMCw==
+X-Google-Smtp-Source: ABdhPJwNurzM+LygEC0YiX0wuysnxgJPszpw0mtEo9Y7176XsIpQNBKYeTFSdYlDE/YRvgnE/WhMHg==
+X-Received: by 2002:a17:90b:50d:: with SMTP id r13mr4895894pjz.94.1592594190698;
+        Fri, 19 Jun 2020 12:16:30 -0700 (PDT)
+Received: from localhost.localdomain ([42.111.138.30])
+        by smtp.gmail.com with ESMTPSA id 12sm6482743pfj.149.2020.06.19.12.16.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 19 Jun 2020 12:16:30 -0700 (PDT)
+From:   Suniel Mahesh <sunil@amarulasolutions.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        gregkh@linuxfoundation.org, sashal@kernel.org
+Cc:     jagan@amarulasolutions.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] arch: arm: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
+Date:   Sat, 20 Jun 2020 00:46:13 +0530
+Message-Id: <1592594173-13497-1-git-send-email-sunil@amarulasolutions.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, full delay handling is done in both the probe and resume
-paths.  Split it in two parts, so the resume path doesn't have to redo
-the parsing part over and over again.
+From: Michael Trimarchi <michael@amarulasolutions.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
+but the TRM mentions GPIO_1 pad is muxed for card detetcion,
+because of which when card is inserted, usb otg is enumerated
+and the card is never detected.
+
+[   64.492645] cfg80211: failed to load regulatory.db
+[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
+[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
+[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
+[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
+[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
+[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[   76.412763] usb usb2: Product: EHCI Host Controller
+[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
+[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
+[   76.431755] hub 2-0:1.0: USB hub found
+[   76.435862] hub 2-0:1.0: 1 port detected
+
+Fix the pin muxing as per TRM by muxing ENET_RX_ER pad for USB_OTG_ID
+and GPIO_1 pad for card detect.
+
+[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
+[   22.459992] mmc0: new high speed SDHC card at address 0001
+[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
+[   22.478856]  mmcblk0: p1 p2
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
 ---
- drivers/net/ethernet/renesas/ravb.h      |  4 +++-
- drivers/net/ethernet/renesas/ravb_main.c | 21 ++++++++++++++++-----
- 2 files changed, 19 insertions(+), 6 deletions(-)
+NOTE:
+- patch tested on i.Core 1.5 MX6 DL
+---
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
-index 9f88b5db4f89843a..e5ca12ce93c730a9 100644
---- a/drivers/net/ethernet/renesas/ravb.h
-+++ b/drivers/net/ethernet/renesas/ravb.h
-@@ -1036,7 +1036,9 @@ struct ravb_private {
- 	unsigned no_avb_link:1;
- 	unsigned avb_link_active_low:1;
- 	unsigned wol_enabled:1;
--	int num_tx_desc;	/* TX descriptors per packet */
-+	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
-+	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
-+	int num_tx_desc;		/* TX descriptors per packet */
- };
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index 756f3a9..12997da 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -397,7 +397,7 @@
  
- static inline u32 ravb_read(struct net_device *ndev, enum ravb_reg reg)
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index a442bcf64b9cd875..f326234d1940f43e 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1967,23 +1967,32 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
- };
+ 	pinctrl_usbotg: usbotggrp {
+ 		fsl,pins = <
+-			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
+ 		>;
+ 	};
  
- /* Set tx and rx clock internal delay modes */
--static void ravb_set_delay_mode(struct net_device *ndev)
-+static void ravb_parse_delay_mode(struct net_device *ndev)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
--	int set = 0;
+@@ -409,6 +409,7 @@
+ 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
+ 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
+ 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
+ 		>;
+ 	};
  
- 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
--		set |= APSR_DM_RDM;
-+		priv->rxcidm = true;
- 
- 	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
- 		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
- 			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
- 			  phy_modes(priv->phy_interface)))
--			set |= APSR_DM_TDM;
-+			priv->txcidm = true;
- 	}
-+}
- 
-+static void ravb_set_delay_mode(struct net_device *ndev)
-+{
-+	struct ravb_private *priv = netdev_priv(ndev);
-+	u32 set = 0;
-+
-+	if (priv->rxcidm)
-+		set |= APSR_DM_RDM;
-+	if (priv->txcidm)
-+		set |= APSR_DM_TDM;
- 	ravb_modify(ndev, APSR, APSR_DM, set);
- }
- 
-@@ -2116,8 +2125,10 @@ static int ravb_probe(struct platform_device *pdev)
- 	/* Request GTI loading */
- 	ravb_modify(ndev, GCCR, GCCR_LTI, GCCR_LTI);
- 
--	if (priv->chip_id != RCAR_GEN2)
-+	if (priv->chip_id != RCAR_GEN2) {
-+		ravb_parse_delay_mode(ndev);
- 		ravb_set_delay_mode(ndev);
-+	}
- 
- 	/* Allocate descriptor base address table */
- 	priv->desc_bat_size = sizeof(struct ravb_desc) * DBAT_ENTRY_NUM;
 -- 
-2.17.1
+2.7.4
 
