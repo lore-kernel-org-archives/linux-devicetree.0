@@ -5,59 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D78CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B78A21D79
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93ADE21548
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578117;
-	bh=U2ApDPJj7HqXeaaoWwL68rF6gEYm+1YdSFa/hATOdHg=;
+	s=default; t=1592578233;
+	bh=SqVHw7je2X5s8JwVsx+Av0VwbuYw1mf97YZ/CeNZ7SQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IH+Zug/NVpg6hCoKkeCQt03pLiaXW76OABdUiBI+eK0d0Ty3PmnHXWSVq4k/1tNCr
-	 W7FojBjv+5Y4jGDYkdS11RAJwQYf9yT4/9RyL8aLdI53GgNL6GqMndECbZ0XB2jeqU
-	 kTZt8ObQTWszL4otoIHrGegAukxMGM/sWuvRgYCw=
+	b=RtwMW3L3ZSMUD3oGbJvXzWeQgkRvieOpgm7q7CNFwRpPm24p4XMO2pweA857LJzT6
+	 pgEhdQkCCy/L/UMZ0hlNePbcgSc6J/iQng88t/aZrmRa5bu12MCmQbiaxcRUKjvXmd
+	 prvOHQ3xKBXlklh/jiqJ2LrtFjKpFR2LkHi/XiN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389095AbgFSOsf (ORCPT
+        id S2389316AbgFSOub (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389058AbgFSOse (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:48:34 -0400
+        id S2388693AbgFSOu2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:50:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30432083B;
-        Fri, 19 Jun 2020 14:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CDB20DD4;
+        Fri, 19 Jun 2020 14:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578113;
-        bh=U2ApDPJj7HqXeaaoWwL68rF6gEYm+1YdSFa/hATOdHg=;
+        s=default; t=1592578228;
+        bh=SqVHw7je2X5s8JwVsx+Av0VwbuYw1mf97YZ/CeNZ7SQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cy1kj9B20HupGqEU98mfCYLkM3VOwsB41AnStBHLF0qiMfsAL3QPOlCbErZh/JE4I
-         CQfYXxtvYbaI4kBcRhgGZGtPNo/OansU65fGZ32wJ0d+88IR1QVdccrRJyMqiV2ZKU
-         7e5LLYsI0GZpRY2IDm5yjlrXR/OldyP+juhzWyZc=
+        b=PpNTz1wEdrDOoJV2JegSKsns3PwhCNdI3SZq2qsRYq39fgJZnx64dhgBlrVwA8V5I
+         tE4b6C15692aRGATSnhysUhbKPsVhsa4DcUQl40A00mXSkxr4jB1NyN733YZHNgl0R
+         9ua1HxIpH6mX8wpflY2xFJQW+o73PIbLQTL42bp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 087/190] spi: dw: Enable interrupts in accordance with DMA xfer mode
-Date:   Fri, 19 Jun 2020 16:32:12 +0200
-Message-Id: <20200619141637.934344550@linuxfoundation.org>
+Subject: [PATCH 4.14 125/190] mips: Add udelay lpj numbers adjustment
+Date:   Fri, 19 Jun 2020 16:32:50 +0200
+Message-Id: <20200619141639.868789638@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -72,66 +69,123 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
+[ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
 
-It's pointless to track the Tx overrun interrupts if Rx-only SPI
-transfer is issued. Similarly there is no need in handling the Rx
-overrun/underrun interrupts if Tx-only SPI transfer is executed.
-So lets unmask the interrupts only if corresponding SPI
-transactions are implied.
+Loops-per-jiffies is a special number which represents a number of
+noop-loop cycles per CPU-scheduler quantum - jiffies. As you
+understand aside from CPU-specific implementation it depends on
+the CPU frequency. So when a platform has the CPU frequency fixed,
+we have no problem and the current udelay interface will work
+just fine. But as soon as CPU-freq driver is enabled and the cores
+frequency changes, we'll end up with distorted udelay's. In order
+to fix this we have to accordinly adjust the per-CPU udelay_val
+(the same as the global loops_per_jiffy) number. This can be done
+in the CPU-freq transition event handler. We subscribe to that event
+in the MIPS arch time-inititalization method.
 
-Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw-mid.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index 4f41d44e8b4c..c4244d2f1ee3 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
+diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
+index a6ebc8135112..df18f386d457 100644
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -22,12 +22,82 @@
+ #include <linux/smp.h>
+ #include <linux/spinlock.h>
+ #include <linux/export.h>
++#include <linux/cpufreq.h>
++#include <linux/delay.h>
  
- static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- {
--	u16 dma_ctrl = 0;
-+	u16 imr = 0, dma_ctrl = 0;
+ #include <asm/cpu-features.h>
+ #include <asm/cpu-type.h>
+ #include <asm/div64.h>
+ #include <asm/time.h>
  
- 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
- 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
- 
--	if (xfer->tx_buf)
-+	if (xfer->tx_buf) {
- 		dma_ctrl |= SPI_DMA_TDMAE;
--	if (xfer->rx_buf)
-+		imr |= SPI_INT_TXOI;
++#ifdef CONFIG_CPU_FREQ
++
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
++static unsigned long glb_lpj_ref;
++static unsigned long glb_lpj_ref_freq;
++
++static int cpufreq_callback(struct notifier_block *nb,
++			    unsigned long val, void *data)
++{
++	struct cpufreq_freqs *freq = data;
++	struct cpumask *cpus = freq->policy->cpus;
++	unsigned long lpj;
++	int cpu;
++
++	/*
++	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
++	 * the loops delay. (Is this possible?)
++	 */
++	if (freq->flags & CPUFREQ_CONST_LOOPS)
++		return NOTIFY_OK;
++
++	/* Save the initial values of the lpjes for future scaling. */
++	if (!glb_lpj_ref) {
++		glb_lpj_ref = boot_cpu_data.udelay_val;
++		glb_lpj_ref_freq = freq->old;
++
++		for_each_online_cpu(cpu) {
++			per_cpu(pcp_lpj_ref, cpu) =
++				cpu_data[cpu].udelay_val;
++			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
++		}
 +	}
-+	if (xfer->rx_buf) {
- 		dma_ctrl |= SPI_DMA_RDMAE;
-+		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
++
++	/*
++	 * Adjust global lpj variable and per-CPU udelay_val number in
++	 * accordance with the new CPU frequency.
++	 */
++	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
++		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
++						glb_lpj_ref_freq,
++						freq->new);
++
++		for_each_cpu(cpu, cpus) {
++			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					    per_cpu(pcp_lpj_ref_freq, cpu),
++					    freq->new);
++			cpu_data[cpu].udelay_val = (unsigned int)lpj;
++		}
 +	}
- 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
- 
- 	/* Set the interrupt mask */
--	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
-+	spi_umask_intr(dws, imr);
- 
- 	dws->transfer_handler = dma_transfer;
- 
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block cpufreq_notifier = {
++	.notifier_call  = cpufreq_callback,
++};
++
++static int __init register_cpufreq_notifier(void)
++{
++	return cpufreq_register_notifier(&cpufreq_notifier,
++					 CPUFREQ_TRANSITION_NOTIFIER);
++}
++core_initcall(register_cpufreq_notifier);
++
++#endif /* CONFIG_CPU_FREQ */
++
+ /*
+  * forward reference
+  */
 -- 
 2.25.1
 
