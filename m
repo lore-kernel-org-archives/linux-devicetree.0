@@ -2,148 +2,75 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A80C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 11:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F97C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 11:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD7C2083B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 11:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mPvSu8OV"
+	by mail.kernel.org (Postfix) with ESMTP id BA53A2083B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 11:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732758AbgFSLcM (ORCPT
+        id S1731131AbgFSLgQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 07:32:12 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:58691 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731756AbgFSLbt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 07:31:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592566308; x=1624102308;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=p+8RoWLbgzQ96coLA+SJ/+5qhlXapbbgZpZg9wtUuf4=;
-  b=mPvSu8OVn478ibndydbJZtrUMrup77in0GRY4W9TLLnIz1juZJGRewDU
-   h0NB1idHg/ttZ17n2L/UF1hJJ7vflTXCJ97BtGhfpNerjYeEiFqs/OqGt
-   4M/MkfJl+oofiGqUGoZiKtJ+6oTWX+y1ql/9XwVuygnkGOea3+lk3bpRL
-   +ajDSLzqGC7m3HnHaG1JSXijA30uUqd6B2/DnYAs5V56SpcxctU+erSg4
-   nZ8xekQXEUnFdlQYMjGQpE0Xjv7unbXqJyDjtoHyBVIBudQvtc4fK7hwe
-   gYEvlrCVlQOA8t2y3lnDQEK+fRkt7wq/C3JjUPZcBGmbYNut78Y4wV+MM
-   Q==;
-IronPort-SDR: 7kjYpE4qCwU7hpIjsZCmnRIAd63u0JaCTHfE16IVpCjaQ2e6/R8xLUWIuAK4TWhSkZMVlPBqUx
- k/J21FbffWBfXn9Lyq+n+lrdD+MFdotgtghkdXt9jJE1iJEKpVa7Y1Xo/WVcLR/nEhtDcadQ6A
- 64zHnZLFZQPRgDD4ukTi/TJTK0TYQqGVUdaHWFruG7I+rPWADwZjcQuAam79wLfsQTlqIaLcs9
- SN6CxnQ50EAExGTADKCK9Fy/8NUWjQgrkjKOaPwa7Mx1UvYxSVnfvaURqLEe9r5oh0AQP4kG/Q
- fWU=
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="84298554"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jun 2020 04:31:45 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 19 Jun 2020 04:31:45 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 19 Jun 2020 04:31:35 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: [PATCH v2 5/6] arm64: dts: sparx5: Add spi-nor support
-Date:   Fri, 19 Jun 2020 13:31:20 +0200
-Message-ID: <20200619113121.9984-6-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619113121.9984-1-lars.povlsen@microchip.com>
-References: <20200619113121.9984-1-lars.povlsen@microchip.com>
+        Fri, 19 Jun 2020 07:36:16 -0400
+Received: from elvis.franken.de ([193.175.24.41]:37513 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727814AbgFSLfR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 07:35:17 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jmFIK-0007F9-00; Fri, 19 Jun 2020 13:34:52 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id E6491C06E7; Fri, 19 Jun 2020 13:05:24 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 13:05:24 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200619110524.GA9391@alpha.franken.de>
+References: <20200602183354.39707-1-zhouyanjie@wanyeetech.com>
+ <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20200602183354.39707-2-zhouyanjie@wanyeetech.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This add spi-nor device nodes to the Sparx5 reference boards.
+On Wed, Jun 03, 2020 at 02:33:54AM +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+> 
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     1.Remove unnecessary "items".
+>     2.Add "clocks" as suggested by Paul Cercueil.
+> 
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5_pcb125.dts        | 9 +++++++++
- arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi | 9 +++++++++
- arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi | 9 +++++++++
- 3 files changed, 27 insertions(+)
+applied to mips-next.
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 573309fe45823..d8b5d23abfab0 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -39,6 +39,15 @@ &sdhci0 {
- 	microchip,clock-delay = <10>;
- };
- 
-+&spi0 {
-+	status = "okay";
-+	spi-flash@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <8000000>; /* input clock */
-+		reg = <0>; /* CS0 */
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index 18a535a043686..628a05d3f57ce 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -38,6 +38,15 @@ gpio-restart {
- 	};
- };
- 
-+&spi0 {
-+	status = "okay";
-+	spi-flash@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <8000000>;
-+		reg = <0>;
-+	};
-+};
-+
- &gpio {
- 	i2cmux_pins_i: i2cmux-pins-i {
- 	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-index d71f11a10b3d2..fb0bc3b241204 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-@@ -51,6 +51,15 @@ i2cmux_s32: i2cmux-3 {
- 	};
- };
- 
-+&spi0 {
-+	status = "okay";
-+	spi-flash@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <8000000>;
-+		reg = <0>;
-+	};
-+};
-+
- &axi {
- 	i2c0_imux: i2c0-imux@0 {
- 		compatible = "i2c-mux-pinctrl";
+Thomas.
+
 -- 
-2.27.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
