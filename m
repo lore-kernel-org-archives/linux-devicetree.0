@@ -2,188 +2,192 @@ Return-Path: <SRS0=bA0P=AA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D83C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9943BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F119F208C7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="g6pABK2b"
+	by mail.kernel.org (Postfix) with ESMTP id 7672421548
+	for <linux-devicetree@archiver.kernel.org>; Fri, 19 Jun 2020 14:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592577564;
+	bh=K/Qd2BVjoGnjBRAXKcRbdqs6eY78ZjkmNsEPRpMD6Og=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q+ZBrwYH5riXJv2xExCDXESE4q4KkOGWmxCrbrYDQ7djLEAmVE+VqrcIbo3de46Ag
+	 5Zsc4qoLjYwmTyryJh9897IV4VWoODwzMROYYn/Vb2n8MS1JWUrLsFEx2v//etcmSK
+	 bf09/dijtK2QhPyecKGroB0KsPSkORTOAvyNysto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgFSOWA (ORCPT
+        id S2387976AbgFSOjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:22:00 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:61286 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgFSOV7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 10:21:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592576518; x=1624112518;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PKnFoxqQrAiroEcrPnCd5Y5Np27cClJYN9tqUhIZ/Xg=;
-  b=g6pABK2bTmeUGYQioMYvtnpOcijPerN1f9fQS0CZ0AWHb9V8iw2W64Rl
-   1kStikK+l9a9Xpc8c/MI3sm1BDafqYOiwMlmkIN1Wqr0x8JeUkriXoSLD
-   NrIwVHCoYBWG4fZ7Q2a+DMZFzTO3/FTKnFJ85LkfEOQCRNeGtvjTYmWXh
-   KatlAU7H7dKWjDL4xt579gTGWQkPCF8qW0zOSfj+recB1Z2CmppsZ+9Ve
-   Ps5hn1bYqBY361cT4+AaRXVgFaSfoq8LE+XHNB00ivRbswMG8PVEDwhNM
-   loYdEYsXufcLKy9D3DPGmpxhPhCcGlTCU4IZGOLXcTpwI5bjDFYE03vWU
-   w==;
-IronPort-SDR: llHCWxN4hggFAoPTbkYOKYaHtktya/T9B2Ag/hDD9VvHmE45igm4SL5Wkay8pEygalATBbfRia
- cf9ZVVjlfNqm6T9xsjEM6csv7gMMK3cLgdWRHvNYw2n1b4t9yJYUZbPywym4Kj5KaiO0E9R2Sz
- FI40TCihRLFDN/PABW8XPZl+VFigcLrEq7H/mg7aG/obRlcV8Uly+sucLK/hw/r7sv23kyD3NL
- pJXrrO4tvsORWA9PBkLW+VHxXwnL6VqasUQF90ysINxOvLi0f50qsEkDy3cLUN9FzHvO5WdVmW
- iMg=
-X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
-   d="scan'208";a="79101137"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jun 2020 07:21:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 19 Jun 2020 07:21:49 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 19 Jun 2020 07:21:24 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <wsa@kernel.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Date:   Fri, 19 Jun 2020 17:19:04 +0300
-Message-ID: <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+        Fri, 19 Jun 2020 10:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388011AbgFSOjR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:39:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD99020CC7;
+        Fri, 19 Jun 2020 14:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592577556;
+        bh=K/Qd2BVjoGnjBRAXKcRbdqs6eY78ZjkmNsEPRpMD6Og=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rcRk6DWImowc6uUn85HCUTlIlOPEepd8KkcApatzBajB+hDXZ+JIYVEeWDBIgqbLf
+         0SIZSqfnHKg26ukFRd32X3Pnu3SeN/QK+7YcukToHeNXbks6FsO2UWthUcDEuqvRhL
+         DOngQTMWBYKozrG3b2Cj2Mjc3edesuxZUaJAtNLg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 067/101] mips: Add udelay lpj numbers adjustment
+Date:   Fri, 19 Jun 2020 16:32:56 +0200
+Message-Id: <20200619141617.561080912@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200619141614.001544111@linuxfoundation.org>
+References: <20200619141614.001544111@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Make the Microchip at91 driver the first to use the generic GPIO bus
-recovery support from the I2C core and discard the driver implementation.
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+[ Upstream commit ed26aacfb5f71eecb20a51c4467da440cb719d66 ]
+
+Loops-per-jiffies is a special number which represents a number of
+noop-loop cycles per CPU-scheduler quantum - jiffies. As you
+understand aside from CPU-specific implementation it depends on
+the CPU frequency. So when a platform has the CPU frequency fixed,
+we have no problem and the current udelay interface will work
+just fine. But as soon as CPU-freq driver is enabled and the cores
+frequency changes, we'll end up with distorted udelay's. In order
+to fix this we have to accordinly adjust the per-CPU udelay_val
+(the same as the global loops_per_jiffy) number. This can be done
+in the CPU-freq transition event handler. We subscribe to that event
+in the MIPS arch time-inititalization method.
+
+Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-at91-master.c | 69 ++--------------------------
- drivers/i2c/busses/i2c-at91.h        |  3 --
- 2 files changed, 3 insertions(+), 69 deletions(-)
+ arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index 363d540a8345..66864f9cf7ac 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -816,79 +816,16 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
- 	return ret;
- }
+diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
+index 8d0170969e22..345978cc105b 100644
+--- a/arch/mips/kernel/time.c
++++ b/arch/mips/kernel/time.c
+@@ -22,12 +22,82 @@
+ #include <linux/smp.h>
+ #include <linux/spinlock.h>
+ #include <linux/export.h>
++#include <linux/cpufreq.h>
++#include <linux/delay.h>
  
--static void at91_prepare_twi_recovery(struct i2c_adapter *adap)
--{
--	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
--
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
--}
--
--static void at91_unprepare_twi_recovery(struct i2c_adapter *adap)
--{
--	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
--
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
--}
--
- static int at91_init_twi_recovery_gpio(struct platform_device *pdev,
- 				       struct at91_twi_dev *dev)
- {
- 	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
+ #include <asm/cpu-features.h>
+ #include <asm/cpu-type.h>
+ #include <asm/div64.h>
+ #include <asm/time.h>
  
--	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
--	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
-+	rinfo->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (!rinfo->pinctrl || IS_ERR(rinfo->pinctrl)) {
- 		dev_info(dev->dev, "can't get pinctrl, bus recovery not supported\n");
--		return PTR_ERR(dev->pinctrl);
-+		return PTR_ERR(rinfo->pinctrl);
- 	}
--
--	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
--							 PINCTRL_STATE_DEFAULT);
--	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
--						      "gpio");
--	if (IS_ERR(dev->pinctrl_pins_default) ||
--	    IS_ERR(dev->pinctrl_pins_gpio)) {
--		dev_info(&pdev->dev, "pinctrl states incomplete for recovery\n");
--		return -EINVAL;
--	}
--
--	/*
--	 * pins will be taken as GPIO, so we might as well inform pinctrl about
--	 * this and move the state to GPIO
--	 */
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
--
--	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
--	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
--
--	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl",
--					  GPIOD_OUT_HIGH_OPEN_DRAIN);
--	if (PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
--
--	if (IS_ERR(rinfo->sda_gpiod) ||
--	    IS_ERR(rinfo->scl_gpiod)) {
--		dev_info(&pdev->dev, "recovery information incomplete\n");
--		if (!IS_ERR(rinfo->sda_gpiod)) {
--			gpiod_put(rinfo->sda_gpiod);
--			rinfo->sda_gpiod = NULL;
--		}
--		if (!IS_ERR(rinfo->scl_gpiod)) {
--			gpiod_put(rinfo->scl_gpiod);
--			rinfo->scl_gpiod = NULL;
--		}
--		pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
--		return -EINVAL;
--	}
--
--	/* change the state of the pins back to their default state */
--	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
--
--	dev_info(&pdev->dev, "using scl, sda for recovery\n");
--
--	rinfo->prepare_recovery = at91_prepare_twi_recovery;
--	rinfo->unprepare_recovery = at91_unprepare_twi_recovery;
--	rinfo->recover_bus = i2c_generic_scl_recovery;
- 	dev->adapter.bus_recovery_info = rinfo;
- 
- 	return 0;
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index 7e7b4955ca7f..eae673ae786c 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -157,9 +157,6 @@ struct at91_twi_dev {
- 	struct at91_twi_dma dma;
- 	bool slave_detected;
- 	struct i2c_bus_recovery_info rinfo;
--	struct pinctrl *pinctrl;
--	struct pinctrl_state *pinctrl_pins_default;
--	struct pinctrl_state *pinctrl_pins_gpio;
- #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
- 	unsigned smr;
- 	struct i2c_client *slave;
++#ifdef CONFIG_CPU_FREQ
++
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
++static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
++static unsigned long glb_lpj_ref;
++static unsigned long glb_lpj_ref_freq;
++
++static int cpufreq_callback(struct notifier_block *nb,
++			    unsigned long val, void *data)
++{
++	struct cpufreq_freqs *freq = data;
++	struct cpumask *cpus = freq->policy->cpus;
++	unsigned long lpj;
++	int cpu;
++
++	/*
++	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
++	 * the loops delay. (Is this possible?)
++	 */
++	if (freq->flags & CPUFREQ_CONST_LOOPS)
++		return NOTIFY_OK;
++
++	/* Save the initial values of the lpjes for future scaling. */
++	if (!glb_lpj_ref) {
++		glb_lpj_ref = boot_cpu_data.udelay_val;
++		glb_lpj_ref_freq = freq->old;
++
++		for_each_online_cpu(cpu) {
++			per_cpu(pcp_lpj_ref, cpu) =
++				cpu_data[cpu].udelay_val;
++			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
++		}
++	}
++
++	/*
++	 * Adjust global lpj variable and per-CPU udelay_val number in
++	 * accordance with the new CPU frequency.
++	 */
++	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
++	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
++		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
++						glb_lpj_ref_freq,
++						freq->new);
++
++		for_each_cpu(cpu, cpus) {
++			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
++					    per_cpu(pcp_lpj_ref_freq, cpu),
++					    freq->new);
++			cpu_data[cpu].udelay_val = (unsigned int)lpj;
++		}
++	}
++
++	return NOTIFY_OK;
++}
++
++static struct notifier_block cpufreq_notifier = {
++	.notifier_call  = cpufreq_callback,
++};
++
++static int __init register_cpufreq_notifier(void)
++{
++	return cpufreq_register_notifier(&cpufreq_notifier,
++					 CPUFREQ_TRANSITION_NOTIFIER);
++}
++core_initcall(register_cpufreq_notifier);
++
++#endif /* CONFIG_CPU_FREQ */
++
+ /*
+  * forward reference
+  */
 -- 
 2.25.1
+
+
 
