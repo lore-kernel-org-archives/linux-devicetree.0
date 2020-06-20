@@ -2,71 +2,90 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30DCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B28BC433E2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D96A622D02
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C55D23BDD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgFTObV (ORCPT
+        id S1728217AbgFTOnh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:31:21 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:36814 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgFTObU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:31:20 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 971FE8054C;
-        Sat, 20 Jun 2020 16:31:16 +0200 (CEST)
-Date:   Sat, 20 Jun 2020 16:31:14 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Sat, 20 Jun 2020 10:43:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50052 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbgFTOnh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 20 Jun 2020 10:43:37 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jmeiH-001PCT-CW; Sat, 20 Jun 2020 16:43:21 +0200
+Date:   Sat, 20 Jun 2020 16:43:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <linux@rempel-privat.de>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for
- some panels
-Message-ID: <20200620143114.GA22329@ravnborg.org>
-References: <20200617222703.17080-1-digetx@gmail.com>
- <20200617222703.17080-8-digetx@gmail.com>
- <20200620112132.GB16901@ravnborg.org>
- <20200620114934.GB5829@pendragon.ideasonboard.com>
- <ea421084-a91c-bc03-5997-1723075b7cae@gmail.com>
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH/RFC 1/5] dt-bindings: net: renesas,ravb: Document
+ internal clock delay properties
+Message-ID: <20200620144321.GH304147@lunn.ch>
+References: <20200619191554.24942-1-geert+renesas@glider.be>
+ <20200619191554.24942-2-geert+renesas@glider.be>
+ <e6d0bfc5-9d75-2dc9-2bfa-671c32cb0b7c@rempel-privat.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea421084-a91c-bc03-5997-1723075b7cae@gmail.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=aPYPGh6k4tu1kSo0xeYA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <e6d0bfc5-9d75-2dc9-2bfa-671c32cb0b7c@rempel-privat.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry
-
+On Sat, Jun 20, 2020 at 07:47:16AM +0200, Oleksij Rempel wrote:
+> Hi Geert,
 > 
-> Oops! Good catch!
-Yep, thanks Laurent. Should have taken a better look before applying.
+> Am 19.06.20 um 21:15 schrieb Geert Uytterhoeven:
+> > Some EtherAVB variants support internal clock delay configuration, which
+> > can add larger delays than the delays that are typically supported by
+> > the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
+> > properties).
+> >
+> > Add properties for configuring the internal MAC delays.
+> > These properties are mandatory, even when specified as zero, to
+> > distinguish between old and new DTBs.
+> >
+> > Update the example accordingly.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  .../devicetree/bindings/net/renesas,ravb.txt  | 29 ++++++++++---------
+> >  1 file changed, 16 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > index 032b76f14f4fdb38..488ada78b6169b8e 100644
+> > --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > @@ -64,6 +64,18 @@ Optional properties:
+> >  			 AVB_LINK signal.
+> >  - renesas,ether-link-active-low: boolean, specify when the AVB_LINK signal is
+> >  				 active-low instead of normal active-high.
+> > +- renesas,rxc-delay-ps: Internal RX clock delay.
+> 
+> may be it make sense to add a generic delay property for MACs and PHYs?
 
-> Indeed, I blindly set the LVDS type to all these
-> panels. Please revert this patch, I'll double check each panel and
-> prepare an updated version of this patch. Thank you very much for the
-> review!
+See Dan Murphys "RGMII Internal delay common property" patchset. That
+patchset is addressing the PHY side. Maybe we can build on that to
+address the MAC side?
 
-If you can prepare a fix within a few days then lets wait for that.
-I will do a better review next time.
-
-	Sam
-
+	Andrew
