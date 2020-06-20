@@ -2,96 +2,90 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 718DBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 21:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536FAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 21:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34FF3246E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 21:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1592A206C1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 21:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fM4jBfoJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CzdGRb37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgFTVeI (ORCPT
+        id S1729042AbgFTVk2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 17:34:08 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44838 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbgFTVeH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 17:34:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id c17so15259025lji.11
-        for <devicetree@vger.kernel.org>; Sat, 20 Jun 2020 14:34:05 -0700 (PDT)
+        Sat, 20 Jun 2020 17:40:28 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35429 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728942AbgFTVk1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 17:40:27 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q19so15340657lji.2
+        for <devicetree@vger.kernel.org>; Sat, 20 Jun 2020 14:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XMLLcSh0FlLbcDXmFaO9BURwcvJCFIp9+2dM/IBT/Z8=;
-        b=fM4jBfoJ8l2d8ZgUkqeYaPu66l91KZ+pIQwrkEHS4iDVaScL1olYwKtzFsLv7tD6nc
-         U5k2wV+U0eGTAME55rsSEefFLQbDFZoLdJWUSbEFQ6t2b9dMa5pThSZpU6CpmQhaAA6x
-         wZQhubqxLH+t28SzlysCuddi8WW516Qro+ktfIHpZpNZO6upfyub7jvC1rh4j1dzn3kN
-         r5s0jtTEv2e77Tzt4Z8dZ4ZvsjOeJF8+gJsFz2nwuIyW2DkeeOkQKMcGAsbiACdNNct8
-         xXLJO8p/SzLJuWgd1BIvAcPLaFclUaxFY/oF3V6ZsY1n6ODXPpOTgsHK/601jY9P/XqC
-         NDxQ==
+        bh=qDGZJrN+zxg9kIEWpfiOHaUMYjaY018dhr2ry8AoDSo=;
+        b=CzdGRb37kVsYau41jwtDVNhfyYBgY3d0+7sNN0OqWFwk0qEouWLrm4IA+xwhjI1UQt
+         QGiP+tYVl4+4RNuPXkMCSXXvX+Zp3DCziRbHJrxIOY18WRXSmZRnMQ6j93S/oYkoF4US
+         c0Qsv1YND4xPcwn5Kb8kcQd8rZYZir9ce6KCsivlD069ARvPvTBajld3H9xjfI1FCllX
+         3ZXAgdc/3xu2k/pKzKhzR6NT6Rd/oPi4UlH+aacp/fM2yx7nWO5+wvdHGY5cRyRmNa8I
+         /yZkt+FBE7pWfHh2aBeORIAx0yu0x3x3cN5ULDhChdnMWRATlQk8xOPvG1v6bjD9WlLB
+         tmrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XMLLcSh0FlLbcDXmFaO9BURwcvJCFIp9+2dM/IBT/Z8=;
-        b=RmvyEe5ItbMtdQ923Obme90DzEyPj4/3iGrbACigD+oxMEd4dUZj21+pZOC/xCyfq3
-         7VG3jDP701pS320JoqKDPP40s2/PEiWmh4UQtIATS475G8RJBbTlNcQtbuMrUx7mc9iA
-         gDxUjIbpOVFuUkmlS7uc4kxyUHfmlBm52QdKY3I78LCzH8alXHn1UDGGU99OHykgrcpb
-         CUVywhA6eQMqi9aJTkxsjo7xnxD278jI+wGAQgKSBMpK7iVgxzeM3On7pBiWUxjeWewq
-         JO05vq9+zl3HbK/9l1EXXLenaDROH3bu/Wt1U2soeE0s71qbVh6lxkCSnJc+iKZKrH2y
-         Lvig==
-X-Gm-Message-State: AOAM530rN3ahnEbpzTFx66zC1d+riqjg+bYhZUfBRxOa/+ep5jP7JM2Q
-        OSEptpDNJ+C9yyCq9p4n9kREjPUCFONSHdEzdUCKSA==
-X-Google-Smtp-Source: ABdhPJyc/rKcuZI7IzUgOFsdvhotZrQBegRWHGiFD7Jo5zA51VgOf9AQa+SOJTDLDml/A2XI/RqRiyXvUzFabtKoFAk=
-X-Received: by 2002:a2e:351a:: with SMTP id z26mr4816556ljz.144.1592688785302;
- Sat, 20 Jun 2020 14:33:05 -0700 (PDT)
+        bh=qDGZJrN+zxg9kIEWpfiOHaUMYjaY018dhr2ry8AoDSo=;
+        b=sFWQAX3yrNImy+6WgNBB5x8hlXVOniInR9s4IP403Oqr2MV4IIvz94UP+NZ9T0GjPN
+         OvD6ox0mr45mZgW1/LPjKg3jnYQa7hlRe+6bqckqOH578UuqPgfNuY0CYVDcRv0S4MGO
+         ZgSUjo6lgTwgAK7cLTZkO6vmu7hXwt4Nb9w54Azmd+SoI1PWB9eK3lVCOtHR+6H8xCok
+         fiKNbZzslCiCYov6+XRibYXM2a3Wo5mCjicmjhkb16tBb66jioR+kHcnTs9I/6zvy3OP
+         TBR2DJy1DnyK3Ft9xnRExcORmpFk26308iDpZdFt/1myE7y78sowNTBGbTZoO4U6aid8
+         NLLw==
+X-Gm-Message-State: AOAM533Kllp6nFhZr3gL1Oo9C1ysssgUQjIJUiViltd6Ji/qyC47W1Ft
+        PG583Ea269c+awUxawbuPtBRPRNO/mH1tqCVM4NJmg==
+X-Google-Smtp-Source: ABdhPJxAa1VzCVlzrh0h7Fjw2j+ZkUnwO3O+sZYxyg7hx+dcgKgbw8afJXNyQtB4JkQJJZ827jwqG3BbejMYNSUh+Ac=
+X-Received: by 2002:a2e:7303:: with SMTP id o3mr5249034ljc.100.1592689165295;
+ Sat, 20 Jun 2020 14:39:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200220162246.8334-1-benjamin.gaignard@st.com> <20200520085142.GD271301@dell>
-In-Reply-To: <20200520085142.GD271301@dell>
+References: <20200616223353.993567-1-lkundrak@v3.sk> <20200616223353.993567-2-lkundrak@v3.sk>
+In-Reply-To: <20200616223353.993567-2-lkundrak@v3.sk>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 23:32:54 +0200
-Message-ID: <CACRpkdYry6=iJ8hpy+pS9hFuBJD5Cf1ZKJwCkCBZPGW4rGa86Q@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to json-schema
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
+Date:   Sat, 20 Jun 2020 23:39:14 +0200
+Message-ID: <CACRpkdZ4_cRPMyA6=-qqWX-GpJ0DQXdj=EbFEkoFqi8w6AahXg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: gpio: Convert mrvl-gpio to json-schema
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>, linux-rtc@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:51 AM Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
->
-> > Convert stmfx bindings to json-schema
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> >  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
-> >  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
->
-> >  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
->
-> Linus, anything from you?
+On Wed, Jun 17, 2020 at 12:33 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
 
-Looks good:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> This converts the mrvl-gpio binding to DT schema format using json-schema.
+
+This looks about right to me:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+I expect Rob will apply it when he's happy with it, else poke me once
+he ACKs it.
 
 Yours,
 Linus Walleij
