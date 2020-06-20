@@ -2,319 +2,110 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BDBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFD3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 15:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B4F23C30
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2A0221F1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 15:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P2+3b3ax"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClaI3OCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgFTOr7 (ORCPT
+        id S1728283AbgFTPFn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
+        Sat, 20 Jun 2020 11:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgFTOr4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:47:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3746C06174E;
-        Sat, 20 Jun 2020 07:47:55 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id p19so951308wmg.1;
-        Sat, 20 Jun 2020 07:47:55 -0700 (PDT)
+        with ESMTP id S1728226AbgFTPFl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 11:05:41 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB76C06174E;
+        Sat, 20 Jun 2020 08:05:40 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id c17so14657235lji.11;
+        Sat, 20 Jun 2020 08:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DCG0ql+6iUBjTSaUb3iHAe/NIrTHP1VLdsVQ8Ju6DOs=;
-        b=P2+3b3axWG/S/fjGIYsYAaPdVg3QP/NlOTEPRydXd3FNpLSyJUlsAQDBw9s0MW8Brw
-         kP1K3DRkrGbhtyEtXDVcLyfKbFQZ+UDCFvTDyAY0KISNkUTX5RxpM1V0MRsOVfO2ELoH
-         STuclzSAAhzMp5vXLK7k161vvOnhITnbv0DanYPtG6IeYQQ5+GSYuDY0THjA4h2NWaxj
-         3gr9DdoBkbKDa3sIyEV0G5FkkUhng78A2OJaf1L21paviwIQxhHwTDZQ6HjW55OT+Ni4
-         Xc0r13sdJ+FV68Y/igICO8OhefNrpu2/YXVvFv22X4aVT7U6LdwkfAheyvAq2h+Gz05p
-         bt8g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cC/kgYZ98AFtKsSnL1c9eWREKRXoMKu60JHedrpuptk=;
+        b=ClaI3OCondxVk+pVJYSeistUsa1TfvZDmkq0JpZHtC8xsR0LnmmdEkgjNYoEkQnUKX
+         tkGbCfVDf5tlH3C/BWaojJPDXgntX4ZpNhYO4Ax7KghREvaXj+aqxhECGB80nF2imTy1
+         gLkDagTcQr9S2bxcx8R568dCyifzswvs+hpf218s6lNwETXVWrQQlbVl7Gex1GeWy3ob
+         ffKGeJkYgbSUhhr5e78mHzksFV1Kz4JuMTz0bSdC2ekCuqu9Nvy4KDYjaOEdihGSuPgo
+         kmd/8X3rH/OWDyIe7rA3eEAoRAfPms3tfjFq4TUc/8k63p0OsH48dycl5dLFVPmUZEy4
+         osQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DCG0ql+6iUBjTSaUb3iHAe/NIrTHP1VLdsVQ8Ju6DOs=;
-        b=EwaAVk0jwBrc1knvKKEAhwprCWmlmIpO4rfsXUnGr2IzTbHP/3Z3t4kDzYXidqOV2y
-         /zwDXkdNFyXZCZsRDvyklA7y4VZmh1/psMefxzKbDg5OBb3OJWDrre36Y6kcMZa+hXnd
-         qa5Tnz1Li+QNbg1Ufl3qjNr0PNQSSr6tqVoxEjRC7hjNwvUpbuNojxrmUfdd9o4WD7hd
-         2KJpJhxayyLpxmxjcTF0ZVjHpQRcaJ0qw28mQDNSVnuZOUCApbFMjN6FN6fXT6yOy2vG
-         C88+n5cjIoK0wez1m+rSUFilLNRy5ijSb3lv6JnKk8gzK+9qJV6LuXu7Ng1PgqoSs6s2
-         qgiQ==
-X-Gm-Message-State: AOAM533bJhn64MxjdER/XZfj2+jpfVB7zfKX6e8O4YUhGdYkq3yNME+5
-        SeLXoFxXUsK+h6/2MA+5O5U=
-X-Google-Smtp-Source: ABdhPJx8xESk/Dr1cADTllfCQmttACysPX0T/qpnwjIwQaBzpUaYwpf/xHGKXvtU08ISEaaTNDmOCA==
-X-Received: by 2002:a1c:4e08:: with SMTP id g8mr2294425wmh.24.1592664474670;
-        Sat, 20 Jun 2020 07:47:54 -0700 (PDT)
-Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
-        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.47.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 07:47:54 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cC/kgYZ98AFtKsSnL1c9eWREKRXoMKu60JHedrpuptk=;
+        b=SMUYrzZMtv/p4e3WlqDhEaaT6dojFY2SDc34sdscWPTtBuh63qz+6SfKeoSePnAEgA
+         4SwPQrsuopX5sTSswKBdyPHsCaSPw8MWx2Ol4Xb1yaE/SfzigS5KOJxpjk7dKnZ/m/rt
+         QYd/hIarcxre3uCymdrJrCCpB2kUeW/XQy9uLwuZQmC8MCpaWqqBza/lywoPORrg5ewo
+         C8ir2VMWy0LQAyWihdga1BKVCjFS8pSrcl7NBBJP8mt8v5AvnFpf9z6jYjCxmKF8Boc1
+         vdg8JaAQxVnkxUuyvNiIIuCbKhtRVfKj1/vW1cVUmNZ1QLjedyJIzd1Puaw6o0GMG2OE
+         4ayA==
+X-Gm-Message-State: AOAM530EtHBGjOBVe2IU3WEer0TkT5x+BLy2Jd/sknzvmIo96GXaz4VU
+        ngDZ6YJvN4rbw9yuj5XXC2s=
+X-Google-Smtp-Source: ABdhPJxkAwkMqQA+UTB5xAzf8ceKNP0+Ozy6OZt8rrWp77P4n6g60+DuTrmnJPIWs/EOJyIZCJJ6aw==
+X-Received: by 2002:a2e:8601:: with SMTP id a1mr3935669lji.255.1592665539062;
+        Sat, 20 Jun 2020 08:05:39 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id m11sm2131027lfl.70.2020.06.20.08.05.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 08:05:38 -0700 (PDT)
+Subject: Re: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for
+ some panels
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/21] clk: qcom: smd: Add support for MSM8992/4 rpm clocks
-Date:   Sat, 20 Jun 2020 16:46:17 +0200
-Message-Id: <20200620144639.335093-2-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
-References: <20200620144639.335093-1-konradybcio@gmail.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200617222703.17080-1-digetx@gmail.com>
+ <20200617222703.17080-8-digetx@gmail.com>
+ <20200620112132.GB16901@ravnborg.org>
+ <20200620114934.GB5829@pendragon.ideasonboard.com>
+ <ea421084-a91c-bc03-5997-1723075b7cae@gmail.com>
+ <20200620143114.GA22329@ravnborg.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e77a34c1-3e0b-7f30-25d0-a955ec8d8c86@gmail.com>
+Date:   Sat, 20 Jun 2020 18:05:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200620143114.GA22329@ravnborg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add rpm smd clocks, PMIC and bus clocks which are required on MSM8992,
-MSM8994 (and APQ variants) for clients to vote on.
+20.06.2020 17:31, Sam Ravnborg пишет:
+> Hi Dmitry
+> 
+>>
+>> Oops! Good catch!
+> Yep, thanks Laurent. Should have taken a better look before applying.
+> 
+>> Indeed, I blindly set the LVDS type to all these
+>> panels. Please revert this patch, I'll double check each panel and
+>> prepare an updated version of this patch. Thank you very much for the
+>> review!
+> 
+> If you can prepare a fix within a few days then lets wait for that.
+> I will do a better review next time.
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../devicetree/bindings/clock/qcom,rpmcc.txt  |   2 +
- drivers/clk/qcom/clk-smd-rpm.c                | 172 ++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h        |   4 +
- 3 files changed, 178 insertions(+)
+Hello Sam,
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index 90a1349bc713..f864ea69a590 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -17,6 +17,8 @@ Required properties :
- 			"qcom,rpmcc-msm8976", "qcom,rpmcc"
- 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
- 			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
-+                        "qcom,rpmcc-msm8992", "qcom,rpmcc"
-+                        "qcom,rpmcc-msm8994", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
- 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index 52f63ad787ba..429517340148 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -574,6 +574,176 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8976 = {
- 	.num_clks = ARRAY_SIZE(msm8976_clks),
- };
- 
-+/* msm8992 */
-+DEFINE_CLK_SMD_RPM(msm8992, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8992, ocmemgx_clk, ocmemgx_a_clk, QCOM_SMD_RPM_MEM_CLK, 2);
-+DEFINE_CLK_SMD_RPM(msm8992, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8992, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-+DEFINE_CLK_SMD_RPM(msm8992, gfx3d_clk_src, gfx3d_a_clk_src, QCOM_SMD_RPM_MEM_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8992, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, bb_clk1, bb_clk1_a, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8992, bb_clk1_pin, bb_clk1_a_pin, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, bb_clk2, bb_clk2_a, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8992, bb_clk2_pin, bb_clk2_a_pin, 2);
-+
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, div_clk1, div_clk1_a, 11);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, div_clk2, div_clk2_a, 12);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, div_clk3, div_clk3_a, 13);
-+DEFINE_CLK_SMD_RPM(msm8992, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, ln_bb_clk, ln_bb_a_clk, 8);
-+DEFINE_CLK_SMD_RPM(msm8992, mmssnoc_ahb_clk, mmssnoc_ahb_a_clk,
-+		   QCOM_SMD_RPM_BUS_CLK, 3);
-+DEFINE_CLK_SMD_RPM_QDSS(msm8992, qdss_clk, qdss_a_clk,
-+			QCOM_SMD_RPM_MISC_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, rf_clk1, rf_clk1_a, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8992, rf_clk2, rf_clk2_a, 5);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8992, rf_clk1_pin, rf_clk1_a_pin, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8992, rf_clk2_pin, rf_clk2_a_pin, 5);
-+
-+DEFINE_CLK_SMD_RPM(msm8992, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8992, ce2_clk, ce2_a_clk, QCOM_SMD_RPM_CE_CLK, 1);
-+
-+static struct clk_smd_rpm *msm8992_clks[] = {
-+	[RPM_SMD_PNOC_CLK] = &msm8992_pnoc_clk,
-+	[RPM_SMD_PNOC_A_CLK] = &msm8992_pnoc_a_clk,
-+	[RPM_SMD_OCMEMGX_CLK] = &msm8992_ocmemgx_clk,
-+	[RPM_SMD_OCMEMGX_A_CLK] = &msm8992_ocmemgx_a_clk,
-+	[RPM_SMD_BIMC_CLK] = &msm8992_bimc_clk,
-+	[RPM_SMD_BIMC_A_CLK] = &msm8992_bimc_a_clk,
-+	[RPM_SMD_CNOC_CLK] = &msm8992_cnoc_clk,
-+	[RPM_SMD_CNOC_A_CLK] = &msm8992_cnoc_a_clk,
-+	[RPM_SMD_GFX3D_CLK_SRC] = &msm8992_gfx3d_clk_src,
-+	[RPM_SMD_GFX3D_A_CLK_SRC] = &msm8992_gfx3d_a_clk_src,
-+	[RPM_SMD_SNOC_CLK] = &msm8992_snoc_clk,
-+	[RPM_SMD_SNOC_A_CLK] = &msm8992_snoc_a_clk,
-+	[RPM_SMD_BB_CLK1] = &msm8992_bb_clk1,
-+	[RPM_SMD_BB_CLK1_A] = &msm8992_bb_clk1_a,
-+	[RPM_SMD_BB_CLK1_PIN] = &msm8992_bb_clk1_pin,
-+	[RPM_SMD_BB_CLK1_A_PIN] = &msm8992_bb_clk1_a_pin,
-+	[RPM_SMD_BB_CLK2] = &msm8992_bb_clk2,
-+	[RPM_SMD_BB_CLK2_A] = &msm8992_bb_clk2_a,
-+	[RPM_SMD_BB_CLK2_PIN] = &msm8992_bb_clk2_pin,
-+	[RPM_SMD_BB_CLK2_A_PIN] = &msm8992_bb_clk2_a_pin,
-+	[RPM_SMD_DIV_CLK1] = &msm8992_div_clk1,
-+	[RPM_SMD_DIV_A_CLK1] = &msm8992_div_clk1_a,
-+	[RPM_SMD_DIV_CLK2] = &msm8992_div_clk2,
-+	[RPM_SMD_DIV_A_CLK2] = &msm8992_div_clk2_a,
-+	[RPM_SMD_DIV_CLK3] = &msm8992_div_clk3,
-+	[RPM_SMD_DIV_A_CLK3] = &msm8992_div_clk3_a,
-+	[RPM_SMD_IPA_CLK] = &msm8992_ipa_clk,
-+	[RPM_SMD_IPA_A_CLK] = &msm8992_ipa_a_clk,
-+	[RPM_SMD_LN_BB_CLK] = &msm8992_ln_bb_clk,
-+	[RPM_SMD_LN_BB_A_CLK] = &msm8992_ln_bb_a_clk,
-+	[RPM_SMD_MMSSNOC_AHB_CLK] = &msm8992_mmssnoc_ahb_clk,
-+	[RPM_SMD_MMSSNOC_AHB_A_CLK] = &msm8992_mmssnoc_ahb_a_clk,
-+	[RPM_SMD_QDSS_CLK] = &msm8992_qdss_clk,
-+	[RPM_SMD_QDSS_A_CLK] = &msm8992_qdss_a_clk,
-+	[RPM_SMD_RF_CLK1] = &msm8992_rf_clk1,
-+	[RPM_SMD_RF_CLK1_A] = &msm8992_rf_clk1_a,
-+	[RPM_SMD_RF_CLK2] = &msm8992_rf_clk2,
-+	[RPM_SMD_RF_CLK2_A] = &msm8992_rf_clk2_a,
-+	[RPM_SMD_RF_CLK1_PIN] = &msm8992_rf_clk1_pin,
-+	[RPM_SMD_RF_CLK1_A_PIN] = &msm8992_rf_clk1_a_pin,
-+	[RPM_SMD_RF_CLK2_PIN] = &msm8992_rf_clk2_pin,
-+	[RPM_SMD_RF_CLK2_A_PIN] = &msm8992_rf_clk2_a_pin,
-+	[RPM_SMD_CE1_CLK] = &msm8992_ce1_clk,
-+	[RPM_SMD_CE1_A_CLK] = &msm8992_ce1_a_clk,
-+	[RPM_SMD_CE2_CLK] = &msm8992_ce2_clk,
-+	[RPM_SMD_CE2_A_CLK] = &msm8992_ce2_a_clk,
-+};
-+
-+static const struct rpm_smd_clk_desc rpm_clk_msm8992 = {
-+	.clks = msm8992_clks,
-+	.num_clks = ARRAY_SIZE(msm8992_clks),
-+};
-+
-+/* msm8994 */
-+DEFINE_CLK_SMD_RPM(msm8994, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8994, ocmemgx_clk, ocmemgx_a_clk, QCOM_SMD_RPM_MEM_CLK, 2);
-+DEFINE_CLK_SMD_RPM(msm8994, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8994, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-+DEFINE_CLK_SMD_RPM(msm8994, gfx3d_clk_src, gfx3d_a_clk_src, QCOM_SMD_RPM_MEM_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8994, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, bb_clk1, bb_clk1_a, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8994, bb_clk1_pin, bb_clk1_a_pin, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, bb_clk2, bb_clk2_a, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8994, bb_clk2_pin, bb_clk2_a_pin, 2);
-+
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, div_clk1, div_clk1_a, 11);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, div_clk2, div_clk2_a, 12);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, div_clk3, div_clk3_a, 13);
-+DEFINE_CLK_SMD_RPM(msm8994, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, ln_bb_clk, ln_bb_a_clk, 8);
-+DEFINE_CLK_SMD_RPM(msm8994, mmssnoc_ahb_clk, mmssnoc_ahb_a_clk,
-+		   QCOM_SMD_RPM_BUS_CLK, 3);
-+DEFINE_CLK_SMD_RPM_QDSS(msm8994, qdss_clk, qdss_a_clk,
-+			QCOM_SMD_RPM_MISC_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, rf_clk1, rf_clk1_a, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8994, rf_clk2, rf_clk2_a, 5);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8994, rf_clk1_pin, rf_clk1_a_pin, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8994, rf_clk2_pin, rf_clk2_a_pin, 5);
-+
-+DEFINE_CLK_SMD_RPM(msm8994, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8994, ce2_clk, ce2_a_clk, QCOM_SMD_RPM_CE_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8994, ce3_clk, ce3_a_clk, QCOM_SMD_RPM_CE_CLK, 2);
-+
-+static struct clk_smd_rpm *msm8994_clks[] = {
-+	[RPM_SMD_PNOC_CLK] = &msm8994_pnoc_clk,
-+	[RPM_SMD_PNOC_A_CLK] = &msm8994_pnoc_a_clk,
-+	[RPM_SMD_OCMEMGX_CLK] = &msm8994_ocmemgx_clk,
-+	[RPM_SMD_OCMEMGX_A_CLK] = &msm8994_ocmemgx_a_clk,
-+	[RPM_SMD_BIMC_CLK] = &msm8994_bimc_clk,
-+	[RPM_SMD_BIMC_A_CLK] = &msm8994_bimc_a_clk,
-+	[RPM_SMD_CNOC_CLK] = &msm8994_cnoc_clk,
-+	[RPM_SMD_CNOC_A_CLK] = &msm8994_cnoc_a_clk,
-+	[RPM_SMD_GFX3D_CLK_SRC] = &msm8994_gfx3d_clk_src,
-+	[RPM_SMD_GFX3D_A_CLK_SRC] = &msm8994_gfx3d_a_clk_src,
-+	[RPM_SMD_SNOC_CLK] = &msm8994_snoc_clk,
-+	[RPM_SMD_SNOC_A_CLK] = &msm8994_snoc_a_clk,
-+	[RPM_SMD_BB_CLK1] = &msm8994_bb_clk1,
-+	[RPM_SMD_BB_CLK1_A] = &msm8994_bb_clk1_a,
-+	[RPM_SMD_BB_CLK1_PIN] = &msm8994_bb_clk1_pin,
-+	[RPM_SMD_BB_CLK1_A_PIN] = &msm8994_bb_clk1_a_pin,
-+	[RPM_SMD_BB_CLK2] = &msm8994_bb_clk2,
-+	[RPM_SMD_BB_CLK2_A] = &msm8994_bb_clk2_a,
-+	[RPM_SMD_BB_CLK2_PIN] = &msm8994_bb_clk2_pin,
-+	[RPM_SMD_BB_CLK2_A_PIN] = &msm8994_bb_clk2_a_pin,
-+	[RPM_SMD_DIV_CLK1] = &msm8994_div_clk1,
-+	[RPM_SMD_DIV_A_CLK1] = &msm8994_div_clk1_a,
-+	[RPM_SMD_DIV_CLK2] = &msm8994_div_clk2,
-+	[RPM_SMD_DIV_A_CLK2] = &msm8994_div_clk2_a,
-+	[RPM_SMD_DIV_CLK3] = &msm8994_div_clk3,
-+	[RPM_SMD_DIV_A_CLK3] = &msm8994_div_clk3_a,
-+	[RPM_SMD_IPA_CLK] = &msm8994_ipa_clk,
-+	[RPM_SMD_IPA_A_CLK] = &msm8994_ipa_a_clk,
-+	[RPM_SMD_LN_BB_CLK] = &msm8994_ln_bb_clk,
-+	[RPM_SMD_LN_BB_A_CLK] = &msm8994_ln_bb_a_clk,
-+	[RPM_SMD_MMSSNOC_AHB_CLK] = &msm8994_mmssnoc_ahb_clk,
-+	[RPM_SMD_MMSSNOC_AHB_A_CLK] = &msm8994_mmssnoc_ahb_a_clk,
-+	[RPM_SMD_QDSS_CLK] = &msm8994_qdss_clk,
-+	[RPM_SMD_QDSS_A_CLK] = &msm8994_qdss_a_clk,
-+	[RPM_SMD_RF_CLK1] = &msm8994_rf_clk1,
-+	[RPM_SMD_RF_CLK1_A] = &msm8994_rf_clk1_a,
-+	[RPM_SMD_RF_CLK2] = &msm8994_rf_clk2,
-+	[RPM_SMD_RF_CLK2_A] = &msm8994_rf_clk2_a,
-+	[RPM_SMD_RF_CLK1_PIN] = &msm8994_rf_clk1_pin,
-+	[RPM_SMD_RF_CLK1_A_PIN] = &msm8994_rf_clk1_a_pin,
-+	[RPM_SMD_RF_CLK2_PIN] = &msm8994_rf_clk2_pin,
-+	[RPM_SMD_RF_CLK2_A_PIN] = &msm8994_rf_clk2_a_pin,
-+	[RPM_SMD_CE1_CLK] = &msm8994_ce1_clk,
-+	[RPM_SMD_CE1_A_CLK] = &msm8994_ce1_a_clk,
-+	[RPM_SMD_CE2_CLK] = &msm8994_ce2_clk,
-+	[RPM_SMD_CE2_A_CLK] = &msm8994_ce2_a_clk,
-+	[RPM_SMD_CE3_CLK] = &msm8994_ce3_clk,
-+	[RPM_SMD_CE3_A_CLK] = &msm8994_ce3_a_clk,
-+};
-+
-+static const struct rpm_smd_clk_desc rpm_clk_msm8994 = {
-+	.clks = msm8994_clks,
-+	.num_clks = ARRAY_SIZE(msm8994_clks),
-+};
-+
-+
- /* msm8996 */
- DEFINE_CLK_SMD_RPM(msm8996, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8996, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-@@ -770,6 +940,8 @@ static const struct of_device_id rpm_smd_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
- 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
- 	{ .compatible = "qcom,rpmcc-msm8976", .data = &rpm_clk_msm8976 },
-+	{ .compatible = "qcom,rpmcc-msm8992", .data = &rpm_clk_msm8992 },
-+	{ .compatible = "qcom,rpmcc-msm8994", .data = &rpm_clk_msm8994 },
- 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
- 	{ .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
- 	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index ae74c43c485d..9cbf17027afd 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -133,5 +133,9 @@
- #define RPM_SMD_RF_CLK3_A			87
- #define RPM_SMD_RF_CLK3_PIN			88
- #define RPM_SMD_RF_CLK3_A_PIN			89
-+#define RPM_SMD_CE2_CLK             90
-+#define RPM_SMD_CE2_A_CLK               91
-+#define RPM_SMD_CE3_CLK             92
-+#define RPM_SMD_CE3_A_CLK           93
- 
- #endif
--- 
-2.27.0
-
+I should be able to make it later today or tomorrow. Could you please
+clarify what do you mean by the fix, do you what it to be as an
+additional patch on top of the applied one or a new version of the patch?
