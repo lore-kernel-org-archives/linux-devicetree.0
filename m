@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5D5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D36C433E2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A790923C3F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DB623BE5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwNmrvk/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7Q0k4xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgFTOtQ (ORCPT
+        id S1728448AbgFTOsq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
+        Sat, 20 Jun 2020 10:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728476AbgFTOs5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:48:57 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0091AC06174E;
-        Sat, 20 Jun 2020 07:48:56 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so12381369wru.0;
-        Sat, 20 Jun 2020 07:48:56 -0700 (PDT)
+        with ESMTP id S1728433AbgFTOsn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:48:43 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FEEC06174E;
+        Sat, 20 Jun 2020 07:48:43 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r9so10917673wmh.2;
+        Sat, 20 Jun 2020 07:48:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4YzpTtuQd8igcmEb94rslBu/tpG/FsBo/caSislaGaQ=;
-        b=iwNmrvk/680CIVcmDysYUApImaXy0T8JwUvUbmSL7asI/B/S8GMypZ+7ED7NUvwkE+
-         8pNceqGjHvAdILbh4MCWjhyKOS+qtHBINaJRmSTyYLWurHDA1TH7XnI/HM40iizw0hu2
-         czzMdJuK3obWErYgS8Z/0981GFXt0FmeVkPlLd/oMPvPlIwCBRJ88W2qW5cawwZs2/Gs
-         CdqmzlkWtIjrxWlwOmM2+q6+cNgU7Ed5oM3p+BxqmS9m2fymjWWcTK5OKLFArldAUs1D
-         AlIcDEi0lhYIlVOBHcRx35Dsfnyp1Pz+46i+rUS4p23h5KDLCQpPAvOdyZYncMBIgX5p
-         qVlg==
+        bh=iDykADcxrijpqv/X+4zRhTKtVeA53wtr3kZ/KK6Yknc=;
+        b=J7Q0k4xazhrgTh5VPqb5vVtvVnAQUxeodb+dzDqLGvJrqG7htnM5ErZWBNI+q/ZQAE
+         vbidlWrnjRon7INnbfePJsJjulJYceMcyh1h4dJVt45HwIYq+kWTZwOyBY3yVCm2ZB9T
+         arTMjWuGitXg5AifgLdHFjyj+jOvOcbSmxSZ/GDLuLhG00r9spHWcwL72eEdpZ3qs0ve
+         gqAVhNZ99FVC/9z4sz51pdxuyVEqJgsGjYKO6g2uTeVo5gseMR+n9YYlBAylr1goZBKU
+         1usdXPoT/ubHobG3urVYurXB1FAx9R5wfOMnyxKhoxFfzEmt9o2oWozbpbiMrFuHyq/l
+         TpgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4YzpTtuQd8igcmEb94rslBu/tpG/FsBo/caSislaGaQ=;
-        b=i0P//gOedXIELQd8uLv8+JwUsLhAlqgUCmXiVsYqad50wX14mQlkX+oLaWNlQcrBIc
-         1Quw0DVPgBYB4Nj2FR1JKUDN1FyAnlJeZpbXBb/aGhoR1WrotdTxNFuSEvlvEpapkPP/
-         h9GsPE9WuB0j212HLjR4LrR03Mion8rOA+ZEXC4H9FRXatLKa407uX7xYPxH99hxMOlj
-         U+apYf6yLu+Gb9Ie/fo9ohjVH1KLIx4p3D5s+CN7kTKgEIGTJOAV7Rxth+MDqgB8pwfr
-         WpG2lkD8xKsa3ZjULpFJDwrv2f2YlcGJuwWu99uYu3gKsiJ04qzA1tD19MFPvTKLI/ks
-         QF8g==
-X-Gm-Message-State: AOAM530ol9Gdq1oK4QmALKGoe7Hi0JFhsU5jDg5OqNHy87JR/kd9M5A+
-        Jkk/cvMn7jIzAD1YlmjEjBc=
-X-Google-Smtp-Source: ABdhPJxAPPFs2N1QEGxO1eVQZpi2K00TAe7zNr5W0BALYsIcs5XsPpdsiVUS/XzMOaEciBnT1Lm27Q==
-X-Received: by 2002:a5d:5549:: with SMTP id g9mr5585965wrw.419.1592664535797;
-        Sat, 20 Jun 2020 07:48:55 -0700 (PDT)
+        bh=iDykADcxrijpqv/X+4zRhTKtVeA53wtr3kZ/KK6Yknc=;
+        b=AS/xW3pG1Su+EtM21H7itbEzrTiAzSFkCqydIiSh8PR9BlAqW9T5PNhr1bznf5JEWR
+         D9bdpWwKtYqunPmzGeXgri3RbS3f5I0Ie5P1e1ZZ0NSB+D/EQik3JI9jRrNElijtTQWa
+         kBIa2IDE+sHVmp66lMTmhxXN/koH5HQEq6fZVS6SguvqGPJsTvyf4YKLjEQ4lTBhADgs
+         vUNkdByFUiQ/5cm65XI76F5I9nwloj262Rq8lz9Qq3vgKzD+G9t/3KvyHJA7LZk9S6HR
+         rDXJoOshYgfzCppNKA3xoParKVh6EYYX9SNa7Bqu9AUoiyxrIHyBbnmoiQN6ms7gbl2F
+         S1Dw==
+X-Gm-Message-State: AOAM5316NRm7Vu+LreuaNvuF+qwo5/ZYLKY8L7xY0334qYssKzyJ61/V
+        NcDeC+fvkaAyAGJ7C7JaLs8=
+X-Google-Smtp-Source: ABdhPJzK+JnkPaEomg+uDiJites2Z/svU9kDxcqK//WHNt1MFHp5Nkk3E0e4oqkFB2vOs0hnBGLuEQ==
+X-Received: by 2002:a7b:c113:: with SMTP id w19mr9542513wmi.161.1592664522060;
+        Sat, 20 Jun 2020 07:48:42 -0700 (PDT)
 Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
-        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.54
+        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 07:48:55 -0700 (PDT)
+        Sat, 20 Jun 2020 07:48:41 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -75,9 +75,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 19/21] arm64: dts: qcom: angler: Add qcom,msm-id and pmic-id
-Date:   Sat, 20 Jun 2020 16:46:35 +0200
-Message-Id: <20200620144639.335093-20-konradybcio@gmail.com>
+Subject: [PATCH 15/21] arm64: dts: qcom: msm8994: Add BLSP2 UART2 node
+Date:   Sat, 20 Jun 2020 16:46:31 +0200
+Message-Id: <20200620144639.335093-16-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
 References: <20200620144639.335093-1-konradybcio@gmail.com>
@@ -88,29 +88,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add properties required for the bootloader to select
-the correct bootloader blob. They have been removed from
-the SoC device tree as they should be set on a per-device
-basis.
+Add a BLSP2 UART2 node to enable serial connection.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-index a5f9a6ab512c..baa55643b40f 100644
---- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-@@ -11,6 +11,8 @@ / {
- 	model = "Huawei Nexus 6P";
- 	compatible = "huawei,angler", "qcom,msm8994";
- 	/* required for bootloader to select correct board */
-+	qcom,msm-id = <207 0x20000>;
-+	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
- 	qcom,board-id = <8026 0>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+index df35c975c94c..20e859eb1318 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -243,6 +243,15 @@ blsp1_uart2: serial@f991e000 {
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+ 		};
  
- 	aliases {
++		blsp2_uart2: serial@f995e000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0xf995e000 0x1000>;
++			interrupt = <GIC_SPI 146 IRQ_TYPE_EDGE_FALLING>;
++			clock-names = "core", "iface";
++			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
++					<&gcc GCC_BLSP2_AHB_CLK>;
++		};
++
+ 		spmi_bus: qcom,spmi@fc4c0000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0xfc4cf000 0x1000>,
 -- 
 2.27.0
 
