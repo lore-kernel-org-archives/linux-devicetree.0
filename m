@@ -2,112 +2,64 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC66FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 02:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91D3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 02:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDBD122DA7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 02:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s4CI5rQA"
+	by mail.kernel.org (Postfix) with ESMTP id B6EC622E01
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 02:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592620666;
+	bh=USMJrv5TGJ58rLPTaSDBTx79oPvTVt+Fh0aaM/+J3xo=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=nRJJcNvGleOD9nlhINMfD2PMPXJU/DS0w/1/9/SOC/gVR7w73IzKXBeS85bn3g12M
+	 PA7TPzGV5GK6UBMElLazJPLDZwkD5PEHzRCYatSpugyL390jEOl3M0d085PplHxXws
+	 kFOt5hS5DVnwEcSuG4zDGrWldOFgjffgHibPjMAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbgFTCdc (ORCPT
+        id S1731961AbgFTChq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 22:33:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731914AbgFTCd3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 22:33:29 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA48C0613EE
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 19:33:28 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x202so10226423oix.11
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 19:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2izEUWmO2Z44gqGlokNsKJYCiU6NrD8s4mWVTOtP2bc=;
-        b=s4CI5rQA2oC41KDlMQtutcRiKWu4nTD2gRPf4ZpqQDclSutlsWz1q11wzgg5SpCVrB
-         vpeDt+HymrhzhRDYYUBdo59HdTt0DKIP9S7ovJhlf+iWvlUFTRf8Y71/jf1fFZwEY10e
-         hhAkJVTG412nIzCKVtxkFtzppe88Lq+gKhAMPNOcTZg8cTl/WRpIPw5cnA6PzJdMmkhN
-         6DsLyIGqhAnVoZ/zZZHo4VTNotbyFjC9sM7ABBV/YYqmwi2Qx+4EvdhqbG81HTkHEOvw
-         7ZO1lvU7Yf8FccTZzJCLyFSpwHF0yXqadkpxWIwk7X4UEPNRJ9W8kos63kFnqxjfJqOr
-         pfCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2izEUWmO2Z44gqGlokNsKJYCiU6NrD8s4mWVTOtP2bc=;
-        b=n+IxxaPyzE83SLCA+MiwGs0zlOmUALjFr+L/bZi/rsAXc5vNT3O+2HAE+aYnVWhDgo
-         gTnBNiNMmMmLxfK/nMvRWxQKHKtsXDegi62gG6JQqqGpViEfBDF0OJluVJlYeVa/lBmW
-         7JOjnS5mIOzY6b0+EKVp457M9XeLM/3VN24uUgOApQX/Zi8p3Qw8EzTc/V8dm9bxAUd6
-         H1zYfk5W6N7YmGG1pAa5ALC4A1tyKY4zQ1zhfO5aej8lRWjzSmC8R0s/0nHMvVHC8aII
-         bbo7V2M5FSq3XFsreLEum3infz0aa6nw4fLwLaxG594nop4w4Y83GF4ugk883aic3NY3
-         R7rg==
-X-Gm-Message-State: AOAM531IVw6NnmKP/dodRdaqUrUHnMbXpRtZ3BUt847cK5mO9HSPG5Sb
-        RumpSVeKtIyFge/hi10sZbKzNWmjB7T6WJGFtjM8yg==
-X-Google-Smtp-Source: ABdhPJzwMAGZETqCd57hDnIimD39x1lQ0rN7GHIBUMMaKf6xyMUxmekPnQIwoFszeceaY/MtRbLUsNoHsJe1HYXdiw8=
-X-Received: by 2002:aca:35d4:: with SMTP id c203mr5227824oia.30.1592620407638;
- Fri, 19 Jun 2020 19:33:27 -0700 (PDT)
+        Fri, 19 Jun 2020 22:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731846AbgFTChq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 22:37:46 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A375022DBF;
+        Sat, 20 Jun 2020 02:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592620665;
+        bh=USMJrv5TGJ58rLPTaSDBTx79oPvTVt+Fh0aaM/+J3xo=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=2Pi8MIn0NaW3UiS8w8draZe8ULWUy2RAduxjVV80wrCfJLjCYrStFrkKMBj+PN1cX
+         bPbxc2SohBwO41prN+zhLnsRQCKSDyd80EgZMFzHgBL5kDqhayXkvSqT0sF4ZAR9Zz
+         16V7lfe37y8WnHcsmwA4d4DVcauUHWF8duKvEN18=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
- <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
- <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
- <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
- <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
- <CAMuHMdXW0jM-A5cvYtFVcgc1Gm3tKkvr0+kWpeJqpJDzNOuYeA@mail.gmail.com> <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
-In-Reply-To: <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 19 Jun 2020 19:32:51 -0700
-Message-ID: <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
- top level devices
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200616202417.14376-1-dinguyen@kernel.org>
+References: <20200616202417.14376-1-dinguyen@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: agilex: add NAND_X_CLK and NAND_ECC_CLK
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+To:     Dinh Nguyen <dinguyen@kernel.org>, linux-clk@vger.kernel.org
+Date:   Fri, 19 Jun 2020 19:37:44 -0700
+Message-ID: <159262066493.62212.8382323290185332150@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 1:07 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> I think instead of deferred_probe_work_func() moving the device to the
-> end of the dpm_list, I think the device probing successfully is what
-> should move it to the end of the dpm_list. That way, the dpm_list is
-> actually ordered by when the devices become functional and not the
-> random order in DT or random probe order which can get pretty
-> convoluted with multiple deferred probes. This feels right and will
-> make suspend/resume more robust against DT ordering -- but I'm not
-> sure what other wide ranging impact this has for other platforms.
+Quoting Dinh Nguyen (2020-06-16 13:24:15)
+> Add the NAND_X_CLK and NAND_ECC_CLK clocks.
+>=20
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
 
-Geert,
-
-If you want to play around with a potential fix to test my hypothesis,
-I think it's just adding this one line to driver_bound():
-============
-klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
-device_links_driver_bound(dev);
-+device_pm_move_to_tail(dev);
-
-device_pm_check_callbacks(dev);
-============
-
--Saravana
+Applied to clk-next
