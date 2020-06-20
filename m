@@ -2,188 +2,105 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC154C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 19:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E9EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 19:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9045241A2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 19:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sWaxqeRi"
+	by mail.kernel.org (Postfix) with ESMTP id AF854223AC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 19:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgFTTEi (ORCPT
+        id S1728554AbgFTTKk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 15:04:38 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38023 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgFTTEh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 15:04:37 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 9so15078486ljv.5
-        for <devicetree@vger.kernel.org>; Sat, 20 Jun 2020 12:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gt87KtJU3Py2Xwggx3DihBEvBGQErKAovzogrK/Y7Og=;
-        b=sWaxqeRiMDYEKs3Z+H86iGb4nPp0cOYA25+AhFEFnHeRk+/OQWg6x/DvGURYiQ8Zq4
-         gUjApymfUikESf21dumpMFLmPOMrHFUQaJxks86JZ+xi85eZFzjgM4dNc0T3+yC220CG
-         7j+8iPvgxRo/59SLecApE4+NP7Y3TXm6dhUJTZyVTk8PQ3gfkgS5xFtbVdIARTqtOzLD
-         3Q9twdq1R6+u+UdAXAbLhhN5M+raYYOuumQSgtT3SH8d3DpMzpdWw/kJZOeu4CoJbMzN
-         c6UDL5yXSkpJWmWeRnISqf4OiPwoiz3jtFxXLcjDUHKzrSGIOp7lpnjBwFg/GepINoum
-         GUVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=gt87KtJU3Py2Xwggx3DihBEvBGQErKAovzogrK/Y7Og=;
-        b=I0fxKvm2NJgkA4XrH42aX91oqFvp4RoPJAyeLwqdem1lw+FCp9cTIlDX7vFuc6EAKl
-         FjxdkX1XZ0H60UaRvl50QB+Ced1cN0oedxNy2OaZ7pPxJ3zXbIrrLU6iy/Yz+mNbe8VN
-         8vJ5KCX8PZ5uha/IRdrvTxKAGfFbqVAOS6PuThl77zY2DaPa4QZZbWVWedtByyP4l4Fi
-         3pJsqL+71whbnFY1XRVELQaIsdJknxc7eGBnJANXk4t+J9/K8V9pdxibXFKf7dqzM0jL
-         BwCsHAjBWQK1AeYsEjPnxOSuug1VUeLuWUFVbl+DjBqfy1RoyCSneHizjt1tMQqFycBe
-         kUtA==
-X-Gm-Message-State: AOAM530E14fFVJRR9OcV9//QDzvkxdlJeWhnpJyPUuSq0kcJ2UO0f7BW
-        aPJpCJruwnN2jv5kZkLL6zBPj7/sDXQ=
-X-Google-Smtp-Source: ABdhPJw93ovWZoxrXKvmkItjVDf94YDZeudxy0paHQYMT1hCqW6/dQs8UC01ensQsGNSHhUcHyNg+A==
-X-Received: by 2002:a2e:3603:: with SMTP id d3mr4369653lja.259.1592679812386;
-        Sat, 20 Jun 2020 12:03:32 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:462b:c4af:1cf5:65ea:51a9:9da1])
-        by smtp.gmail.com with ESMTPSA id x64sm151223lff.14.2020.06.20.12.03.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 20 Jun 2020 12:03:31 -0700 (PDT)
-Subject: Re: [PATCH/RFC 3/5] ravb: Add support for explicit internal clock
- delay configuration
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20200619191554.24942-1-geert+renesas@glider.be>
- <20200619191554.24942-4-geert+renesas@glider.be>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <6935aea3-0acd-f1b9-b36c-553b8c3106d1@cogentembedded.com>
-Date:   Sat, 20 Jun 2020 22:03:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Sat, 20 Jun 2020 15:10:40 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:55550 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgFTTKj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 15:10:39 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 0D5A520021;
+        Sat, 20 Jun 2020 21:10:31 +0200 (CEST)
+Date:   Sat, 20 Jun 2020 21:10:30 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     Laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
+        jason@lakedaemon.net, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
+        tomi.valkeinen@ti.com, kernel@collabora.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 0/4] dt-bindings: display: ti,tfp410.txt: convert to
+ yaml
+Message-ID: <20200620191030.GB27870@ravnborg.org>
+References: <20200617094633.19663-1-ricardo.canuelo@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619191554.24942-4-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617094633.19663-1-ricardo.canuelo@collabora.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=8nJEP1OIZ-IA:10 a=e5mUnYsNAAAA:8 a=g4gMLcP0b6Kv2YKJtkEA:9
+        a=wPNLvfGTeEIA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/19/2020 10:15 PM, Geert Uytterhoeven wrote:
+Hi Ricardo.
 
-> Some EtherAVB variants support internal clock delay configuration, which
-> can add larger delays than the delays that are typically supported by
-> the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
-> properties).
+On Wed, Jun 17, 2020 at 11:46:29AM +0200, Ricardo Cañuelo wrote:
+> This series converts the DT binding for the TI TFP410 DPI-to-DVI encoder
+> to json-schema.
 > 
-> Historically, the EtherAVB driver configured these delays based on the
-> "rgmii-*id" PHY mode.  This caused issues with PHY drivers that
-> implement PHY internal delays properly[1].  Hence a backwards-compatible
-> workaround was added by masking the PHY mode[2].
+> It also fixes a minor bug in the ti-tfp410 driver that causes a
+> wrong calculation of the setup and hold times when the de-skew feature
+> is enabled. The retrieval of the de-skew value from the DT has also been
+> updated to reflect the binding changes.
 > 
-> Add proper support for explicit configuration of the MAC internal clock
-> delays using the new "renesas,[rt]xc-delay-ps" properties.
-> Fall back to the old handling if none of these properties is present.
+> Changes in v4:
 > 
-> [1] Commit bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for
->     the KSZ9031 PHY")
-> [2] Commit 9b23203c32ee02cd ("ravb: Mask PHY mode to avoid inserting
->     delays twice").
+>   - ti,tfp410.yaml:
+>     - "ports" node set back as required (Laurent Pinchart). This means
+>       that dove-sbc-a510.dts will not comply with the binding and will
+>       have to be fixed at some point.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-> ---
->  drivers/net/ethernet/renesas/ravb.h      |  1 +
->  drivers/net/ethernet/renesas/ravb_main.c | 35 ++++++++++++++++++------
->  2 files changed, 27 insertions(+), 9 deletions(-)
+> The bindings have been tested with:
 > 
-> diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
-> index e5ca12ce93c730a9..7453b17a37a2c8d0 100644
-> --- a/drivers/net/ethernet/renesas/ravb.h
-> +++ b/drivers/net/ethernet/renesas/ravb.h
-> @@ -1038,6 +1038,7 @@ struct ravb_private {
->  	unsigned wol_enabled:1;
->  	unsigned rxcidm:1;		/* RX Clock Internal Delay Mode */
->  	unsigned txcidm:1;		/* TX Clock Internal Delay Mode */
-> +	unsigned rgmii_override:1;	/* Deprecated rgmii-*id behavior */
->  	int num_tx_desc;		/* TX descriptors per packet */
->  };
->  
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-> index f326234d1940f43e..0582846bec7726b6 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-[...]
-> @@ -1967,20 +1963,41 @@ static const struct soc_device_attribute ravb_delay_mode_quirk_match[] = {
->  };
->  
->  /* Set tx and rx clock internal delay modes */
-> -static void ravb_parse_delay_mode(struct net_device *ndev)
-> +static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
->  {
->  	struct ravb_private *priv = netdev_priv(ndev);
-> +	bool explicit_delay = false;
-> +	u32 delay;
-> +
-> +	if (!of_property_read_u32(np, "renesas,rxc-delay-ps", &delay)) {
-> +		/* Valid values are 0 and 1800, according to DT bindings */
-> +		priv->rxcidm = !!delay;
-> +		explicit_delay = true;
-> +	}
-> +	if (!of_property_read_u32(np, "renesas,txc-delay-ps", &delay)) {
-> +		/* Valid values are 0 and 2000, according to DT bindings */
-> +		priv->txcidm = !!delay;
-> +		explicit_delay = true;
-> +	}
->  
-> +	if (explicit_delay)
-> +		return;
-> +
-> +	/* Fall back to legacy rgmii-*id behavior */
->  	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
-> -	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID)
-> +	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_RXID) {
->  		priv->rxcidm = true;
-> +		priv->rgmii_override = true;
+>   make dt_binding_check ARCH=<arch> DT_SCHEMA_FILES=<...ti,tfp410.yaml>
+>   make dtbs_check ARCH=<arch> DT_SCHEMA_FILES=<...ti,tfp410.yaml>
+> 
+> for <arch> = arm and arm64.
+> This uncovered a number of dts files that use the TFP410 but not through
+> I2C and don't define the ti,deskew property. These should also be fixed.
+> 
+> Ricardo Cañuelo (4):
+>   dt-bindings: display: ti,tfp410.txt: convert to yaml
+>   dt-bindings: display: ti,tfp410.yaml: Redefine ti,deskew property
+>   drm/bridge: tfp410: fix de-skew value retrieval from DT
+>   drm/bridge: tfp410: Fix setup and hold time calculation
 
-   Mhm, these fields are not bool...
+Thanks for following up and this.
+Applied to drm-misc-next.
 
-> +	}
->  
->  	if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII_ID ||
->  	    priv->phy_interface == PHY_INTERFACE_MODE_RGMII_TXID) {
->  		if (!WARN(soc_device_match(ravb_delay_mode_quirk_match),
->  			  "phy-mode %s requires TX clock internal delay mode which is not supported by this hardware revision. Please update device tree",
-> -			  phy_modes(priv->phy_interface)))
-> +			  phy_modes(priv->phy_interface))) {
->  			priv->txcidm = true;
-> +			priv->rgmii_override = true;
+	Sam
 
-    Same here...
-
-[...]
-
-MBR, Sergei
+> 
+>  .../bindings/display/bridge/ti,tfp410.txt     |  66 ---------
+>  .../bindings/display/bridge/ti,tfp410.yaml    | 131 ++++++++++++++++++
+>  drivers/gpu/drm/bridge/ti-tfp410.c            |  10 +-
+>  3 files changed, 136 insertions(+), 71 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.yaml
+> 
+> -- 
+> 2.18.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
