@@ -2,108 +2,94 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95D6C433E2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 19:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 21:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54BC2463F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 19:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983BD246AD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 21:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qbC+poHv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejwQKsS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgFTT2I (ORCPT
+        id S1728983AbgFTVML (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 15:28:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40220 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728565AbgFTT2H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 15:28:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p18so10465444eds.7;
-        Sat, 20 Jun 2020 12:28:04 -0700 (PDT)
+        Sat, 20 Jun 2020 17:12:11 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34290 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbgFTVMK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 17:12:10 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x18so15260331lji.1
+        for <devicetree@vger.kernel.org>; Sat, 20 Jun 2020 14:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=scA6CqquoWk914rmLn3+nLtaspjuXK54NYNT8t78XLk=;
-        b=qbC+poHvs39ZVCGTzMyJeIJUpytQ6pFd5qeGE3oFWIyiMKZEs3zbCIIiubSaxryjqV
-         fHZRmmlzPFxZAmT4fjc315VsprFu9yXwFVTZN0vi4+ogvLhR+DUhLmUmDWlARfH4lqP0
-         r6IiIGw2ywL+HM32SWPgf681lb9qGq8eGvDXWEeP7vGDUbWHKB4A3orCW0P0W8Y6nkSZ
-         OgbgK/AvNr8N2kaXrsvn/ZibEN+NvJI3DnlZF4FJWQZOu5Cuhzmm1vvW9LZurAgweB8C
-         cz7vBuOmkMsfWs5srbSEo67PGDoGURRN6jPG9y+GnpFnomPdS9ocuZVCOabSLdFbm0uZ
-         2lHw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XJEVsWfbn8aRBSjCUjQoaB/zi3FIbrrLmSUqtBf4ufc=;
+        b=ejwQKsS9R74OVx4oleO34kJ/97nhPXE5oUxGSV3txe70SwiGWv62+473pSxKiEXCDL
+         U5tedGRDKcJ42HmweVyL/YeRulQyKi1SjAM3wF5aYfzAVtLFlSXfhdyjkmS73imjEvlu
+         mUf0ycwAmGlre8Y5z0bue63mfiIvmQf9NqndNnegmKmECrygz6SfWdTy7X3xxiGd+gRR
+         +yQfN3RYHAGEDVUXCzjyj1IrM2oscTM+NA2sd3pyB8aGw9ES6CX3evJhV43ja5C7okJ1
+         pGlD4rxPQ9+Lg427gcKNTxNbkPUt1/zLlPM8E2ZhiDJtCxpWA0tEg/WZnrnmtzOhiXsc
+         0PrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=scA6CqquoWk914rmLn3+nLtaspjuXK54NYNT8t78XLk=;
-        b=RcqOrpg4NMSnAd+yvC74ESuwPsJ3FSUIm2PhPhyzN8LsLkiXV8+dva8lp8RnaHUdeh
-         pyKhnZNku0XpaTwaQpEBpmhYBC+VjubfEp9szS5e3zEpsTVZ8vhJTFFDnDszJB8UShUW
-         gAUiNmD4d9zmOcFEXQGGI4j/G6rkd8a1CL8Eteft9aKmryiqk9uGhDqKyW/uwFS7/nDE
-         sxUkqVkcFmmH0iYyrlNiGb3jBR2b+V6F0XSQuVw9o763hzvMDj+6s2DCYvh1U+UL3Cyf
-         P8SzlydAxDvwZJsd4OxlbTrGbI+8S+kV1KLEZ3qFdNtJMxnDIIIKqZV4woQnX5zYAqIN
-         f15Q==
-X-Gm-Message-State: AOAM531lmSTf+mfqCCWK8X+qyBWgFePNK1WMg5L7FbI7nsOEmGDCsw9s
-        XVKxsMqf4VV3I4DPovXW6i8=
-X-Google-Smtp-Source: ABdhPJy+PKswvEJEFTPfiOtJ7Poy9kSHj4bTMlki+nCfU+FckH9OWUmHYVZxY191m6NdiJ0yfebZbA==
-X-Received: by 2002:a50:d78f:: with SMTP id w15mr9700997edi.245.1592681224048;
-        Sat, 20 Jun 2020 12:27:04 -0700 (PDT)
-Received: from localhost.localdomain (p200300f1371df700428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:371d:f700:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id gv18sm8034044ejb.113.2020.06.20.12.27.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 12:27:03 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] net: stmmac: dwmac-meson8b: add a compatible string for G12A SoCs
-Date:   Sat, 20 Jun 2020 21:26:41 +0200
-Message-Id: <20200620192641.175754-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200620192641.175754-1-martin.blumenstingl@googlemail.com>
-References: <20200620192641.175754-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XJEVsWfbn8aRBSjCUjQoaB/zi3FIbrrLmSUqtBf4ufc=;
+        b=LTFrxB5A28mYuYXOJWsm+xe3grh0mTy7Y+4ADClz5KmJEihuhan4fhhupvL5Eq1F2A
+         Hq6EZZP0y8+QsmLJn435Jm4Cn7XZJOK62jCTyQwa6gLazEaEWiKAsw+HKVy12JwCfyp/
+         GAt0KlD9QK/oIa2sg3emRUJ5afdRARCgD9sElfueYKqgx2AgRYWtJiZifNGdDfKYFpgb
+         /BacClW8TCEAsY81L4gMWrd8++rm9N56iQEhooHwcECxw0MptwX3mjERMR0wxfrnydoi
+         jivOgNjWHuc2cVFbHeQa/FrfdF4o5c+Eplvy2tEFDnMtbeq5vM0uaet9f2HfoJGioNDA
+         x6HQ==
+X-Gm-Message-State: AOAM531CaC0OlWHQtfwVvxOkxplD2/d/MqABKEQ0JIwOUMKENbGTBQNW
+        jIrqFF6MUl6JuqDC8RWqpG1yg3YZCDRmPcYY/0TloQ==
+X-Google-Smtp-Source: ABdhPJyNzj8lntNB+gPdQZorIuGyuglVZ2GRN4JTEikAZoHXf3zt4iKWY8HyVoOjoJhJdUnny/FjxeRZZMdO0eg8d0w=
+X-Received: by 2002:a2e:351a:: with SMTP id z26mr4790421ljz.144.1592687468252;
+ Sat, 20 Jun 2020 14:11:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com>
+In-Reply-To: <20200615133242.24911-6-lars.povlsen@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 20 Jun 2020 23:10:57 +0200
+Message-ID: <CACRpkdaWZeMCNuwUNzyYd+g9Q75F_8o7K1Npxr46V+-Y4z-6wA@mail.gmail.com>
+Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Amlogic Meson G12A, G12B and SM1 have the same (at least as far as we
-know at the time of writing) PRG_ETHERNET glue register implementation.
-This implementation however is slightly different from AXG as it now has
-an undocument "auto cali idx val" register in PRG_ETH1[17:16] which
-seems to be related to RGMII Ethernet.
+On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-Add a new compatible string for G12A SoCs so the logic for this new
-register can be implemented in the future.
+> This add support for Sparx5 pinctrl, using the ocelot drives as
+> basis. It adds pinconfig support as well, as supported by the
+> platform.
+>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Is it fine if I just apply this driver to the pinctrl tree?
+Otherwise Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 234e8b6816ce..544bc621146c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -491,6 +491,10 @@ static const struct of_device_id meson8b_dwmac_match[] = {
- 		.compatible = "amlogic,meson-axg-dwmac",
- 		.data = &meson_axg_dwmac_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson-g12a-dwmac",
-+		.data = &meson_axg_dwmac_data,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, meson8b_dwmac_match);
--- 
-2.27.0
-
+Yours,
+Linus Walleij
