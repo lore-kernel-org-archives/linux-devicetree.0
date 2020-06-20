@@ -2,172 +2,111 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB01C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 00:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4E5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 01:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEE922AB0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 00:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD12722B4D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 01:06:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YFVDo3T7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgFTAm4 (ORCPT
+        id S1731080AbgFTBGj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:42:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730293AbgFTAmz (ORCPT
+        Fri, 19 Jun 2020 21:06:39 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48771 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731089AbgFTBGi (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:42:55 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05K0WSwk183261;
-        Fri, 19 Jun 2020 20:42:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31s0pbagqm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 20:42:09 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05K0WcPq186459;
-        Fri, 19 Jun 2020 20:42:08 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31s0pbagqa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 20:42:08 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05K0VFD0005552;
-        Sat, 20 Jun 2020 00:42:07 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 31q6c6faep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 20 Jun 2020 00:42:07 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05K0g61K49938852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 20 Jun 2020 00:42:06 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A88E7112062;
-        Sat, 20 Jun 2020 00:42:06 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3890A112061;
-        Sat, 20 Jun 2020 00:41:54 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.163.93.234])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Sat, 20 Jun 2020 00:41:53 +0000 (GMT)
-References: <20200618071045.471131-1-prsriva@linux.microsoft.com> <20200618071045.471131-3-prsriva@linux.microsoft.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [V2 PATCH 2/3] dt-bindings: chosen: Document ima-kexec-buffer
-In-reply-to: <20200618071045.471131-3-prsriva@linux.microsoft.com>
-Date:   Fri, 19 Jun 2020 21:41:49 -0300
-Message-ID: <87mu4yr2k2.fsf@morokweng.localdomain>
+        Fri, 19 Jun 2020 21:06:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592615197; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=i+lpbCGwWh2tXc7P76pKSktyAwDvOkm0JAA1VAMKIWs=; b=YFVDo3T74TiPPpNtsOFhLw72/H1CEhJg3514A4TuS8MAKcMSNjHv8yrS8xFfXOnuVLqTkTuO
+ PzY4JMc7XLvCAxp0NbLyKYjBlBolHbw4A+m/FwQCLiK859og59MQfD5vrCn3//dV9MZTAQDC
+ 81vp84j0zhhe1eEmBvjGv7UzrRM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
+ 5eed6108bfb34e631c865cf3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 20 Jun 2020 01:06:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4D393C43387; Sat, 20 Jun 2020 01:06:15 +0000 (UTC)
+Received: from [192.168.0.101] (unknown [49.207.137.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6371EC433C8;
+        Sat, 20 Jun 2020 01:06:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6371EC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V7 1/4] dt-bindings: clock: add ipq6018 a53 pll compatible
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+References: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org>
+ <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
+ <159261339539.62212.17722723971033735363@swboyd.mtv.corp.google.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <efef8d40-1c89-76b5-261e-8801e4dbdf51@codeaurora.org>
+Date:   Sat, 20 Jun 2020 06:36:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_22:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- suspectscore=0 priorityscore=1501 cotscore=-2147483648 lowpriorityscore=0
- clxscore=1015 spamscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006200000
+In-Reply-To: <159261339539.62212.17722723971033735363@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-Prakhar Srivastava <prsriva@linux.microsoft.com> writes:
-
-> Integrity measurement architecture(IMA) validates if files
-> have been accidentally or maliciously altered, both remotely and
-> locally, appraise a file's measurement against a "good" value stored
-> as an extended attribute, and enforce local file integrity.
+On 6/20/2020 6:06 AM, Stephen Boyd wrote:
+> Quoting Sivaprakash Murugesan (2020-06-06 03:55:04)
+>> cpus on ipq6018 are clocked by a53 pll, add device compatible for a53
+>> pll found on ipq6018 devices.
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>> [V7]
+>>   * Addressed minor review comment from Rob
+>>   .../devicetree/bindings/clock/qcom,a53pll.yaml         | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+>> index 20d2638..3161fab 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+>> @@ -15,6 +15,7 @@ description:
+>>   
+>>   properties:
+>>     compatible:
+>> +    const: qcom,ipq6018-a53pll
+>>       const: qcom,msm8916-a53pll
+>>   
+>>     reg:
+> I'm getting this error when running dt binding check:
 >
-> IMA also measures singatures of kernel and initrd during kexec along with
-> the command line used for kexec.
-> These measurements are critical to verify the seccurity posture of the OS.
->
-> Resering memory and adding the memory information to a device tree node
-> acts as the mechanism to carry over IMA measurement logs.
->
-> Update devicetree documentation to reflect the addition of new property
-> under the chosen node.
+> ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+>    in "<unicode string>", line 18, column 5
+> found duplicate key "const" with value "qcom,msm8916-a53pll" (original value: "qcom,ipq6018-a53pll")
+>    in "<unicode string>", line 19, column 5
 
-Thank you for writing this documentation patch. It's something I should
-have done when I added the powerpc IMA kexec support.
+This error started coming after updating the dt-schema version.
 
-You addressed Rob Herring's comments regarding the commit message, but
-not the ones regarding the patch contents.
+Guess I need to replace const with enum to get rid of this error.
 
-When posting a new version of the patches, make sure to address all
-comments made so far. Addressing a comment doesn't necessarily mean
-implementing the requested change. If you don't then you should at least
-explain why you chose a different path.
+will address this.
 
-I mention it because this has occurred before with this patch series,
-and it's hard to make forward progress if review comments get ignored.
-
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 45e79172a646..a15f70c007ef 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -135,3 +135,20 @@ e.g.
->  		linux,initrd-end = <0x82800000>;
->  	};
->  };
-> +
-> +linux,ima-kexec-buffer
-> +----------------------
-> +
-> +This property(currently used by powerpc, arm64) holds the memory range,
-
-space before the parenthesis.
-
-> +the address and the size, of the IMA measurement logs that are being carried
-
-Maybe it's because English isn't my first language, but IMHO it's
-clearer if "the address and the size" is between parentheses rather than
-commas.
-
-> +over to the kexec session.
-
-I don't think there's a "kexec session", but I'm not sure what a good
-term would be. "linux,booted-from-kexec" uses "new kernel" so perhaps
-that's a good option to use instead of "kexec session".
-
-> +
-> +/ {
-> +	chosen {
-> +		linux,ima-kexec-buffer = <0x9 0x82000000 0x0 0x00008000>;
-> +	};
-> +};
-> +
-> +This porperty does not represent real hardware, but the memory allocated for
-> +carrying the IMA measurement logs. The address and the suze are expressed in
-> +#address-cells and #size-cells, respectively of the root node.
-
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
