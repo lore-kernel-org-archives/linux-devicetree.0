@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DATE_IN_PAST_24_48,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CFBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F67C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA32420732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1403920720
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgFVO0k (ORCPT
+        id S1729544AbgFVO0v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:26:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46902 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:26:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48530 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgFVO0d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:33 -0400
+        id S1729523AbgFVO0u (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:50 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 68BD4C1E2;
-        Mon, 22 Jun 2020 14:26:30 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 937DEC1AB;
+        Mon, 22 Jun 2020 14:26:46 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        James Tai <james.tai@realtek.com>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to descriptions
-Date:   Sun, 21 Jun 2020 01:32:25 +0200
-Message-Id: <20200620233227.31585-2-afaerber@suse.de>
+Subject: [PATCH v4 3/3] arm64: dts: realtek: Add RTD1319 SoC and Realtek Pym Particles EVB
+Date:   Sun, 21 Jun 2020 01:32:27 +0200
+Message-Id: <20200620233227.31585-4-afaerber@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200620233227.31585-1-afaerber@suse.de>
 References: <20200620233227.31585-1-afaerber@suse.de>
@@ -43,75 +44,343 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Turn the SoC-level comments into description properties.
+From: James Tai <james.tai@realtek.com>
 
+Add Device Trees for Realtek RTD1319 SoC family, RTD1319 SoC and
+Realtek Pym Particles EVB.
+
+Signed-off-by: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v4: New
+ v3 -> v4:
+ * Updated Realtek copyright for 2 out of 3 files from v3
+ * Renamed from rtd1319-pymparticle.dts to rtd1319-pymparticles.dts
+ * Updated compatible from pymparticle to pym-particles
+ * Updated PMU compatible from armv8-pmuv3 to cortex-a55-pmu (Robin)
  
- .../devicetree/bindings/arm/realtek.yaml      | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ v2 -> v3:
+ * Add virtual maintenance interrupt for architecture timer
+ * Correct the GIC redistributor address range
+ 
+ v1 -> v2:
+ * Reserve the boot ROM address
+ * Reserve boot loader address
+ * Reserve audio/video FW address
+ * Reserve RPC and ring buffer address
+ * Reserve TEE address
+ * Support 1 GiB RAM by default
+ * Reduce rbus range to 2 MiB
+ * Apply the syscon for ISO,MISC,CRT,SB2,SCPU_WRAPPER
+ * Adjust compatible strings order in document
+ 
+ arch/arm64/boot/dts/realtek/Makefile          |   2 +
+ .../boot/dts/realtek/rtd1319-pymparticles.dts |  43 ++++
+ arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
+ arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 213 ++++++++++++++++++
+ 4 files changed, 270 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 845f9c76d6f7..0b388016bbcd 100644
---- a/Documentation/devicetree/bindings/arm/realtek.yaml
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -14,21 +14,21 @@ properties:
-     const: '/'
-   compatible:
-     oneOf:
--      # RTD1195 SoC based boards
--      - items:
-+      - description: RTD1195 SoC based boards
-+        items:
-           - enum:
-               - mele,x1000 # MeLE X1000
-               - realtek,horseradish # Realtek Horseradish EVB
-           - const: realtek,rtd1195
+diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+index ef8d8fcbaa05..83708596726d 100644
+--- a/arch/arm64/boot/dts/realtek/Makefile
++++ b/arch/arm64/boot/dts/realtek/Makefile
+@@ -9,6 +9,8 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
  
--      # RTD1293 SoC based boards
--      - items:
-+      - description: RTD1293 SoC based boards
-+        items:
-           - enum:
-               - synology,ds418j # Synology DiskStation DS418j
-           - const: realtek,rtd1293
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
  
--      # RTD1295 SoC based boards
--      - items:
-+      - description: RTD1295 SoC based boards
-+        items:
-           - enum:
-               - mele,v9 # MeLE V9
-               - probox2,ava # ProBox2 AVA
-@@ -36,21 +36,21 @@ properties:
-               - zidoo,x9s # Zidoo X9S
-           - const: realtek,rtd1295
++dtb-$(CONFIG_ARCH_REALTEK) += rtd1319-pymparticles.dtb
++
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-bpi-m4.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-lionskin.dtb
  
--      # RTD1296 SoC based boards
--      - items:
-+      - description: RTD1296 SoC based boards
-+        items:
-           - enum:
-               - synology,ds418 # Synology DiskStation DS418
-           - const: realtek,rtd1296
- 
--      # RTD1395 SoC based boards
--      - items:
-+      - description: RTD1395 SoC based boards
-+        items:
-           - enum:
-               - bananapi,bpi-m4 # Banana Pi BPI-M4
-               - realtek,lion-skin # Realtek Lion Skin EVB
-           - const: realtek,rtd1395
- 
--      # RTD1619 SoC based boards
--      - items:
-+      - description: RTD1619 SoC based boards
-+        items:
-           - enum:
-               - realtek,mjolnir # Realtek Mjolnir EVB
-           - const: realtek,rtd1619
+diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts b/arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
+new file mode 100644
+index 000000000000..e0b3c3707a85
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticles.dts
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Copyright (c) 2019-2020 Realtek Semiconductor Corp.
++ */
++
++/dts-v1/;
++
++#include "rtd1319.dtsi"
++
++/ {
++	compatible = "realtek,pym-particles", "realtek,rtd1319";
++	model = "Realtek Pym Particles EVB";
++
++	memory@2e000 {
++		device_type = "memory";
++		reg = <0x2e000 0x3ffd2000>; /* boot ROM to 1 GiB or 2 GiB */
++	};
++
++	chosen {
++		stdout-path = "serial0:460800n8";
++	};
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++	};
++};
++
++/* debug console (J1) */
++&uart0 {
++	status = "okay";
++};
++
++/* M.2 slots (CON2, CON8) and J14 */
++&uart1 {
++	status = "disabled";
++};
++
++/* GPIO connector (T1) */
++&uart2 {
++	status = "disabled";
++};
+diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
+new file mode 100644
+index 000000000000..1dcee00009cd
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Realtek RTD1319 SoC
++ *
++ * Copyright (c) 2019 Realtek Semiconductor Corp.
++ */
++
++#include "rtd13xx.dtsi"
++
++/ {
++	compatible = "realtek,rtd1319";
++};
+diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+new file mode 100644
+index 000000000000..8c5b6fc7b8eb
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+@@ -0,0 +1,213 @@
++// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
++/*
++ * Realtek RTD13xx SoC family
++ *
++ * Copyright (c) 2019-2020 Realtek Semiconductor Corp.
++ */
++
++/memreserve/	0x0000000000000000 0x000000000002e000; /* Boot ROM */
++/memreserve/	0x000000000002e000 0x0000000000100000; /* Boot loader */
++/memreserve/	0x000000000f400000 0x0000000000500000; /* Video FW */
++/memreserve/	0x000000000f900000 0x0000000000500000; /* Audio FW */
++/memreserve/	0x0000000010000000 0x0000000000014000; /* Audio FW RAM */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++	interrupt-parent = <&gic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		rpc_comm: rpc@3f000 {
++			reg = <0x3f000 0x1000>;
++		};
++
++		rpc_ringbuf: rpc@1ffe000 {
++			reg = <0x1ffe000 0x4000>;
++		};
++
++		tee: tee@10100000 {
++			reg = <0x10100000 0xf00000>;
++			no-map;
++		};
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu1: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x100>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu2: cpu@200 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x200>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu3: cpu@300 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x300>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		l2: l2-cache {
++			compatible = "cache";
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	arm_pmu: pmu {
++		compatible = "arm,cortex-a55-pmu";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	osc27M: osc {
++		compatible = "fixed-clock";
++		clock-frequency = <27000000>;
++		clock-output-names = "osc27M";
++		#clock-cells = <0>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x00000000 0x00000000 0x0002e000>, /* boot ROM */
++			 <0xff100000 0xff100000 0x00200000>, /* GIC */
++			 <0x98000000 0x98000000 0x00200000>; /* rbus */
++
++		rbus: bus@98000000 {
++			compatible = "simple-bus";
++			reg = <0x98000000 0x200000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x98000000 0x200000>;
++
++			crt: syscon@0 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x0 0x1000>;
++				reg-io-width = <4>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x0 0x1000>;
++			};
++
++			iso: syscon@7000 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x7000 0x1000>;
++				reg-io-width = <4>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x7000 0x1000>;
++			};
++
++			sb2: syscon@1a000 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x1a000 0x1000>;
++				reg-io-width = <4>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x1a000 0x1000>;
++			};
++
++			misc: syscon@1b000 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x1b000 0x1000>;
++				reg-io-width = <4>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x1b000 0x1000>;
++			};
++
++			scpu_wrapper: syscon@1d000 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x1d000 0x1000>;
++				reg-io-width = <4>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x0 0x1d000 0x1000>;
++			};
++		};
++
++		gic: interrupt-controller@ff100000 {
++			compatible = "arm,gic-v3";
++			reg = <0xff100000 0x10000>,
++			      <0xff140000 0x80000>;
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++	};
++};
++
++&iso {
++	uart0: serial0@800 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x800 0x400>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
++		clock-frequency = <432000000>;
++		status = "disabled";
++	};
++};
++
++&misc {
++	uart1: serial1@200 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x200 0x400>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++		clock-frequency = <432000000>;
++		status = "disabled";
++	};
++
++	uart2: serial2@400 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x400 0x400>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++		clock-frequency = <432000000>;
++		status = "disabled";
++	};
++};
 -- 
 2.26.2
 
