@@ -2,90 +2,106 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B28BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AE2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C55D23BDD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9355723BEF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:44:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rmwX1xLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgFTOnh (ORCPT
+        id S1728248AbgFTOoy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:43:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50052 "EHLO vps0.lunn.ch"
+        Sat, 20 Jun 2020 10:44:54 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:49311 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbgFTOnh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 20 Jun 2020 10:43:37 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jmeiH-001PCT-CW; Sat, 20 Jun 2020 16:43:21 +0200
-Date:   Sat, 20 Jun 2020 16:43:21 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <linux@rempel-privat.de>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH/RFC 1/5] dt-bindings: net: renesas,ravb: Document
- internal clock delay properties
-Message-ID: <20200620144321.GH304147@lunn.ch>
-References: <20200619191554.24942-1-geert+renesas@glider.be>
- <20200619191554.24942-2-geert+renesas@glider.be>
- <e6d0bfc5-9d75-2dc9-2bfa-671c32cb0b7c@rempel-privat.de>
+        id S1728246AbgFTOov (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 20 Jun 2020 10:44:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592664290; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=Z5Q7QuSRV0AlAio71S0FB6kALc6xp3I4DkvvHs47BtU=; b=rmwX1xLIe3ECo4b5bvCfbl6Qju6jzcoVBIBGNwBheWyGfPtzzK/2YNqSFuOUce0QtH6m6hIu
+ vX/YOLW21XRfN8rfKD56y+CeTAYNaJql6k40BqRo82fRL38pB3SL3CCJ0cPhGtNHguC/Pe2L
+ NrFc+QrDsfYgPy0dna4iZI7DxWE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5eee20e1356bcc26ab67d05a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 20 Jun 2020 14:44:49
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D697DC43387; Sat, 20 Jun 2020 14:44:48 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E189C433C9;
+        Sat, 20 Jun 2020 14:44:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E189C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Evan Green'" <evgreen@chromium.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
+        <devicetree@vger.kernel.org>,
+        "'linux-arm Mailing List'" <linux-arm-kernel@lists.infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>
+References: <1589946996-31264-1-git-send-email-pillair@codeaurora.org> <CAE=gft5pcHwK8yjObNSSH=U_B6Pz++bDaeUxZhPyJfG2E7LRAg@mail.gmail.com> <CAE=gft5So9Uk2UqRWs2zFO_iD+6ofMy97bKP4HpgM1Wu6Duxvw@mail.gmail.com>
+In-Reply-To: <CAE=gft5So9Uk2UqRWs2zFO_iD+6ofMy97bKP4HpgM1Wu6Duxvw@mail.gmail.com>
+Subject: RE: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sat, 20 Jun 2020 20:14:43 +0530
+Message-ID: <000101d64711$587929c0$096b7d40$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6d0bfc5-9d75-2dc9-2bfa-671c32cb0b7c@rempel-privat.de>
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG/PI1FMT9lT4wFnqoECWl87ZLpcgLOq7cUAp/L6tWo5DW1wA==
+Content-Language: en-us
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 07:47:16AM +0200, Oleksij Rempel wrote:
-> Hi Geert,
-> 
-> Am 19.06.20 um 21:15 schrieb Geert Uytterhoeven:
-> > Some EtherAVB variants support internal clock delay configuration, which
-> > can add larger delays than the delays that are typically supported by
-> > the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
-> > properties).
-> >
-> > Add properties for configuring the internal MAC delays.
-> > These properties are mandatory, even when specified as zero, to
-> > distinguish between old and new DTBs.
-> >
-> > Update the example accordingly.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  .../devicetree/bindings/net/renesas,ravb.txt  | 29 ++++++++++---------
-> >  1 file changed, 16 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > index 032b76f14f4fdb38..488ada78b6169b8e 100644
-> > --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > @@ -64,6 +64,18 @@ Optional properties:
-> >  			 AVB_LINK signal.
-> >  - renesas,ether-link-active-low: boolean, specify when the AVB_LINK signal is
-> >  				 active-low instead of normal active-high.
-> > +- renesas,rxc-delay-ps: Internal RX clock delay.
-> 
-> may be it make sense to add a generic delay property for MACs and PHYs?
+Hi Evan,
+All the dependent patches are already merged.
 
-See Dan Murphys "RGMII Internal delay common property" patchset. That
-patchset is addressing the PHY side. Maybe we can build on that to
-address the MAC side?
+Thanks,
+Rakesh Pillai.
 
-	Andrew
+> -----Original Message-----
+> From: Evan Green <evgreen@chromium.org>
+> Sent: Thursday, June 18, 2020 4:15 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>
+> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> <devicetree@vger.kernel.org>; linux-arm Mailing List <linux-arm-
+> kernel@lists.infradead.org>; LKML <linux-kernel@vger.kernel.org>; linux-
+> arm-msm <linux-arm-msm@vger.kernel.org>
+> Subject: Re: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+> 
+> On Thu, May 21, 2020 at 9:19 AM Evan Green <evgreen@chromium.org>
+> wrote:
+> >
+> > On Tue, May 19, 2020 at 8:57 PM Rakesh Pillai <pillair@codeaurora.org>
+> wrote:
+> > >
+> > > Add device node for the ath10k SNOC platform driver probe
+> > > and add resources required for WCN3990 on sc7180 soc.
+> > >
+> > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> >
+> > Reviewed-by: Evan Green <evgreen@chromium.org>
+> 
+> Looks like this never landed anywhere. Is it blocked on something?
+> -Evan
+
