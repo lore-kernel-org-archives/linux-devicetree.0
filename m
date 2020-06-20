@@ -2,62 +2,63 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D85FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FA0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B2B23BE2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EE423BDF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oTMFaBIT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6+Msgyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgFTOrz (ORCPT
+        id S1728278AbgFTOsE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
+        Sat, 20 Jun 2020 10:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgFTOry (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:47:54 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6472C06174E;
-        Sat, 20 Jun 2020 07:47:53 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l26so10910902wme.3;
-        Sat, 20 Jun 2020 07:47:53 -0700 (PDT)
+        with ESMTP id S1728271AbgFTOr7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:47:59 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69347C06174E;
+        Sat, 20 Jun 2020 07:47:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z13so591617wrw.5;
+        Sat, 20 Jun 2020 07:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N8jOrTg8zSJgPYru4awajjukDIxGwnSXepcjCCU9jaM=;
-        b=oTMFaBITUl8uK7XiinTEfCZiUEmv59lJt6w/qFpLtESVedXgoMFZ20cUtZ/tpnXrEx
-         mtF/VoHdorOsNfzCoU71HRijBVZiOlzIROT0rEB2RnIi6I4MTzxIThU/GDL9KMELFg3n
-         wtQ0/ziQ4/UmdaRrrN5JOcTvWGlUcTh+zIVQvwMFaxZ5Kx/r/AvXDob7QimXG0DMTm0C
-         PeUxzax0CMd8+Hwspe2d2WKZmL3JXtwsNesJneZLgMXav3zbO9j71BZ3Rbxsg1m9rbHP
-         zLl9V4dc+XQvJasuuNsoFsJeLxzFE9UXoZtondymPdrP9hqHxDESQnL0qsJtgCu1xr4Y
-         Ukyw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6EAQ6tORJeX422uHNof4Jb9RszLP3lU6aCec7l6C9d8=;
+        b=m6+MsgykPt4hV9DOJMKJmXUysPxC+K/pfsVB5Qwv3Ra2KiJSXqaOzgPeaFOzM/MmH2
+         z2Ud63r6QT/RFwLxcoZalePnvnkIYOUxMiJR18JxGyzbtCtPYJWyBR8pB880ePOhsOcl
+         D2vMqLsDPiGLgAja+u03FhDhHC9RsdeGDgD+yJadiaJkW14NUQ/eG57bPD/trFNc9ryz
+         bk/TD4gvKjhoOjp34BaiMWKf1kaEcDyVIMw+m6U2SVnw/pQTolOZoSxaLeyeqiL/JOpP
+         UTAPifTGoyqmmBc7Z52lhLEvw7x83rUIW9g+C2BifDv6mW+PoSdCzBrLWTUDGEoVY8VA
+         Iw1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N8jOrTg8zSJgPYru4awajjukDIxGwnSXepcjCCU9jaM=;
-        b=pXJqhx4Svbu0FGBYLnHiSxeJs3cvwmKYusfM5iYvu22RMzWasqXcWmOyvEw9roXPG+
-         Z8fTyiEe3oYUBOxSuhC0K/wad1JonDKmY+V4+sN/jUrwctuNCZs7S2UlWu2KZ0P6/kID
-         feJP03qmQhfzCthOzkAMp8p7/lwFEH7m53zvD5PS2sjJvacJ7HJSyLBQCuoyB0aYHQ+q
-         XhxblkTDCrESvXlexRDyX5H3ZLTka7R2dIFYZJctElLRFyNegxNX29DG0gifujEaygf9
-         ZEn9RXzl1t0zAy2/sxF7keNoWNuZBozGMk0AJ8/qnpPzYNTP10h7wNmaJX3uGt0r5a7m
-         ndEw==
-X-Gm-Message-State: AOAM530jzEi8t4tcDIGfPiGoyfDrfuIEqNdqsolQOCRaVTS+wxWAMVzJ
-        IWeM05SCUEhnpo9seOLdvGU89q3FMxo=
-X-Google-Smtp-Source: ABdhPJyQttuLJ44l2HnKLjW9EtfdwFUtakh67NqEPJf7fqTUga2JSt9SCwbKgbLpm1F71HuXztMNtw==
-X-Received: by 2002:a05:600c:2116:: with SMTP id u22mr8747799wml.97.1592664471198;
-        Sat, 20 Jun 2020 07:47:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6EAQ6tORJeX422uHNof4Jb9RszLP3lU6aCec7l6C9d8=;
+        b=T2RQtJ+Fs7bEKtmqM2Tqev2E/oTmJ3v2TFjSJeyHozkHTu07Owkd0dPLpwSNzpdmfT
+         mJujsF8ox++7N98nPaI0p4wKyARONLf5of8kyssLsxQQW+j7Xbv4Y0TVmJCblZfZv39L
+         kalIxNT4qe+4O8aDxVMOL0XmA/vd82yFG+aK5TaE4JtUFedX2f6nX6JcXsGG2WEvCZ/o
+         UMPNGoSEt/j9L3AMSjP6j6dx5rY+gB9V5Sgr/xPokSBfDGiBzY42FfK6nPUqk2CwW5Te
+         sS703TQMqX2Kmx1U16CgLTbbdvfXpE5kXQPU2wZTLe7uYzu+641+pJuqeN9+zJQt+Y65
+         ZOmQ==
+X-Gm-Message-State: AOAM5306EHz2jGBmbFXKw5ilzOcf4JiE3qf+0ckpNR5SJhdMltk+jUNq
+        qrQ0TP4hLaBmYViY3p2lftU=
+X-Google-Smtp-Source: ABdhPJy6WTMlZWx+MUOouAVeHLYOjq8hnjxakBL7WQCDPu5ftYWTBXeskNu6oy7GYlGXNWnN8L/Hjg==
+X-Received: by 2002:adf:e648:: with SMTP id b8mr9750158wrn.386.1592664478170;
+        Sat, 20 Jun 2020 07:47:58 -0700 (PDT)
 Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
-        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.47.49
+        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.47.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 07:47:50 -0700 (PDT)
+        Sat, 20 Jun 2020 07:47:57 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -74,10 +75,12 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/21] MSM8994 peripheral enablement, DTS updates
-Date:   Sat, 20 Jun 2020 16:46:16 +0200
-Message-Id: <20200620144639.335093-1-konradybcio@gmail.com>
+Subject: [PATCH 02/21] arm64: dts: qcom: msm8994: Add SPMI PMIC arbiter device
+Date:   Sat, 20 Jun 2020 16:46:18 +0200
+Message-Id: <20200620144639.335093-3-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
+References: <20200620144639.335093-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -85,67 +88,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
+Add SPMI PMIC arbiter device to communicate with PMICs
+attached to SPMI bus.
 
-In this series I added support for various buses and peripherals
-such as I2C or SMD RPM. I also did some housekeeping when it comes
-to the DTS. This series also includes a new board (SoMC Kitakami
-Sumire / Xperia Z5).
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-I have a MMCC driver coming along with GCC updates/completion
-(almost ready, need to polish a few things) and I sincerely 
-hope somebody is going to write a 20nm DSI PLL driver (for 8992/4)
-as I have no clue how that works.
-
-Also, some Lumia (yes, Lumia!) device trees are coming soon(tm).
-
-The patchet depends on:
-- https://patchwork.kernel.org/patch/11584267/ (even though bullhead used
-that for a few years and the property never existed but nobody noticed)
-
-- https://patchwork.kernel.org/patch/11580845/ (no point duplicating it for 8994)
-
-
-Konrad Dybcio (21):
-  clk: qcom: smd: Add support for MSM8992/4 rpm clocks
-  arm64: dts: qcom: msm8994: Add SPMI PMIC arbiter device
-  arm64: dts: qcom: msm8994: Add a proper CPU map
-  arm64: dts: qcom: msm8994: Wrap clock nodes into clocks {}
-  arm64: dts: qcom: msm8994: Rename the smem node and remove its unit
-    address
-  arm64: dts: qcom: msm8994: Rename clock_gcc label to gcc
-  arm64: dts: qcom: msm8994: Add apcs node
-  arm64: dts: qcom: msm8994: Add pmu node
-  arm64: dts: qcom: msm8994: Add PSCI node
-  arm64: dts: qcom: msm8994: Add support for SMD RPM
-  arm64: dts: qcom: msm8994: Add SDHCI1 node
-  arm64: dts: qcom: msm8994: Remove qcom,msm-id and qcom-pmic-id
-    properties
-  arm64: dts: qcom: msm8994: Make comments C style
-  arm64: dts: qcom: msm8994: Add SCM node
-  arm64: dts: qcom: msm8994: Add BLSP2 UART2 node
-  arm64: dts: qcom: msm8994: Add I2C, SPI and BLSP DMA nodes
-  arm64: dts: qcom: Update msm8994 pin configuration
-  regulator: qcom_smd: Fix pmi8994 label
-  arm64: dts: qcom: angler: Add qcom,msm-id and pmic-id
-  arm64: dts: qcom: Add support for Sony Xperia Z5 (SoMC Sumire-RoW)
-  arm64: dts: qcom: Move msm8994-smd-rpm contents to lg-bullhead.
-
- .../devicetree/bindings/clock/qcom,rpmcc.txt  |   2 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../dts/qcom/msm8992-bullhead-rev-101.dts     | 264 +++++++++-
- .../boot/dts/qcom/msm8994-angler-rev-101.dts  |   2 +
- arch/arm64/boot/dts/qcom/msm8994-pins.dtsi    | 272 +++++++++++
- arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi | 268 -----------
- .../msm8994-sony-xperia-kitakami-sumire.dts   | 410 ++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8994.dtsi         | 452 +++++++++++++++++-
- drivers/clk/qcom/clk-smd-rpm.c                | 172 +++++++
- drivers/regulator/qcom_smd-regulator.c        |   2 +-
- include/dt-bindings/clock/qcom,rpmcc.h        |   4 +
- 11 files changed, 1556 insertions(+), 293 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-sumire.dts
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+index b1c2d7d6a0f2..f10c8b34bd08 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -149,6 +149,22 @@ blsp1_uart2: serial@f991e000 {
+ 				 <&clock_gcc GCC_BLSP1_AHB_CLK>;
+ 		};
+ 
++		spmi_bus: qcom,spmi@fc4c0000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg = <0xfc4cf000 0x1000>,
++			      <0xfc4cb000 0x1000>,
++			      <0xfc4ca000 0x1000>;
++			reg-names = "core", "intr", "cnfg";
++			interrupt-names = "periph_irq";
++			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++		};
++
+ 		tcsr_mutex_regs: syscon@fd484000 {
+ 			compatible = "syscon";
+ 			reg = <0xfd484000 0x2000>;
 -- 
 2.27.0
 
