@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEB8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2B9C433E2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B631923BDD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18F723BE2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 14:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzaSBXNB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5qP6dFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgFTOsL (ORCPT
+        id S1728365AbgFTOsV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 10:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
+        Sat, 20 Jun 2020 10:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgFTOsK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:48:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A59B2C06174E;
-        Sat, 20 Jun 2020 07:48:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l10so12342521wrr.10;
-        Sat, 20 Jun 2020 07:48:09 -0700 (PDT)
+        with ESMTP id S1728348AbgFTOsQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 10:48:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC8DC06174E;
+        Sat, 20 Jun 2020 07:48:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g10so10911863wmh.4;
+        Sat, 20 Jun 2020 07:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gc0U5BY5xfcdQl/eC7NgZpP6UnL7LldYy3w5rHojCg4=;
-        b=EzaSBXNBnxFRM6fuFA81/CVP4RUExXAKANnj8fH0ME9BCKMj6aR+oEsIEWKLADI07H
-         xS7nTzJsYvK7MWKNYLggwY3cWR75kF5K+vAOjgYHGtkptdj52b0MCS2+ShfBKjLvlphU
-         5dzXAE34siSY6Hy1WZZthzK3tk1MNQSMsMKSbq0kfcuL2bxyc4qbhGr7ldBzmJFSfGVM
-         C4GCZ+jGaeuk4NldIiWnwuo2K4KwqGv2wkdmQM1MDc6iqC4gpnBitpSsW5+0wB47LdBD
-         pJhV1cXnvl9bTIWFzVPCsEMKad+nIH+bed78x+2CUSln/zUJm/LhER2HPmLvO82CzoIn
-         TM/A==
+        bh=5QBFLdNPnq+Qfa+k76IKoOZK33SWyXuGFD7NQgeZQzk=;
+        b=F5qP6dFhmxwp+W/R/YGMI4Ae7wBgy5ztNWzGkNfpcDpS527jJyVPCkALByOxPk+ORI
+         AUADGyNB1lynXwd3rqI8cnyBvapvlcv6oSj1swMv4RJKZIiqqwDpvEhYmGbAVgm+OZGA
+         6MCLczOEq0w205tBS0u2RZ2cT2+M/5CV+Xz/7ZHctSqz7MKmDV8+J0MvpM5AFF84s9CE
+         vpkK8F7YH+Tv0Ji4lhOb45lRz+jPSIiEuWKPzPx3UfmP0gHfs/08uSWVqH2XlZeI/Sgq
+         pIlnMd80LVOPef5LISYdznMA+nXcFnL+wo0LOaX7LLOQFJHZ/quJbeYdEkoziJwfcaIs
+         ZDOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gc0U5BY5xfcdQl/eC7NgZpP6UnL7LldYy3w5rHojCg4=;
-        b=G9NJSxU/8jX5bYnYvVawMGvkPAjSZwiGkW9NEbIvl8VMGSmmkMvylOungHGNBvWS5Y
-         BdkzHx8i9DtzvrlZC9mukGqb8SY3EMh5RMovuItgR5Vvh7e2YRymxrtVqxxxh3l9mjV+
-         VaRuuorhN98Lh8VCIhcuMaofjliXM6UuhU79fEzrsWviHh500sExnqwfG1+ozWLcthdz
-         n1vA2VS/S10Sqh+vJF0vMHeBul7F7gJQJdYyynlbdzEcILKW5o2Ln60pfrUYi05lAX8M
-         yV031hRCyGy7KXrq6Yk1Hy9VdLCiPYcc1n7DHTNExb4QJLvJviTPLGAMv+iYP6M1Wv5P
-         DwiA==
-X-Gm-Message-State: AOAM532YtIYrzFjYNJHJY2rFAiwclT6mgrRaa1uJ2gsFRmy0oQXoQDQn
-        nGTJ7pdC4rdMa9kf/Bb9TXmx0PDVLh0=
-X-Google-Smtp-Source: ABdhPJwLjTvuB811cO0MxzNKNmFnd9+h9sS47O5p7YfQzAjHcqoe6HNS9NlEowLN4/yHzUthrYubOA==
-X-Received: by 2002:adf:e50a:: with SMTP id j10mr10142108wrm.71.1592664488324;
-        Sat, 20 Jun 2020 07:48:08 -0700 (PDT)
+        bh=5QBFLdNPnq+Qfa+k76IKoOZK33SWyXuGFD7NQgeZQzk=;
+        b=XfISIDmCPPtX+2ynQ4b//z7VT3PdtVSo5Ok0jxY1TKzCQaCW83yzRzovRjw2BIF83s
+         bjrRChvSA6f9YFL6qMMzeqY6EDb55zb46crhxbKRkelQ7t0WSY/Zepuq9/4abw1tJ/AU
+         Wigb90g01FKs3/U0joC087c+icKFNWAh3Anzy4mgruDfiNKm/XuXCP865PrXS9pxOB3U
+         4ExnYQ7OBW03oPJrzyARPocBVa8W80sThs0s3ELZEL/6SiKhQtJCqHDdS8uB2PQ6Glr+
+         Bk0A8Z39jrfyNYHqp3C7fWlb/Suxj8J8Vy/QMZdZy1WQ6k2fKXfyy+z76cCO8JvgsrdA
+         WA5Q==
+X-Gm-Message-State: AOAM5317cmw6QQofoG+3lU7Wsbq+BUr6ocFSGu+rhgjPvzYEVzkFvB7L
+        0vIGC7wx09sA0FOSRmmEkF0=
+X-Google-Smtp-Source: ABdhPJy7140U3HXRbr7bMNKYjSf2UUwJaFxPG5rDtjrQKVmTtWryGCy7RTeF59XPpqftQO+Lhs71DQ==
+X-Received: by 2002:a1c:98cc:: with SMTP id a195mr8989696wme.89.1592664495042;
+        Sat, 20 Jun 2020 07:48:15 -0700 (PDT)
 Received: from localhost.localdomain (abae138.neoplus.adsl.tpnet.pl. [83.6.168.138])
-        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.06
+        by smtp.googlemail.com with ESMTPSA id 63sm11928379wra.86.2020.06.20.07.48.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jun 2020 07:48:07 -0700 (PDT)
+        Sat, 20 Jun 2020 07:48:14 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -75,9 +75,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/21] arm64: dts: qcom: msm8994: Rename the smem node and remove its unit address
-Date:   Sat, 20 Jun 2020 16:46:21 +0200
-Message-Id: <20200620144639.335093-6-konradybcio@gmail.com>
+Subject: [PATCH 07/21] arm64: dts: qcom: msm8994: Add apcs node
+Date:   Sat, 20 Jun 2020 16:46:23 +0200
+Message-Id: <20200620144639.335093-8-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
 References: <20200620144639.335093-1-konradybcio@gmail.com>
@@ -88,27 +88,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Change the way smem node is described to match other upstream device
-trees. The previous style was used in downstream kernels.
+Add apcs node so that we can enable SMD RPM
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index 0e8cf7e3dd85..5206605d3bad 100644
+index 0a6d637fbbba..8853559f755d 100644
 --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -308,7 +308,7 @@ tcsr_mutex: hwlock {
- 		#hwlock-cells = <1>;
+@@ -269,6 +269,11 @@ gcc: clock-controller@fc400000 {
+ 			#power-domain-cells = <1>;
+ 			reg = <0xfc400000 0x2000>;
+ 		};
++
++		apcs: syscon@f900d000 {
++			compatible = "syscon";
++			reg = <0xf900d000 0x2000>;
++		};
  	};
  
--	qcom,smem@6a00000 {
-+	smem {
- 		compatible = "qcom,smem";
- 		memory-region = <&smem_mem>;
- 		hwlocks = <&tcsr_mutex 3>;
+ 	memory {
 -- 
 2.27.0
 
