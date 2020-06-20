@@ -5,35 +5,35 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84970C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50930C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 22:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6394D24728
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 22:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D2524735
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 22:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="L0TS6ZsL"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CFnOTQM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgFTWna (ORCPT
+        id S1729118AbgFTWoE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 18:43:30 -0400
-Received: from mout.gmx.net ([212.227.17.22]:40633 "EHLO mout.gmx.net"
+        Sat, 20 Jun 2020 18:44:04 -0400
+Received: from mout.gmx.net ([212.227.17.20]:60347 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgFTWn3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:43:29 -0400
+        id S1728547AbgFTWoD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 20 Jun 2020 18:44:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592692962;
-        bh=SJkG9V9Ioa9d4mEs8B+Ts1mrBz/DoBrNbjbG0YqcoW8=;
+        s=badeba3b8450; t=1592693004;
+        bh=VyVCIBxPFyt78YSnxS+0Id2tmE8pzSJjUVG0PtP0FGo=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=L0TS6ZsL9wzNE0nZD/qm5ZJjxYPd9mb0bHz+Wc89GxEVngTEO1oEtUnBDPVvqWDSW
-         utlwhk8cyNqJfnConKj8VnRLNbAfPwQZqnawGcKdQqeFVaDWjUrjK7rrApjllI0D3p
-         O3UGHr8naeDiHytOMobzDZmzy8GMBiHrY6pwXuwk=
+        b=CFnOTQM3hDO8qn9SOfaIxccrUDsONIICDvI+jIsmU+SlgaKoyLBeI2FNpplaFvAWy
+         6vY1mnLluuZd7IZt/swaQFqEX18Q7jG2KaUvebExAJHnaAawbBx2eqD9VRW6+OUS7b
+         rt5yw5PsHF5ZMIRapjiBMysuRzC8UMFUS1FKtUgw=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N1wll-1ilEJH1IF7-012Gjq; Sun, 21
- Jun 2020 00:42:42 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MkYbu-1j0qH413NO-00m7VT; Sun, 21
+ Jun 2020 00:43:24 +0200
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -61,205 +61,106 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Josua Mayer <josua.mayer@jm0.eu>,
         Andreas Kemnade <andreas@kemnade.info>
-Subject: [RFC PATCH 08/10] rtc: New driver for RTC in Netronix embedded controller
-Date:   Sun, 21 Jun 2020 00:42:19 +0200
-Message-Id: <20200620224222.1312520-7-j.neuschaefer@gmx.net>
+Subject: [RFC PATCH 10/10] ARM: dts: imx50-kobo-aura: Add Netronix embedded controller
+Date:   Sun, 21 Jun 2020 00:42:21 +0200
+Message-Id: <20200620224222.1312520-9-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZySx5t2KwCOIhxVvsNRQk0BHTuvPhh9i+aJrLHsgVrp4vASHns/
- K/Sng6XDPFxIADTuQhRqPpAiIQTxA/wGOa2PSbQbB4sTuJ0aojUJGE8Ag92fPQLXO9nJD6G
- QLoS+fsnoA5cMrwfz9npyau2UOADYu9551W2HpisS3/JZwVYAkM5yt+jitcvhvxSNHOoB3r
- YTQOJ2gOZPtscWai0xOvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qUgUBIrzrMw=:9fm4eUEqTt5MBiuFfEhduT
- mWFDkntqpgEtUv2Z+wMPuN4r6bAeq4tndR38mrmzCTTwLZB0Bno3n8/u/bYcNzbzPW7js1XHK
- IH0+7IJFAo8/zNkJueuIs2Vm5K4HlDYNbSYdeuZWeiyeHGQJrnlTjqxQpaeQpKgGUsFi+uD6m
- 9Bo5bpxpM+l8enZ8zhHQak2cDovMNvBpPButuelU02VA9txy2JesT0BiCHjVezk6zEYs06tPp
- 64+TFHcukjJBVKgBGAbDcY9pmRVV2nebwkJPRsOym1se7tp8pE2rcl0h8b5m3lyvx4Au3ymqI
- aywGleTVEctLo2I17590XnBgKJ9AMqT0hex7+F4ksL0KL0KBecxuNZfTOMgjqWMcBXhsi7ZLd
- WM7y8jYuqrIlRp6Lnx0xvzh06TpAhJ4RjsESjmxksmj0uIKsMMwKy4UAPmY+AfBG59ABCTSgF
- W0Ibt/Rj7q6q1EqWOCZQRpPo7NZYmmNFT9W/5LUqPjCZaSe9gtWVlbE0uaJsikLno8UESeCIj
- YpMuokn3nRJl3P96FPGYYAIIDesCD+zukBOBbMCIpz67yrL00VEvdVCAO9Xb0H4dzjFkbUltM
- q3NUyH0qYR7hKkuZdzXvNm2BWzGd5NY7wvH1U0VvjTieArI5kK2wzKvdNCuMUzPizgkrBzuBr
- lfQpEoOHXG+S1di3VAODVLI1OfETY6qkhihTLJxFAxwQXcToKgWd8fG5WgvBH/zYKDNenF6uz
- N6SL36afGnNQyz2ZWH4V3XgYysSE3xrxVpJqEHhLGb10h7iA5cXsqc4w7OIJDw1pb/Wl/2r/Z
- 8Q+eGujEiDuRBivpi2Cz1mpICTIOQs30isN5H6gO73nZOV2Bp8oTCCBrRVv4RJ7HqFf3VmR5g
- QEJ8aA8sej17imekBzYUVZecSxj8fHMUAqp5Oppdjlt3Hm5ciaR211/cKwzJx2Nt28jA4rnPP
- GK5hbGIXWMeKvBD0o8p+szrDJtPl+u+cH80iRBr8jJ+PA/3Q5QGZ660fK6hjyEb16NG22QKVP
- L/ECG3hvFjnJdNMaNEpqNriFUDIsWnGaW1J5qp3ugwvB5F4zU5R1NTJGAWdbN2r5o1BjNABnH
- cwybOOoZixgQqd50QSyGd2l4h3JcHriVwhM+qV3h9yKHVwkp74WsYomw9NMRgSDY3RMzOMMJP
- S6uvfUe03QAQM/EL+X7vKcQ1HWp91d21pH3T7c2goOl7w0GVtcclM4l3ke8BskRkHXeih4Yqh
- PA7OqZbtxvORAmFOC
+X-Provags-ID: V03:K1:4FNCq66znOgeVyoZjrNrgMQNLnnTq7LrgHosR3ZKBWDuWQR51Y9
+ hYPhfmsJMKVLhNUIXKWpXJ8DaN+Mi7bhYl3wdJNS0UubbVPRgXNfjSkkZ5Sakhi9Sdwyrqb
+ n/bhq7zcYZO6wnOqrkTvllNX/Rorn0iDQKN/y2kqkLi3twA6ydDRZZjvdVGpX8tOPT+hgXi
+ qyEaws9q/M2HxQVCbgODg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UY/7ZGF2UsM=:2TV1b5ihDM1IbSjjYU1cq1
+ RurzmoY+h7ogNf0pk+B8diNEMciUuUtbF+eEBnMAlAYZQAeyf7ODTcGaAYuxubkKzrw6pRrKJ
+ u7YKup/L3RbNQoPDjcWXk4fy6YId5jZy64LSPR1WidU++P1QdFUMTRGMWdhQZRHO2wIaO1BZn
+ pHCfee3VGUHyqGqVCsLTVs+nflPhgABgpwXuXsfcI7/8A6YfGAsPsMbNIyWSZ9tHEGmFYIrXV
+ 9sw+s9jn3cymB1+YgQBkvFyB3pz5SCd4jYb11PbjEXKNeBh8PslQ240dM4MRaMPBzmpsfqKzd
+ KqKZ9BV56kgqBZ0rqvOt+lJiaiIHTK5vvbTwOq4x5h0CL1x2Y7X2N8h2G0eGp8UFoJKBezwZ/
+ bptNe9he5o2CR60qp6N7yD0sKvcY0Zven21jgG1dd8+DHfVHZ1rN2XY2vM5U/W0niVLm/JVfB
+ gZ33qS2Thm0GwLuVsIxhLIKT0ZlBEUFS4VhQNhi98hXbiiZYHHR53hFQzWiP1sKO3z4Our42E
+ 0IVOARxJspuAOEqe+aXN1hCpwcfpDg+BWJ7dgKhX4N+Fnp9gHg+7KNHXbkzcIqP3V92O0rPba
+ M9ftV0TJkC6NfKOo/SJasHwCVxlJFzkbHcbK57O4PNMZ3cxmyVNamvu46vkMKdKRcqk/EJAQq
+ 5gia4k5YBdK+aeFaDR09cV714TJyM6Dd7A/B79plDwQs/lzQiRlQLF0dmiJwtLG7fo6xX5evk
+ 7RPAZWCIjix7UrczoIc39V/7i7ymswXVcynXVEd0ujyQOmWG1o3RzWj450uvLgZToixsKuuUq
+ KGZmeDaq8Or82WumlQWOQrcyRQs8dI/KM0xj/TwIUJXahH4mAfR10uTlxIFg0sLxYZognpgVP
+ qDruGDJNBKefU/b+VzCyuE+Mda+XtDSapia4GD9fseEy/7U2DRmZ36JKDE63uKdgfZtlFXuv4
+ A1cEFebGf3D/i8AJaFUFevkThCFTLPmDye9CabeWM486RdZriVTukJ920ITC2cAWzpAvJV93p
+ XAsaI1gazr2r4BfRSecIP0hsrjuO7zsDsCAWskQTzEQ4rXEshJ1HGGFJuiIEeT9lcxPRspQmB
+ O5GzmmA+VzRqk1K63LwvFdcz0X6nWMfZjvFiFUlHSpceygtOdqA11RG8sx5tyYrT4n1tlI7Xc
+ ijf+a/KpCxLlVe1eTikWgm3UKYCPw6bjRo7MVI9Euzi3A+UP97FKrDiq8RN+x9J1Z4DzjO667
+ BmUzrKMJbsAVFhh5M
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With this driver, mainline Linux can keep its time and date in sync with
-the vendor kernel.
+Enable the Netronix EC on the Kobo Aura ebook reader.
 
-Advanced functionality like alarm and automatic power-on is not yet
-supported.
+Several features are still missing:
+ - Frontlight/backlight. The vendor kernel drives the frontlight LED
+   using the PWM output of the EC and an additional boost pin that
+   increases the brightness.
+ - Battery monitoring
+ - Interrupts for RTC alarm and low-battery events
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
- drivers/rtc/Kconfig     |   4 ++
- drivers/rtc/Makefile    |   1 +
- drivers/rtc/rtc-ntxec.c | 115 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 120 insertions(+)
- create mode 100644 drivers/rtc/rtc-ntxec.c
+ arch/arm/boot/dts/imx50-kobo-aura.dts | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index b54d87d45c89b..2310d08933f9c 100644
-=2D-- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1300,6 +1300,10 @@ config RTC_DRV_CROS_EC
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-cros-ec.
+diff --git a/arch/arm/boot/dts/imx50-kobo-aura.dts b/arch/arm/boot/dts/imx=
+50-kobo-aura.dts
+index a0eaf869b9135..003a7d894902c 100644
+=2D-- a/arch/arm/boot/dts/imx50-kobo-aura.dts
++++ b/arch/arm/boot/dts/imx50-kobo-aura.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ #include "imx50.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 
-+config RTC_DRV_NTXEC
-+	tristate "Netronix embedded controller RTC driver"
-+	depends on MFD_NTXEC
-+
- comment "on-CPU RTC drivers"
+ / {
+ 	model =3D "Kobo Aura (N514)";
+@@ -135,10 +136,34 @@ &i2c3 {
+ 	pinctrl-0 =3D <&pinctrl_i2c3>;
+ 	status =3D "okay";
 
- config RTC_DRV_ASM9260
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 0721752c6ed4c..8653d04aefa99 100644
-=2D-- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -111,6 +111,7 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+=3D rtc-mt7622.o
- obj-$(CONFIG_RTC_DRV_MV)	+=3D rtc-mv.o
- obj-$(CONFIG_RTC_DRV_MXC)	+=3D rtc-mxc.o
- obj-$(CONFIG_RTC_DRV_MXC_V2)	+=3D rtc-mxc_v2.o
-+obj-$(CONFIG_RTC_DRV_NTXEC)	+=3D rtc-ntxec.o
- obj-$(CONFIG_RTC_DRV_OMAP)	+=3D rtc-omap.o
- obj-$(CONFIG_RTC_DRV_OPAL)	+=3D rtc-opal.o
- obj-$(CONFIG_RTC_DRV_PALMAS)	+=3D rtc-palmas.o
-diff --git a/drivers/rtc/rtc-ntxec.c b/drivers/rtc/rtc-ntxec.c
-new file mode 100644
-index 0000000000000..44d5a5eedb597
-=2D-- /dev/null
-+++ b/drivers/rtc/rtc-ntxec.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright 2020 Jonathan Neusch=C3=A4fer
+-	/* TODO: embedded controller at 0x43 */
++	embedded-controller@43 {
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_ec>;
++		compatible =3D "netronix,ntxec";
++		reg =3D <0x43>;
++		system-power-controller;
++		interrupts-extended =3D <&gpio4 11 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells =3D <1>;
 +
-+#include <linux/rtc.h>
-+#include <linux/mfd/ntxec.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
++		ec_pwm: pwm {
++			compatible =3D "netronix,ntxec-pwm";
++			#pwm-cells =3D <2>;
++		};
 +
-+struct ntxec_rtc {
-+	struct device *dev;
-+	struct ntxec *ec;
-+};
++		rtc {
++			compatible =3D "netronix,ntxec-rtc";
++		};
++	};
+ };
+
+ &iomuxc {
++	pinctrl_ec: ec {
++		fsl,pins =3D <
++			MX50_PAD_CSPI_SS0__GPIO4_11		0x0	/* INT */
++		>;
++	};
 +
-+#define NTXEC_WRITE_YEAR	0x10
-+#define NTXEC_WRITE_MONTH	0x11
-+#define NTXEC_WRITE_DAY		0x12
-+#define NTXEC_WRITE_HOUR	0x13
-+#define NTXEC_WRITE_MINUTE	0x14
-+#define NTXEC_WRITE_SECOND	0x15
-+
-+#define NTXEC_READ_YM		0x20
-+#define NTXEC_READ_DH		0x21
-+#define NTXEC_READ_MS		0x22
-+
-+
-+static int ntxec_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
-+	int res;
-+
-+	res =3D ntxec_read16(rtc->ec, NTXEC_READ_YM);
-+	if (res < 0)
-+		return res;
-+
-+	tm->tm_year =3D (res >> 8) + 100;
-+	tm->tm_mon =3D (res & 0xff) - 1;
-+
-+	res =3D ntxec_read16(rtc->ec, NTXEC_READ_DH);
-+	if (res < 0)
-+		return res;
-+
-+	tm->tm_mday =3D res >> 8;
-+	tm->tm_hour =3D res & 0xff;
-+
-+	res =3D ntxec_read16(rtc->ec, NTXEC_READ_MS);
-+	if (res < 0)
-+		return res;
-+
-+	tm->tm_min =3D res >> 8;
-+	tm->tm_sec =3D res & 0xff;
-+
-+	return 0;
-+}
-+
-+static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
-+	int res =3D 0;
-+
-+	res |=3D ntxec_write8(rtc->ec, NTXEC_WRITE_YEAR, tm->tm_year - 100);
-+	res |=3D ntxec_write8(rtc->ec, NTXEC_WRITE_MONTH, tm->tm_mon + 1);
-+	res |=3D ntxec_write8(rtc->ec, NTXEC_WRITE_DAY, tm->tm_mday);
-+	res |=3D ntxec_write8(rtc->ec, NTXEC_WRITE_HOUR, tm->tm_hour);
-+	res |=3D ntxec_write8(rtc->ec, NTXEC_WRITE_MINUTE, tm->tm_min);
-+	res |=3D ntxec_write8(rtc->ec, NTXEC_WRITE_SECOND, tm->tm_sec);
-+
-+	return (res < 0)? -EIO : 0;
-+}
-+
-+static const struct rtc_class_ops ntxec_rtc_ops =3D {
-+	.read_time		=3D ntxec_read_time,
-+	.set_time		=3D ntxec_set_time,
-+};
-+
-+static int ntxec_rtc_probe(struct platform_device *pdev)
-+{
-+	struct rtc_device *rtcdev;
-+	struct ntxec_rtc *rtc;
-+
-+	rtc =3D devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	rtc->dev =3D &pdev->dev;
-+	rtc->ec =3D dev_get_drvdata(pdev->dev.parent);
-+	platform_set_drvdata(pdev, rtc);
-+
-+	rtcdev =3D devm_rtc_device_register(&pdev->dev, "ntxec-rtc",
-+					  &ntxec_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rtcdev))
-+		return PTR_ERR(rtc);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ntxec_rtc_of_match[] =3D {
-+	{ .compatible =3D "netronix,ntxec-rtc" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ntxec_rtc_of_match);
-+
-+static struct platform_driver ntxec_rtc_driver =3D {
-+	.driver =3D {
-+		.name =3D "ntxec-rtc",
-+		.of_match_table =3D ntxec_rtc_of_match,
-+	},
-+	.probe =3D ntxec_rtc_probe,
-+};
-+module_platform_driver(ntxec_rtc_driver);
-+
-+MODULE_AUTHOR("Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>");
-+MODULE_DESCRIPTION("RTC driver for Netronix EC");
-+MODULE_LICENSE("GPL");
+ 	pinctrl_gpiokeys: gpiokeys {
+ 		fsl,pins =3D <
+ 			MX50_PAD_CSPI_MISO__GPIO4_10		0x0
 =2D-
 2.27.0
 
