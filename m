@@ -2,132 +2,365 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1E1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 22:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F04DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 23:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681FE246DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 22:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZEwEkwBO"
+	by mail.kernel.org (Postfix) with ESMTP id 3A4B92474C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 23:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592696224;
+	bh=CawSVpHd2GDDHBo6fZNEBEmKvXOVFkRFxpMFtCubX9U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WhGnLjnszhx+Scb1Alq6tPHc6CNFTWgvfpyXiQ2lABldYWMLWUq+BtvrEhKRigEGB
+	 DARpro74GrYUOpJWrhT1oCkoRwM/PWVOMRthF1BK+Z+Qk6hiszi+TYCBGN6A3cnpQD
+	 0PNJKH2DLi++Xp7YGDRu9z9jFs2uIJXcLKWdkoX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgFTWqp (ORCPT
+        id S1728462AbgFTXhD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 18:46:45 -0400
-Received: from mout.gmx.net ([212.227.17.22]:60263 "EHLO mout.gmx.net"
+        Sat, 20 Jun 2020 19:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgFTWqo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 20 Jun 2020 18:46:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592693163;
-        bh=h/UMIY6fmTdd2wru1QoL9o5eOI3wFFzm7QlYKwwkUdM=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=ZEwEkwBO1iCQDD7fQ6Rl7eNxSJ13psdqlSHmPznnxTCP/FrMHut31htqj8rYe8afX
-         HNB1qHhFqpjIw2Jxz5eU86XToSWStAo8VBMxQdvC0z6KWtUXvBL/VapPb9jaIfe0Ul
-         EcqNt8VKO+vz8MmWnXMi4T9kWacINg/OaRCgesO0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mt79F-1itzhS1A6r-00tT79; Sun, 21
- Jun 2020 00:46:03 +0200
-Date:   Sun, 21 Jun 2020 00:46:01 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 02/10] dt-bindings: Add vendor prefix for Netronix,
- Inc.
-Message-ID: <20200620224601.GB2581@latitude>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+        id S1728199AbgFTXhD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 20 Jun 2020 19:37:03 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B1DD2474C;
+        Sat, 20 Jun 2020 23:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592696222;
+        bh=CawSVpHd2GDDHBo6fZNEBEmKvXOVFkRFxpMFtCubX9U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Kv25pqSEEfD0FgzqYZtxEoh3ej91+/gY4IldaQwyv3JThsK5+rn7c5nPOoIeT9OSd
+         sS+G9QET9eEqhZjnS4Q7vun3bVjw/uWL8DyH7DrKgKHvqsyIPWu4uk8PTGBRCKsxEl
+         RICRuvG28weCfu92RWxGFG5ShqYve8rLEYXNfAsM=
+Received: by mail-ej1-f43.google.com with SMTP id w6so2952728ejq.6;
+        Sat, 20 Jun 2020 16:37:02 -0700 (PDT)
+X-Gm-Message-State: AOAM533919irFnPT8OTNetLlBH21nLoDniSKkHnj+FFSdFGlueyNnS0v
+        ewZs5yODeqUu3QuYXF9bHnFnxTXjgubs0pDd0g==
+X-Google-Smtp-Source: ABdhPJztuHi2fjsSnmBaCSN95EJlMUxP3vDj4t8FVoFTF3CYTOdZnHHjg36lEWbohNJpDCh9W1cChQLxF0ZOsvN84UM=
+X-Received: by 2002:a17:906:3041:: with SMTP id d1mr9854937ejd.7.1592696220739;
+ Sat, 20 Jun 2020 16:37:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
-Content-Disposition: inline
-In-Reply-To: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
-X-Provags-ID: V03:K1:5O+YzEQ/vUdLi8utCOogyjE0FxfqX6VgcRxQrjBKDGTtmFSKYjw
- Uwoa04dGgRh/DH6SxYr8fKCqy8jdmILH2jrPFgAp48BzZtNIivny/AR81+kT0m310ruexCA
- lgedeh5W1LsTtR69899tKj4uRBIsiGP39JChZbHO8SNzhRFPFEcBrZkd1n8G1mlBRFmn4ej
- 6Kmd3/qW51Rg2wM7Nmhbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:g9z075SxS1I=:DHqkOKmSdMJd0/cw2/EzAl
- ZHdbov55RWR5jgK2G3UtymifbK8pkIFsjdB+4K97PiN9at2UFVbd5EPUv4YMBunSahziy1NoZ
- uYbZX8maLwxubFdsYS+xFch1G0IOpbS13LZhdS/DW1j/WNxwCQ/Z2nF7YtGMDHrLUr9AB4HuW
- kJIE9S20cxeHJMevCnMpYzwV80VJ6HiYaQQ0P9ZANs8qrZPnWMa3x7egMRDXKoCabUPF5icO8
- gCoKcIOXVn/tDLlbovFdtb+XYqWzcUqH7DRqv6CM0EmQXhoG752hL+aP/HrMHJcfefvnqc7Su
- JR1DVjJKUdpJGkp/l4Jmv/8S2uRNxrcJCvzi69oYo7jVDvoqtu/PvkI+Bbtaj6btHIxJBryK5
- d3fzwv4aIyN4bh3HJ9pvQiIxQ7bv4N9eLd50PPs/GFrLd2K5cf+tiLCem5pc630lhgClDykuZ
- zx4VuE2R4/Kw2FqvEqAOq2EnGA9lGOE6uxVjtjpYRi79iRz0fTd8z4MJu8L8CdMkEgADRpoHF
- iL4/FxANZC3qWF+motaVQBTVHdcy6FqxtvTS7MM8773gT65CYn0KJhznTIPRLM+am3E/i85SZ
- yAbT6Fivg/GFesNe5Ctf5zaCBfUmNHjSenGgPgjT+VoTWMchSwgRYJgUlN6RmZ5UQBfzlqQbQ
- Hps4C9dIo5IlD5bLvlfJmpmY+9tXPRIj21Su9kpHH2NP8U6aVYsP0qEScOT2fjJrnnY8oZfqf
- MqgWKcKVOGLZ3Xv9+zlKZ180OXWpz9gvOp/glcdNcojEY521F1n+hm5IN8ONB00OssQHX2158
- 74/hsejdGz1sCBfX0FNK/gODeH4JlNAXH11hf26T0FltDrxf/pWTN2mK/kczV3Zf2R9k0Q34Q
- nlKCFBWdjzGxS861dHLmO1f9oM8qyapYxSsScddUIICU6aPmnX0DPbPNaCt9+P+ixzMNwGKKh
- Avo70qo3qqo4uAaZYxjVkVLT5S5stEEUw3svLQW+5AXRdcIhFTO9Uc6fjGTHJV5QtqQd5weyf
- upf1WrflYqYeUuXZdXWq4OGjZBhbF5fmLPcwTZ5TFG09Pn9DFWKOJX8r/TBrzpaNcbOKsscNo
- HzJxkR7UAgmy4XftuJbYpIRCDldjqPh66x1xdlp7YNHd+YLJLjhOWb7QuiWKiZd1jlYzOs9GC
- U7EngI85XOPmdpGwQXaTkXw9IiHVYyqsibfUcUBOqNafUvgBrzdzzOFvisy9EtalNkxC1Jztg
- WQRIRlLxVbsFTHkMv
+References: <1592559720-8482-1-git-send-email-neal.liu@mediatek.com>
+ <1592559720-8482-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8JRnhGKOB+faOaHR6p2nknHiMjAnbfo=390c5jNHtp=A@mail.gmail.com>
+ <1592623132.15277.7.camel@mtkswgap22>
+In-Reply-To: <1592623132.15277.7.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 21 Jun 2020 07:36:48 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-ZGcsv+LEYs+3qfEE=pv8ToWSPFu+7Oum=s-nUuSsDJw@mail.gmail.com>
+Message-ID: <CAAOTY_-ZGcsv+LEYs+3qfEE=pv8ToWSPFu+7Oum=s-nUuSsDJw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi, Neal:
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8820=E6=97=
+=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8811:18=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> Thanks for your quick feedback.
+>
+> On Sat, 2020-06-20 at 00:25 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8819=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:01=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > MT6873 bus frabric provides TrustZone security support and data
+> > > protection to prevent slaves from being accessed by unexpected
+> > > masters.
+> > > The security violations are logged and sent to the processor for
+> > > further analysis or countermeasures.
+> > >
+> > > Any occurrence of security violation would raise an interrupt, and
+> > > it will be handled by devapc-mt6873 driver. The violation
+> > > information is printed in order to find the murderer.
+> > >
+> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > ---
+> >
+> > [snip]
+> >
+> > > +
+> > > +/*
+> > > + * mtk_devapc_pd_get - get devapc pd_types of register address.
+> > > + *
+> > > + * Returns the value of reg addr
+> > > + */
+> > > +static void __iomem *mtk_devapc_pd_get(struct mtk_devapc_context *de=
+vapc_ctx,
+> > > +                                      int slave_type,
+> > > +                                      enum DEVAPC_PD_REG_TYPE pd_reg=
+_type,
+> > > +                                      u32 index)
+> > > +{
+> > > +       struct mtk_devapc_vio_info *vio_info =3D devapc_ctx->soc->vio=
+_info;
+> > > +       u32 slave_type_num =3D devapc_ctx->soc->slave_type_num;
+> > > +       const u32 *devapc_pds =3D devapc_ctx->soc->devapc_pds;
+> >
+> > devapc_pds =3D mt6873_devapc_pds;
+>
+> Are you saying all platform related variables & functions should assign
+> & call it directly in this common flow?
+> I don't think it's a good idea to go backwards since we already extract
+> the common out of it.
 
-On Sun, Jun 21, 2020 at 12:42:13AM +0200, Jonathan Neusch=C3=A4fer wrote:
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+I think we should "do one thing in one patch". When you mix two things
+into one patch, how does reviewer know each modification belong to
+first thing or second thing? For supporting multiple SoC, the patches
+sequence look like this:
 
-Oops, it seems the mail thread got split here when I resent patches 2-10
-after an error. Oh well.
+Patch 1: Add support SoC 1.
+Patch 2: Abstract function and variable for SoC 2.
+Patch 3: Add support SoC 2.
+Patch 4: Abstract function and variable for SoC 3.
+Patch 5: Add support SoC 3.
+Patch 6: Abstract function and variable for SoC 4.
+Patch 7: Add support SoC 4.
 
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
+In patch 1, you should not do any thing about abstraction, but you
+want to merge patch 2, 4, 6 into this patch, so this patch's title
+should be "Add support SoC 1 and abstract function and varible for SoC
+2, SoC 3, and SoC 4"
 
------BEGIN PGP SIGNATURE-----
+>
+> >
+> >
+> > > +       void __iomem *reg;
+> > > +
+> > > +       if (!devapc_pds)
+> >
+> > Never happen.
+> >
+> > > +               return NULL;
+> > > +
+> > > +       if ((slave_type < slave_type_num &&
+> > > +            index < vio_info->vio_mask_sta_num[slave_type]) &&
+> > > +           pd_reg_type < PD_REG_TYPE_NUM) {
+> >
+> > Always true.
+> >
+> > > +               reg =3D devapc_ctx->devapc_pd_base[slave_type] +
+> > > +                       devapc_pds[pd_reg_type];
+> > > +
+> > > +               if (pd_reg_type =3D=3D VIO_MASK || pd_reg_type =3D=3D=
+ VIO_STA)
+> > > +                       reg +=3D 0x4 * index;
+> > > +
+> > > +       } else {
+> > > +               pr_err(PFX "Out Of Boundary, slave_type:0x%x/pd_reg_t=
+ype:0x%x/index:0x%x\n",
+> > > +                      slave_type, pd_reg_type, index);
+> > > +               return NULL;
+> > > +       }
+> > > +
+> > > +       return reg;
+> > > +}
+> > > +
+> >
+> > [snip]
+> >
+> > > +
+> > > +/*
+> > > + * start_devapc - initialize devapc status and start receiving inter=
+rupt
+> > > + *               while devapc violation is triggered.
+> > > + */
+> > > +static void start_devapc(struct mtk_devapc_context *devapc_ctx)
+> > > +{
+> > > +       u32 slave_type_num =3D devapc_ctx->soc->slave_type_num;
+> > > +       const struct mtk_device_info **device_info;
+> > > +       const struct mtk_device_num *ndevices;
+> > > +       void __iomem *pd_vio_shift_sta_reg;
+> > > +       void __iomem *pd_apc_con_reg;
+> > > +       int slave_type, i, vio_idx, index;
+> > > +       u32 vio_shift_sta;
+> > > +
+> > > +       ndevices =3D devapc_ctx->soc->ndevices;
+> >
+> > ndevices =3D mtk6873_devices_num;
+> >
+> >
+> > > +
+> > > +       device_info =3D devapc_ctx->soc->device_info;
+> > > +
+> > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave_typ=
+e++) {
+> > > +               pd_apc_con_reg =3D mtk_devapc_pd_get(devapc_ctx, slav=
+e_type,
+> > > +                                                  APC_CON, 0);
+> > > +               pd_vio_shift_sta_reg =3D mtk_devapc_pd_get(devapc_ctx=
+, slave_type,
+> > > +                                                        VIO_SHIFT_ST=
+A, 0);
+> > > +
+> > > +               if (!pd_apc_con_reg || !pd_vio_shift_sta_reg || !devi=
+ce_info)
+> > > +                       return;
+> > > +
+> > > +               /* Clear DEVAPC violation status */
+> > > +               writel(BIT(31), pd_apc_con_reg);
+> > > +
+> > > +               /* Clear violation shift status */
+> > > +               vio_shift_sta =3D readl(pd_vio_shift_sta_reg);
+> > > +               if (vio_shift_sta)
+> > > +                       writel(vio_shift_sta, pd_vio_shift_sta_reg);
+> > > +
+> > > +               /* Clear type 2 violation status */
+> > > +               check_type2_vio_status(devapc_ctx, slave_type, &vio_i=
+dx, &i);
+> > > +
+> > > +               /* Clear violation status */
+> > > +               for (i =3D 0; i < ndevices[slave_type].vio_slave_num;=
+ i++) {
+> > > +                       vio_idx =3D device_info[slave_type][i].vio_in=
+dex;
+> > > +                       if ((check_vio_status(devapc_ctx, slave_type,=
+ vio_idx)
+> > > +                                             =3D=3D VIOLATION_TRIGGE=
+RED) &&
+> > > +                            clear_vio_status(devapc_ctx, slave_type,
+> > > +                                             vio_idx)) {
+> > > +                               pr_warn(PFX "Clear vio status failed,=
+ slave_type:0x%x, vio_index:0x%x\n",
+> > > +                                       slave_type, vio_idx);
+> > > +
+> > > +                               index =3D i;
+> > > +                               mtk_devapc_dump_vio_dbg(devapc_ctx, s=
+lave_type,
+> > > +                                                       &vio_idx, &in=
+dex);
+> > > +                               i =3D index - 1;
+> > > +                       }
+> > > +
+> > > +                       mask_module_irq(devapc_ctx, slave_type, vio_i=
+dx, false);
+> > > +               }
+> > > +       }
+> > > +}
+> > > +
+> > > +static DEFINE_SPINLOCK(devapc_lock);
+> >
+> > Useless, so remove it.
+>
+> We use devapc_lock in below isr, what do you mean useless?
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl7ukaIACgkQCDBEmo7z
-X9t5/Q/8Cbd0bFYhNk8CBuYZCY3Hb1671urdC0CCUDZHm8+6f4Hak3r6C2TRVz/l
-6mFc4ga7Eaib0kUGNXIr1PKcmAeRrBtDhmk1ouF+jKGoAGSi+vfzbvR3e8TLcwhi
-lK+vE4/GlQ8ucVuPDlazvpIraMLPlv61ucgjL7jaExvZK3q6g3uXSb32YGj2LHRF
-eaWS+o1coNYWk2D24vqwzlF8Ot5tKRlE8Nlk0tP6s2s5AzDyCGmaTanbpWbMrlkr
-f/BG5LbHqRkGnY2cuU1VK+EUxFrg3EtLyHjc9ASPBWDyX5zbPtp7qttUOQ65JUXT
-aE52FjQ83S59G+ibTloZWEpqiHf4WuGkb+erE/tWiFwJCRyymf6V+bfSL4bLLlcw
-0paBO5cdbdZjAprIzVM9jgTyz76Pd/6fSAvQpA1cnz/sGE/XhgXoOz4CjAGNHC0B
-lVCFxsg2lyq8dQx2rBnXiAIzCf7X/72TIf7932wsQd4HUEEILb9kBe0kGNDaHuSF
-v0krqal+swKx/ASrPMu3TTlBw3IGLf7JdrxcnUDNQ8N+TxfEE5dc4WGNELSgPpDF
-DLtzb0WCL8A6svnupjPbMtT10+e7EZf7ESzLFDlnAm932Cop0SsRc0OvWN790vIg
-x7ZzXfwX2B70qJv4yWjJuF1XKmDYluSh0T55EYU7r4oYHZ20DQo=
-=mZCk
------END PGP SIGNATURE-----
+We use spinlock because a thread context and irq context would access
+the same resource, but where is the thread context? If the thread
+context exist in another patch, move this spinlock to that patch.
 
---gatW/ieO32f1wygP--
+Regards,
+Chun-Kuang.
+
+>
+> >
+> > > +
+> > > +/*
+> > > + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR)=
+ will dump
+> > > + *                       violation information including which maste=
+r violates
+> > > + *                       access slave.
+> > > + */
+> > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > +                                       struct mtk_devapc_context *de=
+vapc_ctx)
+> > > +{
+> > > +       u32 slave_type_num =3D devapc_ctx->soc->slave_type_num;
+> > > +       const struct mtk_device_info **device_info;
+> > > +       struct mtk_devapc_vio_info *vio_info;
+> > > +       int slave_type, vio_idx, index;
+> > > +       const char *vio_master;
+> > > +       unsigned long flags;
+> > > +       u8 perm;
+> > > +
+> > > +       spin_lock_irqsave(&devapc_lock, flags);
+> > > +
+> > > +       device_info =3D devapc_ctx->soc->device_info;
+> > > +       vio_info =3D devapc_ctx->soc->vio_info;
+> > > +       vio_idx =3D -1;
+> > > +       index =3D -1;
+> > > +
+> > > +       /* There are multiple DEVAPC_PD */
+> > > +       for (slave_type =3D 0; slave_type < slave_type_num; slave_typ=
+e++) {
+> > > +               if (!check_type2_vio_status(devapc_ctx, slave_type, &=
+vio_idx,
+> > > +                                           &index))
+> > > +                       if (!mtk_devapc_dump_vio_dbg(devapc_ctx, slav=
+e_type,
+> > > +                                                    &vio_idx, &index=
+))
+> > > +                               continue;
+> > > +
+> > > +               /* Ensure that violation info are written before
+> > > +                * further operations
+> > > +                */
+> > > +               smp_mb();
+> > > +
+> > > +               mask_module_irq(devapc_ctx, slave_type, vio_idx, true=
+);
+> > > +
+> > > +               clear_vio_status(devapc_ctx, slave_type, vio_idx);
+> > > +
+> > > +               perm =3D get_permission(devapc_ctx, slave_type, index=
+,
+> > > +                                     vio_info->domain_id);
+> > > +
+> > > +               vio_master =3D devapc_ctx->soc->master_get
+> > > +                       (vio_info->master_id,
+> > > +                        vio_info->vio_addr,
+> > > +                        slave_type,
+> > > +                        vio_info->shift_sta_bit,
+> > > +                        vio_info->domain_id);
+> >
+> > Call mt6873_bus_id_to_master() directly.
+> >
+> > > +
+> > > +               if (!vio_master)
+> > > +                       vio_master =3D "UNKNOWN_MASTER";
+> > > +
+> > > +               pr_info(PFX "Violation - slave_type:0x%x, sys_index:0=
+x%x, ctrl_index:0x%x, vio_index:0x%x\n",
+> > > +                       slave_type,
+> > > +                       device_info[slave_type][index].sys_index,
+> > > +                       device_info[slave_type][index].ctrl_index,
+> > > +                       device_info[slave_type][index].vio_index);
+> > > +
+> > > +               pr_info(PFX "Violation Master: %s\n", vio_master);
+> > > +
+> > > +               devapc_vio_reason(perm);
+> > > +
+> > > +               mask_module_irq(devapc_ctx, slave_type, vio_idx, fals=
+e);
+> > > +       }
+> > > +
+> > > +       spin_unlock_irqrestore(&devapc_lock, flags);
+> > > +       return IRQ_HANDLED;
+> > > +}
+> > > +
+>
+> [snip]
+>
