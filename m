@@ -2,75 +2,93 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744F9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 00:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F66C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 00:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5174722AAE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 00:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AAC225A9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 00:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592613127;
-	bh=7ZyYVxFMAw5CAv0Rz0Wi2Mv+LuXUkbhNIkykP/c2PRo=;
+	s=default; t=1592613397;
+	bh=jPBgI4QiwDIShR7MqXJxRmkH5IZj3qWkZ/G42r75oxo=;
 	h=In-Reply-To:References:Subject:From:To:Date:List-ID:From;
-	b=TJkGit88TLwVW9mL3UKHvCEa06eSHKNdfN39F3LzcWkgF/pzUMsvax1477NXV6pA0
-	 pXW/RhGmG4asphqeuFgs9mK+X2pTHwgAIJah8JSLHiQS+a5LowlBfOjFRpOUb7QV/p
-	 cnDQLLllMuaY5/CSDRU3ZTogIi7TJtqhCeq23/NI=
+	b=BhqYTTlF0Ana1ovtXYJRWN4s0Gd7DU+HpHHxAHvKvnd01VrvYc6IUJ0jF3MkCL1ry
+	 9KQaUVSruUr7i33AYSUhGq7Zv+dPkse8s5K0Ic1+65RxR4CDPeHvpROCT/H8CLhUI3
+	 3KCRc8dDdzGl38TsyKRIm2LYd0K2hPK6ln7i/s/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgFTAcE (ORCPT
+        id S1730901AbgFTAgg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 20:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 20:36:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbgFTAcA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 19 Jun 2020 20:32:00 -0400
+        id S1730293AbgFTAgg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 20:36:36 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9680B22AAC;
-        Sat, 20 Jun 2020 00:31:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2729E225A9;
+        Sat, 20 Jun 2020 00:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592613119;
-        bh=7ZyYVxFMAw5CAv0Rz0Wi2Mv+LuXUkbhNIkykP/c2PRo=;
+        s=default; t=1592613396;
+        bh=jPBgI4QiwDIShR7MqXJxRmkH5IZj3qWkZ/G42r75oxo=;
         h=In-Reply-To:References:Subject:From:To:Date:From;
-        b=tiSLrDOomWEWFuOiC7W09V53I204u7psP0FyPjBQDIfrwk79B77nEeWrYVQqmkSQy
-         m14QNwcwiA/yVfz7U6bNz7ls/lS4eVPjUvT4tBSBQTBEWHt0c0WkjJMA16wvStG5U5
-         Kv5mW8K8MYu4y5icq/EF2lWBLKjIIBnM1odH3tWY=
+        b=JDi4r0yam0XbhtKGe+ZPfgptLCP76hjezDbcioZDsGYEg9rPfAm7ilNgjmuS8f3kw
+         X0yRlwzySg+6dJxhgVDV0PgY/4X+lXLl1dVVMtPEGKklRe9uYVQeIsaMkKQMZYYYRn
+         CRETehh4vlG2lRcTRyRKEedgmLuCySB4svSIyP2Q=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <852c7804-b1b3-2d78-00f6-b67b9fd4e720@codeaurora.org>
-References: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org> <852c7804-b1b3-2d78-00f6-b67b9fd4e720@codeaurora.org>
-Subject: Re: [PATCH V7 0/4] Add APSS clock controller support for IPQ6018
+In-Reply-To: <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
+References: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org> <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH V7 1/4] dt-bindings: clock: add ipq6018 a53 pll compatible
 From:   Stephen Boyd <sboyd@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Fri, 19 Jun 2020 17:31:58 -0700
-Message-ID: <159261311891.62212.13701901545033603842@swboyd.mtv.corp.google.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org,
+        sivaprak@codeaurora.org
+Date:   Fri, 19 Jun 2020 17:36:35 -0700
+Message-ID: <159261339539.62212.17722723971033735363@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sivaprakash Murugesan (2020-06-18 00:00:58)
-> Ping!
+Quoting Sivaprakash Murugesan (2020-06-06 03:55:04)
+> cpus on ipq6018 are clocked by a53 pll, add device compatible for a53
+> pll found on ipq6018 devices.
 >=20
-> Hi Stephen,
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V7]
+>  * Addressed minor review comment from Rob
+>  .../devicetree/bindings/clock/qcom,a53pll.yaml         | 18 ++++++++++++=
+++++++
+>  1 file changed, 18 insertions(+)
 >=20
-> Is it possible for you to review this series? We have regulators and few =
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/D=
+ocumentation/devicetree/bindings/clock/qcom,a53pll.yaml
+> index 20d2638..3161fab 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+> @@ -15,6 +15,7 @@ description:
+> =20
+>  properties:
+>    compatible:
+> +    const: qcom,ipq6018-a53pll
+>      const: qcom,msm8916-a53pll
+> =20
+>    reg:
 
-> other patches
+I'm getting this error when running dt binding check:
 
-regulators depend on CPU clk patches?
-
->=20
-> depend on this patch, it would be great if you could provide your inputs =
-
-> on this.
->
+ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
+  in "<unicode string>", line 18, column 5
+found duplicate key "const" with value "qcom,msm8916-a53pll" (original valu=
+e: "qcom,ipq6018-a53pll")
+  in "<unicode string>", line 19, column 5
