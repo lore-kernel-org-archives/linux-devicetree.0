@@ -2,163 +2,125 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0D8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5A7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 16:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B04B23DC1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 15:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592668669;
-	bh=D8fKktaZdo0jD0i4fAQUF+z6/90romTLM3ZgSwzvpY8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SLVoQyzJUH6+UNOnQcGuwWys/OTWStjXHiM6ASPWgRA32Y6knBOd9X7N32hVdjnM3
-	 gJg84GDTCgoA4cn4N89M3ZC+esLLaN3TNCbRfBBaRDNt6P2EkEAu+1txPV20kkiwCX
-	 hiOG2r9khpVmZHRGfRogCkZmV46lyZHv2WKvCL70=
+	by mail.kernel.org (Postfix) with ESMTP id 87E9223EB0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 16:18:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdlRvIKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgFTP5p (ORCPT
+        id S1727871AbgFTQSQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 11:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgFTP5p (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 20 Jun 2020 11:57:45 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB85823D6A;
-        Sat, 20 Jun 2020 15:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592668664;
-        bh=D8fKktaZdo0jD0i4fAQUF+z6/90romTLM3ZgSwzvpY8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pP6GKyBHjzZRcJx+iJFjVnoR2m7N67RQfT0Bm48HzxTwn/NPvrKJennJn5qtMW7A6
-         XWs9wB6b/eUtJcm1UKKlpAcNqOMDywl+aCTbaTc9WvlyB3E/UomafaAif3mEpR1rGF
-         BplKzw7hKoY66Q6EEC9wx43AN2/CjzSQOs+w4xz4=
-Date:   Sat, 20 Jun 2020 16:57:39 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jean-Baptiste Maneyrol <JManeyrol@invensense.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sensor
- support
-Message-ID: <20200620165739.29694b9b@archlinux>
-In-Reply-To: <MN2PR12MB4422148948CF6FC7953A6D2AC49F0@MN2PR12MB4422.namprd12.prod.outlook.com>
-References: <20200608204250.3291-1-jmaneyrol@invensense.com>
-        <20200608204250.3291-7-jmaneyrol@invensense.com>
-        <fd4918b6-a55f-4047-7f18-b796a8ccd020@metafoo.de>
-        <MN2PR12MB4422148948CF6FC7953A6D2AC49F0@MN2PR12MB4422.namprd12.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 20 Jun 2020 12:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgFTQSP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 12:18:15 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B066DC06174E;
+        Sat, 20 Jun 2020 09:18:14 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id k15so267065lfc.4;
+        Sat, 20 Jun 2020 09:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y/B8+Wt8t65HyAHFIvqCHVw/CPSbL5JP5E6zK3iaABQ=;
+        b=sdlRvIKhkaKKZTjU3Hr85BxtzEcUie+Z3KoUUKlgApYqjtNyyX/51yd9pc/UOLjIcK
+         hej1uV1emdGGYFG5l21iPSkSiVOPTRGWnOCsMsjWYYVuDacDmqkzr35Bb4Lfuird1PCp
+         USG1+oG64s8bR6UOHuxYwiJaJQBvUODlSJi+cmIkfpAygnHxhYeEfsBb2COzHCVH/O3h
+         /aEu0wTZKiFFlBIqOWZS98UF4baUwPhWI38g6BtUUh1+uH/5GUkR6CL+c1McgBNtZj9E
+         Z5FhHfP8Gs+bFwBFNlzziN1F78+Is/EHr8bS35gWFn46NzSyFXfp+c7p83RD45r/FJnf
+         oGXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y/B8+Wt8t65HyAHFIvqCHVw/CPSbL5JP5E6zK3iaABQ=;
+        b=fghDiE3usgPEG1N9M/PIxJiqnpxsED8VbyPcDS05K4VFHkCmdo9h8IFv0a42iHdP9Q
+         IBi7WBzx1JITh9Q05ymLXTYsJsys3RNdZgJROZ6nt3mUKUYViXi6AS1RIjrYZqq7O6d9
+         ejjvL6d4n9u7sbn5wrXjKcYT92FOta/lCRzl76BGPkutg+XdQxsWVo8wwSCON12sUA6p
+         0PQS21Fp2zgmokfK7DKepDiaAECZZNWLjciFv1FtHgNi7wmY5Sm/iw62c58+M2EhIxXO
+         guph0UiFpWC1CH8H9GsUI6IDK/DPjaBgbN+kimt+GHsvn/z+unA3Y0uaz/SrRQlJdNJl
+         YJKg==
+X-Gm-Message-State: AOAM5303VQe6QzwKCfPgs8hTry5IINyrD5zzNucOCYp7CuWi4rj5VMeD
+        bynU+yYzpKNbmUYkasQ9rA4=
+X-Google-Smtp-Source: ABdhPJxC4Ue/7La+Ph2+EqjG4x2knGuQ7LL1+gFoJ+jfuTZGL3POZpxRQSk77anQqyHqi4QWMaYbmw==
+X-Received: by 2002:a19:e93:: with SMTP id 141mr4959112lfo.107.1592669892976;
+        Sat, 20 Jun 2020 09:18:12 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u8sm2158588lff.38.2020.06.20.09.18.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Jun 2020 09:18:11 -0700 (PDT)
+Subject: Re: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for
+ some panels
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200617222703.17080-1-digetx@gmail.com>
+ <20200617222703.17080-8-digetx@gmail.com>
+ <20200620112132.GB16901@ravnborg.org>
+ <20200620114934.GB5829@pendragon.ideasonboard.com>
+ <ea421084-a91c-bc03-5997-1723075b7cae@gmail.com>
+ <20200620143114.GA22329@ravnborg.org>
+ <e77a34c1-3e0b-7f30-25d0-a955ec8d8c86@gmail.com>
+ <20200620153012.GA22743@ravnborg.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ce053d7d-7458-20a0-4e9e-77f7f99d364b@gmail.com>
+Date:   Sat, 20 Jun 2020 19:18:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200620153012.GA22743@ravnborg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 14 Jun 2020 20:35:13 +0000
-Jean-Baptiste Maneyrol <JManeyrol@invensense.com> wrote:
+20.06.2020 18:30, Sam Ravnborg пишет:
+> Hi Dmitry
+> On Sat, Jun 20, 2020 at 06:05:37PM +0300, Dmitry Osipenko wrote:
+>> 20.06.2020 17:31, Sam Ravnborg пишет:
+>>> Hi Dmitry
+>>>
+>>>>
+>>>> Oops! Good catch!
+>>> Yep, thanks Laurent. Should have taken a better look before applying.
+>>>
+>>>> Indeed, I blindly set the LVDS type to all these
+>>>> panels. Please revert this patch, I'll double check each panel and
+>>>> prepare an updated version of this patch. Thank you very much for the
+>>>> review!
+>>>
+>>> If you can prepare a fix within a few days then lets wait for that.
+>>> I will do a better review next time.
+>>
+>> Hello Sam,
+>>
+>> I should be able to make it later today or tomorrow. Could you please
+>> clarify what do you mean by the fix, do you what it to be as an
+>> additional patch on top of the applied one or a new version of the patch?
+> An additional patch on top of the one applied.
+> It shall carry a proper fixes: tag like this:
+> 
+> Fixes: 94f07917ebe8 ("drm/panel-simple: Add missing connector type for some panels")
+> Cc: Dmitry Osipenko <digetx@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: dri-devel@lists.freedesktop.org
 
-> Hello Lars,
->=20
-> for the temperature data, the problem is that temperature in the FIFO (us=
-ed in buffer) is not in the same format than when reading the register.
->=20
-> Reading the temperature register return a full precision value on 16 bits=
-. I am using a PROCESSED attribute for it.
-> Temperature data in buffer (coming from the FIFO) is on 8 bits in lower p=
-recision. It is reported as raw data, thus the need of the offset and scale=
- values.
->=20
-> So offset and scale values are only for transforming the temperature data=
- from the buffer, and direct read is a full precision already processed in =
-m=C2=B0C.
-
-That is a problem.  We have no means of describing it in IIO.
-
-If the channel is processed via sysfs the assumption would normally
-be that it is processed in the buffer as well. We don't really
-have any means of describing the two separately.
-
-In cases where we've seen this before the way around it was to
-change the data in the fifo so that the scaling was the same as the
-sysfs channel (usually it's just a bit of padding).
-
-Can we do that here?  Looks like the ratio is 1:64 so should
-be possible.=20
-
-
-
->=20
-> Thanks for the review,
-> JB
->=20
-> From: Lars-Peter Clausen <lars@metafoo.de>
-> Sent: Sunday, June 14, 2020 17:10
-> To: Jean-Baptiste Maneyrol <JManeyrol@invensense.com>; jic23@kernel.org <=
-jic23@kernel.org>; robh+dt@kernel.org <robh+dt@kernel.org>; robh@kernel.org=
- <robh@kernel.org>; mchehab+huawei@kernel.org <mchehab+huawei@kernel.org>; =
-davem@davemloft.net <davem@davemloft.net>; gregkh@linuxfoundation.org <greg=
-kh@linuxfoundation.org>
-> Cc: linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; devicetree@vge=
-r.kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.org <li=
-nux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH v3 06/13] iio: imu: inv_icm42600: add temperature sen=
-sor support=20
-> =C2=A0
-> =C2=A0CAUTION: This email originated from outside of the organization. Pl=
-ease make sure the sender is who they say they are and do not click links o=
-r open attachments unless you recognize the sender and know the content is =
-safe.
->=20
-> On 6/8/20 10:42 PM, Jean-Baptiste Maneyrol wrote:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0 case IIO_CHAN_INFO_PROCESSED:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ret =3D iio_device_claim_direct_mode(indio_dev);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (ret)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ret =3D inv_icm42600_temp_read(st, &temp);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 iio_device_release_direct_mode(indio_dev);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 if (ret)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *val =3D temp;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return IIO_VAL_INT;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0 case IIO_CHAN_INFO_SCALE:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *val =3D 483;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *val2 =3D 91787;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return IIO_VAL_INT_PLUS_MICRO;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0 case IIO_CHAN_INFO_OFFSET:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 *val =3D 25000;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 return IIO_VAL_INT; =20
->=20
-> If the data is returned processed there is no need to specify scale and=20
-> offset.
->=20
-> But since the transformation to turn the data into standard units is a=20
-> simple linear transform the preferred way to handle this is to return=20
-> RAW data and specify scale and offset.
-
+Okay!
