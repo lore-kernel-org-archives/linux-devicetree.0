@@ -2,138 +2,139 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCA5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 03:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8A6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 03:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956F62311D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 03:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pK8cqQB0"
+	by mail.kernel.org (Postfix) with ESMTP id BDDEE23340
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 03:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732633AbgFTD2g (ORCPT
+        id S1726827AbgFTDzF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 19 Jun 2020 23:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732271AbgFTD2f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 19 Jun 2020 23:28:35 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF19C0613EE
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 20:28:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id i4so5294348pjd.0
-        for <devicetree@vger.kernel.org>; Fri, 19 Jun 2020 20:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wEs1bwDB/TtDfJTP+rfPS/eV3OYFDhVkY2AGM1gTF5E=;
-        b=pK8cqQB0iaxFCQTro5VYTVkbeMbmlffBMiXp4BLcWkJ+Hi7VYupgMvngrbaIMZ23DE
-         T+sYQDXM46cA+pIckwp9yhK7KHfNEC/LyhVnBh7tSDZndbi7OQ5Bl1ZQvOTPhd3H4LrN
-         8qqoaH12Q0DH4IzoR7TTDzAyeBqduNOJLKUq8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wEs1bwDB/TtDfJTP+rfPS/eV3OYFDhVkY2AGM1gTF5E=;
-        b=D7GLyNRbVwIC/FuPZdZpvGbJXFKUOMnMAl3zt/80jP7QDlQlN/VfaWWDFFEmE3fKsZ
-         votemJNeZiPzCDMrDUiwidNp9BvalCGt19LJHFKyRalY9U+uioBXD/+OoseDlBlj9p9N
-         0uAPFEJjjfQiJpKhmWzZ1Zyop39728k/rZhFTpS8HW1RBPqvDGbsmwswSOP0zsrVZkvq
-         mSyyjNGzCl8qbzEbOLdM3q5BoSYlroXWNY4bcz9tVTAwu3PA9hRZPU+Sjb/YNCcdkRvG
-         md8uu9THrEWh0660acG6LvdCSbfKqKyVQIY4oi7VZzNloPuZNV1f9jaYOkXVi5wfVrdA
-         wfNg==
-X-Gm-Message-State: AOAM532F4O3ccPJ+PBizW9MQ8Z5bC75vLjd4JABHjQWx4OyrL2KQarXS
-        kXeokgfV7b+fu559ZAWuWfrorQ==
-X-Google-Smtp-Source: ABdhPJzyfQElYK0QcW79S/OVQnqqlVKouBZCgo8zhKaHIx8bCkDGQavnty0ung243w0p9t0m9hE+KQ==
-X-Received: by 2002:a17:902:6a83:: with SMTP id n3mr10826477plk.42.1592623714598;
-        Fri, 19 Jun 2020 20:28:34 -0700 (PDT)
-Received: from localhost.localdomain ([42.111.160.67])
-        by smtp.gmail.com with ESMTPSA id 67sm6182262pga.44.2020.06.19.20.28.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 20:28:34 -0700 (PDT)
-From:   Suniel Mahesh <sunil@amarulasolutions.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        gregkh@linuxfoundation.org, sashal@kernel.org
-Cc:     jagan@amarulasolutions.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>
-Subject: [PATCH v2] arch: arm: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-Date:   Sat, 20 Jun 2020 08:58:16 +0530
-Message-Id: <1592623696-21485-1-git-send-email-sunil@amarulasolutions.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <CAOf5uwkrjj98+_8Hn40ujn2bLz_oYb7FCWcuO8yNn2y0ewMehg@mail.gmail.com>
-References: <CAOf5uwkrjj98+_8Hn40ujn2bLz_oYb7FCWcuO8yNn2y0ewMehg@mail.gmail.com>
+        Fri, 19 Jun 2020 23:55:05 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54744 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725290AbgFTDzE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 19 Jun 2020 23:55:04 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1D6AD24E770376062A29;
+        Sat, 20 Jun 2020 11:54:58 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.90) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 20 Jun 2020
+ 11:54:48 +0800
+Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
+ linux,low-memory-range for arm64 kdump
+To:     James Morse <james.morse@arm.com>, Rob Herring <robh@kernel.org>
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200521093805.64398-6-chenzhou10@huawei.com>
+ <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
+ <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
+ <20200526211800.GA352001@bogus>
+ <ff7c9f68-b578-3a1a-0815-e61c6f87bc4e@arm.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, <dyoung@redhat.com>,
+        Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        <John.p.donnelly@oracle.com>, <pkushwaha@marvell.com>,
+        "Simon Horman" <horms@verge.net.au>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        "Linux Doc Mailing List" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <kexec@lists.infradead.org>,
+        "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>,
+        Bhupesh Sharma <bhsharma@redhat.com>
+From:   chenzhou <chenzhou10@huawei.com>
+Message-ID: <5339140e-41ee-ab20-0a3b-fcf7da82796b@huawei.com>
+Date:   Sat, 20 Jun 2020 11:54:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <ff7c9f68-b578-3a1a-0815-e61c6f87bc4e@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.213.90]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Michael Trimarchi <michael@amarulasolutions.com>
+Hi James, Rob,
 
-The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
-because of which when card is inserted, usb otg is enumerated
-and the card is never detected.
 
-[   64.492645] cfg80211: failed to load regulatory.db
-[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
-[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
-[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
-[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
-[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
-[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
-[   76.412763] usb usb2: Product: EHCI Host Controller
-[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
-[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
-[   76.431755] hub 2-0:1.0: USB hub found
-[   76.435862] hub 2-0:1.0: 1 port detected
+On 2020/5/30 0:11, James Morse wrote:
+> Hi guys,
+>
+> On 26/05/2020 22:18, Rob Herring wrote:
+>> On Fri, May 22, 2020 at 11:24:11AM +0800, chenzhou wrote:
+>>> On 2020/5/21 21:29, Rob Herring wrote:
+>>>> On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
+>>>>> Add documentation for DT property used by arm64 kdump:
+>>>>> linux,low-memory-range.
+>>>>> "linux,low-memory-range" is an another memory region used for crash
+>>>>> dump kernel devices.
+>>>>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>>>>> index 45e79172a646..bfe6fb6976e6 100644
+>>>>> --- a/Documentation/devicetree/bindings/chosen.txt
+>>>>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>>>>> +linux,low-memory-range
+>>>>> +----------------------
+>>>>> +This property (arm64 only) holds a base address and size, describing a
+>>>>> +limited region below 4G. Similar to "linux,usable-memory-range", it is
+>>>>> +an another memory range which may be considered available for use by the
+>>>>> +kernel.
+>>>> Why can't you just add a range to "linux,usable-memory-range"? It
+>>>> shouldn't be hard to figure out which part is below 4G.
+>>> The comments from James:
+>>> Won't this break if your kdump kernel doesn't know what the extra parameters are?
+>>> Or if it expects two ranges, but only gets one? These DT properties should be treated as
+>>> ABI between kernel versions, we can't really change it like this.
+>>>
+>>> I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
+>>> think the simplest thing to do is to add an 'linux,low-memory-range' that we
+>>> memblock_add() after memblock_cap_memory_range() has been called.
+>>> If its missing, or the new kernel doesn't know what its for, everything keeps working.
+>>
+>> I don't think there's a compatibility issue here though. The current 
+>> kernel doesn't care if the property is longer than 1 base+size. It only 
+>> checks if the size is less than 1 base+size.
+> Aha! I missed that.
+>
+>
+>> And yes, we can rely on 
+>> that implementation detail. It's only an ABI if an existing user 
+>> notices.
+>>
+>> Now, if the low memory is listed first, then an older kdump kernel 
+>> would get a different memory range. If that's a problem, then define 
+>> that low memory goes last. 
+> This first entry would need to be the 'crashkernel' range where the kdump kernel is
+> placed, otherwise an older kernel won't boot. The rest can be optional extras, as long as
+> we are tolerant of it being missing...
+How about like this:
 
-The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
-and ENET_RX_ER pad for USB_OTG_ID for proper operation.
+1. The low memory region remained as "Crash kernel (low)".
+2. Userspace will find "Crash kernel" and "Crash kernel (low)" region in /proc/iomem,
+and add "Crash kernel (low)" as the last range of property "linux,usable-memory-range".
 
-This patch fixes pin muxing as per TRM and is tested on a
-i.Core 1.5 MX6 DL SOM.
+Thanks,
+Chen Zhou
+>
+> I'll try and look at the rest of this series on Monday,
+>
+>
+> Thanks,
+>
+> James
+>
+> .
+>
 
-[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
-[   22.459992] mmc0: new high speed SDHC card at address 0001
-[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
-[   22.478856]  mmcblk0: p1 p2
-
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
----
-Changes for v2:
-- Changed patch description as suggested by Michael Trimarchi to make it
-  more readable/understandable.
----
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 756f3a9..12997da 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -397,7 +397,7 @@
- 
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
--			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-+			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
- 		>;
- 	};
- 
-@@ -409,6 +409,7 @@
- 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
- 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
- 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
-+			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
- 		>;
- 	};
- 
--- 
-2.7.4
 
