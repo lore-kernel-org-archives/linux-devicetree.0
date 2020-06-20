@@ -2,107 +2,158 @@ Return-Path: <SRS0=+D0Y=AB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFDDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 08:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBEEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 11:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F2F23A1B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 08:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="YSsRA99B"
+	by mail.kernel.org (Postfix) with ESMTP id 17F6823357
+	for <linux-devicetree@archiver.kernel.org>; Sat, 20 Jun 2020 11:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgFTI5P (ORCPT
+        id S1728046AbgFTLVj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 04:57:15 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:42627 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727023AbgFTI5O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 20 Jun 2020 04:57:14 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id mZJFjDFv9On2BmZJIjuA4f; Sat, 20 Jun 2020 10:57:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1592643433; bh=IEdTbSDXZI/wvTrfPFs6TwvIoNj1x1hH4PdSv6XWsfs=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=YSsRA99Bctogpc4/QI48L1Iut7hYVe0heWH8icHdFhmExgysqtlXEaplLDEVlnBOg
-         anKjwuX5CTliMfUn3R1PEfo6xEgfnvPwj+sUMvfKoY7mjuL2t6iOiTV2ALCCFAOhqp
-         xYNQu2QTb/OHV6MzJC25tO48eSfe+B//2//BmvnaZVAtsoFciW/FgdWkRHfo8s6OE9
-         ubiaPr2+UslVrzVafHHPDS/Yr2JW2kuCHgHc6+XZdUk23Voi3VFR4BSdHrgFotouKi
-         9qlMMHW/glYHbqrjPN21WQ1FNFADgLjrd43zHBV73O1Zqb9Aam+P4l58XniY4Org6W
-         jqoa18DVRRryA==
-Subject: Re: [PATCH v5 2/2] media: cec: i2c: ch7322: Add ch7322 CEC controller
- driver
-To:     Jeff Chase <jnchase@google.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <20200615193811.233737-1-jnchase@google.com>
- <20200615193811.233737-3-jnchase@google.com>
- <3aefc5c4-2af1-59f2-0797-9a5baf91482e@xs4all.nl>
- <CALTkaQ3n30nS-b1XuMiu_Z4+FfD0horJDagCPBaUqCCx4JhtdA@mail.gmail.com>
- <e45bf5a1-3862-66a2-213b-f7e5563e5a5d@xs4all.nl>
- <CALTkaQ02_ttD52h=74hGos09a0ihQwv-rQS5vwpDsrdnK_rYrg@mail.gmail.com>
- <72ea0f61-5fd4-47b6-4b0f-db620ee661db@xs4all.nl>
- <CALTkaQ0SFiX1rNkz5WOGCs=ZttYG9utKntsRyQKB-aWzDj-Cvw@mail.gmail.com>
- <CALTkaQ23yCWbTSaSAfM_63_nhKBTf-n8vr-EQoU=SehAfg6RaQ@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <739bc351-0463-81ec-aa96-293fe7afa53f@xs4all.nl>
-Date:   Sat, 20 Jun 2020 10:57:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 20 Jun 2020 07:21:39 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:51528 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbgFTLVi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 07:21:38 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 39A458053F;
+        Sat, 20 Jun 2020 13:21:34 +0200 (CEST)
+Date:   Sat, 20 Jun 2020 13:21:32 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for
+ some panels
+Message-ID: <20200620112132.GB16901@ravnborg.org>
+References: <20200617222703.17080-1-digetx@gmail.com>
+ <20200617222703.17080-8-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CALTkaQ23yCWbTSaSAfM_63_nhKBTf-n8vr-EQoU=SehAfg6RaQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDKgTNrEHSsErdvOblnx4Tw03qpObLIID7Op9NFudTbh3qHqfV6rba2ifAuhjs+GdVYYd/uawkXqWAr7fJfuubJNmWkgYDVYquVI7WTqBtd68p41djBR
- LpWINSPACEurGbngNSwd2ysqs2X4d9T/uPWGzo/uF6l+s5CsTPuLwI5Z1P/bMzcDmkWKrd+PxMn/VNtPEQjaVBvp5p/z+juP3iBn812Bq8yOKZFsMKM6x8Zn
- IaICCRW/N1MAEtTcvs+5Rw3eP/1KygOipR7U8uemjMSONuJVRFMphekV9eKjcRmUP/hRAdGShcJ75Jia3Pb4zQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617222703.17080-8-digetx@gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=G88y7es5 c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
+        a=weqEaMSWHVjOYctd_rUA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/06/2020 06:56, Jeff Chase wrote:
->>>>> This particular chip can actually be used both with DMI matching but also
->>>>> on an ARM with device tree, but since you can't test this on an ARM board,
->>>>> there is no point in adding support for that.
->>>>>
->>>>> However, compared to the cros-ec and seco drivers you can do something a bit
->>>>> different here: those drivers just return -ENODEV if there is no match, but
->>>>> since this driver reads the EDID it can just continue as long as it does not
->>>>> set the CEC_CAP_CONNECTOR_INFO capability.
+Hi Dmitry
+
+On Thu, Jun 18, 2020 at 01:27:03AM +0300, Dmitry Osipenko wrote:
+> The DRM panel bridge core requires connector type to be set up properly,
+> otherwise it rejects the panel. The missing connector type problem popped
+> up while I was trying to wrap CLAA070WP03XG panel into a DRM bridge in
+> order to test whether panel's rotation property work properly using
+> panel-simple driver on NVIDIA Tegra30 Nexus 7 tablet device, which uses
+> CLAA070WP03XG display panel.
 > 
-> Hi Hans,
+> The NVIDIA Tegra DRM driver recently gained DRM bridges support for the
+> RGB output and now driver wraps directly-connected panels into DRM bridge.
+> Hence all panels should have connector type set properly now, otherwise
+> the panel's wrapping fails.
 > 
-> After looking into this I don't think I want to actually register the
-> cec adapter with the hdmi port's cec notifier because then it will
-> start receiving physical address updates from the port. Since the
-> driver already updates the physical address itself it seems like that
-> would cause some issues.
+> This patch adds missing connector types for the LVDS panels that are found
+> on NVIDIA Tegra devices:
 > 
-> I'm looking at just adding the connector to the adapter directly using
-> `cec_s_conn_info()`. But it doesn't look like I can get the conn_info
-> without registering with the notifier. Do you have any thoughts here
-> before I try tackling changes to the cec framework?
+>   1. AUO B101AW03
+>   2. Chunghwa CLAA070WP03XG
+>   3. Chunghwa CLAA101WA01A
+>   4. Chunghwa CLAA101WB01
+>   5. EDT ET057090DHU
+>   6. Innolux N156BGE L21
+>   7. Samsung LTN101NT05
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-It's a very good point, I hadn't realized this complication.
+Very good to have this fixed.
+I went ahead and pushed this commit to drm-misc-next as it is really
+independent from the rest of the series.
 
-The notifier support is definitely required for this, but there should be
-a way to prevent the notifier from updating the physical address since it
-is controlled by the CEC adapter instead.
+	Sam
 
-Suggestion:
-
-Add a 'bool adap_controls_phys_addr;' field to struct cec_adapter. If set to
-true, then cec-notifier will skip the cec_s_phys_addr calls.
-
-This driver then just has to set this field to true and it should work.
-
-Regards,
-
-	Hans
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 6764ac630e22..9eb2dbb7bfa6 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -687,6 +687,7 @@ static const struct panel_desc auo_b101aw03 = {
+>  		.width = 223,
+>  		.height = 125,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct display_timing auo_b101ean01_timing = {
+> @@ -1340,6 +1341,7 @@ static const struct panel_desc chunghwa_claa070wp03xg = {
+>  		.width = 94,
+>  		.height = 150,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct drm_display_mode chunghwa_claa101wa01a_mode = {
+> @@ -1362,6 +1364,7 @@ static const struct panel_desc chunghwa_claa101wa01a = {
+>  		.width = 220,
+>  		.height = 120,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct drm_display_mode chunghwa_claa101wb01_mode = {
+> @@ -1384,6 +1387,7 @@ static const struct panel_desc chunghwa_claa101wb01 = {
+>  		.width = 223,
+>  		.height = 125,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct drm_display_mode dataimage_scf0700c48ggu18_mode = {
+> @@ -1573,6 +1577,7 @@ static const struct panel_desc edt_et057090dhu = {
+>  	},
+>  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+>  	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct drm_display_mode edt_etm0700g0dh6_mode = {
+> @@ -2055,6 +2060,7 @@ static const struct panel_desc innolux_n156bge_l21 = {
+>  		.width = 344,
+>  		.height = 193,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct drm_display_mode innolux_p120zdg_bf1_mode = {
+> @@ -3001,6 +3007,7 @@ static const struct panel_desc samsung_ltn101nt05 = {
+>  		.width = 223,
+>  		.height = 125,
+>  	},
+> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>  };
+>  
+>  static const struct drm_display_mode samsung_ltn140at29_301_mode = {
+> -- 
+> 2.26.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
