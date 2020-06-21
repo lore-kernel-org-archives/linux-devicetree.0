@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03447C433E7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759E0C433E1
 	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA7424772
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F5724768
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Nbci1orA"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b8BKcU1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgFUAsN (ORCPT
+        id S1729110AbgFUAsM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 20:48:13 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60972 "EHLO
+        Sat, 20 Jun 2020 20:48:12 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60982 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgFUAsM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 20:48:12 -0400
+        with ESMTP id S1728901AbgFUAsJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 20:48:09 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2FF90552;
-        Sun, 21 Jun 2020 02:48:06 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9127711C5;
+        Sun, 21 Jun 2020 02:48:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592700486;
-        bh=T2gCA4T8mtz1HoFQ2uWHrRsSxO+iWFnLgHfz0vIqZco=;
+        s=mail; t=1592700484;
+        bh=yJ+c7T2CuhBRuvZB1ywhcgNTxXFDy151itPJiOeQcxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nbci1orAELj30VHuptm9yg3pkzxcWy6i5GZBfRrhLwIUSlEa1tYw44EhjxmgqAxuW
-         8uDUVQvBcgFt8BR9Ts8H9ICP61E2mg9LnSN9McxoYTKZOs3dRt0jIm3jfUBoywO39M
-         RM25JSwZ5C8q+0yTXSlcxjXoWHFBfKaYL5qQ4hus=
+        b=b8BKcU1amCqzDFt1h5+kGUQCoiEwgBwWHnGfD5qXEVlEJhlJbHoiLA9g4stKvlPlc
+         6z7e8dMBLG42ckPg2cHZ/Lrh6tCTebrZu/dCNadcJ9pY4UrfTTtIS9ts9Bbsf2f+MK
+         xv1O8CqCBTKRSOj+5u7ZPJ8W2aCbAMaGIWj0lfGY=
 From:   Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 To:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 8/8] dt-bindings: media: renesas,vsp1: Add power-domains and resets
-Date:   Sun, 21 Jun 2020 03:47:34 +0300
-Message-Id: <20200621004734.28602-9-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 5/8] dt-bindings: media: renesas,fdp1: Make power-domains mandatory
+Date:   Sun, 21 Jun 2020 03:47:31 +0300
+Message-Id: <20200621004734.28602-6-laurent.pinchart+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
 References: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
@@ -49,73 +49,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The power-domains and resets properties are used in all DT sources in
-the kernel but are absent from the bindings. Document them and make them
-mandatory.
+All DT source files in the kernel tree specify the power-domains
+property. Make it mandatory.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../devicetree/bindings/media/renesas,vsp1.yaml    | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes since v1:
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.yaml b/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-index 65e8ee61ce90..990e9c1dbc43 100644
---- a/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-+++ b/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-@@ -29,6 +29,12 @@ properties:
-   clocks:
-     maxItems: 1
- 
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-   renesas,fcp:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-@@ -39,6 +45,8 @@ required:
+- Fix typo in comment message
+---
+ Documentation/devicetree/bindings/media/renesas,fdp1.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/media/renesas,fdp1.yaml b/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
+index f4db96a1f53c..39184bd21a27 100644
+--- a/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
++++ b/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
+@@ -43,6 +43,7 @@ required:
    - reg
    - interrupts
    - clocks
 +  - power-domains
-+  - resets
  
  additionalProperties: false
  
-@@ -59,24 +67,30 @@ examples:
-   - |
-     #include <dt-bindings/clock/renesas-cpg-mssr.h>
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7790-sysc.h>
- 
-     vsp@fe928000 {
-         compatible = "renesas,vsp1";
-         reg = <0xfe928000 0x8000>;
-         interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-         clocks = <&cpg CPG_MOD 131>;
-+        power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-+        resets = <&cpg 131>;
-     };
- 
-   # R8A77951 (R-Car H3) VSP2-BC
-   - |
-     #include <dt-bindings/clock/renesas-cpg-mssr.h>
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
- 
-     vsp@fe920000 {
-         compatible = "renesas,vsp2";
-         reg = <0xfe920000 0x8000>;
-         interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
-         clocks = <&cpg CPG_MOD 624>;
-+        power-domains = <&sysc R8A7795_PD_A3VP>;
-+        resets = <&cpg 624>;
- 
-         renesas,fcp = <&fcpvb1>;
-     };
 -- 
 Regards,
 
