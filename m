@@ -2,358 +2,136 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A167C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4F4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 20:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4BAD23BEF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FgCgBZvs"
+	by mail.kernel.org (Postfix) with ESMTP id 41D74206C1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 20:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgFUTqb (ORCPT
+        id S1730585AbgFUUAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 15:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730542AbgFUTqa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 15:46:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBBFC061795
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 12:46:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e18so7135452pgn.7
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 12:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BJN6SbbjPQIEQpAULqv1coaJiso8HaxaosMAVz8bJD8=;
-        b=FgCgBZvsTj6ALSA1gO/TbzB72uhsW/KYc2Qm6SYFVvceBMfzCyiur9pgZ+v7m4Yquk
-         X865Ayojx4yoK8Eh7aXXKGLV+6MJ1r3Xavblk6BYlzvGdbT0oOnnuJ88N8KKQTFKh5Yk
-         PSuzON5MOBpqYYIoJaL6SxY+RzZTnURpvfggSS/nhBwQIrfhTC1pBYqlGUREFzAyLijl
-         4eVezL27Zua+tqyKSqmoNNOtxDzMvKi9dqRFnrOc7lxvR26raS/tLtlN91cq7lCB10hT
-         e5nFIBelr8TSPRd/30fs63SbYvUNRrbsuvagJTw+4eA+qG/qFQGgk4srnCoTFmIfbuoh
-         FBsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BJN6SbbjPQIEQpAULqv1coaJiso8HaxaosMAVz8bJD8=;
-        b=TRWYku1umHxJBztT1Qo4c23SO/QKM4IfaOIU6s3+I3oMZerPqrEX+XJQ0+z4ggi3EU
-         uYRMkbU3XArnI4bEopF0S7Oz/jrsaw4mNMc1z87g/tsMjsmc6xiZ7B4Il2uDb8WSnPCH
-         UJBH0I/jqR8DNbHoWsHhsPh3MVZcZ/bDyRhhOcPGns/bALh9G/3Hqm91h2BAOVqc6bk4
-         qU/wEEaxVSpriCgloP23WXHBrALIdg8l3IejhWPMqo9ZH50fkvfQtq1uE+R7CTrMuJOu
-         9sU47v3WkRItaMilvs8RQVOuDy/3f6ckhPwm/r/PlLVYX/wBnEA07j8OS650/VCShX5l
-         jScA==
-X-Gm-Message-State: AOAM533wI7dqjkMzrJxwXnvbvHF6gnJSrBLtQ7EIBJDiwx3wbtSjy0BW
-        /9B1aHgTuvJDP5IwotgzvSaBxg==
-X-Google-Smtp-Source: ABdhPJwqHB2CYAyWLyORUvhB1OKavnbFKMP0ffmtCm+FKriQ+lZdxjjb3RqIuEawD8oOWOe4o1hEaA==
-X-Received: by 2002:a62:ac0a:: with SMTP id v10mr17677509pfe.27.1592768789881;
-        Sun, 21 Jun 2020 12:46:29 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l83sm11758357pfd.150.2020.06.21.12.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 12:46:29 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 12:43:43 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/5] iio: adc: qcom-vadc: move several adc5 functions to
- common file
-Message-ID: <20200621194343.GO128451@builder.lan>
-References: <20200621193549.2070434-1-dmitry.baryshkov@linaro.org>
- <20200621193549.2070434-3-dmitry.baryshkov@linaro.org>
+        Sun, 21 Jun 2020 16:00:24 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:56129 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730565AbgFUUAY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 21 Jun 2020 16:00:24 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.138.102])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 435715852A7F;
+        Sun, 21 Jun 2020 22:00:21 +0200 (CEST)
+Received: from arch.lan (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sun, 21 Jun
+ 2020 22:00:20 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     <linux-iio@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <jic23@kernel.org>, <pmeerw@pmeerw.net>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH v6 0/4] Add support for SCD30 sensor
+Date:   Sun, 21 Jun 2020 21:56:57 +0200
+Message-ID: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621193549.2070434-3-dmitry.baryshkov@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: CAS1.emp2.local (172.16.1.1) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 13570753053933198359
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgudegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffoggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhephedtgefgkeduvdekheeggefghffhteekleetvdekvddtveeutdetueefueehieetnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 21 Jun 12:35 PDT 2020, Dmitry Baryshkov wrote:
+Following series adds support for Sensirion SCD30 sensor module capable of
+measuring carbon dioxide, temperature and relative humidity. CO2 measurements
+base on NDIR principle while temperature and relative humidity are measured by
+the on board SHT31. As for sensor communication, both I2C and serial interfaces
+are supported.
 
-> ADC-TM5 driver will make use of several functions from ADC5 driver. Move
-> them to qcom-vadc-common driver.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+v6:
+* fix warnings produced by C=2 build option
+* fix 0-day warning 'Clarify calculation precedence for '&' and '?''
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+v5:
+* set pressure calibration via output channel
+* use kstrtobool() to read value into _enabled attribute
+* drop explicit parent asignment as the default one is good enough
+  (seems 'iio: core: pass parent device as parameter during allocation'
+   series was accepted)
 
-Regards,
-Bjorn
+v4:
+* improve formatting
+* improve error handling readability
+* fix message validity check on serial write
 
-> ---
->  drivers/iio/adc/qcom-spmi-adc5.c   | 73 +++---------------------------
->  drivers/iio/adc/qcom-vadc-common.c | 69 +++++++++++++++++++++++++++-
->  drivers/iio/adc/qcom-vadc-common.h | 12 ++++-
->  3 files changed, 85 insertions(+), 69 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-> index 21fdcde77883..10ca0bf77160 100644
-> --- a/drivers/iio/adc/qcom-spmi-adc5.c
-> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
-> @@ -143,18 +143,6 @@ struct adc5_chip {
->  	const struct adc5_data	*data;
->  };
->  
-> -static const struct vadc_prescale_ratio adc5_prescale_ratios[] = {
-> -	{.num =  1, .den =  1},
-> -	{.num =  1, .den =  3},
-> -	{.num =  1, .den =  4},
-> -	{.num =  1, .den =  6},
-> -	{.num =  1, .den = 20},
-> -	{.num =  1, .den =  8},
-> -	{.num = 10, .den = 81},
-> -	{.num =  1, .den = 10},
-> -	{.num =  1, .den = 16}
-> -};
-> -
->  static int adc5_read(struct adc5_chip *adc, u16 offset, u8 *data, int len)
->  {
->  	return regmap_bulk_read(adc->regmap, adc->base + offset, data, len);
-> @@ -165,55 +153,6 @@ static int adc5_write(struct adc5_chip *adc, u16 offset, u8 *data, int len)
->  	return regmap_bulk_write(adc->regmap, adc->base + offset, data, len);
->  }
->  
-> -static int adc5_prescaling_from_dt(u32 num, u32 den)
-> -{
-> -	unsigned int pre;
-> -
-> -	for (pre = 0; pre < ARRAY_SIZE(adc5_prescale_ratios); pre++)
-> -		if (adc5_prescale_ratios[pre].num == num &&
-> -		    adc5_prescale_ratios[pre].den == den)
-> -			break;
-> -
-> -	if (pre == ARRAY_SIZE(adc5_prescale_ratios))
-> -		return -EINVAL;
-> -
-> -	return pre;
-> -}
-> -
-> -static int adc5_hw_settle_time_from_dt(u32 value,
-> -					const unsigned int *hw_settle)
-> -{
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < VADC_HW_SETTLE_SAMPLES_MAX; i++) {
-> -		if (value == hw_settle[i])
-> -			return i;
-> -	}
-> -
-> -	return -EINVAL;
-> -}
-> -
-> -static int adc5_avg_samples_from_dt(u32 value)
-> -{
-> -	if (!is_power_of_2(value) || value > ADC5_AVG_SAMPLES_MAX)
-> -		return -EINVAL;
-> -
-> -	return __ffs(value);
-> -}
-> -
-> -static int adc5_decimation_from_dt(u32 value,
-> -					const unsigned int *decimation)
-> -{
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < ADC5_DECIMATION_SAMPLES_MAX; i++) {
-> -		if (value == decimation[i])
-> -			return i;
-> -	}
-> -
-> -	return -EINVAL;
-> -}
-> -
->  static int adc5_read_voltage_data(struct adc5_chip *adc, u16 *data)
->  {
->  	int ret;
-> @@ -396,7 +335,7 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->  			return ret;
->  
->  		ret = qcom_adc5_hw_scale(prop->scale_fn_type,
-> -			&adc5_prescale_ratios[prop->prescale],
-> +			prop->prescale,
->  			adc->data,
->  			adc_code_volt, val);
->  		if (ret)
-> @@ -539,7 +478,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  
->  	ret = of_property_read_u32(node, "qcom,decimation", &value);
->  	if (!ret) {
-> -		ret = adc5_decimation_from_dt(value, data->decimation);
-> +		ret = qcom_adc5_decimation_from_dt(value, data->decimation);
->  		if (ret < 0) {
->  			dev_err(dev, "%02x invalid decimation %d\n",
->  				chan, value);
-> @@ -552,7 +491,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  
->  	ret = of_property_read_u32_array(node, "qcom,pre-scaling", varr, 2);
->  	if (!ret) {
-> -		ret = adc5_prescaling_from_dt(varr[0], varr[1]);
-> +		ret = qcom_adc5_prescaling_from_dt(varr[0], varr[1]);
->  		if (ret < 0) {
->  			dev_err(dev, "%02x invalid pre-scaling <%d %d>\n",
->  				chan, varr[0], varr[1]);
-> @@ -580,10 +519,10 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  		/* Digital controller >= 5.3 have hw_settle_2 option */
->  		if (dig_version[0] >= ADC5_HW_SETTLE_DIFF_MINOR &&
->  			dig_version[1] >= ADC5_HW_SETTLE_DIFF_MAJOR)
-> -			ret = adc5_hw_settle_time_from_dt(value,
-> +			ret = qcom_adc5_hw_settle_time_from_dt(value,
->  							data->hw_settle_2);
->  		else
-> -			ret = adc5_hw_settle_time_from_dt(value,
-> +			ret = qcom_adc5_hw_settle_time_from_dt(value,
->  							data->hw_settle_1);
->  
->  		if (ret < 0) {
-> @@ -598,7 +537,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  
->  	ret = of_property_read_u32(node, "qcom,avg-samples", &value);
->  	if (!ret) {
-> -		ret = adc5_avg_samples_from_dt(value);
-> +		ret = qcom_adc5_avg_samples_from_dt(value);
->  		if (ret < 0) {
->  			dev_err(dev, "%02x invalid avg-samples %d\n",
->  				chan, value);
-> diff --git a/drivers/iio/adc/qcom-vadc-common.c b/drivers/iio/adc/qcom-vadc-common.c
-> index 2bb78d1c4daa..ffa578ce76db 100644
-> --- a/drivers/iio/adc/qcom-vadc-common.c
-> +++ b/drivers/iio/adc/qcom-vadc-common.c
-> @@ -89,6 +89,18 @@ static const struct vadc_map_pt adcmap_100k_104ef_104fb_1875_vref[] = {
->  	{ 46,	125000 },
->  };
->  
-> +static const struct vadc_prescale_ratio adc5_prescale_ratios[] = {
-> +	{.num =  1, .den =  1},
-> +	{.num =  1, .den =  3},
-> +	{.num =  1, .den =  4},
-> +	{.num =  1, .den =  6},
-> +	{.num =  1, .den = 20},
-> +	{.num =  1, .den =  8},
-> +	{.num = 10, .den = 81},
-> +	{.num =  1, .den = 10},
-> +	{.num =  1, .den = 16}
-> +};
-> +
->  static int qcom_vadc_scale_hw_calib_volt(
->  				const struct vadc_prescale_ratio *prescale,
->  				const struct adc5_data *data,
-> @@ -385,10 +397,12 @@ int qcom_vadc_scale(enum vadc_scale_fn_type scaletype,
->  EXPORT_SYMBOL(qcom_vadc_scale);
->  
->  int qcom_adc5_hw_scale(enum vadc_scale_fn_type scaletype,
-> -		    const struct vadc_prescale_ratio *prescale,
-> +		    unsigned int prescale_ratio,
->  		    const struct adc5_data *data,
->  		    u16 adc_code, int *result)
->  {
-> +	const struct vadc_prescale_ratio *prescale = &adc5_prescale_ratios[prescale_ratio];
-> +
->  	if (!(scaletype >= SCALE_HW_CALIB_DEFAULT &&
->  		scaletype < SCALE_HW_CALIB_INVALID)) {
->  		pr_err("Invalid scale type %d\n", scaletype);
-> @@ -400,6 +414,59 @@ int qcom_adc5_hw_scale(enum vadc_scale_fn_type scaletype,
->  }
->  EXPORT_SYMBOL(qcom_adc5_hw_scale);
->  
-> +int qcom_adc5_prescaling_from_dt(u32 num, u32 den)
-> +{
-> +	unsigned int pre;
-> +
-> +	for (pre = 0; pre < ARRAY_SIZE(adc5_prescale_ratios); pre++)
-> +		if (adc5_prescale_ratios[pre].num == num &&
-> +		    adc5_prescale_ratios[pre].den == den)
-> +			break;
-> +
-> +	if (pre == ARRAY_SIZE(adc5_prescale_ratios))
-> +		return -EINVAL;
-> +
-> +	return pre;
-> +}
-> +EXPORT_SYMBOL(qcom_adc5_prescaling_from_dt);
-> +
-> +int qcom_adc5_hw_settle_time_from_dt(u32 value,
-> +				     const unsigned int *hw_settle)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < VADC_HW_SETTLE_SAMPLES_MAX; i++) {
-> +		if (value == hw_settle[i])
-> +			return i;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL(qcom_adc5_hw_settle_time_from_dt);
-> +
-> +int qcom_adc5_avg_samples_from_dt(u32 value)
-> +{
-> +	if (!is_power_of_2(value) || value > ADC5_AVG_SAMPLES_MAX)
-> +		return -EINVAL;
-> +
-> +	return __ffs(value);
-> +}
-> +EXPORT_SYMBOL(qcom_adc5_avg_samples_from_dt);
-> +
-> +int qcom_adc5_decimation_from_dt(u32 value,
-> +			    const unsigned int *decimation)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ADC5_DECIMATION_SAMPLES_MAX; i++) {
-> +		if (value == decimation[i])
-> +			return i;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL(qcom_adc5_decimation_from_dt);
-> +
->  int qcom_vadc_decimation_from_dt(u32 value)
->  {
->  	if (!is_power_of_2(value) || value < VADC_DECIMATION_MIN ||
-> diff --git a/drivers/iio/adc/qcom-vadc-common.h b/drivers/iio/adc/qcom-vadc-common.h
-> index e074902a24cc..2c65ddc98696 100644
-> --- a/drivers/iio/adc/qcom-vadc-common.h
-> +++ b/drivers/iio/adc/qcom-vadc-common.h
-> @@ -153,10 +153,20 @@ struct qcom_adc5_scale_type {
->  };
->  
->  int qcom_adc5_hw_scale(enum vadc_scale_fn_type scaletype,
-> -		    const struct vadc_prescale_ratio *prescale,
-> +		    unsigned int prescale_ratio,
->  		    const struct adc5_data *data,
->  		    u16 adc_code, int *result_mdec);
->  
-> +int qcom_adc5_prescaling_from_dt(u32 num, u32 den);
-> +
-> +int qcom_adc5_hw_settle_time_from_dt(u32 value,
-> +		const unsigned int *hw_settle);
-> +
-> +int qcom_adc5_avg_samples_from_dt(u32 value);
-> +
-> +int qcom_adc5_decimation_from_dt(u32 value,
-> +			    const unsigned int *decimation);
-> +
->  int qcom_vadc_decimation_from_dt(u32 value);
->  
->  #endif /* QCOM_VADC_COMMON_H */
-> -- 
-> 2.27.0
-> 
+v3:
+* simplify code by scaling temperature & humidity in _read_meas()
+* update realbits in scan types
+* s/adjecent/adjacent
+* drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
+  output channel
+* rework locking in _read_raw
+* fix endianess problem on BE machine
+* align timestamp properly before pushing to buffers
+* explain why interrupt gets disabled after registration
+* add trigger validation
+* drop SCALE for temperature and humidity channel as they are processed
+* register action which stops measuring after starting measurements
+* spit generic calibration attr into two doing specific things
+* add comment explaining why priv in struct scd30_state is for
+* rename node in binding example to co2-sensor
+
+v2:
+* move asm/byteorder.h towards the bottom of include list
+* make channel address names in enum more specific
+* add postfixes to defines and extra comments
+* drop unneeded i2c include from scd30 header
+* break generic command sending function into specialized options
+* expose automatic calibration and forced calibration via the same attr
+* use SAMP_FREQ to set frequency instead of meas_interval attr
+* use CALISCALE to set pressure compensation instead of pressure_comp attr
+* use CALIBBIAS to set temperature offset instead of temp_offset attr
+* fix order in MAINTAINERS
+* drop attribute allowing one to reset sensor
+* as we have dt probing drop board file based probing (i2c_device_id)
+* merge patches touching related files
+* use fwnode API to retrieve interrupt from dt
+* fix interrupt-parent spelling
+* change binding license
+* drop supply from required property
+
+Tomasz Duszynski (4):
+  iio: chemical: scd30: add core driver
+  iio: chemical: scd30: add I2C interface driver
+  iio: chemical: scd30: add serial interface driver
+  dt-bindings: iio: scd30: add device binding file
+
+ Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
+ .../iio/chemical/sensirion,scd30.yaml         |  68 ++
+ MAINTAINERS                                   |   9 +
+ drivers/iio/chemical/Kconfig                  |  33 +
+ drivers/iio/chemical/Makefile                 |   3 +
+ drivers/iio/chemical/scd30.h                  |  78 ++
+ drivers/iio/chemical/scd30_core.c             | 771 ++++++++++++++++++
+ drivers/iio/chemical/scd30_i2c.c              | 139 ++++
+ drivers/iio/chemical/scd30_serial.c           | 263 ++++++
+ 9 files changed, 1398 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+ create mode 100644 drivers/iio/chemical/scd30.h
+ create mode 100644 drivers/iio/chemical/scd30_core.c
+ create mode 100644 drivers/iio/chemical/scd30_i2c.c
+ create mode 100644 drivers/iio/chemical/scd30_serial.c
+
+--
+2.27.0
+
