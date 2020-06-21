@@ -8,31 +8,31 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80629C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CAAC433E0
 	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7C6207E8
+	by mail.kernel.org (Postfix) with ESMTP id 7AFD32336F
 	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ONmNfyZP"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="AjoO0/Rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbgFUTkh (ORCPT
+        id S1730070AbgFUTki (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 15:40:37 -0400
-Received: from mout.web.de ([212.227.15.3]:37319 "EHLO mout.web.de"
+        Sun, 21 Jun 2020 15:40:38 -0400
+Received: from mout.web.de ([212.227.15.3]:39119 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbgFUTkh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1730170AbgFUTkh (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Sun, 21 Jun 2020 15:40:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
         s=dbaedf251592; t=1592768429;
-        bh=Xzttkjxbn6tRm7PPzTn23RfXNlqY8vkHctwxUl7NGfo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ONmNfyZPmlUPKJHOXTML8DibZ/LkYPR1RAhczYVEV2QmRM4m0yiUAtzQslGIuSFmc
-         ZNjiFK+rOh8SV35HcPq47mqTqTRrp9LPF4NcZUkR9XYQtewBipcvXrJEMpDaOIofxw
-         mRz3MrXgKppNkiaW9Dx4Gc8o5SAb6L8D5Xwxy13g=
+        bh=cUH/lxbu1fDaoPxE38bxOH+KGOlEgJnXQgjvrcxT/uA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=AjoO0/RdHCDO/Vym1em35nW2F3J0HbBPyQgDgZBTEFQRM0jq3ZVwlr6tI6Myw5Vnp
+         PM/LHKKaZDCw69NLYjrrlRVNrqq1RtbQD0sdkmouq61LhF91lBFqf5UtcWJxkEgpBX
+         6M2I8W3VGrxGh2eyxF/jupodQA1eueiqsJxK8BS4=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from LaptopNick.fritz.box ([79.227.109.96]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MRk0k-1jJzBH1fBa-00TBd4; Sun, 21
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2BI2-1ijXtr0Hi2-013cJK; Sun, 21
  Jun 2020 21:40:29 +0200
 From:   Nick Reitemeyer <nick.reitemeyer@web.de>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
@@ -40,120 +40,60 @@ Cc:     Stephan Gerhold <stephan@gerhold.net>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Nick Reitemeyer <nick.reitemeyer@web.de>
-Subject: [PATCH 2/2] ARM: dts: ux500: samsung-golden: Add touchkey
-Date:   Sun, 21 Jun 2020 21:38:23 +0200
-Message-Id: <20200621193822.133683-2-nick.reitemeyer@web.de>
+Subject: [PATCH 1/2] ARM: defconfig: u8500: Enable CONFIG_KEYBOARD_TM2_TOUCHKEY
+Date:   Sun, 21 Jun 2020 21:38:22 +0200
+Message-Id: <20200621193822.133683-1-nick.reitemeyer@web.de>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200621193822.133683-1-nick.reitemeyer@web.de>
-References: <20200621193822.133683-1-nick.reitemeyer@web.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:F+gf9Pksrfga9CGGdCdBb+Q+Lyh3AAgB1bsqHaNBaxsx3RPY0i+
- eOZazJGKrXUcZaHAjYWCmE11fWLWs2nvwMEW5RV6vdcaAOCold1DxlmBeACb0hJRiOktao6
- fE+t7JVkC0ATjpRlbQexA27EBrNiJwViBS6+5fhL/cGOMkfL4atjKKrVAHXahYWiUTmKG5X
- TBYAHcXSO2adlyIuFa5Rg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6hX209b3+s8=:ygA26r6qSE7/Pc0s7D6x7G
- YUz40QwrBi5DIKA6Hajf16+G14gaEVy2dFaVdROEt8mRn+x1QiJCAXu6bQtv/Cinv+v/z2zir
- OljeuflNMow026g8WxILb+E3IU65MJUjisJ0vbL/lzi3kRytjoMQ+Ks1bH6gZoDeooNnDTiJJ
- Hev5AwCSjaaly616cW/Oa9/APhXKiAAWs8lmgv26QG/8b8o2KTiYXPT3iLt/rdPy8HQDHaEuk
- NTel32JLI7E8Vmfi/2LH9NEaoOLppf7K1pzBTv08cePKAP5KTwD65FqYNUa9IPEW9FiR6ZDLe
- FPLeErinrKkTezCF2eQrICYU13Ewm+ED+bKuByyYtPh4A5YJ6U6savy0o1wxjmkMaUGrwcTi0
- oTk4Uk39u/TJwAVVrPYcH7Yw5tt2T0k748uERtxLWz2J2SFGYMxDkL3HVmaXA2b3P4sLLhZdj
- dQJM/BJrC7vBv1NED+FvACFzbdkQBq91+aJS0iMXdarQtypfoCgOkiuWOhsTRUjjTYlMcLSap
- E6mNLCcoi5R6XXtJWJ1v+u5978zYEJdYKHEtApTCV85gH8HnI2NyByyj1jyWvFMWFg86bG4rA
- kSOufG8DUxzdYSzoVhCDQG51vlAv7qtlZaO+EcwQJ792wlG4oODX50tC/m9mfrRXlHtQ1ZSyj
- EelDl3GAUhYABNNzhI6AaCAeG77ea7w4ABSBxdCNIqDzuy0/mmx460yDYe6Uvj6Cb8QMsoTjs
- 9XMwDzZPiQeReeR+vHz5FoYGSlF2HWOSzUPmVJ7Amhs9Y+HDIl1nDipdvl6zf6/2+4PoyvsuI
- /KloOe8uqGqaaQEWUqEokxeJ5ptKPkuE6B8LSChbOqa5dzY3Kw32WulTiFjclo7VRWqr3G6Sr
- OYz1geoefQxzuvecQqCMH/7/5+Kf6wrmQUn9pVqLOrw9J7pfirFzSbqxZfX5+J1XvpKv7+mD9
- 5Gw4EZ58U76kLy7Tdnv+eN+HbkRX4Zgg4+wlcgFlHKV1NH+7jQWgk7Pyia0iyGUzYciInUYRs
- 82PHWPF81SIRt/bM3s1+g1yO++bCCzF2Iydub6BMYjAL2AV7L039nmoynIDmw4dcZiVVmUx96
- m52CSzGdTogs3AKQRM9lPjSP+5ONB5eMhYRoQpkZikwOdIlhfCNoOSeemsSw9LEoCw5hp6iEM
- V/lapICu3YRhiTE/f568FqXE3tQCsX+FfcrvW8BTOrWHJ+8GgPtFLaxDeVN/IBao92XkHq31y
- 072ngHUZY8Dtc0fXI
+X-Provags-ID: V03:K1:DyZiYPMqoGw8YEI0qM3yC3WNyGI7BEBQYd5iDRdmlUuzABPAeLs
+ M9EpxDT3nveEpsqTy2ZVLl26OST0WENzbaskw/yo1XflVinz//I41TAQcPEA7QMOidaazqP
+ KPFO3IbzAVgcIvjMiZa76ftAyixPs9UTGoZrczDHkmBaEnXlB7ihxN+s56avLYx1GY270nw
+ uyPxukCrpvAhFOv7wWzEw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:i2D3AhZIRJo=:6O38u/UKDaD2I0lxJBHm6a
+ PRYX1r/BL9JzjPmqTeiRhVDK8mXpiOjCvgjne+Ze04epEexrz0JYZF/bZtpQtEtuXc2VyIPfS
+ 1C8jGNfIaSY49K3BfzEHTnQy8HV17qj68mbzQgBrMKgX5D0cr2884uuLdIdNQWLkTNZ8a1UaE
+ MrA5mXHxPBpTS8xb8VS5RQWIzL73SNFIrdjOGGRxMRqd439masWZpfiOty/bV7jFdy4DKmMWE
+ SmYfL3sshxnUd2ZzsLHOY2bYIXkVRU+aZp0JYJjDT5UGMrsP45oqg4Hlkij9CJmzS2E6Nf60E
+ 0+URUnGbqO44ZN1C1hJZ+c4v3xM5oUyZ0J2AUEZJnAg+RsMTH+TquEglMDOVfMyv000udmPLZ
+ 2bJ2eWtLTNGIjQE/0YrjkoxjPYDQJKir8H9hZefBM26L0dYscbs88cntbjK43Pn5QdlNUTEfY
+ 6WJwzuhpKc2pe/57Bdtq9kZ946QP/6UTfpTRKUQYVS3wXZJ2HgO6tWHhXPWCzJe/P1+oYmh93
+ AgdUM8aR0SpvQzoOgoUR2vKcuVAPtKx+Y3IGw8ZsKn9IzVmzbjBnA2UO3J0kA0+FP28TCcRLz
+ ILYietK6gGyH/6kgMZdzserYc4ck0QYJy2nQnH+/B6uMtRQeOFR8f2q1rqLXD67RcA2QIPFNu
+ n4XJhlvVReGi+HwaLyKhZOL2E239mMMd38GdB8uq7MeYwSrZyig26G5QMk9gjsPFhk6IaOKAI
+ /dfS5z+A6+EW2HMn2L0t3SpqlaabTvPpFjWqpTjLX8I0xtFEzJI0UW7csE1twBB2q/KuBqmpJ
+ UkjXIGdBWboY250B5UWOktKV06KI0jd+fq1xVBgm+d0sulP57plhXgRLKBHsGcDK6JpNO2f/f
+ 9ANTN3PQIKJ3NUe1cIVSKhWe3cVPHI8RklAxo4/tUwvhLn+Cpr+twoaONipiqCOScaJWxMbco
+ mcFMqZtZVv4TL8q75ZDgKH/GytZaXl5gfA3wbgNkYxwDsQZz1jhiHo5M40OXq2kjsxsw07V2+
+ 7LDpF2PRXfRB1oZ7x6XUOjaWUrjcbTfuYhZ+uBIUHo0r/xK7uWoJ7yKLxV1Ca720KZJGs6Qv6
+ ie6nkX32z9ec3NFOaEOat+fqdEYvgEuTv5ub4qzuQYxRv1MEvUGvrBM9+NbT3uXvOkkMITlxG
+ +c/uSxErYONux+2+cjVR0GgZvDw1VfwhutzosY1Slr4VDGcOLVsHaL8MLCEwM7feHO5SHfpZQ
+ x5N2I1E7wLWTG46WU
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds support for the back and menu keys on golden.
+Required for touchkey support on samsung-golden.
 
 Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
 =2D--
- .../arm/boot/dts/ste-ux500-samsung-golden.dts | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm/configs/u8500_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts b/arch/arm/boo=
-t/dts/ste-ux500-samsung-golden.dts
-index 5b499c0b2745..1e26b711d43d 100644
-=2D-- a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-+++ b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-@@ -24,6 +24,32 @@ chosen {
- 		stdout-path =3D &serial2;
- 	};
-
-+	i2c-gpio-0 {
-+		compatible =3D "i2c-gpio";
-+		sda-gpios =3D <&gpio2 14 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		scl-gpios =3D <&gpio2 13 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&i2c_gpio_0_default>;
-+
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		touchkey@20 {
-+			compatible =3D "coreriver,tc360-touchkey";
-+			reg =3D <0x20>;
-+			vdd-supply =3D <&ab8500_ldo_aux4_reg>;
-+			vcc-supply =3D <&ab8500_ldo_aux6_reg>;
-+
-+			interrupt-parent =3D <&gpio2>;
-+			interrupts =3D <15 IRQ_TYPE_EDGE_FALLING>;
-+
-+			pinctrl-names =3D "default";
-+			pinctrl-0 =3D <&touchkey_default>;
-+			linux,keycodes =3D <KEY_MENU KEY_BACK>;
-+		};
-+	};
-+
- 	i2c-gpio-1 {
- 		compatible =3D "i2c-gpio";
- 		sda-gpios =3D <&gpio4 24 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-@@ -403,6 +429,16 @@ golden_cfg1 {
- 		};
- 	};
-
-+	i2c-gpio-0 {
-+		i2c_gpio_0_default: i2c_gpio_0 {
-+			golden_cfg1 {
-+				pins =3D "GPIO77",	/* TOUCHKEY_SCL */
-+				       "GPIO78";	/* TOUCHKEY_SDA */
-+				ste,config =3D <&gpio_in_nopull>;
-+			};
-+		};
-+	};
-+
- 	i2c-gpio-1 {
- 		i2c_gpio_1_default: i2c_gpio_1 {
- 			golden_cfg1 {
-@@ -413,6 +449,15 @@ golden_cfg1 {
- 		};
- 	};
-
-+	touchkey {
-+		touchkey_default: touchkey_default {
-+			golden_cfg1 {
-+				pins =3D "GPIO79";	/* TOUCHKEY_INT */
-+				ste,config =3D <&gpio_in_nopull>;
-+			};
-+		};
-+	};
-+
- 	sdi0 {
- 		sd_level_translator_default: sd_level_translator_default {
- 			golden_cfg1 {
+diff --git a/arch/arm/configs/u8500_defconfig b/arch/arm/configs/u8500_def=
+config
+index 28dd7cf56048..dba57fd7da52 100644
+=2D-- a/arch/arm/configs/u8500_defconfig
++++ b/arch/arm/configs/u8500_defconfig
+@@ -56,6 +56,7 @@ CONFIG_KEYBOARD_GPIO=3Dy
+ CONFIG_KEYBOARD_NOMADIK=3Dy
+ CONFIG_KEYBOARD_STMPE=3Dy
+ CONFIG_KEYBOARD_TC3589X=3Dy
++CONFIG_KEYBOARD_TM2_TOUCHKEY=3Dy
+ # CONFIG_INPUT_MOUSE is not set
+ CONFIG_INPUT_TOUCHSCREEN=3Dy
+ CONFIG_TOUCHSCREEN_ATMEL_MXT=3Dy
 =2D-
 2.27.0
 
