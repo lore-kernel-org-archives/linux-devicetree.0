@@ -2,317 +2,139 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6614C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 11:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E81C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 12:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753E423E53
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 11:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC99248E7
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 12:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3Y7KXSP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cgZCDMkm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbgFULBd (ORCPT
+        id S1730055AbgFUMxp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 07:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729892AbgFULBc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 07:01:32 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC66C061794;
-        Sun, 21 Jun 2020 04:01:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t194so13087435wmt.4;
-        Sun, 21 Jun 2020 04:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DE8N2s1fR94hJYhgdJimowfZbLOPMYaMOhxTPe2h8LM=;
-        b=D3Y7KXSPLEXBLJGFpQpM+Q33ApO5B+1YsMIkbr5BTt/uFjVGGlcSCWC88sUpZGXWrh
-         Hg5ubH+yhqM9edat+F4k9sQ0uWmOgD0f67y9S8fZQIhJPpWymYHpDmh8D+QMstD3OY4M
-         htF3R53tLvFsTU3Zpd4/K0pCnl8V6yEQwNIJaSXcAg1Z2KejQo7qqaTcGH24CYdJTLPT
-         gQ62ZP4j3Eo/3SVuQpxTU/955QwNczJHEjMQMUAM3h63DxNsuSu0ey4KUaXS320J3MXM
-         QpF1A4sdZVHBy/wP7ASUDC2WVCww8qYf3Rai/Xd9ii6a7mOVNAQ1uG7TqDdsO5Mt8gTG
-         vW0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DE8N2s1fR94hJYhgdJimowfZbLOPMYaMOhxTPe2h8LM=;
-        b=NhMyBYv1iia+6HbjDhgBymRWxRJSRMy73lKTWJG8+UrY74r4orkWOFi2iLYLYvzFQx
-         4oHb2Ld+WE8/ge4UazMLm4zcrU7O4TyaOAL6RBHxogRtXitxNk6nficws6V3KUE+vb+C
-         jFzUIYGcciCxOW7zDs691Xf51opVbv+D/v6UXeS8+BJlZMIZ+2sHetb9lwN/yla2vSqr
-         LMa8SnJYZoFkbTivQziJ5mLrQxSMxDdWDVTdUdOx7WcJ+/S/KtJK+p6ferbH4uxsLKfQ
-         fn53PjTn9+VzJSNv5+4ehvVccTxxaYoMPFCSqmZsZcxHN4soVi7n+v3NM/SKQvzzO7pb
-         J2sw==
-X-Gm-Message-State: AOAM531V/lMMBRRCLaMIPfqkZ5wGpmlK5MCYley1lr+hy8gnmyfSEJuc
-        ON0AFrWvgEAKc9wWDxdUNcE=
-X-Google-Smtp-Source: ABdhPJwXrTFQ19BxYZwsniZT3H/XfcX0QfsOcIAt4PLGCFMr0ATNjal5p1Cwh8g7jWUez+x26DP0CA==
-X-Received: by 2002:a1c:2cd7:: with SMTP id s206mr12380713wms.109.1592737289473;
-        Sun, 21 Jun 2020 04:01:29 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id x24sm8101107wmj.28.2020.06.21.04.01.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jun 2020 04:01:28 -0700 (PDT)
-Subject: Re: [PATCH v4 6/7] iommu/mediatek: Add REG_MMU_WR_LEN definition
- preparing for mt6779
-To:     chao hao <Chao.Hao@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Yong Wu <yong.wu@mediatek.com>, FY Yang <fy.yang@mediatek.com>
-References: <20200617030029.4082-1-chao.hao@mediatek.com>
- <20200617030029.4082-7-chao.hao@mediatek.com>
- <9e2c52d6-a887-1977-8877-fbcd30cb4261@gmail.com>
- <1592564184.5692.6.camel@mbjsdccf07>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e9a62fd8-ed8c-05d6-1eaa-49d5a471cd3a@gmail.com>
-Date:   Sun, 21 Jun 2020 13:01:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1592564184.5692.6.camel@mbjsdccf07>
+        Sun, 21 Jun 2020 08:53:45 -0400
+Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:4480
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730033AbgFUMxo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 21 Jun 2020 08:53:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BS6U1kowSr3nRlxM5JIrJqTjFFPUctXuVv11ZyqgT5yR4HT1XkjalAh1VrXl0Hx1CPtYi4yOJ/2QVI8SMFGTk1pBxkSqTCr0GCCyGqe9/krZL6UX4p5MM7QL94r3g290hqXX+z+z3f/VmyTYsC3ctJTL7EGbl0QSwWCV4tjurwFJWV6OB2lqyHeFegdTSEfAzQhJD+DWTv2b2lqN3be6KB2HklUoYwokW76jIj8nT7Uw3AvIrjOlwgt6bOtovl0YG5y7pOARhOEsfzAerL8sJGW+a1IHXWB/1cIKihNydezk2meLik3Prob50TQzWlA/Bdt0qsozt7A3xgEoh4qqPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z/Ht9CsVjnxiXK7pZO3+qJrh7tR7AJv0cVCFSCVNNVc=;
+ b=ILjZySG0kAc0v0ZzPBTg7kyHDg64hKWLXFH/wIWWYPRZ3fLtk5jp9MQ820QC+r0741Wl/OSu19kcohBxDxJccMGeaSVScAiVVM5H3gYkMeyqSYYQixmo7lCTISSszNYfRLaDDdyY3smE0d65P2yuJI93pGLfoCXoVm1cOYQdEIRrDcggil1h4Yr66rQ08na6NaaoYIRi86CKyLdGosoud2fXff4JF6BdYqUyt6YEXkW1zjRIh2sxPvHBE+N6O9S2z2WCGju5s8b/9YxHNZMzZ3c7bkcNF4kvY0/rvqtYGDQDPQEKlZrNaBR3tLd7k2u8LJrH1hn2ksUzbTQghx/7tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z/Ht9CsVjnxiXK7pZO3+qJrh7tR7AJv0cVCFSCVNNVc=;
+ b=cgZCDMkmmq0qoUO9wOq13JHjQUTLFXBMhqEXpL9NP2tt3VxEaq65qPqCtp3cM173Qlejsp0CcDzc3kNKzeeq87SAnOFyefaWbk2TRhvzCHc/yP3KqADQbHHvKvy0IVQdXDDkWJ8g/i+jY5sWEvBpokXWOxuHgUZfp5FPIwRkbO0=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+ by VI1PR04MB6894.eurprd04.prod.outlook.com (2603:10a6:803:13a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Sun, 21 Jun
+ 2020 12:53:39 +0000
+Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
+ ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3109.026; Sun, 21 Jun 2020
+ 12:53:39 +0000
+Subject: Re: [PATCH 4/4] hwrng: imx-rngc: enable driver for i.MX6
+To:     Fabio Estevam <festevam@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200619213347.27826-1-horia.geanta@nxp.com>
+ <20200619213347.27826-5-horia.geanta@nxp.com>
+ <CAOMZO5AZLUxXhX-Maop8iQc0Qan5YqH2QFXaDpYq0hL+BP-L+w@mail.gmail.com>
+ <CAOMZO5BMS2RgRm2t7qDZnhiFBWE3pPZmHW7-kn-0KOq5NVYKfg@mail.gmail.com>
+From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
+Message-ID: <292aafd1-7249-5b76-ccc3-77b153594ef9@nxp.com>
+Date:   Sun, 21 Jun 2020 15:53:35 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <CAOMZO5BMS2RgRm2t7qDZnhiFBWE3pPZmHW7-kn-0KOq5NVYKfg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM4PR05CA0007.eurprd05.prod.outlook.com (2603:10a6:205::20)
+ To VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.129] (84.117.251.185) by AM4PR05CA0007.eurprd05.prod.outlook.com (2603:10a6:205::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Sun, 21 Jun 2020 12:53:36 +0000
+X-Originating-IP: [84.117.251.185]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 78cf8555-6593-4567-d11d-08d815e21e17
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6894:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB689476985F56C1AF5E89587098960@VI1PR04MB6894.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:923;
+X-Forefront-PRVS: 04410E544A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FduWZW/pqPERAiLj7GpO1Om5cPIVtiFc9OYjKVBwxGq8Z+7Fh6gVysz/QLG1zx2SQZKtPM3NdMOKK8eerwAOqMKPhvHDZoBphaR+yS1/SDJXnRrD+AUHMrabu6dpcUnna9ot2AQ/H6k3xotwNSySCldBW1IVljbjWtRgi452B9uWg+FfpHQzB+N9M/f3YAqGTVKKK3Q8ki0lhM7qechb5gtUDLQZLVSl9Qky6bVIN2I21Jw6fCZTjlJm+pUuXR/3zvkQbuCD3Vk62SXlK96+XIZsIZiUqwW+wTPSuHrR2xqV4/H0KfJSnPJq0es/UIP88o9pNHqYpEH/EByKdPjXqb2XIghaD9S0vs5fnS1BfCn6+sRlLOIebCRVbY3rsarC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39850400004)(396003)(346002)(136003)(376002)(2906002)(16576012)(5660300002)(31686004)(316002)(110136005)(54906003)(8936002)(36756003)(8676002)(4326008)(26005)(186003)(16526019)(4744005)(52116002)(478600001)(53546011)(956004)(86362001)(66946007)(31696002)(66476007)(2616005)(6486002)(66556008)(7416002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: SV3zbpHRxCsV2X8ARODkB6agHVLMswssLJD+GcI89QP7NZlXIpM94qry0ayI1zo0w6tRn9lXHuj19FIf767wlXRdf9RAVissGwsP/R+58VJtXm9l2wRMTFwbtUw17fTcMYMjIeg3leJOMqSqRpGzrKtR00QIpYPgRDfrKsnlaJSPEOhlHMblNMugNEEuSPuINekkK9iTqd2HaI+Zfgj6GX42VR94A2IbLJwCXOqUe81WQ+8tRyCcObAFO9Ka3wXrGtoe0ZdrrW0mKNBCPGnS04hQYBvN4Ka4NpNszU+nunKExHPsAHKwNQGmKVqUqWYc3m2NeqgFSXXdCa89L67wMtw9n7+R9VWT3wTianWZ04y7j9YX80uUeIDOWYinTBUJt1Hweou8tz1bAyswqWp3r3y1guk3dvUGUFCVD5PVzKzHlrKpZTNUBKLWj5h//VvXPDKsoqvjn07FJVq1QmBgUuNJWjJRaefxTh9WJIoAA73iBmJ7BIUoINCrGEQg3G10
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78cf8555-6593-4567-d11d-08d815e21e17
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2020 12:53:38.8112
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Swaaz9L5qeOYWMDInLOYjREu4g73+59ZWGPcy6nLLY+zJZiDBN0Akpx3QhDkYiuTiTyDhO6SjV50hUpc39MBSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6894
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 19/06/2020 12:56, chao hao wrote:
-> On Wed, 2020-06-17 at 11:22 +0200, Matthias Brugger wrote:
+On 6/20/2020 12:49 AM, Fabio Estevam wrote:
+> On Fri, Jun 19, 2020 at 6:46 PM Fabio Estevam <festevam@gmail.com> wrote:
+> 
+>> If in the future more SoCs will use this IP, then we will need to keep
+>> extending this list over and over again.
 >>
->> On 17/06/2020 05:00, Chao Hao wrote:
->>> Some platforms(ex: mt6779) have a new register called by REG_MMU_WR_LEN
->>> to improve performance.
->>> This patch add this register definition.
+>> Maybe you could use:
 >>
->> Please be more specific what this register is about.
->>
-> OK. thanks.
-> We can use "has_wr_len" flag to control whether we need to set the
-> register. If the register uses default value, iommu will send command to
-> EMI without restriction, when the number of commands become more and
-> more, it will drop the EMI performance. So when more than
-> ten_commands(default value) don't be handled for EMI, IOMMU will stop
-> send command to EMI for keeping EMI's performace by enabling write
-> throttling mechanism(bit[5][21]=0) in MMU_WR_LEN_CTRL register.
+>> depends on MACH_IMX || COMPILE_TEST
 > 
-> I will write description above to commit message in next version
+> MACH_MXC is what I meant ;-)
 > 
->>>
->>> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
->>> ---
->>>  drivers/iommu/mtk_iommu.c | 10 ++++++++++
->>>  drivers/iommu/mtk_iommu.h |  2 ++
->>>  2 files changed, 12 insertions(+)
->>>
->>> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
->>> index a687e8db0e51..c706bca6487e 100644
->>> --- a/drivers/iommu/mtk_iommu.c
->>> +++ b/drivers/iommu/mtk_iommu.c
->>> @@ -46,6 +46,8 @@
->>>  #define F_MMU_STANDARD_AXI_MODE_BIT		(BIT(3) | BIT(19))
->>>  
->>>  #define REG_MMU_DCM_DIS				0x050
->>> +#define REG_MMU_WR_LEN				0x054
->>> +#define F_MMU_WR_THROT_DIS_BIT			(BIT(5) |  BIT(21))
->>>  
->>>  #define REG_MMU_CTRL_REG			0x110
->>>  #define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
->>> @@ -581,6 +583,12 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
->>>  		writel_relaxed(regval, data->base + REG_MMU_VLD_PA_RNG);
->>>  	}
->>>  	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
->>> +	if (data->plat_data->has_wr_len) {
->>> +		/* write command throttling mode */
->>> +		regval = readl_relaxed(data->base + REG_MMU_WR_LEN);
->>> +		regval &= ~F_MMU_WR_THROT_DIS_BIT;
->>> +		writel_relaxed(regval, data->base + REG_MMU_WR_LEN);
->>> +	}
->>>  
->>>  	if (data->plat_data->reset_axi) {
->>>  		/* The register is called STANDARD_AXI_MODE in this case */
->>> @@ -737,6 +745,7 @@ static int __maybe_unused mtk_iommu_suspend(struct device *dev)
->>>  	struct mtk_iommu_suspend_reg *reg = &data->reg;
->>>  	void __iomem *base = data->base;
->>>  
->>> +	reg->wr_len = readl_relaxed(base + REG_MMU_WR_LEN);
->>
->> Can we read/write the register without any side effect although hardware has not
->> implemented it (!has_wr_len)?
-> 
-> It doesn't have side effect. Becasue all the MTK platform have the
-> register for iommu HW. If we need to have requirement for performance,
-> we can set it by has_wr_len.
-> But I'm Sorry, the name of flag(has_wr_len) is not exact, I will rename
-> it in next version, ex: "wr_throt_en"
-> 
->>
->>
->>>  	reg->misc_ctrl = readl_relaxed(base + REG_MMU_MISC_CTRL);
->>>  	reg->dcm_dis = readl_relaxed(base + REG_MMU_DCM_DIS);
->>>  	reg->ctrl_reg = readl_relaxed(base + REG_MMU_CTRL_REG);
->>> @@ -761,6 +770,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
->>>  		dev_err(data->dev, "Failed to enable clk(%d) in resume\n", ret);
->>>  		return ret;
->>>  	}
->>> +	writel_relaxed(reg->wr_len, base + REG_MMU_WR_LEN);
->>>  	writel_relaxed(reg->misc_ctrl, base + REG_MMU_MISC_CTRL);
->>>  	writel_relaxed(reg->dcm_dis, base + REG_MMU_DCM_DIS);
->>>  	writel_relaxed(reg->ctrl_reg, base + REG_MMU_CTRL_REG);
->>> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
->>> index d51ff99c2c71..9971cedd72ea 100644
->>> --- a/drivers/iommu/mtk_iommu.h
->>> +++ b/drivers/iommu/mtk_iommu.h
->>> @@ -25,6 +25,7 @@ struct mtk_iommu_suspend_reg {
->>>  	u32				int_main_control;
->>>  	u32				ivrp_paddr;
->>>  	u32				vld_pa_rng;
->>> +	u32				wr_len;
->>>  };
->>>  
->>>  enum mtk_iommu_plat {
->>> @@ -43,6 +44,7 @@ struct mtk_iommu_plat_data {
->>>  	bool		    has_misc_ctrl;
->>>  	bool		    has_sub_comm;
->>>  	bool                has_vld_pa_rng;
->>> +	bool                has_wr_len;
->>
->> Given the fact that we are adding more and more plat_data bool values, I think
->> it would make sense to use a u32 flags register and add the appropriate macro
->> definitions to set and check for a flag present.
-> 
-> Thanks for your advice.
-> do you mean like this:
-> struct plat_flag {
-> 
->         #define  HAS_4GB_MODE   BIT(0)
->         #define  HAS_BCLK       BIT(1)
->         #define  REST_AXI       BIT(2)
->         ... ...
-> 
->         u32 flag;
-> };
-> 
-> struct mtk_iommu_plat_data {
->         ......
->         struct plat_flag flag;
->         ......
-> };
-> 
+Probably ARCH_MXC.
 
-Nearly, I mean something like this:
+ARCH_MXC was originally the dependency for this driver, until it was changed
+to a more specific one by
+commit fcdba3c33a4d ("hwrng: imx-rngc - improve dependencies")
 
-#define  HAS_4GB_MODE   BIT(0)
-#define  HAS_BCLK       BIT(1)
-#define  REST_AXI       BIT(2)
+I don't think we'll see too many RNGB deployments in the future,
+thus the list of SoCs shouldn't change that often.
 
-#define MTK_IOMMU_HAS_FLAG(pdata, _x)	\
-		((((pdata)->flags) & (_x)) == (_x))
-
-struct mtk_iommu_plat_data {
-	...
-	u32 flags;
-	...
-}
-
-if (MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_BCLK)
-...
-
-Regards,
-Matthias
-
-> 
->> Regards,
->> Matthias
->>
->>>  	bool                reset_axi;
->>>  	u32                 inv_sel_reg;
->>>  	unsigned char       larbid_remap[8][4];
->>>
-> 
+Horia
