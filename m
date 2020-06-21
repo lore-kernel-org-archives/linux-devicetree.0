@@ -2,298 +2,121 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AFDC433E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A018C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BA625234
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D5725240
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 19:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WgxoW93h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uZ3XMOQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgFUT2b (ORCPT
+        id S1730672AbgFUTdK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 15:28:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
+        Sun, 21 Jun 2020 15:33:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730036AbgFUT2b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 15:28:31 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B18C061797
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 12:28:30 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id c17so16883077lji.11
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 12:28:30 -0700 (PDT)
+        with ESMTP id S1730669AbgFUTdK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 15:33:10 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3324FC061795
+        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 12:33:10 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h22so7398142pjf.1
+        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 12:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Rr0BOI8BzffYBcJ3FrPC0MKxNzbBaaA0ciNFW/6okKs=;
-        b=WgxoW93hkrr52DkMnv53XZXZ/WRm4lRtO0An32UplYwfNbG97G89CBt/RhSS+yZ0bd
-         2zXwmAnGs9mCmwjD29AZ1CgmNXbSslJQyDE+hDVmY2D1rDsFdztX29NVrHBkqvpeM0vn
-         xQVzqbGkX6PRfMscHhj7sOgL5Pmfu3bQZqeVzl6wHagiKa7WVDLu2lIFbUpbcjOdT7ko
-         N84MLvuCXnoMEPzDm4T7QkhNOk0PgORc9dljfVKhd+5AO4fV8lbQxVBMQqZh0qo54W+f
-         HbrHwYJ4xrfW6gDpGW4mM5ZTQzNjWmwjmF9ro33DcNkiUbvccgWzEZKm/Vjyx80lIDNN
-         HRbg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=8V6HFmLfGm9H0h60UuqXdO7H0Hr/Mksem7jzlgy8U7w=;
+        b=uZ3XMOQ4CZBG1jROGxZneTOAF/aHCdQeyVlB3ZvRPBwfRRELY87Zy/FrPPzIzbtjeh
+         ZSWzeilRJ+ltWjl6Wf8XjC9YNwgPUsO+ASAyoEpi37Hdt+3QAoXCC++PIZTbJa+8GGpT
+         ztxtBduTxsquEyTofbr7TcgqSWVtLd7onuIkpBAvohocO81okO6x/h7Iv1zDYrwdr0Z2
+         kJ0J4Pqwssy9Ok05g+TqqC9JqKfzAcE1Dj26Qt1C8YWblqqz3/BxVrgLkk6V9ppyP0Tm
+         U1HmZNDGhHKG9qiukpFLS4kOR8UXxsshrJCRpDGH0Gvo4YSruUMZxSH4zyFR1N0DauXC
+         3IPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Rr0BOI8BzffYBcJ3FrPC0MKxNzbBaaA0ciNFW/6okKs=;
-        b=HMgg3y1zKB9Gdb83LnexOtcd1H4QBO6WmJnLPZsYttpQOk1CatRKui4LZTpCGqKwtZ
-         NMEVBeM7OQBjLHbjuUzBed5iOnTxvXcPVPhGIG3wY10md+3StebiOx7VuA82BmEc/HtY
-         2WUsAIyHQ+hb7Rmp/snG/OmILr74+Mz9eARgcz8yFgLa8pyv40Tpqm5lgiC/3eEluhfo
-         35fNsjNJNiDhV7k9IcAQKFqYbVKA4wHeSJqpW03orPrCg6B70xiiloJhvMlKktFVKNLS
-         2qWRsGyhOhLPlQnH7whjPEbEytzLUnJpqIbVeL1qkvO2OTEJUl9LYJVuexO8KlK01ZJ/
-         89+A==
-X-Gm-Message-State: AOAM532MCy0aB3nJYedlxW8vBkREAJLajj+dDG5f19zQLW+/b3dPb+hk
-        3IiVI9Qn1koSPi3pqHHABd8f0Q==
-X-Google-Smtp-Source: ABdhPJzXfgAQsOez41P5lPnddZ1hczYxxo5UrbDD/5fGrlZBR4UfjYdSt5yRQSA68UTaV/ec1QKRCw==
-X-Received: by 2002:a2e:970c:: with SMTP id r12mr6764967lji.145.1592767709125;
-        Sun, 21 Jun 2020 12:28:29 -0700 (PDT)
-Received: from eriador.lan ([188.162.65.109])
-        by smtp.gmail.com with ESMTPSA id o201sm2917205lff.8.2020.06.21.12.28.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=8V6HFmLfGm9H0h60UuqXdO7H0Hr/Mksem7jzlgy8U7w=;
+        b=O0O7FqmA0tCy4zji/l5zlg4CIvesv9vxRMXRe9wdO6WjNvRxm8IJ5wc2e+NOYkhur/
+         5SrLavJN+w7rvPTZ4mr1DbealpegNHfdbdo1e7XGmOXnuDnq5813FhYZsA2vYOU6nXas
+         503XO1HzMTGfdDyCtkwkpIO/2IvYyKUlRpqXLW6z3q6F52NuXvtNih9V+lgug4h3dDxS
+         gxLsbLXWnZEJNwB5EnY6Ys+Tx3QU8YLO90QFAwusP/BrZv4MVDRmKJ9Rt4MuQovJjOH2
+         v6F1ONCsFaNNTkpKgN1j7C2iM4KEwzsM/1fW3CgkP/uBqXR4W9i1YO56sdy5SCtTUd5M
+         zB2w==
+X-Gm-Message-State: AOAM530cmTCphvcXeNJUFpdTDUmEXLeXYKiFkclDeZdtV3SRTmhJO01Q
+        vbOUpMMFkFaBGlvYncAaMuRlhw==
+X-Google-Smtp-Source: ABdhPJx/yccrdZJLJQ925LbLp9rVL/mKCFCY/9xVs/BHknKusK+X01L1pvGaa2hA8nHDDt3N08i1SQ==
+X-Received: by 2002:a17:90a:c250:: with SMTP id d16mr14494880pjx.60.1592767989562;
+        Sun, 21 Jun 2020 12:33:09 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q68sm11641137pjc.30.2020.06.21.12.33.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 12:28:28 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 3/3] arm64: dts: qcom: pm8150x: add thermal alarms and thermal zones
-Date:   Sun, 21 Jun 2020 22:28:24 +0300
-Message-Id: <20200621192824.2069145-3-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200621192824.2069145-1-dmitry.baryshkov@linaro.org>
-References: <20200621192824.2069145-1-dmitry.baryshkov@linaro.org>
+        Sun, 21 Jun 2020 12:33:08 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 12:30:22 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v7 4/5] remoteproc: ingenic: Added remoteproc driver
+Message-ID: <20200621193022.GA149351@builder.lan>
+References: <20200515104340.10473-1-paul@crapouillou.net>
+ <20200515104340.10473-4-paul@crapouillou.net>
+ <8cdcf5ef-1268-89f6-b229-ac711a80b790@ti.com>
+ <FR8SBQ.5WXNHNH8P2P7@crapouillou.net>
+ <fc1e14e7-4551-48c3-2820-f5889c50becb@ti.com>
+ <G3ATBQ.KJYAFROKKWDP1@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <G3ATBQ.KJYAFROKKWDP1@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add temperature alarm and thermal zone configuration to all three
-pm8150 instances. Configuration is largely based on the msm-4.19 tree.
-These alarms use main adc of the pmic. Separate temperature adc is not
-supported yet.
+On Fri 12 Jun 04:47 PDT 2020, Paul Cercueil wrote:
+> Le jeu. 11 juin 2020 =E0 19:21, Suman Anna <s-anna@ti.com> a =E9crit :
+> > On 6/11/20 5:21 PM, Paul Cercueil wrote:
+> > > Le jeu. 11 juin 2020 =E0 16:47, Suman Anna <s-anna@ti.com> a =E9crit :
+> > > > On 5/15/20 5:43 AM, Paul Cercueil wrote:
+[..]
+> > > > > diff --git a/drivers/remoteproc/ingenic_rproc.c
+> > > > > =7F=7F=7Fb/drivers/remoteproc/ingenic_rproc.c
+[..]
+> > > > > +    /* The clocks must be enabled for the firmware to be
+> > > > > loaded in =7F=7F=7FTCSM */
+> > > > > +    ret =3D clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks),
+> > > > > vpu->clks);
+> > > > > +    if (ret) {
+> > > > > +        dev_err(dev, "Unable to start clocks\n");
+> > > > > +        return ret;
+> > > > > +    }
+> > > >=20
+> > > > You are enabling the clocks directly here and also trying to
+> > > > manage =7F=7Fthem through pm_runtime callbacks again.
+> > >=20
+> > > Yes. The clocks need to be enabled in the probe.
+> >=20
+> > For the preferred non CONFIG_PM case now and lack of
+> > prepare/unprepare().
+>=20
+> I want to make it clear that I'm not against having .prepare/.unprepare, =
+but
+> I want to see what maintainers have to say.
+>=20
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/pm8150.dtsi  | 42 +++++++++++++++++++++++--
- arch/arm64/boot/dts/qcom/pm8150b.dtsi | 44 +++++++++++++++++++++++++--
- arch/arm64/boot/dts/qcom/pm8150l.dtsi | 44 +++++++++++++++++++++++++--
- 3 files changed, 122 insertions(+), 8 deletions(-)
+I think it's perfectly reasonable to enable all the resources here and
+then if CONFIG_PM isn't set you just leave them enabled throughout.
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-index c0b197458665..1b6406927509 100644
---- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-@@ -9,6 +9,37 @@
- #include <dt-bindings/spmi/spmi.h>
- #include <dt-bindings/iio/qcom,spmi-vadc.h>
- 
-+/ {
-+	thermal-zones {
-+		pm8150 {
-+			polling-delay-passive = <100>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors = <&pm8150_temp>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <95000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "hot";
-+				};
-+
-+				trip2 {
-+					temperature = <145000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &spmi_bus {
- 	pm8150_0: pmic@0 {
- 		compatible = "qcom,pm8150", "qcom,spmi-pmic";
-@@ -30,6 +61,15 @@ pwrkey {
- 			};
- 		};
- 
-+		pm8150_temp: temp-alarm@2400 {
-+			compatible = "qcom,spmi-temp-alarm";
-+			reg = <0x2400>;
-+			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-+			io-channels = <&pm8150_adc ADC5_DIE_TEMP>;
-+			io-channel-names = "thermal";
-+			#thermal-sensor-cells = <0>;
-+		};
-+
- 		pm8150_adc: adc@3100 {
- 			compatible = "qcom,spmi-adc5";
- 			reg = <0x3100>;
-@@ -38,8 +78,6 @@ pm8150_adc: adc@3100 {
- 			#io-channel-cells = <1>;
- 			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
- 
--			status = "disabled";
--
- 			ref-gnd@0 {
- 				reg = <ADC5_REF_GND>;
- 				qcom,pre-scaling = <1 1>;
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-index 40b5d75a4a1d..e112e8876db6 100644
---- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -8,6 +8,37 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
-+/ {
-+	thermal-zones {
-+		pm8150b {
-+			polling-delay-passive = <100>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors = <&pm8150b_temp>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <95000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "hot";
-+				};
-+
-+				trip2 {
-+					temperature = <145000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &spmi_bus {
- 	pmic@2 {
- 		compatible = "qcom,pm8150b", "qcom,spmi-pmic";
-@@ -22,7 +53,16 @@ power-on@800 {
- 			status = "disabled";
- 		};
- 
--		adc@3100 {
-+		pm8150b_temp: temp-alarm@2400 {
-+			compatible = "qcom,spmi-temp-alarm";
-+			reg = <0x2400>;
-+			interrupts = <0x2 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-+			io-channels = <&pm8150b_adc ADC5_DIE_TEMP>;
-+			io-channel-names = "thermal";
-+			#thermal-sensor-cells = <0>;
-+		};
-+
-+		pm8150b_adc: adc@3100 {
- 			compatible = "qcom,spmi-adc5";
- 			reg = <0x3100>;
- 			#address-cells = <1>;
-@@ -30,8 +70,6 @@ adc@3100 {
- 			#io-channel-cells = <1>;
- 			interrupts = <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
- 
--			status = "disabled";
--
- 			ref-gnd@0 {
- 				reg = <ADC5_REF_GND>;
- 				qcom,pre-scaling = <1 1>;
-diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-index cf05e0685d10..62139538b7d9 100644
---- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-@@ -8,6 +8,37 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/spmi/spmi.h>
- 
-+/ {
-+	thermal-zones {
-+		pm8150l {
-+			polling-delay-passive = <100>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors = <&pm8150l_temp>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <95000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "hot";
-+				};
-+
-+				trip2 {
-+					temperature = <145000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &spmi_bus {
- 	pmic@4 {
- 		compatible = "qcom,pm8150l", "qcom,spmi-pmic";
-@@ -22,7 +53,16 @@ power-on@800 {
- 			status = "disabled";
- 		};
- 
--		adc@3100 {
-+		pm8150l_temp: temp-alarm@2400 {
-+			compatible = "qcom,spmi-temp-alarm";
-+			reg = <0x2400>;
-+			interrupts = <0x4 0x24 0x0 IRQ_TYPE_EDGE_BOTH>;
-+			io-channels = <&pm8150l_adc ADC5_DIE_TEMP>;
-+			io-channel-names = "thermal";
-+			#thermal-sensor-cells = <0>;
-+		};
-+
-+		pm8150l_adc: adc@3100 {
- 			compatible = "qcom,spmi-adc5";
- 			reg = <0x3100>;
- 			#address-cells = <1>;
-@@ -30,8 +70,6 @@ adc@3100 {
- 			#io-channel-cells = <1>;
- 			interrupts = <0x4 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
- 
--			status = "disabled";
--
- 			ref-gnd@0 {
- 				reg = <ADC5_REF_GND>;
- 				qcom,pre-scaling = <1 1>;
--- 
-2.27.0
-
+Regards,
+Bjorn
