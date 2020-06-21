@@ -2,43 +2,43 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A1BC433E8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BEFC433F2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 430DD24772
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B672477B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hTC86cOC"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qtB3Ee6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgFUAsO (ORCPT
+        id S1729097AbgFUAsL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 20:48:14 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60982 "EHLO
+        Sat, 20 Jun 2020 20:48:11 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60972 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729095AbgFUAsN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 20:48:13 -0400
+        with ESMTP id S1729087AbgFUAsJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 20:48:09 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AB83D121D;
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 32E2C532;
         Sun, 21 Jun 2020 02:48:05 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592700486;
-        bh=r4slO3J2OVAdpD9Rtd5cjCvrs/gu1OQ+MmNPXj4fgi0=;
+        s=mail; t=1592700485;
+        bh=x1qwEsYa9TpzZ3jxVEYrdT2VvcD4ES6ffAolj8MmeqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hTC86cOCyBpoUiyYVwKuaqYF+XCFCZNgZdItHzwKVM6c19MW3UQSLOqbro35M1f6Z
-         Ap0GFDNY/Y7H6ewb5uowwoXYV+fxakO3b9jEl224YonviCwPwXH4x0QCP5JgN/w7/F
-         WlpsrJx2S2MibZktJg5aP9NrsPwW+I1zELMEqWOg=
+        b=qtB3Ee6X9zOTt21KJnwGgigCzH01hRSJbIYTM4AvS/tF/q959RIj35J+IZeJ83Niy
+         84UMJY4wsaMf9HjfCZEopuKS4FLfquurxgaW95MxLxJCdADqyiMOIyqmJMNYa0+J3j
+         czBaBHCSHRdDueax1IseNyH5Ob9sTAL3+UqyYJ9c=
 From:   Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 To:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 7/8] dt-bindings: media: renesas,vsp1: Convert binding to YAML
-Date:   Sun, 21 Jun 2020 03:47:33 +0300
-Message-Id: <20200621004734.28602-8-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 6/8] dt-bindings: media: renesas,fdp1: Add resets property
+Date:   Sun, 21 Jun 2020 03:47:32 +0300
+Message-Id: <20200621004734.28602-7-laurent.pinchart+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
 References: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
@@ -49,161 +49,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Renesas R-Car VSP1 text binding to YAML.
+The resets property is used in DT sources in the kernel tree. Document
+it and make it mandatory.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 Changes since v1:
 
-- Simplify comments on compatible strings
-- Update MAINTAINERS
+- Fix typo in commit message
 ---
- .../bindings/media/renesas,vsp1.txt           | 30 -------
- .../bindings/media/renesas,vsp1.yaml          | 83 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 84 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.txt
- create mode 100644 Documentation/devicetree/bindings/media/renesas,vsp1.yaml
+ Documentation/devicetree/bindings/media/renesas,fdp1.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-deleted file mode 100644
-index cd5a955b2ea0..000000000000
---- a/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--* Renesas VSP Video Processing Engine
--
--The VSP is a video processing engine that supports up-/down-scaling, alpha
--blending, color space conversion and various other image processing features.
--It can be found in the Renesas R-Car Gen2, R-Car Gen3, RZ/G1, and RZ/G2 SoCs.
--
--Required properties:
--
--  - compatible: Must contain one of the following values
--    - "renesas,vsp1" for the R-Car Gen2 and RZ/G1 VSP1
--    - "renesas,vsp2" for the R-Car Gen3 and RZ/G2 VSP2
--
--  - reg: Base address and length of the registers block for the VSP.
--  - interrupts: VSP interrupt specifier.
--  - clocks: A phandle + clock-specifier pair for the VSP functional clock.
--
--Optional properties:
--
--  - renesas,fcp: A phandle referencing the FCP that handles memory accesses
--                 for the VSP. Not needed on Gen2, mandatory on Gen3.
--
--
--Example: R8A7790 (R-Car H2) VSP1-S node
--
--	vsp@fe928000 {
--		compatible = "renesas,vsp1";
--		reg = <0 0xfe928000 0 0x8000>;
--		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp1_clks R8A7790_CLK_VSP1_S>;
--	};
-diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.yaml b/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-new file mode 100644
-index 000000000000..65e8ee61ce90
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/renesas,vsp1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas VSP Video Processing Engine
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+description:
-+  The VSP is a video processing engine that supports up-/down-scaling, alpha
-+  blending, color space conversion and various other image processing features.
-+  It can be found in the Renesas R-Car Gen2, R-Car Gen3, RZ/G1, and RZ/G2 SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - renesas,vsp1 # R-Car Gen2 and RZ/G1
-+      - renesas,vsp2 # R-Car Gen3 and RZ/G2
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  renesas,fcp:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      A phandle referencing the FCP that handles memory accesses for the VSP.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+if:
-+  properties:
-+    compatible:
-+      items:
-+        - const: renesas,vsp1
-+then:
-+  properties:
-+    renesas,fcp: false
-+else:
-+  required:
-+    - renesas,fcp
-+
-+examples:
-+  # R8A7790 (R-Car H2) VSP1-S
-+  - |
-+    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    vsp@fe928000 {
-+        compatible = "renesas,vsp1";
-+        reg = <0xfe928000 0x8000>;
-+        interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&cpg CPG_MOD 131>;
-+    };
-+
-+  # R8A77951 (R-Car H3) VSP2-BC
-+  - |
-+    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    vsp@fe920000 {
-+        compatible = "renesas,vsp2";
-+        reg = <0xfe920000 0x8000>;
-+        interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&cpg CPG_MOD 624>;
-+
-+        renesas,fcp = <&fcpvb1>;
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7383dfa510a3..22e079cc3e3f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10730,7 +10730,7 @@ L:	linux-media@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- S:	Supported
- T:	git git://linuxtv.org/media_tree.git
--F:	Documentation/devicetree/bindings/media/renesas,vsp1.txt
-+F:	Documentation/devicetree/bindings/media/renesas,vsp1.yaml
- F:	drivers/media/platform/vsp1/
+diff --git a/Documentation/devicetree/bindings/media/renesas,fdp1.yaml b/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
+index 39184bd21a27..2a27a7296fea 100644
+--- a/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
++++ b/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
+@@ -32,6 +32,9 @@ properties:
+   power-domains:
+     maxItems: 1
  
- MEDIA DRIVERS FOR ST STV0910 DEMODULATOR ICs
++  resets:
++    maxItems: 1
++
+   renesas,fcp:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description:
+@@ -44,6 +47,7 @@ required:
+   - interrupts
+   - clocks
+   - power-domains
++  - resets
+ 
+ additionalProperties: false
+ 
+@@ -59,6 +63,7 @@ examples:
+         interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
+         clocks = <&cpg CPG_MOD 119>;
+         power-domains = <&sysc R8A7795_PD_A3VP>;
++        resets = <&cpg 119>;
+         renesas,fcp = <&fcpf0>;
+     };
+ ...
 -- 
 Regards,
 
