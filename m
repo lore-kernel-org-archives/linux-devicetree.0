@@ -2,80 +2,118 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759E0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5CEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 06:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F5724768
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 00:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5D42482B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 06:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="b8BKcU1a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eI396BnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgFUAsM (ORCPT
+        id S1729340AbgFUGIJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 20 Jun 2020 20:48:12 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60982 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgFUAsJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 20 Jun 2020 20:48:09 -0400
-Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9127711C5;
-        Sun, 21 Jun 2020 02:48:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592700484;
-        bh=yJ+c7T2CuhBRuvZB1ywhcgNTxXFDy151itPJiOeQcxw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b8BKcU1amCqzDFt1h5+kGUQCoiEwgBwWHnGfD5qXEVlEJhlJbHoiLA9g4stKvlPlc
-         6z7e8dMBLG42ckPg2cHZ/Lrh6tCTebrZu/dCNadcJ9pY4UrfTTtIS9ts9Bbsf2f+MK
-         xv1O8CqCBTKRSOj+5u7ZPJ8W2aCbAMaGIWj0lfGY=
-From:   Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-To:     dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 5/8] dt-bindings: media: renesas,fdp1: Make power-domains mandatory
-Date:   Sun, 21 Jun 2020 03:47:31 +0300
-Message-Id: <20200621004734.28602-6-laurent.pinchart+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
-References: <20200621004734.28602-1-laurent.pinchart+renesas@ideasonboard.com>
+        Sun, 21 Jun 2020 02:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729338AbgFUGIJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 02:08:09 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C673BC061796
+        for <devicetree@vger.kernel.org>; Sat, 20 Jun 2020 23:08:07 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y18so6054968plr.4
+        for <devicetree@vger.kernel.org>; Sat, 20 Jun 2020 23:08:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=a+NZmNa85rn9+KPzd4vANmtBgY1PrDp2O3PiIlzp/9U=;
+        b=eI396BnBH0g9oNApINxy4c96cZa+zZqLRZLKqxwpBTblF3nx8HJYtA2DhrAFt2lsGl
+         nsPxyZUBvcdS3x1dPG+5Bs6J55PX1VcrkPee/0B/cJZn+9Uim19jDcDSK2l51OdA31gG
+         BGg3D0rmMeSk219JidiohAbx8ozUcmsPS8XIQQVqzfX6ilNoWiNUdQz9n3DZXZhiTEsY
+         DqSY487fcfwKsm5bEpNrSpmKWCNW3/l13lGKFBRRTVl/+RNIN6bvHQFH5ol3tuqqXxma
+         bIBL30uXj4bpdquI0nfYhgdqE7r2JUsM7WXDVr3Kb2lI0S25AuzCwq57z9mnyJMMvJRw
+         TkLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a+NZmNa85rn9+KPzd4vANmtBgY1PrDp2O3PiIlzp/9U=;
+        b=NFyKEBpmSrBm3ThPKAtIGZbRfmn55hq8nu+SOAp5g0KTJipsrsj+RT9g+9ReFmVt27
+         sSjX2dx1hDy7OAbxbadKStcnIn7r29ZMVBCuCWUpLzlJDzOOSuiGNxcz4AICHzStFIBW
+         5CAI0ffvhqOFy97bSqGnGEXSCf99VEvzEunK19IZWwYMciVgBbShJnJgtsF6NCXn61E9
+         lQkKc4NVMGtbCqHiD6e8cPAS+WTcYeh2s0lSC8lvIad+0Q7pYvEpnyF14hjFPfLg5geL
+         /ZounUuGyUrF7JZ92rAg3RrYVJVrgt6/vkwPZD+KO0daxdNKVpdZeXkEPOge0p7wNKSi
+         2ecw==
+X-Gm-Message-State: AOAM5329Fy0gyG++NCTBhskpt0UGtzPg8YYzU0BC26dOr+8H942MMGmU
+        xgykbP+DTQ3BjKr6k9ToOTlPBQ==
+X-Google-Smtp-Source: ABdhPJwPxg0VeG81i9p0d0Xp/Ilpo4o1aNYtAJHzWFbGpThw1h1pxb4MXkRTHJzf7a17aSwY0Niqjg==
+X-Received: by 2002:a17:90b:1087:: with SMTP id gj7mr12163713pjb.124.1592719687047;
+        Sat, 20 Jun 2020 23:08:07 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q36sm9700009pjq.18.2020.06.20.23.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jun 2020 23:08:06 -0700 (PDT)
+Date:   Sat, 20 Jun 2020 23:05:19 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/21] regulator: qcom_smd: Fix pmi8994 label
+Message-ID: <20200621060519.GB2421@builder.lan>
+References: <20200620144639.335093-1-konradybcio@gmail.com>
+ <20200620144639.335093-19-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620144639.335093-19-konradybcio@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All DT source files in the kernel tree specify the power-domains
-property. Make it mandatory.
+On Sat 20 Jun 07:46 PDT 2020, Konrad Dybcio wrote:
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Changes since v1:
+> s3 was mislabeled as s2. Fix it.
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-- Fix typo in comment message
----
- Documentation/devicetree/bindings/media/renesas,fdp1.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,fdp1.yaml b/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
-index f4db96a1f53c..39184bd21a27 100644
---- a/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
-+++ b/Documentation/devicetree/bindings/media/renesas,fdp1.yaml
-@@ -43,6 +43,7 @@ required:
-   - reg
-   - interrupts
-   - clocks
-+  - power-domains
- 
- additionalProperties: false
- 
--- 
 Regards,
+Bjorn
 
-Laurent Pinchart
-
+> ---
+>  drivers/regulator/qcom_smd-regulator.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+> index 53a64d856926..7f5c318c8259 100644
+> --- a/drivers/regulator/qcom_smd-regulator.c
+> +++ b/drivers/regulator/qcom_smd-regulator.c
+> @@ -821,7 +821,7 @@ static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
+>  static const struct rpm_regulator_data rpm_pmi8994_regulators[] = {
+>  	{ "s1", QCOM_SMD_RPM_SMPB, 1, &pmi8994_ftsmps, "vdd_s1" },
+>  	{ "s2", QCOM_SMD_RPM_SMPB, 2, &pmi8994_hfsmps, "vdd_s2" },
+> -	{ "s2", QCOM_SMD_RPM_SMPB, 3, &pmi8994_hfsmps, "vdd_s3" },
+> +	{ "s3", QCOM_SMD_RPM_SMPB, 3, &pmi8994_hfsmps, "vdd_s3" },
+>  	{ "boost-bypass", QCOM_SMD_RPM_BBYB, 1, &pmi8994_bby, "vdd_bst_byp" },
+>  	{}
+>  };
+> -- 
+> 2.27.0
+> 
