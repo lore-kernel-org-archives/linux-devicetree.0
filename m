@@ -2,92 +2,119 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB631C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 14:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E61C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 15:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEB2251E2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 14:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BC1206F1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 15:35:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGypfE9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbgFUO5j (ORCPT
+        id S1730357AbgFUPfS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 10:57:39 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:49112 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbgFUO5T (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 21 Jun 2020 10:57:19 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8D20620097B;
-        Sun, 21 Jun 2020 16:57:17 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8065A200706;
-        Sun, 21 Jun 2020 16:57:17 +0200 (CEST)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C133C203C2;
-        Sun, 21 Jun 2020 16:57:16 +0200 (CEST)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] ARM: dts: imx6sl: fix rng node
-Date:   Sun, 21 Jun 2020 17:56:55 +0300
-Message-Id: <20200621145658.12528-3-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200621145658.12528-1-horia.geanta@nxp.com>
-References: <20200621145658.12528-1-horia.geanta@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 21 Jun 2020 11:35:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730349AbgFUPfR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 11:35:17 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61A0C061794;
+        Sun, 21 Jun 2020 08:35:16 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n2so6364951pld.13;
+        Sun, 21 Jun 2020 08:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=y6egePbuV5QUD1Pss3WsUczRgm6WZZV/FMaa+s3w21Q=;
+        b=vGypfE9yre3g5v6JR0SjT1UIA+95xNwC8yWk2m+s7DiVhc09oUZtZO1v8brPNsj2dh
+         be7JVZbZ+9jqcRfrTot7/Gi85kyn6mjmENav+HcsTfYlBD/wCTk6qBpMVFdL1mniepG/
+         gnfFmXjNcr3EY6/v/0Ne5b+ylLoXJWNQvgzP/qcGNg6WarvvA9SpeFXB5fWEj8rhO4Pz
+         yCBtyNlA5vDW2tZQvycjnhYmhAMfBQVtb5J3ioUtfhbxUTefzFqggAEc4bh/up+3++R6
+         /ycvabV5Rrq1MD2yarA9vwXjtMZTyNrs4xkj2obhZsIbrwveYLDgKWWgMYJucN5suLpM
+         MeOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=y6egePbuV5QUD1Pss3WsUczRgm6WZZV/FMaa+s3w21Q=;
+        b=ILETFGuBZ9pHCj6MsDXkHWtYtmT4lbnkw1BJLszEcl1fAIk8V8bB/UgT4s4bOytAyA
+         IXmJ/65ehAbrYGXyckwIEWQli0gCBzAiw5vnUN4+Jia4adWKBfY9wlyys65+RjpkaYrK
+         ptVzMDS1618YbFQ28eYxuUpm97TUaEpEjkKKxcTMcOKBDW215GTLxvV+KO4wKseiK+Ty
+         ebIenXgeIYZ9oBZrrnppjy6wqEFI9ReMaUJrTtsrQMdh3qwZUfCS3hckBUEuqF5GCCQo
+         fJm39dgN8PoA5Mdq1Qh3c/dlgpLC0GCtilOrYfsnsmAJo8BN0wuxS16ZGlj95FHAQTva
+         O4WQ==
+X-Gm-Message-State: AOAM53277g/Zx3gzbPRZbcUFRpAUpDT7CWDIkY4qKoHCrmDpgWLrmKUZ
+        QHkNR6g9QTlM232Ae4xGjU6AvaR2TSnL4g==
+X-Google-Smtp-Source: ABdhPJz2VauVz2AkzBzAirGeS4Osm8F8gssFc5fRLWQPfBn8fc/pWUzdxvC69QmwxppHzD7ne6iIEw==
+X-Received: by 2002:a17:902:bd0b:: with SMTP id p11mr16020194pls.91.1592753716171;
+        Sun, 21 Jun 2020 08:35:16 -0700 (PDT)
+Received: from localhost.localdomain ([106.121.157.185])
+        by smtp.gmail.com with ESMTPSA id e124sm11127129pfh.140.2020.06.21.08.35.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 21 Jun 2020 08:35:15 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH] Configure osc clock for d_can on am437x
+Date:   Sun, 21 Jun 2020 23:34:00 +0800
+Message-Id: <1592753641-5205-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-rng DT node was added without a compatible string.
+From: dillon min <dillon.minfei@gmail.com>
 
-i.MX driver for RNGC (drivers/char/hw_random/imx-rngc.c) also claims
-support for RNGB, and is currently used for i.MX25.
+Got following d_can probe errors with kernel 5.8-rc1 on am437x
 
-Let's use this driver also for RNGB block in i.MX6SL.
+[   10.730822] CAN device driver interface
+Starting Wait for Network to be Configured...
+[  OK  ] Reached target Network.
+[   10.787363] c_can_platform 481cc000.can: probe failed
+[   10.792484] c_can_platform: probe of 481cc000.can failed with
+error -2
+[   10.799457] c_can_platform 481d0000.can: probe failed
+[   10.804617] c_can_platform: probe of 481d0000.can failed with
+error -2
 
-Fixes: e29fe21cff96 ("ARM: dts: add device tree source for imx6sl SoC")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
- arch/arm/boot/dts/imx6sl.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+actually, Tony has fixed this issue on am335x, the patch [3]
+commit messages:
+"
+The reason why the issue happens is because we now attempt to read the
+interconnect target module revision register by first manually enabling
+all the device clocks in sysc_probe(). And looks like d_can also needs
+the osc clock in addition to the module clock, and it may or may not be
+enabled depending on the bootloader version and if other devices have
+already requested osc clock.
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 911d8cf77f2c..0339a46fa71c 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -939,8 +939,10 @@
- 			};
- 
- 			rngb: rngb@21b4000 {
-+				compatible = "fsl,imx6sl-rngb", "fsl,imx25-rngb";
- 				reg = <0x021b4000 0x4000>;
- 				interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX6SL_CLK_DUMMY>;
- 			};
- 
- 			weim: weim@21b8000 {
+Let's fix the issue by adding osc clock as an optional clock for the
+module for am335x. Note that am437x does not seem to list the osc clock
+at all, so presumably it is not needed for am437x.
+"
+
+from TRM of am335x/am437x [1][2], they have the same clock structure,
+so, we can just reuse [3] for am437x platform.
+
+Tested on custom am4372 board.
+
+[1]: https://www.ti.com/lit/pdf/spruh73 Chapter-23, Figure 23-1. DCAN
+Integration
+[2]: https://www.ti.com/lit/pdf/spruhl7 Chapter-25, Figure 25-1. DCAN
+Integration
+[3]: commit 516f1117d0fb ("ARM: dts: Configure osc clock for d_can on am335x")
+
+dillon min (1):
+  ARM: dts: Configure osc clock for d_can on am437x
+
+ arch/arm/boot/dts/am437x-l4.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
 -- 
-2.17.1
+1.9.1
 
