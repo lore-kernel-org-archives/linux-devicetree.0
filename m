@@ -2,155 +2,103 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB7DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 15:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F35C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 18:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB921251F8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 15:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D5E25222
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 18:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgFUPnF (ORCPT
+        id S1727932AbgFUSWe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 11:43:05 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:56875 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730356AbgFUPnF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 21 Jun 2020 11:43:05 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.143.237])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 0C88D63E478B;
-        Sun, 21 Jun 2020 17:43:02 +0200 (CEST)
-Received: from localhost (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sun, 21 Jun
- 2020 17:43:01 +0200
-Date:   Sun, 21 Jun 2020 17:40:37 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v5 1/4] iio: chemical: scd30: add core driver
-Message-ID: <20200621154037.GA13809@arch>
-References: <20200607175812.95777-2-tomasz.duszynski@octakon.com>
- <20200620172502.0d532081@archlinux>
+        Sun, 21 Jun 2020 14:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgFUSWe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 14:22:34 -0400
+X-Greylist: delayed 2609 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 21 Jun 2020 11:22:33 PDT
+Received: from viti.kaiser.cx (viti.kaiser.cx [IPv6:2a01:238:43fe:e600:cd0c:bd4a:7a3:8e9f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EFFC061794;
+        Sun, 21 Jun 2020 11:22:33 -0700 (PDT)
+Received: from martin by viti.kaiser.cx with local (Exim 4.89)
+        (envelope-from <martin@viti.kaiser.cx>)
+        id 1jn3vf-0007dG-R4; Sun, 21 Jun 2020 19:38:51 +0200
+Date:   Sun, 21 Jun 2020 19:38:51 +0200
+From:   Martin Kaiser <martin@kaiser.cx>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] hwrng: imx-rngc: enable driver for i.MX6
+Message-ID: <20200621173851.w6wkknjbzuyfxx7v@viti.kaiser.cx>
+References: <20200621145658.12528-1-horia.geanta@nxp.com>
+ <20200621145658.12528-6-horia.geanta@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200620172502.0d532081@archlinux>
-X-Originating-IP: [89.70.180.118]
-X-ClientProxiedBy: DAG2EX1.emp2.local (172.16.2.11) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 9225060887347813458
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudektddgleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnheptdehveethfffudetjeeftdekueehjeegjedvteffgfevkefffeegffeugeehgfejnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200621145658.12528-6-horia.geanta@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 05:25:02PM +0100, Jonathan Cameron wrote:
-> On Sun, 7 Jun 2020 19:58:09 +0200
-> Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
->
-> > Add Sensirion SCD30 carbon dioxide core driver.
-> >
-> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
->
-> A few things I'd missed showed up in warnings when I applied this and
-> ran a sparse check.  Please fix up and send a v6.
-> Also sanity check the rest with sparse. Note if I'd missed this 0-day
-> would have sent use these warnings.
->
+Thus wrote Horia Geantă (horia.geanta@nxp.com):
 
-Ah, forgot to add C=2 to prior building. Thanks for catching this.
+> i.MX6 SL, SLL, ULL, ULZ SoCs have an RNGB block.
 
-> Thanks,
->
-> Jonathan
->
-> > +
-> > +static int scd30_read_meas(struct scd30_state *state)
-> > +{
-> > +	int i, ret;
-> > +
-> > +	ret = state->command(state, CMD_READ_MEAS, 0, state->meas, sizeof(state->meas));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	be32_to_cpu_array(state->meas, state->meas, ARRAY_SIZE(state->meas));
->
-> The type of the input to the above has the wrong endian markings.
->
-> CHECK   drivers/iio/chemical/scd30_core.c
-> drivers/iio/chemical/scd30_core.c:123:40: warning: incorrect type in argument 2 (different base types)
-> drivers/iio/chemical/scd30_core.c:123:40:    expected restricted __be32 const [usertype] *src
-> drivers/iio/chemical/scd30_core.c:123:40:    got int *
->
-> Whilst you could use a cast, it would be tidier to use an array of __be32.
->
+> Since imx-rngc driver supports also rngb,
+> let's enable it for these SoCs too.
 
-Here's the only place where it's a __be32. All other places assume
-cpu endianess which means changing array type generates a few other warnings
-here and there. So I'd prefer to be lazy here and use a cast :).
+> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+> ---
+>  drivers/char/hw_random/Kconfig    | 2 +-
+>  drivers/char/hw_random/imx-rngc.c | 3 +++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(state->meas); i++)
-> > +		state->meas[i] = scd30_float_to_fp(state->meas[i]);
-> > +
-> > +	/*
-> > +	 * co2 is left unprocessed while temperature and humidity are scaled
-> > +	 * to milli deg C and milli percent respectively.
-> > +	 */
-> > +	state->meas[SCD30_TEMP] *= 10;
-> > +	state->meas[SCD30_HR] *= 10;
-> > +
-> > +	return 0;
-> > +}
-> > +
->
-> ...
->
-> > +
-> > +static irqreturn_t scd30_trigger_handler(int irq, void *p)
-> > +{
-> > +	struct iio_poll_func *pf = p;
-> > +	struct iio_dev *indio_dev = pf->indio_dev;
-> > +	struct scd30_state *state = iio_priv(indio_dev);
-> > +	struct {
-> > +		int data[SCD30_MEAS_COUNT];
-> > +		s64 ts __aligned(8);
-> > +	} scan = { 0, };
-> should be scan = { {0, }, }; or something like that
-> as first element happens to be an array.
->
-> Actually there is padding in here you need to zero I think.
-> So memset is a better bet.
->
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 0ad17efc96df..53f6a7e4392f 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -245,7 +245,7 @@ config HW_RANDOM_MXC_RNGA
+>  config HW_RANDOM_IMX_RNGC
+>  	tristate "Freescale i.MX RNGC Random Number Generator"
+>  	depends on HAS_IOMEM && HAVE_CLK
+> -	depends on SOC_IMX25 || COMPILE_TEST
+> +	depends on SOC_IMX25 || SOC_IMX6SL || SOC_IMX6SLL || SOC_IMX6UL || COMPILE_TEST
+>  	default HW_RANDOM
+>  	help
+>  	  This driver provides kernel-side support for the Random Number
+> diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
+> index 9c47e431ce90..84576d2fbf8c 100644
+> --- a/drivers/char/hw_random/imx-rngc.c
+> +++ b/drivers/char/hw_random/imx-rngc.c
+> @@ -350,6 +350,9 @@ static SIMPLE_DEV_PM_OPS(imx_rngc_pm_ops, imx_rngc_suspend, imx_rngc_resume);
 
-Sure.
+>  static const struct of_device_id imx_rngc_dt_ids[] = {
+>  	{ .compatible = "fsl,imx25-rngb", .data = NULL, },
+> +	{ .compatible = "fsl,imx6sl-rngb", .data = NULL, },
+> +	{ .compatible = "fsl,imx6sll-rngb", .data = NULL, },
+> +	{ .compatible = "fsl,imx6ull-rngb", .data = NULL, },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, imx_rngc_dt_ids);
+> -- 
+> 2.17.1
 
-> > +	int ret;
-> > +
-> > +	mutex_lock(&state->lock);
-> > +	if (!iio_trigger_using_own(indio_dev))
-> > +		ret = scd30_read_poll(state);
-> > +	else
-> > +		ret = scd30_read_meas(state);
-> > +	memcpy(scan.data, state->meas, sizeof(state->meas));
-> > +	mutex_unlock(&state->lock);
-> > +	if (ret)
-> > +		goto out;
-> > +
-> > +	iio_push_to_buffers_with_timestamp(indio_dev, &scan, iio_get_time_ns(indio_dev));
-> > +out:
-> > +	iio_trigger_notify_done(indio_dev->trig);
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> ...
+Reviewed-by: Martin Kaiser <martin@kaiser.cx>
