@@ -4,125 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235D4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 07:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144BCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 07:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16F324844
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 07:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A0F23AC9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 07:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GZEkkNN9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yt7zuV6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgFUHMm (ORCPT
+        id S1729404AbgFUHVb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 03:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51298 "EHLO
+        Sun, 21 Jun 2020 03:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729381AbgFUHMm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 03:12:42 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC92AC061794
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 00:12:41 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x22so6809615pfn.3
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 00:12:41 -0700 (PDT)
+        with ESMTP id S1729388AbgFUHVa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 03:21:30 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 566CAC061795
+        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 00:21:30 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b7so5651746pju.0
+        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 00:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+rMtPSRpfPZ/10LjMZ9D5lqabt/ov8oGZq7vkldZVbI=;
-        b=GZEkkNN9SVWP4VKu+Md9ytVNTcZZ3bH5tDUMUWlQ7XFlTVqOFA7sd7e+7qbjJckms0
-         AZ2cYARf9REVrfk40td2X7poPOGaXlBctz9fQ4KHR+byiLCvOkDLKpUOouIaONISKWk/
-         rqj2o/S5+ShGPOVB9yR0WFACzDnrz+sJ8zbfKSEcLCWC6SqOL680l7foMo8TX0a7TYKn
-         y0qvNbgV/KC7GLMn93L1LJZcPutQLrtetJ2EQXlpB56k1ckuoIEdiFj5ot9xEcQl8qsx
-         aIkvqbhkczcPhNPJPTGCm86buhTJkdxlFH0Kx6yXYZubtkEWm6PBKkyPX6D8LhESvW58
-         FO/w==
+        bh=zhhnd4ooynuYp+DByQntd+/eACdv1P9A50jueK+9Jz0=;
+        b=yt7zuV6i6+kuAthGmj/DlOb4D50uMszJWqg3anEKpSeMOmcg+ci2KBcvYWRChL2n1I
+         uY58D9qvZmXynLUO2XjAdZje5PKshv7DEzG4kEW0GLW661dQ/3NiLnzkDD+cD5i+Lyu7
+         Nepf5U5yH94YPZCd3al6F+60jUOMoMR0luaFoAF9IAiG8jJ/EwdIlsYdqFZFMQeFQNK2
+         58oVfyVV+WSkes/l+iAKwUZf19DhK6tYuQcWWNDEcC2FVHHLqtNMSdfUOl0Vx9DBBZU4
+         y16F1XtYEi340XdbzH1u42PWqLRbB9BzKJXBXxlNWs0xo+rt9ot93mU3mJ7hwhhKZPLm
+         TOag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+rMtPSRpfPZ/10LjMZ9D5lqabt/ov8oGZq7vkldZVbI=;
-        b=FXpezojKy2H7evvkG0NrgG/bcxHy8jsEjo4gN6959takRmDim1p00VF7Dar6Bn20/e
-         INJVi/bwqgblI/k/1vhDuloVa5vqtxFxSr6dxGtK64wFs01UdLtV0F8nNxHdkkIQYnui
-         IFOpusOMm+b71OaqnlwxWGXFp0IHHcL6M7dZ4UFUpYs+CkylW5nH/eWHlNsoT759z/Cl
-         tay/FLBMZp2k6zHmwuUqx7lGo+PDmDDpDg48JEU/sXQPz1MDmuQyZBzcTDVd5edTU7LK
-         Lauj7UTph7vqvC4qVSOTDe3xLlGyVo0KDDcMU1zluz0h3M8JRq/Pwn/UbanRtkRfUAUb
-         pi6Q==
-X-Gm-Message-State: AOAM533pXQw/1A2xf+wQQ9VuDr0WmqejM2fjaPKAWmCrQlUtS4S1J3N9
-        9LmVeO8Vx23d6K1UTdS7JDbpxQ==
-X-Google-Smtp-Source: ABdhPJxgRWInuUhCdGNKOQhoDTL4b8hXtC40JtehcB6BjEgPcRmNVe8MGFYLZwI/jyNblnjXqtHzow==
-X-Received: by 2002:a63:9742:: with SMTP id d2mr7971058pgo.95.1592723561429;
-        Sun, 21 Jun 2020 00:12:41 -0700 (PDT)
+        bh=zhhnd4ooynuYp+DByQntd+/eACdv1P9A50jueK+9Jz0=;
+        b=FdNeIAck2s1pahuXli5e5O2EKK92TBCQjkiKsE8cVgxNsH85y1fS2x7cv13P6Xeowl
+         7QOQ6VGhHF5SkTXrP4OjLaDvg7+dyCdYrWGyPN2F82AO9UiJCT3dcsXSPLvwCPeUHSxL
+         Zd3ccj9P/SdwFMUt7syFdJinktoipfFuey/6BfzF+rM05OKj8ZxF7HaGOKO6kUkpWcS9
+         cL859AbdAIzH7Rc2iNlA6fJANcz2WHk9kIAbIN8Iil7Z1+AZCcMQhlVCynF4RFV9fj+l
+         n4gIn8iYTnl/Kv0FVba+SvnmPXru774zlI523hwBMdiGkixU4j2VwDPb+MIOoH9wJaDX
+         67uQ==
+X-Gm-Message-State: AOAM53381SAtW2C/nLidu/ZHfuCxJjGhIASJYf2Fshko/KMg2oMLbZdZ
+        ykzZ2wPfZbVPI/SM80jhZdzpjg==
+X-Google-Smtp-Source: ABdhPJwlGPhiIqDqP8vcOExyveA/1VsmWOgswjkutg/xCC/ADeseuuGLBVqwQm3jgUsHhE1UtCJcng==
+X-Received: by 2002:a17:90a:eac8:: with SMTP id ev8mr11655642pjb.80.1592724089756;
+        Sun, 21 Jun 2020 00:21:29 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y81sm10530861pfb.33.2020.06.21.00.12.39
+        by smtp.gmail.com with ESMTPSA id e124sm10106487pfh.140.2020.06.21.00.21.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 00:12:40 -0700 (PDT)
-Date:   Sun, 21 Jun 2020 00:09:53 -0700
+        Sun, 21 Jun 2020 00:21:28 -0700 (PDT)
+Date:   Sun, 21 Jun 2020 00:18:41 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     heikki.krogerus@linux.intel.com, mark.rutland@arm.com,
-        broonie@kernel.org, gregkh@linuxfoundation.org,
-        lgirdwood@gmail.com, agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org, rdunlap@infradead.org,
-        bryan.odonoghue@linaro.org, lijun.kernel@gmail.com
-Subject: Re: [PATCH v3 3/6] arm64: boot: dts: qcom: pm8150b: Add node for USB
- type C block
-Message-ID: <20200621070953.GE128451@builder.lan>
-References: <20200617180209.5636-1-wcheng@codeaurora.org>
- <20200617180209.5636-4-wcheng@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        sibis@codeaurora.org, manivannan.sadhasivam@linaro.org,
+        dmitry.baryshkov@linaro.org, Andy Gross <agross@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm8250: Add thermal zones and
+ throttling support
+Message-ID: <20200621071841.GF128451@builder.lan>
+References: <cover.1591684754.git.amit.kucheria@linaro.org>
+ <bf5ca7777fbb6f5e2d374a9a72d1e17d485bd8ea.1591684754.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200617180209.5636-4-wcheng@codeaurora.org>
+In-Reply-To: <bf5ca7777fbb6f5e2d374a9a72d1e17d485bd8ea.1591684754.git.amit.kucheria@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 17 Jun 11:02 PDT 2020, Wesley Cheng wrote:
+On Mon 08 Jun 23:44 PDT 2020, Amit Kucheria wrote:
 
-> The PM8150B has a dedicated USB type C block, which can be used for type C
-> orientation and role detection.  Create the reference node to this type C
-> block for further use.
+> sm8250 has 24 thermal sensors split across two tsens controllers. Add
+> the thermal zones to expose them and wireup the cpus to throttle on
+> crossing passive temperature thresholds.
 > 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Update the comment in the drivers to list the SoCs it supports.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 766 +++++++++++++++++++++++++++
+>  drivers/thermal/qcom/tsens-v2.c      |   2 +-
+>  2 files changed, 767 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> index 322379d5c31f..ec44a8bc2f84 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -22,6 +22,14 @@ power-on@800 {
->  			status = "disabled";
->  		};
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index deaa8415c7b72..5cd18cd8a675b 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/thermal/thermal.h>
 >  
-> +		qcom,typec@1500 {
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -86,6 +87,7 @@ CPU0: cpu@0 {
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+> +			#cooling-cells = <2>;
 
-Please no "qcom," in the node names and please give it a label to make
-it easy to change the status of the node.
+This doesn't apply to linux-next.
 
-> +			compatible = "qcom,pm8150b-usb-typec";
-> +			status = "disabled";
-> +			reg = <0x1500>;
-> +			interrupts =
-> +				<0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
+The problem seems to be that, as pointed out when I submitted that
+patch, the previously anonymous "cpufreq hardware" is now replaced by
+the "EPSS" hardware block.
 
-This is nicer on a single line, so please omit the line break.
+So we need a new driver (or update the existing one) to support this new
+hardware block.
+
+Presumably though, without this there's not much cooling anyways - which
+is sad, as your patch looks good.
+
+>  			L2_0: l2-cache {
+>  			      compatible = "cache";
+>  			      next-level-cache = <&L3_0>;
+[..]
+> diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+> index b293ed32174b5..58cac8f2a358c 100644
+> --- a/drivers/thermal/qcom/tsens-v2.c
+> +++ b/drivers/thermal/qcom/tsens-v2.c
+> @@ -26,7 +26,7 @@
+>  #define TM_TRDY_OFF			0x00e4
+>  #define TM_WDOG_LOG_OFF		0x013c
+>  
+> -/* v2.x: 8996, 8998, sdm845 */
+> +/* v2.x: 8996, 8998, sc7180, sdm845, sm8150, sm8250 */
+
+Even though it's trivial, can you please send this through the tsens
+tree instead, so we don't end up having unnecessary merge conflicts.
 
 Regards,
 Bjorn
 
-> +		};
-> +
->  		adc@3100 {
->  			compatible = "qcom,spmi-adc5";
->  			reg = <0x3100>;
+>  
+>  static struct tsens_features tsens_v2_feat = {
+>  	.ver_major	= VER_2_X,
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 2.25.1
 > 
