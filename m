@@ -2,88 +2,287 @@ Return-Path: <SRS0=az0Z=AC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFC2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 13:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BBBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 14:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7F1248FF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 13:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A7B2491F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 21 Jun 2020 14:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oriOEpQS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x+y3ACx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgFUNWf (ORCPT
+        id S1730141AbgFUONH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 09:22:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:23355 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729619AbgFUNWT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 09:22:19 -0400
-X-UUID: ce429ffb1dac4c33a4006b4a1d7cae5f-20200621
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3rvvFBdm5jN8tYlvL2WjSID0CHDQ80fY5OLbbB7MYi0=;
-        b=oriOEpQSlutnGvjNTZ3mH5oIUO6c0a5UEJR+FPtPNEFT+WFKdjYB6VR9Y1LP1yZCT0QLMmZmPCxeyN33ja6mMqaAP3kKBJERRsKZkHBdd9fnxqmdVtj4wBu+2G4Htg6L9/RD5xNDkrNGQqN1+pV2diFw01imP09whfiIQcAkaFM=;
-X-UUID: ce429ffb1dac4c33a4006b4a1d7cae5f-20200621
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 270657160; Sun, 21 Jun 2020 21:22:14 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sun, 21 Jun 2020 21:22:05 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 21 Jun 2020 21:22:05 +0800
-From:   Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>,
-        Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-Subject: [PATCH v7 3/4] mailbox: cmdq: support mt6779 gce platform definition
-Date:   Sun, 21 Jun 2020 21:22:10 +0800
-Message-ID: <1592745731-14614-4-git-send-email-dennis-yc.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1592745731-14614-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1592745731-14614-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+        Sun, 21 Jun 2020 10:13:07 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55550 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730129AbgFUONH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 10:13:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05LECwQh125744;
+        Sun, 21 Jun 2020 09:12:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592748778;
+        bh=ZF/Org4ein5GHXEP9qlfqPfU9/owt/dGHSyRh19Ah1M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=x+y3ACx87yb2ZT/YwvoXHtXm2SXHXOOvz/Gw592FDNH3V36FMlll1KduN2AkV8pOv
+         Y6K7bZIFltgxVqA4qhH22Q0tuY5tSkDKNPz77B9ssUxDm6LxSpjPjjZBRT4euTpjUb
+         UFn0/9pJATEXcPT9gASmMN2gD702IjbkXDreQOkU=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05LECwXZ081528
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 21 Jun 2020 09:12:58 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 21
+ Jun 2020 09:12:58 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 21 Jun 2020 09:12:58 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05LECwUT021461;
+        Sun, 21 Jun 2020 09:12:58 -0500
+Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
+ support to lp55xx
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <robh@kernel.org>
+CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200615201522.19677-12-dmurphy@ti.com>
+ <202006180032.JW0i39C6%lkp@intel.com>
+ <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+ <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
+ <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
+ <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
+ <56823113-4875-4813-8627-84b0d1792391@ti.com>
+ <bd603f01-2c1b-6167-d88c-3895c1bfdf6c@gmail.com>
+ <fad98aa3-cec6-3cde-951f-fa2b57c26d03@gmail.com>
+ <04473d1d-5cd8-7d1f-7c5d-8d8b582df464@ti.com>
+ <1f5dd2f9-01c7-1f74-9b93-0ae2a6dac915@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <69c01524-c4a4-55c8-578e-24b26bc863b8@ti.com>
+Date:   Sun, 21 Jun 2020 09:12:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1f5dd2f9-01c7-1f74-9b93-0ae2a6dac915@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIGdjZSB2NCBoYXJkd2FyZSBzdXBwb3J0IHdpdGggZGlmZmVyZW50IHRocmVhZCBudW1iZXIg
-YW5kIHNoaWZ0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5o
-c2llaEBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNv
-bT4NClJldmlld2VkLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29t
-Pg0KLS0tDQogZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYyB8ICAgIDIgKysNCiAx
-IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21h
-aWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxi
-b3guYw0KaW5kZXggNGRiZWU5MjU4MTI3Li45OTk0YWM5NDI2ZDYgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQorKysgYi9kcml2ZXJzL21haWxib3gvbXRr
-LWNtZHEtbWFpbGJveC5jDQpAQCAtNTcyLDEwICs1NzIsMTIgQEAgc3RhdGljIGludCBjbWRxX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogDQogc3RhdGljIGNvbnN0IHN0cnVj
-dCBnY2VfcGxhdCBnY2VfcGxhdF92MiA9IHsudGhyZWFkX25yID0gMTZ9Ow0KIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjMgPSB7LnRocmVhZF9uciA9IDI0fTsNCitzdGF0
-aWMgY29uc3Qgc3RydWN0IGdjZV9wbGF0IGdjZV9wbGF0X3Y0ID0gey50aHJlYWRfbnIgPSAyNCwg
-LnNoaWZ0ID0gM307DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgY21kcV9v
-Zl9pZHNbXSA9IHsNCiAJey5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1nY2UiLCAuZGF0
-YSA9ICh2b2lkICopJmdjZV9wbGF0X3YyfSwNCiAJey5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
-ODE4My1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9wbGF0X3YzfSwNCisJey5jb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10Njc3OS1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9wbGF0X3Y0fSwN
-CiAJe30NCiB9Ow0KIA0KLS0gDQoxLjcuOS41DQo=
+Jacek
+
+On 6/19/20 5:10 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 6/19/20 6:35 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 6/18/20 6:26 PM, Jacek Anaszewski wrote:
+>>> On 6/19/20 12:09 AM, Jacek Anaszewski wrote:
+>>>> Dan,
+>>>>
+>>>> On 6/18/20 11:44 PM, Dan Murphy wrote:
+>>>>> Jacek
+>>>>>
+>>>>> On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
+>>>>>> Dan,
+>>>>>>
+>>>>>> On 6/18/20 12:33 AM, Dan Murphy wrote:
+>>>>>>> Jacek
+>>>>>>>
+>>>>>>> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
+>>>>>>>> Dan,
+>>>>>>>>
+>>>>>>>> On 6/17/20 9:22 PM, Dan Murphy wrote:
+>>>>>>>>> Pavel/Jacek
+>>>>>>>>>
+>>>>>>>>> On 6/17/20 11:28 AM, kernel test robot wrote:
+>>>>>>>>>> Hi Dan,
+>>>>>>>>>>
+>>>>>>>>>> I love your patch! Yet something to improve:
+>>>>>>>>>>
+>>>>>>>>>> [auto build test ERROR on pavel-linux-leds/for-next]
+>>>>>>>>>> [cannot apply to j.anaszewski-leds/for-next]
+>>>>>>>>>> [if your patch is applied to the wrong git tree, please drop 
+>>>>>>>>>> us a note to help
+>>>>>>>>>> improve the system. BTW, we also suggest to use '--base' 
+>>>>>>>>>> option to specify the
+>>>>>>>>>> base tree in git format-patch, please see 
+>>>>>>>>>> https://stackoverflow.com/a/37406982]
+>>>>>>>>>>
+>>>>>>>>>> url: 
+>>>>>>>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
+>>>>>>>>>>
+>>>>>>>>>> base: 
+>>>>>>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
+>>>>>>>>>> for-next
+>>>>>>>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
+>>>>>>>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
+>>>>>>>>>> reproduce (this is a W=1 build):
+>>>>>>>>>>          wget 
+>>>>>>>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
+>>>>>>>>>> -O ~/bin/make.cross
+>>>>>>>>>>          chmod +x ~/bin/make.cross
+>>>>>>>>>>          # save the attached .config to linux build tree
+>>>>>>>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
+>>>>>>>>>> make.cross ARCH=ia64
+>>>>>>>>>>
+>>>>>>>>>> If you fix the issue, kindly add following tag as appropriate
+>>>>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>>>>>
+>>>>>>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>>>>>>>>>
+>>>>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>>>>>>> `lp55xx_set_mc_brightness':
+>>>>>>>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference 
+>>>>>>>>>>>> to `led_mc_calc_color_components'
+>>>>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>>>>>>> `devm_led_classdev_multicolor_register':
+>>>>>>>>>>>> include/linux/led-class-multicolor.h:74: undefined 
+>>>>>>>>>>>> reference to `devm_led_classdev_multicolor_register_ext'
+>>>>>>>>>> vim +146 drivers/leds/leds-lp55xx-common.c
+>>>>>>>>>>
+>>>>>>>>>>     138
+>>>>>>>>>>     139    static int lp55xx_set_mc_brightness(struct 
+>>>>>>>>>> led_classdev *cdev,
+>>>>>>>>>>     140                        enum led_brightness brightness)
+>>>>>>>>>>     141    {
+>>>>>>>>>>     142        struct led_classdev_mc *mc_dev = 
+>>>>>>>>>> lcdev_to_mccdev(cdev);
+>>>>>>>>>>     143        struct lp55xx_led *led = 
+>>>>>>>>>> mcled_cdev_to_led(mc_dev);
+>>>>>>>>>>     144        struct lp55xx_device_config *cfg = 
+>>>>>>>>>> led->chip->cfg;
+>>>>>>>>>>     145
+>>>>>>>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
+>>>>>>>>>>     147        return cfg->multicolor_brightness_fn(led);
+>>>>>>>>>>     148
+>>>>>>>>>
+>>>>>>>>> Well this was a mess to figure out.
+>>>>>>>>>
+>>>>>>>>> The only fix I can figure out here is to remove the
+>>>>>>>>>
+>>>>>>>>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>>>>>>>
+>>>>>>>>> from each child device and add
+>>>>>>>>>
+>>>>>>>>>      select LEDS_CLASS_MULTI_COLOR
+>>>>>>>>>
+>>>>>>>>> to the LP55XX_COMMON
+>>>>>>>>>
+>>>>>>>>> This way the Multi color framework will inherit the symbol 
+>>>>>>>>> that was set by the COMMON flag which is inherited by majority 
+>>>>>>>>> from the child flags.
+>>>>>>>>
+>>>>>>>> Did you try this?
+>>>>>>>>
+>>>>>>>> --- a/drivers/leds/Kconfig
+>>>>>>>> +++ b/drivers/leds/Kconfig
+>>>>>>>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
+>>>>>>>>  config LEDS_LP55XX_COMMON
+>>>>>>>>         tristate "Common Driver for TI/National 
+>>>>>>>> LP5521/5523/55231/5562/8501"
+>>>>>>>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
+>>>>>>>> LEDS_LP8501
+>>>>>>>> +       depends on LEDS_CLASS_MULTI_COLOR || 
+>>>>>>>> !LEDS_CLASS_MULTI_COLOR
+>>>>>>>>         depends on OF
+>>>>>>>>         select FW_LOADER
+>>>>>>>>         select FW_LOADER_USER_HELPER
+>>>>>>>>
+>>>>>>>>
+>>>>>>> Yes I did
+>>>>>>>
+>>>>>>> That gave unmet dependencies.
+>>>>>>>
+>>>>>>> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
+>>>>>>>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || 
+>>>>>>> LEDS_LP5523 [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
+>>>>>>> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && 
+>>>>>>> OF [=y]
+>>>>>>>    Selected by [y]:
+>>>>>>>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C 
+>>>>>>> [=y]
+>>>>>>>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C 
+>>>>>>> [=y]
+>>>>>>>    Selected by [m]:
+>>>>>>>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C 
+>>>>>>> [=y] && (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR 
+>>>>>>> [=m])
+>>>>>>>
+>>>>>>
+>>>>>> When I was testing that yesterday I also had the same warning at 
+>>>>>> some
+>>>>>> point of testing different Kconfig setups, but with what I showed 
+>>>>>> above
+>>>>>> it ceased to appear. Now every time I am doing "make oldconfig" the
+>>>>>> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
+>>>>>> from the test bot.
+>>>>>>
+>>>>> That is not what I saw in my testing especially after doing a 
+>>>>> distclean
+>>>>
+>>>> Could you please give your exact steps after "make distclean" and
+>>>> copying test bot config to the kernel root directory?
+>>>>
+>>>> Also, please share the toolchain you're using for tests.
+>>>
+>>> Actually at this stage the toolchain is of lesser relevance.
+>>>
+>>> I've tried once more and indeed the problem shows up.
+>>>
+>>> It is caused by the driver entries doing
+>>>
+>>> "select LEDS_LP55XX_COMMON".
+>>>
+>>> Select sets config to "y" so it conflicts with
+>>> "depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR"
+>>> in the "config LEDS_LP55XX_COMMON".
+>>>
+>>> Your proposed fix will block the possibility of building
+>>> LED_CLASS_MULTI_COLOR as a module when LP55XX drivers
+>>> are enabled so this is also not an option.
+>>>
+>>> Solving this riddle will require some more thinking.
+>>> I haven't analyzed it in detail but maybe "imply" statement from
+>>> kconfig-language.rst could help somehow here. 
+>>
+>> The multicolor framework will build as a module if the LED_CLASS is 
+>> defined as a module.
+>>
+>> See attached test_defconfig
+>
+> But it will be impossible to enable CONFIG_LEDS_LP50XX without
+> CONFIG_LEDS_CLASS_MULTI_COLOR if you will remove
+>
+> depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR.
+>
+I was not removing the dependency for the LP50xx only the LP55xx.
+
+
+> This is actually why the above entry was needed.
+>
+> LP55XX drivers have to work also without multicolor class.
+>
+Well I am not sure how else to resolve this problem.  Because the LP55xx 
+has multi level dependencies.
+
+Only the LP55xx_common has the dependency on the MC framework. The 
+device drivers do not.
+
+The issue is the mixing and matching of the MC fw as a module vs the 
+LP55XX_COMMON as a built-in.
+
+Dan
 
