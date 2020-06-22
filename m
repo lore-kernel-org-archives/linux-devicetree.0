@@ -2,123 +2,84 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F320AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06CC2075A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592833308;
-	bh=76HPA8Jkij2jZjdlFrIktZ6XRSDMq4kt1S8rTegc1Bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V8PdoUcmM54Gb08Km878jzVqg1tNDgWqmyLR+tJJp2Yw0UxN5MsjUZqiAXDBjo7KU
-	 tU/bN9ZuIhr86mCSbJ+At+YCgzuwTuIICJwBBW8X9T1+uxewXDmmv1Boimy9/6rObf
-	 aqBquAVJ07POB9IiWaXzGNkpn9EVbYVAk6Ioqg5w=
+	by mail.kernel.org (Postfix) with ESMTP id D83532070E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgFVNls (ORCPT
+        id S1728749AbgFVNtv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:41:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50706 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 09:49:51 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52230 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbgFVNls (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:41:48 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CDA62074D;
-        Mon, 22 Jun 2020 13:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592833307;
-        bh=76HPA8Jkij2jZjdlFrIktZ6XRSDMq4kt1S8rTegc1Bk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B21oTPIkWw7OBXxlK3V4+IxJeFImDbaXVpPpAU2gG+fIdJtM6deJyZw1VTWTDW6PM
-         FXVyLdPn2rpawBpfjrCUhCR7BsoB9VZSPYJsJ26gumHDkEFPXbq5q4tfdIun86CO1b
-         VLZ42OmyCzXhcYu5zNsCnOQWebv/CcBZxTHjTxxA=
-Date:   Mon, 22 Jun 2020 14:41:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pantelis Antoniou <pantelis.antoniou@linaro.org>
-Cc:     Stephan Gerhold <stephan@gerhold.net>, alsa-devel@alsa-project.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Matthew Porter <mporter@konsulko.com>,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
- apq8039 sound complex
-Message-ID: <20200622134145.GJ4560@sirena.org.uk>
-References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
- <20200619193831.12528-2-pantelis.antoniou@linaro.org>
- <20200619214126.GA1251@gerhold.net>
- <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
- <20200622120409.GD4560@sirena.org.uk>
- <519B5FAC-4DB8-4968-B9D4-96E376D74F1E@linaro.org>
+        id S1728070AbgFVNtu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:49:50 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jnMpW-001fbC-Km; Mon, 22 Jun 2020 15:49:46 +0200
+Date:   Mon, 22 Jun 2020 15:49:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 9/9] dt-bindings: net: dsa: Add documentation for
+ Hellcreek switches
+Message-ID: <20200622134946.GM338481@lunn.ch>
+References: <20200618064029.32168-1-kurt@linutronix.de>
+ <20200618064029.32168-10-kurt@linutronix.de>
+ <20200618134704.GQ249144@lunn.ch>
+ <87zh8zphlc.fsf@kurt>
+ <20200619135657.GF304147@lunn.ch>
+ <87imfjtik4.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tKy6e3LXpfmanBFM"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <519B5FAC-4DB8-4968-B9D4-96E376D74F1E@linaro.org>
-X-Cookie: laser, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87imfjtik4.fsf@kurt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 02:02:19PM +0200, Kurt Kanzenbach wrote:
+> On Fri Jun 19 2020, Andrew Lunn wrote:
+> >> > The switch is 100/100Mbps right? The MAC is only Fast ethernet. Do you
+> >> > need some properties in the port@0 node to tell the switch to only use
+> >> > 100Mbps? I would expect it to default to 1G. Not looked at the code
+> >> > yet...
+> >> 
+> >> No, that is not needed. That is a hardware configuration and AFAIK
+> >> cannot be changed at run time.
+> >
+> > I was wondering about that in general. I did not spot any code in the
+> > driver dealing with results from the PHY auto-neg. So you are saying
+> > the CPU is fixed speed, by strapping? But what about the other ports?
+> > Does the MAC need to know the PHY has negotiated 10Half, not 1G? Would
+> > that not make a difference to your TSN?
+> 
+> Indeed, that does make a difference. I've checked with the vendor. The
+> current version of the switch IP does not support configuring the speed
+> etc. at run time. It is hard wired to 100 Mbit/s or 1000 Mbit/s for
+> now. Later versions of the chip might support setting the speed etc. via
+> configuration registers. As a result the PHYs at the front ports should
+> be programmed to only advertise 100 Mbit/s or 1G depending on the
+> hardware setup.
 
---tKy6e3LXpfmanBFM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Kurt
 
-On Mon, Jun 22, 2020 at 04:32:46PM +0300, Pantelis Antoniou wrote:
-> > On Jun 22, 2020, at 15:04 , Mark Brown <broonie@kernel.org> wrote:
+Are there registers which allow you to determine the strapping? There
+are phylib/phylink calls you can make to set the advertisement in the
+PHY. It would be good to do this in the DSA driver.
 
-> > No, you're encoding use case decisions into the DT here - for example
-> > your example will break use cases like ring tones and shutter sounds
-> > which should play through both speaker and headphones.  It's also
-> > setting volumes which may be inappropriate or may be not and interferes
-> > with userspace using those same physical volume controls.
-
-> It is completely optional whether you use this functionality or not.
-
-It's optional for whoever writes the DT and flashes it, it is not
-optional for whoever's doing the OS configuration - these may not be the
-same people.
-
-> In that case you don=E2=80=99t use the automatic routing you merely set i=
-t to off
-> and everything works as before. Or you merely use the route setup for
-> the function from userspace.
-
-Userspace shouldn't have to be fighting with the kernel for control of
-the device.
-
-> The device in question is not a mobile phone so there is no requirement
-> to have speaker and headphone active at the same time. It is possible to
-> create a function that would be headphone+speaker active at the same time
-> for that case.
-
-That may be true for your OS configuration but that doesn't mean that
-some other user of the same hardware won't want to do something that
-needs both simultaneously.
-
---tKy6e3LXpfmanBFM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7wtRgACgkQJNaLcl1U
-h9DCVwf9FpSeXGVTR/Zcbu24YOawrtka4GsPPSyOzc72t16OmdGnrJ0hROsl8K6n
-sDqhp3MUcOd12L4ljog/75Ewggs5KqUtRcAX+R2EmTDxMnErBwRd9U/JoKmV70y1
-6WdDPh18iAXPGO6fyX3I8ZdJxA7NFTJCsANM44oUDJOv8XZmYyY5vkbDl0bqMAqh
-Gewyh8N0uGlLbGAlWGaXruLxPqkAAugJQXnNQ5nhwZsSeHakCzl5J3ALXE3A8J7R
-QhsxOcaU9gfqkK2Si89Dt03ifwcauVzvzG5YFBgzuj1pjFOLfgwT8c56t1b1ZkSa
-miOXn6WI7XaQr2+ouRo174Dd/Dszkw==
-=h2v/
------END PGP SIGNATURE-----
-
---tKy6e3LXpfmanBFM--
+     Andrew
