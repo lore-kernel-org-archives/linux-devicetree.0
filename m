@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB34C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE30DC433E5
 	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A12120857
+	by mail.kernel.org (Postfix) with ESMTP id CCA3020857
 	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yK7BuJkf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAYvSU8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgFVIAD (ORCPT
+        id S1726958AbgFVH7u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53194 "EHLO
+        Mon, 22 Jun 2020 03:59:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgFVH7w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:59:52 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC92FC061794
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:59:52 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id j189so14790581oih.10
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:59:52 -0700 (PDT)
+        with ESMTP id S1726080AbgFVH7t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:59:49 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5529C061799
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:59:48 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id d67so14805759oig.6
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:59:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hzqoVDbQzZNmNPwLRsiHsWdrSJDCtl0FBiErUw9Lnwc=;
-        b=yK7BuJkfP85RyShC36Lhp2LQ9octtbXw0Kd/pRG6QS48O7IW3L8gb/gFfA0yf7sjwd
-         qQ8qPI4o3Ygkgw4i0odCiSvqAKMqVALqnXOOt7P9vk+2MaXZvyjxYqzUagMI2tVgkFoB
-         xOK9fZ1Gmv1MLfSlpkTKaWnZchLEmKA1x0bXIzzkFFfoTvOZj7feLHbSoa97l1QyQ5O9
-         0XxyCjm6upqXL3kR4YePhnZ84lZpjyM9GWyqRkzcrX7YNGPBLn8oHNGSwBOBzAuEz3u0
-         NnqlLLw9N8bE+vK2Rng5KMKZBlqZKftKhXFHYNXVvG/F9nHug00DqL4aiFpfgM0Orqzj
-         VbHg==
+        bh=TTeC9Xi4qmQZeAOaphNZwsLRTSZ0LBevI66eeZFDnkA=;
+        b=XAYvSU8HN8yBlbKuHfbJtuSsGToPrd+zDmCC2oKtJ0VVy2zd3Jn71KkbOytQU1ODmg
+         ruspmVeLT8+Tyrahotyq7Atc4l436bDFnn2PqWXvxoU46ac9CTaYifRTXlxUB+z1D8C/
+         FLqwY696rMer/Pcdm04wr6bqxhYux28lS2p78XtJvZel+FS/4NsO25VjbzQXF33E0BaK
+         UvIMLYMXo1e6tNJMPqYB0PvzLQ/squz+fPeIueqQbhavDL7OFF+GgCiCjJvnVxWKF4Jz
+         ZPXNANkc+arm9j47j9LSicyc5ZBlReoPVFN7A8kRKywcs8DBn5PSpuZch68+/o/+unNZ
+         pN0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hzqoVDbQzZNmNPwLRsiHsWdrSJDCtl0FBiErUw9Lnwc=;
-        b=GZRbzoEvLUXIFgBgAEO5ejq5aNq7mguRtxnc3U5V+A2wYlbUZNsySNQxqHptzASVUh
-         /HGyTurKm0yqdItN0H3NSAYgOAQg+F6l2Uoy3Gl8fle8GOqDt7Mxf2VEHVwZIiCzex3m
-         kD7wTtXR71xjY0H3l+nQaFqLhFUgySDq+DceZRTPMmQMhXpO0eViaZz8z98H6PmU5l7G
-         lJMrGO9RlOsZ/fRL1MNRSiQPDX7elUiWEsj0KIIT6gFu7ic4h9aU5oHh3j9b1rTnwdrX
-         bqUA4Vl6x2IJsXOy5w0YOyK+zGhNPuxIRTI9ogSckpxoa9eZYZiL2B13joH555RnN2ph
-         sl2w==
-X-Gm-Message-State: AOAM531xKNm9R15hqS6BXmqyfoYQcelIAtck8BTvwtoTn64SSHYb5k4F
-        9gf07kKKKDPxMephfLURTDKndA==
-X-Google-Smtp-Source: ABdhPJw+bQnmJ6Pc0QpgUAdyiwiS7PZ0gYPWeLnYhVPGbWLGZYw7lGRZsHNPlC3mtT6i7n21MomKDQ==
-X-Received: by 2002:aca:51ca:: with SMTP id f193mr11618906oib.170.1592812791283;
-        Mon, 22 Jun 2020 00:59:51 -0700 (PDT)
+        bh=TTeC9Xi4qmQZeAOaphNZwsLRTSZ0LBevI66eeZFDnkA=;
+        b=gv4jMulzvzcf02F2v56tpdbimja1SrpY6LCak+557PfKsfwJpfkgna0Smi5IVftD97
+         Q683p3yYtTJXjcqObxYIYJ3PlAePkTztsF8eM9Sp34kEBoHsVRYifp1zjJz16rGW9AVl
+         3j7xI02rRN9AL7yZJ0nsAuT0MYSlkhELnXRk4S8HuMdzF49yfQTa+VLVYyII5MYOZlxQ
+         TvDzUUgcnuj5eDE+YWa/3xiJ4TXttPbnkb5sgRe2hAXTjytCK26amC8a+61EgJllSNvJ
+         c0s44K0nQQ+2MUE8VxRI+vH6jFgdwaTQiPebQQbwwiAO7s7NNYVG63qo5EYQxAeuPOlp
+         IUCw==
+X-Gm-Message-State: AOAM533FMmQuNNLXiT3HjpYfpeKpWC9Vn0YopQCXibzv9ZCigyhpHxNz
+        cfzLCGpZCC9YwQtRE6gMAHOoxw==
+X-Google-Smtp-Source: ABdhPJw8A7djz0qzGWjwrGnP2koCSgUdpHbwC8JC4UWp1TlKHu6Nj9ro9JvJV9lwB2MWoeXWGqyMRA==
+X-Received: by 2002:aca:5c43:: with SMTP id q64mr11118702oib.130.1592812788187;
+        Mon, 22 Jun 2020 00:59:48 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f7sm3135396otl.60.2020.06.22.00.59.50
+        by smtp.gmail.com with ESMTPSA id f7sm3135396otl.60.2020.06.22.00.59.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:59:50 -0700 (PDT)
+        Mon, 22 Jun 2020 00:59:47 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -65,10 +65,11 @@ To:     Andy Gross <agross@kernel.org>,
         Baolin Wang <baolin.wang7@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
-Date:   Mon, 22 Jun 2020 00:59:56 -0700
-Message-Id: <20200622075956.171058-5-bjorn.andersson@linaro.org>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v2 2/4] dt-bindings: hwlock: qcom: Allow device on mmio bus
+Date:   Mon, 22 Jun 2020 00:59:54 -0700
+Message-Id: <20200622075956.171058-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200622075956.171058-1-bjorn.andersson@linaro.org>
 References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
@@ -79,62 +80,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that we don't need the intermediate syscon to represent the TCSR
-mutexes, update the dts to describe the TCSR mutex directly under /soc.
+In modern Qualcomm platforms the mutex region of the TCSR is forked off
+into its own block, all with a offset of 0 and stride of 4096, and in
+some of these platforms no other registers in this region is accessed
+from Linux.
 
-The change also fixes the sort order of the nodes.
+Update the binding to allow the hardware block to be described directly
+on the mmio bus, in addition to allowing the existing syscon based
+definition for backwards compatibility.
 
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
-Changs since v1:
-- Adjusted sort order of the nodes
+Changes since v1:
+- None
 
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ .../bindings/hwlock/qcom-hwspinlock.yaml         | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 7050adba7995..67a1b6f3301b 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -144,12 +144,6 @@ scm: scm {
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+index 71e63b52edd5..88f975837588 100644
+--- a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
++++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+@@ -19,6 +19,9 @@ properties:
+       - qcom,sfpb-mutex
+       - qcom,tcsr-mutex
  
--	tcsr_mutex: hwlock {
--		compatible = "qcom,tcsr-mutex";
--		syscon = <&tcsr_mutex_regs 0 0x1000>;
--		#hwlock-cells = <1>;
--	};
--
- 	memory@80000000 {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the size */
-@@ -376,6 +370,12 @@ ufs_mem_phy_lanes: lanes@1d87400 {
- 			};
- 		};
- 
-+		tcsr_mutex: hwlock@1f40000 {
-+			compatible = "qcom,tcsr-mutex";
-+			reg = <0x0 0x01f40000 0x0 0x40000>;
-+			#hwlock-cells = <1>;
-+		};
++  reg:
++    maxItems: 1
 +
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			#interrupt-cells = <3>;
-@@ -486,11 +486,6 @@ rpmhpd_opp_turbo_l1: opp10 {
- 			};
- 		};
+   '#hwlock-cells':
+     const: 1
  
--		tcsr_mutex_regs: syscon@1f40000 {
--			compatible = "syscon";
--			reg = <0x0 0x01f40000 0x0 0x40000>;
--		};
--
- 		timer@17c20000 {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
+@@ -31,7 +34,12 @@ properties:
+ required:
+   - compatible
+   - '#hwlock-cells'
+-  - syscon
++
++oneOf:
++  - required:
++    - reg
++  - required:
++    - syscon
+ 
+ additionalProperties: false
+ 
+@@ -46,6 +54,12 @@ examples:
+                 compatible = "qcom,tcsr-mutex";
+                 syscon = <&tcsr_mutex_block 0 0x80>;
+ 
++                #hwlock-cells = <1>;
++        };
++  - |
++        tcsr_mutex: hwlock@1f40000 {
++                compatible = "qcom,tcsr-mutex";
++                reg = <0x01f40000 0x40000>;
+                 #hwlock-cells = <1>;
+         };
+ ...
 -- 
 2.26.2
 
