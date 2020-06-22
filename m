@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F74C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3FBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D419C2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A6A2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="16VBF2La"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="UtNEe+Y7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgFVJmg (ORCPT
+        id S1727111AbgFVJmp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:42:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40750 "EHLO
+        Mon, 22 Jun 2020 05:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgFVJlj (ORCPT
+        with ESMTP id S1727105AbgFVJlj (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:39 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9FCC061797
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a6so13984321wrm.4
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0E7C061794
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so15971761wru.0
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iUydfUf825zuTrP/3rZhTozCzOm5XJhrM7EVYTY3Zy4=;
-        b=16VBF2LawpzpJUoGplW1VMeRQBY+6kIReg/qh3Of8JJozgK7KV3a/y36LFnx7JJaGG
-         +hsOoIVXR9n9Bwou+9lQTjVGf6VkErBZk56xecuHPO9LNdA3N6A87+7oJpGaJZr91+Ep
-         BI6yveOiwM810Bvvg/LZCi0sL3+aPo8rBLYFEgvj1FYJqgvMM+hLxuy3zExLOJZWyH7g
-         i9vpiSlC5Y0qhPNWicv+/56I51GI/LMpey2/OgWMvENvikCSExdgLe04MjH5nquwHbgt
-         vxVipAPH8T2Nok3B4y9B9ucBQNKyRuG9bYn8DcPmhCNY+VwarjwpEe+1IYtpzERMpzWD
-         8lyQ==
+        bh=yy6XgmLu+rdPXztYG22qHG3UQylFLO0aZanRZZZSG+U=;
+        b=UtNEe+Y7D5ArH7Qe/vs7TUd5yHPcILffWoYh4wTCQdtMBq36DtKsydxvi6z3a7HbGS
+         FB2blBliY4Y+cVZyVIBbNCz/TMBZbmhI+WrSDUrAZc+nT9RqNVT9ahaolMbn+oxd3MXf
+         1G7L1Tcb6rs72hInUAFR8sZDDUZyVq9WQ8aEF0wR9UhVHcEeuUBRsA99mkWAfVG8D7Fm
+         zKsJUFL1xKBJ0gZxZlQvxrVGukdEa54zY4pSR0TYGGrqagLXr4OzxpZFMV8ttxXXVHQU
+         uiUpPpCNqmeepGbSEiBWxIRbMBVFfKFJKOIFmK8bRZsbBYVxA3/rlPTyqTaIaGU38MYj
+         ac8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iUydfUf825zuTrP/3rZhTozCzOm5XJhrM7EVYTY3Zy4=;
-        b=oXdras+0KQpD7Zt0CUINVlG/eWIzyn7HQ7AlooDJB8M1K1tNKv0CuV1U6ksKCx5Acb
-         fIjhTM2YiuZWGvwFUcOgVpWysu/XM9I3Ly13QOzt83VAdKKy9lUuBh8yMZXyS0rCk5fz
-         z26sEAFuahIXJcwde2eL/Mtq+tP7B8arcslJ0HcZkEYOLyHn802GPRKbgNmnhoS/B5OC
-         2geV8sotZPONmJPUaldpxAtZQzPsJ3P06FrQs1JI7MNEcZF5ldlbOsrdLXVkj/7O2wTl
-         PR1pSXq1w6y8rNxsSQJCRKEuWfF3o0THQgVMnx1XtXiMqxbVF+yu2QaD9BS9aDAH12gp
-         n71g==
-X-Gm-Message-State: AOAM5327rO5EAu92DriJRmsq3PJRKgR2JgX42todYpnjrHx9uLt3jWu/
-        gpDBQsmYts6H2xBOsoC3LycHbg==
-X-Google-Smtp-Source: ABdhPJw/YDc8BRLdz6R7EQpjrH3iix+fo/75QLcqChmbsRSUxGbc0J2kOfOhJKAo3W+XevgouG/a8A==
-X-Received: by 2002:adf:8168:: with SMTP id 95mr17445453wrm.104.1592818898066;
-        Mon, 22 Jun 2020 02:41:38 -0700 (PDT)
+        bh=yy6XgmLu+rdPXztYG22qHG3UQylFLO0aZanRZZZSG+U=;
+        b=WhI389Oxp6RNBiusU17X1U3EwnBLP2si19te1zLrB7I7Rw01Lx9E0/ljleulyo7zK7
+         VMsrzerReA6R2mKpupbGmzA648YFScdRiDiEaHnklZC6BWSPQhMUvSpXy7JRzh5L6Vqe
+         atdpkEF9vJRq3pMk+CTfqwxiI5PXefAodOFKNDisan8nSPpXP2GvL43m/6QTlKjIdkoA
+         5I70uT/VUOG70b8NCGfMTfKzgeAIsCKQPtnUuBg/UH4Vs4KW6OAV+wpGJZC82Y9o5Wr2
+         nhJ3lV1a1b8dHVldhEsf5iR/M7RUPdnKrhceHpaW9u4f4XYdx206QJkDyKeGE1gJvONJ
+         TGaA==
+X-Gm-Message-State: AOAM531yBC40qEQB8vOh27h7AaTJ8HMUuN+bKHYu5OD8yQwa8A9HdXwv
+        tbK1MWvEpb8HJY9ZVuhbovgzvg==
+X-Google-Smtp-Source: ABdhPJyFGfPZiEZAaPA05Oy9u/8YECmNenqKkrnMxPg4aIkaLDansk5+kyg8mkF5tPJf9KrUB0gUSQ==
+X-Received: by 2002:a5d:6987:: with SMTP id g7mr17998302wru.79.1592818896247;
+        Mon, 22 Jun 2020 02:41:36 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.36
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:37 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:35 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -92,9 +92,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 09/15] net: phy: delay PHY driver probe until PHY registration
-Date:   Mon, 22 Jun 2020 11:37:38 +0200
-Message-Id: <20200622093744.13685-10-brgl@bgdev.pl>
+Subject: [PATCH 08/15] net: phy: check the PHY presence in get_phy_id()
+Date:   Mon, 22 Jun 2020 11:37:37 +0200
+Message-Id: <20200622093744.13685-9-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -107,119 +107,41 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently the PHY ID is read without taking the PHY out of reset. This
-can only work if no resets are defined. This change delays the ID read
-until we're actually registering the PHY device - this is needed because
-earlier (when creating the device) we don't have a struct device yet
-with resets already configured.
-
-While we could use the of_ helpers for GPIO and resets, we will be adding
-PHY regulator support layer on and there are no regulator APIs that work
-without struct device.
-
-This means that phy_device_create() now only instantiates the device but
-doesn't request the relevant driver. If no phy_id is passed to
-phy_device_create() (for that we introduce a new define: PHY_ID_NONE)
-then the ID will be read inside phy_device_register().
+get_phy_id() is only called from get_phy_device() so the check for the
+0x1fffffff value can be pulled into the former. This way it'll be easier
+to remove get_phy_device() later on.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/phy_device.c | 47 +++++++++++++++++++-----------------
- include/linux/phy.h          |  1 +
- 2 files changed, 26 insertions(+), 22 deletions(-)
+ drivers/net/phy/phy_device.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index eccbf6aea63d..94944fffa9bb 100644
+index 8037a9663a85..eccbf6aea63d 100644
 --- a/drivers/net/phy/phy_device.c
 +++ b/drivers/net/phy/phy_device.c
-@@ -658,12 +658,6 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
- 	INIT_DELAYED_WORK(&dev->state_queue, phy_state_machine);
- 	device_initialize(&mdiodev->dev);
+@@ -806,6 +806,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
  
--	ret = phy_request_driver_module(dev);
--	if (ret) {
--		phy_device_free(dev);
--		dev = ERR_PTR(ret);
--	}
--
- 	return dev;
- }
- EXPORT_SYMBOL(phy_device_create);
-@@ -813,30 +807,29 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
+ 	*phy_id |= phy_reg;
+ 
++	/* If the phy_id is mostly Fs, there is no device there */
++	if ((*phy_id & 0x1fffffff) == 0x1fffffff)
++		return -ENODEV;
++
  	return 0;
  }
  
-+static int phy_device_read_id(struct phy_device *phydev)
-+{
-+	struct mdio_device *mdiodev = &phydev->mdio;
-+
-+	phydev->c45_ids.devices_in_package = 0;
-+	memset(phydev->c45_ids.device_ids, 0xff,
-+	       sizeof(phydev->c45_ids.device_ids));
-+
-+	return get_phy_id(mdiodev->bus, mdiodev->addr, &phydev->phy_id,
-+			  phydev->is_c45, &phydev->c45_ids);
-+}
-+
- /**
-- * get_phy_device - reads the specified PHY device and returns its @phy_device
-- *		    struct
-+ * get_phy_device - create a phy_device withoug PHY ID
-  * @bus: the target MII bus
-  * @addr: PHY address on the MII bus
-  * @is_c45: If true the PHY uses the 802.3 clause 45 protocol
-  *
-- * Description: Reads the ID registers of the PHY at @addr on the
-- *   @bus, then allocates and returns the phy_device to represent it.
-+ * Allocates a new phy_device for @addr on the @bus.
-  */
- struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
- {
--	struct phy_c45_device_ids c45_ids;
--	u32 phy_id = 0;
--	int r;
+@@ -832,10 +836,6 @@ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
+ 	if (r)
+ 		return ERR_PTR(r);
+ 
+-	/* If the phy_id is mostly Fs, there is no device there */
+-	if ((phy_id & 0x1fffffff) == 0x1fffffff)
+-		return ERR_PTR(-ENODEV);
 -
--	c45_ids.devices_in_package = 0;
--	memset(c45_ids.device_ids, 0xff, sizeof(c45_ids.device_ids));
--
--	r = get_phy_id(bus, addr, &phy_id, is_c45, &c45_ids);
--	if (r)
--		return ERR_PTR(r);
--
--	return phy_device_create(bus, addr, phy_id, is_c45, &c45_ids);
-+	return phy_device_create(bus, addr, PHY_ID_NONE, is_c45, NULL);
+ 	return phy_device_create(bus, addr, phy_id, is_c45, &c45_ids);
  }
  EXPORT_SYMBOL(get_phy_device);
- 
-@@ -855,6 +848,16 @@ int phy_device_register(struct phy_device *phydev)
- 	/* Deassert the reset signal */
- 	phy_device_reset(phydev, 0);
- 
-+	if (phydev->phy_id == PHY_ID_NONE) {
-+		err = phy_device_read_id(phydev);
-+		if (err)
-+			goto err_unregister_mdio;
-+	}
-+
-+	err = phy_request_driver_module(phydev);
-+	if (err)
-+		goto err_unregister_mdio;
-+
- 	/* Run all of the fixups for this PHY */
- 	err = phy_scan_fixups(phydev);
- 	if (err) {
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..2a695cd90c7c 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -742,6 +742,7 @@ struct phy_driver {
- 
- #define PHY_ANY_ID "MATCH ANY PHY"
- #define PHY_ANY_UID 0xffffffff
-+#define PHY_ID_NONE 0
- 
- #define PHY_ID_MATCH_EXACT(id) .phy_id = (id), .phy_id_mask = GENMASK(31, 0)
- #define PHY_ID_MATCH_MODEL(id) .phy_id = (id), .phy_id_mask = GENMASK(31, 4)
 -- 
 2.26.1
 
