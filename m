@@ -7,31 +7,32 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06EEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53168C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03FA2073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAE220732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgFVO2G (ORCPT
+        id S1729373AbgFVO01 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:28:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47502 "EHLO mx2.suse.de"
+        Mon, 22 Jun 2020 10:26:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46034 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbgFVO0j (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:26:39 -0400
+        id S1729358AbgFVO00 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:26:26 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3EB77C1B6;
-        Mon, 22 Jun 2020 14:26:36 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 175B3C1B6;
+        Mon, 22 Jun 2020 14:26:23 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        James Tai <james.tai@realtek.com>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to descriptions
-Date:   Mon, 22 Jun 2020 14:55:24 +0200
-Message-Id: <20200622125527.24207-2-afaerber@suse.de>
+Subject: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and Realtek Pym Particles EVB
+Date:   Mon, 22 Jun 2020 14:55:25 +0200
+Message-Id: <20200622125527.24207-3-afaerber@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200622125527.24207-1-afaerber@suse.de>
 References: <20200622125527.24207-1-afaerber@suse.de>
@@ -43,75 +44,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Turn the SoC-level comments into description properties.
+From: James Tai <james.tai@realtek.com>
 
+Define compatible strings for Realtek RTD1319 SoC and Realtek Pym Particles
+EVB.
+
+Signed-off-by: James Tai <james.tai@realtek.com>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- v4: New
+ v3 -> v4:
+ * Renamed compatible from pymparticle to pym-particles
+ * Turned SoC comment into description
  
- .../devicetree/bindings/arm/realtek.yaml      | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ v2 -> v3: Unchanged
+ 
+ v1 -> v2:
+ * Put string in alphabetical order
+ 
+ Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-index 845f9c76d6f7..0b388016bbcd 100644
+index 0b388016bbcd..e36e87df3521 100644
 --- a/Documentation/devicetree/bindings/arm/realtek.yaml
 +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -14,21 +14,21 @@ properties:
-     const: '/'
-   compatible:
-     oneOf:
--      # RTD1195 SoC based boards
--      - items:
-+      - description: RTD1195 SoC based boards
-+        items:
-           - enum:
-               - mele,x1000 # MeLE X1000
-               - realtek,horseradish # Realtek Horseradish EVB
-           - const: realtek,rtd1195
- 
--      # RTD1293 SoC based boards
--      - items:
-+      - description: RTD1293 SoC based boards
-+        items:
-           - enum:
-               - synology,ds418j # Synology DiskStation DS418j
-           - const: realtek,rtd1293
- 
--      # RTD1295 SoC based boards
--      - items:
-+      - description: RTD1295 SoC based boards
-+        items:
-           - enum:
-               - mele,v9 # MeLE V9
-               - probox2,ava # ProBox2 AVA
-@@ -36,21 +36,21 @@ properties:
-               - zidoo,x9s # Zidoo X9S
-           - const: realtek,rtd1295
- 
--      # RTD1296 SoC based boards
--      - items:
-+      - description: RTD1296 SoC based boards
-+        items:
-           - enum:
+@@ -42,6 +42,12 @@ properties:
                - synology,ds418 # Synology DiskStation DS418
            - const: realtek,rtd1296
  
--      # RTD1395 SoC based boards
--      - items:
-+      - description: RTD1395 SoC based boards
++      - description: RTD1319 SoC based boards
 +        items:
++          - enum:
++              - realtek,pym-particles # Realtek Pym Particles EVB
++          - const: realtek,rtd1319
++
+       - description: RTD1395 SoC based boards
+         items:
            - enum:
-               - bananapi,bpi-m4 # Banana Pi BPI-M4
-               - realtek,lion-skin # Realtek Lion Skin EVB
-           - const: realtek,rtd1395
- 
--      # RTD1619 SoC based boards
--      - items:
-+      - description: RTD1619 SoC based boards
-+        items:
-           - enum:
-               - realtek,mjolnir # Realtek Mjolnir EVB
-           - const: realtek,rtd1619
 -- 
 2.26.2
 
