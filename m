@@ -2,59 +2,159 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBF2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA617C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC42820732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EB720720
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="miQD36o/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgFVN73 (ORCPT
+        id S1729156AbgFVOEU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:59:29 -0400
-Received: from comms.puri.sm ([159.203.221.185]:55288 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbgFVN73 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:59:29 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 5067EE0318;
-        Mon, 22 Jun 2020 06:59:28 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pf4VA7pwlJcG; Mon, 22 Jun 2020 06:59:27 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     leonard.crestez@nxp.com
-Cc:     Anson.Huang@nxp.com, a.swigon@partner.samsung.com,
-        abailon@baylibre.com, abel.vesa@nxp.com, aisheng.dong@nxp.com,
-        angus@akkea.ca, cw00.choi@samsung.com, devicetree@vger.kernel.org,
-        fabio.estevam@nxp.com, georgi.djakov@linaro.org,
-        kernel@pengutronix.de, krzk@kernel.org, kyungmin.park@samsung.com,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-imx@nxp.com, linux-pm@vger.kernel.org, mark.rutland@arm.com,
-        martink@posteo.de, mka@chromium.org, mturquette@baylibre.com,
-        myungjoo.ham@samsung.com, ping.bai@nxp.com, rjw@rjwysocki.net,
-        robh@kernel.org, saravanak@google.com, sboyd@kernel.org,
-        shawnguo@kernel.org, viresh.kumar@linaro.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH v4 0/6] PM / devfreq: Add dynamic scaling for imx8m ddr controller
-Date:   Mon, 22 Jun 2020 15:58:58 +0200
-Message-Id: <20200622135858.15891-1-martin.kepplinger@puri.sm>
-In-Reply-To: <cover.1573252696.git.leonard.crestez@nxp.com>
-References: <cover.1573252696.git.leonard.crestez@nxp.com>
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jun 2020 10:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729065AbgFVOEU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 10:04:20 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12BDC061795
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 07:04:19 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q19so18138019eja.7
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 07:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AkXgQz4f6Jb/SfgaY94+eCp/+t+YH9GzfLxXy17qw1I=;
+        b=miQD36o/JVjj5qBA3N2E8kQsw3fyaP5shHvUmpQxO/WwB1W6F7TkFAu7FqDbqJycGX
+         ZbeQWR2lKhtbYP//aapUtjeRUXbixUHgYN49PT749c4rJMWYqQ94jitfnK2fNizM3qLV
+         JfGYxFe2V7sES1ZDIN5R6a4kRzHwxusjH/P6ealaz9HEjzYsgvKtQT1HXe/komoioEHB
+         7igQ6Lz1LBp1TXvdZnfydpnd6UVM0Gp/eqiTwXd/jzlbfJ7eAjrHAeMlcHXavgR5Zcud
+         QWPbD6neGomrMu2L3fqSTWi3FZbTIgBxcBKIlQwBPnzekCnOuCr4f3M/TppY18mdfq9x
+         lTgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AkXgQz4f6Jb/SfgaY94+eCp/+t+YH9GzfLxXy17qw1I=;
+        b=nYaXW8EufHt6KHhglVN0XKz30uynLGhTn/F0udX7Gcuw7UtPiRoqtsmlnbUm+TLqnZ
+         Mn+m5aEMA8Ri/FPdbiBUSRUpL1/gUMyLdx94dlJEorKj04IQPMeGnliAh9Wf9+GfH5mA
+         g1HPDOAfCgYFWE84dYrQxuLid8GhLHO4NSGkfh74Smj+6nXMwnQlBrfjlWHdryh2tOq+
+         EHQtCuxF0KStwzHBcQ7n5GQFJ29Z3DXStPaXFoaxvPDAZKlfaMNjzR2HvDeCR9F9cMBZ
+         wVm8aIKqLEJpZ04BOdY09PMWQHB6vCCyopXZLliApl/qbdm6xgLwzjR/xQ5YSw2vMKdz
+         N01A==
+X-Gm-Message-State: AOAM530mhez9XE21+mpWW4gRCvov/lSZ3gNSXK0ApqVOpO0k7fIPzO/a
+        AF2KWUeE0z619lwt95QtwEwrHA==
+X-Google-Smtp-Source: ABdhPJx13jRteSsX752kFTZR7wYlw7AZQfoFikTlKm6sVUt89ZqX2jnk7bahtoLDO7GiSW+vMYhcyA==
+X-Received: by 2002:a17:906:5e08:: with SMTP id n8mr15834673eju.132.1592834658428;
+        Mon, 22 Jun 2020 07:04:18 -0700 (PDT)
+Received: from [192.168.2.2] (ppp089210109128.access.hol.gr. [89.210.109.128])
+        by smtp.gmail.com with ESMTPSA id w18sm1217980edv.11.2020.06.22.07.04.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 07:04:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
+ apq8039 sound complex
+From:   Pantelis Antoniou <pantelis.antoniou@linaro.org>
+In-Reply-To: <20200622134145.GJ4560@sirena.org.uk>
+Date:   Mon, 22 Jun 2020 17:04:16 +0300
+Cc:     Stephan Gerhold <stephan@gerhold.net>, alsa-devel@alsa-project.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Matthew Porter <mporter@konsulko.com>,
+        Shawn Guo <shawn.guo@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8C9C4D5E-D92B-426D-A597-C784D1611967@linaro.org>
+References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
+ <20200619193831.12528-2-pantelis.antoniou@linaro.org>
+ <20200619214126.GA1251@gerhold.net>
+ <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
+ <20200622120409.GD4560@sirena.org.uk>
+ <519B5FAC-4DB8-4968-B9D4-96E376D74F1E@linaro.org>
+ <20200622134145.GJ4560@sirena.org.uk>
+To:     Mark Brown <broonie@kernel.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi Leondard,
 
-before using this patchset I'd like to ask: Do you have plans to create
-an update and push this forward? It is useful.
 
-thanks a lot,
+> On Jun 22, 2020, at 16:41 , Mark Brown <broonie@kernel.org> wrote:
+>=20
+> On Mon, Jun 22, 2020 at 04:32:46PM +0300, Pantelis Antoniou wrote:
+>>> On Jun 22, 2020, at 15:04 , Mark Brown <broonie@kernel.org> wrote:
+>=20
+>>> No, you're encoding use case decisions into the DT here - for =
+example
+>>> your example will break use cases like ring tones and shutter sounds
+>>> which should play through both speaker and headphones.  It's also
+>>> setting volumes which may be inappropriate or may be not and =
+interferes
+>>> with userspace using those same physical volume controls.
+>=20
+>> It is completely optional whether you use this functionality or not.
+>=20
+> It's optional for whoever writes the DT and flashes it, it is not
+> optional for whoever's doing the OS configuration - these may not be =
+the
+> same people.
+>=20
+>> In that case you don=E2=80=99t use the automatic routing you merely =
+set it to off
+>> and everything works as before. Or you merely use the route setup for
+>> the function from userspace.
+>=20
+> Userspace shouldn't have to be fighting with the kernel for control of
+> the device.
+>=20
+>> The device in question is not a mobile phone so there is no =
+requirement
+>> to have speaker and headphone active at the same time. It is possible =
+to
+>> create a function that would be headphone+speaker active at the same =
+time
+>> for that case.
+>=20
+> That may be true for your OS configuration but that doesn't mean that
+> some other user of the same hardware won't want to do something that
+> needs both simultaneously.
 
-                               martin
+Let=E2=80=99s step back a bit and let me present the problem and what =
+this is about.
+Disregard the automatic function selection using external state inputs.
+
+The problem is that for sound card that is composed of a number of =
+component
+like this one a pretty non trivial setting of controls must be done.
+
+Tt is not atypical for a card like this the set of control being a dozen
+or so, with some requiring even more.
+
+Someone has to do them, be it the kernel or userspace.
+
+Instead of having userspace do it, bundle everything in DT so that =
+everything
+can be set in one go, and without having the user-space engineer read =
+the
+a few 10-100 pages of reference manuals.
+
+This is arguably a hardware setting (eg. the set of configuration =
+parameters
+that enables routing sound to speaker).
+
+Now this is not going to perfect for all cases; some cases are very =
+complicated
+and indeed user-space has to be engaged and perform the configuration.
+This mechanism does not preclude it.
+
+
