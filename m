@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE674C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E92C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89E742071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9132B2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JaPBL52s"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JohkqRDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgFVJnY (ORCPT
+        id S1726951AbgFVJn0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40704 "EHLO
+        Mon, 22 Jun 2020 05:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgFVJlb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:31 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB9FC061798
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h5so15967504wrc.7
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
+        with ESMTP id S1726858AbgFVJlZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:25 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A91C061798
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g10so14196613wmh.4
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mOzBIeRVdsbICiHu3pBzNsfTlUAFWbCE1cSbRbG1tJ8=;
-        b=JaPBL52s4sikmFvHY2AeWFMdnIt4op0dMdw+2FQiSixTq4d3+bBSRsdwR810I4r17W
-         Dc1Sq8XgKmuI3/9qeQSaRigNEUtgpr3V54J04DIfxrMUrogAvx9GOjtxzTIREfdMQfH/
-         ZIoRTVgzdEw7FUgW+wJfkmEOOAhCW69U1CPS7FhzT/GuIAsc5CiRXTTEG/mAZov3cV1/
-         Kw2v4DduJlhcgiBk0rJIlyn1FmnjOS6Kg1a7IMwNMqUETbLfpnIxgx6hHvx4LD/zZ23w
-         MiFdp3RuROPF6Vz8gGOhgj1XQ/lErO7eajC9HU+kNQCI4qgh6cJgSRDclHcQ/M0Q+ZK0
-         akZg==
+        bh=jZFWs1jjiaVnSG438fJkY7s38xrX7YeHfB9snWv0f6M=;
+        b=JohkqRDOkStLwOQBjn7GAxxxqeMmpsJpexC5Nvm3ZMZvZkzc6ARClZYDLYdCfBzdNP
+         R+QJVrGl3nve0LVt+ru6aBGSu24D+tdHE1WXHHZuvA5Ccg3nHihCl36U5ScPUL7gEh57
+         udVFjmWNOm6E0bczq/erJCZqK+GBkdblmTaRS2wxUujd7J+4fpcSfkvXc70p5jeaQvh0
+         r7uqyKqpQR2LYCzlfV/PSR3Z3SvvEaicHAEj11kmaMKkCWH4prC3PqUu8JFXFO7jY4OE
+         2ZItHe0laJ0Lf9dSzMlvGGUIslglMGg/vMwUmi0/DI2fZnDGPbhyK9nizsa0eDmyC4EL
+         qmEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mOzBIeRVdsbICiHu3pBzNsfTlUAFWbCE1cSbRbG1tJ8=;
-        b=MTetOYuSUkv58BY9Bp16uNT/mzqfRwppoZV4rcj2+VHKM8neXiqJp3uLQMUJaaSCXO
-         0tTAwvaGPajEb/G2fLaeSToH/xUxm28wF8JXTeRKvIidmjgnrtzhCWtr1YB7Wdcv0OM+
-         a+JRuQt3m1bG+MdXjLNq/RunFU6BmIt45UiAI/Gll5kJN0I8/dLDYL/yrjdoQycp6sSv
-         I+k2Y3CSPi6KoxS/GkGZ7L7nFiNrit/2NtnlEBiI9pKNdMLDqndH0ceVC4j2Zs63PK+t
-         YFd894DdiRwTOhMY/F53IHbH6RxqXdT57xjHfiYuTo/a8qt57mtLm1J81iY07q3WBP2a
-         fJ0w==
-X-Gm-Message-State: AOAM531uOFZTkgEgHSh8OwdJz6zh95JxYXYRw7WCZo45Pb/bIdgQhkfo
-        SXnEfDnmLt7n1PlBd4KWKOO8Mw==
-X-Google-Smtp-Source: ABdhPJxEiAeVa66A6smNF2oImo2X8TfJpMFC5Ia7rzUA6Mu5ujbCfk8T+XkaVik5JQL7C6EsJsyEww==
-X-Received: by 2002:adf:f608:: with SMTP id t8mr3023154wrp.308.1592818889179;
-        Mon, 22 Jun 2020 02:41:29 -0700 (PDT)
+        bh=jZFWs1jjiaVnSG438fJkY7s38xrX7YeHfB9snWv0f6M=;
+        b=bHTF+uE9Th0Kbv9bKyyq7rSen1Kd2VHWBGIl5k9wuQ+kWugUGYCFciz8n4z+7spC92
+         qchKnD+DCcESzv1rR6WuNwhCsunfvC4DbPdixQMoL8bt6xtH9BRUXDFDBOY/nug1DTEI
+         HrQ3/slkyesp/biozeJV66K5TjxMzHJZrEoylEbO4xVgDeVCN6AOm+PfB/k33V70MEjB
+         LA/7hHzL69BivsgpsSRmYoGlkC/5TEnLOJ2rwQFoiM3QtOckpgaYG8l+tSSPc4RR86IG
+         YU/tQnCHhUjSdo6nLrRh9nJ7A0kQEgVuDxCpMj8fPf512krfdnJbFAXuf1GmtdHZVk5L
+         SoBw==
+X-Gm-Message-State: AOAM532QqrMjOXY7S7n3T0O+jQ37HcbWxjMWGxKFFCUGLCQOBGiVdFJ6
+        mCVkqNacFz9VsFUpXeCfTk5faA==
+X-Google-Smtp-Source: ABdhPJyC1ihQ/cFNQCt/b68/kb0LNRNlp3xUizgD1UJeHr9htbQzK5ESNt14EIs0DoIuJdIEW8DsUQ==
+X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr18307854wmf.51.1592818883659;
+        Mon, 22 Jun 2020 02:41:23 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.27
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:28 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:23 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -92,9 +92,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 04/15] net: mdio: add a forward declaration for reset_control to mdio.h
-Date:   Mon, 22 Jun 2020 11:37:33 +0200
-Message-Id: <20200622093744.13685-5-brgl@bgdev.pl>
+Subject: [PATCH 01/15] net: phy: arrange headers in mdio_bus.c alphabetically
+Date:   Mon, 22 Jun 2020 11:37:30 +0200
+Message-Id: <20200622093744.13685-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -107,28 +107,67 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This header refers to struct reset_control but doesn't include any reset
-header. The structure definition is probably somehow indirectly pulled in
-since no warnings are reported but for the sake of correctness add the
-forward declaration for struct reset_control.
+Keeping the headers in alphabetical order is better for readability and
+allows to easily see if given header is already included.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- include/linux/mdio.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/mdio_bus.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/mdio.h b/include/linux/mdio.h
-index 36d2e0673d03..9ac5e7ff6156 100644
---- a/include/linux/mdio.h
-+++ b/include/linux/mdio.h
-@@ -17,6 +17,7 @@
- #define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 6ceee82b2839..296cf9771483 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -8,32 +8,32 @@
  
- struct gpio_desc;
-+struct reset_control;
- struct mii_bus;
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- /* Multiple levels of nesting are possible. However typically this is
+-#include <linux/kernel.h>
+-#include <linux/string.h>
+-#include <linux/errno.h>
+-#include <linux/unistd.h>
+-#include <linux/slab.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/etherdevice.h>
++#include <linux/ethtool.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/mii.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/netdevice.h>
+ #include <linux/of_device.h>
+-#include <linux/of_mdio.h>
+ #include <linux/of_gpio.h>
+-#include <linux/netdevice.h>
+-#include <linux/etherdevice.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
+ #include <linux/reset.h>
+ #include <linux/skbuff.h>
++#include <linux/slab.h>
+ #include <linux/spinlock.h>
+-#include <linux/mm.h>
+-#include <linux/module.h>
+-#include <linux/mii.h>
+-#include <linux/ethtool.h>
+-#include <linux/phy.h>
+-#include <linux/io.h>
++#include <linux/string.h>
+ #include <linux/uaccess.h>
++#include <linux/unistd.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/mdio.h>
 -- 
 2.26.1
 
