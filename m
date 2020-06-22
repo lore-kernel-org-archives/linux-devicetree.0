@@ -2,153 +2,140 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2A2C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BE2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA44820768
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC6920767
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptebOAxv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgJFTLWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgFVTTg (ORCPT
+        id S1728073AbgFVT0J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45788 "EHLO
+        Mon, 22 Jun 2020 15:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728282AbgFVTTf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 15:19:35 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC8CC061795
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 12:19:35 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id c194so16674715oig.5
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 12:19:35 -0700 (PDT)
+        with ESMTP id S1726308AbgFVT0J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 15:26:09 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF6CC061573;
+        Mon, 22 Jun 2020 12:26:08 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id w6so7848204ejq.6;
+        Mon, 22 Jun 2020 12:26:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WpdygEuxEbkEHwJ7Dc7yTeQc0s6WGpubIGVPN8hUzwI=;
-        b=ptebOAxvDdaND1bSmx+wZ0WhkMUfYrP4NqBlrOz/GpBppJcuw1tk1uUy+i7V13LWhH
-         s0UO1oY/AyHU1T/Es4lhiqpz/RTShFaacDb8lGR3pSwZrh7MofFAUI/EqnOYVXe4t2Vd
-         e9BO75ciF7zO40MPLegW44aW1clYneJChKo7/X1FP82k9qBXRNfvUITgoPUu3uTmGvSD
-         0bb1wdoHI4Crq6siiscGwkg7P5q82flpWWOjbGiIYYwwKrjm2R7Gn/WQlwGuymzSRRhG
-         Ra5XQz37tzPKUX9cQB9FnfaVIs4mo4danY29Wz9XyFTbnXqtNCcrpBNjG9O1zpkXRYex
-         G16g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+HdQGf8AeeZRegXNcVVI803kxK+9B394fTQRhPgBEJw=;
+        b=rgJFTLWtpK6HV/xUgz6uEKz42am8tmm8d6/fTDnWa92XngtSicbRIbVSWCz06swyLc
+         LRBTDK3jNgmdq3qjrVu6ZPa3Q+D5QNPeCWLNS17VPTqSS9PPgj22/8EIV9yq/CY3zVtX
+         gai4TG7llx7Vav6yj4F2cX9sFa0sLhquzoWcAcwW5aYkni0khP+G2UOozySbEjh4Ecy+
+         2o78hLMTmiIujtZS5RuRltcR7pyvNk7H6LAu2qSdmq8C2pLQKbUjAoHUSjpJpZw1pE/T
+         tzX/BUcFE3wK1PMGSbM7oCh3VgLbEtH6+1xl3hZfVLzXDSOfEUeUpttqhe7bkWteHK9O
+         s8RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WpdygEuxEbkEHwJ7Dc7yTeQc0s6WGpubIGVPN8hUzwI=;
-        b=pFgKKeKSODV1loTJib5BCtbj3dIrzSuqesdpqviDPB8793MnKzd7OwPvdt9rvlpyUL
-         su6uWHQaJdWzVkzJmb3XP5Z0c27cV6sicAybzBknghQFrrGSZC8DICHwQBrdTo1ityt1
-         EmoB680mpuccJFq4TixgO8wLLYAoKP9oa6xMAtK1z8RdHnznZDVM17qeMYrPZNGx6DLa
-         bCmOAn4xM8g9fxAAUcSB5BO6mQmcwtcy2BlvkI4cAFFPK719qMD7I8nWJS9n9YLNtvx8
-         njcwlOVEGGqUM5hAoQNSLncRx2BB8ypgaoOAJj21BdOhQl3Tkmtu09iaGFSXG8QIZGeC
-         TBcQ==
-X-Gm-Message-State: AOAM531JLw+3WnV4r3eA4QN60ezFC2zF8M+1KuKCKQMP5ReBWj9PpGHR
-        oi5XBbnbDvWObKvSwFyuCFoW3A==
-X-Google-Smtp-Source: ABdhPJxCQJjXXe3MeYjxEJNBUioEcpD4vOcB90cUSGsvH5+8BuzTtqMKADCuuOeTccITGNegZeaqow==
-X-Received: by 2002:a54:4d96:: with SMTP id y22mr12894021oix.55.1592853574476;
-        Mon, 22 Jun 2020 12:19:34 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m84sm3348294oif.32.2020.06.22.12.19.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+HdQGf8AeeZRegXNcVVI803kxK+9B394fTQRhPgBEJw=;
+        b=UBwc6wxiy9SE8MIvJ7z9jbN2dU0ZWGwHn/2cOCXpZHugKL+PzL81ep+cjBx/QQXEon
+         Dwphz1GKH7JGs1AQd+T2aSrPzWSgUTb7b7BPAs6qztn7DqSG+R2SBuJoNkkKBPJbdLup
+         jgCsPawRdswNx986PrGlQ6un6nWYf+zqCQ5+j3657DWV1riESiVsyrqC5jHAkl7gBD3N
+         IUJpdvYcmU5iQmnZQbFo1thgv7tdW4BUbIwu4Rqff/prKLU8XIbqVAQwp4N88g/mYsyI
+         3oP7e3/G15GrAfTPsIAlyVEyjT84PtdLr+1LUnV4tTvXVB+vzYqmmOs5glPWxE/1q6/d
+         nQFw==
+X-Gm-Message-State: AOAM533wGymbsD4cxOk7NBgtzpxzUUIjsqHqHvHjen5EeOfEYaJBW3yH
+        jjzPZOKShff7FsA8AwBVFXM=
+X-Google-Smtp-Source: ABdhPJzpYEMSbX2ijdGUKIsAGuoFgTRy6+0EdJZzJjegCr26ZxUju7lYEPsEttt2zGCy/fnx/w0gOA==
+X-Received: by 2002:a17:906:94c4:: with SMTP id d4mr4132675ejy.232.1592853967406;
+        Mon, 22 Jun 2020 12:26:07 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id d16sm4043336ejo.31.2020.06.22.12.26.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:19:33 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
+        Mon, 22 Jun 2020 12:26:06 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v7 1/5] dt-bindings: remoteproc: Add Qualcomm PIL info binding
-Date:   Mon, 22 Jun 2020 12:19:38 -0700
-Message-Id: <20200622191942.255460-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200622191942.255460-1-bjorn.andersson@linaro.org>
-References: <20200622191942.255460-1-bjorn.andersson@linaro.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/7] Add support for Sony SDM630-based boards
+Date:   Mon, 22 Jun 2020 21:25:50 +0200
+Message-Id: <20200622192558.152828-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a devicetree binding for the Qualcomm peripheral image loader
-relocation information region found in the IMEM.
+changes since v3:
+- order nodes by address (I might have
+made some mistakes but I tried hard..)
+- remove qcom,sdm630-mtp
+- use pretty device names instead of
+codenames
+- fix an overlooked indentation
+- add a compatible for sdm660 for mailbox
+and document it
+- drop the already-applied socinfo patch
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Konrad Dybcio (6):
+  pinctrl: qcom: spmi-gpio: Add pm660(l) compatibility
+  Documentation: Document pm660(l) SPMI GPIOs compatible
+  arm64: dts: qcom: pm660(l): Add base dts files
+  arm64: dts: qcom: sdm630: Add sdm630 dts file
+  arm64: dts: qcom: Add support for Sony Xperia XA2/Plus/Ultra (Nile
+    platform)
+  mailbox: qcom: Add sdm660 hmss compatible
 
-Changes since v6:
-- None
+Martin Botka (1):
+  arm64: dts: qcom: Add support for Sony Xperia 10/10 Plus (Ganges
+    platform)
 
- .../bindings/remoteproc/qcom,pil-info.yaml    | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+ .../mailbox/qcom,apcs-kpss-global.yaml        |    1 +
+ .../bindings/pinctrl/qcom,pmic-gpio.txt       |    2 +
+ arch/arm64/boot/dts/qcom/Makefile             |    5 +
+ arch/arm64/boot/dts/qcom/pm660.dtsi           |   50 +
+ arch/arm64/boot/dts/qcom/pm660l.dtsi          |   36 +
+ .../qcom/sdm630-sony-xperia-ganges-kirin.dts  |   13 +
+ .../dts/qcom/sdm630-sony-xperia-ganges.dtsi   |   40 +
+ .../sdm630-sony-xperia-nile-discovery.dts     |   13 +
+ .../qcom/sdm630-sony-xperia-nile-pioneer.dts  |   13 +
+ .../qcom/sdm630-sony-xperia-nile-voyager.dts  |   20 +
+ .../dts/qcom/sdm630-sony-xperia-nile.dtsi     |  136 ++
+ arch/arm64/boot/dts/qcom/sdm630.dtsi          | 1174 +++++++++++++++++
+ .../sdm636-sony-xperia-ganges-mermaid.dts     |   20 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c       |    5 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      |    4 +
+ 15 files changed, 1532 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm660.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm660l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-new file mode 100644
-index 000000000000..87c52316ddbd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm peripheral image loader relocation info binding
-+
-+maintainers:
-+  - Bjorn Andersson <bjorn.andersson@linaro.org>
-+
-+description:
-+  The Qualcomm peripheral image loader relocation memory region, in IMEM, is
-+  used for communicating remoteproc relocation information to post mortem
-+  debugging tools.
-+
-+properties:
-+  compatible:
-+    const: qcom,pil-reloc-info
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    imem@146bf000 {
-+      compatible = "syscon", "simple-mfd";
-+      reg = <0x146bf000 0x1000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+
-+      ranges = <0 0x146bf000 0x1000>;
-+
-+      pil-reloc@94c {
-+        compatible = "qcom,pil-reloc-info";
-+        reg = <0x94c 0xc8>;
-+      };
-+    };
-+...
 -- 
-2.26.2
+2.27.0
 
