@@ -2,146 +2,114 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 16:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10633C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 16:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318EC2075A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 16:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592844204;
-	bh=fHdUYMN1CthGXBqW5gf/eyqTc6WkYbVr0aR/luIj1iU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hN7GbVSpcMgNBPS2s43Oqg4e3mJehyEcs5LU2gpw/Nat+pEj9K55TGteyFW39WVaO
-	 41YmJVngH5mnDPsfDL9Jo2Yir/3xfwA7WRnJFYlo9eBwqaDOsvUH+pwM0Dzh+AyY7I
-	 9zFFl0PqxYhzKvzqHAoNeUmZ4bUQXFw6jMVHGRxc=
+	by mail.kernel.org (Postfix) with ESMTP id E3A6720768
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 16:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="dJgV3C3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgFVQnX (ORCPT
+        id S1729566AbgFVQqd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729458AbgFVQnW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 12:43:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0920B2073E;
-        Mon, 22 Jun 2020 16:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592844201;
-        bh=fHdUYMN1CthGXBqW5gf/eyqTc6WkYbVr0aR/luIj1iU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FtULZXDtg7M5nsENpvPqhbRvPL6xdrpt7Wt71cZ4txBP4svF8ppG5hckyjtGdPXvN
-         gN6g8D4p7Iw/NSpfFhVKIikjGC4nLuFMAzncSTkrKbXaZwF+cLWoCllQev5sTDgG1R
-         xRg94lJFACbaXJIBEzuCCkoM0hFZKSV+wgvQS3e4=
-Date:   Mon, 22 Jun 2020 17:43:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pantelis Antoniou <pantelis.antoniou@linaro.org>
-Cc:     Stephan Gerhold <stephan@gerhold.net>, alsa-devel@alsa-project.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Matthew Porter <mporter@konsulko.com>,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
- apq8039 sound complex
-Message-ID: <20200622164318.GL4560@sirena.org.uk>
-References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
- <20200619193831.12528-2-pantelis.antoniou@linaro.org>
- <20200619214126.GA1251@gerhold.net>
- <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
- <20200622120409.GD4560@sirena.org.uk>
- <519B5FAC-4DB8-4968-B9D4-96E376D74F1E@linaro.org>
- <20200622134145.GJ4560@sirena.org.uk>
- <8C9C4D5E-D92B-426D-A597-C784D1611967@linaro.org>
+        Mon, 22 Jun 2020 12:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbgFVQqc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 12:46:32 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E235C061796
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 09:46:32 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id mb16so18711756ejb.4
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 09:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fSsgcITuzzTtFvxUUf/7ZrETIp3zZXPYb7gApVA448Y=;
+        b=dJgV3C3Npd0Bo3NuBW7O76jTilUD1dmlODwipR7DJqKsfniJE9SVdQADL9wm1qBTQK
+         m+UVWXA/QmgZQIx6zzzwM8EY/H65MfkrOJeoomdtnwunEv0iYL6h0u/yLTt2YSMip/hy
+         hFVbLDJJ/4QFOSKStPOGqGPA93Xpx1MMWMHwLSUrsZkyk23hJbobslZ0KKxbKIy2+Tim
+         rGezLawf5Sx8J2CMHn67m+sWMHQgfSA6ccJagdqzFjaHKS0cXCvDFZo4quqw7WT2Bw3m
+         AFhMstwxn2sB7XqcmCPCSNmcq6U9iuzxiYhDHDHowhIH07YjhHnL7VCv77HHJyo8HOjh
+         Jt3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fSsgcITuzzTtFvxUUf/7ZrETIp3zZXPYb7gApVA448Y=;
+        b=c2bwXC227L3MQZSg46ryzpanW5XyE745zazc41OA/RRAWmIDKvVesVfMntuJ0fn08n
+         TQstwTrugcBCxY7lAqY6d4tUzqt9tT2DoyOkv68qBsizhEwcJAFR7Gf57ohq5vzqHo7C
+         emkm5ZAX5foflREqgk5FkoEuOhG2BQ1pujxPtdUaHgu+j2y8rRGSz/7ryMXl68U3J3/k
+         xZawXxtL0zChJS3YCKhVPdk6vXU2y4s/IzdJHNvh7EdXX9nyOD+jddCXmHH3jmXZFMfP
+         iutyJ2FOU1qVzHxi0d7Iw/ltSa0o90KeeJoorBX7pnEfeAcs4kAwgypX7JPOZFWWr/Qg
+         KqCg==
+X-Gm-Message-State: AOAM53374A/URWhqSpMHvSL5G15rliuxTBFQ8G+dS/neGLEO6OxachZ9
+        busD+gOaSbbNXyDJyumLlFQecg==
+X-Google-Smtp-Source: ABdhPJwSEpI38Q3zwyH2KwYzEpMI5FZzuvcXZh/bMdcABtEX06nKggmbeaiHu9XyRFCFS5MYVMce8A==
+X-Received: by 2002:a17:907:2052:: with SMTP id pg18mr15683151ejb.513.1592844391224;
+        Mon, 22 Jun 2020 09:46:31 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id d16sm3841777ejo.31.2020.06.22.09.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 09:46:30 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 18:46:28 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH 0/3] pinctrl: single: support #pinctrl-cells = 2
+Message-ID: <20200622164628.GA510359@x1>
+References: <20200618125057.41252-1-drew@beagleboard.org>
+ <20200622161132.GM37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pFej7zHSL6C5fFIz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8C9C4D5E-D92B-426D-A597-C784D1611967@linaro.org>
-X-Cookie: laser, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200622161132.GM37466@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 09:11:32AM -0700, Tony Lindgren wrote:
+> * Drew Fustini <drew@beagleboard.org> [200618 05:52]:
+> > Currently, pinctrl-single only allows #pinctrl-cells = 1.
+> > 
+> > This series will allow pinctrl-single to also support #pinctrl-cells = 2
+> > 
+> > If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
+> > pcs_parse_one_pinctrl_entry() does an OR operation on to get the
+> > value to store in the register.
+> >     
+> > To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
+> > omap.h is modified to keep pin conf and pin mux values separate.
+> 
+> Hmm to me it looks like the order of the patches is the
+> wrong way around here. Don't we need to first change
+> pinctrl-single.c, and then only after that update the
+> dts? And make sure the pinctrl-single.c change does not
+> break anything without changing the dts :)
+> 
+> Regards,
+> 
+> Tony
 
---pFej7zHSL6C5fFIz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for pointing this out.
 
-On Mon, Jun 22, 2020 at 05:04:16PM +0300, Pantelis Antoniou wrote:
+I'll submit new version where:
+[PATCH 1/3] pinctrl: single: parse #pinctrl-cells = 2
+[PATCH 2/3] ARM: dts: change AM33XX_PADCONF macro separate conf and mux
+[PATCH 3/3] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
 
-> The problem is that for sound card that is composed of a number of compon=
-ent
-> like this one a pretty non trivial setting of controls must be done.
-
-> Tt is not atypical for a card like this the set of control being a dozen
-> or so, with some requiring even more.
-
-> Someone has to do them, be it the kernel or userspace.
-
-This is super standard stuff, it's why UCM (and the Android equivalent)
-exist.  There is nothing here that's remarkable or new here, *please*
-look at existing solutions before proposing new stuff and (as Stephan
-suggested) please don't try to sneak major changes in how things work
-into otherwise routine patches.
-
-> Instead of having userspace do it, bundle everything in DT so that everyt=
-hing
-> can be set in one go, and without having the user-space engineer read the
-> a few 10-100 pages of reference manuals.
-
-Very often in embedded systems the people doing the tuning include
-hardware and acoustic engineers for whom dealing with the flexibility of
-the device is not an issue but having to reflash and reboot the system
-to test out changes is a substantial inconvenience.  I've seen how happy
-they can be with userspace configuration options allowing them to speed
-up their workflows.  For end users it doesn't really make a huge
-difference if the configuration is delivered as part of the firmware or
-as part of userspace.
-
-> This is arguably a hardware setting (eg. the set of configuration paramet=
-ers
-> that enables routing sound to speaker).
-
-In all but the simplest systems there are several, frequently many,
-options available for even seemingly simple tasks like routing audio to
-the speaker.  Deciding between these is something that's well within the
-bounds of userspace configurability, it's not like there's only one way
-to do things and there may be tradeoffs to be made or combinations of
-things to be considered (eg, will we have to mix additional streams in
-or route the audio to additional outputs later?).  Transitions between
-use cases are also very much part of this, they can often be worked out
-automatically but not always.
-
-> Now this is not going to perfect for all cases; some cases are very compl=
-icated
-> and indeed user-space has to be engaged and perform the configuration.
-> This mechanism does not preclude it.
-
-Having multiple uncoordinated mechanisms for doing the same thing in the
-same system makes the system more complicated. =20
-
---pFej7zHSL6C5fFIz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7w36YACgkQJNaLcl1U
-h9ALXAf+ITFI2DOoH2qE4+RFkrE6iNsf5CAeoJwCOIa0ZzBWTZINaqr8sHF8Ak7Q
-n5iU+vu4EZRAxkRZMzzc8zPsZC7tey4F4yNshc+n1t41HtmA1OOG7Yie3Nt1iCUF
-Vpj7TtWHLsAmCewClfYJ48qp2ZinR+RBGlJ3qqW4MaoZbcQEW3AGv7yswXtPZuxE
-AGNvlac3wLT4dF15Ol46dIRRpcBZfs2CgP/+afQ5ZQoVFPCnucA3ljSRyM48DcqB
-fM8o5v5HmUtC/FgHsMHvA46UZcyoaZzDwMGK/SpyqLOt1beqw8BbL3B8dP7EMIOY
-rvDT0R1JIokB+JAoseBcmEQtxbvXXg==
-=Am6L
------END PGP SIGNATURE-----
-
---pFej7zHSL6C5fFIz--
+-drew
