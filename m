@@ -2,455 +2,576 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B93C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42FE420732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1752220708
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s52wCzZc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0vCCRrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgFVL3B (ORCPT
+        id S1727084AbgFVLe3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57386 "EHLO
+        Mon, 22 Jun 2020 07:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgFVL3B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:29:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FB1C061794;
-        Mon, 22 Jun 2020 04:29:00 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l17so14532257wmj.0;
-        Mon, 22 Jun 2020 04:29:00 -0700 (PDT)
+        with ESMTP id S1726998AbgFVLe3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:34:29 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6AAFC061795
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 04:34:27 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id cy7so6840634edb.5
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 04:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cFV2UwkHIXZoBfoREkw2lJuc+zkgTD6SbaXShzZO07M=;
-        b=s52wCzZcEn4Pw6G0GIXhz9Di4LsThhEcORzxeSeKnYTlyBEwvDEdnJFGjGt7OjMsui
-         T3OkSD7KYCDOSX50nzBQc2ZfgrPVrnNFckqBtRHYsuhVqwlYRdnSAhRmV297EgfWdZbQ
-         OdML9S13A3twURW4bsaDQpMDstrIn8K6RJVQul6GEM9eKkcRaxJX4SFIh3lbXq9jH+Sb
-         09ITtbVDD/pyb7Esz3bTffbm40oaV3BIjnIq7WCNGsoxsw3GnH4EyVeN8E7/61aKvjIv
-         2tdUZvlBjRpQn/z+oZReXdKgkPC07at3WrmrUvkij2uTt9BLF2FRx2+MmJAg8ioNBeMt
-         vPQQ==
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CkMLKDYyCdgwgrz6M1KvCuyRca4uYmURUSVIrQBAvAs=;
+        b=E0vCCRrRcBEQEc24INVK06CXRUi9uNy4P7BoFOkgMQfS/2XlouVRXGecPDz/qguUJv
+         HpY6Egz4KTxwz/fsL0+dbThaO+FwYXsCjJVkOkGu+qmJKHy8Ib8jGeWrV8G2YjB1bkzy
+         WQNtGkzkd0c31/xsJqjpOw+k9Bnryy78AV3HVRSCJzBtE7cXDUVhWzybLDy1GcESL96Z
+         R3G7FIdQ/LRPG2zhqOwkpHu9AUwO2K9sqpkt4shLnZUCS7oQwN2lPpMZf5kjhJYAOmvg
+         w7wePJlz6m2fw7fSx/gj0ub4Xnxc9PLDwc4FZDsZAS8IwIFEfiiMIce/HtfuVhM+EUKm
+         H3lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cFV2UwkHIXZoBfoREkw2lJuc+zkgTD6SbaXShzZO07M=;
-        b=NyIhO77dR3RYqR7P1Fm6ZiasZXyZCclnk76nWBnA6ZbTk45y3VVlk1hvt62FMB12Lj
-         4J0Su1R4EuMnHSzYzLrxXWGIl0vpTtV8wUkyzAdrpRLSlT8sibYzKjE24cQzFZJkuq/m
-         DdNnKomAyqnJcgpw+4N+XiigaTOwFrjv+n9KYS9XCAKn7BACTAnI4KKlZ9YiXEM0Nm1R
-         s2NLADBX4oRNT2DU7m/DckRkTq7CnGGRL+CtFHLmzHvXQ9fFb128l3hWCYLKX9jUdikh
-         caN821P9NZ937pjz0g/bPNIZ9aBirnCz4jby3eapDSBL7RXFf1AAAGaEUQThN7rRdUJE
-         2U2w==
-X-Gm-Message-State: AOAM530jyI0/aCJYXlqb9tdykHmjTwJlxsGBTEHNzZpntIOQv0fPZFwZ
-        MawfOZmNdmK9RkQZ0rPVV1b1zS8y
-X-Google-Smtp-Source: ABdhPJx9EqFTEYK7CsIx1OB4ilZ0K5lN9gHVN4svdUoZdCPOzOfUGK4lKZmBtP2YIqTV496ZG+aAiQ==
-X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr2208937wmg.153.1592825339372;
-        Mon, 22 Jun 2020 04:28:59 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id c25sm4618613wml.46.2020.06.22.04.28.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 04:28:58 -0700 (PDT)
-Subject: Re: [PATCH v6 7/7] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
- <1592480018-3340-8-git-send-email-hanks.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3cbd81c1-0c68-80e2-d963-9ec7c0b7260c@gmail.com>
-Date:   Mon, 22 Jun 2020 13:28:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <1592480018-3340-8-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CkMLKDYyCdgwgrz6M1KvCuyRca4uYmURUSVIrQBAvAs=;
+        b=FSJni4ZGKAZlmi2bMxnn55M77WNUaOQhRSQV8hH0LgwDbGVCFRAhW+yz6gn6T1GVix
+         38+o5H0NQkr8sY2ilWlp8ue/fap9so8jAlsf9q8zU5MifeIIOaz3B3feasZ7KYBG1Aqh
+         O9iEswlYwh4Z0iBd8EupQg7dTrP5ET/VrYyfPpwJprXejcEq3mQt4auwzpzuAVq6gdb7
+         hZW1jjDa6MLCSDtMZwHIJjjs+0Vtpsdr+SMTo5uFWn2t9sELXX1btLn5YV0l/CZfOAan
+         pNIYn33Bk428409Dxo9bjUc5sVOLjik/4tPday2yYWZA52o/2ZIv9z8XjESgEWiONIrK
+         sRDA==
+X-Gm-Message-State: AOAM532wFUI3LbqaHiSl+cuPX7m2QmrxlfLn+rzXFTLhCn1y9jU4sV/2
+        QocaA7ytNxRf3+3OYGJrTMUQ8w==
+X-Google-Smtp-Source: ABdhPJw2TclJgKhGEZSe4yr9Ks34pnf4FLPghWj83LoIt+wG/aeGcpVWvJEpc3m7sjqyjF+KpuK0gA==
+X-Received: by 2002:aa7:cd6c:: with SMTP id ca12mr16716994edb.36.1592825666146;
+        Mon, 22 Jun 2020 04:34:26 -0700 (PDT)
+Received: from [192.168.2.2] (ppp089210109128.access.hol.gr. [89.210.109.128])
+        by smtp.gmail.com with ESMTPSA id f16sm26335ejr.0.2020.06.22.04.34.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 04:34:25 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
+ apq8039 sound complex
+From:   Pantelis Antoniou <pantelis.antoniou@linaro.org>
+In-Reply-To: <20200619214126.GA1251@gerhold.net>
+Date:   Mon, 22 Jun 2020 14:34:23 +0300
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matthew Porter <mporter@konsulko.com>,
+        Shawn Guo <shawn.guo@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
+References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
+ <20200619193831.12528-2-pantelis.antoniou@linaro.org>
+ <20200619214126.GA1251@gerhold.net>
+To:     Stephan Gerhold <stephan@gerhold.net>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Stephan,
 
 
-On 18/06/2020 13:33, Hanks Chen wrote:
-> this adds initial MT6779 dts settings for board support,
-> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
-> 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->  arch/arm64/boot/dts/mediatek/mt6779-evb.dts |   31 ++++
->  arch/arm64/boot/dts/mediatek/mt6779.dtsi    |  261 +++++++++++++++++++++++++++
->  3 files changed, 293 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index a57af9d..4d1b0f9 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6779-evb.dts b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
-> new file mode 100644
-> index 0000000..164f5cb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
-> @@ -0,0 +1,31 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Mars.C <mars.cheng@mediatek.com>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt6779.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT6779 EVB";
-> +	compatible = "mediatek,mt6779-evb", "mediatek,mt6779";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x1e800000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:921600n8";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dtsi b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> new file mode 100644
-> index 0000000..64e5963
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> @@ -0,0 +1,261 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Mars.C <mars.cheng@mediatek.com>
-> + *
-> + */
-> +
-> +#include <dt-bindings/clock/mt6779-clk.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/pinctrl/mt6779-pinfunc.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt6779";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x000>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x100>;
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x200>;
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x300>;
-> +		};
-> +
-> +		cpu4: cpu@4 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x400>;
-> +		};
-> +
-> +		cpu5: cpu@5 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x500>;
-> +		};
-> +
-> +		cpu6: cpu@6 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a75";
-> +			enable-method = "psci";
-> +			reg = <0x600>;
-> +		};
-> +
-> +		cpu7: cpu@7 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a75";
-> +			enable-method = "psci";
-> +			reg = <0x700>;
-> +		};
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW 0>;
-> +	};
-> +
-> +	clk26m: oscillator@0 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <26000000>;
-> +		clock-output-names = "clk26m";
-> +	};
-> +
-> +	clk32k: oscillator@1 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "clk32k";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		gic: interrupt-controller@0c000000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <4>;
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
-> +			      <0 0x0c040000 0 0x200000>; /* GICR */
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
-> +
-> +			ppi-partitions {
-> +				ppi_cluster0: interrupt-partition-0 {
-> +					affinity = <&cpu0 &cpu1 \
-> +						&cpu2 &cpu3 &cpu4 &cpu5>;
-> +				};
-> +				ppi_cluster1: interrupt-partition-1 {
-> +					affinity = <&cpu6 &cpu7>;
-> +				};
-> +			};
-> +
-> +		};
-> +
-> +		sysirq: intpol-controller@0c53a650 {
-> +			compatible = "mediatek,mt6779-sysirq",
-> +				     "mediatek,mt6577-sysirq";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0 0x0c53a650 0 0x50>;
-> +		};
-> +
-> +		topckgen: clock-controller@10000000 {
-> +			compatible = "mediatek,mt6779-topckgen", "syscon";
-> +			reg = <0 0x10000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		infracfg_ao: clock-controller@10001000 {
-> +			compatible = "mediatek,mt6779-infracfg_ao", "syscon";
-> +			reg = <0 0x10001000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		pio: pinctrl@10005000 {
-> +			compatible = "mediatek,mt6779-pinctrl", "syscon";
-> +			reg = <0 0x10005000 0 0x1000>,
-> +			      <0 0x11c20000 0 0x1000>,
-> +			      <0 0x11d10000 0 0x1000>,
-> +			      <0 0x11e20000 0 0x1000>,
-> +			      <0 0x11e70000 0 0x1000>,
-> +			      <0 0x11ea0000 0 0x1000>,
-> +			      <0 0x11f20000 0 0x1000>,
-> +			      <0 0x11f30000 0 0x1000>,
-> +			      <0 0x1000b000 0 0x1000>;
-> +			reg-names = "gpio", "iocfg_rm",
-> +				    "iocfg_br", "iocfg_lm",
-> +				    "iocfg_lb", "iocfg_rt",
-> +				    "iocfg_lt", "iocfg_tl",
-> +				    "eint";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pio 0 0 210>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		apmixed: clock-controller@1000c000 {
-> +			compatible = "mediatek,mt6779-apmixed", "syscon";
-> +			reg = <0 0x1000c000 0 0xe00>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11002000 0 0x400>;
-> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x400>;
-> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
+> On Jun 20, 2020, at 00:41 , Stephan Gerhold <stephan@gerhold.net> =
+wrote:
+>=20
+> Hi Pantelis,
+>=20
+> On Fri, Jun 19, 2020 at 10:38:30PM +0300, Pantelis Antoniou wrote:
+>> Add a yaml device binding for the QCOM apq8039 sound complex driver.
+>>=20
+>=20
+> Nice to see some activity to get sound working on another SoC!
+> Thanks for documenting all these properties.
+>=20
 
-For the record, my late comment on v5 was that we should expose all four UARTs
-in the dtsi as it describes the HW.
+Thanks (I guess :) )
 
-Other then that, patch looks good.
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@linaro.org>
+>> ---
+>> .../bindings/sound/qcom,apq8039.yaml          | 370 =
+++++++++++++++++++
+>> 1 file changed, 370 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
+>>=20
+>> diff --git =
+a/Documentation/devicetree/bindings/sound/qcom,apq8039.yaml =
+b/Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
+>> new file mode 100644
+>> index 000000000000..f1c4fb99ccbb
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
+>> @@ -0,0 +1,370 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/qcom,apq8039.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Technologies APQ8039 ASoC sound card
+>> +
+>> +maintainers:
+>> +  - Pantelis Antoniou <pantelis.antoniou@linaro.org>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: qcom,apq8039-sndcard
+>> +
+>> +  pinctrl-0:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description: |
+>> +      Should specify pin control groups used for this controller =
+matching
+>> +      the first entry in pinctrl-names.
+>> +
+>> +  pinctrl-1:
+>> +    description: |
+>> +      Should specify pin control groups used for this controller =
+matching
+>> +      the second entry in pinctrl-names.
+>> +
+>> +  pinctrl-names:
+>> +    minItems: 1
+>> +    items:
+>> +      - const: default
+>> +      - const: sleep
+>> +    description:
+>> +      Names for the pin configuration(s); may be "default" or =
+"sleep",
+>> +      where the "sleep" configuration may describe the state
+>> +      the pins should be in during system suspend.
+>> +
+>> +  reg:
+>> +    description: Must contain an address for each entry in =
+"reg-names".
+>> +    minItems: 2
+>> +    maxItems: 2
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: mic-iomux
+>> +      - const: spkr-iomux
+>> +
+>> +  qcom,model:
+>> +    $ref: /schemas/types.yaml#/definitions/string
+>> +    description: The user-visible name of the sound complex.
+>> +
+>> +  qcom,audio-routing:
+>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+>> +    description: |
+>> +      List of the connections between audio components;  each entry =
+is a
+>> +      pair of strings, the first being the connection's sink, the =
+second
+>> +      being the connection's source; valid names could be power =
+supplies
+>> +      and MicBias of msm8916-analoc-wcd codec.
+>> +
+>> +  function-definition:
+>> +    type: object
+>> +    description: |
+>> +      Functional configuration for the sound complex via a
+>> +      simple control. allows fixed and dynamically constructed
+>> +      function selection.
+>> +
+>> +    properties:
+>> +      mixer-control:
+>> +        $ref: /schemas/types.yaml#/definitions/string
+>> +        description: |
+>> +          Name of the exported alsa mix control.
+>> +
+>> +      function-list:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +        description: |
+>> +          phandle(s) of the functions which the sound complex
+>> +          exposes via the control.
+>> +
+>> +      system-list:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +        description: |
+>> +          phandle(s) of the default, init and shutdown functions
+>> +          Must be one of the declared ones in the function property.
+>> +          The default function is the one selected by default on
+>> +          startup (after the init function's sequence is executed).
+>> +          On shutdown the shutdown function sequence will be =
+executed.
+>> +          Typically init and shutdown are the same and it's purpose
+>> +          is to initialize the sound complex mixer controls to the
+>> +          all off state, and be ready for a regular function =
+selection.
+>> +
+>> +    patternProperties:
+>> +      "^[A-Za-z_][A-Aa-z0-9_]*$":
+>> +        type: object
+>> +        description:
+>> +          Function description subnodes. The name of the function
+>> +          is simply the name of the subnode, so restrictions apply
+>> +          to the valid node names.
+>> +
+>> +          The function definition of each subnode is either a cooked
+>> +          function (i.e. which is not dependent on state inputs), or
+>> +          a function that is selecting a cooked function based on =
+the
+>> +          state inputs and the generated state vector.
+>> +
+>> +        oneOf:
+>> +          # non-cooked function
+>> +          - properties:
+>> +              enable:
+>> +                $ref: =
+/schemas/types.yaml#/definitions/non-unique-string-array
+>> +                description: |
+>> +                  Sequence of alsa mixer controls to apply when this =
+state is to
+>> +                  be enabled.
+>> +
+>> +              disable:
+>> +                $ref: =
+/schemas/types.yaml#/definitions/non-unique-string-array
+>> +                description: |
+>> +                  Sequence of alsa mixer controls to apply when this =
+state is to
+>> +                  be disabled.
+>> +
+>> +            required:
+>> +              - enable
+>> +
+>> +          # cooked function
+>> +          - properties:
+>> +              state-inputs:
+>> +                description: |
+>> +                  A list of state inputs to be used in constructing =
+a state
+>> +                  vector.
+>> +                type: array
+>> +                uniqueItems: true
+>> +                minItems: 1
+>> +                items:
+>> +                  anyOf:
+>> +                    - const: JACK_HEADPHONE
+>> +                    - const: JACK_MICROPHONE
+>> +
+>> +              state-input-bits:
+>> +                $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +                description: |
+>> +                  Number of bits to use for each state-input in the
+>> +                  state vector creation. For now only the value 1 is
+>> +                  supported for JACK_HEADPHONE and JACK_MICROPHONE.
+>> +
+>> +              state-input-defaults:
+>> +                $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +                description: |
+>> +                  The default value to use as a state input at =
+startup.
+>> +
+>> +              state-map:
+>> +                $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +                description: |
+>> +                  The mapping of this function to a cooked function. =
+The
+>> +                  format used is a sequence of phandle to a state, =
+the mask
+>> +                  to apply to the state vector, and the equality =
+value.
+>> +
+>> +                  Take the example's configuration
+>> +
+>> +                    state-inputs         =3D "JACK_HEADPHONE", =
+"JACK_MICROPHONE";
+>> +                    state-input-bits     =3D <1>, <1>;
+>> +                    state-input-defaults =3D <0>, <0>;
+>> +
+>> +                    state-map =3D <&speaker    0x1 0x0>,
+>> +                                <&headphones 0x3 0x1>,
+>> +                                <&headset    0x3 0x3>;
+>> +
+>> +                  is decoded as follows.
+>> +
+>> +                  There are 3 possible cooked functions to be =
+selected.
+>> +                  speaker, headphone and headset. The state-inputs =
+are
+>> +                  the JACK_HEADPHONE and JACK_MICROPHONE, which are =
+single
+>> +                  bit values, being placed at bit 0 and bit 1 of the
+>> +                  constructed vector.
+>> +
+>> +                  The 4 possible state vectors are:
+>> +                    MICROPHONE=3D0, HEADPHONE=3D0, 0
+>> +                    MICROPHONE=3D0, HEADPHONE=3D1, 1
+>> +                    MICROPHONE=3D1, HEADPHONE=3D0, 2
+>> +                    MICROPHONE=3D1, HEADPHONE=3D1, 3
+>> +
+>> +                  The speaker function is selected when HEADPHONE=3D0 =
+because
+>> +                  both (0 & 1) =3D=3D (2 & 1) =3D=3D 0.
+>> +
+>> +                  The headphones function is selected when =
+HEADPHONE=3D1 and
+>> +                  MICROPHONE=3D0 because (1 & 3) =3D=3D 1.
+>> +
+>> +                  The headset function is selected when both =
+HEADPHONE=3D1 and
+>> +                  MICROPHONE=3D1 because (3 & 3) =3D=3D 3.
+>> +
+>> +            required:
+>> +              - state-inputs
+>> +              - state-input-bits
+>> +              - state-input-defaults
+>> +              - state-map
+>> +
+>> +patternProperties:
+>> +  "^.*dai-link-[0-9]+$":
+>> +    type: object
+>> +    description: |-
+>> +      cpu and codec child nodes:
+>> +        Container for cpu and codec dai sub-nodes.
+>> +        One cpu and one codec sub-node must exist.
+>> +
+>> +    properties:
+>> +      link-name:
+>> +        description: The link name
+>> +
+>> +      cpu:
+>> +        type: object
+>> +        properties:
+>> +
+>> +          sound-dai:
+>> +            $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +            description: phandle(s) of the CPU DAI(s)
+>> +
+>> +        required:
+>> +          - sound-dai
+>> +
+>> +      codec:
+>> +        type: object
+>> +        properties:
+>> +
+>> +          sound-dai:
+>> +            $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +            description: phandle(s) of the codec DAI(s)
+>> +
+>> +        required:
+>> +          - sound-dai
+>> +
+>> +    required:
+>> +      - link-name
+>> +      - cpu
+>> +      - codec
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - qcom,model
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/sound/apq8016-lpass.h>
+>> +
+>> +    sound: sound@7702000  {
+>> +        compatible =3D "qcom,apq8039-sndcard";
+>> +        reg =3D <0x07702000 0x4>, <0x07702004 0x4>;
+>> +        reg-names =3D "mic-iomux", "spkr-iomux";
+>> +
+>> +        status =3D "okay";
+>> +        pinctrl-0 =3D <&cdc_pdm_lines_act>;
+>> +        pinctrl-1 =3D <&cdc_pdm_lines_sus>;
+>> +        pinctrl-names =3D "default", "sleep";
+>> +        qcom,model =3D "APQ8039";
+>> +        qcom,audio-routing =3D "AMIC2", "MIC BIAS Internal2";
+>> +
+>> +        internal-codec-playback-dai-link-0 {
+>> +            link-name =3D "WCD";
+>> +            cpu {
+>> +                sound-dai =3D <&lpass MI2S_PRIMARY>;
+>> +            };
+>> +            codec {
+>> +                sound-dai =3D <&lpass_codec 0>, <&wcd_codec 0>;
+>> +            };
+>> +        };
+>> +
+>> +        internal-codec-capture-dai-link-0 {
+>> +            link-name =3D "WCD-Capture";
+>> +            cpu {
+>> +                sound-dai =3D <&lpass MI2S_TERTIARY>;
+>> +            };
+>> +            codec {
+>> +                sound-dai =3D <&lpass_codec 1>, <&wcd_codec 1>;
+>> +            };
+>> +        };
+>> +
+>> +        function-definition {
+>> +
+>> +            mixer-control =3D "Jack Function";
+>> +            function-list =3D <&auto &headphones &headset &speaker =
+&off>;
+>> +            system-list =3D <&auto &off &off>;  // default, init, =
+shutdown
+>> +
+>> +            auto: Automatic {
+>> +                // Headphone presence bit 0 (1) - H
+>> +                // Microphone presence bit 1 (2) - M
+>> +                state-inputs         =3D "JACK_HEADPHONE", =
+"JACK_MICROPHONE";
+>> +                state-input-bits     =3D <1>, <1>;
+>> +                state-input-defaults =3D <0>, <0>;
+>> +
+>> +                // HM & MASK
+>> +                state-map =3D
+>> +                    <&speaker    0x1 0x0>,  // no headphone -> =
+speaker
+>> +                    <&headphones 0x3 0x1>,  // headphone but no mic =
+-> headphones
+>> +                    <&headset    0x3 0x3>;  // headphone & mic -> =
+headset
+>> +            };
+>> +            headphones: Headphones {
+>> +                enable =3D
+>> +                    "RX1 MIX1 INP1", "RX1",
+>> +                    "RX2 MIX1 INP1", "RX2",
+>> +                    "RDAC2 MUX", "RX2",
+>> +                    "RX1 Digital Volume", "128",
+>> +                    "RX2 Digital Volume", "128",
+>> +                    "HPHL", "Switch",
+>> +                    "HPHR", "Switch";
+>> +
+>> +                disable =3D
+>> +                    "RX1 Digital Volume", "0",
+>> +                    "RX2 Digital Volume", "0",
+>> +                    "HPHL", "ZERO",
+>> +                    "HPHR", "ZERO",
+>> +                    "RDAC2 MUX", "RX1",
+>> +                    "RX1 MIX1 INP1", "ZERO",
+>> +                    "RX2 MIX1 INP1", "ZERO";
+>> +            };
+>> +            headset: Headset {
+>> +                enable =3D
+>> +                    "RX1 MIX1 INP1", "RX1",
+>> +                    "RX2 MIX1 INP1", "RX2",
+>> +                    "RDAC2 MUX", "RX2",
+>> +                    "RX1 Digital Volume", "128",
+>> +                    "RX2 Digital Volume", "128",
+>> +                    "DEC1 MUX", "ADC2",
+>> +                    "CIC1 MUX", "AMIC",
+>> +                    "ADC2 Volume", "8",
+>> +                    "ADC2 MUX", "INP2",
+>> +                    "HPHL", "Switch",
+>> +                    "HPHR", "Switch";
+>> +
+>> +                disable =3D
+>> +                    "RX1 Digital Volume", "0",
+>> +                    "RX2 Digital Volume", "0",
+>> +                    "HPHL", "ZERO",
+>> +                    "HPHR", "ZERO",
+>> +                    "RDAC2 MUX", "RX1",
+>> +                    "RX1 MIX1 INP1", "ZERO",
+>> +                    "RX2 MIX1 INP1", "ZERO",
+>> +                    "ADC2 MUX", "ZERO",
+>> +                    "ADC2 Volume", "0",
+>> +                    "DEC1 MUX", "ZERO";
+>> +            };
+>> +            speaker: Speaker {
+>> +                enable =3D
+>> +                    "SPK DAC Switch", "1",
+>> +                    "RX3 MIX1 INP1", "RX1",
+>> +                    "RX3 MIX1 INP2", "RX2",
+>> +                    "RX3 Digital Volume", "128";
+>> +
+>> +                disable =3D
+>> +                    "SPK DAC Switch", "0",
+>> +                    "RX3 MIX1 INP1", "ZERO",
+>> +                    "RX3 MIX1 INP2", "ZERO";
+>> +            };
+>> +            off: Off {
+>> +                enable =3D
+>> +                    "RX1 Digital Volume", "0",
+>> +                    "RX2 Digital Volume", "0",
+>> +                    "HPHL", "ZERO",
+>> +                    "HPHR", "ZERO",
+>> +                    "RDAC2 MUX", "RX1",
+>> +                    "RX1 MIX1 INP1", "ZERO",
+>> +                    "RX2 MIX1 INP1", "ZERO",
+>> +                    "ADC2 MUX", "ZERO",
+>> +                    "ADC2 Volume", "0",
+>> +                    "DEC1 MUX", "ZERO",
+>> +                    "SPK DAC Switch", "0",
+>> +                    "RX3 MIX1 INP1", "ZERO",
+>> +                    "RX3 MIX1 INP2", "ZERO";
+>> +            };
+>> +        };
+>=20
+> This looks much like a replacement for ALSA UCM and userspace audio =
+jack
+> detection coded into the device tree.
+>=20
 
-Regards,
-Matthias
+I wouldn=E2=80=99t call it a replacement exactly. It=E2=80=99s merely a =
+way to bundle all
+of this information about codec glue in the kernel (where it should =
+belong IMO).
+
+
+> While I personally think this is an interesting idea
+> (We have the device tree to describe the hardware, why can we not also
+> describe necessary audio routing to enable a particular output?)
+> this is also not really specific to the APQ8039 hardware, is it?
+>=20
+
+Not really TBF. However it is considerably simplified but not handling
+all the mixer controls types besides the ones that are applicable to=20
+this driver.
+
+> In fact, without all the code to handle the mixer enable/disable
+> sequences the machine driver looks almost identical to the existing
+> apq8016-sbc.
+>=20
+
+Yep, modulo some device tree handling fixes.
+
+> If you want to discuss ways to integrate mixer enable/disable =
+sequences
+> into the device tree, I suggest that you post your ideas separately as
+> [RFC] with a more generic subject. That will make it more easy for
+> everyone interested to share their thoughts.
+>=20
+
+Well, I can certainly do that. However I=E2=80=99d like to see if this =
+is
+something that the community would be interested to, but feedback
+against this patch.
+
+As I mentioned earlier it needs some work to be made to something
+that=E2=80=99s completely generic (i.e. handling arbitrary control =
+types).
+
+> Right now it's quite hidden in a patch set where the subjects suggest
+> that it's just a simple machine driver to glue some codecs together.
+>=20
+> Thanks,
+> Stephan
+
+
+Regards
+
+=E2=80=94 Pantelis
+
