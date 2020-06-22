@@ -2,148 +2,116 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C60C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AAAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D556206C1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DCF206D7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="H1Ldib1J"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tcKWWO9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgFVJJW (ORCPT
+        id S1726676AbgFVJRD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:09:22 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.221]:17590 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbgFVJJW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:09:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1592816956;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=S6bYQw3zQoFPKezXkLlmR/gLwK36xiQySvi3IzEfiYE=;
-        b=H1Ldib1JhP6NDeJRKkW5nbOm9m+RRrnKUQ7E2d5zlaoKkazsxOZIz6He45Gv6PYb81
-        ZpxcZC7RcmKC1oarqZkBJqzSOSsPaLfJSkk/mkGRtMYrk4kQ2Lp5K83ao2EM34+T5ndD
-        c43twmIk8092HeHHSZKSlSNSko4GDUt7I9V1sPkcapcF+MmbFErg7GF3umAp1mfITlBj
-        x3iMTCV2t//6Z42xEfzEuijZJ7k9d9mHcJ2bH1EB0T/pMAnJB/Kz2Mhqw4PUXrZt4KQP
-        g2TFghyBSxlLdbRHTiPQ6Lg88uJZ7no8/aXXRJFg14Ycpr82tUZEhryr7C2ZoWGJfCKo
-        3goQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j6IczHboo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.4 DYNA|AUTH)
-        with ESMTPSA id 6005e9w5M99D1ie
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 22 Jun 2020 11:09:13 +0200 (CEST)
-Date:   Mon, 22 Jun 2020 11:09:05 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Nick Reitemeyer <nick.reitemeyer@web.de>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: ux500: samsung-golden: Add touchkey
-Message-ID: <20200622090905.GA170221@gerhold.net>
-References: <20200621193822.133683-1-nick.reitemeyer@web.de>
- <20200621193822.133683-2-nick.reitemeyer@web.de>
+        Mon, 22 Jun 2020 05:17:03 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36805 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbgFVJRD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 05:17:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592817422; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=ooirKCjR7lwlB/4N/A1gnewRijD2y6yusHKO21HgUNE=; b=tcKWWO9aRiCqqvIItbzAKN+7/jJHDBIwdEzoyiZdIFaaCSISrVFB5alAA0F4Hqa9VAW+FOTi
+ V0YAHXyksaDFu/5ieLGFKhecItIBAlFRAXAaXsirowvAHts1U3WBdY4OWZUr6iNWEE7SmuHm
+ cQ7be59kaTwCdXVmDiH6CzvCB2c=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5ef0770df3deea03f3a4ed67 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 22 Jun 2020 09:17:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F8EDC433CB; Mon, 22 Jun 2020 09:17:01 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D8F2C433C8;
+        Mon, 22 Jun 2020 09:16:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D8F2C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Evan Green'" <evgreen@chromium.org>
+Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
+        <devicetree@vger.kernel.org>,
+        "'linux-arm Mailing List'" <linux-arm-kernel@lists.infradead.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>
+References: <1589946996-31264-1-git-send-email-pillair@codeaurora.org> <CAE=gft5pcHwK8yjObNSSH=U_B6Pz++bDaeUxZhPyJfG2E7LRAg@mail.gmail.com> <CAE=gft5So9Uk2UqRWs2zFO_iD+6ofMy97bKP4HpgM1Wu6Duxvw@mail.gmail.com> <20200621190602.GL128451@builder.lan>
+In-Reply-To: <20200621190602.GL128451@builder.lan>
+Subject: RE: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Mon, 22 Jun 2020 14:46:54 +0530
+Message-ID: <000001d64875$e28615a0$a79240e0$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621193822.133683-2-nick.reitemeyer@web.de>
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG/PI1FMT9lT4wFnqoECWl87ZLpcgLOq7cUAp/L6tUBMLjXYajdeP/A
+Content-Language: en-us
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 09:38:23PM +0200, Nick Reitemeyer wrote:
-> Adds support for the back and menu keys on golden.
-> 
-> Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
 
-Thanks for sending this!
 
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Monday, June 22, 2020 12:36 AM
+> To: Evan Green <evgreen@chromium.org>
+> Cc: Rakesh Pillai <pillair@codeaurora.org>; open list:OPEN FIRMWARE AND
+> FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; linux-arm
+> Mailing List <linux-arm-kernel@lists.infradead.org>; LKML <linux-
+> kernel@vger.kernel.org>; linux-arm-msm <linux-arm-
+> msm@vger.kernel.org>
+> Subject: Re: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+> 
+> On Wed 17 Jun 15:45 PDT 2020, Evan Green wrote:
+> 
+> > On Thu, May 21, 2020 at 9:19 AM Evan Green <evgreen@chromium.org>
+> wrote:
+> > >
+> > > On Tue, May 19, 2020 at 8:57 PM Rakesh Pillai <pillair@codeaurora.org>
+> wrote:
+> > > >
+> > > > Add device node for the ath10k SNOC platform driver probe
+> > > > and add resources required for WCN3990 on sc7180 soc.
+> > > >
+> > > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > >
+> > > Reviewed-by: Evan Green <evgreen@chromium.org>
+> >
+> > Looks like this never landed anywhere. Is it blocked on something?
+> 
+> I remember waiting for some reviews, but I see those are in place. Then
+> as I was applying this I saw that a v12 had shown up, with regulators.
+> 
+> So, I applied v12.
 
-> ---
->  .../arm/boot/dts/ste-ux500-samsung-golden.dts | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
+
+Thanks Bjorn.
+
+
 > 
-> diff --git a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-> index 5b499c0b2745..1e26b711d43d 100644
-> --- a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-> +++ b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-> @@ -24,6 +24,32 @@ chosen {
->  		stdout-path = &serial2;
->  	};
-> 
-> +	i2c-gpio-0 {
-> +		compatible = "i2c-gpio";
-> +		sda-gpios = <&gpio2 14 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpio2 13 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&i2c_gpio_0_default>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		touchkey@20 {
-> +			compatible = "coreriver,tc360-touchkey";
-> +			reg = <0x20>;
-> +			vdd-supply = <&ab8500_ldo_aux4_reg>;
-> +			vcc-supply = <&ab8500_ldo_aux6_reg>;
-> +
-> +			interrupt-parent = <&gpio2>;
-> +			interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&touchkey_default>;
-> +			linux,keycodes = <KEY_MENU KEY_BACK>;
-> +		};
-> +	};
-> +
->  	i2c-gpio-1 {
->  		compatible = "i2c-gpio";
->  		sda-gpios = <&gpio4 24 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-> @@ -403,6 +429,16 @@ golden_cfg1 {
->  		};
->  	};
-> 
-> +	i2c-gpio-0 {
-> +		i2c_gpio_0_default: i2c_gpio_0 {
-> +			golden_cfg1 {
-> +				pins = "GPIO77",	/* TOUCHKEY_SCL */
-> +				       "GPIO78";	/* TOUCHKEY_SDA */
-> +				ste,config = <&gpio_in_nopull>;
-> +			};
-> +		};
-> +	};
-> +
->  	i2c-gpio-1 {
->  		i2c_gpio_1_default: i2c_gpio_1 {
->  			golden_cfg1 {
-> @@ -413,6 +449,15 @@ golden_cfg1 {
->  		};
->  	};
-> 
-> +	touchkey {
-> +		touchkey_default: touchkey_default {
-> +			golden_cfg1 {
-> +				pins = "GPIO79";	/* TOUCHKEY_INT */
-> +				ste,config = <&gpio_in_nopull>;
-> +			};
-> +		};
-> +	};
-> +
->  	sdi0 {
->  		sd_level_translator_default: sd_level_translator_default {
->  			golden_cfg1 {
-> --
-> 2.27.0
-> 
+> Thanks,
+> Bjorn
+
