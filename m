@@ -2,232 +2,258 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457ACC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 259D32544B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592809780;
-	bh=oQfZYFEK5TzA58baDfjiFR4quEk2JmrbUpxr4Y4OY1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xuTBl0xw2A8CGVsIZeXO3sbw1SZKvL4DlyW2cnZn7aW5gfKRw/hYiZm3BfWTAqGL9
-	 TCmW8OEc5x64j8qxArYLPVfR3CsMk46EBG7NGAKFgznruivulo13H7ye6fOpKGcG6w
-	 uOWm6BhWw4HODGln27m+HunPQx9i+U14xn79kUzs=
+	by mail.kernel.org (Postfix) with ESMTP id 1348A206E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOabQXPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgFVHJj (ORCPT
+        id S1731339AbgFVHU5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726850AbgFVHJj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 03:09:39 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A54F25440;
-        Mon, 22 Jun 2020 07:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592809778;
-        bh=oQfZYFEK5TzA58baDfjiFR4quEk2JmrbUpxr4Y4OY1k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=obWIgoG2HbCErNH6CrWpyWHVaLgzv5zgbpsfOH3hgbjA+565FWwDlEoYCjC9nSFA9
-         pbGbOncwMUBZZMefktQmKx5Ne9W1PweltyIuiadv9bE2zKOzi+3D3VhjL9B52+b0v6
-         aUQk7bKDsaHi0h+KGL7BJiwxi7c14Zd7LpaLOdE0=
-Date:   Mon, 22 Jun 2020 12:39:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 3/3] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200622070934.GG2324254@vkoul-mobl>
-References: <20200617105950.3165360-1-vkoul@kernel.org>
- <20200617105950.3165360-4-vkoul@kernel.org>
- <20200620180516.GA27870@ravnborg.org>
+        Mon, 22 Jun 2020 03:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726850AbgFVHU4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:20:56 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD1BC061795
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:20:56 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e18so7774858pgn.7
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TKu4b/neMK0AHW1Fq9DdzM2DE1aRPxbJSRBuKY9XmU0=;
+        b=dOabQXPqHS/z/a9D5rdE5KrM3vn8itgNDR0a3+kEkRWP3H2bx2ES8qpaN4zEhx+cR3
+         vEX23sObt6hSims2SkDI/mvhwaM+MbhQTHPTgGq+024E8nae97F2AepZZhS3Qe5kypxE
+         DDjmY8Tr7n24Dkh3lU89LvP8G8xF57Hv7FnTpGCzVjMBo5IgBkWBdw8yB+eUP3qPDZC7
+         r3AflGoV/k/N+kFjiA4YIdpMVNg8DpeeIu1PZbGclRJgZ/kM4oV/F0pp89IA+OCP2m/C
+         UDSzQulhXOamap2+671hN87wU7wfct91jvLWvsJ4o0C9qAAgGC7wsSTMmayjp6iLx0vF
+         vzaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TKu4b/neMK0AHW1Fq9DdzM2DE1aRPxbJSRBuKY9XmU0=;
+        b=sY4gZ6WPOSmvisZvxVFD4XOuIze4kb5ODQbHG5y1CzlMsQL8xKCoDPcH5Z/VjA3iNl
+         kKd/5JHLZoPJorFomFJI86D3PcbJjbwMEmXzu/I1I/+3iE07DNPlDATKTAKrCNPDAI9o
+         KURb9cS1unrnYtZcDXThBlV7a6DBbDaLGqUo9wWuqQpFQEwIMamnnF6pHTm8J0TTPuuF
+         n3lQIAS579E6u/oBMdyTb0k2e+rUIvwPfjRCdumS6Z8dzWZwb16cMAcuIraKjTiwFYUW
+         XPMPOmDv46UF9+7weqMqYvWkQZkn78IMr31rnltY7s3k1ZFhrsJPyxph7ZXnuK15em3h
+         3eqA==
+X-Gm-Message-State: AOAM531S9Hc0X0ka9g2bf+1cRKC2Rj2tsnBCgrC8GfoWnjpHWO4Yjw+e
+        QPIg3qSGOKUiDAj6bfMuPruHLQ==
+X-Google-Smtp-Source: ABdhPJyYR8Nknc0FZ9ccI1tVx2q5D4kHN+UZFFBUA1ZWvJytIH+NFRNcKQk49YOzhWQilC3NG7MZ4Q==
+X-Received: by 2002:aa7:96e9:: with SMTP id i9mr19604759pfq.232.1592810455513;
+        Mon, 22 Jun 2020 00:20:55 -0700 (PDT)
+Received: from localhost ([122.172.111.76])
+        by smtp.gmail.com with ESMTPSA id 26sm5161063pfp.35.2020.06.22.00.20.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 00:20:54 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 12:50:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bbasu@nvidia.com, mperttunen@nvidia.com
+Subject: Re: [TEGRA194_CPUFREQ Patch v3 3/4] cpufreq: Add Tegra194 cpufreq
+ driver
+Message-ID: <20200622072052.uryxo4hri6gzrkku@vireshk-i7>
+References: <1592775274-27513-1-git-send-email-sumitg@nvidia.com>
+ <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200620180516.GA27870@ravnborg.org>
+In-Reply-To: <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Sam,
+On 22-06-20, 03:04, Sumit Gupta wrote:
+> diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+> new file mode 100644
+> index 0000000..8de8000
+> --- /dev/null
+> +++ b/drivers/cpufreq/tegra194-cpufreq.c
+> @@ -0,0 +1,403 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
 
-On 20-06-20, 20:05, Sam Ravnborg wrote:
-> Hi Vinod.
-> 
-> Looks good but some some of small nits.
+                    2020
 
-Great :)
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/smp_plat.h>
+> +
+> +#include <soc/tegra/bpmp.h>
+> +#include <soc/tegra/bpmp-abi.h>
+> +
+> +#define KHZ                     1000
+> +#define REF_CLK_MHZ             408 /* 408 MHz */
+> +#define US_DELAY                500
+> +#define US_DELAY_MIN            2
+> +#define CPUFREQ_TBL_STEP_HZ     (50 * KHZ * KHZ)
+> +#define MAX_CNT                 ~0U
+> +
+> +/* cpufreq transisition latency */
+> +#define TEGRA_CPUFREQ_TRANSITION_LATENCY (300 * 1000) /* unit in nanoseconds */
+> +
+> +#define LOOP_FOR_EACH_CPU_OF_CLUSTER(cl) for (cpu = (cl * 2); \
+> +					cpu < ((cl + 1) * 2); cpu++)
 
-> And a few larger things in the following.
-> The larger things is releated to prepare the bridge driver to live in a
-> world with chained bridges.
+Both latency and this loop are used only once in the code, maybe just open code
+it. Also you should have passed cpu as a parameter to the macro, even if it
+works fine without it, for better readability.
 
-Sure, so that entails adding the callbacks specified below right or is
-there anything else required to do?
+> +
+> +u16 map_freq_to_ndiv(struct mrq_cpu_ndiv_limits_response *nltbl, u32 freq)
 
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_graph.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <sound/hdmi-codec.h>
-> > +#include <drm/drm_probe_helper.h>
-> > +#include <drm/drm_atomic_helper.h>
-> > +#include <drm/drm_bridge.h>
-> > +#include <drm/drm_mipi_dsi.h>
-> > +#include <drm/drm_print.h>
-> Please add empty lines between each group of includes.
-> They are already sorted within each group and in preferred order - good.
+Unused routine
 
-Okay if that is the preference, sure
+> +{
+> +	return DIV_ROUND_UP(freq * nltbl->pdiv * nltbl->mdiv,
+> +			    nltbl->ref_clk_hz / KHZ);
+> +}
 
-> > +static int lt9611_mipi_input_analog(struct lt9611 *lt9611)
-> > +{
-> > +	const struct reg_sequence reg_cfg[] = {
-> > +		{ 0x8106, 0x40 }, /*port A rx current*/
-> > +		{ 0x810a, 0xfe }, /*port A ldo voltage set*/
-> > +		{ 0x810b, 0xbf }, /*enable port A lprx*/
-> > +		{ 0x8111, 0x40 }, /*port B rx current*/
-> > +		{ 0x8115, 0xfe }, /*port B ldo voltage set*/
-> > +		{ 0x8116, 0xbf }, /*enable port B lprx*/
-> > +
-> > +		{ 0x811c, 0x03 }, /*PortA clk lane no-LP mode*/
-> > +		{ 0x8120, 0x03 }, /*PortB clk lane with-LP mode*/
-> Add space after "/*" and before closing "*/".
-> Like is done a few lines up in lt9611_modes[]
+> +static int tegra194_cpufreq_init(struct cpufreq_policy *policy)
+> +{
+> +	struct tegra194_cpufreq_data *data = cpufreq_get_driver_data();
+> +	int cl = get_cpu_cluster(policy->cpu);
+> +	u32 cpu;
+> +
+> +	if (cl >= data->num_clusters)
+> +		return -EINVAL;
+> +
+> +	policy->cur = tegra194_fast_get_speed(policy->cpu); /* boot freq */
+> +
+> +	/* set same policy for all cpus in a cluster */
+> +	LOOP_FOR_EACH_CPU_OF_CLUSTER(cl)
+> +		cpumask_set_cpu(cpu, policy->cpus);
+> +
+> +	policy->freq_table = data->tables[cl];
+> +	policy->cpuinfo.transition_latency = TEGRA_CPUFREQ_TRANSITION_LATENCY;
+> +
+> +	return 0;
+> +}
 
-Oops seems to have missed these, will fix this and others if any
+> +static int tegra194_cpufreq_set_target(struct cpufreq_policy *policy,
+> +				       unsigned int index)
+> +{
+> +	struct cpufreq_frequency_table *tbl = policy->freq_table + index;
+> +
+> +	on_each_cpu_mask(policy->cpus, set_cpu_ndiv, tbl, true);
 
-> > +static int lt9611_mipi_input_digital(struct lt9611 *lt9611,
-> > +				     const struct drm_display_mode *mode)
-> > +{
-> > +	struct reg_sequence reg_cfg[] = {
-> > +		{ 0x8300, LT9611_4LANES },
-> > +		{ 0x830a, 0x00 },
-> > +		{ 0x824f, 0x80 },
-> > +		{ 0x8250, 0x10 },
-> > +		{ 0x8302, 0x0a },
-> > +		{ 0x8306, 0x0a },
-> > +	};
-> > +
-> > +	if (mode->hdisplay == 3840)
-> > +		reg_cfg[1].def = 0x03;
-> Please check if some of these constants be replaced by something readable
-> from the datasheet.
-> Same goes for other places where constants are used.
+I am still a bit confused. While setting the frequency you are calling this
+routine for each CPU of the policy (cluster). Does that mean that CPUs within a
+cluster can actually run at different frequencies at any given point of time ?
 
-The problem is that the datasheet I have doesn't define register names.
-Worse some of them are not even documented. I did give it a shot to
-define these, but gave up half way due to lack on inventive names :(
+If cpufreq terms, a cpufreq policy represents a group of CPUs that change
+frequency together, i.e. they share the clk line. If all CPUs in your system can
+do DVFS separately, then you must have policy per CPU, instead of cluster.
 
-I would like to keep the registers and replace them in future if we get
-a good spec from vendor.. or i can define REG_1...REG_N!
+> +static void tegra194_cpufreq_free_resources(void)
+> +{
+> +	flush_workqueue(read_counters_wq);
 
-> > +static void lt9611_mipi_video_setup(struct lt9611 *lt9611,
-> > +				    const struct drm_display_mode *mode)
-> > +{
-> > +	u32 h_total, h_act, hpw, hfp, hss;
-> > +	u32 v_total, v_act, vpw, vfp, vss;
-> > +
-> > +	h_total = mode->htotal;
-> > +	v_total = mode->vtotal;
-> > +
-> > +	h_act = mode->hdisplay;
-> > +	hpw = mode->hsync_end - mode->hsync_start;
-> > +	hfp = mode->hsync_start - mode->hdisplay;
-> > +	hss = (mode->hsync_end - mode->hsync_start) +
-> > +	      (mode->htotal - mode->hsync_end);
-> > +
-> > +	v_act = mode->vdisplay;
-> > +	vpw = mode->vsync_end - mode->vsync_start;
-> > +	vfp = mode->vsync_start - mode->vdisplay;
-> > +	vss = (mode->vsync_end - mode->vsync_start) +
-> > +	      (mode->vtotal - mode->vsync_end);
-> Using the names from display_timings would make this easier to recognize
-> for the reader.
-> Examples:
-> vfp versus vfront_porch
-> vss versus vsync_len
-> 
-> I do not say the names from display_timing are much better, only that they
-> are more recognizeable.
+Why is this required exactly? I see that you add the work request and
+immediately flush it, then why would you need to do this separately ?
 
-okay will do
+> +	destroy_workqueue(read_counters_wq);
+> +}
+> +
+> +static struct cpufreq_frequency_table *
+> +init_freq_table(struct platform_device *pdev, struct tegra_bpmp *bpmp,
+> +		unsigned int cluster_id)
+> +{
+> +	struct cpufreq_frequency_table *freq_table;
+> +	struct mrq_cpu_ndiv_limits_response resp;
+> +	unsigned int num_freqs, ndiv, delta_ndiv;
+> +	struct mrq_cpu_ndiv_limits_request req;
+> +	struct tegra_bpmp_message msg;
+> +	u16 freq_table_step_size;
+> +	int err, index;
+> +
+> +	memset(&req, 0, sizeof(req));
+> +	req.cluster_id = cluster_id;
+> +
+> +	memset(&msg, 0, sizeof(msg));
+> +	msg.mrq = MRQ_CPU_NDIV_LIMITS;
+> +	msg.tx.data = &req;
+> +	msg.tx.size = sizeof(req);
+> +	msg.rx.data = &resp;
+> +	msg.rx.size = sizeof(resp);
+> +
+> +	err = tegra_bpmp_transfer(bpmp, &msg);
 
-> > +static irqreturn_t lt9611_irq_thread_handler(int irq, void *dev_id)
-> > +{
-> > +	struct lt9611 *lt9611 = dev_id;
-> > +	unsigned int irq_flag0 = 0;
-> > +	unsigned int irq_flag3 = 0;
-> > +
-> > +	regmap_read(lt9611->regmap, 0x820f, &irq_flag3);
-> > +	regmap_read(lt9611->regmap, 0x820c, &irq_flag0);
-> > +
-> > +	pr_debug("%s() irq_flag0: %#x irq_flag3: %#x\n",
-> > +		 __func__, irq_flag0, irq_flag3);
-> debug artifact you can delete now?
+So the firmware can actually return different frequency tables for the clusters,
+right ? Else you could have received the table only once and used it for all the
+CPUs.
 
-Okay, will remove this and rest
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	/*
+> +	 * Make sure frequency table step is a multiple of mdiv to match
+> +	 * vhint table granularity.
+> +	 */
+> +	freq_table_step_size = resp.mdiv *
+> +			DIV_ROUND_UP(CPUFREQ_TBL_STEP_HZ, resp.ref_clk_hz);
+> +
+> +	dev_dbg(&pdev->dev, "cluster %d: frequency table step size: %d\n",
+> +		cluster_id, freq_table_step_size);
+> +
+> +	delta_ndiv = resp.ndiv_max - resp.ndiv_min;
+> +
+> +	if (unlikely(delta_ndiv == 0))
+> +		num_freqs = 1;
+> +	else
+> +		/* We store both ndiv_min and ndiv_max hence the +1 */
+> +		num_freqs = delta_ndiv / freq_table_step_size + 1;
+> +
+> +	num_freqs += (delta_ndiv % freq_table_step_size) ? 1 : 0;
+> +
+> +	freq_table = devm_kcalloc(&pdev->dev, num_freqs + 1,
+> +				  sizeof(*freq_table), GFP_KERNEL);
+> +	if (!freq_table)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for (index = 0, ndiv = resp.ndiv_min;
+> +			ndiv < resp.ndiv_max;
+> +			index++, ndiv += freq_table_step_size) {
+> +		freq_table[index].driver_data = ndiv;
+> +		freq_table[index].frequency = map_ndiv_to_freq(&resp, ndiv);
+> +	}
+> +
+> +	freq_table[index].driver_data = resp.ndiv_max;
+> +	freq_table[index++].frequency = map_ndiv_to_freq(&resp, resp.ndiv_max);
+> +	freq_table[index].frequency = CPUFREQ_TABLE_END;
+> +
+> +	return freq_table;
+> +}
 
-> 
-> > +
-> > +	 /* hpd changed low */
-> Drop extra space in indent of this comment and following comments as
-> well.
-
-Ok
-
-> > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> > +				enum drm_bridge_attach_flags flags)
-> > +{
-> > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> > +	int ret;
-> > +
-> > +	dev_dbg(lt9611->dev, "bridge attach\n");
-> > +
-> > +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR) {
-> > +		DRM_ERROR("Fix bridge driver to make connector optional!");
-> > +		return -EINVAL;
-> > +	}
-> Please fix bridge so connector creation is optional.
-> for new bridge driver this is mandatory.
-
-Can you elaborate what is means by fixing bridge here, what are the
-things that should be done and are expected for new bridge drivers
-
-> > +static const struct drm_bridge_funcs lt9611_bridge_funcs = {
-> > +	.attach = lt9611_bridge_attach,
-> > +	.detach = lt9611_bridge_detach,
-> > +	.mode_valid = lt9611_bridge_mode_valid,
-> > +	.enable = lt9611_bridge_enable,
-> > +	.disable = lt9611_bridge_disable,
-> > +	.post_disable = lt9611_bridge_post_disable,
-> > +	.mode_set = lt9611_bridge_mode_set,
-> 
-> Add relevant bridge functions - .get_edid, .detect looks like
-> candidates.
-> See other bridge drivers for inspiration.
-
-Any good examples?
 -- 
-~Vinod
+viresh
