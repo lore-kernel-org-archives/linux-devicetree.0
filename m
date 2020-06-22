@@ -7,73 +7,73 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F2DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 06:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7812CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 06:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC1625430
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 06:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AC825431
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 06:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mkRAbfJy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlT4vcr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgFVGvx (ORCPT
+        id S1731294AbgFVGxy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
+        Mon, 22 Jun 2020 02:53:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgFVGvw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 02:51:52 -0400
+        with ESMTP id S1726814AbgFVGxy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 02:53:54 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40706C061794
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 23:51:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g18so6355940wrm.2
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 23:51:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FCEC061794
+        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 23:53:54 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k6so2963857wrn.3
+        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 23:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=W5AE71tZZBH3wMZqXScLr5DwjRMl7db4uGp55HYU/Dg=;
-        b=mkRAbfJyRJ7KB0LHXsgpwG0CiAa/P/5/iO3acaUyyEjBJWz4t0BYUHyFFq16t71gpa
-         lq7DGrVrVA3x2kNPZibjjjqM3t/FUqaeo9Ebm3wAvV5NsH5JlMDBscU5KSy2NDXPFJx7
-         4pgDpFHbMgmOvNya9PPfnvDYgp75cBs3mvd/jObzGtoS9L6rQ2wM6dJO9YYIIgzSAMys
-         tT9fziU0OsjO9B546XMkNp+uDKFvERcbuA6vmbuE8x4WuEXnwFsTy4Cq2a36K5AJ4OuM
-         8u7tWgJ5Igilq3sBA50cAkCwvSKL1FU3ZLVdEtJ9wGF13SAO6KGJGaT9BzLMoVIT+o1p
-         4gfQ==
+        bh=3st1Xpy8PMIYJ29+AOCat9fQ6H15z9nbOwUnhMMLhQg=;
+        b=RlT4vcr6p8p3WhMwqdvdIiWm8cSpTritK3ynpnHlhdiSq1A63RYtWfur0SYx3CEgf8
+         zNEIP66840WXAZWesJhfhc1PHUSLX8nx5+pId5innSe9PWR8tUY9g2MswWSoGDAZAsk9
+         01UtfkJ4gJLz9dvM6yVDRaW4jqauOfwvj+HakP6osJRPnrrVHFiOuZy+wmFQXfamCSi/
+         BQADIpisPiVuSUmXgMkQ49PohawdreO4lpLyfGwVNBA6SHsHr4vYDJO3iaZkbtOmuD3J
+         Rc2jM9gSjz/u7aShV8GTzUFKE7g5yDNG6xB5NeJxf1hSWeOY4gLzMR5StHyk3QEuJUhV
+         cE9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=W5AE71tZZBH3wMZqXScLr5DwjRMl7db4uGp55HYU/Dg=;
-        b=GzF6LS3q/jqla+7I0M0Lxk3Smm7kJzv5hpiyWGdU1UZWBkodmorYoukTMUfD9o9lni
-         aauhp5AIOk8idIaiYt65bKYnyAEXT0QrrTbztz2DmZ+V8R4zh7jzKu6QOQ8n20gv9+xp
-         3XURev5Ui6jle6nwqwfhCw4Ad95AbapiSu1CEBESQ4ifgRW/nZGh1CqS+/kOBkqDCdMs
-         7TeGAOuODB7/UWd4q+Rv4AIcpg9+HENnUAT6SMUXljYYAWvoxyBYxGJQj6N5US66ARAK
-         2aWDZ2B6JE+rP6BD7wKw/76hKHnDj6nsAPz2VR5y4X1kU7Gob2WJpjrYb2BzmU2VUej7
-         grcw==
-X-Gm-Message-State: AOAM532wck31cv2v3nUV5rvyygUV4tp5PmDD2ConxALnAOhtUuc3lY14
-        1p0xk8Lqdu2Mw94/zh4u0kjoLg==
-X-Google-Smtp-Source: ABdhPJy2NI2zalF1V+ZM6SKNVjk0PGxNFAKbw2Rolxk072PMdRub9lrhpJE/fzmAZMk22FQG02nS+g==
-X-Received: by 2002:a5d:4d89:: with SMTP id b9mr18647943wru.210.1592808710687;
-        Sun, 21 Jun 2020 23:51:50 -0700 (PDT)
+        bh=3st1Xpy8PMIYJ29+AOCat9fQ6H15z9nbOwUnhMMLhQg=;
+        b=b7HMHlBKcTsBgJTHfcJbW0uMcemgAqBhEX4e3sony4LTZ7kxs+p5BfZmjR43xVGY9/
+         ey9/3/BtzSUVEwdj6A/0F+PXb/79eVcDnkp9e3nVam7nJpgoWPiFsBVVzmxc3/k4xzbo
+         A35iP1OXuCaRp7oqR8C8B7WA/EWUzTet4VWJHzwjDv5U911+iqxEGfgBHBmbehAjCAEC
+         Hf61663kGpW+Ivx2Qop5ctDcGG+jY9jOHeSb8iVSNd9C635E3T1LGzbimS4fn6No6x4T
+         mup7eUbEd3VEuaJ6BX1zcLAAFTH5F4re90ylrAWXp99IUc8bBwXvn1OR0piQCZdwLZ6M
+         OoDw==
+X-Gm-Message-State: AOAM5314Es9O/oGJIoIu3HKHBjZOeWu3d7kCL+QucZSfANCH4vEfIh4v
+        KDewjkLJmeyKXnxzde7n286p8CKoaR4=
+X-Google-Smtp-Source: ABdhPJx60bF1uC6l4ykc8vsYhgnhHXh7sN8AhZNQZCxssjwQToadbKxSJ0hyVFLyrrQsT9omwbuxYg==
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr17113215wru.309.1592808832730;
+        Sun, 21 Jun 2020 23:53:52 -0700 (PDT)
 Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 104sm16720609wrl.25.2020.06.21.23.51.49
+        by smtp.gmail.com with ESMTPSA id p9sm14749735wma.48.2020.06.21.23.53.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 23:51:49 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 07:51:48 +0100
+        Sun, 21 Jun 2020 23:53:52 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 07:53:50 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Lubomir Rintel <lkundrak@v3.sk>
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] mfd: ene-kb3930: Add driver for ENE KB3930
- Embedded Controller
-Message-ID: <20200622065148.GM954398@dell>
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
+ Controller binding
+Message-ID: <20200622065350.GN954398@dell>
 References: <20200617110829.1036898-1-lkundrak@v3.sk>
- <20200617110829.1036898-3-lkundrak@v3.sk>
+ <20200617110829.1036898-2-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617110829.1036898-3-lkundrak@v3.sk>
+In-Reply-To: <20200617110829.1036898-2-lkundrak@v3.sk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -81,313 +81,87 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, 17 Jun 2020, Lubomir Rintel wrote:
 
-> This driver provides access to the EC RAM of said embedded controller
-> attached to the I2C bus as well as optionally supporting its slightly weird
-> power-off/restart protocol.
-> 
-> A particular implementation of the EC firmware can be identified by a
-> model byte. If this driver identifies the Dell Ariel platform, it
-> registers the appropriate cells.
+> Add binding document for the ENE KB3930 Embedded Controller.
 > 
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
 > ---
-> Changes since v3:
-> - Clarify that the power-off function is provided by this driver while
->   LEDS_ARIEL is necessary to drive the leds in Kconfig help text
-> - s/kb3930_power_off/kb3930_pm_power_off/, s/global_kb3930/kb3930_power_off/
-> - Don't fail with -EEXIST with more than one instance
-> - s/ret < 0/ret/ for devm_mfd_add_devices() return value
-> - Drop a \n between struct i2c_driver and module_i2c_driver()
+> Changes since v4:
+> - Collected Rob's Reviewed-by
 > 
-> Changes since v2:
-> - Sort the includes
-> - s/EC_MODEL_ID/EC_MODEL/
-> - Add a couple of clarifying comments
-> - Use #defines for values used in poweroff routine
-> - Remove priority from a restart notifier block
-> - s/priv/ddata/
-> - s/ec_ram/ram_regmap/ for the regmap name
-> - Fix the error handling when getting off gpios was not successful
-> - Remove a useless dev_info at the end of probe()
-> - Use i2c probe_new() callback, drop i2c_device_id
-> - Modify the logic in checking the model ID
-
-Much better.  Just a couple of nits to fix.
-
->  drivers/mfd/Kconfig      |  11 ++
->  drivers/mfd/Makefile     |   1 +
->  drivers/mfd/ene-kb3930.c | 211 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 223 insertions(+)
->  create mode 100644 drivers/mfd/ene-kb3930.c
+> Changes since v1:
+> - Addressed binding validation failure
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index a37d7d1713820..7569f1d1703e3 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -398,6 +398,17 @@ config MFD_DLN2
->  	  etc. must be enabled in order to use the functionality of
->  	  the device.
->  
-> +config MFD_ENE_KB3930
-> +	tristate "ENE KB3930 Embedded Controller support"
-
-What is "ENE"?
-
-> +	depends on I2C
-> +	depends on MACH_MMP3_DT || COMPILE_TEST
-> +	select MFD_CORE
-> +	help
-> +	  This adds support for the power-off functionality and access to
-> +	  the registers that control LEDS and USB port power on ENE KB3930
-> +	  Embedded Controller. To use the LED functionality LEDS_ARIEL must
-> +	  be enabled.
-> +
->  config MFD_EXYNOS_LPASS
->  	tristate "Samsung Exynos SoC Low Power Audio Subsystem"
->  	depends on ARCH_EXYNOS || COMPILE_TEST
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a6..11085a6968398 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
->  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
->  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
->  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
-> +obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
->  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
->  obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
->  
-> diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
+>  .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
 > new file mode 100644
-> index 0000000000000..75eced148ce53
+> index 0000000000000..005f5cb59ab12
 > --- /dev/null
-> +++ b/drivers/mfd/ene-kb3930.c
-> @@ -0,0 +1,211 @@
-> +// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-> +/*
-> + * ENE KB3930 Embedded Controller Driver
-> + *
-> + * Copyright (C) 2020 Lubomir Rintel
-> + */
+> +++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/ene-kb3930.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/reboot.h>
-> +#include <linux/regmap.h>
-> +
-> +/* I2C registers that are multiplexing access to the EC RAM. */
-> +enum {
-> +	EC_DATA_IN	= 0x00,
-> +	EC_RAM_OUT	= 0x80,
-> +	EC_RAM_IN	= 0x81,
-> +};
-> +
-> +/* EC RAM registers. */
-> +enum {
-> +	EC_MODEL	= 0x30,
-> +	EC_VERSION_MAJ	= 0x31,
-> +	EC_VERSION_MIN	= 0x32,
-> +};
-> +
-> +struct kb3930 {
-> +	struct i2c_client *client;
-> +	struct regmap *ram_regmap;
-> +	struct gpio_descs *off_gpios;
-> +};
-> +
-> +struct kb3930 *kb3930_power_off;
-> +
-> +#define EC_GPIO_WAVE		0
-> +#define EC_GPIO_OFF_MODE	1
-> +
-> +#define EC_OFF_MODE_REBOOT	0
-> +#define EC_OFF_MODE_POWER	1
-> +
-> +static void kb3930_off(struct kb3930 *ddata, int off_mode)
-> +{
-> +	gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_OFF_MODE],
-> +			       off_mode);
-> +
-> +	/*
-> +	 * The EC initiates a shutdown when it detects a 10 MHz wave, inspecting the
-> +	 * other GPIO pin to decide whether it's supposed to turn the power off or
-> +	 * reset the board.
-> +	 */
-> +	while (1) {
-> +		mdelay(50);
-> +		gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_WAVE], 0);
-> +		mdelay(50);
-> +		gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_WAVE], 1);
-> +	}
+> +title: ENE KB3930 Embedded Controller bindings
 
-The comment describes what the EC is expecting, but says nothing about
-what these lines of code do, or why they're required.
+Please expand ENE.
 
-> +}
-> +
-> +static int kb3930_restart(struct notifier_block *this,
-> +			  unsigned long mode, void *cmd)
-> +{
-> +	kb3930_off(kb3930_power_off, EC_OFF_MODE_REBOOT);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static void kb3930_pm_power_off(void)
-> +{
-> +	kb3930_off(kb3930_power_off, EC_OFF_MODE_POWER);
-> +}
-> +
-> +static struct notifier_block kb3930_restart_nb = {
-> +	.notifier_call = kb3930_restart,
-> +};
-> +
-> +static const struct mfd_cell ariel_ec_cells[] = {
-> +	{ .name = "dell-wyse-ariel-led", },
-> +	{ .name = "dell-wyse-ariel-power", },
-> +};
-> +
-> +static int kb3930_ec_ram_reg_write(void *context, unsigned int reg,
-> +				   unsigned int val)
-> +{
-> +	struct kb3930 *ddata = context;
-> +
-> +	return i2c_smbus_write_word_data(ddata->client, EC_RAM_OUT,
-> +					 (val << 8) | reg);
-> +}
-> +
-> +static int kb3930_ec_ram_reg_read(void *context, unsigned int reg,
-> +				  unsigned int *val)
-> +{
-> +	struct kb3930 *ddata = context;
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_word_data(ddata->client, EC_RAM_IN, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_read_word_data(ddata->client, EC_DATA_IN);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = ret >> 8;
-> +	return 0;
-> +}
-> +
-> +static const struct regmap_config kb3930_ram_regmap_config = {
-> +	.name = "ec_ram",
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.reg_stride = 1,
-> +	.max_register = 0xff,
-> +	.reg_write = kb3930_ec_ram_reg_write,
-> +	.reg_read = kb3930_ec_ram_reg_read,
-> +	.fast_io = false,
-> +};
-> +
-> +static int kb3930_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct kb3930 *ddata;
-> +	unsigned int model;
-> +	int ret;
-> +
-> +	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-> +	if (!ddata)
-> +		return -ENOMEM;
-> +
-> +	kb3930_power_off = ddata;
-> +	ddata->client = client;
-> +	i2c_set_clientdata(client, ddata);
-> +
-> +	ddata->ram_regmap = devm_regmap_init(dev, NULL, ddata,
-> +					     &kb3930_ram_regmap_config);
-> +	if (IS_ERR(ddata->ram_regmap))
-> +		return PTR_ERR(ddata->ram_regmap);
-> +
-> +	ret = regmap_read(ddata->ram_regmap, EC_MODEL, &model);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Currently we only support the cells present on Dell Ariel model. */
-> +	if (model != 'J') {
-> +		dev_err(dev, "unknown board model: %02x\n", model);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* These are the cells valid for model == 'J' only. */
+> +description: |
+> +  This binding describes the ENE KB3930 Embedded Controller attached to a
+> +  I2C bus.
 
-The previous comment makes this superfluous.
+Nit: "an I2C bus"
 
-> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
-> +				   ariel_ec_cells,
-> +				   ARRAY_SIZE(ariel_ec_cells),
-> +				   NULL, 0, NULL);
-> +	if (ret)
-> +		return ret;
+> +maintainers:
+> +  - Lubomir Rintel <lkundrak@v3.sk>
 > +
-> +	if (of_property_read_bool(np, "system-power-controller")) {
-> +		ddata->off_gpios =
-> +			devm_gpiod_get_array_optional(dev, "off", GPIOD_IN);
-> +		if (IS_ERR(ddata->off_gpios))
-> +			return PTR_ERR(ddata->off_gpios);
-> +		if (ddata->off_gpios->ndescs < 2) {
-> +			dev_err(dev, "invalid off-gpios property\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-
-'\n' here.
-
-> +	if (ddata->off_gpios) {
-> +		register_restart_handler(&kb3930_restart_nb);
-> +		if (pm_power_off == NULL)
-
-if (!pm_power_off)
-
-> +			pm_power_off = kb3930_pm_power_off;
-> +	}
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
+> +      - const: ene,kb3930
+> +  reg:
+> +    maxItems: 1
 > +
-> +	return 0;
-> +}
+> +  off-gpios:
+> +    description: GPIO used with the shutdown protocol on Ariel
+> +    maxItems: 2
 > +
-> +static int kb3930_remove(struct i2c_client *client)
-> +{
-> +	struct kb3930 *ddata = i2c_get_clientdata(client);
+> +  system-power-controller: true
 > +
-> +	if (ddata->off_gpios) {
-> +		if (pm_power_off == kb3930_pm_power_off)
-> +			pm_power_off = NULL;
-> +		unregister_restart_handler(&kb3930_restart_nb);
-> +	}
-> +	kb3930_power_off = NULL;
+> +required:
+> +  - compatible
+> +  - reg
 > +
-> +	return 0;
-> +}
+> +additionalProperties: false
 > +
-> +static const struct of_device_id kb3930_dt_ids[] = {
-> +	{ .compatible = "ene,kb3930" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, kb3930_dt_ids);
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
 > +
-> +static struct i2c_driver kb3930_driver = {
-> +	.probe_new = kb3930_probe,
-> +	.remove = kb3930_remove,
-> +	.driver = {
-> +		.name = "ene-kb3930",
-> +		.of_match_table = of_match_ptr(kb3930_dt_ids),
-> +	},
-> +};
-> +module_i2c_driver(kb3930_driver);
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
 > +
-> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-> +MODULE_DESCRIPTION("ENE KB3930 Embedded Controller Driver");
-> +MODULE_LICENSE("Dual BSD/GPL");
+> +      embedded-controller@58 {
+> +        compatible = "dell,wyse-ariel-ec", "ene,kb3930";
+> +        reg = <0x58>;
+> +        system-power-controller;
+> +
+> +        off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
+> +                    <&gpio 127 GPIO_ACTIVE_HIGH>;
+> +      };
+> +    };
+> +
+> +...
 
 -- 
 Lee Jones [李琼斯]
