@@ -2,59 +2,55 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7877DC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB346C433E2
 	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 15:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E347720732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 15:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E48520732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 15:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="dLDFsdNE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ra9tnjuW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgFVPSn (ORCPT
+        id S1729500AbgFVPSo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 11:18:43 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:21953 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729462AbgFVPSm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 11:18:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1592839117;
+        Mon, 22 Jun 2020 11:18:44 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.160]:14873 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729416AbgFVPSh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 11:18:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1592839114;
         s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=eUybk80IehW1UzAjbTnyoIiCZjoRefk+5Fnl2dnnB/0=;
-        b=dLDFsdNE26KSiHN4HyWxKF8TX+r6x0UzNaDmXBM+UdVL0a+hv+sOBpwkBr6p3s5e8G
-        bq6Kl0uodSfZw0xSbY9tFuuozunnHS5nxcj/UlfFaXhShz+JEJo/FwuzUC6oOxZ7gfSE
-        +6NPfFq+nXUNEQtjc0K2ERpErmV1l26U5OP7CEqT4YhvVKV6z3xbmqQmkgzdgBgQ7g4a
-        Hx2hjpjJC3YOCr3FWPbBBodboQIsuiZsSstc+h3kXjCWqmck2r4rdkWl0dBteFOnA1VB
-        0J/KO/vS2N1qcw/9eNzcPuK9Ul6rVyosJRIbMMpQ67O3Rx6ZALyXVmV09GB8MobiJQVP
-        LSrQ==
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=fJli+iBRk/tOBUvTn/eRnpt+UynUZbK5fCjHy9r/Wl4=;
+        b=ra9tnjuWrRdPzboiM9rO5FCm8dKf2ndhFBfdNksJsw2UX3HQDth9vA4SxtTuVEB9Tm
+        9quOgfwAPrEVJ/BJ/i1QLDSvfwfAlBSNC1lHjUngseo0ZoAmAQmoqroBgHqfX2m1JKsk
+        MycPFQI9L6zUoqLC9z/uLEsdzzj34Y7ivO5we171s6Q+rQFLRVgUjaT4zY9c7PZOy1Iv
+        OrWkrCYel2PSYlum7eo60cC0xVf9K/UBwDXQNepJJ5xpUpOrk79bhNdX8jWDmsCk4mDc
+        oCiIGANuvz81lpzMetxV1o8HQbx5wkkDpStZM0tVj7tirebG9Q5AlDpDfePmjUudsMJc
+        HQbw==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6OIUPH"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.10.4 DYNA|AUTH)
-        with ESMTPSA id 6005e9w5MFIY5Xz
+        with ESMTPSA id 6005e9w5MFIW5Xi
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Mon, 22 Jun 2020 17:18:34 +0200 (CEST)
+        Mon, 22 Jun 2020 17:18:32 +0200 (CEST)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         ~postmarketos/upstreaming@lists.sr.ht,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Michael Srba <michael.srba@seznam.cz>
-Subject: [PATCH 4/4] arm64: dts: qcom: msm8916-samsung-a2015: Add accelerometer/magnetometer
-Date:   Mon, 22 Jun 2020 17:17:51 +0200
-Message-Id: <20200622151751.408995-5-stephan@gerhold.net>
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH 0/4] Pinctrl cleanup for MSM8916, add sensors for samsung-a2015
+Date:   Mon, 22 Jun 2020 17:17:47 +0200
+Message-Id: <20200622151751.408995-1-stephan@gerhold.net>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622151751.408995-1-stephan@gerhold.net>
-References: <20200622151751.408995-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -62,103 +58,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A3U/A5U both use a Bosch BMC150 accelerometer/magnetometer combo.
-The chip provides two separate I2C devices for the accelerometer
-and magnetometer that are already supported by the bmc150-accel
-and bmc150-magn driver.
+This patch sets prepares for adding the accelerometer/magnetometer used
+in msm8916-samsung-a2015 by:
 
-The only difference between A3U/A5U is the way the sensor is
-mounted on the mainboard - set the mount-matrix in the
-device-specific device tree part to handle that difference.
+  1. Cleaning up existing pinctrl configurations
+     (Bjorn recently suggested using a simpler form)
+  2. Restoring the minimal drive strength for the I2C pins by default
+     (The higher drive strength is only set for apq8016-sbc)
 
-Co-developed-by: Michael Srba <michael.srba@seznam.cz>
-Signed-off-by: Michael Srba <michael.srba@seznam.cz>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- .../qcom/msm8916-samsung-a2015-common.dtsi    | 27 +++++++++++++++++++
- .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts |  6 +++++
- .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts |  6 +++++
- 3 files changed, 39 insertions(+)
+And finally the accelerometer/magnetometer is added to the
+msm8916-samsung-a2015 device tree.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index 58485d055241..a0c00d9d62c4 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -167,6 +167,25 @@ muic: sm5502@25 {
- 	};
- };
- 
-+&blsp_i2c2 {
-+	status = "okay";
-+
-+	accelerometer: accelerometer@10 {
-+		compatible = "bosch,bmc150_accel";
-+		reg = <0x10>;
-+		interrupt-parent = <&msmgpio>;
-+		interrupts = <115 IRQ_TYPE_EDGE_RISING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&accel_int_default>;
-+	};
-+
-+	magnetometer@12 {
-+		compatible = "bosch,bmc150_magn";
-+		reg = <0x12>;
-+	};
-+};
-+
- &spmi_bus {
- 	pm8916@0 {
- 		pon@800 {
-@@ -294,6 +313,14 @@ l18 {
- };
- 
- &msmgpio {
-+	accel_int_default: accel-int-default {
-+		pins = "gpio115";
-+		function = "gpio";
-+
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
- 	gpio_keys_default: gpio-keys-default {
- 		pins = "gpio107", "gpio109";
- 		function = "gpio";
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-index 33160a3687ce..410c7d199f96 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
-@@ -22,6 +22,12 @@ reg_panel_vdd3: regulator-panel-vdd3 {
- 	};
- };
- 
-+&accelerometer {
-+	mount-matrix = "0", "1", "0",
-+		       "1", "0", "0",
-+		       "0", "0", "1";
-+};
-+
- &dsi0 {
- 	panel@0 {
- 		reg = <0>;
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
-index e4b6fa18ca25..e39c04d977c2 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dts
-@@ -9,6 +9,12 @@ / {
- 	compatible = "samsung,a5u-eur", "qcom,msm8916";
- };
- 
-+&accelerometer {
-+	mount-matrix = "-1", "0", "0",
-+			"0", "1", "0",
-+			"0", "0", "1";
-+};
-+
- &blsp_i2c5 {
- 	status = "okay";
- 
+Stephan Gerhold (4):
+  arm64: dts: msm8916-samsung/longcheer: Move pinctrl/regulators to end
+    of file
+  arm64: dts: qcom: msm8916: Simplify pinctrl configuration
+  arm64: dts: qcom: msm8916: Use higher I2C drive-strength only on
+    DB410c
+  arm64: dts: qcom: msm8916-samsung-a2015: Add
+    accelerometer/magnetometer
+
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 187 ++--
+ .../boot/dts/qcom/msm8916-longcheer-l8150.dts |  42 +-
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi    | 861 +++++++-----------
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 150 +--
+ .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts |  20 +-
+ .../boot/dts/qcom/msm8916-samsung-a5u-eur.dts |  20 +-
+ 6 files changed, 508 insertions(+), 772 deletions(-)
+
 -- 
 2.27.0
 
