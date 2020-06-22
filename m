@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79A2C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957F5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 845DF2083E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE79208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:58:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfOLAiBa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPOIKQ18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgFVH6N (ORCPT
+        id S1727870AbgFVH61 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:58:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
+        Mon, 22 Jun 2020 03:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727870AbgFVH6M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:58:12 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C117BC061794;
-        Mon, 22 Jun 2020 00:58:11 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id h28so655482edz.0;
-        Mon, 22 Jun 2020 00:58:11 -0700 (PDT)
+        with ESMTP id S1727769AbgFVH6X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:58:23 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33FEC061794;
+        Mon, 22 Jun 2020 00:58:22 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id z17so919193edr.9;
+        Mon, 22 Jun 2020 00:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T9nXQS24IzdAIA5rd/n9W4KYIMOEsi4rl6eO3TNMu0Y=;
-        b=tfOLAiBau9aznFJa/bKhu0XtIQw1lmugYp/dimpgoc6KmzBe92ueJjdFZpvjELA4Nm
-         ZTqlA5itENZuXZuUkWYY9fa2lsS+XPU3Vhn/YyJEwQFT8p4s8nK9AT6ofvulf1bjVgbk
-         lY+FVeWoG/D9Vqq05R9aQUKleI6pejnbMfXZncnRlM5Tg+EL9RO3w4OWSsg5NE9Af05V
-         Be6ShGVCjqff//d+WRulHapqUPUM5I4ukxOPCRic8Pi1e7yFTgHm8JG+TQgDvMwr0ggN
-         M72TIK6L9HMwnVhBmoyn389e8haItIkVUxtyPETfswW2s3tZoGw5M490/2gyc49nm1ZA
-         l/Xw==
+        bh=WBZuUHUmNAJyQJ0TZGyLculNA255/tziYvFb0kPpSto=;
+        b=jPOIKQ18ZUyOpB9JY4EhGf8gMpXTp20uWD1PGXKv/AlBLPvsvJ827/6CBP/NZfPVGq
+         JZCjPBiXg4YsG3X+dbM94qXwbhA5XHdlbPzGLd0yVBsMGACyLdC1kgzoEBbA3/w2Xfjw
+         r2N8lHW3Y5u9laa/sBYPp26WoF93IemSlTIjQygP1zh3EQHpDCj5lKU+/T4HYPfdZD7s
+         IQHsQ01FYdrA7ECXwZd7SZ1qmoANbMElM4vmrNImpBEpw+aezh3SPjlOnqB3MP0eXRhp
+         Ll6XxzrtdknIoHNrCCyIXFe5MClyvgnFYqTisOHDe6x12BVFCf9YB/q7e9ErVuQJiKfo
+         6SDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T9nXQS24IzdAIA5rd/n9W4KYIMOEsi4rl6eO3TNMu0Y=;
-        b=SewtVCwA8ZsCTpm3Zbc0eOJhcPFxE0YN7ltPjgF8PLhRHni3FVlQZCMN4x7WDQxrQu
-         PdYl0G25A+LVvYZHY+9yqE2R6CHc6cGPKzXxl9Uy/6KGC6B+olB6BHeTMgiQ0laZ8og/
-         DjUbXoAJZW5WbgBzXfkAlD/NUetYJVLg6SUpBftOpiQB8PVZllofp8yxmv6Gs1Ulbiu7
-         vPXsWb2gNdyURylcGCJn7+vZgDpKmvo/fV7BTL8xpLcgPHM1k+wnJrvzR5Hfvp4aTGRf
-         sMsgGTVXLtke8f/TMX4CAQtZvLbrimLhat78Hv1W9t6egDWUW8VLijmjh1TbuRAIoy4z
-         FdBg==
-X-Gm-Message-State: AOAM532vHfXySoFg2Nx8234SvjLcrRbWmGulAKZPK5KLwtl/Dg24dhqD
-        vGvff71QFhaehw2OOmGNz7A=
-X-Google-Smtp-Source: ABdhPJzGULkHG1G+P4LRMpZqGh9LrhcAVvZARST280Y+WbmTQXXRm5mm8RPLyaHGxnIkAFNIy+kw9A==
-X-Received: by 2002:a05:6402:128b:: with SMTP id w11mr15075087edv.377.1592812690495;
-        Mon, 22 Jun 2020 00:58:10 -0700 (PDT)
+        bh=WBZuUHUmNAJyQJ0TZGyLculNA255/tziYvFb0kPpSto=;
+        b=UAi/2TBGJI94NHm4GA5JVg+W+JAlYcCTHTIZoN5S36+0R5w4D9d2hknMUkCdh3nzZ8
+         o/svocDuHfZ3rWZNDkkbbIP8P225eNRWjpjjrvVGeOEjAUnh4ByjJnebNaJiVN5OSZi5
+         Gs09LqM8ntCa/6CXpqj2u5a23zU+gqCazfoDSi/5CjBTBASYLVuJIKJtxAwVeuzGEp5n
+         p5AQDircz/XAdVT08auSHDwMixyNIxWfD77IieCuK/9h+WxtuUDlWN66jNx6w/6Y6q6d
+         AGP+aO8rxI95SR3JIqojfdXndHCZX8G6bttH4o8YAiNSxBg7JV5sMeKxSFEp1YAb+wrk
+         r5aw==
+X-Gm-Message-State: AOAM533VgOWpZsYHitMyimsC70o15IjPDLp2f4fX+p+/uHhYX/i3fLal
+        NSQ5f/fqTojIb5jQAB5QsOQ=
+X-Google-Smtp-Source: ABdhPJx2ZT0XalvkbwuHx5OW7iVtdcQEnpB5ecmMuTwktzJcPlCzVXTmCb1qDfW/gRB4V+Ukr/8o8g==
+X-Received: by 2002:a50:e387:: with SMTP id b7mr15252439edm.190.1592812701722;
+        Mon, 22 Jun 2020 00:58:21 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id b4sm10511606ejp.40.2020.06.22.00.58.09
+        by smtp.googlemail.com with ESMTPSA id b4sm10511606ejp.40.2020.06.22.00.58.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:58:10 -0700 (PDT)
+        Mon, 22 Jun 2020 00:58:21 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -73,10 +73,11 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 5/8] arm64: dts: qcom: pm660(l): Add base dts files
-Date:   Mon, 22 Jun 2020 09:57:43 +0200
-Message-Id: <20200622075749.21925-6-konradybcio@gmail.com>
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Martin Botka <martin.botka1@gmail.com>
+Subject: [PATCH v2 8/8] arm64: dts: qcom: Add support for Sony Xperia 10/10 Plus (Ganges platform)
+Date:   Mon, 22 Jun 2020 09:57:46 +0200
+Message-Id: <20200622075749.21925-9-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200622075749.21925-1-konradybcio@gmail.com>
 References: <20200622075749.21925-1-konradybcio@gmail.com>
@@ -87,135 +88,149 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add base DTS files for pm660(l) along with GPIOs, power-on and
-rtc nodes.
+From: Martin Botka <martin.botka1@gmail.com>
 
+Add device tree support for the Sony Xperia 10 and 10
+Plus smartphones. They are all based on the Sony Ganges
+platform (sdm630/636) and share a lot of common code.
+The differences are really minor, so a Ganges-common DTSI
+has been created to reduce clutter.
+
+10 - Kirin
+10 Plus - Mermaid
+
+This platform is based on SoMC Nile, but there are some
+major differences when it comes to pin configuration and
+panel setup (among others).
+
+The boards currently support:
+* Screen console
+* SDHCI
+* I2C
+* pstore log dump
+* GPIO keys
+* PSCI idle states
+
+Signed-off-by: Martin Botka <martin.botka1@gmail.com>
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Tested-by: Martin Botka <martin.botka1@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/pm660.dtsi  | 60 ++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/pm660l.dtsi | 46 +++++++++++++++++++++
- 2 files changed, 106 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/pm660.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/pm660l.dtsi
+ arch/arm64/boot/dts/qcom/Makefile             |  2 +
+ .../qcom/sdm630-sony-xperia-ganges-kirin.dts  | 13 ++++++
+ .../dts/qcom/sdm630-sony-xperia-ganges.dtsi   | 40 +++++++++++++++++++
+ .../sdm636-sony-xperia-ganges-mermaid.dts     | 20 ++++++++++
+ 4 files changed, 75 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
 
-diff --git a/arch/arm64/boot/dts/qcom/pm660.dtsi b/arch/arm64/boot/dts/qcom/pm660.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 1cad7cb07574..c98bafe03a96 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -16,9 +16,11 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-ganges-kirin.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm636-sony-xperia-ganges-mermaid.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
 new file mode 100644
-index 000000000000..041f45264255
+index 000000000000..246710a01046
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pm660.dtsi
-@@ -0,0 +1,60 @@
++++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
+@@ -0,0 +1,13 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +/*
-+ * Copyright (c) 2020, Konrad Dybcio
++ * Copyright (c) 2020, Martin Botka
 + */
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/spmi/spmi.h>
-+#include <dt-bindings/input/linux-event-codes.h>
++/dts-v1/;
 +
-+&spmi_bus {
++#include "sdm630-sony-xperia-ganges.dtsi"
 +
-+	pmic@0 {
-+		compatible = "qcom,pm660", "qcom,spmi-pmic";
-+		reg = <0x0 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rtc@6000 {
-+			compatible = "qcom,pm8941-rtc";
-+			reg = <0x6000>, <0x6100>;
-+			reg-names = "rtc", "alarm";
-+			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-+		};
-+
-+		pon: pon@800 {
-+			compatible = "qcom,pm8916-pon";
-+
-+			reg = <0x800>;
-+
-+			pwrkey {
-+				compatible = "qcom,pm8941-pwrkey";
-+				interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
-+				debounce = <15625>;
-+				bias-pull-up;
-+				linux,code = <KEY_POWER>;
-+			};
-+
-+		};
-+
-+		pm660_gpios: gpios@c000 {
-+			compatible = "qcom,pm660-gpio";
-+			reg = <0xc000>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
-+				     <0 0xc1 0 IRQ_TYPE_NONE>,
-+				     <0 0xc2 0 IRQ_TYPE_NONE>,
-+				     <0 0xc3 0 IRQ_TYPE_NONE>,
-+				     <0 0xc4 0 IRQ_TYPE_NONE>,
-+				     <0 0xc5 0 IRQ_TYPE_NONE>,
-+				     <0 0xc6 0 IRQ_TYPE_NONE>,
-+				     <0 0xc7 0 IRQ_TYPE_NONE>,
-+				     <0 0xc8 0 IRQ_TYPE_NONE>,
-+				     <0 0xc9 0 IRQ_TYPE_NONE>,
-+				     <0 0xca 0 IRQ_TYPE_NONE>,
-+				     <0 0xcb 0 IRQ_TYPE_NONE>,
-+				     <0 0xcc 0 IRQ_TYPE_NONE>;
-+		};
-+	};
++/ {
++	model = "SoMC Kirin-RoW";
++	compatible = "sony,kirin-row", "qcom,sdm630", "qcom,sdm630-mtp";
 +};
-diff --git a/arch/arm64/boot/dts/qcom/pm660l.dtsi b/arch/arm64/boot/dts/qcom/pm660l.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
 new file mode 100644
-index 000000000000..5e0f1a6e3966
+index 000000000000..ea051b3d14b8
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pm660l.dtsi
-@@ -0,0 +1,46 @@
++++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
+@@ -0,0 +1,40 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +/*
-+ * Copyright (c) 2020, Konrad Dybcio
++ * Copyright (c) 2020, Martin Botka
 + */
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/spmi/spmi.h>
-+#include <dt-bindings/input/linux-event-codes.h>
++/dts-v1/;
 +
-+&spmi_bus {
++/* Ganges is very similar to Nile, but
++ * there are some differences that will need
++ * to be addresed when more peripherals are
++ * enabled upstream. Hence the separate DTSI.
++ */
++#include "sdm630-sony-xperia-nile.dtsi"
 +
-+	pmic@2 {
-+		compatible = "qcom,pm660l", "qcom,spmi-pmic";
-+		reg = <0x2 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pm660l_gpios: gpios@c000 {
-+			compatible = "qcom,pm660l-gpio", "qcom,spmi-gpio";
-+			reg = <0xc000>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			#interrupt-cells = <2>;
-+			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xca 0x0 IRQ_TYPE_NONE>,
-+					 <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
++/ {
++	chosen {
++		framebuffer@9d400000 {
++			reg = <0 0x9d400000 0 (2520 * 1080 * 4)>;
++			height = <2520>;
 +		};
 +	};
 +
-+	pmic@3 {
-+		compatible = "qcom,pm660l", "qcom,spmi-pmic";
-+		reg = <0x3 SPMI_USID>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
++	soc {
 +
++		i2c@c175000 {
++			status = "okay";
++
++			/* Novatek touchscreen */
++		};
++
++		/* Yes, this is intentional.
++		 * Ganges devices only use gpio-keys for
++		 * Volume Down, but currently there's an
++		 * issue with it that has to be resolved.
++		 * Until then, let's not make the kernel panic
++		 */
++		/delete-node/ gpio-keys;
++	};
++
++};
+diff --git a/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
+new file mode 100644
+index 000000000000..96b7782d58de
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2020, Martin Botka
++ */
++
++/dts-v1/;
++
++/* Mermaid uses sdm636, but it's different ever so slightly
++ * that we can ignore it for the time being. Sony also commonizes
++ * the Ganges platform as a whole in downstream kernels.
++ */
++#include "sdm630-sony-xperia-ganges.dtsi"
++
++/ {
++	model = "SoMC Mermaid-RoW";
++	compatible = "sony,mermaid-row", "qcom,sdm636", "qcom,sdm636-mtp";
++
++	qcom,msm-id = <345 0>;
++	qcom,pmic-id = <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00 0x00 0x1001b 0x102001a 0x00 0x00>;
++};
 -- 
 2.27.0
 
