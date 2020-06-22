@@ -2,81 +2,112 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3D3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAC5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7E620716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6E020716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgFVMcW (ORCPT
+        id S1728177AbgFVMch (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:32:22 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40265 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgFVMcV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:32:21 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s13so12887887otd.7;
-        Mon, 22 Jun 2020 05:32:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ibxUnRRCECiCbSmDxzdIIXocGNM6i8JlycCHedFdcTI=;
-        b=pxmMi1G8yNT5kXMHnm/oaaCn25zK3wLRRFwqk7EMg3d8Ay9SC02BdHjxhM5liwzEzK
-         MYCqftsb0h/yqgVwfS7BlELWKkUeFUMJXyi6lkH0VKvcjhCtxyj8raQwx8984/p6RVmn
-         wU1qcbeBgj2V7caO9pg9sMVP0hVw2ccu7gT9SwI+h4fa9goFfbpJwaiBw9DauySXvyvu
-         KKT8QOG+B96K/9niG4R+gOnOdUljMcbCl8dT6MgipkBx0b7lEgynHuxD45HY+AvFxzGX
-         Oda750jHv01NDf7arZvSiY8k+yD1vwJXWFPQ6v3fBwUdV1CbsYWLhAfHrsNG5GtXD34/
-         WWaw==
-X-Gm-Message-State: AOAM532TZuyLMnnUVt9TynD4LERSi0OOm+900YcSrg+O1gMon4IsgnrY
-        4m3RlNePXDK9IfxM5xthHnn95ww5Wf7tbBQA2p0=
-X-Google-Smtp-Source: ABdhPJzIeiFPEgRt94Dd9Zt37v6KnXnM7WPcdiPuluhCOlGqTR5Pc0TZnvyL2WxJTIMQFFHCC0xL30KawJ1LQKjLg9M=
-X-Received: by 2002:a9d:62c2:: with SMTP id z2mr13406400otk.145.1592829140448;
- Mon, 22 Jun 2020 05:32:20 -0700 (PDT)
+        Mon, 22 Jun 2020 08:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728044AbgFVMch (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:32:37 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC87C061794;
+        Mon, 22 Jun 2020 05:32:37 -0700 (PDT)
+Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt@linutronix.de>)
+        id 1jnLco-00006V-Jv; Mon, 22 Jun 2020 14:32:34 +0200
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 6/9] net: dsa: hellcreek: Add debugging mechanisms
+In-Reply-To: <20200619134218.GD304147@lunn.ch>
+References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-7-kurt@linutronix.de> <20200618173458.GH240559@lunn.ch> <875zbnqwo2.fsf@kurt> <20200619134218.GD304147@lunn.ch>
+Date:   Mon, 22 Jun 2020 14:32:28 +0200
+Message-ID: <87d05rth5v.fsf@kurt>
 MIME-Version: 1.0
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1591555267-21822-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1591555267-21822-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 22 Jun 2020 14:32:09 +0200
-Message-ID: <CAMuHMdWY=2YxxYX8pOCTzaH9q7-cNYpiL9mQhzwQK4C3NN+kqQ@mail.gmail.com>
-Subject: Re: [PATCH 05/11] arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0
- main board support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for HiHope RZ/G2M Rev.3.0/4.0 main board support based on
-> r8a774a1 SoC.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On Fri Jun 19 2020, Andrew Lunn wrote:
+>> > Are trace registers counters?
+>>=20
+>> No. The trace registers provide bits for error conditions and if packets
+>> have been dropped e.g. because of full queues or FCS errors, and so on.
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Is there some documentation somewhere? A better understanding of what
+> they can do might help figure out the correct API.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+No, not that I'm aware of.
 
-Gr{oetje,eeting}s,
+Actually there are a few more debugging mechanisms and features which
+should be exposed somehow. Here's the list:
 
-                        Geert
+ * Trace registers for the error conditions. This feature needs to be
+   configured for which ports should be traced
+ * Memory registers for indicating how many free page and meta pointers
+   are available (read-only)
+ * Limit registers for configuring:
+   * Maximum memory limit per port
+   * Reserved memory for critical traffic
+   * Background traffic rate
+   * Maximum queue depth
+ * Re-prioritization of packets based on the ether type (not mac address)
+ * Packet logging (-> retrieval of packet time stamps) based on port, traff=
+ic class and direction
+ * Queue tracking
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+What API would be useful for these mechanisms?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wpNwACgkQeSpbgcuY
+8KZw0Q//aX5+sEx9mWsmbYMxC3/HQPjHUjLpvOOOU3sXM8nFn7WBRn6T35TaNY1r
+4il/Bw40S9f+UYy2AAm7rmxPYpf7EGOWmyl1GnwmlfpVc6VOtUWIg8umTVd8TIC6
+6YdTLmwwtAdCbcGXJikcvd59EzzJ9n5G7NnQMI3OLQ/4h7SzIWYa4KkK1KT9jtFn
+7TLxfLJmPI/2VzmacqN8RrfjKUJxnHCDjTykaio4RWYhYwYMxVapebmz8Prdk6WY
+tpkYW2qkw6rWfi/mSfXURd7QWYxpiPHx8Is0I9QIDqcG2W7RsJgamKNE8MT9ehX/
+6D3YGOsXawpjQjzkrcp8rb5fIpdxrRBRJxK7iAHQS1FxA6OtNr7iGNyBFWVe8MM5
+Sdq7Rn5QNUzf4M9Vbn+OI0q5RsLTBP1xaGJHAcSPB+SB673rAC+apjVVVed2I4AP
+PnDJ20aGoVe1fZoovWx+fx/aC5nKejU42C0HJm0m5mx9OfJ3FcW8HxbXe/EAa9a8
+RIP65ZpAmqDDkBt/JeJ3UHdBWaA5ck7uTIZtwHFKhIbeB/QIe3vLQZn55Bf5WPe3
+O8ddQa54ox27rb5mUKHSi+1DoYWxDaa7Ple0LugktCxH9Zxied8mHd9IkqDeb9yy
+/B615DopQgEeG/cpKfqvZQJxFx4yaVi0DiLi4uAJpySXiJoTJns=
+=EEtE
+-----END PGP SIGNATURE-----
+--=-=-=--
