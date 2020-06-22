@@ -2,204 +2,105 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A5BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6C7E206EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="cY9JURAW"
+	by mail.kernel.org (Postfix) with ESMTP id 7114F2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgFVMCN (ORCPT
+        id S1727960AbgFVMC2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:02:13 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:58701 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgFVMCL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:02:11 -0400
-X-Greylist: delayed 729 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Jun 2020 08:02:10 EDT
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05MC0mJU031409;
-        Mon, 22 Jun 2020 21:00:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05MC0mJU031409
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592827249;
-        bh=eg9cS/iFCnkIuPhMhc6OKqBZdWFocu0SvTBatQL6K2w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cY9JURAWYJCcDpn5iJg7WHds4bmraJRN/tkBHgBGZqeLL+SkQxaooE6WJrzfAZKCv
-         IO9uEd+I7TMg7rAbSrTRfDt2IhW8ZHKTqIIV8YNaaekSUt4ThlE0jqFyRojcfMjuPs
-         P1aAzK6TuBw4C7ybGfVXh1dX2vtEemRq7wTBjo9S/viYGCUF68t+FgAbnUKCXf+W2u
-         ZXOPk+L41yoOvWckMKSAhsob324NKewwglQby1BKLNHraHatLmHwXMTH4QQYSoaie9
-         vcu3wQz6992wDnXWWpOKheSzZ6D2pv3Kf3AJ/wJF334SEbJkaTOUjFO/IF6px+fmaQ
-         2mtl9CRpHCpBA==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        - <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: ASoC: Convert UniPhier AIO audio system to json-schema
-Date:   Mon, 22 Jun 2020 21:00:39 +0900
-Message-Id: <20200622120039.453616-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 22 Jun 2020 08:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbgFVMC2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:02:28 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0032C061794;
+        Mon, 22 Jun 2020 05:02:28 -0700 (PDT)
+Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt@linutronix.de>)
+        id 1jnL9e-00083K-0P; Mon, 22 Jun 2020 14:02:26 +0200
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 9/9] dt-bindings: net: dsa: Add documentation for Hellcreek switches
+In-Reply-To: <20200619135657.GF304147@lunn.ch>
+References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-10-kurt@linutronix.de> <20200618134704.GQ249144@lunn.ch> <87zh8zphlc.fsf@kurt> <20200619135657.GF304147@lunn.ch>
+Date:   Mon, 22 Jun 2020 14:02:19 +0200
+Message-ID: <87imfjtik4.fsf@kurt>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier AIO audio system binding to DT schema format.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On Fri Jun 19 2020, Andrew Lunn wrote:
+>> > The switch is 100/100Mbps right? The MAC is only Fast ethernet. Do you
+>> > need some properties in the port@0 node to tell the switch to only use
+>> > 100Mbps? I would expect it to default to 1G. Not looked at the code
+>> > yet...
+>>=20
+>> No, that is not needed. That is a hardware configuration and AFAIK
+>> cannot be changed at run time.
+>
+> I was wondering about that in general. I did not spot any code in the
+> driver dealing with results from the PHY auto-neg. So you are saying
+> the CPU is fixed speed, by strapping? But what about the other ports?
+> Does the MAC need to know the PHY has negotiated 10Half, not 1G? Would
+> that not make a difference to your TSN?
 
- .../sound/socionext,uniphier-aio.yaml         | 73 +++++++++++++++++++
- .../bindings/sound/uniphier,aio.txt           | 45 ------------
- 2 files changed, 73 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,aio.txt
+Indeed, that does make a difference. I've checked with the vendor. The
+current version of the switch IP does not support configuring the speed
+etc. at run time. It is hard wired to 100 Mbit/s or 1000 Mbit/s for
+now. Later versions of the chip might support setting the speed etc. via
+configuration registers. As a result the PHYs at the front ports should
+be programmed to only advertise 100 Mbit/s or 1G depending on the
+hardware setup.
 
-diff --git a/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml b/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
-new file mode 100644
-index 000000000000..bea8b06ff1b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/socionext,uniphier-aio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier AIO audio system
-+
-+maintainers:
-+  - <alsa-devel@alsa-project.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-ld11-aio
-+      - socionext,uniphier-ld20-aio
-+      - socionext,uniphier-pxs2-aio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: aio
-+
-+  clocks:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: aio
-+
-+  resets:
-+    maxItems: 1
-+
-+  socionext,syscon:
-+    description: |
-+      Specifies a phandle to soc-glue, which is used for changing mode of S/PDIF
-+      signal pin to output from Hi-Z. This property is optional if you use I2S
-+      signal pins only.
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clock-names
-+  - clocks
-+  - reset-names
-+  - resets
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    audio@56000000 {
-+        compatible = "socionext,uniphier-ld20-aio";
-+        reg = <0x56000000 0x80000>;
-+        interrupts = <0 144 4>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_aout>;
-+        clock-names = "aio";
-+        clocks = <&sys_clk 40>;
-+        reset-names = "aio";
-+        resets = <&sys_rst 40>;
-+        #sound-dai-cells = <1>;
-+        socionext,syscon = <&soc_glue>;
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/uniphier,aio.txt b/Documentation/devicetree/bindings/sound/uniphier,aio.txt
-deleted file mode 100644
-index 4ce68ed6f2f2..000000000000
---- a/Documentation/devicetree/bindings/sound/uniphier,aio.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--Socionext UniPhier SoC audio driver
--
--The Socionext UniPhier audio subsystem consists of I2S and S/PDIF blocks in
--the same register space.
--
--Required properties:
--- compatible      : should be one of the following:
--		    "socionext,uniphier-ld11-aio"
--		    "socionext,uniphier-ld20-aio"
--		    "socionext,uniphier-pxs2-aio"
--- reg             : offset and length of the register set for the device.
--- interrupts      : should contain I2S or S/PDIF interrupt.
--- pinctrl-names   : should be "default".
--- pinctrl-0       : defined I2S signal pins for an external codec chip.
--- clock-names     : should include following entries:
--                    "aio"
--- clocks          : a list of phandle, should contain an entry for each
--                    entry in clock-names.
--- reset-names     : should include following entries:
--                    "aio"
--- resets          : a list of phandle, should contain an entry for each
--                    entry in reset-names.
--- #sound-dai-cells: should be 1.
--
--Optional properties:
--- socionext,syscon: a phandle, should contain soc-glue.
--                    The soc-glue is used for changing mode of S/PDIF signal pin
--                    to Output from Hi-Z. This property is optional if you use
--                    I2S signal pins only.
--
--Example:
--	audio {
--		compatible = "socionext,uniphier-ld20-aio";
--		reg = <0x56000000 0x80000>;
--		interrupts = <0 144 4>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_aout>;
--		clock-names = "aio";
--		clocks = <&sys_clk 40>;
--		reset-names = "aio";
--		resets = <&sys_rst 40>;
--		#sound-dai-cells = <1>;
--
--		socionext,syscon = <&sg>;
--	};
--- 
-2.25.1
+Thanks,
+Kurt
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wncsACgkQeSpbgcuY
+8KYXyA/8DLXlHC/IIVPn9Frz2Es51NLmJmUYxmNRdlFFtHNlVZ7OxyewgvGG4XBa
+Y3+UMl9byjXzkHkgYAEBp98PKDtAf+wM2DYj/OP2CS9IvxKL6X1Sfductwxq3yg7
+MFOUvHo/eeGd88vFvDddX6/z9NeV2TaXTBmnwLLxsXa06QjTedhM5bJTBRZcqZi/
+aHzDXwXgr81HSF3rj2QwlcgjVtUF7NKeSq42AnnuQyw2sfyNEObN0x/85+/FlaWx
+C7kNUIX/gB8mRjEBDwWb4Ic7K+X2Fry16yMvaSLzDO9oKXeefRt1fAaIL5/e+/MZ
+HYifNcPEHczfd3SxWQf7qNdm3ulvHTVkbFbAqrENtaqEH7nw6YGgpAjSpAKFynM8
+DPp8W9wE+No5Bvm4zxarR/eERItRjruRXwot/tx0D7/Of1QVpPqf1Rt3CfTKphDC
+ZHvkeZoJAnm6wo6Ig5v7Bq44oTRFTbXjkXgl681BNLk4xJnU0Akvam3nVMDzapH+
+rOGyFlcsNk6QE08W2maQjOKmjEclWzXxNpuEc80CgKzseYJOmuvT1Nbt6B7SymZY
+hdlKz2A9h2rZgMxIlKVGH5QNEE0iLc1wr5N4XQYcZKftveJc6hbx+KIg1HvPcfH5
+nWKuH/lHl98iBpzVow48vMcA0++wcy+TCVBM3blbL8ACiMa792Y=
+=CdRP
+-----END PGP SIGNATURE-----
+--=-=-=--
