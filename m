@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1898C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E4CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED37206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43346206F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hPCSBYPi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="xtlQ6vt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgFVKBU (ORCPT
+        id S1726988AbgFVKC2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
+        Mon, 22 Jun 2020 06:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgFVKBR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:01:17 -0400
+        with ESMTP id S1727783AbgFVKBQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:01:16 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0795C061794
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:16 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j18so716390wmi.3
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A13DC061796
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:15 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y20so15094873wmi.2
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SA+ksrlspcBtk66ickfbWi5/X69plQETLqM+T7sqDOM=;
-        b=hPCSBYPijk+oW7o3W3ojF3NAaYsD4JrRPsGlfOOBzQ4ThECSIaaifu8iSYPR7zbUAx
-         giQ4sowH3znExtSO3S964zh5IyteuZGXmP9B2ZvExrbuG0lv3RnqMa0dbDx7oKT3Cruf
-         ntFtCt/KtwVdleh2QZcz+vD9bEurGJjeVbuXPkyeyA87kxRvFoIssYR99lkRq25sp0Dy
-         8ME3z0/l/PLLTultbtzKIRLt1ie8TS/eRQs7WOUniJkv9YG+Ya35j/vswWIOOkBzSz+Z
-         KPipplT5rhQD8Nb/E1vu5Mffd1y2DmSUKnz0Ux1Df2rzIAqZgpQCiOI37E2WBb24Fa9I
-         KUIw==
+        bh=vANIsXo74NzXiDIyR10LVPoVvN0SF3cCppVREngNaSg=;
+        b=xtlQ6vt2ftcI+XabUk5dlYEY+EoWH8nR8xcQ0FineEvTFIyHxwdZru/XNV/dfPCuwH
+         p+2SV3EvOLiwS1nhvc60TsvMW4YNirrfN8g/xcNwpKisI/ZQhpTItmGFfFpSHrXsGu+S
+         b7MvvTAW41tXqhs9scOYapiZqZ36Pfyhf81lebKF4vMaR5ghYo5mQz1TbDxar4ISYJoU
+         r97GfAQhf4HMDRDYdamUBfw7XB2G5c/8Yd3xQBk2wd2NRH8kL2poxNolBqJT2m6c+bYv
+         ZbtsK6uSEB72jNc60WhrddXbm/mQa5m5tZApNrkGL3PmfTcjFpfrBr+Em/UQj5iDvDis
+         u71g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SA+ksrlspcBtk66ickfbWi5/X69plQETLqM+T7sqDOM=;
-        b=StwgX/uZsBIt9gYMAkQKxRsu/KCKpgdc5QQkRQ5kqXUt324Nqpw+sioUaPCqqKW6yC
-         Wy+1CyqWYCPjw38H9ydOyAiBZLvORGvKueOP38jr/IQ57RkS/8LV2GJINez12LoyfnqP
-         5r0zly9mxhhImBI61IPQO3BxmKeE4iIK9M+vz6x5QqGR3zAjIJRdPI9KBrX7b/xJwdRH
-         96NcD7IwEYeGvPLS+0NCrd68Px6iQSciDYX8igvmCXQRVoBK0GR9mYHaQH+Rlhn1v9Db
-         OzO5Tm156SSgYQhcI34FmD+/6t5XM4g+971HaTedtqc0E0ennIqSr0nHLlnRGz5Ubnp2
-         BkNA==
-X-Gm-Message-State: AOAM533TLczog+Bf/gn5B6i+8093GmA3ezv7uRE67inZcONQ7atVjPNe
-        Kmc34JxoeF+KA5Wqj3GchKA0Hg==
-X-Google-Smtp-Source: ABdhPJwWuhZqPJe1EH2uJKbIx2fxGg7cPQA+kFKd21eTb++TacoGNccIXkK+VSOvahqdHB0+R/2MHw==
-X-Received: by 2002:a1c:bc55:: with SMTP id m82mr10040949wmf.92.1592820075474;
-        Mon, 22 Jun 2020 03:01:15 -0700 (PDT)
+        bh=vANIsXo74NzXiDIyR10LVPoVvN0SF3cCppVREngNaSg=;
+        b=NXFWXyZV/tSQBfm41mDfyuoKTQIIIBt62GZjyuy39hXscmpGg/ay80CFDDcSjgcXm3
+         QfXPgJCYpwepwp7Jg86tOQdNofo6wc8RUAhY26ZVTus5+SziIJ2l2aBea6ANIme/6HLQ
+         mu2e9AQ+t0bSVg0+QxJaQ/av7YyyUPM4VxIE4eIJ9q2udLnGZL0/XbrRoyQaavksr+os
+         evaf8NkPE9jqmuKkomObZpQ6mb1OCMf3C3Z4uUpuioUMDqm6sOFv5+5urQCSghB1xU6b
+         OWFVvEbAhWsUWBm3fH/YQ4N4kA2aHZPb8FTxrhgot1us4pnOkParmqSWtFzYZNSMmtAY
+         AgrQ==
+X-Gm-Message-State: AOAM5338G5JKDyRIqHOVLYEVp0BzD3CYR9XvEwCld81A0sqUTLEClb4g
+        S3CEZp3l/VB+OH5jnah03+f4vQ==
+X-Google-Smtp-Source: ABdhPJzUHixuKfQa4u9XvxcXJoOatBovm5nA4dkuN9R2ixW6hpip+ioKdNDg9ycFUOAJ0KD49goWaA==
+X-Received: by 2002:a1c:c1:: with SMTP id 184mr17443884wma.74.1592820073899;
+        Mon, 22 Jun 2020 03:01:13 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.14
+        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:01:14 -0700 (PDT)
+        Mon, 22 Jun 2020 03:01:12 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
@@ -83,9 +83,9 @@ Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 06/11] phy: un-inline devm_mdiobus_register()
-Date:   Mon, 22 Jun 2020 12:00:51 +0200
-Message-Id: <20200622100056.10151-7-brgl@bgdev.pl>
+Subject: [PATCH 05/11] Documentation: devres: add missing mdio helper
+Date:   Mon, 22 Jun 2020 12:00:50 +0200
+Message-Id: <20200622100056.10151-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622100056.10151-1-brgl@bgdev.pl>
 References: <20200622100056.10151-1-brgl@bgdev.pl>
@@ -98,82 +98,26 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Functions should only be static inline if they're very short. This
-devres helper is already over 10 lines and it will grow soon as we'll
-be improving upon its approach. Pull it into mdio_devres.c.
+We have a devres variant of mdiobus_register() but it's not listed in
+devres.rst. Add it under other mdio devm functions.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/Makefile      |  2 +-
- drivers/net/phy/mdio_devres.c | 18 ++++++++++++++++++
- include/linux/phy.h           | 15 ++-------------
- 3 files changed, 21 insertions(+), 14 deletions(-)
- create mode 100644 drivers/net/phy/mdio_devres.c
+ Documentation/driver-api/driver-model/devres.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index dc9e53b511d6..896afdcac437 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -3,7 +3,7 @@
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index e0b58c392e4f..5463fc8a60c1 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -343,6 +343,7 @@ MDIO
+   devm_mdiobus_alloc()
+   devm_mdiobus_alloc_size()
+   devm_mdiobus_free()
++  devm_mdiobus_register()
  
- libphy-y			:= phy.o phy-c45.o phy-core.o phy_device.o \
- 				   linkmode.o
--mdio-bus-y			+= mdio_bus.o mdio_device.o
-+mdio-bus-y			+= mdio_bus.o mdio_device.o mdio_devres.o
- 
- ifdef CONFIG_MDIO_DEVICE
- obj-y				+= mdio-boardinfo.o
-diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
-new file mode 100644
-index 000000000000..f0b4b6cfe5e3
---- /dev/null
-+++ b/drivers/net/phy/mdio_devres.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/phy.h>
-+
-+int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
-+{
-+	int ret;
-+
-+	if (!bus->is_managed)
-+		return -EPERM;
-+
-+	ret = __mdiobus_register(bus, owner);
-+	if (!ret)
-+		bus->is_managed_registered = 1;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(__devm_mdiobus_register);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..62149945c5b3 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -313,20 +313,9 @@ static inline struct mii_bus *mdiobus_alloc(void)
- }
- 
- int __mdiobus_register(struct mii_bus *bus, struct module *owner);
-+int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner);
- #define mdiobus_register(bus) __mdiobus_register(bus, THIS_MODULE)
--static inline int devm_mdiobus_register(struct mii_bus *bus)
--{
--	int ret;
--
--	if (!bus->is_managed)
--		return -EPERM;
--
--	ret = mdiobus_register(bus);
--	if (!ret)
--		bus->is_managed_registered = 1;
--
--	return ret;
--}
-+#define devm_mdiobus_register(bus) __devm_mdiobus_register(bus, THIS_MODULE)
- 
- void mdiobus_unregister(struct mii_bus *bus);
- void mdiobus_free(struct mii_bus *bus);
+ MEM
+   devm_free_pages()
 -- 
 2.26.1
 
