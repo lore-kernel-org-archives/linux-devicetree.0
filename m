@@ -2,184 +2,136 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82C6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82723C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 957D320706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C22206F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ItMGHHfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgFVKhg (ORCPT
+        id S1727809AbgFVKjp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:37:36 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:33303 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726776AbgFVKhg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 06:37:36 -0400
-X-IronPort-AV: E=Sophos;i="5.75,266,1589209200"; 
-   d="scan'208";a="50072171"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 22 Jun 2020 19:37:34 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A2208400855F;
-        Mon, 22 Jun 2020 19:37:34 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] dt-bindings: usb: renesas,usb-xhci: convert to YAML
-Date:   Mon, 22 Jun 2020 19:37:32 +0900
-Message-Id: <1592822252-12338-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 22 Jun 2020 06:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbgFVKjo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:39:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE878C061795
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:39:43 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so3742624wru.6
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ppPSmD0W4LKyxlniJhYfTmLmk2R68Qbvb6wTB52e/f0=;
+        b=ItMGHHfBn6t+/6rQdOvInje8umTE9Lh/8MQrHN1kBQmODoVSN1eOFW8HFLDcqWjRfz
+         iW7RlpQQYT2m0DQT2L8tJ3Gbnm4FrrA0hZNu5go4Lzxd+kPhaBqaTFY0IdbGKfCHN12r
+         YP6adtx7pTBj07Wd8/4VSZJYaO0d+iQIEliTdTqNbuLF6u1CILqsrtIFVQrBPp+mQWnZ
+         77UOT6MgZnEhhklMWr44xbkquBvDL8ge3ILunTUUmfMpAACxHi/NSbC/poDK3u/A/9pa
+         Bre5+xqACXaastiIzh4nSPQCMcFTumjfW7jnpw3XlMI2+YyVlzQ0krOo7HPcjQQ3bIh9
+         S48w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ppPSmD0W4LKyxlniJhYfTmLmk2R68Qbvb6wTB52e/f0=;
+        b=CszR+eVGw6H3hoF5CzrKDy5ZPng58XbpNKcszLeo+oC17DUpInJCAgZ8DNoajP2gA/
+         25wkBc0nUvN8YM72ifp8HaBs+88WPRnIZxaSng6yULPiiiJmRiYBuAdFhL2p6hpZGg7I
+         A665XKzeK9E4VJx4blTv0Jb2aw1QCGEyv/i7c3JJkKnifSYMQDl3qDwOEXcNJnHQyUzW
+         VlPQBUVNmXoVCpb+PM4AimD3H6TfjnX2GwwQh30Kgf2MtGMSiU8SPgJS5+02pCaFipbM
+         zx0/wA/S8/g2xEVuFLKjSJRsANnG1taBv3+fYIyx3gWHTi+15TTvXGURk87eAZqu4NCm
+         m4Kg==
+X-Gm-Message-State: AOAM531oH5Cr213HKEZbmE8Dl41qG4Yg3z/n2hRG6uW8nlVRveDg8qH+
+        UI0ZLITqFaTAmRuFKYSZKHWMyQ==
+X-Google-Smtp-Source: ABdhPJzfjcLOl+6WBhcjg432De4rDwDj114xV3ZgmqkPIv2TBXFQeD+Fz+W7XZC3xVDWGcr5fxtuTQ==
+X-Received: by 2002:adf:ef4d:: with SMTP id c13mr6752284wrp.315.1592822382351;
+        Mon, 22 Jun 2020 03:39:42 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id e12sm17422241wro.52.2020.06.22.03.39.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 03:39:41 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 11:39:39 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
+ bindings to DT schema
+Message-ID: <20200622103939.goqysclrsxps344i@holly.lan>
+References: <20200618224413.1115849-1-robh@kernel.org>
+ <20200619215341.GA6857@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200619215341.GA6857@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas related parts of usb-xhci to YAML because
-they are not compatible with generic-xhci.
+On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
+> Good to have these converted. A few comments in the following. One
+> comment is for the backlight people as you copied the original text.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Changes from v1:
- - Update the commit description.
- - Use SoC part names instead of part numbers in the comments.
- - Add comments on renesas,rcar-gen[23]-xhci.
- - Add power-domains and resets to required.
- https://patchwork.kernel.org/patch/11604565/
+... and I've sliced out everything except that in this reply.
 
- .../devicetree/bindings/usb/renesas,usb-xhci.yaml  | 86 ++++++++++++++++++++++
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 18 -----
- 2 files changed, 86 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
+> On Thu, Jun 18, 2020 at 04:44:13PM -0600, Rob Herring wrote:
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> > new file mode 100644
+> > index 000000000000..ae50945d2798
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> > @@ -0,0 +1,58 @@
+> > ...
+> > +
+> > +  default-brightness-level:
+> > +    description: The default brightness level (index into the array defined
+> > +      by the "brightness-levels" property).
+>
+> This description does not match my understading.
+> The description says "index into", but in reality this is a value that
+> matches somewhere in the range specified by brightness-levels.
+> So it is not an index.
+> 
+> Maybe I just read it wrong and the description is fine. But when I read
+> index the when it says 6 I would look for brightness-levels[6] equals
+> 128 in the example below.
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
-new file mode 100644
-index 0000000..add9f7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/renesas,usb-xhci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas USB xHCI controllers
-+
-+maintainers:
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+allOf:
-+  - $ref: "usb-hcd.yaml"
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,xhci-r8a7742 # RZ/G1H
-+              - renesas,xhci-r8a7743 # RZ/G1M
-+              - renesas,xhci-r8a7744 # RZ/G1N
-+              - renesas,xhci-r8a7790 # R-Car H2
-+              - renesas,xhci-r8a7791 # R-Car M2-W
-+              - renesas,xhci-r8a7793 # R-Car M2-N
-+          - const: renesas,rcar-gen2-xhci # R-Car Gen2 and RZ/G1
-+      - items:
-+          - enum:
-+              - renesas,xhci-r8a774a1 # RZ/G2M
-+              - renesas,xhci-r8a774b1 # RZ/G2N
-+              - renesas,xhci-r8a774c0 # RZ/G2E
-+              - renesas,xhci-r8a7795  # R-Car H3
-+              - renesas,xhci-r8a7796  # R-Car M3-W
-+              - renesas,xhci-r8a77961 # R-Car M3-W+
-+              - renesas,xhci-r8a77965 # R-Car M3-N
-+              - renesas,xhci-r8a77990 # R-Car E3
-+          - const: renesas,rcar-gen3-xhci # R-Car Gen3 and RZ/G2
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    maxItems: 1
-+    items:
-+      - const: usb
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - power-domains
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
-+
-+    xhci0: usb@ee000000 {
-+        compatible = "renesas,xhci-r8a7795", "renesas,rcar-gen3-xhci";
-+        reg = <0xee000000 0xc00>;
-+        interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&cpg CPG_MOD 328>;
-+        power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+        resets = <&cpg 328>;
-+    };
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index b120dd6..0c5cff8 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -7,24 +7,6 @@ Required properties:
-     - "marvell,armada3700-xhci" for Armada 37xx SoCs
-     - "marvell,armada-375-xhci" for Armada 375 SoCs
-     - "marvell,armada-380-xhci" for Armada 38x SoCs
--    - "renesas,xhci-r8a7742" for r8a7742 SoC
--    - "renesas,xhci-r8a7743" for r8a7743 SoC
--    - "renesas,xhci-r8a7744" for r8a7744 SoC
--    - "renesas,xhci-r8a774a1" for r8a774a1 SoC
--    - "renesas,xhci-r8a774b1" for r8a774b1 SoC
--    - "renesas,xhci-r8a774c0" for r8a774c0 SoC
--    - "renesas,xhci-r8a7790" for r8a7790 SoC
--    - "renesas,xhci-r8a7791" for r8a7791 SoC
--    - "renesas,xhci-r8a7793" for r8a7793 SoC
--    - "renesas,xhci-r8a7795" for r8a7795 SoC
--    - "renesas,xhci-r8a7796" for r8a77960 SoC
--    - "renesas,xhci-r8a77961" for r8a77961 SoC
--    - "renesas,xhci-r8a77965" for r8a77965 SoC
--    - "renesas,xhci-r8a77990" for r8a77990 SoC
--    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
--      device
--    - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
--      device
-     - "brcm,bcm7445-xhci" for Broadcom STB SoCs with XHCI
-     - "xhci-platform" (deprecated)
- 
--- 
-2.7.4
+When the brightness-levels array is not present then backlight
+brightness and led brightness have a 1:1 mapping. In this case the
+meaning of "default brightness level" is (hopefully) obvious and the
+parenthetic text does not apply.
 
+When the array is present then we have two different scales of
+brightness and it is important to describe which scale we use for the
+default brightness. The language about "index into" was adopted to avoid
+having to introduce extra terminology whilst making it clear that
+setting the default brightness-level to 128 is invalid (because it is
+not an acceptable index) and that a value of 6 will result in the LED
+brightness being set to 128.
+
+
+> And this is not how it is coded.
+
+That had me worried for a moment but I think the code and bindings are
+in agreement.
+
+There is some code to map the LED scale (128) to the backlight scale (6)
+but this used to ensure we supply the correct brightness level to user
+space when an active backlight is handed over from bootloader to kernel.
+
+If a default-brightness-level is provided then the above logic is
+overridden and the value read from the DT gets placed directly into
+props.brightness where it will act as in index into the brightness
+table.
+
+
+Daniel.
