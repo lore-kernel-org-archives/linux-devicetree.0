@@ -2,112 +2,141 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAC5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA789C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6E020716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872492071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wcSTbWr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgFVMch (ORCPT
+        id S1728158AbgFVMlW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        Mon, 22 Jun 2020 08:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgFVMch (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:32:37 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC87C061794;
-        Mon, 22 Jun 2020 05:32:37 -0700 (PDT)
-Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt@linutronix.de>)
-        id 1jnLco-00006V-Jv; Mon, 22 Jun 2020 14:32:34 +0200
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [RFC PATCH 6/9] net: dsa: hellcreek: Add debugging mechanisms
-In-Reply-To: <20200619134218.GD304147@lunn.ch>
-References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-7-kurt@linutronix.de> <20200618173458.GH240559@lunn.ch> <875zbnqwo2.fsf@kurt> <20200619134218.GD304147@lunn.ch>
-Date:   Mon, 22 Jun 2020 14:32:28 +0200
-Message-ID: <87d05rth5v.fsf@kurt>
+        with ESMTP id S1728121AbgFVMlV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:41:21 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA92C061796
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 05:41:21 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i12so8098586pju.3
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 05:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fq5dVVlXW8qg+ASmc5eHI9qkJpaHLFgd8jV55IoO3ds=;
+        b=wcSTbWr12KM0AKzvczAYGpY8oNBlPcfTlSqXSviRt6OVkzWhCDYP9/vasBpxVa159T
+         vZMShpuchPupvThg/UKN4QPPDmfiT1u7wmr3KcRRsd8+9ZzOLxdvwSYoiYH0M0ITVWIp
+         AEIqdLRy2K0grOOM48kvK15Np7sRxIjAz85bJKWF0mOFTFGhw6D80NKy8xkZQd4/1QzT
+         xPKuFKJQ7UKYWCA50gU9EcDEdbOMRxt86AZ9SH8u+auHNZsoUbF9YDee4c7i10JsZUqU
+         4tHiNTvD1eLzQbXCpmq19w5ln2UemzsLBWF0ThxGAFg581DionEgeCstmoE5U29SWFlh
+         bcuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fq5dVVlXW8qg+ASmc5eHI9qkJpaHLFgd8jV55IoO3ds=;
+        b=HYojRnERCN0Ow85pahCJEJ1nbsxGvPcXqLCApgAKDgC4uw5fWtebXUimVpSg01XXPg
+         cHxZHJgGeKEM6KokgDFPNABDzmrF4525rO4UUrZ1EhFInR8FZlcoJZdSEKbEsuPfaXGE
+         +sj0TwJm5x18SVY3o320Z2pRxlyilzF2nXkliQ00tvxovSKnwRaQlECboPzV8o4ir9kP
+         ohAkanBwcf2BLQgyBtgDMqlef5jiniXamaF/7zLkLawK5TBU23x0xsvJ51fdnJGQs1TL
+         vC7E8v3pufP/8n7hmR9MpP+GTKHjN78aLglA6v0m57tiPBN6V9UofSbZWDuuHJhnAzZ7
+         LB1A==
+X-Gm-Message-State: AOAM53314gNSMNT7kjjV48PuVVvEGeFmWTVbZe/NpVKfR3VRvurmpxIm
+        JbQqc2xXnC6Ugg1hOPW7LtLKDg==
+X-Google-Smtp-Source: ABdhPJwjlbEAiUJF8l5uuQoy02B2OXMWAyP1HFiJcPrgxtCoWUakvFFTfhJvx+tjDSCep+YvLypuKg==
+X-Received: by 2002:a17:90a:36d0:: with SMTP id t74mr16600778pjb.27.1592829680949;
+        Mon, 22 Jun 2020 05:41:20 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id i62sm14590581pfg.90.2020.06.22.05.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 05:41:19 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org
+Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v5 0/4] Qualcomm labibb regulator driver
+Date:   Mon, 22 Jun 2020 18:11:06 +0530
+Message-Id: <20200622124110.20971-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This series adds a driver for LAB/IBB regulators found on some Qualcomm SoCs.
+These regulators provide positive and/or negative boost power supplies
+for LCD/LED display panels connected to the SoC.
 
-On Fri Jun 19 2020, Andrew Lunn wrote:
->> > Are trace registers counters?
->>=20
->> No. The trace registers provide bits for error conditions and if packets
->> have been dropped e.g. because of full queues or FCS errors, and so on.
->
-> Is there some documentation somewhere? A better understanding of what
-> they can do might help figure out the correct API.
+This series adds the support for pmi8998 PMIC found in SDM845 family of SoCs.
 
-No, not that I'm aware of.
+Changes from v4:
+- v4 Review comments incorporated
+  - simplified the driver: removed of_get_child_by_name(); use ENABLE_CTL
+    register and switch over to use the regulator_*_regmap helpers
+  - improved kerneldoc
+  - From the dt-bindings, removed interrupt-names, changed to dual license,
+    added unevaluatedProperties: false, removed interrupt-names, since there
+    is only one interrupt per node
+  - Since the Short Circuit handling needs more details from QC engineers,
+    drop the SC handling patch from this series, to submit it later
 
-Actually there are a few more debugging mechanisms and features which
-should be exposed somehow. Here's the list:
+Changes from v3:
+- Handled review comments from v3
+- In core, swapped the meaning of enable_time and poll_enabled_time; so we
+   wait for total enable_time delay, and poll in-between at poll_enabled_time
+   interval now.
+- fixed dt_bindings_check issues in dt-bindings patch.
+- Cleanup of register_labibb_regulator(), and adapted to updated meaning of
+   poll_enabled_time.
 
- * Trace registers for the error conditions. This feature needs to be
-   configured for which ports should be traced
- * Memory registers for indicating how many free page and meta pointers
-   are available (read-only)
- * Limit registers for configuring:
-   * Maximum memory limit per port
-   * Reserved memory for critical traffic
-   * Background traffic rate
-   * Maximum queue depth
- * Re-prioritization of packets based on the ether type (not mac address)
- * Packet logging (-> retrieval of packet time stamps) based on port, traff=
-ic class and direction
- * Queue tracking
+Changes from v2:
+- Review comments from v2
+- Moved the poll-to-check-enabled functionality to regulator core.
+- Used more core features to simplify enable/disable functions.
+- Moved the devicetree binding to yaml.
+- Updated interrupt-names and simplified handling.
 
-What API would be useful for these mechanisms?
+Changes from v1:
+- Incorporated review comments from v1
+- Changed from virtual-regulator based handling to individual regulator based
+  handling.
+- Reworked the core to merge most of enable/disable functions, combine the
+  regulator_ops into one and allow for future variations.
+- is_enabled() is now _really_ is_enabled()
+- Simplified the SC interrupt handling - use regmap_read_poll_timeout,
+  REGULATOR_EVENT_OVER_CURRENT handling and notification to clients.
 
-Thanks,
-Kurt
+Nisha Kumari (3):
+  dt-bindings: regulator: Add labibb regulator
+  arm64: dts: qcom: pmi8998: Add nodes for LAB and IBB regulators
+  regulator: qcom: Add labibb driver
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Sumit Semwal (1):
+  regulator: Allow regulators to verify enabled during enable()
 
------BEGIN PGP SIGNATURE-----
+ .../regulator/qcom-labibb-regulator.yaml      |  70 +++++++
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  12 ++
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/core.c                      |  63 ++++++-
+ drivers/regulator/qcom-labibb-regulator.c     | 175 ++++++++++++++++++
+ include/linux/regulator/driver.h              |   5 +
+ 7 files changed, 335 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+ create mode 100644 drivers/regulator/qcom-labibb-regulator.c
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wpNwACgkQeSpbgcuY
-8KZw0Q//aX5+sEx9mWsmbYMxC3/HQPjHUjLpvOOOU3sXM8nFn7WBRn6T35TaNY1r
-4il/Bw40S9f+UYy2AAm7rmxPYpf7EGOWmyl1GnwmlfpVc6VOtUWIg8umTVd8TIC6
-6YdTLmwwtAdCbcGXJikcvd59EzzJ9n5G7NnQMI3OLQ/4h7SzIWYa4KkK1KT9jtFn
-7TLxfLJmPI/2VzmacqN8RrfjKUJxnHCDjTykaio4RWYhYwYMxVapebmz8Prdk6WY
-tpkYW2qkw6rWfi/mSfXURd7QWYxpiPHx8Is0I9QIDqcG2W7RsJgamKNE8MT9ehX/
-6D3YGOsXawpjQjzkrcp8rb5fIpdxrRBRJxK7iAHQS1FxA6OtNr7iGNyBFWVe8MM5
-Sdq7Rn5QNUzf4M9Vbn+OI0q5RsLTBP1xaGJHAcSPB+SB673rAC+apjVVVed2I4AP
-PnDJ20aGoVe1fZoovWx+fx/aC5nKejU42C0HJm0m5mx9OfJ3FcW8HxbXe/EAa9a8
-RIP65ZpAmqDDkBt/JeJ3UHdBWaA5ck7uTIZtwHFKhIbeB/QIe3vLQZn55Bf5WPe3
-O8ddQa54ox27rb5mUKHSi+1DoYWxDaa7Ple0LugktCxH9Zxied8mHd9IkqDeb9yy
-/B615DopQgEeG/cpKfqvZQJxFx4yaVi0DiLi4uAJpySXiJoTJns=
-=EEtE
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+2.27.0
+
