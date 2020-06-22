@@ -2,177 +2,167 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98715C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114ACC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7547920716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61ED20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dyANFxY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgFVNhn (ORCPT
+        id S1728996AbgFVNim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:37:43 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39881 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728203AbgFVNhn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:37:43 -0400
-Received: from [37.160.94.17] (port=64520 helo=melee.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jnMdl-000DM3-WC; Mon, 22 Jun 2020 15:37:38 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-fpga@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Moritz Fischer <mdf@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH v2 2/2] fpga manager: xilinx-spi: check INIT_B pin during write_init
-Date:   Mon, 22 Jun 2020 15:37:23 +0200
-Message-Id: <20200622133723.23326-2-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622133723.23326-1-luca@lucaceresoli.net>
-References: <20200622133723.23326-1-luca@lucaceresoli.net>
+        Mon, 22 Jun 2020 09:38:42 -0400
+Received: from mail-db8eur05on2061.outbound.protection.outlook.com ([40.107.20.61]:12207
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728335AbgFVNil (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:38:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h5GVfX57SwnP2pdNaf+o0bdVvAEeR+T/iR6B7JYKpfwZ/M2UwU2hU/bvPtBT3cvFsq5McUNaK+t3MDZAM6xAvRwR+VZ3QzbmbkljSxWc6l2gEV32uCUsfUtCke1/7EIZoiT7T9MPQb0OXi+iobY8yXFdz1mBGqbccgUc6CH1TdPL86uR5KXMql99AkU+xphehR3DcxKmFQw1Iyhe/eTPCapz4DOU8GLAJ0rb6uzwpaptv0RT/W2ye3nske5gQHF21s5gJCYgVridVp+SuJfB6tD//w7/wkonJk9cktPxweZCPvyzBzgaHnwUZS815M47IzUz9haHXZVH6Zy6rMzoDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XNFw7vmsU9mpTnzHIzSjb1FYBYxAoTfeCfNOOUlGRaw=;
+ b=iJTXIq5ZrWlo693Tx9StOXenHc3HkZqNm7ES448Jm72NkqHV2AI+Ztc8oAH+o7WAhE6ie91baxHZb+Bf7qysfKknohf0/XqnIKdWB7Z5/xtEOQWM9V+OUvmPLNkjy44qytHCcmKuJtnHMmrzV0C0XkOAqtRaYVEjTzEOiaXSSD+RnWwNrjE53B7h55gwMx3+C82WAz6ufb7AAOOKrfYmnyQbJcMD0RCyFVZYU8nC5GoB7Z6cyb3F/oFRCipMMCQBNvQYkuodFBElU9W25yQUGS/kM3f/JRFry//gc1aYep01A3DqgTUjvHVxlzvfxPK3hB/eBTgK3bo3Ps9g6uxm2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XNFw7vmsU9mpTnzHIzSjb1FYBYxAoTfeCfNOOUlGRaw=;
+ b=dyANFxY1UwkHn/hbBhRPbyxFM8owatLbbBsiTgaBzMbvcqRNTJxXFT9/Ifpp7q8HoZrGOJHdpsEpkqwmXk7dAvsGuj4Vpy3O6FTbStAhd3qTaspgyYpvOYlsSq2wAUPCbxlCHae/cb8F1DwA7HLPoVt6dfmk4hI4JIky6SoT0vs=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
+ by AM0PR04MB5075.eurprd04.prod.outlook.com (2603:10a6:208:bf::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 13:38:37 +0000
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 13:38:37 +0000
+From:   Florinel Iordache <florinel.iordache@nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk
+Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Subject: [PATCH net-next v3 0/7] net: ethernet backplane support on DPAA1
+Date:   Mon, 22 Jun 2020 16:38:13 +0300
+Message-Id: <1592833093-31783-1-git-send-email-florinel.iordache@nxp.com>
+X-Mailer: git-send-email 1.9.1
+Reply-to: florinel.iordache@nxp.com
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR10CA0013.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:17c::23) To AM0PR04MB5443.eurprd04.prod.outlook.com
+ (2603:10a6:208:119::33)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1464-128.ea.freescale.net (83.217.231.2) by AM0PR10CA0013.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 13:38:36 +0000
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d80b0a1a-3219-4ba2-c32e-08d816b1912f
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5075:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB5075230B4634B0924C9CBAA4FB970@AM0PR04MB5075.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0442E569BC
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f6x/w1IWam4L8lN03M0hiO893q+TosBgteA2GVoE2lcpD1OmJQTT0dTcKkWtgCJZWByWP6GzWidhd/O4/IwUOZV/wGaoiX6otpVRqnfufp5PTlg16oM2R4h3DrZgntjzfxvf3ZTYkEfCNQDhujGQ8QxCvS60ZXq3DCaxQiuej0eK/VzuK/kjqWs9U/EivdyZoL67eQqBFgMkiZ+lBFYtP5YF9GFKISb4XKBd326rCYQB5iHWmR6rfPJ6SBKq42Ba/xBd6OVm/MeSxZynX0An6OW0VCXmKxQIdB+RChlNdeX51jNc1TNcJh4svyLQyWRX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(66476007)(66556008)(66946007)(83380400001)(5660300002)(2616005)(956004)(44832011)(86362001)(6666004)(2906002)(8676002)(6512007)(52116002)(16526019)(186003)(26005)(3450700001)(6506007)(4326008)(6486002)(316002)(478600001)(8936002)(7416002)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: geXCrSGhwzHAMrpWiPp088GpYfcCl9Cd5rOIEuvE+69M0Vq8QwQjYZL/WQK/9snRfU2oytUHstdvetYaTHXA1UJycth7usOCuNaX72PgDmZx219zFiHDFZnSrlb8GizpMCKGslQX5jJIzx1yBxIFeOZg0MyYqmvzSK6G2S8jNJLgj07gljx8lvsQhsgogtkozkIuhTBNwdojlaMnhKZcyLB9a5X/6G77ScUuagQvBLjuJl7wmnNNe85MKZiTyV+Y8eOosA7OzCPSlbBxuxc/RdkE934s5HXQJlWHar2Pq6PJFvpmYfLqI0wW6LbBK7u9aNiFiuRtFN/5X4+06sR4V7ZRPmWN8xsHOpjpMiV7zN1nYaA/CHFSNuDRZUeZ8rGJ41KtnTEnUNQYx/ljwFBX86loAtGtvnNHi0NM6M/YhzTpF2i9BuXdm8O6JJUsUxRd9DYtfFVucYs7/Eu7A+7sNehCFDBFK60CCLTWHYcMXRg=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d80b0a1a-3219-4ba2-c32e-08d816b1912f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 13:38:37.5173
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0VdVYUTjGcDnTwxnh8yn7X5hN9+QGmy22+axLZ+xyKhjUOj8AUfn/3n34213UxYuUUJ8/UzrjXxluBQgj1rIK+emIWpQGbaxcWXlWPHA5OY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5075
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The INIT_B pin reports the status during startup and after the end of the
-programming process. However the current driver completely ignores it.
+Add support for Ethernet Backplane KR driver only on DPAA1 devices.
+Ethernet Backplane KR generic driver is using link training
+(ieee802.3ap/ba standards), equalization algorithms (bee, fixed) and
+enable qoriq family of devices.
+This driver is dependent on uboot Backplane KR support:
+patchwork.ozlabs.org/project/uboot/list/?series=164627&state=*
 
-Check the pin status during startup to make sure programming is never
-started too early and also to detect any hardware issues in the FPGA
-connection.
+v3 changes:
+* The entire DPAA2 support was removed as well as phylink changes.
+This patchset contains only DPAA1 support for KR.
+* DPAA2 support will be added after we find a suitable solution
+for PCS representation.
+* All the changes made in v2 that addressed all the feedback not
+related to PCS representation, are kept in v3 as well.
 
-This is optional for backward compatibility. If INIT_B is not passed by
-device tree, just fallback to the old udelays.
+Florinel Iordache (7):
+  doc: net: add backplane documentation
+  dt-bindings: net: add backplane dt bindings
+  net: fman: add kr support for dpaa1 mac
+  net: phy: add backplane kr driver support
+  net: phy: enable qoriq backplane support
+  net: phy: add bee algorithm for kr training
+  arm64: dts: add serdes and mdio description
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+ .../bindings/net/ethernet-controller.yaml          |    7 +-
+ .../devicetree/bindings/net/ethernet-phy.yaml      |   50 +
+ .../devicetree/bindings/net/serdes-lane.yaml       |   49 +
+ Documentation/devicetree/bindings/net/serdes.yaml  |   42 +
+ Documentation/networking/backplane.rst             |  159 ++
+ Documentation/networking/phy.rst                   |    9 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     |   33 +-
+ .../boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi    |    5 +-
+ .../boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi    |    5 +-
+ drivers/net/ethernet/freescale/fman/mac.c          |   10 +-
+ drivers/net/phy/Kconfig                            |    2 +
+ drivers/net/phy/Makefile                           |    1 +
+ drivers/net/phy/backplane/Kconfig                  |   40 +
+ drivers/net/phy/backplane/Makefile                 |   12 +
+ drivers/net/phy/backplane/backplane.c              | 1557 ++++++++++++++++++++
+ drivers/net/phy/backplane/backplane.h              |  293 ++++
+ drivers/net/phy/backplane/eq_bee.c                 | 1076 ++++++++++++++
+ drivers/net/phy/backplane/eq_fixed.c               |   83 ++
+ drivers/net/phy/backplane/equalization.h           |  275 ++++
+ drivers/net/phy/backplane/link_training.c          | 1529 +++++++++++++++++++
+ drivers/net/phy/backplane/link_training.h          |   32 +
+ drivers/net/phy/backplane/qoriq_backplane.c        |  473 ++++++
+ drivers/net/phy/backplane/qoriq_backplane.h        |   42 +
+ drivers/net/phy/backplane/qoriq_serdes_10g.c       |  486 ++++++
+ 24 files changed, 6258 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
+ create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
+ create mode 100644 Documentation/networking/backplane.rst
+ create mode 100644 drivers/net/phy/backplane/Kconfig
+ create mode 100644 drivers/net/phy/backplane/Makefile
+ create mode 100644 drivers/net/phy/backplane/backplane.c
+ create mode 100644 drivers/net/phy/backplane/backplane.h
+ create mode 100644 drivers/net/phy/backplane/eq_bee.c
+ create mode 100644 drivers/net/phy/backplane/eq_fixed.c
+ create mode 100644 drivers/net/phy/backplane/equalization.h
+ create mode 100644 drivers/net/phy/backplane/link_training.c
+ create mode 100644 drivers/net/phy/backplane/link_training.h
+ create mode 100644 drivers/net/phy/backplane/qoriq_backplane.c
+ create mode 100644 drivers/net/phy/backplane/qoriq_backplane.h
+ create mode 100644 drivers/net/phy/backplane/qoriq_serdes_10g.c
 
----
-
-Changes in v2:
- - rename DT property init_b-gpios to init-b-gpios (Rob Herring suggested to
-   not use '_' in property names)
- - improve wait_for_init_b() documentation and variable naming
----
- drivers/fpga/xilinx-spi.c | 55 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-index 799ae04301be..2967aa2a74e2 100644
---- a/drivers/fpga/xilinx-spi.c
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -23,6 +23,7 @@
- struct xilinx_spi_conf {
- 	struct spi_device *spi;
- 	struct gpio_desc *prog_b;
-+	struct gpio_desc *init_b;
- 	struct gpio_desc *done;
- };
- 
-@@ -36,11 +37,45 @@ static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
- 	return FPGA_MGR_STATE_UNKNOWN;
- }
- 
-+/**
-+ * wait_for_init_b - wait for the INIT_B pin to have a given state, or wait
-+ * a given delay if the pin is unavailable
-+ *
-+ * @mgr:        The FPGA manager object
-+ * @value:      Value INIT_B to wait for (1 = asserted = low)
-+ * @alt_udelay: Delay to wait if the INIT_B GPIO is not available
-+ *
-+ * Returns 0 when the INIT_B GPIO reached the given state or -ETIMEDOUT if
-+ * too much time passed waiting for that. If no INIT_B GPIO is available
-+ * then always return 0.
-+ */
-+static int wait_for_init_b(struct fpga_manager *mgr, int value,
-+			   unsigned long alt_udelay)
-+{
-+	struct xilinx_spi_conf *conf = mgr->priv;
-+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-+
-+	if (conf->init_b) {
-+		while (time_before(jiffies, timeout)) {
-+			/* dump_state(conf, "wait for init_d .."); */
-+			if (gpiod_get_value(conf->init_b) == value)
-+				return 0;
-+			usleep_range(100, 400);
-+		}
-+		return -ETIMEDOUT;
-+	}
-+
-+	udelay(alt_udelay);
-+
-+	return 0;
-+}
-+
- static int xilinx_spi_write_init(struct fpga_manager *mgr,
- 				 struct fpga_image_info *info,
- 				 const char *buf, size_t count)
- {
- 	struct xilinx_spi_conf *conf = mgr->priv;
-+	int err;
- 
- 	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
- 		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-@@ -49,10 +84,21 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
- 
- 	gpiod_set_value(conf->prog_b, 1);
- 
--	udelay(1); /* min is 500 ns */
-+	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-+	if (err) {
-+		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
-+		gpiod_set_value(conf->prog_b, 0);
-+		return err;
-+	}
- 
- 	gpiod_set_value(conf->prog_b, 0);
- 
-+	err = wait_for_init_b(mgr, 0, 0);
-+	if (err) {
-+		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-+		return err;
-+	}
-+
- 	if (gpiod_get_value(conf->done)) {
- 		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
- 		return -EIO;
-@@ -154,6 +200,13 @@ static int xilinx_spi_probe(struct spi_device *spi)
- 		return PTR_ERR(conf->prog_b);
- 	}
- 
-+	conf->init_b = devm_gpiod_get_optional(&spi->dev, "init-b", GPIOD_IN);
-+	if (IS_ERR(conf->init_b)) {
-+		dev_err(&spi->dev, "Failed to get INIT_B gpio: %ld\n",
-+			PTR_ERR(conf->init_b));
-+		return PTR_ERR(conf->init_b);
-+	}
-+
- 	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
- 	if (IS_ERR(conf->done)) {
- 		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
 -- 
-2.27.0
+1.9.1
 
