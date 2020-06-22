@@ -2,100 +2,137 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BA2C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5DDC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4CB82083E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4788A20771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FvvYYEOP"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="eX3H6EWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgFVIAH (ORCPT
+        id S1726019AbgFVIA3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgFVH7r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:59:47 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 364E8C061795
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:59:46 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id n6so12371769otl.0
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 00:59:46 -0700 (PDT)
+        Mon, 22 Jun 2020 04:00:29 -0400
+Received: from mail-eopbgr1310101.outbound.protection.outlook.com ([40.107.131.101]:60864
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725897AbgFVIA2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 04:00:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WwnI119078lCXGiSbhmMamwGjjux27/rmQ+/Pic8Dkn4E6/HjcplL+aJk3hK/REfAtx8VwcXCeUEr90FPF/CIPFnHotS//KS+xwusDu5a86xux0xtjmElUayg+kgD0HmnQZcdqMQSpVcrs/7lNdTaxqYyfJGwHS/j4YhU26wlvrYceJ8SjVG/Ru9i0DEt0p+W/CyrPX5NFI3GOqLZ0PhmfYxth/9LDN07791qVo1hz8mw6JQw3DWkVvEGh//nni7u6Evy+VnwvSiA0u7rI7nhftmq+9ZgK9+DOgbE+E2fD7kCEF4AoX+Vus1aIOyzxbm6/BLKWFSU8MqGBEofoZNtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j2uL8as/0Cd+K2T0QTP2+KrgCnxlkzApSvaG80Zh074=;
+ b=LTKROlTyeEnu6cF5RmZKNJdDkU034/VWivSQJyOovN3fq28qLD2PjL0nRpf8ZvaLF5ca8+ERuryyQBlUxb+upTWIdY3SdR7tJrknORUXVcnUxBktOj1Ewfh0b5R5DXaltscohhDlJuewxF6S8/kYTf0KG46nsmmiMk6vrnuhdCbMmispU80oI9yREJJolWGXDFEVz8Umkh2acJHP7gH8fOC3OZtvFXzq67DuSta6p2TiD/7qNmGshMTuuUU+mV7Idyk3Phd8hyu2zFuGfOJmbWM13jamMj2Kd/VEoOqwlSY5IT8wS3loc9SOxlX7r9RfN7QS+3BAK0lQ4/IYYQsHaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W0AVC+X9ErzkYiUB5L4DLbPxCRa8htBKCdd8OA+6EeU=;
-        b=FvvYYEOPp4pm6JVzYIdlhQZgKQC4Eu0pmimukdREZ26w/K4RWzzQxG6c9zeJgTqiSa
-         qN9MIBtsPbkb1j8GYgXREyt9oAag/aycbJACqYdW2300He/IjRZskDg01Jrb4KGzgHnc
-         v7PpiflO7XHUd5c3kq2IC7VL26GWdN931FFhC8ecLCDSDzgUp3mTEMYSC4aHI7isoLQx
-         3QWbS0JX7Ux/UxNywd/1HiblCWy1NGOUA9KnD7kqRBdX27StGF/cltlpLWluWdSwjV+u
-         u4cHpa90l8EjkyRqYGA4wBdan6v21SoAsVRylPM83g0vJjRP9vgYLEw3Cg6/oDOzKgwL
-         x+XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W0AVC+X9ErzkYiUB5L4DLbPxCRa8htBKCdd8OA+6EeU=;
-        b=lSCglmwUhnfim0GGy3zSVClJDr8PFxfIlHs6Q8FJU1STIiycRYsI2hR8R8UzrfhITX
-         S6rXnHgpA53xJNOllL9f5+qmaPCoSqETL5vuUkJB+GC7cIQSHk2CIwNHHeNKlUB1ab6t
-         NsRLGibyxs16tYZOMw94BA3/YkTR7HQuNRqX88cj4LXByZm+cCzSdmbA9pRxOC4sjIRZ
-         gjLux6h4iHYkvVTf3HpBRnhejZ2zb1n2NWMt9AeePG8bmQWdGm7ZoL6TuszEr8Q8gpQ/
-         OPFi+lUj3y3uwJqf6DAk01yR/4TYDtOY5AsnggxYFYYsM1gWngm4u7sLHtldtT/wYy1A
-         gj3A==
-X-Gm-Message-State: AOAM532+Xnb5RpvbUk63hoE+qeRc4V+PZaiEmizhs/C+Du48cQ+UMJmQ
-        zZ3g8RZYhmJ7lfSCqrJRWTa3iQ==
-X-Google-Smtp-Source: ABdhPJz7O6kvIiN2932DRiySX4pyGzskG5olUNFzZYaoBSXN+4cLgQQHk6GWwwfvkD/ldN3thmQAKQ==
-X-Received: by 2002:a9d:21c5:: with SMTP id s63mr13578242otb.63.1592812785534;
-        Mon, 22 Jun 2020 00:59:45 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f7sm3135396otl.60.2020.06.22.00.59.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 00:59:44 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] hwspinlock: qcom: Allow dropping the intermediate TCSR mutex syscon
-Date:   Mon, 22 Jun 2020 00:59:52 -0700
-Message-Id: <20200622075956.171058-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j2uL8as/0Cd+K2T0QTP2+KrgCnxlkzApSvaG80Zh074=;
+ b=eX3H6EWG3AhmmXntv+NWSH/6Mv+flwx19bF6iVoxRBv952QSJOPijo5dV24gqYUHgy9zT0NSiPoBI7qZZenzGw29EcPJxL2xTzcWH6Jbf53g86GeL7jDP+7qa2vqUQDrOCDnSkHcUSqot5CZezkc/TiutQj0PrL0xhCzoDvJV8o=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY2PR01MB5018.jpnprd01.prod.outlook.com (2603:1096:404:118::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 08:00:22 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::2da1:bdb7:9089:7f43]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::2da1:bdb7:9089:7f43%3]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 08:00:22 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
+Thread-Topic: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
+Thread-Index: AQHWQwbqafU6kcCmak6Q/RlGSBV2bqjeBLQAgAYZrNCAACLCgIAADqTQ
+Date:   Mon, 22 Jun 2020 08:00:22 +0000
+Message-ID: <TY2PR01MB36928A972E7D1F515302E7D1D8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWd_nRhYZoHGdC+OJuB3edNUZ=pcNERDRkOwr+n=43Yeg@mail.gmail.com>
+ <TY2PR01MB369258B26BD909D9E0E3615ED8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+ <CAMuHMdU03451pdTyAFTXcjadZUbF_1An6smqkB12WvvY1tzezA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU03451pdTyAFTXcjadZUbF_1An6smqkB12WvvY1tzezA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux-m68k.org; dkim=none (message not signed)
+ header.d=none;linux-m68k.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b9f780c0-36a2-4064-4b00-08d816825072
+x-ms-traffictypediagnostic: TY2PR01MB5018:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB5018F9C8860A4B97263B3D61D8970@TY2PR01MB5018.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:457;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O9m7Z2mxgUu6eatcH8WZVZDcZNW9GTpFiulziK4a+JCEj0Dl5h0lsKLVgzLJ1P02swz0cej/Dqxdr5bHxjJpTrosk3jnaYs6rkmNdk/2GBZJ6VaC1LXiMmj+bV8b+dH0ZzuyGYJwCwKopmdlgN6khhMJzmMXe4+zZ2W3okmeUcvHvp+c2vOhICJSi75EEfhyb8USLfxlffdd+Uqs88A6HymXQKw5FxPPHXdpKREiFLXXAG3Bp0tYQZMEPuIiKW1ucv16CcZOOC/k7dvo5lnkh8RExqP1q8SupEbWxusZZrlh4C0ECWayVcnZZpRrfQyqgeefd5X0pTV12SJCGs9eRt38Gf4cta8T/aw7ZFMUnPdV/cLdTQ0rjAZq6t6kOpzN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(8936002)(33656002)(54906003)(64756008)(7696005)(66476007)(66946007)(55016002)(66446008)(66556008)(4326008)(316002)(71200400001)(478600001)(2906002)(186003)(86362001)(52536014)(5660300002)(6916009)(53546011)(6506007)(8676002)(26005)(76116006)(55236004)(9686003)(142933001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: sPUN8d15kdA9ZhwdyU4lTATaZL2eCWbA5fG300cV9zpSP6TYSanlaxScL0oFHtQ5uVTe+kL05zMPhn5V/ApDdSwUXIkE7YTqJ2EOG5GsmiEdeBk8/+PBx8wO4DcafwO5EYgdjnlD2Kndu9FPN3ujJi74+4VEnCP2tWR9gabyRXYZaTr7UAdMW+2C+qso5sOBU0yyep3MP2SfdaLoLimb6DxLWI0iU/ZmqanGtiOo0i2YeaDFdlqZFFHp0vluur5a1rC3VYW2FKqNubWbmEd3MD/eSziHbxtrhoW5OchIx8G1JUsOJH6zhUaUAzoARhacKRT2rHl1ye9Sdsn7b1lNj6SzY2JY65QwJWLsU3on9grvKC2sYvP+9GPylHDSpWRwlOdlbEa++ISFEtE8/40KVRSaLkIJ+rRZz4+y5ynZf46+bllrCaP2//X/xvRIv9Fj0IyKaS3bx80lSXyi33yhLmXm3H4/j0GH4pJpZ+KN5TN3vWuen+t8sMasezVtgAGv
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9f780c0-36a2-4064-4b00-08d816825072
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 08:00:22.2763
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WXVMHxSQX/I++yz0vLIQVChWhCUdU+kPx80dwxmMH6nhttYO31CMZtV7hD+nqfhskZ9WKdFGBRQwCNqoPe2CCnlxfcxgGZDHFWA+NLj2hoDRXqeUVJ0Zxb1+vMObEJmn
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB5018
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In modern Qualcomm platforms the mutex region of the TCSR is forked off into
-its own block, all with a offset of 0 and stride of 4096, and in some of these
-platforms no other registers in this region is accessed from Linux. Update the
-binding and the implementation to allow the TCSR mutex to be represented
-without an intermediate syscon node.
-
-Bjorn Andersson (4):
-  dt-bindings: hwlock: qcom: Migrate binding to YAML
-  dt-bindings: hwlock: qcom: Allow device on mmio bus
-  hwspinlock: qcom: Allow mmio usage in addition to syscon
-  arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
-
- .../bindings/hwlock/qcom-hwspinlock.txt       | 39 -----------
- .../bindings/hwlock/qcom-hwspinlock.yaml      | 65 +++++++++++++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi          | 17 ++---
- drivers/hwspinlock/qcom_hwspinlock.c          | 70 ++++++++++++++-----
- 4 files changed, 125 insertions(+), 66 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
- create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-
--- 
-2.26.2
-
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogTW9uZGF5
+LCBKdW5lIDIyLCAyMDIwIDQ6MDYgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24g
+TW9uLCBKdW4gMjIsIDIwMjAgYXQgNzoyMSBBTSBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGlo
+aXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gRnJvbTogR2VlcnQgVXl0
+dGVyaG9ldmVuLCBTZW50OiBUaHVyc2RheSwgSnVuZSAxOCwgMjAyMCA0OjUyIFBNDQo+ID4gPiBP
+biBNb24sIEp1biAxNSwgMjAyMCBhdCAxOjIxIFBNIFlvc2hpaGlybyBTaGltb2RhDQo+ID4gPiA8
+eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gPiBDb252ZXJ0
+IHJlbmVzYXMgcmVsYXRlZCBwYXJ0IG9mIHVzYi14aGNpIHRvIFlBTUwuDQo+ID4gPiA+DQo+ID4g
+PiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51
+aEByZW5lc2FzLmNvbT4NCj4gDQo+ID4gPiBTbyB5b3UncmUganVzdCBleHRyYWN0aW5nIHRoZSBS
+ZW5lc2FzIHBhcnRzLi4uDQo+ID4gPg0KPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvcmVuZXNhcyx1c2IteGhj
+aS55YW1sDQo+ID4gPg0KPiA+ID4gLi4uIGFuZCBwdXR0aW5nIHRoZW0gaW4gYSBzZXBhcmF0ZSBm
+aWxlLg0KPiA+DQo+ID4gWWVzLg0KPiA+DQo+ID4gPiBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIGtl
+ZXAgdGhlbSBjb21iaW5lZCBpbiBhIHNpbmdsZSBkb2N1bWVudD8NCj4gPiA+IE9yIGFyZSB0aGVy
+ZSB0b28gbWFueSBkaWZmZXJlbmNlcz8NCj4gPg0KPiA+IEkgdGhvdWdodCB0aGVyZSB3ZXJlIHRv
+byBtYW55IGRpZmZlcmVuY2VzLiBBdCBmaXJzdCwgSSBoYWQgY29udmVydGVkIGFsbCB0bw0KPiA+
+IGEgc2luZ2xlIGRvY3VtZW50IFsxXS4gQnV0LCBJIHdhcyB0aGlua2luZyB0aGVyZSB3YXMgYSBu
+b3QgZ29vZCB3YXkgaW4gdmFsaWRhdGlvbg0KPiA+IHBvaW50IG9mIHZpZXcgYmVjYXVzZSBzb21l
+IHByb3BlcnRpZXMgbmVlZGVkIHRvIGFkanVzdCBmb3IgYWxsIHBsYXRmb3Jtcy4NCj4gPiBBbHNv
+LCB1bmZvcnR1bmF0ZWx5LCBzb21lIGNvbXBhdGlibGVzIGFuZCBzcGVjaWZpYyBwcm9wZXJ0aWVz
+DQo+ID4gYXJlIG5vdCBkb2N1bWVudGVkLi4uIFNvLCBJIGhhZCBleHRyYWN0ZWQgdGhlIFJlbmVz
+YXMgcGFydHMgb25seS4NCj4gPg0KPiA+IFsxXQ0KPiA+IFBsZWFzZSByZWZlciB0byB0aGUgZW5k
+IG9mIHRoaXMgZW1haWwuDQo+IA0KPiBPSy4gTWFrZXMgc2Vuc2UsIGFzIHRoZSBSZW5lc2FzIHBh
+cnRzIGFyZSBub3QgY29tcGF0aWJsZSB3aXRoIGdlbmVyaWMteGhjaS4NCg0KWWVzLiBTbywgSSds
+bCBhZGQgc3VjaCBpbmZvcm1hdGlvbiBpbnRvIHRoZSBjb21taXQgZGVzY3JpcHRpb24gb24gdjIu
+DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5n
+fXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2Vl
+cnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBn
+ZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRo
+IHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEkn
+bSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0
+aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGlu
+dXMgVG9ydmFsZHMNCg==
