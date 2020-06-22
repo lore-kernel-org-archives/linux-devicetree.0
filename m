@@ -2,105 +2,104 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B7EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE12DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7114F2071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C320C20760
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592827452;
+	bh=OtCXs6qM/P9EkBQOGbFbsuL3yixXLWMZlDM2pS2KULw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AmIdwdXnEFUSlgB7HRrn+QVFRz04lipTFP6V2Fku2qZT4D8kJFHFdNkcY6gGPloL5
+	 oVzZat+awQ/nUQHi0yRhTHy3srwcZFwKx/4dc0Sa8HEGkE+v9x270Zu4avldvulzEv
+	 4hidmwwAgYDr8b8p/aJ4Kuscv8ObF1JOtMLJn0uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgFVMC2 (ORCPT
+        id S1728003AbgFVMEM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgFVMC2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:02:28 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0032C061794;
-        Mon, 22 Jun 2020 05:02:28 -0700 (PDT)
-Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt@linutronix.de>)
-        id 1jnL9e-00083K-0P; Mon, 22 Jun 2020 14:02:26 +0200
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [RFC PATCH 9/9] dt-bindings: net: dsa: Add documentation for Hellcreek switches
-In-Reply-To: <20200619135657.GF304147@lunn.ch>
-References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-10-kurt@linutronix.de> <20200618134704.GQ249144@lunn.ch> <87zh8zphlc.fsf@kurt> <20200619135657.GF304147@lunn.ch>
-Date:   Mon, 22 Jun 2020 14:02:19 +0200
-Message-ID: <87imfjtik4.fsf@kurt>
+        Mon, 22 Jun 2020 08:04:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727864AbgFVMEL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 08:04:11 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E432071A;
+        Mon, 22 Jun 2020 12:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592827451;
+        bh=OtCXs6qM/P9EkBQOGbFbsuL3yixXLWMZlDM2pS2KULw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lLSiwOPq3kFltNjGmVtUTR8bqdRAZLMPunIKPq/ormr3CcYLEKhYqR99c7sOWbm6j
+         QGDp3guukz+KDDmVFZZbM801EPjtvCQJHQ1Jn22iv/gzYz0+zqTS2g6Agann7ySK64
+         D7rgZz7rr4H84BwzotL1cGZN6bQDlsmoSWEjnkqs=
+Date:   Mon, 22 Jun 2020 13:04:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pantelis Antoniou <pantelis.antoniou@linaro.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Matthew Porter <mporter@konsulko.com>,
+        Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
+ apq8039 sound complex
+Message-ID: <20200622120409.GD4560@sirena.org.uk>
+References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
+ <20200619193831.12528-2-pantelis.antoniou@linaro.org>
+ <20200619214126.GA1251@gerhold.net>
+ <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zS7rBR6csb6tI2e1"
+Content-Disposition: inline
+In-Reply-To: <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
+X-Cookie: laser, n.:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--zS7rBR6csb6tI2e1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri Jun 19 2020, Andrew Lunn wrote:
->> > The switch is 100/100Mbps right? The MAC is only Fast ethernet. Do you
->> > need some properties in the port@0 node to tell the switch to only use
->> > 100Mbps? I would expect it to default to 1G. Not looked at the code
->> > yet...
->>=20
->> No, that is not needed. That is a hardware configuration and AFAIK
->> cannot be changed at run time.
->
-> I was wondering about that in general. I did not spot any code in the
-> driver dealing with results from the PHY auto-neg. So you are saying
-> the CPU is fixed speed, by strapping? But what about the other ports?
-> Does the MAC need to know the PHY has negotiated 10Half, not 1G? Would
-> that not make a difference to your TSN?
+On Mon, Jun 22, 2020 at 02:34:23PM +0300, Pantelis Antoniou wrote:
 
-Indeed, that does make a difference. I've checked with the vendor. The
-current version of the switch IP does not support configuring the speed
-etc. at run time. It is hard wired to 100 Mbit/s or 1000 Mbit/s for
-now. Later versions of the chip might support setting the speed etc. via
-configuration registers. As a result the PHYs at the front ports should
-be programmed to only advertise 100 Mbit/s or 1G depending on the
-hardware setup.
+> > This looks much like a replacement for ALSA UCM and userspace audio jack
+> > detection coded into the device tree.
 
-Thanks,
-Kurt
+> I wouldn=E2=80=99t call it a replacement exactly. It=E2=80=99s merely a w=
+ay to bundle all
+> of this information about codec glue in the kernel (where it should belon=
+g IMO).
 
---=-=-=
+No, you're encoding use case decisions into the DT here - for example
+your example will break use cases like ring tones and shutter sounds
+which should play through both speaker and headphones.  It's also
+setting volumes which may be inappropriate or may be not and interferes
+with userspace using those same physical volume controls.
+
+--zS7rBR6csb6tI2e1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wncsACgkQeSpbgcuY
-8KYXyA/8DLXlHC/IIVPn9Frz2Es51NLmJmUYxmNRdlFFtHNlVZ7OxyewgvGG4XBa
-Y3+UMl9byjXzkHkgYAEBp98PKDtAf+wM2DYj/OP2CS9IvxKL6X1Sfductwxq3yg7
-MFOUvHo/eeGd88vFvDddX6/z9NeV2TaXTBmnwLLxsXa06QjTedhM5bJTBRZcqZi/
-aHzDXwXgr81HSF3rj2QwlcgjVtUF7NKeSq42AnnuQyw2sfyNEObN0x/85+/FlaWx
-C7kNUIX/gB8mRjEBDwWb4Ic7K+X2Fry16yMvaSLzDO9oKXeefRt1fAaIL5/e+/MZ
-HYifNcPEHczfd3SxWQf7qNdm3ulvHTVkbFbAqrENtaqEH7nw6YGgpAjSpAKFynM8
-DPp8W9wE+No5Bvm4zxarR/eERItRjruRXwot/tx0D7/Of1QVpPqf1Rt3CfTKphDC
-ZHvkeZoJAnm6wo6Ig5v7Bq44oTRFTbXjkXgl681BNLk4xJnU0Akvam3nVMDzapH+
-rOGyFlcsNk6QE08W2maQjOKmjEclWzXxNpuEc80CgKzseYJOmuvT1Nbt6B7SymZY
-hdlKz2A9h2rZgMxIlKVGH5QNEE0iLc1wr5N4XQYcZKftveJc6hbx+KIg1HvPcfH5
-nWKuH/lHl98iBpzVow48vMcA0++wcy+TCVBM3blbL8ACiMa792Y=
-=CdRP
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7wnjgACgkQJNaLcl1U
+h9Dz/Af/ajnJ98C2qreuaWAPQ8PgLd/GE3P0ukq/sBXHzyMUg16weomHiWdIrtEZ
+/78/EQEqwb8rigyHLVLC7P/BBmLH2XqpNu0tB0hhv4iN5ywyvri2U6LbDUIlSdKM
+VieAO/eLiOmM7lC34jf5n6JJllQJGAFQlsJMeSdsBMim/xILhPXPAZ8Vw10PakkK
+VWBCA2z5kQLlqU7R/90f9HqXaQFegxQJzJN4otivtTr0bNq3fYVnjs/l8cGoIM78
+hHTm7Gg5dIPxG6u5SL+s6073hlMRzS1NOPCjz/9nuJgNV49BR9kvHT25GE2wPmLP
+Pbq2xpkHMsSQSpnRaK81eKX9f3gp1Q==
+=IFZO
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--zS7rBR6csb6tI2e1--
