@@ -2,148 +2,158 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79655C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29656C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFA320720
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592826693;
-	bh=6kI4L4zPUlkblUHtlE0vjkJQynOdD+oESUx6nEDdgtA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gw3JyoWPKKc/eVhFnlH804PRNz3Xpd07dXmQtYiw2iYbXdRXZuq9udu/8wBaz+R3V
-	 9W5UY1cPtV83q6HeMdhTf/MO8qsYpAxWM286JlFHwYFJU6v1PpnWMeCYyg8UvTDgSa
-	 3ooJCsKYUPyspQyoY1vk/QwMx2zuWXsP03KGqQm8=
+	by mail.kernel.org (Postfix) with ESMTP id 087062071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgFVLvc (ORCPT
+        id S1727882AbgFVLwq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbgFVLvc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 07:51:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D93B206EB;
-        Mon, 22 Jun 2020 11:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592826691;
-        bh=6kI4L4zPUlkblUHtlE0vjkJQynOdD+oESUx6nEDdgtA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k5bbji9DbfRj4tdakCUFG9c0m2fv4xOMhtcICMHdf7aexe0EUGfar7nMd2ujoLGWj
-         Zm9fi6pWgwb3HpZxKrRYxjVAtm+/vsWZjURMA/jMuJ7C+ouAEWJT6VL3hBBqWebpCx
-         xiZ5uBYb12DAW6k45vIv8bs9j8QJ0quxF2AHCaEQ=
-Date:   Mon, 22 Jun 2020 12:51:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Pantelis Antoniou <pantelis.antoniou@linaro.org>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Matt Porter <mporter@konsulko.com>,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
- apq8039 sound complex
-Message-ID: <20200622115129.GC4560@sirena.org.uk>
-References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
- <20200619193831.12528-2-pantelis.antoniou@linaro.org>
- <20200619214126.GA1251@gerhold.net>
+        Mon, 22 Jun 2020 07:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgFVLwq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:52:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A299C061794;
+        Mon, 22 Jun 2020 04:52:46 -0700 (PDT)
+Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt@linutronix.de>)
+        id 1jnL0E-0007v8-Hk; Mon, 22 Jun 2020 13:52:42 +0200
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 3/9] net: dsa: hellcreek: Add PTP clock support
+In-Reply-To: <20200619134001.GC304147@lunn.ch>
+References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-4-kurt@linutronix.de> <20200618172304.GG240559@lunn.ch> <878sgjqx4r.fsf@kurt> <20200619134001.GC304147@lunn.ch>
+Date:   Mon, 22 Jun 2020 13:52:36 +0200
+Message-ID: <87lfkftj0b.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
-Content-Disposition: inline
-In-Reply-To: <20200619214126.GA1251@gerhold.net>
-X-Cookie: laser, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---0vzXIDBeUiKkjNJl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 19, 2020 at 11:41:26PM +0200, Stephan Gerhold wrote:
-> Hi Pantelis,
->=20
-> On Fri, Jun 19, 2020 at 10:38:30PM +0300, Pantelis Antoniou wrote:
-> > Add a yaml device binding for the QCOM apq8039 sound complex driver.
-> >=20
->=20
-> Nice to see some activity to get sound working on another SoC!
-> Thanks for documenting all these properties.
+On Fri Jun 19 2020, Andrew Lunn wrote:
+> On Fri, Jun 19, 2020 at 10:26:44AM +0200, Kurt Kanzenbach wrote:
+>> Hi Andrew,
+>>=20
+>> On Thu Jun 18 2020, Andrew Lunn wrote:
+>> >> +static u64 __hellcreek_ptp_clock_read(struct hellcreek *hellcreek)
+>> >> +{
+>> >> +	u16 nsl, nsh, secl, secm, sech;
+>> >> +
+>> >> +	/* Take a snapshot */
+>> >> +	hellcreek_ptp_write(hellcreek, PR_COMMAND_C_SS, PR_COMMAND_C);
+>> >> +
+>> >> +	/* The time of the day is saved as 96 bits. However, due to hardware
+>> >> +	 * limitations the seconds are not or only partly kept in the PTP
+>> >> +	 * core. That's why only the nanoseconds are used and the seconds a=
+re
+>> >> +	 * tracked in software. Anyway due to internal locking all five
+>> >> +	 * registers should be read.
+>> >> +	 */
+>> >> +	sech =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
+>> >> +	secm =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
+>> >> +	secl =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
+>> >> +	nsh  =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
+>> >> +	nsl  =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
+>> >> +
+>> >> +	return (u64)nsl | ((u64)nsh << 16);
+>> >
+>> > Hi Kurt
+>> >
+>> > What are the hardware limitations? There seems to be 48 bits for
+>> > seconds? That allows for 8925104 years?
+>>=20
+>> In theory, yes. Due to hardware hardware considerations only a few or
+>> none of these bits are used for the seconds. The rest is zero. Meaning
+>> that the wraparound is not 8925104 years, but at e.g. 8 seconds when
+>> using 3 bits for the seconds.
+>
+> Please add this to the comment.
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+I will, no problem.
 
-> > +  function-definition:
-> > +    type: object
-> > +    description: |
-> > +      Functional configuration for the sound complex via a
-> > +      simple control. allows fixed and dynamically constructed
-> > +      function selection.
-> > +
-> > +    properties:
-> > +      mixer-control:
-> > +        $ref: /schemas/types.yaml#/definitions/string
-> > +        description: |
-> > +          Name of the exported alsa mix control.
+>
+>> >> +static u64 __hellcreek_ptp_gettime(struct hellcreek *hellcreek)
+>> >> +{
+>> >> +	u64 ns;
+>> >> +
+>> >> +	ns =3D __hellcreek_ptp_clock_read(hellcreek);
+>> >> +	if (ns < hellcreek->last_ts)
+>> >> +		hellcreek->seconds++;
+>> >> +	hellcreek->last_ts =3D ns;
+>> >> +	ns +=3D hellcreek->seconds * NSEC_PER_SEC;
+>> >
+>> > So the assumption is, this gets called at least once per second. And
+>> > if that does not happen, there is no recovery. The second is lost.
+>>=20
+>> Yes, exactly. If a single overflow is missed, then the time is wrong.
+>>=20
+>> >
+>> > I'm just wondering if there is something more robust using what the
+>> > hardware does provide, even if the hardware is not perfect.
+>>=20
+>> I don't think there's a more robust way to do this. The overflow period
+>> is a second which should be enough time to catch the overflow even if
+>> the system is loaded. We did long running tests for days and the
+>> mechanism worked fine. We could also consider to move the delayed work
+>> to a dedicated thread which could be run with real time (SCHED_FIFO)
+>> priority. But, I didn't see the need for it.
+>
+> If the hardware does give you 3 working bits for the seconds, you
+> could make use of that for a consistency check. If nothing else, you
+> could do a
+>
+> dev_err(dev, 'PTP time is FUBAR');
 
-This does *not* look like something that should be in a DT binding, it
-is quite clearly OS specific.
+OK. I'll add a check for that.
 
-> > +      system-list:
-> > +        $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +        description: |
-> > +          phandle(s) of the default, init and shutdown functions
-> > +          Must be one of the declared ones in the function property.
-> > +          The default function is the one selected by default on
-> > +          startup (after the init function's sequence is executed).
-> > +          On shutdown the shutdown function sequence will be executed.
-> > +          Typically init and shutdown are the same and it's purpose
-> > +          is to initialize the sound complex mixer controls to the
-> > +          all off state, and be ready for a regular function selection.
+Thanks,
+Kurt
 
-> This looks much like a replacement for ALSA UCM and userspace audio jack
-> detection coded into the device tree.
-
-Very much so.  This is use case configuration and completely
-inappropriate for DT.  DT should describe the hardware, the way the OS
-intends to use the hardware is up to the OS.
-
-> If you want to discuss ways to integrate mixer enable/disable sequences
-> into the device tree, I suggest that you post your ideas separately as
-> [RFC] with a more generic subject. That will make it more easy for
-> everyone interested to share their thoughts.
-
-> Right now it's quite hidden in a patch set where the subjects suggest
-> that it's just a simple machine driver to glue some codecs together.
-
-Indeed, I agree entirely.
-
---0vzXIDBeUiKkjNJl
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7wm0AACgkQJNaLcl1U
-h9CUhgf/RIFd53orwiMac+A1ik82HDNf5kX/wfvcuhQB6aFkTGuyMHXXcAC/8JJp
-XgvvAcZqZpVpGZd+l9FoSp3Ye2iAPJfA4zfM7pQ5MLHoZNjnQG8n5gE04w6JhCZq
-fWi4khSCyOej+9u3Wef+37mCCLIT8g1mB34QialxOU/JsFyZEzULz/9q0reposju
-yxbv899e+GoUrRdYwhYafXcbsvy2t8UfERlBdoaGb5WDOXpYXJeTbirDhnYCKWtb
-ze3jg9a1/OAtqkPjolDJHxHY8AC4WJSYwVyPGjHMPKnf5nhuLa/CKB7J6UMyyEXN
-SEQyffj47T49rSpjtvS9FdMTg7nwXw==
-=4kwO
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wm4QACgkQeSpbgcuY
+8KZtdA//WegWsTtiIgimHSJcxAbCNjZZb/DQ3rwXCgmDnlbo2YyLAkZy1vihHPmQ
+ap3m7rKufXNZnbRK5t0YPk8kf1X1cH2blkWRCpVkpQbvvvjfqmP9b6oK+3xY2fJx
+iFZc3qpQMgVgQZGh+XcsUZXm0RbmFpCKGt1Ly8BJW7+2zK6ZU0a0Qha49VppXcMH
+lPQl9sPp7NwIYCoMnTq5kfxKFS7tcyc0KEOrgdxbXLW+Zz9XkMryZ6sPXkIp2UaM
+2ZZ19ha9Dolnk4/TPoMew++D/r/c3PzViYz6NwjT/CKM4PmCaCLBLVvP+np+fLAx
+q72sMAPSRtVf9cbCFRycF3PPT5VBpdbnfy5zETBJATVLTVpcsNFM26K3nEUN8obQ
+2Ns4t1coTgUlWMS6hcRmm5Tq9aE5ExsZQcRUkQaA712xMqVafV5rJ0nv/VvgCO4k
+y5iHan7AFYrvAXm30xFdD3Wy8UThT1zCPWeFSEqQ+kzJ7cOFoeErQsdZcpv24bdh
+PIUvv/a8F7U78OTOtHEpAV3Di9uAdL4dEJ4cn0H1VEOAClDJJsJbrbuwYANkMudT
+WNEkmk03rhgTJuaq9jXm1hugkr/0HasCEMDD3fv/Ru1L0jUnXiR8mkFrudrA4D/e
+OqmNC9FB1z92ah5diUOtkhDaORs22nb0CS2R21g/fLsC8Tu6JAY=
+=hnDA
 -----END PGP SIGNATURE-----
-
---0vzXIDBeUiKkjNJl--
+--=-=-=--
