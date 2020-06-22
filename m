@@ -2,61 +2,62 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276FBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5102C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0518820706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8B220706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rxCKkG6S"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="RkGI6tow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgFVKBK (ORCPT
+        id S1727784AbgFVKBV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
+        Mon, 22 Jun 2020 06:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgFVKBI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:01:08 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F5CC061794
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:06 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g75so6170813wme.5
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:06 -0700 (PDT)
+        with ESMTP id S1727805AbgFVKBT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:01:19 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F870C0617BB
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:18 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l17so14277916wmj.0
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0a5wnHY7CslRA6Iynsfhb3yG1izm8FY/pWdetFoi42c=;
-        b=rxCKkG6SfwCZOTa1iL5Lojz3NDEQwyb2IxWpdYBFS7nvwaSmH3nUs6LKzmpIqO9fmz
-         T0E4/NHNhWS1FxOj6Knq7vaDIfED18iz4zDTKFADfGdZ87o9VBNoHn9xKkFZ5ABiLuMo
-         spikJGn8iabnLkYyJ4CKFueyLxhkCPXnn+tT0IIM62ri0cxtQBzPXWPE2OKAi+/WB4Hb
-         Zm7iXcDn1Km9OIDru3YUscj0Ip3rFJhgBzUhsF68MWUFQB29eaTMLMdCy2o5sHrQdX4O
-         +4gvt10n83RfLFmg67wO7WMqC6KCkbs7hPXvMxFl4ifmIlhRhWH6of7y0Q6ilwx8joXN
-         aa9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
+        b=RkGI6towfSCgupn14twIBaRcPBpM6kTZkAyARWvNzlnwP2dFp8mTrnv4XT4CqOTAtt
+         IZZIzKyBSsI3/vkakwGdPxh4YtWTjHfNDgdbQoZiEHDRdqwaJzeBZU2n3pe3Hl1JIPX3
+         j5b+wJ80RHNzlW79fmuSMN+irizFshjUfl7KHbTO/28J+86JZlFjPu2oxnw1xDlP9U+o
+         Tz/qaKPx5+I3TcQfOgtfVc5nagMQ1oAW9Ofb8YpEYwg0Zu2KW4gsBJQW7Tl/PL353xVB
+         MT3qUFDfoJzdv7OI5y+BMBaG6gcer8a9lZAr62OJTJz3NDwnsNdQyvR6wevtOPQ6vWAU
+         9aMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0a5wnHY7CslRA6Iynsfhb3yG1izm8FY/pWdetFoi42c=;
-        b=eQhGEDAUWgBO44R7DXmjptmNtyjSIwnTGFIWEd3++9upqxDAZ13KyzaZNcoqU9QEQ8
-         Azl3cw6yzcx91ZC/0Xs9sAZ0aTCAH8bJLWVNE9ABsDzUfEMjgtvhgK/0DBeXu8c8k8G8
-         DRa8TRDv64sv2t1xHTAGEqb1ms8cxEb6sKWmrvCn/9Oa3GE6PB5MNp5J8VArZ2frQ2zl
-         VQ4L8IJuU+hl/bPV6AXt/BeyU8t7c0TuXicqj/huiXS1F6mPJVs0vYDvM107+caiB48E
-         lHJVhoB6qI+OzYJVkkIans0E4ZtkhdFiJvx1V773JeXkjUjJcP5wG/zJgOe0+a5qlu58
-         Af3g==
-X-Gm-Message-State: AOAM533szqXBXDlXj7BdnJCdclG0zPVkstVOVsAJb4p/GZ3qxrdtNME4
-        xjMXCLxqVAJn2tmjvdsjDnFfmA==
-X-Google-Smtp-Source: ABdhPJwltFZXM/3VYa9tIy2MbCHj//CBC2paauuUY5AwGyYeKiWa1AZvShK5hzeRuXlvCn791GVruA==
-X-Received: by 2002:a1c:c1:: with SMTP id 184mr17443220wma.74.1592820065387;
-        Mon, 22 Jun 2020 03:01:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rcgV1UNGKm4K4QD82m2Udcr1uoHRVa+LAuPxtdS553M=;
+        b=AKX++BMHAEn0rIXiQShLUWLSHGhSZHpTQccZoF7TiGl66b8/CwrLTy63XgPFhpcLMc
+         s9AbrxzKEEZwAMfEYU2lh5uLyD2WNutB5uB83vH4fdc2A8dZ6Y56a/nngqP3/OmlUFrd
+         5oxtH5wPxYvsET3Zv8jdLo1rH1atcmdjiG33bk2N033ah9CJookS4j+KcUcK3OAKzK4+
+         uT5ngbr459vkdyXh4TIscBa95lLsKV7CsTCPDmntvdx1YbaTRvinYm8J3BS/hDY6pyjM
+         VbkaFx20pIcNalrfoIZbF+2xsFuI3dqvGi5jtH7mzLxzk4j6qYC4q26NYBOK77mfOPR8
+         1hlg==
+X-Gm-Message-State: AOAM533VrFM3tTP34hXJLuEh4Z1u+Jix+zDPXIbkCH4ljRIaIK9ppgM1
+        db/FgPGxP1DpU71Hoc14o1i1dA==
+X-Google-Smtp-Source: ABdhPJy6HpyoKYwmL67X7W6b1kvbkakGECdClzNJkWp/hMLI6DOqKfaBEc4Vc9FAS3rR166Apmbchw==
+X-Received: by 2002:a1c:f616:: with SMTP id w22mr9844980wmc.155.1592820077095;
+        Mon, 22 Jun 2020 03:01:17 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.03
+        by smtp.gmail.com with ESMTPSA id x205sm16822187wmx.21.2020.06.22.03.01.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:01:04 -0700 (PDT)
+        Mon, 22 Jun 2020 03:01:16 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
@@ -82,10 +83,12 @@ Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 00/11] net: improve devres helpers
-Date:   Mon, 22 Jun 2020 12:00:45 +0200
-Message-Id: <20200622100056.10151-1-brgl@bgdev.pl>
+Subject: [PATCH 07/11] phy: mdio: add kerneldoc for __devm_mdiobus_register()
+Date:   Mon, 22 Jun 2020 12:00:52 +0200
+Message-Id: <20200622100056.10151-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200622100056.10151-1-brgl@bgdev.pl>
+References: <20200622100056.10151-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -95,70 +98,31 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-When I first submitted the series adding devm_register_netdev() I was
-told during review that it should check if the underlying struct net_device
-is managed too before proceeding. I initially accepted this as the right
-approach but in the back of my head something seemed wrong about this.
-I started looking around and noticed how devm_mdiobus_register()
-is implemented.
+This function is not documented. Add a short kerneldoc description.
 
-It turned out that struct mii_bus contains information about whether it's
-managed or not and the release callback of devm_mdiobus_alloc() is responsible
-for calling mdiobus_unregister(). This seems wrong to me as managed structures
-shouldn't care about who manages them. It's devres' code task to correctly undo
-whatever it registers/allocates.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/net/phy/mdio_devres.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-With this series I propose to make the release callbacks of mdiobus devm
-helpers only release the resources they actually allocate themselves as it the
-standard in devm routines. I also propose to not check whether the structures
-passed to devm_mdiobus_register() and devm_register_netdev() are already
-managed as they could have been allocated over devres as part of bigger
-memory chunk. I see this as an unnecessary limitation.
-
-First two patches aim at removing the only use of devm_mdiobus_free(). It
-modifies the ixgbe driver. I only compile tested it as I don't have the
-relevant hw.
-
-Next two patches relax devm_register_netdev() - we stop checking whether
-struct net_device was registered using devm_etherdev_alloc().
-
-We then document the mdio devres helper that's missing in devres.rst list
-and un-inline the current implementation of devm_mdiobus_register().
-
-Patch 8 re-implements the devres helpers for mdio conforming to common
-devres patterns.
-
-Patches 9 and 10 provide devm_of_mdiobus_register() and the last patch
-adds its first user.
-
-Bartosz Golaszewski (11):
-  net: ethernet: ixgbe: check the return value of ixgbe_mii_bus_init()
-  net: ethernet: ixgbe: don't call devm_mdiobus_free()
-  net: devres: relax devm_register_netdev()
-  net: devres: rename the release callback of devm_register_netdev()
-  Documentation: devres: add missing mdio helper
-  phy: un-inline devm_mdiobus_register()
-  phy: mdio: add kerneldoc for __devm_mdiobus_register()
-  net: phy: don't abuse devres in devm_mdiobus_register()
-  of: mdio: remove the 'extern' keyword from function declarations
-  of: mdio: provide devm_of_mdiobus_register()
-  net: ethernet: mtk-star-emac: use devm_of_mdiobus_register()
-
- .../driver-api/driver-model/devres.rst        |  3 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |  6 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c  | 14 +---
- drivers/net/ethernet/mediatek/mtk_star_emac.c | 13 +--
- drivers/net/ethernet/realtek/r8169_main.c     |  2 +-
- drivers/net/phy/Makefile                      |  2 +-
- drivers/net/phy/mdio_bus.c                    | 73 ----------------
- drivers/net/phy/mdio_devres.c                 | 83 +++++++++++++++++++
- drivers/of/of_mdio.c                          | 43 ++++++++++
- include/linux/of_mdio.h                       | 40 ++++-----
- include/linux/phy.h                           | 21 +----
- net/devres.c                                  | 23 +----
- 12 files changed, 167 insertions(+), 156 deletions(-)
- create mode 100644 drivers/net/phy/mdio_devres.c
-
+diff --git a/drivers/net/phy/mdio_devres.c b/drivers/net/phy/mdio_devres.c
+index f0b4b6cfe5e3..3ee887733d4a 100644
+--- a/drivers/net/phy/mdio_devres.c
++++ b/drivers/net/phy/mdio_devres.c
+@@ -2,6 +2,13 @@
+ 
+ #include <linux/phy.h>
+ 
++/**
++ * __devm_mdiobus_register - Resource-managed variant of mdiobus_register()
++ * @bus:	MII bus structure to register
++ * @owner:	Owning module
++ *
++ * Returns 0 on success, negative error number on failure.
++ */
+ int __devm_mdiobus_register(struct mii_bus *bus, struct module *owner)
+ {
+ 	int ret;
 -- 
 2.26.1
 
