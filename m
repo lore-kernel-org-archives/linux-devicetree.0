@@ -2,96 +2,126 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E0EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B7FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA9020702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592832696;
-	bh=pLENTLPeVroG+On1y8UoBO5nhRFMAm48TrmuocJI5Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dN7wBIK23ZY9zl4llG10JuXSI4N3T3Jo0/RmbuXXM3DnpUQm8VTs3r+5eM/40/Ici
-	 2bXyrhPUrEFF70ByFFp4bhjFz9oSig6QLKSq19FjIyHUO+AdDUppqVVswah/Lo4m+a
-	 qtRGImegkAIzQ32VE/ALU/st0mo9pugjTs/XFeU8=
+	by mail.kernel.org (Postfix) with ESMTP id D933F20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzWbEtJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgFVNbf (ORCPT
+        id S1728339AbgFVNcw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgFVNbf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:31:35 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8860206D7;
-        Mon, 22 Jun 2020 13:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592832695;
-        bh=pLENTLPeVroG+On1y8UoBO5nhRFMAm48TrmuocJI5Sc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xWnP2/GXM7lzszi0oY8pTZz+2T8jjbEcTplJWlzAfj7QP7+h06iUJCNEUaxvu0JnW
-         z951jXlTvWaTK82PV86nqORX7eZJOfy6y0fajWcjvwYnMt4OTtB8Z96gCx1cCEMwSK
-         K7Kk+ZZjAIMHy7QSnEEghyP426johQ05MlzHUeJc=
-Date:   Mon, 22 Jun 2020 14:31:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [RESEND v2 3/4] regulator: mt6359: Add support for MT6359
- regulator
-Message-ID: <20200622133132.GI4560@sirena.org.uk>
-References: <1592808050-14260-1-git-send-email-Wen.Su@mediatek.com>
- <1592808050-14260-4-git-send-email-Wen.Su@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yzvKDKJiLNESc64M"
-Content-Disposition: inline
-In-Reply-To: <1592808050-14260-4-git-send-email-Wen.Su@mediatek.com>
-X-Cookie: laser, n.:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 22 Jun 2020 09:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728929AbgFVNcw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 09:32:52 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4ABEC061573
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 06:32:50 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id rk21so1644302ejb.2
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 06:32:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DN+aIrNNSN4VZvLqRGfauOKkPbvay1cyyn1lN95aoco=;
+        b=yzWbEtJwrPJKbiLaeKXvfuyfqHafyIJ0bgC41vGAyu4gMBeHvixHGOIY9b7msORZoo
+         wgtBscreEdbMak8oBnBE/57VEdZZ8e3gi+zE5xNhaONMl4nICm+WQ/bOgND3hBWVGF84
+         bhX8Q24cJRWVUqFoOaH/JxqIFsQoHcvI47ML1OyjHfTBECvN3Y+SYOKtFEnxPWZYUaZr
+         FBg16HOe1Et13yABN5E9jsCdWGHut4nAbIX77+6qvR+jDbUqzLr9Uobe2VmwCfBHTP0Y
+         Tv2p91wpWva9Oi7rg8lX2rHkyEHHVIBQg09sHId/rc0w16tEHglt+mlZSsDLY8PI0/Uh
+         fF5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DN+aIrNNSN4VZvLqRGfauOKkPbvay1cyyn1lN95aoco=;
+        b=XxVkeBnklOBgr7IwqDYw+R29uDtck4FTx5YXbhvfJ0Wcw3je8EtROwSu7KHSKCxoTu
+         Fd61zrYQC9IXP3QpEg8flgY5QekW2QoXecV4Y7/69+asYNAgyBRuBDEnSK7R0inmhD3e
+         SFJbYgLVnmy+0o4VxVmOOzPW60Ofkbmae4Zy3gZmvp9WmXD89AMVSLsR2nSd4uJXJN3I
+         J5avqou4smCOtkrM5deYdGsXiH6OUG48lZCOax3j08bG8zcGMMWCsAfTdSY036Wy4Lla
+         NT2r7gXK3kOcRnZrur9v6RJnI+4Jh+jZNuhUDfx0tem0f51Rbclq+F651O6deAJp796i
+         oepw==
+X-Gm-Message-State: AOAM532RYPnMrgTrp1O/UhjwEIuQ4bDPPXdP47UhXWdl8mIA7Xt/RMj4
+        fyCSDyx9UQIJaAsAbTrQFoA3VQ==
+X-Google-Smtp-Source: ABdhPJwQskSgfiCPBZPphv6mJbhvwfrvXYjmrfJ2WkcPKDBC2x2YMZVtMkHmBAfue4WjvYFeKgFQjw==
+X-Received: by 2002:a17:907:1104:: with SMTP id qu4mr15187950ejb.382.1592832769399;
+        Mon, 22 Jun 2020 06:32:49 -0700 (PDT)
+Received: from [192.168.2.2] (ppp089210109128.access.hol.gr. [89.210.109.128])
+        by smtp.gmail.com with ESMTPSA id u19sm4810426edd.62.2020.06.22.06.32.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2020 06:32:48 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
+ apq8039 sound complex
+From:   Pantelis Antoniou <pantelis.antoniou@linaro.org>
+In-Reply-To: <20200622120409.GD4560@sirena.org.uk>
+Date:   Mon, 22 Jun 2020 16:32:46 +0300
+Cc:     Stephan Gerhold <stephan@gerhold.net>, alsa-devel@alsa-project.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Matthew Porter <mporter@konsulko.com>,
+        Shawn Guo <shawn.guo@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <519B5FAC-4DB8-4968-B9D4-96E376D74F1E@linaro.org>
+References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
+ <20200619193831.12528-2-pantelis.antoniou@linaro.org>
+ <20200619214126.GA1251@gerhold.net>
+ <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
+ <20200622120409.GD4560@sirena.org.uk>
+To:     Mark Brown <broonie@kernel.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Mark,
 
---yzvKDKJiLNESc64M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 22, 2020 at 02:40:49PM +0800, Wen Su wrote:
-> From: "Wen Su" <wen.su@mediatek.com>
+> On Jun 22, 2020, at 15:04 , Mark Brown <broonie@kernel.org> wrote:
 >=20
-> The MT6359 is a regulator found on boards based on MediaTek MT6779 and
-> probably other SoCs. It is a so called pmic and connects as a slave to
-> SoC using SPI, wrapped inside the pmic-wrapper.
+> On Mon, Jun 22, 2020 at 02:34:23PM +0300, Pantelis Antoniou wrote:
+>=20
+>>> This looks much like a replacement for ALSA UCM and userspace audio =
+jack
+>>> detection coded into the device tree.
+>=20
+>> I wouldn=E2=80=99t call it a replacement exactly. It=E2=80=99s merely =
+a way to bundle all
+>> of this information about codec glue in the kernel (where it should =
+belong IMO).
+>=20
+> No, you're encoding use case decisions into the DT here - for example
+> your example will break use cases like ring tones and shutter sounds
+> which should play through both speaker and headphones.  It's also
+> setting volumes which may be inappropriate or may be not and =
+interferes
+> with userspace using those same physical volume controls.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+It is completely optional whether you use this functionality or not.
 
---yzvKDKJiLNESc64M
-Content-Type: application/pgp-signature; name="signature.asc"
+In that case you don=E2=80=99t use the automatic routing you merely set =
+it to off
+and everything works as before. Or you merely use the route setup for
+the function from userspace.
 
------BEGIN PGP SIGNATURE-----
+The device in question is not a mobile phone so there is no requirement
+to have speaker and headphone active at the same time. It is possible to
+create a function that would be headphone+speaker active at the same =
+time
+for that case.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7wsrQACgkQJNaLcl1U
-h9Djwgf6AmEftO99uS8cYEjMpPbS8Ok0R+XH/YDPD2t3hiska3+L/e5zFNZz4lGO
-0cLGtC6n7tXEm6SiX019tvoxMLw+3wLOMaxaYLDKW72XSlVeqHO5qKaQZRrKElEi
-VdKmM8Ddbo+a8g5okY/JFtlDeuN/80DH6evYdoFs6PYH8XGG0kn+pn3tcC0w629j
-+pYS4gDrCMZ3uzXLkLpr3KIVE+IIQgnhAGDRE3ETO7ojW7F/HnF47q5Pf1DbSO2F
-2VWYGEPPmZ3wyWBGooDwHftAgUop3G2lonszzKzjdmSpLza/Q/W13CHDKCg7Gc2O
-AMTnQxMR0LCo/BU5faCLLLR059lIjA==
-=FkFR
------END PGP SIGNATURE-----
+Regards
 
---yzvKDKJiLNESc64M--
+=E2=80=94 Pantelis
+
