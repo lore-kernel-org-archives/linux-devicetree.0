@@ -8,71 +8,74 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB31FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B93C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE4F72068F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FE420732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gehmnNCv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s52wCzZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgFVLZt (ORCPT
+        id S1727027AbgFVL3B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:25:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56868 "EHLO
+        Mon, 22 Jun 2020 07:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728695AbgFVLZf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:25:35 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1409C061794;
-        Mon, 22 Jun 2020 04:25:34 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g18so7215549wrm.2;
-        Mon, 22 Jun 2020 04:25:34 -0700 (PDT)
+        with ESMTP id S1727001AbgFVL3B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:29:01 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FB1C061794;
+        Mon, 22 Jun 2020 04:29:00 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l17so14532257wmj.0;
+        Mon, 22 Jun 2020 04:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XZse9AJ4R7SRzA+VZNtgiFX85zhjfIUflbQuQALrRq4=;
-        b=gehmnNCvu7d2SsXrB69+aq7VFVXyJPLF62JCpZhOzT08Of79s+F4ZjninEQvwiSmRW
-         ywRuLmOOwp5kTQXdF55u9bUT+hOqPrvtGcNh2xdnGYurCh8V4eU6jewRm9yHeD1YgoN0
-         m7oIP2wpHFFfFBS2IS5NGRaiT8fjFTmgn9Oskv2f59MEbxGT5/EvOIXc5tGomSiYyZH2
-         IF2/YqfjUTLAmHuWQddhFFuRSKgFCCy4feSinjQmbcFanZtY3dvPMaOV5/vY/JjmA0B8
-         ZJ806sIF1koMwpxGoKIc7b6MAFsL47OEt7uwgacfzJRjCGeqxVqtyA03V3ZmaJFHEiuv
-         8beQ==
+        bh=cFV2UwkHIXZoBfoREkw2lJuc+zkgTD6SbaXShzZO07M=;
+        b=s52wCzZcEn4Pw6G0GIXhz9Di4LsThhEcORzxeSeKnYTlyBEwvDEdnJFGjGt7OjMsui
+         T3OkSD7KYCDOSX50nzBQc2ZfgrPVrnNFckqBtRHYsuhVqwlYRdnSAhRmV297EgfWdZbQ
+         OdML9S13A3twURW4bsaDQpMDstrIn8K6RJVQul6GEM9eKkcRaxJX4SFIh3lbXq9jH+Sb
+         09ITtbVDD/pyb7Esz3bTffbm40oaV3BIjnIq7WCNGsoxsw3GnH4EyVeN8E7/61aKvjIv
+         2tdUZvlBjRpQn/z+oZReXdKgkPC07at3WrmrUvkij2uTt9BLF2FRx2+MmJAg8ioNBeMt
+         vPQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=XZse9AJ4R7SRzA+VZNtgiFX85zhjfIUflbQuQALrRq4=;
-        b=gH4VnxAohNu/h/xiP9UodfgZcJ8ftvxHfZH0KYPjq6xbCHBkccsOKf+Ani3VyYJz/m
-         D3JYWErUlVoxJ8UVtDbE63jAGj7JjvXg4eCvOp7m3fStcC+3DSMoHYeYAWLyjl2p3YpA
-         a8EFj8q8YVmPfySxZP6qJwztMxGVA8nrbX9Af+9dZQjtCZdHBSckJaLHNfTnBI3G2ssL
-         i2phqKhygLaWcQDD4CL4mbrcm7xYCixzFMcCVfWErPoa2hgvW+eR7npIIw0n7Y0mNMcH
-         9nXhzpoo3JHPO4A27AiJzD8cyawKPxTMDm49+C/GFda1ohPkvR2TKgcZG5ODv4VEK7+2
-         Hm9A==
-X-Gm-Message-State: AOAM532vMDfIPKLgZDhoRBXbS+8z0crd5WY5/vSsyHvj/bJIERcP72M0
-        wQpH+c5ugj+6gYJhZgi/vPtSDHVU
-X-Google-Smtp-Source: ABdhPJyOT+CmAbCdd5kyEI81Rkw75wKAWOm9Kze8iUh5MMlPIRvOV0QG2COPr0mO8zcQDWgLYqXPwQ==
-X-Received: by 2002:adf:ed4f:: with SMTP id u15mr9047840wro.318.1592825133276;
-        Mon, 22 Jun 2020 04:25:33 -0700 (PDT)
+        bh=cFV2UwkHIXZoBfoREkw2lJuc+zkgTD6SbaXShzZO07M=;
+        b=NyIhO77dR3RYqR7P1Fm6ZiasZXyZCclnk76nWBnA6ZbTk45y3VVlk1hvt62FMB12Lj
+         4J0Su1R4EuMnHSzYzLrxXWGIl0vpTtV8wUkyzAdrpRLSlT8sibYzKjE24cQzFZJkuq/m
+         DdNnKomAyqnJcgpw+4N+XiigaTOwFrjv+n9KYS9XCAKn7BACTAnI4KKlZ9YiXEM0Nm1R
+         s2NLADBX4oRNT2DU7m/DckRkTq7CnGGRL+CtFHLmzHvXQ9fFb128l3hWCYLKX9jUdikh
+         caN821P9NZ937pjz0g/bPNIZ9aBirnCz4jby3eapDSBL7RXFf1AAAGaEUQThN7rRdUJE
+         2U2w==
+X-Gm-Message-State: AOAM530jyI0/aCJYXlqb9tdykHmjTwJlxsGBTEHNzZpntIOQv0fPZFwZ
+        MawfOZmNdmK9RkQZ0rPVV1b1zS8y
+X-Google-Smtp-Source: ABdhPJx9EqFTEYK7CsIx1OB4ilZ0K5lN9gHVN4svdUoZdCPOzOfUGK4lKZmBtP2YIqTV496ZG+aAiQ==
+X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr2208937wmg.153.1592825339372;
+        Mon, 22 Jun 2020 04:28:59 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id d63sm17401323wmc.22.2020.06.22.04.25.31
+        by smtp.gmail.com with ESMTPSA id c25sm4618613wml.46.2020.06.22.04.28.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 04:25:32 -0700 (PDT)
-Subject: Re: [PATCH v5 6/6] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mon, 22 Jun 2020 04:28:58 -0700 (PDT)
+Subject: Re: [PATCH v6 7/7] arm64: dts: add dts nodes for MT6779
+To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+Cc:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, devicetree@vger.kernel.org
-References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
- <1585128694-13881-7-git-send-email-hanks.chen@mediatek.com>
- <3751b55b-07a7-7985-a8d9-5414a4ca0d24@gmail.com>
- <1592314461.6256.18.camel@mtkswgap22>
+        linux-clk@vger.kernel.org, wsd_upstream@mediatek.com,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
+ <1592480018-3340-8-git-send-email-hanks.chen@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -148,12 +151,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <247c07c2-4488-a112-5874-4bd7c9d98292@gmail.com>
-Date:   Mon, 22 Jun 2020 13:25:31 +0200
+Message-ID: <3cbd81c1-0c68-80e2-d963-9ec7c0b7260c@gmail.com>
+Date:   Mon, 22 Jun 2020 13:28:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1592314461.6256.18.camel@mtkswgap22>
+In-Reply-To: <1592480018-3340-8-git-send-email-hanks.chen@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -164,189 +167,290 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 16/06/2020 15:34, Hanks Chen wrote:
-> On Wed, 2020-03-25 at 17:39 +0100, Matthias Brugger wrote:
->>
->> On 25/03/2020 10:31, Hanks Chen wrote:
->>> this adds initial MT6779 dts settings fo board support,
->>
->> "for board support"
->>
->>> including cpu, gic, timer, ccf, pinctrl, uart...etc.
->>
->> The etc is PMU and PSCI and sysirq, correct? Let's list at least sysirq as this
->> is something MediaTek specific.
->>
->>>
->>> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
->>> ---
->>>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->>>  arch/arm64/boot/dts/mediatek/mt6779-evb.dts |   31 ++++
->>>  arch/arm64/boot/dts/mediatek/mt6779.dtsi    |  265 +++++++++++++++++++++++++++
->>>  3 files changed, 297 insertions(+)
->>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
->>> index 458bbc4..53f1c61 100644
->>> --- a/arch/arm64/boot/dts/mediatek/Makefile
->>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
->>> @@ -1,6 +1,7 @@
->>>  # SPDX-License-Identifier: GPL-2.0
->>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
->>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->>>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt6779-evb.dts b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->>> new file mode 100644
->>> index 0000000..164f5cb
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->>> @@ -0,0 +1,31 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + * Copyright (c) 2019 MediaTek Inc.
->>> + * Author: Mars.C <mars.cheng@mediatek.com>
->>> + *
->>> + */
->>> +
->>> +/dts-v1/;
->>> +#include "mt6779.dtsi"
->>> +
->>> +/ {
->>> +	model = "MediaTek MT6779 EVB";
->>> +	compatible = "mediatek,mt6779-evb", "mediatek,mt6779";
->>> +
->>> +	aliases {
->>> +		serial0 = &uart0;
->>> +	};
->>> +
->>> +	memory@40000000 {
->>> +		device_type = "memory";
->>> +		reg = <0 0x40000000 0 0x1e800000>;
->>> +	};
->>> +
->>> +	chosen {
->>> +		stdout-path = "serial0:921600n8";
->>> +	};
->>> +};
->>> +
->>> +&uart0 {
->>> +	status = "okay";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dtsi b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
->>> new file mode 100644
->>> index 0000000..422ff5f
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
->>> @@ -0,0 +1,265 @@
->> [...]
->>> +
->>> +	uart_clk: dummy26m {
->>> +		compatible = "fixed-clock";
->>> +		clock-frequency = <26000000>;
->>> +		#clock-cells = <0>;
->>> +	};
->>
->> No real clocks for uart? What about CLK_INFRA_UARTx?
+On 18/06/2020 13:33, Hanks Chen wrote:
+> this adds initial MT6779 dts settings for board support,
+> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
 > 
-> sorry, I miss the clocks for uart
-> I'll add "baud" and "bus" in next version.
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+>  arch/arm64/boot/dts/mediatek/mt6779-evb.dts |   31 ++++
+>  arch/arm64/boot/dts/mediatek/mt6779.dtsi    |  261 +++++++++++++++++++++++++++
+>  3 files changed, 293 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
 > 
-> clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
-> clock-names = "baud", "bus";
-> 
-> 
->>
->>> +
->>> +	timer {
->>> +		compatible = "arm,armv8-timer";
->>> +		interrupt-parent = <&gic>;
->>> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
->>> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
->>> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
->>> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
->>> +	};
->>> +
->>> +	soc {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <2>;
->>> +		compatible = "simple-bus";
->>> +		ranges;
->>> +
->> [...]
->>> +
->>> +		uart0: serial@11002000 {
->>> +			compatible = "mediatek,mt6779-uart",
->>> +				     "mediatek,mt6577-uart";
->>> +			reg = <0 0x11002000 0 0x400>;
->>> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
->>> +			clocks = <&uart_clk>;
->>> +			status = "disabled";
->>> +		};
->>> +
->>> +		uart1: serial@11003000 {
->>> +			compatible = "mediatek,mt6779-uart",
->>> +				     "mediatek,mt6577-uart";
->>> +			reg = <0 0x11003000 0 0x400>;
->>> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
->>> +			clocks = <&uart_clk>;
->>> +			status = "disabled";
->>> +		};
->>
->> SoC has only two UARTs but clock driver has three, how comes?
->>
-> 
-> In mt6779 SoC, we have four UARTs.
-> but we only use UART0 and UART1 as standard serial ports for APMCU.The
-> others for modem side.
-> so we add two UARTs in dts.
-> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index a57af9d..4d1b0f9 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6779-evb.dts b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+> new file mode 100644
+> index 0000000..164f5cb
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+> @@ -0,0 +1,31 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Mars.C <mars.cheng@mediatek.com>
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt6779.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT6779 EVB";
+> +	compatible = "mediatek,mt6779-evb", "mediatek,mt6779";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x1e800000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:921600n8";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dtsi b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
+> new file mode 100644
+> index 0000000..64e5963
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
+> @@ -0,0 +1,261 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Mars.C <mars.cheng@mediatek.com>
+> + *
+> + */
+> +
+> +#include <dt-bindings/clock/mt6779-clk.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/pinctrl/mt6779-pinfunc.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt6779";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x000>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x100>;
+> +		};
+> +
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x200>;
+> +		};
+> +
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x300>;
+> +		};
+> +
+> +		cpu4: cpu@4 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x400>;
+> +		};
+> +
+> +		cpu5: cpu@5 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			enable-method = "psci";
+> +			reg = <0x500>;
+> +		};
+> +
+> +		cpu6: cpu@6 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a75";
+> +			enable-method = "psci";
+> +			reg = <0x600>;
+> +		};
+> +
+> +		cpu7: cpu@7 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a75";
+> +			enable-method = "psci";
+> +			reg = <0x700>;
+> +		};
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW 0>;
+> +	};
+> +
+> +	clk26m: oscillator@0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <26000000>;
+> +		clock-output-names = "clk26m";
+> +	};
+> +
+> +	clk32k: oscillator@1 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "clk32k";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		gic: interrupt-controller@0c000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <4>;
+> +			interrupt-parent = <&gic>;
+> +			interrupt-controller;
+> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
+> +			      <0 0x0c040000 0 0x200000>; /* GICR */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
+> +
+> +			ppi-partitions {
+> +				ppi_cluster0: interrupt-partition-0 {
+> +					affinity = <&cpu0 &cpu1 \
+> +						&cpu2 &cpu3 &cpu4 &cpu5>;
+> +				};
+> +				ppi_cluster1: interrupt-partition-1 {
+> +					affinity = <&cpu6 &cpu7>;
+> +				};
+> +			};
+> +
+> +		};
+> +
+> +		sysirq: intpol-controller@0c53a650 {
+> +			compatible = "mediatek,mt6779-sysirq",
+> +				     "mediatek,mt6577-sysirq";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +			reg = <0 0x0c53a650 0 0x50>;
+> +		};
+> +
+> +		topckgen: clock-controller@10000000 {
+> +			compatible = "mediatek,mt6779-topckgen", "syscon";
+> +			reg = <0 0x10000000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		infracfg_ao: clock-controller@10001000 {
+> +			compatible = "mediatek,mt6779-infracfg_ao", "syscon";
+> +			reg = <0 0x10001000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		pio: pinctrl@10005000 {
+> +			compatible = "mediatek,mt6779-pinctrl", "syscon";
+> +			reg = <0 0x10005000 0 0x1000>,
+> +			      <0 0x11c20000 0 0x1000>,
+> +			      <0 0x11d10000 0 0x1000>,
+> +			      <0 0x11e20000 0 0x1000>,
+> +			      <0 0x11e70000 0 0x1000>,
+> +			      <0 0x11ea0000 0 0x1000>,
+> +			      <0 0x11f20000 0 0x1000>,
+> +			      <0 0x11f30000 0 0x1000>,
+> +			      <0 0x1000b000 0 0x1000>;
+> +			reg-names = "gpio", "iocfg_rm",
+> +				    "iocfg_br", "iocfg_lm",
+> +				    "iocfg_lb", "iocfg_rt",
+> +				    "iocfg_lt", "iocfg_tl",
+> +				    "eint";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&pio 0 0 210>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		apmixed: clock-controller@1000c000 {
+> +			compatible = "mediatek,mt6779-apmixed", "syscon";
+> +			reg = <0 0x1000c000 0 0xe00>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		uart0: serial@11002000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11002000 0 0x400>;
+> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@11003000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11003000 0 0x400>;
+> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
 
-Sorry for the late reply.
+For the record, my late comment on v5 was that we should expose all four UARTs
+in the dtsi as it describes the HW.
 
-DTS describes the HW, so we should add all four to the mt6779.dtsi but only
-enable the one that can be used.
-BTW I thought modem works through user space application, so why don't you want
-to expose them?
+Other then that, patch looks good.
 
 Regards,
 Matthias
-
->>> +
->>> +		audio: clock-controller@11210000 {
->>> +			compatible = "mediatek,mt6779-audio", "syscon";
->>> +			reg = <0 0x11210000 0 0x1000>;
->>> +			#clock-cells = <1>;
->>> +		};
->>> +
->>> +		mfgcfg: clock-controller@13fbf000 {
->>> +			compatible = "mediatek,mt6779-mfgcfg", "syscon";
->>> +			reg = <0 0x13fbf000 0 0x1000>;
->>> +			#clock-cells = <1>;
->>> +		};
->>> +
->>> +		mmsys: clock-controller@14000000 {
->>> +			compatible = "mediatek,mt6779-mmsys", "syscon";
->>> +			reg = <0 0x14000000 0 0x1000>;
->>> +			#clock-cells = <1>;
->>> +		};
->>
->> Please beware that we are refactoring the mmsys right now. Please use this new
->> approach as this will go upstream soon.
->>
->> https://patchwork.kernel.org/project/linux-mediatek/list/?series=254897
->>
-> Got it, I'll update new approach in next version.
-> Thanks!
-> 
->> Regards,
->> Matthias
->>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
