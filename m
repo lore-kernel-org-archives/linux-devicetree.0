@@ -2,91 +2,201 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E416C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 02:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24172C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 02:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1449A20739
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 02:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED362233CE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 02:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GVGX3u5Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQjoctLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbgFVCfh (ORCPT
+        id S1726760AbgFVCg3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 21 Jun 2020 22:35:37 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57959 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726696AbgFVCfh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 22:35:37 -0400
-X-UUID: f155f083c2404d6d8fb851c228b4ae6f-20200622
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FsSGkrpcGktQk0blepm9MlOqi1tXM0TjQmxwLvfOsKs=;
-        b=GVGX3u5QhgwgoczDFTNcz0mTKWFWVjYRqQMyve0YXTVXfodN/wVn3ufjYEP0kE8n07Dh8GbLEcFGgvi5ENkNhapzz7HsugGCJxk3g/Q1G/plF2DW2K50LEoC+w1xcatS4mLyKFwYZ+i8Wa7PPgDyajgk2NjEDZCqWgZy+qOVMVQ=;
-X-UUID: f155f083c2404d6d8fb851c228b4ae6f-20200622
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 206992374; Mon, 22 Jun 2020 10:35:35 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 22 Jun 2020 10:35:32 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 22 Jun 2020 10:35:23 +0800
-Message-ID: <1592793333.11692.4.camel@mtksdaap41>
-Subject: Re: [PATCH v7 3/4] mailbox: cmdq: support mt6779 gce platform
- definition
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>
-Date:   Mon, 22 Jun 2020 10:35:33 +0800
-In-Reply-To: <1592745731-14614-4-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1592745731-14614-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1592745731-14614-4-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 21 Jun 2020 22:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgFVCg3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 21 Jun 2020 22:36:29 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2398C061794;
+        Sun, 21 Jun 2020 19:36:27 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id g139so7887731lfd.10;
+        Sun, 21 Jun 2020 19:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=brsTpuDT663Ub3YFvhMHjyZRDtv4MEIUf2dZ4ezLQvI=;
+        b=YQjoctLjn8JZYY80zeRdn6QirrjhP48hDICj+nm429Y+NjBOb1/eWUWC3SJ5vfSwjc
+         VUiMUDsfqJqBtKKDgPAyK0URfKTYajhsyiLDKVEomRHut66XyGai5aJA2vLJozEDVlZI
+         2U9o0HmssceXXc4XmU7HYQAs7dfazFA8Am6M+jm2g5VjYUJIV1RnQVRpfRTG73E2OSzD
+         nHscVMNHTMCZqoUD0gowqmRhZsYYGhHDyq4QjfjnrQcRR3623t9EEgrhcrU3RuToIJeE
+         0spyTTanA4wo+ZlGpnOSszQWLqu7rWOm7hP3Z/4C5BP9jhPfR2BYF/02hmQQsO8mwF6x
+         7TZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=brsTpuDT663Ub3YFvhMHjyZRDtv4MEIUf2dZ4ezLQvI=;
+        b=e98xzJV5wYHKp2f/FFCjOhTOWQ2jCAtwUOw6bEv0oGzZrBuzgiqZcFwb2vwZpGo8CI
+         rEOvH7CVbInk2a2slHAHu78J681vqwBkclkbSN9MMNLoFtZPoPiLrY8gyLAIWJqERDAR
+         onS3OaartliX6NKZE4V8k8+v0jxqFr5DmdzthMDD9Mg5VXxdLbUUCPU2aZVmXjQhP8Qw
+         UQDxKBBuEvMk488ahQ/YLfBVO36SxH7sEfj2+YGExdLQ9f0vgtT+Da6clS0f5nqugfu1
+         OfWufzxpdtwMIs9C9rO6mFFW21Kd0cnN04AVE5H2deYQgMggwILI3weKJDEngDBr2Sxu
+         JZpA==
+X-Gm-Message-State: AOAM530FevJg9DLzF07ujlYrSpfIP5NW0IyeDpnTb0quBMkSC7QnydKJ
+        fA1uZGFb9NvFbXsUQVvWnDdNEvEWC+lP0fJLkoWHNg==
+X-Google-Smtp-Source: ABdhPJy0RrrpnQqNTViywItrtiOZhkZpeD0w6Ko2o5KLmgmz9+9uviqJlsEJ+pt3tDeEIPX65WGt98/IE0GAEgdkGgM=
+X-Received: by 2002:a05:6512:682:: with SMTP id t2mr8442039lfe.101.1592793385962;
+ Sun, 21 Jun 2020 19:36:25 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1592458104-2961-1-git-send-email-akolli@codeaurora.org>
+ <1592458104-2961-3-git-send-email-akolli@codeaurora.org> <CAGRGNgV74fCD1gb=rXEe1BMN5+5stYeX3W6eKc4-do76TBmFqA@mail.gmail.com>
+ <34ed705f28b40fab493b8c888138e6a7@codeaurora.org>
+In-Reply-To: <34ed705f28b40fab493b8c888138e6a7@codeaurora.org>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Mon, 22 Jun 2020 12:36:14 +1000
+Message-ID: <CAGRGNgXyxGUZQRnT_uZJ74=YTVEomTvsL_weET1WuGqA1SHWBA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] ath11k: copy ce service configs to hw_params
+To:     Anilkumar Kolli <akolli@codeaurora.org>
+Cc:     ath11k@lists.infradead.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-wireless@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQoNClRo
-YW5rcy4NCg0KT24gU3VuLCAyMDIwLTA2LTIxIGF0IDIxOjIyICswODAwLCBEZW5uaXMgWUMgSHNp
-ZWggd3JvdGU6DQo+IEFkZCBnY2UgdjQgaGFyZHdhcmUgc3VwcG9ydCB3aXRoIGRpZmZlcmVudCB0
-aHJlYWQgbnVtYmVyIGFuZCBzaGlmdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBI
-c2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gUmV2aWV3ZWQtYnk6IENLIEh1
-IDxjay5odUBtZWRpYXRlay5jb20+DQo+IFJldmlld2VkLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxt
-YXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21k
-cS1tYWlsYm94LmMgfCAgICAyICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYyBi
-L2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gaW5kZXggNGRiZWU5MjU4MTI3
-Li45OTk0YWM5NDI2ZDYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1t
-YWlsYm94LmMNCj4gKysrIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiBA
-QCAtNTcyLDEwICs1NzIsMTIgQEAgc3RhdGljIGludCBjbWRxX3Byb2JlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYpDQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3BsYXQgZ2Nl
-X3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2fTsNCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZ2Nl
-X3BsYXQgZ2NlX3BsYXRfdjMgPSB7LnRocmVhZF9uciA9IDI0fTsNCj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjQgPSB7LnRocmVhZF9uciA9IDI0LCAuc2hpZnQgPSAz
-fTsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgY21kcV9vZl9pZHNb
-XSA9IHsNCj4gIAl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWdjZSIsIC5kYXRhID0g
-KHZvaWQgKikmZ2NlX3BsYXRfdjJ9LA0KPiAgCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgx
-ODMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92M30sDQo+ICsJey5jb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10Njc3OS1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9wbGF0X3Y0fSwN
-Cj4gIAl7fQ0KPiAgfTsNCj4gIA0KDQo=
+Hi Anilkumar,
 
+On Sat, Jun 20, 2020 at 2:24 AM <akolli@codeaurora.org> wrote:
+>
+> On 2020-06-19 04:40, Julian Calaby wrote:
+> > Hi Anilkumar,
+> >
+> > On Thu, Jun 18, 2020 at 3:31 PM Anilkumar Kolli <akolli@codeaurora.org>
+> > wrote:
+> >>
+> >> No functional changes, added target ce service configurations
+> >> to hw_params.
+> >>
+> >> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+> >> ---
+> >> V3:
+> >>  - added ce svc configs in hw_params
+> >>
+> >>  drivers/net/wireless/ath/ath11k/ahb.c  | 20 +++++++++++++++-----
+> >>  drivers/net/wireless/ath/ath11k/core.c |  8 +-------
+> >>  drivers/net/wireless/ath/ath11k/core.h |  1 +
+> >>  drivers/net/wireless/ath/ath11k/hw.h   |  2 ++
+> >>  4 files changed, 19 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/drivers/net/wireless/ath/ath11k/ahb.c
+> >> b/drivers/net/wireless/ath/ath11k/ahb.c
+> >> index 7e9bfeaaf4d2..aa74d27e5871 100644
+> >> --- a/drivers/net/wireless/ath/ath11k/ahb.c
+> >> +++ b/drivers/net/wireless/ath/ath11k/ahb.c
+> >> @@ -152,7 +152,7 @@ static const struct ce_pipe_config
+> >> target_ce_config_wlan[] = {
+> >>   * This table is derived from the CE_PCI TABLE, above.
+> >>   * It is passed to the Target at startup for use by firmware.
+> >>   */
+> >> -static const struct service_to_pipe target_service_to_ce_map_wlan[] =
+> >> {
+> >> +static const struct service_to_pipe
+> >> target_service_to_ce_map_wlan_ipq8074[] = {
+> >>         {
+> >>                 .service_id =
+> >> __cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
+> >>                 .pipedir = __cpu_to_le32(PIPEDIR_OUT),  /* out = UL =
+> >> host -> target */
+> >> @@ -644,8 +644,8 @@ static void ath11k_ahb_init_qmi_ce_config(struct
+> >> ath11k_base *ab)
+> >>
+> >>         cfg->tgt_ce_len = ARRAY_SIZE(target_ce_config_wlan) - 1;
+> >>         cfg->tgt_ce = target_ce_config_wlan;
+> >> -       cfg->svc_to_ce_map_len =
+> >> ARRAY_SIZE(target_service_to_ce_map_wlan);
+> >> -       cfg->svc_to_ce_map = target_service_to_ce_map_wlan;
+> >> +       cfg->svc_to_ce_map_len = ab->hw_params.svc_to_ce_map_len;
+> >> +       cfg->svc_to_ce_map = ab->hw_params.svc_to_ce_map;
+> >>  }
+> >>
+> >>  static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
+> >> @@ -853,8 +853,8 @@ static int ath11k_ahb_map_service_to_pipe(struct
+> >> ath11k_base *ab, u16 service_id
+> >>         bool ul_set = false, dl_set = false;
+> >>         int i;
+> >>
+> >> -       for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan);
+> >> i++) {
+> >> -               entry = &target_service_to_ce_map_wlan[i];
+> >> +       for (i = 0; i < ab->hw_params.svc_to_ce_map_len; i++) {
+> >> +               entry = &ab->hw_params.svc_to_ce_map[i];
+> >>
+> >>                 if (__le32_to_cpu(entry->service_id) != service_id)
+> >>                         continue;
+> >> @@ -950,6 +950,16 @@ static int ath11k_ahb_probe(struct
+> >> platform_device *pdev)
+> >>                 goto err_hal_srng_deinit;
+> >>         }
+> >>
+> >> +       ret = ath11k_init_hw_params(ab);
+> >> +       if (ret) {
+> >> +               ath11k_err(ab, "failed to get hw params %d\n", ret);
+> >> +               return ret;
+> >> +       }
+> >> +
+> >> +       ab->hw_params.svc_to_ce_map_len =
+> >> +
+> >> ARRAY_SIZE(target_service_to_ce_map_wlan_ipq8074);
+> >> +       ab->hw_params.svc_to_ce_map =
+> >> target_service_to_ce_map_wlan_ipq8074;
+> >
+> > I think you misunderstood my point about this, the point wasn't to
+> > copy the svc map to hw_params, but define it in hw_params:
+> >
+> > +       {
+> > +               .hw_rev = ATH11K_HW_IPQ6018,
+> > +               .name = "ipq6018 hw1.0",
+> > +               .fw = {
+> > +                       .dir = "IPQ6018/hw1.0",
+> > +                       .board_size = 256 * 1024,
+> > +                       .cal_size = 256 * 1024,
+> > +               },
+> > +               .max_radios = 2,
+> > +               .bdf_addr = 0x4ABC0000,
+> > +               .hw_ops = &ipq6018_ops,
+> > +               .svc_to_ce_map_len =
+> > ARRAY_SIZE(target_service_to_ce_map_wlan_ipq6018,
+> > +               .svc_to_ce_map = target_service_to_ce_map_wlan_ipq6018,
+> > +       },
+> >
+> > That completely eliminates special case code based on the hardware ID
+> > in the driver.
+> >
+> The static array of structures target_service_to_ce_map_wlan_ipq6018[]
+> is defined in ahb.c and hw_params are initialised in core.c, this will
+> not work. no?
+
+My understanding, and please correct me if I'm wrong, is that the
+service map is a property of the hardware. So why not define all the
+hardware properties in one place?
+
+You could either move the hardware definitions and service maps to a
+new file (maybe ahb_conf.c), move those maps to ahb.c or just add them
+to some header file so ahb.c can reference them.
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
