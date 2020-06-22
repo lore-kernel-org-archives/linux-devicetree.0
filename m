@@ -2,173 +2,110 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C524C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74438C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2132071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:04:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vxcnk++B"
+	by mail.kernel.org (Postfix) with ESMTP id 5843420732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgFVMEy (ORCPT
+        id S1727969AbgFVMFf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:04:54 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:62665 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgFVMEy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:04:54 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05MC3SgG001221;
-        Mon, 22 Jun 2020 21:03:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05MC3SgG001221
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592827409;
-        bh=XT5p7CGO0IRfglTH035B6VnJfGMRKyJLc0ZZJHRD7vI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vxcnk++Bh/HeR8KH8zvH64uyIKfNlEo5yYtjkH/52X7GM1W6grC2f/fYi44u3aO7Q
-         Zc2ON3HRrNHrIwYGTB46c+hVPdBIm7VdJdRPcc0vBkE8AbS4NWlehCVdwMLA3ocXnd
-         Fp4+7RwQrjN79zRVo/qK+/fuEDGxCGKISPdVIybR7Brvn/gY4LzKMnRS5+zWFSLvAx
-         e2i8LWJkaUDzZ9+fC2LN3MqBFvdpx2HTj6FWUrQeljYW/wiBjM+SB0O6zjgA9uxkNb
-         QWf8lMEh5XbIkTZScLcxASeXZ9n1+sgshBXwiDEQC6cw7q3+giUIxNaYP1pejGinkQ
-         NPTj859DtiRwg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        - <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: ASoC: Convert UniPhier EVEA codec to json-schema
-Date:   Mon, 22 Jun 2020 21:03:20 +0900
-Message-Id: <20200622120320.454535-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 22 Jun 2020 08:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgFVMFf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:05:35 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EACC061794;
+        Mon, 22 Jun 2020 05:05:35 -0700 (PDT)
+Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt@linutronix.de>)
+        id 1jnLCf-000875-6N; Mon, 22 Jun 2020 14:05:33 +0200
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [RFC PATCH 9/9] dt-bindings: net: dsa: Add documentation for Hellcreek switches
+In-Reply-To: <87wo43phk0.fsf@kurt>
+References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-10-kurt@linutronix.de> <e8085c6a-0b61-60f9-f411-2540dec80926@gmail.com> <87wo43phk0.fsf@kurt>
+Date:   Mon, 22 Jun 2020 14:05:26 +0200
+Message-ID: <87ftantiex.fsf@kurt>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier EVEA sound codec binding to DT schema format.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On Fri Jun 19 2020, Kurt Kanzenbach wrote:
+> On Thu Jun 18 2020, Florian Fainelli wrote:
+>> On 6/17/2020 11:40 PM, Kurt Kanzenbach wrote:
+>>> Add basic documentation and example.
+>>>=20
+>>> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+>>> ---
+>>>  .../devicetree/bindings/net/dsa/hellcreek.txt | 72 +++++++++++++++++++
+>>>  1 file changed, 72 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek=
+.txt
+>>>=20
+>>> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.txt b/=
+Documentation/devicetree/bindings/net/dsa/hellcreek.txt
+>>> new file mode 100644
+>>> index 000000000000..9ea6494dc554
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.txt
+>>
+>> This should be a YAML binding and we should also convert the DSA binding
+>> to YAML one day.
+>
+> OK.
 
- .../sound/socionext,uniphier-evea.yaml        | 62 +++++++++++++++++++
- .../bindings/sound/uniphier,evea.txt          | 26 --------
- 2 files changed, 62 insertions(+), 26 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,evea.txt
+I converted it into a YAML binding. Should I provide the dsa.yaml as
+well? Otherwise I have to define the DSA properties such as dsa,member
+in the hellcreek.yaml file.
 
-diff --git a/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml b/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
-new file mode 100644
-index 000000000000..7ac1c0140d5d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/socionext,uniphier-evea.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/socionext,uniphier-evea.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier EVEA SoC-internal sound codec
-+
-+maintainers:
-+  - <alsa-devel@alsa-project.org>
-+
-+properties:
-+  compatible:
-+    const: socionext,uniphier-evea
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: evea
-+      - const: exiv
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 2
-+
-+  reset-names:
-+    items:
-+      - const: evea
-+      - const: exiv
-+      - const: adamv
-+
-+  resets:
-+    minItems: 3
-+    maxItems: 3
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-names
-+  - clocks
-+  - reset-names
-+  - resets
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    codec@57900000 {
-+        compatible = "socionext,uniphier-evea";
-+        reg = <0x57900000 0x1000>;
-+        clock-names = "evea", "exiv";
-+        clocks = <&sys_clk 41>, <&sys_clk 42>;
-+        reset-names = "evea", "exiv", "adamv";
-+        resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
-+        #sound-dai-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/uniphier,evea.txt b/Documentation/devicetree/bindings/sound/uniphier,evea.txt
-deleted file mode 100644
-index 3f31b235f18b..000000000000
---- a/Documentation/devicetree/bindings/sound/uniphier,evea.txt
-+++ /dev/null
-@@ -1,26 +0,0 @@
--Socionext EVEA - UniPhier SoC internal codec driver
--
--Required properties:
--- compatible      : should be "socionext,uniphier-evea".
--- reg             : offset and length of the register set for the device.
--- clock-names     : should include following entries:
--                    "evea", "exiv"
--- clocks          : a list of phandle, should contain an entry for each
--                    entries in clock-names.
--- reset-names     : should include following entries:
--                    "evea", "exiv", "adamv"
--- resets          : a list of phandle, should contain reset entries of
--                    reset-names.
--- #sound-dai-cells: should be 1.
--
--Example:
--
--	codec {
--		compatible = "socionext,uniphier-evea";
--		reg = <0x57900000 0x1000>;
--		clock-names = "evea", "exiv";
--		clocks = <&sys_clk 41>, <&sys_clk 42>;
--		reset-names = "evea", "exiv", "adamv";
--		resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
--		#sound-dai-cells = <1>;
--	};
--- 
-2.25.1
+Thanks,
+Kurt
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wnoYACgkQeSpbgcuY
+8KZx0g/7BDwrxEf4tPOoJOwHTWWNxvd3O5QGMGbfIND9QrcRwZjIsrUobuU+MVY5
+fxOWBByWR5kUAPPJS6TceCULoyjEYuCiiCc1FsshL5gkRotTRteKp0uH6OKFf0oa
+zvbrfvwugLtYV9j+JmZ6I78SpZTfzZ4XcRLXXmuplcjEs7tw4TMq2XiuKKOQh/kA
+rjqg+T0UXtnpNE1V5+jMroGQrC2GJwN1DkarokZje+FOHzb9Cl+pTsiQA6WJFa37
+KG9Apr8QTKXg6IAkkX6jMcZue1TqkfCHt0Ve2C1e7zVTaoqV67xX9xm3kyePYS1v
+WQCxHr/Bn/BjVMahgsD/dHcIF18AnPIbVAc72a9v4HfZxrH/+qvLuNmkw/1cOXAx
+GF+8lqm9UoZ8X6vgru7B/kBveFS5NycjfroQkBN0rztLYukrhbh9QbGe60Fp+49H
+KsyvqqnDA2FhPXd6AfoJpK/6QTNRyUOu41/aUVCEdLH200Dz8VKoqR0O/D5nDr1Z
+vFC1CSV/GuSGUPQE0GS/BAtpaVNKZBH99YrNBqqqZMa5pv54G51Plwvp7oBueh1W
+7nW9FC/k3vYS6b+KGfyS6VZtPXEXZvDp/lEy+BUJ88a62dGrwXnfi6kI1RrfDQGu
+295hxZOwwk/c/lAFhniHt87tESQdZQSPxkEQ38phogFnxhi2eug=
+=ioWG
+-----END PGP SIGNATURE-----
+--=-=-=--
