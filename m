@@ -2,225 +2,111 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540DC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 16:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F058EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D44832076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 16:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABF220656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZiXCU+2A"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="hvQ1oySd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgFVQ5f (ORCPT
+        id S1729905AbgFVRcI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 12:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51778 "EHLO
+        Mon, 22 Jun 2020 13:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730006AbgFVQ5f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 12:57:35 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5602AC061795
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 09:57:34 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 17so276337wmo.1
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 09:57:34 -0700 (PDT)
+        with ESMTP id S1729777AbgFVRcH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 13:32:07 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C085C061573
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:32:07 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id q19so18843788eja.7
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:32:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=F+nlUAhHEbsgDoArBUNdvvaIbV4AUsHI2HbfVWN8ih0=;
-        b=ZiXCU+2An8ajIuIk/jVXiqjUZ6QhL/GTYo7OKI7BEariTuLskGO4iJ4u2Mmj+YpjRy
-         heQ7oBLCcTWv5Liiyva55Ni+yPP9jZap/wVaIVx5TWCfhs7vwsUxsmTbfcz/NTwpoKB5
-         vuYu14wLQK8OCg4x7FMkcDE7moG5zK7cLYIFEycAFEqA9Kuh1cp5kN5SLErAZ/oUe3IE
-         JGNy6459N+IPwcGTWR8hYWGhey1TQGH+EIoI4CJzOr0BFqG8RcQ9/ocy3ehQut/sWPU8
-         UcGk6Ygvgo+B9gq5S5MFjZ+LAJEFOLvykrKDyR/9LtZCmIjL+4AZGY+ZSAcsWmCJHmi0
-         D6Zg==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bCAmII4vqMO96t6X95dj63747CKVWHh9SpN0EDHNpes=;
+        b=hvQ1oySdzoTVBNsN+Qt+HaAMEdhMG3L+Uc9QrdJ1obT/L6trCvyS1+6ZzzR9xjtI4v
+         7yQvnyViWU9NsYvAjZgHiUdsopYgkr4JULFpKxs9uzNeyp517EDsw/7+xgWfVuGlTNzK
+         /Jezmi5Dac3fa+kZE2kq+Ms3CoNWr1xKVUtjIKQpg76kyAXtjDXDT0x4XIQc7JupEyL+
+         p5/kDdJ1aWQ9X5JHEIbollPYf7vUoyO2EG7td/nOPrp1C8+hWPBjIrqVsYjxvgKDcxX1
+         kS9KFRBFen4rc9+Y+nQEKwP73AxeOeldYP/JKjhAUgOpyyCMEHGtRT2Btw2yYP/3B/YC
+         ST6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F+nlUAhHEbsgDoArBUNdvvaIbV4AUsHI2HbfVWN8ih0=;
-        b=XBr44FTrwqRN8FCK1p8RIIUEU+djw3+6Ad2M7ChRMA4jAQGhN3D+7fbJQ0GgG27viK
-         O0xI+FcttU+Bo/10Zn4lkVeKvE0sV0BhGUvVurA7Pk2tQu3GzeKFRcX109NaJ8a53OOk
-         4OmRNyq0YQvR1OEhd3Kg2W4i8JXeIrexso3q4xLPI9V7R/UyE4/aYhyufVEezujZpQfV
-         ik+MzeQWws2okP9VXdW+paTzolRVcjncW7+9Vu64S24xvfr0H1QLSQWTocJCttI8c0Gb
-         gWqNJUdyOfeLQXq/cttSjCx/4ZOYGpH8yLKn2rmrrMnL7dP9My0E4J54L6f6Eg4BqbOF
-         3tEg==
-X-Gm-Message-State: AOAM531z/ea/pBbsfFhWWxS8325TvLPvFywyk8fxHVjkBCmabUcU4yYn
-        I0f/cVEfxJ38ZMCgCZ5c9ozjgg==
-X-Google-Smtp-Source: ABdhPJwC+mgtdB3qpfYTUZ3BE0gyIVx6GhzJ1K2c92QPj0jBT2j5czIy0RQw3+GtlciTGxhLBPoMoA==
-X-Received: by 2002:a1c:6a01:: with SMTP id f1mr18924478wmc.52.1592845053002;
-        Mon, 22 Jun 2020 09:57:33 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s18sm20653700wra.85.2020.06.22.09.57.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bCAmII4vqMO96t6X95dj63747CKVWHh9SpN0EDHNpes=;
+        b=r72RWXhmaDjLLW50qmuM7eXsmepbOHaUy3zHL6bJEVaOOQhafZqf41LRwKx9Gtr3Q/
+         Js7qXhdIvsqZU5adEiYCftDxm03Yx3cfgBNse1FtbYKlEvKhDMmhrBjf/vUx6TA2JILn
+         W4/gD049NmgNXOmqOdnyOTexmOwMI8QHB7TTJuCn/zGisWjH8V9f141Bs2H4zKaEZW+B
+         F8LAekhx2fnI7t/okP4eUk33OajLwEMxWBa/UhI1Oe9eN7fkagqBtipQ3/ISlozVFCGl
+         kU+euqyCSyuDnWPms4XEo729ueSPmCQRHbzKLcDBCm+yHMGTzPubE150MpN70XE+DKzE
+         mQgw==
+X-Gm-Message-State: AOAM530xXanbFm3Dz+jOS7cfvZP7cu1tKXR6kmj/XJEUFCybtoxqEP3m
+        e+x0fpXKegns7YGTmj9la151OA==
+X-Google-Smtp-Source: ABdhPJznEQZukuasHS/Zg0q2uZdeIDXrMqMHqbzNqvR2pj+yiY1x7DPMl+RtmNMaot0hcEZtE374dg==
+X-Received: by 2002:a17:906:7208:: with SMTP id m8mr17339905ejk.544.1592847126281;
+        Mon, 22 Jun 2020 10:32:06 -0700 (PDT)
+Received: from localhost.localdomain (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id z1sm4747386ejb.41.2020.06.22.10.32.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 09:57:32 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 17:57:30 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
- bindings to DT schema
-Message-ID: <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
-References: <20200618224413.1115849-1-robh@kernel.org>
- <20200619215341.GA6857@ravnborg.org>
+        Mon, 22 Jun 2020 10:32:05 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH v3 0/3] pinctrl: single: support #pinctrl-cells = 2
+Date:   Mon, 22 Jun 2020 19:29:48 +0200
+Message-Id: <20200622172951.524306-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619215341.GA6857@ravnborg.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > new file mode 100644
-> > index 000000000000..7e1f109a38a4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > @@ -0,0 +1,98 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: pwm-backlight bindings
-> > +
-> > +maintainers:
-> > +  - Lee Jones <lee.jones@linaro.org>
-> > +  - Daniel Thompson <daniel.thompson@linaro.org>
-> > +  - Jingoo Han <jingoohan1@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: pwm-backlight
-> > +
-> > +  pwms:
-> > +    maxItems: 1
-> > +
-> > +  pwm-names: true
-> > +
-> > +  power-supply:
-> > +    description: regulator for supply voltage
-> > +
-> > +  enable-gpios:
-> > +    description: Contains a single GPIO specifier for the GPIO which enables
-> > +      and disables the backlight
-> > +    maxItems: 1
-> > +
-> > +  post-pwm-on-delay-ms:
-> > +    description: Delay in ms between setting an initial (non-zero) PWM and
-> > +      enabling the backlight using GPIO.
-> > +
-> > +  pwm-off-delay-ms:
-> > +    description: Delay in ms between disabling the backlight using GPIO
-> > +      and setting PWM value to 0.
-> > +
-> > +  brightness-levels:
-> > +    description: Array of distinct brightness levels. Typically these are
-> > +      in the range from 0 to 255, but any range starting at 0 will do. The
-> > +      actual brightness level (PWM duty cycle) will be interpolated from
-> > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
-> > +      value in the array represents a 100% duty cycle (brightest).
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +
-> > +  default-brightness-level:
-> > +    description: The default brightness level (index into the array defined
-> > +      by the "brightness-levels" property).
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> Same comment as before...
+Currently, pinctrl-single only allows #pinctrl-cells = 1.
 
-Sorry the "ditto" meant I didn't thing about PWM as much as I should
-have.
+This series will allow pinctrl-single to also support #pinctrl-cells = 2
 
-The situation for PWM is a little different to LED. That's mostly
-because we decided not to clutter the LED code with
-"num-interpolated-steps".
+If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
+pcs_parse_one_pinctrl_entry() does an OR operation on to get the
+value to store in the register.
+    
+To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
+omap.h is modified to keep pin conf and pin mux values separate.
 
-The PWM code implements the default-brightness-level as an index into
-the brightness array *after* it has been expanded using interpolation.
-In other words today Linux treats the default-brightness-level more
-like[1].
+change log:
+- v3: change order of patches to make sure the pinctrl-single.c patch
+  does not break anything without the dts patches
 
-    description: The default brightness level. When
-      num-interpolated-steps is not set this is simply an index into
-      the array defined by the "brightness-levels" property. If
-      num-interpolated-steps is set the brightness array will be
-      expanded by interpolation before we index to get a default
-      level.
+- v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
+  compile error in dtc.  I had added it per suggestion from checkpatch
+  about having parentheses around complex values.
 
-This is the best I have come up with so far... but I concede it still
-lacks elegance.
+Drew Fustini (3):
+  pinctrl: single: parse #pinctrl-cells = 2
+  ARM: dts: change AM33XX_PADCONF macro separate conf and mux
+  ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
 
+ arch/arm/boot/dts/am33xx-l4.dtsi   |  2 +-
+ drivers/pinctrl/pinctrl-single.c   | 11 +++++++++--
+ include/dt-bindings/pinctrl/omap.h |  2 +-
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-Daniel.
+-- 
+2.25.1
 
-
-[1] I don't know my way round the BSD code bases to be sure what they
-    do... I did a couple of web searches but didn't pull up anything
-    definitive.
-
-
-> 
-> > +
-> > +  num-interpolated-steps:
-> > +    description: Number of interpolated steps between each value of brightness-levels
-> > +      table. This way a high resolution pwm duty cycle can be used without
-> > +      having to list out every possible value in the brightness-level array.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +dependencies:
-> > +  default-brightness-level: [brightness-levels]
-> > +  num-interpolated-steps: [brightness-levels]
-> > +
-> > +required:
-> > +  - compatible
-> > +  - pwms
-> > +  - power-supply
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    backlight {
-> > +        compatible = "pwm-backlight";
-> > +        pwms = <&pwm 0 5000000>;
-> > +
-> > +        brightness-levels = <0 4 8 16 32 64 128 255>;
-> > +        default-brightness-level = <6>;
-> > +
-> > +        power-supply = <&vdd_bl_reg>;
-> > +        enable-gpios = <&gpio 58 0>;
-> > +        post-pwm-on-delay-ms = <10>;
-> > +        pwm-off-delay-ms = <10>;
-> > +    };
-> > +
-> > +  - |
-> > +    // Example using num-interpolation-steps:
-> > +    backlight {
-> > +        compatible = "pwm-backlight";
-> > +        pwms = <&pwm 0 5000000>;
-> > +
-> > +        brightness-levels = <0 2048 4096 8192 16384 65535>;
-> > +        num-interpolated-steps = <2048>;
-> > +        default-brightness-level = <4096>;
-> > +
-> > +        power-supply = <&vdd_bl_reg>;
-> > +        enable-gpios = <&gpio 58 0>;
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.25.1
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
