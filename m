@@ -2,104 +2,232 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19BDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457ACC433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9396022BEA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259D32544B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592809780;
+	bh=oQfZYFEK5TzA58baDfjiFR4quEk2JmrbUpxr4Y4OY1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xuTBl0xw2A8CGVsIZeXO3sbw1SZKvL4DlyW2cnZn7aW5gfKRw/hYiZm3BfWTAqGL9
+	 TCmW8OEc5x64j8qxArYLPVfR3CsMk46EBG7NGAKFgznruivulo13H7ye6fOpKGcG6w
+	 uOWm6BhWw4HODGln27m+HunPQx9i+U14xn79kUzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbgFVHGS (ORCPT
+        id S1726917AbgFVHJj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 03:06:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44830 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgFVHGR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:06:17 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e5so12218979ote.11;
-        Mon, 22 Jun 2020 00:06:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/moNm0JhqFf7N9xf8shxCLSCHkTyX5Q4ojQ7yxsOhLw=;
-        b=eOn6lmpbAJon480UCuRk6Gxva2F38Ci43UQ+9ruDmTN9V3c5KKgD1rSypkQd4r+UjU
-         JUcxsmMUEf/rOeOxrF/94ECoSyX3rvzQyYVsJMb0Xhy+7TJQdW8H8Aen9vijW5SYLbf3
-         wgaP8dNVKZtO++5CaXiuR1tW+vUun1Y6kJ1mlgFUNNe15EYfmikJD5+nxVujrrznex2k
-         KbaKCU41QGT/bKKPx1WsgBsfgUhyG5zxbuo08BhIp2f5x+wTopR1vbplqVA2tT+bRBjg
-         7kD0kcgRUIdT9JXGFyuAdz6xdymKcOUlLlgLM4qNRO6lpHJ6hu1PO/qP5hWh8TXC9F3K
-         +cmw==
-X-Gm-Message-State: AOAM532GH/ggwADG7Cv71uwwAgquDp2tDzqR8QGYoBxYpLIk4yWRXOay
-        03OKasCGyG4TlkwXvEoUI6Yw69a87m7TbQ+kAt84Ig==
-X-Google-Smtp-Source: ABdhPJz/42Fp1d5uFwEcgKoZG7C2YDazzY66i/rhyg/YaPqYCQgL8Dqt1/1v3jZVeLZSe5K8PYmzCAMHOO9OKKNC60U=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr12956410otp.250.1592809576767;
- Mon, 22 Jun 2020 00:06:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWd_nRhYZoHGdC+OJuB3edNUZ=pcNERDRkOwr+n=43Yeg@mail.gmail.com> <TY2PR01MB369258B26BD909D9E0E3615ED8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB369258B26BD909D9E0E3615ED8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 22 Jun 2020 09:06:05 +0200
-Message-ID: <CAMuHMdU03451pdTyAFTXcjadZUbF_1An6smqkB12WvvY1tzezA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Mon, 22 Jun 2020 03:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726850AbgFVHJj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 03:09:39 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A54F25440;
+        Mon, 22 Jun 2020 07:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592809778;
+        bh=oQfZYFEK5TzA58baDfjiFR4quEk2JmrbUpxr4Y4OY1k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=obWIgoG2HbCErNH6CrWpyWHVaLgzv5zgbpsfOH3hgbjA+565FWwDlEoYCjC9nSFA9
+         pbGbOncwMUBZZMefktQmKx5Ne9W1PweltyIuiadv9bE2zKOzi+3D3VhjL9B52+b0v6
+         aUQk7bKDsaHi0h+KGL7BJiwxi7c14Zd7LpaLOdE0=
+Date:   Mon, 22 Jun 2020 12:39:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-arm-msm@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 3/3] drm/bridge: Introduce LT9611 DSI to HDMI bridge
+Message-ID: <20200622070934.GG2324254@vkoul-mobl>
+References: <20200617105950.3165360-1-vkoul@kernel.org>
+ <20200617105950.3165360-4-vkoul@kernel.org>
+ <20200620180516.GA27870@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200620180516.GA27870@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Hello Sam,
 
-On Mon, Jun 22, 2020 at 7:21 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Geert Uytterhoeven, Sent: Thursday, June 18, 2020 4:52 PM
-> > On Mon, Jun 15, 2020 at 1:21 PM Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > Convert renesas related part of usb-xhci to YAML.
-> > >
-> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On 20-06-20, 20:05, Sam Ravnborg wrote:
+> Hi Vinod.
+> 
+> Looks good but some some of small nits.
 
-> > So you're just extracting the Renesas parts...
-> >
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
-> >
-> > ... and putting them in a separate file.
->
-> Yes.
->
-> > Would it make sense to keep them combined in a single document?
-> > Or are there too many differences?
->
-> I thought there were too many differences. At first, I had converted all to
-> a single document [1]. But, I was thinking there was a not good way in validation
-> point of view because some properties needed to adjust for all platforms.
-> Also, unfortunately, some compatibles and specific properties
-> are not documented... So, I had extracted the Renesas parts only.
->
-> [1]
-> Please refer to the end of this email.
+Great :)
 
-OK. Makes sense, as the Renesas parts are not compatible with generic-xhci.
+> And a few larger things in the following.
+> The larger things is releated to prepare the bridge driver to live in a
+> world with chained bridges.
 
-Gr{oetje,eeting}s,
+Sure, so that entails adding the callbacks specified below right or is
+there anything else required to do?
 
-                        Geert
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_graph.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <sound/hdmi-codec.h>
+> > +#include <drm/drm_probe_helper.h>
+> > +#include <drm/drm_atomic_helper.h>
+> > +#include <drm/drm_bridge.h>
+> > +#include <drm/drm_mipi_dsi.h>
+> > +#include <drm/drm_print.h>
+> Please add empty lines between each group of includes.
+> They are already sorted within each group and in preferred order - good.
 
+Okay if that is the preference, sure
+
+> > +static int lt9611_mipi_input_analog(struct lt9611 *lt9611)
+> > +{
+> > +	const struct reg_sequence reg_cfg[] = {
+> > +		{ 0x8106, 0x40 }, /*port A rx current*/
+> > +		{ 0x810a, 0xfe }, /*port A ldo voltage set*/
+> > +		{ 0x810b, 0xbf }, /*enable port A lprx*/
+> > +		{ 0x8111, 0x40 }, /*port B rx current*/
+> > +		{ 0x8115, 0xfe }, /*port B ldo voltage set*/
+> > +		{ 0x8116, 0xbf }, /*enable port B lprx*/
+> > +
+> > +		{ 0x811c, 0x03 }, /*PortA clk lane no-LP mode*/
+> > +		{ 0x8120, 0x03 }, /*PortB clk lane with-LP mode*/
+> Add space after "/*" and before closing "*/".
+> Like is done a few lines up in lt9611_modes[]
+
+Oops seems to have missed these, will fix this and others if any
+
+> > +static int lt9611_mipi_input_digital(struct lt9611 *lt9611,
+> > +				     const struct drm_display_mode *mode)
+> > +{
+> > +	struct reg_sequence reg_cfg[] = {
+> > +		{ 0x8300, LT9611_4LANES },
+> > +		{ 0x830a, 0x00 },
+> > +		{ 0x824f, 0x80 },
+> > +		{ 0x8250, 0x10 },
+> > +		{ 0x8302, 0x0a },
+> > +		{ 0x8306, 0x0a },
+> > +	};
+> > +
+> > +	if (mode->hdisplay == 3840)
+> > +		reg_cfg[1].def = 0x03;
+> Please check if some of these constants be replaced by something readable
+> from the datasheet.
+> Same goes for other places where constants are used.
+
+The problem is that the datasheet I have doesn't define register names.
+Worse some of them are not even documented. I did give it a shot to
+define these, but gave up half way due to lack on inventive names :(
+
+I would like to keep the registers and replace them in future if we get
+a good spec from vendor.. or i can define REG_1...REG_N!
+
+> > +static void lt9611_mipi_video_setup(struct lt9611 *lt9611,
+> > +				    const struct drm_display_mode *mode)
+> > +{
+> > +	u32 h_total, h_act, hpw, hfp, hss;
+> > +	u32 v_total, v_act, vpw, vfp, vss;
+> > +
+> > +	h_total = mode->htotal;
+> > +	v_total = mode->vtotal;
+> > +
+> > +	h_act = mode->hdisplay;
+> > +	hpw = mode->hsync_end - mode->hsync_start;
+> > +	hfp = mode->hsync_start - mode->hdisplay;
+> > +	hss = (mode->hsync_end - mode->hsync_start) +
+> > +	      (mode->htotal - mode->hsync_end);
+> > +
+> > +	v_act = mode->vdisplay;
+> > +	vpw = mode->vsync_end - mode->vsync_start;
+> > +	vfp = mode->vsync_start - mode->vdisplay;
+> > +	vss = (mode->vsync_end - mode->vsync_start) +
+> > +	      (mode->vtotal - mode->vsync_end);
+> Using the names from display_timings would make this easier to recognize
+> for the reader.
+> Examples:
+> vfp versus vfront_porch
+> vss versus vsync_len
+> 
+> I do not say the names from display_timing are much better, only that they
+> are more recognizeable.
+
+okay will do
+
+> > +static irqreturn_t lt9611_irq_thread_handler(int irq, void *dev_id)
+> > +{
+> > +	struct lt9611 *lt9611 = dev_id;
+> > +	unsigned int irq_flag0 = 0;
+> > +	unsigned int irq_flag3 = 0;
+> > +
+> > +	regmap_read(lt9611->regmap, 0x820f, &irq_flag3);
+> > +	regmap_read(lt9611->regmap, 0x820c, &irq_flag0);
+> > +
+> > +	pr_debug("%s() irq_flag0: %#x irq_flag3: %#x\n",
+> > +		 __func__, irq_flag0, irq_flag3);
+> debug artifact you can delete now?
+
+Okay, will remove this and rest
+
+> 
+> > +
+> > +	 /* hpd changed low */
+> Drop extra space in indent of this comment and following comments as
+> well.
+
+Ok
+
+> > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
+> > +				enum drm_bridge_attach_flags flags)
+> > +{
+> > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
+> > +	int ret;
+> > +
+> > +	dev_dbg(lt9611->dev, "bridge attach\n");
+> > +
+> > +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR) {
+> > +		DRM_ERROR("Fix bridge driver to make connector optional!");
+> > +		return -EINVAL;
+> > +	}
+> Please fix bridge so connector creation is optional.
+> for new bridge driver this is mandatory.
+
+Can you elaborate what is means by fixing bridge here, what are the
+things that should be done and are expected for new bridge drivers
+
+> > +static const struct drm_bridge_funcs lt9611_bridge_funcs = {
+> > +	.attach = lt9611_bridge_attach,
+> > +	.detach = lt9611_bridge_detach,
+> > +	.mode_valid = lt9611_bridge_mode_valid,
+> > +	.enable = lt9611_bridge_enable,
+> > +	.disable = lt9611_bridge_disable,
+> > +	.post_disable = lt9611_bridge_post_disable,
+> > +	.mode_set = lt9611_bridge_mode_set,
+> 
+> Add relevant bridge functions - .get_edid, .detect looks like
+> candidates.
+> See other bridge drivers for inspiration.
+
+Any good examples?
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~Vinod
