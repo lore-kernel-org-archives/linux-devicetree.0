@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF17C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA5EC433E6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F89206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B318F20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 13:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgFVNNi (ORCPT
+        id S1728235AbgFVNQg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 09:13:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51884 "EHLO vps0.lunn.ch"
+        Mon, 22 Jun 2020 09:16:36 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51938 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbgFVNNi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 09:13:38 -0400
+        id S1728148AbgFVNQg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 09:16:36 -0400
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
         (envelope-from <andrew@lunn.ch>)
-        id 1jnMGL-001f9v-S6; Mon, 22 Jun 2020 15:13:25 +0200
-Date:   Mon, 22 Jun 2020 15:13:25 +0200
+        id 1jnMJ6-001fCY-B8; Mon, 22 Jun 2020 15:16:16 +0200
+Date:   Mon, 22 Jun 2020 15:16:16 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -57,27 +57,28 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 04/15] net: mdio: add a forward declaration for
- reset_control to mdio.h
-Message-ID: <20200622131325.GI338481@lunn.ch>
+Subject: Re: [PATCH 05/15] net: phy: reset the PHY even if probe() is not
+ implemented
+Message-ID: <20200622131616.GJ338481@lunn.ch>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-5-brgl@bgdev.pl>
+ <20200622093744.13685-6-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622093744.13685-5-brgl@bgdev.pl>
+In-Reply-To: <20200622093744.13685-6-brgl@bgdev.pl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:37:33AM +0200, Bartosz Golaszewski wrote:
+On Mon, Jun 22, 2020 at 11:37:34AM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> This header refers to struct reset_control but doesn't include any reset
-> header. The structure definition is probably somehow indirectly pulled in
-> since no warnings are reported but for the sake of correctness add the
-> forward declaration for struct reset_control.
+> Currently we only call phy_device_reset() if the PHY driver implements
+> the probe() callback. This is not mandatory and many drivers (e.g.
+> realtek) don't need probe() for most devices but still can have reset
+> GPIOs defined. There's no reason to depend on the presence of probe()
+> here so pull the reset code out of the if clause.
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
