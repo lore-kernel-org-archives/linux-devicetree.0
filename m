@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31184C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C91C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D76020732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721BB20716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:43:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="swtzTFmL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="A2nZUOgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgFVJnP (ORCPT
+        id S1728000AbgFVJnU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:43:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40720 "EHLO
+        Mon, 22 Jun 2020 05:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgFVJle (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51F2C061796
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so15945846wrr.10
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:33 -0700 (PDT)
+        with ESMTP id S1726952AbgFVJlc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:32 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20FC2C061794
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so13983893wrm.4
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nC0F5ZT+Ll5OOGkPAd3mIJIStND0frPBkptlTCmDLJg=;
-        b=swtzTFmLVIWLX97Ka8BE4T1dWXPt5l1jiTgEty4wbnCrweWQw3HbeTXNza6y2qcCXR
-         iIu5WIxWbsQs51WOv19l2MOnnx9biFYV7/MbY0YMlQ/cSE0G+PyDXwmHvUYyHhrnNdUq
-         xAHqSoVXMheRLlPuN1KpgliIQIXbuBOHq+PCzME+TGn0K+/URvl99z5NPSrgSbWHtdpH
-         2XLpBaTp7Jhs4GFXZGq+gopioO0XNjhy5k4P+p0oSTll4HgmIBiAnRFMRF6aTZi4O2og
-         vYAAkHtdQXctioWsdumoNSuMfzhqraPeWT6gTazq92hFSwkJkMSYyr7hlCsjXk1eVqPx
-         7WHQ==
+        bh=cfUc+TkUAgqz9MdoL32AGr8CBlEvrLInm5v62775Pps=;
+        b=A2nZUOgnmx1UP+ORv6aiykQQt+lLSQ1KO7Odnx9nMWmPGWBB/9zwG2qDldAgXJmqFF
+         xP5a4eGOadOLgU5l8x7N7j9+z2XQcTH/rFKkU1WWhZmJmVhXF2hTLLfHyQ5etAtMHKmX
+         GzjJGiUtKBqAj3ZO+9U33Aqe6H7sc3uFms0oEry7uZGxugnSgJBjckjsDuq2/0a7BeEq
+         I4qul8QuxKe+CEztgYEFZDIF1pwVYkuHKS4ZkApg+YQ/TcNclWYBEankibn6cVK3MPY7
+         ZU+9DUlAqUZCkiO9dP4Q1H37N9frUcXcUiOti5AX0YjukaK8I91Rvini9mJsIrmoYDWK
+         Og9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nC0F5ZT+Ll5OOGkPAd3mIJIStND0frPBkptlTCmDLJg=;
-        b=uaKje8tDdcImqEo0KGJ/GKFaiOYCoW5lsMIjKeOJxqcJk5Ch3zW0vky6AhuJaaXzlm
-         itzhNPvGzTOZxvc1q5hPMib51cMLlyPD91j5t3vBOFpFTzc2oLKIgbZZxAVz3Jr8TcUS
-         te3UTAewLQpFxD3Y1wuO0xejOUqwa/jVtsm5J/Dh4gHEp70S1OP1EAoKLanV5T/RNFR2
-         7Vdybllk7iLzLL10VjIEs/MEZqq3uJ7KFOp1qk1YmCcOA1c9nBU+5x8ujwrK+8aJe19B
-         Cy7BUKMvqSW60E1GCZCHxAYLlOADjKNMZUeFEVYFQTGvPmfhqFttUu3Vtj1P4Y7OFEPW
-         gZkA==
-X-Gm-Message-State: AOAM532arTWeWpsrlTAdHXHN/0sxmet9Ygvz2E9ycYbmv7cow8ZjfGHA
-        aUSXLlIyFL9Q1qgnvoT/hDNOZw==
-X-Google-Smtp-Source: ABdhPJzxHCym+Ub6CuSXGJUTfH6gp7OLN1NQWcaww2Sg2sQLihShVVzipPqZpx45p1tV4dBze4Q9ew==
-X-Received: by 2002:a5d:6802:: with SMTP id w2mr18207943wru.68.1592818892680;
-        Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+        bh=cfUc+TkUAgqz9MdoL32AGr8CBlEvrLInm5v62775Pps=;
+        b=ZepFSFnRYH9mVbvxzdgC04ac1m5d4sRaW1+H0oSoe3Qxfy8RG8oyq/cgY8geieAo33
+         F++mArhrC2vXm+TBDo+07e2jzZIP/qy5viyp2uH1sHCsqHSzZWnikj2Abt3xz5bJy1Tl
+         nhXRR7jczSAoN7KPOukF6FrkbefrSB4j3BnoxyaWQBokUzOhsjodugtlhfegXOgbmhcV
+         NIQHL8B7zQb5332BymQsHoA8Z94KsE7G3eajD7IYYq3/7tdZePgQrYqSsVUpdsSbAhEj
+         xyrkA/SGC97HnK6kdA9NaupZYwqizukJw/+8pUJAnzXPUuV1QjjHnRf7wpvvnKYRra9N
+         4y9A==
+X-Gm-Message-State: AOAM533Fa9O44HCetYqpvWLj8Akhuh8lymflrkrphVWVETwWspYaEugr
+        KX1615o3tO5etSr8/ZKayVVyxg==
+X-Google-Smtp-Source: ABdhPJzkmYuQpu0uNoygH8mU35nl1Z6nB3WJ2gtz2NCWG24AiJQNaa6UhDtUjU6DEUC2R04sQUctyQ==
+X-Received: by 2002:a5d:470a:: with SMTP id y10mr5777035wrq.405.1592818890889;
+        Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.31
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:32 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:30 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -92,9 +92,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 06/15] net: phy: mdio: reset MDIO devices even if probe() is not implemented
-Date:   Mon, 22 Jun 2020 11:37:35 +0200
-Message-Id: <20200622093744.13685-7-brgl@bgdev.pl>
+Subject: [PATCH 05/15] net: phy: reset the PHY even if probe() is not implemented
+Date:   Mon, 22 Jun 2020 11:37:34 +0200
+Message-Id: <20200622093744.13685-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -107,49 +107,70 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Similarily to PHY drivers - there's no reason to require probe() to be
-implemented in order to call mdio_device_reset(). MDIO devices can have
-resets defined without needing to do anything in probe().
+Currently we only call phy_device_reset() if the PHY driver implements
+the probe() callback. This is not mandatory and many drivers (e.g.
+realtek) don't need probe() for most devices but still can have reset
+GPIOs defined. There's no reason to depend on the presence of probe()
+here so pull the reset code out of the if clause.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/phy/mdio_device.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/net/phy/phy_device.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index f60443e48622..be615504b829 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -150,10 +150,10 @@ static int mdio_probe(struct device *dev)
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
- 	int err = 0;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 1b4df12c70ad..f6985db08340 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2690,16 +2690,13 @@ static int phy_probe(struct device *dev)
  
--	if (mdiodrv->probe) {
+ 	mutex_lock(&phydev->lock);
+ 
+-	if (phydev->drv->probe) {
 -		/* Deassert the reset signal */
--		mdio_device_reset(mdiodev, 0);
+-		phy_device_reset(phydev, 0);
 +	/* Deassert the reset signal */
-+	mdio_device_reset(mdiodev, 0);
++	phy_device_reset(phydev, 0);
  
-+	if (mdiodrv->probe) {
- 		err = mdiodrv->probe(mdiodev);
- 		if (err) {
- 			/* Assert the reset signal */
-@@ -170,12 +170,11 @@ static int mdio_remove(struct device *dev)
- 	struct device_driver *drv = mdiodev->dev.driver;
- 	struct mdio_driver *mdiodrv = to_mdio_driver(drv);
++	if (phydev->drv->probe) {
+ 		err = phydev->drv->probe(phydev);
+-		if (err) {
+-			/* Assert the reset signal */
+-			phy_device_reset(phydev, 1);
++		if (err)
+ 			goto out;
+-		}
+ 	}
  
--	if (mdiodrv->remove) {
-+	if (mdiodrv->remove)
- 		mdiodrv->remove(mdiodev);
+ 	/* Start out supporting everything. Eventually,
+@@ -2761,6 +2758,10 @@ static int phy_probe(struct device *dev)
+ 	phydev->state = PHY_READY;
+ 
+ out:
++	/* Assert the reset signal */
++	if (err)
++		phy_device_reset(phydev, 1);
++
+ 	mutex_unlock(&phydev->lock);
+ 
+ 	return err;
+@@ -2779,12 +2780,12 @@ static int phy_remove(struct device *dev)
+ 	sfp_bus_del_upstream(phydev->sfp_bus);
+ 	phydev->sfp_bus = NULL;
+ 
+-	if (phydev->drv && phydev->drv->remove) {
++	if (phydev->drv && phydev->drv->remove)
+ 		phydev->drv->remove(phydev);
  
 -		/* Assert the reset signal */
--		mdio_device_reset(mdiodev, 1);
+-		phy_device_reset(phydev, 1);
 -	}
 +	/* Assert the reset signal */
-+	mdio_device_reset(mdiodev, 1);
++	phy_device_reset(phydev, 1);
++
+ 	phydev->drv = NULL;
  
  	return 0;
- }
 -- 
 2.26.1
 
