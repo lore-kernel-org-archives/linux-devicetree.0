@@ -2,117 +2,480 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65354C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F4920706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3583F206FA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sJrF4WUS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MqPCIqVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgFVKqi (ORCPT
+        id S1727905AbgFVKzw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:46:38 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:64510 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgFVKqi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:46:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592822797; x=1624358797;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=KHvJLP0itNpakCb4tg71Js5YXmKvGUBsqp96jfT9yXw=;
-  b=sJrF4WUSM6wBYbfjj7vWTa+pVUOf12sweLJs3sLi7/AsDN4I4DfQOKKp
-   3FTIHpzOCWmpLChR3hM0IK3hspO7KTr31mZ4+Z9WAHnvCJ4aStwCTZZD1
-   x90KlSHHdQIGGDe9K25PpGUN4U/qay/C0FkdGFlEZ/WPa1RsoaxVj+j7m
-   OovA+PQAIsEpMHwvSn0b1O08od/wya2CyvXlYb8XS7IAuunIYvUlMQBbO
-   leXkBLTNfp/iu7OnUkmXslcClcZhmh8ZHa2eew9NQ3Zx+t6RPiZPFQq7A
-   75eWHeEKK2iR+PcfKXdhF9AvOjRWEmWaCEuUitZEzvwKn9lFyOqfaTt4p
-   A==;
-IronPort-SDR: jIDnA4F4tHU6zBj7u39UFZocR2sz485FomgdldxzhJc4VCJUfL7MIcbRuLFTJp2SBt2pRul5sR
- NIeN5Cdwsxez19lhBD8/B+m6pclB0eJ+dQ/z7tvXIZuRs62yPkutgDPygnZP6HszIP55Mi3Ek8
- Xw/t0xKt3INxH7jxs77pnHINpQ+LVoB/NsVJXBXvwfxHwvivMlBBDRmYIbW8nYQ+Y9Vh/zeJJH
- +0QJHSu+m6WINc3x9cGKc+zeI/bI23cCYj4eaL99NqE0HwVT/SFi3ZPKnMWovuISDQTATMxoS8
- hBQ=
-X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="16577354"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jun 2020 03:46:36 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 22 Jun 2020 03:46:36 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Mon, 22 Jun 2020 03:46:34 -0700
-References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Serge Semin" <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
-In-Reply-To: <20200619121107.GE5396@sirena.org.uk>
-Date:   Mon, 22 Jun 2020 12:46:33 +0200
-Message-ID: <87imfjxtrq.fsf@soft-dev15.microsemi.net>
+        Mon, 22 Jun 2020 06:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727860AbgFVKzt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:55:49 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDF9C061796
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:55:48 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id q5so3792887wru.6
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KoWfZGUWw5C18ooOV0MLNeymXgRwlrvLzPcWKgUELZ8=;
+        b=MqPCIqVfeX6FnZR0P6Nv/pkU/Oo/r0qpdBVkZ41DKtClDNp2XknFMQblxt6Kl4dOLf
+         500zLlXFEy7KVKZbNIyzTbGNL1FbqwZeuw5h2neOFh9FU+hFKFVoHMrebkUMRS7NSCnf
+         /Iep0kf+yLJ7awueDHIC9Qd1hkolYp1hIpg/iyOAbK6Lnd92wZ8sy/rYW9+wYz0i0jg+
+         Wa75paKy6HV6VvhOnYDFIPxB1IFJxktZmHTgch1QVs/FZl/5aZ5koo9CYDQCiTC6+Aor
+         9cqRS/n4IqkLdeBVrK9GjEPtlvYUM/t7ygvmJ3LdUMEZ34Bo/eI4jG4LQQpddCqALScL
+         NtPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KoWfZGUWw5C18ooOV0MLNeymXgRwlrvLzPcWKgUELZ8=;
+        b=kqjKj+Dvv3LS7bHSh5RMOcxUS2ISJkZzcsM31awIUvhWKL5bM4fxxZ35UQvGCd4oL4
+         spHIAHAhPNjGhc/22+4PKmcoDspMG8t0wXswqM4aDmx/CU3DQ3nWhEz3TXVi/gG5BCzV
+         w0U55PZqsSjIdqnkTr94N4XyJcCLkENy7r1JvvS9FD3sWgR36szTXG2z62KJ1YFq2WH4
+         oWpDU/VCwRmbiCNcR0bWX8otOt9hL2lwDu9nT4rKJnJC/MMymjzCIffZ19lPAaOp1OpD
+         //fSNHJ6xKVW9ZUm/zAL35m/Dyg5eUSKLKQIFV/RQanzb4s4qEuXHSFDnp+XoSbobnCo
+         SJQQ==
+X-Gm-Message-State: AOAM533xsFmH4Os4aveMRyb/DiWiLK7MuO0ZlICzB5OQhkI0QW6uZ/3q
+        Ov0xepXroarnBRRwWqJe86u06w==
+X-Google-Smtp-Source: ABdhPJwUK4AwBpQhsM0+AFV5S7K5kK/5FkSGHnjSyKX7rVYVRGIgnKd20aMohuBX+6UliHE+X1ez0A==
+X-Received: by 2002:adf:9286:: with SMTP id 6mr18654037wrn.361.1592823347358;
+        Mon, 22 Jun 2020 03:55:47 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id c20sm10890766wrb.65.2020.06.22.03.55.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 03:55:46 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 11:55:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 04/10] mfd: Add base driver for Netronix embedded
+ controller
+Message-ID: <20200622105544.GU954398@dell>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+ <20200620224222.1312520-3-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200620224222.1312520-3-j.neuschaefer@gmx.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sun, 21 Jun 2020, Jonathan Neuschäfer wrote:
 
-Mark Brown writes:
+Description of the device here please.
 
-On Fri, Jun 19, 2020 at 01:31:18PM +0200, Lars Povlsen wrote:
+> Third-party hardware documentation is available at
 
->> +/*
->> + * The Designware SPI controller (referred to as master in the
->> + * documentation) automatically deasserts chip select when the tx fifo
->> + * is empty. The chip selects then needs to be driven by a CS override
->> + * register. enable is an active low signal.
->> + */
->> +static void dw_spi_sparx5_set_cs(struct spi_device *spi, bool nEnable)
->
->The value that is passed in here is the value that should be driven on
->the output pin, the driver should not be interpreting the value in any
->way here.  Documenting it as nEnable adds a layer of confusion, and it
->may not be an active high signal depending on the system.
+'\n'
 
-Ok, I will make the CS function more like the others.
+> https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-controller
 
->
->> +	if (!nEnable) {
->> +		/* Ensure CS toggles, so start off all disabled */
->> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~0);
->> +		/* CS override drive enable */
->> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 1);
->
->This should just be setting the value to whatever the core asked for it
->to be set to, the driver adding extra toggles is likely to disrupt
->things.
+Indent this with a couple of spaces.
 
-I will have a look at this again. But it was added for a reason. The
-issue is that we have two different busses in front of the controller,
-so we might need more settle time when switching interface.
+> The EC supports interrupts, but the driver doesn't make use of them so
+> far.
+> 
+> Known problems:
+> - The reboot handler is installed in such a way that it directly calls
+>   into the i2c subsystem to send the reboot command to the EC. This
+>   means that the reboot handler may sleep, which is not allowed.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+>  drivers/mfd/Kconfig       |   7 ++
+>  drivers/mfd/Makefile      |   1 +
+>  drivers/mfd/ntxec.c       | 188 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ntxec.h |  30 ++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 drivers/mfd/ntxec.c
+>  create mode 100644 include/linux/mfd/ntxec.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index a37d7d1713820..78410b928648e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -978,6 +978,13 @@ config MFD_VIPERBOARD
+>  	  You need to select the mfd cell drivers separately.
+>  	  The drivers do not support all features the board exposes.
+> 
+> +config MFD_NTXEC
+> +	bool "Netronix Embedded Controller"
+> +	depends on I2C && OF
+> +	help
+> +	  Say yes here if you want to support the embedded controller of
+> +	  certain e-book readers designed by the ODM Netronix.
 
-Thank you for you comments,
+s/of certain/found in certain/.
 
-Cheers
+>  config MFD_RETU
+>  	tristate "Nokia Retu and Tahvo multi-function device"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 9367a92f795a6..19d9391ed6f32 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -218,6 +218,7 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+>  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
+>  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+> +obj-$(CONFIG_MFD_NTXEC)		+= ntxec.o
+>  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+>  obj-$(CONFIG_MFD_RK808)		+= rk808.o
+>  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
+> diff --git a/drivers/mfd/ntxec.c b/drivers/mfd/ntxec.c
+> new file mode 100644
+> index 0000000000000..82adea34ea746
+> --- /dev/null
+> +++ b/drivers/mfd/ntxec.c
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright 2020 Jonathan Neuschäfer
+> +//
+> +// MFD driver for the usually MSP430-based embedded controller used in certain
+> +// Netronix ebook reader board designs
+
+Only the SPDX line should contain C++ style comments.
+
+Description at the top, copyright after.
+
+An "MFD driver" isn't really a thing.  Please describe the device.
+
+> +#include <asm/unaligned.h>
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mfd/ntxec.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm.h>
+> +#include <linux/reboot.h>
+> +#include <linux/types.h>
+> +
+> +
+
+No need for double line spacing.
+
+> +#define NTXEC_VERSION		0x00
+> +#define NTXEC_POWEROFF		0x50
+> +#define NTXEC_POWERKEEP		0x70
+> +#define NTXEC_RESET		0x90
+
+Are these registers?  Might be worth pre/post-fixing with _REG.
+
+> +/* Register access */
+> +
+> +int ntxec_read16(struct ntxec *ec, u8 addr)
+> +{
+> +	u8 request[1] = { addr };
+> +	u8 response[2];
+> +	int res;
+> +
+> +	struct i2c_msg msgs[] = {
+> +		{
+> +			.addr = ec->client->addr,
+> +			.flags = ec->client->flags,
+> +			.len = sizeof(request),
+> +			.buf = request
+> +		}, {
+> +			.addr = ec->client->addr,
+> +			.flags = ec->client->flags | I2C_M_RD,
+> +			.len = sizeof(response),
+> +			.buf = response
+> +		}
+> +	};
+> +
+> +	res = i2c_transfer(ec->client->adapter, msgs, ARRAY_SIZE(msgs));
+> +	if (res < 0)
+> +		return res;
+> +	if (res != ARRAY_SIZE(msgs))
+> +		return -EIO;
+> +
+> +	return get_unaligned_be16(response);
+> +}
+> +EXPORT_SYMBOL(ntxec_read16);
+> +
+> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value)
+> +{
+> +	u8 request[3] = { addr, };
+> +	int res;
+> +
+> +	put_unaligned_be16(value, request + 1);
+> +
+> +	res = i2c_transfer_buffer_flags(ec->client, request, sizeof(request),
+> +					ec->client->flags);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(ntxec_write16);
+> +
+> +int ntxec_read8(struct ntxec *ec, u8 addr)
+> +{
+> +	int res = ntxec_read16(ec, addr);
+> +
+> +	if (res < 0)
+> +		return res;
+> +
+> +	return (res >> 8) & 0xff;
+> +}
+> +EXPORT_SYMBOL(ntxec_read8);
+> +
+> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value)
+> +{
+> +	return ntxec_write16(ec, addr, value << 8);
+> +}
+> +EXPORT_SYMBOL(ntxec_write8);
+
+Why are you hand-rolling your own accessors?
+
+> +
+> +
+> +/* Reboot/poweroff handling */
+
+These comments seem to be stating the obvious.
+
+Please remove them.
+
+> +static struct ntxec *poweroff_restart_instance;
+> +
+> +static void ntxec_poweroff(void)
+> +{
+> +	ntxec_write8(poweroff_restart_instance, NTXEC_POWEROFF, 0x01);
+
+All magic numbers should be defined?
+
+> +	msleep(5000);
+
+Why 5000?
+
+> +}
+> +
+> +static int ntxec_restart(struct notifier_block *nb,
+> +		unsigned long action, void *data)
+> +{
+> +	/* FIXME: The I2C driver sleeps, but restart handlers may not sleep */
+
+Then this is not allowed.
+
+You need to fix this *before* submitting upstream.
+
+> +	ntxec_write8(poweroff_restart_instance, NTXEC_RESET, 0xff);
+> +	/* TODO: delay? */
+
+TODO *before* submitting upstream.  This is not a development branch.
+
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block ntxec_restart_handler = {
+> +	.notifier_call = ntxec_restart,
+> +	.priority = 128
+> +};
+> +
+> +
+> +/* Driver setup */
+> +
+> +static int ntxec_probe(struct i2c_client *client,
+> +			    const struct i2c_device_id *ids)
+> +{
+> +	struct ntxec *ec;
+> +	int res;
+
+What does 'res' mean?
+
+> +	ec = devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
+> +	if (!ec)
+> +		return -ENOMEM;
+> +
+> +	ec->dev = &client->dev;
+> +	ec->client = client;
+
+You don't need both (if any).
+
+> +	/* Determine the firmware version */
+> +	res = ntxec_read16(ec, NTXEC_VERSION);
+> +	if (res < 0) {
+> +		dev_dbg(ec->dev, "Failed to read firmware version number\n");
+
+Why dbg?
+
+> +		return res;
+> +	}
+> +	ec->version = res;
+> +
+> +	dev_info(ec->dev,
+> +		 "Netronix embedded controller version %04x detected.\n",
+> +		 ec->version);
+> +
+> +	/* For now, we don't support the new register layout. */
+> +	if (ntxec_has_new_layout(ec))
+> +		return -EOPNOTSUPP;
+
+What is the new layout?
+
+Why don't you support it?
+
+> +	if (of_device_is_system_power_controller(ec->dev->of_node)) {
+> +		/*
+> +		 * Set the 'powerkeep' bit. This is necessary on some boards
+> +		 * in order to keep the system running.
+> +		 */
+> +		res = ntxec_write8(ec, NTXEC_POWERKEEP, 0x08);
+> +		if (res < 0)
+> +			return res;
+> +
+> +		/* Install poweroff handler */
+> +		WARN_ON(poweroff_restart_instance);
+
+Why WARN?
+
+> +		poweroff_restart_instance = ec;
+> +		if (pm_power_off != NULL)
+
+if (pm_power_off)
+
+> +			/* TODO: Refactor among all poweroff drivers */
+
+Nope.
+
+> +			dev_err(ec->dev, "pm_power_off already assigned\n");
+
+Error, but execution carries on anyway?
+
+> +		else
+> +			pm_power_off = ntxec_poweroff;
+> +
+> +		/* Install board reset handler */
+> +		res = register_restart_handler(&ntxec_restart_handler);
+> +		if (res < 0)
+
+Is >0 valid?
+
+> +			dev_err(ec->dev,
+> +				"Failed to register restart handler: %d\n", res);
+> +	}
+> +
+> +	i2c_set_clientdata(client, ec);
+
+Where do you use this?
+
+> +	return devm_of_platform_populate(ec->dev);
+> +}
+> +
+> +static const struct of_device_id of_ntxec_match_table[] = {
+> +	{ .compatible = "netronix,ntxec", },
+> +	{}
+> +};
+
+Use .probe_new() and drop this.
+
+> +static struct i2c_driver ntxec_driver = {
+> +	.driver	= {
+> +		.name	= "ntxec",
+> +		.of_match_table = of_ntxec_match_table,
+> +	},
+> +	.probe		= ntxec_probe,
+
+Nothing to .remove()?
+
+> +};
+> +builtin_i2c_driver(ntxec_driver);
+
+Only built-in?
+
+> diff --git a/include/linux/mfd/ntxec.h b/include/linux/mfd/ntxec.h
+> new file mode 100644
+> index 0000000000000..9f9d6f2141751
+> --- /dev/null
+> +++ b/include/linux/mfd/ntxec.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright 2020 Jonathan Neuschäfer
+> + *
+> + * MFD access functions for the Netronix embedded controller.
+
+No such thing as an MFD.
+
+"Embedded Controller"
+
+> + */
+> +
+> +#ifndef NTXEC_H
+> +#define NTXEC_H
+> +
+> +#include <linux/types.h>
+> +
+> +struct ntxec {
+> +	struct device *dev;
+> +	struct i2c_client *client;
+> +	u16 version;
+> +	/* TODO: Add a mutex to protect actions consisting of multiple accesses? */
+
+No TODOs.  Please fix before upstreaming.
+
+> +};
+> +
+> +static inline bool ntxec_has_new_layout(struct ntxec *ec)
+> +{
+> +	return ec->version == 0xe916;
+
+Why don't you just check for the devices you *do* support?
+
+> +}
+> +
+> +int ntxec_read16(struct ntxec *ec, u8 addr);
+> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value);
+> +int ntxec_read8(struct ntxec *ec, u8 addr);
+> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value);
+> +
+> +#endif
+
+#endif /* NTXEC_H */
 
 -- 
-Lars Povlsen,
-Microchip
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
