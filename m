@@ -6,96 +6,116 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562E4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D836BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D3720578
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C60206FA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyTPcZ3p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="avt6c0ad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgFVKaY (ORCPT
+        id S1727105AbgFVKcs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        Mon, 22 Jun 2020 06:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgFVKaW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:30:22 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D606C061796
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:30:21 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x6so16073671wrm.13
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:30:21 -0700 (PDT)
+        with ESMTP id S1727046AbgFVKcr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:32:47 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7D6C061795
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:32:47 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l10so16114801wrr.10
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:32:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OJZ8ufIPKsqB5rJhxxmA58THKC8gBVaQJxB1BylSHW8=;
-        b=hyTPcZ3p/Vj6NBYTZuHMAibM2O4uw5XyIDy98N/mJFvWAkzmlmsgkmIdoUWbpc0r7k
-         98uhYZM80THFf+l8shd3BDY8336XLBaz70LV/2bAqqu305gf8YTAYYdWus/Y+V0+47iu
-         Rr0HhXfrQyZGE13X5i5Vz+p3VGGkd4eDwsfkgKGa1dnHotEE8Fqp/ZVTKsKQeY2V4iG0
-         xi9713viZTF66cHzHcR8S6hrTHw99znvETu7lqsDPBE37UYcZJ0JmPSdcKPUUSHZlV4x
-         ZE2v+946/9xzxcKSOfXLVBxbi/C+rNRFDVDrcILhe0MTGy+7VPon/dfW+RTZ9tkVS8G+
-         TsWQ==
+        bh=Fa4dCMlEWKxhwtDN8DZa0EBzcvxNGKcUrvu6R1FLLEY=;
+        b=avt6c0ad9r5XtZvoCZsUT9m85JMd/pwM+nH7ld0naOBpha7Jkf6u2MGebUC3u2YD7V
+         BDMYT+W6hKu/qxgMRTn8CHo4T/t/p+Q2j01eq0Y9+DFvdvgJESLEr2x8xDLexqabk2ir
+         +nJJ3xS2rK0L4H/btmt7xfl/v8d/xT/Ehyl6qt6PI75AxA5zoQuH4BxNZi9cajCv9N8Q
+         IZNJM4mQnHI3shXQNuuv2UAuIO0mocUXa1lpdH3nQh4ZlwjVC6/JjrDHP455EuaAAx5I
+         A4/2mDw8nJMH3QcaFeNdsNrZIuyFYh+mUzdkNEDU05xhWWV3wTzZvIyFtvOXZx1igV3j
+         Ow5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=OJZ8ufIPKsqB5rJhxxmA58THKC8gBVaQJxB1BylSHW8=;
-        b=o4Ta6j6hX+kcB2zEig1/gu8nN1eVJR+8ESAT30/BqTxE60bLDXT89AqIF2yHarNuXv
-         BMT2TWpWmhRUA1w9+CRVasc2xgKUvbrK2nFryD8wlj7KeEVB/t+PRZVgCMIczVEHAl4j
-         gUyPzNLvquAUPD4rp2O09f2DwNEzAxkTuHW0Sx3ZWBzCIlFucy/zGBXcRes7NRmbJqIt
-         EWHPUbJYt97/Kkxi/j9/ha1JKtgwML745Hu5D2oQH5L/7aK4vMtoO0foYB63tYtPLqok
-         Csj3mzwZRyztU3i8rU5+Im6mj99+Eq31hBDVyaFsAgHJ/TR3YhfVD6PqZrcMVVHBBtPk
-         4Qiw==
-X-Gm-Message-State: AOAM530aKTIYcHP3PsQWnpX02szkGh6TDfSgBd9jx++CoEC6kxaEVt4a
-        xWxn6jvpfAzuoVFSYhR1B4pO5Q==
-X-Google-Smtp-Source: ABdhPJzbZyR4CNtd9Ju/EbDUWI2mZigkJb8SK98Z/hYKtkT3onVWzAgyoX8RGlVwB7JFNUi69uXTIQ==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr17702175wrq.140.1592821819859;
-        Mon, 22 Jun 2020 03:30:19 -0700 (PDT)
+        bh=Fa4dCMlEWKxhwtDN8DZa0EBzcvxNGKcUrvu6R1FLLEY=;
+        b=A3fEz2y6Q1+Y2u6Qh3b9zCgsZJPThCeBpOAT7mW3bdJvZ1I5NrInnbnlA9ao2nD5iG
+         7J21YmGmpYWjtxRmzUChH8cWTAOvS+ha67Akq+YN5E4wEN1FlXkA9L2NVnHo0UaC9voP
+         bGraXE0vdWh7R4RXruxF3JvZtV7YB+JjAA3uJ8q5qtr/3V507zbMp3OBf2JSnEOB8sz8
+         QzqEGknRgwpf0Ncz+hEQcXn5Hw5x1u66UIo2UK8z+jAuK3TsOiXDjxs5czGDinC/+exq
+         OK5qKdnMM2MNQUr2qkpcC7iRQ6rQXjzL7TjLYJ4/BnbGarB6SapFcDmiV1WhY1FHPHGk
+         uOgg==
+X-Gm-Message-State: AOAM531xLrGQICP/gcd2x/cUaxfNr9G/Y2isgQYL8dHu8KYpHrGHK2T3
+        fRuyxNWPBhC3qxbB64fdNzWE6g==
+X-Google-Smtp-Source: ABdhPJwX0G/3q4eO7PMMGrf3/EarwYht0K/sahtWaIUqU5krFYZCMH4KP6m8xJqZ1qD6hZbalCZVPQ==
+X-Received: by 2002:adf:e4d0:: with SMTP id v16mr5666137wrm.193.1592821966276;
+        Mon, 22 Jun 2020 03:32:46 -0700 (PDT)
 Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id d9sm17210004wre.28.2020.06.22.03.30.18
+        by smtp.gmail.com with ESMTPSA id j6sm15810066wmb.3.2020.06.22.03.32.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:30:19 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 11:30:17 +0100
+        Mon, 22 Jun 2020 03:32:45 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 11:32:43 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.co, alexandre.torgue@st.com,
-        linus.walleij@linaro.org, amelie.delaunay@st.com,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
- json-schema
-Message-ID: <20200622103017.GS954398@dell>
-References: <20200220162246.8334-1-benjamin.gaignard@st.com>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [RFC PATCH 01/10] DT bindings in plain text format
+Message-ID: <20200622103243.GT954398@dell>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+ <20200620223915.1311485-2-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
+In-Reply-To: <20200620223915.1311485-2-j.neuschaefer@gmx.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
+On Sun, 21 Jun 2020, Jonathan Neuschäfer wrote:
 
-> Convert stmfx bindings to json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> For reference, here are the devicetree bindings in plaintext format.
+> (Not for merge.)
+
+This would be better placed inside the relevant patch(es), rather than
+in a separate non-mergeable extra/superfluous patch.
+
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
->  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
->  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
->  3 files changed, 124 insertions(+), 144 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
-
-Applied, thanks.
+>  .../bindings/mfd/netronix,ntxec.txt           | 58 +++++++++++++++++++
+>  .../bindings/pwm/netronix,ntxec-pwm.txt       | 27 +++++++++
+>  .../bindings/rtc/netronix,ntxec-rtc.txt       | 17 ++++++
+>  3 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/netronix,ntxec.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.txt
 
 -- 
 Lee Jones [李琼斯]
