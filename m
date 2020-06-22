@@ -2,245 +2,318 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD84BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9865C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 18:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E2F20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9272076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 18:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fKYxb8a5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVBP+IvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbgFVR5Q (ORCPT
+        id S1730249AbgFVSB4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32938 "EHLO
+        Mon, 22 Jun 2020 14:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730104AbgFVR5P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 13:57:15 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB08EC061573
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:57:14 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id t25so16413918oij.7
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:57:14 -0700 (PDT)
+        with ESMTP id S1730046AbgFVSBx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 14:01:53 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8E3C061573;
+        Mon, 22 Jun 2020 11:01:53 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id er17so8378210qvb.8;
+        Mon, 22 Jun 2020 11:01:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M3GEVdXIf0tk+DXRvjn8ivHe3tRnJ1flWGbCBgMSqFc=;
-        b=fKYxb8a5H/16u9zlWS8iJSngzhsQi8W1gBgVdQKgopZCmgNRKW4ShQtq754r/X5ZHq
-         fy6m5ZY5hX4E0YahT9PIK9K0hD3j10Uy59Ms3GAKtrVZaffV73Avh9kzG2xPwcQpE2jN
-         8f9MCiTyTnGs+lgdJ4+REJgssZ4aoLmVB39814XTPl2qPHqWj/gzwk+XimPFIVVEHUvp
-         JzsFN060SsfLCwR1b2ZTOFv/2dloiWXa9fBsxadwXtQFyVQEwAdDKS6LxeGJ6e36GFJZ
-         nvfChvHXG4x7H6NJ79akzQS3olwqvZy18fNlsxK0nyMeuPuAZK5+wYZs67khpZMIQQqQ
-         mHaQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jom6FB/6i46rN+8UOD3WhmDHiHJVG44IC/T2lpxw+zs=;
+        b=UVBP+IvVp9e1XfiNdmq8PbTRt7b+QWBboEnJSbQo92m0SUa8otWAcu9uL7PId+fpYd
+         bPnXekFkkeAjv7OHezUHWxhYkHP6H7v2xaeNrCc7byFyPavpcBwmIIXguJ6icLNURvdc
+         wbjPZQ89Z+4I5oTSp2nTIbWj+khDSfh7D1Q+c/i2yIS51Nm8QsOGnh4ScCv7No20pgRF
+         4IyUqwjNqgo8W9yyDjnRUHULiivQFnRnuI4oc+FtxEDGlYnVlsyeM16/hGlLWGRY+bh3
+         PzkpKLpJjj4SzG9XyqEd8zSOOSkKe6kOyXZiivXguDcGq8I9b6p3tbarolnRqwNbryBS
+         X9BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M3GEVdXIf0tk+DXRvjn8ivHe3tRnJ1flWGbCBgMSqFc=;
-        b=ODpDHlHSGd7/hwQhPv5hJElDUhJ4TDx+Qe7hnboCpHb6OYQmEnmwF4cUQ87xigmfVu
-         OqH4+WZDU3wGl1OnmypE4oOvNrMz83o226qQ5excSznf67gHiLTBmHo63x5NBq8GJiDi
-         D73M+wKk8EtQ2STppHU63HmuQkwnWmHdWwyd/KhVVhKZVwrn/wjgTASnJb/iInVGCCi0
-         5i4OEhnWcoyspvPrlZaSjeM5aCOG14Vwv4pse4l8qEhaxb81D1Zwhu9kRPObYeCQ0ws6
-         PryrRFApmNj0EFXuBuPMbvTGwV/EYd+ohqSBA2bKcMWVQNrMmRuLGxOItLHnFYUTyaGF
-         cWQA==
-X-Gm-Message-State: AOAM532gnZp5a69kzgyUw8iMNAMp72VTx1jBzVe33ecDoenSFwgP+Nl0
-        stzaZp61BM1JZ0giYA3Bu38bAo/sOUc=
-X-Google-Smtp-Source: ABdhPJxkLE5HD8rZWtgYIPepWBzqCb0jDBaJuqVva8yCjfKKXg5Nh77NsC5ouVeAKrFlZLLucadR5A==
-X-Received: by 2002:aca:7213:: with SMTP id p19mr13643738oic.58.1592848634118;
-        Mon, 22 Jun 2020 10:57:14 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k7sm3510087oon.29.2020.06.22.10.57.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 10:57:13 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 10:54:28 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Martin Botka <martin.botka1@gmail.com>
-Subject: Re: [PATCH v2 8/8] arm64: dts: qcom: Add support for Sony Xperia
- 10/10 Plus (Ganges platform)
-Message-ID: <20200622175428.GU128451@builder.lan>
-References: <20200622075749.21925-1-konradybcio@gmail.com>
- <20200622075749.21925-9-konradybcio@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jom6FB/6i46rN+8UOD3WhmDHiHJVG44IC/T2lpxw+zs=;
+        b=leDufUZKTQcPkwsB5fPhk3ACOMsK/A0/IcsgSFtdh5Up6dGxNtJ7YlaJR0fNNuVvW1
+         2q6ebSQBN+X6ZAB94LRowE0e159bhTaWJ5vhfeLk+ydKfykSru44JKy4JORU7q1VqE5E
+         /9I9bv2+sX06hi7WQ+47c5d46xv8hRoaG4FQrOe75djBu76/RXT7jFPam57vliDyqWpL
+         95AE/s/JkeYLdldABgPuI3jNOEaRbXuFzzReIqxhxE4Ru63OuB2YWMSubie+Th9bQfPg
+         GJp9VVLVU2GLAZmk8FU+1pWZ7lJSZzybauNDorlw3VNAcSkJxwVegqBNljEBThU8m/jc
+         QFpw==
+X-Gm-Message-State: AOAM531D1gcHhrYd7qZC55BHe7T/R0fCS+5FonsJOfBIWtH55Cn+H0Ea
+        GWJNpSCzDtcnfS+bWC4mWAI=
+X-Google-Smtp-Source: ABdhPJwSbmT+HcIqt6reqTP2PLhiQYAX5ru7M9VqEh3FFc03FeoRJ+5t9o8xa1JVDMYq5h71qBSXEA==
+X-Received: by 2002:ad4:55b4:: with SMTP id f20mr22279534qvx.148.1592848912699;
+        Mon, 22 Jun 2020 11:01:52 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id m57sm11737465qtk.19.2020.06.22.11.01.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 11:01:50 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200611191002.2256570-1-lee.jones@linaro.org>
+ <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
+ <20200615092644.GA2608702@dell>
+ <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
+ <20200622085009.GP954398@dell>
+ <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
+ <20200622151054.GW954398@dell>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+Date:   Mon, 22 Jun 2020 13:01:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622075749.21925-9-konradybcio@gmail.com>
+In-Reply-To: <20200622151054.GW954398@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 22 Jun 00:57 PDT 2020, Konrad Dybcio wrote:
+On 2020-06-22 10:10, Lee Jones wrote:
+> On Mon, 22 Jun 2020, Frank Rowand wrote:
+> 
+>> On 2020-06-22 03:50, Lee Jones wrote:
+>>> On Thu, 18 Jun 2020, Frank Rowand wrote:
+>>>
+>>>> On 2020-06-15 04:26, Lee Jones wrote:
+>>>>> On Sun, 14 Jun 2020, Frank Rowand wrote:
+>>>>>
+>>>>>> Hi Lee,
+>>>>>>
+>>>>>> I'm looking at 5.8-rc1.
+>>>>>>
+>>>>>> The only use of OF_MFD_CELL() where the same compatible is specified
+>>>>>> for multiple elements of a struct mfd_cell array is for compatible
+>>>>>> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
+>>>>>>
+>>>>>>         OF_MFD_CELL("ab8500-pwm",
+>>>>>>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
+>>>>>>         OF_MFD_CELL("ab8500-pwm",
+>>>>>>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
+>>>>>>         OF_MFD_CELL("ab8500-pwm",
+>>>>>>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
+>>>>
+>>>>          OF_MFD_CELL("ab8500-pwm",
+>>>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
+>>>>
+>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
+>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
+>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
+>>>>
+>>>>>>
+>>>>>> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
+>>>>>> are:
+>>>>>>
+>>>>>>    arch/arm/boot/dts/ste-ab8500.dtsi
+>>>>>>    arch/arm/boot/dts/ste-ab8505.dtsi
+>>>>>>
+>>>>>> These two .dtsi files only have a single node with this compatible.
+>>>>>> Chasing back to .dts and .dtsi files that include these two .dtsi
+>>>>>> files, I see no case where there are multiple nodes with this
+>>>>>> compatible.
+>>>>>>
+>>>>>> So it looks to me like there is no .dts in mainline that is providing
+>>>>>> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
+>>>>>> is expecting.  No case that there are multiple mfd child nodes where
+>>>>>> mfd_add_device() would assign the first of n child nodes with the
+>>>>>> same compatible to multiple devices.
+>>>>>>
+>>>>>> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
+>>>>>> Am I missing something here?
+>>>>>>
+>>>>>> If I am correct, then either drivers/mfd/ab8500-core.c or
+>>>>>> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
+>>>>>
+>>>>> Your analysis is correct.
+>>>>
+>>>> OK, if I'm not overlooking anything, that is good news.
+>>>>
+>>>> Existing .dts source files only have one "ab8500-pwm" child.  They already
+>>>> work correcly.
+>>>>
+>>>> Create a new compatible for the case of multiple children.  In my example
+>>>> I will add "-mc" (multiple children) to the existing compatible.  There
+>>>> is likely a better name, but this lets me provide an example.
+>>>>
+>>>> Modify drivers/mfd/ab8500-core.c to use the new compatible, and new .dts
+>>>> source files with multiple children use the new compatible:
+>>>>
+>>>>          OF_MFD_CELL("ab8500-pwm",
+>>>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
+>>>>
+>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
+>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
+>>>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
+>>>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
+>>>>
+>>>> The "OF_MFD_CELL" entry is the existing entry, which will handle current
+>>>> .dts source files.  The new "OF_MFD_CELL_REG" entries will handle new
+>>>> .dts source files.
+>>>
+>>> Sorry, but I'm not sure what the above exercise is supposed to solve.
+>>>
+>>> Could you explain it for me please?
+>>
+>> The OF_MFD_CELL() entry handles all of the existing .dts source files
+>> that only have one ab8500-pwm child nodes.  So existing .dtb blobs
+>> continue to work.
+>>
+>> The OF_MFD_CELL_REG() entries will handle all of the new .dts source
+>> files that will have up to 3 ab8500-pwm child nodes.
+>>
+>> Compatibility is maintained for existing .dtb files.  A new kernel
+>> version with the changes will support new .dtb files that contain
+>> multiple ab8500-pwm child nodes.
+> 
+> I can see *what* you're trying to do.  I was looking for an
+> explanation of *how* you think that will work.  FWIW, I don't think
+> what you're proposing will work as you envisage.  I thought that
+> perhaps I was missing something, which is why I requested further
+> explanation.
+> 
+>>>> And of course the patch that creates OF_MFD_CELL_REG() needs to precede
+>>>> this change.
+>>>>
+>>>> I would remove the fallback code in the existing patch that tries to
+>>>> handle an incorrect binding.  Just error out if the binding is not
+>>>> used properly.
+>>>
+>>> What fallback code?
+>>
+>> Based on reading the patch description, I expected some extra code to try
+>> to handle the case where the compatible in more than one struct mfd_cell
+>> entry is "stericsson,ab8500-pwm" and there are multiple ab8500-pwm child
+>> nodes.
+>>
+>> Looking at the actual code (which I had not done before), I see that the
+>> "best effort attempt to match" is keeping a list of child nodes that
+>> have already been used (mfd_of_node_list) and avoiding re-use of such
+>> nodes.  This allows an invalid .dtb (one with multple "stericsson,ab8500-pwm"
+>> child nodes) to possibly be assigned unique child nodes for multiple
+>> struct mfd_cell entries to be "stericsson,ab8500-pwm".
+>>
+>> So it is confusing for me to call that "fallback code".  It really is
+>> "best effort attempt to match" for a broken .dtb code.
+>>
+>> There should be no best effort for a broken .dtb.  The broken .dtb should
+>> instead result in an error.
+> 
+> The problem is, how can you tell the difference between a valid and a
+> broken FDT without pre-processing - which, as I explained in the
+> commit message, I am not prepared to do.  We cannot test individually
+> since all configurations (e.g. no 'reg' property are valid on an
+> individual basis.
 
-> From: Martin Botka <martin.botka1@gmail.com>
-> 
-> Add device tree support for the Sony Xperia 10 and 10
-> Plus smartphones. They are all based on the Sony Ganges
-> platform (sdm630/636) and share a lot of common code.
-> The differences are really minor, so a Ganges-common DTSI
-> has been created to reduce clutter.
-> 
-> 10 - Kirin
-> 10 Plus - Mermaid
-> 
-> This platform is based on SoMC Nile, but there are some
-> major differences when it comes to pin configuration and
-> panel setup (among others).
-> 
-> The boards currently support:
-> * Screen console
-> * SDHCI
-> * I2C
-> * pstore log dump
-> * GPIO keys
-> * PSCI idle states
-> 
-> Signed-off-by: Martin Botka <martin.botka1@gmail.com>
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> Tested-by: Martin Botka <martin.botka1@gmail.com>
+If my proposed changes are made, then there are at least 3 ways to detect
+a broken FDT or prevent the problem caused by the broken FDT.
 
-Same comments as on patch 7 regarding the model, but apart from that
-this looks good.
 
-Happy to see these patches on the list, keep up the good work!
+1) Use the validation process that uses the bindings to validate the
+devicetree source.
 
-Regards,
-Bjorn
 
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |  2 +
->  .../qcom/sdm630-sony-xperia-ganges-kirin.dts  | 13 ++++++
->  .../dts/qcom/sdm630-sony-xperia-ganges.dtsi   | 40 +++++++++++++++++++
->  .../sdm636-sony-xperia-ganges-mermaid.dts     | 20 ++++++++++
->  4 files changed, 75 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
+2) Modify patch 1/3.  The small part of the patch to modify is:
+
++static int mfd_match_of_node_to_dev(struct platform_device *pdev,
++				    struct device_node *np,
++				    const struct mfd_cell *cell)
++{
++	struct mfd_of_node_entry *of_entry;
++	const __be32 *reg;
++	u64 of_node_addr;
++
++	/* Skip devices 'disabled' by Device Tree */
++	if (!of_device_is_available(np))
++		return -ENODEV;
++
++	/* Skip if OF node has previously been allocated to a device */
++	list_for_each_entry(of_entry, &mfd_of_node_list, list)
+
+Change:
+
++		if (of_entry->np == np)
++			return -EAGAIN;
+
+To:
+
++		if (of_entry->np == np) {
++			if (!cell->use_of_reg)
++				return -EINVAL;
++			else
++				return -EAGAIN;
+
+There may be a better choice than EINVAL, but I am just showing the method.
+
+You may also want to refactor this section of the patch slightly
+differently to achieve the same result.  It was just easiest to
+show the suggested change the way I did it.
+
+The test that returns EINVAL detects the issue that the FDT does
+not match the binding (there is more one child node with the
+"stericsson,ab8500-pwm" compatible.
+
+
+3) I'm not sure if the pre-parsing that is wanted is parsing of the
+devicetree or parsing of the struct mfd_cell array.  If the mfd_cell
+array then solution 3 is not acceptable.
+
+A different change to a small part of patch 1/3.  In mfd_add_devices(),
+validate parameter "cells".  The validation could precede the existing
+code, or it could be folded into the existing for loop.  The validation
+is checking for any other element of the cells array containing
+the same compatible value if cell->use_of_reg is not true for an element.
+
+If this validation occurs, then I think mfd_of_node_list, and all the
+associated code to deal with it is no longer needed.  But I didn't
+look at this part in detail, so maybe I missed something.
+
+The validation is something like (untested):
+
+	if (IS_ENABLED(CONFIG_OF)
+		for (i = 0; i < n_devs; i++) {
+			this_cell = cells + i;
+			if (!this_cell->use_of_reg) {
+				for (j = 1; j < n_devs; j++) {
+					if (j != i) {
+						cell = cells + j;
+						if (!strcmp(this_cell->of_compatible, cell->of_compatible))
+							return -EINVAL;
+					}
+				}
+			}
+		}
+	
+
+
+
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 1cad7cb07574..c98bafe03a96 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -16,9 +16,11 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-ganges-kirin.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm636-sony-xperia-ganges-mermaid.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
-> new file mode 100644
-> index 000000000000..246710a01046
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Martin Botka
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-ganges.dtsi"
-> +
-> +/ {
-> +	model = "SoMC Kirin-RoW";
-> +	compatible = "sony,kirin-row", "qcom,sdm630", "qcom,sdm630-mtp";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
-> new file mode 100644
-> index 000000000000..ea051b3d14b8
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges.dtsi
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Martin Botka
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/* Ganges is very similar to Nile, but
-> + * there are some differences that will need
-> + * to be addresed when more peripherals are
-> + * enabled upstream. Hence the separate DTSI.
-> + */
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	chosen {
-> +		framebuffer@9d400000 {
-> +			reg = <0 0x9d400000 0 (2520 * 1080 * 4)>;
-> +			height = <2520>;
-> +		};
-> +	};
-> +
-> +	soc {
-> +
-> +		i2c@c175000 {
-> +			status = "okay";
-> +
-> +			/* Novatek touchscreen */
-> +		};
-> +
-> +		/* Yes, this is intentional.
-> +		 * Ganges devices only use gpio-keys for
-> +		 * Volume Down, but currently there's an
-> +		 * issue with it that has to be resolved.
-> +		 * Until then, let's not make the kernel panic
-> +		 */
-> +		/delete-node/ gpio-keys;
-> +	};
-> +
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
-> new file mode 100644
-> index 000000000000..96b7782d58de
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dts
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Martin Botka
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/* Mermaid uses sdm636, but it's different ever so slightly
-> + * that we can ignore it for the time being. Sony also commonizes
-> + * the Ganges platform as a whole in downstream kernels.
-> + */
-> +#include "sdm630-sony-xperia-ganges.dtsi"
-> +
-> +/ {
-> +	model = "SoMC Mermaid-RoW";
-> +	compatible = "sony,mermaid-row", "qcom,sdm636", "qcom,sdm636-mtp";
-> +
-> +	qcom,msm-id = <345 0>;
-> +	qcom,pmic-id = <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00 0x00 0x1001b 0x102001a 0x00 0x00>;
-> +};
-> -- 
-> 2.27.0
+> The best we can do is "best effort", to try and match each cell with
+> its requested OF node.
 > 
+
