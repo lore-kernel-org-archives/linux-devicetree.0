@@ -4,235 +4,289 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105DCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C16C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAAEA20732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5702D20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 17:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLHgDfMA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wm31U41Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgFVRfo (ORCPT
+        id S1730040AbgFVRlh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 13:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        Mon, 22 Jun 2020 13:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729811AbgFVRfn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 13:35:43 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 638BBC061796
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:35:43 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d10so5954152pls.5
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:35:43 -0700 (PDT)
+        with ESMTP id S1729605AbgFVRlg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 13:41:36 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C670C061573
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:41:35 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id n6so13779285otl.0
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 10:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=L1g5xES3CpMTfmaxXXd6gYSv9IzAcINcj2uv/tgbG9Y=;
-        b=ZLHgDfMAYWXXWSfPXppNDYDfwV+JeYKEEMTRJtc0XT9yPcQHGZZ4zXHxbUW0x3qXFO
-         aW2DKF+9eKkb0m7Ky0j3c0XN4XCKs5xLhFxhTy6/FiXeoRyZsf6SXmnCFHxlByNj6XGl
-         3GVnnqf7wls7RVlESYlk040A83i1QGTUGHHF+2HK5/8ePZUR1SEv+lXB7xYd/rAUm2R9
-         2DbjgGumYL4PhI9p0FbsLXtcSyu7eB4k4/9MGdM2p/ZPs2jAQUhq4xMz+L8E8PDD8IJ8
-         5nu5vIhY4MwkyV/Myew4bZnsIPLRNj9Q10o4jycLaJY5awm1zUKy0xOlPTnQy8cVLDRy
-         CMSA==
+        bh=dp8vvD2CI6znDHHfd68Sf9CL9jtb/dkv5bravtbMg7A=;
+        b=Wm31U41Y8LtB0XivKMN8OXczcrfTJ+xdbLxBxhT6nCXCHdV2c3QkPn8neJ5NSYfXlZ
+         igvQSF8PjyoQ2Dq3PyQpGsyrGftMb40MlpdsiWJ8PTC+nSayXqDhervGxUet+8hk1eqf
+         rEwrHjbbetFFr05CU4r57mPUTFJVo2HeXjCl4tz7I8ct3v7ybioFhg/IbqoXv1/990yT
+         UVHl1EQaflUDsNMO640JWPcSxuzm5ZLYsUkU9Jo5RamkrF4DjRjD1MzZS2T9VYVBcL/W
+         gFxu+1/c/jjfx5CL2TM4Cl2p9MQhOxYM5x1b+USeGyEl+Wp50VjhBkYfnQvUmLd+8X3F
+         llHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=L1g5xES3CpMTfmaxXXd6gYSv9IzAcINcj2uv/tgbG9Y=;
-        b=hJ/vERW27HMV7Bl2p6DUfNx0SEgGE4Et+fh6n5w5G34Z0sklY1XF9JkhuiixkAIHDT
-         AHxKJkKhS9ciqXI0kuh1LrsOC6P1a6m50p+tS8anQA51pKs7qmN3PtaTxhuPcRZMbP0F
-         QnSuAGkQQGFKy1GiL7KSazRj+B1At8lOwd8qBTsRqBW/OuQE5N7V33LhAJPM3Mv2C2YN
-         v77HuLrCbLc8RB0ruVuKnJhxpyJFH3LdlR058ddzwvqq05e//OiXgyGgS+ZumNrhWR21
-         d9n0L00It+BBtM98ZcBjwhWqF9is13y0xunr6+UQBGpVaOTfCPtirpK1wbDJp/V/3qC3
-         pOJA==
-X-Gm-Message-State: AOAM532HkU4oM5dFjVOx2uryj5EVqmQah5NVPto5nIUAnT9sa1ewT1cw
-        R4XcKuPmzfJHAdaeG7qfQ/wjZg==
-X-Google-Smtp-Source: ABdhPJwMVQv0naG5OOxhiKhTYMgSY9S0QaQjF3tJwVYat59w4ioGMRX8xTLHUto82LpsEk5KMDfYxQ==
-X-Received: by 2002:a17:90a:c250:: with SMTP id d16mr19234190pjx.60.1592847342715;
-        Mon, 22 Jun 2020 10:35:42 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id n19sm10925109pgb.0.2020.06.22.10.35.41
+        bh=dp8vvD2CI6znDHHfd68Sf9CL9jtb/dkv5bravtbMg7A=;
+        b=lJBHANQjGMnd9iXYCU5zAI0iF1xvtft4d36zWC1M8TtM32Ep1KxUDgT96H++Gs8Sdh
+         e/qZPVFvAFA0apWh93HLaiSji473r/H6ZlE9jxEWoz0KknqDbl29tCNRILKJdaOYP6cf
+         uqKg4NXuZ3fdEFOf10k6C31yDeUkYoBuK0sbHv9ISHK+aBS6UdBz1//dkQTXt+4ay7JN
+         qBIWVrLTxgZUky76Vk5owDm0SF8kziVDVZZpYpB2tApKIlUwobZSIzrtQpROaLfK9ASr
+         WHSfY3WiTCcu5mPzMyYtOq3WAJYlKAeiG0S8+eHCCstWp1SqUcPMaa1qj9wvClSa0+/t
+         pUnQ==
+X-Gm-Message-State: AOAM5314IwW3bViCe1iPFyBSopddR0c/IvhgdxqTeaTMM0gT303K8OAk
+        HzL7rT+U0COxwVu34cRRu6CE1Q==
+X-Google-Smtp-Source: ABdhPJxU47N0XE/3K90NJgWY/Y5EeYU97hoLQGnqSmlFe+zILC8u6n0gXCC/3WKOYcliNydMfKml3g==
+X-Received: by 2002:a05:6830:2004:: with SMTP id e4mr15096660otp.85.1592847693553;
+        Mon, 22 Jun 2020 10:41:33 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j2sm3420573otk.61.2020.06.22.10.41.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 10:35:42 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 11:35:40 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mon, 22 Jun 2020 10:41:32 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 10:38:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] remoteproc: k3: Add TI-SCI processor control
- helper functions
-Message-ID: <20200622173540.GA1820962@xps15>
-References: <20200612224914.7634-1-s-anna@ti.com>
- <20200612224914.7634-3-s-anna@ti.com>
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] clk: qcom: gcc-msm8994: Add missing clocks,
+ resets and GDSCs
+Message-ID: <20200622173848.GF2421@builder.lan>
+References: <20200622091843.57589-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612224914.7634-3-s-anna@ti.com>
+In-Reply-To: <20200622091843.57589-1-konradybcio@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Suman,
+On Mon 22 Jun 02:18 PDT 2020, Konrad Dybcio wrote:
 
-Apologies for the late reply, this one slipped through the cracks...
+> changes since v1:
+> - refrain from reordering defines in the header
 
+The changelog goes after '---' below.
 
-On Fri, Jun 12, 2020 at 05:49:10PM -0500, Suman Anna wrote:
-> Texas Instruments' K3 generation SoCs have specific modules/register
-> spaces used for configuring the various aspects of a remote processor.
-> These include power, reset, boot vector and other configuration features
-> specific to each compute processor present on the SoC. These registers
-> are managed by the System Controller such as DMSC on K3 AM65x SoCs.
 > 
-> The Texas Instrument's System Control Interface (TI-SCI) Message Protocol
-> is used to communicate to the System Controller from various compute
-> processors to invoke specific services provided by the firmware running
-> on the System Controller.
+> This change adds GDSCs, resets and most of the missing
+> clocks to the msm8994 GCC driver. The remaining ones
+> are of local_vote_clk and gate_clk type, which are not
+> yet supported upstream. Also reorder them to match the
+> original downstream driver.
 > 
-> Add a common processor control interface header file that can be used by
-> multiple remoteproc drivers. The helper functions within this header file
-> abstract the various TI SCI protocol ops for the remoteproc drivers, and
-> allow them to request the System Controller to be able to program and
-> manage various remote processors on the SoC. The remoteproc drivers are
-> expected to manage the life-cycle of their ti_sci_proc_dev local
-> structures.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 > ---
-> v3: New to this series, but the patch is identical to the one from the
->     K3 R5F series posted previously, with patch title adjusted
->     https://patchwork.kernel.org/patch/11456379/
+>  drivers/clk/qcom/gcc-msm8994.c               | 388 ++++++++++++++++++-
+>  include/dt-bindings/clock/qcom,gcc-msm8994.h |  36 ++
+>  2 files changed, 423 insertions(+), 1 deletion(-)
 > 
->  drivers/remoteproc/ti_sci_proc.h | 102 +++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
->  create mode 100644 drivers/remoteproc/ti_sci_proc.h
-> 
-> diff --git a/drivers/remoteproc/ti_sci_proc.h b/drivers/remoteproc/ti_sci_proc.h
-> new file mode 100644
-> index 000000000000..e42d8015b8e7
-> --- /dev/null
-> +++ b/drivers/remoteproc/ti_sci_proc.h
-> @@ -0,0 +1,102 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Texas Instruments TI-SCI Processor Controller Helper Functions
-> + *
-> + * Copyright (C) 2018-2020 Texas Instruments Incorporated - http://www.ti.com/
-> + *	Suman Anna
-> + */
-> +
-> +#ifndef REMOTEPROC_TI_SCI_PROC_H
-> +#define REMOTEPROC_TI_SCI_PROC_H
-> +
-> +/**
-> + * struct ti_sci_proc - structure representing a processor control client
-> + * @sci: cached TI-SCI protocol handle
-> + * @ops: cached TI-SCI proc ops
-> + * @dev: cached client device pointer
-> + * @proc_id: processor id for the consumer remoteproc device
-> + * @host_id: host id to pass the control over for this consumer remoteproc
-> + *	     device
-> + */
-> +struct ti_sci_proc {
-> +	const struct ti_sci_handle *sci;
-> +	const struct ti_sci_proc_ops *ops;
-> +	struct device *dev;
-
-Please include the proper header files for the above structures.  I would also
-have expected the name of the structure to be ti_sci_rproc but that choice is
-entirely your.
-
-With the proper header files included:
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-> +	u8 proc_id;
-> +	u8 host_id;
+> diff --git a/drivers/clk/qcom/gcc-msm8994.c b/drivers/clk/qcom/gcc-msm8994.c
+> index b7fc8c7ba195..144d2ba7a9be 100644
+> --- a/drivers/clk/qcom/gcc-msm8994.c
+> +++ b/drivers/clk/qcom/gcc-msm8994.c
+> @@ -20,6 +20,7 @@
+>  #include "clk-rcg.h"
+>  #include "clk-branch.h"
+>  #include "reset.h"
+> +#include "gdsc.h"
+>  
+>  enum {
+>  	P_XO,
+> @@ -1772,6 +1773,32 @@ static struct clk_branch gcc_gp3_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_lpass_q6_axi_clk = {
+> +	.halt_reg = 0x0280,
+> +	.clkr = {
+> +		.enable_reg = 0x0280,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_lpass_q6_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
 > +};
 > +
-> +static inline int ti_sci_proc_request(struct ti_sci_proc *tsp)
-> +{
-> +	int ret;
+> +static struct clk_branch gcc_mss_q6_bimc_axi_clk = {
+> +	.halt_reg = 0x0284,
+> +	.clkr = {
+> +		.enable_reg = 0x0284,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_mss_q6_bimc_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +	ret = tsp->ops->request(tsp->sci, tsp->proc_id);
-> +	if (ret)
-> +		dev_err(tsp->dev, "ti-sci processor request failed: %d\n",
-> +			ret);
-> +	return ret;
-> +}
+>  static struct clk_branch gcc_pcie_0_aux_clk = {
+>  	.halt_reg = 0x1ad4,
+>  	.clkr = {
+> @@ -1790,6 +1817,32 @@ static struct clk_branch gcc_pcie_0_aux_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_0_cfg_ahb_clk = {
+> +	.halt_reg = 0x1ad0,
+> +	.clkr = {
+> +		.enable_reg = 0x1ad0,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_0_cfg_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +static inline int ti_sci_proc_release(struct ti_sci_proc *tsp)
-> +{
-> +	int ret;
+> +static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
+> +	.halt_reg = 0x1acc,
+> +	.clkr = {
+> +		.enable_reg = 0x1acc,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_0_mstr_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +	ret = tsp->ops->release(tsp->sci, tsp->proc_id);
-> +	if (ret)
-> +		dev_err(tsp->dev, "ti-sci processor release failed: %d\n",
-> +			ret);
-> +	return ret;
-> +}
+>  static struct clk_branch gcc_pcie_0_pipe_clk = {
+>  	.halt_reg = 0x1ad8,
+>  	.halt_check = BRANCH_HALT_DELAY,
+> @@ -1809,6 +1862,20 @@ static struct clk_branch gcc_pcie_0_pipe_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_0_slv_axi_clk = {
+> +	.halt_reg = 0x1ac8,
+> +	.halt_check = BRANCH_HALT_DELAY,
+> +	.clkr = {
+> +		.enable_reg = 0x1ac8,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_0_slv_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +static inline int ti_sci_proc_handover(struct ti_sci_proc *tsp)
-> +{
-> +	int ret;
+>  static struct clk_branch gcc_pcie_1_aux_clk = {
+>  	.halt_reg = 0x1b54,
+>  	.clkr = {
+> @@ -1827,6 +1894,32 @@ static struct clk_branch gcc_pcie_1_aux_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_1_cfg_ahb_clk = {
+> +	.halt_reg = 0x1b54,
+> +	.clkr = {
+> +		.enable_reg = 0x1b54,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_1_cfg_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +	ret = tsp->ops->handover(tsp->sci, tsp->proc_id, tsp->host_id);
-> +	if (ret)
-> +		dev_err(tsp->dev, "ti-sci processor handover of %d to %d failed: %d\n",
-> +			tsp->proc_id, tsp->host_id, ret);
-> +	return ret;
-> +}
+> +static struct clk_branch gcc_pcie_1_mstr_axi_clk = {
+> +	.halt_reg = 0x1b50,
+> +	.clkr = {
+> +		.enable_reg = 0x1b50,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_1_mstr_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +static inline int ti_sci_proc_set_config(struct ti_sci_proc *tsp,
-> +					 u64 boot_vector,
-> +					 u32 cfg_set, u32 cfg_clr)
-> +{
-> +	int ret;
+>  static struct clk_branch gcc_pcie_1_pipe_clk = {
+>  	.halt_reg = 0x1b58,
+>  	.halt_check = BRANCH_HALT_DELAY,
+> @@ -1846,6 +1939,19 @@ static struct clk_branch gcc_pcie_1_pipe_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pcie_1_slv_axi_clk = {
+> +	.halt_reg = 0x1b48,
+> +	.clkr = {
+> +		.enable_reg = 0x1b48,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pcie_1_slv_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +	ret = tsp->ops->set_config(tsp->sci, tsp->proc_id, boot_vector,
-> +				   cfg_set, cfg_clr);
-> +	if (ret)
-> +		dev_err(tsp->dev, "ti-sci processor set_config failed: %d\n",
-> +			ret);
-> +	return ret;
-> +}
+>  static struct clk_branch gcc_pdm2_clk = {
+>  	.halt_reg = 0x0ccc,
+>  	.clkr = {
+> @@ -1864,6 +1970,19 @@ static struct clk_branch gcc_pdm2_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_pdm_ahb_clk = {
+> +	.halt_reg = 0x0cc4,
+> +	.clkr = {
+> +		.enable_reg = 0x0cc4,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_pdm_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
 > +
-> +static inline int ti_sci_proc_set_control(struct ti_sci_proc *tsp,
-> +					  u32 ctrl_set, u32 ctrl_clr)
-> +{
-> +	int ret;
-> +
-> +	ret = tsp->ops->set_control(tsp->sci, tsp->proc_id, ctrl_set, ctrl_clr);
-> +	if (ret)
-> +		dev_err(tsp->dev, "ti-sci processor set_control failed: %d\n",
-> +			ret);
-> +	return ret;
-> +}
-> +
-> +static inline int ti_sci_proc_get_status(struct ti_sci_proc *tsp,
-> +					 u64 *boot_vector, u32 *cfg_flags,
-> +					 u32 *ctrl_flags, u32 *status_flags)
-> +{
-> +	int ret;
-> +
-> +	ret = tsp->ops->get_status(tsp->sci, tsp->proc_id, boot_vector,
-> +				   cfg_flags, ctrl_flags, status_flags);
-> +	if (ret)
-> +		dev_err(tsp->dev, "ti-sci processor get_status failed: %d\n",
-> +			ret);
-> +	return ret;
-> +}
-> +
-> +#endif /* REMOTEPROC_TI_SCI_PROC_H */
-> -- 
-> 2.26.0
-> 
+>  static struct clk_branch gcc_sdcc1_apps_clk = {
+>  	.halt_reg = 0x04c4,
+>  	.clkr = {
+> @@ -1899,6 +2018,23 @@ static struct clk_branch gcc_sdcc1_ahb_clk = {
+>  	},
+>  };
+>  
+> +static struct clk_branch gcc_sdcc2_ahb_clk = {
+> +	.halt_reg = 0x0508,
+> +	.clkr = {
+> +		.enable_reg = 0x0508,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data)
+> +		{
+> +			.name = "gcc_sdcc2_ahb_clk",
+> +			.parent_names = (const char *[]){
+
+Please convert these to use .parent_data instead.
+
+Regards,
+Bjorn
