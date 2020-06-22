@@ -2,197 +2,104 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29C0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670AAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A96882068F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1czj5/t"
+	by mail.kernel.org (Postfix) with ESMTP id 3D6942070E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592815904;
+	bh=zZU2CHuLFqnK4HbBINlII1Iia0QVhzVmBgAshjaxrEs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=n7raVHceGSBD2kJZIL6xeHiZE8XiWdohjNBUTT3cKaVtb9HBUIITxGSNW5x2IJKuY
+	 LGFrO2rWJVL+/F700KT0uWE4KKRSaA550mQ7RKQ69eEQDD07PQ0rICXb/dG1XRkKds
+	 laBwV51NbHhe2q2tjhNJfOoG966evQqYDnbnyZx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgFVIuO (ORCPT
+        id S1726551AbgFVIvn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgFVIuO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 04:50:14 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC251C061794
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 01:50:13 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c3so15732316wru.12
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 01:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2pe38k03Di4JjdcjaPHQ0TSLRnrktMq6M6UKWiJjYyg=;
-        b=H1czj5/tMXsaUU8jQQLmo48P8FXGXM8lfjYElph8keBvcmynoIYkw0E/kw12Qs4yyc
-         aKZUVFUeAr4xwDwwprzPZUYnnVQ8SD7aLLFMk+HhdohYt6MRABXL8V1whsNg/xR4D7MJ
-         yEd9UUKTw/7Iayn7Ib1fEor3k2SJeS4R3q+9RirnkQ+CUrF5FYz8RMguG3ULwQBytL4A
-         2giF7V5YClwVmgYBwRZUAOPPpiOdDJV0hj1KPD9RrkfgBXcF3Ejq8DIM7uPv52IzMpHL
-         G/QTdlbqyUpfPstPjjVNiTlJDKE3elvdOFPjTEJpUvlSF66pUx+FAszQK28076qfdiCe
-         WdAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2pe38k03Di4JjdcjaPHQ0TSLRnrktMq6M6UKWiJjYyg=;
-        b=OmeTPJTA/fCkekB3E4+bvqB7pafv1yWNBHytnuOvnMGQdDpTLf7qI0XEbiMqUEVc/g
-         uEIg2DXyJcDyEY5tQsYZyB6HGv5CJj1J46i6LOqM3w6YJVl7HO2rE9Yv0gvRD2+oyNaR
-         l9sISp1tOUBM+ODoNxFhoHp+7ct18fH1KZyMXA7xS9w40zlE8XxBP6zARNPtuf1bx3Nh
-         N/fwBJVVaUcW4sQTeBm1DN+LKXpbNp/bowH/y0tQf4a6ccIhsQkdhECLaWk3JstqaBkL
-         wHMiWrk09uZokBqNFoDeeMxfJkMdNN4qtZsramOH6ekV/S1yZFuTyP7zmYM+7WxY0Mys
-         UonA==
-X-Gm-Message-State: AOAM531gjhYUmU4B4mUYI5c1ttMR9012i8JEQk1PdB3i4b7F4iS9+JTh
-        yIwrFjsb1HfhVea6e/5UhCh8Qg==
-X-Google-Smtp-Source: ABdhPJwpmSXOor6kxYfD8+BD9tXBZQyiV+hdFCfcDxHCaiqLZmk8jIfRba/ngIRMDSLcC6TR3zEXhQ==
-X-Received: by 2002:a5d:62d1:: with SMTP id o17mr17565839wrv.162.1592815812390;
-        Mon, 22 Jun 2020 01:50:12 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id i19sm10121054wrb.56.2020.06.22.01.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 01:50:11 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 09:50:09 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200622085009.GP954398@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
- <20200615092644.GA2608702@dell>
- <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
+        Mon, 22 Jun 2020 04:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgFVIvn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 04:51:43 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11EED20708;
+        Mon, 22 Jun 2020 08:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592815903;
+        bh=zZU2CHuLFqnK4HbBINlII1Iia0QVhzVmBgAshjaxrEs=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=b4AYHwLCJMc9D7WFTeQ0tGime4u9LvggVD8RioNpey4HMM+dSCByUCdS6Lm9sZSXv
+         goQKp6s1D6vW80tHcmh+YHp+sQ8UpNQEskeqN7ePmbSH+V7hWJOSerxOaq/6srUXSG
+         O810vXpD4UWW3mSvIYjUuVpiqrAY2IwDtnTVN1Bk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200620182010.395097-1-konradybcio@gmail.com>
+References: <20200620182010.395097-1-konradybcio@gmail.com>
+Subject: Re: [PATCH 1/1] clk: qcom: gcc-msm8994: Add missing clocks, resets and GDSCs
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl
+Date:   Mon, 22 Jun 2020 01:51:42 -0700
+Message-ID: <159281590234.62212.14723968355916401794@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2020, Frank Rowand wrote:
+Quoting Konrad Dybcio (2020-06-20 11:20:09)
+> diff --git a/include/dt-bindings/clock/qcom,gcc-msm8994.h b/include/dt-bi=
+ndings/clock/qcom,gcc-msm8994.h
+> index 938969309e00..d32c3fd2500c 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-msm8994.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+> @@ -106,25 +106,62 @@
+>  #define GCC_GP1_CLK                            96
+>  #define GCC_GP2_CLK                            97
+>  #define GCC_GP3_CLK                            98
+> -#define GCC_PCIE_0_AUX_CLK                     99
+> -#define GCC_PCIE_0_PIPE_CLK                    100
+> -#define GCC_PCIE_1_AUX_CLK                     101
+> -#define GCC_PCIE_1_PIPE_CLK                    102
+> -#define GCC_PDM2_CLK                           103
+> -#define GCC_SDCC1_APPS_CLK                     104
+> -#define GCC_SDCC2_APPS_CLK                     105
+> -#define GCC_SDCC3_APPS_CLK                     106
+> -#define GCC_SDCC4_APPS_CLK                     107
+> -#define GCC_SYS_NOC_UFS_AXI_CLK                        108
+> -#define GCC_SYS_NOC_USB3_AXI_CLK               109
+> -#define GCC_TSIF_REF_CLK                       110
+> -#define GCC_UFS_AXI_CLK                                111
+> -#define GCC_UFS_RX_CFG_CLK                     112
+> -#define GCC_UFS_TX_CFG_CLK                     113
+> -#define GCC_USB30_MASTER_CLK                   114
+> -#define GCC_USB30_MOCK_UTMI_CLK                        115
+> -#define GCC_USB3_PHY_AUX_CLK                   116
+> -#define GCC_USB_HS_SYSTEM_CLK                  117
+> -#define GCC_SDCC1_AHB_CLK                      118
+> +#define GCC_LPASS_Q6_AXI_CLK            99
+> +#define GCC_MSS_Q6_BIMC_AXI_CLK         100
+> +#define GCC_PCIE_0_AUX_CLK                     101
 
-> On 2020-06-15 04:26, Lee Jones wrote:
-> > On Sun, 14 Jun 2020, Frank Rowand wrote:
-> > 
-> >> Hi Lee,
-> >>
-> >> I'm looking at 5.8-rc1.
-> >>
-> >> The only use of OF_MFD_CELL() where the same compatible is specified
-> >> for multiple elements of a struct mfd_cell array is for compatible
-> >> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
-> >>
-> >>         OF_MFD_CELL("ab8500-pwm",
-> >>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
-> >>         OF_MFD_CELL("ab8500-pwm",
-> >>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
-> >>         OF_MFD_CELL("ab8500-pwm",
-> >>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
-> 
->          OF_MFD_CELL("ab8500-pwm",
->                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
-> 
->          OF_MFD_CELL_REG("ab8500-pwm-mc",
->                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
->          OF_MFD_CELL_REG("ab8500-pwm-mc",
->                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
->          OF_MFD_CELL_REG("ab8500-pwm-mc",
->                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
-> 
-> >>
-> >> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
-> >> are:
-> >>
-> >>    arch/arm/boot/dts/ste-ab8500.dtsi
-> >>    arch/arm/boot/dts/ste-ab8505.dtsi
-> >>
-> >> These two .dtsi files only have a single node with this compatible.
-> >> Chasing back to .dts and .dtsi files that include these two .dtsi
-> >> files, I see no case where there are multiple nodes with this
-> >> compatible.
-> >>
-> >> So it looks to me like there is no .dts in mainline that is providing
-> >> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
-> >> is expecting.  No case that there are multiple mfd child nodes where
-> >> mfd_add_device() would assign the first of n child nodes with the
-> >> same compatible to multiple devices.
-> >>
-> >> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
-> >> Am I missing something here?
-> >>
-> >> If I am correct, then either drivers/mfd/ab8500-core.c or
-> >> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
-> > 
-> > Your analysis is correct.
-> 
-> OK, if I'm not overlooking anything, that is good news.
-> 
-> Existing .dts source files only have one "ab8500-pwm" child.  They already
-> work correcly.
-> 
-> Create a new compatible for the case of multiple children.  In my example
-> I will add "-mc" (multiple children) to the existing compatible.  There
-> is likely a better name, but this lets me provide an example.
-> 
-> Modify drivers/mfd/ab8500-core.c to use the new compatible, and new .dts
-> source files with multiple children use the new compatible:
-> 
->          OF_MFD_CELL("ab8500-pwm",
->                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
-> 
->          OF_MFD_CELL_REG("ab8500-pwm-mc",
->                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
->          OF_MFD_CELL_REG("ab8500-pwm-mc",
->                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
->          OF_MFD_CELL_REG("ab8500-pwm-mc",
->                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
-> 
-> The "OF_MFD_CELL" entry is the existing entry, which will handle current
-> .dts source files.  The new "OF_MFD_CELL_REG" entries will handle new
-> .dts source files.
+You can't do this. The numbers are an ABI that should not change. Just
+keep tacking on new numbers and new defines instead.
 
-Sorry, but I'm not sure what the above exercise is supposed to solve.
-
-Could you explain it for me please?
-
-> And of course the patch that creates OF_MFD_CELL_REG() needs to precede
-> this change.
-> 
-> I would remove the fallback code in the existing patch that tries to
-> handle an incorrect binding.  Just error out if the binding is not
-> used properly.
-
-What fallback code?
-
-> > Although it's not "broken", it just works when it really shouldn't.
-> > 
-> > I will be fixing the 'ab8500-pwm' case in due course.
-> > 
-> >> Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
-> >> approach (I have not completely read the actual code in the patch yet
-> >> though).
-> > 
-> > Thanks.
-> > 
-> 
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> +#define GCC_PCIE_0_CFG_AHB_CLK      102
+> +#define GCC_PCIE_0_MSTR_AXI_CLK     103
+> +#define GCC_PCIE_0_PIPE_CLK                    104
+> +#define GCC_PCIE_0_SLV_AXI_CLK      105
+> +#define GCC_PCIE_1_AUX_CLK                     106
