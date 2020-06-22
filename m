@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38DEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D6CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAE720732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540CA2071A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 09:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="fwhLeGUT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XpSDFkYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgFVJmN (ORCPT
+        id S1727915AbgFVJmf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 05:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40772 "EHLO
+        Mon, 22 Jun 2020 05:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgFVJlp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:45 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD50AC061797
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:44 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so4109157wmm.0
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:44 -0700 (PDT)
+        with ESMTP id S1727116AbgFVJlm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 05:41:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220F5C06179B
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k6so3483575wrn.3
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 02:41:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H6LOSRZxGizpxzfF22Sv14N1k+l2XBln54kSc7WXTbU=;
-        b=fwhLeGUTHzaOn5r0hKFAxOrI/4bP6cRMLAZ9vxuMsWmVTbLCLBfuv2c3zx2K+9WkzC
-         4510agGDHbhXy4FxLo2y6wSgQ64p20rVWdVPiqvbTzNx3rKJ0wAQIRkSuhTdzUPDyq33
-         EGJ7dP781SaoA69mOAe2VG//Mj+PraeucVuHaZFWBoluRKQxOPm81fI00ykep20zlmSB
-         RPZYYFefMuTBJhmo6T+gCbA2sk4rO/dFZ8SsuCQmoiiBtm5IHQMXEHE2Tj3zbDGXmqd+
-         33R1jARght4O0k5GCattCXLy0yW2yV908NCQr9OgF+g3eygrEUkhQhtDWFMWiBtAcU50
-         OBog==
+        bh=r7nW5+M2kh3cyRyjmx7rE7/COR4QWlNL8CdVe/fIbIs=;
+        b=XpSDFkYeVraxiwg/39otpkkJoHtYP4sFAfXMCtKdQJw1oTQbFoKREJWtbqNON3jfWc
+         EGdzjWhRvetEZZlr/I5j+Y99sKov/il4jFxNvZDmEZqLsj05w9DscD2q2xxItOV7NEn0
+         Ks0NxdCoBxv9IqVnzDoXUtuX3V4Tmr4PdQyGyVC2ZsCreOyID+ag5NQdk+BuXbrM9LaI
+         BGdjyyH7GCr2qq1OPt17TJtEH06ciHZSyAqQx0XLoZ5bSNK1Mi5eNtUeINHTvTKl8gSE
+         eNqCc3eEQOEUxA3S0GBF2Mfp+PTfRWQbgIYVM7JWIsVaP5PiUOxf3ffTQdRFjltEHbpn
+         c0vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H6LOSRZxGizpxzfF22Sv14N1k+l2XBln54kSc7WXTbU=;
-        b=Yh1NPwg2x+wXN/OPwznyDEkfMwIokWnvnKx0+up4w5FeTwaTxJKc8EkjnX/mXqshvX
-         PFm6ihbqyiT5mH94WUkbXcUwS00PwftvFvt1d489RuwvXpWL84y2cHzFPQA7ZXgurghp
-         xqz/buK6uAJqhh0mbLvPZYuUb6LZcrdg5UaN2DaQDsKWW2kkJkdz2Dft/8o1Csq0f9/Y
-         gPWNHSJ5JyRy8mEQHHVkFkLFypqqW4RVOvJqJyf1du3HlErI9o5Gwes88b075yynRz2B
-         8iLeExbcEB1Xkcxbl78IKuI2oW7yBH+g2XhqIiA0Xv0ZZq+LH+jHwEAUxAsn4w9tofVS
-         Dd6A==
-X-Gm-Message-State: AOAM533HoKzjzxBTIA6ekWoRbRYOzkUU2kxM9Bev9xsx4FKA1QEgovEZ
-        r8ohJwW4BTLeZFVLSZY1F8Be0w==
-X-Google-Smtp-Source: ABdhPJxKaZTzwaRgXjyD3lQOmmZEDuZrxf5WMvWd8aJTlxKoe6V5StaOUPB2OradOOO/ubvV2pVenA==
-X-Received: by 2002:a1c:1fd1:: with SMTP id f200mr17253456wmf.162.1592818903618;
-        Mon, 22 Jun 2020 02:41:43 -0700 (PDT)
+        bh=r7nW5+M2kh3cyRyjmx7rE7/COR4QWlNL8CdVe/fIbIs=;
+        b=ojQrDUI14wz8ZMUc0P5E5LCdLkGBe+4Xew/QhWzQN2y5uvSQlvI69x+K5W4NQH5aCA
+         2pU8+zxnN4skYnboqB0TgWaKMAlFmuwTgJ8HB+TbYIrGb0f876zaYmIglRyYi/DlDUGp
+         jKMtso/TnZPgiZ+8V64V76C5T9Tuj2aCiHtcRLZCFE6ztp5svImTwwNlYRpY36Iaj0LF
+         z1dLAiKWven/uaIITV+t/kHrBnzoqw7J7XXlFW3nasEz/lJ0lZ6uFqDGAovzALgEHlwL
+         8HB/Ekc1Y2VuqXhIpmceT+8IGhOaCZkmWuabcIFu5+YQ/lJurVC+uBzSM4eJct6nrN5z
+         8ETA==
+X-Gm-Message-State: AOAM5330/axQk1DaQJ8IiTPTWMUq5uGzysM+bq8j41ZesE+YHi2ZnbZC
+        zWIXwl705adcaJ5GVAc47xH5DQ==
+X-Google-Smtp-Source: ABdhPJziJYcTjk6jm0fDfnLPlChK17pDk1Ty5W2fRkaBHu9dXXGiCcXlDIMMSfver6mQJh4kbChvSQ==
+X-Received: by 2002:adf:a34d:: with SMTP id d13mr17477047wrb.270.1592818899871;
+        Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.41
+        by smtp.gmail.com with ESMTPSA id j24sm14392652wrd.43.2020.06.22.02.41.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 02:41:43 -0700 (PDT)
+        Mon, 22 Jun 2020 02:41:39 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -92,9 +92,9 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 12/15] dt-bindings: mdio: add phy-supply property to ethernet phy node
-Date:   Mon, 22 Jun 2020 11:37:41 +0200
-Message-Id: <20200622093744.13685-13-brgl@bgdev.pl>
+Subject: [PATCH 10/15] net: phy: simplify phy_device_create()
+Date:   Mon, 22 Jun 2020 11:37:39 +0200
+Message-Id: <20200622093744.13685-11-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200622093744.13685-1-brgl@bgdev.pl>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
@@ -107,30 +107,93 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The phy-supply property is often added to MAC nodes but this is wrong
-conceptually. These supplies should be part of the PHY node on the
-MDIO bus. Add phy-supply property at PHY level to mdio.yaml.
+The last argument passed to phy_device_create() (c45_ids) is never used
+in current mainline outside of the core PHY code - it can only be
+configured when reading the PHY ID from phy_device_read_id().
+
+Let's drop this argument treewide.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- Documentation/devicetree/bindings/net/mdio.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/nxp-tja11xx.c | 2 +-
+ drivers/net/phy/phy_device.c  | 8 +++-----
+ drivers/of/of_mdio.c          | 2 +-
+ include/linux/phy.h           | 3 +--
+ 4 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-index d6a3bf8550eb..9c10012c2093 100644
---- a/Documentation/devicetree/bindings/net/mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/mdio.yaml
-@@ -90,6 +90,10 @@ patternProperties:
-           Delay after the reset was deasserted in microseconds. If
-           this property is missing the delay will be skipped.
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index a72fa0d2e7c7..b98b620ef88c 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -507,7 +507,7 @@ static void tja1102_p1_register(struct work_struct *work)
+ 		}
  
-+      phy-supply:
-+        description:
-+          Phandle to the regulator that provides the supply voltage to the PHY.
+ 		/* Real PHY ID of Port 1 is 0 */
+-		phy = phy_device_create(bus, addr, PHY_ID_TJA1102, false, NULL);
++		phy = phy_device_create(bus, addr, PHY_ID_TJA1102, false);
+ 		if (IS_ERR(phy)) {
+ 			dev_err(dev, "Can't create PHY device for Port 1: %i\n",
+ 				addr);
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 94944fffa9bb..ad7c4cd9d357 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -613,8 +613,7 @@ static int phy_request_driver_module(struct phy_device *phydev)
+ }
+ 
+ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+-				     bool is_c45,
+-				     struct phy_c45_device_ids *c45_ids)
++				     bool is_c45)
+ {
+ 	struct phy_device *dev;
+ 	struct mdio_device *mdiodev;
+@@ -647,8 +646,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+ 
+ 	dev->is_c45 = is_c45;
+ 	dev->phy_id = phy_id;
+-	if (c45_ids)
+-		dev->c45_ids = *c45_ids;
 +
-     required:
-       - reg
+ 	dev->irq = bus->irq[addr];
+ 	dev_set_name(&mdiodev->dev, PHY_ID_FMT, bus->id, addr);
  
+@@ -829,7 +827,7 @@ static int phy_device_read_id(struct phy_device *phydev)
+  */
+ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
+ {
+-	return phy_device_create(bus, addr, PHY_ID_NONE, is_c45, NULL);
++	return phy_device_create(bus, addr, PHY_ID_NONE, is_c45);
+ }
+ EXPORT_SYMBOL(get_phy_device);
+ 
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index a04afe79529c..63843037673c 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -121,7 +121,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+ 					 "ethernet-phy-ieee802.3-c45");
+ 
+ 	if (!is_c45 && !of_get_phy_id(child, &phy_id))
+-		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
++		phy = phy_device_create(mdio, addr, phy_id, 0);
+ 	else
+ 		phy = get_phy_device(mdio, addr, is_c45);
+ 	if (IS_ERR(phy)) {
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 2a695cd90c7c..662919c1dd27 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1213,8 +1213,7 @@ int phy_modify_paged(struct phy_device *phydev, int page, u32 regnum,
+ 		     u16 mask, u16 set);
+ 
+ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, u32 phy_id,
+-				     bool is_c45,
+-				     struct phy_c45_device_ids *c45_ids);
++				     bool is_c45);
+ #if IS_ENABLED(CONFIG_PHYLIB)
+ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45);
+ int phy_device_register(struct phy_device *phy);
 -- 
 2.26.1
 
