@@ -2,137 +2,190 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5DDC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB763C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4788A20771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C9D2082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 08:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="eX3H6EWG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+i6t1/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgFVIA3 (ORCPT
+        id S1725781AbgFVICB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 04:00:29 -0400
-Received: from mail-eopbgr1310101.outbound.protection.outlook.com ([40.107.131.101]:60864
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725897AbgFVIA2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 04:00:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WwnI119078lCXGiSbhmMamwGjjux27/rmQ+/Pic8Dkn4E6/HjcplL+aJk3hK/REfAtx8VwcXCeUEr90FPF/CIPFnHotS//KS+xwusDu5a86xux0xtjmElUayg+kgD0HmnQZcdqMQSpVcrs/7lNdTaxqYyfJGwHS/j4YhU26wlvrYceJ8SjVG/Ru9i0DEt0p+W/CyrPX5NFI3GOqLZ0PhmfYxth/9LDN07791qVo1hz8mw6JQw3DWkVvEGh//nni7u6Evy+VnwvSiA0u7rI7nhftmq+9ZgK9+DOgbE+E2fD7kCEF4AoX+Vus1aIOyzxbm6/BLKWFSU8MqGBEofoZNtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j2uL8as/0Cd+K2T0QTP2+KrgCnxlkzApSvaG80Zh074=;
- b=LTKROlTyeEnu6cF5RmZKNJdDkU034/VWivSQJyOovN3fq28qLD2PjL0nRpf8ZvaLF5ca8+ERuryyQBlUxb+upTWIdY3SdR7tJrknORUXVcnUxBktOj1Ewfh0b5R5DXaltscohhDlJuewxF6S8/kYTf0KG46nsmmiMk6vrnuhdCbMmispU80oI9yREJJolWGXDFEVz8Umkh2acJHP7gH8fOC3OZtvFXzq67DuSta6p2TiD/7qNmGshMTuuUU+mV7Idyk3Phd8hyu2zFuGfOJmbWM13jamMj2Kd/VEoOqwlSY5IT8wS3loc9SOxlX7r9RfN7QS+3BAK0lQ4/IYYQsHaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Mon, 22 Jun 2020 04:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgFVICA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 04:02:00 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A32C061794;
+        Mon, 22 Jun 2020 01:01:59 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q19so17048198eja.7;
+        Mon, 22 Jun 2020 01:01:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j2uL8as/0Cd+K2T0QTP2+KrgCnxlkzApSvaG80Zh074=;
- b=eX3H6EWG3AhmmXntv+NWSH/6Mv+flwx19bF6iVoxRBv952QSJOPijo5dV24gqYUHgy9zT0NSiPoBI7qZZenzGw29EcPJxL2xTzcWH6Jbf53g86GeL7jDP+7qa2vqUQDrOCDnSkHcUSqot5CZezkc/TiutQj0PrL0xhCzoDvJV8o=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TY2PR01MB5018.jpnprd01.prod.outlook.com (2603:1096:404:118::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 08:00:22 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::2da1:bdb7:9089:7f43%3]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 08:00:22 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
-Thread-Topic: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
-Thread-Index: AQHWQwbqafU6kcCmak6Q/RlGSBV2bqjeBLQAgAYZrNCAACLCgIAADqTQ
-Date:   Mon, 22 Jun 2020 08:00:22 +0000
-Message-ID: <TY2PR01MB36928A972E7D1F515302E7D1D8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWd_nRhYZoHGdC+OJuB3edNUZ=pcNERDRkOwr+n=43Yeg@mail.gmail.com>
- <TY2PR01MB369258B26BD909D9E0E3615ED8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <CAMuHMdU03451pdTyAFTXcjadZUbF_1An6smqkB12WvvY1tzezA@mail.gmail.com>
-In-Reply-To: <CAMuHMdU03451pdTyAFTXcjadZUbF_1An6smqkB12WvvY1tzezA@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b9f780c0-36a2-4064-4b00-08d816825072
-x-ms-traffictypediagnostic: TY2PR01MB5018:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB5018F9C8860A4B97263B3D61D8970@TY2PR01MB5018.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:457;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O9m7Z2mxgUu6eatcH8WZVZDcZNW9GTpFiulziK4a+JCEj0Dl5h0lsKLVgzLJ1P02swz0cej/Dqxdr5bHxjJpTrosk3jnaYs6rkmNdk/2GBZJ6VaC1LXiMmj+bV8b+dH0ZzuyGYJwCwKopmdlgN6khhMJzmMXe4+zZ2W3okmeUcvHvp+c2vOhICJSi75EEfhyb8USLfxlffdd+Uqs88A6HymXQKw5FxPPHXdpKREiFLXXAG3Bp0tYQZMEPuIiKW1ucv16CcZOOC/k7dvo5lnkh8RExqP1q8SupEbWxusZZrlh4C0ECWayVcnZZpRrfQyqgeefd5X0pTV12SJCGs9eRt38Gf4cta8T/aw7ZFMUnPdV/cLdTQ0rjAZq6t6kOpzN
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(8936002)(33656002)(54906003)(64756008)(7696005)(66476007)(66946007)(55016002)(66446008)(66556008)(4326008)(316002)(71200400001)(478600001)(2906002)(186003)(86362001)(52536014)(5660300002)(6916009)(53546011)(6506007)(8676002)(26005)(76116006)(55236004)(9686003)(142933001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: sPUN8d15kdA9ZhwdyU4lTATaZL2eCWbA5fG300cV9zpSP6TYSanlaxScL0oFHtQ5uVTe+kL05zMPhn5V/ApDdSwUXIkE7YTqJ2EOG5GsmiEdeBk8/+PBx8wO4DcafwO5EYgdjnlD2Kndu9FPN3ujJi74+4VEnCP2tWR9gabyRXYZaTr7UAdMW+2C+qso5sOBU0yyep3MP2SfdaLoLimb6DxLWI0iU/ZmqanGtiOo0i2YeaDFdlqZFFHp0vluur5a1rC3VYW2FKqNubWbmEd3MD/eSziHbxtrhoW5OchIx8G1JUsOJH6zhUaUAzoARhacKRT2rHl1ye9Sdsn7b1lNj6SzY2JY65QwJWLsU3on9grvKC2sYvP+9GPylHDSpWRwlOdlbEa++ISFEtE8/40KVRSaLkIJ+rRZz4+y5ynZf46+bllrCaP2//X/xvRIv9Fj0IyKaS3bx80lSXyi33yhLmXm3H4/j0GH4pJpZ+KN5TN3vWuen+t8sMasezVtgAGv
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tKnwQ2j5y2YnX+5ChVTcEKkT8J5oqo183ugfqdKtiFU=;
+        b=Q+i6t1/pBmJYoAYXknPPUbsP7Gy8oILmPOEmswYxSjFEaxZqDsOKjmozOoQTgynN6b
+         paKDI+3sHmZ8zH52xHgmW1pqmjkc6zbSLaLrMEYV5RnaCgk634Orxiu5370t9JwjCEX5
+         2Jjr5tIfA6VLKvNlekfFXJk12+LNAGDKBgv+Ji1Gf7jUsamDkys+KUF2qHshW5F3/vWv
+         eRPCjgw76pUVd6v+VxrxgejTQ/+l8oJYQFnd7yZpRzC09Qpb0Kaw5A6koT7+k33TQqT0
+         o037n1YslzBWjJ9BXW4/vakgMRQ7nE1EU+wLqOCWNUQhGX/EA5ibz26hAc41bFcPOppS
+         92Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tKnwQ2j5y2YnX+5ChVTcEKkT8J5oqo183ugfqdKtiFU=;
+        b=nuNNLTcwIycHdKC/0mp04qCZ3VRYL2bCh0aDqiK4STkZF6wMPgoNAfzMWeCnOPkTVE
+         nbpDunvvlYQ8J6SCflhdp0dLoPTI8ui2RsXJQaZf/aZYbEgyb9qMzwb924x+F2oRRxkj
+         Vh6lqEqnPWHStGkCRI25L8X/IpRCogOVuqlY3My4EXTvzG3xaJ+wFCxs8aig3OMD5nYV
+         e5/STzbTdGbas2hKuCR4CZ+rwMl6ZNoMKn1sjz1OSKZMR78BM1y/wcu7Yc4TuNnwbuM/
+         0mOtycDL3AHYiWr7nhDqXECH2Irf+2VMI1mxwO0SsffLOg9B4EEjAwwTRFo4EkpVFphD
+         W5Ag==
+X-Gm-Message-State: AOAM5324gYj0xg+MznXulWj5MGQ8e9e6ZfEUxCqDIws3QOQ3ropBIk5b
+        b1Yq57+f6Ma8WSq/VP2DTq4=
+X-Google-Smtp-Source: ABdhPJz6SmpQuenHDeJHMJ69tuqstcUiABOB/m9suNbzl2/EHGLfiDnSQA10vdY5oa4JuBHTtaTSPw==
+X-Received: by 2002:a17:906:2304:: with SMTP id l4mr14284250eja.104.1592812917634;
+        Mon, 22 Jun 2020 01:01:57 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p9sm5921335ejd.50.2020.06.22.01.01.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 01:01:57 -0700 (PDT)
+Subject: Re: [RFC PATCH v1 0/2] rk3318 A95X Z2 board
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, frank.wang@rock-chips.com
+References: <20200620134659.4592-1-jbx6244@gmail.com>
+Message-ID: <c421ed14-3b1d-7aca-d106-5e312a38840f@gmail.com>
+Date:   Mon, 22 Jun 2020 10:01:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9f780c0-36a2-4064-4b00-08d816825072
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 08:00:22.2763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WXVMHxSQX/I++yz0vLIQVChWhCUdU+kPx80dwxmMH6nhttYO31CMZtV7hD+nqfhskZ9WKdFGBRQwCNqoPe2CCnlxfcxgGZDHFWA+NLj2hoDRXqeUVJ0Zxb1+vMObEJmn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB5018
+In-Reply-To: <20200620134659.4592-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogTW9uZGF5
-LCBKdW5lIDIyLCAyMDIwIDQ6MDYgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24g
-TW9uLCBKdW4gMjIsIDIwMjAgYXQgNzoyMSBBTSBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGlo
-aXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gRnJvbTogR2VlcnQgVXl0
-dGVyaG9ldmVuLCBTZW50OiBUaHVyc2RheSwgSnVuZSAxOCwgMjAyMCA0OjUyIFBNDQo+ID4gPiBP
-biBNb24sIEp1biAxNSwgMjAyMCBhdCAxOjIxIFBNIFlvc2hpaGlybyBTaGltb2RhDQo+ID4gPiA8
-eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gPiBDb252ZXJ0
-IHJlbmVzYXMgcmVsYXRlZCBwYXJ0IG9mIHVzYi14aGNpIHRvIFlBTUwuDQo+ID4gPiA+DQo+ID4g
-PiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51
-aEByZW5lc2FzLmNvbT4NCj4gDQo+ID4gPiBTbyB5b3UncmUganVzdCBleHRyYWN0aW5nIHRoZSBS
-ZW5lc2FzIHBhcnRzLi4uDQo+ID4gPg0KPiA+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiA+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvcmVuZXNhcyx1c2IteGhj
-aS55YW1sDQo+ID4gPg0KPiA+ID4gLi4uIGFuZCBwdXR0aW5nIHRoZW0gaW4gYSBzZXBhcmF0ZSBm
-aWxlLg0KPiA+DQo+ID4gWWVzLg0KPiA+DQo+ID4gPiBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIGtl
-ZXAgdGhlbSBjb21iaW5lZCBpbiBhIHNpbmdsZSBkb2N1bWVudD8NCj4gPiA+IE9yIGFyZSB0aGVy
-ZSB0b28gbWFueSBkaWZmZXJlbmNlcz8NCj4gPg0KPiA+IEkgdGhvdWdodCB0aGVyZSB3ZXJlIHRv
-byBtYW55IGRpZmZlcmVuY2VzLiBBdCBmaXJzdCwgSSBoYWQgY29udmVydGVkIGFsbCB0bw0KPiA+
-IGEgc2luZ2xlIGRvY3VtZW50IFsxXS4gQnV0LCBJIHdhcyB0aGlua2luZyB0aGVyZSB3YXMgYSBu
-b3QgZ29vZCB3YXkgaW4gdmFsaWRhdGlvbg0KPiA+IHBvaW50IG9mIHZpZXcgYmVjYXVzZSBzb21l
-IHByb3BlcnRpZXMgbmVlZGVkIHRvIGFkanVzdCBmb3IgYWxsIHBsYXRmb3Jtcy4NCj4gPiBBbHNv
-LCB1bmZvcnR1bmF0ZWx5LCBzb21lIGNvbXBhdGlibGVzIGFuZCBzcGVjaWZpYyBwcm9wZXJ0aWVz
-DQo+ID4gYXJlIG5vdCBkb2N1bWVudGVkLi4uIFNvLCBJIGhhZCBleHRyYWN0ZWQgdGhlIFJlbmVz
-YXMgcGFydHMgb25seS4NCj4gPg0KPiA+IFsxXQ0KPiA+IFBsZWFzZSByZWZlciB0byB0aGUgZW5k
-IG9mIHRoaXMgZW1haWwuDQo+IA0KPiBPSy4gTWFrZXMgc2Vuc2UsIGFzIHRoZSBSZW5lc2FzIHBh
-cnRzIGFyZSBub3QgY29tcGF0aWJsZSB3aXRoIGdlbmVyaWMteGhjaS4NCg0KWWVzLiBTbywgSSds
-bCBhZGQgc3VjaCBpbmZvcm1hdGlvbiBpbnRvIHRoZSBjb21taXQgZGVzY3JpcHRpb24gb24gdjIu
-DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5n
-fXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2Vl
-cnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBn
-ZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRo
-IHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEkn
-bSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0
-aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGlu
-dXMgVG9ydmFsZHMNCg==
+Hi,
+
+BUG report 1:
+About phy-rockchip-inno-usb2.c and rk3318.
+
+Goal is to use ttyUSB0 as console in combination with agetty as long as
+we don't have a working HDMI signal on a DVI monitor.
+Boot with rk3318 starts normal on emmc with U-boot OK. It then loads the
+kernel
+and initrd on SD card. Log view on ttyS2 works.
+At the end of the init process extcon0 sends 2 events sortly after each
+other.
+usb2 crashes if extcon0 event reports 'USB=0' and 'DCP=1'.
+It looks like there's no consistant init (delay?) in the driver or hardware.
+
+Boot only possible with busybox + initrd with no scripts that delay
+event handling.
+(Un)plug events are unrelayable. Getty only becomes active
+if usb cable connected direct to the board(without usb hub).
+With systemd only a kernel log scroll, but never able to use ttyUSB0 as
+login.
+
+mdev.conf line to catch the events:
+
+extcon[0-9]+    root:root 666 */bin/cat /sys/class/extcon/extcon0/state
+> /dev/kmsg
+
+In extlinux.conf clk and pm must be ignored in the kernel command line
+to prevent a crash.
+
+label kernel
+    kernel /Image
+    fdt /rk3318-a95x-z2.dtb
+    initrd /rootfs.cpio
+    append console=ttyUSB0,115200n8
+           console=ttyS2,1500000n8
+           pd_ignore_unused
+           clk_ignore_unused
+           initcall_debug=1
+           debug
+           drm.debug=0xe
+           video=HDMI-A-1:1280x720@60
+           earlycon=uart8250,mmio32,0xff130000,keep
+           swiotlb=1
+           kpti=0
+           no_console_suspend=1
+           consoleblank=0
+           rootwait
+
+Question:
+Does anyone have a solution for usb2 or
+was there previous discussion/info about this?
+
+Why has rk3328.dtsi incomplete (see TRM) power-domains and qos? Does
+that work?
+Was rk3318 VOP+HDMI, gmac2phy tested in Linux mainline before?
+
+Kind regards,
+
+Johan
+
+Kernel log with usb2 OK:
+
+[    0.959594] Run /init as init process
+[    0.959937]   with arguments:
+[    0.960210]     /init
+[    0.960416]   with environment:
+[    0.960703]     HOME=/
+[    0.960917]     TERM=linux
+[    0.961562] process '/bin/busybox' started with executable stack
+[    0.967474] usb 1-1: new full-speed USB device number 2 using dwc2
+
+[..]
+
+[    6.785160] USB=1
+[    6.785160] USB-HOST=0
+[    6.785160] SDP=1
+[    6.785160] CDP=0
+[    6.785160] DCP=0
+[    6.785160] SLOW-CHARGER=0
+[    6.785165] USB=1
+[    6.785165] USB-HOST=0
+[    6.785165] SDP=1
+[    6.785165] CDP=0
+[    6.785165] DCP=0
+[    6.785165] SLOW-CHARGER=0
+[   13.729625] random: crng init done
+[   31.715450] vcc_host_vbus: disabling
+
+Kernel log with usb2 crash:
+
+[    0.940666] Run /init as init process
+[    0.941005]   with arguments:
+[    0.941280]     /init
+[    0.941490]   with environment:
+[    0.941781]     HOME=/
+[    0.941999]     TERM=linux
+[    0.942536] process '/bin/busybox' started with executable stack
+[    0.967442] usb 1-1: new full-speed USB device number 2 using dwc2
+
+[..]
+
+[    7.300792] USB=0
+[    7.300792] USB-HOST=0
+[    7.300792] SDP=0
+[    7.300792] CDP=0
+[    7.300792] DCP=1
+[    7.300792] SLOW-CHARGER=0
+
