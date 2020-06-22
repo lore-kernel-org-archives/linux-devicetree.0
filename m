@@ -2,169 +2,104 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7812CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 06:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19BDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AC825431
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 06:53:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlT4vcr6"
+	by mail.kernel.org (Postfix) with ESMTP id 9396022BEA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 07:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731294AbgFVGxy (ORCPT
+        id S1731305AbgFVHGS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 02:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgFVGxy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 02:53:54 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FCEC061794
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 23:53:54 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k6so2963857wrn.3
-        for <devicetree@vger.kernel.org>; Sun, 21 Jun 2020 23:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3st1Xpy8PMIYJ29+AOCat9fQ6H15z9nbOwUnhMMLhQg=;
-        b=RlT4vcr6p8p3WhMwqdvdIiWm8cSpTritK3ynpnHlhdiSq1A63RYtWfur0SYx3CEgf8
-         zNEIP66840WXAZWesJhfhc1PHUSLX8nx5+pId5innSe9PWR8tUY9g2MswWSoGDAZAsk9
-         01UtfkJ4gJLz9dvM6yVDRaW4jqauOfwvj+HakP6osJRPnrrVHFiOuZy+wmFQXfamCSi/
-         BQADIpisPiVuSUmXgMkQ49PohawdreO4lpLyfGwVNBA6SHsHr4vYDJO3iaZkbtOmuD3J
-         Rc2jM9gSjz/u7aShV8GTzUFKE7g5yDNG6xB5NeJxf1hSWeOY4gLzMR5StHyk3QEuJUhV
-         cE9A==
+        Mon, 22 Jun 2020 03:06:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44830 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgFVHGR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 03:06:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e5so12218979ote.11;
+        Mon, 22 Jun 2020 00:06:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3st1Xpy8PMIYJ29+AOCat9fQ6H15z9nbOwUnhMMLhQg=;
-        b=b7HMHlBKcTsBgJTHfcJbW0uMcemgAqBhEX4e3sony4LTZ7kxs+p5BfZmjR43xVGY9/
-         ey9/3/BtzSUVEwdj6A/0F+PXb/79eVcDnkp9e3nVam7nJpgoWPiFsBVVzmxc3/k4xzbo
-         A35iP1OXuCaRp7oqR8C8B7WA/EWUzTet4VWJHzwjDv5U911+iqxEGfgBHBmbehAjCAEC
-         Hf61663kGpW+Ivx2Qop5ctDcGG+jY9jOHeSb8iVSNd9C635E3T1LGzbimS4fn6No6x4T
-         mup7eUbEd3VEuaJ6BX1zcLAAFTH5F4re90ylrAWXp99IUc8bBwXvn1OR0piQCZdwLZ6M
-         OoDw==
-X-Gm-Message-State: AOAM5314Es9O/oGJIoIu3HKHBjZOeWu3d7kCL+QucZSfANCH4vEfIh4v
-        KDewjkLJmeyKXnxzde7n286p8CKoaR4=
-X-Google-Smtp-Source: ABdhPJx60bF1uC6l4ykc8vsYhgnhHXh7sN8AhZNQZCxssjwQToadbKxSJ0hyVFLyrrQsT9omwbuxYg==
-X-Received: by 2002:a5d:630f:: with SMTP id i15mr17113215wru.309.1592808832730;
-        Sun, 21 Jun 2020 23:53:52 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p9sm14749735wma.48.2020.06.21.23.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2020 23:53:52 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 07:53:50 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
- Controller binding
-Message-ID: <20200622065350.GN954398@dell>
-References: <20200617110829.1036898-1-lkundrak@v3.sk>
- <20200617110829.1036898-2-lkundrak@v3.sk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/moNm0JhqFf7N9xf8shxCLSCHkTyX5Q4ojQ7yxsOhLw=;
+        b=eOn6lmpbAJon480UCuRk6Gxva2F38Ci43UQ+9ruDmTN9V3c5KKgD1rSypkQd4r+UjU
+         JUcxsmMUEf/rOeOxrF/94ECoSyX3rvzQyYVsJMb0Xhy+7TJQdW8H8Aen9vijW5SYLbf3
+         wgaP8dNVKZtO++5CaXiuR1tW+vUun1Y6kJ1mlgFUNNe15EYfmikJD5+nxVujrrznex2k
+         KbaKCU41QGT/bKKPx1WsgBsfgUhyG5zxbuo08BhIp2f5x+wTopR1vbplqVA2tT+bRBjg
+         7kD0kcgRUIdT9JXGFyuAdz6xdymKcOUlLlgLM4qNRO6lpHJ6hu1PO/qP5hWh8TXC9F3K
+         +cmw==
+X-Gm-Message-State: AOAM532GH/ggwADG7Cv71uwwAgquDp2tDzqR8QGYoBxYpLIk4yWRXOay
+        03OKasCGyG4TlkwXvEoUI6Yw69a87m7TbQ+kAt84Ig==
+X-Google-Smtp-Source: ABdhPJz/42Fp1d5uFwEcgKoZG7C2YDazzY66i/rhyg/YaPqYCQgL8Dqt1/1v3jZVeLZSe5K8PYmzCAMHOO9OKKNC60U=
+X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr12956410otp.250.1592809576767;
+ Mon, 22 Jun 2020 00:06:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617110829.1036898-2-lkundrak@v3.sk>
+References: <1592219989-28631-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWd_nRhYZoHGdC+OJuB3edNUZ=pcNERDRkOwr+n=43Yeg@mail.gmail.com> <TY2PR01MB369258B26BD909D9E0E3615ED8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY2PR01MB369258B26BD909D9E0E3615ED8970@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Jun 2020 09:06:05 +0200
+Message-ID: <CAMuHMdU03451pdTyAFTXcjadZUbF_1An6smqkB12WvvY1tzezA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: usb: renesas,usb-xhci: convert to YAML
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 17 Jun 2020, Lubomir Rintel wrote:
+Hi Shimoda-san,
 
-> Add binding document for the ENE KB3930 Embedded Controller.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> ---
-> Changes since v4:
-> - Collected Rob's Reviewed-by
-> 
-> Changes since v1:
-> - Addressed binding validation failure
-> 
->  .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> new file mode 100644
-> index 0000000000000..005f5cb59ab12
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/ene-kb3930.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ENE KB3930 Embedded Controller bindings
+On Mon, Jun 22, 2020 at 7:21 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Geert Uytterhoeven, Sent: Thursday, June 18, 2020 4:52 PM
+> > On Mon, Jun 15, 2020 at 1:21 PM Yoshihiro Shimoda
+> > <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > > Convert renesas related part of usb-xhci to YAML.
+> > >
+> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Please expand ENE.
+> > So you're just extracting the Renesas parts...
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
+> >
+> > ... and putting them in a separate file.
+>
+> Yes.
+>
+> > Would it make sense to keep them combined in a single document?
+> > Or are there too many differences?
+>
+> I thought there were too many differences. At first, I had converted all to
+> a single document [1]. But, I was thinking there was a not good way in validation
+> point of view because some properties needed to adjust for all platforms.
+> Also, unfortunately, some compatibles and specific properties
+> are not documented... So, I had extracted the Renesas parts only.
+>
+> [1]
+> Please refer to the end of this email.
 
-> +description: |
-> +  This binding describes the ENE KB3930 Embedded Controller attached to a
-> +  I2C bus.
+OK. Makes sense, as the Renesas parts are not compatible with generic-xhci.
 
-Nit: "an I2C bus"
+Gr{oetje,eeting}s,
 
-> +maintainers:
-> +  - Lubomir Rintel <lkundrak@v3.sk>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
-> +      - const: ene,kb3930
-> +  reg:
-> +    maxItems: 1
-> +
-> +  off-gpios:
-> +    description: GPIO used with the shutdown protocol on Ariel
-> +    maxItems: 2
-> +
-> +  system-power-controller: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      embedded-controller@58 {
-> +        compatible = "dell,wyse-ariel-ec", "ene,kb3930";
-> +        reg = <0x58>;
-> +        system-power-controller;
-> +
-> +        off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
-> +                    <&gpio 127 GPIO_ACTIVE_HIGH>;
-> +      };
-> +    };
-> +
-> +...
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
