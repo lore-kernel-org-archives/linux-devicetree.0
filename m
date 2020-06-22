@@ -2,134 +2,98 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4119C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 20:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EC2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BDC20767
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 20:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A452073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 21:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="A8hbsldP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgFVUvc (ORCPT
+        id S1728850AbgFVVEJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 16:51:32 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45422 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728421AbgFVUvc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 16:51:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B03E78030809;
-        Mon, 22 Jun 2020 20:51:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zrSYLP8U0TZk; Mon, 22 Jun 2020 23:51:22 +0300 (MSK)
-Date:   Mon, 22 Jun 2020 23:51:21 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Pavel Machek <pavel@denx.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200622205121.4xuki7guyj6u5yul@mobilestation>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
- <20200619210719.GB12233@amd>
+        Mon, 22 Jun 2020 17:04:09 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34275 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730462AbgFVVEI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 17:04:08 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id ED0C7226E9;
+        Mon, 22 Jun 2020 23:03:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1592859846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wfYhB7RXUqaiyvTYfdggr111rUrcCYz0SCl+kSO679c=;
+        b=A8hbsldPm59by1p7qTlAcpiW2fSii5BxN2YF47VruG1AmYjMUX4eqDZUOQQxmep9NxFX39
+        uT+Ax7VQ2X/P/ykjrQSXvklnP4V7D60C5H8xKLNj4OSXgQ/MBzKY/BH/eIHpUE2iUyrnhs
+        fJ0d/a0eA/3iWyoXCuolRflC+rhaLIA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200619210719.GB12233@amd>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 22 Jun 2020 23:03:59 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+In-Reply-To: <0709f20bc61afb6656bc57312eb69f56@walle.cc>
+References: <20200609110136.GJ4106@dell>
+ <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
+ <0709f20bc61afb6656bc57312eb69f56@walle.cc>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Pavel
-
-On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
-> On Fri 2020-06-19 16:32:47, Greg Kroah-Hartman wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > [ Upstream commit f0410bbf7d0fb80149e3b17d11d31f5b5197873e ]
-> > 
-> > DW APB SSI DMA-part of the driver may need to perform the requested
-> > SPI-transfer synchronously. In that case the dma_transfer() callback
-> > will return 0 as a marker of the SPI transfer being finished so the
-> > SPI core doesn't need to wait and may proceed with the SPI message
-> > trasnfers pumping procedure. This will be needed to fix the problem
-> > when DMA transactions are finished, but there is still data left in
-> > the SPI Tx/Rx FIFOs being sent/received. But for now make dma_transfer
-> > to return 1 as the normal dw_spi_transfer_one() method.
+Am 2020-06-14 12:26, schrieb Michael Walle:
+> Hi Rob,
+> 
+> Am 2020-06-10 00:03, schrieb Rob Herring:
+> [..]
+>> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
+>> then you shouldn't have a unit-address either and you can simply match
+>> on the node name (standard DT driver matching is with compatible,
+>> device_type, and node name (w/o unit-address)). We've generally been
+>> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
+>> Matching on 'classname-N' would work with node name matching as only
+>> unit-addresses are stripped.
+> 
+> This still keeps me thinking. Shouldn't we allow the (MFD!) device
+> driver creator to choose between "classname@N" and "classname-N".
+> In most cases N might not be made up, but it is arbitrarily chosen;
+> for example you've chosen the bank for the ab8500 reg. It is not
+> a defined entity, like an I2C address if your parent is an I2C bus,
+> or a SPI chip select, or the memory address in case of MMIO. Instead
+> the device driver creator just chooses some "random" property from
+> the datasheet; another device creator might have chosen another
+> property. Wouldn't it make more sense, to just say this MFD provides
+> N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
+> That would also be the logical consequence of the current MFD sub
+> device to OF node matching code, which just supports N=1.
 > 
 
-> As far as I understand, this is support for new SoC, not a fix?
+Rob? Lee?
 
-Not really. That patch is a first one of a series fixing a problem with
-SPI transfer completion:
-33726eff3d98 spi: dw: Add SPI Rx-done wait method to DMA-based transfer
-1ade2d8a72f9 spi: dw: Add SPI Tx-done wait method to DMA-based transfer
-bdbdf0f06337 spi: dw: Locally wait for the DMA transfers completion
-f0410bbf7d0f spi: dw: Return any value retrieved from the dma_transfer callback
-
-In anyway having just first commit applied is harmless, though pretty much
-pointless in fixing the problem it had been originally introduced for. But it
-can be useful for something else. See my comment below.
-
-> 
-> > +++ b/drivers/spi/spi-dw.c
-> > @@ -383,11 +383,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
-> >  
-> >  	spi_enable_chip(dws, 1);
-> >  
-> > -	if (dws->dma_mapped) {
-> > -		ret = dws->dma_ops->dma_transfer(dws, transfer);
-> > -		if (ret < 0)
-> > -			return ret;
-> > -	}
-> > +	if (dws->dma_mapped)
-> > +		return dws->dma_ops->dma_transfer(dws, transfer);
-> >  
-> >  	if (chip->poll_mode)
-> >  		return poll_transfer(dws);
-> 
-
-> Mainline patch simply changes return value, but code is different in
-> v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
-> that a problem?
-
-Actually no.) In that old 4.19 context it's even better to return straight away
-no matter what value is returned by the dma_transfer() callback. In the code
-without this patch applied, the transfer_one() method will check the poll_mode
-flag state even if the dma_transfer() returns a positive value. The positive
-value (1) means that the DMA transfer has been executed and the SPI core must
-wait for its completion. Needless to say, that if the poll_mode flag state
-gets to be true, then a poll-transfer will be executed alongside with the DMA
-transfer. Which as you understand will be very wrong. So by having this patch
-applied we implicitly fix that problem. Although a probability of the
-problematic situation is very low, since the DW APB SSI driver poll-mode hasn't
-been utilized by any SPI client driver since long time ago...
-
--Sergey
-
-> 
-> Best regards,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
+-michael
