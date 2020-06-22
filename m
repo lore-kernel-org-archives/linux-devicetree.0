@@ -2,110 +2,181 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74438C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D33C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5843420732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF94E20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AAjayNzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgFVMFf (ORCPT
+        id S1728060AbgFVMJh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgFVMFf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:05:35 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EACC061794;
-        Mon, 22 Jun 2020 05:05:35 -0700 (PDT)
-Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt@linutronix.de>)
-        id 1jnLCf-000875-6N; Mon, 22 Jun 2020 14:05:33 +0200
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [RFC PATCH 9/9] dt-bindings: net: dsa: Add documentation for Hellcreek switches
-In-Reply-To: <87wo43phk0.fsf@kurt>
-References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-10-kurt@linutronix.de> <e8085c6a-0b61-60f9-f411-2540dec80926@gmail.com> <87wo43phk0.fsf@kurt>
-Date:   Mon, 22 Jun 2020 14:05:26 +0200
-Message-ID: <87ftantiex.fsf@kurt>
+        Mon, 22 Jun 2020 08:09:37 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48571 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728050AbgFVMJg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:09:36 -0400
+X-UUID: 1ec83a4c232a44799d0bf8c4bd07bd71-20200622
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=nNgds+bDT2ifcNkL//7OZ4u/UefJ60BgM2OSs6r2Q1Q=;
+        b=AAjayNzPGth7z7ztkJtWW3fRqcPlndneJPj4yRuqkfeXvAOXn8QEpfmNJNQuwbPynzBLeVGPZNuICOnICjNnb45OcN0sApT3TB6zI8F/qkQpaZ61+rMhw6sKmMXUBkZ2GBuSGLf5lLU8XnD8iosMfVGTHKmtyKz/ucSKNWJ6L0I=;
+X-UUID: 1ec83a4c232a44799d0bf8c4bd07bd71-20200622
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 169218616; Mon, 22 Jun 2020 20:09:28 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 22 Jun 2020 20:09:23 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 22 Jun 2020 20:09:23 +0800
+Message-ID: <1592827766.10773.33.camel@mtkswgap22>
+Subject: Re: [PATCH v5 6/6] arm64: dts: add dts nodes for MT6779
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <devicetree@vger.kernel.org>, CC Hwang <cc.hwang@mediatek.com>
+Date:   Mon, 22 Jun 2020 20:09:26 +0800
+In-Reply-To: <247c07c2-4488-a112-5874-4bd7c9d98292@gmail.com>
+References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
+         <1585128694-13881-7-git-send-email-hanks.chen@mediatek.com>
+         <3751b55b-07a7-7985-a8d9-5414a4ca0d24@gmail.com>
+         <1592314461.6256.18.camel@mtkswgap22>
+         <247c07c2-4488-a112-5874-4bd7c9d98292@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-TM-SNTS-SMTP: 6A55C18C576A69E3623226D2328A09247EDC113675F07EE57FFB6469D36378F92000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+T24gTW9uLCAyMDIwLTA2LTIyIGF0IDEzOjI1ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMTYvMDYvMjAyMCAxNTozNCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiBPbiBX
+ZWQsIDIwMjAtMDMtMjUgYXQgMTc6MzkgKzAxMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+
+ID4+DQo+ID4+IE9uIDI1LzAzLzIwMjAgMTA6MzEsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4+PiB0
+aGlzIGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvIGJvYXJkIHN1cHBvcnQsDQo+
+ID4+DQo+ID4+ICJmb3IgYm9hcmQgc3VwcG9ydCINCj4gPj4NCj4gPj4+IGluY2x1ZGluZyBjcHUs
+IGdpYywgdGltZXIsIGNjZiwgcGluY3RybCwgdWFydC4uLmV0Yy4NCj4gPj4NCj4gPj4gVGhlIGV0
+YyBpcyBQTVUgYW5kIFBTQ0kgYW5kIHN5c2lycSwgY29ycmVjdD8gTGV0J3MgbGlzdCBhdCBsZWFz
+dCBzeXNpcnEgYXMgdGhpcw0KPiA+PiBpcyBzb21ldGhpbmcgTWVkaWFUZWsgc3BlY2lmaWMuDQo+
+ID4+DQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBt
+ZWRpYXRlay5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlh
+dGVrL01ha2VmaWxlICAgICAgIHwgICAgMSArDQo+ID4+PiAgYXJjaC9hcm02NC9ib290L2R0cy9t
+ZWRpYXRlay9tdDY3NzktZXZiLmR0cyB8ICAgMzEgKysrKw0KPiA+Pj4gIGFyY2gvYXJtNjQvYm9v
+dC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kgICAgfCAgMjY1ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKw0KPiA+Pj4gIDMgZmlsZXMgY2hhbmdlZCwgMjk3IGluc2VydGlvbnMoKykNCj4gPj4+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3Nzkt
+ZXZiLmR0cw0KPiA+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210Njc3OS5kdHNpDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L01ha2VmaWxlDQo+ID4+PiBpbmRleCA0NThiYmM0Li41M2YxYzYxIDEwMDY0NA0KPiA+Pj4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmlsZQ0KPiA+Pj4gKysrIGIvYXJj
+aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmlsZQ0KPiA+Pj4gQEAgLTEsNiArMSw3IEBA
+DQo+ID4+PiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+Pj4gIGR0Yi0k
+KENPTkZJR19BUkNIX01FRElBVEVLKSArPSBtdDI3MTItZXZiLmR0Yg0KPiA+Pj4gIGR0Yi0kKENP
+TkZJR19BUkNIX01FRElBVEVLKSArPSBtdDY3NTUtZXZiLmR0Yg0KPiA+Pj4gK2R0Yi0kKENPTkZJ
+R19BUkNIX01FRElBVEVLKSArPSBtdDY3NzktZXZiLmR0Yg0KPiA+Pj4gIGR0Yi0kKENPTkZJR19B
+UkNIX01FRElBVEVLKSArPSBtdDY3OTUtZXZiLmR0Yg0KPiA+Pj4gIGR0Yi0kKENPTkZJR19BUkNI
+X01FRElBVEVLKSArPSBtdDY3OTctZXZiLmR0Yg0KPiA+Pj4gIGR0Yi0kKENPTkZJR19BUkNIX01F
+RElBVEVLKSArPSBtdDY3OTcteDIwLWRldi5kdGINCj4gPj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS1ldmIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cw0KPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
+Pj4+IGluZGV4IDAwMDAwMDAuLjE2NGY1Y2INCj4gPj4+IC0tLSAvZGV2L251bGwNCj4gPj4+ICsr
+KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LWV2Yi5kdHMNCj4gPj4+IEBA
+IC0wLDAgKzEsMzEgQEANCj4gPj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MCsNCj4gPj4+ICsvKg0KPiA+Pj4gKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJbmMu
+DQo+ID4+PiArICogQXV0aG9yOiBNYXJzLkMgPG1hcnMuY2hlbmdAbWVkaWF0ZWsuY29tPg0KPiA+
+Pj4gKyAqDQo+ID4+PiArICovDQo+ID4+PiArDQo+ID4+PiArL2R0cy12MS87DQo+ID4+PiArI2lu
+Y2x1ZGUgIm10Njc3OS5kdHNpIg0KPiA+Pj4gKw0KPiA+Pj4gKy8gew0KPiA+Pj4gKwltb2RlbCA9
+ICJNZWRpYVRlayBNVDY3NzkgRVZCIjsNCj4gPj4+ICsJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
+dDY3NzktZXZiIiwgIm1lZGlhdGVrLG10Njc3OSI7DQo+ID4+PiArDQo+ID4+PiArCWFsaWFzZXMg
+ew0KPiA+Pj4gKwkJc2VyaWFsMCA9ICZ1YXJ0MDsNCj4gPj4+ICsJfTsNCj4gPj4+ICsNCj4gPj4+
+ICsJbWVtb3J5QDQwMDAwMDAwIHsNCj4gPj4+ICsJCWRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+
+ID4+PiArCQlyZWcgPSA8MCAweDQwMDAwMDAwIDAgMHgxZTgwMDAwMD47DQo+ID4+PiArCX07DQo+
+ID4+PiArDQo+ID4+PiArCWNob3NlbiB7DQo+ID4+PiArCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWww
+OjkyMTYwMG44IjsNCj4gPj4+ICsJfTsNCj4gPj4+ICt9Ow0KPiA+Pj4gKw0KPiA+Pj4gKyZ1YXJ0
+MCB7DQo+ID4+PiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPj4+ICt9Ow0KPiA+Pj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kgYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpDQo+ID4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KPiA+Pj4gaW5kZXggMDAwMDAwMC4uNDIyZmY1Zg0KPiA+Pj4gLS0tIC9kZXYvbnVsbA0KPiA+
+Pj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KPiA+Pj4g
+QEAgLTAsMCArMSwyNjUgQEANCj4gPj4gWy4uLl0NCj4gPj4+ICsNCj4gPj4+ICsJdWFydF9jbGs6
+IGR1bW15MjZtIHsNCj4gPj4+ICsJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0KPiA+Pj4g
+KwkJY2xvY2stZnJlcXVlbmN5ID0gPDI2MDAwMDAwPjsNCj4gPj4+ICsJCSNjbG9jay1jZWxscyA9
+IDwwPjsNCj4gPj4+ICsJfTsNCj4gPj4NCj4gPj4gTm8gcmVhbCBjbG9ja3MgZm9yIHVhcnQ/IFdo
+YXQgYWJvdXQgQ0xLX0lORlJBX1VBUlR4Pw0KPiA+IA0KPiA+IHNvcnJ5LCBJIG1pc3MgdGhlIGNs
+b2NrcyBmb3IgdWFydA0KPiA+IEknbGwgYWRkICJiYXVkIiBhbmQgImJ1cyIgaW4gbmV4dCB2ZXJz
+aW9uLg0KPiA+IA0KPiA+IGNsb2NrcyA9IDwmY2xrMjZtPiwgPCZpbmZyYWNmZ19hbyBDTEtfSU5G
+UkFfVUFSVDA+Ow0KPiA+IGNsb2NrLW5hbWVzID0gImJhdWQiLCAiYnVzIjsNCj4gPiANCj4gPiAN
+Cj4gPj4NCj4gPj4+ICsNCj4gPj4+ICsJdGltZXIgew0KPiA+Pj4gKwkJY29tcGF0aWJsZSA9ICJh
+cm0sYXJtdjgtdGltZXIiOw0KPiA+Pj4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4g
+Pj4+ICsJCWludGVycnVwdHMgPSA8R0lDX1BQSSAxMyBJUlFfVFlQRV9MRVZFTF9MT1cgMD4sDQo+
+ID4+PiArCQkJICAgICA8R0lDX1BQSSAxNCBJUlFfVFlQRV9MRVZFTF9MT1cgMD4sDQo+ID4+PiAr
+CQkJICAgICA8R0lDX1BQSSAxMSBJUlFfVFlQRV9MRVZFTF9MT1cgMD4sDQo+ID4+PiArCQkJICAg
+ICA8R0lDX1BQSSAxMCBJUlFfVFlQRV9MRVZFTF9MT1cgMD47DQo+ID4+PiArCX07DQo+ID4+PiAr
+DQo+ID4+PiArCXNvYyB7DQo+ID4+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsNCj4gPj4+ICsJ
+CSNzaXplLWNlbGxzID0gPDI+Ow0KPiA+Pj4gKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsN
+Cj4gPj4+ICsJCXJhbmdlczsNCj4gPj4+ICsNCj4gPj4gWy4uLl0NCj4gPj4+ICsNCj4gPj4+ICsJ
+CXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KPiA+Pj4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0
+ZWssbXQ2Nzc5LXVhcnQiLA0KPiA+Pj4gKwkJCQkgICAgICJtZWRpYXRlayxtdDY1NzctdWFydCI7
+DQo+ID4+PiArCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4NDAwPjsNCj4gPj4+ICsJCQlpbnRl
+cnJ1cHRzID0gPEdJQ19TUEkgMTE1IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ID4+PiArCQkJY2xv
+Y2tzID0gPCZ1YXJ0X2Nsaz47DQo+ID4+PiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPj4+
+ICsJCX07DQo+ID4+PiArDQo+ID4+PiArCQl1YXJ0MTogc2VyaWFsQDExMDAzMDAwIHsNCj4gPj4+
+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPj4+ICsJCQkJICAg
+ICAibWVkaWF0ZWssbXQ2NTc3LXVhcnQiOw0KPiA+Pj4gKwkJCXJlZyA9IDwwIDB4MTEwMDMwMDAg
+MCAweDQwMD47DQo+ID4+PiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNiBJUlFfVFlQRV9M
+RVZFTF9MT1c+Ow0KPiA+Pj4gKwkJCWNsb2NrcyA9IDwmdWFydF9jbGs+Ow0KPiA+Pj4gKwkJCXN0
+YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4+PiArCQl9Ow0KPiA+Pg0KPiA+PiBTb0MgaGFzIG9ubHkg
+dHdvIFVBUlRzIGJ1dCBjbG9jayBkcml2ZXIgaGFzIHRocmVlLCBob3cgY29tZXM/DQo+ID4+DQo+
+ID4gDQo+ID4gSW4gbXQ2Nzc5IFNvQywgd2UgaGF2ZSBmb3VyIFVBUlRzLg0KPiA+IGJ1dCB3ZSBv
+bmx5IHVzZSBVQVJUMCBhbmQgVUFSVDEgYXMgc3RhbmRhcmQgc2VyaWFsIHBvcnRzIGZvciBBUE1D
+VS5UaGUNCj4gPiBvdGhlcnMgZm9yIG1vZGVtIHNpZGUuDQo+ID4gc28gd2UgYWRkIHR3byBVQVJU
+cyBpbiBkdHMuDQo+ID4gDQo+IA0KPiBTb3JyeSBmb3IgdGhlIGxhdGUgcmVwbHkuDQo+IA0KPiBE
+VFMgZGVzY3JpYmVzIHRoZSBIVywgc28gd2Ugc2hvdWxkIGFkZCBhbGwgZm91ciB0byB0aGUgbXQ2
+Nzc5LmR0c2kgYnV0IG9ubHkNCj4gZW5hYmxlIHRoZSBvbmUgdGhhdCBjYW4gYmUgdXNlZC4NCj4g
+QlRXIEkgdGhvdWdodCBtb2RlbSB3b3JrcyB0aHJvdWdoIHVzZXIgc3BhY2UgYXBwbGljYXRpb24s
+IHNvIHdoeSBkb24ndCB5b3Ugd2FudA0KPiB0byBleHBvc2UgdGhlbT8NCj4gDQo+IFJlZ2FyZHMs
+DQo+IE1hdHRoaWFzDQo+IA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudC4NCg0KSW4gTVQ2
+Nzc5IHBsYXRmb3JtLCBNRE1DVXMgY29udHJvbCBVQVJUMiBhbmQgVUFSVDMgZGlyZWN0bHksIGl0
+IGRvZXNuJ3QNCm5lZWQgYW55IHN1cHBvcnQgZnJvbSBhcG1jdS4NCg0KYnV0IEknbGwgYWRkIGFs
+bCBmb3VyIHRvIHRoZSBtdDY3NzkgZHRzaSB0byBzaGFyZSB0aGUgaW5mbyBpbiBuZXh0DQp2ZXJz
+aW9uLih2NykNCg0KDQpUaGFua3MNCkhhbmtzDQoNCj4gPj4+ICsNCj4gPj4+ICsJCWF1ZGlvOiBj
+bG9jay1jb250cm9sbGVyQDExMjEwMDAwIHsNCj4gPj4+ICsJCQljb21wYXRpYmxlID0gIm1lZGlh
+dGVrLG10Njc3OS1hdWRpbyIsICJzeXNjb24iOw0KPiA+Pj4gKwkJCXJlZyA9IDwwIDB4MTEyMTAw
+MDAgMCAweDEwMDA+Ow0KPiA+Pj4gKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCj4gPj4+ICsJCX07
+DQo+ID4+PiArDQo+ID4+PiArCQltZmdjZmc6IGNsb2NrLWNvbnRyb2xsZXJAMTNmYmYwMDAgew0K
+PiA+Pj4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LW1mZ2NmZyIsICJzeXNjb24i
+Ow0KPiA+Pj4gKwkJCXJlZyA9IDwwIDB4MTNmYmYwMDAgMCAweDEwMDA+Ow0KPiA+Pj4gKwkJCSNj
+bG9jay1jZWxscyA9IDwxPjsNCj4gPj4+ICsJCX07DQo+ID4+PiArDQo+ID4+PiArCQltbXN5czog
+Y2xvY2stY29udHJvbGxlckAxNDAwMDAwMCB7DQo+ID4+PiArCQkJY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxtdDY3NzktbW1zeXMiLCAic3lzY29uIjsNCj4gPj4+ICsJCQlyZWcgPSA8MCAweDE0MDAw
+MDAwIDAgMHgxMDAwPjsNCj4gPj4+ICsJCQkjY2xvY2stY2VsbHMgPSA8MT47DQo+ID4+PiArCQl9
+Ow0KPiA+Pg0KPiA+PiBQbGVhc2UgYmV3YXJlIHRoYXQgd2UgYXJlIHJlZmFjdG9yaW5nIHRoZSBt
+bXN5cyByaWdodCBub3cuIFBsZWFzZSB1c2UgdGhpcyBuZXcNCj4gPj4gYXBwcm9hY2ggYXMgdGhp
+cyB3aWxsIGdvIHVwc3RyZWFtIHNvb24uDQo+ID4+DQo+ID4+IGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcHJvamVjdC9saW51eC1tZWRpYXRlay9saXN0Lz9zZXJpZXM9MjU0ODk3DQo+ID4+
+DQo+ID4gR290IGl0LCBJJ2xsIHVwZGF0ZSBuZXcgYXBwcm9hY2ggaW4gbmV4dCB2ZXJzaW9uLg0K
+PiA+IFRoYW5rcyENCj4gPiANCj4gPj4gUmVnYXJkcywNCj4gPj4gTWF0dGhpYXMNCj4gPj4NCj4g
+Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPj4g
+TGludXgtbWVkaWF0ZWsgbWFpbGluZyBsaXN0DQo+ID4+IExpbnV4LW1lZGlhdGVrQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcNCj4gPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9saW51eC1tZWRpYXRlaw0KPiA+IA0KDQo=
 
-On Fri Jun 19 2020, Kurt Kanzenbach wrote:
-> On Thu Jun 18 2020, Florian Fainelli wrote:
->> On 6/17/2020 11:40 PM, Kurt Kanzenbach wrote:
->>> Add basic documentation and example.
->>>=20
->>> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
->>> ---
->>>  .../devicetree/bindings/net/dsa/hellcreek.txt | 72 +++++++++++++++++++
->>>  1 file changed, 72 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek=
-.txt
->>>=20
->>> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.txt b/=
-Documentation/devicetree/bindings/net/dsa/hellcreek.txt
->>> new file mode 100644
->>> index 000000000000..9ea6494dc554
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.txt
->>
->> This should be a YAML binding and we should also convert the DSA binding
->> to YAML one day.
->
-> OK.
-
-I converted it into a YAML binding. Should I provide the dsa.yaml as
-well? Otherwise I have to define the DSA properties such as dsa,member
-in the hellcreek.yaml file.
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wnoYACgkQeSpbgcuY
-8KZx0g/7BDwrxEf4tPOoJOwHTWWNxvd3O5QGMGbfIND9QrcRwZjIsrUobuU+MVY5
-fxOWBByWR5kUAPPJS6TceCULoyjEYuCiiCc1FsshL5gkRotTRteKp0uH6OKFf0oa
-zvbrfvwugLtYV9j+JmZ6I78SpZTfzZ4XcRLXXmuplcjEs7tw4TMq2XiuKKOQh/kA
-rjqg+T0UXtnpNE1V5+jMroGQrC2GJwN1DkarokZje+FOHzb9Cl+pTsiQA6WJFa37
-KG9Apr8QTKXg6IAkkX6jMcZue1TqkfCHt0Ve2C1e7zVTaoqV67xX9xm3kyePYS1v
-WQCxHr/Bn/BjVMahgsD/dHcIF18AnPIbVAc72a9v4HfZxrH/+qvLuNmkw/1cOXAx
-GF+8lqm9UoZ8X6vgru7B/kBveFS5NycjfroQkBN0rztLYukrhbh9QbGe60Fp+49H
-KsyvqqnDA2FhPXd6AfoJpK/6QTNRyUOu41/aUVCEdLH200Dz8VKoqR0O/D5nDr1Z
-vFC1CSV/GuSGUPQE0GS/BAtpaVNKZBH99YrNBqqqZMa5pv54G51Plwvp7oBueh1W
-7nW9FC/k3vYS6b+KGfyS6VZtPXEXZvDp/lEy+BUJ88a62dGrwXnfi6kI1RrfDQGu
-295hxZOwwk/c/lAFhniHt87tESQdZQSPxkEQ38phogFnxhi2eug=
-=ioWG
------END PGP SIGNATURE-----
---=-=-=--
