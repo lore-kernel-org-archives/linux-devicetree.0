@@ -2,335 +2,381 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E2BC433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B668DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4A692071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8163520732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 12:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQzatJcu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvZM8CIu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgFVMlk (ORCPT
+        id S1727903AbgFVMmR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 08:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40388 "EHLO
+        Mon, 22 Jun 2020 08:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgFVMlg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:41:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526EDC061795
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 05:41:36 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j1so8368841pfe.4
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 05:41:36 -0700 (PDT)
+        with ESMTP id S1727865AbgFVMmR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 08:42:17 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1573FC061794;
+        Mon, 22 Jun 2020 05:42:17 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id m21so13478990eds.13;
+        Mon, 22 Jun 2020 05:42:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=doG+Qibpx9UFueyy0W0CrVNyS15JzsuLsQupBt9QvgE=;
-        b=iQzatJcuL9WDIP4KEVDiKSFveg8Z6pgISK4ejtUpZTwbG7IRlVUv4Mf/wnJs42D4Dv
-         70Hx3RD3MobgA5MXVgVPMF4k2IhgcVOecPttAD1gXYJG9jELvhVObPBiJ1o5faeRZktC
-         66z1azO20UW7HnLGftv1okbgf+dZ1njRKAlIJwi4Wdmzg3D5BHSbxo3MxrJV4j/R9fnX
-         BK6cNF8RIFoZyUIAmCEMpiXh/4xH14MUZ4PDB156Uh9DXcPnj2Vr0yXVxjx5heiKHF4R
-         aRwcIF3A8lHd+zHQO9UxGr4z4lMkFYaS2Pk1gC0ViH7fH7QodpaL3id9oKVAxlDXj0oE
-         IEDA==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mu6VeqCASEiuhRz0q1C6CUsALhu2QbWsAKX0g1pGGUU=;
+        b=jvZM8CIuqTfTr4MeZm6B1/AEogjayZusgd+hj7/qJouomAjYB3w3DrtDzyAKVPIYg3
+         3p6mWhZaFR6e7FvOTdA3U3vaQnonCUUIGQOrkyFN8R6TuNVrJUDBvdVLYKOtOophsrhw
+         tTNc/yOkawmCdm6Xq9Xk/adjXBZsf838sp6sYtay6OB6/5ixJqfGqaOS1YH6OKfFZPqq
+         PM6Pd5cQZOQ2NcYPld+51Pht/9zFRIj0ATJXm6rrAf1pD/3vNo559mhA6jxVa3rd7Ndz
+         aq6OmgkDGcB8h+0khpz5nNjhIYgrq5M2W0iFeO2R2x0FE30V34M7lPZe8YtafWhQm3hk
+         whlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=doG+Qibpx9UFueyy0W0CrVNyS15JzsuLsQupBt9QvgE=;
-        b=CAadUCR5/QqX9qrFaz0k76+phlzk2JE+Lj7K08NGj4NwuCPop/AA7B6++0Z2JkVz7p
-         yFp2pzDi4gLAXgldYITdoj0WF/eh3Fr/eG6hdML/loSCJBOEwRMdGcw7nvYU+0unqZs/
-         jvQI9UPVJ6VXwNfXqMkqeLUHej5YtVvTo5YMeQLWHVr3L0v/u0QD4Cxc+WsCpzyZvS1i
-         4o4nCbEFWUoo8thKA6Gp0q3BAbRFT+Q8ccHgK72MTeDjoHCArTxtLUcR4isG/dQ5EeVv
-         L9LCCA/2+8Cx/6/yaLoB8M+xNOk4dWs3GE0L6iAK441h1imh2Iw8IrskK5dnNob732qL
-         Jlzg==
-X-Gm-Message-State: AOAM531EnddV6n7/AFXcgShs3lvzWGfTEtQxqhRIgK8+nxAGFCoSrpqx
-        1RnQ1Fe3GVaGk3Vs/aHMk5YKUA==
-X-Google-Smtp-Source: ABdhPJxCieCQSLmPNdyAB5ZCSv2fxRpAFBKFrnxFg2tSTBO3DVw+rZwT5Thxv2w8QpFlBlREe7oRMg==
-X-Received: by 2002:a62:8608:: with SMTP id x8mr19358832pfd.96.1592829695710;
-        Mon, 22 Jun 2020 05:41:35 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id i62sm14590581pfg.90.2020.06.22.05.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 05:41:35 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org
-Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v5 4/4] regulator: qcom: Add labibb driver
-Date:   Mon, 22 Jun 2020 18:11:10 +0530
-Message-Id: <20200622124110.20971-5-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622124110.20971-1-sumit.semwal@linaro.org>
-References: <20200622124110.20971-1-sumit.semwal@linaro.org>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mu6VeqCASEiuhRz0q1C6CUsALhu2QbWsAKX0g1pGGUU=;
+        b=duINeSkjh7X56o78AqghEHjWNcfFapDwVDF3o8F80nZ/IxG1VAExaMGTmO6Y3UMcok
+         Y1iZ/b3tt1EA1NrAPiJVNssdggAJZfzRdHuwso4DwZ5KO9LyoB754cLR2gPhRhCqQJLP
+         7CnPyFANrIzvO+LRawLfKafo+1AnxR/koeXT/WyiNNQAGiatDq02GesJDFe2+DDW1bXJ
+         MVw4UAW3b7C/p4frLEuLk13bgeJypCAlDM8jPQE2Db+30ly73VE8zgghz5T9Z8OzqmGV
+         mZLKJ10WfegfVsfNJEjik730IV6mYh9/3Ja3qHtXWvBdati2/jF5tcijsYcAxeTGvrgP
+         F7Rw==
+X-Gm-Message-State: AOAM53277/R36RJ9PX+ld8KXgIxHifHO3DbQEin51IzVM0H5SrgZdgxd
+        Mz4DXqqz+milS+TKFORdXKksiYlz
+X-Google-Smtp-Source: ABdhPJzYcPRPlpRsYl7rsf0f/iNrA1Mb1plSDGE+NtTXZ4dJzcXmeRsCf17s6Hosr6qbDeo5JoOatw==
+X-Received: by 2002:a50:e047:: with SMTP id g7mr2599254edl.290.1592829735416;
+        Mon, 22 Jun 2020 05:42:15 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:a1e8:1586:8683:3d86? ([2a01:110f:b59:fd00:a1e8:1586:8683:3d86])
+        by smtp.gmail.com with ESMTPSA id kt4sm2006231ejb.48.2020.06.22.05.42.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jun 2020 05:42:14 -0700 (PDT)
+Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
+ support to lp55xx
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh@kernel.org
+Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615201522.19677-12-dmurphy@ti.com>
+ <202006180032.JW0i39C6%lkp@intel.com>
+ <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+ <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
+ <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
+ <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
+ <56823113-4875-4813-8627-84b0d1792391@ti.com>
+ <bd603f01-2c1b-6167-d88c-3895c1bfdf6c@gmail.com>
+ <fad98aa3-cec6-3cde-951f-fa2b57c26d03@gmail.com>
+ <04473d1d-5cd8-7d1f-7c5d-8d8b582df464@ti.com>
+ <1f5dd2f9-01c7-1f74-9b93-0ae2a6dac915@gmail.com>
+ <69c01524-c4a4-55c8-578e-24b26bc863b8@ti.com>
+ <52d2c06a-d4ab-b9b2-b1d3-d5f81780cd7f@gmail.com>
+Message-ID: <9a396176-c6e8-c403-df10-ee94ff5f0ebd@gmail.com>
+Date:   Mon, 22 Jun 2020 14:42:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <52d2c06a-d4ab-b9b2-b1d3-d5f81780cd7f@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nisha Kumari <nishakumari@codeaurora.org>
+Dan,
 
-Qualcomm platforms have LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost)
-regulators, labibb for short, which are used as power supply for
-LCD Mode displays.
+On 6/21/20 10:24 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 6/21/20 4:12 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 6/19/20 5:10 PM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 6/19/20 6:35 PM, Dan Murphy wrote:
+>>>> Jacek
+>>>>
+>>>> On 6/18/20 6:26 PM, Jacek Anaszewski wrote:
+>>>>> On 6/19/20 12:09 AM, Jacek Anaszewski wrote:
+>>>>>> Dan,
+>>>>>>
+>>>>>> On 6/18/20 11:44 PM, Dan Murphy wrote:
+>>>>>>> Jacek
+>>>>>>>
+>>>>>>> On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
+>>>>>>>> Dan,
+>>>>>>>>
+>>>>>>>> On 6/18/20 12:33 AM, Dan Murphy wrote:
+>>>>>>>>> Jacek
+>>>>>>>>>
+>>>>>>>>> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
+>>>>>>>>>> Dan,
+>>>>>>>>>>
+>>>>>>>>>> On 6/17/20 9:22 PM, Dan Murphy wrote:
+>>>>>>>>>>> Pavel/Jacek
+>>>>>>>>>>>
+>>>>>>>>>>> On 6/17/20 11:28 AM, kernel test robot wrote:
+>>>>>>>>>>>> Hi Dan,
+>>>>>>>>>>>>
+>>>>>>>>>>>> I love your patch! Yet something to improve:
+>>>>>>>>>>>>
+>>>>>>>>>>>> [auto build test ERROR on pavel-linux-leds/for-next]
+>>>>>>>>>>>> [cannot apply to j.anaszewski-leds/for-next]
+>>>>>>>>>>>> [if your patch is applied to the wrong git tree, please drop 
+>>>>>>>>>>>> us a note to help
+>>>>>>>>>>>> improve the system. BTW, we also suggest to use '--base' 
+>>>>>>>>>>>> option to specify the
+>>>>>>>>>>>> base tree in git format-patch, please see 
+>>>>>>>>>>>> https://stackoverflow.com/a/37406982]
+>>>>>>>>>>>>
+>>>>>>>>>>>> url: 
+>>>>>>>>>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
+>>>>>>>>>>>>
+>>>>>>>>>>>> base: 
+>>>>>>>>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
+>>>>>>>>>>>> for-next
+>>>>>>>>>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
+>>>>>>>>>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
+>>>>>>>>>>>> reproduce (this is a W=1 build):
+>>>>>>>>>>>>          wget 
+>>>>>>>>>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
+>>>>>>>>>>>> -O ~/bin/make.cross
+>>>>>>>>>>>>          chmod +x ~/bin/make.cross
+>>>>>>>>>>>>          # save the attached .config to linux build tree
+>>>>>>>>>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
+>>>>>>>>>>>> make.cross ARCH=ia64
+>>>>>>>>>>>>
+>>>>>>>>>>>> If you fix the issue, kindly add following tag as appropriate
+>>>>>>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>>>>>>>
+>>>>>>>>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>>>>>>>>>>>
+>>>>>>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in 
+>>>>>>>>>>>> function `lp55xx_set_mc_brightness':
+>>>>>>>>>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference 
+>>>>>>>>>>>>>> to `led_mc_calc_color_components'
+>>>>>>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in 
+>>>>>>>>>>>> function `devm_led_classdev_multicolor_register':
+>>>>>>>>>>>>>> include/linux/led-class-multicolor.h:74: undefined 
+>>>>>>>>>>>>>> reference to `devm_led_classdev_multicolor_register_ext'
+>>>>>>>>>>>> vim +146 drivers/leds/leds-lp55xx-common.c
+>>>>>>>>>>>>
+>>>>>>>>>>>>     138
+>>>>>>>>>>>>     139    static int lp55xx_set_mc_brightness(struct 
+>>>>>>>>>>>> led_classdev *cdev,
+>>>>>>>>>>>>     140                        enum led_brightness brightness)
+>>>>>>>>>>>>     141    {
+>>>>>>>>>>>>     142        struct led_classdev_mc *mc_dev = 
+>>>>>>>>>>>> lcdev_to_mccdev(cdev);
+>>>>>>>>>>>>     143        struct lp55xx_led *led = 
+>>>>>>>>>>>> mcled_cdev_to_led(mc_dev);
+>>>>>>>>>>>>     144        struct lp55xx_device_config *cfg = 
+>>>>>>>>>>>> led->chip->cfg;
+>>>>>>>>>>>>     145
+>>>>>>>>>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, 
+>>>>>>>>>>>> brightness);
+>>>>>>>>>>>>     147        return cfg->multicolor_brightness_fn(led);
+>>>>>>>>>>>>     148
+>>>>>>>>>>>
+>>>>>>>>>>> Well this was a mess to figure out.
+>>>>>>>>>>>
+>>>>>>>>>>> The only fix I can figure out here is to remove the
+>>>>>>>>>>>
+>>>>>>>>>>>      depends on LEDS_CLASS_MULTI_COLOR || 
+>>>>>>>>>>> !LEDS_CLASS_MULTI_COLOR
+>>>>>>>>>>>
+>>>>>>>>>>> from each child device and add
+>>>>>>>>>>>
+>>>>>>>>>>>      select LEDS_CLASS_MULTI_COLOR
+>>>>>>>>>>>
+>>>>>>>>>>> to the LP55XX_COMMON
+>>>>>>>>>>>
+>>>>>>>>>>> This way the Multi color framework will inherit the symbol 
+>>>>>>>>>>> that was set by the COMMON flag which is inherited by 
+>>>>>>>>>>> majority from the child flags.
+>>>>>>>>>>
+>>>>>>>>>> Did you try this?
+>>>>>>>>>>
+>>>>>>>>>> --- a/drivers/leds/Kconfig
+>>>>>>>>>> +++ b/drivers/leds/Kconfig
+>>>>>>>>>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
+>>>>>>>>>>  config LEDS_LP55XX_COMMON
+>>>>>>>>>>         tristate "Common Driver for TI/National 
+>>>>>>>>>> LP5521/5523/55231/5562/8501"
+>>>>>>>>>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 
+>>>>>>>>>> || LEDS_LP8501
+>>>>>>>>>> +       depends on LEDS_CLASS_MULTI_COLOR || 
+>>>>>>>>>> !LEDS_CLASS_MULTI_COLOR
+>>>>>>>>>>         depends on OF
+>>>>>>>>>>         select FW_LOADER
+>>>>>>>>>>         select FW_LOADER_USER_HELPER
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>> Yes I did
+>>>>>>>>>
+>>>>>>>>> That gave unmet dependencies.
+>>>>>>>>>
+>>>>>>>>> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
+>>>>>>>>>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || 
+>>>>>>>>> LEDS_LP5523 [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
+>>>>>>>>> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) 
+>>>>>>>>> && OF [=y]
+>>>>>>>>>    Selected by [y]:
+>>>>>>>>>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && 
+>>>>>>>>> I2C [=y]
+>>>>>>>>>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && 
+>>>>>>>>> I2C [=y]
+>>>>>>>>>    Selected by [m]:
+>>>>>>>>>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && 
+>>>>>>>>> I2C [=y] && (LEDS_CLASS_MULTI_COLOR [=m] || 
+>>>>>>>>> !LEDS_CLASS_MULTI_COLOR [=m])
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> When I was testing that yesterday I also had the same warning at 
+>>>>>>>> some
+>>>>>>>> point of testing different Kconfig setups, but with what I 
+>>>>>>>> showed above
+>>>>>>>> it ceased to appear. Now every time I am doing "make oldconfig" the
+>>>>>>>> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the 
+>>>>>>>> config
+>>>>>>>> from the test bot.
+>>>>>>>>
+>>>>>>> That is not what I saw in my testing especially after doing a 
+>>>>>>> distclean
+>>>>>>
+>>>>>> Could you please give your exact steps after "make distclean" and
+>>>>>> copying test bot config to the kernel root directory?
+>>>>>>
+>>>>>> Also, please share the toolchain you're using for tests.
+>>>>>
+>>>>> Actually at this stage the toolchain is of lesser relevance.
+>>>>>
+>>>>> I've tried once more and indeed the problem shows up.
+>>>>>
+>>>>> It is caused by the driver entries doing
+>>>>>
+>>>>> "select LEDS_LP55XX_COMMON".
+>>>>>
+>>>>> Select sets config to "y" so it conflicts with
+>>>>> "depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR"
+>>>>> in the "config LEDS_LP55XX_COMMON".
+>>>>>
+>>>>> Your proposed fix will block the possibility of building
+>>>>> LED_CLASS_MULTI_COLOR as a module when LP55XX drivers
+>>>>> are enabled so this is also not an option.
+>>>>>
+>>>>> Solving this riddle will require some more thinking.
+>>>>> I haven't analyzed it in detail but maybe "imply" statement from
+>>>>> kconfig-language.rst could help somehow here. 
+>>>>
+>>>> The multicolor framework will build as a module if the LED_CLASS is 
+>>>> defined as a module.
+>>>>
+>>>> See attached test_defconfig
+>>>
+>>> But it will be impossible to enable CONFIG_LEDS_LP50XX without
+>>> CONFIG_LEDS_CLASS_MULTI_COLOR if you will remove
+>>>
+>>> depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR.
+>>>
+>> I was not removing the dependency for the LP50xx only the LP55xx.
+> 
+> It was my typo, I meant LP55XX.
+> 
+>>
+>>> This is actually why the above entry was needed.
+>>>
+>>> LP55XX drivers have to work also without multicolor class.
+>>>
+>> Well I am not sure how else to resolve this problem.  Because the 
+>> LP55xx has multi level dependencies.
+>>
+>> Only the LP55xx_common has the dependency on the MC framework. The 
+>> device drivers do not.
+>>
+>> The issue is the mixing and matching of the MC fw as a module vs the 
+>> LP55XX_COMMON as a built-in.
+> 
+> The simplest solution is to avoid selecting LP55XX_COMMON in favor
+> of making child drivers depending on it. Of course, maybe there exists
+> some trickier option to keep the selection, but I would have to play
+> a bit more with it to be sure.
 
-This patch adds labibb regulator driver for pmi8998 PMIC, found on
-SDM845 platforms.
+Yep, this seems to be the only viable solution.
 
-Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-  [sumits: reworked the driver design as per upstream review]
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+My proposed change to the Kconfig:
 
----
-v5: sumits: review comments addressed
-     - removed dev_info about registering
-     - removed of_get_child_by_name()
-     - changed from using STATUS1 register to using ENABLE_CTL; this
-       allows us to use the regulator_*_regmap helpers and makes this
-       code cleaner. (In limited testing, STATUS1 seemed to report the
-       change faster than ENABLE_CTL, but in absence of mechanism to
-       validate if the regulator has indeed fully ramped when STATUS1
-       starts flagging, broonie suggested to use the slower ENABLE_CTL
-       path for safety).
-v4: sumits: address review comments from v3, including cleaning up
-     register_labibb_regulator(), and adapted to updated meaning of
-     poll_enabled_time.
-v3: sumits: addressed review comments from v2; moved to use core
-     regulator features like enable_time, off_on_delay, and the newly
-     added poll_enabled_time. Moved the check_enabled functionality
-     to core framework via poll_enabled_time.
-v2: sumits: reworked the driver for more common code, and addressed
-     review comments from v1
----
- drivers/regulator/Kconfig                 |  10 ++
- drivers/regulator/Makefile                |   1 +
- drivers/regulator/qcom-labibb-regulator.c | 175 ++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 drivers/regulator/qcom-labibb-regulator.c
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index adfa762cb291..10de7d237ffd 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -397,10 +397,10 @@ config LEDS_LP50XX
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 8f677f5d79b4..c6377df023bc 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -1178,5 +1178,15 @@ config REGULATOR_WM8994
- 	  This driver provides support for the voltage regulators on the
- 	  WM8994 CODEC.
- 
-+config REGULATOR_QCOM_LABIBB
-+	tristate "QCOM LAB/IBB regulator support"
-+	depends on SPMI || COMPILE_TEST
-+	help
-+	  This driver supports Qualcomm's LAB/IBB regulators present on the
-+	  Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
-+	  based PMIC implementations. LAB can be used as positive
-+	  boost regulator and IBB can be used as a negative boost regulator
-+	  for LCD display panel.
-+
- endif
- 
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index e8f163371071..2c2b0861df76 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -88,6 +88,7 @@ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
- obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
- obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
- obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
-+obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
-diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-new file mode 100644
-index 000000000000..8c7dd1928380
---- /dev/null
-+++ b/drivers/regulator/qcom-labibb-regulator.c
-@@ -0,0 +1,175 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+#define REG_PERPH_TYPE                  0x04
-+
-+#define QCOM_LAB_TYPE			0x24
-+#define QCOM_IBB_TYPE			0x20
-+
-+#define PMI8998_LAB_REG_BASE		0xde00
-+#define PMI8998_IBB_REG_BASE		0xdc00
-+
-+#define REG_LABIBB_STATUS1		0x08
-+#define REG_LABIBB_ENABLE_CTL		0x46
-+#define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
-+#define LABIBB_CONTROL_ENABLE		BIT(7)
-+
-+#define LAB_ENABLE_CTL_MASK		BIT(7)
-+#define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
-+
-+#define LABIBB_OFF_ON_DELAY		1000
-+#define LAB_ENABLE_TIME			(LABIBB_OFF_ON_DELAY * 2)
-+#define IBB_ENABLE_TIME			(LABIBB_OFF_ON_DELAY * 10)
-+#define LABIBB_POLL_ENABLED_TIME	1000
-+
-+struct labibb_regulator {
-+	struct regulator_desc		desc;
-+	struct device			*dev;
-+	struct regmap			*regmap;
-+	struct regulator_dev		*rdev;
-+	u16				base;
-+	u8				type;
-+};
-+
-+struct labibb_regulator_data {
-+	const char			*name;
-+	u8				type;
-+	u16				base;
-+	struct regulator_desc		*desc;
-+};
-+
-+static struct regulator_ops qcom_labibb_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+};
-+
-+static struct regulator_desc pmi8998_lab_desc = {
-+	.enable_mask		= LAB_ENABLE_CTL_MASK,
-+	.enable_reg		= (PMI8998_LAB_REG_BASE + REG_LABIBB_ENABLE_CTL),
-+	.enable_val		= LABIBB_CONTROL_ENABLE,
-+	.enable_time		= LAB_ENABLE_TIME,
-+	.poll_enabled_time	= LABIBB_POLL_ENABLED_TIME,
-+	.off_on_delay		= LABIBB_OFF_ON_DELAY,
-+	.owner			= THIS_MODULE,
-+	.type			= REGULATOR_VOLTAGE,
-+	.ops			= &qcom_labibb_ops,
-+};
-+
-+static struct regulator_desc pmi8998_ibb_desc = {
-+	.enable_mask		= IBB_ENABLE_CTL_MASK,
-+	.enable_reg		= (PMI8998_IBB_REG_BASE + REG_LABIBB_ENABLE_CTL),
-+	.enable_val		= LABIBB_CONTROL_ENABLE,
-+	.enable_time		= IBB_ENABLE_TIME,
-+	.poll_enabled_time	= LABIBB_POLL_ENABLED_TIME,
-+	.off_on_delay		= LABIBB_OFF_ON_DELAY,
-+	.owner			= THIS_MODULE,
-+	.type			= REGULATOR_VOLTAGE,
-+	.ops			= &qcom_labibb_ops,
-+};
-+
-+static const struct labibb_regulator_data pmi8998_labibb_data[] = {
-+	{"lab", QCOM_LAB_TYPE, PMI8998_LAB_REG_BASE, &pmi8998_lab_desc},
-+	{"ibb", QCOM_IBB_TYPE, PMI8998_IBB_REG_BASE, &pmi8998_ibb_desc},
-+	{ },
-+};
-+
-+static const struct of_device_id qcom_labibb_match[] = {
-+	{ .compatible = "qcom,pmi8998-lab-ibb", .data = &pmi8998_labibb_data},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_labibb_match);
-+
-+static int qcom_labibb_regulator_probe(struct platform_device *pdev)
-+{
-+	struct labibb_regulator *vreg;
-+	struct device *dev = &pdev->dev;
-+	struct regulator_config cfg = {};
-+
-+	const struct of_device_id *match;
-+	const struct labibb_regulator_data *reg_data;
-+	struct regmap *reg_regmap;
-+	unsigned int type;
-+	int ret;
-+
-+	reg_regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!reg_regmap) {
-+		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	match = of_match_device(qcom_labibb_match, &pdev->dev);
-+	if (!match)
-+		return -ENODEV;
-+
-+	for (reg_data = match->data; reg_data->name; reg_data++) {
-+
-+		/* Validate if the type of regulator is indeed
-+		 * what's mentioned in DT.
-+		 */
-+		ret = regmap_read(reg_regmap, reg_data->base + REG_PERPH_TYPE,
-+				  &type);
-+		if (ret < 0) {
-+			dev_err(dev,
-+				"Peripheral type read failed ret=%d\n",
-+				ret);
-+			return -EINVAL;
-+		}
-+
-+		if (WARN_ON((type != QCOM_LAB_TYPE) && (type != QCOM_IBB_TYPE)) ||
-+		    WARN_ON(type != reg_data->type))
-+			return -EINVAL;
-+
-+		vreg  = devm_kzalloc(&pdev->dev, sizeof(*vreg),
-+					   GFP_KERNEL);
-+		if (!vreg)
-+			return -ENOMEM;
-+
-+		vreg->regmap = reg_regmap;
-+		vreg->dev = dev;
-+		vreg->base = reg_data->base;
-+		vreg->type = reg_data->type;
-+
-+		memcpy(&vreg->desc, reg_data->desc, sizeof(vreg->desc));
-+		vreg->desc.of_match = reg_data->name;
-+		vreg->desc.name = reg_data->name;
-+
-+		cfg.dev = vreg->dev;
-+		cfg.driver_data = vreg;
-+		cfg.regmap = vreg->regmap;
-+
-+		vreg->rdev = devm_regulator_register(vreg->dev, &vreg->desc,
-+							&cfg);
-+
-+		if (IS_ERR(vreg->rdev)) {
-+			dev_err(dev, "qcom_labibb: error registering %s : %d\n",
-+					reg_data->name, ret);
-+			return PTR_ERR(vreg->rdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver qcom_labibb_regulator_driver = {
-+	.driver	= {
-+		.name = "qcom-lab-ibb-regulator",
-+		.of_match_table	= qcom_labibb_match,
-+	},
-+	.probe = qcom_labibb_regulator_probe,
-+};
-+module_platform_driver(qcom_labibb_regulator_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm labibb driver");
-+MODULE_AUTHOR("Nisha Kumari <nishakumari@codeaurora.org>");
-+MODULE_AUTHOR("Sumit Semwal <sumit.semwal@linaro.org>");
-+MODULE_LICENSE("GPL v2");
+  config LEDS_LP55XX_COMMON
+         tristate "Common Driver for TI/National 
+LP5521/5523/55231/5562/8501"
+-       depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
+         depends on OF
+         select FW_LOADER
+         select FW_LOADER_USER_HELPER
++       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+         help
+           This option supports common operations for 
+LP5521/5523/55231/5562/8501
+           devices.
+@@ -408,8 +408,7 @@ config LEDS_LP55XX_COMMON
+  config LEDS_LP5521
+         tristate "LED Support for N.S. LP5521 LED driver chip"
+         depends on LEDS_CLASS && I2C
+-       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+-       select LEDS_LP55XX_COMMON
++       depends on LEDS_LP55XX_COMMON
+         help
+           If you say yes here you get support for the National 
+Semiconductor
+           LP5521 LED driver. It is 3 channel chip with programmable 
+engines.
+@@ -419,8 +418,7 @@ config LEDS_LP5521
+  config LEDS_LP5523
+         tristate "LED Support for TI/National LP5523/55231 LED driver chip"
+         depends on LEDS_CLASS && I2C
+-       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+-       select LEDS_LP55XX_COMMON
++       depends on LEDS_LP55XX_COMMON
+         help
+           If you say yes here you get support for TI/National Semiconductor
+           LP5523/55231 LED driver.
+@@ -431,7 +429,7 @@ config LEDS_LP5523
+  config LEDS_LP5562
+         tristate "LED Support for TI LP5562 LED driver chip"
+         depends on LEDS_CLASS && I2C
+-       select LEDS_LP55XX_COMMON
++       depends on LEDS_LP55XX_COMMON
+         help
+           If you say yes here you get support for TI LP5562 LED driver.
+           It is 4 channels chip with programmable engines.
+@@ -441,7 +439,7 @@ config LEDS_LP5562
+  config LEDS_LP8501
+         tristate "LED Support for TI LP8501 LED driver chip"
+         depends on LEDS_CLASS && I2C
+-       select LEDS_LP55XX_COMMON
++       depends on LEDS_LP55XX_COMMON
+         help
+           If you say yes here you get support for TI LP8501 LED driver.
+           It is 9 channel chip with programmable engines.
+
+
 -- 
-2.27.0
-
+Best regards,
+Jacek Anaszewski
