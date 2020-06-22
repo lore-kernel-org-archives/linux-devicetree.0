@@ -2,576 +2,296 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C111BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1752220708
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995672070E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0vCCRrR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QphqDsoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgFVLe3 (ORCPT
+        id S1727921AbgFVLiD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgFVLe3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:34:29 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6AAFC061795
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 04:34:27 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id cy7so6840634edb.5
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 04:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CkMLKDYyCdgwgrz6M1KvCuyRca4uYmURUSVIrQBAvAs=;
-        b=E0vCCRrRcBEQEc24INVK06CXRUi9uNy4P7BoFOkgMQfS/2XlouVRXGecPDz/qguUJv
-         HpY6Egz4KTxwz/fsL0+dbThaO+FwYXsCjJVkOkGu+qmJKHy8Ib8jGeWrV8G2YjB1bkzy
-         WQNtGkzkd0c31/xsJqjpOw+k9Bnryy78AV3HVRSCJzBtE7cXDUVhWzybLDy1GcESL96Z
-         R3G7FIdQ/LRPG2zhqOwkpHu9AUwO2K9sqpkt4shLnZUCS7oQwN2lPpMZf5kjhJYAOmvg
-         w7wePJlz6m2fw7fSx/gj0ub4Xnxc9PLDwc4FZDsZAS8IwIFEfiiMIce/HtfuVhM+EUKm
-         H3lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CkMLKDYyCdgwgrz6M1KvCuyRca4uYmURUSVIrQBAvAs=;
-        b=FSJni4ZGKAZlmi2bMxnn55M77WNUaOQhRSQV8hH0LgwDbGVCFRAhW+yz6gn6T1GVix
-         38+o5H0NQkr8sY2ilWlp8ue/fap9so8jAlsf9q8zU5MifeIIOaz3B3feasZ7KYBG1Aqh
-         O9iEswlYwh4Z0iBd8EupQg7dTrP5ET/VrYyfPpwJprXejcEq3mQt4auwzpzuAVq6gdb7
-         hZW1jjDa6MLCSDtMZwHIJjjs+0Vtpsdr+SMTo5uFWn2t9sELXX1btLn5YV0l/CZfOAan
-         pNIYn33Bk428409Dxo9bjUc5sVOLjik/4tPday2yYWZA52o/2ZIv9z8XjESgEWiONIrK
-         sRDA==
-X-Gm-Message-State: AOAM532wFUI3LbqaHiSl+cuPX7m2QmrxlfLn+rzXFTLhCn1y9jU4sV/2
-        QocaA7ytNxRf3+3OYGJrTMUQ8w==
-X-Google-Smtp-Source: ABdhPJw2TclJgKhGEZSe4yr9Ks34pnf4FLPghWj83LoIt+wG/aeGcpVWvJEpc3m7sjqyjF+KpuK0gA==
-X-Received: by 2002:aa7:cd6c:: with SMTP id ca12mr16716994edb.36.1592825666146;
-        Mon, 22 Jun 2020 04:34:26 -0700 (PDT)
-Received: from [192.168.2.2] (ppp089210109128.access.hol.gr. [89.210.109.128])
-        by smtp.gmail.com with ESMTPSA id f16sm26335ejr.0.2020.06.22.04.34.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jun 2020 04:34:25 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Device tree bindings for the
- apq8039 sound complex
-From:   Pantelis Antoniou <pantelis.antoniou@linaro.org>
-In-Reply-To: <20200619214126.GA1251@gerhold.net>
-Date:   Mon, 22 Jun 2020 14:34:23 +0300
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matthew Porter <mporter@konsulko.com>,
-        Shawn Guo <shawn.guo@linaro.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2070B433-83E0-4ACE-A470-36401934FC5A@linaro.org>
-References: <20200619193831.12528-1-pantelis.antoniou@linaro.org>
- <20200619193831.12528-2-pantelis.antoniou@linaro.org>
- <20200619214126.GA1251@gerhold.net>
-To:     Stephan Gerhold <stephan@gerhold.net>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 22 Jun 2020 07:38:03 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:33706 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbgFVLiC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:38:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1592825879; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=S4TMOQR23TFpFNf/Gdrrq65wyImfAOA6VASHODQN8A8=;
+        b=QphqDsoeYX3l+fski8+fWU5lzLz02BoDZG+qXic1QwpxMARJ2+gY/1YNnE6ZCzkOctkEeL
+        /TfSdmXg9NW/Fn7W3Z0PwluQ6IJyKd+6LJiXg3KGV6n/4J16FRdpD+wG/x+jRC/RHVPKkM
+        64HGuPWcEFrNbxE/rYGdi+o5mVArPCM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, od@zcrc.me,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH RESEND v2] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt to YAML
+Date:   Mon, 22 Jun 2020 13:37:40 +0200
+Message-Id: <20200622113740.46450-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephan,
+Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
 
+In the process, some compatible strings now require a fallback, as the
+corresponding SoCs are pin-compatible with their fallback variant.
 
-> On Jun 20, 2020, at 00:41 , Stephan Gerhold <stephan@gerhold.net> =
-wrote:
->=20
-> Hi Pantelis,
->=20
-> On Fri, Jun 19, 2020 at 10:38:30PM +0300, Pantelis Antoniou wrote:
->> Add a yaml device binding for the QCOM apq8039 sound complex driver.
->>=20
->=20
-> Nice to see some activity to get sound working on another SoC!
-> Thanks for documenting all these properties.
->=20
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-Thanks (I guess :) )
+Notes:
+    v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
+        - remove 'additionalProperties: false' since we will have pin conf nodes
 
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@linaro.org>
->> ---
->> .../bindings/sound/qcom,apq8039.yaml          | 370 =
-++++++++++++++++++
->> 1 file changed, 370 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/sound/qcom,apq8039.yaml =
-b/Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
->> new file mode 100644
->> index 000000000000..f1c4fb99ccbb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/qcom,apq8039.yaml
->> @@ -0,0 +1,370 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/qcom,apq8039.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies APQ8039 ASoC sound card
->> +
->> +maintainers:
->> +  - Pantelis Antoniou <pantelis.antoniou@linaro.org>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: qcom,apq8039-sndcard
->> +
->> +  pinctrl-0:
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->> +    description: |
->> +      Should specify pin control groups used for this controller =
-matching
->> +      the first entry in pinctrl-names.
->> +
->> +  pinctrl-1:
->> +    description: |
->> +      Should specify pin control groups used for this controller =
-matching
->> +      the second entry in pinctrl-names.
->> +
->> +  pinctrl-names:
->> +    minItems: 1
->> +    items:
->> +      - const: default
->> +      - const: sleep
->> +    description:
->> +      Names for the pin configuration(s); may be "default" or =
-"sleep",
->> +      where the "sleep" configuration may describe the state
->> +      the pins should be in during system suspend.
->> +
->> +  reg:
->> +    description: Must contain an address for each entry in =
-"reg-names".
->> +    minItems: 2
->> +    maxItems: 2
->> +
->> +  reg-names:
->> +    items:
->> +      - const: mic-iomux
->> +      - const: spkr-iomux
->> +
->> +  qcom,model:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description: The user-visible name of the sound complex.
->> +
->> +  qcom,audio-routing:
->> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
->> +    description: |
->> +      List of the connections between audio components;  each entry =
-is a
->> +      pair of strings, the first being the connection's sink, the =
-second
->> +      being the connection's source; valid names could be power =
-supplies
->> +      and MicBias of msm8916-analoc-wcd codec.
->> +
->> +  function-definition:
->> +    type: object
->> +    description: |
->> +      Functional configuration for the sound complex via a
->> +      simple control. allows fixed and dynamically constructed
->> +      function selection.
->> +
->> +    properties:
->> +      mixer-control:
->> +        $ref: /schemas/types.yaml#/definitions/string
->> +        description: |
->> +          Name of the exported alsa mix control.
->> +
->> +      function-list:
->> +        $ref: /schemas/types.yaml#/definitions/phandle-array
->> +        description: |
->> +          phandle(s) of the functions which the sound complex
->> +          exposes via the control.
->> +
->> +      system-list:
->> +        $ref: /schemas/types.yaml#/definitions/phandle-array
->> +        description: |
->> +          phandle(s) of the default, init and shutdown functions
->> +          Must be one of the declared ones in the function property.
->> +          The default function is the one selected by default on
->> +          startup (after the init function's sequence is executed).
->> +          On shutdown the shutdown function sequence will be =
-executed.
->> +          Typically init and shutdown are the same and it's purpose
->> +          is to initialize the sound complex mixer controls to the
->> +          all off state, and be ready for a regular function =
-selection.
->> +
->> +    patternProperties:
->> +      "^[A-Za-z_][A-Aa-z0-9_]*$":
->> +        type: object
->> +        description:
->> +          Function description subnodes. The name of the function
->> +          is simply the name of the subnode, so restrictions apply
->> +          to the valid node names.
->> +
->> +          The function definition of each subnode is either a cooked
->> +          function (i.e. which is not dependent on state inputs), or
->> +          a function that is selecting a cooked function based on =
-the
->> +          state inputs and the generated state vector.
->> +
->> +        oneOf:
->> +          # non-cooked function
->> +          - properties:
->> +              enable:
->> +                $ref: =
-/schemas/types.yaml#/definitions/non-unique-string-array
->> +                description: |
->> +                  Sequence of alsa mixer controls to apply when this =
-state is to
->> +                  be enabled.
->> +
->> +              disable:
->> +                $ref: =
-/schemas/types.yaml#/definitions/non-unique-string-array
->> +                description: |
->> +                  Sequence of alsa mixer controls to apply when this =
-state is to
->> +                  be disabled.
->> +
->> +            required:
->> +              - enable
->> +
->> +          # cooked function
->> +          - properties:
->> +              state-inputs:
->> +                description: |
->> +                  A list of state inputs to be used in constructing =
-a state
->> +                  vector.
->> +                type: array
->> +                uniqueItems: true
->> +                minItems: 1
->> +                items:
->> +                  anyOf:
->> +                    - const: JACK_HEADPHONE
->> +                    - const: JACK_MICROPHONE
->> +
->> +              state-input-bits:
->> +                $ref: /schemas/types.yaml#/definitions/uint32-array
->> +                description: |
->> +                  Number of bits to use for each state-input in the
->> +                  state vector creation. For now only the value 1 is
->> +                  supported for JACK_HEADPHONE and JACK_MICROPHONE.
->> +
->> +              state-input-defaults:
->> +                $ref: /schemas/types.yaml#/definitions/uint32-array
->> +                description: |
->> +                  The default value to use as a state input at =
-startup.
->> +
->> +              state-map:
->> +                $ref: /schemas/types.yaml#/definitions/phandle-array
->> +                description: |
->> +                  The mapping of this function to a cooked function. =
-The
->> +                  format used is a sequence of phandle to a state, =
-the mask
->> +                  to apply to the state vector, and the equality =
-value.
->> +
->> +                  Take the example's configuration
->> +
->> +                    state-inputs         =3D "JACK_HEADPHONE", =
-"JACK_MICROPHONE";
->> +                    state-input-bits     =3D <1>, <1>;
->> +                    state-input-defaults =3D <0>, <0>;
->> +
->> +                    state-map =3D <&speaker    0x1 0x0>,
->> +                                <&headphones 0x3 0x1>,
->> +                                <&headset    0x3 0x3>;
->> +
->> +                  is decoded as follows.
->> +
->> +                  There are 3 possible cooked functions to be =
-selected.
->> +                  speaker, headphone and headset. The state-inputs =
-are
->> +                  the JACK_HEADPHONE and JACK_MICROPHONE, which are =
-single
->> +                  bit values, being placed at bit 0 and bit 1 of the
->> +                  constructed vector.
->> +
->> +                  The 4 possible state vectors are:
->> +                    MICROPHONE=3D0, HEADPHONE=3D0, 0
->> +                    MICROPHONE=3D0, HEADPHONE=3D1, 1
->> +                    MICROPHONE=3D1, HEADPHONE=3D0, 2
->> +                    MICROPHONE=3D1, HEADPHONE=3D1, 3
->> +
->> +                  The speaker function is selected when HEADPHONE=3D0 =
-because
->> +                  both (0 & 1) =3D=3D (2 & 1) =3D=3D 0.
->> +
->> +                  The headphones function is selected when =
-HEADPHONE=3D1 and
->> +                  MICROPHONE=3D0 because (1 & 3) =3D=3D 1.
->> +
->> +                  The headset function is selected when both =
-HEADPHONE=3D1 and
->> +                  MICROPHONE=3D1 because (3 & 3) =3D=3D 3.
->> +
->> +            required:
->> +              - state-inputs
->> +              - state-input-bits
->> +              - state-input-defaults
->> +              - state-map
->> +
->> +patternProperties:
->> +  "^.*dai-link-[0-9]+$":
->> +    type: object
->> +    description: |-
->> +      cpu and codec child nodes:
->> +        Container for cpu and codec dai sub-nodes.
->> +        One cpu and one codec sub-node must exist.
->> +
->> +    properties:
->> +      link-name:
->> +        description: The link name
->> +
->> +      cpu:
->> +        type: object
->> +        properties:
->> +
->> +          sound-dai:
->> +            $ref: /schemas/types.yaml#/definitions/phandle-array
->> +            description: phandle(s) of the CPU DAI(s)
->> +
->> +        required:
->> +          - sound-dai
->> +
->> +      codec:
->> +        type: object
->> +        properties:
->> +
->> +          sound-dai:
->> +            $ref: /schemas/types.yaml#/definitions/phandle-array
->> +            description: phandle(s) of the codec DAI(s)
->> +
->> +        required:
->> +          - sound-dai
->> +
->> +    required:
->> +      - link-name
->> +      - cpu
->> +      - codec
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - qcom,model
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/sound/apq8016-lpass.h>
->> +
->> +    sound: sound@7702000  {
->> +        compatible =3D "qcom,apq8039-sndcard";
->> +        reg =3D <0x07702000 0x4>, <0x07702004 0x4>;
->> +        reg-names =3D "mic-iomux", "spkr-iomux";
->> +
->> +        status =3D "okay";
->> +        pinctrl-0 =3D <&cdc_pdm_lines_act>;
->> +        pinctrl-1 =3D <&cdc_pdm_lines_sus>;
->> +        pinctrl-names =3D "default", "sleep";
->> +        qcom,model =3D "APQ8039";
->> +        qcom,audio-routing =3D "AMIC2", "MIC BIAS Internal2";
->> +
->> +        internal-codec-playback-dai-link-0 {
->> +            link-name =3D "WCD";
->> +            cpu {
->> +                sound-dai =3D <&lpass MI2S_PRIMARY>;
->> +            };
->> +            codec {
->> +                sound-dai =3D <&lpass_codec 0>, <&wcd_codec 0>;
->> +            };
->> +        };
->> +
->> +        internal-codec-capture-dai-link-0 {
->> +            link-name =3D "WCD-Capture";
->> +            cpu {
->> +                sound-dai =3D <&lpass MI2S_TERTIARY>;
->> +            };
->> +            codec {
->> +                sound-dai =3D <&lpass_codec 1>, <&wcd_codec 1>;
->> +            };
->> +        };
->> +
->> +        function-definition {
->> +
->> +            mixer-control =3D "Jack Function";
->> +            function-list =3D <&auto &headphones &headset &speaker =
-&off>;
->> +            system-list =3D <&auto &off &off>;  // default, init, =
-shutdown
->> +
->> +            auto: Automatic {
->> +                // Headphone presence bit 0 (1) - H
->> +                // Microphone presence bit 1 (2) - M
->> +                state-inputs         =3D "JACK_HEADPHONE", =
-"JACK_MICROPHONE";
->> +                state-input-bits     =3D <1>, <1>;
->> +                state-input-defaults =3D <0>, <0>;
->> +
->> +                // HM & MASK
->> +                state-map =3D
->> +                    <&speaker    0x1 0x0>,  // no headphone -> =
-speaker
->> +                    <&headphones 0x3 0x1>,  // headphone but no mic =
--> headphones
->> +                    <&headset    0x3 0x3>;  // headphone & mic -> =
-headset
->> +            };
->> +            headphones: Headphones {
->> +                enable =3D
->> +                    "RX1 MIX1 INP1", "RX1",
->> +                    "RX2 MIX1 INP1", "RX2",
->> +                    "RDAC2 MUX", "RX2",
->> +                    "RX1 Digital Volume", "128",
->> +                    "RX2 Digital Volume", "128",
->> +                    "HPHL", "Switch",
->> +                    "HPHR", "Switch";
->> +
->> +                disable =3D
->> +                    "RX1 Digital Volume", "0",
->> +                    "RX2 Digital Volume", "0",
->> +                    "HPHL", "ZERO",
->> +                    "HPHR", "ZERO",
->> +                    "RDAC2 MUX", "RX1",
->> +                    "RX1 MIX1 INP1", "ZERO",
->> +                    "RX2 MIX1 INP1", "ZERO";
->> +            };
->> +            headset: Headset {
->> +                enable =3D
->> +                    "RX1 MIX1 INP1", "RX1",
->> +                    "RX2 MIX1 INP1", "RX2",
->> +                    "RDAC2 MUX", "RX2",
->> +                    "RX1 Digital Volume", "128",
->> +                    "RX2 Digital Volume", "128",
->> +                    "DEC1 MUX", "ADC2",
->> +                    "CIC1 MUX", "AMIC",
->> +                    "ADC2 Volume", "8",
->> +                    "ADC2 MUX", "INP2",
->> +                    "HPHL", "Switch",
->> +                    "HPHR", "Switch";
->> +
->> +                disable =3D
->> +                    "RX1 Digital Volume", "0",
->> +                    "RX2 Digital Volume", "0",
->> +                    "HPHL", "ZERO",
->> +                    "HPHR", "ZERO",
->> +                    "RDAC2 MUX", "RX1",
->> +                    "RX1 MIX1 INP1", "ZERO",
->> +                    "RX2 MIX1 INP1", "ZERO",
->> +                    "ADC2 MUX", "ZERO",
->> +                    "ADC2 Volume", "0",
->> +                    "DEC1 MUX", "ZERO";
->> +            };
->> +            speaker: Speaker {
->> +                enable =3D
->> +                    "SPK DAC Switch", "1",
->> +                    "RX3 MIX1 INP1", "RX1",
->> +                    "RX3 MIX1 INP2", "RX2",
->> +                    "RX3 Digital Volume", "128";
->> +
->> +                disable =3D
->> +                    "SPK DAC Switch", "0",
->> +                    "RX3 MIX1 INP1", "ZERO",
->> +                    "RX3 MIX1 INP2", "ZERO";
->> +            };
->> +            off: Off {
->> +                enable =3D
->> +                    "RX1 Digital Volume", "0",
->> +                    "RX2 Digital Volume", "0",
->> +                    "HPHL", "ZERO",
->> +                    "HPHR", "ZERO",
->> +                    "RDAC2 MUX", "RX1",
->> +                    "RX1 MIX1 INP1", "ZERO",
->> +                    "RX2 MIX1 INP1", "ZERO",
->> +                    "ADC2 MUX", "ZERO",
->> +                    "ADC2 Volume", "0",
->> +                    "DEC1 MUX", "ZERO",
->> +                    "SPK DAC Switch", "0",
->> +                    "RX3 MIX1 INP1", "ZERO",
->> +                    "RX3 MIX1 INP2", "ZERO";
->> +            };
->> +        };
->=20
-> This looks much like a replacement for ALSA UCM and userspace audio =
-jack
-> detection coded into the device tree.
->=20
+ .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
+ .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
+ 2 files changed, 136 insertions(+), 81 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
 
-I wouldn=E2=80=99t call it a replacement exactly. It=E2=80=99s merely a =
-way to bundle all
-of this information about codec glue in the kernel (where it should =
-belong IMO).
-
-
-> While I personally think this is an interesting idea
-> (We have the device tree to describe the hardware, why can we not also
-> describe necessary audio routing to enable a particular output?)
-> this is also not really specific to the APQ8039 hardware, is it?
->=20
-
-Not really TBF. However it is considerably simplified but not handling
-all the mixer controls types besides the ones that are applicable to=20
-this driver.
-
-> In fact, without all the code to handle the mixer enable/disable
-> sequences the machine driver looks almost identical to the existing
-> apq8016-sbc.
->=20
-
-Yep, modulo some device tree handling fixes.
-
-> If you want to discuss ways to integrate mixer enable/disable =
-sequences
-> into the device tree, I suggest that you post your ideas separately as
-> [RFC] with a more generic subject. That will make it more easy for
-> everyone interested to share their thoughts.
->=20
-
-Well, I can certainly do that. However I=E2=80=99d like to see if this =
-is
-something that the community would be interested to, but feedback
-against this patch.
-
-As I mentioned earlier it needs some work to be made to something
-that=E2=80=99s completely generic (i.e. handling arbitrary control =
-types).
-
-> Right now it's quite hidden in a patch set where the subjects suggest
-> that it's just a simple machine driver to glue some codecs together.
->=20
-> Thanks,
-> Stephan
-
-
-Regards
-
-=E2=80=94 Pantelis
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+deleted file mode 100644
+index d9b2100c98e8..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
++++ /dev/null
+@@ -1,81 +0,0 @@
+-Ingenic XBurst pin controller
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
+-
+-For the XBurst SoCs, pin control is tightly bound with GPIO ports. All pins may
+-be used as GPIOs, multiplexed device functions are configured within the
+-GPIO port configuration registers and it is typical to refer to pins using the
+-naming scheme "PxN" where x is a character identifying the GPIO port with
+-which the pin is associated and N is an integer from 0 to 31 identifying the
+-pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
+-PB31 is the last pin in GPIO port B. The jz4740, the x1000 and the x1830
+-contains 4 GPIO ports, PA to PD, for a total of 128 pins. The jz4760, the
+-jz4770 and the jz4780 contains 6 GPIO ports, PA to PF, for a total of 192 pins.
+-
+-
+-Required properties:
+---------------------
+-
+- - compatible: One of:
+-    - "ingenic,jz4740-pinctrl"
+-    - "ingenic,jz4725b-pinctrl"
+-    - "ingenic,jz4760-pinctrl"
+-    - "ingenic,jz4760b-pinctrl"
+-    - "ingenic,jz4770-pinctrl"
+-    - "ingenic,jz4780-pinctrl"
+-    - "ingenic,x1000-pinctrl"
+-    - "ingenic,x1000e-pinctrl"
+-    - "ingenic,x1500-pinctrl"
+-    - "ingenic,x1830-pinctrl"
+- - reg: Address range of the pinctrl registers.
+-
+-
+-Required properties for sub-nodes (GPIO chips):
+------------------------------------------------
+-
+- - compatible: Must contain one of:
+-    - "ingenic,jz4740-gpio"
+-    - "ingenic,jz4760-gpio"
+-    - "ingenic,jz4770-gpio"
+-    - "ingenic,jz4780-gpio"
+-    - "ingenic,x1000-gpio"
+-    - "ingenic,x1830-gpio"
+- - reg: The GPIO bank number.
+- - interrupt-controller: Marks the device node as an interrupt controller.
+- - interrupts: Interrupt specifier for the controllers interrupt.
+- - #interrupt-cells: Should be 2. Refer to
+-   ../interrupt-controller/interrupts.txt for more details.
+- - gpio-controller: Marks the device node as a GPIO controller.
+- - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
+-    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
+-    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+- - gpio-ranges: Range of pins managed by the GPIO controller. Refer to
+-   ../gpio/gpio.txt for more details.
+-
+-
+-Example:
+---------
+-
+-pinctrl: pin-controller@10010000 {
+-	compatible = "ingenic,jz4740-pinctrl";
+-	reg = <0x10010000 0x400>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	gpa: gpio@0 {
+-		compatible = "ingenic,jz4740-gpio";
+-		reg = <0>;
+-
+-		gpio-controller;
+-		gpio-ranges = <&pinctrl 0 0 32>;
+-		#gpio-cells = <2>;
+-
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-
+-		interrupt-parent = <&intc>;
+-		interrupts = <28>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+new file mode 100644
+index 000000000000..5be2b1e95b36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+@@ -0,0 +1,136 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic SoCs pin controller devicetree bindings
++
++description: >
++  Please refer to pinctrl-bindings.txt in this directory for details of the
++  common pinctrl bindings used by client devices, including the meaning of the
++  phrase "pin configuration node".
++
++  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
++  may be used as GPIOs, multiplexed device functions are configured within the
++  GPIO port configuration registers and it is typical to refer to pins using the
++  naming scheme "PxN" where x is a character identifying the GPIO port with
++  which the pin is associated and N is an integer from 0 to 31 identifying the
++  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
++  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
++  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
++  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
++  pins.
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  nodename:
++    pattern: "^pinctrl@[0-9a-f]+$"
++
++  compatible:
++    oneOf:
++      - enum:
++        - ingenic,jz4740-pinctrl
++        - ingenic,jz4725b-pinctrl
++        - ingenic,jz4760-pinctrl
++        - ingenic,jz4770-pinctrl
++        - ingenic,jz4780-pinctrl
++        - ingenic,x1000-pinctrl
++        - ingenic,x1500-pinctrl
++        - ingenic,x1830-pinctrl
++      - items:
++        - const: ingenic,jz4760b-pinctrl
++        - const: ingenic,jz4760-pinctrl
++      - items:
++        - const: ingenic,x1000e-pinctrl
++        - const: ingenic,x1000-pinctrl
++
++  reg:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^gpio@[0-9]$":
++    type: object
++    properties:
++      compatible:
++        enum:
++          - ingenic,jz4740-gpio
++          - ingenic,jz4725b-gpio
++          - ingenic,jz4760-gpio
++          - ingenic,jz4770-gpio
++          - ingenic,jz4780-gpio
++          - ingenic,x1000-gpio
++          - ingenic,x1500-gpio
++          - ingenic,x1830-gpio
++
++      reg:
++        items:
++          - description: The GPIO bank number
++
++      gpio-controller: true
++
++      "#gpio-cells":
++        const: 2
++
++      gpio-ranges:
++        maxItems: 1
++
++      interrupt-controller: true
++
++      "#interrupt-cells":
++        const: 2
++        description:
++          Refer to ../interrupt-controller/interrupts.txt for more details.
++
++      interrupts:
++        maxItems: 1
++
++    required:
++      - compatible
++      - reg
++      - gpio-controller
++      - "#gpio-cells"
++      - interrupts
++      - interrupt-controller
++      - "#interrupt-cells"
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    pin-controller@10010000 {
++      compatible = "ingenic,jz4770-pinctrl";
++      reg = <0x10010000 0x600>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      gpio@0 {
++        compatible = "ingenic,jz4770-gpio";
++        reg = <0>;
++
++        gpio-controller;
++        gpio-ranges = <&pinctrl 0 0 32>;
++        #gpio-cells = <2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++
++        interrupt-parent = <&intc>;
++        interrupts = <17>;
++      };
++    };
+-- 
+2.26.2
 
