@@ -2,243 +2,162 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAD5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5B1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28CC20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C88206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkssSAvs"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ahjrcgB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgFVOfx (ORCPT
+        id S1729085AbgFVOj6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbgFVOfw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 10:35:52 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85105C061573;
-        Mon, 22 Jun 2020 07:35:52 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f18so15687940qkh.1;
-        Mon, 22 Jun 2020 07:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LNUClnRY10+qwIAllr11lVvbbWYvmqFCQZTj4sTxqsA=;
-        b=XkssSAvsNqyxhCz25lhiRn5A2OZXtv9ecnYO2mo4br+L9CDc+1dhURng6Q/siaJmP+
-         WzADCSm/Uu+lZkfwMlis9tnwGfqkMFJ7yDSPqB6/QmMdGyBJCZdaCNw+Pu420E93yz41
-         DBh0yUOSuMw2LOeZOn3UcV1+ciUzlt4NFvwi3NAXLLC1IYRekUqQ8fArGWGJAz61ixJQ
-         8tTj/KIyGk9O8Rt9n4NpQBL0EleRzCgZHHg/D5oCjWnIvg9X6dgg9TkCf4SiCe+qLqPi
-         wxVwiAnQKTFTnEdWAHD03BFgOprM4uIoQ4fsWHDx80AC78MNJiAYb9G2H251NZ3qDsCD
-         bXqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LNUClnRY10+qwIAllr11lVvbbWYvmqFCQZTj4sTxqsA=;
-        b=sCfOBpqaWEyHJ0C8KBoYzANsL9Djw2SPEKQHv4RvKww68sqMqCt9p5oZM1hmXbGiOH
-         5NiICuGjpl+1+aVUIVdzaJgeYvdCg15rOIyWi520JgwscThE4zaMtyUtoUbVEusHiKhC
-         7iI9pmx4xfvuVWdB9jif1Cysq7rE7VuNF5Cek6sUP23iFAFep+wL6agGYTgaTPepg25w
-         cxGcrAmSk37FanmJnWNtx2cVo42LysCnySI45haJrz7q5l6XIv2NMmnH7bJxKVdB2Yuw
-         drgl7L3xlvc+3s3OxicrFZiFR5mNI2JZ2y/kltD5d6YZ5I95H5CSxrEhyqmqfLDO+R+U
-         M6vw==
-X-Gm-Message-State: AOAM533b/Jg20YzFgpfIRL1rP94OXt3XeamhYIMvSFhhltI7YbkKnmX+
-        Q1o+5/cMumCIEbJmYQPAahw=
-X-Google-Smtp-Source: ABdhPJwVMUaj2ibSKyvSlkN0GGpFLwTe7z0TOUh/6k7zDmq0OdgkXhSXA+czB6invWnrGMhGFEkFpQ==
-X-Received: by 2002:a37:46c1:: with SMTP id t184mr16597057qka.192.1592836551697;
-        Mon, 22 Jun 2020 07:35:51 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id c24sm4395128qtd.82.2020.06.22.07.35.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2020 07:35:51 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
- <20200615092644.GA2608702@dell>
- <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
- <20200622085009.GP954398@dell>
- <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <f1e03639-a202-ab91-df38-453320d1ddeb@gmail.com>
-Date:   Mon, 22 Jun 2020 09:35:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 22 Jun 2020 10:39:58 -0400
+Received: from mail-eopbgr130082.outbound.protection.outlook.com ([40.107.13.82]:61695
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728293AbgFVOj5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 10:39:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NtbgFHYlXsR5VYu1z/9q5tePuZd5gq1tZ0iCiRzlpQab6oeb8LuZTUPQWacQXUhkfQwJb57UnSjTYsx6wVbSKey5lhV6cFBQnNjF2BZbNUx5zuviC/SBnYs70vRrO5V0I3NQdkYx8PBiy4uP0wDKQ5eIf8QCRl8I2lEzkmLBul03sv+Y8Pig9jgdx0kOQDSeXDy1BTcln4AVYoCrrzpPXCnXBmzJcM6VU99KRzpxKJjeauaJZVahSrfiD0Zb3SAuoITJtwAZcxDEylp9P+ZQnehQLV4RnYTX/gIeMZX7M17v/WqYoaWqWgiiVVt5rNcJW2mSpntQe/PQIzAkWAUOPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nOTQVPXwol0zHMvVRQAoD5aRK9P8+99oA6rYC5GuLjA=;
+ b=UyAi2RaT/ueGQZ0ulHYDAyLeDX53hTgcA6MOuJ97b7XPHGQWwpw5NuFllxbjn5IgC13Exox5F7qyGG0ItX2ANja7uIDfAbROZOEEiAjcEITPzWqRLhktA20K/fWGI3cfCa0m7qrVehjHXOpFIvq1NIL9wYjzOaivlV0AcbCmEIeqrjHq14+HmcGmkl1Ub748pWpgqwsxlzNl+f6eJFX52w31FsMzkNkfUwS2fuSXuCrsjXd7KvOlpPTQodd6IAQshML68sWFn4RtgpnJU2eQjynJcAUMMjmPmN7DAZJVcd1LSIA2wG+DpN1Ru+xHsC+2pkulHPvDC4JydtlIwLnkKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nOTQVPXwol0zHMvVRQAoD5aRK9P8+99oA6rYC5GuLjA=;
+ b=ahjrcgB1Q9CfvAPLgGmLpcrl7dNlL/kM/fnJQO4+d73SEkuKGuunhYntgEBqV4SM8Pq8N388/G69fenIs3VrnDJhndYYW+phVfN37SAdMtGPsq64dAZ5grEPNo2wZfntjHbjQQlzkLdeWaD3ehkgxblZbsug494Ixw8lKDIECI8=
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
+ by AM0PR04MB6148.eurprd04.prod.outlook.com (2603:10a6:208:13e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Mon, 22 Jun
+ 2020 14:39:54 +0000
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
+ 14:39:54 +0000
+From:   Florinel Iordache <florinel.iordache@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Subject: RE: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr
+ driver support
+Thread-Topic: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr
+ driver support
+Thread-Index: AQHWSJoOSv10qY8hR027u6Fzd8TnaKjksHoAgAAAoSA=
+Date:   Mon, 22 Jun 2020 14:39:54 +0000
+Message-ID: <AM0PR04MB5443DAF865284ADE78423C64FB970@AM0PR04MB5443.eurprd04.prod.outlook.com>
+References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
+ <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
+ <20200622142430.GP279339@lunn.ch>
+In-Reply-To: <20200622142430.GP279339@lunn.ch>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [86.126.7.45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 41b08e4c-6f24-4e9a-98fe-08d816ba20e0
+x-ms-traffictypediagnostic: AM0PR04MB6148:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB61483BA6C05C9798EE8AE544FB970@AM0PR04MB6148.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0442E569BC
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: br6dpLhfTX3pCuz8bnyTjSnMzgwhh3qfejuPYLExIQpqFySPIakAK9Zn+MAf6iVkTzKm4Hoq42VjogvnS7Ggjn/8OVh18T2GN+zB+CykSenMW2KZ0jL4NUdyhYLLGQVcAzYTbF+Av/o5/bLSOsmBmiR/UjMf1REsunP4STGg9buOJ/KrN0+yVnE/u9mbAefSJmwTuVYrd2dLPCUzjGRAmnncY23wVsLAg+ZOaBkBlTh49AuwymhqWBlBBy7lvvrwM84e6vIKJrpZLO+k/MXBut+pXkPvKpU7s7QbyIlcGhWwaDVYf2kBan9Qf/oQwceSRfNQ2LlleTccgtUBagS42A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(376002)(39860400002)(136003)(71200400001)(86362001)(8936002)(8676002)(186003)(54906003)(52536014)(76116006)(5660300002)(4326008)(66476007)(66556008)(64756008)(66946007)(66446008)(55016002)(33656002)(9686003)(44832011)(478600001)(6506007)(2906002)(53546011)(316002)(26005)(83380400001)(6916009)(7696005)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: kfxViY0Hk/te4CPsx86SG1+3xSTU/FTN7IYBc5/1W9nVVbv39OpopDIBApUKENNebNrELnhV5m0+pzuBtZeCoAtbFYjGmyBNi+kvDju6FC+OM4Xu6LYG3M18qkmOwM+VMAeWuQVN6xR2evcqYYaBSq9kjiIx0VQ5w+4dadMkrmESwVnKFRaJcnrQkzE3SFwyap8fyxqdgVge5CdOTSJNq2H+zro98q3Bujeh/nou2wJsdu+K7zFoFQjiYYQYd8HR95KcepQ4h7zN8RXfCnVjzn/3f28t3fOo8trNJoLidL39UWe5lezSftMaSvoarDyjj+fhGKipFGDKysaOfl6CRCb7wnj1qCWzm6wQBtxpkyXOkrg5Fsb4CFkCOBmZEJDJrfs5BkYyFcQ8oRPYGe7UfxTjOCIZOITIbvuOIGnPN3J/+71+k3oOLfsroOHf9hqHi7vqGRVrENs2C8YoNqedIfmbQHTrY7C91g7t7U+glgI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41b08e4c-6f24-4e9a-98fe-08d816ba20e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 14:39:54.2524
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cytMhCl7TVhCUoy1/fYWT7NRF3OPO9+p8Cb5uBX1yLfSs4g+ellYjPtsvyrouScjzvg7laIH+6G5Wd+bEyAd5TP+47LS6Mwc26TcErWloXs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6148
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-22 09:32, Frank Rowand wrote:
-> On 2020-06-22 03:50, Lee Jones wrote:
->> On Thu, 18 Jun 2020, Frank Rowand wrote:
->>
->>> On 2020-06-15 04:26, Lee Jones wrote:
->>>> On Sun, 14 Jun 2020, Frank Rowand wrote:
->>>>
->>>>> Hi Lee,
->>>>>
->>>>> I'm looking at 5.8-rc1.
->>>>>
->>>>> The only use of OF_MFD_CELL() where the same compatible is specified
->>>>> for multiple elements of a struct mfd_cell array is for compatible
->>>>> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
->>>>>
->>>>>         OF_MFD_CELL("ab8500-pwm",
->>>>>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
->>>>>         OF_MFD_CELL("ab8500-pwm",
->>>>>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
->>>>>         OF_MFD_CELL("ab8500-pwm",
->>>>>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
->>>
->>>          OF_MFD_CELL("ab8500-pwm",
->>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
->>>
->>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
->>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
->>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
->>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
->>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
->>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
->>>
->>>>>
->>>>> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
->>>>> are:
->>>>>
->>>>>    arch/arm/boot/dts/ste-ab8500.dtsi
->>>>>    arch/arm/boot/dts/ste-ab8505.dtsi
->>>>>
->>>>> These two .dtsi files only have a single node with this compatible.
->>>>> Chasing back to .dts and .dtsi files that include these two .dtsi
->>>>> files, I see no case where there are multiple nodes with this
->>>>> compatible.
->>>>>
->>>>> So it looks to me like there is no .dts in mainline that is providing
->>>>> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
->>>>> is expecting.  No case that there are multiple mfd child nodes where
->>>>> mfd_add_device() would assign the first of n child nodes with the
->>>>> same compatible to multiple devices.
->>>>>
->>>>> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
->>>>> Am I missing something here?
->>>>>
->>>>> If I am correct, then either drivers/mfd/ab8500-core.c or
->>>>> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
->>>>
->>>> Your analysis is correct.
->>>
->>> OK, if I'm not overlooking anything, that is good news.
->>>
->>> Existing .dts source files only have one "ab8500-pwm" child.  They already
->>> work correcly.
->>>
->>> Create a new compatible for the case of multiple children.  In my example
->>> I will add "-mc" (multiple children) to the existing compatible.  There
->>> is likely a better name, but this lets me provide an example.
->>>
->>> Modify drivers/mfd/ab8500-core.c to use the new compatible, and new .dts
->>> source files with multiple children use the new compatible:
->>>
->>>          OF_MFD_CELL("ab8500-pwm",
->>>                      NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
->>>
->>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
->>>                          NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
->>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
->>>                          NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
->>>          OF_MFD_CELL_REG("ab8500-pwm-mc",
->>>                          NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
->>>
->>> The "OF_MFD_CELL" entry is the existing entry, which will handle current
->>> .dts source files.  The new "OF_MFD_CELL_REG" entries will handle new
->>> .dts source files.
->>
->> Sorry, but I'm not sure what the above exercise is supposed to solve.
->>
->> Could you explain it for me please?
-> 
-> The OF_MFD_CELL() entry handles all of the existing .dts source files
-> that only have one ab8500-pwm child nodes.  So existing .dtb blobs
-> continue to work.
-> 
-> The OF_MFD_CELL_REG() entries will handle all of the new .dts source
-> files that will have up to 3 ab8500-pwm child nodes.
-> 
-> Compatibility is maintained for existing .dtb files.  A new kernel
-> version with the changes will support new .dtb files that contain
-> multiple ab8500-pwm child nodes.
-> 
->>
->>> And of course the patch that creates OF_MFD_CELL_REG() needs to precede
->>> this change.
->>>
->>> I would remove the fallback code in the existing patch that tries to
->>> handle an incorrect binding.  Just error out if the binding is not
->>> used properly.
->>
->> What fallback code?
-> 
-> Based on reading the patch description, I expected some extra code to try
-> to handle the case where the compatible in more than one struct mfd_cell
-> entry is "stericsson,ab8500-pwm" and there are multiple ab8500-pwm child
-> nodes.
-> 
-> Looking at the actual code (which I had not done before), I see that the
-> "best effort attempt to match" is keeping a list of child nodes that
-> have already been used (mfd_of_node_list) and avoiding re-use of such
-> nodes.  This allows an invalid .dtb (one with multple "stericsson,ab8500-pwm"
-> child nodes) to possibly be assigned unique child nodes for multiple
+> -----Original Message-----
+> From: Andrew Lunn <andrew@lunn.ch>
+> Sent: Monday, June 22, 2020 5:25 PM
+> To: Florinel Iordache <florinel.iordache@nxp.com>
+> Cc: davem@davemloft.net; netdev@vger.kernel.org; f.fainelli@gmail.com;
+> hkallweit1@gmail.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
+> linux-doc@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> kuba@kernel.org; corbet@lwn.net; shawnguo@kernel.org; Leo Li
+> <leoyang.li@nxp.com>; Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
+> Ioana Ciornei <ioana.ciornei@nxp.com>; linux-kernel@vger.kernel.org
+> Subject: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr dri=
+ver
+> support
+>=20
+> Caution: EXT Email
+>=20
+> On Mon, Jun 22, 2020 at 04:35:21PM +0300, Florinel Iordache wrote:
+> > Add support for backplane kr generic driver including link training
+> > (ieee802.3ap/ba) and fixed equalization algorithm
+>=20
+> Hi Florinel
+>=20
+> This is still a PHY device. I don't remember any discussions which resolv=
+ed the
+> issues of if at the end of the backplane there is another PHY.
+>=20
+> It makes little sense to repost this code until we have this problem disc=
+ussed and
+> a way forward decided on. It fits into the discussion Russell and Ioana a=
+re having
+> about representing PCS drivers. Please contribute to that.
+>=20
+>         Andrew
 
-> struct mfd_cell entries to be "stericsson,ab8500-pwm".
+Hi Andrew,
 
-  struct mfd_cell entries that each have the same compatible value
-  "stericsson,ab8500-pwm".
+Yes, you are right: we decided to send only support for DPAA1 using current=
+ approach as a PHY device
+(as mentioned in cover-letter), until PCS representation will be fully clar=
+ified.
+The entire DPAA2 support was removed for now, together with phylink changes=
+.
+DPAA1 maintainer (Madalin Bucur) agrees with current representation as a PH=
+Y device for DPAA1.
+So we would like to have some discussions around this approach for DPAA1 on=
+ly, as it seems suitable for us.
 
-Some day I'll learn how to speak my native language. :-)
-
--Frank
-
-> 
-> So it is confusing for me to call that "fallback code".  It really is
-> "best effort attempt to match" for a broken .dtb code.
-> 
-> There should be no best effort for a broken .dtb.  The broken .dtb should
-> instead result in an error.
-> 
-> -Frank
-> 
->>
->>>> Although it's not "broken", it just works when it really shouldn't.
->>>>
->>>> I will be fixing the 'ab8500-pwm' case in due course.
->>>>
->>>>> Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
->>>>> approach (I have not completely read the actual code in the patch yet
->>>>> though).
->>>>
->>>> Thanks.
->>>>
->>>
->>
-> 
-
+Regards,
+Florinel.
