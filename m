@@ -2,136 +2,117 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82723C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C22206F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F4920706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 10:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ItMGHHfB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sJrF4WUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgFVKjp (ORCPT
+        id S1727879AbgFVKqi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 06:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbgFVKjo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:39:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE878C061795
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:39:43 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q5so3742624wru.6
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 03:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ppPSmD0W4LKyxlniJhYfTmLmk2R68Qbvb6wTB52e/f0=;
-        b=ItMGHHfBn6t+/6rQdOvInje8umTE9Lh/8MQrHN1kBQmODoVSN1eOFW8HFLDcqWjRfz
-         iW7RlpQQYT2m0DQT2L8tJ3Gbnm4FrrA0hZNu5go4Lzxd+kPhaBqaTFY0IdbGKfCHN12r
-         YP6adtx7pTBj07Wd8/4VSZJYaO0d+iQIEliTdTqNbuLF6u1CILqsrtIFVQrBPp+mQWnZ
-         77UOT6MgZnEhhklMWr44xbkquBvDL8ge3ILunTUUmfMpAACxHi/NSbC/poDK3u/A/9pa
-         Bre5+xqACXaastiIzh4nSPQCMcFTumjfW7jnpw3XlMI2+YyVlzQ0krOo7HPcjQQ3bIh9
-         S48w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ppPSmD0W4LKyxlniJhYfTmLmk2R68Qbvb6wTB52e/f0=;
-        b=CszR+eVGw6H3hoF5CzrKDy5ZPng58XbpNKcszLeo+oC17DUpInJCAgZ8DNoajP2gA/
-         25wkBc0nUvN8YM72ifp8HaBs+88WPRnIZxaSng6yULPiiiJmRiYBuAdFhL2p6hpZGg7I
-         A665XKzeK9E4VJx4blTv0Jb2aw1QCGEyv/i7c3JJkKnifSYMQDl3qDwOEXcNJnHQyUzW
-         VlPQBUVNmXoVCpb+PM4AimD3H6TfjnX2GwwQh30Kgf2MtGMSiU8SPgJS5+02pCaFipbM
-         zx0/wA/S8/g2xEVuFLKjSJRsANnG1taBv3+fYIyx3gWHTi+15TTvXGURk87eAZqu4NCm
-         m4Kg==
-X-Gm-Message-State: AOAM531oH5Cr213HKEZbmE8Dl41qG4Yg3z/n2hRG6uW8nlVRveDg8qH+
-        UI0ZLITqFaTAmRuFKYSZKHWMyQ==
-X-Google-Smtp-Source: ABdhPJzfjcLOl+6WBhcjg432De4rDwDj114xV3ZgmqkPIv2TBXFQeD+Fz+W7XZC3xVDWGcr5fxtuTQ==
-X-Received: by 2002:adf:ef4d:: with SMTP id c13mr6752284wrp.315.1592822382351;
-        Mon, 22 Jun 2020 03:39:42 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id e12sm17422241wro.52.2020.06.22.03.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 03:39:41 -0700 (PDT)
-Date:   Mon, 22 Jun 2020 11:39:39 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
- bindings to DT schema
-Message-ID: <20200622103939.goqysclrsxps344i@holly.lan>
-References: <20200618224413.1115849-1-robh@kernel.org>
- <20200619215341.GA6857@ravnborg.org>
+        Mon, 22 Jun 2020 06:46:38 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:64510 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbgFVKqi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 06:46:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592822797; x=1624358797;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=KHvJLP0itNpakCb4tg71Js5YXmKvGUBsqp96jfT9yXw=;
+  b=sJrF4WUSM6wBYbfjj7vWTa+pVUOf12sweLJs3sLi7/AsDN4I4DfQOKKp
+   3FTIHpzOCWmpLChR3hM0IK3hspO7KTr31mZ4+Z9WAHnvCJ4aStwCTZZD1
+   x90KlSHHdQIGGDe9K25PpGUN4U/qay/C0FkdGFlEZ/WPa1RsoaxVj+j7m
+   OovA+PQAIsEpMHwvSn0b1O08od/wya2CyvXlYb8XS7IAuunIYvUlMQBbO
+   leXkBLTNfp/iu7OnUkmXslcClcZhmh8ZHa2eew9NQ3Zx+t6RPiZPFQq7A
+   75eWHeEKK2iR+PcfKXdhF9AvOjRWEmWaCEuUitZEzvwKn9lFyOqfaTt4p
+   A==;
+IronPort-SDR: jIDnA4F4tHU6zBj7u39UFZocR2sz485FomgdldxzhJc4VCJUfL7MIcbRuLFTJp2SBt2pRul5sR
+ NIeN5Cdwsxez19lhBD8/B+m6pclB0eJ+dQ/z7tvXIZuRs62yPkutgDPygnZP6HszIP55Mi3Ek8
+ Xw/t0xKt3INxH7jxs77pnHINpQ+LVoB/NsVJXBXvwfxHwvivMlBBDRmYIbW8nYQ+Y9Vh/zeJJH
+ +0QJHSu+m6WINc3x9cGKc+zeI/bI23cCYj4eaL99NqE0HwVT/SFi3ZPKnMWovuISDQTATMxoS8
+ hBQ=
+X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
+   d="scan'208";a="16577354"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jun 2020 03:46:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 22 Jun 2020 03:46:36 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 22 Jun 2020 03:46:34 -0700
+References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Serge Semin" <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
+In-Reply-To: <20200619121107.GE5396@sirena.org.uk>
+Date:   Mon, 22 Jun 2020 12:46:33 +0200
+Message-ID: <87imfjxtrq.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200619215341.GA6857@ravnborg.org>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
-> Good to have these converted. A few comments in the following. One
-> comment is for the backlight people as you copied the original text.
 
-... and I've sliced out everything except that in this reply.
+Mark Brown writes:
 
-> On Thu, Jun 18, 2020 at 04:44:13PM -0600, Rob Herring wrote:
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-> > new file mode 100644
-> > index 000000000000..ae50945d2798
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
-> > @@ -0,0 +1,58 @@
-> > ...
-> > +
-> > +  default-brightness-level:
-> > +    description: The default brightness level (index into the array defined
-> > +      by the "brightness-levels" property).
+On Fri, Jun 19, 2020 at 01:31:18PM +0200, Lars Povlsen wrote:
+
+>> +/*
+>> + * The Designware SPI controller (referred to as master in the
+>> + * documentation) automatically deasserts chip select when the tx fifo
+>> + * is empty. The chip selects then needs to be driven by a CS override
+>> + * register. enable is an active low signal.
+>> + */
+>> +static void dw_spi_sparx5_set_cs(struct spi_device *spi, bool nEnable)
 >
-> This description does not match my understading.
-> The description says "index into", but in reality this is a value that
-> matches somewhere in the range specified by brightness-levels.
-> So it is not an index.
-> 
-> Maybe I just read it wrong and the description is fine. But when I read
-> index the when it says 6 I would look for brightness-levels[6] equals
-> 128 in the example below.
+>The value that is passed in here is the value that should be driven on
+>the output pin, the driver should not be interpreting the value in any
+>way here.  Documenting it as nEnable adds a layer of confusion, and it
+>may not be an active high signal depending on the system.
 
-When the brightness-levels array is not present then backlight
-brightness and led brightness have a 1:1 mapping. In this case the
-meaning of "default brightness level" is (hopefully) obvious and the
-parenthetic text does not apply.
+Ok, I will make the CS function more like the others.
 
-When the array is present then we have two different scales of
-brightness and it is important to describe which scale we use for the
-default brightness. The language about "index into" was adopted to avoid
-having to introduce extra terminology whilst making it clear that
-setting the default brightness-level to 128 is invalid (because it is
-not an acceptable index) and that a value of 6 will result in the LED
-brightness being set to 128.
+>
+>> +	if (!nEnable) {
+>> +		/* Ensure CS toggles, so start off all disabled */
+>> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~0);
+>> +		/* CS override drive enable */
+>> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 1);
+>
+>This should just be setting the value to whatever the core asked for it
+>to be set to, the driver adding extra toggles is likely to disrupt
+>things.
 
+I will have a look at this again. But it was added for a reason. The
+issue is that we have two different busses in front of the controller,
+so we might need more settle time when switching interface.
 
-> And this is not how it is coded.
+Thank you for you comments,
 
-That had me worried for a moment but I think the code and bindings are
-in agreement.
+Cheers
 
-There is some code to map the LED scale (128) to the backlight scale (6)
-but this used to ensure we supply the correct brightness level to user
-space when an active backlight is handed over from bootloader to kernel.
-
-If a default-brightness-level is provided then the above logic is
-overridden and the value read from the DT gets placed directly into
-props.brightness where it will act as in index into the brightness
-table.
-
-
-Daniel.
+-- 
+Lars Povlsen,
+Microchip
