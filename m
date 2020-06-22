@@ -1,100 +1,71 @@
 Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F97FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A3AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 21:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D0B2076A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 21:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592862419;
-	bh=XrZl/vVQWaiQPTxpVNlEe6VlmB1jEXGxRHg5FbzoxMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sASZYmY4Ydd06RcvRoDyG+IKJajNmekrwTXb/nh0wxJEPg5AZcytc9BkCZ24JhhPy
-	 rhJhHm7CDQ+wMbfI5wQ5yHCpwVe2UYJlhL57YH45EKuB2Pwq9y0j548dV4U16/vjGc
-	 gRiX2LLSuK6HMOj2NGsSwOKZ7ijLt9fQxn7l44iU=
+	by mail.kernel.org (Postfix) with ESMTP id D241C20767
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 21:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbgFVVq6 (ORCPT
+        id S1730605AbgFVVtf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 17:46:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39144 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 17:49:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14723 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730594AbgFVVq6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 17:46:58 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFC2F2075A;
-        Mon, 22 Jun 2020 21:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592862417;
-        bh=XrZl/vVQWaiQPTxpVNlEe6VlmB1jEXGxRHg5FbzoxMA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JDnfB2iRafLkgHmRvlGUj0k+vNxNQMs1lY12U9FapM45OcfpQ76IL/Giv/l25E2FZ
-         RAhb0WYRnxr0zEXRKpZWhmF1JVEC31xtyGrpy44Q0hhtahRqygF5D6QZ0U7KHZvQrs
-         D6tgJV6OuXsqQ942GYVhLixo4yijI9jaQchrv59g=
-Date:   Mon, 22 Jun 2020 14:46:55 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net,
-        shawnguo@kernel.org, leoyang.li@nxp.com, madalin.bucur@oss.nxp.com,
-        ioana.ciornei@nxp.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver
- support
-Message-ID: <20200622144655.49ee2fe2@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
-        <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
+        id S1730527AbgFVVtf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 17:49:35 -0400
+IronPort-SDR: JTFxKTYojH5mEBs6RM7CZrfhkJB2rsHfbUOFIJm1KhcIFlFvstOHR+KS/SBsP9Is9Hd+ZIacWU
+ LekfCDhbqnMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="142147317"
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="142147317"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 14:49:33 -0700
+IronPort-SDR: l3+aCNn5cePJQnTRUQM4M2UMmP5EjvVZ6GmDgHmqx1h3pHz2i1GNcq7Fihp7D5jhue8nvCH4Aq
+ 4ZBVhrF46cBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
+   d="scan'208";a="263119058"
+Received: from jczajka-mobl.ger.corp.intel.com (HELO localhost) ([10.249.40.133])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Jun 2020 14:49:24 -0700
+Date:   Tue, 23 Jun 2020 00:49:22 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v11 0/8] Add tpm i2c ptp driver
+Message-ID: <20200622214922.GC22727@linux.intel.com>
+References: <20200618134344.243537-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618134344.243537-1-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 22 Jun 2020 16:35:21 +0300 Florinel Iordache wrote:
-> Add support for backplane kr generic driver including link training
-> (ieee802.3ap/ba) and fixed equalization algorithm
->=20
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+On Thu, Jun 18, 2020 at 04:43:35PM +0300, amirmizi6@gmail.com wrote:
+>  - Jarkko Sakkinen:
+>         https://lore.kernel.org/patchwork/patch/1252428/
+>         https://lore.kernel.org/patchwork/patch/1252422/
+>         https://lore.kernel.org/patchwork/patch/1252424/
 
-drivers/net/phy/backplane/backplane.c:60:11: warning: symbol 'backplane_com=
-mon_features_array' was not declared. Should it be static?
-drivers/net/phy/backplane/backplane.c:66:11: warning: symbol 'backplane_pro=
-tocol_features_array' was not declared. Should it be static?
-drivers/net/phy/backplane/backplane.c:1204:40: warning: incorrect type in a=
-ssignment (different address spaces)
-drivers/net/phy/backplane/backplane.c:1204:40:    expected void *[assigned]=
- reg_base
-drivers/net/phy/backplane/backplane.c:1204:40:    got void [noderef] <asn:2=
-> *reg_base
-drivers/net/phy/backplane/backplane.c: In function =C3=A2=E2=82=AC=CB=9Cbp_=
-kr_state_machine=C3=A2=E2=82=AC=E2=84=A2:
-drivers/net/phy/backplane/backplane.c:590:27: warning: variable =C3=A2=E2=
-=82=AC=CB=9Cbpdev=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunused-but-se=
-t-variable]
-  590 |  struct backplane_device *bpdev;
-      |                           ^~~~~
-drivers/net/phy/backplane/link_training.c: In function =C3=A2=E2=82=AC=CB=
-=9Clt_train_remote_tx=C3=A2=E2=82=AC=E2=84=A2:
-drivers/net/phy/backplane/link_training.c:557:6: warning: variable =C3=A2=
-=E2=82=AC=CB=9Clp_resp_time=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wunu=
-sed-but-set-variable]
-  557 |  u64 lp_resp_time;
-      |      ^~~~~~~~~~~~
-drivers/net/phy/backplane/link_training.c: In function =C3=A2=E2=82=AC=CB=
-=9Clt_train_local_tx=C3=A2=E2=82=AC=E2=84=A2:
-drivers/net/phy/backplane/link_training.c:1143:15: warning: variable =C3=A2=
-=E2=82=AC=CB=9Cold_ld_status=C3=A2=E2=82=AC=E2=84=A2 set but not used [-Wun=
-used-but-set-variable]
- 1143 |  int request, old_ld_status;
-      |               ^~~~~~~~~~~~~
+Thanks for linking these, very helpful.
+
+/Jarkko
