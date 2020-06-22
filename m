@@ -2,162 +2,163 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5B1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B046C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C88206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42DA20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 14:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ahjrcgB1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZEhxfi1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgFVOj6 (ORCPT
+        id S1729379AbgFVOtv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 10:39:58 -0400
-Received: from mail-eopbgr130082.outbound.protection.outlook.com ([40.107.13.82]:61695
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728293AbgFVOj5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:39:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NtbgFHYlXsR5VYu1z/9q5tePuZd5gq1tZ0iCiRzlpQab6oeb8LuZTUPQWacQXUhkfQwJb57UnSjTYsx6wVbSKey5lhV6cFBQnNjF2BZbNUx5zuviC/SBnYs70vRrO5V0I3NQdkYx8PBiy4uP0wDKQ5eIf8QCRl8I2lEzkmLBul03sv+Y8Pig9jgdx0kOQDSeXDy1BTcln4AVYoCrrzpPXCnXBmzJcM6VU99KRzpxKJjeauaJZVahSrfiD0Zb3SAuoITJtwAZcxDEylp9P+ZQnehQLV4RnYTX/gIeMZX7M17v/WqYoaWqWgiiVVt5rNcJW2mSpntQe/PQIzAkWAUOPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nOTQVPXwol0zHMvVRQAoD5aRK9P8+99oA6rYC5GuLjA=;
- b=UyAi2RaT/ueGQZ0ulHYDAyLeDX53hTgcA6MOuJ97b7XPHGQWwpw5NuFllxbjn5IgC13Exox5F7qyGG0ItX2ANja7uIDfAbROZOEEiAjcEITPzWqRLhktA20K/fWGI3cfCa0m7qrVehjHXOpFIvq1NIL9wYjzOaivlV0AcbCmEIeqrjHq14+HmcGmkl1Ub748pWpgqwsxlzNl+f6eJFX52w31FsMzkNkfUwS2fuSXuCrsjXd7KvOlpPTQodd6IAQshML68sWFn4RtgpnJU2eQjynJcAUMMjmPmN7DAZJVcd1LSIA2wG+DpN1Ru+xHsC+2pkulHPvDC4JydtlIwLnkKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nOTQVPXwol0zHMvVRQAoD5aRK9P8+99oA6rYC5GuLjA=;
- b=ahjrcgB1Q9CfvAPLgGmLpcrl7dNlL/kM/fnJQO4+d73SEkuKGuunhYntgEBqV4SM8Pq8N388/G69fenIs3VrnDJhndYYW+phVfN37SAdMtGPsq64dAZ5grEPNo2wZfntjHbjQQlzkLdeWaD3ehkgxblZbsug494Ixw8lKDIECI8=
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
- by AM0PR04MB6148.eurprd04.prod.outlook.com (2603:10a6:208:13e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Mon, 22 Jun
- 2020 14:39:54 +0000
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 14:39:54 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: RE: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr
- driver support
-Thread-Topic: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr
- driver support
-Thread-Index: AQHWSJoOSv10qY8hR027u6Fzd8TnaKjksHoAgAAAoSA=
-Date:   Mon, 22 Jun 2020 14:39:54 +0000
-Message-ID: <AM0PR04MB5443DAF865284ADE78423C64FB970@AM0PR04MB5443.eurprd04.prod.outlook.com>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
- <20200622142430.GP279339@lunn.ch>
-In-Reply-To: <20200622142430.GP279339@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [86.126.7.45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 41b08e4c-6f24-4e9a-98fe-08d816ba20e0
-x-ms-traffictypediagnostic: AM0PR04MB6148:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB61483BA6C05C9798EE8AE544FB970@AM0PR04MB6148.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0442E569BC
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: br6dpLhfTX3pCuz8bnyTjSnMzgwhh3qfejuPYLExIQpqFySPIakAK9Zn+MAf6iVkTzKm4Hoq42VjogvnS7Ggjn/8OVh18T2GN+zB+CykSenMW2KZ0jL4NUdyhYLLGQVcAzYTbF+Av/o5/bLSOsmBmiR/UjMf1REsunP4STGg9buOJ/KrN0+yVnE/u9mbAefSJmwTuVYrd2dLPCUzjGRAmnncY23wVsLAg+ZOaBkBlTh49AuwymhqWBlBBy7lvvrwM84e6vIKJrpZLO+k/MXBut+pXkPvKpU7s7QbyIlcGhWwaDVYf2kBan9Qf/oQwceSRfNQ2LlleTccgtUBagS42A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(376002)(39860400002)(136003)(71200400001)(86362001)(8936002)(8676002)(186003)(54906003)(52536014)(76116006)(5660300002)(4326008)(66476007)(66556008)(64756008)(66946007)(66446008)(55016002)(33656002)(9686003)(44832011)(478600001)(6506007)(2906002)(53546011)(316002)(26005)(83380400001)(6916009)(7696005)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: kfxViY0Hk/te4CPsx86SG1+3xSTU/FTN7IYBc5/1W9nVVbv39OpopDIBApUKENNebNrELnhV5m0+pzuBtZeCoAtbFYjGmyBNi+kvDju6FC+OM4Xu6LYG3M18qkmOwM+VMAeWuQVN6xR2evcqYYaBSq9kjiIx0VQ5w+4dadMkrmESwVnKFRaJcnrQkzE3SFwyap8fyxqdgVge5CdOTSJNq2H+zro98q3Bujeh/nou2wJsdu+K7zFoFQjiYYQYd8HR95KcepQ4h7zN8RXfCnVjzn/3f28t3fOo8trNJoLidL39UWe5lezSftMaSvoarDyjj+fhGKipFGDKysaOfl6CRCb7wnj1qCWzm6wQBtxpkyXOkrg5Fsb4CFkCOBmZEJDJrfs5BkYyFcQ8oRPYGe7UfxTjOCIZOITIbvuOIGnPN3J/+71+k3oOLfsroOHf9hqHi7vqGRVrENs2C8YoNqedIfmbQHTrY7C91g7t7U+glgI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 22 Jun 2020 10:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729289AbgFVOtt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 10:49:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DFEFC061795
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 07:49:49 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id u14so2962651pjj.2
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 07:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stp1IX1mmPHX1rj5/nK/QmlVoQRLEAbDl7LJG7bMgaI=;
+        b=ZEhxfi1u8JLhx/tPQ4f98TQ5H60Fp9wuN8Fi1Fd4NTr8i9+lHYLOtLwz38YlAIHkU3
+         yh5ikvQmAqvgM6OgWb8L/1RRuxC/NVmHWc+Oxj1FXxDdqO4u22ERLPIvzbf94nYlqOx6
+         hgO4IpDZDbDAMebXoHJ90eH73wg6srMYDio0Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stp1IX1mmPHX1rj5/nK/QmlVoQRLEAbDl7LJG7bMgaI=;
+        b=ELcEWA4fiw5toZZRQDAndTS4pvogGRF5rQKBpHXbgpCkZVUFSjdolK4TVgkWAS3u/6
+         kAyWDz4RqZdluh6IuakdclpNcH+qvOcnQYhFXhq4Jb0ApAhOMqdFC3ihdwpWpYM3icQC
+         sNHEwuT9BWYUmUCJgJLZQanuIUmuhtsV4ib78s556Rw36gSv12QFS0NPIIdmimdODDNS
+         nrUFjdrPGjGL9uBsxJnIc4c170KUKwDZRneJmHGOGeww7aaZ1lqqX35IP8anSaNKwQYG
+         KzuwfEl21nbPoJyzV3aGAKEUbne9LNO4iEuB1t+ncSIlBQzDsVMPQJItsMJNx9BRS3tO
+         llOg==
+X-Gm-Message-State: AOAM5329TankFWO+d550nQiRDYDm36Hn/0otlqc0m2EaBOkUzFRIju7S
+        Pz1JtyvWYHRGM/cIdMpMls6v/w==
+X-Google-Smtp-Source: ABdhPJyEjVbfdxq0yEtd5ulcNWM0zz+5gEFUT1RwYiu/sTfqIRJRmjV+RUTXtuN1p300nEZ5DpNmmA==
+X-Received: by 2002:a17:90a:65c5:: with SMTP id i5mr18651602pjs.155.1592837388727;
+        Mon, 22 Jun 2020 07:49:48 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 77sm13903018pfu.139.2020.06.22.07.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 07:49:48 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     mturney@codeaurora.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        rnayak@codeaurora.org, dhavalp@codeaurora.org,
+        saiprakash.ranjan@codeaurora.org, sparate@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, mkurumel@codeaurora.org,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] nvmem: qfprom: Patches for fuse blowing on Qualcomm SoCs
+Date:   Mon, 22 Jun 2020 07:49:25 -0700
+Message-Id: <20200622144929.230498-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41b08e4c-6f24-4e9a-98fe-08d816ba20e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2020 14:39:54.2524
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cytMhCl7TVhCUoy1/fYWT7NRF3OPO9+p8Cb5uBX1yLfSs4g+ellYjPtsvyrouScjzvg7laIH+6G5Wd+bEyAd5TP+47LS6Mwc26TcErWloXs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6148
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Andrew Lunn <andrew@lunn.ch>
-> Sent: Monday, June 22, 2020 5:25 PM
-> To: Florinel Iordache <florinel.iordache@nxp.com>
-> Cc: davem@davemloft.net; netdev@vger.kernel.org; f.fainelli@gmail.com;
-> hkallweit1@gmail.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
-> linux-doc@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> kuba@kernel.org; corbet@lwn.net; shawnguo@kernel.org; Leo Li
-> <leoyang.li@nxp.com>; Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
-> Ioana Ciornei <ioana.ciornei@nxp.com>; linux-kernel@vger.kernel.org
-> Subject: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr dri=
-ver
-> support
->=20
-> Caution: EXT Email
->=20
-> On Mon, Jun 22, 2020 at 04:35:21PM +0300, Florinel Iordache wrote:
-> > Add support for backplane kr generic driver including link training
-> > (ieee802.3ap/ba) and fixed equalization algorithm
->=20
-> Hi Florinel
->=20
-> This is still a PHY device. I don't remember any discussions which resolv=
-ed the
-> issues of if at the end of the backplane there is another PHY.
->=20
-> It makes little sense to repost this code until we have this problem disc=
-ussed and
-> a way forward decided on. It fits into the discussion Russell and Ioana a=
-re having
-> about representing PCS drivers. Please contribute to that.
->=20
->         Andrew
 
-Hi Andrew,
+This series enables blowing of fuses on Qualcomm SoCs by extending the
+existing qfprom driver with write support.
 
-Yes, you are right: we decided to send only support for DPAA1 using current=
- approach as a PHY device
-(as mentioned in cover-letter), until PCS representation will be fully clar=
-ified.
-The entire DPAA2 support was removed for now, together with phylink changes=
-.
-DPAA1 maintainer (Madalin Bucur) agrees with current representation as a PH=
-Y device for DPAA1.
-So we would like to have some discussions around this approach for DPAA1 on=
-ly, as it seems suitable for us.
+A few notes:
+- Though I don't have any firsthand knowledge of it, it's my
+  understanding that these changes could be used on any Qualcomm SoC.
+  However, it's likely not very useful on most boards because the
+  bootloader protects against this.  Thus the write support here is
+  likely only useful with a cooperating bootloader.
+- Blowing fuses is truly a one-way process.  If you mess around with
+  this and do something wrong you could irreparably brick your chip.
+  You have been warned.
 
-Regards,
-Florinel.
+Versions 1 and 2 of this series were posted by Ravi Kumar Bokka.  I
+posted version 3 containing my changes / fixups with his consent.  I
+have left authorship as Ravi but added my own Signed-off-by.
+
+Version 4 is a minor spin over version 3.
+
+Changes in v4:
+- Maintainer now listed as Srinivas.
+- Example under "soc" to get #address-cells and #size-cells.
+- Clock name is "core", not "sec".
+- Example under "soc" to get #address-cells and #size-cells.
+- Only get clock/regulator if all address ranges are provided.
+- Don't use optional version of clk_get now.
+- Clock name is "core", not "sec".
+- Cleaned up error message if couldn't get clock.
+- Fixed up minor version mask.
+- Use GENMASK to generate masks.
+- Clock name is "core", not "sec".
+
+Changes in v3:
+- Split conversion to yaml into separate patch new in v3.
+- Use 'const' for compatible instead of a 1-entry enum.
+- Changed filename to match compatible string.
+- Add #address-cells and #size-cells to list of properties.
+- Fixed up example.
+- Add an extra reg range (at 0x6000 offset for SoCs checked)
+- Define two options for reg: 1 item or 4 items.
+- No reg-names.
+- Add "clocks" and "clock-names" to list of properties.
+- Clock is now "sec", not "secclk".
+- Add "vcc-supply" to list of properties.
+- Fixed up example.
+- Don't provide "reset" value for things; just save/restore.
+- Use the major/minor version read from 0x6000.
+- Reading should still read "corrected", not "raw".
+- Added a sysfs knob to allow you to read "raw" instead of "corrected"
+- Simplified the SoC data structure.
+- No need for quite so many levels of abstraction for clocks/regulator.
+- Don't set regulator voltage.  Rely on device tree to make sure it's right.
+- Properly undo things in the case of failure.
+- Don't just keep enabling the regulator over and over again.
+- Enable / disable the clock each time
+- Polling every 100 us but timing out in 10 us didn't make sense; swap.
+- No reason for 100 us to be SoC specific.
+- No need for reg-names.
+- We shouldn't be creating two separate nvmem devices.
+- Name is now 'efuse' to match what schema checker wants.
+- Reorganized ranges to match driver/bindings changes.
+- Added 4th range as per driver/binding changes.
+- No more reg-names as per driver/binding changes.
+- Clock name is now just "sec" as per driver/binding changes.
+
+Ravi Kumar Bokka (4):
+  dt-bindings: nvmem: qfprom: Convert to yaml
+  dt-bindings: nvmem: Add properties needed for blowing fuses
+  nvmem: qfprom: Add fuse blowing support
+  arm64: dts: qcom: sc7180: Add properties to qfprom for fuse blowing
+
+ .../bindings/nvmem/qcom,qfprom.yaml           |  96 ++++++
+ .../devicetree/bindings/nvmem/qfprom.txt      |  35 --
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts       |   4 +
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          |  10 +-
+ drivers/nvmem/qfprom.c                        | 314 +++++++++++++++++-
+ 5 files changed, 411 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+ delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+
+-- 
+2.27.0.111.gc72c7da667-goog
+
