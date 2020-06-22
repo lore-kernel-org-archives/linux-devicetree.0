@@ -2,135 +2,112 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0930C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C642C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE09C20767
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsjB8NNx"
+	by mail.kernel.org (Postfix) with ESMTP id 0946320675
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 19:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgFVT0j (ORCPT
+        id S1728171AbgFVTaw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 15:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbgFVT0d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 15:26:33 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF84C061573;
-        Mon, 22 Jun 2020 12:26:32 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m21so14532762eds.13;
-        Mon, 22 Jun 2020 12:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D3mfNI3tpj7TRzILlNnYOGT6ZBrzCCEcbxRV2T2nUks=;
-        b=WsjB8NNxnJRtuxY3fTzdww2T0NoEdnimu+6C0ru0tAxn6pKm8sfHSUS8eLMd3AaL9F
-         HOWxYt0xRXvIoswC8rsAxmMtrT4PnHw2DUIxhn4zzqC/eW6+kI+hwDtqzzjTnSpve1V0
-         Ac+pPI3DLPHzJuXjsEOcBv6M5jaaWkKyYF9dTStQVCIKW0QA6a0G6CAEcM2yY+aoJHrh
-         JwGIBuOcdcFDWLbkIy7vO6BdXbYH6Q5gttXFcrQqTfd5q8Y0ADB4X4Kypp1z9S+vXfUm
-         AsXAgZdFOdK48vJksWgyObZ7fpMlxuapuwvcqT3j2iNlaeKS7VmcwIaFNXZEEyK0tiHS
-         ivqg==
+        Mon, 22 Jun 2020 15:30:52 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38836 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbgFVTaw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 15:30:52 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 64so3170972oti.5;
+        Mon, 22 Jun 2020 12:30:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D3mfNI3tpj7TRzILlNnYOGT6ZBrzCCEcbxRV2T2nUks=;
-        b=sdfzuWqeQqI5GjF7kf+mHBn3LWDR+DBZagZQ3nCfnGhAK4MSHCXuX3Enk1ewbBlWn1
-         fcdtpTfAl0WvojPV2QbZ1aBb1BOlc2F4KP+XiPtVbxcA/PUWOHlnFHpFAAHg0izE+6SY
-         9MJ1GytPoRKsrkyANpaGXN4LkNIoUJZ0fqtnQOIaUCL7+Xm6Rs0tk+x3S0WQJ2xCKhUS
-         aNB2pPHUXoSs5e2DCD3ZLGsGvObmT7FS0xsCmGS88xJvyb0C/njsl2k2zttAVBaPUpoX
-         0dLjWXu7X5Qhtygw5UKhpa98jS1vKysOSiKtt8zOR9EznaLvyvRoayTFpbnt+wffDHre
-         AVcw==
-X-Gm-Message-State: AOAM530WUn/JbAlmcfMbe9d1Q9VJ2e/uNQkTNkDuVzCJzkDLYfNNQudF
-        8IuMCBmdRSGUE+VsW4uNFec=
-X-Google-Smtp-Source: ABdhPJyEvTKKKK1QUgvSAgIB4e1tk+u8wJU/dGxWTG0TwnjrRa4CCrBrWgHPVhWLKjxqOoOqh0h72A==
-X-Received: by 2002:aa7:dc57:: with SMTP id g23mr17807266edu.352.1592853991490;
-        Mon, 22 Jun 2020 12:26:31 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id d16sm4043336ejo.31.2020.06.22.12.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 12:26:31 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v3 7/7] mailbox: qcom: Add sdm660 hmss compatible
-Date:   Mon, 22 Jun 2020 21:25:57 +0200
-Message-Id: <20200622192558.152828-8-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200622192558.152828-1-konradybcio@gmail.com>
-References: <20200622192558.152828-1-konradybcio@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f+m8WfznoPmZDhpXMJjjF8LFblQRh0TioPpDuSD1pp0=;
+        b=cZ5nn/bPlQ38WJLE5/Lfh/ECMriNLGxHjekmOlqKxv8Ry4UtJtu0seF2jKgvE3AhSw
+         dZ36TvvVExjo7D0f/2Cnypc+0X4n1yeWUniTCuEYFe3kp7w7OW+RI/Wia1RT+q134YdO
+         KLEDJpdPkfGzmvaBxBaqXipjDcfcCL+nIP08vbPJQosUp6hbu/DG86ELHHsZtfObuHSN
+         3OvWvXagIaafHyVw9oceZQCT6gtjLMwU4+mXk1Ui1pF+w+lYCHiQmEP80JFrLpkP8y8k
+         fdL7PP9UafxBe+/gNSxuxyRfq6dKHBMBg2p7D83W/gjMXwZciFMgtphv8nrPnhZpA6sb
+         zWHw==
+X-Gm-Message-State: AOAM530p9ntLtAPouQiRpXWHRPq1+kMrY/jrD4gtP/pFYMgNjT/0NkUj
+        XsEzolWI4wI+QD6lT4uo6QUyaJ9QJc3+ikqWegU=
+X-Google-Smtp-Source: ABdhPJwRxDC7XKOX0GSqgJfIIpa4gxfZ9Mz9zJRml/UI6rLWqLBUvxcLJOOvgyLDgRj/WAdDU+2gFeYTFa4HV4iICjw=
+X-Received: by 2002:a9d:62c2:: with SMTP id z2mr15002234otk.145.1592854250122;
+ Mon, 22 Jun 2020 12:30:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1591554886-21725-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8sMAkhLh9n7d=4QaNLDDJuExcu4ctWX2P1xH6Jqj-D3DA@mail.gmail.com>
+In-Reply-To: <CA+V-a8sMAkhLh9n7d=4QaNLDDJuExcu4ctWX2P1xH6Jqj-D3DA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 22 Jun 2020 21:30:38 +0200
+Message-ID: <CAMuHMdVPcF4B8SiWPYuT2pRN5i_nn0n2tKrg8+y=XdhFkU-Vsw@mail.gmail.com>
+Subject: Re: [PATCH 00/11] Add support for HiHope RZ/G2M[N] Rev.3.0/4.0
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Qualcomm SDM660 platform has a APCS HMSS GLOBAL block, add the
-compatible for this.
+Hi Prabhakar,
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml   | 1 +
- drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 5 +++++
- 2 files changed, 6 insertions(+)
+On Mon, Jun 22, 2020 at 7:52 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Sun, Jun 7, 2020 at 7:35 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > This patch series adds supports for HiHope RZ/G2M[N] Rev.3.0/4.0
+> > boards.
+> >
+> > Patches are based on top of renesas-arm-dt-for-v5.9 branch [1].
+> >
+> > [1] git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > Lad Prabhakar (11):
+> >   arm64: dts: renesas: r8a774a1-hihope-rzg2m[-ex/-ex-idk-1110wr]: Rename
+> >     HiHope RZ/G2M boards
+> >   arm64: dts: renesas: r8a774b1-hihope-rzg2n[-ex]: Rename HiHope RZ/G2N
+> >     boards
+> >   arm64: dts: renesas: hihope-common: Separate out Rev.2.0 specific into
+> >     hihope-common-rev2.dtsi file
+> >   arm64: dts: renesas: Add HiHope RZ/G2M[N] Rev.3.0/4.0 specific into
+> >     common file
+> >   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 main board support
+> >   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 sub board support
+> >   arm64: dts: renesas: hihope-rzg2-ex: Separate out lvds specific nodes
+> >     into common file
+> >   arm64: dts: renesas: Add HiHope RZ/G2M Rev.3.0/4.0 board with
+> >     idk-1110wr display
+> >   arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 main board support
+> >   arm64: dts: renesas: Add HiHope RZ/G2N Rev.3.0/4.0 sub board support
+> >   arm64: dts: renesas: Add HiHope RZ/G2N Rev2.0/3.0/4.0 board with
+> >     idk-1110wr display
+> >
+> Thank you for the Ack's for the above patches.
+>
+> I shall re-spin the new version fixing the comments. I am waiting for
+> your feedback on patch 03/11.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-index 12eff942708d..b4501c6b5c6f 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-@@ -22,6 +22,7 @@ properties:
-       - qcom,msm8998-apcs-hmss-global
-       - qcom,qcs404-apcs-apps-global
-       - qcom,sc7180-apss-shared
-+      - qcom,sdm660-apcs-hmss-global
-       - qcom,sdm845-apss-shared
-       - qcom,sm8150-apss-shared
- 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index cec34f0af6ce..ab0275869434 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -49,6 +49,10 @@ static const struct qcom_apcs_ipc_data msm8998_apcs_data = {
- 	.offset = 8, .clk_name = NULL
- };
- 
-+static const struct qcom_apcs_ipc_data sdm660_apcs_data = {
-+	.offset = 8, .clk_name = NULL
-+};
-+
- static const struct qcom_apcs_ipc_data apps_shared_apcs_data = {
- 	.offset = 12, .clk_name = NULL
- };
-@@ -150,6 +154,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
- 	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = &msm8998_apcs_data },
- 	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = &msm8916_apcs_data },
- 	{ .compatible = "qcom,sc7180-apss-shared", .data = &apps_shared_apcs_data },
-+	{ .compatible = "qcom,sdm660-apcs-hmss-global", .data = &sdm660_apcs_data },
- 	{ .compatible = "qcom,sdm845-apss-shared", .data = &apps_shared_apcs_data },
- 	{ .compatible = "qcom,sm8150-apss-shared", .data = &apps_shared_apcs_data },
- 	{}
+I'm sorry, but what exactly is still unresolved for patch 03/11?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.27.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
