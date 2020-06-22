@@ -2,158 +2,319 @@ Return-Path: <SRS0=KHJB=AD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29656C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BDEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 087062071A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05014206EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 22 Jun 2020 11:58:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EffVA766"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgFVLwq (ORCPT
+        id S1727897AbgFVL6R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 07:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFVLwq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:52:46 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A299C061794;
-        Mon, 22 Jun 2020 04:52:46 -0700 (PDT)
-Received: from p5b06d650.dip0.t-ipconnect.de ([91.6.214.80] helo=kurt)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt@linutronix.de>)
-        id 1jnL0E-0007v8-Hk; Mon, 22 Jun 2020 13:52:42 +0200
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [RFC PATCH 3/9] net: dsa: hellcreek: Add PTP clock support
-In-Reply-To: <20200619134001.GC304147@lunn.ch>
-References: <20200618064029.32168-1-kurt@linutronix.de> <20200618064029.32168-4-kurt@linutronix.de> <20200618172304.GG240559@lunn.ch> <878sgjqx4r.fsf@kurt> <20200619134001.GC304147@lunn.ch>
-Date:   Mon, 22 Jun 2020 13:52:36 +0200
-Message-ID: <87lfkftj0b.fsf@kurt>
+        Mon, 22 Jun 2020 07:58:17 -0400
+Received: from condef-01.nifty.com ([202.248.20.66]:65081 "EHLO
+        condef-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727821AbgFVL6R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 07:58:17 -0400
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-01.nifty.com with ESMTP id 05MBo4gA014006
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 20:50:04 +0900
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 05MBmUTK027768;
+        Mon, 22 Jun 2020 20:48:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 05MBmUTK027768
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592826510;
+        bh=f3EMttsKXE8wNghn4PUIkbuq9XEwF9UBbOhFXf+0tEM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EffVA766bsXs0n9u8OkWf4xQynGfSdkWMT4HeX/Km0vF0bsfBxzerDUwLDSnEC1K8
+         DOSLb+82bW93i/JmF0RdINFHFT7drAheGrR2iQ+k7sJO3R2Vpvp1qXgryZspiIdB3A
+         LSMFteQi1niRGNhrmmqnIu50IQboMyi8drVd0Kw3/+0veJ3H/mxWVCLNMIJ+ZqhrIi
+         FImWJnKxi1IMh6rB30oqeAFDS396u5SxfXGJlvmZ56TA3AKlkcOe1g5/suiCYEeE5+
+         onpOHeqRfQn1cXpq0UHAIKvP1SAZYewvxkAq86qMc7dzeaJAwGFjrZxwWv3rDSQZlE
+         X0kztVDqz+Zmw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: reset: Convert UniPhier reset to json-schema
+Date:   Mon, 22 Jun 2020 20:48:26 +0900
+Message-Id: <20200622114826.450442-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Convert the UniPhier reset controller binding to DT schema format.
+I excluded the glue resets because their bindings are too different.
 
-On Fri Jun 19 2020, Andrew Lunn wrote:
-> On Fri, Jun 19, 2020 at 10:26:44AM +0200, Kurt Kanzenbach wrote:
->> Hi Andrew,
->>=20
->> On Thu Jun 18 2020, Andrew Lunn wrote:
->> >> +static u64 __hellcreek_ptp_clock_read(struct hellcreek *hellcreek)
->> >> +{
->> >> +	u16 nsl, nsh, secl, secm, sech;
->> >> +
->> >> +	/* Take a snapshot */
->> >> +	hellcreek_ptp_write(hellcreek, PR_COMMAND_C_SS, PR_COMMAND_C);
->> >> +
->> >> +	/* The time of the day is saved as 96 bits. However, due to hardware
->> >> +	 * limitations the seconds are not or only partly kept in the PTP
->> >> +	 * core. That's why only the nanoseconds are used and the seconds a=
-re
->> >> +	 * tracked in software. Anyway due to internal locking all five
->> >> +	 * registers should be read.
->> >> +	 */
->> >> +	sech =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
->> >> +	secm =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
->> >> +	secl =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
->> >> +	nsh  =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
->> >> +	nsl  =3D hellcreek_ptp_read(hellcreek, PR_SS_SYNC_DATA_C);
->> >> +
->> >> +	return (u64)nsl | ((u64)nsh << 16);
->> >
->> > Hi Kurt
->> >
->> > What are the hardware limitations? There seems to be 48 bits for
->> > seconds? That allows for 8925104 years?
->>=20
->> In theory, yes. Due to hardware hardware considerations only a few or
->> none of these bits are used for the seconds. The rest is zero. Meaning
->> that the wraparound is not 8925104 years, but at e.g. 8 seconds when
->> using 3 bits for the seconds.
->
-> Please add this to the comment.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-I will, no problem.
+ .../reset/socionext,uniphier-reset.yaml       | 112 ++++++++++++++++
+ .../bindings/reset/uniphier-reset.txt         | 121 +-----------------
+ 2 files changed, 113 insertions(+), 120 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
 
->
->> >> +static u64 __hellcreek_ptp_gettime(struct hellcreek *hellcreek)
->> >> +{
->> >> +	u64 ns;
->> >> +
->> >> +	ns =3D __hellcreek_ptp_clock_read(hellcreek);
->> >> +	if (ns < hellcreek->last_ts)
->> >> +		hellcreek->seconds++;
->> >> +	hellcreek->last_ts =3D ns;
->> >> +	ns +=3D hellcreek->seconds * NSEC_PER_SEC;
->> >
->> > So the assumption is, this gets called at least once per second. And
->> > if that does not happen, there is no recovery. The second is lost.
->>=20
->> Yes, exactly. If a single overflow is missed, then the time is wrong.
->>=20
->> >
->> > I'm just wondering if there is something more robust using what the
->> > hardware does provide, even if the hardware is not perfect.
->>=20
->> I don't think there's a more robust way to do this. The overflow period
->> is a second which should be enough time to catch the overflow even if
->> the system is loaded. We did long running tests for days and the
->> mechanism worked fine. We could also consider to move the delayed work
->> to a dedicated thread which could be run with real time (SCHED_FIFO)
->> priority. But, I didn't see the need for it.
->
-> If the hardware does give you 3 working bits for the seconds, you
-> could make use of that for a consistency check. If nothing else, you
-> could do a
->
-> dev_err(dev, 'PTP time is FUBAR');
+diff --git a/Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml b/Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
+new file mode 100644
+index 000000000000..4c9b0ebf6869
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/socionext,uniphier-reset.yaml
+@@ -0,0 +1,112 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/socionext,uniphier-reset.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier reset controller
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++
++properties:
++  compatible:
++    oneOf:
++      - description: System reset
++        enum:
++          - socionext,uniphier-ld4-reset
++          - socionext,uniphier-pro4-reset
++          - socionext,uniphier-sld8-reset
++          - socionext,uniphier-pro5-reset
++          - socionext,uniphier-pxs2-reset
++          - socionext,uniphier-ld6b-reset
++          - socionext,uniphier-ld11-reset
++          - socionext,uniphier-ld20-reset
++          - socionext,uniphier-pxs3-reset
++      - description: Media I/O (MIO) reset, SD reset
++        enum:
++          - socionext,uniphier-ld4-mio-reset
++          - socionext,uniphier-pro4-mio-reset
++          - socionext,uniphier-sld8-mio-reset
++          - socionext,uniphier-pro5-sd-reset
++          - socionext,uniphier-pxs2-sd-reset
++          - socionext,uniphier-ld11-mio-reset
++          - socionext,uniphier-ld11-sd-reset
++          - socionext,uniphier-ld20-sd-reset
++          - socionext,uniphier-pxs3-sd-reset
++      - description: Peripheral reset
++        enum:
++          - socionext,uniphier-ld4-peri-reset
++          - socionext,uniphier-pro4-peri-reset
++          - socionext,uniphier-sld8-peri-reset
++          - socionext,uniphier-pro5-peri-reset
++          - socionext,uniphier-pxs2-peri-reset
++          - socionext,uniphier-ld11-peri-reset
++          - socionext,uniphier-ld20-peri-reset
++          - socionext,uniphier-pxs3-peri-reset
++      - description: Analog signal amplifier reset
++        enum:
++          - socionext,uniphier-ld11-adamv-reset
++          - socionext,uniphier-ld20-adamv-reset
++
++  "#reset-cells":
++    const: 1
++
++additionalProperties: false
++
++required:
++  - compatible
++  - "#reset-cells"
++
++examples:
++  - |
++    sysctrl@61840000 {
++        compatible = "socionext,uniphier-sysctrl", "simple-mfd", "syscon";
++        reg = <0x61840000 0x4000>;
++
++        reset {
++            compatible = "socionext,uniphier-ld11-reset";
++            #reset-cells = <1>;
++        };
++
++        // other nodes ...
++    };
++
++  - |
++    mioctrl@59810000 {
++        compatible = "socionext,uniphier-mioctrl", "simple-mfd", "syscon";
++        reg = <0x59810000 0x800>;
++
++        reset {
++            compatible = "socionext,uniphier-ld11-mio-reset";
++            #reset-cells = <1>;
++        };
++
++        // other nodes ...
++    };
++
++  - |
++    perictrl@59820000 {
++        compatible = "socionext,uniphier-perictrl", "simple-mfd", "syscon";
++        reg = <0x59820000 0x200>;
++
++        reset {
++            compatible = "socionext,uniphier-ld11-peri-reset";
++            #reset-cells = <1>;
++        };
++
++        // other nodes ...
++    };
++
++  - |
++    adamv@57920000 {
++        compatible = "socionext,uniphier-ld11-adamv", "simple-mfd", "syscon";
++        reg = <0x57920000 0x1000>;
++
++        reset {
++            compatible = "socionext,uniphier-ld11-adamv-reset";
++            #reset-cells = <1>;
++        };
++
++        // other nodes ...
++    };
+diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+index e320a8cc9e4d..88e06e5e8d23 100644
+--- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
++++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+@@ -1,123 +1,4 @@
+-UniPhier reset controller
+-
+-
+-System reset
+-------------
+-
+-Required properties:
+-- compatible: should be one of the following:
+-    "socionext,uniphier-ld4-reset"  - for LD4 SoC
+-    "socionext,uniphier-pro4-reset" - for Pro4 SoC
+-    "socionext,uniphier-sld8-reset" - for sLD8 SoC
+-    "socionext,uniphier-pro5-reset" - for Pro5 SoC
+-    "socionext,uniphier-pxs2-reset" - for PXs2/LD6b SoC
+-    "socionext,uniphier-ld11-reset" - for LD11 SoC
+-    "socionext,uniphier-ld20-reset" - for LD20 SoC
+-    "socionext,uniphier-pxs3-reset" - for PXs3 SoC
+-- #reset-cells: should be 1.
+-
+-Example:
+-
+-	sysctrl@61840000 {
+-		compatible = "socionext,uniphier-ld11-sysctrl",
+-			     "simple-mfd", "syscon";
+-		reg = <0x61840000 0x4000>;
+-
+-		reset {
+-			compatible = "socionext,uniphier-ld11-reset";
+-			#reset-cells = <1>;
+-		};
+-
+-		other nodes ...
+-	};
+-
+-
+-Media I/O (MIO) reset, SD reset
+--------------------------------
+-
+-Required properties:
+-- compatible: should be one of the following:
+-    "socionext,uniphier-ld4-mio-reset"  - for LD4 SoC
+-    "socionext,uniphier-pro4-mio-reset" - for Pro4 SoC
+-    "socionext,uniphier-sld8-mio-reset" - for sLD8 SoC
+-    "socionext,uniphier-pro5-sd-reset"  - for Pro5 SoC
+-    "socionext,uniphier-pxs2-sd-reset"  - for PXs2/LD6b SoC
+-    "socionext,uniphier-ld11-mio-reset" - for LD11 SoC (MIO)
+-    "socionext,uniphier-ld11-sd-reset"  - for LD11 SoC (SD)
+-    "socionext,uniphier-ld20-sd-reset"  - for LD20 SoC
+-    "socionext,uniphier-pxs3-sd-reset"  - for PXs3 SoC
+-- #reset-cells: should be 1.
+-
+-Example:
+-
+-	mioctrl@59810000 {
+-		compatible = "socionext,uniphier-ld11-mioctrl",
+-			     "simple-mfd", "syscon";
+-		reg = <0x59810000 0x800>;
+-
+-		reset {
+-			compatible = "socionext,uniphier-ld11-mio-reset";
+-			#reset-cells = <1>;
+-		};
+-
+-		other nodes ...
+-	};
+-
+-
+-Peripheral reset
+-----------------
+-
+-Required properties:
+-- compatible: should be one of the following:
+-    "socionext,uniphier-ld4-peri-reset"  - for LD4 SoC
+-    "socionext,uniphier-pro4-peri-reset" - for Pro4 SoC
+-    "socionext,uniphier-sld8-peri-reset" - for sLD8 SoC
+-    "socionext,uniphier-pro5-peri-reset" - for Pro5 SoC
+-    "socionext,uniphier-pxs2-peri-reset" - for PXs2/LD6b SoC
+-    "socionext,uniphier-ld11-peri-reset" - for LD11 SoC
+-    "socionext,uniphier-ld20-peri-reset" - for LD20 SoC
+-    "socionext,uniphier-pxs3-peri-reset" - for PXs3 SoC
+-- #reset-cells: should be 1.
+-
+-Example:
+-
+-	perictrl@59820000 {
+-		compatible = "socionext,uniphier-ld11-perictrl",
+-			     "simple-mfd", "syscon";
+-		reg = <0x59820000 0x200>;
+-
+-		reset {
+-			compatible = "socionext,uniphier-ld11-peri-reset";
+-			#reset-cells = <1>;
+-		};
+-
+-		other nodes ...
+-	};
+-
+-
+-Analog signal amplifier reset
+------------------------------
+-
+-Required properties:
+-- compatible: should be one of the following:
+-    "socionext,uniphier-ld11-adamv-reset" - for LD11 SoC
+-    "socionext,uniphier-ld20-adamv-reset" - for LD20 SoC
+-- #reset-cells: should be 1.
+-
+-Example:
+-
+-	adamv@57920000 {
+-		compatible = "socionext,uniphier-ld11-adamv",
+-			     "simple-mfd", "syscon";
+-		reg = <0x57920000 0x1000>;
+-
+-		adamv_rst: reset {
+-			compatible = "socionext,uniphier-ld11-adamv-reset";
+-			#reset-cells = <1>;
+-		};
+-
+-		other nodes ...
+-	};
++UniPhier glue reset controller
+ 
+ 
+ Peripheral core reset in glue layer
+-- 
+2.25.1
 
-OK. I'll add a check for that.
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl7wm4QACgkQeSpbgcuY
-8KZtdA//WegWsTtiIgimHSJcxAbCNjZZb/DQ3rwXCgmDnlbo2YyLAkZy1vihHPmQ
-ap3m7rKufXNZnbRK5t0YPk8kf1X1cH2blkWRCpVkpQbvvvjfqmP9b6oK+3xY2fJx
-iFZc3qpQMgVgQZGh+XcsUZXm0RbmFpCKGt1Ly8BJW7+2zK6ZU0a0Qha49VppXcMH
-lPQl9sPp7NwIYCoMnTq5kfxKFS7tcyc0KEOrgdxbXLW+Zz9XkMryZ6sPXkIp2UaM
-2ZZ19ha9Dolnk4/TPoMew++D/r/c3PzViYz6NwjT/CKM4PmCaCLBLVvP+np+fLAx
-q72sMAPSRtVf9cbCFRycF3PPT5VBpdbnfy5zETBJATVLTVpcsNFM26K3nEUN8obQ
-2Ns4t1coTgUlWMS6hcRmm5Tq9aE5ExsZQcRUkQaA712xMqVafV5rJ0nv/VvgCO4k
-y5iHan7AFYrvAXm30xFdD3Wy8UThT1zCPWeFSEqQ+kzJ7cOFoeErQsdZcpv24bdh
-PIUvv/a8F7U78OTOtHEpAV3Di9uAdL4dEJ4cn0H1VEOAClDJJsJbrbuwYANkMudT
-WNEkmk03rhgTJuaq9jXm1hugkr/0HasCEMDD3fv/Ru1L0jUnXiR8mkFrudrA4D/e
-OqmNC9FB1z92ah5diUOtkhDaORs22nb0CS2R21g/fLsC8Tu6JAY=
-=hnDA
------END PGP SIGNATURE-----
---=-=-=--
