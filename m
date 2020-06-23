@@ -2,62 +2,63 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D07C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D13C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDBA2072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1398C2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 18:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0VX6Sgy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMkrHARn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733050AbgFWSIk (ORCPT
+        id S1733292AbgFWSI5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 14:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
+        Tue, 23 Jun 2020 14:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732549AbgFWSIj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 14:08:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B34CC061573;
-        Tue, 23 Jun 2020 11:08:39 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id v3so14029047wrc.1;
-        Tue, 23 Jun 2020 11:08:39 -0700 (PDT)
+        with ESMTP id S1733263AbgFWSIw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 14:08:52 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE838C061573;
+        Tue, 23 Jun 2020 11:08:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r12so4192722wrj.13;
+        Tue, 23 Jun 2020 11:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=31dgJUvqmMiUjr5/SjwepCwX7LHCXraRa5BeX61GTfI=;
-        b=k0VX6SgyT10NYDAWWRGaAQ4zDZ0897r38KlzWcP1GetAhm91XVV9nJdPWE2BsqLg2F
-         808WRCuE7mtgEExzwXNHd2FT9D8gQI1WeJRBVM17lZDxDARUvruTXOn7c3ecaflXhnWT
-         6S64Yc8Tw0dkjWmbc95nOZI69oSDm+XRh4ZW6yqUe2l48pjwiBmce3IaV0akwGaEpTrw
-         CvphJx0a9/CYS6wggA/U1x+PRW9yIuz5D9QXufQ3ZzNyYwNB1FwGSfjJKBumRBsL8UO6
-         ZhUcQXUOofiPLbkuf3vuaO5G8jqTl00MTDXe1Ivc8tkVL5Ae6dIPh+m/9Uoht4HosoJO
-         wG8A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RbtJkgou2Sv/07rr10hS93WNcruB7HSmdvjivA4sw00=;
+        b=tMkrHARnKddaR8UWmDyAwYMPricXhySA3mGhJUZ3G3FuHVEwjhIzoesy13LjwWZvqM
+         bi9s/Tg3wTza6ZLqpBtG67kI+R4T08H+h8stHDXyppCbD3WhxKPuQ/rk3VPkL1EdBQRH
+         3VXQtW9/qjpggV7euvaA4Ivafkm4fj4IfwZI6W0ugpakUUlpBMgpII/zjmEw0C9P+ROu
+         rgzMOZLlEyDTDfYYgzFFr6iDsH1mGBL/MV73e2GSXCrTZfYKv3K4IwV4MHXTlMC8prBC
+         wRl+lN6QQygDatcXUzvLMKHJnbKol/r7fVJyWpda4C278LJ8HzQPbe/soBzuBHtjpZwK
+         58YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=31dgJUvqmMiUjr5/SjwepCwX7LHCXraRa5BeX61GTfI=;
-        b=OscEEQ5uIBEXIGDl1wCT6flP4DlQWpSVgmrU2o6nFy00bPj4RE3HrYCysx8ML0cEze
-         nOczcPpAZQnqpxbzHtHNASdWe9R2xRpbpvahrMELCqCtFEKBR8/+Ae1CQ2X2+xPE6KN0
-         /FftZ07FV1bBn8UW5z4nK8uDs90l30ApG4LHel6j1n0WzLTGNysBotgQ+8A1axIqZMgH
-         Bw+u7V7dq9FwXAss5eEo0R1fb2OmcztwJbDfzZ7I7QhZydiVtuDqkwqCfZXeeA7+FGCw
-         NFtabTU3BCr9OSql/K/mXJBy2H+3WLfxGjJ1ufv4b5u1MkgVKbzM8Yhqpr/iTCtmRlLS
-         FmNQ==
-X-Gm-Message-State: AOAM531Novt8+q3kz36o5xkLqIazrWWeVj8F6FJhcCdA4wWuAUvcRRrq
-        Q6dbCCUbUfc4GeYpqw1BSug=
-X-Google-Smtp-Source: ABdhPJwQZQAeI0iwVIQ22Ds2N5g7OV0FSAPFVo01fCJvlE+RoPXOKXFaxNnSchApHq1eudJjsRD0rg==
-X-Received: by 2002:a5d:6809:: with SMTP id w9mr27921394wru.182.1592935717856;
-        Tue, 23 Jun 2020 11:08:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RbtJkgou2Sv/07rr10hS93WNcruB7HSmdvjivA4sw00=;
+        b=h1WX9K111pCODiGH+OOEKpw0uD5Q7XOV5grU9xtyHORTvRuDj0JacQd5zY6RPPOT+m
+         8roJsLHlt1NSxA4qYciTBHoTqOelNVOiFYMTqcFAz9Ro6cd5S9xV2SlgVcizZKxCdP0z
+         iHUpP3wH0RI0CCe7imdQGFdejzoWGdO2Dxj/fBZWmXZlcJmzVTMJb3ydPF9ThZfE6dWL
+         q1EkMg60W93stVrEffkPB+eXJcnvjgiy1Z0Tt2VPsqWy6/Nc5+nTyxBDipXlSTtptCFG
+         7pdu+sVNGhfU3zIr7sa4AxQyoqTzLGD3VNN9VuoB1ty70UOMRyoj69jml0efdrWxU0EL
+         yEUw==
+X-Gm-Message-State: AOAM531yCp/4dzHO8UcUj8LeRPoBEqNR3VPspw6g5rS3WXSEWtVV80uF
+        paak9gXKz2QqaoeKZY74Hxs=
+X-Google-Smtp-Source: ABdhPJwIHeaLsKMAC3sndH10ckS+doecfyDBJU/fW+EBqHQRwhH06Gkx8/ImQUF019F2EkLutD/hqw==
+X-Received: by 2002:adf:e2c9:: with SMTP id d9mr26392727wrj.227.1592935730692;
+        Tue, 23 Jun 2020 11:08:50 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id c16sm4719529wml.45.2020.06.23.11.08.35
+        by smtp.googlemail.com with ESMTPSA id c16sm4719529wml.45.2020.06.23.11.08.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 11:08:37 -0700 (PDT)
+        Tue, 23 Jun 2020 11:08:50 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -70,10 +71,12 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Rajendra Nayak <rnayak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 0/8] SDM630 and Ninges fixes
-Date:   Tue, 23 Jun 2020 20:08:24 +0200
-Message-Id: <20200623180832.254163-1-konradybcio@gmail.com>
+Subject: [PATCH 6/8] arm64: dts: qcom: sdm630: nile: Reserve disabled GPIOs
+Date:   Tue, 23 Jun 2020 20:08:30 +0200
+Message-Id: <20200623180832.254163-7-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623180832.254163-1-konradybcio@gmail.com>
+References: <20200623180832.254163-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -81,41 +84,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Disclaimer: Ninges = Nile&Ganges
+Both Nile and Ganges platforms have gpios 8-11 disabled.
+Without this, the kernel will not boot when the pinctrl
+driver is present.
 
-This series brings support for RPMPD on 630/660,
-initial tsens support (thermal-zones are WIP so
-dont' want to send them yet), an urgent fix for
-pinctrl (I have made a mistake that only showed
-itself when I tried to add more GPIO-dependent
-stuff...) and some stuff for Ninges, namely
-enablement of BLSP1_UART2 (omitted it previously)
-and temporary removal of Vol- on Nile (which is
-a result of fixing the pinctrl driver so that
-gpio-keys got to the point where it probed it
-and then it died). Also with these changes come
-some cosmetic updates (using phandles instead of
-addresses as per Bjorn's Request).
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Konrad Dybcio (8):
-  soc: qcom: rpmpd: Add SDM660 power-domains
-  arm64: dts: qcom: sdm630: Add RPM power domains support
-  arm64: dts: qcom: sdm630: Add tsens node
-  arm64: dts: qcom: sdm630: nile: Enable BLSP1_UART2
-  arm64: dts: qcom: sdm630: Fix the pinctrl node
-  arm64: dts: qcom: sdm630: nile: Reserve disabled GPIOs
-  arm64: dts: qcom: sdm630: nile: Remove Volume Down gpio-key
-  arm64: dts: qcom: sdm630: ganges: Change addresses to phandles
-
- .../devicetree/bindings/power/qcom,rpmpd.yaml |  1 +
- .../bindings/thermal/qcom-tsens.yaml          |  1 +
- .../dts/qcom/sdm630-sony-xperia-ganges.dtsi   | 22 +++---
- .../dts/qcom/sdm630-sony-xperia-nile.dtsi     | 67 +++++++++---------
- arch/arm64/boot/dts/qcom/sdm630.dtsi          | 69 +++++++++++++++++--
- drivers/soc/qcom/rpmpd.c                      | 33 +++++++++
- include/dt-bindings/power/qcom-rpmpd.h        | 12 ++++
- 7 files changed, 155 insertions(+), 50 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+index de06fa809488..9fe800d547cb 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
+@@ -136,3 +136,7 @@ &sdhc_1 {
+ 	/* SoMC Nile platform's eMMC doesn't support HS200 mode */
+ 	mmc-hs400-1_8v;
+ };
++
++&tlmm {
++	gpio-reserved-ranges = <8 4>;
++};
 -- 
 2.27.0
 
