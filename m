@@ -2,63 +2,62 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AD9C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2645C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B262078E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854652078E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvFA4Qkq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WruQF02r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388640AbgFWWth (ORCPT
+        id S2388704AbgFWWsT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46946 "EHLO
+        Tue, 23 Jun 2020 18:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388735AbgFWWs0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 18:48:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3775AC061795;
-        Tue, 23 Jun 2020 15:48:26 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so264602wrm.4;
-        Tue, 23 Jun 2020 15:48:26 -0700 (PDT)
+        with ESMTP id S2387887AbgFWWsS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 18:48:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1329AC061795;
+        Tue, 23 Jun 2020 15:48:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j94so281251wrj.0;
+        Tue, 23 Jun 2020 15:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l20ghDaBITcWUJdBjFantj3la1r6idQ6rjpXrXpW8d0=;
-        b=RvFA4QkqTNG0dxdYdv6lQRlfayAkQ8HyDjjrl/3ISJuwAYmKaudQL5JQWApkekFh/N
-         BZ1mXfGbcY3HjYOP8NsYDUnamfoE/A0T8lBWNlVsIIf4zFbzbU6zayYZCzEt+5Qfpy49
-         Elal8nPLSKcMnrnD35LxMv4WpdLf2zNe16fDiD+GzjSvS0lhNVrWOfgjeL7ae5rQdgXL
-         TavZOtXUk8unm9EXxZSlRxpUVi76RF7qFzVlHZ76VocXIj0KcF2JS1C7hvuCqSYrfrcd
-         aExtPXQJCkmLu9MU2BFRqfyNuJOUaProlMsbt1lO5Xqa8OT/wz8keNOHTzF0kKk+WzT/
-         CWhg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i1XPnQdZkQcK6l2ZDFifyN3TcjJd5d/D5Kr8vGiE5lE=;
+        b=WruQF02r6TacNOsWUtr6SeywvIR+2lOOwkRSG24Rtw0M6G6i06AwHhztQb8+fOwkQU
+         5h/FlBWZU68nsWJY2EmYWK2iqywarDlWYk56J4kgvsWnvMJLecOcgXvyOKWT1xzoL7vd
+         mE7FEeX+M2ArbZYcxmUfrcCTHJvWmL19Xk4ZF0g3KjrdWKzzfjbkwy3VdPXD6qRpBUO9
+         SprQAfeVZM2Wj7xQJ0RqHD11lKqFg1T9PlmlxPW4wB62KmHhUAzivIkvz1LRcZtVYxmm
+         FPEA/txLU/jwLU3jXFQtC2C3imW77aJfMo+agpaW1yPhIrEGTw/kfzRECYcA54u4bkWN
+         RLWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l20ghDaBITcWUJdBjFantj3la1r6idQ6rjpXrXpW8d0=;
-        b=J9bV9BQFRYXM7GHhx/cRPd1rBAkZyzMlf1743PeU9TX204C5MBd3yNKhrOEz5VS0cq
-         86bQe7f3abBaFdcPTJddvYnzt9hMHitZ1eGuUu+bcIy4VJCqQHM9y44b+AKwfHWJ0lFT
-         mSghHO0ZlunOjPhrXBf1TgssMUKQW3MuxR3IT5yhN7EQrqOuY1xbHnb4znRMjcJm4lyW
-         DcZdAul3fvbRAE6/KsrzZQB+LkbVM1AgvocJIWbL2IHzWXwC8XtGfHETdtRBjsSaWA8K
-         HZpUi+IuPAYPCrm7ATbyfDUkeZKpRlnErhXqlGgsnaAepQkEOxsgCFIiV/QZnWxACYUz
-         epQw==
-X-Gm-Message-State: AOAM531Bde80YQx3btIDnv5agaTD+n4muThxJHmjk6RYZndQtpfbnsT3
-        of0wDReL+lbjCJALVwFXVEs=
-X-Google-Smtp-Source: ABdhPJySH3tmQbbmZq5YUNPFZUGN1wGTVYZXEp4zoRr4SmpAXJD1aXVMQQeB/UzGRvYv2TnkUWiUpQ==
-X-Received: by 2002:adf:828b:: with SMTP id 11mr29481518wrc.58.1592952504987;
-        Tue, 23 Jun 2020 15:48:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i1XPnQdZkQcK6l2ZDFifyN3TcjJd5d/D5Kr8vGiE5lE=;
+        b=AOEWBpDAd6S/bVY+R/SWtJaJ5uxAz6UEUmj475ATSadve/K10d97zWFkI3/u2svJVJ
+         QeohS0g7OXJ/0Qcdb3JmnsKB6u4iHhxwu000Eugnrkj63k7ugnWaiatOjl59vv1CIHOJ
+         m4at0wB9GUHcO6oJoltqCOSgJDu/UnrpPGoS1GY670hGsBsCgXpv8AYdprWs/gCvbySK
+         LVjdUtSV4aNmETg3BJ1wC9LuEOr9y/DLCHK0GYcvioF70N2kuDJv6HS7YZx5VYHosJEY
+         2PNe78Hp6Mj0VjzcLTqQF+tBHg/gWAF3V7NXvjOZWxsHKaJI8q602QmhTmzhs1N/RAiD
+         m/UA==
+X-Gm-Message-State: AOAM531YRemC5USv54HNCKOIl6SK1xBkZtXUD9YQnt2epmWneJ5SiCy5
+        b0kYTZTnRekxI6wDnDmrXwA=
+X-Google-Smtp-Source: ABdhPJwRPIK6iKQ1iUT54k5TT7V9aTf8ga1P1OzrnSVyqIpdWCRp4bkmZUA3kgPu+f69SluVR7GIAQ==
+X-Received: by 2002:a5d:6a46:: with SMTP id t6mr428371wrw.374.1592952496595;
+        Tue, 23 Jun 2020 15:48:16 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.23
+        by smtp.googlemail.com with ESMTPSA id g144sm5671179wme.2.2020.06.23.15.48.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 15:48:24 -0700 (PDT)
+        Tue, 23 Jun 2020 15:48:16 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -70,12 +69,10 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/12] arm64: dts: qcom: msm8994: Add a proper CPU map
-Date:   Wed, 24 Jun 2020 00:48:02 +0200
-Message-Id: <20200623224813.297077-4-konradybcio@gmail.com>
+Subject: [PATCH v2 00/12] MSM8994 peripheral enablement, DTS updates
+Date:   Wed, 24 Jun 2020 00:47:59 +0200
+Message-Id: <20200623224813.297077-1-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623224813.297077-1-konradybcio@gmail.com>
-References: <20200623224813.297077-1-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -83,144 +80,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a proper CPU map to enable the use of all 8 cores.
+changes since v1:
+- clean up the commit history and cut down
+on unnecessary commit count
+- bring the DTS in line with the newest ones
+- fix some minor typos that went unnoticed
+- drop RPMCC patch (sent separately)
+- drop the pmi8994 patch (applied)
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/msm8994.dtsi | 112 +++++++++++++++++++++++---
- 1 file changed, 102 insertions(+), 10 deletions(-)
+The patchet depends on:
+- https://patchwork.kernel.org/patch/11584267/ (even though bullhead used
+that for a few years and the property never existed but nobody noticed)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-index 23e50c30669b..e7f4b06eb12c 100644
---- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-@@ -28,24 +28,116 @@ sleep_clk: sleep_clk {
- 	};
- 
- 	cpus {
--		#address-cells = <1>;
-+		#address-cells = <2>;
- 		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+			L2_0: l2-cache {
-+				compatible = "cache";
-+				cache-level = <2>;
-+			};
-+		};
-+
-+		CPU1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+			L2_1: l2-cache {
-+				compatible = "cache";
-+				cache-level = <2>;
-+			};
-+		};
-+
-+		CPU5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+		};
-+
-+		CPU6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+		};
-+
-+		CPU7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_1>;
-+		};
-+
- 		cpu-map {
- 			cluster0 {
- 				core0 {
- 					cpu = <&CPU0>;
- 				};
-+
-+				core1 {
-+					cpu = <&CPU1>;
-+				};
-+
-+				core2 {
-+					cpu = <&CPU2>;
-+				};
-+
-+				core3 {
-+					cpu = <&CPU3>;
-+				};
- 			};
--		};
- 
--		CPU0: cpu@0 {
--			device_type = "cpu";
--			compatible = "arm,cortex-a53";
--			reg = <0x0>;
--			next-level-cache = <&L2_0>;
--			L2_0: l2-cache {
--			      compatible = "cache";
--			      cache-level = <2>;
-+			cluster1 {
-+				core0 {
-+					cpu = <&CPU4>;
-+				};
-+
-+				core1 {
-+					cpu = <&CPU5>;
-+				};
-+
-+				core2 {
-+					cpu = <&CPU6>;
-+				};
-+
-+				core3 {
-+					cpu = <&CPU7>;
-+				};
- 			};
- 		};
- 	};
+- https://patchwork.kernel.org/patch/11580845/ (no point duplicating it for 8994)
+
+- RPMCC for 8992/4 (sent soon after this series)
+
+Konrad Dybcio (12):
+  arm64: dts: qcom: msm8994: Modernize the DTS style
+  arm64: dts: qcom: msm8994: Add SPMI PMIC arbiter device
+  arm64: dts: qcom: msm8994: Add a proper CPU map
+  arm64: dts: qcom: msm8994: Add support for SMD RPM
+  arm64: dts: qcom: msm8994: Add SDHCI1 node
+  arm64: dts: qcom: msm8994: Add SCM node
+  arm64: dts: qcom: msm8994: Add I2C, SPI and BLSP DMA nodes
+  arm64: dts: qcom: msm8994: Add pmu node
+  arm64: dts: qcom: msm8994: Add PSCI node
+  arm64: dts: qcom: angler: Add qcom,msm-id and pmic-id
+  arm64: dts: qcom: Move msm8994-smd-rpm contents to lg-bullhead.
+  arm64: dts: qcom: Add support for Sony Xperia Z5 (SoMC Sumire-RoW)
+
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/msm8992-bullhead-rev-101.dts     | 264 ++++++-
+ .../boot/dts/qcom/msm8994-angler-rev-101.dts  |   2 +
+ arch/arm64/boot/dts/qcom/msm8994-pins.dtsi    |  30 -
+ arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi | 268 -------
+ .../msm8994-sony-xperia-kitakami-sumire.dts   | 395 ++++++++++
+ arch/arm64/boot/dts/qcom/msm8994.dtsi         | 710 ++++++++++++++++--
+ 7 files changed, 1303 insertions(+), 367 deletions(-)
+ delete mode 100644 arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+ delete mode 100644 arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-sumire.dts
+
 -- 
 2.27.0
 
