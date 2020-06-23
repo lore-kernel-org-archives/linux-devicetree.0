@@ -2,120 +2,271 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFC4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4674DC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBEB420786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20882076A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pGl6N2G5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbgFWCvc (ORCPT
+        id S1731989AbgFWCyS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:51:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32924 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731842AbgFWCvc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:51:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6AA9FAE35;
-        Tue, 23 Jun 2020 02:51:29 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?James=20Tai=20=5B=E6=88=B4=E5=BF=97=E5=B3=B0=5D?= 
-        <james.tai@realtek.com>,
-        =?UTF-8?q?Stanley=20Chang=20=5B=E6=98=8C=E8=82=B2=E5=BE=B7=5D?= 
-        <stanley_chang@realtek.com>, Edgar Lee <cylee12@realtek.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 01/29] dt-bindings: soc: Add Realtek RTD1195 chip info binding
-Date:   Tue, 23 Jun 2020 04:50:38 +0200
-Message-Id: <20200623025106.31273-2-afaerber@suse.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200623025106.31273-1-afaerber@suse.de>
-References: <20200623025106.31273-1-afaerber@suse.de>
+        Mon, 22 Jun 2020 22:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731863AbgFWCyR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 22:54:17 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC4DC061796
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 19:54:16 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e9so9181296pgo.9
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 19:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cQ3SCOG8CEWcdo/tXLcomxA+Sv9DPM6c0TLHTvFTydo=;
+        b=pGl6N2G5ObJ6Flfwwb/LTlhcADw8HqeYPMPuDoiqlKFA00zySbJ+jVN0WUI2oK/9wp
+         i0U3Hw9lPj95YKs2ZnSpnLyiVg4XcJHZtNF+C4BzXk+2rBH9UPPu0ZjDxBW5s5Crz/IE
+         vjFgJxJMtUOD6xJh/+3PFbOW+LGi+N9lnp4yBRxMCJ7Nn2JZ3IT3f1gmjv3axxe6CqCe
+         EUJDaYHufbOYowmLLdm7QgQbw9RVN7Vg+mtxIGO8vLAyiK+ht8FyK3TwN2IT3IWAF640
+         3hYrR7VxT+gII/F6wHtBK6GhbJuCFg6NnNEMfI2IeL6/VzfOmNPVATRTS4RNSgP8q8H6
+         /4pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cQ3SCOG8CEWcdo/tXLcomxA+Sv9DPM6c0TLHTvFTydo=;
+        b=e7N4qV5NYNPmO1QwZRjbKwgb5meZhiQr7jVMwsbExUCIwA7+K8BAqAIqKocShsbnNA
+         6iJs+e+KH6ukJZWR7xDUVTcfq4v9eTdZpXQWMNJKWSaopr76n4Sqfk5IEHG/3HruMQEM
+         u2ffAsHPwRN2bGlbWqEymm/6/gtUUSiL7iX0PoPYE5YOqgJjKl41iV9hO/3LnyeXs/Jz
+         +L5zvrfft7b22FbKs5cghfHRilUZfuIdTgjSkkkpi664SGtayA1WDqkWtRIWUWP2/c4H
+         aDsdfuao3d9E8/QSo6R4LX+oq1mgjKbvw50vawX3t0dC5pzrF+Gx0Bvbh1rslFaTCggO
+         ydsw==
+X-Gm-Message-State: AOAM5325EOWZR3K8fKERIO2yuUkru8aR9HU3/jdyUDOZkEJn85j6897M
+        WHAkLMqjBt8BEt+fTHGmXefA
+X-Google-Smtp-Source: ABdhPJxohB33RWsPvmL6Y1OqwR64gc0rQ3g/GBld84r8b4FKj1LxmOejpV4ZoFtUuLS26GdmYNvhIw==
+X-Received: by 2002:a62:1c46:: with SMTP id c67mr22439884pfc.170.1592880856068;
+        Mon, 22 Jun 2020 19:54:16 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:609d:7d26:e4ff:f0b0:edd6:2484])
+        by smtp.gmail.com with ESMTPSA id i20sm15589173pfd.81.2020.06.22.19.54.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jun 2020 19:54:15 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 08:24:07 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/6] arm64: dts: qcom: sm8250: Add remoteprocs
+Message-ID: <20200623025407.GE11093@Mani-XPS-13-9360>
+References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
+ <20200622222747.717306-6-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622222747.717306-6-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define a binding for RTD1195 and later DHC SoCs' chip info registers.
-Add the new directory to MAINTAINERS.
+On Mon, Jun 22, 2020 at 03:27:46PM -0700, Bjorn Andersson wrote:
+> Add remoteproc nodes for the audio, compute and sensor cores, define
+> glink for each one and enable them on the MTP with appropriate firmware
+> defined.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- Note: The binding gets extended compatibly twice with additional properties.
- Could be squashed later if approved.
- 
- v1 -> v2:
- * Dropped quotes for compatible (Rob)
- * Added additionalProperties: false (Rob)
- 
- .../soc/realtek/realtek,rtd1195-chip.yaml     | 34 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
-new file mode 100644
-index 000000000000..86a1de214782
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/soc/realtek/realtek,rtd1195-chip.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Realtek Digital Home Center chip identification
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+
-+description: |
-+  The Realtek DHC SoCs have some registers to identify the chip and revision.
-+
-+properties:
-+  compatible:
-+    const: realtek,rtd1195-chip
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    chip-info@1801a200 {
-+        compatible = "realtek,rtd1195-chip";
-+        reg = <0x1801a200 0x8>;
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d282ee3492e0..78adbc3cc101 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2307,6 +2307,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-realtek-soc@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/realtek.yaml
-+F:	Documentation/devicetree/bindings/soc/realtek/
- F:	arch/arm/boot/dts/rtd*
- F:	arch/arm/mach-realtek/
- F:	arch/arm64/boot/dts/realtek/
--- 
-2.26.2
+Thanks,
+Mani
 
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250-mtp.dts |  15 +++
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi    | 116 ++++++++++++++++++++++++
+>  2 files changed, 131 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> index 63d259931c4d..6894f8490dae 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
+> @@ -55,6 +55,11 @@ vreg_s6c_0p88: smpc6-regulator {
+>  	};
+>  };
+>  
+> +&adsp {
+> +	status = "okay";
+> +	firmware-name = "qcom/sm8250/adsp.mbn";
+> +};
+> +
+>  &apps_rsc {
+>  	pm8150-rpmh-regulators {
+>  		compatible = "qcom,pm8150-rpmh-regulators";
+> @@ -348,10 +353,20 @@ vreg_l7f_1p8: ldo7 {
+>  	};
+>  };
+>  
+> +&cdsp {
+> +	status = "okay";
+> +	firmware-name = "qcom/sm8250/cdsp.mbn";
+> +};
+> +
+>  &qupv3_id_1 {
+>  	status = "okay";
+>  };
+>  
+> +&slpi {
+> +	status = "okay";
+> +	firmware-name = "qcom/sm8250/slpi.mbn";
+> +};
+> +
+>  &tlmm {
+>  	gpio-reserved-ranges = <28 4>, <40 4>;
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index 364d9a798673..a21299b9c62f 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -1052,6 +1052,83 @@ tcsr_mutex_regs: syscon@1f40000 {
+>  			reg = <0x0 0x01f40000 0x0 0x40000>;
+>  		};
+>  
+> +		slpi: remoteproc@5c00000 {
+> +			compatible = "qcom,sm8250-slpi-pas";
+> +			reg = <0 0x05c00000 0 0x4000>;
+> +
+> +			interrupts-extended = <&pdc 9 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&smp2p_slpi_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_slpi_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_slpi_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_slpi_in 3 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "xo";
+> +
+> +			power-domains = <&aoss_qmp AOSS_QMP_LS_SLPI>,
+> +					<&rpmhpd SM8250_LCX>,
+> +					<&rpmhpd SM8250_LMX>;
+> +			power-domain-names = "load_state", "lcx", "lmx";
+> +
+> +			memory-region = <&slpi_mem>;
+> +
+> +			qcom,smem-states = <&smp2p_slpi_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts-extended = <&ipcc IPCC_CLIENT_SLPI
+> +							     IPCC_MPROC_SIGNAL_GLINK_QMP
+> +							     IRQ_TYPE_EDGE_RISING>;
+> +				mboxes = <&ipcc IPCC_CLIENT_SLPI
+> +						IPCC_MPROC_SIGNAL_GLINK_QMP>;
+> +
+> +				label = "lpass";
+> +				qcom,remote-pid = <3>;
+> +			};
+> +		};
+> +
+> +		cdsp: remoteproc@8300000 {
+> +			compatible = "qcom,sm8250-cdsp-pas";
+> +			reg = <0 0x08300000 0 0x10000>;
+> +
+> +			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&smp2p_cdsp_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_cdsp_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_cdsp_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_cdsp_in 3 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "xo";
+> +
+> +			power-domains = <&aoss_qmp AOSS_QMP_LS_CDSP>,
+> +					<&rpmhpd SM8250_CX>;
+> +			power-domain-names = "load_state", "cx";
+> +
+> +			memory-region = <&cdsp_mem>;
+> +
+> +			qcom,smem-states = <&smp2p_cdsp_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts-extended = <&ipcc IPCC_CLIENT_CDSP
+> +							     IPCC_MPROC_SIGNAL_GLINK_QMP
+> +							     IRQ_TYPE_EDGE_RISING>;
+> +				mboxes = <&ipcc IPCC_CLIENT_CDSP
+> +						IPCC_MPROC_SIGNAL_GLINK_QMP>;
+> +
+> +				label = "lpass";
+> +				qcom,remote-pid = <5>;
+> +			};
+> +		};
+> +
+>  		pdc: interrupt-controller@b220000 {
+>  			compatible = "qcom,sm8250-pdc", "qcom,pdc";
+>  			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
+> @@ -1668,6 +1745,45 @@ config {
+>  			};
+>  		};
+>  
+> +		adsp: remoteproc@17300000 {
+> +			compatible = "qcom,sm8250-adsp-pas";
+> +			reg = <0 0x17300000 0 0x100>;
+> +
+> +			interrupts-extended = <&pdc 6 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&smp2p_adsp_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_adsp_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_adsp_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&smp2p_adsp_in 3 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "xo";
+> +
+> +			power-domains = <&aoss_qmp AOSS_QMP_LS_LPASS>,
+> +					<&rpmhpd SM8250_LCX>,
+> +					<&rpmhpd SM8250_LMX>;
+> +			power-domain-names = "load_state", "lcx", "lmx";
+> +
+> +			memory-region = <&adsp_mem>;
+> +
+> +			qcom,smem-states = <&smp2p_adsp_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts-extended = <&ipcc IPCC_CLIENT_LPASS
+> +							     IPCC_MPROC_SIGNAL_GLINK_QMP
+> +							     IRQ_TYPE_EDGE_RISING>;
+> +				mboxes = <&ipcc IPCC_CLIENT_LPASS
+> +						IPCC_MPROC_SIGNAL_GLINK_QMP>;
+> +
+> +				label = "lpass";
+> +				qcom,remote-pid = <2>;
+> +			};
+> +		};
+> +
+>  		intc: interrupt-controller@17a00000 {
+>  			compatible = "arm,gic-v3";
+>  			#interrupt-cells = <3>;
+> -- 
+> 2.26.2
+> 
