@@ -4,91 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9245C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 10:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5927C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB46B20771
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 10:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC5120771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592909874;
-	bh=6wt/+Vt+bq7XfKbTd2BTFYU+/jxu6ucOpuI8JSZHgmE=;
+	s=default; t=1592910447;
+	bh=zsfKB1wuRE9SSXUBbFLTHKmSLXW6nA+V2ztTFC7lHs4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HWPgLZSE9rAL4HgUA6r/go4YhXPG5YwPigvyA7YPopHPphmABqqq0uPDU08y6YK32
-	 5OEA86wbtR7YUEt1chPRykSW6IVYwUn7/xnGPy9R69b7ze205fvXnmWcpWdcEJGF7H
-	 iB7FHerB1roo/SALLlyqNFeiDwG2/CYQt0/+6xNo=
+	b=sPA2JKkf/DNQxncrX1vcPHpDMF8M6DHhKm4EXEYApziPJZoy4O6TgUyL68rEhDBG/
+	 owhjKpJBuFuV4VO+/NC/AHTpi2VeyE2psKafCSzIXp7QFSDprl+Q+kyUP4PITP2bat
+	 1MoL9nMGDO2x0GnncCEXKrhLjwaNuehAZjDfMXj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbgFWK5u (ORCPT
+        id S1732269AbgFWLH1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 06:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43148 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 07:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732205AbgFWK5t (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 06:57:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1732189AbgFWLH0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 07:07:26 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0558420738;
-        Tue, 23 Jun 2020 10:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8059D2072E;
+        Tue, 23 Jun 2020 11:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592909869;
-        bh=6wt/+Vt+bq7XfKbTd2BTFYU+/jxu6ucOpuI8JSZHgmE=;
+        s=default; t=1592910446;
+        bh=zsfKB1wuRE9SSXUBbFLTHKmSLXW6nA+V2ztTFC7lHs4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iPJKGkyZRdUTcwnRxFqIPzNnKGmakA8amVTzv2YzYI+0cdqtCkq+sWQzXv5pJyz5e
-         3aXUygT40lmQYPuK87BGULcA1lR4AezxCBhfRdk6cR4OUT3ACRg2eXL0wIzsDJQBo1
-         /1LAUlkUYfrTkUIS02eTtz+j7aMoALiQxXCJLfyI=
-Date:   Tue, 23 Jun 2020 11:57:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 7/8] spi: spi-qcom-qspi: Add interconnect support
-Message-ID: <20200623105747.GD5582@sirena.org.uk>
-References: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
- <1592908737-7068-8-git-send-email-akashast@codeaurora.org>
+        b=PY2qDnfEkRWh64fvJQJyDv79ltuupggMNAkE7iNBNsaD+7RGnhEkx1cYdXSH5F06H
+         uZdZqJ8knVOiE20AX92B+EGOEmmP2bNOmgUtDJ0l3UyezYAgoFVvCk1mjBI8PPeioy
+         09TfWUJ/d5RJW5ngA/MMsrpbsKOnex4ffkufF9a8=
+Date:   Tue, 23 Jun 2020 19:07:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 0/3] arm64: dts: imx8qxp: dtb aliases fix/update
+Message-ID: <20200623110720.GY30139@dragon>
+References: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592908737-7068-8-git-send-email-akashast@codeaurora.org>
-X-Cookie: No motorized vehicles allowed.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 02:49:51PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> V2:
+>  Fix order in patch 2/3, no other changes
+> 
+> Minor patchset to fix and update alias for i.MX8QXP
+> 
+> Peng Fan (3):
+>   arm64: dts: imx8qxp: add alias for lsio MU
+>   arm64: dts: imx8qxp: add i2c aliases
+>   arm64: dts: imx8qxp: Add ethernet alias
 
---P+33d92oIH25kiaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jun 23, 2020 at 04:08:56PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for QSPI device and vote according to the
-> current bus speed of the driver.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---P+33d92oIH25kiaB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7x4CoACgkQJNaLcl1U
-h9BOYwf/bhyPfFwvPg7mlAQzfs2h7yx4AVfOS0MsvuMWE+wu2/XtlV+oMuw4neAs
-i2HCMN/QFY/WmNGWV8e6wGdYEmZBw5c1o9nTPSaIawVYM1OsSz6o7YzZA1wrmS0M
-xG4TS82lvy0klZ4agrcQ6Q8gzgaUsXH4+5ftOMP3oqGFauHUjuxCRu8RYbVo7qew
-MvlDGqbxm/2cCq+bjEWfDiuMBMzp1KsclKCqmEUig6RXbgAZyw0l1Nw9yhtb92zM
-HRasGq2QGfT3/94VqT1xqXrkPAuSanyj42AOeWiHSFMA2sCAQmvToqwvH1hWJMtY
-z8es5Xaec/KswpLs/beZ85itrAvFXg==
-=OgFJ
------END PGP SIGNATURE-----
-
---P+33d92oIH25kiaB--
+Applied, thanks.
