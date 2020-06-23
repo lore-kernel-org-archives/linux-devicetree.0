@@ -2,112 +2,105 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF167C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59590C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1302077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6852070E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAVFzV6P"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LvUP/Kjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731555AbgFWH3Y (ORCPT
+        id S1731615AbgFWHai (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731545AbgFWH3X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 03:29:23 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F6D0C061796
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 00:29:23 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id j189so18002254oih.10
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 00:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fWjmAOPbHTLJzpYz+sy+z31E1izVE1LPqGR/mFW6VFs=;
-        b=yAVFzV6PVBFAy2hY3vXcJzS1GczJUTFS5vZPzQh5LZcYNqiikW53hpz3rIe2XDPo8C
-         0hyeFHa2yN+Ye8/nXtjZtOhOL1j0LPwEJxWCN6qm0oH9pzbzqypUzz6M7LrVrIYlznYR
-         NhGdWbIxmcaBZFgmiZUGKeN1Y16cQJbhVGCnzhBcm10bHi2azAS2TcLflPfW4V501Ywm
-         hu5zz2nY5lDEAk4TY/YCQZUdvTHan+c876RDZsWeZvM4eHYGP7Ly34ba71vF1bae+e4m
-         ylnmMJ77TfoocM9VeWTlg7Qtt2Z6Yalq/jxUn9zZ3CHvUOVsRCncA6S4/4H4F/i1U49o
-         4NZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fWjmAOPbHTLJzpYz+sy+z31E1izVE1LPqGR/mFW6VFs=;
-        b=eR/hFQIfA9XMKFBkese2ksGOR3IDOb9FtMWaPBjo9YTb/Hn32zgl/0hT8bshCXydy5
-         NDDUKvhUOhersmk931gBSzTPL82JuiCcbVZtg7nGX4ajNtvongqeO6XgXT6rJPQYQoVK
-         d0KxOH/ZeG1bz1SctQnoY8umdsYX8b3XNzl4kfDuvTphiTvhqOq6WspZWBg+FUBMtotN
-         QPbZzbjC+GQYHcmxYDOc4je/+JLJdTVp6dSmQ538yZODKfrUa72xOQ3aTh4SJW5JzTem
-         gl/eaotF7CmkhrmQVTS6cwZ37oP03DtU4q2/poz4TBcbrLRcmwAwOK5XHg6rOOjwgZCh
-         QkPQ==
-X-Gm-Message-State: AOAM530hoPUP48N/TxSR7Scx+BeD9IvRghASLhs9+2HdZMLIe1ndi02u
-        wLXdx8RUg5VDa18SMwUA9eRGOu0lmnA=
-X-Google-Smtp-Source: ABdhPJzP34B3Rwc4zxe2WgbBZFWKaQe90xa2tW61z475GjCUrbJCMHJrlaNe1KIzYpPZ5uM2CEUNCQ==
-X-Received: by 2002:a54:4495:: with SMTP id v21mr15211852oiv.35.1592897362777;
-        Tue, 23 Jun 2020 00:29:22 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m3sm4040184oop.37.2020.06.23.00.29.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 00:29:22 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 00:26:38 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] Documentation: Document pm660(l) SPMI GPIOs
- compatible
-Message-ID: <20200623072638.GZ128451@builder.lan>
-References: <20200622192558.152828-1-konradybcio@gmail.com>
- <20200622192558.152828-3-konradybcio@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622192558.152828-3-konradybcio@gmail.com>
+        Tue, 23 Jun 2020 03:30:38 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:21047 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731206AbgFWHai (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 03:30:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592897437; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=2Yi/lYn/6WQNSFr0HSiO3C0rw+Cv8ZwJDqYtP0XLOP8=; b=LvUP/KjshKdrEK0/P37/UhvsbuyqEYAW1o0k4y7NUFZ4lXUZDFRaykJEQr8lUbtS1+QDtIUE
+ jyOFQa2bLMsVi9L2f+QLA/e4NueXNFO1cPp8P2hPf3P7vvWCmeK1Ic7TAwt4/p2ooFCzq+wa
+ si0sJ7J2d2YJFEq7vay5YPrTjjw=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5ef1af87fe1db4db89b9bf7f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 07:30:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C3651C43395; Tue, 23 Jun 2020 07:30:15 +0000 (UTC)
+Received: from jprakash-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48A96C433C8;
+        Tue, 23 Jun 2020 07:30:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48A96C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
+        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        Jishnu Prakash <jprakash@codeaurora.org>
+Subject: [PATCH V7 0/7] iio: adc: Add support for QCOM SPMI PMIC7 ADC
+Date:   Tue, 23 Jun 2020 12:59:52 +0530
+Message-Id: <1592897399-24089-1-git-send-email-jprakash@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
+The following changes are made in V7:
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+In the seventh patch, the function pointer is defined using typedef
+instead of struct, to address a review comment.
 
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> index 7be5de8d253f..c3d1914381ae 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> @@ -23,6 +23,8 @@ PMIC's from Qualcomm.
->  		    "qcom,pmi8994-gpio"
->  		    "qcom,pmi8998-gpio"
->  		    "qcom,pms405-gpio"
-> +		    "qcom,pm660-gpio"
-> +		    "qcom,pm660l-gpio"
->  		    "qcom,pm8150-gpio"
->  		    "qcom,pm8150b-gpio"
->  		    "qcom,pm6150-gpio"
-> -- 
-> 2.27.0
-> 
+There are no changes in any other patches, from V6.
+
+Jishnu Prakash (7):
+  iio: adc: Convert the QCOM SPMI ADC bindings to .yaml format
+  iio: adc: Add PMIC7 ADC bindings
+  iio: adc: Add info property under adc_data
+  iio: adc: Add support for PMIC7 ADC
+  iio: adc: Update return value checks
+  iio: adc: Update debug prints
+  iio: adc: Combine read functions for PMIC5 and PMIC7
+
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 -------------
+ .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 278 +++++++++++++++++++++
+ drivers/iio/adc/qcom-spmi-adc5.c                   | 242 ++++++++++++++++--
+ drivers/iio/adc/qcom-vadc-common.c                 | 262 +++++++++++++++++++
+ drivers/iio/adc/qcom-vadc-common.h                 |  15 ++
+ include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    |  67 +++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   |  88 +++++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   |  46 ++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   |  28 +++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   |  28 +++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           |  78 +++++-
+ 11 files changed, 1109 insertions(+), 196 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
