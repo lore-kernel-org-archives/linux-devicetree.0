@@ -2,127 +2,127 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA50C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0994C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB4B206C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A5D20679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="q/Wwwp8A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tf+1p30e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732116AbgFWJlX (ORCPT
+        id S1731997AbgFWJm7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
+        Tue, 23 Jun 2020 05:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732041AbgFWJlW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:41:22 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91629C061795
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id c4so9263189iot.4
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
-        b=q/Wwwp8A1BT//ycShNsM7XqmB3bG24wQBAirlMbmZaCGJ14WlIrYk1hUeGFPFvFYh9
-         18AuWxnLJ1U1xdH/pGBPRjrPFyfPQg7q+9IucqCmFfeBCfeps7rxI2SW2DoKIfLUr5up
-         QiSEWrkcSOyboUd9lJ8T7gHRuzsG0YMSv8qg4VHWp/kK/35QhddY4oGB6G4nqgWMrCZh
-         syPjBA05FOD90Sz9u5udUM+MDkSo1wLudZ9Ufcpzj9Ht4F4P+CCs4YMhBoTiJJpc3hEZ
-         C3x7fLzfiu+6I1zCZCYLoB7ldYctRJTYQSe0hOhS8cOtdYjiuOJfUpqpndg4fwtYgwqc
-         4scA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
-        b=DGaZihi6j9Tg5apEY10JnDQ2melOJheB9h9wlgGtcepCjouPnvpjkPxeLZeo1NbhMG
-         Gfwtx2O8IR/rHgD8R8rD1qaHhDihCQyzEKa4CpZrPOMCSJs1ext/23T2eajzRhjn8MYt
-         aPFvaKPsy1ddinWLhMyYm0LoHo/Z4SXJ5kuRl9IP1fd//l0z3xAn0BB8DpBzvfT7J7Nc
-         eht6JSEY+ZOqKoQS0QZVT0a0W3xfE4UxqnSdKtOy3ufGj3IP9cuwl2n1aBsIEcHEZY/8
-         4LBJZUWeY2vMpF7AAQix7XTESF2cXZsIJy3Jdu2BGi9lpRJpvnYDM0A+UVfyD25ID7Cv
-         DM0w==
-X-Gm-Message-State: AOAM530ydSK74YGJ6BVnTYiPj0k0VYJm3iUnF8wj9vQTgnKfI29foMrK
-        5pn5NzmBjyOaQTXO5FIw82FGdfDgqswtzcssurqJPg==
-X-Google-Smtp-Source: ABdhPJx3IjaiDsJ/En/rPYv6gBlyL3k6lTKfuVMMpv+FRtlkN7ZNw3o69BET+TAsLrzyXAm77vQTkunODede1IEEHSw=
-X-Received: by 2002:a02:cdc4:: with SMTP id m4mr22844233jap.57.1592905281814;
- Tue, 23 Jun 2020 02:41:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-15-brgl@bgdev.pl>
- <20200622132921.GI1551@shell.armlinux.org.uk>
-In-Reply-To: <20200622132921.GI1551@shell.armlinux.org.uk>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 Jun 2020 11:41:11 +0200
-Message-ID: <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
-Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+        with ESMTP id S1731935AbgFWJm6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:42:58 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A799C061573;
+        Tue, 23 Jun 2020 02:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XwLVMpP6cYtFVBzdSro7PxdncqYRVnLMVLk9It8eSnA=; b=tf+1p30e2HRfibZvcGIgWdm64
+        euHfgRqyIfJz7Z14X4KDLhvTmozwXi1YqbRvoVo5SQkM7ggoaV/Y99/dRdEZJaIHh1OnwrAB5srvi
+        I+Z+7oavGotEH8SpPoeiEwilvM+NIuGKNEj9LXSqjUbxmSAMmwY36mKHP1OwNJv6N0MgpyjPjnLHK
+        7id5NOZoBZntIPhqMq/OB8L+PQXSRAfl0F7MQ7v62+dbKk/6t+O8J/TRocgljM3EdK3rF0C/MZ+Ba
+        qESqMzjrtcNDj6/wB9iNZwTzSWmBf55iojTnVK+9yICH6SxlweILkm7rh3VkkSvgCobKe9Cr5ZrC9
+        nmscJw74Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59010)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jnfSA-0001aO-Th; Tue, 23 Jun 2020 10:42:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jnfS8-0000vV-68; Tue, 23 Jun 2020 10:42:52 +0100
+Date:   Tue, 23 Jun 2020 10:42:52 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
         Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
         Quan Nguyen <quan@os.amperecomputing.com>,
         Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
         Mark Brown <broonie@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "moderated list:ARM/Mediatek SoC..." 
         <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "David S . Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+Message-ID: <20200623094252.GS1551@shell.armlinux.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk>
+ <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
-<linux@armlinux.org.uk> napisa=C5=82(a):
->
+On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
+> pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> napisał(a):
+> >
+> 
+> [snip!]
+> 
+> >
+> > This is likely to cause issues for some PHY drivers.  Note that we have
+> > some PHY drivers which register a temperature sensor in the probe
+> > function, which means they can be accessed independently of the lifetime
+> > of the PHY bound to the network driver (which may only be while the
+> > network device is "up".)  We certainly do not want hwmon failing just
+> > because the network device is down.
+> >
+> > That's kind of worked around for the reset stuff, because there are two
+> > layers to that: the mdio device layer reset support which knows nothing
+> > of the PHY binding state to the network driver, and the phylib reset
+> > support, but it is not nice.
+> >
+> 
+> Regulators are reference counted so if the hwmon driver enables it
+> using mdio_device_power_on() it will stay on even after the PHY driver
+> calls phy_device_power_off(), right? Am I missing something?
 
-[snip!]
+If that is true, you will need to audit the PHY drivers to add that.
 
->
-> This is likely to cause issues for some PHY drivers.  Note that we have
-> some PHY drivers which register a temperature sensor in the probe
-> function, which means they can be accessed independently of the lifetime
-> of the PHY bound to the network driver (which may only be while the
-> network device is "up".)  We certainly do not want hwmon failing just
-> because the network device is down.
->
-> That's kind of worked around for the reset stuff, because there are two
-> layers to that: the mdio device layer reset support which knows nothing
-> of the PHY binding state to the network driver, and the phylib reset
-> support, but it is not nice.
->
-
-Regulators are reference counted so if the hwmon driver enables it
-using mdio_device_power_on() it will stay on even after the PHY driver
-calls phy_device_power_off(), right? Am I missing something?
-
-Bart
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
