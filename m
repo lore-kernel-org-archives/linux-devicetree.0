@@ -2,81 +2,90 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A39C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A68CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3503D2078A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF76E2078A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 22:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e271y1wg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbH3sery"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387618AbgFWWVs (ORCPT
+        id S2388227AbgFWWrW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 18:21:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
+        Tue, 23 Jun 2020 18:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387568AbgFWWVr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 18:21:47 -0400
+        with ESMTP id S2387736AbgFWWrT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 18:47:19 -0400
 Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E52C061573;
-        Tue, 23 Jun 2020 15:21:47 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g13so149376qtv.8;
-        Tue, 23 Jun 2020 15:21:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67DAC06125C;
+        Tue, 23 Jun 2020 15:33:52 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id u17so202282qtq.1;
+        Tue, 23 Jun 2020 15:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kXNdMH2aHtz1cKCLUKEwpUC3KvkAioSi57ODqs3OgVI=;
-        b=e271y1wgb/AZJgBDYDmfwpTDMuoTV0T5hOfCBs5NYTEeYMUzw4F0rox85dnSpZJniD
-         D+5MBTkSk1tu+Wk/GXnwaVzrbihvyJydBz+XnF/bO8zWlG1jnRD3BZCHOkcpkrhHcqTN
-         BxN6x2qdwE0Qj7ihmxDlXWMOfPNO9tW5Blqy4UOE+dmIx7HIn3wnRyR++2WtnCfvffgw
-         jWh13cdIh7iZpU3kNJFkVOctpAqLibQVR/3NHZ3Rq0ygjDUHGcNzWyz3QF8zXccT1vsz
-         G6uXCLR85eFO5CG3X0/xSo/S6sCRk8uLATAyDt61uubVGqVXC25azmVNGviW14O39/nZ
-         RWRg==
+        bh=J8G2am4LycnAoPLOy+2PS7RCIcbIIa4nJGScou/N4W8=;
+        b=NbH3sery+/Qe5M40n5bdjBcoiYiE3l/d8UHQTfPCYMYi3BdKqONQPoqDli8+EA5JKC
+         IVQOZbdSWI6kXX5j3ScGn6Eaj0VR3rlRQejfbPk+oHZ3z9/WT3qmu0mzQT7qlUhUJGLI
+         QUvKVsFcDlt2puXh1OLK4+GrD3sdbpogQu5+9a7zPF8vJ4KmOHS/87QCC6aPhhEjmRRU
+         Bf9rceKTtbL1V7ks2M+eAp7KPq2bb/kw5lK4k9t9ymUSFnzCaCXuG5e7zIA7/snQw7c6
+         cBffxrwyUwdN/VKikJjX0yHlM/GLSIz15+BsgMT2MfNoRYJgo68iwuthaFMU6xzDPeOR
+         T0Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kXNdMH2aHtz1cKCLUKEwpUC3KvkAioSi57ODqs3OgVI=;
-        b=Z6ilFnekbLmYKDD2jicrZhBBxv2Yt0euhKvHL2IH3gZKMOeEOeGmSxEZxaG5LJri6j
-         81px1/HH007TKxv4nJVaAloYM9Jw9jVm0Nv0iEhTj9mL3HmsNwLH+D500Oi6hx1Ivem3
-         rgJ8XakcW1CDj7Pzhs9xAdrufNsz66L6/BjuxlgDSLiBpooWdSoW5IMGejFaRbvY1wCx
-         ge4VWIUHBJzruE9ocQJEo9d/kKUAQoHLZyRr8m9VgmcZ3zXne7mfH4r6OUZxDC8kRMFB
-         eQoicajNe2ZKZmprrx7QSvPprtppnfi5I19GeJkElesyWSKcjXQ7uyk3MGyNStP3ipVg
-         fCrw==
-X-Gm-Message-State: AOAM532gChyNpCwSsv+DVlQ/Y93CbG4DgEMaDq4TdKUFuThSbXi7KF67
-        afhNIBixUAapXFaDmSj/0ow=
-X-Google-Smtp-Source: ABdhPJxTFD4XxeL72+YUc91Cj7omrXA6jfpXKuMJbYFrm3mlTFfN3/1tBtA33gtsaMOfp7ctMiX64w==
-X-Received: by 2002:ac8:27b6:: with SMTP id w51mr24573196qtw.124.1592950906164;
-        Tue, 23 Jun 2020 15:21:46 -0700 (PDT)
+        bh=J8G2am4LycnAoPLOy+2PS7RCIcbIIa4nJGScou/N4W8=;
+        b=Fmf9rnC0CjOYznmvWEMityEhmSszuDf6GePhBcwhals+Auub+xwVH2PuSOW1QNCais
+         ia5CjjnSW7ByoUz72RBmZ1aLUkgoNA/RYmQnLXpRqajzG7Qo4wtYcy62h3HXFrZPwtrl
+         9GOIyxeB3TNTfaItL0SZg+kkUMUJis0Yd8dciainkclXYM/h3s0f798SaPcBggnWDqq1
+         6FsMl0DJFFvkPwbnbAaeo5sEdR75ze/lS1KaBnZivc2y3utJ08jqgYUh7OWyfdCN/y1/
+         YtiPPFgvN8isvnuaxrwegDlX3sW9hNhZIvMp0+fBCwDrSXHx7PpK+f8ury7AXt/SMaAH
+         WO3A==
+X-Gm-Message-State: AOAM533llgzP/Sv4+sQOrt0xKeCGHRlLciDPwZky33kX0v3sbKMtdgbP
+        f9WVu7s3PXcjVdH3j+a24Ew=
+X-Google-Smtp-Source: ABdhPJzff2BzkTOKO8KMvzYPVoeW5pH9NHD3WiGMrgK3El1HJApgdwBVLcyX2leKK5rB5wg3UXXupQ==
+X-Received: by 2002:ac8:1090:: with SMTP id a16mr24391486qtj.181.1592951631945;
+        Tue, 23 Jun 2020 15:33:51 -0700 (PDT)
 Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id x19sm1910603qtc.36.2020.06.23.15.21.44
+        by smtp.gmail.com with ESMTPSA id a185sm1685060qkg.3.2020.06.23.15.33.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 15:21:45 -0700 (PDT)
+        Tue, 23 Jun 2020 15:33:51 -0700 (PDT)
 Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
  devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>, andy.shevchenko@gmail.com,
-        michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux@roeck-us.net, andriy.shevchenko@linux.intel.com,
-        robin.murphy@arm.com, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+References: <20200615092644.GA2608702@dell>
+ <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
+ <20200622085009.GP954398@dell>
+ <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
+ <20200622151054.GW954398@dell>
+ <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+ <20200622191133.GY954398@dell>
+ <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
+ <20200623064723.GZ954398@dell>
+ <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
+ <20200623195905.GB954398@dell>
 From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <2a25af37-a9b8-e4f3-6092-06c1c907dc9f@gmail.com>
-Date:   Tue, 23 Jun 2020 17:21:44 -0500
+Message-ID: <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
+Date:   Tue, 23 Jun 2020 17:33:50 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200611191002.2256570-1-lee.jones@linaro.org>
+In-Reply-To: <20200623195905.GB954398@dell>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,370 +94,346 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-11 14:10, Lee Jones wrote:
-> Currently, when a child platform device (sometimes referred to as a
-> sub-device) is registered via the Multi-Functional Device (MFD) API,
-> the framework attempts to match the newly registered platform device
-> with its associated Device Tree (OF) node.  Until now, the device has
-> been allocated the first node found with an identical OF compatible
-> string.  Unfortunately, if there are, say for example '3' devices
-> which are to be handled by the same driver and therefore have the same
-> compatible string, each of them will be allocated a pointer to the
-> *first* node.
+On 2020-06-23 14:59, Lee Jones wrote:
+> Suggestion #2
 > 
-> An example Device Tree entry might look like this:
+>>>>>> 2) Modify patch 1/3.  The small part of the patch to modify is:
+>>>>>>
+>>>>>> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
+>>>>>> +				    struct device_node *np,
+>>>>>> +				    const struct mfd_cell *cell)
+>>>>>> +{
+>>>>>> +	struct mfd_of_node_entry *of_entry;
+>>>>>> +	const __be32 *reg;
+>>>>>> +	u64 of_node_addr;
+>>>>>> +
+>>>>>> +	/* Skip devices 'disabled' by Device Tree */
+>>>>>> +	if (!of_device_is_available(np))
+>>>>>> +		return -ENODEV;
+>>>>>> +
+>>>>>> +	/* Skip if OF node has previously been allocated to a device */
+>>>>>> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
+>>>>>>
+>>>>>> Change:
+>>>>>>
+>>>>>> +		if (of_entry->np == np)
+>>>>>> +			return -EAGAIN;
+>>>>>>
+>>>>>> To:
+>>>>>>
+>>>>>> +		if (of_entry->np == np) {
+>>>>>> +			if (!cell->use_of_reg)
+>>>>>> +				return -EINVAL;
+>>>>>> +			else
+>>>>>> +				return -EAGAIN;
+>>>>>>
+>>>>>> There may be a better choice than EINVAL, but I am just showing the method.
+>>>>>>
+>>>>>> You may also want to refactor this section of the patch slightly
+>>>>>> differently to achieve the same result.  It was just easiest to
+>>>>>> show the suggested change the way I did it.
+>>>>>>
+>>>>>> The test that returns EINVAL detects the issue that the FDT does
+>>>>>> not match the binding (there is more one child node with the
+>>>>>> "stericsson,ab8500-pwm" compatible.
 > 
->   mfd_of_test {
->           compatible = "mfd,of-test-parent";
->           #address-cells = <0x02>;
->           #size-cells = <0x02>;
+> My reply to suggestion #2
 > 
->           child@aaaaaaaaaaaaaaaa {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xaaaaaaaa 0xaaaaaaaa 0 0x11>,
->                         <0xbbbbbbbb 0xbbbbbbbb 0 0x22>;
->           };
-> 
->           child@cccccccc {
->                   compatible = "mfd,of-test-child";
->                   reg = <0x00000000 0xcccccccc 0 0x33>;
->           };
-> 
->           child@dddddddd00000000 {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xdddddddd 0x00000000 0 0x44>;
->           };
->   };
-> 
-> When used with example sub-device registration like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 0, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child")
->   };
-> 
-> ... the current implementation will result in all devices being allocated
-> the first OF node found containing a matching compatible string:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@aaaaaaaaaaaaaaaa
-> 
-> After this patch each device will be allocated a unique OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@cccccccc
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@dddddddd00000000
-> 
-> Which is fine if all OF nodes are identical.  However if we wish to
-> apply an attribute to particular device, we really need to ensure the
-> correct OF node will be associated with the device containing the
-> correct address.  We accomplish this by matching the device's address
-> expressed in DT with one provided during sub-device registration.
-> Like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child", 0xdddddddd00000000),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> This will ensure a specific device (designated here using the
-> platform_ids; 1, 2 and 3) is matched with a particular OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@dddddddd00000000
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@cccccccc
-> 
-> This implementation is still not infallible, hence the mention of
-> "best effort" in the commit subject.  Since we have not *insisted* on
-> the existence of 'reg' properties (in some scenarios they just do not
-> make sense) and no device currently uses the new 'of_reg' attribute,
-> we have to make an on-the-fly judgement call whether to associate the
-> OF node anyway.  Which we do in cases where parent drivers haven't
-> specified a particular OF node to match to.  So there is a *slight*
-> possibility of the following result (note: the implementation here is
-> convoluted, but it shows you one means by which this process can
-> still break):
-> 
->   /*
->    * First entry will match to the first OF node with matching compatible
->    * Second will fail, since the first took its OF node and is no longer available
->    * Third will succeed
->    */
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
-> 	OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> The result:
-> 
->   [0.753869] mfd-of-test-parent mfd_of_test: Registering 3 devices
->   [0.756597] mfd-of-test-child: Failed to locate of_node [id: 2]
->   [0.759999] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.760314] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.760908] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.761183] mfd-of-test-child mfd-of-test-child.2: No OF node associated with this device
->   [0.761621] mfd-of-test-child mfd-of-test-child.3: Probing platform device: 3
->   [0.761899] mfd-of-test-child mfd-of-test-child.3: Using OF node: child@cccccccc
-> 
-> We could code around this with some pre-parsing semantics, but the
-> added complexity required to cover each and every corner-case is not
-> justified.  Merely patching the current failing (via this patch) is
-> already working with some pretty small corner-cases.  Other issues
-> should be patched in the parent drivers which can be achieved simply
-> by implementing OF_MFD_CELL_REG().
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> 
-> Changelog:
-> 
-> v1 => v2:
->   * Simply return -EAGAIN if node is already in use
->   * Allow for valid of_reg=0 by introducing use_of_reg boolean flag
->   * Split helpers out into separate patch
-> 
-> drivers/mfd/mfd-core.c   | 99 +++++++++++++++++++++++++++++++++++-----
->  include/linux/mfd/core.h | 10 ++++
->  2 files changed, 97 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index e831e733b38cf..120803717b828 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/kernel.h>
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
-> +#include <linux/list.h>
->  #include <linux/property.h>
->  #include <linux/mfd/core.h>
->  #include <linux/pm_runtime.h>
-> @@ -17,8 +18,17 @@
->  #include <linux/module.h>
->  #include <linux/irqdomain.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/regulator/consumer.h>
->  
-> +static LIST_HEAD(mfd_of_node_list);
-> +
-> +struct mfd_of_node_entry {
-> +	struct list_head list;
-> +	struct device *dev;
-> +	struct device_node *np;
-> +};
-> +
->  static struct device_type mfd_dev_type = {
->  	.name	= "mfd_device",
->  };
-> @@ -107,6 +117,54 @@ static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
->  }
->  #endif
->  
-> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
-> +				    struct device_node *np,
-> +				    const struct mfd_cell *cell)
-> +{
-> +	struct mfd_of_node_entry *of_entry;
-> +	const __be32 *reg;
-> +	u64 of_node_addr;
-> +
-> +	/* Skip devices 'disabled' by Device Tree */
-> +	if (!of_device_is_available(np))
-> +		return -ENODEV;
-> +
-> +	/* Skip if OF node has previously been allocated to a device */
-> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
-> +		if (of_entry->np == np)
-> +			return -EAGAIN;
-> +
-> +	if (!cell->use_of_reg)
-> +		/* No of_reg defined - allocate first free compatible match */
-> +		goto allocate_of_node;
-> +
-> +	/* We only care about each node's first defined address */
-> +	reg = of_get_address(np, 0, NULL, NULL);
-> +	if (!reg)
-> +		/* OF node does not contatin a 'reg' property to match to */
-> +		return -EAGAIN;
-> +
-> +	of_node_addr = of_read_number(reg, of_n_addr_cells(np));
-> +
-> +	if (cell->of_reg != of_node_addr)
-> +		/* No match */
-> +		return -EAGAIN;
-> +
-> +allocate_of_node:
-> +	of_entry = kzalloc(sizeof(*of_entry), GFP_KERNEL);
-> +	if (!of_entry)
-> +		return -ENOMEM;
-> +
-> +	of_entry->dev = &pdev->dev;
-> +	of_entry->np = np;
-> +	list_add_tail(&of_entry->list, &mfd_of_node_list);
-> +
-> +	pdev->dev.of_node = np;
-> +	pdev->dev.fwnode = &np->fwnode;
-> +
-> +	return 0;
-> +}
-> +
->  static int mfd_add_device(struct device *parent, int id,
->  			  const struct mfd_cell *cell,
->  			  struct resource *mem_base,
-> @@ -115,6 +173,7 @@ static int mfd_add_device(struct device *parent, int id,
->  	struct resource *res;
->  	struct platform_device *pdev;
->  	struct device_node *np = NULL;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  	int ret = -ENOMEM;
->  	int platform_id;
->  	int r;
-> @@ -149,19 +208,22 @@ static int mfd_add_device(struct device *parent, int id,
->  	if (ret < 0)
->  		goto fail_res;
->  
-> -	if (parent->of_node && cell->of_compatible) {
-> +	if (IS_ENABLED(CONFIG_OF) && parent->of_node && cell->of_compatible) {
->  		for_each_child_of_node(parent->of_node, np) {
->  			if (of_device_is_compatible(np, cell->of_compatible)) {
-> -				if (!of_device_is_available(np)) {
-> -					/* Ignore disabled devices error free */
-> -					ret = 0;
-> +				ret = mfd_match_of_node_to_dev(pdev, np, cell);
-> +				if (ret == -EAGAIN)
-> +					continue;
-> +				if (ret)
->  					goto fail_alias;
-> -				}
-> -				pdev->dev.of_node = np;
-> -				pdev->dev.fwnode = &np->fwnode;
-> +
->  				break;
->  			}
->  		}
-> +
-> +		if (!pdev->dev.of_node)
-> +			pr_warn("%s: Failed to locate of_node [id: %d]\n",
-> +				cell->name, platform_id);
->  	}
->  
->  	mfd_acpi_add_device(cell, pdev);
-> @@ -170,13 +232,13 @@ static int mfd_add_device(struct device *parent, int id,
->  		ret = platform_device_add_data(pdev,
->  					cell->platform_data, cell->pdata_size);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	if (cell->properties) {
->  		ret = platform_device_add_properties(pdev, cell->properties);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	for (r = 0; r < cell->num_resources; r++) {
-> @@ -213,18 +275,18 @@ static int mfd_add_device(struct device *parent, int id,
->  			if (has_acpi_companion(&pdev->dev)) {
->  				ret = acpi_check_resource_conflict(&res[r]);
->  				if (ret)
-> -					goto fail_alias;
-> +					goto fail_of_entry;
->  			}
->  		}
->  	}
->  
->  	ret = platform_device_add_resources(pdev, res, cell->num_resources);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	ret = platform_device_add(pdev);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	if (cell->pm_runtime_no_callbacks)
->  		pm_runtime_no_callbacks(&pdev->dev);
-> @@ -233,6 +295,12 @@ static int mfd_add_device(struct device *parent, int id,
->  
->  	return 0;
->  
-> +fail_of_entry:
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == &pdev->dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
->  fail_alias:
->  	regulator_bulk_unregister_supply_alias(&pdev->dev,
->  					       cell->parent_supplies,
-> @@ -287,6 +355,7 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  {
->  	struct platform_device *pdev;
->  	const struct mfd_cell *cell;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  
->  	if (dev->type != &mfd_dev_type)
->  		return 0;
-> @@ -297,6 +366,12 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
->  					       cell->num_parent_supplies);
->  
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
-> +
->  	kfree(cell);
->  
->  	platform_device_unregister(pdev);
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index d01d1299e49dc..a148b907bb7f1 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -78,6 +78,16 @@ struct mfd_cell {
->  	 */
->  	const char		*of_compatible;
->  
-> +	/*
-> +	 * Address as defined in Device Tree.  Used to compement 'of_compatible'
-> +	 * (above) when matching OF nodes with devices that have identical
-> +	 * compatible strings
-> +	 */
+>>>>> So here, instead of just failing a single device, we fail everything?
+>>>>> Sounds a lot like throwing the baby out with the bath water.  How is
+>>>>> that an improvement?
 
-Instead of the above comment, suggest something like instead (I have not properly
-line wrapped, to make it easier to see the difference):
+I could have sworn that I had replied with a solution to this issue.  So I
+searched and searched and searched my emails in the thread.  And checked my
+drafts email folder.  Then finally realized I had made a stupid mistake.
 
-   > +	/*
-   > +	 * Address as defined in Device Tree mfd child node "reg" property.  Used in combination with 'of_compatible'
-   > +	 * (above) when matching OF nodes with devices that have identical
-   > +	 * compatible strings
-   > +	 */
-   
-> +	const u64 of_reg;
-> +
-> +	/* Set to 'true' to use 'of_reg' (above) - allows for of_reg=0 */
-> +	bool use_of_reg;
-> +
->  	/* Matches ACPI */
->  	const struct mfd_cell_acpi_match	*acpi_match;
->  
+I did reply about this, but I had put my "-Frank" signature at the end
+of a comment much higher in the email.  So of course I expect you stopped
+reading at that point and never saw my answer.  My apologies!!!
+
+The email in question is:
+
+  https://lore.kernel.org/linux-devicetree/eae9cc00-e67a-cb6a-37c2-f2235782ed77@gmail.com/
+
+and what I wrote at this point in that email is:
+
+  You can modify more extensively than my simple example, changing
+  mfd_add_device() to more gracefully handle an EINVAL returned by
+  mfd_match_of_node_to_dev().
+
+Thus a modification to my suggestion #2 to make it _not_ fail
+everything.
+
+I didn't really flesh out all that "more gracefully handle" means.
+Among other things, it could include a pr_warn() that provides
+a fairly specific possible cause of the problem (eg the corner
+case mentioned near the end of the patch 1/3 header that shows
+mixing OF_MFD_CELL() and OF_MFD_CELL_REG() for the same compatible
+value.  It may be tricky coming up with good phrasing in a pr_warn()
+that describes the generic issue instead of the specific example.
+
+Again, sorry.
+
+
+>>>
+>>> [0]
+>>
+>> Is "[0]" the patch series, especially patch 1/3?
+> 
+> No, this is my reply to your suggestion #2.
+> 
+> The [0] is referenced further down.
+> 
+> [...]
+> 
+>>>>>  * False positives can occur and will fail as a result
+>>>>
+>>>> ((What is an example of a false positive?))  Never mind, now that
+>>>> I see that the previous issue is a fatal flaw, this becomes
+>>>> academic.
+>>>
+>>> That's okay, I don't mind discussing.
+>>>
+>>> Ironically, the 'ab8500-pwm' is a good example of a false positive,
+>>> since it's fine for the DT nodes to be identical.  So long as there
+>>> are nodes present for each instance, it doesn't matter which one is
+>>> allocated to which device .Forcing a 'reg' property onto them for no> good reason it not a valid solution here.
+>>
+
+Start of my comment that I wrote with "too many shortcuts" (see below):
+
+>> I thought that one of the points of this patch series was to add a
+>> "reg" property to any mfd child that was described by the
+>> OF_MFD_CELL_REG() macro.
+> 
+> The OF_MFD_CELL_REG() macro didn't exist until this patch-set.
+
+  
+Maybe the way I wrote that took too many shortcuts.  Let me re-phrase.
+
+I thought that one of the points of this patch set was to add the
+of_reg and use_of_reg fields to struct mfd_cell.  The expected use
+of the of_reg and use_of_reg fields was to allow the presence of a
+"reg" property in a devicetree mfd child node to be used to match
+specific child nodes to specific elements of the mfd_add_devices()
+cell array parameter, with the match occurring when the array elements
+are processed (currently in mfd_match_of_node_to_dev(), which is
+called by mfd_add_device()).
+
+The key point being the matching specific devicetree mfd child nodes
+to specific cell array members.
+
+The OF_MFD_CELL_REG() is simply a helper macro related to the above.
+
+> 
+> There are currently no users.
+
+Yes.  And as I pointed out elsewhere, I would expect a user of new
+functionality to be added as part of a patch series that adds the
+new functionality.  Or at least a mention of a specific plan to
+use the functionality.
+
+I had been assuming that the intended user was the one use case that
+I had identified, and that you let me continue to assume was the one
+existing use case.
+
+> 
+>> And that was meant to fix the problem where multiple indistinguishable
+>> children existed.  The only instance I found of that (using the
+>> weak search on OF_MFD_CELL()) was of compatible "stericsson,ab8500-pwm"
+>> in drivers/mfd/ab8500-core.c.  You agreed with my email that
+>> reported that.
+> 
+> No, I agreed with you that there is a current problem with
+> "stericsson,ab8500-pwm", as identified by Michael.  I didn't actually
+> know about this issue until *after* drafting this patch-set.  To be
+> clear the "stericsson,ab8500-pwm" scenario is not the reason for this
+> set's existence.
+
+So now I know that drivers/mfd/ab8500-core.c is totally unrelated to
+this patch series, and not the intended user of the new functionality.
+
+> 
+> Also, please forget about the OF_MFD_* macros, they are totally
+> agnostic to this effort.  The only relevance they have here is the
+> addition of 1 extra macro which *could* be used to provide the 'reg'
+> property where appropriate.
+
+My point was that my search for the data that comprised the "cell"
+parameter passed to mfd_add_devices() was inadequate, because I
+was searching on OF_MFD_CELL() instead of mfd_add_devices.  I was
+admitting that part of my ignorance was because of this poor search.
+
+I was searching for where the problem case actually occurred in the
+kernel.  Maybe you did not realize that I have been thinking that
+the only place where the problem case occurred was the single case
+I found with this insufficient search method.
+
+In some or many or all (I don't know, I'm not going to go back
+and search for all of them) you can probably replace mention
+of the OF_MFD_* with either my search for input data to
+mfd_add_devices() _or_ a concise reference to the new of_reg
+and use_of_reg fields of struct mfd_cell and the use of the
+new fields.
+
+Where is the problem that the patch set was intended to fix?
+
+> 
+>> So I thought that drivers/mfd/ab8500-core.c would be modified to
+>> replace the multiple instances of compatible "stericsson,ab8500-pwm"
+>> in OF_MFD_CELL() with OF_MFD_CELL_REG().
+> 
+> That is not my vision.  There is no need for "stericsson,ab8500-pwm"
+> to have 'reg' properties as far as I see it.
+
+In that case the binding document for the mfd child node with
+compatible "stericsson,ab8500-pwm" should be updated to state
+that if there are multiple such child nodes with the same parent
+then they must contain exactly the same set of properties and
+values.
+
+Maybe not your problem, I have no idea who is responsible for
+that update.
+
+However, 
+
+> 
+>> This is another problem with the patch series: there is no user
+>> of OF_MFD_CELL_REG().  Please add one to the series.
+> 
+> That's not a problem with this patch-set, it's a problem with your
+> understanding of this patch-set. :)
+
+I have already responded above about whether there should be a user
+of OF_MFD_CELL_REG() in the patch set.
+
+> 
+> As far as I know, there aren't any current users who would benefit
+> from this work.
+
+Sigh.  From the original patch 1/3 header:
+
+  "Currently, when a child platform device (sometimes referred to as a
+  sub-device) is registered via the Multi-Functional Device (MFD) API,
+  the framework attempts to match the newly registered platform device
+  with its associated Device Tree (OF) node.  Until now, the device has
+  been allocated the first node found with an identical OF compatible
+  string.  Unfortunately, if there are, say for example '3' devices
+  which are to be handled by the same driver and therefore have the same
+  compatible string, each of them will be allocated a pointer to the
+  *first* node."
+
+This implies that there is a current instance where multiple devices
+are "allocated a pointer to the *first* node".
+
+If the patch header had instead said something like:
+
+  adding the ability for an mfd device to have multiple children
+  with the same value of "compatible" property
+
+then my whole approach to trying to analyze and understand the
+patch series would have been entirely different.  One of my
+early replies described my attempt to find the code that was
+encountering the problem that the patch series claimed to fix.
+One of my concerns was handling potential compatibility issues
+with existing FDTs.
+
+And my understanding of your response to my analysis and investigation
+was that I had indeed found a problem case in existing code.  But now
+you tell me that the driver and mfd child node compatible value that
+I identified are not at all a problem.
+
+> Instead, it is designed to provide future submitters
+> with another tool to help them link their child devices to the correct
+> OF nodes.
+
+And that is what I was looking for above in this reply, looking for
+a user of the new functionality in the patch series, where I stated:
+
+   "Or at least a mention of a specific plan to
+   use the functionality."
+
+
+> That's not to say that current users can't and won't
+> benefit from this.  Just that they are not the target audience.
+> 
+>>>>> The above actually makes the solution worse, not better.
+>>>>>
+>>>>
+>>>> Patch 1/3 silently fails to deal with a broken devicetree.
+>>>> It results on one of the three ab8500-pwm child nodes in
+>>>> the hypothetical devicetree source tree not being added.
+>>>>
+>>>> That is not a good result either.
+>>>
+>>> No it doesn't.  In the case of 'ab8500-pwm' the OF node is not set for
+>>> 2 of the devices and warnings are presented in the kernel log.
+>>
+>> OK, I was wrong about "silent".  There is a warning:
+>>    pr_warn("%s: Failed to locate of_node [id: %d]\n",
+>>
+>>> The
+>>> device will continue to probe and function as usual.
+>>
+>> If the device probes and functions as usual without the child of_node,
+>> then why does the node have any properties (for the cases of
+>> arch/arm/boot/dts/ste-ab8500.dtsi and arch/arm/boot/dts/ste-ab8505.dtsi
+>> the properties "clocks" and "clock-names").
+> 
+> Because DT is meant to describe the hardware, not the implementation.
+> 
+> DT does not know, or care that in our case most operations that happen
+> on the platform are passed back via an API to a central controlling
+> location.  Or that in reality, the OF node in this situation is
+> superfluous.
+> 
+> Can we please stop talking about the AB8500.  It doesn't have anything
+> to do with this series besides the fact that if it (this set) had
+> existed *before* 'ab8500-pwm' was OF enabled, it wouldn't now be
+> wonky.
+
+OK.  I now understand that you don't expect the new functionality of
+the of_reg and use_of_reg fields of struct mfd_cell to be used by
+in relation to "ab8500-pwm" and drivers/mfd/ab8500-core.c.  I will
+drop them from the discussion.
+
+
+> 
+>> Digging through that leads to yet another related question, or actually
+>> sort of the same question.  Why do the child nodes with compatible
+>> "stericsson,ab8500-pwm" have the properties "clocks" and "clock-names"
+>> since the binding Documentation/devicetree/bindings/mfd/ab8500.txt
+>> does not list them?
+> 
+> If you want to talk about the AB8500, please start a new thread.
+> 
+>>>> OK, so my solution #3 is a no go.  How about my solution #2,
+>>>> which you did not comment on?
+>>>
+>>> I did [0].  You must have missed it. :)
+>>
+
+>> But yes or no to my solution #2 (with some slight changes to
+>> make it better (more gracious handling of the detected error) as
+>> discussed elsewhere in the email thread)?
+> 
+> Please see "[0]" above!
+> 
+> AFAICT your solution #2 involves bombing out *all* devices if there is
+> a duplicate compatible with no 'reg' property value.  This is a)
+> over-kill and b) not an error, as I mentioned:
+
+As I mentioned above, I set you up to have this misunderstanding by
+a mistake in one of my earlier emails.  So now that I have pointed
+out what I meant here by "more gracious handling of the detected
+error", what do you think of my amended solution #2?
+
+> 
+>>> It also suffers with false positives.
 > 
 
+Sorry for the very long response, but it seemed we were operating
+under some different understandings and I hope I have clarified some
+things.
+
+-Frank
