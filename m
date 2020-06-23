@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1695C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 23:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5177C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 23:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F51A208A9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 23:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831CC20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 23:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7GeDhst"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yn+FjvQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbgFWXZQ (ORCPT
+        id S2387793AbgFWXZ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 19:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52682 "EHLO
+        Tue, 23 Jun 2020 19:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387947AbgFWXZJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 19:25:09 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3279FC061573
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 16:25:09 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id u128so338051pgu.13
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 16:25:09 -0700 (PDT)
+        with ESMTP id S2387596AbgFWXZy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 19:25:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084C7C0613ED
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 16:25:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id n2so132446pld.13
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 16:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=O693aBUZA0/02GeteSwkznapNiqCdk4fR4JfhAjgavc=;
-        b=E7GeDhstIFhfU6UMSXEXnw12+uANnkkg6BPkJQ1DeVXe/HPH78nR/zlVv4a9+C4z/3
-         iFsAk0aky/OE/pjiWRSP9ml8X35XD3eQ/ZEAxJ/LFBrtV420T/R6QHdwKVt1XIACJ7hb
-         n7SFRrWjS3pvX2sVcqmg+/myPCMlW/kXNEFes6RqGMpQW3MFSvLSiOxXZCFoaTzI0Mzq
-         v8B7MiLSZ0cgU2BM7H35D7ac16DBSl6nKNLWbCahFh9Iq2tK35UWMgUUAwaKNXuqqfsJ
-         Qdb2MC+KdIpp9aUy9qqq55CwnOT5LGVeU5v4Sq4lYKUIpHJ4WRw4Lu5qWfHIUMkMpDUX
-         CWiQ==
+        bh=qE7vw0GVqcFQF+JDQggXEnkset3CAwUc/U76FmaYOOM=;
+        b=Yn+FjvQ53K9wm8K3rbcmUUE3AJMdVgGfxmQohnQq8p6BxBUb1IQXw+Ens5oPzIQ4uS
+         Ymar9ULBIVv4OoPeMYXOmNGBgN+636JA+zpMm+3L6nGBHuF+jyKFiMB/V8KZMZl4Xbuw
+         MXyN2O+sFyszKi1v5tIh6Me5iOuMtEpv0CQoMjzCa2DqRfWP5GyoU61X/k1gHLHQ74Z2
+         3hXAkEkYTCQuWo0zIV6YscQ5F5opIbvbOb4bYfRxEGUYwQQ52JmoqAzn66nQaVVgJW64
+         /ZkJSCta8rvvB0KjaYfoJ7Y9+2HQQoY8falz29KTjnI+eJKhUtuUpcnTQEWjh8hY9oLA
+         Mnag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=O693aBUZA0/02GeteSwkznapNiqCdk4fR4JfhAjgavc=;
-        b=Ncp49CiZOi+IbpBfUgpWgcWlr5zn9zQBYLdMqFi2ZjHloWjs3fmjRzcY2z2sCTius5
-         tmMC5UXcrAvtjjZFCFfQegWMrhpv/qWXdU00wLqT94d2e/qcXHnjMvwHcEWr73UwKzCW
-         M90BGPWoDUybXicgJKc+39gcFqsdv+o73aA8JAyDD6poof1uTEdGe3CHAIXMf3e+N1G5
-         jy/Nidz79OybdDZylD7CLUc5Tefcrqo0C4k3m67PWVj4pQD3PYnWKcsVVKwHcA4zrQEL
-         uZCrW5QsOFnhlAsNrwjKG4PiHtuzGxPvT7sdIzw75ozFuyGQvtd5ZhdA6OXQ3jACSDFT
-         zD9w==
-X-Gm-Message-State: AOAM532ssX8fWKT+IaJDuGMCwmFFG8l1NwgN2NFruWHaYJzzW1udzc8B
-        Vt6chQ0ercUXXw62ATytFHjWhA==
-X-Google-Smtp-Source: ABdhPJxrhbnAFdFw9+anuE/yWe/CReucVHYYbY2Ub9iSuabkIhcI+U3Lx0tcNQdgrhacKhQjcgUS+w==
-X-Received: by 2002:aa7:96af:: with SMTP id g15mr27462110pfk.75.1592954708697;
-        Tue, 23 Jun 2020 16:25:08 -0700 (PDT)
+        bh=qE7vw0GVqcFQF+JDQggXEnkset3CAwUc/U76FmaYOOM=;
+        b=tUKhc/fAC5bdOPzAq2dKKHuGdRRe/nJaBqjNW7jJhAWMiujhZVCkuoiLSvHoD8k7H6
+         5gqkTEyAelTYrtrsdCehKDKR+rYbsTxtzd8DNLJHnzErwxObQ8eLC8ZoCU4j6x+RP3QS
+         Xknp8G4AhiJ9bzyMOm3bR+sInW6hLaUHIOCp93z63kIfzxjTl37CO4o/cXAgddBBzKB4
+         O3p0oEIA9X1yPJZNG3BcH9M2BSDpOvY9Wzn2RGlxuTWCVDpXE0IKws+/sJOnGPkXERop
+         Xgty/PvNHiWHqxjIdjLPmW+axDG7hRHd4iknM+pvWep4IG+cvIQOlSdztSXA2UOCa0Na
+         WKqg==
+X-Gm-Message-State: AOAM531N61xQZFgTale71wVgG63EKogyrgRaneT9d3K9NfiSozJVDzPJ
+        PCLjcuuUi+2ezzwuUN0/gH5qIw==
+X-Google-Smtp-Source: ABdhPJwQ/Jau2NMJv+UPDND3zP/fjJqZ/f7DzjXlnas8zvrMilmF2OYPTT2JL0gVhGgG+3sNCPrMdg==
+X-Received: by 2002:a17:90a:c003:: with SMTP id p3mr26633173pjt.178.1592954753537;
+        Tue, 23 Jun 2020 16:25:53 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w124sm17656423pfc.213.2020.06.23.16.25.07
+        by smtp.gmail.com with ESMTPSA id x1sm3465861pju.3.2020.06.23.16.25.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 16:25:08 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 16:22:25 -0700
+        Tue, 23 Jun 2020 16:25:52 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 16:23:10 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Konrad Dybcio <konradybcio@gmail.com>
 Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
@@ -68,14 +68,15 @@ Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/12] arm64: dts: qcom: msm8994: Add PSCI node
-Message-ID: <20200623232225.GO128451@builder.lan>
+Subject: Re: [PATCH v2 10/12] arm64: dts: qcom: angler: Add qcom,msm-id and
+ pmic-id
+Message-ID: <20200623232310.GP128451@builder.lan>
 References: <20200623224813.297077-1-konradybcio@gmail.com>
- <20200623224813.297077-10-konradybcio@gmail.com>
+ <20200623224813.297077-11-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623224813.297077-10-konradybcio@gmail.com>
+In-Reply-To: <20200623224813.297077-11-konradybcio@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -83,36 +84,32 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Tue 23 Jun 15:48 PDT 2020, Konrad Dybcio wrote:
 
-> Add PSCI node to enable multi-processor startup.
-> 
-> Note that not every 8994 device firmware supports PSCI,
-> and even if, then it can only start the cores and not
-> shut them down.
+> Add properties required for the bootloader to select
+> the correct bootloader blob. They have been removed from
+> the SoC device tree as they should be set on a per-device
+> basis.
 > 
 > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
 Applied, thanks.
 
 > ---
->  arch/arm64/boot/dts/qcom/msm8994.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-> index b3c01ebc5c67..9eec8ab6bf2c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
-> @@ -159,6 +159,11 @@ pmu {
->  		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4)| IRQ_TYPE_LEVEL_HIGH)>;
->  	};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> index a5f9a6ab512c..baa55643b40f 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> @@ -11,6 +11,8 @@ / {
+>  	model = "Huawei Nexus 6P";
+>  	compatible = "huawei,angler", "qcom,msm8994";
+>  	/* required for bootloader to select correct board */
+> +	qcom,msm-id = <207 0x20000>;
+> +	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
+>  	qcom,board-id = <8026 0>;
 >  
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "hvc";
-> +	};
-> +
->  	reserved-memory {
->  		#address-cells = <2>;
->  		#size-cells = <2>;
+>  	aliases {
 > -- 
 > 2.27.0
 > 
