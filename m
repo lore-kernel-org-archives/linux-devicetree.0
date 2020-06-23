@@ -2,141 +2,130 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9418C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FB1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A1120720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89C0207BC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lB2+x1nm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgFWCQN (ORCPT
+        id S1731697AbgFWCoB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:16:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51194 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730459AbgFWCQN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:16:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1DC95AE18;
-        Tue, 23 Jun 2020 02:16:10 +0000 (UTC)
-Subject: Re: [PATCH v4 3/3] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- Pym Particles EVB
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Marc Zyngier <marc.zyngier@arm.com>
-References: <20200620233227.31585-1-afaerber@suse.de>
- <20200620233227.31585-4-afaerber@suse.de>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <fd6ad520-54f2-076c-dd4c-34a4bf426b22@suse.de>
-Date:   Tue, 23 Jun 2020 04:16:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 22 Jun 2020 22:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731557AbgFWCoB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 22:44:01 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171E2C061573
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 19:44:01 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j12so7156084pfn.10
+        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 19:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8HZme+4yoYk/0IIihuaQK25ly6wubdQhFQnW5CQJpwQ=;
+        b=lB2+x1nmphDRMaiyajc3MjdPsv6wxTxxEQRuPpfVZRFxgaLOH212DQg4vTDdiWgo7p
+         iKSmyDf/u9/wFaGA2QV6Qfifwx4V4WcH5AbwwZmG/H6OcSRYIlNxRAz+LW8BEQJO9HFK
+         TLtwymzwJa9lkkpJNwZwB/WxvfRNJdiyaETTcLcBW1lm1M6GeJrdTCYUfGoBSAbU0fIi
+         ABZGjmlXpYsPB7GGKm1BQBn2oJdt+T09dWBivCUMzSF539X3wvbWGdYzvFY/o8nqytE3
+         7CExUz2qA8PZS/6Q/aUBBb+jZKBjEpzflVXlglv5KIldIu0Vc8ynPFLJUbIluQKlkv9M
+         XCvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8HZme+4yoYk/0IIihuaQK25ly6wubdQhFQnW5CQJpwQ=;
+        b=HDxwy4FrLfHukYa/MefZVzk1QY7UM7w34VoKozPd996KzaWq6lXSuw2kbWZI31jQce
+         Fr+v++tDu0a0ZGBy8V7MXE4yc3yQr6Jhl55LDBgWLVpEERVwr9AXVsHans81pHpaKAlP
+         zS9uVJosvPHAzezlICNMrvyjsAiqKodPujOW+Rr9jcFZQ/jAHb7VqGv4K6rUMnvH6lgl
+         owjWNMKZRnmcJA9R6keTevKUyUfNSxscIEhY704XpI7n7CZheP/CBl/koCOURY3oXeYg
+         soIxjb87x9gvuyGzvSXiwEEdO/5VQqQf+V63x2Pu34FnBU1OE/P9edc0OJwhVYD7+hhl
+         Da1g==
+X-Gm-Message-State: AOAM533CRAlO4z/xmxIPWf+xQg0AMMi8a9/5bV6lQG+4YV+Onu3U1DKy
+        JQJ68jODi0rxfIVIpXPBhg8G
+X-Google-Smtp-Source: ABdhPJyXU1fbfPSMRmxqKjkespCChz+D6aeP9471It6Hdk5H3/tuDKr4c3qP6XD8FFCk5wtGj6Lv2Q==
+X-Received: by 2002:a62:1b82:: with SMTP id b124mr22691966pfb.172.1592880240481;
+        Mon, 22 Jun 2020 19:44:00 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:609d:7d26:e4ff:f0b0:edd6:2484])
+        by smtp.gmail.com with ESMTPSA id x4sm14546059pfx.87.2020.06.22.19.43.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Jun 2020 19:43:59 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 08:13:52 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sm8250: Add IPCC
+Message-ID: <20200623024352.GB11093@Mani-XPS-13-9360>
+References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
+ <20200622222747.717306-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200620233227.31585-4-afaerber@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622222747.717306-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
-
-Am 21.06.20 um 01:32 schrieb Andreas Färber:
-> From: James Tai <james.tai@realtek.com>
+On Mon, Jun 22, 2020 at 03:27:43PM -0700, Bjorn Andersson wrote:
+> Add the IPCC node, used to send and receive IPC signals with
+> remoteprocs.
 > 
-> Add Device Trees for Realtek RTD1319 SoC family, RTD1319 SoC and
-> Realtek Pym Particles EVB.
-> 
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->   v3 -> v4:
->   * Updated Realtek copyright for 2 out of 3 files from v3
->   * Renamed from rtd1319-pymparticle.dts to rtd1319-pymparticles.dts
->   * Updated compatible from pymparticle to pym-particles
->   * Updated PMU compatible from armv8-pmuv3 to cortex-a55-pmu (Robin)
->   
->   v2 -> v3:
->   * Add virtual maintenance interrupt for architecture timer
->   * Correct the GIC redistributor address range
-[...]
-> diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> new file mode 100644
-> index 000000000000..8c5b6fc7b8eb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-[...]
-> +		gic: interrupt-controller@ff100000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0xff100000 0x10000>,
-> +			      <0xff140000 0x80000>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index e583a01cbcf1..74a7ca96177e 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -6,6 +6,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-sm8250.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+> +#include <dt-bindings/mailbox/qcom-ipcc.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  
+> @@ -329,6 +330,15 @@ gcc: clock-controller@100000 {
+>  			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
+>  		};
+>  
+> +		ipcc: interrupt-controller@408000 {
 
-In my testing this appears to cause the following error:
+ipcc: mailbox@408000
 
-[    2.239858] irq: type mismatch, failed to map hwirq-25 for 
-interrupt-controller@ff100000!
-...
-[    3.505649] kvm [1]: IPA Size Limit: 40bits
-[    3.506051] kvm [1]: GICv3: no GICV resource entry
-[    3.506058] kvm [1]: disabling GICv2 emulation
-[    3.506081] kvm [1]: GIC system register CPU interface enabled
-[    3.506175] kvm [1]: vgic interrupt IRQ1
-[    3.506293] kvm [1]: Hyp mode initialized successfully
+Other than this,
 
-If I change it to IRQ_TYPE_LEVEL_LOW, that error goes away:
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[    3.506030] kvm [1]: IPA Size Limit: 40bits
-[    3.506430] kvm [1]: GICv3: no GICV resource entry
-[    3.506437] kvm [1]: disabling GICv2 emulation
-[    3.506459] kvm [1]: GIC system register CPU interface enabled
-[    3.506551] kvm [1]: vgic interrupt IRQ1
-[    3.506672] kvm [1]: Hyp mode initialized successfully
+Thanks,
+Mani
 
-In-tree RTD1619 has it as HIGH, too, but doesn't show above error:
-
-[    2.918973] kvm [1]: IPA Size Limit: 40bits
-[    2.919345] kvm [1]: GICv3: no GICV resource entry
-[    2.919352] kvm [1]: disabling GICv2 emulation
-[    2.919373] kvm [1]: GIC system register CPU interface enabled
-[    2.919522] kvm [1]: vgic interrupt IRQ1
-[    2.919700] kvm [1]: Hyp mode initialized successfully
-
-RTD1619 doesn't show an error either if I change it to LOW though:
-
-[    2.918843] kvm [1]: IPA Size Limit: 40bits
-[    2.919212] kvm [1]: GICv3: no GICV resource entry
-[    2.919218] kvm [1]: disabling GICv2 emulation
-[    2.919240] kvm [1]: GIC system register CPU interface enabled
-[    2.919390] kvm [1]: vgic interrupt IRQ1
-[    2.919567] kvm [1]: Hyp mode initialized successfully
-
-The GICv3 bindings example does have it as 4 == HIGH, but so does the 
-GICv2 binding example, and yet we used LOW == 8 for in-tree RTD139x, 
-RTD129x and RTD1195. The downstream BSP uses value 4 == HIGH for both 
-RTD16xx and RTD13xx - is it possible this was never actually tested?
-
-Thanks in advance for clarifying the correct interrupt polarity.
-
+> +			compatible = "qcom,sm8250-ipcc", "qcom,ipcc";
+> +			reg = <0 0x00408000 0 0x1000>;
+> +			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
 > +			interrupt-controller;
 > +			#interrupt-cells = <3>;
+> +			#mbox-cells = <2>;
 > +		};
-[snip]
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+> +
+>  		qupv3_id_2: geniqup@8c0000 {
+>  			compatible = "qcom,geni-se-qup";
+>  			reg = <0x0 0x008c0000 0x0 0x6000>;
+> -- 
+> 2.26.2
+> 
