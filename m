@@ -2,66 +2,66 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40C2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855B3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA58B2082F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5898620C09
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o63sFuue"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UinVkuo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbgFWTQX (ORCPT
+        id S2387489AbgFWTjt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:16:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
+        Tue, 23 Jun 2020 15:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733255AbgFWTQW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 15:16:22 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32151C061573;
-        Tue, 23 Jun 2020 12:16:22 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id y10so8361760eje.1;
-        Tue, 23 Jun 2020 12:16:22 -0700 (PDT)
+        with ESMTP id S1733248AbgFWTjt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 15:39:49 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A69EC061573;
+        Tue, 23 Jun 2020 12:39:49 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id y2so7411927ioy.3;
+        Tue, 23 Jun 2020 12:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UzQp1hQlOzqdNi1YndpqVxliVZx+D0AKaaRUoCK8nr8=;
-        b=o63sFuueEHk/547QE0wCBXP5jjFSTls7r/TONSuWAL7wxROIgVccIDHl8Dg3Sqsnuc
-         Arge0FYFOaRJcUbwY3Gl6cYVSJTPmwSln65Vx1yusrlqVgDTc/GPBjz4SlH80nI84Pjq
-         4DMO4un1gp0GZJvPHYmXtKh7QbgOOex3AOt3/2nnnrhNNelHiOPhJ5EBp7p2NZGGGY1W
-         fRZLeTEVaX07cNFd7rVbHlOWpXK4QeZfWIZKA7z0cVGEkruQCW//esmHsO1lH4VwSQyJ
-         rJLuSZqjU/yn3IvSsgInqWwE6Pa2f8o8lWnaEW3Ua0Skj3HwtdKu/GCJyYZd4DsVjzlw
-         1Iwg==
+        bh=ON8R5IT5kpw4UiCSOW1nl5up36r+tL2wFW0z/curnEc=;
+        b=UinVkuo1YR7kJFYxyDUhOHD+YXCS+9X2TqEs9x+IDax1d/3WcgLjPE6LEQ86FHvP2E
+         j19p5Cj9X4Ip2DRABsYsfocfyJd7ziKfmFfrgf8UZ4uAYH3nDTmsyhmbkV3LfWwE6lGY
+         FR21FfizxwWp0I9w79ogkdoSQb+vWe+4T9XXyZByzsZACePbEDp8Xdtrrz+djWOjFo7t
+         hxr3gjKmrY7EigC2OOJVFfXszDifccUSYKb9x4UeK26nCh06oLXjb8mgvfnsjGl8vwd7
+         C5oIqpCvjX9AymC5VXHi9Tf+cDVi5/k7LqCd0PMluaxyJaX79NaVuJnPEnqQsIFZiv7l
+         X6yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=UzQp1hQlOzqdNi1YndpqVxliVZx+D0AKaaRUoCK8nr8=;
-        b=CxGH3VRNzfXFWMSgz6yhf2KJEGUthWSFU9fXz+AbbQnfKITZV+R36XwObPFGWLU5km
-         8N7FcbZJjLkR7E0RaGllHav4x6diBBo4EsAlOPqUkHJ6f00PkGah65ugrJk3z1Edau3u
-         NuRvGVcB1r70aHBI7TPzdd6e2RM13BAbFJ8cbq4c6K/NRAi8D1aSzqjDd0Ujgw7iB84l
-         83aU6yBxLe7lenueRR5wiqqOgDAY11ve50MSF+S+/9N+a8/ZIwUnBlh2y/a/sGBOstY9
-         OH0KPhlBnoqynonBZq/lPqOLCBTWHmAK7B+THGtL9K4DA10Cy2r1GEePxznHFWPQuv6A
-         H7xw==
-X-Gm-Message-State: AOAM531DM7bMHwaHXS2/D94DyeAS/IoOkzEbGdK1RQA5nQTzoiJ/sxvS
-        0kh8QLzzf3rJOFE6ErpeMuc=
-X-Google-Smtp-Source: ABdhPJxOw4MaCAt9fkW9CBZlxVk9ro0+kaT5EauAAfdESjmO1rtUKnRrup90FzgFnQzU6ATJdFl+TA==
-X-Received: by 2002:a17:906:19c7:: with SMTP id h7mr21240539ejd.403.1592939780864;
-        Tue, 23 Jun 2020 12:16:20 -0700 (PDT)
+        bh=ON8R5IT5kpw4UiCSOW1nl5up36r+tL2wFW0z/curnEc=;
+        b=k8PvaZJ0CPQ13cVLlbB7xKJ8RXlJu8Wkvw7PoHb5KqsbfJPRMbbaZWCbvTWGs+RIhc
+         EFpfzfnDE3e5Zl3AM7K5EOhiz3Y3Jb/gN4laRtJmDkaYsK68wI8GS6npQYHPhA6fGi2P
+         IRDO+VOOuNuk/xP/Q6wGDsA5QOra/H/8JGZo2LKLK5nzO5ncpTBOd9qwgo6Y+GlhH1ze
+         D9jVyiy/HMn6NHsum4nsazinazAyBNjy/OKQzmXQ+fQLpgprLrWxFcDCVnRltDfir/Qp
+         89+jA0lmBa2eP7mmmo1QxS7GoT3mbmvLIXlk+wqmaokjq3NKhopwGFLTi9z9XNqwjjYQ
+         rAWw==
+X-Gm-Message-State: AOAM532Hw/qBZLGkcEBpVvvUPuJ4ppUTdyjuKmSa2W7nSAlSPUf6C5aB
+        vf+0oPKrU44erf3SCM/rBg0=
+X-Google-Smtp-Source: ABdhPJzpbYG2AxrKYqBD/+gTiqDb38cJZpoiLygkaCCJpgCpWyQc52XVMfaH+Uq4mhUTojXyy0tnBg==
+X-Received: by 2002:a6b:91c5:: with SMTP id t188mr14071991iod.61.1592941188540;
+        Tue, 23 Jun 2020 12:39:48 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id l3sm3923118edr.14.2020.06.23.12.16.12
+        by smtp.googlemail.com with ESMTPSA id m2sm2999896iln.1.2020.06.23.12.39.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 12:16:20 -0700 (PDT)
-Subject: Re: [PATCH 06/15] net: phy: mdio: reset MDIO devices even if probe()
- is not implemented
+        Tue, 23 Jun 2020 12:39:47 -0700 (PDT)
+Subject: Re: [PATCH 12/15] dt-bindings: mdio: add phy-supply property to
+ ethernet phy node
 To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
@@ -95,7 +95,7 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-7-brgl@bgdev.pl>
+ <20200622093744.13685-13-brgl@bgdev.pl>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -151,12 +151,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <1af383ab-43eb-0557-0fd8-1f0fee3436b5@gmail.com>
-Date:   Tue, 23 Jun 2020 12:16:10 -0700
+Message-ID: <5e5194be-0e5c-5945-4c39-06692a557cb7@gmail.com>
+Date:   Tue, 23 Jun 2020 12:39:43 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200622093744.13685-7-brgl@bgdev.pl>
+In-Reply-To: <20200622093744.13685-13-brgl@bgdev.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -168,14 +168,32 @@ X-Mailing-List: devicetree@vger.kernel.org
 On 6/22/20 2:37 AM, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Similarily to PHY drivers - there's no reason to require probe() to be
-> implemented in order to call mdio_device_reset(). MDIO devices can have
-> resets defined without needing to do anything in probe().
+> The phy-supply property is often added to MAC nodes but this is wrong
+> conceptually. These supplies should be part of the PHY node on the
+> MDIO bus. Add phy-supply property at PHY level to mdio.yaml.
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/net/mdio.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+> index d6a3bf8550eb..9c10012c2093 100644
+> --- a/Documentation/devicetree/bindings/net/mdio.yaml
+> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+> @@ -90,6 +90,10 @@ patternProperties:
+>            Delay after the reset was deasserted in microseconds. If
+>            this property is missing the delay will be skipped.
+>  
+> +      phy-supply:
+> +        description:
+> +          Phandle to the regulator that provides the supply voltage to the PHY.
 
-Same comment as patch #5, I would prefer that we seek a solution that
-allows MDIO drivers to manage multiple reset lines (would that exist) on
-their own instead of this one size fits all approach. Thank you.
+I do not see how you can come up with a generic name here, there could
+be PHYs supporting different voltages (3.3V, 1.8V, 1.5V) depending on
+their operation mode/strapping, there can also be different parts of the
+PHY being powered by different regulators, the analog part could be on
+an always-on island such that Wake-on-LAN from the PHY could be done,
+and the digital part could be on a complete different island.
 -- 
 Florian
