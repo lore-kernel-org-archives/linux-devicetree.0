@@ -2,357 +2,210 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DADC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1A2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E561A2077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DC120716
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yRvE71xH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFptDqDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbgFWHiB (ORCPT
+        id S1731265AbgFWHv1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47012 "EHLO
+        Tue, 23 Jun 2020 03:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731054AbgFWHiA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 03:38:00 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811FAC061797
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 00:38:00 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k15so15633142otp.8
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 00:38:00 -0700 (PDT)
+        with ESMTP id S1731158AbgFWHv0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 03:51:26 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4813C061573;
+        Tue, 23 Jun 2020 00:51:26 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e5so15626576ote.11;
+        Tue, 23 Jun 2020 00:51:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=35v059ZSefWiE/94cPIdPsNYSj0+xNFw0zZxXG6+Ru4=;
-        b=yRvE71xHNF6E696AMfCuE+3xfDYcTc3yUU5vc4zZuoFKBV+AuBEygXslM1Ri7FTqUY
-         rkGrksg+O5zIiKwLkV7GOpfoBgKJzecwIZ27dR8MSb3+TqccBwzqIyTgHgCwSOWZ3raO
-         aKjAluRAqMOGafA0LdI9hhJWBES/lxYbZ3AnM4gRHU+rz5SuW4fftU6TBQxdxrUmftk/
-         5XTGJczBhWcJJUDufYD+cbqasMyyd4zLqegwr9rid76/Xx+1wrQ8gKs9VjmRV2jppftX
-         cSnL6ESOX0FImU/i1qcy6CE/5oxJKmIOAEtCqBz/Ghds+X7S7Er8h9++Kd4ydM+eKq+e
-         u6xA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=31g1sbVtR+uOawnMksB1fqDaovbJUKSiTqnUPMyL77I=;
+        b=HFptDqDb3X53PSN7ilibR9KZ401OqDhKcO44etgdqJH7FD74k3YmeoFFjZTu/oWV4/
+         X4DPxHANUsTLnLQCb2/Y2zLEY658AEntQiZI44r3bQIUAfHX6utOBtSlLFQgH65UcA+k
+         ZXq1G5vIHZikthaSU6lt/WG89ETn1qxsq8F1lTOItTrUfOKb6FQb/J2Fxsa/OG2ufKII
+         mlLk1cY7x0/m1Nqo2nltJCOTcor36fPjUVRYZBVUJ4PcY3a1Tr0ZnOzKod4+lgQMpxyo
+         tDaNhbXN8yengWZvjinnp2HNkoyYL7RZ+QtINNlRlH7CXxTntP6GHaxbNOe2jaa0ospr
+         xXFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=35v059ZSefWiE/94cPIdPsNYSj0+xNFw0zZxXG6+Ru4=;
-        b=O4b50RC6frMqBBeyeKDhHvth1fnC/IGANvmOB7MXJxJ7tflkrNvdXspYlq/iPIQKvk
-         BgPettt7ep1Tv4WjxSI2+gdlUTIWSFwQ+0xNzL16/jCz2X1AEdgozRNWf6cNSg74qWbJ
-         E615r2sb1gb8Y3I/8W1VAgS4GCsQC8y7s0c0op5pNbQ9Ukt8p+sL7XQE0ONdcghH3HXQ
-         +lol2NdYku6wXMTyxguPiryQXsALq34gVpiX39dYMeqz71TQQmRw13K8GUUhkSqM4hRL
-         MITL08tv1GFwLui7sf79NirPrP1+ONpw4DA1apiDNytpkfuBm5QvjQYm2okjfkx9HzHt
-         xqlQ==
-X-Gm-Message-State: AOAM5329Db9MiSTrgXBndwq5hQvy8i/fmXUWyhL6dHSOHhz7RimD+FyY
-        hqHdzGFAjfz4aco+KcvMaV0IJQ==
-X-Google-Smtp-Source: ABdhPJw8UOm3lfPe6w8OyAPXm0lHSGhZgHDMNbj0rIur8GCTV3KPjYo4LH/vcrmVM3xONNX++19JDg==
-X-Received: by 2002:a9d:aaa:: with SMTP id 39mr16361606otq.269.1592897879660;
-        Tue, 23 Jun 2020 00:37:59 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x194sm154858oix.22.2020.06.23.00.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 00:37:59 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 00:35:15 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        ??ukasz Patron <priv.luk@gmail.com>
-Subject: Re: [PATCH v3 5/7] arm64: dts: qcom: Add support for Sony Xperia
- XA2/Plus/Ultra (Nile platform)
-Message-ID: <20200623073515.GA128451@builder.lan>
-References: <20200622192558.152828-1-konradybcio@gmail.com>
- <20200622192558.152828-6-konradybcio@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=31g1sbVtR+uOawnMksB1fqDaovbJUKSiTqnUPMyL77I=;
+        b=jSOMAAXL4Ip/nFIGBQb6vD60kGUv6NKss94+OtprqX/ukmIYi1K0zRNunjCpdxbeGQ
+         d5AJSb7eV1vLwvLWHdPSm8rB5OSlCOENK6aDDIJF/HriTxHGSZ+ofrpfTjmUvLi8zycX
+         0JBLf0Yck+RoN4w1HxL14FVhxbXDULgebb3dFl/uX/EsnBfhVWM+3xirywQ8Gg3ngOAq
+         LMHHpHEYA9OtcCEQKkQ69LoLk9KmyRBZcuhR6DKup1dYjsydF/CpWLjBxv2qMCBoRV+s
+         wjeisBxu0M1/hH7a5n6z38leHGEURSypPMijm7dqspYLYJNqGRLZm4WVdZiK7lIxLuS7
+         9RjA==
+X-Gm-Message-State: AOAM532rmSTgrhCI5kNuY2qLtMHfIAHW6iOc+/aRnpQ9cci1X/Y6RgbD
+        181ip70bVNqenOvM0Co6xpI+JZvwXO9rusCVuds=
+X-Google-Smtp-Source: ABdhPJy+PYnswA5wydGyHE4W1n9hO8mF9AzRCcJmrgJePeo0DD7R7YHLVJgE1gJudHYQ+mWh3MF/mwgt2D1cpExgOoY=
+X-Received: by 2002:a9d:6546:: with SMTP id q6mr16747184otl.365.1592898686139;
+ Tue, 23 Jun 2020 00:51:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622192558.152828-6-konradybcio@gmail.com>
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com> <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
+In-Reply-To: <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 23 Jun 2020 08:51:00 +0100
+Message-ID: <CA+V-a8vAfoQGpv-sXvJ11i9QC=EvKg750yusHBhLp8C17KmJbA@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
+Hi Geert,
 
-> Add device tree support for the Sony Xperia XA2, XA2 Plus and
-> XA2 Ultra smartphones. They are all based on the Sony Nile
-> platform (sdm630) and share a lot of common code. The
-> differences are really minor, so a Nile-common DTSI
-> has been created to reduce clutter.
-> 
-> XA2 - Pioneer
-> XA2 Plus - Voyager
-> XA2 Ultra - Discovery
-> 
-> The boards currently support:
-> * Screen console
-> * SDHCI
-> * I2C
-> * pstore log dump
-> * GPIO keys
-> * PSCI idle states
-> 
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> Tested-by: ??ukasz Patron <priv.luk@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   3 +
->  .../sdm630-sony-xperia-nile-discovery.dts     |  13 ++
->  .../qcom/sdm630-sony-xperia-nile-pioneer.dts  |  13 ++
->  .../qcom/sdm630-sony-xperia-nile-voyager.dts  |  20 +++
->  .../dts/qcom/sdm630-sony-xperia-nile.dtsi     | 136 ++++++++++++++++++
->  5 files changed, 185 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 0f2c33d611df..1cad7cb07574 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -16,6 +16,9 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
-> new file mode 100644
-> index 000000000000..8fca0b69fa01
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	model = "Sony Xperia XA2 Ultra";
-> +	compatible = "sony,discovery-row", "qcom,sdm630";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
-> new file mode 100644
-> index 000000000000..90dcd4ebaaed
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	model = "Sony Xperia XA2";
-> +	compatible = "sony,pioneer-row", "qcom,sdm630";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
-> new file mode 100644
-> index 000000000000..fae5f1bb6834
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dts
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630-sony-xperia-nile.dtsi"
-> +
-> +/ {
-> +	model = "Sony Xperia XA2 Plus";
-> +	compatible = "sony,voyager-row", "qcom,sdm630";
-> +
-> +	chosen {
-> +		framebuffer@9d400000 {
-> +			reg = <0 0x9d400000 0 (2160 * 1080 * 4)>;
-> +			height = <2160>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-> new file mode 100644
-> index 000000000000..9ba359c848d0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile.dtsi
-> @@ -0,0 +1,136 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, Konrad Dybcio
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sdm630.dtsi"
-> +#include "pm660.dtsi"
-> +#include "pm660l.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/input/gpio-keys.h>
-> +
-> +/ {
-> +	/* required for bootloader to select correct board */
-> +	qcom,msm-id = <318 0>;
-> +	qcom,board-id = <8 1>;
-> +	qcom,pmic-id = <0x1001b 0x101011a 0x00 0x00 0x1001b 0x201011a 0x00 0x00>;
-> +
-> +	/* This part enables graphical output via bootloader-enabled display */
-> +	chosen {
-> +		bootargs = "earlycon=tty0 console=tty0";
-> +
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		stdout-path = "framebuffer0";
-> +
-> +		framebuffer0: framebuffer@9d400000 {
-> +			compatible = "simple-framebuffer";
-> +			reg = <0 0x9d400000 0 (1920 * 1080 * 4)>;
-> +			width = <1080>;
-> +			height = <1920>;
-> +			stride = <(1080 * 4)>;
-> +			format = "a8r8g8b8";
-> +			status= "okay";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		status = "okay";
-> +		compatible = "gpio-keys";
-> +		input-name = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		autorepeat;
-> +
-> +		camera_focus {
-> +			label = "Camera Focus";
-> +			gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-> +			linux,input-type = <1>;
-> +			linux,code = <KEY_CAMERA_FOCUS>;
-> +			debounce-interval = <15>;
-> +		};
-> +
-> +		camera_snapshot {
-> +			label = "Camera Snapshot";
-> +			gpios = <&tlmm 113 GPIO_ACTIVE_LOW>;
-> +			linux,input-type = <1>;
-> +			linux,code = <KEY_CAMERA>;
-> +			debounce-interval = <15>;
-> +		};
-> +
-> +		vol_down {
-> +			label = "Volume Down";
-> +			gpios = <&pm660l_gpios 7 GPIO_ACTIVE_LOW>;
-> +			linux,input-type = <1>;
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +			gpio-key,wakeup;
-> +			debounce-interval = <15>;
-> +		};
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		ramoops@ffc00000 {
-> +			compatible = "ramoops";
-> +			reg = <0x0 0xffc00000 0x0 0x100000>;
-> +			record-size = <0x10000>;
-> +			console-size = <0x60000>;
-> +			ftrace-size = <0x10000>;
-> +			pmsg-size = <0x20000>;
-> +			ecc-size = <16>;
-> +			status = "okay";
-> +		};
-> +
-> +		debug_region@ffb00000 {
-> +			reg = <0x00 0xffb00000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		removed_region@85800000 {
-> +			reg = <0x00 0x85800000 0x00 0x3700000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	soc {
-> +		sdhci@c0c4000 {
+On Mon, Jun 8, 2020 at 3:59 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> Hi Geert,
+>
+> On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > Hi Prabhakar,
+> >
+> > On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Separate out Rev.2.0 specific hardware changes into
+> > > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> > > by all the variants for RZ/G2M[N] boards.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/renesas/hihope-common-rev2.dtsi
+> >
+> > Perhaps just hihope-rev2.dtsi, i.e. without the "common-"?
+> >
+> Yes makes sense.
+>
+> > > @@ -0,0 +1,101 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> > > + * parts
+> > > + *
+> > > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > > + */
+> > > +
+> > > +#include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +/ {
+> > > +       leds {
+> > > +               compatible = "gpio-leds";
+> > > +
+> > > +               bt_active_led {
+> > > +                       label = "blue:bt";
+> > > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> > > +                       linux,default-trigger = "hci0-power";
+> > > +                       default-state = "off";
+> > > +               };
+> > > +
+> > > +               led0 {
+> > > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> > > +               };
+> > > +
+> > > +               led1 {
+> > > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > > +               };
+> > > +
+> > > +               led2 {
+> > > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> > > +               };
+> > > +
+> > > +               led3 {
+> > > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> > > +               };
+> >
+> > led1, led2, and led3 are present on both, so I'd keep them in
+> > hihope-common.dtsi.
+> >
+> The leds defined in hihope-common-rev4.dtsi are as per the label names
+> on the schematics/board so that it's easier to identify the LED's by
+> name.
+>
+I was waiting on the above to be confirmed.
 
-I believe I forgot to ask you to refer to these nodes by label instead
-of per their structure (i.e. &sdhc_1 { ... outside / {). As we do in
-e.g. sdm845-mtp.dts.
+Cheers,
+--Prabhakar
 
-But the patches looks good, so I applied them anyways. When it suits you
-(e.g. when you're populating the i2c nodes below) please update them
-accordingly.
-
-Thanks,
-Bjorn
-
-> +			status = "okay";
-> +
-> +			mmc-ddr-1_8v;
-> +			/* SoMC Nile platform's eMMC doesn't support HS200 mode */
-> +			mmc-hs400-1_8v;
-> +		};
-> +
-> +		i2c@c175000 {
-> +			status = "okay";
-> +
-> +			/* Synaptics touchscreen */
-> +		};
-> +
-> +		i2c@c176000 {
-> +			status = "okay";
-> +
-> +			/* SMB1351 charger */
-> +		};
-> +
-> +		serial@c1af000 {
-> +			status = "okay";
-> +		};
-> +
-> +		/* I2C3, 4, 5, 7 and 8 are disabled on this board. */
-> +
-> +		i2c@c1b6000 {
-> +			status = "okay";
-> +
-> +			/* NXP NFC */
-> +		};
-> +	};
-> +};
-> -- 
-> 2.27.0
-> 
+> > > +
+> > > +               wlan_active_led {
+> > > +                       label = "yellow:wlan";
+> > > +                       gpios = <&gpio7  1 GPIO_ACTIVE_HIGH>;
+> > > +                       linux,default-trigger = "phy0tx";
+> > > +                       default-state = "off";
+> > > +               };
+> > > +       };
+> > > +
+> > > +       wlan_en_reg: regulator-wlan_en {
+> > > +               compatible = "regulator-fixed";
+> > > +               regulator-name = "wlan-en-regulator";
+> > > +               regulator-min-microvolt = <1800000>;
+> > > +               regulator-max-microvolt = <1800000>;
+> > > +               startup-delay-us = <70000>;
+> > > +
+> > > +               gpio = <&gpio_expander 1 GPIO_ACTIVE_HIGH>;
+> > > +               enable-active-high;
+> > > +       };
+> >
+> > Same for the WLAN regulator, especially as it is referenced from
+> > hihope-common.dtsi.
+> > As the GPIO  line differs between the two variants, you just need
+> > to add the gpio property in the revision-specific file.
+> >
+> Agreed will move this to common.
+>
+> > > +};
+> > > +
+> > > +&hscif0 {
+> > > +       bluetooth {
+> > > +               compatible = "ti,wl1837-st";
+> > > +               enable-gpios = <&gpio_expander 2 GPIO_ACTIVE_HIGH>;
+> > > +       };
+> > > +};
+> >
+> > As node is small, and the GPIO line differs from the two variants,
+> > I think duplicating it in both revision-specific files is fine, though.
+> >
+> Agreed.
+>
+> Cheers,
+> --Prabhakar
+>
+> > Gr{oetje,eeting}s,
+> >
+> >                         Geert
+> >
+> > --
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> >
+> > In personal conversations with technical people, I call myself a hacker. But
+> > when I'm talking to journalists I just say "programmer" or something like that.
+> >                                 -- Linus Torvalds
