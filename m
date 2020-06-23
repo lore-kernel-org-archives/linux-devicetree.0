@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC46C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E8CC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0120E20707
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C1520738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cUXgPSfu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O8VeP0Ym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbgFWNsz (ORCPT
+        id S1732779AbgFWNtE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:48:55 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55218 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732743AbgFWNsx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:48:53 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmlkk110142;
-        Tue, 23 Jun 2020 08:48:47 -0500
+        Tue, 23 Jun 2020 09:49:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50822 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732762AbgFWNtD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:49:03 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmwGV007435;
+        Tue, 23 Jun 2020 08:48:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592920127;
-        bh=NjHRGQyuPawgk7rsFcYQJon3wpp+3lTd1hxMTCsjXxs=;
+        s=ti-com-17Q1; t=1592920138;
+        bh=eShyx82GLaQ3xsgsj9ve463coidBb5dHGAfrzfcrN0w=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=cUXgPSfucGEb1HraXngmB22wBe+dSyqQKUoy7g/Tbet8Gl5wF+lSSJxpzKvbWFRZW
-         ZuihmQnSAoxv8kQxWbkBMJGzs1MaxqifxYE+yJ4EI9EK4jdxoKMrZVlhlDu67wO4YV
-         /zVRYBwhli2zfS9bhg1PVW1I/y4NVKbAEAj9BegY=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NDmlTx013813
+        b=O8VeP0YmziDfyrxX6UHKp7EaV83P/r5qBnx2chGfg7mfXnFtf4xzmIlcnw5geHw7x
+         YDKWpbE6G6zoiu4XOrTpCWqN5LNm6fJPY9hkhVzS7HLvYiXAAF4V+PCLDj45kukfh9
+         oAmCIed28cE1PFo9jb4qYBFr0d44NWip6f1MFLw0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NDmwNM124054
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 08:48:47 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 23 Jun 2020 08:48:58 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
- Jun 2020 08:48:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 08:48:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 23 Jun 2020 08:48:47 -0500
+ Frontend Transport; Tue, 23 Jun 2020 08:48:57 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmlm8093493;
-        Tue, 23 Jun 2020 08:48:47 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmvWw011965;
+        Tue, 23 Jun 2020 08:48:57 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <robh@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v10 1/5] dt-bindings: net: Add tx and rx internal delays
-Date:   Tue, 23 Jun 2020 08:48:32 -0500
-Message-ID: <20200623134836.21981-2-dmurphy@ti.com>
+Subject: [PATCH net-next v10 3/5] dt-bindings: net: Add RGMII internal delay for DP83869
+Date:   Tue, 23 Jun 2020 08:48:34 -0500
+Message-ID: <20200623134836.21981-4-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200623134836.21981-1-dmurphy@ti.com>
 References: <20200623134836.21981-1-dmurphy@ti.com>
@@ -67,41 +67,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-tx-internal-delays and rx-internal-delays are a common setting for RGMII
-capable devices.
-
-These properties are used when the phy-mode or phy-controller is set to
-rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
-controller that the PHY will add the internal delay for the connection.
+Add the internal delay values into the header and update the binding
+with the internal delay properties.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- .../devicetree/bindings/net/ethernet-phy.yaml        | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../devicetree/bindings/net/ti,dp83869.yaml      | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-index 9b1f1147ca36..a9e547ac7905 100644
---- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-@@ -162,6 +162,18 @@ properties:
-     description:
-       Specifies a reference to a node representing a SFP cage.
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+index 5b69ef03bbf7..71e90a3e4652 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
++++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+@@ -8,7 +8,7 @@ $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+ title: TI DP83869 ethernet PHY
+ 
+ allOf:
+-  - $ref: "ethernet-controller.yaml#"
++  - $ref: "ethernet-phy.yaml#"
+ 
+ maintainers:
+   - Dan Murphy <dmurphy@ti.com>
+@@ -64,6 +64,18 @@ properties:
+        Operational mode for the PHY.  If this is not set then the operational
+        mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
  
 +  rx-internal-delay-ps:
-+    description: |
-+      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
-+      PHY's that have configurable RX internal delays.  If this property is
-+      present then the PHY applies the RX delay.
++    description: Delay is in pico seconds
++    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
++            3250, 3500, 3750, 4000 ]
++    default: 2000
 +
 +  tx-internal-delay-ps:
-+    description: |
-+      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
-+      PHY's that have configurable TX internal delays. If this property is
-+      present then the PHY applies the TX delay.
++    description: Delay is in pico seconds
++    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
++            3250, 3500, 3750, 4000 ]
++    default: 2000
 +
  required:
    - reg
  
+@@ -80,5 +92,7 @@ examples:
+         ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
+         ti,max-output-impedance = "true";
+         ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
++        rx-internal-delay-ps = <2000>;
++        tx-internal-delay-ps = <2000>;
+       };
+     };
 -- 
 2.26.2
 
