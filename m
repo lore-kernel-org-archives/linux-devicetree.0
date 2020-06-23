@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB45C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60564C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF4220724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDA720738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592895066;
-	bh=C5FlAHhZpaa+KxqYHKVR7HYYVpMpz8TplbMahkIcUcI=;
+	s=default; t=1592895198;
+	bh=kTbnxtWZaVnKAzweo8XMbjGX2zAcjAPyn4YWfihQZOw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vCX9QAOT7MhK2HrxnZO7IGrJW9+ankEsQMfVw2qkRvc9TWu+8fpFdIlGSuC+PvYv+
-	 xKCQu9OzrwfbypPjwCCuGYeCZRo7fNEH+Ri5RYr1mn9eTQrKrq8VurnOW82z16pIyB
-	 sG8tkDGG8ROpUOAZ0f8HY6CWvV5QRLHKCxsd5wqc=
+	b=I5IsVLY/KUYVjfrb+RcJdIMZEe+5jZAtPW5QDM2DKqwYSXJgCLh6aWvWgE/edNAQk
+	 OeWEE8eRRsCbo7jfw4T23d7b1ohzR6egZKEFDe0/42sPaQwNHzyln3GP1snHJ+fuTa
+	 dJwC0MQJ2DfAJmH1N01crIMdkTwrVv0mxhykIWTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbgFWGvF (ORCPT
+        id S1730538AbgFWGxR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:51:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51636 "EHLO mail.kernel.org"
+        Tue, 23 Jun 2020 02:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730583AbgFWGvF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 02:51:05 -0400
+        id S1730476AbgFWGxR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 02:53:17 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BFDA20706;
-        Tue, 23 Jun 2020 06:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D6E220724;
+        Tue, 23 Jun 2020 06:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592895065;
-        bh=C5FlAHhZpaa+KxqYHKVR7HYYVpMpz8TplbMahkIcUcI=;
+        s=default; t=1592895197;
+        bh=kTbnxtWZaVnKAzweo8XMbjGX2zAcjAPyn4YWfihQZOw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FtAGu6WCswXbBBTB8IPlyFFfyRL5MVDFoH1K5g/a7zvRVhReiNWEy4eWnPbNS2XLf
-         9MC96h+KDFTc4fQUxfh2IrtLkCOGSwXcj7x2r6JY53q/9+7jFEBSXuUFiNFDwnRb5V
-         wrbb0+YcRn+hSiXPUDwSlB5zS1il7wgnVne0O9bg=
-Date:   Tue, 23 Jun 2020 14:50:58 +0800
+        b=t6Ks0/kbQGbgzCPuUbxSeS7W6yhm6esdxYnY4iABcDYLLiX2MORtOx2yLpp6OyMc5
+         BceIhrVpf/vPHJPPyWEuhPsW4qccffF+/Gs9UdZYHYoNX1VteoyLame6iJr5hdtBWT
+         PPaUqV+KhMyZtPQFedrrVnE1mY1PamLqwhQR+t78=
+Date:   Tue, 23 Jun 2020 14:53:11 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     peng.fan@nxp.com
 Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
@@ -49,25 +49,26 @@ Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
         leonard.crestez@nxp.com, daniel.baluta@nxp.com,
         l.stach@pengutronix.de, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: Re: [PATCH V3 2/3] arm64: dts: imx8m: add mu node
-Message-ID: <20200623065057.GP30139@dragon>
+Subject: Re: [PATCH V3 3/3] clk: imx8mp: add mu root clk
+Message-ID: <20200623065310.GQ30139@dragon>
 References: <1590999602-29482-1-git-send-email-peng.fan@nxp.com>
- <1590999602-29482-3-git-send-email-peng.fan@nxp.com>
+ <1590999602-29482-4-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590999602-29482-3-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1590999602-29482-4-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 04:20:01PM +0800, peng.fan@nxp.com wrote:
+On Mon, Jun 01, 2020 at 04:20:02PM +0800, peng.fan@nxp.com wrote:
 > From: Peng Fan <peng.fan@nxp.com>
 > 
-> Add mu node to let A53 could communicate with M Core.
+> Add mu root clk for mu mailbox usage.
 > 
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 > Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
 Applied, thanks.
