@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD4AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2EDC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7EE320768
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9853F20768
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731937AbgFWJCD (ORCPT
+        id S1731758AbgFWJC3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:02:03 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43598 "EHLO loongson.cn"
+        Tue, 23 Jun 2020 05:02:29 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43588 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731756AbgFWJCD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1731158AbgFWJCD (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Tue, 23 Jun 2020 05:02:03 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_2r7xPFer7FIAA--.12008S4;
-        Tue, 23 Jun 2020 17:01:49 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_2r7xPFer7FIAA--.12008S5;
+        Tue, 23 Jun 2020 17:01:50 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -39,20 +39,20 @@ Cc:     Guo Ren <guoren@kernel.org>, Baruch Siach <baruch@tkos.co.il>,
         Michal Simek <michal.simek@xilinx.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 2/7 RESEND] irqchip/loongson-htpic: Remove redundant kfree operation
-Date:   Tue, 23 Jun 2020 17:01:42 +0800
-Message-Id: <1592902907-5062-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 3/7 RESEND] irqchip/loongson-htvec: Check return value of irq_domain_translate_onecell()
+Date:   Tue, 23 Jun 2020 17:01:43 +0800
+Message-Id: <1592902907-5062-4-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592902907-5062-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592902907-5062-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx_2r7xPFer7FIAA--.12008S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr15XrW5ZrW3AF15Kr4xtFb_yoW3twb_Cr
-        WIqr9rJFW0gr1rC3y7ur47ZrySkw4kWF1kuF4aya4ft347tw1rAry7Ar4fJF47Wa1SkFn8
-        WFW7ZrykAw1xGjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: AQAAf9Dx_2r7xPFer7FIAA--.12008S5
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13uFykCFWktrW3tF1UKFg_yoWDZrX_CF
+        yIgFnxWr1Uur13Zr4rGr45ZFyxZrWkWF1v9FZ5ta43X34UKw1xAr13Zw43GF47Wr4Fyr9r
+        GrZ3urySyw1xujkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
         9fnUUIcSsGvfJTRUUUbJ8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
         6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r15M28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
-        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
+        IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
+        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6x
         kF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv
         6xkF7I0E14v26rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc
         02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
@@ -63,38 +63,41 @@ X-Coremail-Antispam: 1UD129KBjvdXoWrtr15XrW5ZrW3AF15Kr4xtFb_yoW3twb_Cr
         6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6x
         kF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
         14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
-        uYvjTRnmiZUUUUU
+        uYvjTROJ5nUUUUU
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the function htpic_of_init(), when kzalloc htpic fails, it should
-return -ENOMEM directly, no need to execute "goto" to kfree.
+Check the return value of irq_domain_translate_onecell() due to
+it may returns -EINVAL if failed.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-htpic.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
-index dd018c2..63f7280 100644
---- a/drivers/irqchip/irq-loongson-htpic.c
-+++ b/drivers/irqchip/irq-loongson-htpic.c
-@@ -93,10 +93,8 @@ int __init htpic_of_init(struct device_node *node, struct device_node *parent)
- 	}
+diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+index b36d403..720cf96 100644
+--- a/drivers/irqchip/irq-loongson-htvec.c
++++ b/drivers/irqchip/irq-loongson-htvec.c
+@@ -109,11 +109,14 @@ static struct irq_chip htvec_irq_chip = {
+ static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 			      unsigned int nr_irqs, void *arg)
+ {
++	int ret;
+ 	unsigned long hwirq;
+ 	unsigned int type, i;
+ 	struct htvec *priv = domain->host_data;
  
- 	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
--	if (!htpic) {
--		err = -ENOMEM;
--		goto out_free;
--	}
-+	if (!htpic)
-+		return -ENOMEM;
+-	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
++	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
++	if (ret)
++		return ret;
  
- 	htpic->base = of_iomap(node, 0);
- 	if (!htpic->base) {
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
 -- 
 2.1.0
 
