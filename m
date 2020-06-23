@@ -2,67 +2,67 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855B3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF9BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5898620C09
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CAB207E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UinVkuo1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+y2HgSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387489AbgFWTjt (ORCPT
+        id S2387562AbgFWTtU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        Tue, 23 Jun 2020 15:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733248AbgFWTjt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 15:39:49 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A69EC061573;
-        Tue, 23 Jun 2020 12:39:49 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id y2so7411927ioy.3;
-        Tue, 23 Jun 2020 12:39:49 -0700 (PDT)
+        with ESMTP id S1733258AbgFWTtU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 15:49:20 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239DBC061573;
+        Tue, 23 Jun 2020 12:49:20 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id o5so25171105iow.8;
+        Tue, 23 Jun 2020 12:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ON8R5IT5kpw4UiCSOW1nl5up36r+tL2wFW0z/curnEc=;
-        b=UinVkuo1YR7kJFYxyDUhOHD+YXCS+9X2TqEs9x+IDax1d/3WcgLjPE6LEQ86FHvP2E
-         j19p5Cj9X4Ip2DRABsYsfocfyJd7ziKfmFfrgf8UZ4uAYH3nDTmsyhmbkV3LfWwE6lGY
-         FR21FfizxwWp0I9w79ogkdoSQb+vWe+4T9XXyZByzsZACePbEDp8Xdtrrz+djWOjFo7t
-         hxr3gjKmrY7EigC2OOJVFfXszDifccUSYKb9x4UeK26nCh06oLXjb8mgvfnsjGl8vwd7
-         C5oIqpCvjX9AymC5VXHi9Tf+cDVi5/k7LqCd0PMluaxyJaX79NaVuJnPEnqQsIFZiv7l
-         X6yQ==
+        bh=hAK/qguNrmk0Gm1APUEN0dntiivLtTinL6GSxp7o6Ow=;
+        b=B+y2HgSDU/5tRsw+WKTnUfx4ewuLBP1Z66CDJqZpdGGn/PNVQcD4gmWOR8yOObgEOx
+         yOsTCYAAoRDhLhYdPJRirf86Ti50iPIFK9dcBBzA1zm5n/xckUIAJ09KuCLvBss10tkl
+         9+oqb4lYyDGKk3Rioqrn5CQGUKV2Z4WRHxcFDnkMMBqZO1pdgCVXgpE2OBKIoEsrHomG
+         yqaau3D2o7z4Cq3uKAxybpAsyEGc2shjNcB62/uiBrZoBPyqi42MnFJeCjPrp0zgt3WL
+         z6mCU+3Jqu/pCzcFEJDugPptN9cbXij7c0BKhsp0pU1EFZsnt+uffD4XIc8wGzLCR2WE
+         9xOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=ON8R5IT5kpw4UiCSOW1nl5up36r+tL2wFW0z/curnEc=;
-        b=k8PvaZJ0CPQ13cVLlbB7xKJ8RXlJu8Wkvw7PoHb5KqsbfJPRMbbaZWCbvTWGs+RIhc
-         EFpfzfnDE3e5Zl3AM7K5EOhiz3Y3Jb/gN4laRtJmDkaYsK68wI8GS6npQYHPhA6fGi2P
-         IRDO+VOOuNuk/xP/Q6wGDsA5QOra/H/8JGZo2LKLK5nzO5ncpTBOd9qwgo6Y+GlhH1ze
-         D9jVyiy/HMn6NHsum4nsazinazAyBNjy/OKQzmXQ+fQLpgprLrWxFcDCVnRltDfir/Qp
-         89+jA0lmBa2eP7mmmo1QxS7GoT3mbmvLIXlk+wqmaokjq3NKhopwGFLTi9z9XNqwjjYQ
-         rAWw==
-X-Gm-Message-State: AOAM532Hw/qBZLGkcEBpVvvUPuJ4ppUTdyjuKmSa2W7nSAlSPUf6C5aB
-        vf+0oPKrU44erf3SCM/rBg0=
-X-Google-Smtp-Source: ABdhPJzpbYG2AxrKYqBD/+gTiqDb38cJZpoiLygkaCCJpgCpWyQc52XVMfaH+Uq4mhUTojXyy0tnBg==
-X-Received: by 2002:a6b:91c5:: with SMTP id t188mr14071991iod.61.1592941188540;
-        Tue, 23 Jun 2020 12:39:48 -0700 (PDT)
+        bh=hAK/qguNrmk0Gm1APUEN0dntiivLtTinL6GSxp7o6Ow=;
+        b=Uqq0s/1yNX42j6iirbFcsvnkJgHMS4CthAWknB5phayFmOd7Xx/x4RdBCaCeKo0IHg
+         /7Lr/JwEx8ZkuDosKEgU7CIdIROcDsDw0bYiGscq7RnmT2VwsGKBqKRicvlmUtygCKOk
+         RaqUu21WI9eeX0S8DY/MSEwmrpU5onmdBFkiklsewycUNFTY1ZyBvBoT0wJvZJm6BbsH
+         dYMQY/S8LtTp9AMfqwIQ+i1vhqNwi1ZuuxfaKBON3sWjLoKDpzUWARbXfaPsNPaKZld1
+         pTNmDbp86G7lDeQ/ujXL5XZoleeZHw1wumgs+hyJHYZU/VXxc8Zj9mJIJpJnc2cz9Bo4
+         XGsw==
+X-Gm-Message-State: AOAM530OhM6boXDk1eM4VkEe8DJgB/G6Z0WtahjgNMMlk+5xvW3flOEI
+        K7KBjFP72mTvKifg3jyBskI=
+X-Google-Smtp-Source: ABdhPJyuVMZyMj6yPM93Z62rBEasacSyFa5WqfLZLQhdF+FMcW4sbckkyiejtk99VWmebUAhCVWKHQ==
+X-Received: by 2002:a02:2417:: with SMTP id f23mr26618811jaa.28.1592941759511;
+        Tue, 23 Jun 2020 12:49:19 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id m2sm2999896iln.1.2020.06.23.12.39.44
+        by smtp.googlemail.com with ESMTPSA id k3sm6320722iot.42.2020.06.23.12.49.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 12:39:47 -0700 (PDT)
-Subject: Re: [PATCH 12/15] dt-bindings: mdio: add phy-supply property to
- ethernet phy node
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+        Tue, 23 Jun 2020 12:49:18 -0700 (PDT)
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
+ registration
+To:     Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         "David S . Miller" <davem@davemloft.net>,
@@ -84,10 +84,9 @@ To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
         Quan Nguyen <quan@os.amperecomputing.com>,
         Frank Rowand <frowand.list@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Liam Girdwood <lgirdwood@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
         Fabien Parent <fparent@baylibre.com>,
         Stephane Le Provost <stephane.leprovost@mediatek.com>,
@@ -95,7 +94,8 @@ Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-13-brgl@bgdev.pl>
+ <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
+ <20200622135106.GK4560@sirena.org.uk>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -151,49 +151,64 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <5e5194be-0e5c-5945-4c39-06692a557cb7@gmail.com>
-Date:   Tue, 23 Jun 2020 12:39:43 -0700
+Message-ID: <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
+Date:   Tue, 23 Jun 2020 12:49:15 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200622093744.13685-13-brgl@bgdev.pl>
+In-Reply-To: <20200622135106.GK4560@sirena.org.uk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/22/20 2:37 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 6/22/20 6:51 AM, Mark Brown wrote:
+> On Mon, Jun 22, 2020 at 03:39:40PM +0200, Andrew Lunn wrote:
 > 
-> The phy-supply property is often added to MAC nodes but this is wrong
-> conceptually. These supplies should be part of the PHY node on the
-> MDIO bus. Add phy-supply property at PHY level to mdio.yaml.
+>> The PHY subsystem cannot be the first to run into this problem, that
+>> you need a device structure to make use of the regulator API, but you
+>> need the regulator API to probe the device. How do other subsystems
+>> work around this?
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/net/mdio.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-> index d6a3bf8550eb..9c10012c2093 100644
-> --- a/Documentation/devicetree/bindings/net/mdio.yaml
-> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
-> @@ -90,6 +90,10 @@ patternProperties:
->            Delay after the reset was deasserted in microseconds. If
->            this property is missing the delay will be skipped.
->  
-> +      phy-supply:
-> +        description:
-> +          Phandle to the regulator that provides the supply voltage to the PHY.
+> If the bus includes power management for the devices on the bus the
+> controller is generally responsible for that rather than the devices,
+> the devices access this via facilities provided by the bus if needed.
+> If the device is enumerated by firmware prior to being physically
+> enumerable then the bus will generally instantiate the device model
+> device and then arrange to wait for the physical device to appear and
+> get joined up with the device model device, typically in such situations
+> the physical device might appear and disappear dynamically at runtime
+> based on what the driver is doing anyway.
 
-I do not see how you can come up with a generic name here, there could
-be PHYs supporting different voltages (3.3V, 1.8V, 1.5V) depending on
-their operation mode/strapping, there can also be different parts of the
-PHY being powered by different regulators, the analog part could be on
-an always-on island such that Wake-on-LAN from the PHY could be done,
-and the digital part could be on a complete different island.
+In premise there is nothing that prevents the MDIO bus from taking care
+of the regulators, resets, prior to probing the PHY driver, what is
+complicated here is that we do need to issue a read of the actual PHY to
+know its 32-bit unique identifier and match it with an appropriate
+driver. The way that we have worked around this with if you do not wish
+such a hardware access to be made, is to provide an Ethernet PHY node
+compatible string that encodes that 32-bit OUI directly. In premise the
+same challenges exist with PCI devices/endpoints as well as USB, would
+they have reset or regulator typically attached to them.
+
+> 
+>> Maybe it is time to add a lower level API to the regulator framework?
+> 
+> I don't see any need for that here, this is far from the only thing
+> that's keyed off a struct device and having the device appear and
+> disappear at runtime can make things like runtime PM look really messy
+> to userspace.
+> 
+> We could use a pre-probe stage in the device model for hotpluggable
+> buses in embedded contexts where you might need to bring things out of
+> reset or power them up before they'll appear on the bus for enumeration
+> but buses have mostly handled that at their level.
+> 
+
+That sounds like a better solution, are there any subsystems currently
+implementing that, or would this be a generic Linux device driver model
+addition that needs to be done?
 -- 
 Florian
