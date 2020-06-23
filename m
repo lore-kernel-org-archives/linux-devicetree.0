@@ -2,111 +2,87 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E01CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D782AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69BB9206E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B382820723
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 06:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mDh1Fl94"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oRMFmqO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgFWGUY (ORCPT
+        id S1730515AbgFWG3g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 02:20:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730662AbgFWGUY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 02:20:24 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337D3C061797
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 23:20:24 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id d4so9401630pgk.4
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 23:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xkEZLfW1ArYgf+mEiL+b5tURW9CFpN3REEce4uqJNH0=;
-        b=mDh1Fl94b3/LSZ+hMlztNtRD33tkWnaxz8jVAg3XWYW8wZ8vRi1lGAMFXvmC+ld9oq
-         yoj1BYpiF4qp/PUndN/UrCjFRgoxGIVbP7WdIa/Og1WXc5/3wG9C91iC1qcV50TlhZ6m
-         XBllvcUyb3wDmPZK3Etsz833H3UWSiNLXTZlbHuC0a/stsEgjxQDg6gu5q309hEyTJNc
-         VA6U6mtmGjjwP7IWZrxUg9ih8rRJMMh8IC5Jqvi9wNZq8UAohIxZndVvX0mI5xnYvPxJ
-         EmHNG66dntMreD3T8r2oyjt9i/uD//9Mo0vhNQEblG0eGl2WJqHcpUUNoZqCbP92pq5k
-         B5yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xkEZLfW1ArYgf+mEiL+b5tURW9CFpN3REEce4uqJNH0=;
-        b=BW/xDJlnk8on4pYCnlEWLJtLH47pAmdcAXETvxYtpdqizI+sVY8P2uQeBQUQ1/YhcK
-         DttRJ/kfHu/22bmLPHcocX9QfRfKBeOfd/l4D0K+R656LOxvfKeA6RazmkXdzcEG6plO
-         DkRCZkqsDb84N+OmcwC/kI6ECszIeVD5rxJpBgz0nq++Kus6ES6/SJnv39rG828MoPiF
-         +okBerban/neR0S2fwJJT17QsRfoE9L6YzIxsb7WOIbE/o7g3pYOw/sy83ZJCYDPoebG
-         MnA8MEUuG+YQ0VMpps1uzzv2np9ZpGK1ni6aneFFBz5qgSALj41S/z0UhXml8FrtPYPn
-         mcjg==
-X-Gm-Message-State: AOAM532LiNbk6KM+9Fg1+SRQ9ou6r9QrlQKZEUxMYYAwM20qbEoleqen
-        0eCAn8Ixj9LQ7k97om4RgxGECw==
-X-Google-Smtp-Source: ABdhPJzPhO4piZUlhyX41kRvKT0EgrKEBSKMGlr2VTKP7RKfZOV4lMU0w2m7uDvwx/uYcjh4UjbI6g==
-X-Received: by 2002:a63:3f42:: with SMTP id m63mr16314448pga.310.1592893223436;
-        Mon, 22 Jun 2020 23:20:23 -0700 (PDT)
-Received: from localhost ([122.172.111.76])
-        by smtp.gmail.com with ESMTPSA id np5sm1408030pjb.43.2020.06.22.23.20.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jun 2020 23:20:22 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 11:50:20 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ Patch v3 3/4] cpufreq: Add Tegra194 cpufreq
- driver
-Message-ID: <20200623062020.weg6h4uygelkih7d@vireshk-i7>
-References: <1592775274-27513-1-git-send-email-sumitg@nvidia.com>
- <1592775274-27513-4-git-send-email-sumitg@nvidia.com>
- <20200622072052.uryxo4hri6gzrkku@vireshk-i7>
- <ed6956a3-3f77-2943-6387-5affc25b59d2@nvidia.com>
+        Tue, 23 Jun 2020 02:29:36 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:38260 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730406AbgFWG3f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 02:29:35 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 05N6SID1008028;
+        Tue, 23 Jun 2020 15:28:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05N6SID1008028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592893698;
+        bh=uTXPjrpCh4fD/aE1Dd8b26sBzP/nRgftIkj2Y3t4u6E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oRMFmqO+anwp5IKFFMuw2tKuP+TF8VvvV75yUpel96GyZ+BUSKrqnKVFe1TYw18Da
+         W2vUUBO7GnLCYLPu+Kv5pD9EI9AhnbsYsrvbAbLCfTDf3pFH0EwwBIN7vQnxqcsjdL
+         WZO9SCL00p+YjCGEb94LO+AkFumx49KjBNh+7h1nquErcuJIL+bDKL2PHrfWZona0P
+         exQiZSMXD2356Wh4cIfZFZPav3Y3jSxnwSzUJXbX8sjgW3mImavJOp2hRD3uURS1cy
+         7/fuBv7ANLJqTXEsOoeGsDiCoAfLjasPNhkOYWciFgrqgkFPpqw+XQjgaf525sb8dh
+         UsM5W0pVbfIRw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: bus: uniphier-system-bus: fix warning in example
+Date:   Tue, 23 Jun 2020 15:28:11 +0900
+Message-Id: <20200623062812.705264-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed6956a3-3f77-2943-6387-5affc25b59d2@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23-06-20, 10:49, Sumit Gupta wrote:
-> Hi Viresh,
-> 
-> Thank you for the review. please find my reply inline.
-> 
-> 
-> > > +++ b/drivers/cpufreq/tegra194-cpufreq.c
-> > > @@ -0,0 +1,403 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved
-> > 
-> >                      2020
+Since commit e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to
+json-schema"), the schema for "ns16550a" is checked.
 
-You missed this ?
+'make dt_binding_check' emits the following warning:
 
-> T194 supports four CPU clusters, each with two cores. Each CPU cluster is
-> capable of running at a specific frequency sourced by respective NAFLL to
-> provide cluster specific clocks. Individual cores within a cluster write
-> freq in per core register. Cluster h/w forwards the max(core0, core1)
-> request to per cluster NAFLL.
+  uart@5,00200000: $nodename:0: 'uart@5,00200000' does not match '^serial(@[0-9a-f,]+)*$'
 
-Okay, this is clear now. Add a comment about this max thing in the
-target routine to show why you need to do this on all CPUs.
+Rename the node to follow the pattern defined in
+Documentation/devicetree/bindings/serial/serial.yaml
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ .../devicetree/bindings/bus/socionext,uniphier-system-bus.yaml  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+index c4c9119e4a20..9fa4f891fa00 100644
+--- a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
++++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+@@ -87,7 +87,7 @@ examples:
+             phy-mode = "mii";
+         };
+ 
+-        uart@5,00200000 {
++        serial@5,00200000 {
+             compatible = "ns16550a";
+             reg = <5 0x00200000 0x20>;
+             interrupts = <0 49 4>;
 -- 
-viresh
+2.25.1
+
