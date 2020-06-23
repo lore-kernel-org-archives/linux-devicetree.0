@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75CFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A4AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9175320786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818432076A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731892AbgFWCvf (ORCPT
+        id S1731931AbgFWCvi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:51:35 -0400
+        Mon, 22 Jun 2020 22:51:38 -0400
 Received: from mx2.suse.de ([195.135.220.15]:33024 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731858AbgFWCve (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:51:34 -0400
+        id S1731911AbgFWCvi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 22:51:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C6987AE70;
-        Tue, 23 Jun 2020 02:51:31 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 2A507B18C;
+        Tue, 23 Jun 2020 02:51:36 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         <stanley_chang@realtek.com>, Edgar Lee <cylee12@realtek.com>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 05/29] dt-bindings: soc: realtek: rtd1195-chip: Add iso-syscon property
-Date:   Tue, 23 Jun 2020 04:50:42 +0200
-Message-Id: <20200623025106.31273-6-afaerber@suse.de>
+Subject: [PATCH v2 15/29] arm64: dts: realtek: rtd13xx: Add chip info node
+Date:   Tue, 23 Jun 2020 04:50:52 +0200
+Message-Id: <20200623025106.31273-16-afaerber@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200623025106.31273-1-afaerber@suse.de>
 References: <20200623025106.31273-1-afaerber@suse.de>
@@ -47,55 +47,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allow to optionally specify a phandle to iso syscon to identify the chip.
-RTD1295 family will want to check the ISO_CHIP_INFO1 register.
+Add a DT node for chip identification.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- A SoC specific binding would defeat the purpose of the generic Linux driver
- detecting the SoC based on registers.
- Simply allowing it all for SoC families seems the most flexible.
+ v2: New
  
- v1 -> v2:
- * Instead of extending reg, allow optional iso-syscon property for RTD129x.
-   Iso syscon currently does not have a compatible, and it may need to differ
-   across SoC families.
- 
- .../bindings/soc/realtek/realtek,rtd1195-chip.yaml       | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/realtek/rtd13xx.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
-index 86a1de214782..dfe33c95f68d 100644
---- a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
-+++ b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
-@@ -11,6 +11,7 @@ maintainers:
- 
- description: |
-   The Realtek DHC SoCs have some registers to identify the chip and revision.
-+  To identify the exact model within a family, further registers are needed.
- 
- properties:
-   compatible:
-@@ -19,6 +20,8 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  iso-syscon: true
+diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+index e41be02f2e3a..e4271ef5cb1e 100644
+--- a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
++++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+@@ -211,3 +211,10 @@ uart2: serial@400 {
+ 		status = "disabled";
+ 	};
+ };
 +
- required:
-   - compatible
-   - reg
-@@ -31,4 +34,10 @@ examples:
-         compatible = "realtek,rtd1195-chip";
-         reg = <0x1801a200 0x8>;
-     };
-+  - |
-+    chip-info@9801a200 {
-+        compatible = "realtek,rtd1195-chip";
-+        reg = <0x9801a200 0x8>;
-+        iso-syscon = <&iso>;
-+    };
- ...
++&sb2 {
++	chip-info@200 {
++		compatible = "realtek,rtd1195-chip";
++		reg = <0x200 0x8>;
++	};
++};
 -- 
 2.26.2
 
