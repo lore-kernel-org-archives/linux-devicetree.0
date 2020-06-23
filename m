@@ -4,88 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E83C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBCB20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEBC20780
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592883646;
-	bh=YnFKD2SuD44mKD4MHh/11/4JdpjARNP9QmTVMDETsFw=;
+	s=default; t=1592883788;
+	bh=cDkDjDJ9XyK6peIfZDlp8sh1nsx50bXhbCY50HUtazo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qrmqWXOaIQwqA1VcXZqxgu5fqSBdJVXnsFOkC81Z3tem3Vez/vzsNN3PYYAsxs85x
-	 U98UlkDBPVRE2FnphkBUcYeOl3T9g4Y11CKerf4Y02/AFXEQbn3BrMlE+V89FjrLAo
-	 SJNc/Hc4zMQOrZhW5vnNBIHtWJW08rWgfczHORNw=
+	b=ARPeiD5+Sm8Mv89MKnbV5dZ+8pAX0ITTd8tp0KWGL0ySENDJpuTZ3l7S7Sjib+o18
+	 CXCVsd5pu4dQSiN5JDKWVV816VRFsNeNJ2Gn+2NT59mtNmUeQxodR4Yi472XN5+l6X
+	 noZg7IhMSaGKNoQKIBu+0mbxi1Rz80uMzPUV6veI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgFWDkm (ORCPT
+        id S1731171AbgFWDnI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 23:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39266 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 23:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbgFWDkm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 23:40:42 -0400
+        id S1728526AbgFWDnH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 23:43:07 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B03DB206C1;
-        Tue, 23 Jun 2020 03:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB18B206C1;
+        Tue, 23 Jun 2020 03:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592883641;
-        bh=YnFKD2SuD44mKD4MHh/11/4JdpjARNP9QmTVMDETsFw=;
+        s=default; t=1592883787;
+        bh=cDkDjDJ9XyK6peIfZDlp8sh1nsx50bXhbCY50HUtazo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dwQ/rjW3rD29ihmU/ZiivDNFUn9sMGLMqcGoVW6l03+BONg1fSJkoaNzzCQ7oWIau
-         hPLFxOsjW6gfmOnOoNHHiE0woEMl5Zh8kCC8q0FBMyKkPFpax7OhnB8ib/mhBy3TTP
-         +BYdTj/gzPOj6REQ0BM3Ac/2n6teqZqE8PEUdg1k=
-Date:   Tue, 23 Jun 2020 11:40:34 +0800
+        b=MhrocqJyoFgA4kBRum4a6RttO3Tpc7vn6TKns+27/d6KOV9khJW0+gOdcbv2Mgn64
+         ZMljqrRp4o1n/v5qXPS7NxlxKTNxtqJsmopU/gNWaVKguXp2qjfDT+0kn4yMJe5F8w
+         iwvI+Frw+D/ocMM/ib4GiGc942cWeBGq9FRnau+c=
+Date:   Tue, 23 Jun 2020 11:43:00 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: Change WDOG_ANY signal from push-pull to
- open-drain
-Message-ID: <20200623034033.GJ30139@dragon>
-References: <20200528144312.25980-1-frieder.schrempf@kontron.de>
- <20200528144312.25980-2-frieder.schrempf@kontron.de>
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-gw53xx: allow boot firmware to set
+ eth1 MAC
+Message-ID: <20200623034240.GK30139@dragon>
+References: <1590695583-1327-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528144312.25980-2-frieder.schrempf@kontron.de>
+In-Reply-To: <1590695583-1327-1-git-send-email-tharvey@gateworks.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 28, 2020 at 02:43:43PM +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Thu, May 28, 2020 at 12:53:03PM -0700, Tim Harvey wrote:
+> The GW53xx has a PCIe based GbE as the 2nd ethernet device. The
+> boot firmware will populate the local-mac-address field of the
+> device aliased to ethernet1 thus adding the PCIe device to
+> dt allows boot firmware to set its MAC address.
 > 
-> The WDOG_ANY signal is connected to the RESET_IN signal of the SoM
-> and baseboard. It is currently configured as push-pull, which means
-> that if some external device like a programmer wants to assert the
-> RESET_IN signal by pulling it to ground, it drives against the high
-> level WDOG_ANY output of the SoC.
-> 
-> To fix this we set the WDOG_ANY signal to open-drain configuration.
-> That way we make sure that the RESET_IN can be asserted by the
-> watchdog as well as by external devices.
-> 
-> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-Added 'imx6ul-kontron:' to subject and applied both patches.
-
-Shawn
+Applied, thanks.
