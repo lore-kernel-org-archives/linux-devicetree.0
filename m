@@ -2,98 +2,128 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BDBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D830C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099A720724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173C220724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qmzQkGlc"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="itSqhEL9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731912AbgFWJ2N (ORCPT
+        id S1732141AbgFWJab (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:28:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38074 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731887AbgFWJ2N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:28:13 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05N9S5Ze125926;
-        Tue, 23 Jun 2020 04:28:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592904485;
-        bh=fEs47RkZAn3o/i2PzvLLvWnHhB3TwHTtIfZTfW8Ym2A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qmzQkGlcIGW8tTCERgHaPdshR+P5MVgidMjFj7XXg5ukVfic43hZAj79vpZQQ5uJC
-         G74mzz4I2s31oVrEhjCDYtFK8SMiT/7xo3uTWwHHzRfsSpOKYQJpAwqPBpsCo27XCH
-         NVhPriYQt4yHQFoVEJg/9Xqu3AuXA9q6rmCspZR4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05N9S5c1034921;
-        Tue, 23 Jun 2020 04:28:05 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
- Jun 2020 04:28:05 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 23 Jun 2020 04:28:05 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05N9S3LY025765;
-        Tue, 23 Jun 2020 04:28:03 -0500
-Subject: Re: [PATCH v3 3/3] ASoC: ti: Add custom machine driver for j721e EVM
- (CPB and IVI)
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <robh+dt@kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200612085909.15018-1-peter.ujfalusi@ti.com>
- <20200612085909.15018-4-peter.ujfalusi@ti.com>
- <7f2c4297-3ad9-5b8f-c9a5-5120078120c6@ti.com>
- <20200612122757.GF5396@sirena.org.uk>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <8c255c3c-8c9c-9200-962f-69de9a1f861c@ti.com>
-Date:   Tue, 23 Jun 2020 12:28:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 23 Jun 2020 05:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731965AbgFWJab (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:30:31 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1771DC061573
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:30:31 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id a12so9188670ion.13
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oLaLVpG0MyDInMfdyKDIo+dI3RLGik3lpc5kwQdQ/vw=;
+        b=itSqhEL9M1HNMjjg0HmGB6ODcp78KKoys2tcbmkfbxbnFf0gtzRbl1v0p9UyS87C8U
+         yBHI8y2mDuy/mYr4ZiVTXs0cIFQwbnoQ+DZ9UbLCGrsDywa5eSErM0ZGFTcKNGqeHDAk
+         I0xodIoqS41AnBblnoQzKSN47HDqK9EAE48fnMz7osH1NcTj39rXx6xxY1XJla4eeFm5
+         9FR6iUvRSFkvNghRKuu/IUf2XlRd3VycKWML0IuQRexvK7ewZL+Qhna1Amw9TZZjSCfF
+         4ISeQ29W2dUdLJDTabFJPAc9GXCAnZuqCrfBpDCrs8JLKV9piimbaQ8MqthMBFgCJdF3
+         lHmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oLaLVpG0MyDInMfdyKDIo+dI3RLGik3lpc5kwQdQ/vw=;
+        b=JcjkAIHQuTHpYcE/dJDs3igTJvofHNf/fOvVBu0LpWP1nr0zASQKLQmG/QqirzlK9L
+         BsBBIRYVIHVeqojY6tDPT1qlshrX1oBDZ8R7HRXxfe8MbgnWTv5Zc2T5adjgdTsyp4b5
+         AVSUx9YZK0/pTIt5Xb8xGnJJ1jIbvlDxfRh1jiQ4qNmVPDtZ6Ua5SvLZ8XDTVtAp+2gu
+         evfcF5uTNQa/39yIuF4H6KptOxc//lsIWBicSrWCycIUjGRxEf8jraCCW85WdXaTjLBt
+         ZMq+ZBEFpT2sQ4B3+JQhX9Dfi0xZXOgU1f/tCy6iA528B7zAk//SN7NkWlgh1cZYcJpu
+         DkSA==
+X-Gm-Message-State: AOAM530jr7drdAoDVN40IGxGFvXXtTJhUmzZgHuGMXxiVuG0m9Qr2ehq
+        gN8iBhBHcbWLm3qTlnMMHweK4dhI05J0kB0TVGqXCQ==
+X-Google-Smtp-Source: ABdhPJzAIxv0yIi9GjnJO0SiHwTFon80qm+0CZass27KwI8p5hZbCaGVWbdjSE1htxm4yeVgmXJhlPla03/26+P1YPU=
+X-Received: by 2002:a05:6638:979:: with SMTP id o25mr21315946jaj.24.1592904630490;
+ Tue, 23 Jun 2020 02:30:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200612122757.GF5396@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-14-brgl@bgdev.pl>
+ <20200622132504.GH1551@shell.armlinux.org.uk>
+In-Reply-To: <20200622132504.GH1551@shell.armlinux.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 23 Jun 2020 11:30:19 +0200
+Message-ID: <CAMRc=MeXst5fOD+PJHHzXbDvf-i_jcJp_srzjH1P=Y03OPGxag@mail.gmail.com>
+Subject: Re: [PATCH 13/15] net: phy: mdio: add support for PHY supply regulator
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+pon., 22 cze 2020 o 15:25 Russell King - ARM Linux admin
+<linux@armlinux.org.uk> napisa=C5=82(a):
+>
+> On Mon, Jun 22, 2020 at 11:37:42AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently many MAC drivers control the regulator supplying the PHY but
+> > this is conceptually wrong. The regulator should be defined as a proper=
+ty
+> > of the PHY node on the MDIO bus and controlled by the MDIO sub-system.
+> >
+> > Add support for an optional PHY regulator which will be enabled before
+> > optional deasserting of the reset signal.
+>
+> I wonder if this is the right place for this - MDIO devices do not have
+> to be PHYs - they can be switches, and using "phy-supply" for a switch
+> doesn't seem logical.
+>
+> However, I can see the utility of having having a supply provided for
+> all mdio devices, so it seems to me to be a naming issue.  Andrew?
+>
 
+I followed the example of the phy reset retrieved in
+mdiobus_register_reset(). I'm happy to change it to some other name.
 
-On 12/06/2020 15.27, Mark Brown wrote:
-> On Fri, Jun 12, 2020 at 12:27:17PM +0300, Peter Ujfalusi wrote:
->=20
->>> +	if (IS_ERR(clocks->target)) {
->>> +		ret =3D PTR_ERR(clocks->target);
->>> +		if (ret !=3D -EPROBE_DEFER)
->>> +			dev_err(dev, "failed to acquire %s': %d\n",
->=20
->> Looks like I have extra "'" in the prints...
->=20
-> Apart from the issues you pointed out yourself this all looks reasonabl=
-e
-> to me.
-
-Thanks Mark,
-I'll wait for Rob on the binding doc side before I send the updated v4.
-
-- P=E9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Bart
