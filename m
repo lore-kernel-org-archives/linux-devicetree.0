@@ -2,73 +2,117 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5927C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F8EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC5120771
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A58F20724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592910447;
-	bh=zsfKB1wuRE9SSXUBbFLTHKmSLXW6nA+V2ztTFC7lHs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sPA2JKkf/DNQxncrX1vcPHpDMF8M6DHhKm4EXEYApziPJZoy4O6TgUyL68rEhDBG/
-	 owhjKpJBuFuV4VO+/NC/AHTpi2VeyE2psKafCSzIXp7QFSDprl+Q+kyUP4PITP2bat
-	 1MoL9nMGDO2x0GnncCEXKrhLjwaNuehAZjDfMXj8=
+	s=default; t=1592911978;
+	bh=sYM42tP6vSo8oEBHm3PelGnthTPPshAVGLXL///pyqs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tvQ66E6frzA52X62iZYuNEO7WnzAFdPajp5lSp5RMDGv6bXeGYr/neKChZrPspH5a
+	 MeMUAm2eA7Pb8SfIlRW4FytL2FTWk4dINFtzcTrs+ZARx9t+HAMpxNImizezHVwB6X
+	 AmtIziqIv7SZfXBeZYmrQFv3KfKy4fqcRDrLkABc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732269AbgFWLH1 (ORCPT
+        id S1732353AbgFWLc5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732189AbgFWLH0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 07:07:26 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8059D2072E;
-        Tue, 23 Jun 2020 11:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592910446;
-        bh=zsfKB1wuRE9SSXUBbFLTHKmSLXW6nA+V2ztTFC7lHs4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PY2qDnfEkRWh64fvJQJyDv79ltuupggMNAkE7iNBNsaD+7RGnhEkx1cYdXSH5F06H
-         uZdZqJ8knVOiE20AX92B+EGOEmmP2bNOmgUtDJ0l3UyezYAgoFVvCk1mjBI8PPeioy
-         09TfWUJ/d5RJW5ngA/MMsrpbsKOnex4ffkufF9a8=
-Date:   Tue, 23 Jun 2020 19:07:21 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        l.stach@pengutronix.de, devicetree@vger.kernel.org
-Subject: Re: [PATCH V2 0/3] arm64: dts: imx8qxp: dtb aliases fix/update
-Message-ID: <20200623110720.GY30139@dragon>
-References: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
+        Tue, 23 Jun 2020 07:32:57 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:49940 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732328AbgFWLc4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 07:32:56 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 05NBWUe9027207;
+        Tue, 23 Jun 2020 20:32:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 05NBWUe9027207
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592911951;
+        bh=/bby6eiaoafnsKasvD+44XkuZDUwzMZIHd9Yc7kyG3A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yk9h8fxKWFn7hj6Cdl7Mx7QH4Jd6HPEDhWjMtLtp7s2NVOXrE+8yc7f3ZwqnfCbCa
+         ac/Op0VEg3quw+stSY22mCenxyJJbH1wgYKMdpdMRiH6tta2ptiX6hGsgQ2OQyPZxO
+         zXoNB19h7+sMP2F0k/hlWYdEiU8+9PH4aKrgNWbWDE3uRtMdRKBVSeBbRgidfBqFCj
+         7FbrCGYtkBgepwzBFLlACjhU2gbVWtX/gMc3NnnQ/wB+Ix+5Goy2iv8F+CuksLqt5q
+         9P82b/F8y/D10unfy6larAuWM0AVqIgNWjDLSSR6NpnfokMEqZAqHycUD+oXTwKdmH
+         9U7F9BKa38tpQ==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id i8so6671588uak.9;
+        Tue, 23 Jun 2020 04:32:30 -0700 (PDT)
+X-Gm-Message-State: AOAM53066gMLIGwx09WvtMb++Cv+IJ2gyiiQTXC8U+P2K12RwUTas1Pl
+        knkTPtNRCrinuDDYP1nPXy9dmV7IE8PnwJr3lOY=
+X-Google-Smtp-Source: ABdhPJycnTrfA31vybeM0h39X3HSjsSRYxa5A9nDB0CSrKvTSk51+WjWwDYWqRwDacxbVagUuPP34EDE+eseNUUiHV0=
+X-Received: by 2002:ab0:156d:: with SMTP id p42mr14817199uae.121.1592911949417;
+ Tue, 23 Jun 2020 04:32:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592894994-30015-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200623062812.705264-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20200623062812.705264-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 23 Jun 2020 20:31:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS0GAUT-CYijWCetRgSXAaiHzwb_JE5RY0ECr68BDBk4Q@mail.gmail.com>
+Message-ID: <CAK7LNAS0GAUT-CYijWCetRgSXAaiHzwb_JE5RY0ECr68BDBk4Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: bus: uniphier-system-bus: fix warning in example
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 02:49:51PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> V2:
->  Fix order in patch 2/3, no other changes
-> 
-> Minor patchset to fix and update alias for i.MX8QXP
-> 
-> Peng Fan (3):
->   arm64: dts: imx8qxp: add alias for lsio MU
->   arm64: dts: imx8qxp: add i2c aliases
->   arm64: dts: imx8qxp: Add ethernet alias
+On Tue, Jun 23, 2020 at 3:29 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Since commit e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to
+> json-schema"), the schema for "ns16550a" is checked.
+>
+> 'make dt_binding_check' emits the following warning:
+>
+>   uart@5,00200000: $nodename:0: 'uart@5,00200000' does not match '^serial(@[0-9a-f,]+)*$'
+>
+> Rename the node to follow the pattern defined in
+> Documentation/devicetree/bindings/serial/serial.yaml
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  .../devicetree/bindings/bus/socionext,uniphier-system-bus.yaml  | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+> index c4c9119e4a20..9fa4f891fa00 100644
+> --- a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+> +++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+> @@ -87,7 +87,7 @@ examples:
+>              phy-mode = "mii";
+>          };
+>
+> -        uart@5,00200000 {
+> +        serial@5,00200000 {
 
-Applied, thanks.
+
+I think '5,200000' is a better unit name.
+
+Will send v2.
+
+
+
+>              compatible = "ns16550a";
+>              reg = <5 0x00200000 0x20>;
+>              interrupts = <0 49 4>;
+> --
+> 2.25.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
