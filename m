@@ -2,118 +2,214 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51859C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5629C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA8520768
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA1E20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 11:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nrQC4w3A"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MBl6WMP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732454AbgFWLfF (ORCPT
+        id S1732425AbgFWLk5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 07:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732427AbgFWLeu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 07:34:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D5ABC061795
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 04:34:50 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so1927657pgq.1
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 04:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PkzrLJ8GQCeqvePUouDtyFlaPA55kJZCSe1ntjETQw4=;
-        b=nrQC4w3A1v0pfWioLgCVpCk7IFobcxPOzAB8rnpV50jIQn7WEYPuG+Ct2b/lsLccAO
-         Y/E+65Y+oCT70dsfdryHawG0zTIt8CImRu2p66n82EbutffVH0/JqEmQzSdepymPXtPV
-         /SiHFMfPcmRr2dtvpUI7eUUK2J2eooXYFcNeAbpCaqwV2ttevXk6fuDzVAKAaUsnYkEg
-         EokKiBopklKMnv9ml+h441QAOmfdnQr/EG5JQPFucdzCilPPY10ZaS6tQJQt0Y+9Ql3q
-         F2eWGmR0rumqwqA22JI+JQngr3Nd8+rzLXW9TS/CcuE3ipWdT5jXxjaC83v2i9DE7KP8
-         KMvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PkzrLJ8GQCeqvePUouDtyFlaPA55kJZCSe1ntjETQw4=;
-        b=U7rJprqHOjRDOQcObCs3LQ1g+WXTyDgXJh9Q+7CPVA189oiwE/cmjFgtWqLGTni7sg
-         tMU9WPIF0jevRZye8cCx/A6enbimqCIR9UpmOmTTRLFE4mxv9V0S9hxkWGgaWr92+pQ5
-         2af4YpmTY6TGgQDnkc0GaT0ixywIlfOWidou/Ol4SuHkjNN8l/dBy8iwwsjnxwU+awyx
-         kvLvsyZ2wKdHxUKQxxlVBnxomkx7IYFRPKpvGBPe/WBV+iYX0BnNWqSIFvpWXLKF8n63
-         TcVVeHQ5ZVbj0NnvL2+K74CZQu/fyQb83R9ToDpeG5zTm5a1+0k1UvaYtKxxCyS9cip8
-         O0Bg==
-X-Gm-Message-State: AOAM531S0EN055dEfYvD1YA4lOTJiNYoYWigpDJ/yfaQpLcEqlx2yYEy
-        2+nBnrIaGe60mU2LtdBw6ccSd8eYOA==
-X-Google-Smtp-Source: ABdhPJzoDy3xwrO38WKLoUceaihufyrOPObFSwULxYG51nVgdbmuMFL70euQsI1xMUNsz6xO5O7k5g==
-X-Received: by 2002:a62:7e8d:: with SMTP id z135mr23497708pfc.251.1592912088852;
-        Tue, 23 Jun 2020 04:34:48 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:609d:7d26:e4ff:f0b0:edd6:2484])
-        by smtp.gmail.com with ESMTPSA id m9sm16636166pfo.200.2020.06.23.04.34.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 04:34:48 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 17:04:40 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8250-mtp: Drop PM8150 ldo11
-Message-ID: <20200623113440.GB13669@Mani-XPS-13-9360>
-References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
- <20200622222747.717306-2-bjorn.andersson@linaro.org>
+        Tue, 23 Jun 2020 07:40:57 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:35705 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732245AbgFWLk4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 07:40:56 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 05NBdQcO015338;
+        Tue, 23 Jun 2020 20:39:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 05NBdQcO015338
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592912367;
+        bh=EQR5jz5Ak267spsKF3ptXzFmAIfZKKdNNqltK1FNhao=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MBl6WMP9adRnYFLrrJkyqoyppk+BUFmKK6oIMZCxoQgKR+qeQm87sOAI8TELXzp/p
+         dE5cjfY6chpBz57ArwADg3D/AT8bFm/JnTMJHHdW0Z2nKmv94VxV/wYofC3qXj1sQd
+         bLLaaBeA2oOlNHYEDraW1Q9nWCb8GPeCRRiEd0pb3eSsN8klDL7hyC9cidtcnoXdyC
+         WpQzUXovcvwNIPmD2nETSwwZ9eipi0EFRHtI04RixvDXpFb1+dX6GgJYEOIENVVkEI
+         XqC88Q7N7+9W/+kM0jC+e8nA7CiA0QdfNU/QkcKDXaPhUDXU09lYT4xb3znh+4gZpG
+         tTjnZk1zCyS2Q==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        - <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: ASoC: Convert UniPhier AIO audio system to json-schema
+Date:   Tue, 23 Jun 2020 20:39:15 +0900
+Message-Id: <20200623113915.791386-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622222747.717306-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:27:42PM -0700, Bjorn Andersson wrote:
-> PM8150 ldo11 on the MTP is wired to VDD_SSC_CX and controlled in levels,
-> rather than as a regulator. As such it's available from the rpmhpd as
-> the SM8250_LCX power domain.
-> 
-> Fixes: ec13d5c23a33 ("arm64: dts: qcom: sm8250-mtp: Add pm8150, pm8150l and pm8009")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Convert the UniPhier AIO audio system binding to DT schema format.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks,
-Mani
+Changes in v2:
+  - Add schema for subnode 'port'
 
-> ---
->  arch/arm64/boot/dts/qcom/sm8250-mtp.dts | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> index 2fc9e7ff0060..63d259931c4d 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> @@ -140,13 +140,6 @@ vreg_l10a_1p8: ldo10 {
->  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->  		};
->  
-> -		vreg_l11a_0p75: ldo11 {
-> -			regulator-name = "vreg_l11a_0p75";
-> -			regulator-min-microvolt = <800000>;
-> -			regulator-max-microvolt = <800000>;
-> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> -		};
-> -
->  		vreg_l12a_1p8: ldo12 {
->  			regulator-name = "vreg_l12a_1p8";
->  			regulator-min-microvolt = <1800000>;
-> -- 
-> 2.26.2
-> 
+ .../sound/socionext,uniphier-aio.yaml         | 81 +++++++++++++++++++
+ .../bindings/sound/uniphier,aio.txt           | 45 -----------
+ 2 files changed, 81 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/uniphier,aio.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml b/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+new file mode 100644
+index 000000000000..4987eb91f2ab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/socionext,uniphier-aio.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/socionext,uniphier-aio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier AIO audio system
++
++maintainers:
++  - <alsa-devel@alsa-project.org>
++
++properties:
++  compatible:
++    enum:
++      - socionext,uniphier-ld11-aio
++      - socionext,uniphier-ld20-aio
++      - socionext,uniphier-pxs2-aio
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-names:
++    const: aio
++
++  clocks:
++    maxItems: 1
++
++  reset-names:
++    const: aio
++
++  resets:
++    maxItems: 1
++
++  socionext,syscon:
++    description: |
++      Specifies a phandle to soc-glue, which is used for changing mode of S/PDIF
++      signal pin to output from Hi-Z. This property is optional if you use I2S
++      signal pins only.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  "#sound-dai-cells":
++    const: 1
++
++patternProperties:
++  "^port@[0-9]$":
++    type: object
++    properties:
++      endpoint: true
++    required:
++      - endpoint
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-names
++  - clocks
++  - reset-names
++  - resets
++  - "#sound-dai-cells"
++
++examples:
++  - |
++    audio@56000000 {
++        compatible = "socionext,uniphier-ld20-aio";
++        reg = <0x56000000 0x80000>;
++        interrupts = <0 144 4>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_aout>;
++        clock-names = "aio";
++        clocks = <&sys_clk 40>;
++        reset-names = "aio";
++        resets = <&sys_rst 40>;
++        #sound-dai-cells = <1>;
++        socionext,syscon = <&soc_glue>;
++    };
+diff --git a/Documentation/devicetree/bindings/sound/uniphier,aio.txt b/Documentation/devicetree/bindings/sound/uniphier,aio.txt
+deleted file mode 100644
+index 4ce68ed6f2f2..000000000000
+--- a/Documentation/devicetree/bindings/sound/uniphier,aio.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Socionext UniPhier SoC audio driver
+-
+-The Socionext UniPhier audio subsystem consists of I2S and S/PDIF blocks in
+-the same register space.
+-
+-Required properties:
+-- compatible      : should be one of the following:
+-		    "socionext,uniphier-ld11-aio"
+-		    "socionext,uniphier-ld20-aio"
+-		    "socionext,uniphier-pxs2-aio"
+-- reg             : offset and length of the register set for the device.
+-- interrupts      : should contain I2S or S/PDIF interrupt.
+-- pinctrl-names   : should be "default".
+-- pinctrl-0       : defined I2S signal pins for an external codec chip.
+-- clock-names     : should include following entries:
+-                    "aio"
+-- clocks          : a list of phandle, should contain an entry for each
+-                    entry in clock-names.
+-- reset-names     : should include following entries:
+-                    "aio"
+-- resets          : a list of phandle, should contain an entry for each
+-                    entry in reset-names.
+-- #sound-dai-cells: should be 1.
+-
+-Optional properties:
+-- socionext,syscon: a phandle, should contain soc-glue.
+-                    The soc-glue is used for changing mode of S/PDIF signal pin
+-                    to Output from Hi-Z. This property is optional if you use
+-                    I2S signal pins only.
+-
+-Example:
+-	audio {
+-		compatible = "socionext,uniphier-ld20-aio";
+-		reg = <0x56000000 0x80000>;
+-		interrupts = <0 144 4>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_aout>;
+-		clock-names = "aio";
+-		clocks = <&sys_clk 40>;
+-		reset-names = "aio";
+-		resets = <&sys_rst 40>;
+-		#sound-dai-cells = <1>;
+-
+-		socionext,syscon = <&sg>;
+-	};
+-- 
+2.25.1
+
