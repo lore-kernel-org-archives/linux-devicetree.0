@@ -2,90 +2,102 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F3AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E61C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B63920776
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A5F2078A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592915990;
+	bh=Sf31bbv+NizJQ/qfUekYBQVAKaQoqsrAkLY4dLIG+kw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=GL9kNuOxDijBkpHWMnFsKZx6w+yNlqzM1tf43UPWlrhejg6WttjQmpwvUhGa6YOdA
+	 oP68ZMYgyUxCB07RZQJsbO8cx4/N16VxQtLjjw5Ypq+gxWg2rTpe58Gj0oi1oaUZfE
+	 eyAVfunHt/gvWb3ci1zkPxbQxqWEZSPXrbMH5VF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732508AbgFWM0A (ORCPT
+        id S1732653AbgFWMjt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732478AbgFWM0A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 08:26:00 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344D5C061573;
-        Tue, 23 Jun 2020 05:26:00 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 23 Jun 2020 08:39:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729667AbgFWMjt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 08:39:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id C5559634C87;
-        Tue, 23 Jun 2020 15:25:36 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jnhzc-00016j-NF; Tue, 23 Jun 2020 15:25:36 +0300
-Date:   Tue, 23 Jun 2020 15:25:36 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v5 06/10] media: i2c: imx290: Add support for test
- pattern generation
-Message-ID: <20200623122536.GE870@valkosipuli.retiisi.org.uk>
-References: <20200612135355.30286-1-andrey.konovalov@linaro.org>
- <20200612135355.30286-7-andrey.konovalov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612135355.30286-7-andrey.konovalov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4245220776;
+        Tue, 23 Jun 2020 12:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592915988;
+        bh=Sf31bbv+NizJQ/qfUekYBQVAKaQoqsrAkLY4dLIG+kw=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=nirshNN0aFNNjSoexxgBlu3LFSV/A7dCq9dEs54XwdLipJdJZI2dIMYBwVLzlOIux
+         gEJO2xMSvsDvUB9qSGN8dlNlAOyF/nqQpS3cKoYSGiNqpXkLYcPsyMR+u6Dd0DhSgQ
+         OeFAt7QY8Xs3Eu3wv3HphKRraiQpqo1IGrybx0gQ=
+Date:   Tue, 23 Jun 2020 13:39:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     skrzynka@konradybcio.pl, Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Andy Gross <agross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Colin Cross <ccross@android.com>
+In-Reply-To: <20200620144639.335093-1-konradybcio@gmail.com>
+References: <20200620144639.335093-1-konradybcio@gmail.com>
+Subject: Re: [PATCH 00/21] MSM8994 peripheral enablement, DTS updates
+Message-Id: <159291598139.44727.6998255676582744850.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey,
+On Sat, 20 Jun 2020 16:46:16 +0200, Konrad Dybcio wrote:
+> In this series I added support for various buses and peripherals
+> such as I2C or SMD RPM. I also did some housekeeping when it comes
+> to the DTS. This series also includes a new board (SoMC Kitakami
+> Sumire / Xperia Z5).
+> 
+> I have a MMCC driver coming along with GCC updates/completion
+> (almost ready, need to polish a few things) and I sincerely
+> hope somebody is going to write a 20nm DSI PLL driver (for 8992/4)
+> as I have no clue how that works.
+> 
+> [...]
 
-On Fri, Jun 12, 2020 at 04:53:51PM +0300, Andrey Konovalov wrote:
-...
-> @@ -448,6 +466,22 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
->  	case V4L2_CID_GAIN:
->  		ret = imx290_set_gain(imx290, ctrl->val);
->  		break;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		if (ctrl->val) {
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> +			msleep(10);
-> +			imx290_write_reg(imx290, IMX290_PGCTRL,
-> +					 (u8)(IMX290_PGCTRL_REGEN |
-> +					 IMX290_PGCTRL_THRU |
-> +					 IMX290_PGCTRL_MODE(ctrl->val)));
-> +		} else {
-> +			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
-> +			msleep(10);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
-> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
-> +		}
-> +		break;
->  	default:
->  		ret = -EINVAL;
->  		break;
+Applied to
 
-I've merged the patches in my tree. Could you still replace msleep() with
-less than 20 ms with usleep_range() usage as a follow-up patch on top of
-these, please?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
--- 
-Kind regards,
+Thanks!
 
-Sakari Ailus
+[1/1] regulator: qcom_smd: Fix pmi8994 label
+      commit: 0d46f69881c34351b6ec523c31225b90ea89ee20
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
