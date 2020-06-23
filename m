@@ -2,114 +2,127 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8433C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA50C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C256020724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB4B206C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="h3ztPvbN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="q/Wwwp8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbgFWJc3 (ORCPT
+        id S1732116AbgFWJlX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:32:29 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:26186 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731921AbgFWJc1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:32:27 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N9NoaL028773;
-        Tue, 23 Jun 2020 11:31:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=Weg0RcL/DVf4Oy73jsoOhA5zRr02V3dL56h1oGO0waY=;
- b=h3ztPvbNJRqBmRFmjJqzjCtiE/9dI0oL6hVSPD6oB4RtwFuhkGto2DZU1wL9/yxNOtwr
- uqNsmRbkq6+d5EyOClF0kV0RtRVcIaxWZwJyv3gyJe2MhGmy6Q0gsm9gyoLbuEXjYAst
- /k2czctZimUvv5IUzXxeXhDum0ydDfvzK0lN6ddLZr4lgbbILzvzjWU8Q4msz7e+QsiI
- nYyzxQjYyDTwTNgi0/PQUyo0J26PKh1q8VQWX5scoVHrvPDk16SamnHL7XensjbaXKAb
- 934YNq4bZrhCTBtYzPEci0FT/vsamf5o24GazsRj5NLkxTEpDpEQ7E43OqnnicPnUUCo +w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31s87vecn2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 11:31:14 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7A46210002A;
-        Tue, 23 Jun 2020 11:31:13 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 699602B64A7;
-        Tue, 23 Jun 2020 11:31:13 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 23 Jun 2020 11:31:12
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@kernel.org>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH] ARM: dts: stm32: configure i2c5 support on stm32mp15xx-dkx
-Date:   Tue, 23 Jun 2020 11:31:12 +0200
-Message-ID: <1592904672-12781-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 23 Jun 2020 05:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732041AbgFWJlW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:41:22 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91629C061795
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id c4so9263189iot.4
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
+        b=q/Wwwp8A1BT//ycShNsM7XqmB3bG24wQBAirlMbmZaCGJ14WlIrYk1hUeGFPFvFYh9
+         18AuWxnLJ1U1xdH/pGBPRjrPFyfPQg7q+9IucqCmFfeBCfeps7rxI2SW2DoKIfLUr5up
+         QiSEWrkcSOyboUd9lJ8T7gHRuzsG0YMSv8qg4VHWp/kK/35QhddY4oGB6G4nqgWMrCZh
+         syPjBA05FOD90Sz9u5udUM+MDkSo1wLudZ9Ufcpzj9Ht4F4P+CCs4YMhBoTiJJpc3hEZ
+         C3x7fLzfiu+6I1zCZCYLoB7ldYctRJTYQSe0hOhS8cOtdYjiuOJfUpqpndg4fwtYgwqc
+         4scA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eYT530/2mRtpAyh0DpDIsFqdUu0RZKvGKhfFQ+olAzg=;
+        b=DGaZihi6j9Tg5apEY10JnDQ2melOJheB9h9wlgGtcepCjouPnvpjkPxeLZeo1NbhMG
+         Gfwtx2O8IR/rHgD8R8rD1qaHhDihCQyzEKa4CpZrPOMCSJs1ext/23T2eajzRhjn8MYt
+         aPFvaKPsy1ddinWLhMyYm0LoHo/Z4SXJ5kuRl9IP1fd//l0z3xAn0BB8DpBzvfT7J7Nc
+         eht6JSEY+ZOqKoQS0QZVT0a0W3xfE4UxqnSdKtOy3ufGj3IP9cuwl2n1aBsIEcHEZY/8
+         4LBJZUWeY2vMpF7AAQix7XTESF2cXZsIJy3Jdu2BGi9lpRJpvnYDM0A+UVfyD25ID7Cv
+         DM0w==
+X-Gm-Message-State: AOAM530ydSK74YGJ6BVnTYiPj0k0VYJm3iUnF8wj9vQTgnKfI29foMrK
+        5pn5NzmBjyOaQTXO5FIw82FGdfDgqswtzcssurqJPg==
+X-Google-Smtp-Source: ABdhPJx3IjaiDsJ/En/rPYv6gBlyL3k6lTKfuVMMpv+FRtlkN7ZNw3o69BET+TAsLrzyXAm77vQTkunODede1IEEHSw=
+X-Received: by 2002:a02:cdc4:: with SMTP id m4mr22844233jap.57.1592905281814;
+ Tue, 23 Jun 2020 02:41:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_05:2020-06-22,2020-06-23 signatures=0
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk>
+In-Reply-To: <20200622132921.GI1551@shell.armlinux.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 23 Jun 2020 11:41:11 +0200
+Message-ID: <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+<linux@armlinux.org.uk> napisa=C5=82(a):
+>
 
-Configure I2C5 on stm32mp15 DK boards. It's available and can be used on:
-- Arduino connector
-- GPIO expansion connector
-Keep it disabled by default, so the pins are kept in their initial state to
-lower power consumption. This way they can also be used as GPIO.
+[snip!]
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+>
+> This is likely to cause issues for some PHY drivers.  Note that we have
+> some PHY drivers which register a temperature sensor in the probe
+> function, which means they can be accessed independently of the lifetime
+> of the PHY bound to the network driver (which may only be while the
+> network device is "up".)  We certainly do not want hwmon failing just
+> because the network device is down.
+>
+> That's kind of worked around for the reset stuff, because there are two
+> layers to that: the mdio device layer reset support which knows nothing
+> of the PHY binding state to the network driver, and the phylib reset
+> support, but it is not nice.
+>
 
-diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-index fcf50131e5fe..e69aba9830b3 100644
---- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-@@ -361,6 +361,19 @@
- 	};
- };
- 
-+&i2c5 {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&i2c5_pins_a>;
-+	pinctrl-1 = <&i2c5_sleep_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	clock-frequency = <400000>;
-+	/* spare dmas for other usage */
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+	status = "disabled";
-+};
-+
- &i2s2 {
- 	clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
- 	clock-names = "pclk", "i2sclk", "x8k", "x11k";
--- 
-2.17.1
+Regulators are reference counted so if the hwmon driver enables it
+using mdio_device_power_on() it will stay on even after the PHY driver
+calls phy_device_power_off(), right? Am I missing something?
 
+Bart
