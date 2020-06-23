@@ -2,70 +2,95 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC45C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F57C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAFD20780
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AF820780
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592884394;
-	bh=Wp5chbRNJuFWD8uHzmxgXDHr5PmBm1ZhwdDYKZCk/OI=;
+	s=default; t=1592884584;
+	bh=gpM6eseKXzmhhIgOiEJ2kOGIRCvZ0v7etboKPXbrzUM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uxltTHx38+68lepP8RXqAwLHHyrfQkIyV+vearqRMVw/q12USLj6a5y0J9oLjhojj
-	 vi4aH/183HR+YHdkfl51NUGGv/6C3iOpLtLvsFzCbdy5xi3YGIhvWw0Xql9SPlOd/W
-	 N3eAz6eescpikPVaz1LIFNhpdnYQ5TL4JnhQ4VLY=
+	b=AClDNz9dAdpHBlfDF7iSQfbbCXr/LYuTvcJFllnGe2Vrn6ON18UpGmTNU5SpmoPsq
+	 63B9oCJcKX4vLrcs98zBfr1f2xiX/zHt527216xx1j4JeDN7lyyjfpTHENUBfh7LE5
+	 SWfKACEoUuFpyWFWoH8RbUHQaapgwrd7TEkUL61Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbgFWDxN (ORCPT
+        id S1731203AbgFWD4X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 23:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42598 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 23:56:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbgFWDxN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 23:53:13 -0400
+        id S1731114AbgFWD4X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 23:56:23 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF8220707;
-        Tue, 23 Jun 2020 03:53:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1FCA20771;
+        Tue, 23 Jun 2020 03:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592884393;
-        bh=Wp5chbRNJuFWD8uHzmxgXDHr5PmBm1ZhwdDYKZCk/OI=;
+        s=default; t=1592884582;
+        bh=gpM6eseKXzmhhIgOiEJ2kOGIRCvZ0v7etboKPXbrzUM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JKcqlHDc/30jWp3TBHXsIIp436pqkk+yAVP/ZWLQAbSHrSTE4pZPBjJEjPrv2MXLA
-         HxQZyQ98+mLVlXX+yW+JIiJ4rJeoSE129ywlAw8F0AzsGRWDmqsDfd8JxQJgv4RXjs
-         2kFNDAQ/JxoagRrDxo6EdIzh/f2juMQurGaoPm0o=
-Date:   Tue, 23 Jun 2020 11:53:01 +0800
+        b=sz0Mi/gLMqUMgqgf+Q35A6BtXL5f7uP7oukWNfmPnhewG4tIoQIUzEZ52/wKjVaI5
+         Sc/U4bchRYzMTXNzvDPZzME6nCtPHfkVmgpDtvyMjAyWCFYniX0F+jfBcA79JS++Gm
+         2RHnazSBvWGeSSmd/JmtVzf4KZuzXUYJ0YUB9EJU=
+Date:   Tue, 23 Jun 2020 11:56:16 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     peng.fan@nxp.com
 Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, aisheng.dong@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
         l.stach@pengutronix.de, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/3] arm64: dts: imx8qxp: dtb aliases fix/update
-Message-ID: <20200623035300.GM30139@dragon>
+Subject: Re: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
+Message-ID: <20200623035615.GN30139@dragon>
 References: <1590977180-9957-1-git-send-email-peng.fan@nxp.com>
+ <1590977180-9957-3-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590977180-9957-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1590977180-9957-3-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 10:06:17AM +0800, peng.fan@nxp.com wrote:
+On Mon, Jun 01, 2020 at 10:06:19AM +0800, peng.fan@nxp.com wrote:
 > From: Peng Fan <peng.fan@nxp.com>
 > 
-> Minor patchset to fix and update alias for i.MX8QXP
+> The devices could be enumerated properly with aliases.
 > 
-> Peng Fan (3):
->   arm64: dts: imx8qxp: add alias for lsio MU
->   arm64: dts: imx8qxp: add i2c aliases
->   arm64: dts: imx8qxp: Add ethernet alias
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 33363c127478..8ce997110cd6 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -19,6 +19,10 @@
+>  	#size-cells = <2>;
+>  
+>  	aliases {
+> +		i2c0 = &adma_i2c0;
+> +		i2c1 = &adma_i2c1;
+> +		i2c2 = &adma_i2c2;
+> +		i2c3 = &adma_i2c3;
 
-Applied all, thanks.
+Had a second look.  It breaks alphabetical order.  So dropped the
+series.
+
+Shawn
+
+>  		gpio0 = &lsio_gpio0;
+>  		gpio1 = &lsio_gpio1;
+>  		gpio2 = &lsio_gpio2;
+> -- 
+> 2.16.4
+> 
