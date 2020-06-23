@@ -2,82 +2,172 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A77C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 16:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2DFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 16:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF732073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 16:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACC720780
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 16:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="elmIn/w9"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rNfsLC2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbgFWQAi (ORCPT
+        id S1732185AbgFWQ1S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 12:00:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40806 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733012AbgFWQAi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 12:00:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NFxoNB045823;
-        Tue, 23 Jun 2020 10:59:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592927990;
-        bh=olC4l/jXzIroYJbEpRReyOUqgRg7I8gSJNp27yn9+/g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=elmIn/w9jpsWEuzqTTEYJMbNKlN3CikTLSag64yS0+7RWQhvsgkwgPuhSnidqaH3Y
-         zLFp4scutmYLF7bf1PmT96FcQcJmQahn/lROVxVGJdOZOUR3UP4ucXrxsnrV9CA7tE
-         hB02ImQxeZkTKLUtZglqNab7Oy6xEg00+9XjJCQE=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NFxotF083470
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 10:59:50 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
- Jun 2020 10:59:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 23 Jun 2020 10:59:50 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NFxnjP128978;
-        Tue, 23 Jun 2020 10:59:50 -0500
-Subject: Re: [PATCH v4 2/2] ASoC: tas2562: Update shutdown GPIO property
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200612171412.25423-1-dmurphy@ti.com>
- <20200612171412.25423-2-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <cfb043e3-77c5-2957-20b6-2814f1445cf0@ti.com>
-Date:   Tue, 23 Jun 2020 10:59:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 12:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732155AbgFWQ1R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 12:27:17 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC11BC061795
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 09:27:17 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t8so19942414ilm.7
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 09:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2HfYUl27ws6rzUdD3KtQEV+gfmF8af8Ah+cfE/GhpU0=;
+        b=rNfsLC2jhNPskzrBCvMUiHmMQhtgQHZRNee+zxTRxsUSJ9sABsKMttIhODtAJEKc5Y
+         ScZo4QlGKQZWPhsJ/n02X2L/URyh8JSsNhSmkT+OCYBiRLamvRZ7wCorHduH4pbUKmPC
+         XgZGwZJ+VAIxJCX9rAlvnABk2Sv/XTe4g/vAiINxGvKjqaJ+msVJ4gQzyECvqGdXct7I
+         GzYmJjf7Q0KbSU7qxIYlDOO+KRq/iZqe2yOmCpyN5uKCkmyTEUqY2Ler9C7PSVWe8JNP
+         mEX2+5Ff4/qzcIN96B5xb5NyyEHc8oiHh8tuiDCAQQMVHvM04XX+j8WGQLMHSGs3O7HS
+         2ldQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2HfYUl27ws6rzUdD3KtQEV+gfmF8af8Ah+cfE/GhpU0=;
+        b=e/8SsNvJyopuNO7FAhZebPbFO2F+fEaZxWINKSa7RxZrk69jEeBjEq4abRVLsXuAgI
+         2QoUmzhFUnOSum8xQa98LjdrDvHA4Xu7AtdE8+tap8BbKecBBpspopU6eNW9dR9hHhIF
+         vWV00U1fhve97HNYx5wUhNGuPSIF4lGclMdHYPup3SHR968RGZGJ5f51xNMG/NBiqClD
+         83BfnVl99Ju48SiyEDA+fxN+q+Mi+LBo2diEs7SIMX+JwTV1k4jQEHAaEemCF/6e4L3w
+         vC211VEESsYFr5zbYXwuppbpd59e3O5zR1UmF13hB7UbuUerS2sc2sSXJudraCn6848A
+         imLQ==
+X-Gm-Message-State: AOAM532m8sEN6d8LCSNwzyLdkt0pvIB0wuM5rtkk2hd1VJ57SAICtDDO
+        owhafhwVaAme4YxEvQOJ7cC2lCj5HerfofDJAr5Fkg==
+X-Google-Smtp-Source: ABdhPJxuRp1kY0Pjp+MMdWj5T/28lVrk2yLNcq6IbmjVHcQQMX5N/hsJ+Bg1RgVxEBhjOZebPX9QJrWrcsZrxc0i0U4=
+X-Received: by 2002:a92:c509:: with SMTP id r9mr22887128ilg.189.1592929637036;
+ Tue, 23 Jun 2020 09:27:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200612171412.25423-2-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk> <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+ <20200623094252.GS1551@shell.armlinux.org.uk> <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
+ <20200623095646.GT1551@shell.armlinux.org.uk>
+In-Reply-To: <20200623095646.GT1551@shell.armlinux.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 23 Jun 2020 18:27:06 +0200
+Message-ID: <CAMRc=MeKE12sXZycyGA7vmjNai0JfDhRX+XDTp3r3YtrmLQj3A@mail.gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
+wt., 23 cze 2020 o 11:56 Russell King - ARM Linux admin
+<linux@armlinux.org.uk> napisa=C5=82(a):
+>
+> On Tue, Jun 23, 2020 at 11:46:15AM +0200, Bartosz Golaszewski wrote:
+> > wt., 23 cze 2020 o 11:43 Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> napisa=C5=82(a):
+> > >
+> > > On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
+> > > > pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk> napisa=C5=82(a):
+> > > > >
+> > > >
+> > > > [snip!]
+> > > >
+> > > > >
+> > > > > This is likely to cause issues for some PHY drivers.  Note that w=
+e have
+> > > > > some PHY drivers which register a temperature sensor in the probe
+> > > > > function, which means they can be accessed independently of the l=
+ifetime
+> > > > > of the PHY bound to the network driver (which may only be while t=
+he
+> > > > > network device is "up".)  We certainly do not want hwmon failing =
+just
+> > > > > because the network device is down.
+> > > > >
+> > > > > That's kind of worked around for the reset stuff, because there a=
+re two
+> > > > > layers to that: the mdio device layer reset support which knows n=
+othing
+> > > > > of the PHY binding state to the network driver, and the phylib re=
+set
+> > > > > support, but it is not nice.
+> > > > >
+> > > >
+> > > > Regulators are reference counted so if the hwmon driver enables it
+> > > > using mdio_device_power_on() it will stay on even after the PHY dri=
+ver
+> > > > calls phy_device_power_off(), right? Am I missing something?
+> > >
+> > > If that is true, you will need to audit the PHY drivers to add that.
+> > >
+> >
+> > This change doesn't have any effect on devices which don't have a
+> > regulator assigned in DT though. The one I'm adding in the last patch
+> > is the first to use this.
+>
+> It's quality of implementation.
+>
+> Should we wait for someone else to make use of the new regulator
+> support that has been added with a PHY that uses hwmon, and they
+> don't realise that it breaks hwmon on it, and several kernel versions
+> go by without it being noticed.  It will only be a noticable issue
+> when the associated network device is down, and that network device
+> driver detaches from the PHY, so _is_ likely not to be noticed.
+>
+> Or should we do a small amount of work now to properly implement
+> regulator support, which includes a trivial grep for "hwmon" amongst
+> the PHY drivers, and add the necessary call to avoid the regulator
+> being shut off.
+>
 
-On 6/12/20 12:14 PM, Dan Murphy wrote:
-> Update the shutdown GPIO property to be shutdown from shut-down.
+I'm not sure what the correct approach is here. Provide some helper
+that, when called, would increase the regulator's reference count even
+more to keep it enabled from the moment hwmon is registered to when
+the driver is detached?
 
-I have some other patches that go on top of this patchset I am wondering 
-if I should re-submit with those patches on top or indicate in a cover 
-letter the dependency
-
-Dan
-
+Bart
