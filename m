@@ -2,128 +2,114 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D830C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8433C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 173C220724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C256020724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="itSqhEL9"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="h3ztPvbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbgFWJab (ORCPT
+        id S1731992AbgFWJc3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731965AbgFWJab (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:30:31 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1771DC061573
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:30:31 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id a12so9188670ion.13
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 02:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oLaLVpG0MyDInMfdyKDIo+dI3RLGik3lpc5kwQdQ/vw=;
-        b=itSqhEL9M1HNMjjg0HmGB6ODcp78KKoys2tcbmkfbxbnFf0gtzRbl1v0p9UyS87C8U
-         yBHI8y2mDuy/mYr4ZiVTXs0cIFQwbnoQ+DZ9UbLCGrsDywa5eSErM0ZGFTcKNGqeHDAk
-         I0xodIoqS41AnBblnoQzKSN47HDqK9EAE48fnMz7osH1NcTj39rXx6xxY1XJla4eeFm5
-         9FR6iUvRSFkvNghRKuu/IUf2XlRd3VycKWML0IuQRexvK7ewZL+Qhna1Amw9TZZjSCfF
-         4ISeQ29W2dUdLJDTabFJPAc9GXCAnZuqCrfBpDCrs8JLKV9piimbaQ8MqthMBFgCJdF3
-         lHmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oLaLVpG0MyDInMfdyKDIo+dI3RLGik3lpc5kwQdQ/vw=;
-        b=JcjkAIHQuTHpYcE/dJDs3igTJvofHNf/fOvVBu0LpWP1nr0zASQKLQmG/QqirzlK9L
-         BsBBIRYVIHVeqojY6tDPT1qlshrX1oBDZ8R7HRXxfe8MbgnWTv5Zc2T5adjgdTsyp4b5
-         AVSUx9YZK0/pTIt5Xb8xGnJJ1jIbvlDxfRh1jiQ4qNmVPDtZ6Ua5SvLZ8XDTVtAp+2gu
-         evfcF5uTNQa/39yIuF4H6KptOxc//lsIWBicSrWCycIUjGRxEf8jraCCW85WdXaTjLBt
-         ZMq+ZBEFpT2sQ4B3+JQhX9Dfi0xZXOgU1f/tCy6iA528B7zAk//SN7NkWlgh1cZYcJpu
-         DkSA==
-X-Gm-Message-State: AOAM530jr7drdAoDVN40IGxGFvXXtTJhUmzZgHuGMXxiVuG0m9Qr2ehq
-        gN8iBhBHcbWLm3qTlnMMHweK4dhI05J0kB0TVGqXCQ==
-X-Google-Smtp-Source: ABdhPJzAIxv0yIi9GjnJO0SiHwTFon80qm+0CZass27KwI8p5hZbCaGVWbdjSE1htxm4yeVgmXJhlPla03/26+P1YPU=
-X-Received: by 2002:a05:6638:979:: with SMTP id o25mr21315946jaj.24.1592904630490;
- Tue, 23 Jun 2020 02:30:30 -0700 (PDT)
+        Tue, 23 Jun 2020 05:32:29 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:26186 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731921AbgFWJc1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:32:27 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N9NoaL028773;
+        Tue, 23 Jun 2020 11:31:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Weg0RcL/DVf4Oy73jsoOhA5zRr02V3dL56h1oGO0waY=;
+ b=h3ztPvbNJRqBmRFmjJqzjCtiE/9dI0oL6hVSPD6oB4RtwFuhkGto2DZU1wL9/yxNOtwr
+ uqNsmRbkq6+d5EyOClF0kV0RtRVcIaxWZwJyv3gyJe2MhGmy6Q0gsm9gyoLbuEXjYAst
+ /k2czctZimUvv5IUzXxeXhDum0ydDfvzK0lN6ddLZr4lgbbILzvzjWU8Q4msz7e+QsiI
+ nYyzxQjYyDTwTNgi0/PQUyo0J26PKh1q8VQWX5scoVHrvPDk16SamnHL7XensjbaXKAb
+ 934YNq4bZrhCTBtYzPEci0FT/vsamf5o24GazsRj5NLkxTEpDpEQ7E43OqnnicPnUUCo +w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31s87vecn2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jun 2020 11:31:14 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7A46210002A;
+        Tue, 23 Jun 2020 11:31:13 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 699602B64A7;
+        Tue, 23 Jun 2020 11:31:13 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 23 Jun 2020 11:31:12
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH] ARM: dts: stm32: configure i2c5 support on stm32mp15xx-dkx
+Date:   Tue, 23 Jun 2020 11:31:12 +0200
+Message-ID: <1592904672-12781-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-14-brgl@bgdev.pl>
- <20200622132504.GH1551@shell.armlinux.org.uk>
-In-Reply-To: <20200622132504.GH1551@shell.armlinux.org.uk>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 Jun 2020 11:30:19 +0200
-Message-ID: <CAMRc=MeXst5fOD+PJHHzXbDvf-i_jcJp_srzjH1P=Y03OPGxag@mail.gmail.com>
-Subject: Re: [PATCH 13/15] net: phy: mdio: add support for PHY supply regulator
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-23_05:2020-06-22,2020-06-23 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 22 cze 2020 o 15:25 Russell King - ARM Linux admin
-<linux@armlinux.org.uk> napisa=C5=82(a):
->
-> On Mon, Jun 22, 2020 at 11:37:42AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently many MAC drivers control the regulator supplying the PHY but
-> > this is conceptually wrong. The regulator should be defined as a proper=
-ty
-> > of the PHY node on the MDIO bus and controlled by the MDIO sub-system.
-> >
-> > Add support for an optional PHY regulator which will be enabled before
-> > optional deasserting of the reset signal.
->
-> I wonder if this is the right place for this - MDIO devices do not have
-> to be PHYs - they can be switches, and using "phy-supply" for a switch
-> doesn't seem logical.
->
-> However, I can see the utility of having having a supply provided for
-> all mdio devices, so it seems to me to be a naming issue.  Andrew?
->
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-I followed the example of the phy reset retrieved in
-mdiobus_register_reset(). I'm happy to change it to some other name.
+Configure I2C5 on stm32mp15 DK boards. It's available and can be used on:
+- Arduino connector
+- GPIO expansion connector
+Keep it disabled by default, so the pins are kept in their initial state to
+lower power consumption. This way they can also be used as GPIO.
 
-Bart
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+---
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index fcf50131e5fe..e69aba9830b3 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -361,6 +361,19 @@
+ 	};
+ };
+ 
++&i2c5 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c5_pins_a>;
++	pinctrl-1 = <&i2c5_sleep_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
++	/* spare dmas for other usage */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "disabled";
++};
++
+ &i2s2 {
+ 	clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
+ 	clock-names = "pclk", "i2sclk", "x8k", "x11k";
+-- 
+2.17.1
+
