@@ -2,213 +2,271 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF9BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB47C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CAB207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2232080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 19:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+y2HgSD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CeTwP3xd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387562AbgFWTtU (ORCPT
+        id S2387420AbgFWT7M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 15:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
+        Tue, 23 Jun 2020 15:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733258AbgFWTtU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 15:49:20 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239DBC061573;
-        Tue, 23 Jun 2020 12:49:20 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id o5so25171105iow.8;
-        Tue, 23 Jun 2020 12:49:20 -0700 (PDT)
+        with ESMTP id S1733302AbgFWT7L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 15:59:11 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52EBFC061573
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 12:59:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j18so20589wmi.3
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 12:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hAK/qguNrmk0Gm1APUEN0dntiivLtTinL6GSxp7o6Ow=;
-        b=B+y2HgSDU/5tRsw+WKTnUfx4ewuLBP1Z66CDJqZpdGGn/PNVQcD4gmWOR8yOObgEOx
-         yOsTCYAAoRDhLhYdPJRirf86Ti50iPIFK9dcBBzA1zm5n/xckUIAJ09KuCLvBss10tkl
-         9+oqb4lYyDGKk3Rioqrn5CQGUKV2Z4WRHxcFDnkMMBqZO1pdgCVXgpE2OBKIoEsrHomG
-         yqaau3D2o7z4Cq3uKAxybpAsyEGc2shjNcB62/uiBrZoBPyqi42MnFJeCjPrp0zgt3WL
-         z6mCU+3Jqu/pCzcFEJDugPptN9cbXij7c0BKhsp0pU1EFZsnt+uffD4XIc8wGzLCR2WE
-         9xOQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=IPdMfNBCb3ooyKxisNbJboD6zq07Gvy74xhRp0EuCMo=;
+        b=CeTwP3xdcLmwwCQ6Fp2yvYkY9zraSYXGspSaLBeT7GB1HENWbjidC+8alq/+trmwCQ
+         H6x+05l6tmgMZyB/W/Fw1lMoUu5FmqlIETo88G3NEKWdUCJmkkwh6SD8EjoW7+HwO8Wx
+         cB09rJhmKpH5lNzTtahGMVkTCCsUffCh6R7KCPG71F31fKynMeSM92ArlZf/Y/4471uJ
+         lcM2UyMnz0thKKrSPzXZjDPWr/IuilFgGiwFchVIazg/tzu6YKyJ403YYPX4SCAHsqCj
+         zCTDAAXh+VvuS1qrdKUgPhqaEELsOyBhijUUAGoXmtfGivUKXTH91NMDSiTtm/lLwLb2
+         YACg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=hAK/qguNrmk0Gm1APUEN0dntiivLtTinL6GSxp7o6Ow=;
-        b=Uqq0s/1yNX42j6iirbFcsvnkJgHMS4CthAWknB5phayFmOd7Xx/x4RdBCaCeKo0IHg
-         /7Lr/JwEx8ZkuDosKEgU7CIdIROcDsDw0bYiGscq7RnmT2VwsGKBqKRicvlmUtygCKOk
-         RaqUu21WI9eeX0S8DY/MSEwmrpU5onmdBFkiklsewycUNFTY1ZyBvBoT0wJvZJm6BbsH
-         dYMQY/S8LtTp9AMfqwIQ+i1vhqNwi1ZuuxfaKBON3sWjLoKDpzUWARbXfaPsNPaKZld1
-         pTNmDbp86G7lDeQ/ujXL5XZoleeZHw1wumgs+hyJHYZU/VXxc8Zj9mJIJpJnc2cz9Bo4
-         XGsw==
-X-Gm-Message-State: AOAM530OhM6boXDk1eM4VkEe8DJgB/G6Z0WtahjgNMMlk+5xvW3flOEI
-        K7KBjFP72mTvKifg3jyBskI=
-X-Google-Smtp-Source: ABdhPJyuVMZyMj6yPM93Z62rBEasacSyFa5WqfLZLQhdF+FMcW4sbckkyiejtk99VWmebUAhCVWKHQ==
-X-Received: by 2002:a02:2417:: with SMTP id f23mr26618811jaa.28.1592941759511;
-        Tue, 23 Jun 2020 12:49:19 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k3sm6320722iot.42.2020.06.23.12.49.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 12:49:18 -0700 (PDT)
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
- registration
-To:     Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
- <20200622135106.GK4560@sirena.org.uk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
-Date:   Tue, 23 Jun 2020 12:49:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=IPdMfNBCb3ooyKxisNbJboD6zq07Gvy74xhRp0EuCMo=;
+        b=Nk6qKp3x25S/mU8d7JeuPQtiPeqmku/V6J5tFrFcvwxJcAdgfQEnfqA/hxeW1Er6BB
+         HVzTXwU/senv+tpyjJB4m+DvUhIYMicBGVyWr3xlxtgvSA0cVICLdh3Ddi+x23W5GraM
+         1a7B365Da2BgSfQa8dJH5776pKig/DHk5Kk/aYX0RXCB9FSNcDVyqwfEccV95W1XDydP
+         92V7oY8yESL9otYQcotWgyoOX9bfMC6NzMh8xWXg/14evadMVFPvCdu/ZU6nRc4Jc9mH
+         kE1I+VxboFmsh3DAdQVmCKHGhlq+17KcJAkHmi/Ln511DQuTWNfDJ8xP6pgZfKVvzLzb
+         Z3sA==
+X-Gm-Message-State: AOAM530q6AER8tEfoRDrhJ4fd0F9FQiDrE6Rm5NaWkf8OTWiUSr2s4qv
+        9me/3o3alEdl2mTNGIUhBT+Na0OHAwbDcw==
+X-Google-Smtp-Source: ABdhPJzzMvFH1YHMHYA8VnuOX5wd3xqPorM6dkBi3h6WAXZ4I87/hAdqvcVA9papKXzK0NCyfIp4KQ==
+X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr25363647wml.70.1592942349777;
+        Tue, 23 Jun 2020 12:59:09 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id a81sm5485161wmd.25.2020.06.23.12.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 12:59:09 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 20:59:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+Message-ID: <20200623195905.GB954398@dell>
+References: <20200615092644.GA2608702@dell>
+ <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
+ <20200622085009.GP954398@dell>
+ <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
+ <20200622151054.GW954398@dell>
+ <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+ <20200622191133.GY954398@dell>
+ <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
+ <20200623064723.GZ954398@dell>
+ <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200622135106.GK4560@sirena.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/22/20 6:51 AM, Mark Brown wrote:
-> On Mon, Jun 22, 2020 at 03:39:40PM +0200, Andrew Lunn wrote:
-> 
->> The PHY subsystem cannot be the first to run into this problem, that
->> you need a device structure to make use of the regulator API, but you
->> need the regulator API to probe the device. How do other subsystems
->> work around this?
-> 
-> If the bus includes power management for the devices on the bus the
-> controller is generally responsible for that rather than the devices,
-> the devices access this via facilities provided by the bus if needed.
-> If the device is enumerated by firmware prior to being physically
-> enumerable then the bus will generally instantiate the device model
-> device and then arrange to wait for the physical device to appear and
-> get joined up with the device model device, typically in such situations
-> the physical device might appear and disappear dynamically at runtime
-> based on what the driver is doing anyway.
+Suggestion #2
 
-In premise there is nothing that prevents the MDIO bus from taking care
-of the regulators, resets, prior to probing the PHY driver, what is
-complicated here is that we do need to issue a read of the actual PHY to
-know its 32-bit unique identifier and match it with an appropriate
-driver. The way that we have worked around this with if you do not wish
-such a hardware access to be made, is to provide an Ethernet PHY node
-compatible string that encodes that 32-bit OUI directly. In premise the
-same challenges exist with PCI devices/endpoints as well as USB, would
-they have reset or regulator typically attached to them.
+> >>>> 2) Modify patch 1/3.  The small part of the patch to modify is:
+> >>>>
+> >>>> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
+> >>>> +				    struct device_node *np,
+> >>>> +				    const struct mfd_cell *cell)
+> >>>> +{
+> >>>> +	struct mfd_of_node_entry *of_entry;
+> >>>> +	const __be32 *reg;
+> >>>> +	u64 of_node_addr;
+> >>>> +
+> >>>> +	/* Skip devices 'disabled' by Device Tree */
+> >>>> +	if (!of_device_is_available(np))
+> >>>> +		return -ENODEV;
+> >>>> +
+> >>>> +	/* Skip if OF node has previously been allocated to a device */
+> >>>> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
+> >>>>
+> >>>> Change:
+> >>>>
+> >>>> +		if (of_entry->np == np)
+> >>>> +			return -EAGAIN;
+> >>>>
+> >>>> To:
+> >>>>
+> >>>> +		if (of_entry->np == np) {
+> >>>> +			if (!cell->use_of_reg)
+> >>>> +				return -EINVAL;
+> >>>> +			else
+> >>>> +				return -EAGAIN;
+> >>>>
+> >>>> There may be a better choice than EINVAL, but I am just showing the method.
+> >>>>
+> >>>> You may also want to refactor this section of the patch slightly
+> >>>> differently to achieve the same result.  It was just easiest to
+> >>>> show the suggested change the way I did it.
+> >>>>
+> >>>> The test that returns EINVAL detects the issue that the FDT does
+> >>>> not match the binding (there is more one child node with the
+> >>>> "stericsson,ab8500-pwm" compatible.
 
-> 
->> Maybe it is time to add a lower level API to the regulator framework?
-> 
-> I don't see any need for that here, this is far from the only thing
-> that's keyed off a struct device and having the device appear and
-> disappear at runtime can make things like runtime PM look really messy
-> to userspace.
-> 
-> We could use a pre-probe stage in the device model for hotpluggable
-> buses in embedded contexts where you might need to bring things out of
-> reset or power them up before they'll appear on the bus for enumeration
-> but buses have mostly handled that at their level.
-> 
+My reply to suggestion #2
 
-That sounds like a better solution, are there any subsystems currently
-implementing that, or would this be a generic Linux device driver model
-addition that needs to be done?
+> >>> So here, instead of just failing a single device, we fail everything?
+> >>> Sounds a lot like throwing the baby out with the bath water.  How is
+> >>> that an improvement?
+> > 
+> > [0]
+> 
+> Is "[0]" the patch series, especially patch 1/3?
+
+No, this is my reply to your suggestion #2.
+
+The [0] is referenced further down.
+
+[...]
+
+> >>>  * False positives can occur and will fail as a result
+> >>
+> >> ((What is an example of a false positive?))  Never mind, now that
+> >> I see that the previous issue is a fatal flaw, this becomes
+> >> academic.
+> > 
+> > That's okay, I don't mind discussing.
+> > 
+> > Ironically, the 'ab8500-pwm' is a good example of a false positive,
+> > since it's fine for the DT nodes to be identical.  So long as there
+> > are nodes present for each instance, it doesn't matter which one is
+> > allocated to which device .Forcing a 'reg' property onto them for no> good reason it not a valid solution here.
+> 
+> I thought that one of the points of this patch series was to add a
+> "reg" property to any mfd child that was described by the
+> OF_MFD_CELL_REG() macro.
+
+The OF_MFD_CELL_REG() macro didn't exist until this patch-set.
+
+There are currently no users.
+
+> And that was meant to fix the problem where multiple indistinguishable
+> children existed.  The only instance I found of that (using the
+> weak search on OF_MFD_CELL()) was of compatible "stericsson,ab8500-pwm"
+> in drivers/mfd/ab8500-core.c.  You agreed with my email that
+> reported that.
+
+No, I agreed with you that there is a current problem with
+"stericsson,ab8500-pwm", as identified by Michael.  I didn't actually
+know about this issue until *after* drafting this patch-set.  To be
+clear the "stericsson,ab8500-pwm" scenario is not the reason for this
+set's existence.
+
+Also, please forget about the OF_MFD_* macros, they are totally
+agnostic to this effort.  The only relevance they have here is the
+addition of 1 extra macro which *could* be used to provide the 'reg'
+property where appropriate.
+
+> So I thought that drivers/mfd/ab8500-core.c would be modified to
+> replace the multiple instances of compatible "stericsson,ab8500-pwm"
+> in OF_MFD_CELL() with OF_MFD_CELL_REG().
+
+That is not my vision.  There is no need for "stericsson,ab8500-pwm"
+to have 'reg' properties as far as I see it.
+
+> This is another problem with the patch series: there is no user
+> of OF_MFD_CELL_REG().  Please add one to the series.
+
+That's not a problem with this patch-set, it's a problem with your
+understanding of this patch-set. :)
+
+As far as I know, there aren't any current users who would benefit
+from this work.  Instead, it is designed to provide future submitters
+with another tool to help them link their child devices to the correct
+OF nodes.  That's not to say that current users can't and won't
+benefit from this.  Just that they are not the target audience.
+
+> >>> The above actually makes the solution worse, not better.
+> >>>
+> >>
+> >> Patch 1/3 silently fails to deal with a broken devicetree.
+> >> It results on one of the three ab8500-pwm child nodes in
+> >> the hypothetical devicetree source tree not being added.
+> >>
+> >> That is not a good result either.
+> > 
+> > No it doesn't.  In the case of 'ab8500-pwm' the OF node is not set for
+> > 2 of the devices and warnings are presented in the kernel log.
+> 
+> OK, I was wrong about "silent".  There is a warning:
+>    pr_warn("%s: Failed to locate of_node [id: %d]\n",
+> 
+> > The
+> > device will continue to probe and function as usual.
+> 
+> If the device probes and functions as usual without the child of_node,
+> then why does the node have any properties (for the cases of
+> arch/arm/boot/dts/ste-ab8500.dtsi and arch/arm/boot/dts/ste-ab8505.dtsi
+> the properties "clocks" and "clock-names").
+
+Because DT is meant to describe the hardware, not the implementation.
+
+DT does not know, or care that in our case most operations that happen
+on the platform are passed back via an API to a central controlling
+location.  Or that in reality, the OF node in this situation is
+superfluous.
+
+Can we please stop talking about the AB8500.  It doesn't have anything
+to do with this series besides the fact that if it (this set) had
+existed *before* 'ab8500-pwm' was OF enabled, it wouldn't now be
+wonky.
+
+> Digging through that leads to yet another related question, or actually
+> sort of the same question.  Why do the child nodes with compatible
+> "stericsson,ab8500-pwm" have the properties "clocks" and "clock-names"
+> since the binding Documentation/devicetree/bindings/mfd/ab8500.txt
+> does not list them?
+
+If you want to talk about the AB8500, please start a new thread.
+
+> >> OK, so my solution #3 is a no go.  How about my solution #2,
+> >> which you did not comment on?
+> > 
+> > I did [0].  You must have missed it. :)
+> 
+> But yes or no to my solution #2 (with some slight changes to
+> make it better (more gracious handling of the detected error) as
+> discussed elsewhere in the email thread)?
+
+Please see "[0]" above!
+
+AFAICT your solution #2 involves bombing out *all* devices if there is
+a duplicate compatible with no 'reg' property value.  This is a)
+over-kill and b) not an error, as I mentioned:
+
+> > It also suffers with false positives.
+
 -- 
-Florian
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
