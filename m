@@ -2,104 +2,183 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD602C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 08:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C96C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCFB2072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 08:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB6E20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 08:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GvWgx0nm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ij3LAsP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731746AbgFWI2P (ORCPT
+        id S1731724AbgFWIfL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 04:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
+        Tue, 23 Jun 2020 04:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731655AbgFWI2P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 04:28:15 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56FF1C061573
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 01:28:14 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id s21so18130220oic.9
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 01:28:14 -0700 (PDT)
+        with ESMTP id S1731567AbgFWIfL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 04:35:11 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1935CC061573;
+        Tue, 23 Jun 2020 01:35:11 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 18so1104434otv.6;
+        Tue, 23 Jun 2020 01:35:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cqQFfoyhrWaOKhFdJte4kkoxyTcLsH1iOwp2ZSE2I4A=;
-        b=GvWgx0nmFgtq4mVOlqREkhgt9B3bR9uDfemw1u3w/4F/Mul89yoUcSMZdKNxfj29TL
-         NThLta7adyrEvzzve2bmd6SC7DM3BJYBAWRnXotghNh5ECOzVu/IwVrPAGHHd7Or+Xv8
-         lLvuSv6Whmcdo9peGqbqt5GwqDW7IJCKuB7Ud5NJV+cXEkMgnhQVtXlS+1Lpd0ikUl9u
-         75Pl7/981U0+ilqEeMUS+gkZUzv+UobRA/a3cRedbBdv5iP7F36Dw8sJegadnFOvMG/l
-         LKC95DMZO/JG1/ziHntOKEaCNXH/2gStRSeFZ6Ga5cdPIkBLJsILfshtpZ95bxariUHX
-         m9oQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=goSzzxDsgzxsQuY6F1h0SsNpCeO6nw7HQJbzXsVCZxo=;
+        b=ij3LAsP9p1irjc88wp1/WWNHRrwz3UZn4dmSUurQcPXlkh41m+MnezeltpEXliOxCt
+         3kxSCX/4mPnFXq4aU057VjYSGpTGZrzzbJh5hHQi7dNdKWoa+CeUDBGmwvYnMD0T0e7g
+         Zf3DMSrWTgKKz2RUHr6MjNXLPC7iat4GzmFDvoGBlMzY8c1YInfnPOGF2SOjDI/FkzUB
+         jGgTDY0j5xpx3tobTOPpKWUnG8uoy3BLAWFeis2vjxDOhRP25kXrtnKqd/ZB1ALr1kuQ
+         xX+XKpRAYJioif5IWq6jAiewZ4Oky2moCN/xQsOeuFpvjGUzrMMsAoCqh4Elq8QWcRD6
+         ZuXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cqQFfoyhrWaOKhFdJte4kkoxyTcLsH1iOwp2ZSE2I4A=;
-        b=lfVMoC1LZoPG4gb6ucQAGDH54D3AIwXm3G87hAUKCmP214i+BFnKSymC+doxiRU/cz
-         8xQGyc9LiXt+zvkVuJs639rf0gbF1K1Ysu07Bo66I6+SgIITBqGPgzh4R7QqNflWF7ms
-         VmeBsxd3HdrrlPkIgC+DHx8b5WVBiQXPRmSr3UAw8kUSon9tFhYEaXo4gzOt0rvqGukP
-         1wXkv2ItGnJZXmgTsPf6+Rf2ZeSYIZjFljdInh7iW+f+EPIw5FVhbC74IkCI2loTe82v
-         7sLSJGuvIvN7rn/d1tpRPFHZHS+Q+hvSwenN5AkVEl+6aZ1SRRnMRCy1b8xHhpAsdNi0
-         mE1w==
-X-Gm-Message-State: AOAM531jRoAR7mBAbraIuXpLGvPKNbX+SCSwo3LekJHg39/sqBQAef55
-        1DnBzM13VKrYdrV0iowjEhUSRQ==
-X-Google-Smtp-Source: ABdhPJzD4ERSMBEMlRHS3xKkAJPfibloRkw/YqA8Ybl/aMA3r2xbBG9faEtstxi6XqowDI2FAqO/Dw==
-X-Received: by 2002:aca:f58c:: with SMTP id t134mr14702855oih.86.1592900893663;
-        Tue, 23 Jun 2020 01:28:13 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m94sm3906883otm.19.2020.06.23.01.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 01:28:13 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 01:25:29 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] pinctrl: qcom: spmi-gpio: Add pm660(l)
- compatibility
-Message-ID: <20200623082529.GC128451@builder.lan>
-References: <20200622192558.152828-1-konradybcio@gmail.com>
- <20200622192558.152828-2-konradybcio@gmail.com>
- <20200623072624.GY128451@builder.lan>
- <CAMS8qEWZ6hg1-n737ZDop6qsL4k3aNLPt_pJJqTwStNtRKhTcA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=goSzzxDsgzxsQuY6F1h0SsNpCeO6nw7HQJbzXsVCZxo=;
+        b=PpfK3U8zyxd2buZJtox4W0jSmc1M1wMSeixVekqgfcqTyaH2ge/bkb2W0aQ2S2utaQ
+         nhaQoFsNlmorw8nKC3EWA0CLs7ZhZ1w4U9/4UB7kR+NXvjuTkaQBbp7dQ8+monyn1wr8
+         zmX+JhBejofPrLP7XMG7QAwzzVNWEqTY17mbLUL/neBdRyxTWkcMw8errylzRr38iv0M
+         rICWE9WP0FkNgP8i2W73otecrkzNAoDv3nc7rjg14nC3URZp9g8RNBM3LqV6zvdn9yNC
+         YIQ8c1lyX4tCxn6vYFTL+hzIhFdkWvWDIQl+n3f+AbcL1ezvqwctLKTg2nr+40gcSMOK
+         bmRw==
+X-Gm-Message-State: AOAM5317u/5teCkY10D2Q8VVweDdmDysQogfDgUzLTDFpMPSPfeMHzdE
+        70Qb1tzR9egnVvtZ0ze4TBRL9YPChizRtpePSvo=
+X-Google-Smtp-Source: ABdhPJwffdh0M4nKESM3uobBBa2UiPZNyiH0quaHQH7SdqqFBJmq9vJwUIlp8hKAj1M9RkRbx/6mjjn2BU9Qv+N0dQQ=
+X-Received: by 2002:a9d:6546:: with SMTP id q6mr16850481otl.365.1592901310350;
+ Tue, 23 Jun 2020 01:35:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMS8qEWZ6hg1-n737ZDop6qsL4k3aNLPt_pJJqTwStNtRKhTcA@mail.gmail.com>
+References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1591555267-21822-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWKhq63yT9XbbV4Nmr0EJZcGQ396pVCqkrzMTmgunznaQ@mail.gmail.com>
+ <CA+V-a8ueb-3VD-=Bcg6dJqZhLRoCBxu-Zo+key_oEFchNc_APA@mail.gmail.com>
+ <CA+V-a8vAfoQGpv-sXvJ11i9QC=EvKg750yusHBhLp8C17KmJbA@mail.gmail.com> <CAMuHMdWp6dL3g56EGDGnDBs+GNHeaO7ejy1k_4EaM_RY+dV=Cg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWp6dL3g56EGDGnDBs+GNHeaO7ejy1k_4EaM_RY+dV=Cg@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 23 Jun 2020 09:34:44 +0100
+Message-ID: <CA+V-a8tUvT1Q+nhsk1Te5CrYSSTbEqvO1=8QyRHY4q2VYNzoKQ@mail.gmail.com>
+Subject: Re: [PATCH 03/11] arm64: dts: renesas: hihope-common: Separate out
+ Rev.2.0 specific into hihope-common-rev2.dtsi file
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 23 Jun 01:02 PDT 2020, Konrad Dybcio wrote:
+Hi Geert,
 
-> Yes, you did.
-> 
-> This was a mistake on my end and I realized it
->  after sending the v3, but I figured there's no
->  point in sending it yet again exclusively for this reason.
-> Hope you don't mind.
-> 
+On Tue, Jun 23, 2020 at 9:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Jun 23, 2020 at 9:51 AM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Mon, Jun 8, 2020 at 3:59 PM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > > On Mon, Jun 8, 2020 at 3:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Sun, Jun 7, 2020 at 8:41 PM Lad Prabhakar
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > > > Separate out Rev.2.0 specific hardware changes into
+> > > > > hihope-common-rev2.dtsi file so that hihope-common.dtsi can be used
+> > > > > by all the variants for RZ/G2M[N] boards.
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > > > > @@ -0,0 +1,101 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * Device Tree Source for the HiHope RZ/G2[MN] main board Rev.2.0 common
+> > > > > + * parts
+> > > > > + *
+> > > > > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > > > > + */
+> > > > > +
+> > > > > +#include <dt-bindings/gpio/gpio.h>
+> > > > > +
+> > > > > +/ {
+> > > > > +       leds {
+> > > > > +               compatible = "gpio-leds";
+> > > > > +
+> > > > > +               bt_active_led {
+> > > > > +                       label = "blue:bt";
+> > > > > +                       gpios = <&gpio7  0 GPIO_ACTIVE_HIGH>;
+> > > > > +                       linux,default-trigger = "hci0-power";
+> > > > > +                       default-state = "off";
+> > > > > +               };
+> > > > > +
+> > > > > +               led0 {
+> > > > > +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > > > +
+> > > > > +               led1 {
+> > > > > +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > > > +
+> > > > > +               led2 {
+> > > > > +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > > > +
+> > > > > +               led3 {
+> > > > > +                       gpios = <&gpio0  0 GPIO_ACTIVE_HIGH>;
+> > > > > +               };
+> > > >
+> > > > led1, led2, and led3 are present on both, so I'd keep them in
+> > > > hihope-common.dtsi.
+> > > >
+> > > The leds defined in hihope-common-rev4.dtsi are as per the label names
+> > > on the schematics/board so that it's easier to identify the LED's by
+> > > name.
+> > >
+> > I was waiting on the above to be confirmed.
+>
+> I can confirm the naming of the LEDs on the rev4 board.
+> However, following the same reasoning, the rev2 LEDs should be renamed
+> led2201, led2202, led2203, and led2402 ;-)
 
-No worries, try to remember in the future.
+I didn't want to change any behaviour if some was using the LED's with names.
 
-Thanks,
-Bjorn
+> Does anyone rely on the names?  If not, it may make sense to use the
+> rev4 names for both, in the common file?
+>
+Not sure, but I'll take your suggestion and just name them as per rev4 naming.
+
+> Not even considering the switches...
+> Seems they forgot to rename switches SW220[123] when renaming LED220[123].
+> Worse, on rev2, you have SW220_2_/LED220_1_ sharing a GPIO, and
+> SW220_1_/LED220_2_ sharing another one.
+>
+> And on rev4, GP6_11/GP_LED/TSW_0_ is driving LED_4_ and SW220_2_?
+>
+> Conclusion: I don't care how you name them ;-)
+>
+ :)
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
