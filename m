@@ -2,102 +2,128 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A650C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1545320707
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6BA20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wQdWuZFW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SMdXrCDF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732672AbgFWNst (ORCPT
+        id S1732773AbgFWNxa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:48:49 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50796 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732629AbgFWNst (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:48:49 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmg0A007402;
-        Tue, 23 Jun 2020 08:48:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592920122;
-        bh=t3UKzHX3lCyR4eH6u/dGz7RzYpxhbfYkVViEKjM2usE=;
-        h=From:To:CC:Subject:Date;
-        b=wQdWuZFWRhSIojO1+GIh2PRHLwrOoN6rjBM+TgYLxNfZC1YmNfAW1kdpS4O/HJexY
-         5X1HbehCSxU6tq0gPemLpGYqSwz7JJ24/JPTh9GZUmCsY+2mw3KwFFypif5pZcLZrT
-         dDZE2SqVmCjL3dGq4yv+rsNIsR3N0HaoTovBb0bw=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NDmg8N003739
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 08:48:42 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
- Jun 2020 08:48:42 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 23 Jun 2020 08:48:42 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmgVv011585;
-        Tue, 23 Jun 2020 08:48:42 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v10 0/5] RGMII Internal delay common property
-Date:   Tue, 23 Jun 2020 08:48:31 -0500
-Message-ID: <20200623134836.21981-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 23 Jun 2020 09:53:30 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:65017 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732766AbgFWNx2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:53:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592920408; x=1624456408;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=Wh8tlTmkeLmBURIATHl2HVTtETUBHTovyprw1YhBJSM=;
+  b=SMdXrCDFMmZVp3bb5Z5x1QczWxPpCryOKnOjKQ8sYF7MsyMG7KbwChWv
+   fGwf91boFgwKYuCSdQ6gkCMtHl64dyE4fX8orILhPyJcQoWNEPOHAlWUd
+   UN6Aq7y6bHK4WHqFDP6OxvkUaxFle4ozNain3uQDP0YKFMinJSnZO73z6
+   qz6t5z+ouvx3sYh9le45gPu36BlDJxUrpNXS528YO7mi6Hp/GyTc5lwY1
+   F8lJ8V/NBlb3l6QZoyINtU9sYNR19j9bdLbXX1M3ldxnolflFRzLZGBOK
+   rYd1rtTLtYA5qccP2P4QkFnE1SPH722LgaFipBZr8xp64rBkOfAIeszI/
+   Q==;
+IronPort-SDR: Hq1PluohMkhb19j9nTJJm20AtFbnzLD8gz48m6b5MdsUHRS/VsQMz2/eU3gp6WRbjRTlmIfWG8
+ l6EztbvEEyQl/q8Ey00w82H6iIaiWVNRlYxzfBM9pUqWzG10mmNVZ9Zmgoxw1laDhW/EVCY4sG
+ xon+qyF5ghrjG4FBnQacQicEChjGOxXMTVEgCzjmqgSvvq/wj8sC46ntVkOi1E/U7E3kKmTp7V
+ vD1D7Gu8nKx9rsP8pX6Bq+117suOEQUaHH99ahxigiBndUKVkvrR2Knn+tjGzYvnr5gODwDXH7
+ b5w=
+X-IronPort-AV: E=Sophos;i="5.75,271,1589266800"; 
+   d="scan'208";a="81216978"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jun 2020 06:53:26 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 23 Jun 2020 06:53:14 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Tue, 23 Jun 2020 06:53:12 -0700
+References: <20200619113121.9984-1-lars.povlsen@microchip.com> <20200619113121.9984-4-lars.povlsen@microchip.com> <20200619121107.GE5396@sirena.org.uk> <87imfjxtrq.fsf@soft-dev15.microsemi.net> <20200622121706.GF4560@sirena.org.uk>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v2 3/6] spi: dw: Add Microchip Sparx5 support
+In-Reply-To: <20200622121706.GF4560@sirena.org.uk>
+Date:   Tue, 23 Jun 2020 15:53:22 +0200
+Message-ID: <878sgddh2l.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
 
-The RGMII internal delay is a common setting found in most RGMII capable PHY
-devices.  It was found that many vendor specific device tree properties exist
-to do the same function. This creates a common property to be used for PHY's
-that have internal delays for the Rx and Tx paths.
+Mark Brown writes:
 
-If the internal delay is tunable then the caller needs to pass the internal
-delay array and the return will be the index in the array that was found in
-the firmware node.
+On Mon, Jun 22, 2020 at 12:46:33PM +0200, Lars Povlsen wrote:
+>> On Fri, Jun 19, 2020 at 01:31:18PM +0200, Lars Povlsen wrote:
+>
+>> >> +	if (!nEnable) {
+>> >> +		/* Ensure CS toggles, so start off all disabled */
+>> >> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_VAL, ~0);
+>> >> +		/* CS override drive enable */
+>> >> +		regmap_write(dwsmscc->syscon, SPARX5_FORCE_ENA, 1);
+>
+>> >This should just be setting the value to whatever the core asked for it
+>> >to be set to, the driver adding extra toggles is likely to disrupt
+>> >things.
+>
+>> I will have a look at this again. But it was added for a reason. The
+>> issue is that we have two different busses in front of the controller,
+>> so we might need more settle time when switching interface.
+>
+>If there's a mux that needs to be handled specially that mux should be
+>described in DT on the relevant boards, there shouldn't just be
+>something hard coded in the controller driver.
 
-If the internal delay is fixed then the caller only needs to indicate which
-delay to return.  There is no need for a fixed delay to add device properties
-since the value is not configurable. Per the ethernet-controller.yaml the
-interface type indicates that the PHY should provide the delay.
+I have been able to change this into a straight setting - no
+toggling. Just needed a settle delay.
 
-This series contains examples of both a configurable delay and a fixed delay.
+I looked at the spi-mux driver, but that is more for muxing the CS's, as
+I understand - not the actual bus segment. I could use it, but it would
+require encoding the bus segment into the CS (double the normal
+range). Also, selecting the bus interface is tightly coupled to the
+controller - its not an externally constructed board mux.
 
-Dan Murphy (5):
-  dt-bindings: net: Add tx and rx internal delays
-  net: phy: Add a helper to return the index for of the internal delay
-  dt-bindings: net: Add RGMII internal delay for DP83869
-  net: dp83869: Add RGMII internal delay configuration
-  net: phy: DP83822: Add setting the fixed internal delay
+I feel the current implementation is more to the point, and easily
+understandable. It just adds the "microchip,spi-interface2" DT property.
 
- .../devicetree/bindings/net/ethernet-phy.yaml |  12 +++
- .../devicetree/bindings/net/ti,dp83869.yaml   |  16 ++-
- drivers/net/phy/dp83822.c                     |  79 ++++++++++++--
- drivers/net/phy/dp83869.c                     |  53 +++++++++-
- drivers/net/phy/phy_device.c                  | 100 ++++++++++++++++++
- include/linux/phy.h                           |   4 +
- 6 files changed, 250 insertions(+), 14 deletions(-)
+It might be that a better way exists using the spi-mux framework, and if
+you have some ideas for that I'd be all ears.
+
+>
+>BTW please do not CC subsystem patches to soc@kernel.org unless there's
+>a specific reason to do so - there's no need for it, these patches won't
+>get merged via there unless something is going wrong.  Generally the
+>subsystem maintainers take patches for a given subsystem.
+
+Ok, duly noted.
+
+Thank you for the comments.
+
+---Lars
+
 
 -- 
-2.26.2
-
+Lars Povlsen,
+Microchip
