@@ -4,71 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF40EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AF2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D174820720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6260920768
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592878052;
-	bh=Topq0nSm+ZfDtevszrQfQbKpVKHMXRgDg1d6bvqIr3s=;
+	s=default; t=1592878099;
+	bh=uW4WusswhVLgizDySNr71wzxeIDhK+OWpYozxZaa52g=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=J6EDHwRAgq/QfGC2GsbGX0qywsQvZr4ryd7suPXiqeDuL/Iab7KI8EpFk1ViThoIp
-	 5cjHWghDy1GjqINw396kGZ6ZzajCyBUlJpXdoSEhCJOo8rFgVBoQaraS7p46XCwFEU
-	 zar38eJZHqXUnDoBZodLBfX3jZ1wFqZhLchLr6bo=
+	b=RblYcBwyN3SDYLe11Qm2A7CLKTHZsD5oMAqwVZYGI9g6U1VrLMjRcLCGM4IelDBSD
+	 eMlsevT/+n1sODQiAn6noFVdnNp+CLSsmVJpCPKCSkgLPZ/xQoJDsnzmVbNlGTr2ce
+	 4+PDU2bK0MXq0iOdHSDxghbngYzllL7P7poxsMEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbgFWCHY (ORCPT
+        id S1730643AbgFWCIQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44126 "EHLO mail.kernel.org"
+        Mon, 22 Jun 2020 22:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbgFWCHW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 22 Jun 2020 22:07:22 -0400
+        id S1730328AbgFWCIP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 22:08:15 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79DE720720;
-        Tue, 23 Jun 2020 02:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B7120720;
+        Tue, 23 Jun 2020 02:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592878041;
-        bh=Topq0nSm+ZfDtevszrQfQbKpVKHMXRgDg1d6bvqIr3s=;
+        s=default; t=1592878095;
+        bh=uW4WusswhVLgizDySNr71wzxeIDhK+OWpYozxZaa52g=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Y8N5TSdUoRz9m6kgkHZgU+mMeGyxqHV1cEeKdCKbteuClhEtY2PNFqCNNoyB8yejK
-         p4EmS+5lP5Uk+H0r7g+Qh9HNrakOWND8HemhOaH6MSVsUbIhNyW+rUEFmDNuIvWCiE
-         04M/ZLTHx9dgmLyalf7EmwsGrobV2wDmldGj3N4Y=
+        b=YMe9EAm8d/uA85dqa18gaLyV9Dsx2KPu/Nci9FKJ28x1qKY7FWOsTVqThq2DTKx+C
+         TTfr1JQQjKxS6e19W00TTVHZADe3dGdzk4x2UVAwcD1LltPcAFgRBJNPynvzVffXS2
+         eNsOWmH2q8zTFY7ywBonQn8q1i9F7XyBPUKFpk/k=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200603154329.31579-2-aford173@gmail.com>
-References: <20200603154329.31579-1-aford173@gmail.com> <20200603154329.31579-2-aford173@gmail.com>
-Subject: Re: [PATCH V3 2/3] dt: Add additional option bindings for IDT VersaClock
+In-Reply-To: <1591155360-26173-3-git-send-email-peng.fan@nxp.com>
+References: <1591155360-26173-1-git-send-email-peng.fan@nxp.com> <1591155360-26173-3-git-send-email-peng.fan@nxp.com>
+Subject: Re: [PATCH V4 2/2] clk: imx8mp: add mu root clk
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Adam Ford <aford173@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org
-Date:   Mon, 22 Jun 2020 19:07:20 -0700
-Message-ID: <159287804088.62212.12096173329418216527@swboyd.mtv.corp.google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        l.stach@pengutronix.de, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+To:     aisheng.dong@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de,
+        linux@rempel-privat.de, peng.fan@nxp.com, robh+dt@kernel.org,
+        shawnguo@kernel.org
+Date:   Mon, 22 Jun 2020 19:08:14 -0700
+Message-ID: <159287809463.62212.16531272768548193811@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Adam Ford (2020-06-03 08:43:28)
-> The VersaClock driver now supports some additional bindings to support
-> child nodes which can configure optional settings like mode, voltage
-> and slew.
+Quoting peng.fan@nxp.com (2020-06-02 20:36:00)
+> From: Peng Fan <peng.fan@nxp.com>
 >=20
-> This patch updates the binding document to describe what is available
-> in the driver.
+> Add mu root clk for mu mailbox usage.
 >=20
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
 
-Applied to clk-next
+Acked-by: Stephen Boyd <sboyd@kernel.org>
