@@ -2,151 +2,168 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180B0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 10:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7B0520724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DD120738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 10:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zgSWOu4N"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vyLaglkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbgFWJ4w (ORCPT
+        id S1732226AbgFWKd3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731947AbgFWJ4v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 05:56:51 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A97C061573;
-        Tue, 23 Jun 2020 02:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fVbOM75xv50lUOUamFW/PCZWwW1H+bw+wE9vcoAR+6c=; b=zgSWOu4NiJmUNVTnO3A59o0wG
-        LnICkTXubnN/Yj6EczhmPZGplS3lQuoufgG+aHHXAPqPHOHndEFVYwHCeU3yoHXFwTKA2mW09/z1u
-        ApMlIuqhIyf5Pubd/Ei2XrjJ269MP+GMf4pJhEyAIHDrqlABTFhN2MhU9+XK5w9rXFEau5Im8nQkQ
-        +wkNyBSTQ1FEMNjcoBS0NTYCD9pClnruDphijin/IJY5VANUP61vWzdMcQ4+vfcUoEKW5NOdcc/gP
-        8LQ8ZKMHJGWh7cieC//06HoEQhQe+N72OVdWUFKOOpOuublBfvh6iMb0IlX5p1hYWWVqiQExSy4W8
-        kDWugzM2g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59012)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jnffc-0001cC-38; Tue, 23 Jun 2020 10:56:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jnffa-0000vi-KS; Tue, 23 Jun 2020 10:56:46 +0100
-Date:   Tue, 23 Jun 2020 10:56:46 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Tue, 23 Jun 2020 06:33:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31523 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732213AbgFWKd3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 06:33:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592908409; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=lNNnByEug5g2bPYKwn6YK0re+KHJrKIrpbDEXH/HrBY=; b=vyLaglkPNv+ncrrzFaFiMuGpMdiebedYyltgYE3CTg9HJKDoSZCCik+FzjpJrTxrt2WfN5yh
+ +avHXeOGAYTumUm2Q/rsG3Sk9wxxM7o7Bcei6QjvT7QXu4m/ji1DIg4zXY7aFwCSVzRYFsW6
+ 8MJg/+EL19rYf5P5rKMUq0b93y4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5ef1da73567385e8e7092586 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 10:33:23
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AB6B2C433A0; Tue, 23 Jun 2020 10:33:22 +0000 (UTC)
+Received: from [192.168.43.98] (unknown [157.48.152.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26A3BC433CA;
+        Tue, 23 Jun 2020 10:33:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26A3BC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V7 RESEND 4/7] spi: spi-geni-qcom: Add interconnect
+ support
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
-Message-ID: <20200623095646.GT1551@shell.armlinux.org.uk>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-15-brgl@bgdev.pl>
- <20200622132921.GI1551@shell.armlinux.org.uk>
- <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
- <20200623094252.GS1551@shell.armlinux.org.uk>
- <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>, msavaliy@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+References: <1591682194-32388-1-git-send-email-akashast@codeaurora.org>
+ <1591682194-32388-5-git-send-email-akashast@codeaurora.org>
+ <CAD=FV=XwV-8J9-j1j2gwQ08oF8izDv=hB9vj_SogbagOBQfN6Q@mail.gmail.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <4160ce9e-ee40-703c-1f13-c20ab90e0a96@codeaurora.org>
+Date:   Tue, 23 Jun 2020 16:03:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAD=FV=XwV-8J9-j1j2gwQ08oF8izDv=hB9vj_SogbagOBQfN6Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 11:46:15AM +0200, Bartosz Golaszewski wrote:
-> wt., 23 cze 2020 o 11:43 Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> napisał(a):
-> >
-> > On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
-> > > pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> napisał(a):
-> > > >
-> > >
-> > > [snip!]
-> > >
-> > > >
-> > > > This is likely to cause issues for some PHY drivers.  Note that we have
-> > > > some PHY drivers which register a temperature sensor in the probe
-> > > > function, which means they can be accessed independently of the lifetime
-> > > > of the PHY bound to the network driver (which may only be while the
-> > > > network device is "up".)  We certainly do not want hwmon failing just
-> > > > because the network device is down.
-> > > >
-> > > > That's kind of worked around for the reset stuff, because there are two
-> > > > layers to that: the mdio device layer reset support which knows nothing
-> > > > of the PHY binding state to the network driver, and the phylib reset
-> > > > support, but it is not nice.
-> > > >
-> > >
-> > > Regulators are reference counted so if the hwmon driver enables it
-> > > using mdio_device_power_on() it will stay on even after the PHY driver
-> > > calls phy_device_power_off(), right? Am I missing something?
-> >
-> > If that is true, you will need to audit the PHY drivers to add that.
-> >
-> 
-> This change doesn't have any effect on devices which don't have a
-> regulator assigned in DT though. The one I'm adding in the last patch
-> is the first to use this.
+Hi Doug,
 
-It's quality of implementation.
+On 6/23/2020 10:36 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Jun 8, 2020 at 10:57 PM Akash Asthana <akashast@codeaurora.org> wrote:
+>> Get the interconnect paths for SPI based Serial Engine device
+>> and vote according to the current bus speed of the driver.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>> Changes in V2:
+>>   - As per Bjorn's comment, removed se == NULL check from geni_spi_icc_get
+>>   - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>>   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>>     path handle
+>>   - As per Matthias comment, added error handling for icc_set_bw call
+>>
+>> Changes in V3:
+>>   - As per Matthias's comment, use helper ICC function from geni-se driver.
+>>
+>> Changes in V4:
+>>   - Move peak_bw guess as twice of avg_bw if nothing mentioned explicitly
+>>     to ICC core.
+>>
+>> Changes in V5:
+>>   - Use icc_enable/disable in power on/off call.
+>>   - Save some non-zero avg/peak value to ICC core by calling geni_icc_set_bw
+>>     from probe so that when resume/icc_enable is called NOC are running at
+>>     some non-zero value. No need to call icc_disable after BW vote because
+>>     device will resume and suspend before probe return and will leave ICC in
+>>     disabled state.
+>>
+>> Changes in V6:
+>>   - No change
+>>
+>> Changes in V7:
+>>   - As per Matthias's comment removed usage of peak_bw variable because we don't
+>>     have explicit peak requirement, we were voting peak = avg and this can be
+>>     tracked using single variable for avg bw.
+>>
+>>   drivers/spi/spi-geni-qcom.c | 29 ++++++++++++++++++++++++++++-
+>>   1 file changed, 28 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+>> index c397242..2ace5c5 100644
+>> --- a/drivers/spi/spi-geni-qcom.c
+>> +++ b/drivers/spi/spi-geni-qcom.c
+>> @@ -234,6 +234,12 @@ static int setup_fifo_params(struct spi_device *spi_slv,
+>>                  return ret;
+>>          }
+>>
+>> +       /* Set BW quota for CPU as driver supports FIFO mode only. */
+>> +       se->icc_paths[CPU_TO_GENI].avg_bw = Bps_to_icc(mas->cur_speed_hz);
+>> +       ret = geni_icc_set_bw(se);
+>> +       if (ret)
+>> +               return ret;
+>> +
+> I haven't done a deep review of your patch, but a quick drive-by
+> review since I happened to notice it while looking at this driver.
+> You should probably also update the other path that's adjusting the
+> "mas->cur_speed_hz" variable.  Specifically see setup_fifo_xfer().
+>
+> For bonus points, you could even unify the two paths.  Perhaps you
+> could pick <https://crrev.com/c/2259624> and include it in your series
+> (remove the WIP if you do).
 
-Should we wait for someone else to make use of the new regulator
-support that has been added with a PHY that uses hwmon, and they
-don't realise that it breaks hwmon on it, and several kernel versions
-go by without it being noticed.  It will only be a noticable issue
-when the associated network device is down, and that network device
-driver detaches from the PHY, so _is_ likely not to be noticed.
+Yeah, we can adjust ICC vote per transfer like we are doing for clock.
 
-Or should we do a small amount of work now to properly implement
-regulator support, which includes a trivial grep for "hwmon" amongst
-the PHY drivers, and add the necessary call to avoid the regulator
-being shut off.
+I will include your patch to v8 series.
+
+Thanks for review.
+
+regards,
+
+Akash
+
+>
+> -Doug
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
