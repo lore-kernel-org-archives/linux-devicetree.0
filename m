@@ -2,112 +2,80 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18A1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E717C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08762078E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 02:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQ4xiTf7"
+	by mail.kernel.org (Postfix) with ESMTP id CA03C20786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 03:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592881307;
+	bh=vDOuS8RpaAzFZqbGkD5xxV2WoIOlKdteQNq9eaFY3Cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eLPkXrbYOyaMKTySTJaEW5ZarNoemZqy/53YVFFEuKGeX24NCOvVCNGY8CaJkW7LO
+	 lQPWlILpO/TYC1yPG3+Et36n8BXLYslYg80zdoTjWHplKojDFTrqtmiJ51k4cI6etM
+	 gVGrmdATIFPfkJRdwe0M1Ln2IbTQcdcUSUilo7sY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731841AbgFWC4J (ORCPT
+        id S1731789AbgFWDBr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 22 Jun 2020 22:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731760AbgFWC4I (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 22 Jun 2020 22:56:08 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAB1C061796
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 19:56:07 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id z5so714721pgb.6
-        for <devicetree@vger.kernel.org>; Mon, 22 Jun 2020 19:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kSTC0VTBrWDM5by3kGz7hIcxXLRKqyZK1aiOUbh6nM8=;
-        b=eQ4xiTf7gx2KjSDgCEoSAdzK7UDZ8pqfOk3ewtrUignzeaxkaEM73d/Yd0pQAF1kbD
-         /cTGE2Ja7Mn6ueajaTG/Ravft6sQHIuvGIhhVF55uRTIl9+1LgpYvNlrkNFLOoJdfFNl
-         yfxfErmHrKZxhkS+wTdJeJ5kpQHYNVELPQaQc1Sjmwe1Nc403gxMAuo0Ha7p4Kgo+g2Z
-         zkwbEyqaG/HsD7XYjTC2SCzs6JwgLPbLEiJhqTYDQFaY2heEyT6V93h/bSG1HyJW/gfw
-         RcC0sGEZgafv6zkgZg1tIpHfJPvKHCLiPpRNMX2SoBHwOH42L0gZz4YJg5NQAWkaR6Sr
-         B4Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kSTC0VTBrWDM5by3kGz7hIcxXLRKqyZK1aiOUbh6nM8=;
-        b=t2amy82MQw8u4zboEOhtF7NpU7CU08dl922AW0P44UZ2dbPLNG4l7p671BIG8rx3Tv
-         foKQa7vhBPhZtElH6iL6vsnXsKTloFSDcRESuaUBEb797ojx7PQ/NXXRR4sUnYK9odW3
-         J8HTk8OKcKtyqtzJy+JEQPx80u0jjeYLy2e7rLN6EHh6Nnzg/Y6GwsKpQF4LysbDmwAW
-         Bll0y7ZdLRkDD7o0Rdty9qxOgTb1439+2ttA9UFh0hzC4RHm8ZdcdxmcXHtcca0yJAPI
-         d+Ne2JKAAGqb/lN8FJtNBE4GkrR9I5mIVkKKz3BAVRxGAnXDy3t1IMqkpdyQVZQB3Gtq
-         +dgQ==
-X-Gm-Message-State: AOAM530QYPC4eSd+fLyRDMEVaSA4nbeNuRjp/LDxhSix+nCeBxiyU7Xv
-        8gFev5HjSf6DhGDcZh1gT0WK
-X-Google-Smtp-Source: ABdhPJyrVggWi5UupCm2eia+264I1LZmyLdnPGHgQa9SBezyVI4TW8Vu1BIiFcqr1BCjXIz0g8Jk4A==
-X-Received: by 2002:a05:6a00:1510:: with SMTP id q16mr21976058pfu.164.1592880966978;
-        Mon, 22 Jun 2020 19:56:06 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:609d:7d26:e4ff:f0b0:edd6:2484])
-        by smtp.gmail.com with ESMTPSA id y12sm15348621pfm.158.2020.06.22.19.56.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Jun 2020 19:56:06 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 08:26:00 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 6/6] arm64: defconfig: Enable Qualcomm IPCC driver
-Message-ID: <20200623025600.GF11093@Mani-XPS-13-9360>
-References: <20200622222747.717306-1-bjorn.andersson@linaro.org>
- <20200622222747.717306-7-bjorn.andersson@linaro.org>
+        Mon, 22 Jun 2020 23:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731788AbgFWDBr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 22 Jun 2020 23:01:47 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA19F2076A;
+        Tue, 23 Jun 2020 03:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592881306;
+        bh=vDOuS8RpaAzFZqbGkD5xxV2WoIOlKdteQNq9eaFY3Cc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GeWCzUjgozzXMZGgptbtH8rlZG7589ImrXs+2uWhSXaIRH0bhufH9EENP3uMd+6iD
+         GiHtWejo6R1POtlEe8yhjw5K4Ra2AVDUkDRI6h87fZXfv+T3tB33uIdBpP51j86fkv
+         LYesaH7dN24jm+VBqOZdyx3IMp7qaQMY1JkWcBZQ=
+Date:   Tue, 23 Jun 2020 11:01:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        peng.fan@nxp.com, aford173@gmail.com, jun.li@nxp.com,
+        shengjiu.wang@nxp.com, horia.geanta@nxp.com, aisheng.dong@nxp.com,
+        fugang.duan@nxp.com, agx@sigxcpu.org, l.stach@pengutronix.de,
+        andrew.smirnov@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 0/4] Change i.MX/MXS SoCs ocotp/iim node name to efuse
+Message-ID: <20200623030130.GH30139@dragon>
+References: <1590635570-8541-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622222747.717306-7-bjorn.andersson@linaro.org>
+In-Reply-To: <1590635570-8541-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:27:47PM -0700, Bjorn Andersson wrote:
-> The IPCC hardware block provides a mechanism for triggering interrupts
-> between co-processors in recent Qualcomm SoCs. This is used as basis for
-> most form of communication between co-processors, so enable this
-> support.
+On Thu, May 28, 2020 at 11:12:46AM +0800, Anson Huang wrote:
+> In the nvmem yaml schema, it requires the nodename to be one of
+> "eeprom|efuse|nvram", so need to change all i.MX/MXS SoCs ocotp/iim node
+> name to efuse:
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+> MXS platforms: i.MX23/28;
+> i.MX platforms with IIM: i.MX25/27/31/35/51/53.
+> i.MX ARMv7 platforms with OCOTP: i.MX6QDL/6SL/6SX/6SLL/6UL/7S/7ULP.
+> i.MX ARMv8 platforms with OCOTP: i.MX8MQ/8MM/8MN/8MP.
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 5848799dcad0..b3d13e1a052a 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -834,6 +834,7 @@ CONFIG_IMX_MBOX=y
->  CONFIG_PLATFORM_MHU=y
->  CONFIG_BCM2835_MBOX=y
->  CONFIG_QCOM_APCS_IPC=y
-> +CONFIG_QCOM_IPCC=y
->  CONFIG_ROCKCHIP_IOMMU=y
->  CONFIG_TEGRA_IOMMU_SMMU=y
->  CONFIG_ARM_SMMU=y
-> -- 
-> 2.26.2
-> 
+> Anson Huang (4):
+>   ARM: dts: imx: change ocotp node name on i.MX6/7 SoCs
+>   arm64: dts: imx8m: change ocotp node name on i.MX8M SoCs
+>   ARM: dts: imx: change ocotp node name on MXS SoCs
+>   ARM: dts: imx: change iim node name on i.MX SoCs
+
+Applied all, thanks.
