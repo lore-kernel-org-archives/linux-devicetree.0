@@ -2,62 +2,60 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7A4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A650C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814B52070E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1545320707
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fETe9Py0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wQdWuZFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732765AbgFWNs7 (ORCPT
+        id S1732672AbgFWNst (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:48:59 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55232 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732762AbgFWNs5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:48:57 -0400
+        Tue, 23 Jun 2020 09:48:49 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50796 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732629AbgFWNst (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:48:49 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmquK110153;
-        Tue, 23 Jun 2020 08:48:52 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmg0A007402;
+        Tue, 23 Jun 2020 08:48:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592920132;
-        bh=Qs655vx2aySdbX1vG29sRtFyWV9hqkfoFvwyhBhceUY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fETe9Py0HO2O0dL2yEifRiU7hEt7IvfUuhP3LGSBvIlidC0hrGZDHE6BUIzwdg2Lu
-         1h+KGtFnGUiQ7g/AuR0KsITrssX+6nIftLNTnAWwSOyNnhmLXEgwVNJiSzIh1OtdvH
-         6Dm5dsXAjicBIKBgG8pIE7BDl3bfUvTTGIZzKJjc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NDmqRb003929
+        s=ti-com-17Q1; t=1592920122;
+        bh=t3UKzHX3lCyR4eH6u/dGz7RzYpxhbfYkVViEKjM2usE=;
+        h=From:To:CC:Subject:Date;
+        b=wQdWuZFWRhSIojO1+GIh2PRHLwrOoN6rjBM+TgYLxNfZC1YmNfAW1kdpS4O/HJexY
+         5X1HbehCSxU6tq0gPemLpGYqSwz7JJ24/JPTh9GZUmCsY+2mw3KwFFypif5pZcLZrT
+         dDZE2SqVmCjL3dGq4yv+rsNIsR3N0HaoTovBb0bw=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05NDmg8N003739
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jun 2020 08:48:52 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 23 Jun 2020 08:48:42 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 23
- Jun 2020 08:48:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 08:48:42 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 23 Jun 2020 08:48:52 -0500
+ Frontend Transport; Tue, 23 Jun 2020 08:48:42 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmqOg093622;
-        Tue, 23 Jun 2020 08:48:52 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05NDmgVv011585;
+        Tue, 23 Jun 2020 08:48:42 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <robh@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v10 2/5] net: phy: Add a helper to return the index for of the internal delay
-Date:   Tue, 23 Jun 2020 08:48:33 -0500
-Message-ID: <20200623134836.21981-3-dmurphy@ti.com>
+Subject: [PATCH net-next v10 0/5] RGMII Internal delay common property
+Date:   Tue, 23 Jun 2020 08:48:31 -0500
+Message-ID: <20200623134836.21981-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200623134836.21981-1-dmurphy@ti.com>
-References: <20200623134836.21981-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -67,152 +65,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a helper function that will return the index in the array for the
-passed in internal delay value.  The helper requires the array, size and
-delay value.
+Hello
 
-The helper will then return the index for the exact match or return the
-index for the index to the closest smaller value.
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have internal delays for the Rx and Tx paths.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/phy_device.c | 100 +++++++++++++++++++++++++++++++++++
- include/linux/phy.h          |   4 ++
- 2 files changed, 104 insertions(+)
+If the internal delay is tunable then the caller needs to pass the internal
+delay array and the return will be the index in the array that was found in
+the firmware node.
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 29ef4456ac25..96f242eed058 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -31,6 +31,7 @@
- #include <linux/mdio.h>
- #include <linux/io.h>
- #include <linux/uaccess.h>
-+#include <linux/property.h>
- 
- MODULE_DESCRIPTION("PHY library");
- MODULE_AUTHOR("Andy Fleming");
-@@ -2708,6 +2709,105 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
- }
- EXPORT_SYMBOL(phy_get_pause);
- 
-+#if IS_ENABLED(CONFIG_OF_MDIO)
-+static int phy_get_int_delay_property(struct device *dev, const char *name)
-+{
-+	s32 int_delay;
-+	int ret;
-+
-+	ret = device_property_read_u32(dev, name, &int_delay);
-+	if (ret)
-+		return ret;
-+
-+	return int_delay;
-+}
-+#else
-+static inline int phy_get_int_delay_property(struct device *dev,
-+					     const char *name)
-+{
-+	return -EINVAL;
-+}
-+#endif
-+
-+/**
-+ * phy_get_delay_index - returns the index of the internal delay
-+ * @phydev: phy_device struct
-+ * @dev: pointer to the devices device struct
-+ * @delay_values: array of delays the PHY supports
-+ * @size: the size of the delay array
-+ * @is_rx: boolean to indicate to get the rx internal delay
-+ *
-+ * Returns the index within the array of internal delay passed in.
-+ * If the device property is not present then the interface type is checked
-+ * if the interface defines use of internal delay then a 1 is returned otherwise
-+ * a 0 is returned.
-+ * The array must be in ascending order. If PHY does not have an ascending order
-+ * array then size = 0 and the value of the delay property is returned.
-+ * Return -EINVAL if the delay is invalid or cannot be found.
-+ */
-+s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
-+			   const int *delay_values, int size, bool is_rx)
-+{
-+	s32 delay;
-+	int i;
-+
-+	if (is_rx) {
-+		delay = phy_get_int_delay_property(dev, "rx-internal-delay-ps");
-+		if (delay < 0 && size == 0) {
-+			if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+			    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+				return 1;
-+			else
-+				return 0;
-+		}
-+
-+	} else {
-+		delay = phy_get_int_delay_property(dev, "tx-internal-delay-ps");
-+		if (delay < 0 && size == 0) {
-+			if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+			    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+				return 1;
-+			else
-+				return 0;
-+		}
-+	}
-+
-+	if (delay < 0)
-+		return delay;
-+
-+	if (delay && size == 0)
-+		return delay;
-+
-+	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
-+		phydev_err(phydev, "Delay %d is out of range\n", delay);
-+		return -EINVAL;
-+	}
-+
-+	if (delay == delay_values[0])
-+		return 0;
-+
-+	for (i = 1; i < size; i++) {
-+		if (delay == delay_values[i])
-+			return i;
-+
-+		/* Find an approximate index by looking up the table */
-+		if (delay > delay_values[i - 1] &&
-+		    delay < delay_values[i]) {
-+			if (delay - delay_values[i - 1] <
-+			    delay_values[i] - delay)
-+				return i - 1;
-+			else
-+				return i;
-+		}
-+	}
-+
-+	phydev_err(phydev, "error finding internal delay index for %d\n",
-+		   delay);
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL(phy_get_internal_delay);
-+
- static bool phy_drv_supports_irq(struct phy_driver *phydrv)
- {
- 	return phydrv->config_intr && phydrv->ack_interrupt;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 9248dd2ce4ca..bce5729be753 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1434,6 +1434,10 @@ void phy_set_asym_pause(struct phy_device *phydev, bool rx, bool tx);
- bool phy_validate_pause(struct phy_device *phydev,
- 			struct ethtool_pauseparam *pp);
- void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause);
-+
-+s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
-+			   const int *delay_values, int size, bool is_rx);
-+
- void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
- 		       bool *tx_pause, bool *rx_pause);
- 
+If the internal delay is fixed then the caller only needs to indicate which
+delay to return.  There is no need for a fixed delay to add device properties
+since the value is not configurable. Per the ethernet-controller.yaml the
+interface type indicates that the PHY should provide the delay.
+
+This series contains examples of both a configurable delay and a fixed delay.
+
+Dan Murphy (5):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+  net: phy: DP83822: Add setting the fixed internal delay
+
+ .../devicetree/bindings/net/ethernet-phy.yaml |  12 +++
+ .../devicetree/bindings/net/ti,dp83869.yaml   |  16 ++-
+ drivers/net/phy/dp83822.c                     |  79 ++++++++++++--
+ drivers/net/phy/dp83869.c                     |  53 +++++++++-
+ drivers/net/phy/phy_device.c                  | 100 ++++++++++++++++++
+ include/linux/phy.h                           |   4 +
+ 6 files changed, 250 insertions(+), 14 deletions(-)
+
 -- 
 2.26.2
 
