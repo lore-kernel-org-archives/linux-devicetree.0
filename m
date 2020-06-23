@@ -2,99 +2,80 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AFEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F100C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D1520702
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256042072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 09:11:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GDazfbBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731939AbgFWJHP (ORCPT
+        id S1731941AbgFWJLh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 05:07:15 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44746 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731921AbgFWJGu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:06:50 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2oexvFeJ7JIAA--.33S7;
-        Tue, 23 Jun 2020 17:06:44 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 5/7 RESEND] irqchip/loongson-pch-msi: Remove unneeded variable
-Date:   Tue, 23 Jun 2020 17:06:36 +0800
-Message-Id: <1592903198-5505-6-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1592903198-5505-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxf2oexvFeJ7JIAA--.33S7
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFW7Jw17Kr47Cr15WryUZFb_yoWktwb_CF
-        1Iq3ZxGFy2yr43WF4xK3yYqFy2vFyDuF1v9FWFva13X3yYgws7AFW3Aan3JrW7Gr18Zr1f
-        CrZ5Gw1Syr129jkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbCxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0
-        c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2
-        IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv6xkF7I0E14v26rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv04
-        87Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
-        aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67
-        IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWr
-        XwCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4I
-        xYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj4iubyAUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 23 Jun 2020 05:11:37 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53753 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731945AbgFWJLh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:11:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592903496; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=URJMAy2kMHYmo7L30NLkdmxA75Vd5batIlRwsEao3Ks=; b=GDazfbBA3fqR4mmQd5QFATWJVzZWqRZcV9FLj9U91lucYBkBzdVziOoq/BZSXTzIAzUORNVl
+ Dnyu+K6ML+HxddiVJk3GKtKkbgYRjk3VdhQl2To3+DoqcDrk1kpRoKlQ1ScYShrTENRoDD1k
+ PonOYuEMFFUpbsCbicrfacBsybU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ef1c7426f2ee827dae3aab2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 23 Jun 2020 09:11:30
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC6C9C433CB; Tue, 23 Jun 2020 09:11:29 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8C42C433C8;
+        Tue, 23 Jun 2020 09:11:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8C42C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Felix Fietkau <nbd@nbd.name>
+Cc:     linux-wireless@vger.kernel.org, shayne.chen@mediatek.com,
+        evelyn.tsai@mediatek.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: net: wireless: mt76: add power-limits node
+References: <20200616192544.97938-1-nbd@nbd.name>
+Date:   Tue, 23 Jun 2020 12:11:25 +0300
+In-Reply-To: <20200616192544.97938-1-nbd@nbd.name> (Felix Fietkau's message of
+        "Tue, 16 Jun 2020 21:25:41 +0200")
+Message-ID: <87o8padu4i.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-irq_domain_alloc_irqs_parent() returns 0 on success and non-zero value
-on failure, it is redudant to check its non-zero return value and then
-return it, so just remove the variable "ret" and return directly in the
-function pch_msi_parent_domain_alloc().
+Felix Fietkau <nbd@nbd.name> writes:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-loongson-pch-msi.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+> This subnode can be used to set per-rate tx power limits either per
+> country code / regdomain or globally.
+> These limits are typically provided by the device manufacturers and are
+> used to limit sideband emissions and stay within regulatory limits
+>
+> Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
 
-diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-index 50becd2..12aeeab 100644
---- a/drivers/irqchip/irq-loongson-pch-msi.c
-+++ b/drivers/irqchip/irq-loongson-pch-msi.c
-@@ -100,17 +100,12 @@ static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
- 					unsigned int virq, int hwirq)
- {
- 	struct irq_fwspec fwspec;
--	int ret;
- 
- 	fwspec.fwnode = domain->parent->fwnode;
- 	fwspec.param_count = 1;
- 	fwspec.param[0] = hwirq;
- 
--	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
--	if (ret)
--		return ret;
--
--	return 0;
-+	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- }
- 
- static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
+I think Shayne's s-o-b should follow the Co-developed-by line.
+
 -- 
-2.1.0
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
