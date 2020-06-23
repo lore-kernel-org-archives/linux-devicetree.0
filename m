@@ -4,149 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E42C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A56C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58AC5206B7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52227206B7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 07:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MiXGw9Dj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RShs6dv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgFWHG4 (ORCPT
+        id S1731006AbgFWHRy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 03:06:56 -0400
-Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:35474
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730781AbgFWHG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:06:56 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jbm534/kLo74VPGBFisST7ZGwrs4ITFyikI4qfKq1rTOHDmvvusz05OcEUM3HRQijm8Ms8FjlelM30x0erLyOakueqC4pAJiPg0a872JTYyWlKrzJIvlu0hXTiK3KLSGUbX41a6HzKObfmP8Hb2m5mpEbAtOSNXrxYZ71mzECg43V8sOOC9yRZFBm40UnZBjijdJS1th5D+3IK2x5X8w/p/DJ+y4Z3QIwfYNWDIste2UZjvs9++zcyWVsH1yJb79GyZFB/N1ckpvahL14Y2Mmgcb83+UO2YfLqOQ9cy+cxKeFrNjgtdbgzpR6HahQw/FN1ulOebX+0hqxxIWv6O6Ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GDClRvSOW34Ay+DMRzXqBG4Owcpb+/SbEXKnH4p0tXE=;
- b=S0ZX93Jkw0Vgiku6z9buE6QegIEYbM5r2ZpdeWBQyW585bRIxDEEt5KUBdh52BoLiSQIpleNb9GfqCKurGZmp5qZaj5h/wigRam52GE2XkGKvsKZk3nctQo4wEUlzoGcAkYCU1cRnZlmtdwJav+nDCaR9e/u2wmD2M/saGq9bzyl/tSNPb7KeP1exWDzctGw3x0sb2HlqX8WaP+DS+NWjucdgqfo02mNfJCBa9VcEGK9aHnm6RMdUlG6g6mLK9A4tTX9kaKXW6b9+iIfGLCGpSsOARKde6WNAXLBGG1GjNn7X9ImFvcV7+XfpPMwYRVrv5mJUw75QSPtnUqsTJ2HUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GDClRvSOW34Ay+DMRzXqBG4Owcpb+/SbEXKnH4p0tXE=;
- b=MiXGw9Dj0mkplpoq1703VntW/ThPGL9ir22qxXNiIawpaO4g6FF27MgHmj7iY4tWTosejSJAT409V8pGRnWcU7j6Ll1E21l9wUexxRzImJwgz2u7MXb3auq2gcxMVjJgGtKfEPMJKd+Z266fesv6MQf1PdO4km9SWzCDju119SQ=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2711.eurprd04.prod.outlook.com (2603:10a6:4:96::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Tue, 23 Jun
- 2020 07:06:51 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3109.027; Tue, 23 Jun 2020
- 07:06:51 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Fabio Estevam <fabio.estevam@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
-Thread-Topic: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
-Thread-Index: AQHWN7q7FzxDRlKvSUqllYWi4vXJsajltQcAgAAz0OA=
-Date:   Tue, 23 Jun 2020 07:06:51 +0000
-Message-ID: <DB6PR0402MB2760A7116D8743792570BEE088940@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1590977180-9957-1-git-send-email-peng.fan@nxp.com>
- <1590977180-9957-3-git-send-email-peng.fan@nxp.com>
- <20200623035615.GN30139@dragon>
-In-Reply-To: <20200623035615.GN30139@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e27f3640-e854-4b7d-5b62-08d81744013c
-x-ms-traffictypediagnostic: DB6PR0402MB2711:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB2711D842204E22E271379A2988940@DB6PR0402MB2711.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:862;
-x-forefront-prvs: 04433051BF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sMCu7veLhQElnMjZCkCP9DruPjgEwfTMCNS4TgM+gYFkNAslH/zzytR6j2URidFFX0RMYmXSAbBAvcKYCuZZwVD0Y/g84NpIYxT2E6wDZViTKjvM68TN4x1JhsY0lHTveOU7d9XeEoZI3tzuKc6hIC2BA43Im1HeiTFqYI1eDuqvVjHGfWJgFFNCdeiYLwSEOdlzqcPOXgTAJyYdSg0BPQ1iZCWye88gaDGaP5iCbta+aiiUnhlfSgGcTlCXrUrWCkwjn9SqYofMsQdSpsaWfbve3UZt8wo7XwJxZoNbRSz9BNvPsBjpbiCGG5X6xH/6apQNpS5ds/gWCfpEzxZIvD/NE8myYOlNs8P9fwR2vQM73HXEK2VokgzzfIUZMpcc9SsUi0wwwXujQnkJxvH13buz2H8FRfqUcp+wvtmW0A9fn+x3DqOcDMdsfTa9XlRbWm70+YQ+JZt9G5BGjuFQbw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(76116006)(26005)(6916009)(478600001)(52536014)(5660300002)(2906002)(186003)(54906003)(33656002)(316002)(8936002)(66476007)(66556008)(64756008)(66446008)(4326008)(66946007)(44832011)(8676002)(7696005)(86362001)(83380400001)(71200400001)(55016002)(966005)(6506007)(9686003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 3vtIbllHpOsAXkruIpXZyYV3O6IDJtTy/xSL9ehTRY168tIV0MOWzkmTm1PLdcQZ2DQiL0E3hVpnU/DzE80/bpVhUt11YMKQThujuwdH0GQ+ooVh5GVQUgJm/7rSeHLN7kHwTW8ECiZr26jmXZ74fCd/yYUlQc0jfxVPHTKywD30gAi7g/wRRR21pXfLoP+aolyT9w0sJi4woN0ZsDGtMEicv+wBSwN6hhQ4VdVhY2yLkoUgQp1mH67NG2UeoYrS0HcZSVWdkE4W9yckCaR3x7tPnZLk5mTHfr9kXCsj5tUVwvM2MkX2v7HmiA/zh23VvljsVFjXdUTy27KprskgMryKUdDlU/S1f0H0CTlMBZFRplKaiR+Cd95EwrYryct0cdkz1t78hjUqrY8u75zgni//0xjqWyTZkdof2EnMZrfoBdlFjcTP9uaW0EUH+NmV3rBsOmclNVcy3N/3RzEQuicmD76H6NfvPShGO0IGqqx1USChss4bcIMoEuU+bhds
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jun 2020 03:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731505AbgFWHRx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 03:17:53 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147D0C061797
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 00:17:52 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id e5so15547403ote.11
+        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 00:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OrQkyvC22e1MwYWC4yiJoh4JThum+qbMQLILKSvLEQo=;
+        b=RShs6dv7sFJ452LX+nOtFOcGZusftsuBQMDT8SzDKmgtVEJts9p2PoLcI+A8LIbvEX
+         vQBxpR0ooCDzmoXbFw6HlwU7lgGudcAjrrQe5PhR0yDUc7OuEb+rUIa+0tjQbAQBLibM
+         fDIrAfL02eLpmnYqcsE9vkqs/Qq2jYweRTP17/7HMOhsZkH2HHobrQyr0pt+Sq6Gi697
+         40Rli9mSMsWDSnSZAizj8DZkhuwYPJ5A1k9vjER/qUpuYSTy2trHVu6q5Ad50lJ6voGS
+         TR/rnQQu5FopflXbMBbO4Q2tohc85ETIOnqGPVlb2M4k7vU6T4LOF1MK6aqYpNxk8o1e
+         665w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OrQkyvC22e1MwYWC4yiJoh4JThum+qbMQLILKSvLEQo=;
+        b=G4BGcfM2OWRORHkg3V0S96aNoRYcbWqpE7E7gm5p4Q3DRlMrfYw3rV8XWZ/fJ4BbRm
+         VK9hYJFuEBXfpDKHW1XWUIe8miL8+xjRx66gQh3I2mNghDyPTBJ94xfosiFL3ZZTPf0B
+         6QT46c02ejPr9a9cdnwGRkOvXjmJCLgCtog//ATwmhlJ4y832mGrTV2ktIXesnzsJi0/
+         aTewybehkIcnFTIEoIE6DpMXK5c7p00asUEjkW3pTHWPTYcT5kZqqJC65v5/ofB7Bdnr
+         9hD1khXzHFW21+JrqvG5JjHLYAa5XTp420CB638QjcN52hHU4l4MCkp0EAMv96NnSw59
+         d09g==
+X-Gm-Message-State: AOAM531jCUvMT402Qjq9X22sH4LJOU97ychv8+smXIusFdEiL3XOd5n2
+        qdAavK+W40aTQPAMRUpnuYWQ/w==
+X-Google-Smtp-Source: ABdhPJwp+BnWQ4Ps7xLiLjdxtbq87IaPZN18D99VL8cgp/knyF5k0izryN9gIZCA62v1cv85sXBA5w==
+X-Received: by 2002:a05:6830:130b:: with SMTP id p11mr17321671otq.293.1592896671350;
+        Tue, 23 Jun 2020 00:17:51 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q10sm3877909otl.40.2020.06.23.00.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 00:17:50 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 00:15:06 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vincent Knecht <vincent.knecht@mailoo.org>
+Cc:     sboyd@kernel.org, konradybcio@gmail.com,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] drivers: soc: Add MSM8936 SMD RPM compatible
+Message-ID: <20200623071506.GW128451@builder.lan>
+References: <20200613072745.1249003-1-vincent.knecht@mailoo.org>
+ <20200613072745.1249003-4-vincent.knecht@mailoo.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e27f3640-e854-4b7d-5b62-08d81744013c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2020 07:06:51.7453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ql2BLyCclsAQk45mN/3G5rBBSyc//BjJKpG5h+eUEDCQqT3peztHfaBcWRDSCstKI6kz/yk/sWXHgom6HZHicQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2711
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613072745.1249003-4-vincent.knecht@mailoo.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Sat 13 Jun 00:27 PDT 2020, Vincent Knecht wrote:
 
-> Subject: Re: [PATCH 2/3] arm64: dts: imx8qxp: add i2c aliases
->=20
-> On Mon, Jun 01, 2020 at 10:06:19AM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The devices could be enumerated properly with aliases.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 33363c127478..8ce997110cd6 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -19,6 +19,10 @@
-> >  	#size-cells =3D <2>;
-> >
-> >  	aliases {
-> > +		i2c0 =3D &adma_i2c0;
-> > +		i2c1 =3D &adma_i2c1;
-> > +		i2c2 =3D &adma_i2c2;
-> > +		i2c3 =3D &adma_i2c3;
->=20
-> Had a second look.  It breaks alphabetical order.  So dropped the series.
+> From: Konrad Dybcio <konradybcio@gmail.com>
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
 
-V2 has this addressed.
-https://patchwork.kernel.org/cover/11619867/
+Patch 3 and 4 applied.
 
 Thanks,
-Peng.
+Bjorn
 
->=20
-> Shawn
->=20
-> >  		gpio0 =3D &lsio_gpio0;
-> >  		gpio1 =3D &lsio_gpio1;
-> >  		gpio2 =3D &lsio_gpio2;
-> > --
-> > 2.16.4
-> >
+> ---
+>  drivers/soc/qcom/smd-rpm.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
+> index 005dd30c58fa..8f290c67cb47 100644
+> --- a/drivers/soc/qcom/smd-rpm.c
+> +++ b/drivers/soc/qcom/smd-rpm.c
+> @@ -231,6 +231,7 @@ static void qcom_smd_rpm_remove(struct rpmsg_device *rpdev)
+>  static const struct of_device_id qcom_smd_rpm_of_match[] = {
+>  	{ .compatible = "qcom,rpm-apq8084" },
+>  	{ .compatible = "qcom,rpm-msm8916" },
+> +	{ .compatible = "qcom,rpm-msm8936" },
+>  	{ .compatible = "qcom,rpm-msm8974" },
+>  	{ .compatible = "qcom,rpm-msm8976" },
+>  	{ .compatible = "qcom,rpm-msm8996" },
+> -- 
+> 2.25.4
+> 
+> 
