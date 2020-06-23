@@ -2,124 +2,104 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257B7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A896FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022332080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 20:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592943395;
-	bh=gDGnvZfZxG08b9wvGhCaBJiEgiArLyhOEhwuqh+/4Xg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZHHePTY75PAzzOIQRb1QaDeMuHbn0rzWBTarqg4eLtFg1LGd8KCSI7+Kbav96aV5/
-	 Jupf8OLthYVSV2HJQEf2uuk/QkUSYcs1qTdabm9ok5Dm2vlZUCGehpxM8oWBSwU6aj
-	 Ln0xoY2ivDiZA/3iJ63I9Q9KPLrJKpmbkB68AXps=
+	by mail.kernel.org (Postfix) with ESMTP id 8319D20724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 21:21:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frQCVrMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389412AbgFWUQd (ORCPT
+        id S2404257AbgFWVVw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 16:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389427AbgFWUQb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 16:16:31 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB322064B;
-        Tue, 23 Jun 2020 20:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592943390;
-        bh=gDGnvZfZxG08b9wvGhCaBJiEgiArLyhOEhwuqh+/4Xg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y9UwVHOwGJuOhYMiSxOJo8XDSMmeGgWKrc0Uz3JBUaLR4LA6LbHi7+Oi+JfJLfcaq
-         pKB2NjOEMM3KUgJf9UswWdLF53hl6JjKFdIhEfegfP+IvdJWnRd/j9XnlTSz2f0k02
-         fsulvyWw9rlpOsS0WvtokvCV2JlEajVWPOdNF6KA=
-Date:   Tue, 23 Jun 2020 13:16:28 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 03/11] net: devres: relax devm_register_netdev()
-Message-ID: <20200623131628.232ec75e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
-References: <20200622100056.10151-1-brgl@bgdev.pl>
-        <20200622100056.10151-4-brgl@bgdev.pl>
-        <20200622154943.02782b5a@kicinski-fedora-PC1C0HJN>
-        <CAMRc=MfF1RbQCJ62QhscFLu1HKYRc9M-2SMep1_vTJ2xhKjLAA@mail.gmail.com>
+        Tue, 23 Jun 2020 17:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404249AbgFWVVv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 17:21:51 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BB1C061573;
+        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l188so7235107qkf.10;
+        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JyKLP13MA3we/vWXo7vrVA6xMNeRPMkMoZjirv2W5f8=;
+        b=frQCVrMNN/+WhRNV+xlYiJ59hqptoPUZlFyQEi5Nxs1ZDTbZCHFzkP5Fy+KHZmFx42
+         4IJltfqqSa4cluvGdrB4QfYoiCddWuCbVEMiIL6FvU/Mjg/zWLLtqFYCq+HGrgRVQigm
+         e1zJzySEmJ7pSb7vKwaNOzU+CG88I+Vm5N2F6Vmg60ITcOh6RaK2G52nuUAqhRk7QpWT
+         jKGMiyN6PpnOOGPsPIukYvhMFkaarZQ4yeSa1wdJ1yDxyAA1MLvXSOCLVDnpBJN9yWq2
+         UzM3uNt2YbG7Sa4i5E79iwTPccj9Z6xjuyIg1TF4ioqpdc5bEslAT2EgP+LR4fpOBfKS
+         4KTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JyKLP13MA3we/vWXo7vrVA6xMNeRPMkMoZjirv2W5f8=;
+        b=szwbNOW340Hfr+2PwizwZwucn4EhqXN3WvNetSHsWvd0EmQRJQMJwPZ7PfB7L6K/fc
+         leaUW30hOyN/2hhKzTADZxtYIGim19JQv83Q8PAr1an7n2HQzzPC3XuM1+pUjGjjYsAy
+         FJuH8g92nrM1FIEUnQ0Kh5KAFb6zim+A5+K25gziMflTrrSl/dxesGBYAgoBeY+pz3De
+         L7LeEXZMIktE70JvEqKAZZW7sCTKiEtlRxGRyMfaUkZed+p9qx74L4OQOjJpQnFvYVFU
+         J2oDZtxNJoKP267s7RQ8wfMeoUuqpxfWh+tbz4A5IneSwHX1TwTSVGHrCgd269UAVN4F
+         uoEQ==
+X-Gm-Message-State: AOAM5306NgY4u3ftBcAGZ10cYHR5FQTPM3PiHqdHMm/cJfryz5QiwJ17
+        bCBZ4SmyKBzJm9a47rWhQEaYg2rMf7pjqg==
+X-Google-Smtp-Source: ABdhPJxPuHCjth4EvPORtZ3tcp/As6OSbqLCTv4lhJm6iUiMx7p+8K7lcbf/Vp1AKm6A+CrjKnFUXQ==
+X-Received: by 2002:a37:6fc6:: with SMTP id k189mr21800161qkc.289.1592947310034;
+        Tue, 23 Jun 2020 14:21:50 -0700 (PDT)
+Received: from DESKTOP-J6NUVB7.localdomain ([179.232.194.217])
+        by smtp.gmail.com with ESMTPSA id b4sm1459665qka.133.2020.06.23.14.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 14:21:49 -0700 (PDT)
+From:   =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20H=2E=20Spies?= <jhlspies@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] MIPS: ingenic: gcw0: Fix HP detection GPIO.
+Date:   Tue, 23 Jun 2020 18:19:45 -0300
+Message-Id: <20200623211945.823-1-jhlspies@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2020 11:12:24 +0200 Bartosz Golaszewski wrote:
-> wt., 23 cze 2020 o 00:49 Jakub Kicinski <kuba@kernel.org> napisa=C5=82(a):
-> > On Mon, 22 Jun 2020 12:00:48 +0200 Bartosz Golaszewski wrote: =20
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > This devres helper registers a release callback that only unregisters
-> > > the net_device. It works perfectly fine with netdev structs that are
-> > > not managed on their own. There's no reason to check this - drop the
-> > > warning.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com> =20
-> >
-> > I think the reasoning for this suggestion was to catch possible UAF
-> > errors. The netdev doesn't necessarily has to be from devm_alloc_*
-> > but it has to be part of devm-ed memory or memory which is freed
-> > after driver's remove callback.
-> > =20
->=20
-> Yes I understand that UAF was the concern here, but this limitation is
-> unnecessary. In its current form devm_register_netdev() only works for
-> struct net_device allocated with devm_alloc_etherdev(). Meanwhile
-> calling alloc_netdev() (which doesn't have its devm counterpart yet -
-> I may look into it shortly),
+Previously marked as active high, but is in reality active low.
 
-If resource managed alloc_netdev() is needed devm_alloc_netdev() can
-be created, and even reuse devm_free_netdev() so no changes to the
-warning are even necessary for such extension.
+Cc: stable@vger.kernel.org
+Fixes: b1bfdb660516 ("MIPS: ingenic: DTS: Update GCW0 support")
+Signed-off-by: João H. Spies <jhlspies@gmail.com>
+---
+ arch/mips/boot/dts/ingenic/gcw0.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> then registering a devm action with devm_add_action_or_reset() which
-> would free this memory is a perfectly fine use case. This patch would
-> make it possible.
-
-alloc_netdev() + devm_add_action makes no sense in the upstream kernel,
-just add the appropriate helper, we care little about out of tree code.
-
-> > Are there cases in practice where you've seen the netdev not being
-> > devm allocated? =20
->=20
-> As I said above - alloc_netdev() used by wireless, can, usb etc.
-> drivers doesn't have a devres variant.
-
+diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
+index 8d22828787d8..bc72304a2440 100644
+--- a/arch/mips/boot/dts/ingenic/gcw0.dts
++++ b/arch/mips/boot/dts/ingenic/gcw0.dts
+@@ -92,7 +92,7 @@
+ 			"MIC1N", "Built-in Mic";
+ 		simple-audio-card,pin-switches = "Speaker", "Headphones";
+ 
+-		simple-audio-card,hp-det-gpio = <&gpf 21 GPIO_ACTIVE_HIGH>;
++		simple-audio-card,hp-det-gpio = <&gpf 21 GPIO_ACTIVE_LOW>;
+ 		simple-audio-card,aux-devs = <&speaker_amp>, <&headphones_amp>;
+ 
+ 		simple-audio-card,bitclock-master = <&dai_codec>;
+-- 
+2.17.1
 
