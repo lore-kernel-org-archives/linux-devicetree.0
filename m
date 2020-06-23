@@ -2,137 +2,115 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EC0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D371C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF32C20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:37:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592919450;
-	bh=6YgqTqpzXNk6G5h5tbtGEM3OeaCxBlz+iED1nYuxZaE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eUDXrZRZD0rPcPm8PLFzmhDToluoZnAol/yY6YcWjgieBnwDUszntoUJZB78tDUMt
-	 mg9jm5kBhUdTq/QYClF+C8yc55K96ySZPKfC1GM3BSYyPqjHZIsqiITbYStAjfKnUD
-	 ULnjLeegq3bkOe/l1LLGZDh677yeXSMeJ7W1T/M8=
+	by mail.kernel.org (Postfix) with ESMTP id 322D62070E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 13:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732650AbgFWNhZ (ORCPT
+        id S1732700AbgFWNmm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 09:37:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732631AbgFWNhY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 09:37:24 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59CEF2070E;
-        Tue, 23 Jun 2020 13:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592919443;
-        bh=6YgqTqpzXNk6G5h5tbtGEM3OeaCxBlz+iED1nYuxZaE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Sq2RoIup4I8YKO42/klL8ky4Pktk9BSuOz5eofHdUAN8fFQH8ZqzKcxvAspetKkiZ
-         B/NBMX3qMnB9yFtuaW1Kqt4MWr4uDWeHrtdD5QrMCCRg8CRPuzpDvGHecLCx867g+B
-         fc2T1tehkIEpPE88M2hQzL8jfnqCwTMf5R9lxaeA=
-Date:   Tue, 23 Jun 2020 15:37:15 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Kate Stewart <kstewart@linuxfoundation.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Yong Zhi <yong.zhi@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tian Shu Qiu <tian.shu.qiu@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-spdx@vger.kernel.org, linux-mm@kvack.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Alex Shi <alex.shi@linux.alibaba.com>
-Subject: Re: [PATCH v2 0/9] Convert the remaining text files to ReST and add
- SPDX for GFDL
-Message-ID: <20200623153442.5d0c91b2@coco.lan>
-In-Reply-To: <CAG_66ZRjeX0AERQ0g_d0u=quhrhKHzXRu__m46trqzLLt=8XDA@mail.gmail.com>
-References: <cover.1592905407.git.mchehab+huawei@kernel.org>
-        <CAG_66ZRjeX0AERQ0g_d0u=quhrhKHzXRu__m46trqzLLt=8XDA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 23 Jun 2020 09:42:42 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:32967 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732631AbgFWNmm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 09:42:42 -0400
+X-Greylist: delayed 3256 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jun 2020 09:42:41 EDT
+Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 05NClfui068788;
+        Tue, 23 Jun 2020 21:47:41 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
+ Tue, 23 Jun 2020 21:47:41 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
+Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 05NClbP6068743
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Tue, 23 Jun 2020 21:47:41 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Heiko Stuebner <heiko@sntech.de>, alsa-devel@alsa-project.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH 2/2] dt-bindings: sound: add missing clock description of rk3328 DT schema
+Date:   Tue, 23 Jun 2020 21:47:34 +0900
+Message-Id: <20200623124734.1736470-2-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200623124734.1736470-1-katsuhiro@katsuster.net>
+References: <20200623124734.1736470-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kate,
+This patch adds description about "mclk" clock and fixes some errors
+which are dt_binding_check reported.
 
-Em Tue, 23 Jun 2020 06:58:55 -0500
-Kate Stewart <kstewart@linuxfoundation.org> escreveu:
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+---
+ .../bindings/sound/rockchip,rk3328-codec.yaml     | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-> On Tue, Jun 23, 2020 at 4:53 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > The main goal of this series is to finish the ReST conversion. After this
-> > series, we have just those files still in plain old format:
-> >
-> >         - Documentation/RCU/RTFP.txt
-> >         - Documentation/atomic_bitops.txt
-> >         - Documentation/memory-barriers.txt
-> >         - Documentation/atomic_t.txt
-> >         - Documentation/filesystems/dax.txt
-> >         - Documentation/filesystems/path-lookup.txt
-> >         - Documentation/virt/kvm/devices/README
-> >
-> > PS.: I'm using a script to remove false-positives and ignore non-converted
-> > translated files.
-> >
-> > It is worth to mention that this fseries contain licenses for the two
-> > GFDL licenses used within the Kernel: GFDL-1.1+ and GFDL-1.2.
-> >
-> > Those licenses are the result of long discussions with the SPDX legal
-> > team, and are part of this commit, to be added for the future
-> > SPDX 3.10 version:
-> >         https://github.com/spdx/license-list-XML/pull/1048/commits/f695d2ac65230d0f4161ba58fff2f9d87bb5a053
-> >
-> > Mauro Carvalho Chehab (9):
-> >   docs: dt: convert booting-without-of.txt to ReST format
-> >   LICENSES: add GFDL licenses
-> >   media: docs: use SPDX GFDL-1.1-or-later-no-invariants  
-> 
-> The identifier "GFDL-1.1-or-later-no-invariants" isn't following expected
-> construction (or-later and -only at the end) and the pull request is
-> still under
-> discussion on the SPDX license list, so please hold off on applying this
-> until the correct identifier is figured out there.
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
+index 08a74e28e483..525b48c2f5de 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3328-codec.yaml
+@@ -19,10 +19,12 @@ properties:
+   clocks:
+     items:
+       - description: clock for audio codec
++      - description: clock for I2S master clock
+ 
+   clock-names:
+     items:
+       - const: pclk
++      - const: mclk
+ 
+   rockchip,grf:
+     $ref: /schemas/types.yaml#/definitions/phandle
+@@ -41,21 +43,28 @@ properties:
+       GPIO specifier for external line driver control (typically the
+       dedicated GPIO_MUTE pin)
+ 
++  "#sound-dai-cells":
++    const: 0
++
+ required:
+   - compatible
+   - reg
+   - clocks
+   - clock-names
+   - rockchip,grf
++  - "#sound-dai-cells"
+ 
+ examples:
+   - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/clock/rk3328-cru.h>
+     codec: codec@ff410000 {
+       compatible = "rockchip,rk3328-codec";
+       reg = <0xff410000 0x1000>;
+-      clocks = <&cru PCLK_ACODEC>;
+-      clock-names = "pclk";
++      clocks = <&cru PCLK_ACODECPHY>, <&cru SCLK_I2S1>;
++      clock-names = "pclk", "mclk";
+       rockchip,grf = <&grf>;
+       mute-gpios = <&grf_gpio 0 GPIO_ACTIVE_LOW>;
+-      spk-depop-time-ms = 100;
++      spk-depop-time-ms = <100>;
++      #sound-dai-cells = <0>;
+     };
+-- 
+2.27.0
 
-Thanks for checking this. I assumed that the discussions on SPDX were
-finished. For now, I'll keep using a license text at the Kernel
-(on media and on another file dual-licensed GPL and GFDL).
-
-I'm keeping the patches changing the license on a temp branch. I'll
-re-submit them once the patch gets merged at SPDX specs tree.
-
-Btw, another file using both GPL and GFDL was just added via the
-media tree[1]. I need to remember that when re-submitting this one,
-as otherwise it would be a left-over.
-
-[1] Due to historic reasons, media userspace API is licensed under
-GFDL. We're using a dual-license model for newer files at the
-media uAPI book.
-
-Thanks!
-Mauro
