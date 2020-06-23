@@ -2,120 +2,90 @@ Return-Path: <SRS0=lOvj=AE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFA0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F3AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2990120781
-	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:24:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lkow4fJt"
+	by mail.kernel.org (Postfix) with ESMTP id 5B63920776
+	for <linux-devicetree@archiver.kernel.org>; Tue, 23 Jun 2020 12:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732516AbgFWMYS (ORCPT
+        id S1732508AbgFWM0A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 08:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
+        Tue, 23 Jun 2020 08:26:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732542AbgFWMYS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 08:24:18 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4162C061755
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 05:24:17 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h5so20329315wrc.7
-        for <devicetree@vger.kernel.org>; Tue, 23 Jun 2020 05:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=++T8yoGkGRxx38VWQ3gyOTuSMcmswHmEWL3ZocVDNWk=;
-        b=Lkow4fJtt0BRPWbiyfYj3mVy0BAbo+XzVkXopTpZ6F0bAFxi1QBH0+boQE0phOJ2OG
-         5ZiJBUfg5ib7zXl6YEkBobiyIBmJNREpqb+qKFSALFMox8rNqYIKEMcguwGMbrYo9Hb7
-         ZoYlTyHdtFD+VsT7x2lAJjxt5/wakqbk370A4HdqdsUb+ce40uymikWS2YuUdfppGQLR
-         GgdW7S5GuUEdRviWyjuSLJyOHy2UYkvtm9mzffRqZT0eetFNaifFAUJrqCgoB5lH5hQs
-         HwIVAf3Ir52H7qKTzyv8RPzAVXf1NYiniB6lJLyJ+tAUI8dSvhaxqc8zJYG6cWMw1781
-         3WAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=++T8yoGkGRxx38VWQ3gyOTuSMcmswHmEWL3ZocVDNWk=;
-        b=JAOH2R1Hp6Kk6NIpK9GuJqTyHZpY+UaZnZcMIOPuY6zO5JdjgdRAIdlkZDZtUW0UbR
-         WJsN/tK3+RoAdST9ZksT8ZFjIWWdPf61kPdwMkyGRzAmLurvHjMbXHR9PR8VA+OHFTPW
-         D/11BbK4TRaRzvS69oYoAtq46Y05WaLfjJJkF1QAVNcKpDTXWB6NB+/8nhGsvVGs+Ri7
-         Ova1rdTGxDSgfQJnJlkH1pZ3W9hBVTUaH7npp+myD/yUbtTS5jF3KWInuasFxTOLRXFJ
-         CEb+YPwgD0lrTYFpLVhGoBWCuu4WB2wTJDpWeL9WX1v68ebswmm6QHPDXYhW0mCR/H2o
-         2LPA==
-X-Gm-Message-State: AOAM533gOET4Yibb5bYb4axMTwIiISQYmhZw9qj6pK4z3q7U7BIQKfrh
-        rS+EMHU+wNumQhZPS5DOE9vIGR6P544=
-X-Google-Smtp-Source: ABdhPJx/HQDrBA+jX35kXwkrQ2leG+4O8B1oCB6K/K6s4IV+voC5Hx9AWpSSjpvNS0Enjrg8JhRoVg==
-X-Received: by 2002:adf:e484:: with SMTP id i4mr14831422wrm.246.1592915056487;
-        Tue, 23 Jun 2020 05:24:16 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id 133sm3995590wme.5.2020.06.23.05.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 05:24:15 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 13:24:13 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to
- simple-mfd from simple-bus
-Message-ID: <20200623122413.GA954398@dell>
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com>
+        with ESMTP id S1732478AbgFWM0A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 08:26:00 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344D5C061573;
+        Tue, 23 Jun 2020 05:26:00 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id C5559634C87;
+        Tue, 23 Jun 2020 15:25:36 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jnhzc-00016j-NF; Tue, 23 Jun 2020 15:25:36 +0300
+Date:   Tue, 23 Jun 2020 15:25:36 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v5 06/10] media: i2c: imx290: Add support for test
+ pattern generation
+Message-ID: <20200623122536.GE870@valkosipuli.retiisi.org.uk>
+References: <20200612135355.30286-1-andrey.konovalov@linaro.org>
+ <20200612135355.30286-7-andrey.konovalov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200623114614.792648-4-yamada.masahiro@socionext.com>
+In-Reply-To: <20200612135355.30286-7-andrey.konovalov@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 23 Jun 2020, Masahiro Yamada wrote:
+Hi Andrey,
 
-> 'make ARCH=arm dtbs_check' emits the following warning:
-> 
->   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> 
-> Maybe, simple-mfd could be a better fit for this device.
+On Fri, Jun 12, 2020 at 04:53:51PM +0300, Andrey Konovalov wrote:
+...
+> @@ -448,6 +466,22 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_GAIN:
+>  		ret = imx290_set_gain(imx290, ctrl->val);
+>  		break;
+> +	case V4L2_CID_TEST_PATTERN:
+> +		if (ctrl->val) {
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
+> +			msleep(10);
+> +			imx290_write_reg(imx290, IMX290_PGCTRL,
+> +					 (u8)(IMX290_PGCTRL_REGEN |
+> +					 IMX290_PGCTRL_THRU |
+> +					 IMX290_PGCTRL_MODE(ctrl->val)));
+> +		} else {
+> +			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
+> +			msleep(10);
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
+> +			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
+> +		}
+> +		break;
+>  	default:
+>  		ret = -EINVAL;
+>  		break;
 
-The two should be equivalent.
-
-What do you mean by "maybe"?  Does this squash the warning?
-
-Isn't the issue caused by the ','?
-
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/arm/boot/dts/uniphier-support-card.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/boot/dts/uniphier-support-card.dtsi
-> index 11e46e7de7c5..eedc10cbc6e6 100644
-> --- a/arch/arm/boot/dts/uniphier-support-card.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
-> @@ -10,7 +10,7 @@ &system_bus {
->  	ranges = <1 0x00000000 0x42000000 0x02000000>;
->  
->  	support_card: support-card@1,1f00000 {
-> -		compatible = "simple-bus";
-> +		compatible = "simple-mfd";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		ranges = <0x00000000 1 0x01f00000 0x00100000>;
+I've merged the patches in my tree. Could you still replace msleep() with
+less than 20 ms with usleep_range() usage as a follow-up patch on top of
+these, please?
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Kind regards,
+
+Sakari Ailus
