@@ -2,96 +2,105 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAD9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E559C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15CF2078D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593019809;
-	bh=h33gmGGByy2GPZrJ7tjNqx/Etm0E51dsYTshtyz2YhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hsbxFe4tmLGikjeYH3omA/6/OosR33F6EEgDs1kcAzRmIbo2Q+97FtA/200SN1YfX
-	 JbLAPdVG/vRobl601ZxpWYCmsKoC08URrwTq0Rem9+NGHWGdZXBtuXWVdDdjAyKWLT
-	 r6FsEbe0ocktz9Xfi24AW8ZKEVWoTBsAvZ5zF8wA=
+	by mail.kernel.org (Postfix) with ESMTP id 3850920738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:36:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S1QJCkhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405445AbgFXRaG (ORCPT
+        id S2405548AbgFXRgT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405429AbgFXRaF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 13:30:05 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 156A52078D;
-        Wed, 24 Jun 2020 17:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593019805;
-        bh=h33gmGGByy2GPZrJ7tjNqx/Etm0E51dsYTshtyz2YhE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yuRiI+ina71wDNranb8AwW9LaPmZDEbmUmZmhXR8uZXZAbrCJrZUhNi9Pyx1X52N0
-         ghUVH4l5ovbj/9oXbBaYRo7phEtcC8FTCj04Fzn7IfiHYfB6T5tYG+/e12h0P/+G6B
-         MbKo17ZfsjVqPDeyfD+FqWt6ycK4fecC5fGAzXcw=
-Date:   Wed, 24 Jun 2020 23:00:00 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     'Kishon Vijay Abraham I' <kishon@ti.com>, robh@kernel.org,
-        krzk@kernel.org, linux-samsung-soc@vger.kernel.org,
-        avri.altman@wdc.com, stanley.chu@mediatek.com,
-        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        cang@codeaurora.org, devicetree@vger.kernel.org,
-        kwmad.kim@samsung.com, linux-kernel@vger.kernel.org,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-Message-ID: <20200624173000.GJ2324254@vkoul-mobl>
-References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
- <20200528011658.71590-1-alim.akhtar@samsung.com>
- <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
- <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
- <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
- <000001d646a6$6cb5fd70$4621f850$@samsung.com>
- <20200624102112.GX2324254@vkoul-mobl>
- <004b01d64a48$8bb87270$a3295750$@samsung.com>
+        Wed, 24 Jun 2020 13:36:19 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59922 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404908AbgFXRgT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 13:36:19 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OHa4PC059738;
+        Wed, 24 Jun 2020 12:36:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593020164;
+        bh=b7I1LZjktpXQtE/2SIxPlGxZJRi/hvLLHrKcEtNIZXM=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=S1QJCkhF8V2NBByGKWtk/vz55e0z8N2FwVrqdXywrH2vywZFUrpZmygqW7vY+d6VS
+         epUUkxSSnuWq2cwb/FgbEXggJWNYIj8qrsgQ2/QiwZSAd5FqGcMcAkNnKpiYKGxLD/
+         Qz8TWD/dVnP6AXrMZWTYpTFZCv+Fvzl3/uadznk4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OHa4ap044210
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 12:36:04 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
+ Jun 2020 12:36:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 24 Jun 2020 12:36:03 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OHa3tG127913;
+        Wed, 24 Jun 2020 12:36:03 -0500
+Subject: Re: [PATCH v5 3/7] ASoC: tas2562: Fix format issue for extra space
+ before a comma
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>
+References: <20200624161459.19248-1-dmurphy@ti.com>
+ <20200624161459.19248-4-dmurphy@ti.com> <20200624162917.GK5472@sirena.org.uk>
+ <c4a26be8-88cc-1dfa-61e0-844b9c19eb52@ti.com>
+Message-ID: <370c71e3-731b-3549-adb0-597abb217cfc@ti.com>
+Date:   Wed, 24 Jun 2020 12:36:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <004b01d64a48$8bb87270$a3295750$@samsung.com>
+In-Reply-To: <c4a26be8-88cc-1dfa-61e0-844b9c19eb52@ti.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alim,
+Mark
 
-On 24-06-20, 22:27, Alim Akhtar wrote:
-> > > > Sure, will re-send this series.
-> > 
-> > But patches have not been sent right, pls send and me/Kishon will review
-> > 
-> Thanks for your kind attention on this series. As per [0] comment from
-> Kishon, patch 7/10 [1] and probably 6/10 [2] should have been Applied after
-> 5.8-rc1 was tagged.
+On 6/24/20 11:58 AM, Dan Murphy wrote:
+> Mark
+>
+> On 6/24/20 11:29 AM, Mark Brown wrote:
+>> On Wed, Jun 24, 2020 at 11:14:55AM -0500, Dan Murphy wrote:
+>>> Fix the issue found that there is an extra space before a comma in the
+>>> volume control.
+>>>
+>>> Fixes: bf726b1c86f2c ("ASoC: tas2562: Add support for digital volume 
+>>> control")
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   arch/arm/boot/compressed/fdt.h             |   66 +
+>>>   arch/arm/boot/compressed/libfdt.h          | 2072 
+>>> ++++++++++++++++++++
+>>>   arch/arm/boot/compressed/libfdt_internal.h |  173 ++
+>>>   sound/soc/codecs/tas2562.c                 |    2 +-
+>> I'm guessing those libfdt changes weren't supposed to be here?
+>
+> No they were not those must have been added when I verified the build.
+>
+Can this patchset get a review as well so I can fix before I post v6?
 
-And that is something I am trying atm, but I dont have patches in my
-mailbox, so would you be kind enough to resend me these patches after
-rebasing to phy-next, also do add acks/reviews collected in previous
-posts.
+Not sure what the current work load is for review or merge.
 
-I dont think I have seen resend, or maybe I wasnt cced
+Dan
 
-> I have already send and re-send V10 of this series. Kishon has already
-> reviewed and provided comments and I have addressed them as well. These
-> patches already have and Reviewed-by, Tested-by tags.
-> Let me know if something more needs to be done from my side.
-> [0] https://lkml.org/lkml/2020/6/7/410
-> [1] https://lkml.org/lkml/2020/5/27/1705
-> [2] https://lkml.org/lkml/2020/5/27/1701
 
--- 
-~Vinod
+> Dan
+>
