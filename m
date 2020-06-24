@@ -2,145 +2,92 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E14C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B325BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A211320836
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+qiZfi0"
+	by mail.kernel.org (Postfix) with ESMTP id 9316520724
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390607AbgFXLYV (ORCPT
+        id S2388954AbgFXLaT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388986AbgFXLYT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 07:24:19 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997A0C061573
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 04:24:19 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f139so2134168wmf.5
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 04:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NrvSiaDLXTBfKnuOt7hk8LUvf/vD6JGQ7WAbFA5i7Uc=;
-        b=h+qiZfi0OhOnDkgTLpZizeUC5IOa97wx3ik8VofmQ5pfxMjOrV/QZdQ1bzH0PCVdiU
-         UgreOMhRLysmM+bBtebPY7anIyh5Ho7OoqBtQmM4nX9hm9SZdRD6PwLqtvezCvD5x2bP
-         yKLL3oYAOG9YVSUhAPv2B0YkFFu+XrIW2mOMZL0AxwspP7uIhMzfAKKRW5Sjn3PfuI7I
-         8tUEK+4WbXF6HcnEghMiSEhm2Z6Z58auYOW96L/YLupOfUvseYw9YDjMWDUdRzEAqj/T
-         mPxbp9qt//mWBrqgyYQmdqSzcji9eNyItiQcmo1Ts9oa2hmbhVVJiBaLSzhtiyZR1Cab
-         UiuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NrvSiaDLXTBfKnuOt7hk8LUvf/vD6JGQ7WAbFA5i7Uc=;
-        b=pi/DyX4x6DTZTvA2wGhp6rzwdPEn4VcWhP9AN5SEflWHgnYLyT7uzCI+jRBpH/YGBB
-         0Wc6VCjfB+xN/oFBv8Yh1FTPQdmoR3TG7lxSGUDSvvmjse1QrBvxjMSc2U3km6txiEYw
-         guazZZvviOTmcCjOITaWuPGJdc3q0mrk0XVmJoWxY8EH2dqsMwzRhpvblOUnvq2R1KMn
-         Dv5pTMCHi4IEsCSecPgPZb0FipJloCScXbOxl2I9XQ0w/9vu/3j0aC2+Noa7ixixomuT
-         HyiPT/3rO+k/Yku2PUj3BCDL+kmHBSWOQmQpamaD6SI4eQ3ZbmKL88v/cJURYisdrPPk
-         2TzA==
-X-Gm-Message-State: AOAM5314R8XVYz4x2ucwJ0995wB+6bm9PtDM3/eNO9GtpEJ40e0oVr/N
-        35tD79TZe3K/fsiVPXfk6i8ulQ==
-X-Google-Smtp-Source: ABdhPJxnvJ/bAKboWQS8u3ig+E2OSp3FrtA0y0gJWgzooZABsBXHuo/PhR/sGO75JnZcwGDW//Wkaw==
-X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr8696211wmk.126.1592997857631;
-        Wed, 24 Jun 2020 04:24:17 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id x5sm7962485wmg.2.2020.06.24.04.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 04:24:16 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 12:24:14 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Frank Rowand <frowand.list@gmail.com>, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200624112414.GG954398@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <30f03734-61fd-1b6b-bf11-21b6423a7c50@gmail.com>
- <20200624064145.GC954398@dell>
- <7a31b34940984b3f0921ed2d4fb29a58@walle.cc>
- <20200624082352.GF954398@dell>
- <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
+        Wed, 24 Jun 2020 07:30:19 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56230 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388470AbgFXLaT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:30:19 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL986OfNeWT5JAA--.789S3;
+        Wed, 24 Jun 2020 19:30:03 +0800 (CST)
+Subject: Re: [1/7] irqchip: Fix potential resource leaks
+To:     Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
+ <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
+ <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
+ <bd28aef9-ba70-0539-bdc3-6ce7162cefca@loongson.cn>
+ <cc6b95ec-691e-f010-4a04-add39d706c4b@web.de>
+ <423f83e0-c533-c346-ab8b-f2c6ccc828a2@loongson.cn>
+ <37ff7ca4-dc7c-6a43-94a3-9628efe69b25@web.de>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8556e402-52ae-849f-2f6e-e56406057dce@loongson.cn>
+Date:   Wed, 24 Jun 2020 19:30:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
+In-Reply-To: <37ff7ca4-dc7c-6a43-94a3-9628efe69b25@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxL986OfNeWT5JAA--.789S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYy7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aV
+        CY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
+        x4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeV
+        CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
+        xcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+        x2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I
+        0E14v26rxl6s0DYxBIdaVFxhVjvjDU0xZFpf9x0JUu5l8UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2020, Michael Walle wrote:
+On 06/24/2020 06:06 PM, Markus Elfring wrote:
+>>> Were any known software analysis tools involved for the detection of
+>>> questionable source code places?
+>> kmemleak can detect memory leak,
+>> but I do not know how to detect other kind of leaks.
+> How do you think about to extend source code analysis tools accordingly?
 
-> Am 2020-06-24 10:23, schrieb Lee Jones:
-> > On Wed, 24 Jun 2020, Michael Walle wrote:
-> 
-> [..]
-> 
-> > > Although Rob mentioned to maybe relax that, but I sill fail to see
-> > > the advantage to have an arbitrary reg property instead of a unique
-> > > node name.
-> > 
-> > I don't have a strong opinion either way.
-> > 
-> > We can *also* add node name matching if Rob deems it fit.
-> 
-> Where do you see a use of the reg property?
+I have no good idea,
+maybe some simple match check tools can do this.
 
-The vast proportion of devices do and will have 'reg' properties.
+>
+>
+>> I think consciously release resource in the error path can avoid leaks.
+> Is it often too easy to overlook relevant function calls?
 
-> You already expressed
-> that you see exposing the internal offset as a hack:
-> 
->  "Placing "internal offsets" into the 'reg' property is a hack." [1]
-> 
-> So what are you putting into reg instead? Rob suggested "anything"
-> documented in the hardware manual. But isn't this just also something
-> we make up and especially for the MFD driver. Thus IMHO it doesn't
-> qualify as a unit-address, which - as far as I understand it - is
-> unique on the parent bus. To repeat my argument, its not a defined
-> thing like an I2C address.
+Yes,  I think code review can avoid this issue in some certain degree.
 
-So our argument in the past (although this is going back the best part
-of 10 years) has always been that; if devices are different, there is
-almost always a documented (in the H/W manual/datasheet) way to
-differentiate/address them.  Whether that's a physical address, an
-offset, a bank ID, an I2C/SPI address or whatever.
+>
+> Regards,
+> Markus
 
-As to not being able to use that address/ID due to the DT rules
-surrounding address space as per the example in your previous email,
-well that's a rule specific to DT and makes little sense in some real
-world cases (such as, dare I say it, the AB8500).
-
-You'll have to take the aforementioned point and the point about using
-node names instead of 'reg' properties up with Rob and the other
-interested DT folk.
-
-Again, I'm happy to extend that functionality if it becomes acceptable
-practice.
-
-> [1] https://lore.kernel.org/linux-devicetree/20200609185231.GO4106@dell/
-> 
-> -michael
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
