@@ -2,116 +2,150 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAF9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914FCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4544D20857
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E45F2088E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592991794;
+	bh=rYiMLNyH6eejq1M7FI0t8GXIQIY1y4HUlGHPYP73bvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RgNzObra5H/3HuKmsA2+1Weey9AQN6KCm02HfPGeyqQnhIjY6Ff6AFIwhQfIH46Z0
+	 Jdc54CEV1TenMzFJLkdjhOChDCAATl7MqPAurHdjwLYo4qPAXU16E6ER7FjBGxmO8K
+	 C0sw7xQiwdi18vOsTacUNb6fNkCvQ8lGiB8YcxSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbgFXJYx (ORCPT
+        id S2389910AbgFXJnH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:24:53 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:34264 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728637AbgFXJYx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:24:53 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn97KG_NesDFJAA--.736S3;
-        Wed, 24 Jun 2020 17:24:29 +0800 (CST)
-Subject: Re: [PATCH 1/7] irqchip: Fix potential resource leaks
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-References: <1592902276-3969-1-git-send-email-yangtiezhu@loongson.cn>
- <1592902276-3969-2-git-send-email-yangtiezhu@loongson.cn>
- <CAJKOXPc9QuDp+FEogVamf7x+4JEUw78MSKqSPFpRcyTYZ7HSMA@mail.gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kukjin Kim <kgene@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-riscv@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <678f8927-3560-e55b-956f-3e197c7e3244@loongson.cn>
-Date:   Wed, 24 Jun 2020 17:24:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 24 Jun 2020 05:43:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388005AbgFXJnG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:43:06 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7102C20885;
+        Wed, 24 Jun 2020 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592991785;
+        bh=rYiMLNyH6eejq1M7FI0t8GXIQIY1y4HUlGHPYP73bvA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iMQawrP4gD/kEbaeFzV0OLvI9+7NVkmw8/GoJ2aEPtRKA/jirfzwFYy0L5Y/OzPCu
+         xisKHDnJn2fl+MFySaTny0zOqs4oZxopj5XvUAjHuCdvuRhKkw4v/EbNApMnkwuGh8
+         +rPE3Bwi4OtimVg+6yswW8FMP+j9M58H929pco0w=
+Date:   Wed, 24 Jun 2020 10:43:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
+ registration
+Message-ID: <20200624094302.GA5472@sirena.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-10-brgl@bgdev.pl>
+ <20200622133940.GL338481@lunn.ch>
+ <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPc9QuDp+FEogVamf7x+4JEUw78MSKqSPFpRcyTYZ7HSMA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxn97KG_NesDFJAA--.736S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF4UtF18Zr1UKw1fGw4fAFb_yoW8XF4kpF
-        4UJ39IvrWrCFW2kr43Cr1jyFy5Jwn3tay7K3yxA3sxXr98W3srGF4UA34kXrn7GryfGw12
-        9F4rXa45G3W5CFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwI
-        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7
-        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-        6cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aV
-        CY1x0267AKxVW0oVCq3bIYCTnIWIevJa73UjIFyTuYvjfUOqXHDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/24/2020 05:15 PM, Krzysztof Kozlowski wrote:
-> On Tue, 23 Jun 2020 at 10:51, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->> There exists some potential resource leaks in the error path, fix them.
-> This should be split per driver and per bug (although mostly in driver
-> it's just one bug). Otherwise it is difficult to review, backport and
-> revert.
 
-Thanks for your suggestion, I have split it into a patch series [1],
-I will resend it some days later due to git send-email always failed.
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[1] https://lore.kernel.org/patchwork/cover/1263192/
+On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
+> On 6/22/20 6:51 AM, Mark Brown wrote:
 
->
-> Best regards,
-> Krzysztof
->
->
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   drivers/irqchip/irq-ath79-misc.c      |  3 +++
->>   drivers/irqchip/irq-csky-apb-intc.c   |  3 +++
->>   drivers/irqchip/irq-csky-mpintc.c     | 26 ++++++++++++++++++++------
->>   drivers/irqchip/irq-davinci-aintc.c   | 17 +++++++++++++----
->>   drivers/irqchip/irq-davinci-cp-intc.c | 17 ++++++++++++++---
->>   drivers/irqchip/irq-digicolor.c       |  4 ++++
->>   drivers/irqchip/irq-dw-apb-ictl.c     | 11 ++++++++---
->>   drivers/irqchip/irq-loongson-htvec.c  |  5 ++++-
->>   drivers/irqchip/irq-ls1x.c            |  4 +++-
->>   drivers/irqchip/irq-mscc-ocelot.c     |  6 ++++--
->>   drivers/irqchip/irq-nvic.c            |  2 ++
->>   drivers/irqchip/irq-omap-intc.c       |  4 +++-
->>   drivers/irqchip/irq-riscv-intc.c      |  1 +
->>   drivers/irqchip/irq-s3c24xx.c         | 20 +++++++++++++++-----
->>   drivers/irqchip/irq-xilinx-intc.c     |  1 +
->>   15 files changed, 98 insertions(+), 26 deletions(-)
+> > If the bus includes power management for the devices on the bus the
+> > controller is generally responsible for that rather than the devices,
+> > the devices access this via facilities provided by the bus if needed.
+> > If the device is enumerated by firmware prior to being physically
+> > enumerable then the bus will generally instantiate the device model
+> > device and then arrange to wait for the physical device to appear and
+> > get joined up with the device model device, typically in such situations
+> > the physical device might appear and disappear dynamically at runtime
+> > based on what the driver is doing anyway.
 
+> In premise there is nothing that prevents the MDIO bus from taking care
+> of the regulators, resets, prior to probing the PHY driver, what is
+> complicated here is that we do need to issue a read of the actual PHY to
+> know its 32-bit unique identifier and match it with an appropriate
+> driver. The way that we have worked around this with if you do not wish
+> such a hardware access to be made, is to provide an Ethernet PHY node
+> compatible string that encodes that 32-bit OUI directly. In premise the
+> same challenges exist with PCI devices/endpoints as well as USB, would
+> they have reset or regulator typically attached to them.
+
+That all sounds very normal and is covered by both cases I describe?
+
+> > We could use a pre-probe stage in the device model for hotpluggable
+> > buses in embedded contexts where you might need to bring things out of
+> > reset or power them up before they'll appear on the bus for enumeration
+> > but buses have mostly handled that at their level.
+
+> That sounds like a better solution, are there any subsystems currently
+> implementing that, or would this be a generic Linux device driver model
+> addition that needs to be done?
+
+Like I say I'm suggesting doing something at the device model level.
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zICMACgkQJNaLcl1U
+h9Ca2Af/csONj6LtRsNrXjMLjw4BGVBnwP/tZBvSxig6MizM80Yd7HzvQiUWDAQW
+opLo3gkpbl+73elKt2hSf5gktte6pl5jBepYzqd54u71xWQ6bZE4U3ONtKN2Q7eb
+b2CIxsthUl15y6Y+spJAGYjqB7+3JSU4j60NpuRAnH25gsxkJyokoyDQNwz3/itl
+CJcvpaKru9uCPKXfk960C6SkRpX0kNfFc3yBm7yFTIMeiicFei9o/qdEBzqaRC/8
+Plrsjw9hilHtWP4/3AhHXk98OGzuTzYSS78XVYRGBC58Wj7IDO+ytY5mCR7mZdtg
+gZPYYA7XHRNX3252/FCJO39GTfJMCg==
+=ttw3
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
