@@ -2,142 +2,124 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B210C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761D8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4ACC2077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB89206F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFBN12aB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LG7RCEyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404323AbgFXPvh (ORCPT
+        id S2404495AbgFXP4q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        Wed, 24 Jun 2020 11:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403931AbgFXPvg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 11:51:36 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D06AC061573;
-        Wed, 24 Jun 2020 08:51:36 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id u17so2084595qtq.1;
-        Wed, 24 Jun 2020 08:51:36 -0700 (PDT)
+        with ESMTP id S2404351AbgFXP4q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 11:56:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163D1C061573;
+        Wed, 24 Jun 2020 08:56:46 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so2763917wrw.12;
+        Wed, 24 Jun 2020 08:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OCTRPctFFpx+aJELBCUccAzQ7DxE/nJNw3rXnEquQLM=;
-        b=oFBN12aBhFMNm20MuO5zZdopwr4turKFOKrM2v9T/yy/tIjWIqwNmv9lhfJ7GEo1nJ
-         3JhvlgHrTy6opzdGbl0JEJjwOfGSj6MB15M7ASOJ8eLdH9dTMQ6T0IecnVoPoLCxNw6F
-         47wJdrzDzY62KMrt9DuAE+vrfnfHXh9aG0vOuMqNvW/bsYhFH27yshh8OZ5qXgkHSDU+
-         e0jcliItYSTHk4yTlfXACT8Gm2F6DkzWpIKgMiGBWuVrEFbJ9QxY35173+gzBD9O11H3
-         wawthk3A4yMRakY/o7nv3iqLB3RSPFZGL9txRkPlwW8wbgV0wMxwwEmDoBxyDMm/7Olo
-         W5Lg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1kKEO/E+UNrweV7whzWyfeDv+7PjzgnRwHWXgtaaUvo=;
+        b=LG7RCEyf8kwWsj5iULmeP6Nm6LbR1uPu5aeLHnKQBpaLELWjJw15iAnj/Ct+7e1O0W
+         Y7gaoDVA8P2tqtJbezAT6ZTvelFzQ+iefTN6iRKg9aKkvKjSDYRjo7ANFNvyJcCIEc3N
+         xUjR++eKGZXMlJ49c+l7zwk3puGRHTW+UqX8nuwi4w7YC5NAX6q4q869qUOJOOYsyZL1
+         5ViWOm3kDmOG9B3W2Zur1bZ2VAzuX0BhW//5F5IxodOgbmiFZuwhsLkNNBOZwW1cQkO3
+         8NpRuMJWKkbcWiorHI8dfDa3fY97KD3wdM/NMC3e+BAsw0nQETw3l4LGQjx53QONeWMu
+         VnUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=OCTRPctFFpx+aJELBCUccAzQ7DxE/nJNw3rXnEquQLM=;
-        b=R6EVE17iXbBRzc6SGnuwYJk/yBrvwpj5oZHlNoeKSO/kPbBhY9pV/iZUOrirfwk28H
-         0tF9slRpVep0KN5sY/MveuFu9IzXirBsHfZb6ALJ+fmftDjamXD4ctpr09E6FtEgOghD
-         JanSzjS81nhJTFjOxi/R1P0xOS77blbhYnP2M4mm9adApYbQeOrLC6+3q/a1HrGJhoWk
-         y9WqKw9oCVdwrxDYACN3O7ivF0SkbpojDal8TBJaB1NXIvh7meYLh57zUAjQf3O+7KaR
-         rvgB6e5QchQsIw9Fiyta1I1jfCpenQ3bryDf3BAr/aO0N1Q57Q8+QRmTI/REq5t9m8at
-         72FQ==
-X-Gm-Message-State: AOAM533LXTSHBTUOFyYvVwovZhvfZpmWwkX6XIqh7VUhA+ZA+i5YiA1C
-        4YRpboqo23ORDRmlZA08mLs=
-X-Google-Smtp-Source: ABdhPJy1e1vJJM+J98uJc4itRbEG5EBXp0uiQVb9aNso0GWU8UqdxCPUrbhjAJk/YUX7fswV7L2vvA==
-X-Received: by 2002:ac8:19cb:: with SMTP id s11mr27364417qtk.105.1593013895675;
-        Wed, 24 Jun 2020 08:51:35 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id q47sm4143309qta.16.2020.06.24.08.51.34
+        bh=1kKEO/E+UNrweV7whzWyfeDv+7PjzgnRwHWXgtaaUvo=;
+        b=erwenOORlIi9BIzHbxbRkd8Z8tbrzSBVYsFy8yzanXC1d7aOqUJRq9HZUbBzpMS1R1
+         mpdFpp9PGUBGcFPsK8XULqEstnXje7Rp5l2WtlPVxUOdBACFhlTXiekzwaEGGs8djAwg
+         jaZJcGlyZK5rPXp//xFHVQFA+/AgDvWQDAoQ68x5NNBr7XwhZuVyTvZneGgLiHcAE8PK
+         c5bPC2ArJGizVnixjORp2QvDDpvQuxW6V3tU3YQxFnk7h9ZqgzbcLSWd1FZtagbVtJnz
+         GUnAlZ2P7pwv5buqaK5ED7EDVpQ6WPuHPvoDMoBG12D9t3s3E/qn8KTf7MF9I4i7MKPm
+         XPyA==
+X-Gm-Message-State: AOAM533wFHcoZ7LkNtFj0ckxtyjYJFOX+870lRTsupRAzLOUfn4BgcUC
+        soOgVpaBRfW2TOLxTFzzNkmQKzfz
+X-Google-Smtp-Source: ABdhPJx8SmWM+Y7TRhOwmHqaHHLRA3HDyQIsRlVvv+pRkqWglb65pVyJISYpFBL4B3G1kEwThrCH3w==
+X-Received: by 2002:adf:a49c:: with SMTP id g28mr9709376wrb.118.1593014204793;
+        Wed, 24 Jun 2020 08:56:44 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id z132sm2779839wmb.21.2020.06.24.08.56.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:51:34 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200622085009.GP954398@dell>
- <cd8952da-cc55-8087-b9f6-876417beb188@gmail.com>
- <20200622151054.GW954398@dell>
- <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
- <20200622191133.GY954398@dell>
- <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
- <20200623064723.GZ954398@dell>
- <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
- <20200623195905.GB954398@dell>
- <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
- <20200624074631.GE954398@dell>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
-Date:   Wed, 24 Jun 2020 10:51:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 08:56:43 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH v3 0/6] power: supply: max17040 support compatible devices
+Date:   Wed, 24 Jun 2020 18:56:27 +0300
+Message-Id: <20200624155633.3557401-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200624074631.GE954398@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-24 02:46, Lee Jones wrote:
-> On Tue, 23 Jun 2020, Frank Rowand wrote:
-> 
->> On 2020-06-23 14:59, Lee Jones wrote:
+The max17040 fuel gauge is part of a family of 8 chips that have very similar
+mode of operations and registers.
+
+This patch set adds:
+- compatible strings for all supported devices and handles the minor
+  differences between them;
+- handling for devices reporting double capacity via maxim,double-soc;
+- handling for setting rcomp, a compensation value for more accurate reading,
+  affected by battery chemistry and operating temps;
+- suppot for SOC alerts (capacity changes by +/- 1%), to prevent polling every
+  second;
+- improved max17040 driver with regmap and devm_
+
+The datasheets of the supported devices are linked [0] [1] [2] [3].
+
+[0] https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
+[1] https://datasheets.maximintegrated.com/en/ds/MAX17043-MAX17044.pdf
+[2] https://datasheets.maximintegrated.com/en/ds/MAX17048-MAX17049.pdf
+[3] https://datasheets.maximintegrated.com/en/ds/MAX17058-MAX17059.pdf
+
+v2: https://lkml.org/lkml/2020/6/18/260
+v1: https://lkml.org/lkml/2020/6/8/682
+
+Changes in v2:
+- remove maxim,skip-reset property in favor of device id
+- split driver change into 4 pieces
+
+Iskren Chernev (6):
+  power: supply: max17040: Use regmap i2c
+  dt-bindings: power: supply: Extend max17040 compatibility
+  power: supply: max17040: Support compatible devices
+  dt-bindings: power: supply: max17040: Add maxim,rcomp
+  power: supply: max17040: Support setting rcomp
+  power: supply: max17040: Support soc alert
+
+ .../power/supply/max17040_battery.txt         |  21 +-
+ drivers/power/supply/Kconfig                  |  11 +-
+ drivers/power/supply/max17040_battery.c       | 473 ++++++++++++------
+ 3 files changed, 357 insertions(+), 148 deletions(-)
 
 
-< big snip >
-
-Thanks for the replies in the above portion.
-
-
->>>> But yes or no to my solution #2 (with some slight changes to
->>>> make it better (more gracious handling of the detected error) as
->>>> discussed elsewhere in the email thread)?
->>>
->>> Please see "[0]" above!
->>>
->>> AFAICT your solution #2 involves bombing out *all* devices if there is
->>> a duplicate compatible with no 'reg' property value.  This is a)
->>> over-kill and b) not an error, as I mentioned:
->>
->> As I mentioned above, I set you up to have this misunderstanding by
->> a mistake in one of my earlier emails.  So now that I have pointed
->> out what I meant here by "more gracious handling of the detected
->> error", what do you think of my amended solution #2?
-> 
-> Explained above, but the LT;DR is that it's not correct.
-
-I don't agree with you, I think my solution is better.  Even if I
-prefer my solution, I find your solution to be good enough.
-
-So I am dropping my specific objection to returning -EAGAIN from
-mfd_match_of_node_to_dev() when the node has previously been
-allocated to a device.
-
-
-> 
->>>>> It also suffers with false positives.
->>>
->>
->> Sorry for the very long response, but it seemed we were operating
->> under some different understandings and I hope I have clarified some
->> things.
-> 
-> Likewise. :)
-> 
+base-commit: cfafde3c949cae39483639c03c5da5fd91bb234e
+--
+2.27.0
 
