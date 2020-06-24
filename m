@@ -3,83 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683D3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 03:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BA9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34AB02070E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 03:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01A42073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:08:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LHkJg7Yg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvpTvHX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbgFXDvd (ORCPT
+        id S2388889AbgFXGIU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 23:51:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31285 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388665AbgFXDvd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 23:51:33 -0400
-X-UUID: ab9f33d4d1164f7d944f2ceff272d664-20200624
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2Dog3+Nae8JVLbPa7qMUki8StCUSkZ7vDzgUmgL8nCI=;
-        b=LHkJg7YgjU04Nt6u/wwESrQfe1U61/PUIjrTRHJUv06I7DJZjtziIHvpHoLxkWhAx9lvbfpTF4Keg1+3VJdyWy6SBG469XasDS1heAPhFAWVwlxSqWZa06uP/h/DawRL9PPvA4KV2jmqmvNuLtO8kUBkKLyvWcG3M1jVwF7zGgw=;
-X-UUID: ab9f33d4d1164f7d944f2ceff272d664-20200624
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1208736638; Wed, 24 Jun 2020 11:51:30 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 24 Jun 2020 11:51:20 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 24 Jun 2020 11:51:20 +0800
-Message-ID: <1592970682.14160.6.camel@mtkswgap22>
-Subject: Re: Add MediaTek MT6873 devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 24 Jun 2020 11:51:22 +0800
-In-Reply-To: <20200609173204.GB1107294@bogus>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
-         <20200609173204.GB1107294@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 24 Jun 2020 02:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388164AbgFXGIU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 02:08:20 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93899C061573;
+        Tue, 23 Jun 2020 23:08:18 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o2so1299478wmh.2;
+        Tue, 23 Jun 2020 23:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J3AVCftaR9EPyVJSqZvDpFIlU9LAhorW3LOOtyD+8K4=;
+        b=mvpTvHX5ybEUwBm8lbbmhcm7Hb632yIgI6KI1i1azenZ+I3ggc9FqJDZwNHLXL3qos
+         5dwJL/iOANuTSGlR8vWIw1SrWmS85nbTWPF6V9W7HHTkJvLCYnMQ6HFJGNHx/8kVAIJH
+         brm41FjXgrhl8XZ4vJpFY24H11fOvruoV9kCE72crRSgVu6oVtI5xtQ9Jz2P7IeOlKSo
+         iR6a9tNwEgLkUvcL+sw7FxaLp1PtM+NM2o1XISKc4xtaoxIJ1w7uyyp5nR63MCmVVzRl
+         3dgJUkWoWZIXDH/FKWIj5Od6rqeYZpqmPrtv1JK+wjr0Jz3Oacmh/h8kvJW6jQdtNldu
+         2YEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J3AVCftaR9EPyVJSqZvDpFIlU9LAhorW3LOOtyD+8K4=;
+        b=LPFmVBX1lGidbhS7VzFexuQQIp/eABOCKLi5JNLuyzTG8wRZX3fc5++bvUEED4y5ra
+         BshHa5wx6bu5ueu+NwI1DJsNvEfKAu1E2oiCMjTqan5MvSbSAS7MPt7sS2jUvGq/+oGA
+         xSZ1tphQilSlMXdG7OzPXtsG8N81OWhA1HQp/a8MCat7fkKIXiL8xiDH5k49NSrV6oPz
+         RlmT/UTvF22cnWY5qqqhuKiJgfkmItdCy4WQn3bjA45TK+p+UB7W7iYxyWM1B9IUloug
+         FfUx4D6BEXDJrVTRNaT1nvUmSu2vcYzt1Mcr3Of1QoLHdKuX9x5F+VlUJAu8TCkYMoZC
+         wuQg==
+X-Gm-Message-State: AOAM5303Ty4UMCh38+wVO6vlbDiJxUo2YrTZTnHVOFrRiYY8h+p1aHqj
+        94YLqQa2ajK6UBjrPrAB+RI=
+X-Google-Smtp-Source: ABdhPJxiESCVTYPKA7k2CylgKyTPo+uTpECT+lsNYvSmat+X3RolB7tU7PK118c4exFljWMvSRQoCw==
+X-Received: by 2002:a7b:c18f:: with SMTP id y15mr20639263wmi.85.1592978897172;
+        Tue, 23 Jun 2020 23:08:17 -0700 (PDT)
+Received: from ?IPv6:2a04:241e:500:9200:593:409e:3935:5922? ([2a04:241e:500:9200:593:409e:3935:5922])
+        by smtp.gmail.com with ESMTPSA id k185sm3352122wmk.47.2020.06.23.23.08.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 23:08:16 -0700 (PDT)
+Subject: Re: [PATCH v4 0/6] PM / devfreq: Add dynamic scaling for imx8m ddr
+ controller
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        leonard.crestez@nxp.com
+Cc:     Anson.Huang@nxp.com, a.swigon@partner.samsung.com,
+        abailon@baylibre.com, abel.vesa@nxp.com, aisheng.dong@nxp.com,
+        angus@akkea.ca, cw00.choi@samsung.com, devicetree@vger.kernel.org,
+        fabio.estevam@nxp.com, georgi.djakov@linaro.org,
+        kernel@pengutronix.de, krzk@kernel.org, kyungmin.park@samsung.com,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-imx@nxp.com, linux-pm@vger.kernel.org, mark.rutland@arm.com,
+        martink@posteo.de, mka@chromium.org, mturquette@baylibre.com,
+        myungjoo.ham@samsung.com, ping.bai@nxp.com, rjw@rjwysocki.net,
+        robh@kernel.org, saravanak@google.com, sboyd@kernel.org,
+        shawnguo@kernel.org, viresh.kumar@linaro.org
+References: <cover.1573252696.git.leonard.crestez@nxp.com>
+ <20200622135858.15891-1-martin.kepplinger@puri.sm>
+From:   Leonard Crestez <cdleonard@gmail.com>
+Message-ID: <e8440abf-e51f-9846-f2af-a1a44a7fd89a@gmail.com>
+Date:   Wed, 24 Jun 2020 09:08:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 94B690576371ABB4BE2991BDACDFB8DE814464701461FFE7D00C600E775A57D32000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200622135858.15891-1-martin.kepplinger@puri.sm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTA5IGF0IDExOjMyIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVHVlLCBKdW4gMDksIDIwMjAgYXQgMDY6MjQ6MTlQTSArMDgwMCwgTmVhbCBMaXUgd3JvdGU6
-DQo+ID4gVGhlc2UgcGF0Y2ggc2VyaWVzIGludHJvZHVjZSBhIE1lZGlhVGVrIE1UNjg3MyBkZXZh
-cGMgZHJpdmVyLg0KPiA+IA0KPiA+IE1UNjg3MyBidXMgZnJhYnJpYyBwcm92aWRlcyBUcnVzdFpv
-bmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBz
-bGF2ZXMgZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4g
-PiBUaGUgc2VjdXJpdHkgdmlvbGF0aW9ucyBhcmUgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9j
-ZXNzb3IgZm9yDQo+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4g
-DQo+ID4gQW55IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFu
-IGludGVycnVwdCwgYW5kDQo+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IGRldmFwYy1tdDY4NzMg
-ZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQo+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBvcmRl
-ciB0byBmaW5kIHRoZSBtdXJkZXJlci4NCj4gDQo+IFRoZXJlJ3MgYWxzbyBhIHByb3Bvc2VkIGRy
-aXZlciB3aXRoIHNpbWlsYXIgZnVuY3Rpb25hbGl0eVsxXS4gQ29tZSB1cCANCj4gd2l0aCBhIGNv
-bW1vbiBzb2x1dGlvbi4NCj4gDQo+IFJvYg0KPiANCj4gWzFdIGh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2xpbnV4LWFybS1rZXJuZWwvMjAyMDAxMjgxNTM4MDYuNzc4MC0xLWJlbmphbWluLmdhaWdu
-YXJkQHN0LmNvbS8NCg0KQWN0dWFsbHksIE1lZGlhdGVrIGRldmFwYyBIVyBkbyB0aGUgc2ltaWxh
-ciB0aGluZ3MuIEJ1dCB0aGUgcmVhbA0KImZpcmV3YWxsIiBmdW5jdGlvbmFsaXR5IGlzIGltcGxl
-bWVudGVkIGluIFRydXN0Wm9uZSBpbnN0cmVhZCBvZiBSRUUuDQpUaGlzIGRldmFwYy1tdDY4NzMg
-ZHJpdmVyIGlzIG1haW5seSBoYW5kbGVkIHRoZSB2aW9sYXRpb24uDQoNCkJ1cyBmaXJld2FsbCBm
-cmFtZXdvcmsgc2VlbXMgbm90IGNvdmVyIHRoaXMgcGFydHMuDQo=
+On 6/22/20 4:58 PM, Martin Kepplinger wrote:
+> hi Leondard,
+> 
+> before using this patchset I'd like to ask: Do you have plans to create
+> an update and push this forward? It is useful.
 
+Hello.
+
+I am no longer with NXP and don't have access to imx hardware right now.
+
+However the series that you replied to is very old and was accepted many 
+months ago. You shouldn't have to apply out-of-tree kernel patches.
+
+--
+Regards,
+Leonard
