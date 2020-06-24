@@ -2,235 +2,84 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A181EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 02:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683D3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 03:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8358F20DD4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 02:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AB02070E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 03:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LHkJg7Yg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388404AbgFXCvF (ORCPT
+        id S2388666AbgFXDvd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 22:51:05 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43690 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387985AbgFXCu5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 22:50:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 362211A016F;
-        Wed, 24 Jun 2020 04:50:56 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F55F1A012B;
-        Wed, 24 Jun 2020 04:50:52 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ECD97402DB;
-        Wed, 24 Jun 2020 10:50:47 +0800 (SGT)
-From:   Biwen Li <biwen.li@oss.nxp.com>
-To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [v3 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Wed, 24 Jun 2020 10:45:00 +0800
-Message-Id: <20200624024501.15974-3-biwen.li@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200624024501.15974-1-biwen.li@oss.nxp.com>
-References: <20200624024501.15974-1-biwen.li@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 23 Jun 2020 23:51:33 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31285 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388665AbgFXDvd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 23 Jun 2020 23:51:33 -0400
+X-UUID: ab9f33d4d1164f7d944f2ceff272d664-20200624
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2Dog3+Nae8JVLbPa7qMUki8StCUSkZ7vDzgUmgL8nCI=;
+        b=LHkJg7YgjU04Nt6u/wwESrQfe1U61/PUIjrTRHJUv06I7DJZjtziIHvpHoLxkWhAx9lvbfpTF4Keg1+3VJdyWy6SBG469XasDS1heAPhFAWVwlxSqWZa06uP/h/DawRL9PPvA4KV2jmqmvNuLtO8kUBkKLyvWcG3M1jVwF7zGgw=;
+X-UUID: ab9f33d4d1164f7d944f2ceff272d664-20200624
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1208736638; Wed, 24 Jun 2020 11:51:30 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 24 Jun 2020 11:51:20 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 24 Jun 2020 11:51:20 +0800
+Message-ID: <1592970682.14160.6.camel@mtkswgap22>
+Subject: Re: Add MediaTek MT6873 devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Wed, 24 Jun 2020 11:51:22 +0800
+In-Reply-To: <20200609173204.GB1107294@bogus>
+References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
+         <20200609173204.GB1107294@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 94B690576371ABB4BE2991BDACDFB8DE814464701461FFE7D00C600E775A57D32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
-
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
-
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v3:
-	- sort alphabetically
-
-Change in v2:
-	- use generic name
-	- use definition
-
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 006e544..ff19ec4 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -17,6 +17,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 		rtic-a = &rtic_a;
- 		rtic-b = &rtic_b;
- 		rtic-c = &rtic_c;
-@@ -512,6 +513,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3b641bd..55ceae7 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -829,6 +830,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index d4c1da3..3c92c21 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -765,6 +766,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: power-controller@1ee2140 {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 36a7995..169f474 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -781,6 +782,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: power-controller@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 3944ef1..41102da 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -20,6 +20,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 		serial0 = &serial0;
- 		serial1 = &serial1;
- 		serial2 = &serial2;
-@@ -763,6 +764,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: power-controller@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.7.4
+T24gVHVlLCAyMDIwLTA2LTA5IGF0IDExOjMyIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBKdW4gMDksIDIwMjAgYXQgMDY6MjQ6MTlQTSArMDgwMCwgTmVhbCBMaXUgd3JvdGU6
+DQo+ID4gVGhlc2UgcGF0Y2ggc2VyaWVzIGludHJvZHVjZSBhIE1lZGlhVGVrIE1UNjg3MyBkZXZh
+cGMgZHJpdmVyLg0KPiA+IA0KPiA+IE1UNjg3MyBidXMgZnJhYnJpYyBwcm92aWRlcyBUcnVzdFpv
+bmUgc2VjdXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBz
+bGF2ZXMgZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4g
+PiBUaGUgc2VjdXJpdHkgdmlvbGF0aW9ucyBhcmUgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9j
+ZXNzb3IgZm9yDQo+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4g
+DQo+ID4gQW55IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFu
+IGludGVycnVwdCwgYW5kDQo+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IGRldmFwYy1tdDY4NzMg
+ZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQo+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBvcmRl
+ciB0byBmaW5kIHRoZSBtdXJkZXJlci4NCj4gDQo+IFRoZXJlJ3MgYWxzbyBhIHByb3Bvc2VkIGRy
+aXZlciB3aXRoIHNpbWlsYXIgZnVuY3Rpb25hbGl0eVsxXS4gQ29tZSB1cCANCj4gd2l0aCBhIGNv
+bW1vbiBzb2x1dGlvbi4NCj4gDQo+IFJvYg0KPiANCj4gWzFdIGh0dHBzOi8vbG9yZS5rZXJuZWwu
+b3JnL2xpbnV4LWFybS1rZXJuZWwvMjAyMDAxMjgxNTM4MDYuNzc4MC0xLWJlbmphbWluLmdhaWdu
+YXJkQHN0LmNvbS8NCg0KQWN0dWFsbHksIE1lZGlhdGVrIGRldmFwYyBIVyBkbyB0aGUgc2ltaWxh
+ciB0aGluZ3MuIEJ1dCB0aGUgcmVhbA0KImZpcmV3YWxsIiBmdW5jdGlvbmFsaXR5IGlzIGltcGxl
+bWVudGVkIGluIFRydXN0Wm9uZSBpbnN0cmVhZCBvZiBSRUUuDQpUaGlzIGRldmFwYy1tdDY4NzMg
+ZHJpdmVyIGlzIG1haW5seSBoYW5kbGVkIHRoZSB2aW9sYXRpb24uDQoNCkJ1cyBmaXJld2FsbCBm
+cmFtZXdvcmsgc2VlbXMgbm90IGNvdmVyIHRoaXMgcGFydHMuDQo=
 
