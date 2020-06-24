@@ -2,100 +2,185 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A6BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB09C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 088602082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902A320823
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593016161;
-	bh=TfdmMZFoMamba9hAZ73wEPB7qlys4If0NBVI+1NG/UU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Jsj1KSSTaO2GePXtXhFGAeWXYReSbVmPWhau9hlwY8HS3On+BVh68/7NMkHP9ltU
-	 EqpGirkqjn+rPe8dmqY+4RMLjQagN8sP28ACCEgYDcKC5rwiLxbHJq1lUZ7HqbwKBu
-	 Cd1FSW8ObaMKT/LiheYqGYDEC5AF/Huc2xtWS6/U=
+	s=default; t=1593016235;
+	bh=Pfvomw1TLLTzfltrArXaoZtSgfvtwJFjZsI9bAfnSVc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nqhqh4Oku1aJKH65V1/Ycb+20H32XsQ89eUMqX2Tj+yCHgNe9C4MwA5QOrYIZZMR4
+	 oTQJSTZ3tN2Zn3xTYcnDjy27ijEEdEJUZ17wwVTZuO6f/SHAUCs8GJ6jf5pFRsv+VN
+	 +Indac5Jo45RmxDLU9heeNTwCEfqBFAedFYTmmfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404928AbgFXQ3U (ORCPT
+        id S2405134AbgFXQaU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404911AbgFXQ3U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 12:29:20 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71AEF20836;
-        Wed, 24 Jun 2020 16:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593016160;
-        bh=TfdmMZFoMamba9hAZ73wEPB7qlys4If0NBVI+1NG/UU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VpzJJgus9+zyY0l2n1ruLm646dBuDmHvNsXlWYco19nCDNYZBoo/Y2FIsJ8yxZ0yw
-         e/kpOYqkVyEmfUOIJ1FREsJxtHZtkYjlj24ce5uRir7ho2s0bU2nB2GHb4jqgFyk0z
-         zZ04nY8eZz1feeBtXSteZCyt2CnBll2ZaTigowIs=
-Date:   Wed, 24 Jun 2020 17:29:17 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 3/7] ASoC: tas2562: Fix format issue for extra space
- before a comma
-Message-ID: <20200624162917.GK5472@sirena.org.uk>
-References: <20200624161459.19248-1-dmurphy@ti.com>
- <20200624161459.19248-4-dmurphy@ti.com>
+        Wed, 24 Jun 2020 12:30:20 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:19226 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405125AbgFXQaT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:30:19 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05OGTfaR005680;
+        Thu, 25 Jun 2020 01:29:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05OGTfaR005680
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593016182;
+        bh=c7+M29aF8yRW1Nkcx3gmqJt9IcqAJwKGtRkbRqyOzlI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g/XKpchLT4+QDgFpZ5vxzPNPPd1pneaOQG/HaUF++M/but0/NyVM0OW43RYYL7NXH
+         gXc7Rqg3o6pimKVZcv13hX59xry2PZrlcEwIjBithJ5U4jVaMEFoMX3LIqcxWBbVST
+         LhdeM91mQng6q7E5JeWgDtUGGde0EzoCA2S5LCP8NEXThj4nqiVGdkr4qfEVJVEcfb
+         JKnLAaHhNbd/CUldhH0Qy/30la1zmclXZMrE8XwcGHl9m60W2SnvNBjx0QFtT9xmLx
+         1lot417jPjKESVGxFzk1/tZyjvE6SyjtyHAkc0jyWPxA17kh4VcMzdzExLe4S4EEW5
+         77FO8SlYaDeIA==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id o15so1723697vsp.12;
+        Wed, 24 Jun 2020 09:29:42 -0700 (PDT)
+X-Gm-Message-State: AOAM532CgQDUnnymHO1BdB/N7m4SHDAmQFM1glxkcvZWUe0Fgek8L6Eo
+        tjY+0mlXSD5XHpNWmYMBNaFcP5OGJS9gIDHBQOg=
+X-Google-Smtp-Source: ABdhPJxYmf0AwU89oXZeD9Fz7mOb8pgZwxbLdIcFX447lpPev/jeGL1RUIg6DRLVZaYYRC5jxEGgZi7AC9NNVrmmWQM=
+X-Received: by 2002:a67:2d42:: with SMTP id t63mr23107336vst.181.1593016180953;
+ Wed, 24 Jun 2020 09:29:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tKtFalx5NIx0HZ72"
-Content-Disposition: inline
-In-Reply-To: <20200624161459.19248-4-dmurphy@ti.com>
-X-Cookie: So this is it.  We're going to die.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
+ <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
+In-Reply-To: <20200623122413.GA954398@dell>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 25 Jun 2020 01:29:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
+Message-ID: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
+ from simple-bus
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Tue, 23 Jun 2020, Masahiro Yamada wrote:
+>
+> > 'make ARCH=3Darm dtbs_check' emits the following warning:
+> >
+> >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does no=
+t match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> >
+> > Maybe, simple-mfd could be a better fit for this device.
+>
+> The two should be equivalent.
 
---tKtFalx5NIx0HZ72
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I know.
+That's why I can change "simple-bus" to "simple-mfd"
+with no risk.
 
-On Wed, Jun 24, 2020 at 11:14:55AM -0500, Dan Murphy wrote:
-> Fix the issue found that there is an extra space before a comma in the
-> volume control.
->=20
-> Fixes: bf726b1c86f2c ("ASoC: tas2562: Add support for digital volume cont=
-rol")
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  arch/arm/boot/compressed/fdt.h             |   66 +
->  arch/arm/boot/compressed/libfdt.h          | 2072 ++++++++++++++++++++
->  arch/arm/boot/compressed/libfdt_internal.h |  173 ++
->  sound/soc/codecs/tas2562.c                 |    2 +-
+The difference is schema-check.
 
-I'm guessing those libfdt changes weren't supposed to be here?
+The node name for "simple-bus" is checked by 'make dtbs_check'.
 
---tKtFalx5NIx0HZ72
-Content-Type: application/pgp-signature; name="signature.asc"
+See this code:
+https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.ya=
+ml#L17
 
------BEGIN PGP SIGNATURE-----
+Even if I rename the node, it does not accept the
+unit name '1,1f00000'
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zf10ACgkQJNaLcl1U
-h9An2Qf6AzD1t9C2zhCAOdLfYVN/RaS8w3Mi6hZd+l5rIvL+gYEHsaqTQDYsy8mv
-aeAZNN3FPKsxBnXLssuA63iBaQIhE3M8SI1V3OFPBK1MZEGAQVAe4KYMseQVLEdk
-6hj4jLd4u7hGvRfx4boqmYZmVKoCOGUlawS7CcdyS1tFq9LEi3yLSEqdH76eNVcm
-mMd4zhO731rZl5kIWeOVGEDxfsVKDfn3BLFQUcTa6BwvW6xd9LKQi9xgjDPql3Qp
-GomCINoovcB4wglAXd7EoiNTErfgcW1m5gUCKPF4oxeWURzEKozYFON6csZcWh9+
-lsKqk6ykjHMXZfC2OngiLTPe4zE3Rg==
-=jWX5
------END PGP SIGNATURE-----
 
---tKtFalx5NIx0HZ72--
+
+>
+> What do you mean by "maybe"?  Does this squash the warning?
+
+"maybe" means I am not quite sure
+which compatible is a better fit
+to describe this device.
+
+
+As mentioned above, simple-bus and simple-mfd
+are interchangeable from a driver point of view.
+
+This add-on board is integrated with various peripherals
+such as 16550a serial, smsc9115 ether etc.
+The address-decode is implemented in a CPLD device.
+It has chip selects and local addresses, which are mapped to
+the parent.
+
+It can be either simple-bus or simple-mfd, I think.
+
+
+dt-schema checks the node name of simple-bus.
+Currently, there is no check for simple-mfd.
+
+So, I think this patch is an easy solution
+to fix the warning.
+
+Rob is in Cc. Please add comments if any.
+
+
+>
+> Isn't the issue caused by the ','?
+
+Right.
+
+The node name of simple-bus
+must meet the regular expression:
+"^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
+
+
+Even if I rename the node
+"support-card@1,1f00000"
+to "bus@1,1f00000", the warning is still
+displayed due to ','
+
+"1,1f00000" means
+the address 0x01f00000 of chip select 1.
+
+
+Thanks
+
+>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  arch/arm/boot/dts/uniphier-support-card.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/bo=
+ot/dts/uniphier-support-card.dtsi
+> > index 11e46e7de7c5..eedc10cbc6e6 100644
+> > --- a/arch/arm/boot/dts/uniphier-support-card.dtsi
+> > +++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
+> > @@ -10,7 +10,7 @@ &system_bus {
+> >       ranges =3D <1 0x00000000 0x42000000 0x02000000>;
+> >
+> >       support_card: support-card@1,1f00000 {
+> > -             compatible =3D "simple-bus";
+> > +             compatible =3D "simple-mfd";
+> >               #address-cells =3D <1>;
+> >               #size-cells =3D <1>;
+> >               ranges =3D <0x00000000 1 0x01f00000 0x00100000>;
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+
+
+--
+Best Regards
+Masahiro Yamada
