@@ -2,185 +2,143 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB09C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD16C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 902A320823
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593016235;
-	bh=Pfvomw1TLLTzfltrArXaoZtSgfvtwJFjZsI9bAfnSVc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nqhqh4Oku1aJKH65V1/Ycb+20H32XsQ89eUMqX2Tj+yCHgNe9C4MwA5QOrYIZZMR4
-	 oTQJSTZ3tN2Zn3xTYcnDjy27ijEEdEJUZ17wwVTZuO6f/SHAUCs8GJ6jf5pFRsv+VN
-	 +Indac5Jo45RmxDLU9heeNTwCEfqBFAedFYTmmfg=
+	by mail.kernel.org (Postfix) with ESMTP id EBC752073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Gs5a8ysD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405134AbgFXQaU (ORCPT
+        id S2405032AbgFXQfv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:30:20 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:19226 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405125AbgFXQaT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:30:19 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05OGTfaR005680;
-        Thu, 25 Jun 2020 01:29:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05OGTfaR005680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593016182;
-        bh=c7+M29aF8yRW1Nkcx3gmqJt9IcqAJwKGtRkbRqyOzlI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g/XKpchLT4+QDgFpZ5vxzPNPPd1pneaOQG/HaUF++M/but0/NyVM0OW43RYYL7NXH
-         gXc7Rqg3o6pimKVZcv13hX59xry2PZrlcEwIjBithJ5U4jVaMEFoMX3LIqcxWBbVST
-         LhdeM91mQng6q7E5JeWgDtUGGde0EzoCA2S5LCP8NEXThj4nqiVGdkr4qfEVJVEcfb
-         JKnLAaHhNbd/CUldhH0Qy/30la1zmclXZMrE8XwcGHl9m60W2SnvNBjx0QFtT9xmLx
-         1lot417jPjKESVGxFzk1/tZyjvE6SyjtyHAkc0jyWPxA17kh4VcMzdzExLe4S4EEW5
-         77FO8SlYaDeIA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id o15so1723697vsp.12;
-        Wed, 24 Jun 2020 09:29:42 -0700 (PDT)
-X-Gm-Message-State: AOAM532CgQDUnnymHO1BdB/N7m4SHDAmQFM1glxkcvZWUe0Fgek8L6Eo
-        tjY+0mlXSD5XHpNWmYMBNaFcP5OGJS9gIDHBQOg=
-X-Google-Smtp-Source: ABdhPJxYmf0AwU89oXZeD9Fz7mOb8pgZwxbLdIcFX447lpPev/jeGL1RUIg6DRLVZaYYRC5jxEGgZi7AC9NNVrmmWQM=
-X-Received: by 2002:a67:2d42:: with SMTP id t63mr23107336vst.181.1593016180953;
- Wed, 24 Jun 2020 09:29:40 -0700 (PDT)
+        Wed, 24 Jun 2020 12:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404999AbgFXQft (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:35:49 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1087CC061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:35:49 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id k23so2821714iom.10
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Sp0WLMHGJPSAAMQoilN1mZe9srYQKmzrBKtnNiwXpVs=;
+        b=Gs5a8ysDongBqjpVPsiQWEdpD5YRNoaq5AdJr4nWs/zYkTf9M+ghwGa2A+vl53WV6M
+         JRhhJVQhyuX8Tjd445UrEkqaFeRBOHvtFUzLBeMPO0HX9mrLGqK4lDzsj6o3kvYnXAtP
+         U9yDgHUDz7mk9brV9quovHVYMfYdpE1wplg8iEBwg4dESo1GeYGKG147fTWViUWPXVaS
+         FR6tX7MIy3c334Uz8RjbHxPZg9QBgw0WiGsyG1tVXNjq2ij/nw+U3r3cmvFLDwDYK1qw
+         EoXeQw+M9J5xE1EYWjQsHsb+8MY6uK1Y0nyljUOAVmAheLR3MwqkhUPIAU1EoVLOMvau
+         PLIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Sp0WLMHGJPSAAMQoilN1mZe9srYQKmzrBKtnNiwXpVs=;
+        b=o9reP00xoV/yZUZv4NGnNs6UOLostFM0jaUXUP3sxdVW5BdJ0Erq/S8IM3CLZYpSVG
+         941NPoPjSCA6ThOLkh0Oodxe4UKmrlAACiEzItIS/+h3hQehoxVUuK9YQVdEe+TMOFn1
+         Q9ejRMsdeLmtR7E5HMoM22ppgx76p9EMMtIDuvb+BRiac4BhV2MazjzrosAAy6YBF0Nh
+         DpcSykitKDdOHnaOKyU0iPh/uhVZ6eXlNkHZVNJpmYkFFeVR1RZ6LpLSf5Jwg468czVX
+         WvwZ+NZjB2NfeTvs7BGAZ8srnHLHbcUZHgNnn+63/hZf3xSk7bi1t0QVgaKbtNMLFuGy
+         lfzw==
+X-Gm-Message-State: AOAM533eU2Oc5vGiTUoSbeZQTxigpWdDbWxXFGjg+Yw5EL4SOWbhg+vB
+        rlYghPrCU9vu+JLQDPnl13pHfzxoWmIOVuiCy2rYbQ==
+X-Google-Smtp-Source: ABdhPJxqogL8HjW0xO8Djm9BN68/4TRrqeL4aSvgA3Rvp4v39IWyLfFQicLhQQMp3WEw0MNQuACTa3lGvzsxsAPhLOs=
+X-Received: by 2002:a6b:b252:: with SMTP id b79mr32690628iof.31.1593016548397;
+ Wed, 24 Jun 2020 09:35:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
-In-Reply-To: <20200623122413.GA954398@dell>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 25 Jun 2020 01:29:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
-Message-ID: <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
- from simple-bus
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-10-brgl@bgdev.pl>
+ <20200622133940.GL338481@lunn.ch> <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com> <20200624094302.GA5472@sirena.org.uk>
+ <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com> <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
+In-Reply-To: <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 24 Jun 2020 18:35:37 +0200
+Message-ID: <CAMRc=MfQFgrJC3nvuJgZobixa6MLeMw-tdg_3e1yNDityU5XSw@mail.gmail.com>
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY registration
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
+On Wed, Jun 24, 2020 at 6:06 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> On Tue, 23 Jun 2020, Masahiro Yamada wrote:
->
-> > 'make ARCH=3Darm dtbs_check' emits the following warning:
+
+[snip!]
+
 > >
-> >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does no=
-t match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> >
-> > Maybe, simple-mfd could be a better fit for this device.
+> > This has evolved into several new concepts being proposed vs my
+> > use-case which is relatively simple. The former will probably take
+> > several months of development, reviews and discussions and it will
+> > block supporting the phy supply on pumpkin boards upstream. I would
+> > prefer not to redo what other MAC drivers do (phy-supply property on
+> > the MAC node, controlling it from the MAC driver itself) if we've
+> > already established it's wrong.
 >
-> The two should be equivalent.
-
-Yes, I know.
-That's why I can change "simple-bus" to "simple-mfd"
-with no risk.
-
-The difference is schema-check.
-
-The node name for "simple-bus" is checked by 'make dtbs_check'.
-
-See this code:
-https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.ya=
-ml#L17
-
-Even if I rename the node, it does not accept the
-unit name '1,1f00000'
-
-
-
+> You are not new to Linux development, so none of this should come as a
+> surprise to you. Your proposed solution has clearly short comings and is
+> a hack, especially around the PHY_ID_NONE business to get a phy_device
+> only then to have the real PHY device ID. You should also now that "I
+> need it now because my product deliverable depends on it" has never been
+> received as a valid argument to coerce people into accepting a solution
+> for which there are at review time known deficiencies to the proposed
+> approach.
 >
-> What do you mean by "maybe"?  Does this squash the warning?
 
-"maybe" means I am not quite sure
-which compatible is a better fit
-to describe this device.
+Don't get me wrong, I understand that full well. On the other hand a
+couple years ago I put a significant amount of work into the concept
+of early platform device drivers for linux clocksource, clock and
+interrupt drivers. Every reviewer had his own preferred approach and
+after something like three completely different submissions and
+several conversations at conferences I simply gave up due to all the
+bikeshedding. It just wasn't moving forward and frankly: I expect any
+changes to the core driver model to follow a similar path of most
+resistance.
 
+I will give it a shot but at some point getting the job done is better
+than not getting it done just because the solution isn't perfect. IMO
+this approach is still slightly more correct than controlling the
+PHY's supply from the MAC driver.
 
-As mentioned above, simple-bus and simple-mfd
-are interchangeable from a driver point of view.
-
-This add-on board is integrated with various peripherals
-such as 16550a serial, smsc9115 ether etc.
-The address-decode is implemented in a CPLD device.
-It has chip selects and local addresses, which are mapped to
-the parent.
-
-It can be either simple-bus or simple-mfd, I think.
-
-
-dt-schema checks the node name of simple-bus.
-Currently, there is no check for simple-mfd.
-
-So, I think this patch is an easy solution
-to fix the warning.
-
-Rob is in Cc. Please add comments if any.
-
-
->
-> Isn't the issue caused by the ','?
-
-Right.
-
-The node name of simple-bus
-must meet the regular expression:
-"^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
-
-
-Even if I rename the node
-"support-card@1,1f00000"
-to "bus@1,1f00000", the warning is still
-displayed due to ','
-
-"1,1f00000" means
-the address 0x01f00000 of chip select 1.
-
-
-Thanks
-
->
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  arch/arm/boot/dts/uniphier-support-card.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/bo=
-ot/dts/uniphier-support-card.dtsi
-> > index 11e46e7de7c5..eedc10cbc6e6 100644
-> > --- a/arch/arm/boot/dts/uniphier-support-card.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
-> > @@ -10,7 +10,7 @@ &system_bus {
-> >       ranges =3D <1 0x00000000 0x42000000 0x02000000>;
-> >
-> >       support_card: support-card@1,1f00000 {
-> > -             compatible =3D "simple-bus";
-> > +             compatible =3D "simple-mfd";
-> >               #address-cells =3D <1>;
-> >               #size-cells =3D <1>;
-> >               ranges =3D <0x00000000 1 0x01f00000 0x00100000>;
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
-
-
---
-Best Regards
-Masahiro Yamada
+Bartosz
