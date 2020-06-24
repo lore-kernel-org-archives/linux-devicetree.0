@@ -2,165 +2,127 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3ADC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 23:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BE0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAEA207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 23:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4638207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NdA2/nJI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1wwfU36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgFXXOI (ORCPT
+        id S2389035AbgFXXXT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
+        Wed, 24 Jun 2020 19:23:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728090AbgFXXOI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 19:14:08 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F272FC061573
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:14:05 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e9so2247656pgo.9
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:14:05 -0700 (PDT)
+        with ESMTP id S1728791AbgFXXXR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 19:23:17 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C99C0613ED
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:23:17 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id a3so3364797oid.4
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:23:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+7AF3Ce4clllGfpNaJa1qHwB1pRt3ZfsyY5W1G7hgnM=;
-        b=NdA2/nJIb2yNcbFuDf+G5/HR9byziIurJeeXmi74xEeKThuTJd8qHOsZGE25kWwzYb
-         bdYt01AvsgD7MS5fBWEIlNIF/Gz0va2G/rpcmxA9BEb7Ks0NkSD3KS+PxM2OWGFs55NF
-         VIROe437BOgGfd6t0VGbHTfYko0la78gArKYVVA0oNeHDtEdZz8O4BJgyXyQ6it+sB+I
-         ARwydNIIof/8tj5jSrTwFl6ZPDHUJrDxw+ANuSU9TDXz7sdCHhlm0fFF+2Y7aUGhf5dy
-         pf8U/YoUZmlp6mv/Wq65RAcxJLo73UXus8VCmTBik55LaZKvT0GFccMZT3ZNEM4X53cx
-         yPdQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dGipXZ9X17I+u12oD4DZ2rzNuQVhucODHVNdBawnSmI=;
+        b=M1wwfU36UoerE5HtEt7AEffn18uiUdtoM8XXl0AWGojXJGk3IpAdJ2M0usNyP93xIJ
+         C4K+tOo4fi/6g4LDkLfnGygf2naXQEjHsl+hfIdob42HpSMDH+RoiClBIpgTZBx++Gwz
+         F071ruwPJDr/lHuDqNMAs+amwuavPxIJt1JaWWxFc3xFISohL1QELXY5uKA9Dywb7DaN
+         A20RNPw7+ZloQGbS1jfx4jB/8WXiwu33UjOTyKHHu0VlWpJLIrtQtLaEzmdXeT9EE5GB
+         owoWOoO1ON0J7TmZDzZtNI5C/NRXNrd0BXcvAjC8iei4HAH1VMd+PspPMOJfibAazSDi
+         2QXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+7AF3Ce4clllGfpNaJa1qHwB1pRt3ZfsyY5W1G7hgnM=;
-        b=nku9lwg9k9unYUgxBszD8e27H/mEz7ZuXzOfGeukqZAt+1ggyAyTtv23JW0b0xjfgY
-         HYcBU1lBZmfZmpCQ2b0lTFLViYByBPmQ8tfb5M5bbSqfZtcaj8XRPxLV3gl7SpEVYCBf
-         cTgs2d6/tuCYZx4OZjq81HZ7alNx2CgXhqNqTzi1BIdxJtVYshcwml6TRV9yhiycKrJ3
-         xhC1pUwkfEbsyz6RFKOSCa6aat2PnW8R/W20EjFhDSdkZe9APBn15OtAE59MxKnD68wY
-         6cDIf4mY/TnS7ePGbmRfdz0KXyHNDwMdFvPKfUob+jQ3f7oBETz52NHqN14f17aCZfEI
-         IVEA==
-X-Gm-Message-State: AOAM532bF+AvT+iLJ7Xw1qVGvtHgvCiMc3rhVDINLWedp7OqJF9kAHdH
-        15Y2ZBHd0AxmwA3MaCMamTlLEA==
-X-Google-Smtp-Source: ABdhPJyqWuRmhH4/SkSh4oTDaEYmxriQ6XdWOSZZEn8/35ILfr0Skv325Imu5mALqyP6NDrVByCl3g==
-X-Received: by 2002:a65:6393:: with SMTP id h19mr7002597pgv.278.1593040445494;
-        Wed, 24 Jun 2020 16:14:05 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id y204sm4880467pfb.111.2020.06.24.16.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 16:14:04 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 17:14:02 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>, Suman Anna <s-anna@ti.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/5] remoteproc: ingenic: Added remoteproc driver
-Message-ID: <20200624231402.GA1933376@xps15>
-References: <20200515104340.10473-1-paul@crapouillou.net>
- <20200515104340.10473-4-paul@crapouillou.net>
- <8cdcf5ef-1268-89f6-b229-ac711a80b790@ti.com>
- <FR8SBQ.5WXNHNH8P2P7@crapouillou.net>
- <fc1e14e7-4551-48c3-2820-f5889c50becb@ti.com>
- <G3ATBQ.KJYAFROKKWDP1@crapouillou.net>
- <20200621193022.GA149351@builder.lan>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dGipXZ9X17I+u12oD4DZ2rzNuQVhucODHVNdBawnSmI=;
+        b=Gpp2xak9voq0mWqK/nhDZquopVmGr2Dj+YP28KWuTj0SjAS9PGJrEwLVWyylB7yf9p
+         N9WfnTyi2hF/Ichx3A0bypvUpivQjFhzBV6SLyhaw4X30QqFA+rzXxcwd4UNeJZYcO1O
+         rVS62scM89GwZcbBinU6gpNladZ28+1Sgd4CAPP2EWGtUGtUnBT5xEaRe70VztNiLYFh
+         Hcpihy2RZl6Ws5kBcdkoPldWI5Ty2XNI4lQ2IgMmvY23NkKu3aFo4G/+K9oRvpnpdK5Z
+         bPiZnMoAHif22uWY80xxuDCT5xuYfMNn+nPOUq4eO++0kEQ7OWb8FNtyhC2WgYdQC4PV
+         d8/w==
+X-Gm-Message-State: AOAM533a97rOMiD0MiWVeMio944qYXIANkBbuW/olTdtbc3uR9C1qV+e
+        4hlJPoahzNZtmBoXA5h/CnwYgs8TLoKvhA8b5i5LMw==
+X-Google-Smtp-Source: ABdhPJx5V5Rup3zninLm3/4nlfZ5WpzvvNUIwQf1nRP1tGt6s55UEoBgS6WnEaNkB6yHnFN0OU4E08/nB8eF6a04daw=
+X-Received: by 2002:aca:6208:: with SMTP id w8mr126619oib.69.1593040996906;
+ Wed, 24 Jun 2020 16:23:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200621193022.GA149351@builder.lan>
+References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
+ <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
+ <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
+ <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
+ <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
+ <CAMuHMdXW0jM-A5cvYtFVcgc1Gm3tKkvr0+kWpeJqpJDzNOuYeA@mail.gmail.com>
+ <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
+ <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com> <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 24 Jun 2020 16:22:40 -0700
+Message-ID: <CAGETcx_gOQWbxUAS6joxEgLDx_wuXwn3AFqDuio_42XeeG++PQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
+ top level devices
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Ji Luo <ji.luo@nxp.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jun 21, 2020 at 12:30:22PM -0700, Bjorn Andersson wrote:
-> On Fri 12 Jun 04:47 PDT 2020, Paul Cercueil wrote:
-> > Le jeu. 11 juin 2020 =E0 19:21, Suman Anna <s-anna@ti.com> a =E9crit :
-> > > On 6/11/20 5:21 PM, Paul Cercueil wrote:
-> > > > Le jeu. 11 juin 2020 =E0 16:47, Suman Anna <s-anna@ti.com> a =E9cri=
-t :
-> > > > > On 5/15/20 5:43 AM, Paul Cercueil wrote:
-> [..]
-> > > > > > diff --git a/drivers/remoteproc/ingenic_rproc.c
-> > > > > > =7F=7F=7Fb/drivers/remoteproc/ingenic_rproc.c
-> [..]
-> > > > > > +    /* The clocks must be enabled for the firmware to be
-> > > > > > loaded in =7F=7F=7FTCSM */
-> > > > > > +    ret =3D clk_bulk_prepare_enable(ARRAY_SIZE(vpu->clks),
-> > > > > > vpu->clks);
-> > > > > > +    if (ret) {
-> > > > > > +        dev_err(dev, "Unable to start clocks\n");
-> > > > > > +        return ret;
-> > > > > > +    }
-> > > > >=20
-> > > > > You are enabling the clocks directly here and also trying to
-> > > > > manage =7F=7Fthem through pm_runtime callbacks again.
-> > > >=20
-> > > > Yes. The clocks need to be enabled in the probe.
-> > >=20
-> > > For the preferred non CONFIG_PM case now and lack of
-> > > prepare/unprepare().
-> >=20
-> > I want to make it clear that I'm not against having .prepare/.unprepare=
-, but
-> > I want to see what maintainers have to say.
-> >=20
->=20
-> I think it's perfectly reasonable to enable all the resources here and
-> then if CONFIG_PM isn't set you just leave them enabled throughout.
+On Mon, Jun 22, 2020 at 8:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Saravana,
+>
+> On Sat, Jun 20, 2020 at 4:33 AM Saravana Kannan <saravanak@google.com> wrote:
+> > On Fri, Jun 19, 2020 at 1:07 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > I think instead of deferred_probe_work_func() moving the device to the
+> > > end of the dpm_list, I think the device probing successfully is what
+> > > should move it to the end of the dpm_list. That way, the dpm_list is
+> > > actually ordered by when the devices become functional and not the
+> > > random order in DT or random probe order which can get pretty
+> > > convoluted with multiple deferred probes. This feels right and will
+> > > make suspend/resume more robust against DT ordering -- but I'm not
+> > > sure what other wide ranging impact this has for other platforms.
+> >
+> > If you want to play around with a potential fix to test my hypothesis,
+> > I think it's just adding this one line to driver_bound():
+> > ============
+> > klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
+> > device_links_driver_bound(dev);
+> > +device_pm_move_to_tail(dev);
+> >
+> > device_pm_check_callbacks(dev);
+> > ============
+>
+> Thanks, that seems to fix the issue for me, on both affected systems!
+> Note that this has quite some impact on the order devices are suspended,
+> but this seems harmless.
+>
+> Will try on more systems later...
 
-In my opinion the best way to deal with the status of the CONFIG_PM
-configuration option is to move clock relate operations to the prepare/unpr=
-epare
-callbacks.  Doing so would have several advantages:
+Thanks for testing. Maybe I should just send that change as a patch
+and see what Greg/Rafael have to say to that.
 
-1) If rproc->auto_boot is false then clocks aren't enabled needlessly betwe=
-en
-the time the driver is probed and the remote processor is started.
+It's a general fix anyway. So, might as well send it out.
 
-2) It would allow for the removal of the runtime PM calls in the core, whic=
-h in
-the current state, prevents the runtime PM mechanic to really serve its pur=
-pose.
-Indeed, calling runtime PM operations in rproc_fw_boot() and rproc_shutdown=
-()
-prevents the remote processor from being suspended during periods of inacti=
-vity.
-If all that is required for Ingenic's remote processor is to set the clocks
-before accessing device memory and switch them off when no longer needed, I
-think prepare() and unprepare() are the best choice.
-
-3) As Suman pointed out having runtime PM operations in remoteproc core mak=
-es the
-task of supporting scenarios where the remote processor is loaded by another
-entity more complex.  Given the distinct nature of managing power for remote
-processors and the characteristics of each platform I beleive the best plac=
-e to
-call runtime PM operations is in the rproc operations, as it is done
-omap_remoteproc.c
-
-Since we are quite early in the release cycle all we need is a couple of sm=
-all
-patches: one to move clock manipulation in the Ingenic driver to the remote=
-proc
-core's prepare/unprepare function and another one to remove runtime PM
-operations from the core.
-
-Thanks,
-Mathieu
-
->=20
-> Regards,
-> Bjorn
+-Saravana
