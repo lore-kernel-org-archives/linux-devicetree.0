@@ -2,143 +2,100 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DE0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A6BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21ECB2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fr2l7dlU"
+	by mail.kernel.org (Postfix) with ESMTP id 088602082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593016161;
+	bh=TfdmMZFoMamba9hAZ73wEPB7qlys4If0NBVI+1NG/UU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Jsj1KSSTaO2GePXtXhFGAeWXYReSbVmPWhau9hlwY8HS3On+BVh68/7NMkHP9ltU
+	 EqpGirkqjn+rPe8dmqY+4RMLjQagN8sP28ACCEgYDcKC5rwiLxbHJq1lUZ7HqbwKBu
+	 Cd1FSW8ObaMKT/LiheYqGYDEC5AF/Huc2xtWS6/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404675AbgFXQZc (ORCPT
+        id S2404928AbgFXQ3U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:25:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404468AbgFXQZc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:25:32 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F69C061573;
-        Wed, 24 Jun 2020 09:25:32 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id j80so2405473qke.0;
-        Wed, 24 Jun 2020 09:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EX+waRZgWkttNQFyEQaMEGS91DwT52qIcg8cn7tx7x0=;
-        b=Fr2l7dlUKiPmEZHXthnoPVJaBTDZ8tQeygaptwCtWakFBu/hKZPdpO/cvCjH+6z1Ww
-         Fxd9euxfiC7WJvmRvoI2XwPwPTz8FnhdXODfS/QXWcgg2M7IsoyxD+LiRoMRxBlEUou7
-         A1gpl7Qfjjs8rBxSL+vGRHtgUV2Xnh5vWVS/5jYGK3GICSd30q7HORJT2XqKzjtNQR2t
-         RGwcwH7R+sLpmW3sJB+aXG456xgsJ7J6PMjKch90MS8eVFynfnkVfRNccG2uJGGIggbW
-         icl3XbyIpR2rDt4zBps0WklWsRilZT1peDuYmDsqSNstJGm/C6KSyZeg6yil9cFZrzL2
-         B6Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EX+waRZgWkttNQFyEQaMEGS91DwT52qIcg8cn7tx7x0=;
-        b=eyp502mTOQae0nRTIrs43a8AFUBKM4iRaDu0GXTbjheux+EpLyNFhWsgFLyNCr2GJQ
-         1C8kD+iXeQZ89CRYVONqH7EZQvBSlCo/MNt4akJ3YMA0aUy0La045hmE8gxO7UXZbujW
-         A7KxmojFuh4BuW8tL5xPuxbmod78yyQn7TMCXtg8I+HejPAAub8xNzT34odzs61doHHo
-         dtqu/HRcPvj5KUREGMzib4Vw+vCiGRWRVp5G64FUrJuzX70xlIumAjj4MwijRIXkYa9U
-         VuAs+Z69nP8fC0pN8iQaOOyj/GUmqFZBQOT52e5CeUBv/rYG6SrJ3lW4tX679T0WoSjP
-         VnvQ==
-X-Gm-Message-State: AOAM5326ZoWswa53eiUFu8qQHWcTmMQcINqn9X4TSevJXaqU9VrDnUTk
-        iTIWmtz6fFwtelLhTUwrDkU=
-X-Google-Smtp-Source: ABdhPJwxFli0DGylImdLbucIC/YTFByOJI9o7sIdwE4PZG41+89LDyF+oJewq4AgmLSxYa1Rjow2zg==
-X-Received: by 2002:ae9:e8cf:: with SMTP id a198mr18441339qkg.460.1593015931469;
-        Wed, 24 Jun 2020 09:25:31 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id f22sm4508170qko.89.2020.06.24.09.25.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 09:25:31 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200622151054.GW954398@dell>
- <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
- <20200622191133.GY954398@dell>
- <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
- <20200623064723.GZ954398@dell>
- <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
- <20200623195905.GB954398@dell>
- <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
- <20200624074631.GE954398@dell>
- <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
- <20200624161435.GI954398@dell>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <53200e52-bc53-1351-dc90-b775c29f8456@gmail.com>
-Date:   Wed, 24 Jun 2020 11:25:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 24 Jun 2020 12:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404911AbgFXQ3U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 24 Jun 2020 12:29:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71AEF20836;
+        Wed, 24 Jun 2020 16:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593016160;
+        bh=TfdmMZFoMamba9hAZ73wEPB7qlys4If0NBVI+1NG/UU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VpzJJgus9+zyY0l2n1ruLm646dBuDmHvNsXlWYco19nCDNYZBoo/Y2FIsJ8yxZ0yw
+         e/kpOYqkVyEmfUOIJ1FREsJxtHZtkYjlj24ce5uRir7ho2s0bU2nB2GHb4jqgFyk0z
+         zZ04nY8eZz1feeBtXSteZCyt2CnBll2ZaTigowIs=
+Date:   Wed, 24 Jun 2020 17:29:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] ASoC: tas2562: Fix format issue for extra space
+ before a comma
+Message-ID: <20200624162917.GK5472@sirena.org.uk>
+References: <20200624161459.19248-1-dmurphy@ti.com>
+ <20200624161459.19248-4-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200624161435.GI954398@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tKtFalx5NIx0HZ72"
+Content-Disposition: inline
+In-Reply-To: <20200624161459.19248-4-dmurphy@ti.com>
+X-Cookie: So this is it.  We're going to die.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-24 11:14, Lee Jones wrote:
-> On Wed, 24 Jun 2020, Frank Rowand wrote:
-> 
->> On 2020-06-24 02:46, Lee Jones wrote:
->>> On Tue, 23 Jun 2020, Frank Rowand wrote:
->>>
->>>> On 2020-06-23 14:59, Lee Jones wrote:
->>
->> < big snip >
->>
->> Thanks for the replies in the above portion.
-> 
-> NP.
-> 
->>>>>> But yes or no to my solution #2 (with some slight changes to
->>>>>> make it better (more gracious handling of the detected error) as
->>>>>> discussed elsewhere in the email thread)?
->>>>>
->>>>> Please see "[0]" above!
->>>>>
->>>>> AFAICT your solution #2 involves bombing out *all* devices if there is
->>>>> a duplicate compatible with no 'reg' property value.  This is a)
->>>>> over-kill and b) not an error, as I mentioned:
->>>>
->>>> As I mentioned above, I set you up to have this misunderstanding by
->>>> a mistake in one of my earlier emails.  So now that I have pointed
->>>> out what I meant here by "more gracious handling of the detected
->>>> error", what do you think of my amended solution #2?
->>>
->>> Explained above, but the LT;DR is that it's not correct.
->>
->> I don't agree with you, I think my solution is better.  Even if I
->> prefer my solution, I find your solution to be good enough.
-> 
-> I still don't see how it could work, but please feel free to submit a
-> subsequent patch and we can discuss it on its own merits.
-> 
->> So I am dropping my specific objection to returning -EAGAIN from
->> mfd_match_of_node_to_dev() when the node has previously been
->> allocated to a device.
-> 
-> Great.  Thanks for taking an interest.
-> 
-> Does this mean I can apply your Reviewed-by?
-> 
 
-No, please do not.  I don't want to give the patch that strong
-of an endorsement.
+--tKtFalx5NIx0HZ72
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 24, 2020 at 11:14:55AM -0500, Dan Murphy wrote:
+> Fix the issue found that there is an extra space before a comma in the
+> volume control.
+>=20
+> Fixes: bf726b1c86f2c ("ASoC: tas2562: Add support for digital volume cont=
+rol")
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  arch/arm/boot/compressed/fdt.h             |   66 +
+>  arch/arm/boot/compressed/libfdt.h          | 2072 ++++++++++++++++++++
+>  arch/arm/boot/compressed/libfdt_internal.h |  173 ++
+>  sound/soc/codecs/tas2562.c                 |    2 +-
+
+I'm guessing those libfdt changes weren't supposed to be here?
+
+--tKtFalx5NIx0HZ72
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7zf10ACgkQJNaLcl1U
+h9An2Qf6AzD1t9C2zhCAOdLfYVN/RaS8w3Mi6hZd+l5rIvL+gYEHsaqTQDYsy8mv
+aeAZNN3FPKsxBnXLssuA63iBaQIhE3M8SI1V3OFPBK1MZEGAQVAe4KYMseQVLEdk
+6hj4jLd4u7hGvRfx4boqmYZmVKoCOGUlawS7CcdyS1tFq9LEi3yLSEqdH76eNVcm
+mMd4zhO731rZl5kIWeOVGEDxfsVKDfn3BLFQUcTa6BwvW6xd9LKQi9xgjDPql3Qp
+GomCINoovcB4wglAXd7EoiNTErfgcW1m5gUCKPF4oxeWURzEKozYFON6csZcWh9+
+lsKqk6ykjHMXZfC2OngiLTPe4zE3Rg==
+=jWX5
+-----END PGP SIGNATURE-----
+
+--tKtFalx5NIx0HZ72--
