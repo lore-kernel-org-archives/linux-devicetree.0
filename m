@@ -2,93 +2,93 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7485CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B71CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD8F20738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AAA620738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 09:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="bdYacdR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387914AbgFXJRE (ORCPT
+        id S2389022AbgFXJTN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 05:17:04 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60472 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387886AbgFXJRE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:17:04 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2gCGvNexTBJAA--.646S3;
-        Wed, 24 Jun 2020 17:16:51 +0800 (CST)
-Subject: Re: [1/7] irqchip: Fix potential resource leaks
-To:     Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
- <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
- <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <bd28aef9-ba70-0539-bdc3-6ce7162cefca@loongson.cn>
-Date:   Wed, 24 Jun 2020 17:16:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 24 Jun 2020 05:19:13 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:44125 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728637AbgFXJTN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 05:19:13 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 50F7923078;
+        Wed, 24 Jun 2020 11:19:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1592990350;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U1MkeMav3rgM2pXSNTqGSaH9vXR2wuTt3ai+eM3hpl4=;
+        b=bdYacdR9LQq1EGxqkQC0BzTmp/OSRD04I4OESLB7aT1kS+qYV0hJr4k0oAlDqU9yAoJkaB
+        OEJgXjCIZEph3swCIfZos3+DbSVqZf++ri09jUuwpXxErBjnXhRjnd/vSRf6RfzqH3gLLr
+        /YPE/XBjRi3t4ZB6UR+kWjmmBVDQBz8=
 MIME-Version: 1.0
-In-Reply-To: <9ca22645-8bf3-008f-fe55-d432f962cac3@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxT2gCGvNexTBJAA--.646S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gry8Jw4xZr1DWrWUGw18Grg_yoWfuwbEk3
-        WxK34DW397AF4UCr17tr4jqr98G3sxGa45tw4DtFW2gryavwsxCFZ7WrWrJw18WrZ7Crnx
-        Arsrt34fXw1xujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr4
-        1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-        67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-        8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-        wI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7
-        CjxVAFwI0_GcCE3sUvcSsGvfC2KfnxnUUI43ZEXa7VUbdOz3UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 24 Jun 2020 11:19:07 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+In-Reply-To: <20200624082352.GF954398@dell>
+References: <20200611191002.2256570-1-lee.jones@linaro.org>
+ <30f03734-61fd-1b6b-bf11-21b6423a7c50@gmail.com>
+ <20200624064145.GC954398@dell> <7a31b34940984b3f0921ed2d4fb29a58@walle.cc>
+ <20200624082352.GF954398@dell>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <c0a8ebd32ae07ae98fa56728c77f8e79@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/24/2020 04:42 PM, Markus Elfring wrote:
->>> Can it helpful to add jump targets so that a bit of exception handling
->>> can be better reused at the end of this function?
->> OK, no problem, I will do it in the v2.
-> It seems that the software evolution will be continued with another
-> update suggestion like the following.
->
-> [PATCH v3 10/14 RESEND] irqchip/nvic: Fix potential resource leaks
-> https://lore.kernel.org/linux-mips/1592984711-3130-11-git-send-email-yangtiezhu@loongson.cn/
-> https://lore.kernel.org/patchwork/patch/1263191/
->
->
-> Can it matter to omit the word “potential” from change descriptions
-> after you detected that specific function calls were missing
-> in if branches?
+Am 2020-06-24 10:23, schrieb Lee Jones:
+> On Wed, 24 Jun 2020, Michael Walle wrote:
 
-Oh, I find this issue through code review, I have no test environment
-to trigger the error path, but I think it is better to release the resource
-in the error path, so I use "potential" description.
+[..]
 
->
-> Regards,
-> Markus
+>> Although Rob mentioned to maybe relax that, but I sill fail to see
+>> the advantage to have an arbitrary reg property instead of a unique
+>> node name.
+> 
+> I don't have a strong opinion either way.
+> 
+> We can *also* add node name matching if Rob deems it fit.
 
+Where do you see a use of the reg property? You already expressed
+that you see exposing the internal offset as a hack:
+
+  "Placing "internal offsets" into the 'reg' property is a hack." [1]
+
+So what are you putting into reg instead? Rob suggested "anything"
+documented in the hardware manual. But isn't this just also something
+we make up and especially for the MFD driver. Thus IMHO it doesn't
+qualify as a unit-address, which - as far as I understand it - is
+unique on the parent bus. To repeat my argument, its not a defined
+thing like an I2C address.
+
+[1] https://lore.kernel.org/linux-devicetree/20200609185231.GO4106@dell/
+
+-michael
