@@ -2,131 +2,334 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EF3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11690C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 20:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23EDF2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 19:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6582082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 20:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUhGLW3e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404297AbgFXTAG (ORCPT
+        id S2406312AbgFXUZR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 15:00:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:56106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405469AbgFXTAG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 15:00:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA3121F1;
-        Wed, 24 Jun 2020 12:00:04 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470C13F71E;
-        Wed, 24 Jun 2020 11:59:59 -0700 (PDT)
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
- registration
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        netdev <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
- <20200622135106.GK4560@sirena.org.uk>
- <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
- <20200624094302.GA5472@sirena.org.uk>
- <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
- <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
- <20200624165016.GA1551@shell.armlinux.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <0c78a4ab-5aae-a45c-babd-e860c6cfc3c8@arm.com>
-Date:   Wed, 24 Jun 2020 19:59:57 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 16:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406285AbgFXUZP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 16:25:15 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776EDC061573;
+        Wed, 24 Jun 2020 13:25:15 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q19so3737963eja.7;
+        Wed, 24 Jun 2020 13:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AIOfbi7IvAHWTFwhOSciS+mbpizJqu08bqyXcucoS5M=;
+        b=nUhGLW3eDrlXs1vQzcd3HopBFOlouYaMr9vDYVY6nynmwc6MmZ0kaiqmpZ79ejDyD3
+         9Rh7hT7jp4Uu02HiccxvXZuxWCJQY+ghf8qzIGgnyeXGrk7x8aRf604LcK4o6iQ7FME1
+         WjONCe6aOoRfvLAqI6laKANxYC4lMbs5tmzAhvLvPWRWvArkggso1KymMtn5H0kmXfqO
+         1eKKXnUGkQvS9nPTi6EfFvkC0N388p4zmbjR6YIPXRZRWu+ltLW+c6x01IztBjL+vM5H
+         8QLg7iTON4Oix62ng62fZ2bFeuNNXIV8rRs+QNSoKGngXaiVvK797CDPbDCSQaom0gOi
+         EKaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AIOfbi7IvAHWTFwhOSciS+mbpizJqu08bqyXcucoS5M=;
+        b=DLNkxGPR1NugMKYH0KimazkKOk9UgeYH4XQN3Vwr0do9zZucRNsUugXRzDwwvznBkV
+         XO8zga+xxHViC+6rzfN7JFOXBB4a+8IX9tR4OoeO9qVu7t5HVgxLNDePB74gODWRoRBr
+         9HRSr4uX8W5A2FodlmyZ/L9OZF+ZizvebaxkxVCZZYMJZPhBsOq+JGPZWLZyRPov3ais
+         SyXFO4P2QLzp5aUlsqloQCWc90BhSWD0Jzfzz0mE3C6X8PWz3pDhcz/FjBuMifYEC8kR
+         gVGUt5SYgt0zG5Hy2OdC4qW47Bw/M0/bD0C7ymXAvAXYuQtowo+fXSDeXvQzQ8xeSLML
+         CCVQ==
+X-Gm-Message-State: AOAM533W4HI8ylT0iI5PukKPBpx6JFadpN8C71o3fLrOa4jaDF60U0Ak
+        lMZ9hF8+ITOr2y3yblQSjcM5D0U67E5mUDtLVnI=
+X-Google-Smtp-Source: ABdhPJw/iDHgooLID2Ky+/3ZRdFuED7kHW7EMlqnbsWxPn5Wdf67DTKrgCJkW7NZvUPX0bi8xOT9Fri0vmHg/4aMFZs=
+X-Received: by 2002:a17:906:7c54:: with SMTP id g20mr10689573ejp.460.1593030313919;
+ Wed, 24 Jun 2020 13:25:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200624165016.GA1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1592999796-30501-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1592999796-30501-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 24 Jun 2020 13:25:43 -0700
+Message-ID: <CAF6AEGs_E+8p=-o1BHkAbAa8qY1ZaU8rPJsfzqV5L4wBBhvcAg@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: add support for dither block in display
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-24 17:50, Russell King - ARM Linux admin wrote:
-> On Wed, Jun 24, 2020 at 09:06:28AM -0700, Florian Fainelli wrote:
->> On 6/24/2020 6:48 AM, Bartosz Golaszewski wrote:
->>> I didn't expect to open such a can of worms...
->>>
->>> This has evolved into several new concepts being proposed vs my
->>> use-case which is relatively simple. The former will probably take
->>> several months of development, reviews and discussions and it will
->>> block supporting the phy supply on pumpkin boards upstream. I would
->>> prefer not to redo what other MAC drivers do (phy-supply property on
->>> the MAC node, controlling it from the MAC driver itself) if we've
->>> already established it's wrong.
->>
->> You are not new to Linux development, so none of this should come as a
->> surprise to you. Your proposed solution has clearly short comings and is
->> a hack, especially around the PHY_ID_NONE business to get a phy_device
->> only then to have the real PHY device ID. You should also now that "I
->> need it now because my product deliverable depends on it" has never been
->> received as a valid argument to coerce people into accepting a solution
->> for which there are at review time known deficiencies to the proposed
->> approach.
-> 
-> It /is/ a generic issue.  The same problem exists for AMBA Primecell
-> devices, and that code has an internal deferred device list that it
-> manages.  See drivers/amba/bus.c, amba_deferred_retry_func(),
-> amba_device_try_add(), and amba_device_add().
-> 
-> As we see more devices gain this property, it needs to be addressed
-> in a generic way, rather than coming up with multiple bus specific
-> implementations.
-> 
-> Maybe struct bus_type needs a method to do the preparation to add
-> a device (such as reading IDs etc), which is called by device_add().
-> If that method returns -EPROBE_DEFER, the device gets added to a
-> deferred list, which gets retried when drivers are successfully
-> probed.  Possible maybe?
+On Wed, Jun 24, 2020 at 4:57 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> This change enables dither block for primary interface
+> in display.
+>
+> Enabled for 6bpc in the current version.
+>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 45 +++++++++++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 66 +++++++++++++++++++++----
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
+>  3 files changed, 130 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index 63976dc..26e870a 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -208,6 +208,42 @@ struct dpu_encoder_virt {
+>
+>  #define to_dpu_encoder_virt(x) container_of(x, struct dpu_encoder_virt, base)
+>
+> +static u32 dither_matrix[DITHER_MATRIX_SZ] = {
+> +       15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
+> +};
+> +
+> +static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
+> +{
+> +       struct dpu_hw_dither_cfg dither_cfg = { 0 };
+> +       struct drm_display_info *info;
+> +
+> +       if (!phys || !phys->connector || !phys->hw_pp ||
+> +               !phys->hw_pp->ops.setup_dither)
+> +               return;
 
-FWIW that would be ideal for solving an ordering a problem we have in 
-the IOMMU subsystem too (which we currently sort-of-handle by deferring 
-driver probe from dma_configure(), but it really needs to be done 
-earlier and not depend on drivers being present at all).
+it looks like other than phys->hw_pp->ops.setup_dither, you shouldn't
+need to check most of these conditions.
 
-Robin.
+> +
+> +       info = &phys->connector->display_info;
+> +       if (!info)
+
+and definitely not this one
+
+> +               return;
+> +
+> +       switch (phys->connector->display_info.bpc) {
+> +       case 6:
+> +               dither_cfg.c0_bitdepth = 6;
+> +               dither_cfg.c1_bitdepth = 6;
+> +               dither_cfg.c2_bitdepth = 6;
+> +               dither_cfg.c3_bitdepth = 6;
+> +               dither_cfg.temporal_en = 0;
+> +               break;
+> +       default:
+> +               phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
+> +               return;
+> +       }
+> +
+> +       memcpy(&dither_cfg.matrix, dither_matrix,
+> +                       sizeof(u32) * DITHER_MATRIX_SZ);
+> +
+> +       phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
+> +}
+> +
+>  void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
+>                 enum dpu_intr_idx intr_idx)
+>  {
+> @@ -1082,6 +1118,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+>         struct dpu_encoder_virt *dpu_enc = NULL;
+>         struct msm_drm_private *priv;
+>         struct dpu_kms *dpu_kms;
+> +       int i;
+>
+>         if (!drm_enc || !drm_enc->dev) {
+>                 DPU_ERROR("invalid parameters\n");
+> @@ -1104,6 +1141,14 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+>                                 dpu_kms->catalog);
+>
+>         _dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
+> +
+> +       if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
+> +               for (i = 0; i < dpu_enc->num_phys_encs; i++) {
+> +                       struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
+> +
+> +                       _dpu_encoder_setup_dither(phys);
+> +               }
+> +       }
+>  }
+>
+>  void dpu_encoder_virt_runtime_resume(struct drm_encoder *drm_enc)
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+> index d110a40..cf7603d 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+> @@ -28,6 +28,16 @@
+>  #define PP_FBC_BUDGET_CTL               0x038
+>  #define PP_FBC_LOSSY_MODE               0x03C
+>
+> +#define PP_DITHER_EN                   0x000
+> +#define PP_DITHER_BITDEPTH             0x004
+> +#define PP_DITHER_MATRIX               0x008
+> +
+> +#define DITHER_DEPTH_MAP_INDEX 9
+> +
+> +static u32 dither_depth_map[DITHER_DEPTH_MAP_INDEX] = {
+> +       0, 0, 0, 0, 0, 0, 0, 1, 2
+> +};
+> +
+>  static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
+>                 const struct dpu_mdss_cfg *m,
+>                 void __iomem *addr,
+> @@ -49,6 +59,40 @@ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
+>         return ERR_PTR(-EINVAL);
+>  }
+>
+> +static void dpu_hw_pp_setup_dither(struct dpu_hw_pingpong *pp,
+> +                                   struct dpu_hw_dither_cfg *cfg)
+> +{
+> +       struct dpu_hw_blk_reg_map *c;
+> +       u32 i, base, data = 0;
+> +
+> +       if (!pp)
+> +               return;
+
+can this ever be NULL..  at least currently you are checking this both
+here and in _dpu_encoder_setup_dither()
+
+BR,
+-R
+
+> +
+> +       c = &pp->hw;
+> +       base = pp->caps->sblk->dither.base;
+> +       if (!cfg) {
+> +               DPU_REG_WRITE(c, base + PP_DITHER_EN, 0);
+> +               return;
+> +       }
+> +
+> +       data = dither_depth_map[cfg->c0_bitdepth] & REG_MASK(2);
+> +       data |= (dither_depth_map[cfg->c1_bitdepth] & REG_MASK(2)) << 2;
+> +       data |= (dither_depth_map[cfg->c2_bitdepth] & REG_MASK(2)) << 4;
+> +       data |= (dither_depth_map[cfg->c3_bitdepth] & REG_MASK(2)) << 6;
+> +       data |= (cfg->temporal_en) ? (1 << 8) : 0;
+> +
+> +       DPU_REG_WRITE(c, base + PP_DITHER_BITDEPTH, data);
+> +
+> +       for (i = 0; i < DITHER_MATRIX_SZ - 3; i += 4) {
+> +               data = (cfg->matrix[i] & REG_MASK(4)) |
+> +                       ((cfg->matrix[i + 1] & REG_MASK(4)) << 4) |
+> +                       ((cfg->matrix[i + 2] & REG_MASK(4)) << 8) |
+> +                       ((cfg->matrix[i + 3] & REG_MASK(4)) << 12);
+> +               DPU_REG_WRITE(c, base + PP_DITHER_MATRIX + i, data);
+> +       }
+> +       DPU_REG_WRITE(c, base + PP_DITHER_EN, 1);
+> +}
+> +
+>  static int dpu_hw_pp_setup_te_config(struct dpu_hw_pingpong *pp,
+>                 struct dpu_hw_tear_check *te)
+>  {
+> @@ -180,15 +224,19 @@ static u32 dpu_hw_pp_get_line_count(struct dpu_hw_pingpong *pp)
+>         return line;
+>  }
+>
+> -static void _setup_pingpong_ops(struct dpu_hw_pingpong_ops *ops,
+> -       const struct dpu_pingpong_cfg *hw_cap)
+> +static void _setup_pingpong_ops(struct dpu_hw_pingpong *c,
+> +                               unsigned long features)
+>  {
+> -       ops->setup_tearcheck = dpu_hw_pp_setup_te_config;
+> -       ops->enable_tearcheck = dpu_hw_pp_enable_te;
+> -       ops->connect_external_te = dpu_hw_pp_connect_external_te;
+> -       ops->get_vsync_info = dpu_hw_pp_get_vsync_info;
+> -       ops->poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
+> -       ops->get_line_count = dpu_hw_pp_get_line_count;
+> +       c->ops.setup_tearcheck = dpu_hw_pp_setup_te_config;
+> +       c->ops.enable_tearcheck = dpu_hw_pp_enable_te;
+> +       c->ops.connect_external_te = dpu_hw_pp_connect_external_te;
+> +       c->ops.get_vsync_info = dpu_hw_pp_get_vsync_info;
+> +       c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
+> +       c->ops.get_line_count = dpu_hw_pp_get_line_count;
+> +
+> +       if (test_bit(DPU_PINGPONG_DITHER, &features) &&
+> +               IS_SC7180_TARGET(c->hw.hwversion))
+> +               c->ops.setup_dither = dpu_hw_pp_setup_dither;
+>  };
+>
+>  static struct dpu_hw_blk_ops dpu_hw_ops;
+> @@ -212,7 +260,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(enum dpu_pingpong idx,
+>
+>         c->idx = idx;
+>         c->caps = cfg;
+> -       _setup_pingpong_ops(&c->ops, c->caps);
+> +       _setup_pingpong_ops(c, c->caps->features);
+>
+>         dpu_hw_blk_init(&c->base, DPU_HW_BLK_PINGPONG, idx, &dpu_hw_ops);
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+> index d73cb73..065996b 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+> @@ -10,6 +10,8 @@
+>  #include "dpu_hw_util.h"
+>  #include "dpu_hw_blk.h"
+>
+> +#define DITHER_MATRIX_SZ 16
+> +
+>  struct dpu_hw_pingpong;
+>
+>  struct dpu_hw_tear_check {
+> @@ -35,6 +37,26 @@ struct dpu_hw_pp_vsync_info {
+>  };
+>
+>  /**
+> + * struct dpu_hw_dither_cfg - dither feature structure
+> + * @flags: for customizing operations
+> + * @temporal_en: temperal dither enable
+> + * @c0_bitdepth: c0 component bit depth
+> + * @c1_bitdepth: c1 component bit depth
+> + * @c2_bitdepth: c2 component bit depth
+> + * @c3_bitdepth: c2 component bit depth
+> + * @matrix: dither strength matrix
+> + */
+> +struct dpu_hw_dither_cfg {
+> +       u64 flags;
+> +       u32 temporal_en;
+> +       u32 c0_bitdepth;
+> +       u32 c1_bitdepth;
+> +       u32 c2_bitdepth;
+> +       u32 c3_bitdepth;
+> +       u32 matrix[DITHER_MATRIX_SZ];
+> +};
+> +
+> +/**
+>   *
+>   * struct dpu_hw_pingpong_ops : Interface to the pingpong Hw driver functions
+>   *  Assumption is these functions will be called after clocks are enabled
+> @@ -82,6 +104,12 @@ struct dpu_hw_pingpong_ops {
+>          * Obtain current vertical line counter
+>          */
+>         u32 (*get_line_count)(struct dpu_hw_pingpong *pp);
+> +
+> +       /**
+> +        * Setup dither matix for pingpong block
+> +        */
+> +       void (*setup_dither)(struct dpu_hw_pingpong *pp,
+> +                       struct dpu_hw_dither_cfg *cfg);
+>  };
+>
+>  struct dpu_hw_pingpong {
+> --
+> 1.9.1
+>
