@@ -5,24 +5,24 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E1FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67B792084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617402073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389650AbgFXH3y (ORCPT
+        id S2389800AbgFXH36 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:29:54 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:59660 "EHLO loongson.cn"
+        Wed, 24 Jun 2020 03:29:58 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:59680 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387871AbgFXH3y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:29:54 -0400
+        id S2389625AbgFXH35 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:29:57 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S10;
-        Wed, 24 Jun 2020 15:29:47 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_93mAPNezSRJAA--.399S11;
+        Wed, 24 Jun 2020 15:29:48 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -31,16 +31,16 @@ Cc:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 08/14] irqchip/ls1x: Fix potential resource leaks
-Date:   Wed, 24 Jun 2020 15:29:36 +0800
-Message-Id: <1592983782-8842-9-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 09/14] irqchip/mscc-ocelot: Fix potential resource leaks
+Date:   Wed, 24 Jun 2020 15:29:37 +0800
+Message-Id: <1592983782-8842-10-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592983782-8842-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S10
-X-Coremail-Antispam: 1UD129KBjvdXoWrurWUWFykJF48Zr47Zr4xJFb_yoWDZFgE9r
-        1Sg3s3WayIyr1fJ3yIgw13ZFW7trZYgFs2vFW0kF13ta4xWw1rur4xZr1fJF4xuFWjkF97
-        C3yjvr10y34xAjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: AQAAf9Dx_93mAPNezSRJAA--.399S11
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw13uF47Ary7tFW8CrW7Jwb_yoWkXFb_Cr
+        s0g3s3GrWUKr4fJanrtwnxZ34kWr4v9F1vgrZ7t3Zxt34xK3s7Zr4avrsxAr48uFZ0krnr
+        Ga1j9r4xAw1xujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
         9fnUUIcSsGvfJTRUUUbmkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
         6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
         IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
@@ -63,34 +63,38 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 There exists potential resource leaks in the error path, fix them.
 
-Fixes: 9e543e22e204 ("irqchip: Add driver for Loongson-1 interrupt controller")
+Fixes: 19d99164480a ("irqchip: Add a driver for the Microsemi Ocelot controller")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-ls1x.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-mscc-ocelot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
-index 353111a..409001b 100644
---- a/drivers/irqchip/irq-ls1x.c
-+++ b/drivers/irqchip/irq-ls1x.c
-@@ -131,7 +131,7 @@ static int __init ls1x_intc_of_init(struct device_node *node,
- 	if (!priv->domain) {
- 		pr_err("ls1x-irq: cannot add IRQ domain\n");
- 		err = -ENOMEM;
--		goto out_iounmap;
-+		goto out_dispose_irq;
+diff --git a/drivers/irqchip/irq-mscc-ocelot.c b/drivers/irqchip/irq-mscc-ocelot.c
+index 88143c0..e676ae2 100644
+--- a/drivers/irqchip/irq-mscc-ocelot.c
++++ b/drivers/irqchip/irq-mscc-ocelot.c
+@@ -73,7 +73,8 @@ static int __init ocelot_irq_init(struct device_node *node,
+ 				       &irq_generic_chip_ops, NULL);
+ 	if (!domain) {
+ 		pr_err("%pOFn: unable to add irq domain\n", node);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_irq_dispose;
  	}
  
- 	err = irq_alloc_domain_generic_chips(priv->domain, 32, 2,
-@@ -182,6 +182,8 @@ static int __init ls1x_intc_of_init(struct device_node *node,
+ 	ret = irq_alloc_domain_generic_chips(domain, OCELOT_NR_IRQ, 1,
+@@ -109,9 +110,10 @@ static int __init ocelot_irq_init(struct device_node *node,
  
- out_free_domain:
- 	irq_domain_remove(priv->domain);
-+out_dispose_irq:
+ err_gc_free:
+ 	irq_free_generic_chip(gc);
+-
+ err_domain_remove:
+ 	irq_domain_remove(domain);
++err_irq_dispose:
 +	irq_dispose_mapping(parent_irq);
- out_iounmap:
- 	iounmap(priv->intc_base);
- out_free_priv:
+ 
+ 	return ret;
+ }
 -- 
 2.1.0
 
