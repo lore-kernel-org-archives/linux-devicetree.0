@@ -2,112 +2,135 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EA1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 01:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0A2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 02:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 452A320702
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 01:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B0920836
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 02:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jWwi91+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387934AbgFXBpf (ORCPT
+        id S2387950AbgFXC0D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 23 Jun 2020 21:45:35 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48092 "EHLO loongson.cn"
+        Tue, 23 Jun 2020 22:26:03 -0400
+Received: from mail-vi1eur05on2081.outbound.protection.outlook.com ([40.107.21.81]:49249
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387780AbgFXBpf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 23 Jun 2020 21:45:35 -0400
-Received: from [10.130.0.166] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL94ssPJezAZJAA--.243S3;
-        Wed, 24 Jun 2020 09:45:17 +0800 (CST)
-Subject: Re: [PATCH 1/7] irqchip: Fix potential resource leaks
-To:     Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org
-References: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d2111f53-ca52-fedf-0257-71f0aa89b093@loongson.cn>
-Date:   Wed, 24 Jun 2020 09:44:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        id S2387719AbgFXC0C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 23 Jun 2020 22:26:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hIp+S7T4Sl+RYxbcf3rwlrmVBfiAIt9QlYK9mQx5yYcMAfgq/ht0iKB8gWOcVpKj41BG+167VmX+BGtsQtLGtVOSbT3BtWXwqHou6kg0sSyiIAkgoTJnIuxF7D/J79W6qKTGvQZVZdBXBxBHf1qQM+GpUtln8/TgbPPxtzwZ8/o8G2A0rfiOj8J5CkAPFntS2gaTkj3whnTAnIXrWBq1rhgV9WmRBpfgEjWN7Zmfe5w7mrzlb+X6+oKo/ZiEmPvpP8rhrR5AEX8uTKt6TX1Wgx9kPNtHLofLGW4QcbG2/jGgSFHMixFLKfD/NSUh5JRN2ZVGebh8GnpXSoMlzH77Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rU9cDiMtqOvhoArBDcGrVu7PgwcUM9jJVlq3xzSYTuM=;
+ b=fBhDDBak6gDXJ5uWk7Gj8SdnsJcEneSP8l6hz2OkDAgSrIYQfldgF5Z9JZNzcIE3P1ZI8tJf7JTtoBjoggUkvlxVsIhhnw9QkiAX1CDBQi2nOYushGXCWHhZi5rjyLXL8RFZwAXC2St9OoMMcnmDlIz8qC3J1hHmhUWkwrkpfvvap6uvkHexBLpSZYApTQSPdKoElLc5sgIQHiJpOQPX6ZQwwsQRSYaDUtuS9jae4wW8rSP4yObccCbe5CrwPmm1pYfZEe6rmt7RvNBuT+Nq+HLHZIO4ioLAKjYymiQDgtIz7Ijzi1X6VK043DQH2lrK/TQHI5IoDeeZs0WFMUp9Ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rU9cDiMtqOvhoArBDcGrVu7PgwcUM9jJVlq3xzSYTuM=;
+ b=jWwi91+6cKA6z69EPtB0ml2ml20JFX8PHuDrCcpip/rZKQ2jydbW2WxISVlkfWe1pJRQigt7GNrCvh9EUlzntmUA5lB4snDDdU54Q4SW6mBHfbLen3+7cJD1PLlh3qxAlJ5Z8NtAHaAcX36l8RBmmY2LA/ILoIjA3glHAndZ2IY=
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com (2603:10a6:4:33::14)
+ by DB6PR0401MB2472.eurprd04.prod.outlook.com (2603:10a6:4:36::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Wed, 24 Jun
+ 2020 02:25:58 +0000
+Received: from DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710]) by DB6PR0401MB2438.eurprd04.prod.outlook.com
+ ([fe80::444:b05a:a5:5710%9]) with mapi id 15.20.3109.027; Wed, 24 Jun 2020
+ 02:25:58 +0000
+From:   "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        "Biwen Li (OSS)" <biwen.li@oss.nxp.com>
+CC:     Ran Wang <ran.wang_1@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>
+Subject: RE: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add
+ ftm_alarm0 node
+Thread-Topic: [v2 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa:
+ add ftm_alarm0 node
+Thread-Index: AQHWSc7LwUF/uYH2J0qePoDw6vPXhw==
+Date:   Wed, 24 Jun 2020 02:25:58 +0000
+Message-ID: <DB6PR0401MB2438903D0BA7650CE4B136548F950@DB6PR0401MB2438.eurprd04.prod.outlook.com>
+References: <20200614143206.24993-1-biwen.li@oss.nxp.com>
+ <20200614143206.24993-3-biwen.li@oss.nxp.com> <20200623120004.GD30139@dragon>
+In-Reply-To: <20200623120004.GD30139@dragon>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f905141b-0a4f-40b4-a7f4-08d817e5ee41
+x-ms-traffictypediagnostic: DB6PR0401MB2472:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0401MB247228B0FC08997C6B847893CE950@DB6PR0401MB2472.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0444EB1997
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m5VcHEO0bcn5lBgpDvFO3NZKMtazSoHjKdUfM/IP7Xqj0w8SFcT5/nEp0bk+s+qGodx+qgoKiJKPVFRRK0dIGAhz2iPyLO1dIoalDPopqPcDlBh3GykzbSGGSYvUwF9ZWNprd7a4yN2dq6bNn9lm6rbw8rhPqvemsxrJbUItUqOYl8l4Smu4kaSL47sL4gCep51GP4BsG3Zucg8gkKQ/hhGzfqinNXyMc/458JYiOveLZlGmZkttyz3Smgo7o+SzIJEAm9F05bZEM3v7Zo/85PfZgWfeY7UbsfB7FIISIw8o3X5p3Rh1rzQ0gLfge2x1RmEYMfeKsAXRXTGJFKZQYA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2438.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(8936002)(478600001)(5660300002)(2906002)(76116006)(66946007)(64756008)(66476007)(66556008)(71200400001)(66446008)(8676002)(9686003)(7696005)(52536014)(33656002)(186003)(6506007)(4326008)(54906003)(316002)(110136005)(26005)(55016002)(86362001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: sfxdcTv0ZWzBb5bCxIg/GNYSNh2vurkS5Co4UfLK1z34oOsG5iZFVMk/u4vP82friiOYTsK6ZmNNLghy5atft0yRKxeUoBRTyLtZFGWrP4oSheXeY9i+OO6QfLLWAv9/vgvao44SP9y8DNIXp/wust5oQF4vE1aSVoZe1yX89W1wfCEu6tCUhivqQoqovDvPWNEXbalSQHQnXVgjkNQBITHcb92PYpXde27ohdpScBm+kTqNn0BPi2ZOmZkjdsNyNGVFEaut2MVvXuUx5SQVURwa967jWuKFUzVcj6RKylQDveGfRONYBT03KE61sYHPzFE/sr041YitWfspvO/4EG4Kc2LHmhGvQY5aUmIQjNPf0Ck6hmfxHJvRiLLBOLV9tURHGjBJRF35seKdap7c63/oAtXzctIxBQzI4dT/gSuO6MUf2kp9VKpY/gAF+gFimLDXIg7WJzNEqW3feIf04ARI+VtrqIrnxk/w2Pejlks=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <65e734f7-c43c-f96b-3650-980e15edba60@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxL94ssPJezAZJAA--.243S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw17tw18JFy5JrW5Aw47Jwb_yoWkuFc_CF
-        1F9ryDuay8Ar1UGF4xKw17Xr9xKrnrX3sxtFyvya12y34fZa1I9rsagr9aqa4xZr92krn8
-        Gr4jv342yr1I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbakFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-        Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-        x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-        1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyU
-        JVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-        IYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f905141b-0a4f-40b4-a7f4-08d817e5ee41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2020 02:25:58.4735
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AWY1XxLVBchHXW8LSGIKYAv1TgEKRTb9DlOLnlrl2pIbYW/NG4du2hhjPa78hrQCCXhuUbOIY2437hTWDbbu7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2472
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/23/2020 11:55 PM, Markus Elfring wrote:
->> There exists some potential resource leaks in the error path, fix them.
-> Will the tag “Fixes” become relevant for the commit message?
-
-Hi Markus,
-
-Thanks for your reply and suggestion.
-
-This patch contains many files in drivers/irqchip,
-maybe I should split it into some small patches if use the tag "Fixes"?
-
->
->
-> …
->> +++ b/drivers/irqchip/irq-nvic.c
->> @@ -94,6 +94,7 @@ static int __init nvic_of_init(struct device_node *node,
->>
->>   	if (!nvic_irq_domain) {
->>   		pr_warn("Failed to allocate irq domain\n");
->> +		iounmap(nvic_base);
->>   		return -ENOMEM;
->>   	}
->>
->> @@ -103,6 +104,7 @@ static int __init nvic_of_init(struct device_node *node,
->>   	if (ret) {
->>   		pr_warn("Failed to allocate irq chips\n");
->>   		irq_domain_remove(nvic_irq_domain);
->> +		iounmap(nvic_base);
->>   		return ret;
->>   	}
-> Can it helpful to add jump targets so that a bit of exception handling
-> can be better reused at the end of this function?
-
-OK, no problem, I will do it in the v2.
-
-By the way, I have resent this patch series due to git send-email failed,
-https://lore.kernel.org/patchwork/cover/1261517/
-
-Thanks,
-Tiezhu
-
->
-> Regards,
-> Markus
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> > Change in v2:
+> > 	- use generic name
+> > 	- use definition
+> >
+> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
+> > arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
+> >  5 files changed, 72 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > index 006e544..4742efe 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> > @@ -22,6 +22,7 @@
+> >  		rtic-c =3D &rtic_c;
+> >  		rtic-d =3D &rtic_d;
+> >  		sec-mon =3D &sec_mon;
+> > +		rtc1 =3D &ftm_alarm0;
+>=20
+> Sorry. I did not catch it during v1 review.  But we want to keep them sor=
+t
+> alphabetically.
+Okay, got it, i will sort them in v3.
 
