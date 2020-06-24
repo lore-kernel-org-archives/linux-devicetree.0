@@ -2,108 +2,112 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F29DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AFAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3692084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ope4PDxZ"
+	by mail.kernel.org (Postfix) with ESMTP id C7DB12082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 07:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389760AbgFXHcL (ORCPT
+        id S2389842AbgFXHe0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 03:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388375AbgFXHcL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 03:32:11 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437A0C061573
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 00:32:11 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b7so2036114pju.0
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 00:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XiffTKYWfkRx2OuMiP/252mjsVT01Skep/qWi8vbGWk=;
-        b=Ope4PDxZMKqo33DrekdQIdllBSDMkIlNiHCxw3yYG5stm7pwHar0QsGYxUv1ivqW1Z
-         SRN16VM0aa5Mc9iKJyZnIz0LvX4yjs+p4eJ3aQeOtnZOvdchEvfZpHiutoDpAlcQwMug
-         OSmVWqM98/0yw7XUkxvFRykp2Q2gCAgkNvEe7k+WplncMKqzuaatAWOXW+/8cGV1DBRP
-         LjeBl/8cO8V89B5ICJpFG3VSGMgKkIIAuiJ3yfS5KGpv9inZK1+xFpgLIUzbieNES2lS
-         NXgVHWc7cn5EjOaUNf3CDQumo78W0+VhABf/oM3A5Fb7M4cME54HpW8KUiEGo4oeauq3
-         jMDQ==
+        Wed, 24 Jun 2020 03:34:26 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37301 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388489AbgFXHe0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 03:34:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id v13so1042225otp.4;
+        Wed, 24 Jun 2020 00:34:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XiffTKYWfkRx2OuMiP/252mjsVT01Skep/qWi8vbGWk=;
-        b=KiQNoBanL56jh4RBVd7ghC7i378stunibanGQaNLPrSefgqun8nbxi6i2c5KXFAWaW
-         q2tc8MjRWLFpo6pSzsYuAHVezt8k3S9JM0YLai619g6w4zY1qJ7TuWk4D+XSTPnk52M4
-         EXtY4F6V1z4KvQ2YWxR8XnqdiYqWUxU14wx+M6dsTlxInL57TOSgEd0UEvOl0BYlbt9X
-         qW2hwrXlA84Y0SMA3Ruzapk43Eqi2N8FosAPcr2khjd/eMtHq25EYXCHPIG95CZlbI46
-         gAdRTVAtcwOOEu85FeAg+O0i8CvWKg20TnGvYhml0ilDofLgPSqyayzH5VzVuu5LoGrL
-         9gpQ==
-X-Gm-Message-State: AOAM530d2g4u6+ddx5n15Imorvtd063fR8Y9kkNoT30Io0YHKxqNcrXA
-        +gbeIRXBycB09n5EyrIRr6w0ng==
-X-Google-Smtp-Source: ABdhPJzmmQR87baMbd/6VHklCBu0rFXvmKlmotKOEGTSQbtK8VLZjuez9jqsDKFhQIepFUxhRZLPwQ==
-X-Received: by 2002:a17:90a:5c82:: with SMTP id r2mr16853142pji.161.1592983930591;
-        Wed, 24 Jun 2020 00:32:10 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g21sm18765157pfh.134.2020.06.24.00.32.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 00:32:09 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 00:29:27 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 06/12] arm64: dts: qcom: msm8994: Add SCM node
-Message-ID: <20200624072927.GT128451@builder.lan>
-References: <20200623224813.297077-1-konradybcio@gmail.com>
- <20200623224813.297077-7-konradybcio@gmail.com>
- <20200623231919.GL128451@builder.lan>
- <CAMS8qEXeFO0vNKHoJeDKKprdECFLVtXOWnphc6iRjOBigeFe1Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j5iJaAmcwIz93ZsJcMmiCbrU1gnAgWj1jKvFm1JtK38=;
+        b=NE1sTZZLk+CtEKLsY9GmDuJF+nCrHxYUXDYxESgF62X5cZZThxTBD80cg3TO0SuF0k
+         IZiim3QKwi2btGz1ucU4P/8IFZEjwSYysBJfZp79C6AiIPJ3xkTtMvPclhtGAqzqiBn5
+         452rlzZfc+bvNAjQXWpBMkMT2IQgsoCEY+d2+LiG1Ku1qWORO9WvkNfg8Hg5Jxo+vY9E
+         BdDzwUqY1S6fMVrgOiu8dXxaMCV8zvaGfhXY08KKQe83FQa5vfWkDsongQ7AG1oZFaSb
+         sBaCPi87DyeMEc49+GxvLaXz4afGpOyDcwOL3EDk7FWcjrt04cJNNy7XWE+mKS7gxbEz
+         ldiw==
+X-Gm-Message-State: AOAM531i4jVbQ8VQB6+J55vZsjX1NZ5jAJnLaq488J4NavvHtKK9Ktqf
+        6071GagnkTnwP9GtYnEnZ3JjJqgKY1Bk4FaYSG2SJAK6
+X-Google-Smtp-Source: ABdhPJysMLeTgnT1zZNYcM9UUaX0LYbwwd5YK/jR2CfMmZxWqVy6gv8jlfq9DQ03hq5B5ML5uSUVwBSO6NQzv9Qjgg8=
+X-Received: by 2002:a4a:b804:: with SMTP id g4mr22189953oop.40.1592984065134;
+ Wed, 24 Jun 2020 00:34:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMS8qEXeFO0vNKHoJeDKKprdECFLVtXOWnphc6iRjOBigeFe1Q@mail.gmail.com>
+References: <20200603154329.31579-1-aford173@gmail.com>
+In-Reply-To: <20200603154329.31579-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 24 Jun 2020 09:34:13 +0200
+Message-ID: <CAMuHMdW1radtuje+z85TLXO8EAEdVYp3gF2ZE9aYbHUHdrY-Fg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] clk: vc5: Allow Versaclock driver to support
+ multiple instances
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 23 Jun 16:30 PDT 2020, Konrad Dybcio wrote:
+Hi Adam,
 
-> >Shouldn't this be "qcom,scm-msm8992", "qcom,scm" ?
-> >
-> >(Or rather "qcom,scm-msm8994", "qcom,scm")
-> 
-> Some DTs only have the SoC-specific one, and some also
-> have the generic one. But I can add the generic one if
-> you wish.
-> 
-> I went with 8992, as I added it in the 8992 series
-> (gonna update that one soon, too, so we can get it merged)
-> and I didn't want to needlessly duplicate it. Ideally maybe we
-> could switch to just qcom,scm for clockless SCM compats?
-> 
+On Wed, Jun 3, 2020 at 5:44 PM Adam Ford <aford173@gmail.com> wrote:
+> Currently, the Versaclock driver is only expecting one instance and
+> uses hard-coded names for the various clock names.  Unfortunately,
+> this is a problem when there is more than one instance of the driver,
+> because the subsequent instantiations of the driver use the identical
+> name.  Each clock after the fist fails to load, because the clock
+> subsystem cannot handle two clocks with identical name.
 
-It's fairly common practice to specify both a specific and a generic
-compatible, this would allow us to in the driver do special handling of
-the specific in the future if we need to - without having to update the
-devicetree.
+Thanks for your patch, which is now commit f491276a51685987 ("clk: vc5:
+Allow Versaclock driver to support multiple instances") in clk-next.
 
-Regards,
-Bjorn
+> This patch removes the hard-coded name arrays and uses kasprintf to
+> assign clock names based on names of their respective node and parent
+> node which gives each clock a unique identifying name.
+>
+> For a verasaclock node with a name like:
+>    versaclock5: versaclock_som@6a
+>
+> The updated clock names would appear like:
+>     versaclock_som.mux
+>        versaclock_som.out0_sel_i2cb
+>        versaclock_som.pfd
+>           versaclock_som.pll
+>              versaclock_som.fod3
+>                 versaclock_som.out4
+>              versaclock_som.fod2
+>                 versaclock_som.out3
+>              versaclock_som.fod1
+>                 versaclock_som.out2
+>              versaclock_som.fod0
+>                 versaclock_som.out1
+
+I'm afraid this won't help, as all versaclock nodes should be named
+"clock-controller@<unit-address>", as per DT generic node name
+recommendations.
+Incorporating the unit-address won't help, as you can have multiple
+i2c buses in the system.
+How do other drivers handle this?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
