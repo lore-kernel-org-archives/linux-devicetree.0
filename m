@@ -2,283 +2,92 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9D3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C75C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 12:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D50D20857
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8F620B1F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 12:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hc72frU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403845AbgFXL5K (ORCPT
+        id S2390682AbgFXMDR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 07:57:10 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:20068 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403801AbgFXL5K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 07:57:10 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 24 Jun 2020 04:57:07 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Jun 2020 04:57:06 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 24 Jun 2020 17:26:42 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 921DE4A40; Wed, 24 Jun 2020 17:26:40 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: add support for dither block in display
-Date:   Wed, 24 Jun 2020 17:26:36 +0530
-Message-Id: <1592999796-30501-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 24 Jun 2020 08:03:17 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:51308 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389387AbgFXMDR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 08:03:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1593000193; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VA2AWcxxad/sxNKV1aRnPWhyI//Gmywy6le15GSXRt4=;
+        b=hc72frU2egBndDOCOeCljM0eVw5CN6qs/b557/6Bpn7sfHFvTV3MSjWlyDEiHrYNskqXhG
+        5pp4x/UYkJyptxDkK2u8hJ4leDYJL2o27l+L8iXhye9dWe6RTb9XVDTvbZafiON91Ucs56
+        vrnLR96J/6OJVxl91EOGWKaQs6PmMww=
+Date:   Wed, 24 Jun 2020 14:03:03 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] MIPS: ingenic: gcw0: Fix HP detection GPIO.
+To:     =?iso-8859-1?b?Sm/jbw==?= "H. Spies" <jhlspies@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Message-Id: <3TIFCQ.1ZGWWD0PTNQ03@crapouillou.net>
+In-Reply-To: <20200623211945.823-1-jhlspies@gmail.com>
+References: <20200623211945.823-1-jhlspies@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This change enables dither block for primary interface
-in display.
+Hi Jo=E3o,
 
-Enabled for 6bpc in the current version.
+Le mar. 23 juin 2020 =E0 18:19, Jo=E3o H. Spies <jhlspies@gmail.com> a=20
+=E9crit :
+> Previously marked as active high, but is in reality active low.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: b1bfdb660516 ("MIPS: ingenic: DTS: Update GCW0 support")
+> Signed-off-by: Jo=E3o H. Spies <jhlspies@gmail.com>
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 45 +++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 66 +++++++++++++++++++++----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
- 3 files changed, 130 insertions(+), 9 deletions(-)
+Good catch.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..26e870a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -208,6 +208,42 @@ struct dpu_encoder_virt {
- 
- #define to_dpu_encoder_virt(x) container_of(x, struct dpu_encoder_virt, base)
- 
-+static u32 dither_matrix[DITHER_MATRIX_SZ] = {
-+	15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
-+};
-+
-+static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
-+{
-+	struct dpu_hw_dither_cfg dither_cfg = { 0 };
-+	struct drm_display_info *info;
-+
-+	if (!phys || !phys->connector || !phys->hw_pp ||
-+		!phys->hw_pp->ops.setup_dither)
-+		return;
-+
-+	info = &phys->connector->display_info;
-+	if (!info)
-+		return;
-+
-+	switch (phys->connector->display_info.bpc) {
-+	case 6:
-+		dither_cfg.c0_bitdepth = 6;
-+		dither_cfg.c1_bitdepth = 6;
-+		dither_cfg.c2_bitdepth = 6;
-+		dither_cfg.c3_bitdepth = 6;
-+		dither_cfg.temporal_en = 0;
-+		break;
-+	default:
-+		phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
-+		return;
-+	}
-+
-+	memcpy(&dither_cfg.matrix, dither_matrix,
-+			sizeof(u32) * DITHER_MATRIX_SZ);
-+
-+	phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
-+}
-+
- void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
- 		enum dpu_intr_idx intr_idx)
- {
-@@ -1082,6 +1118,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 	struct dpu_encoder_virt *dpu_enc = NULL;
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
-+	int i;
- 
- 	if (!drm_enc || !drm_enc->dev) {
- 		DPU_ERROR("invalid parameters\n");
-@@ -1104,6 +1141,14 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
- 				dpu_kms->catalog);
- 
- 	_dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
-+
-+	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
-+		for (i = 0; i < dpu_enc->num_phys_encs; i++) {
-+			struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
-+
-+			_dpu_encoder_setup_dither(phys);
-+		}
-+	}
- }
- 
- void dpu_encoder_virt_runtime_resume(struct drm_encoder *drm_enc)
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-index d110a40..cf7603d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
-@@ -28,6 +28,16 @@
- #define PP_FBC_BUDGET_CTL               0x038
- #define PP_FBC_LOSSY_MODE               0x03C
- 
-+#define PP_DITHER_EN			0x000
-+#define PP_DITHER_BITDEPTH		0x004
-+#define PP_DITHER_MATRIX		0x008
-+
-+#define DITHER_DEPTH_MAP_INDEX 9
-+
-+static u32 dither_depth_map[DITHER_DEPTH_MAP_INDEX] = {
-+	0, 0, 0, 0, 0, 0, 0, 1, 2
-+};
-+
- static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
- 		const struct dpu_mdss_cfg *m,
- 		void __iomem *addr,
-@@ -49,6 +59,40 @@ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static void dpu_hw_pp_setup_dither(struct dpu_hw_pingpong *pp,
-+				    struct dpu_hw_dither_cfg *cfg)
-+{
-+	struct dpu_hw_blk_reg_map *c;
-+	u32 i, base, data = 0;
-+
-+	if (!pp)
-+		return;
-+
-+	c = &pp->hw;
-+	base = pp->caps->sblk->dither.base;
-+	if (!cfg) {
-+		DPU_REG_WRITE(c, base + PP_DITHER_EN, 0);
-+		return;
-+	}
-+
-+	data = dither_depth_map[cfg->c0_bitdepth] & REG_MASK(2);
-+	data |= (dither_depth_map[cfg->c1_bitdepth] & REG_MASK(2)) << 2;
-+	data |= (dither_depth_map[cfg->c2_bitdepth] & REG_MASK(2)) << 4;
-+	data |= (dither_depth_map[cfg->c3_bitdepth] & REG_MASK(2)) << 6;
-+	data |= (cfg->temporal_en) ? (1 << 8) : 0;
-+
-+	DPU_REG_WRITE(c, base + PP_DITHER_BITDEPTH, data);
-+
-+	for (i = 0; i < DITHER_MATRIX_SZ - 3; i += 4) {
-+		data = (cfg->matrix[i] & REG_MASK(4)) |
-+			((cfg->matrix[i + 1] & REG_MASK(4)) << 4) |
-+			((cfg->matrix[i + 2] & REG_MASK(4)) << 8) |
-+			((cfg->matrix[i + 3] & REG_MASK(4)) << 12);
-+		DPU_REG_WRITE(c, base + PP_DITHER_MATRIX + i, data);
-+	}
-+	DPU_REG_WRITE(c, base + PP_DITHER_EN, 1);
-+}
-+
- static int dpu_hw_pp_setup_te_config(struct dpu_hw_pingpong *pp,
- 		struct dpu_hw_tear_check *te)
- {
-@@ -180,15 +224,19 @@ static u32 dpu_hw_pp_get_line_count(struct dpu_hw_pingpong *pp)
- 	return line;
- }
- 
--static void _setup_pingpong_ops(struct dpu_hw_pingpong_ops *ops,
--	const struct dpu_pingpong_cfg *hw_cap)
-+static void _setup_pingpong_ops(struct dpu_hw_pingpong *c,
-+				unsigned long features)
- {
--	ops->setup_tearcheck = dpu_hw_pp_setup_te_config;
--	ops->enable_tearcheck = dpu_hw_pp_enable_te;
--	ops->connect_external_te = dpu_hw_pp_connect_external_te;
--	ops->get_vsync_info = dpu_hw_pp_get_vsync_info;
--	ops->poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
--	ops->get_line_count = dpu_hw_pp_get_line_count;
-+	c->ops.setup_tearcheck = dpu_hw_pp_setup_te_config;
-+	c->ops.enable_tearcheck = dpu_hw_pp_enable_te;
-+	c->ops.connect_external_te = dpu_hw_pp_connect_external_te;
-+	c->ops.get_vsync_info = dpu_hw_pp_get_vsync_info;
-+	c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
-+	c->ops.get_line_count = dpu_hw_pp_get_line_count;
-+
-+	if (test_bit(DPU_PINGPONG_DITHER, &features) &&
-+		IS_SC7180_TARGET(c->hw.hwversion))
-+		c->ops.setup_dither = dpu_hw_pp_setup_dither;
- };
- 
- static struct dpu_hw_blk_ops dpu_hw_ops;
-@@ -212,7 +260,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(enum dpu_pingpong idx,
- 
- 	c->idx = idx;
- 	c->caps = cfg;
--	_setup_pingpong_ops(&c->ops, c->caps);
-+	_setup_pingpong_ops(c, c->caps->features);
- 
- 	dpu_hw_blk_init(&c->base, DPU_HW_BLK_PINGPONG, idx, &dpu_hw_ops);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-index d73cb73..065996b 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
-@@ -10,6 +10,8 @@
- #include "dpu_hw_util.h"
- #include "dpu_hw_blk.h"
- 
-+#define DITHER_MATRIX_SZ 16
-+
- struct dpu_hw_pingpong;
- 
- struct dpu_hw_tear_check {
-@@ -35,6 +37,26 @@ struct dpu_hw_pp_vsync_info {
- };
- 
- /**
-+ * struct dpu_hw_dither_cfg - dither feature structure
-+ * @flags: for customizing operations
-+ * @temporal_en: temperal dither enable
-+ * @c0_bitdepth: c0 component bit depth
-+ * @c1_bitdepth: c1 component bit depth
-+ * @c2_bitdepth: c2 component bit depth
-+ * @c3_bitdepth: c2 component bit depth
-+ * @matrix: dither strength matrix
-+ */
-+struct dpu_hw_dither_cfg {
-+	u64 flags;
-+	u32 temporal_en;
-+	u32 c0_bitdepth;
-+	u32 c1_bitdepth;
-+	u32 c2_bitdepth;
-+	u32 c3_bitdepth;
-+	u32 matrix[DITHER_MATRIX_SZ];
-+};
-+
-+/**
-  *
-  * struct dpu_hw_pingpong_ops : Interface to the pingpong Hw driver functions
-  *  Assumption is these functions will be called after clocks are enabled
-@@ -82,6 +104,12 @@ struct dpu_hw_pingpong_ops {
- 	 * Obtain current vertical line counter
- 	 */
- 	u32 (*get_line_count)(struct dpu_hw_pingpong *pp);
-+
-+	/**
-+	 * Setup dither matix for pingpong block
-+	 */
-+	void (*setup_dither)(struct dpu_hw_pingpong *pp,
-+			struct dpu_hw_dither_cfg *cfg);
- };
- 
- struct dpu_hw_pingpong {
--- 
-1.9.1
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+
+Cheers,
+-Paul
+
+> ---
+>  arch/mips/boot/dts/ingenic/gcw0.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts=20
+> b/arch/mips/boot/dts/ingenic/gcw0.dts
+> index 8d22828787d8..bc72304a2440 100644
+> --- a/arch/mips/boot/dts/ingenic/gcw0.dts
+> +++ b/arch/mips/boot/dts/ingenic/gcw0.dts
+> @@ -92,7 +92,7 @@
+>  			"MIC1N", "Built-in Mic";
+>  		simple-audio-card,pin-switches =3D "Speaker", "Headphones";
+>=20
+> -		simple-audio-card,hp-det-gpio =3D <&gpf 21 GPIO_ACTIVE_HIGH>;
+> +		simple-audio-card,hp-det-gpio =3D <&gpf 21 GPIO_ACTIVE_LOW>;
+>  		simple-audio-card,aux-devs =3D <&speaker_amp>, <&headphones_amp>;
+>=20
+>  		simple-audio-card,bitclock-master =3D <&dai_codec>;
+> --
+> 2.17.1
+>=20
+
 
