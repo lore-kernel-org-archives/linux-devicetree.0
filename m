@@ -5,24 +5,24 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA964C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FFDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87652217A0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34DB20706
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389413AbgFXGpu (ORCPT
+        id S2389434AbgFXGpy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:45:50 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:48442 "EHLO loongson.cn"
+        Wed, 24 Jun 2020 02:45:54 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:48426 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389381AbgFXGpu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 02:45:50 -0400
+        id S2389383AbgFXGpx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:45:53 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxXeuQ9vJebSBJAA--.397S8;
-        Wed, 24 Jun 2020 14:45:40 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxXeuQ9vJebSBJAA--.397S6;
+        Wed, 24 Jun 2020 14:45:39 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -31,16 +31,16 @@ Cc:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 6/7 RESEND] irqchip/loongson-pch-msi: Remove unneeded variable
-Date:   Wed, 24 Jun 2020 14:45:35 +0800
-Message-Id: <1592981136-3572-7-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 4/7 RESEND] irqchip/loongson-htvec: Check return value of irq_domain_translate_onecell()
+Date:   Wed, 24 Jun 2020 14:45:33 +0800
+Message-Id: <1592981136-3572-5-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1592981136-3572-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1592981136-3572-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9DxXeuQ9vJebSBJAA--.397S8
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFW7Jw17Kr47Cr15WryUZFb_yoWktwb_CF
-        1Iq3ZxGFy2yr43WF4xK3yYqFy2vFyDuF1v9FWFva13X3yYgws7AFW3Aan3JrW7Gr18Zr1f
-        CrZ5Gw1Syr129jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: AQAAf9DxXeuQ9vJebSBJAA--.397S6
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw13uFykCw48tFyDXr1UKFg_yoWkWrc_CF
+        yIqF98Wr1Uur13Ar4fGw45XFyxZrWkWF1v9FZ5tasxX3yUKw1xAr1Yvw43CF47Gr4Fyry7
+        GrZ3urySkw1xujkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
         9fnUUIcSsGvfJTRUUUbmkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
         6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
         IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
@@ -61,39 +61,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-irq_domain_alloc_irqs_parent() returns 0 on success and non-zero value
-on failure, it is redudant to check its non-zero return value and then
-return it, so just remove the variable "ret" and return directly in the
-function pch_msi_parent_domain_alloc().
+Check the return value of irq_domain_translate_onecell() due to
+it may returns -EINVAL if failed.
 
+Fixes: 818e915fbac5 ("irqchip: Add Loongson HyperTransport Vector support")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-pch-msi.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/irqchip/irq-loongson-htvec.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-loongson-pch-msi.c b/drivers/irqchip/irq-loongson-pch-msi.c
-index 50becd2..12aeeab 100644
---- a/drivers/irqchip/irq-loongson-pch-msi.c
-+++ b/drivers/irqchip/irq-loongson-pch-msi.c
-@@ -100,17 +100,12 @@ static int pch_msi_parent_domain_alloc(struct irq_domain *domain,
- 					unsigned int virq, int hwirq)
+diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
+index b36d403..720cf96 100644
+--- a/drivers/irqchip/irq-loongson-htvec.c
++++ b/drivers/irqchip/irq-loongson-htvec.c
+@@ -109,11 +109,14 @@ static struct irq_chip htvec_irq_chip = {
+ static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 			      unsigned int nr_irqs, void *arg)
  {
- 	struct irq_fwspec fwspec;
--	int ret;
++	int ret;
+ 	unsigned long hwirq;
+ 	unsigned int type, i;
+ 	struct htvec *priv = domain->host_data;
  
- 	fwspec.fwnode = domain->parent->fwnode;
- 	fwspec.param_count = 1;
- 	fwspec.param[0] = hwirq;
+-	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
++	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
++	if (ret)
++		return ret;
  
--	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
--	if (ret)
--		return ret;
--
--	return 0;
-+	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- }
- 
- static int pch_msi_middle_domain_alloc(struct irq_domain *domain,
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
 -- 
 2.1.0
 
