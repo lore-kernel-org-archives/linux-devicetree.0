@@ -2,118 +2,195 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCB1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6410C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA23214F1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4952078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K43RLRxV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2rzrcC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404771AbgFXP5e (ORCPT
+        id S2404750AbgFXQGj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 11:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35982 "EHLO
+        Wed, 24 Jun 2020 12:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404672AbgFXP44 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 11:56:56 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB36C061795;
-        Wed, 24 Jun 2020 08:56:56 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u26so4808244wmn.1;
-        Wed, 24 Jun 2020 08:56:56 -0700 (PDT)
+        with ESMTP id S2404525AbgFXQGi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:06:38 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89512C061573;
+        Wed, 24 Jun 2020 09:06:38 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l2so1572705wmf.0;
+        Wed, 24 Jun 2020 09:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qUKa07WIX4FJ9UC2RNCE+udUH0IZVYqwllIgAs/5xTU=;
-        b=K43RLRxVJUYUEKifmRwwtb9VtFl2vRTd0bBYdDk2fRq0txh81+9QrhqhA4MxNOlFvK
-         IDi4b59GeJK4FsTrZDYjqBiH+ByGb0EBp37DWAhXAnbA3wrytiNtZR3bsfAekM2LvAWB
-         tdghQVGPDYXDSOtX6GBrUSz3I0wazLvnJZ1RsIlLn6ea8LUt+OtQTrFjlnMoZhoazmjp
-         kSzpCRnExbta7cbHu72zd8CcrbGS/kxe29snIB2PvTE6uoYpt4AjbsbJ8HS+j2zHgQ4d
-         ZeUnTANXgMbpjJ5tNHzrlPYaUeAWF7URyAT/bf2VXfAvfiXfyjEi+EDXUP6ig64aKnDG
-         5WoA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N5fl5/sMZxwAr7ptc9+M4Sr+AByefpkVY5hVcBVQQ/k=;
+        b=c2rzrcC1s/RvV0v6BauZL5SgifsfzraAm6dKbwwVmpzxQX4AEpCnmWIyRQjVyJ0BxY
+         VwAF1gysQzcY6viTFWKNd5ER+wald/A+oDJmThbanQzzZTMkP8Syhpwrt+cK1I8evkBw
+         vKEUtxcqdx/YAs6AfAz1YMl1W6EjqZaigjKox7N0hT1oe61tpTl1rIpLMJbIlywMUA6y
+         r9Iqdiq9bK+9J6sjSGr1PFWW6C7ipYzc5btYktjX9GjMxMJrTiHGA4nrljYift0Cb5wn
+         Lo9oppL/ubGVr1CRnyh4GbMhJctzp8q5jjRO/KLV5NGB/8uatOUPDVDfTmK6h+fUbnK4
+         JiJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qUKa07WIX4FJ9UC2RNCE+udUH0IZVYqwllIgAs/5xTU=;
-        b=elIGyUzWjeDQwj9SRJGn8ryiH4yom86d8KKIHXKK6BCM7faM3xthfQssddI/KYE7mx
-         Ln/qgfdL7o9LgVKvxLiHd9FxWjAu3ZBk+1siODX51bngsRQayj7PlaMzqSD71KrbZSEb
-         duZGu/4N+utOdvkXchV3TlDEhiNmsYKuue3iXY71Kr9KbMokh3GVmnaUAreoVCGKjNXS
-         rwmAGB4Dj39zf9wipDAed76ZBAEZEh7XhLJS831T/itXC1osnP3crUnCDvHoFmtBuwlk
-         s2qT+WgmHdrkYiPb9ZE8h8MyS3og/56IyW4dk4uhoazQ9OcQ/1q1Hv/5oVJeXD98nLRu
-         QBOw==
-X-Gm-Message-State: AOAM532pyx+wAMdfKvoSoJS5821bcrFBDB6O/XW7seylHbi+ZKCUChEg
-        DQonF1nXyT4OnzP8dNHPXO8=
-X-Google-Smtp-Source: ABdhPJzcxM2i1Qf9RVr14XaBQbQldzvyj7eR6MN6J7NfyO8CWTG4/WFBLRccMAeEC8hRiUOAtbXarA==
-X-Received: by 2002:a1c:4408:: with SMTP id r8mr10837709wma.100.1593014215292;
-        Wed, 24 Jun 2020 08:56:55 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id q188sm5074344wma.46.2020.06.24.08.56.54
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N5fl5/sMZxwAr7ptc9+M4Sr+AByefpkVY5hVcBVQQ/k=;
+        b=QXjwsmM9OpdYZkuQliRgF7KLfozW3Jj6Zznn6cATO31eYn/M3SCI6PUq4saLq52kXc
+         MZQADTovH++L0Mk2WBDMGKVq6arP4jeCcLsrv1iqyrtDLvVIGbgyd4QoEykj0jf+9Zm2
+         tkDQSHytAu0wBGiLtzsjdfnO6s458eCTidzhGOv6sca+C5kQWC1I5RR3v+sajF2cN4jY
+         gI2S+v3VrJsQueUNamae/pggfrI+/qGHbVtHH6odUJLEkZLxl3dDD4D/QcNBp2Qh0o/M
+         0V+8qWzyuTVXdf/w2H1uFq0iXfEK/zp5a2r/72sr1TwAxAZ20eNG6pz9X+bKqeLDOucV
+         O+/g==
+X-Gm-Message-State: AOAM530Hj3RVbEljJELo0oSAzpPDBhS/wFCsdfzuqIiwbxMrwRkIskyr
+        kPpXjjZ05yKWysVHQ19YXgo=
+X-Google-Smtp-Source: ABdhPJwWIG0y9eC4lbkgJBhmydeFIya8dS7IrcbvZPWjmmIvUtHTKwrtZj6sEnp2a6behlqd9ZQbOQ==
+X-Received: by 2002:a1c:a90d:: with SMTP id s13mr16491624wme.184.1593014797129;
+        Wed, 24 Jun 2020 09:06:37 -0700 (PDT)
+Received: from [10.230.189.192] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f14sm10446689wro.90.2020.06.24.09.06.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 08:56:54 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH v3 4/6] dt-bindings: power: supply: max17040: Add maxim,rcomp
-Date:   Wed, 24 Jun 2020 18:56:31 +0300
-Message-Id: <20200624155633.3557401-5-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200624155633.3557401-1-iskren.chernev@gmail.com>
-References: <20200624155633.3557401-1-iskren.chernev@gmail.com>
+        Wed, 24 Jun 2020 09:06:36 -0700 (PDT)
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
+ registration
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
+ <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
+ <20200624094302.GA5472@sirena.org.uk>
+ <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
+Date:   Wed, 24 Jun 2020 09:06:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To compensate for the battery chemistry and operating conditions the
-chips support a compensation value. Specify one or two byte compensation
-via the maxim,rcomp byte array.
 
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
- .../devicetree/bindings/power/supply/max17040_battery.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-index 554bce82a08e6..2cf046d12d922 100644
---- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-@@ -17,6 +17,11 @@ Optional properties :
- 				Specify this boolean property to divide the
- 				reported value in 2 and thus normalize it.
- 				SOC == State of Charge == Capacity.
-+- maxim,rcomp :			A value to compensate readings for various
-+				battery chemistries and operating temperatures.
-+				max17040,41 have 2 byte rcomp, default to
-+				0x97 0x00. All other devices have one byte
-+				rcomp, default to 0x97.
- - interrupts : 			Interrupt line see Documentation/devicetree/
- 				bindings/interrupt-controller/interrupts.txt
- - wakeup-source :		This device has wakeup capabilities. Use this
-@@ -41,6 +46,7 @@ Example:
- 	battery-fuel-gauge@36 {
- 		compatible = "maxim,max17048";
- 		reg = <0x36>;
-+		maxim,rcomp = /bits/ 8 <0x56>;
- 		maxim,alert-low-soc-level = <10>;
- 		maxim,double-soc;
- 	};
+On 6/24/2020 6:48 AM, Bartosz Golaszewski wrote:
+> śr., 24 cze 2020 o 11:43 Mark Brown <broonie@kernel.org> napisał(a):
+>>
+>> On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
+>>> On 6/22/20 6:51 AM, Mark Brown wrote:
+>>
+>>>> If the bus includes power management for the devices on the bus the
+>>>> controller is generally responsible for that rather than the devices,
+>>>> the devices access this via facilities provided by the bus if needed.
+>>>> If the device is enumerated by firmware prior to being physically
+>>>> enumerable then the bus will generally instantiate the device model
+>>>> device and then arrange to wait for the physical device to appear and
+>>>> get joined up with the device model device, typically in such situations
+>>>> the physical device might appear and disappear dynamically at runtime
+>>>> based on what the driver is doing anyway.
+>>
+>>> In premise there is nothing that prevents the MDIO bus from taking care
+>>> of the regulators, resets, prior to probing the PHY driver, what is
+>>> complicated here is that we do need to issue a read of the actual PHY to
+>>> know its 32-bit unique identifier and match it with an appropriate
+>>> driver. The way that we have worked around this with if you do not wish
+>>> such a hardware access to be made, is to provide an Ethernet PHY node
+>>> compatible string that encodes that 32-bit OUI directly. In premise the
+>>> same challenges exist with PCI devices/endpoints as well as USB, would
+>>> they have reset or regulator typically attached to them.
+>>
+>> That all sounds very normal and is covered by both cases I describe?
+>>
+>>>> We could use a pre-probe stage in the device model for hotpluggable
+>>>> buses in embedded contexts where you might need to bring things out of
+>>>> reset or power them up before they'll appear on the bus for enumeration
+>>>> but buses have mostly handled that at their level.
+>>
+>>> That sounds like a better solution, are there any subsystems currently
+>>> implementing that, or would this be a generic Linux device driver model
+>>> addition that needs to be done?
+>>
+>> Like I say I'm suggesting doing something at the device model level.
+> 
+> I didn't expect to open such a can of worms...
+> 
+> This has evolved into several new concepts being proposed vs my
+> use-case which is relatively simple. The former will probably take
+> several months of development, reviews and discussions and it will
+> block supporting the phy supply on pumpkin boards upstream. I would
+> prefer not to redo what other MAC drivers do (phy-supply property on
+> the MAC node, controlling it from the MAC driver itself) if we've
+> already established it's wrong.
+
+You are not new to Linux development, so none of this should come as a
+surprise to you. Your proposed solution has clearly short comings and is
+a hack, especially around the PHY_ID_NONE business to get a phy_device
+only then to have the real PHY device ID. You should also now that "I
+need it now because my product deliverable depends on it" has never been
+received as a valid argument to coerce people into accepting a solution
+for which there are at review time known deficiencies to the proposed
+approach.
+
+> 
+> Is there any compromise we could reach to add support for a basic,
+> common use-case of a single regulator supplying a PHY that needs
+> enabling before reading its ID short-term (just like we currently
+> support a single reset or reset-gpios property for PHYs) and
+> introducing a whole new concept to the device model for more advanced
+> (but currently mostly hypothetical) cases long-term?
+
+The pre-probe use case is absolutely not hypothetical, and I would need
+it for pcie-brcmstb.c at some point which is a PCIe root complex driver
+with multiple regulators that need to be turned on *prior* to
+enumerating the PCIe bus and creating pci_device instances. It is
+literally the same thing as what you are trying to do, just in a
+different subsystem, therefore I am happy to test and review your patches.
 -- 
-2.27.0
-
+Florian
