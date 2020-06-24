@@ -2,195 +2,140 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6410C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0E0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4952078A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1CF20768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2rzrcC1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vvkd1UY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404750AbgFXQGj (ORCPT
+        id S2404933AbgFXQOl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
+        Wed, 24 Jun 2020 12:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404525AbgFXQGi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:06:38 -0400
+        with ESMTP id S2404927AbgFXQOj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:14:39 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89512C061573;
-        Wed, 24 Jun 2020 09:06:38 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so1572705wmf.0;
-        Wed, 24 Jun 2020 09:06:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86274C061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:14:39 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 17so3089817wmo.1
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N5fl5/sMZxwAr7ptc9+M4Sr+AByefpkVY5hVcBVQQ/k=;
-        b=c2rzrcC1s/RvV0v6BauZL5SgifsfzraAm6dKbwwVmpzxQX4AEpCnmWIyRQjVyJ0BxY
-         VwAF1gysQzcY6viTFWKNd5ER+wald/A+oDJmThbanQzzZTMkP8Syhpwrt+cK1I8evkBw
-         vKEUtxcqdx/YAs6AfAz1YMl1W6EjqZaigjKox7N0hT1oe61tpTl1rIpLMJbIlywMUA6y
-         r9Iqdiq9bK+9J6sjSGr1PFWW6C7ipYzc5btYktjX9GjMxMJrTiHGA4nrljYift0Cb5wn
-         Lo9oppL/ubGVr1CRnyh4GbMhJctzp8q5jjRO/KLV5NGB/8uatOUPDVDfTmK6h+fUbnK4
-         JiJg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JZwW5G5yWDQn7isXOxX6OgeleecRbTC9nCsi8uj1JNQ=;
+        b=vvkd1UY91KCarieRskOqn4JPNlnOQzqs9UCV25dgPU4GhdYxZhq6iQFStm/crcaxZ1
+         SaqYy5hyEwv6QKqfAAPLeJbGf/0B1SnbEeLVk/VMLhX4kIdYeVB2OImuZvbdcUcr1mMX
+         YeZTk3pgZHj7OpVZtQKE8Dr33AZ8kek8YYU+ib4PNri/SvMiyoYMiixaBBTLqb1HAArs
+         tlH7+e+JuVvGychuZMxj1QThYw1Ruf5BZERGQz8bdAA99pfmM/KJrtZFVkWU/t8B2vHv
+         1stmNq0PgDpRWSd6JG2kcwPdMzLuoD4seA09IgNmk5ZvsUppndK1TT1CLrqxX7ZHD6mQ
+         PDEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N5fl5/sMZxwAr7ptc9+M4Sr+AByefpkVY5hVcBVQQ/k=;
-        b=QXjwsmM9OpdYZkuQliRgF7KLfozW3Jj6Zznn6cATO31eYn/M3SCI6PUq4saLq52kXc
-         MZQADTovH++L0Mk2WBDMGKVq6arP4jeCcLsrv1iqyrtDLvVIGbgyd4QoEykj0jf+9Zm2
-         tkDQSHytAu0wBGiLtzsjdfnO6s458eCTidzhGOv6sca+C5kQWC1I5RR3v+sajF2cN4jY
-         gI2S+v3VrJsQueUNamae/pggfrI+/qGHbVtHH6odUJLEkZLxl3dDD4D/QcNBp2Qh0o/M
-         0V+8qWzyuTVXdf/w2H1uFq0iXfEK/zp5a2r/72sr1TwAxAZ20eNG6pz9X+bKqeLDOucV
-         O+/g==
-X-Gm-Message-State: AOAM530Hj3RVbEljJELo0oSAzpPDBhS/wFCsdfzuqIiwbxMrwRkIskyr
-        kPpXjjZ05yKWysVHQ19YXgo=
-X-Google-Smtp-Source: ABdhPJwWIG0y9eC4lbkgJBhmydeFIya8dS7IrcbvZPWjmmIvUtHTKwrtZj6sEnp2a6behlqd9ZQbOQ==
-X-Received: by 2002:a1c:a90d:: with SMTP id s13mr16491624wme.184.1593014797129;
-        Wed, 24 Jun 2020 09:06:37 -0700 (PDT)
-Received: from [10.230.189.192] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f14sm10446689wro.90.2020.06.24.09.06.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 09:06:36 -0700 (PDT)
-Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY
- registration
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200622093744.13685-1-brgl@bgdev.pl>
- <20200622093744.13685-10-brgl@bgdev.pl> <20200622133940.GL338481@lunn.ch>
- <20200622135106.GK4560@sirena.org.uk>
- <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com>
- <20200624094302.GA5472@sirena.org.uk>
- <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <f806586d-a6d7-99af-bba4-d1e7d28be192@gmail.com>
-Date:   Wed, 24 Jun 2020 09:06:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JZwW5G5yWDQn7isXOxX6OgeleecRbTC9nCsi8uj1JNQ=;
+        b=J8luzcnTvaqcFtLQXbfo0yxJNOc5dmGP1hq+C9RH7JwTTOZdQGNDwWqct4zG/aq0lN
+         vP3bmOYtpiGZDuNBXmEpVc/BTLsdyCwx9AJwnUoEaNRw2UtwRAX88MzBbxqZY8j4FihA
+         aAn1tWQmhi9xhLopGbG7XWAHyZOlfuSDRaO2oxfvXtArz3tsn15JHCZrw5An28aPxct1
+         Ha9xlegv2ihVmPZaDuYaSIOl+it2thOJixp4FWzQxQCKHjrWE8Tna5jEJ+ugErh+LPLH
+         JLBZDUCh90L3OxEoII4QEnJvjkIHpQ0IPbNx2WxsegEdHXPbxpvSGp95hoorUgDihuRT
+         +10g==
+X-Gm-Message-State: AOAM531erZdIG41wd04pYQAdYzbBuCMVy5eIjnMIhvkLMZ1tNyyVEW0m
+        ARSAVsvV9F9mDxIlKrUKfeV8VQ==
+X-Google-Smtp-Source: ABdhPJwLF8n1RB43kspzHdY8WTuv/0NWaBJLIc+6JrYaIAS9KX1GtgIjzTREB/louHC0/laR7dJR6Q==
+X-Received: by 2002:a05:600c:204d:: with SMTP id p13mr30158147wmg.88.1593015278202;
+        Wed, 24 Jun 2020 09:14:38 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id f186sm8428843wmf.29.2020.06.24.09.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 09:14:37 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 17:14:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+Message-ID: <20200624161435.GI954398@dell>
+References: <20200622151054.GW954398@dell>
+ <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+ <20200622191133.GY954398@dell>
+ <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
+ <20200623064723.GZ954398@dell>
+ <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
+ <20200623195905.GB954398@dell>
+ <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
+ <20200624074631.GE954398@dell>
+ <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, 24 Jun 2020, Frank Rowand wrote:
 
-
-On 6/24/2020 6:48 AM, Bartosz Golaszewski wrote:
-> śr., 24 cze 2020 o 11:43 Mark Brown <broonie@kernel.org> napisał(a):
->>
->> On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
->>> On 6/22/20 6:51 AM, Mark Brown wrote:
->>
->>>> If the bus includes power management for the devices on the bus the
->>>> controller is generally responsible for that rather than the devices,
->>>> the devices access this via facilities provided by the bus if needed.
->>>> If the device is enumerated by firmware prior to being physically
->>>> enumerable then the bus will generally instantiate the device model
->>>> device and then arrange to wait for the physical device to appear and
->>>> get joined up with the device model device, typically in such situations
->>>> the physical device might appear and disappear dynamically at runtime
->>>> based on what the driver is doing anyway.
->>
->>> In premise there is nothing that prevents the MDIO bus from taking care
->>> of the regulators, resets, prior to probing the PHY driver, what is
->>> complicated here is that we do need to issue a read of the actual PHY to
->>> know its 32-bit unique identifier and match it with an appropriate
->>> driver. The way that we have worked around this with if you do not wish
->>> such a hardware access to be made, is to provide an Ethernet PHY node
->>> compatible string that encodes that 32-bit OUI directly. In premise the
->>> same challenges exist with PCI devices/endpoints as well as USB, would
->>> they have reset or regulator typically attached to them.
->>
->> That all sounds very normal and is covered by both cases I describe?
->>
->>>> We could use a pre-probe stage in the device model for hotpluggable
->>>> buses in embedded contexts where you might need to bring things out of
->>>> reset or power them up before they'll appear on the bus for enumeration
->>>> but buses have mostly handled that at their level.
->>
->>> That sounds like a better solution, are there any subsystems currently
->>> implementing that, or would this be a generic Linux device driver model
->>> addition that needs to be done?
->>
->> Like I say I'm suggesting doing something at the device model level.
+> On 2020-06-24 02:46, Lee Jones wrote:
+> > On Tue, 23 Jun 2020, Frank Rowand wrote:
+> > 
+> >> On 2020-06-23 14:59, Lee Jones wrote:
 > 
-> I didn't expect to open such a can of worms...
+> < big snip >
 > 
-> This has evolved into several new concepts being proposed vs my
-> use-case which is relatively simple. The former will probably take
-> several months of development, reviews and discussions and it will
-> block supporting the phy supply on pumpkin boards upstream. I would
-> prefer not to redo what other MAC drivers do (phy-supply property on
-> the MAC node, controlling it from the MAC driver itself) if we've
-> already established it's wrong.
+> Thanks for the replies in the above portion.
 
-You are not new to Linux development, so none of this should come as a
-surprise to you. Your proposed solution has clearly short comings and is
-a hack, especially around the PHY_ID_NONE business to get a phy_device
-only then to have the real PHY device ID. You should also now that "I
-need it now because my product deliverable depends on it" has never been
-received as a valid argument to coerce people into accepting a solution
-for which there are at review time known deficiencies to the proposed
-approach.
+NP.
 
+> >>>> But yes or no to my solution #2 (with some slight changes to
+> >>>> make it better (more gracious handling of the detected error) as
+> >>>> discussed elsewhere in the email thread)?
+> >>>
+> >>> Please see "[0]" above!
+> >>>
+> >>> AFAICT your solution #2 involves bombing out *all* devices if there is
+> >>> a duplicate compatible with no 'reg' property value.  This is a)
+> >>> over-kill and b) not an error, as I mentioned:
+> >>
+> >> As I mentioned above, I set you up to have this misunderstanding by
+> >> a mistake in one of my earlier emails.  So now that I have pointed
+> >> out what I meant here by "more gracious handling of the detected
+> >> error", what do you think of my amended solution #2?
+> > 
+> > Explained above, but the LT;DR is that it's not correct.
 > 
-> Is there any compromise we could reach to add support for a basic,
-> common use-case of a single regulator supplying a PHY that needs
-> enabling before reading its ID short-term (just like we currently
-> support a single reset or reset-gpios property for PHYs) and
-> introducing a whole new concept to the device model for more advanced
-> (but currently mostly hypothetical) cases long-term?
+> I don't agree with you, I think my solution is better.  Even if I
+> prefer my solution, I find your solution to be good enough.
 
-The pre-probe use case is absolutely not hypothetical, and I would need
-it for pcie-brcmstb.c at some point which is a PCIe root complex driver
-with multiple regulators that need to be turned on *prior* to
-enumerating the PCIe bus and creating pci_device instances. It is
-literally the same thing as what you are trying to do, just in a
-different subsystem, therefore I am happy to test and review your patches.
+I still don't see how it could work, but please feel free to submit a
+subsequent patch and we can discuss it on its own merits.
+
+> So I am dropping my specific objection to returning -EAGAIN from
+> mfd_match_of_node_to_dev() when the node has previously been
+> allocated to a device.
+
+Great.  Thanks for taking an interest.
+
+Does this mean I can apply your Reviewed-by?
+
 -- 
-Florian
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
