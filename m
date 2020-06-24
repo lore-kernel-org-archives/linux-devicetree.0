@@ -2,158 +2,167 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7186AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 13:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B46B2100A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 13:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB472082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 13:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="HjKIqEjr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0jvmCkm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390950AbgFXNq2 (ORCPT
+        id S2391122AbgFXNtL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 09:46:28 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:51681 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390933AbgFXNq2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 09:46:28 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id o5jJjhY5wNb6lo5jMjtarX; Wed, 24 Jun 2020 15:46:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1593006385; bh=ZuV4OmcavInlJN2jxK6OSIjKBVUQtZBJPsSNmNf4VtE=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=HjKIqEjrG/WADHDRB48Q5wBZwrHcFhHpvNLciTynquKm5yE6KvY+jk7CyoRme4jb8
-         gaJT3ok7Z4BifCV3Jwn5eynDB2z56kl+urp+ayU0Qm5OK7bydZG+wrDbF2BEx7W7gw
-         JVnaEvVZzasnlU/EXmjvnhS3KMy/ZUYLKw0Idrbj54dlYr6DJVc99wRnbEoBFSNorA
-         jbf5jmDAYSlHRD/da9yTJbPPp5OfF6lfD6ktENp6VRQFd/sYf7lIkwRyRPU198A6oU
-         FDlg6Zr5tQuO9GpJ9I3pF8P4D/PgrrQwPpz/hVQqTYNySLo6byf1J1Ww6SrZtgu9PC
-         HmYaDnNC96neA==
-Subject: Re: [PATCH v11 13/13] dt-bindings: Add media properties
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>, tfiga@google.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org
-References: <20200509090456.3496481-1-jacopo@jmondi.org>
- <20200509090456.3496481-14-jacopo@jmondi.org>
- <6a8add4e-c1f6-bd08-8928-3c8884eeda2c@xs4all.nl>
- <20200520075217.zxpirx5migumekwx@uno.localdomain>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <982aab4d-3214-564e-467f-087ecc9241d8@xs4all.nl>
-Date:   Wed, 24 Jun 2020 15:46:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 24 Jun 2020 09:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391110AbgFXNtD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 09:49:03 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 969D3C061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 06:49:02 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id j16so2087629ili.9
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 06:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HMgVoQ0NH17cOLvd+EMrZ4qMVzF5NeVckkBSBDB5GLs=;
+        b=0jvmCkm1uxOa1uyi4BAYlDRMMqRDa38wgi9E8/XIDdGrA9oQ5L4spIW2A1eGA4BtF2
+         S8zElmWx4UIeuMFNfhPYYnWZuScbEVueJuWuV4FXywiqce4LL2run2a4ymvcOzIu/C/+
+         6Fe7gIuaYQNI6sGKgF4WgNb2BUsmVdRrHfRKrtAsfldLg5IvcbHl6PWauCZhmFQojQhm
+         9a7Q5RrPl/lbr4+33xEC9+RPw7xZD15uxySVT5i1FJFwQookYTDkrFsYT0wH0jVU3Rlu
+         L9Tp3z1r1c62MEmeG50kWokbFvxn6cOtU/lGUbjrNM0wFfDadl3nZISJG+6IalJfMcDf
+         33mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HMgVoQ0NH17cOLvd+EMrZ4qMVzF5NeVckkBSBDB5GLs=;
+        b=j2+ij4CwPD5q3JWa8Nils8fRIThZDECMsAjWawEyZseMRTed4N2yX4mvRb0JZht71v
+         atbMwI+dM8DfKS68z/86x+16mWwyvkS7T1r+XE6JZYYrYVED9uHFf4IOWpq+75G1+i3M
+         4NmR2oODEkx1WYuv0uf7TJztp3tsfCDU23tj7mFfqG9xZc9xsJXhFr31U0log9F2uie5
+         T56cbJqolluiH+oTx7rfj+2biagRql4JbnaSekk+FThmAZlQC77o7MKyW6VZ0oXNZsUB
+         J6JTRLlVFCaPL58AVVKbQfiD4wkmb+JQxH2hdmXaYjG/7Tgjlt7mXmEY554tck0ff4oQ
+         lxWw==
+X-Gm-Message-State: AOAM531a9SBBIaR1AQhcjaFrcML9IipzjuhfdBwy1SkifEmsrD3Z3vCt
+        iLYYVv65bVZ9HwtSIQOWKcvSmU7yBFVLO4W0nONN5w==
+X-Google-Smtp-Source: ABdhPJxdX8ruFrJVm8CZiU93LA3RvFI3WisGoVFQmLOi9T6/smGz8KDwDETgwAqF6p43r34eXBRDqfcPxFBj5bX92S8=
+X-Received: by 2002:a92:de10:: with SMTP id x16mr29799293ilm.6.1593006540971;
+ Wed, 24 Jun 2020 06:49:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200520075217.zxpirx5migumekwx@uno.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLP9AbVPTh4Suhogb0uTVq+ZuTuA/ufGXSNoJyr4fqOfZjF0kpircmmzUWD6iQ/mBwGJm0eliL0JazH4sqFiQZLHq3k26TeMP1ZSOVMF9TAuCtoX/fNe
- e1OCMTKkBLmTLJt5ZTezPCq6wEqg7+4R1rOwL1Dapz+V3D41XWWMMwmqbkj3ck/E4g2uve8gNmRIlujBxNTIaJGuibYK6qlpG1/QJelvdzOHH8/t6ehOIRtI
- 4oEIZzCdItuaC/RFhJ8PVsHop+k4Lh9WHcS519m+Yo1Jl5W6O6her+vAMQwdWRXvCXBBzI2v9Cr6OfJrkRTlKk6hFzJ8crsq+0FDoKV0qBylgf3hkVYRAo8p
- LL3+uwJx2QNjHEswX4XANMYHrYzvNLypj/aJ2oge4WBlQGXRqpA+pEALd8WuO8Q4GdaERg3bgjaRJpwA88AT4u6Ny/pu2o8Tm8kiUbtTgnn9Fngo/WIhv65/
- wZiWd2KsWJ6VVvi8Q/txkcgmjkVH++ZdtY9peQ==
+References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-10-brgl@bgdev.pl>
+ <20200622133940.GL338481@lunn.ch> <20200622135106.GK4560@sirena.org.uk>
+ <dca54c57-a3bd-1147-63b2-4631194963f0@gmail.com> <20200624094302.GA5472@sirena.org.uk>
+In-Reply-To: <20200624094302.GA5472@sirena.org.uk>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 24 Jun 2020 15:48:50 +0200
+Message-ID: <CAMRc=McBxJdujCyjQF3NA=bCWHF1dx8xJ1Nc2snmqukvJ_VyoQ@mail.gmail.com>
+Subject: Re: [PATCH 09/15] net: phy: delay PHY driver probe until PHY registration
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/05/2020 09:52, Jacopo Mondi wrote:
-> Hi Hans,
-> 
-> On Mon, May 11, 2020 at 09:27:57AM +0200, Hans Verkuil wrote:
->> On 09/05/2020 11:04, Jacopo Mondi wrote:
->>> Add a DT header file to contain definitions for standard media properties.
->>>
->>> The file is named after:
->>> Documentation/devicetree/bindings/media/video-interfaces.txt
->>> which contains the standard media properties definitions.
->>>
->>> Initially add three macros to define the supported 'orientation'
->>> property values.
->>>
->>> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
->>> ---
->>>
->>> I currently don't have users in mainline for this, I understand this implies
->>> this is probably not going to be accepted. At the same time we don't have a
->>> common place for media-related definitions, which support properties defined in
->>> video-interfaces.txt
->>>
->>> I leave it here at the end of the series for discussions, but I'm fine dropping
->>> it from the series.
->>>
->>> Thanks
->>>   j
->>>
->>> ---
->>>  include/dt-bindings/media/video-interfaces.h | 15 +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->>>  create mode 100644 include/dt-bindings/media/video-interfaces.h
->>>
->>> diff --git a/include/dt-bindings/media/video-interfaces.h b/include/dt-bindings/media/video-interfaces.h
->>> new file mode 100644
->>> index 0000000000000..404c697d6bd6e
->>> --- /dev/null
->>> +++ b/include/dt-bindings/media/video-interfaces.h
->>> @@ -0,0 +1,15 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only */
->>> +/*
->>> + * include/dt-bindings/media/video-interfaces.h
->>> + *
->>> + * Copyright (C) 2020 Jacopo Mondi <jacopo@jmondi.org>
->>> + */
->>> +
->>> +#ifndef __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
->>> +#define __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__
->>> +
->>> +#define FRONT_CAMERA		<0>
->>> +#define BACK_CAMERA		<1>
->>> +#define EXTERNAL_CAMERA		<2>
->>
->> Uh, shouldn't that be 0, 1 and 2 instead of <0>, <1> and <2> ?
-> 
-> I used that notation to be able to write
->         orientation = FRONT_CAMERA
-> in place of
->         orientation = <FRONT_CAMERA>
-> 
-> Do you think it's wrong ?
+=C5=9Br., 24 cze 2020 o 11:43 Mark Brown <broonie@kernel.org> napisa=C5=82(=
+a):
+>
+> On Tue, Jun 23, 2020 at 12:49:15PM -0700, Florian Fainelli wrote:
+> > On 6/22/20 6:51 AM, Mark Brown wrote:
+>
+> > > If the bus includes power management for the devices on the bus the
+> > > controller is generally responsible for that rather than the devices,
+> > > the devices access this via facilities provided by the bus if needed.
+> > > If the device is enumerated by firmware prior to being physically
+> > > enumerable then the bus will generally instantiate the device model
+> > > device and then arrange to wait for the physical device to appear and
+> > > get joined up with the device model device, typically in such situati=
+ons
+> > > the physical device might appear and disappear dynamically at runtime
+> > > based on what the driver is doing anyway.
+>
+> > In premise there is nothing that prevents the MDIO bus from taking care
+> > of the regulators, resets, prior to probing the PHY driver, what is
+> > complicated here is that we do need to issue a read of the actual PHY t=
+o
+> > know its 32-bit unique identifier and match it with an appropriate
+> > driver. The way that we have worked around this with if you do not wish
+> > such a hardware access to be made, is to provide an Ethernet PHY node
+> > compatible string that encodes that 32-bit OUI directly. In premise the
+> > same challenges exist with PCI devices/endpoints as well as USB, would
+> > they have reset or regulator typically attached to them.
+>
+> That all sounds very normal and is covered by both cases I describe?
+>
+> > > We could use a pre-probe stage in the device model for hotpluggable
+> > > buses in embedded contexts where you might need to bring things out o=
+f
+> > > reset or power them up before they'll appear on the bus for enumerati=
+on
+> > > but buses have mostly handled that at their level.
+>
+> > That sounds like a better solution, are there any subsystems currently
+> > implementing that, or would this be a generic Linux device driver model
+> > addition that needs to be done?
+>
+> Like I say I'm suggesting doing something at the device model level.
 
-Yes, I think that's wrong :-)
+I didn't expect to open such a can of worms...
 
-From what I can see in existing device tree files you do not hide the '<>'.
+This has evolved into several new concepts being proposed vs my
+use-case which is relatively simple. The former will probably take
+several months of development, reviews and discussions and it will
+block supporting the phy supply on pumpkin boards upstream. I would
+prefer not to redo what other MAC drivers do (phy-supply property on
+the MAC node, controlling it from the MAC driver itself) if we've
+already established it's wrong.
 
-Regards,
+Is there any compromise we could reach to add support for a basic,
+common use-case of a single regulator supplying a PHY that needs
+enabling before reading its ID short-term (just like we currently
+support a single reset or reset-gpios property for PHYs) and
+introducing a whole new concept to the device model for more advanced
+(but currently mostly hypothetical) cases long-term?
 
-	Hans
-
-> 
-> Thanks
->   j
-> 
->>
->> I'm skipping this patch for the PR.
->>
->> Regards,
->>
->> 	Hans
->>
->>> +
->>> +#endif /* __DT_BINDINGS_MEDIA_VIDEO_INTERFACES_H__ */
->>> --
->>> 2.26.1
->>>
->>
-
+Bart
