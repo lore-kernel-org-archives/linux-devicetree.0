@@ -2,60 +2,63 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77098C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12295C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8C520B80
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20BF20A8B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:16:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9+Xgjp1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MFeu6wEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405014AbgFXQPr (ORCPT
+        id S2405047AbgFXQQD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:15:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50402 "EHLO
+        Wed, 24 Jun 2020 12:16:03 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50458 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404802AbgFXQPq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:15:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGF1cl038472;
-        Wed, 24 Jun 2020 11:15:01 -0500
+        with ESMTP id S2405028AbgFXQQC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:16:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFMu2038566;
+        Wed, 24 Jun 2020 11:15:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593015301;
-        bh=PERrQrRfdmam6H0p9AISJ5uvgazKR0B7qBwzzHc92JA=;
-        h=From:To:CC:Subject:Date;
-        b=O9+Xgjp1yiFV1ez/tC5FJaYDrH7dzhajKNpZbiK31kD8bvPAqFwo3n721Ww7l2lhT
-         3onjWEhL7U2JN3QYoO27m/SaNPniSKNqaGJwqH0OqpXi979pGI3r8pL1VTRCQYzKLN
-         p0NBdi0LROr/Bi3KAxnUkJGY0XdK+1zP3/aSPyIo=
+        s=ti-com-17Q1; t=1593015322;
+        bh=nvx312mv4VGvwwIjEoy4EfaLo8OvbsRscw5gPQDVBlY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=MFeu6wEiXAnjuPDKovdBwGx1SJ2bEHkvAyg6AW+/DoaR16KNRR+JbPdnIQKocOzAr
+         9rUmU6mz2FZU0A96CMve8H+fp9G97CwZe8ySpRax7x+37xsXRKsUnmkk8FFfLxv+Qs
+         jT0G1NZkJnTvNMe+cAK9haS+HZcBa05QpzZV6x/I=
 Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGF120079293;
-        Wed, 24 Jun 2020 11:15:01 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05OGFMjD127736
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jun 2020 11:15:22 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
  (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 11:15:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 11:15:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 11:15:00 -0500
+ Frontend Transport; Wed, 24 Jun 2020 11:15:22 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGF0de112577;
-        Wed, 24 Jun 2020 11:15:00 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05OGFLFS128610;
+        Wed, 24 Jun 2020 11:15:21 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>
 CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         <robh@kernel.org>, <devicetree@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v5 0/7] TAS2562 issue fixes and slot programming 
-Date:   Wed, 24 Jun 2020 11:14:52 -0500
-Message-ID: <20200624161459.19248-1-dmurphy@ti.com>
+Subject: [PATCH v5 5/7] dt-bindings: tas2562: Add voltage sense slot property
+Date:   Wed, 24 Jun 2020 11:14:57 -0500
+Message-ID: <20200624161459.19248-6-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200624161459.19248-1-dmurphy@ti.com>
+References: <20200624161459.19248-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -65,45 +68,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
+Add a property to configure the slot for the voltage sense monitoring of
+the device. Vsense data will be sent to the processor via the slot
+defined by the property
 
-This series fixes issues tih the shut-down gpio device tree allocation and a
-code format issue found.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/sound/tas2562.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-While working on a project slot programming for the tx and rx paths needed to be
-enabled.  In addition the vsense slot programming needed to be configurable and
-not directly a simpler adder to the isense slot.
-
-Finally the yaml conversion patch was moved to be the last patch in the series
-so that the fixes can be applied and the yaml can be reviewed appropriately
-and does not hold up the rest of the fixes.
-
-Dan
-
-
-Dan Murphy (7):
-  dt-bindings: tas2562: Fix shut-down gpio property
-  ASoC: tas2562: Update shutdown GPIO property
-  ASoC: tas2562: Fix format issue for extra space before a comma
-  ASoC: tas2562: Add rx and tx slot programming
-  dt-bindings: tas2562: Add voltage sense slot property
-  ASoC: tas2562: Add voltage sense slot configuration
-  dt-bindings: tas2562: Convert the tas2562 binding to yaml
-
- .../devicetree/bindings/sound/tas2562.txt     |   34 -
- .../devicetree/bindings/sound/tas2562.yaml    |   77 +
- arch/arm/boot/compressed/fdt.h                |   66 +
- arch/arm/boot/compressed/libfdt.h             | 2072 +++++++++++++++++
- arch/arm/boot/compressed/libfdt_internal.h    |  173 ++
- sound/soc/codecs/tas2562.c                    |   88 +-
- sound/soc/codecs/tas2562.h                    |    4 +
- 7 files changed, 2462 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/tas2562.txt
- create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
- create mode 100644 arch/arm/boot/compressed/fdt.h
- create mode 100644 arch/arm/boot/compressed/libfdt.h
- create mode 100644 arch/arm/boot/compressed/libfdt_internal.h
-
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.txt b/Documentation/devicetree/bindings/sound/tas2562.txt
+index fd0ac8636c01..dc6d7362ded7 100644
+--- a/Documentation/devicetree/bindings/sound/tas2562.txt
++++ b/Documentation/devicetree/bindings/sound/tas2562.txt
+@@ -11,6 +11,8 @@ Required properties:
+  - compatible:	   - Should contain "ti,tas2562", "ti,tas2563".
+  - reg:		   - The i2c address. Should be 0x4c, 0x4d, 0x4e or 0x4f.
+  - ti,imon-slot-no:- TDM TX current sense time slot.
++ - ti,vmon-slot-no:- TDM TX voltage sense time slot. This slot must always be
++		     greater then ti,imon-slot-no.
+ 
+ Optional properties:
+ - interrupt-parent: phandle to the interrupt controller which provides
+@@ -30,5 +32,6 @@ tas2562@4c {
+ 
+ 	shut-down-gpio = <&gpio1 15 0>;
+         ti,imon-slot-no = <0>;
++        ti,vmon-slot-no = <1>;
+ };
+ 
 -- 
 2.26.2
 
