@@ -2,160 +2,125 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 10:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19CCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 677632088E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 10:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9292620EDD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 11:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jsrHEYsj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8pOtPW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390535AbgFXK5O (ORCPT
+        id S2388835AbgFXLEp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 06:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46002 "EHLO
+        Wed, 24 Jun 2020 07:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390480AbgFXK5N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 06:57:13 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE74C061798
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 03:57:13 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id 190so1116499vsr.9
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 03:57:13 -0700 (PDT)
+        with ESMTP id S1728883AbgFXLEo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 07:04:44 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A94C061573;
+        Wed, 24 Jun 2020 04:04:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a127so1001221pfa.12;
+        Wed, 24 Jun 2020 04:04:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vn4droilz5xGM4KfZXgTLDdDZ7pkVwg0FkXdJSTh6us=;
-        b=jsrHEYsjYaln2VseebXDq9KSHpUlVCIp31IbwlZNiLEWvQQUW3jOQYJyYJ7ilWsi8t
-         N4yIdR3YaRGUPVNKe7i4mRT46gYHqXTnBpAYFx6g326/StBM1zMIZgqE/Il1qOv3STOn
-         fxiahpFUpRclnlN6ofiAe89/gsyxluoR8eawmKIV9o+dvNVy1/F0Jl2dJ7hK2dxOREOc
-         YXbt1vQ34xDe+W0KAHfmGph3WghyiCvx0EDecfobr2KxmbamtlyrwfbCgjpWvdza+gsD
-         BGzm8TnsM3OhMG8PgIzFCF995Q9nxS7OXOXKBdJQhWQ7HGO4f0RZSlTPw1OZeUPe4Fex
-         JV0A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t/T/N8+T8VRdD2pd3O+kasRwWgBFC0Eh4uFuB6FWblI=;
+        b=I8pOtPW1qN3NdT/NC0Qymo1nt/esn4cUsKwRbcH15Rs8nEbfF+tk3ECsLhjiDPOX98
+         0sMuNE6FqPHy8+W5Ic+/bdUc/7RQMKMBFuo66J1nE0iRajxdc4IbSReZZ6SOsjZmH+by
+         fOYFELp2qLHr/PGSOswQqtagoGjgKN1c3PPMS4CtwUwB9DwEVDjE7ZmnzjqJjlJw+Xf2
+         0MxwNAgkLzFZG8qGkBaEuaSBGSvF9f9WpyiCloKUU7Y5dn2a6JjeCE/zHz1pY22donl2
+         NKKvL7Qo4doMrJgO/GAjWvjmj5DZRhXGBM2F3Mde8Il7zq3gYCowBP+dlRsaB/C8HK9x
+         7M/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vn4droilz5xGM4KfZXgTLDdDZ7pkVwg0FkXdJSTh6us=;
-        b=fhuKwkXLt6ozWGrZ2/8JqvKksV/Q0M1EMIsIrahppwYPdV7fr5695ZU0Y5WcRabNOE
-         T2XUptKzkArNf87/0Q/UFe9+RSvgZ18L1xNTOls7D7RBp+QnwACSKcvmUlGIaaDXInYH
-         YkhTmlEZX8slr3iz89Xc/iZMR4BBV2buKfJPpYsk5zwEa8P+6HOvcwysT/14QeqIFXyi
-         F9wecRG+SYkMVrKBMQxy2H0BZtgUxDDBR9fyBSH36fmV0ljQqLRIR2NYhusCTVy94wOj
-         uvKgCT7jUTtNsPryevAkUyGWhrYNe6/vNCA7CF/nSqO1IuB7mAPKmpUwT9zwxXGNhcgW
-         SkKA==
-X-Gm-Message-State: AOAM533pdI49LXl/6fFhdlk5xXmc7fhk09ampCeiXMRUZ21ZlZROcS2v
-        aY90IvOcGw07KuWC9NnAxu0OiBMY+O6FXuLi3SwwQA==
-X-Google-Smtp-Source: ABdhPJwsxJpI/X+t50qo0pfoptqsNIIaJYL0e6gqFMktW+4P7dgIwXfmwMKeXKnC5Tvh/SK00ZCwC18Bi+FEfhZtYJ4=
-X-Received: by 2002:a67:e10d:: with SMTP id d13mr23383320vsl.27.1592996231712;
- Wed, 24 Jun 2020 03:57:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t/T/N8+T8VRdD2pd3O+kasRwWgBFC0Eh4uFuB6FWblI=;
+        b=GnBl9HfIf9AXudsPOw1Qmt04dbYcfUnT/anaH3nP0dnZArYbXGB7WfAKNK9DOIFzXh
+         sCIVTfBgsYcmhG86R22fDc984FKsgcXgYQWbqL2oZC4JMmzVaCWcpd5dj5kwSg0B8f9H
+         bSVRUlRp9FOZp80PdQ90DKngPbYtsAsE09yhOFhKUuHW8RJIWjY+ydAzcfSF+MTI87JR
+         0vZY0bFh7sPTCjSl9168TzCUbqPKF+ocPVmgIUPWVIaR0zJUIsYNMyNUyGjgISeUDMrT
+         2z+RdvD3VKj3ptyqKFKL6N1WZPKaC232MUoI4ksNzfkgBRbWvxZmg4dShr6yRRmd8rj3
+         55Cw==
+X-Gm-Message-State: AOAM533rusp+Gh62aOnJNNYLxp/ieInRt4zdT7h52bCtWZzuH8ztjF7/
+        cOMQyw2pua+J7E/gZqyvjT7Io5Gn
+X-Google-Smtp-Source: ABdhPJwwCBDuUrdAtcpI4eEVifkWpvyoLlDNFzmhdcJKoqs7+myVuPLRwYJLFiikdQHsX+p6HaofpA==
+X-Received: by 2002:a65:6089:: with SMTP id t9mr21707464pgu.236.1592996682708;
+        Wed, 24 Jun 2020 04:04:42 -0700 (PDT)
+Received: from localhost.localdomain ([103.51.74.220])
+        by smtp.gmail.com with ESMTPSA id s98sm5272796pjb.33.2020.06.24.04.04.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 04:04:42 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Fix L2 cache-controller nodename
+Date:   Wed, 24 Jun 2020 11:04:35 +0000
+Message-Id: <20200624110435.1150-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <cbd70c2f0f5ddae0d8e418fcb1e03101e408f6c2.1585753313.git.amit.kucheria@linaro.org>
- <20200414164357.GA11178@bogus>
-In-Reply-To: <20200414164357.GA11178@bogus>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 24 Jun 2020 16:27:00 +0530
-Message-ID: <CAHLCerM7hwKS=jNtMLnoCXr6z9ckOo1879e-MR-BnOC0JO=adA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: thermal: Get rid of thermal.txt and replace references
-To:     Rob Herring <robh@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-tegra@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 10:14 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed,  1 Apr 2020 20:35:50 +0530, Amit Kucheria wrote:
-> > Now that we have yaml bindings for the thermal subsystem, get rid of the
-> > old bindings (thermal.txt).
-> >
-> > Replace all references to thermal.txt in the Documentation with a link
-> > to the appropriate YAML bindings using the following search and replace
-> > pattern:
-> >  - If the reference is specific to the thermal-sensor-cells property,
-> >  replace with a pointer to thermal-sensor.yaml
-> >  - If the reference is to the cooling-cells property, replace with a
-> >  pointer to thermal-cooling-devices.yaml
-> >  - If the reference is generic thermal bindings, replace with a
-> >  reference to thermal*.yaml.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
-> >  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
-> >  .../arm/marvell/ap80x-system-controller.txt   |   2 +-
-> >  .../arm/marvell/cp110-system-controller.txt   |   2 +-
-> >  .../bindings/cpufreq/cpufreq-dt.txt           |   3 +-
-> >  .../bindings/cpufreq/cpufreq-mediatek.txt     |   4 +-
-> >  .../devicetree/bindings/hwmon/gpio-fan.txt    |   3 +-
-> >  .../devicetree/bindings/hwmon/lm90.txt        |   4 +-
-> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     |   2 +-
-> >  .../bindings/thermal/amazon,al-thermal.txt    |   2 +-
-> >  .../bindings/thermal/brcm,avs-ro-thermal.yaml |   2 +-
-> >  .../bindings/thermal/brcm,bcm2835-thermal.txt |   2 +-
-> >  .../bindings/thermal/hisilicon-thermal.txt    |   2 +-
-> >  .../bindings/thermal/max77620_thermal.txt     |   6 +-
-> >  .../bindings/thermal/mediatek-thermal.txt     |   2 +-
-> >  .../thermal/nvidia,tegra124-soctherm.txt      |  10 +-
-> >  .../thermal/nvidia,tegra186-bpmp-thermal.txt  |   2 +-
-> >  .../bindings/thermal/qcom-spmi-temp-alarm.txt |   2 +-
-> >  .../bindings/thermal/rockchip-thermal.txt     |   2 +-
-> >  .../bindings/thermal/tango-thermal.txt        |   2 +-
-> >  .../bindings/thermal/thermal-generic-adc.txt  |   2 +-
-> >  .../devicetree/bindings/thermal/thermal.txt   | 586 ------------------
-> >  .../bindings/thermal/uniphier-thermal.txt     |   2 +-
-> >  23 files changed, 33 insertions(+), 615 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
-> >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Fix warning message by changing nodename to 'cache-controller'.
 
-Daniel, Rob,
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/l2c2x0.yaml
+arch/arm/boot/dts/exynos4210-i9100.dt.yaml: l2-cache-controller@10502000:
+	$nodename:0: 'l2-cache-controller@10502000' does not match '
+	^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+arch/arm/boot/dts/exynos4412-i9300.dt.yaml: l2-cache-controller@10502000:
+        $nodename:0: 'l2-cache-controller@10502000' does not match '
+        ^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-This seems to have been missed in the 5.8 merge window. I suspect this
-should go in through the thermal tree.
+Fixes: 56b60b8bce4a ("ARM: 8265/1: dts: exynos4: Add nodes for L2 cache controller")
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+ arch/arm/boot/dts/exynos4210.dtsi | 2 +-
+ arch/arm/boot/dts/exynos4412.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Regards,
-Amit
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index b4466232f0c1..33435ce79ce4 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -97,7 +97,7 @@ pd_lcd1: power-domain@10023ca0 {
+ 			label = "LCD1";
+ 		};
+ 
+-		l2c: l2-cache-controller@10502000 {
++		l2c: cache-controller@10502000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x10502000 0x1000>;
+ 			cache-unified;
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 48868947373e..7002832eb4c0 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -213,7 +213,7 @@ pd_isp: power-domain@10023ca0 {
+ 			label = "ISP";
+ 		};
+ 
+-		l2c: l2-cache-controller@10502000 {
++		l2c: cache-controller@10502000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x10502000 0x1000>;
+ 			cache-unified;
+-- 
+2.27.0
+
