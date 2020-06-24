@@ -2,91 +2,126 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C72C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB12AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C50C2078A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C502078E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 17:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wca+aKs6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+H6PpNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405613AbgFXRoB (ORCPT
+        id S2405623AbgFXRsC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 13:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52660 "EHLO
+        Wed, 24 Jun 2020 13:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405522AbgFXRoA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 13:44:00 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F6ACC061573
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 10:44:00 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x8so429903plm.10
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 10:44:00 -0700 (PDT)
+        with ESMTP id S2405546AbgFXRsB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 13:48:01 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D71C061573;
+        Wed, 24 Jun 2020 10:48:01 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dr13so3328316ejc.3;
+        Wed, 24 Jun 2020 10:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=blPOdTajVn4OJWy527Nm/cJEP9dim0oSKgwxjjYh5Yk=;
-        b=Wca+aKs6OCeCLlQZHE2jtvWB9Igz6JI4h9CAPSmdajSZfhp2ZUPUCRDHujdfiLw847
-         RY+1k9HzrWuintQ1IOg0AvP8qZaBBwDF4rut0xOtMGygpnJK8PHQskMf03hSw+HiPVN1
-         oxn1UkEEkBskJoSBUGnoEZcMTz1dNz834ktawILifAj0yQ4aUyK9pBs6xHm+h0Ljrf+y
-         rFbYYzWRA5j14xgc5ygP+TrFiJ3HazqFe2tZLTx5XJ8stS8GbnLwxdSUQj0nGIGycoYP
-         ZeXu3B8KwzSYDlcjgCzItlFn+A2QCmb5X4lC1VIJd3pDehc2NmqWTjMxU68j3EGSHcex
-         Gr5A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eopJXMOiBM4uNCSpUziq8KbuR5DEUMui+dpvP7Q2/5U=;
+        b=T+H6PpNIklJjcSSldaz48SjChF+gUaSl1gUlXDjWs7kfYEHeeLWiyKNmdltgu3PQP1
+         Gl31B77wgh/YLGK6v85qlgUyFRiQ/DYnMXbbxu5sosB4F4pV/AJnLzRDOa6OK7umNk7x
+         o926s1TstOFlKfmjwYPrsiy/pmv2oYUzMhorJe4YS72OWNf3pf1bfneYWQb5j8Fq/PzG
+         H88V3/ouLdM4yK6+hq10iilXPAkspkyRZ9trNalO+POoTk4EmCdACTMm9fSX4sOa1uUS
+         X5WbyxFrvsGil2xu1KuOA5WKRXqDE0EEoxeuFkMawcz6mp21fgMgJZtyhW6pD2bYgGMl
+         xH2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=blPOdTajVn4OJWy527Nm/cJEP9dim0oSKgwxjjYh5Yk=;
-        b=eu1VQP+/aJ7SW52Vdhs9arqlWuyL9FdQ9Ana81dBZ0g82uhqPmZ+RXBlsNHPuVVurO
-         SnKVjY8MjPl9y6GzGUA+BsOqjq83JfldFhIofY0bld2yWDnzaYWzqut/48MLmkN1X9lP
-         Q3BlVP0JDRuC0zGICrsMh8F5rMh5GP95ewMsu+mgbsd/iiTCN1Qdpnp0B5jD8IgaYh3F
-         a+/dRtIasMikBDhNHl+HhQryWiW6OMst3Wv2tPheLDAG+nUiervb1BJ766PyYhuJZav/
-         Ji28eJ7tYRXVSla8NPg1VkE9/1eT8Xm5jebR/eiUF7dH1Tk1JIwv76+vvfaygnfBDyQM
-         hrng==
-X-Gm-Message-State: AOAM533etw+mAVR4nBnBq+58YPISO5qgWE4krj6dpWq7i+JJQwrGrqdQ
-        TTN8LGRkxs95lwk1wn6N+d0qPw==
-X-Google-Smtp-Source: ABdhPJyNVz7Caxp0j/OEjoO/h6oiEfmM/aIeAAklNOAuzgysJYahbgohTEF9YUzi6hvucALYQ5uqlg==
-X-Received: by 2002:a17:90b:238d:: with SMTP id mr13mr30519050pjb.19.1593020639461;
-        Wed, 24 Jun 2020 10:43:59 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h13sm20588371pfk.25.2020.06.24.10.43.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eopJXMOiBM4uNCSpUziq8KbuR5DEUMui+dpvP7Q2/5U=;
+        b=JTyeir1XPsV04KLyHdOdbGjgfzPlAUwcG2AXZU4uttuZOczT7+4CDnI4ZYhCFGzJ1q
+         +C7x47oiezxCEMSr4sn0q9fsM7cAq0zcVDLcR7w+YVYlpz1/O1PAlYDTgXEWUoFGWg8h
+         IAAFg6pEK5ExPSn/J2jRURSH6Ub/Te6lkR+bmZuJpzQRRzq0rk7aXoji8+N9ADnUN5TC
+         YSBwzsF0RUcFXt5JQQ012xaneY/OJnCy7McYxFZ+NvbaglEkTwn5Wx4S0rTPorc+aGJF
+         5pXBCLIrppR3fSMQ81+3Xc6YdJ80o9gyN7AT4kwawwOE6ppNQVrofPow/JzUjFfJy/Da
+         q/Kw==
+X-Gm-Message-State: AOAM532FAlc0opJeyL6QShIwjuxndisWrBb8LkvxFVXsPgzbAUS0P7F5
+        3B2fP1XzXFO5xRiWT8p4yYo=
+X-Google-Smtp-Source: ABdhPJyycI4VI3Jn5WxPZIcHDCmNYlNFbUBkNYbFZf32o5yzfQkcZzSBWqm65y70VWV3kRJBTqYndw==
+X-Received: by 2002:a17:906:3483:: with SMTP id g3mr25568317ejb.373.1593020880243;
+        Wed, 24 Jun 2020 10:48:00 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id s14sm8044146edq.36.2020.06.24.10.47.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 10:43:58 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:41:17 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
-        kishon@ti.com, robh+dt@kernel.org, mgautam@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 0/5] Enable USB support in IPQ8074
-Message-ID: <20200624174117.GU128451@builder.lan>
-References: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
- <20200624171834.GH2324254@vkoul-mobl>
+        Wed, 24 Jun 2020 10:47:59 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 0/6] Add RMU and DMAC/GPIO clock support for Actions Semi S500 SoCs
+Date:   Wed, 24 Jun 2020 20:47:51 +0300
+Message-Id: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624171834.GH2324254@vkoul-mobl>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 24 Jun 10:18 PDT 2020, Vinod Koul wrote:
+This patch series is a stripped-down revision of the initial series
+"[PATCH 00/11] Add CMU/RMU/DMA support for Actions Semi S500 SoCs":
+https://lore.kernel.org/lkml/cover.1592407030.git.cristian.ciocaltea@gmail.com/
 
-> On 08-06-20, 19:41, Sivaprakash Murugesan wrote:
-> > IPQ8074 has two super speed USB ports, with QMP and QUSB2 PHYs.
-> > This patch set enables the USB PHYs and USB dwc3 in IPQ8074.
-> 
-> Applied 1 thru 4. Bjorn can take the 5th one, thanks
-> 
+At Stephen's request, I detached all DTS related work to keep the focus
+exclusively on the Actions S500 SoC clock driver changes:
 
-Thanks Vinod, I've applied and pushed out patch 5.
+ - Add support for some missing clocks: APB, DMAC, GPIO
+ - Add support for Reset Management Unit
+
+The removed patches are subject to resubmission via a separate series:
+
+ - arm: dts: owl-s500: Add Clock Management Unit
+ - arm: dts: owl-s500: Set UART clock refs from CMU
+ - arm: dts: owl-s500-roseapplepi: Use UART clock from CMU
+ - arm: dts: owl-s500: Add DMA controller
+ - arm: dts: owl-s500: Add Reset Controller support
 
 Regards,
-Bjorn
+Cristi
+
+Changes in v1:
+ - Incorporate Stephen's review comments
+ - Remove DTS related patches
+ - Rebase remaining patches on v5.8-rc2
+ - Update cover letter, both subject and content, to reflect the new
+   scope
+
+Cristian Ciocaltea (6):
+  clk: actions: Fix h_clk for Actions S500 SoC
+  dt-bindings: clock: Add APB, DMAC, GPIO bindings for Actions S500 SoC
+  clk: actions: Add APB, DMAC, GPIO clock support for Actions S500 SoC
+  dt-bindings: reset: Add binding constants for Actions S500 RMU
+  clk: actions: Add Actions S500 SoC Reset Management Unit support
+  MAINTAINERS: Add reset binding entry for Actions Semi Owl SoCs
+
+ MAINTAINERS                                   |  1 +
+ drivers/clk/actions/owl-s500.c                | 89 ++++++++++++++++++-
+ include/dt-bindings/clock/actions,s500-cmu.h  | 77 ++++++++--------
+ .../dt-bindings/reset/actions,s500-reset.h    | 67 ++++++++++++++
+ 4 files changed, 196 insertions(+), 38 deletions(-)
+ create mode 100644 include/dt-bindings/reset/actions,s500-reset.h
+
+-- 
+2.27.0
+
