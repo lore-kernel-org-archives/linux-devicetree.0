@@ -2,108 +2,90 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BA9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E981AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D01A42073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:08:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvpTvHX5"
+	by mail.kernel.org (Postfix) with ESMTP id C7BE220DD4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 06:36:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388889AbgFXGIU (ORCPT
+        id S2389149AbgFXGgH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 02:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388164AbgFXGIU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 02:08:20 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93899C061573;
-        Tue, 23 Jun 2020 23:08:18 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o2so1299478wmh.2;
-        Tue, 23 Jun 2020 23:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J3AVCftaR9EPyVJSqZvDpFIlU9LAhorW3LOOtyD+8K4=;
-        b=mvpTvHX5ybEUwBm8lbbmhcm7Hb632yIgI6KI1i1azenZ+I3ggc9FqJDZwNHLXL3qos
-         5dwJL/iOANuTSGlR8vWIw1SrWmS85nbTWPF6V9W7HHTkJvLCYnMQ6HFJGNHx/8kVAIJH
-         brm41FjXgrhl8XZ4vJpFY24H11fOvruoV9kCE72crRSgVu6oVtI5xtQ9Jz2P7IeOlKSo
-         iR6a9tNwEgLkUvcL+sw7FxaLp1PtM+NM2o1XISKc4xtaoxIJ1w7uyyp5nR63MCmVVzRl
-         3dgJUkWoWZIXDH/FKWIj5Od6rqeYZpqmPrtv1JK+wjr0Jz3Oacmh/h8kvJW6jQdtNldu
-         2YEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J3AVCftaR9EPyVJSqZvDpFIlU9LAhorW3LOOtyD+8K4=;
-        b=LPFmVBX1lGidbhS7VzFexuQQIp/eABOCKLi5JNLuyzTG8wRZX3fc5++bvUEED4y5ra
-         BshHa5wx6bu5ueu+NwI1DJsNvEfKAu1E2oiCMjTqan5MvSbSAS7MPt7sS2jUvGq/+oGA
-         xSZ1tphQilSlMXdG7OzPXtsG8N81OWhA1HQp/a8MCat7fkKIXiL8xiDH5k49NSrV6oPz
-         RlmT/UTvF22cnWY5qqqhuKiJgfkmItdCy4WQn3bjA45TK+p+UB7W7iYxyWM1B9IUloug
-         FfUx4D6BEXDJrVTRNaT1nvUmSu2vcYzt1Mcr3Of1QoLHdKuX9x5F+VlUJAu8TCkYMoZC
-         wuQg==
-X-Gm-Message-State: AOAM5303Ty4UMCh38+wVO6vlbDiJxUo2YrTZTnHVOFrRiYY8h+p1aHqj
-        94YLqQa2ajK6UBjrPrAB+RI=
-X-Google-Smtp-Source: ABdhPJxiESCVTYPKA7k2CylgKyTPo+uTpECT+lsNYvSmat+X3RolB7tU7PK118c4exFljWMvSRQoCw==
-X-Received: by 2002:a7b:c18f:: with SMTP id y15mr20639263wmi.85.1592978897172;
-        Tue, 23 Jun 2020 23:08:17 -0700 (PDT)
-Received: from ?IPv6:2a04:241e:500:9200:593:409e:3935:5922? ([2a04:241e:500:9200:593:409e:3935:5922])
-        by smtp.gmail.com with ESMTPSA id k185sm3352122wmk.47.2020.06.23.23.08.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2020 23:08:16 -0700 (PDT)
-Subject: Re: [PATCH v4 0/6] PM / devfreq: Add dynamic scaling for imx8m ddr
- controller
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        leonard.crestez@nxp.com
-Cc:     Anson.Huang@nxp.com, a.swigon@partner.samsung.com,
-        abailon@baylibre.com, abel.vesa@nxp.com, aisheng.dong@nxp.com,
-        angus@akkea.ca, cw00.choi@samsung.com, devicetree@vger.kernel.org,
-        fabio.estevam@nxp.com, georgi.djakov@linaro.org,
-        kernel@pengutronix.de, krzk@kernel.org, kyungmin.park@samsung.com,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-imx@nxp.com, linux-pm@vger.kernel.org, mark.rutland@arm.com,
-        martink@posteo.de, mka@chromium.org, mturquette@baylibre.com,
-        myungjoo.ham@samsung.com, ping.bai@nxp.com, rjw@rjwysocki.net,
-        robh@kernel.org, saravanak@google.com, sboyd@kernel.org,
-        shawnguo@kernel.org, viresh.kumar@linaro.org
-References: <cover.1573252696.git.leonard.crestez@nxp.com>
- <20200622135858.15891-1-martin.kepplinger@puri.sm>
-From:   Leonard Crestez <cdleonard@gmail.com>
-Message-ID: <e8440abf-e51f-9846-f2af-a1a44a7fd89a@gmail.com>
-Date:   Wed, 24 Jun 2020 09:08:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200622135858.15891-1-martin.kepplinger@puri.sm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jun 2020 02:36:07 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45764 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389152AbgFXGfm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:35:42 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx39809PJeSB9JAA--.620S3;
+        Wed, 24 Jun 2020 14:35:34 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2 1/7] irqchip/loongson-htpic: Remove redundant kfree operation
+Date:   Wed, 24 Jun 2020 14:35:25 +0800
+Message-Id: <1592980531-2121-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1592980531-2121-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1592980531-2121-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dx39809PJeSB9JAA--.620S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr15XrW5ZrW3AF15Kr4xtFb_yoW3twb_Cr
+        WIqr9rJFW0gr1rC3y7ur47ZrySkw4kWF1kuF4aya4ft347tw1rAry7Ar4fJF47Wa1SkFn8
+        WFW7ZrykAw1xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbPkFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+        8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+        xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I
+        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+        WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+        wI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2
+        IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v2
+        6F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjfU1q2MUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/22/20 4:58 PM, Martin Kepplinger wrote:
-> hi Leondard,
-> 
-> before using this patchset I'd like to ask: Do you have plans to create
-> an update and push this forward? It is useful.
+In the function htpic_of_init(), when kzalloc htpic fails, it should
+return -ENOMEM directly, no need to execute "goto" to kfree.
 
-Hello.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/irqchip/irq-loongson-htpic.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-I am no longer with NXP and don't have access to imx hardware right now.
+diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
+index dd018c2..63f7280 100644
+--- a/drivers/irqchip/irq-loongson-htpic.c
++++ b/drivers/irqchip/irq-loongson-htpic.c
+@@ -93,10 +93,8 @@ int __init htpic_of_init(struct device_node *node, struct device_node *parent)
+ 	}
+ 
+ 	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
+-	if (!htpic) {
+-		err = -ENOMEM;
+-		goto out_free;
+-	}
++	if (!htpic)
++		return -ENOMEM;
+ 
+ 	htpic->base = of_iomap(node, 0);
+ 	if (!htpic->base) {
+-- 
+2.1.0
 
-However the series that you replied to is very old and was accepted many 
-months ago. You shouldn't have to apply out-of-tree kernel patches.
-
---
-Regards,
-Leonard
