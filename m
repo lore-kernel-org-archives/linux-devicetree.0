@@ -2,132 +2,143 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B247C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DE0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3526820823
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21ECB2082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:25:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GDbX4i4/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fr2l7dlU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404552AbgFXQWU (ORCPT
+        id S2404675AbgFXQZc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39988 "EHLO
+        Wed, 24 Jun 2020 12:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404350AbgFXQWU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:22:20 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4996C0613ED
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:22:19 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id w9so2567346ilk.13
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:22:19 -0700 (PDT)
+        with ESMTP id S2404468AbgFXQZc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:25:32 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F69C061573;
+        Wed, 24 Jun 2020 09:25:32 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id j80so2405473qke.0;
+        Wed, 24 Jun 2020 09:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=STD7qLvWtpSzAtO1gXjXJztLXOvVuvn065ZWjIwBzm8=;
-        b=GDbX4i4/9sFa2QnOyFKV3sAmgpvbd4H9sf69kAM0V93uCHV4aw7EViw8WQGFnmGhGL
-         RCC+okJfghc3Wz2bz8HZeO7YwxG7/oL/0OfQHSSw8KaxqyDX+3pN+o3xIH3aODH5BQjK
-         vTgBiV68m+YydOFw1YZbI/IzAxH09eBSYoeOnD2WwMhuNy5dRivxMDq8sxhdaJcPIFVE
-         xpNn8lwne15R7K3Ux72CJTplglE9cuR4bjD2TZvXf3CiAqo230jAdvO8oHmtF2Psgl2p
-         YadWLDh4Bl411uJHkly3hQX/7NFaklwQk0TAShizwVTPmjXzGeqZOsMfxFNXOJwnROdt
-         D35Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EX+waRZgWkttNQFyEQaMEGS91DwT52qIcg8cn7tx7x0=;
+        b=Fr2l7dlUKiPmEZHXthnoPVJaBTDZ8tQeygaptwCtWakFBu/hKZPdpO/cvCjH+6z1Ww
+         Fxd9euxfiC7WJvmRvoI2XwPwPTz8FnhdXODfS/QXWcgg2M7IsoyxD+LiRoMRxBlEUou7
+         A1gpl7Qfjjs8rBxSL+vGRHtgUV2Xnh5vWVS/5jYGK3GICSd30q7HORJT2XqKzjtNQR2t
+         RGwcwH7R+sLpmW3sJB+aXG456xgsJ7J6PMjKch90MS8eVFynfnkVfRNccG2uJGGIggbW
+         icl3XbyIpR2rDt4zBps0WklWsRilZT1peDuYmDsqSNstJGm/C6KSyZeg6yil9cFZrzL2
+         B6Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=STD7qLvWtpSzAtO1gXjXJztLXOvVuvn065ZWjIwBzm8=;
-        b=JthL4z7hTUyIEJ8CPSVR67uhG6L5i86EKEdShjCPGwT6kQat3p8ajIACToioOsnfiW
-         HT/zuvzL8WQhVWawx5cBgu5twoRgSt+EBqcv0u/URfpIuZB7n9og3hH9UptD/msktFAW
-         TJ7mXNva5eBsWQn/DKJs5ESx6yVIyX7NOxZujupK4IDKpAfKyNyomb1xTlqiqGofSA+4
-         2x+kNsTK0/0YACBpAh0TQ5/wCYzyyjEy9BHk+EOObt2BVSspGIpL5yN3FIbDAp6BJEjo
-         6icH0y/ktO/tzwk0fWD3povymi+g0uHK8OyN2rHoU/KdUmuCi5+QeQZOe8GopbeLjWa5
-         i6yw==
-X-Gm-Message-State: AOAM533hS9tIJxmzW98dHifYhrI7vf5/1eXnN6FdMa5xsIFQvmbiLqbI
-        KiXsnipVPY8u5Tb/r/cC1FEdaA/2Vz8GG1nKcfojCw==
-X-Google-Smtp-Source: ABdhPJyCu6OdPyGuzSe1OJNhDF0LoYbiaX834HuGofRmFkCh2g6eAXaOlNsVAMtygwLHq1VOlmz7okN+XaK4lvMSMqk=
-X-Received: by 2002:a92:c509:: with SMTP id r9mr28062372ilg.189.1593015739191;
- Wed, 24 Jun 2020 09:22:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EX+waRZgWkttNQFyEQaMEGS91DwT52qIcg8cn7tx7x0=;
+        b=eyp502mTOQae0nRTIrs43a8AFUBKM4iRaDu0GXTbjheux+EpLyNFhWsgFLyNCr2GJQ
+         1C8kD+iXeQZ89CRYVONqH7EZQvBSlCo/MNt4akJ3YMA0aUy0La045hmE8gxO7UXZbujW
+         A7KxmojFuh4BuW8tL5xPuxbmod78yyQn7TMCXtg8I+HejPAAub8xNzT34odzs61doHHo
+         dtqu/HRcPvj5KUREGMzib4Vw+vCiGRWRVp5G64FUrJuzX70xlIumAjj4MwijRIXkYa9U
+         VuAs+Z69nP8fC0pN8iQaOOyj/GUmqFZBQOT52e5CeUBv/rYG6SrJ3lW4tX679T0WoSjP
+         VnvQ==
+X-Gm-Message-State: AOAM5326ZoWswa53eiUFu8qQHWcTmMQcINqn9X4TSevJXaqU9VrDnUTk
+        iTIWmtz6fFwtelLhTUwrDkU=
+X-Google-Smtp-Source: ABdhPJwxFli0DGylImdLbucIC/YTFByOJI9o7sIdwE4PZG41+89LDyF+oJewq4AgmLSxYa1Rjow2zg==
+X-Received: by 2002:ae9:e8cf:: with SMTP id a198mr18441339qkg.460.1593015931469;
+        Wed, 24 Jun 2020 09:25:31 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id f22sm4508170qko.89.2020.06.24.09.25.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 09:25:31 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200622151054.GW954398@dell>
+ <037c0fd2-df35-5981-7ef2-c6199841650d@gmail.com>
+ <20200622191133.GY954398@dell>
+ <dc893ce4-8a4d-b7d9-8591-18a8b9b2ea2b@gmail.com>
+ <20200623064723.GZ954398@dell>
+ <83f2be78-1548-fa2b-199a-2391b2eceb47@gmail.com>
+ <20200623195905.GB954398@dell>
+ <6684101d-1013-2964-c247-394f9b12a194@gmail.com>
+ <20200624074631.GE954398@dell>
+ <d7774c42-fd41-9fab-2ea0-cd6bc7d35383@gmail.com>
+ <20200624161435.GI954398@dell>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <53200e52-bc53-1351-dc90-b775c29f8456@gmail.com>
+Date:   Wed, 24 Jun 2020 11:25:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200622093744.13685-1-brgl@bgdev.pl> <20200622093744.13685-6-brgl@bgdev.pl>
- <1da91144-076d-bf1e-f12a-2b4fe242febc@gmail.com>
-In-Reply-To: <1da91144-076d-bf1e-f12a-2b4fe242febc@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 24 Jun 2020 18:22:08 +0200
-Message-ID: <CAMRc=MeCTNuwY4-h=OhVVT1RHWYfi-VwEZMvm0RNrS_qNu_EPw@mail.gmail.com>
-Subject: Re: [PATCH 05/15] net: phy: reset the PHY even if probe() is not implemented
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200624161435.GI954398@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 23 cze 2020 o 21:14 Florian Fainelli <f.fainelli@gmail.com> napisa=C5=
-=82(a):
->
-> On 6/22/20 2:37 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently we only call phy_device_reset() if the PHY driver implements
-> > the probe() callback. This is not mandatory and many drivers (e.g.
-> > realtek) don't need probe() for most devices but still can have reset
-> > GPIOs defined. There's no reason to depend on the presence of probe()
-> > here so pull the reset code out of the if clause.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> OK, but now let's imagine that a PHY device has two or more reset lines,
-> one of them is going to be managed by the core PHY library and the rest
-> is going to be under the responsibility of the PHY driver, that does not
-> sound intuitive or convenient at all. This is a hypothetical case, but
-> it could conceivable happen, so how about adding a flag to the driver
-> that says "let me manage it a all"?
+On 2020-06-24 11:14, Lee Jones wrote:
+> On Wed, 24 Jun 2020, Frank Rowand wrote:
+> 
+>> On 2020-06-24 02:46, Lee Jones wrote:
+>>> On Tue, 23 Jun 2020, Frank Rowand wrote:
+>>>
+>>>> On 2020-06-23 14:59, Lee Jones wrote:
+>>
+>> < big snip >
+>>
+>> Thanks for the replies in the above portion.
+> 
+> NP.
+> 
+>>>>>> But yes or no to my solution #2 (with some slight changes to
+>>>>>> make it better (more gracious handling of the detected error) as
+>>>>>> discussed elsewhere in the email thread)?
+>>>>>
+>>>>> Please see "[0]" above!
+>>>>>
+>>>>> AFAICT your solution #2 involves bombing out *all* devices if there is
+>>>>> a duplicate compatible with no 'reg' property value.  This is a)
+>>>>> over-kill and b) not an error, as I mentioned:
+>>>>
+>>>> As I mentioned above, I set you up to have this misunderstanding by
+>>>> a mistake in one of my earlier emails.  So now that I have pointed
+>>>> out what I meant here by "more gracious handling of the detected
+>>>> error", what do you think of my amended solution #2?
+>>>
+>>> Explained above, but the LT;DR is that it's not correct.
+>>
+>> I don't agree with you, I think my solution is better.  Even if I
+>> prefer my solution, I find your solution to be good enough.
+> 
+> I still don't see how it could work, but please feel free to submit a
+> subsequent patch and we can discuss it on its own merits.
+> 
+>> So I am dropping my specific objection to returning -EAGAIN from
+>> mfd_match_of_node_to_dev() when the node has previously been
+>> allocated to a device.
+> 
+> Great.  Thanks for taking an interest.
+> 
+> Does this mean I can apply your Reviewed-by?
+> 
 
-This sounds good as a new feature idea but doesn't seem to be related
-to what this patch is trying to do. The only thing it does is improve
-the current behavior. I'll note your point for the future work on the
-pre-probe stage.
-
-Bartosz
+No, please do not.  I don't want to give the patch that strong
+of an endorsement.
