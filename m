@@ -2,65 +2,172 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6190C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1A6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8FD020738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA3520738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZgOTBUbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404859AbgFXQwE (ORCPT
+        id S2404173AbgFXQ5Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:52:04 -0400
-Received: from out28-148.mail.aliyun.com ([115.124.28.148]:41923 "EHLO
-        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404815AbgFXQwA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:52:00 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2918739|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0155759-0.000286233-0.984138;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07381;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.Hrw5KdE_1593017496;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Hrw5KdE_1593017496)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Thu, 25 Jun 2020 00:51:43 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, robh+dt@kernel.org, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 0/2] Add support for the OST in Ingenic X1000.
-Date:   Thu, 25 Jun 2020 00:51:11 +0800
-Message-Id: <20200624165113.30873-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 24 Jun 2020 12:57:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404124AbgFXQ5Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:57:24 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4C6C061573;
+        Wed, 24 Jun 2020 09:57:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=L0BSl9Rz5P8GUkSvL7sI0fAZe5Hrhoqy7/0x3FiFW2Y=; b=ZgOTBUbPjta9cXrzFnnIAnab4
+        Dcm9pDc0Ejlq5vVTWRjyevo27fV7XGPaj06Z05BDeZRcenj/FWeWJut7lz1cg2jUDgZnf8MvLUdYM
+        P+biZdJlriNMVb3RtYtqgt1B8ql+d+lgDKGM3OOj3i9TDJ3SIgG6/R4Rg8amZWPYlQq6fIY/e5RIH
+        39Hwa7ZromkrO1urRg88NKb0eQZfm104fYt7Wvq+tEViZGuPwfd3FP5JIhp40PZgkNtwizse0M5zD
+        FpIcwGpyg+93AxBkRp7ezqMw7JKjDwcBW5nSjVKmWjVeWpHEex9JZNfJ7NiOhJ6zOdVKpd7uk/VBN
+        B1UNRAHEg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59222)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jo8i8-0003ML-Ug; Wed, 24 Jun 2020 17:57:20 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jo8i7-00027d-Ep; Wed, 24 Jun 2020 17:57:19 +0100
+Date:   Wed, 24 Jun 2020 17:57:19 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+        Quan Nguyen <quan@os.amperecomputing.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Keyur Chudgar <keyur@os.amperecomputing.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 14/15] net: phy: add PHY regulator support
+Message-ID: <20200624165719.GB1551@shell.armlinux.org.uk>
+References: <20200622093744.13685-1-brgl@bgdev.pl>
+ <20200622093744.13685-15-brgl@bgdev.pl>
+ <20200622132921.GI1551@shell.armlinux.org.uk>
+ <CAMRc=Me1r3Mzfg3-gTsGk4rEtvB=P9ESkn9q=c7z0Q=YQDsw2A@mail.gmail.com>
+ <20200623094252.GS1551@shell.armlinux.org.uk>
+ <CAMpxmJVP9db-4-AA4e1JkEfrajvJ4s0T6zo5+oFzpJHRBcuSsg@mail.gmail.com>
+ <20200623095646.GT1551@shell.armlinux.org.uk>
+ <CAMRc=MeKE12sXZycyGA7vmjNai0JfDhRX+XDTp3r3YtrmLQj3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeKE12sXZycyGA7vmjNai0JfDhRX+XDTp3r3YtrmLQj3A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-1.Add Ingenic X1000 OST bindings.
-2.Add support for the Ingenic X1000 OST.
+On Tue, Jun 23, 2020 at 06:27:06PM +0200, Bartosz Golaszewski wrote:
+> wt., 23 cze 2020 o 11:56 Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> napisał(a):
+> >
+> > On Tue, Jun 23, 2020 at 11:46:15AM +0200, Bartosz Golaszewski wrote:
+> > > wt., 23 cze 2020 o 11:43 Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> napisał(a):
+> > > >
+> > > > On Tue, Jun 23, 2020 at 11:41:11AM +0200, Bartosz Golaszewski wrote:
+> > > > > pon., 22 cze 2020 o 15:29 Russell King - ARM Linux admin
+> > > > > <linux@armlinux.org.uk> napisał(a):
+> > > > > >
+> > > > >
+> > > > > [snip!]
+> > > > >
+> > > > > >
+> > > > > > This is likely to cause issues for some PHY drivers.  Note that we have
+> > > > > > some PHY drivers which register a temperature sensor in the probe
+> > > > > > function, which means they can be accessed independently of the lifetime
+> > > > > > of the PHY bound to the network driver (which may only be while the
+> > > > > > network device is "up".)  We certainly do not want hwmon failing just
+> > > > > > because the network device is down.
+> > > > > >
+> > > > > > That's kind of worked around for the reset stuff, because there are two
+> > > > > > layers to that: the mdio device layer reset support which knows nothing
+> > > > > > of the PHY binding state to the network driver, and the phylib reset
+> > > > > > support, but it is not nice.
+> > > > > >
+> > > > >
+> > > > > Regulators are reference counted so if the hwmon driver enables it
+> > > > > using mdio_device_power_on() it will stay on even after the PHY driver
+> > > > > calls phy_device_power_off(), right? Am I missing something?
+> > > >
+> > > > If that is true, you will need to audit the PHY drivers to add that.
+> > > >
+> > >
+> > > This change doesn't have any effect on devices which don't have a
+> > > regulator assigned in DT though. The one I'm adding in the last patch
+> > > is the first to use this.
+> >
+> > It's quality of implementation.
+> >
+> > Should we wait for someone else to make use of the new regulator
+> > support that has been added with a PHY that uses hwmon, and they
+> > don't realise that it breaks hwmon on it, and several kernel versions
+> > go by without it being noticed.  It will only be a noticable issue
+> > when the associated network device is down, and that network device
+> > driver detaches from the PHY, so _is_ likely not to be noticed.
+> >
+> > Or should we do a small amount of work now to properly implement
+> > regulator support, which includes a trivial grep for "hwmon" amongst
+> > the PHY drivers, and add the necessary call to avoid the regulator
+> > being shut off.
+> >
+> 
+> I'm not sure what the correct approach is here. Provide some helper
+> that, when called, would increase the regulator's reference count even
+> more to keep it enabled from the moment hwmon is registered to when
+> the driver is detached?
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: timer: Add Ingenic X1000 OST bindings.
-  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+I think a PHY driver needs the utility to control this.  We need to be
+careful here with naming, because phylib is not the only code in the
+kernel that uses the phy_ prefix.
 
- .../devicetree/bindings/timer/ingenic,ost.yaml     |  62 +++
- drivers/clocksource/Kconfig                        |  19 +-
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/ingenic-sysost.c               | 507 +++++++++++++++++++++
- include/dt-bindings/clock/ingenic,ost.h            |  12 +
- 5 files changed, 597 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,ost.yaml
- create mode 100755 drivers/clocksource/ingenic-sysost.c
- create mode 100644 include/dt-bindings/clock/ingenic,ost.h
+If we had runtime PM support for PHYs, with regulator support hooked
+into runtime PM, then we already have standard interfaces that drivers
+can use to control whether the device gets powered down.
 
 -- 
-2.11.0
-
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
