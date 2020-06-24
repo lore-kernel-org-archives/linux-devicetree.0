@@ -2,438 +2,209 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12F3C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93062C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C182120672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6BA20836
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wm4xoj6y"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R0ajLe+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbgFYAIQ (ORCPT
+        id S2388697AbgFYAPu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388099AbgFYAIP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 20:08:15 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31B04C061796
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 17:08:15 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d12so1919197ply.1
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 17:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7XSfbaWwgfeqzjI1f2OAxr2wATpLsWrvOZYJtGKWY3Q=;
-        b=Wm4xoj6yQXcpR2bgz+HwhZvEzqzZNYTzwRFfAVHsJA07D4xJtMxl/vC/T8lHhgrTIG
-         a+XU67mgMTShQ8V6BnlVL2UFxBcB7Fbgf6NtYY0on6BwrQMpnvaRibIwNGGhjKqITWbB
-         22vzlRxTt+v8jhMnqUIIG4pxk6Z1ZaPoQ/O8A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7XSfbaWwgfeqzjI1f2OAxr2wATpLsWrvOZYJtGKWY3Q=;
-        b=Ul0mtPV9HONEl8eGZhwupJpap0R5p/PXV9FgrNofzGDmN5gKnRQOG+CxJd5Vb3AOsw
-         lDezrTFkJO3HItYot7lDiMOt2kxIsebLu9+t9UFTuzQ8JkvXg6RXU28v75x37VkQCQvA
-         fV39owZ3WZTkaQZFkI0jYvzKieQwMcjA2H11F0gnBtsdX50eKhNNZRwedRLE5icf4/M+
-         tCkgX/LC9lAKnt5dHWFEBC+zgY/4lL1rl/l7/vdRwlt7AfPQCLNKO9KUoHBNj3T7fjg3
-         OoQomqdb5ngqi0zadxMmopjDyCZNpFjRONtYadlAnJ91PDrfkX3P5+j4EWVyhHaVnOoX
-         +d2A==
-X-Gm-Message-State: AOAM531gSi8VEGa1QqJSuJnzRUeZP6bnqG12NNWFSJ7Afr83QZrjfAZE
-        QX0E5iWvlYeyxUgkdIEfXjD34Q==
-X-Google-Smtp-Source: ABdhPJw4S1HNkycqcrd80//h2hauSwe6nxEd0vm5+3m1sIdU1/0jbri5WoTnNkdlCqb5Wd3f1yyCGg==
-X-Received: by 2002:a17:90a:7645:: with SMTP id s5mr364365pjl.50.1593043694625;
-        Wed, 24 Jun 2020 17:08:14 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id dw17sm5905866pjb.40.2020.06.24.17.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 17:08:14 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: qcom: sdm845: Switch SPI to use GPIO for CS
-Date:   Wed, 24 Jun 2020 17:08:05 -0700
-Message-Id: <20200624170746.2.I0cabe4244069dd6e3ba47d522c54d4a36ff413f2@changeid>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-In-Reply-To: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
-References: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
+        Wed, 24 Jun 2020 20:15:50 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:40607 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388204AbgFYAPu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 20:15:50 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200625001546epoutp01c94a63fe0ba1849bcdc426f3eb8acd70~boTYdZoQL0889108891epoutp01D
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 00:15:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200625001546epoutp01c94a63fe0ba1849bcdc426f3eb8acd70~boTYdZoQL0889108891epoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593044147;
+        bh=K++Hc08bAChySryV6xpOMUZDcRAOfde/r1jVXz7IMhM=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=R0ajLe+Mp/4jHL01kttLwprq3dpuaRABc08yzW6zH/Xuni+IeiQv40kj8c54yGbPL
+         KDkLCl2yVDKTM4yMDfXkZ4OKvWbMpbPDTYsa3XnfgalIyMubG/h5B2yCpjrN3B1SzJ
+         852uSjCWTpskkiRwaT/o50jQjPJOgKWKn8K/P9bM=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200625001545epcas5p428d7a679260ac346e34b1164dd488804~boTWr2J-J1595815958epcas5p4d;
+        Thu, 25 Jun 2020 00:15:45 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D3.98.09475.0BCE3FE5; Thu, 25 Jun 2020 09:15:44 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200625001543epcas5p2d1f9f7f7de574cac6db4157ca2ec1eec~boTVSj4E50338303383epcas5p2B;
+        Thu, 25 Jun 2020 00:15:43 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200625001543epsmtrp29bc724a369ef686a37ad4ada5537ccce~boTVRpxmv1949219492epsmtrp2d;
+        Thu, 25 Jun 2020 00:15:43 +0000 (GMT)
+X-AuditID: b6c32a4b-39fff70000002503-24-5ef3ecb0d2c8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9B.98.08382.FACE3FE5; Thu, 25 Jun 2020 09:15:43 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200625001541epsmtip147a08a9f7f078048181c7fc901b5ff2c~boTTzIqHU1042310423epsmtip1t;
+        Thu, 25 Jun 2020 00:15:41 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     vkoul@kernel.org
+Cc:     robh+dt@kernel.org, krzk@kernel.org, kwmad.kim@samsung.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        kishon@ti.com, Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [RESEND PATCH v10 1/2] dt-bindings: phy: Document Samsung UFS PHY
+ bindings
+Date:   Thu, 25 Jun 2020 05:26:30 +0530
+Message-Id: <20200624235631.11232-1-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZdlhTS3fDm89xBov+W1o8mLeNzWL+kXOs
+        Fhee9rBZnD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsWvceYbfYeecEswOXx6ZVnWwem5fU
+        e/RtWcXocfzGdiaPz5vkAlijuGxSUnMyy1KL9O0SuDJmHd7IWHBfrGJd22L2BsbTgl2MnBwS
+        AiYSn3aeYuli5OIQEtjNKPHpWi8bhPOJUeLGofdMIFVCAt8YJVZOdexi5ADraNnoAlGzl1Fi
+        w9cVUDUtTBKNXzlAbDYBbYm707eAxUUERCRWr5zHCNLALPCXUWLb9Y+sIAlhgVCJw1tvgxWx
+        CKhKPNp5AizOK2Ajsf/3YVaI8+QlVm84wAwRF5Q4OfMJC4jNDBRv3jqbGWSohMBPdonza3ex
+        QFznInHvGC9Er7DEq+Nb2CFsKYnP7/ayQZRkS/TsMoYI10gsnXeMBcK2lzhwZQ7YFGYBTYn1
+        u/QhNvFJ9P5+wgTRySvR0SYEUa0q0fzuKlSntMTE7m6ogz0kzqx8xgIJkViJ3a82s05glJuF
+        5P5ZSO6fhbBsASPzKkbJ1ILi3PTUYtMC47zUcr3ixNzi0rx0veT83E2M4KSi5b2D8dGDD3qH
+        GJk4GA8xSnAwK4nwhrh9ihPiTUmsrEotyo8vKs1JLT7EKM3BoiTOq/TjTJyQQHpiSWp2ampB
+        ahFMlomDU6qB6dg/twnL56+LWfllCVvSHwWZHIve3WmHoo8oveqvbPZbqLz/j0vH8TUbnGe1
+        PFK+yHTN1mBylP0Zka5X92d6f39+aguT+orvQoslS8xmPbrhc+qxQ0DM3ValX/+31zQuOCVX
+        270s0jA9jT1zZU5SlHaBdn6gctM90/q1PDfzgpe0ZMjH1aUcmpjmn/qSs6vTLzzYveCidcnL
+        RXVTfn2992m/XmT9L8272jveSXM/F9uV05/zzsu3lknjLce5trnNHicZw1/9MStODlXUylCt
+        t3ViuH1+lq19p3Kz1/NZrDeSu91yE2Y3LeReGHMy1bWA6xDjMU3HC0rhzeXLdRgNHlkWbslV
+        7GosYnBULVdiKc5INNRiLipOBAD7ACqxmQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsWy7bCSnO76N5/jDPb+k7Z4MG8bm8X8I+dY
+        LS487WGzOH9+A7vFzS1HWSw2Pb7GanF51xw2ixnn9zFZtO49wm6x884JZgcuj02rOtk8Ni+p
+        9+jbsorR4/iN7UwenzfJBbBGcdmkpOZklqUW6dslcGXMOryRseC+WMW6tsXsDYynBbsYOTgk
+        BEwkWja6dDFycggJ7GaUWHOxCsSWEJCWuL5xAjuELSyx8t9zIJsLqKaJSWLz589MIAk2AW2J
+        u9O3gNkiAiISq1fOYwQpYhZoZ5K4/v0AWEJYIFji89GtYDaLgKrEo50nWEFsXgEbif2/D7NC
+        bJCXWL3hADNEXFDi5MwnLCDHMQuoS6yfJwQSZgYqad46m3kCI/8sJFWzEKpmIalawMi8ilEy
+        taA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjONi1NHcwbl/1Qe8QIxMH4yFGCQ5mJRHeELdP
+        cUK8KYmVValF+fFFpTmpxYcYpTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJMnFwSjUwKVqYdXns
+        3Ok0ZTanyhRjq1cP7nyonhjAr9++4eQX3YVlk9saCrLPxkfITLN5+1YgbJnc264HQZPMVHL4
+        f7Ee3nfFSDqsbN/5Fed/vt2iUiAxb/e0kE0z+jwXcojd+ztRyqb+ofsNRt3ar4ynew/8ndW8
+        78HPxu9BrvnvJ6VeSow8/d9i5y6lM5s3LOS1KKq6y258NcLy0bHdwW0nvXYrWk/1FdNfeNgy
+        eGfvNplVP43mtcRrdbmI2OTEy6TnpYZcYtoaeUjIprN1VrpvsKbQo3XliVqNNn2MwaxCZtdX
+        T8756CgavnnlY6ld5UqP33WH97oflRE+KrvHVrni/obL1bc6NWZIvNkuPU/hlZWqEktxRqKh
+        FnNRcSIA6ZK74+UCAAA=
+X-CMS-MailID: 20200625001543epcas5p2d1f9f7f7de574cac6db4157ca2ec1eec
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200625001543epcas5p2d1f9f7f7de574cac6db4157ca2ec1eec
+References: <CGME20200625001543epcas5p2d1f9f7f7de574cac6db4157ca2ec1eec@epcas5p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is like the same change for sc7180 but just for sdm845.
+This patch documents Samsung UFS PHY device tree bindings
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 ---
+This is just a rebase on phy-next, was part of series [1]
+which adds ufs host contoller driver.
+[1]  https://lkml.org/lkml/2020/5/27/1697
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 113 +++++++++++++++++++++++----
- 1 file changed, 97 insertions(+), 16 deletions(-)
+ .../bindings/phy/samsung,ufs-phy.yaml         | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31346d2..417cf1530848 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -12,6 +12,7 @@
- #include <dt-bindings/clock/qcom,lpass-sdm845.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,videocc-sdm845.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interconnect/qcom,sdm845.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-@@ -837,6 +838,7 @@ spi0: spi@880000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi0_default>;
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 3 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -874,6 +876,7 @@ spi1: spi@884000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi1_default>;
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 20 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -911,6 +914,7 @@ spi2: spi@888000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi2_default>;
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 30 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -948,6 +952,7 @@ spi3: spi@88c000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi3_default>;
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 44 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -985,6 +990,7 @@ spi4: spi@890000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi4_default>;
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 92 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1022,6 +1028,7 @@ spi5: spi@894000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi5_default>;
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 88 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1059,6 +1066,7 @@ spi6: spi@898000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi6_default>;
- 				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 48 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1096,6 +1104,7 @@ spi7: spi@89c000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi7_default>;
- 				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 96 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1145,6 +1154,7 @@ spi8: spi@a80000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi8_default>;
- 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 68 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1182,6 +1192,7 @@ spi9: spi@a84000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi9_default>;
- 				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 5 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1219,6 +1230,7 @@ spi10: spi@a88000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi10_default>;
- 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 54 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1256,6 +1268,7 @@ spi11: spi@a8c000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi11_default>;
- 				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 34 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1293,6 +1306,7 @@ spi12: spi@a90000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi12_default>;
- 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 52 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1330,6 +1344,7 @@ spi13: spi@a94000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi13_default>;
- 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 108 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1367,6 +1382,7 @@ spi14: spi@a98000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi14_default>;
- 				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 32 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -1404,6 +1420,7 @@ spi15: spi@a9c000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&qup_spi15_default>;
- 				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
-+				cs-gpios = <&tlmm 84 GPIO_ACTIVE_LOW>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -2002,129 +2019,193 @@ pinmux {
- 			qup_spi0_default: qup-spi0-default {
- 				pinmux {
- 					pins = "gpio0", "gpio1",
--					       "gpio2", "gpio3";
-+					       "gpio2";
- 					function = "qup0";
- 				};
-+				pinmux-cs {
-+					pins = "gpio3";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi1_default: qup-spi1-default {
- 				pinmux {
- 					pins = "gpio17", "gpio18",
--					       "gpio19", "gpio20";
-+					       "gpio19";
- 					function = "qup1";
- 				};
-+				pinmux-cs {
-+					pins = "gpio20";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi2_default: qup-spi2-default {
- 				pinmux {
- 					pins = "gpio27", "gpio28",
--					       "gpio29", "gpio30";
-+					       "gpio29";
- 					function = "qup2";
- 				};
-+				pinmux-cs {
-+					pins = "gpio30";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi3_default: qup-spi3-default {
- 				pinmux {
- 					pins = "gpio41", "gpio42",
--					       "gpio43", "gpio44";
-+					       "gpio43";
- 					function = "qup3";
- 				};
-+				pinmux-cs {
-+					pins = "gpio44";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi4_default: qup-spi4-default {
- 				pinmux {
- 					pins = "gpio89", "gpio90",
--					       "gpio91", "gpio92";
-+					       "gpio91";
- 					function = "qup4";
- 				};
-+				pinmux-cs {
-+					pins = "gpio92";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi5_default: qup-spi5-default {
- 				pinmux {
- 					pins = "gpio85", "gpio86",
--					       "gpio87", "gpio88";
-+					       "gpio87";
- 					function = "qup5";
- 				};
-+				pinmux-cs {
-+					pins = "gpio88";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi6_default: qup-spi6-default {
- 				pinmux {
- 					pins = "gpio45", "gpio46",
--					       "gpio47", "gpio48";
-+					       "gpio47";
- 					function = "qup6";
- 				};
-+				pinmux-cs {
-+					pins = "gpio48";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi7_default: qup-spi7-default {
- 				pinmux {
- 					pins = "gpio93", "gpio94",
--					       "gpio95", "gpio96";
-+					       "gpio95";
- 					function = "qup7";
- 				};
-+				pinmux-cs {
-+					pins = "gpio96";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi8_default: qup-spi8-default {
- 				pinmux {
- 					pins = "gpio65", "gpio66",
--					       "gpio67", "gpio68";
-+					       "gpio67";
- 					function = "qup8";
- 				};
-+				pinmux-cs {
-+					pins = "gpio68";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi9_default: qup-spi9-default {
- 				pinmux {
- 					pins = "gpio6", "gpio7",
--					       "gpio4", "gpio5";
-+					       "gpio4";
- 					function = "qup9";
- 				};
-+				pinmux-cs {
-+					pins = "gpio5";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi10_default: qup-spi10-default {
- 				pinmux {
- 					pins = "gpio55", "gpio56",
--					       "gpio53", "gpio54";
-+					       "gpio53";
- 					function = "qup10";
- 				};
-+				pinmux-cs {
-+					pins = "gpio54";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi11_default: qup-spi11-default {
- 				pinmux {
- 					pins = "gpio31", "gpio32",
--					       "gpio33", "gpio34";
-+					       "gpio33";
- 					function = "qup11";
- 				};
-+				pinmux-cs {
-+					pins = "gpio34";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi12_default: qup-spi12-default {
- 				pinmux {
- 					pins = "gpio49", "gpio50",
--					       "gpio51", "gpio52";
-+					       "gpio51";
- 					function = "qup12";
- 				};
-+				pinmux-cs {
-+					pins = "gpio52";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi13_default: qup-spi13-default {
- 				pinmux {
- 					pins = "gpio105", "gpio106",
--					       "gpio107", "gpio108";
-+					       "gpio107";
- 					function = "qup13";
- 				};
-+				pinmux-cs {
-+					pins = "gpio108";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi14_default: qup-spi14-default {
- 				pinmux {
- 					pins = "gpio33", "gpio34",
--					       "gpio31", "gpio32";
-+					       "gpio31";
- 					function = "qup14";
- 				};
-+				pinmux-cs {
-+					pins = "gpio32";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_spi15_default: qup-spi15-default {
- 				pinmux {
- 					pins = "gpio81", "gpio82",
--					       "gpio83", "gpio84";
-+					       "gpio83";
- 					function = "qup15";
- 				};
-+				pinmux-cs {
-+					pins = "gpio84";
-+					function = "gpio";
-+				};
- 			};
- 
- 			qup_uart0_default: qup-uart0-default {
+diff --git a/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+new file mode 100644
+index 000000000000..636cc501b54f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/samsung,ufs-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung SoC series UFS PHY Device Tree Bindings
++
++maintainers:
++  - Alim Akhtar <alim.akhtar@samsung.com>
++
++properties:
++  "#phy-cells":
++    const: 0
++
++  compatible:
++    enum:
++      - samsung,exynos7-ufs-phy
++
++  reg:
++    maxItems: 1
++
++  reg-names:
++    items:
++      - const: phy-pma
++
++  clocks:
++    items:
++      - description: PLL reference clock
++      - description: symbol clock for input symbol ( rx0-ch0 symbol clock)
++      - description: symbol clock for input symbol ( rx1-ch1 symbol clock)
++      - description: symbol clock for output symbol ( tx0 symbol clock)
++
++  clock-names:
++    items:
++      - const: ref_clk
++      - const: rx1_symbol_clk
++      - const: rx0_symbol_clk
++      - const: tx0_symbol_clk
++
++  samsung,pmu-syscon:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: phandle for PMU system controller interface, used to
++                 control pmu registers bits for ufs m-phy
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - samsung,pmu-syscon
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/exynos7-clk.h>
++
++    ufs_phy: ufs-phy@15571800 {
++        compatible = "samsung,exynos7-ufs-phy";
++        reg = <0x15571800 0x240>;
++        reg-names = "phy-pma";
++        samsung,pmu-syscon = <&pmu_system_controller>;
++        #phy-cells = <0>;
++        clocks = <&clock_fsys1 SCLK_COMBO_PHY_EMBEDDED_26M>,
++                 <&clock_fsys1 PHYCLK_UFS20_RX1_SYMBOL_USER>,
++                 <&clock_fsys1 PHYCLK_UFS20_RX0_SYMBOL_USER>,
++                 <&clock_fsys1 PHYCLK_UFS20_TX0_SYMBOL_USER>;
++        clock-names = "ref_clk", "rx1_symbol_clk",
++                      "rx0_symbol_clk", "tx0_symbol_clk";
++
++    };
++...
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.17.1
 
