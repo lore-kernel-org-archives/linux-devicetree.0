@@ -2,92 +2,120 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A857DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 14:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD8FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7969C20578
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 14:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0B9206C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 15:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9pv2nHl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoHXRaEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391100AbgFXOp2 (ORCPT
+        id S2390798AbgFXPBT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 10:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52890 "EHLO
+        Wed, 24 Jun 2020 11:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389583AbgFXOp1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 10:45:27 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39699C061573;
-        Wed, 24 Jun 2020 07:45:27 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id m21so1672703eds.13;
-        Wed, 24 Jun 2020 07:45:27 -0700 (PDT)
+        with ESMTP id S2390251AbgFXPBT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 11:01:19 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F74C061573;
+        Wed, 24 Jun 2020 08:01:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g18so2631429wrm.2;
+        Wed, 24 Jun 2020 08:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lIqE2NUHHN1jnUVxaUmChf7C6YexvjrFTau9YkSeGiI=;
-        b=K9pv2nHlMVvSHQxXmeTLh5YhPo9Sh8Wa0zWK8/oJRYyq/CxzmT6VibZSbU2AJfOJoD
-         YLLAaqK232+a5+4euM+JfWcfO/W3Bu+vexN4cJJAr2VQU1V0DrrUSecC//LcB9Hos5io
-         ey63LchdWVEMuDX5ydsGrtLiHsbW2sLirb9GmhBOj7a9Fay5YE+Vz/PjkHm3gStQzG/K
-         rFNDqack3cRru/QmKslBSZniphwZHwtDn22yQWkQ8ft8cNEKKhiNmOlB26Xpp5k3zt2H
-         AAC8EfonHmBHH4tt7EEbIzzP3S8qG1fIujJPqJtg8hUi25fxyPsNjVLMczj9rKCBii0y
-         apWw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G1/tgFSEPzLGEWgFIjtQpqgS4DnYma/m5Iy4TZnXgTE=;
+        b=QoHXRaEjmyXE4GwZkcrNhYwb9HRqV7Q8mETs8rxzB1JXf5BsD8mgNE3HeVTC5mUXDi
+         K1LBaNXKyZGkZLGHAGocXP+7I1o7McnZhQEa6J2LmcP3uZxCyTQ+RKWBW+aZ5NKFyspQ
+         cw0BQa8lmTIiP+n5sBvadPK5Hx/9qglVQDe+BLkxKGxnH8w+03WdC02dzJqmrt5o5nS4
+         QFJl6uSMMazHK3aagVeFAUKWKb0hXvI/TZa+SHGKQUXHp8ApfO4Z+OulB1/nLT/2OUEY
+         cdvObYbaIhHUdeqjiX6dYhv6xYKTtABIEiktnI5NhCpRP2+cNO+P767XqIjF9ap8ngmL
+         oa8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lIqE2NUHHN1jnUVxaUmChf7C6YexvjrFTau9YkSeGiI=;
-        b=rhgrIldcMbHil8S+YvBAlZbJw/PzzES4AljkRE439zM0X08ttzAXNFJntEa4UeCdj8
-         1s1oL21ZNwFjzctYaMxy5MwHzoszpp51t9JG/14/VSdLG8S78OJ5TTwv5CyvsuEkNkDL
-         h8xQmbcbwcCB13hwknMs2tHislkoPuzRy0wa0XwvrAciZ1Wp/PENzvkxfxpLV8pjlUhc
-         IT40apqt/ta8ZDKrsq04hc6XpL8H8e9M/eFAusb4k3X7Ucwpasi7qDeCl33aAp6a23gN
-         QyV2y98JrS18aCDAo0qpt3Qq5iBZLb74bGun+3eYrcXe9RCjcGlf7RMzTzuAG6tICO2x
-         FUxw==
-X-Gm-Message-State: AOAM5335vb7jt4IzEgIq56oVEORz70VX4oxHDpaK3Odjq6/ZgE5+7r7C
-        3ngeHDMGVDy3OOUhU94g4LRh3xcY/NXBtPf5NnQ=
-X-Google-Smtp-Source: ABdhPJzKndG7kjOCV6qRQ1De7msGegvxr+SwDBcGbUH2E5WIx6mrl3d5FCmeYs2bOfsAruUh15NvQ6YhfaxPpkA0kao=
-X-Received: by 2002:a50:e08c:: with SMTP id f12mr27130963edl.233.1593009925988;
- Wed, 24 Jun 2020 07:45:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623224813.297077-1-konradybcio@gmail.com>
- <20200623224813.297077-13-konradybcio@gmail.com> <20200623232705.GR128451@builder.lan>
-In-Reply-To: <20200623232705.GR128451@builder.lan>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G1/tgFSEPzLGEWgFIjtQpqgS4DnYma/m5Iy4TZnXgTE=;
+        b=WZd2biuZ9hlgoDwJ159192rFOiCjX5BIJhMt8W4oXPPiunsWzcs+ewC1hdcuIBzlsx
+         lJlQ3N1B9Fi9uXN/HEFl77cSDieRk3MUSj3lhowkynJw1+SIkHkOGRZuQwspwWdJk4rn
+         kqu0twBhtnf58UhPFnWGLRhuhXFinJm03g+NzOrUuFCSCQz46dtIQgOd7KhDrUlqaDTo
+         iOXpqbZzIRvcfAobcZCIlzu99DR7JnZaerXgE70nOEMO3GnJzqFBt/80eCPgLqZWWllj
+         bPe1jEhC2u9jOB4nriWddYx0q0K4jyruGARanugc0ZbUo1oQ3H/+EK4/ncwyhJfycK23
+         2f+Q==
+X-Gm-Message-State: AOAM532BMQ34CgDojp3XslqW6216qclbjkY1lGljyApK8m6Oi8eqVMyu
+        aCkJzPrDcCXmpaExpfHqIc0=
+X-Google-Smtp-Source: ABdhPJyjovMUsXCbiiflsGu+suhkfBFu9ISRVh9yoncvFWtslrW0/Brooqqrxvu5uZRBKQDjfozwyQ==
+X-Received: by 2002:adf:f34c:: with SMTP id e12mr19662863wrp.46.1593010877790;
+        Wed, 24 Jun 2020 08:01:17 -0700 (PDT)
+Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
+        by smtp.googlemail.com with ESMTPSA id s8sm21339390wru.38.2020.06.24.08.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 08:01:17 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Wed, 24 Jun 2020 16:44:50 +0200
-Message-ID: <CAMS8qEVzThnfonhczz_X_idXQr28EzhwbCW6T9UhZKb_dDfSuA@mail.gmail.com>
-Subject: Re: [PATCH v2 12/12] arm64: dts: qcom: Add support for Sony Xperia Z5
- (SoMC Sumire-RoW)
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
         Kees Cook <keescook@chromium.org>,
         Anton Vorontsov <anton@enomsg.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] MSM8994 peripheral enablement, DTS updates
+Date:   Wed, 24 Jun 2020 17:00:58 +0200
+Message-Id: <20200624150107.76234-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->This does worry me...
+changes since v2:
 
-Yeah, sadly the only way to get SMP on every msm8916/39 and
-*some* 92/94 mobile devices is to use something along this: [1]
+- drop applied patches
+- add msm8994 SCM compat and binding
+- declare regulators in device DTs
+- make APCS a mailbox
 
-But for now, 1 core is enough. We will worry when more peripherals
-are brought up.
+Konrad Dybcio (8):
+  firmware: qcom_scm: Add msm8994 compatible
+  arm64: dts: qcom: msm8994: Add SCM node
+  arm64: dts: qcom: msm8992: Add a label to rpm-requests
+  arm64: dts: qcom: msm8992: Remove regulators from SoC DTSI
+  mailbox: qcom: Add msm8994 apcs compatible
+  arm64: dts: qcom: msm8994: Add support for SMD RPM
+  arm64: dts: qcom: Move msm8994-smd-rpm contents to lg-bullhead.
+  arm64: dts: qcom: Add support for Sony Xperia Z5 (SoMC Sumire-RoW)
 
-[1] https://github.com/msm8916-mainline/linux/commit/1b12cb1f8e718175bcff5734cdb3903e83d8aa89
+ .../devicetree/bindings/firmware/qcom,scm.txt |   1 +
+ .../mailbox/qcom,apcs-kpss-global.yaml        |   1 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/msm8992-bullhead-rev-101.dts     | 225 ++++++++++++++-
+ arch/arm64/boot/dts/qcom/msm8992.dtsi         |  48 +---
+ arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi | 268 ------------------
+ .../msm8994-sony-xperia-kitakami-sumire.dts   |  13 +
+ .../qcom/msm8994-sony-xperia-kitakami.dtsi    | 235 +++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8994.dtsi         |  49 ++++
+ drivers/firmware/qcom_scm.c                   |   1 +
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c       |   5 +
+ 11 files changed, 531 insertions(+), 316 deletions(-)
+ delete mode 100644 arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-sumire.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
 
-Regards
-Konrad
+-- 
+2.27.0
+
