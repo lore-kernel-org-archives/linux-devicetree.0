@@ -2,181 +2,121 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88B6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 08:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7FAC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 08:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C410C20823
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 08:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A3920B1F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 08:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yGYLrSlh"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sjUMD2Y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390375AbgFXIX7 (ORCPT
+        id S1728638AbgFXImK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 04:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50646 "EHLO
+        Wed, 24 Jun 2020 04:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388916AbgFXIX6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 04:23:58 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C76AC061755
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 01:23:57 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so3961450wmm.0
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 01:23:57 -0700 (PDT)
+        with ESMTP id S1728463AbgFXImJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 04:42:09 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3264C061755
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 01:42:08 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n24so1641851lji.10
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 01:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=7CfWJggOLytFRr/ikNip00lDY5ba4BeQpprJvlEpZKo=;
-        b=yGYLrSlhQcadIM9Q2dJ4CvQCzkx8AcJghjxpA1+GyjKYQ/iRmlu8ztULHouYkoaxgT
-         cl9d781if+2/7AkR/18N9K1p9NnUuXpybssQHjeD5/+9Qv8DCAoBr5gyP2gNPQuve+Ko
-         l7bwJrXijWLfBzSQT6yT5gnH2n6B1sKQnKY4EXyU17fp60IudB1fuk0Rx7R0bmM+wKpb
-         j/yQ7U32UOGCTLvhLXWGXcLIgx0rpVSCgZXST10ngQPIoCEo2pJW0fzhzaSbhyPJUSF5
-         9LTagsQcH4OMfQn6sb8V2TvrnzPsH4xtZZGinxWkahLz4RFMKgQ4oNKRqjaSAZuTNqQU
-         mNPA==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U9Y3mMEn+doGyQindvusnFiRFTGJSlJ41lw2KppHaQM=;
+        b=sjUMD2Y4BnGJF9F5G/QzwTYguxPh0uyIGcELYBrvEg3KUruDRJLHGshCaZ/WC1U0Xf
+         6ZbIs0gXaZpcNTTl47QbM9QxKQbSnPtUUVu6B3J9zbU4+LBlnNGCOrM56mtRsGCm0xex
+         hU0s8+EZKtDxlKiceB+1mfH8jkOC5/T8CZHrwTLZke8h4ThenspGeknXuELkpvBas1fZ
+         HcLL2QiBuP+mDOimuoIpvBx5rP1l+z4vBcpzDiOU8dd9CjFC5/Q27fw8tplTEawxB55N
+         QNTdDajj0KfgqOjF4MzY2XJYLV2dWj8D5gr6j/WhRWgq2jmhudA7tJi64K/aTlLCOi4S
+         9x/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7CfWJggOLytFRr/ikNip00lDY5ba4BeQpprJvlEpZKo=;
-        b=giwR40UsvZgo1heyj+EJiABR4N3rlS2cwaBxIXRDlZode1XK6wJftQzVMFyyKJ5JvT
-         JArSNcBrGc2ZenC8tz12nUiZ6t8rSNhl05iii9EE3lUotlb/kIaX3+sTLGUIOKkOFS/q
-         HkwGjZH/dWVbdHlzmukk65M2+j1szSjw4J7TXf7CuiwCTMw+IL8LmWRmTslkwCamabVQ
-         Rby5rzCcIfMnLLQf4OfG9YQwpNe2fMDiSZA7n/DK3iK8MASNUWxWcva9BREoHZNn/8Of
-         J9eQKIpJKQMFXZuy8/IZHL4BSz9W0TXerWps+Uu+sKAaK0N6A6fODXEXn/PhKz7M6xSd
-         WPUw==
-X-Gm-Message-State: AOAM530ZFg5ZLT1dwij5S47V8Prk0MKWowffKxKhLtmvKWFDtFb+G2tq
-        7HW4R8W4rd6eJtBCYWS17jno2w==
-X-Google-Smtp-Source: ABdhPJxelqW9I6Z+7u1Gs3c+QcyYSi1L6TpEnF6VtqYJIB1FBDOrZkKNvBXdMtrikHVFkI74T4j3FA==
-X-Received: by 2002:a1c:a385:: with SMTP id m127mr26949887wme.112.1592987035664;
-        Wed, 24 Jun 2020 01:23:55 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id m65sm7120441wmf.17.2020.06.24.01.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 01:23:54 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 09:23:52 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Frank Rowand <frowand.list@gmail.com>, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-Message-ID: <20200624082352.GF954398@dell>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <30f03734-61fd-1b6b-bf11-21b6423a7c50@gmail.com>
- <20200624064145.GC954398@dell>
- <7a31b34940984b3f0921ed2d4fb29a58@walle.cc>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U9Y3mMEn+doGyQindvusnFiRFTGJSlJ41lw2KppHaQM=;
+        b=XYz4LS4ipIzlbls0Uqi86Ob6iSFNuOJND6WIMEFQhUL2H1mmwaptd2pCu0QYv1aM+c
+         kfHTf2FLTMZGgMqsK4xpDB6QFQV9c1AURcLzq6KQP7cp4iA4mPTjEh2yemMRwLgdUVFx
+         MVusc3uAt76xUtMvkSBYEF74cVPujZQg7yu2F4dzHYM3/ErZr6KGg/Afy6EKsqSgC7xz
+         ypThavTuLy+3hxS2vuyViFdf9fnzwCfgczBfdj6P+nq4PuIhB2BTNBGP88ESbm+qrNdL
+         uRoAedX4eT+ZGSj4yKU0pTZ8DWr7JJIsb9lwZI/dcik82o820AsTDJW4iT/IvWW+FMLJ
+         uzvw==
+X-Gm-Message-State: AOAM5311DeeHWjWRCoOc+bR+P5NIoo8Io6rRZZ+zemGYxzLkvlzJSWq5
+        9QKDGsa5pd1pvXowCSFRxJNjPg==
+X-Google-Smtp-Source: ABdhPJxWz2zHxxYyeUTsDV4G12M7iX0sqxgtBhVO4cTO9Xf4zISUyecpI4UYqC/F6so3Uk/Lqvf9Nw==
+X-Received: by 2002:a05:651c:290:: with SMTP id b16mr13625069ljo.149.1592988127361;
+        Wed, 24 Jun 2020 01:42:07 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4295:f835:1ba:7b55:ca16:3bac? ([2a00:1fa0:4295:f835:1ba:7b55:ca16:3bac])
+        by smtp.gmail.com with ESMTPSA id j19sm1173718ljg.28.2020.06.24.01.42.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 01:42:06 -0700 (PDT)
+Subject: Re: [PATCH v2 7/7 RESEND] dt-bindings: interrupt-controller: Fix
+ typos in loongson,liointc.yaml
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+References: <1592981136-3572-1-git-send-email-yangtiezhu@loongson.cn>
+ <1592981136-3572-8-git-send-email-yangtiezhu@loongson.cn>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <0b20ab00-2809-1770-c7c0-114260b2a571@cogentembedded.com>
+Date:   Wed, 24 Jun 2020 11:42:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7a31b34940984b3f0921ed2d4fb29a58@walle.cc>
+In-Reply-To: <1592981136-3572-8-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2020, Michael Walle wrote:
+Hello!
 
-> Hi,
+On 24.06.2020 9:45, Tiezhu Yang wrote:
+
+> Fix the following two typos in loongson,liointc.yaml:
+> fron -> from
+> it's -> its
 > 
-> Am 2020-06-24 08:41, schrieb Lee Jones:
-> > On Tue, 23 Jun 2020, Frank Rowand wrote:
-> > 
-> > > On 2020-06-11 14:10, Lee Jones wrote:
-> > > > Currently, when a child platform device (sometimes referred to as a
-> > > > sub-device) is registered via the Multi-Functional Device (MFD) API,
-> > > > the framework attempts to match the newly registered platform device
-> > > > with its associated Device Tree (OF) node.  Until now, the device has
-> > > > been allocated the first node found with an identical OF compatible
-> > > > string.  Unfortunately, if there are, say for example '3' devices
-> > > > which are to be handled by the same driver and therefore have the same
-> > > > compatible string, each of them will be allocated a pointer to the
-> > > > *first* node.
-> > > 
-> > > As you mentioned elsewhere in this thread, this series "fixes" the
-> > > problem related to the "stericsson,ab8500-pwm" compatible.
-> > > 
-> > > I know, I said I would drop discussion of that compatible, but bear
-> > > with me for a second.  :-)
-> > > 
-> > > The "problem" is that the devices for multiple mfd child nodes with
-> > > the same compatible value of "stericsson,ab8500-pwm" will all have
-> > > a pointer to the first child node.  At the moment the same child
-> > > of_node being used by more than one device does not cause any
-> > > incorrect behavior.
-> > > 
-> > > Just in case the driver for "stericsson,ab8500-pwm" is modified
-> > > in a way that the child of_node needs to be distinct for each
-> > > device, and that changes gets back ported, it would be useful
-> > > to have Fixes: tags for this patch series.
-> > > 
-> > > So, at your discretion (and I'll let you worry about the correct
-> > > Fixes: tag format), this series fixes:
-> > > 
-> > > bad76991d7847b7877ae797cc79745d82ffd9120 mfd: Register ab8500
-> > > devices using the newly DT:ed MFD API
-> > 
-> > This patch isn't actually broken.
-> > 
-> > The issue is the DTB, which [0] addresses.
-> > 
-> > [0]
-> > https://lkml.kernel.org/lkml/20200622083432.1491715-1-lee.jones@linaro.org/
+> Fixes: b6280c8bb6f5 ("dt-bindings: interrupt-controller: Add Loongson LIOINTC")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   .../devicetree/bindings/interrupt-controller/loongson,liointc.yaml    | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Now, I'm confused; because this patch doesn't use the reg property
-> but a different node name.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> index b1db21e..13908ca 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,liointc.yaml
+> @@ -51,8 +51,8 @@ properties:
+>       description: |
+>         This property points how the children interrupts will be mapped into CPU
+>         interrupt lines. Each cell refers to a parent interrupt line from 0 to 3
+> -      and each bit in the cell refers to a children interrupt fron 0 to 31.
+> -      If a CPU interrupt line didn't connected with liointc, then keep it's
+> +      and each bit in the cell refers to a children interrupt from 0 to 31.
+> +      If a CPU interrupt line didn't connected with liointc, then keep its
 
-The fix mentioned above is orthogonal to this set.
+    "Connect", while you're at it?
 
-The *only* reason for the differing node names there is to circumvent
-the following DTC warnings:
+>         cell with zero.
+>       $ref: /schemas/types.yaml#/definitions/uint32-array
+>       minItems: 4
 
-arch/arm/boot/dts/ste-ab8500.dtsi:210.16-214.7: ERROR (duplicate_node_names): /soc/prcmu@80157000/ab8500/ab8500-pwm: Duplicate node name
-arch/arm/boot/dts/ste-ab8500.dtsi:216.16-220.7: ERROR (duplicate_node_names): /soc/prcmu@80157000/ab8500/ab8500-pwm: Duplicate node name
-arch/arm/boot/dts/ste-ab8500.dtsi:216.16-220.7: ERROR (duplicate_node_names): /soc/prcmu@80157000/ab8500/ab8500-pwm: Duplicate node name
-
-> I'd actually prefer this for any MFD
-> driver which has multiple nodes of the same compatible string. See
-> my reasoning here [1]. But until now, no one has responded. Thus,
-> I'd rather see a OF_MFD_CELL_NAME() which matches the node name
-> instead of the OF_MFD_CELL_REG() macro.
-> 
-> This would also circumvent the fact that the unit-address has one
-> number space. Eg. it is not possible to have:
-> 
-> mfd {
->   compatible = "mfd,compatible";
-> 
->   gpio@0 {
->     reg = <0>;
->   };
->   gpio@1 {
->     reg = <1>;
->   };
->   pwm@0 {
->     reg = <0>;
->   };
-> };
-> 
-> Although Rob mentioned to maybe relax that, but I sill fail to see
-> the advantage to have an arbitrary reg property instead of a unique
-> node name.
-
-I don't have a strong opinion either way.
-
-We can *also* add node name matching if Rob deems it fit.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+MBR, Sergei
