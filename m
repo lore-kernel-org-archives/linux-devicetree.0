@@ -2,192 +2,186 @@ Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497A2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA05C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECBA20738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D35020738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 16:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V0cCQaCx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mG6WvpR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405264AbgFXQ5f (ORCPT
+        id S2404919AbgFXQ55 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 12:57:35 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:60497 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404797AbgFXQ5e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:57:34 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200624165731epoutp01616fae05f77e61a329bf1710b30e5e3a~biUu7qTP10955109551epoutp01I
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:57:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200624165731epoutp01616fae05f77e61a329bf1710b30e5e3a~biUu7qTP10955109551epoutp01I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593017851;
-        bh=KMd0eqO8GtMWjgpfB+VCvK0D2tfYjlEPKEeNRLFEtnU=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=V0cCQaCxsrgMYT8h8x4Uri96K7ttSZdTEKZ2AdTe6hop/MYICRQefyCpYJRdMyl2p
-         hnGGdtM6+jvKDF+o7vhT9NJWJY9JAmxsXgTkew4MxNdxdFNdnoN0dCYOf/gCDoL25Y
-         OIXHUSaMG8GtjvK6uNVzyFajUeWBOL79exnjTRvo=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200624165730epcas5p308d7aa7476e68ec2f67d033269104742~biUt-TL3a1144711447epcas5p3j;
-        Wed, 24 Jun 2020 16:57:30 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8E.95.09467.AF583FE5; Thu, 25 Jun 2020 01:57:30 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200624165730epcas5p1e3eeb64857ac214b70f5437017cfc2ea~biUtoidCr3199531995epcas5p1n;
-        Wed, 24 Jun 2020 16:57:30 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200624165730epsmtrp1cc2c747d18b9c824162b4cf22946e699~biUtnqRXt0105301053epsmtrp1N;
-        Wed, 24 Jun 2020 16:57:30 +0000 (GMT)
-X-AuditID: b6c32a49-a29ff700000024fb-a4-5ef385fa56d2
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        04.4A.08303.AF583FE5; Thu, 25 Jun 2020 01:57:30 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200624165726epsmtip28bf5d75b985779d3d7ca28befebd281c~biUp9YYsN2887728877epsmtip2S;
-        Wed, 24 Jun 2020 16:57:25 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Vinod Koul'" <vkoul@kernel.org>
-Cc:     "'Kishon Vijay Abraham I'" <kishon@ti.com>, <robh@kernel.org>,
-        <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
-        <linux-scsi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
-        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
-        <linux-kernel@vger.kernel.org>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>
-In-Reply-To: <20200624102112.GX2324254@vkoul-mobl>
-Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-Date:   Wed, 24 Jun 2020 22:27:23 +0530
-Message-ID: <004b01d64a48$8bb87270$a3295750$@samsung.com>
+        Wed, 24 Jun 2020 12:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405298AbgFXQ54 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 12:57:56 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F093C061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:57:55 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q90so890138pjh.3
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 09:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CmjIW8R8o5r2lBV1s31ea71JUTHcO/wI+cUm5Z7J13I=;
+        b=mG6WvpR98paCQbz/iHfb07cJGGOD2+q40Ra14ZRfvRUEETTcl4Ka/lUveyjjpHB6G5
+         Ju/6TESVKwG44SgDilOCn+26m3E8OlV7lRBczDoZ7u4nDMlJiEYjHFph6ib2Fy3dvn6Z
+         FuV7JfBukoUvAnHscRTBFaTwnfBjk96ZjZ2z0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CmjIW8R8o5r2lBV1s31ea71JUTHcO/wI+cUm5Z7J13I=;
+        b=JIIrzNCVjgAOmOzGC/7d1yZEan96WkNwl1i4y+AW4hGT/iSaBhoIxClOzPPN0PkHtG
+         H/EaAqnkc48IFOYtIKRpb41QmKSD4EUBDaIwGwyvvnWcU+uS7kvVk6EQwFKL5N0iYWdS
+         mwU0QvwAGDytPr0mZYedy3RwiprU2WcAOOr+YGC2V8XSJLvRPmyTp1qX7wh/VBlTw3qw
+         N0X/HeMv/89ofsLOyCLclfmG5KgShxOkt/sy16pc1QhMEc6QqLzJM6UshVcNaBa3lCoX
+         pdxCknMfnw08bvbdwqjZK/sNbmSdrrz0Kh9KTkXeDn8lrf3ozlwj8dhzdgFWRekq0j0Y
+         W4GQ==
+X-Gm-Message-State: AOAM533Nt/bwP/1ihi94aBQ+mCM85LaH5ptPFg8Fd2xsya851LslU/0E
+        SRG6PL2HSgX4aL2XxQ8A2cvXJ+F56rU=
+X-Google-Smtp-Source: ABdhPJwcLj6W7e3dXuyoYT2CvePVH4Ccxc3lYrIKl6UXZvF7YtKEJWq8hq+uSRU1E/2jR+KVFLoDQA==
+X-Received: by 2002:a17:902:704a:: with SMTP id h10mr28656684plt.85.1593017875159;
+        Wed, 24 Jun 2020 09:57:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id mp15sm5731457pjb.45.2020.06.24.09.57.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 09:57:54 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 09:57:52 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>, saravanak@google.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jonathan <jonathan@marek.ca>
+Subject: Re: [PATCH v3 2/6] drm: msm: a6xx: send opp instead of a frequency
+Message-ID: <20200624165752.GA39073@google.com>
+References: <1591417551-38051-1-git-send-email-smasetty@codeaurora.org>
+ <1591417551-38051-3-git-send-email-smasetty@codeaurora.org>
+ <CAF6AEGva1DyFc1P_5+U=P+Sh-ngN9PyN6Hh2ZXBnxB952UQ54w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-in
-Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUMBx1WEmQIl7FhyAiYYQSwBBY3htKW5/StQ
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAKsWRmVeSWpSXmKPExsWy7bCmhu6v1s9xBvMuyFi8/HmVzeLT+mWs
-        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
-        P9DNFMAZxWWTkpqTWZZapG+XwJXxd89y1oKLQhWHj/9laWD8w9fFyMEhIWAicbmrrouRi0NI
-        YDejxPyPq5i6GDmBnE+MEof2FUIkPjNKtE7bwAaSAGk48vMVG0TRLkaJy70+EPYbRonzkwxA
-        bDYBXYkdi9vAakQEVCW2PHkAZjMLLGSW2LJAH8TmFDCSWHh2OSuILSzgJPF6xR6wxSxA9Q3b
-        lrKA2LwClhL7dx9mgrAFJU7OfMICMUdeYvvbOcwQ9yhI/Hy6jBUiLi5x9GcPM8TeKIlLP54w
-        gTwgIfCCQ+LD9YWsEA0uEjPX7meBsIUlXh3fwg5hS0m87G9jh4RKtkTPLmOIcI3E0nnHoMrt
-        JQ5cmcMCUsIsoCmxfpc+xFo+id7fIKtAOnklOtqEIKpVJZrfXYXqlJaY2N3NClHiIdHXJDqB
-        UXEWkr9mIflrFpJfZiHsWsDIsopRMrWgODc9tdi0wDAvtVyvODG3uDQvXS85P3cTIzjRaXnu
-        YLz74IPeIUYmDsZDjBIczEoivCFun+KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8yr9OBMnJJCe
-        WJKanZpakFoEk2Xi4JRqYJq/b8WpX9YlbvHuhzr+iHkGZyrKlljavP3KHyu371Kx5gfhlW2C
-        Lr4L2bdoqO1WZEnqClh2cJ9HxdPMKPfquQbs39+fZW148S9XKUhx95P/M1zXJ8xdvUlEmeG5
-        i4szr6IXs/m6DxXO8490/+DPSmh4dFdJS1mlUmH+yixx83ZOidN9e6Z8ezb1WIxQqaycWr3k
-        I+eJW3KrlgoKeCi94msIvVM/T9TMXvz9wr/VJYd/mFgbOXqX/Vmdy7i6XEDs93ffmNnWnhPf
-        C0pw/7mmv2bp9Y2HZrN+/KVl458quTw+8YOlwvxt/2692af8rCWw0H/u1vVlZ9fZzS2KvXJt
-        V0Pw/p+Z5mvt287d0dSLUmIpzkg01GIuKk4EAIr9fdDjAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSvO6v1s9xBp9/sFi8/HmVzeLT+mWs
-        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
-        P9DNFMAZxWWTkpqTWZZapG+XwJXxd89y1oKLQhWHj/9laWD8w9fFyMkhIWAiceTnKzYQW0hg
-        B6PE+lklEHFpiesbJ7BD2MISK/89B7K5gGpeMUosWjCLGSTBJqArsWNxG1iziICqxJYnD9hA
-        ipgF1jJLzD+0mg2i4yeTxLdbX8FGcQoYSSw8u5wVxBYWcJJ4vWIPE4jNAtTdsG0pC4jNK2Ap
-        sX/3YSYIW1Di5MwnQHEOoKl6Em0bGUHCzALyEtvfzmGGuE5B4ufTZawQcXGJoz97mCEOipK4
-        9OMJ0wRG4VlIJs1CmDQLyaRZSLoXMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQI
-        jlwtrR2Me1Z90DvEyMTBeIhRgoNZSYQ3xO1TnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHer7MW
-        xgkJpCeWpGanphakFsFkmTg4pRqYOiYFn7zjp5G0jrdUsqtP4ICwQvTmHvnvHAorrmaVN77M
-        9Th+8/XC/KmzK+d0SVou0RIRuv3I1D/p0w4txr0lTt5RaVPtgpJ1+G13zXkSEL9m1vze0zI1
-        rnvW3IiK5nFgfCw+vY1RTHVix/alz/TajG9V8VrJfsiv3vf03eV7LV/8vebdEJnaLHPWMTzs
-        ct6ZnI0/vzWrLbDu/B0007VD1jnu2KF/Oj/1f535t+nurrCXnKorF6/gkGNhK+aUcDc7Xnw3
-        r/3SlYjs4NRrVRm6K+sOZ19beuWZe43vPPPVf3/Z7K+crZu/Nvvo2zeHVLZ+kOqTmL+Ona1J
-        YHGSeeePE6KBUf+STx1ISVRgiY1UYinOSDTUYi4qTgQARvMgWksDAAA=
-X-CMS-MailID: 20200624165730epcas5p1e3eeb64857ac214b70f5437017cfc2ea
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
-References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
-        <20200528011658.71590-1-alim.akhtar@samsung.com>
-        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
-        <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
-        <89b96bd0-a9a3-cdd8-dc67-1f9f49eef264@ti.com>
-        <000001d646a6$6cb5fd70$4621f850$@samsung.com>
-        <20200624102112.GX2324254@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGva1DyFc1P_5+U=P+Sh-ngN9PyN6Hh2ZXBnxB952UQ54w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinod
+Hi,
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 24 June 2020 15:51
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>; robh@kernel.org;
-> krzk@kernel.org; linux-samsung-soc@vger.kernel.org; avri.altman@wdc.com;
-> stanley.chu@mediatek.com; linux-scsi@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; cang@codeaurora.org;
-devicetree@vger.kernel.org;
-> kwmad.kim@samsung.com; linux-kernel@vger.kernel.org; 'Martin K. Petersen'
-> <martin.petersen@oracle.com>
-> Subject: Re: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-> 
-> On 20-06-20, 07:29, Alim Akhtar wrote:
-> > Hi Kishon,
+On Thu, Jun 18, 2020 at 10:52:09AM -0700, Rob Clark wrote:
+> On Fri, Jun 5, 2020 at 9:26 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
 > >
-> > > -----Original Message-----
-> > > From: Alim Akhtar <alim.akhtar@samsung.com>
-> > > Sent: 11 June 2020 20:49
-> > > To: 'Kishon Vijay Abraham I' <kishon@ti.com>; 'Martin K. Petersen'
-> > > > >>
-> > > > >> Applied [1,2,3,4,5,9] to 5.9/scsi-queue. The series won't show
-> > > > >> up in my
-> > > > > public
-> > > > >> tree until shortly after -rc1 is released.
-> > > > >>
-> > > > > Thanks Martin,
-> > > > > Hi Rob and Kishon/Vinod
-> > > > > Can you please pickup dt-bindings and PHY driver respectively?
-> > > >
-> > > > You might have CC'ed me only for the PHY patch. I don't have the
-> > > > dt-bindings in my inbox. Care to re-send what's missing again?
-> > > > This will be merged after -rc1 is tagged.
-> > > >
+> > This patch changes the plumbing to send the devfreq recommended opp rather
+> > than the frequency. Also consolidate and rearrange the code in a6xx to set
+> > the GPU frequency and the icc vote in preparation for the upcoming
+> > changes for GPU->DDR scaling votes.
 > >
-> > -rc1 is out, I do not see phy driver patch in your tree[1] yet, let me
-know if I am
-> looking into right tree.
-> > [1] -> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git
-> 
-> Right tree
+> > Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > ---
+> >  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 62 +++++++++++++++++++----------------
+> >  drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  2 +-
+> >  drivers/gpu/drm/msm/msm_gpu.c         |  3 +-
+> >  drivers/gpu/drm/msm/msm_gpu.h         |  3 +-
+> >  4 files changed, 38 insertions(+), 32 deletions(-)
 > >
-> > Thanks!
+> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > index 748cd37..2d8124b 100644
+> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > @@ -100,17 +100,30 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
+> >                 A6XX_GMU_SPTPRAC_PWR_CLK_STATUS_GX_HM_CLK_OFF));
+> >  }
 > >
-> > > Sure, will re-send this series.
+> > -static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+> > +void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+> >  {
+> > -       struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
+> > -       struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+> > -       struct msm_gpu *gpu = &adreno_gpu->base;
+> > -       int ret;
+> > +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> > +       struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
+> > +       struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
+> > +       u32 perf_index;
+> > +       unsigned long gpu_freq;
+> > +       int ret = 0;
+> > +
+> > +       gpu_freq = dev_pm_opp_get_freq(opp);
+> > +
+> > +       if (gpu_freq == gmu->freq)
+> > +               return;
+> > +
+> > +       for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
+> > +               if (gpu_freq == gmu->gpu_freqs[perf_index])
+> > +                       break;
+> > +
+> > +       gmu->current_perf_index = perf_index;
+> >
+> >         gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
+> >
+> >         gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
+> > -               ((3 & 0xf) << 28) | index);
+> > +                       ((3 & 0xf) << 28) | perf_index);
+> >
+> >         /*
+> >          * Send an invalid index as a vote for the bus bandwidth and let the
+> > @@ -126,7 +139,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+> >         if (ret)
+> >                 dev_err(gmu->dev, "GMU set GPU frequency error: %d\n", ret);
+> >
+> > -       gmu->freq = gmu->gpu_freqs[index];
+> > +       gmu->freq = gmu->gpu_freqs[perf_index];
+> >
+> >         /*
+> >          * Eventually we will want to scale the path vote with the frequency but
+> > @@ -135,25 +148,6 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
+> >         icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> >  }
+> >
+> > -void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+> > -{
+> > -       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> > -       struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
+> > -       struct a6xx_gmu *gmu = &a6xx_gpu->gmu;
+> > -       u32 perf_index = 0;
+> > -
+> > -       if (freq == gmu->freq)
+> > -               return;
+> > -
+> > -       for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
+> > -               if (freq == gmu->gpu_freqs[perf_index])
+> > -                       break;
+> > -
+> > -       gmu->current_perf_index = perf_index;
+> > -
+> > -       __a6xx_gmu_set_freq(gmu, perf_index);
+> > -}
 > 
-> But patches have not been sent right, pls send and me/Kishon will review
+> this does end up conflicting a bit with some of the newer stuff that
+> landed this cycle, in particular "drm/msm/a6xx: HFI v2 for A640 and
+> A650"
 > 
-Thanks for your kind attention on this series. As per [0] comment from
-Kishon, patch 7/10 [1] and probably 6/10 [2] should have been Applied after
-5.8-rc1 was tagged.
-I have already send and re-send V10 of this series. Kishon has already
-reviewed and provided comments and I have addressed them as well. These
-patches already have and Reviewed-by, Tested-by tags.
-Let me know if something more needs to be done from my side.
-[0] https://lkml.org/lkml/2020/6/7/410
-[1] https://lkml.org/lkml/2020/5/27/1705
-[2] https://lkml.org/lkml/2020/5/27/1701
+> Adding Jonathan on CC since I think he will want to test this on
+> a650/a640 as well..
 
-Thanks!
+Sharat, please send an updated version that is rebased on the latest drm-msm.
 
-> Thanks
-> --
-> ~Vinod
+Thanks
 
+Matthias
