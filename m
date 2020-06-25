@@ -2,140 +2,149 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0084C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 06:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753A3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 06:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79387206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 06:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSqndLJ9"
+	by mail.kernel.org (Postfix) with ESMTP id 443FF206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 06:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593065957;
+	bh=YbHGP11pHUX7giQDfbZQIvNPcOxAKEPuTaMFvWI1/mI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D2e+zp6d05cAPXGZ3NPKtIOj3aY39rJ2/LGVDXG6AbOg4Bbn4wM3l8GqS0S+rRv0T
+	 AcT0YhYxxv96/W3UbSVixltWNlt5QVTH5586zsiYP0AOynOBR71DFfKCZK/PaJ5oUD
+	 Gm27VYtgqK7K8A1yg/SqmgDIqpY0oAr2YaAmV3Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389665AbgFYGNJ (ORCPT
+        id S2389772AbgFYGTQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 02:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgFYGNI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 02:13:08 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC253C061573
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 23:13:06 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h15so4526470wrq.8
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 23:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=iA2LoEFl42PAfMHt6BhD+YKFpB/tKVOEuCLtgIdaUcg=;
-        b=iSqndLJ9qLVyw7p18ZTcH6bXibo55m/izg5YbG0MwtaVDbnfdmaUgYZF5S/7GFi/vt
-         5J+ZrctuzeZm4BNxufro5YRuDWIV2ZwNqpzDvJyC/hnMMeYG/Ml6HWwPLwFic4SzFOdP
-         f/lRvuYn4Tl3ZtUnGVVXMfZJSCHj1b3emgXbCmHO4o3MR3i1O/8hzxeJ+fqjvkOtpF/c
-         ul7g6TM1aAgS1z3hNo3TbqBmJ596IWY4D4OtKItMlAan8x5doJNvOd0X4KUK0BkTV8rf
-         txQlU9JpqItgodRxWijXUBNAVRfCTAw7GLCjRh5Xvt9QCr1/75F2R0f7ld5hWzR3QsBv
-         Ot8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iA2LoEFl42PAfMHt6BhD+YKFpB/tKVOEuCLtgIdaUcg=;
-        b=SYXM1k95/j+R0Y5rCo3oCH7bYt8G5NLx547J7VJB2/CBGOp6sJm/tuzMxwabkZGbXu
-         ZgJRL6F5IaSncG9VmVm1ljd0XleSFM0WY762hiCCs9BUJhKckJF3eX/WG1xyLFdujsi3
-         1vKvr6G0lqqwJX0ODj1Re/YEv8wRdWY75nXEhtnuoZKRPpSS+au8xko2FBBPBhYo6CxP
-         DYciCljqpnnf/TTWf21v1UoFNT41vWYd8zJp8zGTu/a+kkvAQ6BvtsyzYVRdJ/o79BK+
-         TjwwQOPpW+C0vFCato6ZhVB4MXa+hzQiAoNbbHWXrA6SB7la5JYbpcptNf99qOm51ca6
-         ctsA==
-X-Gm-Message-State: AOAM530azSh6WCawa0dWC0OO8xuo0BaULv1XImG3rkJ9EXmRq76G3gW0
-        mzP0dRc1FZvavnG4bs+QaaiHQQ==
-X-Google-Smtp-Source: ABdhPJwq2swoxVQwWpcIMTGj0ih5YY/4JmDKH2eqYJuaBV/SepD18Aj4As76aHk2nf7cBTjKdyLEWQ==
-X-Received: by 2002:a5d:62cc:: with SMTP id o12mr27479942wrv.365.1593065585521;
-        Wed, 24 Jun 2020 23:13:05 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id j24sm28793190wrd.43.2020.06.24.23.13.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 23:13:04 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 07:13:02 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        GregKroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
-Message-ID: <20200625061302.GK954398@dell>
-References: <20200609110136.GJ4106@dell>
- <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
- <0709f20bc61afb6656bc57312eb69f56@walle.cc>
- <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
- <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
+        Thu, 25 Jun 2020 02:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389663AbgFYGTQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 02:19:16 -0400
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27763207E8;
+        Thu, 25 Jun 2020 06:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593065955;
+        bh=YbHGP11pHUX7giQDfbZQIvNPcOxAKEPuTaMFvWI1/mI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yZZ1VTEyTafiT2YXaenbvvrLdDlo6nFFtivq2bXBWSj94Ii9nNCaabS/k/Xi9yKMm
+         bXTyiyj2+7xgLAopMan2JLxV7MFY0KFkYmFCuPHveByBaBPRIp21WH48T3z1TWAOEh
+         3tV3DmTnBlzIa94uLY8ifxSrlGuF5vHpiTgjqs9s=
+Received: by mail-ej1-f51.google.com with SMTP id y10so4790948eje.1;
+        Wed, 24 Jun 2020 23:19:15 -0700 (PDT)
+X-Gm-Message-State: AOAM530HmvOkzndY/AmQbmYPrPX80mZvn9l3airlkUBPYFAO8tqOlmqj
+        Su36iogqXPK06uqcaujx9OTFjsk6S6ptyGN9sA==
+X-Google-Smtp-Source: ABdhPJyi7O/XYnvtXHx6vhbw1CBavl9kSew93qwynQ4pKthExCyrXGBoxEehFW4NkW5yOppX2nLWouhaN+4dRcFwtPU=
+X-Received: by 2002:a17:906:856:: with SMTP id f22mr18224560ejd.245.1593065953692;
+ Wed, 24 Jun 2020 23:19:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
+References: <1592559720-8482-1-git-send-email-neal.liu@mediatek.com> <1592559720-8482-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1592559720-8482-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 25 Jun 2020 14:19:02 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-hfQFL_CRHTC7RxOLSe0BYzWf_f-QUvjBp4JjaAcX1PA@mail.gmail.com>
+Message-ID: <CAAOTY_-hfQFL_CRHTC7RxOLSe0BYzWf_f-QUvjBp4JjaAcX1PA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2020, Frank Rowand wrote:
-> On 2020-06-22 16:03, Michael Walle wrote:
-> > Am 2020-06-14 12:26, schrieb Michael Walle:
-> >> Hi Rob,
-> >>
-> >> Am 2020-06-10 00:03, schrieb Rob Herring:
-> >> [..]
-> >>> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
-> >>> then you shouldn't have a unit-address either and you can simply match
-> >>> on the node name (standard DT driver matching is with compatible,
-> >>> device_type, and node name (w/o unit-address)). We've generally been
-> >>> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
-> >>> Matching on 'classname-N' would work with node name matching as only
-> >>> unit-addresses are stripped.
-> >>
-> >> This still keeps me thinking. Shouldn't we allow the (MFD!) device
-> >> driver creator to choose between "classname@N" and "classname-N".
-> >> In most cases N might not be made up, but it is arbitrarily chosen;
-> >> for example you've chosen the bank for the ab8500 reg. It is not
-> >> a defined entity, like an I2C address if your parent is an I2C bus,
-> >> or a SPI chip select, or the memory address in case of MMIO. Instead
-> >> the device driver creator just chooses some "random" property from
-> >> the datasheet; another device creator might have chosen another
-> >> property. Wouldn't it make more sense, to just say this MFD provides
-> >> N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
-> >> That would also be the logical consequence of the current MFD sub
-> >> device to OF node matching code, which just supports N=1.
+Hi, Neal:
 
-It's funny.  You reiterate things like "arbitrarily chosen" and
-"randomly chosen from the datasheet" but yet your suggestion is just
-that.  The only difference is that you wish to place the numerical
-differentiator in the node name, rather than the reg property.  Worse
-still, you are suggesting that you wish to just enumerate them off
-sequentially from some arbitrary base (likely 0).
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B46=E6=9C=8819=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:01=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MT6873 bus frabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violations are logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by devapc-mt6873 driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
-I don't know of many cases off, the top of my head at least, where
-this is a problem.  As you've mentioned, in the case of the AB8500,
-the bank is used which is semantically how the devices are actually
-addressed.  It's not random, it's physical.
+[snip]
 
-How are the identical devices addressed/identified/differentiated
-from each other on your H/W?  You must have a way of saying "I want
-PWM X to act in a different way from PWM Y".  What is 'X' and 'Y' in
-your datasheet?
+> +
+> +/*
+> + * sramrom_vio_handler - clean sramrom violation & print violation infor=
+mation
+> + *                      for debugging.
+> + */
+> +static void sramrom_vio_handler(struct mtk_devapc_context *devapc_ctx)
+> +{
+> +       const struct mtk_sramrom_sec_vio_desc *sramrom_vios;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       struct arm_smccc_res res;
+> +       size_t sramrom_vio_sta;
+> +       int sramrom_vio;
+> +       u32 rw;
+> +
+> +       sramrom_vios =3D devapc_ctx->soc->sramrom_sec_vios;
+> +       vio_info =3D devapc_ctx->soc->vio_info;
+> +
+> +       arm_smccc_smc(MTK_SIP_KERNEL_CLR_SRAMROM_VIO,
+> +                     0, 0, 0, 0, 0, 0, 0, &res);
+> +
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+This irq handler call arm_smccc_smc() to get into TrustZone, why not
+let the whole irq handler in TrustZone?
+
+Regards,
+Chun-Kuang.
+
+> +       sramrom_vio =3D res.a0;
+> +       sramrom_vio_sta =3D res.a1;
+> +       vio_info->vio_addr =3D res.a2;
+> +
+> +       if (sramrom_vio =3D=3D SRAM_VIOLATION)
+> +               pr_info(PFX "SRAM violation is triggered\n");
+> +       else if (sramrom_vio =3D=3D ROM_VIOLATION)
+> +               pr_info(PFX "ROM violation is triggered\n");
+> +       else
+> +               return;
+> +
+> +       vio_info->master_id =3D (sramrom_vio_sta & sramrom_vios->vio_id_m=
+ask)
+> +                       >> sramrom_vios->vio_id_shift;
+> +       vio_info->domain_id =3D (sramrom_vio_sta & sramrom_vios->vio_doma=
+in_mask)
+> +                       >> sramrom_vios->vio_domain_shift;
+> +       rw =3D (sramrom_vio_sta & sramrom_vios->vio_rw_mask) >>
+> +                       sramrom_vios->vio_rw_shift;
+> +
+> +       if (rw)
+> +               vio_info->write =3D 1;
+> +       else
+> +               vio_info->read =3D 1;
+> +
+> +       pr_info(PFX "%s: master_id:0x%x, domain_id:0x%x, rw:%s, vio_addr:=
+0x%x\n",
+> +               __func__, vio_info->master_id, vio_info->domain_id,
+> +               rw ? "Write" : "Read", vio_info->vio_addr);
+> +}
+> +
