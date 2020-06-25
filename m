@@ -2,145 +2,172 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B9AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB548C433E2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 632682072E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F1E20644
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itDE7aS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgFYEYA (ORCPT
+        id S1726093AbgFYFAH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 00:24:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27978 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgFYEYA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 00:24:00 -0400
-IronPort-SDR: /VyxqyaFq++yxyl9zoqCLyvC9ViSbNY+nXnOlBoE17mLlnL0bv1+8BRnfOyeBVKiKtcszyOdcE
- 9+wyU/UmkFGw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146246035"
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="146246035"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:23:59 -0700
-IronPort-SDR: wn6pbKZSjt6KA7vrnM6zVRfPvdg0paanvOI94eMoZWfE9hNk658QDFgcn6iJhvoKuEXgsErZak
- HRe+Idgq4U3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="311863765"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 21:23:58 -0700
-Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
-        by linux.intel.com (Postfix) with ESMTP id 95689580298;
-        Wed, 24 Jun 2020 21:23:55 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
- <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
-Date:   Thu, 25 Jun 2020 12:23:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 01:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389749AbgFYFAE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 01:00:04 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53ECAC061795
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:00:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id h185so2487416pfg.2
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gNtbIZ568VO1hTjCxcIyUTJVwIpNwttbY91p1QqsdC4=;
+        b=itDE7aS4I50IkCwOnZKTfUWfju44bYUDoiNCiZT06igwGbt4AypALVfBSnRQE+UE5O
+         MCGjc4V4zkDKnPLjgijrdHTJ1W9zHDPLWbfuOGJwzHDj8Cfc6Pg4ozFdmxpGNbxZbOaH
+         BepHUKCntSEv7ip2c/PQHxRoY4IBIyXZ7/wScKKy1i4F53C+nh5WGOX3P/mudcjMhiyF
+         Z4Ut03GDayTQfhXPOc73e/HyYxqIM0nWdhvySpMedRmW71CvTAc262gqR4SSd+TjboM2
+         FgYNrAJHFaYfO6aj6YB8MIY1vdSB3ZKXjqE4zMmztIgcWQIUE3JV5Ih17HAkWqLE8M9J
+         jzyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gNtbIZ568VO1hTjCxcIyUTJVwIpNwttbY91p1QqsdC4=;
+        b=OE6v+M97ywjNqvMwjwsOWQoy5NI7KaSstaBTIvhmnr9en7JL2ToTONlFedMTy4TC+Q
+         ekLUu9lElJU7Qc3bazYxCE6TwqZ7CAwUu7sm/alhB0tSK3HlDeU1b3trjgXL89jPuroc
+         2hO2Df2UIz/A3sl1vH/T18Rwy4Muw4HgqFSFyrb+h/AOZFOl3jpbP3eDWi2jn+YVF1ll
+         +bKShUjAi38wpX4JdvNsQPfo7tNlnec1rnrvqsv5Ii0RLknrlO+xYl0VIpQizZuRQET0
+         XqS2dN5a6uEgN5I2sB7IVRI0n8B7oDbuU6UVVi5/158kggaSHRWyJWWkDRYTTmcOJ5W/
+         32qw==
+X-Gm-Message-State: AOAM530xWnqSQFHKtFtsZ/NAsWv0O4GSV8liKfhz3Zz7JiH7z7Bzkv1G
+        XbSj2Hcz474b/+9edO1CD2B2Vg==
+X-Google-Smtp-Source: ABdhPJwh9JC1nam0V/DJQyApj/Ye+dnlgpcjMSQVecblYDk0/KQNNSpYA3pCrHD9eiNJbOSmczVeQA==
+X-Received: by 2002:a62:3041:: with SMTP id w62mr31621996pfw.205.1593061202490;
+        Wed, 24 Jun 2020 22:00:02 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v9sm21531382pfe.198.2020.06.24.22.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 22:00:01 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 21:57:20 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
+        broonie@kernel.org, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        swboyd@chromium.org, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        mka@chromium.org, dianders@chromium.org, evgreen@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V8 0/8] Add interconnect support to QSPI and QUP drivers
+Message-ID: <20200625045720.GV128451@builder.lan>
+References: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue 23 Jun 03:38 PDT 2020, Akash Asthana wrote:
 
-Hi Philipp,
+> This patch series is based on tag "next-20200622" of linux-next tree.
+> 
 
-On 18/6/2020 8:25 pm, Philipp Zabel wrote:
-> Hi Rahul,
->
-> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
->> This PWM controller does not have any other consumer, it is a
->> dedicated PWM controller for fan attached to the system. Add
->> driver for this PWM fan controller.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/pwm/Kconfig         |   9 +
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 410 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
->>
-> [...]
->> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
->> new file mode 100644
->> index 000000000000..3c7077acb161
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-intel-lgm.c
->> @@ -0,0 +1,400 @@
-> [...]
->> +static int lgm_pwm_probe(struct platform_device *pdev)
->> +{
->> +	struct lgm_pwm_chip *pc;
->> +	struct device *dev = &pdev->dev;
->> +	void __iomem *io_base;
->> +	int ret;
->> +
->> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
->> +	if (!pc)
->> +		return -ENOMEM;
->> +
->> +	io_base = devm_platform_ioremap_resource(pdev, 0);
->> +	if (IS_ERR(io_base))
->> +		return PTR_ERR(io_base);
->> +
->> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
->> +	if (IS_ERR(pc->regmap)) {
->> +		ret = PTR_ERR(pc->regmap);
->> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
->> +		return ret;
->> +	}
->> +
->> +	pc->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(pc->clk)) {
->> +		ret = PTR_ERR(pc->clk);
->> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
->> +		return ret;
->> +	}
->> +
->> +	pc->rst = devm_reset_control_get(dev, NULL);
->> +	if (IS_ERR(pc->rst)) {
->> +		ret = PTR_ERR(pc->rst);
->> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
->> +		return ret;
->> +	}
-> Please use devm_reset_control_get_exclusive() to make it explicit an
-> that exclusive reset control is requested. Given how the reset control
-> is used, I think this driver could also use
-> devm_reset_control_get_shared() to potentially allow sharing a reset
-> line with other devices.
-
-devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
-Code as below:
-static inline struct reset_control *devm_reset_control_get(
-                                struct device *dev, const char *id)
-{
-        return devm_reset_control_get_exclusive(dev, id);
-}
-Am i missing something else?
+Series applied to the qcom tree, thank you and thanks for the Acks.
 
 Regards,
-Rahul
+Bjorn
+
+> High level design:
+>  - QUP wrapper/common driver.
+>    Vote for QUP core on behalf of earlycon from probe.
+>    Remove BW vote during earlycon exit call
+> 
+>  - SERIAL driver.
+>    Vote only for CPU/CORE path because driver is in FIFO mode only
+>    Vote/unvote from qcom_geni_serial_pm func.
+>    Bump up the CPU vote from set_termios call based on real time need
+> 
+>  - I2C driver.
+>    Vote for CORE/CPU/DDR path
+>    Vote/unvote from runtime resume/suspend callback
+>    As bus speed for I2C is fixed from probe itself no need for bump up.
+> 
+>  - SPI QUP driver.
+>    Vote only for CPU/CORE path because driver is in FIFO mode only
+>    Vote/unvote from runtime resume/suspend callback
+>    Bump up CPU vote based on real time need per transfer.
+> 
+>  - QSPI driver.
+>    Vote only for CPU path
+>    Vote/unvote from runtime resume/suspend callback
+>    Bump up CPU vote based on real time need per transfer.
+> 
+> Changes in V2:
+>  - Add devm_of_icc_get() API interconnect core.
+>  - Add ICC support to common driver to fix earlyconsole crash.
+> 
+> Changes in V3:
+>  - Define common ICC APIs in geni-se driver and use it across geni based
+>    I2C,SPI and UART driver.
+> 
+> Changes in V4:
+>  - Add a patch to ICC core to scale peak requirement
+>    as twice of average if it is not mentioned explicilty.
+> 
+> Changes in V5:
+>  - As per Georgi's suggestion removed patch from ICC core for assuming
+>    peak_bw as twice of average when it's not mentioned, instead assume it
+>    equall to avg_bw and keep this assumption in ICC client itself.
+>  - As per Matthias suggestion use enum for GENI QUP ICC paths.
+> 
+> Changes in V6:
+>  - No Major change
+> 
+> Changes in V7:
+>  - As per Matthias's comment removed usage of peak_bw variable because we don't
+>    have explicit peak requirement, we were voting peak = avg and this can be
+>    tracked using single variable for avg bw.
+>  - As per Matthias's comment improved print log.
+> 
+> Changes in V8:
+>  - Add [PATCH V8 5/8] to factor out common code for clock setting.
+>  - Combine ICC voting and clock setting to single API. [PATCH V8 6/8]
+>  - Add ICC voting per transfer because in case of multi message,
+>    transfer frequency can vary for each message/transfer.[PATCH V8 6/8]
+> 
+> Akash Asthana (7):
+>   soc: qcom: geni: Support for ICC voting
+>   soc: qcom-geni-se: Add interconnect support to fix earlycon crash
+>   i2c: i2c-qcom-geni: Add interconnect support
+>   tty: serial: qcom_geni_serial: Add interconnect support
+>   spi: spi-geni-qcom: Add interconnect support
+>   spi: spi-qcom-qspi: Add interconnect support
+>   arm64: dts: sc7180: Add interconnect for QUP and QSPI
+> 
+> Douglas Anderson (1):
+>   spi: spi-geni-qcom: Combine the clock setting code
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi  | 127 ++++++++++++++++++++++++++++
+>  drivers/i2c/busses/i2c-qcom-geni.c    |  26 +++++-
+>  drivers/soc/qcom/qcom-geni-se.c       | 150 ++++++++++++++++++++++++++++++++++
+>  drivers/spi/spi-geni-qcom.c           | 100 +++++++++++++++--------
+>  drivers/spi/spi-qcom-qspi.c           |  56 ++++++++++++-
+>  drivers/tty/serial/qcom_geni_serial.c |  38 ++++++++-
+>  include/linux/qcom-geni-se.h          |  40 +++++++++
+>  7 files changed, 496 insertions(+), 41 deletions(-)
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> 
