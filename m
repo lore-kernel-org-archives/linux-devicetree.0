@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEC8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784CAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CAF20899
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462D720707
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593104727;
-	bh=rUhNk4gTmYJPBy9DK1rVT2dArPsMUXEROFSxa+d+BQs=;
+	s=default; t=1593104730;
+	bh=4zsOT8dFCda+/kC/Af0lQAAJytwJ/ToTgr8jJJp9nEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gspao7IyZgK8kqpjE79KTcTv9QZ9BOYP9pTd9lHzKej7JoDNCnKhxSPvd8jRMuIXA
-	 T3fzDE/t0nTZGt1sRp/4L2aD18z9jWmUIEJfN36a/uPrjrKP8YDMfhXbDWe7B6MRgU
-	 hsPeVzjmBADrqvbnrVLMlDB2U90t6pIMNCQKJBRE=
+	b=sda5/MxAyfN2GbufKy4Ajnqrei7Q7vV2yOs5+O1uK8p8NlKK4RsR0INT/FSQTQdE2
+	 qwvaFi+fI7lFrijQRTHaKYZZqezmzjpTPMky7vWru11ME7EozmbUjX8Je+Sziq7RQQ
+	 6v1WabKUSIvF6YwNytjsR0xBk/4ehd2kHjmJKohc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406590AbgFYRFO (ORCPT
+        id S2406620AbgFYRF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:05:14 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:51073 "EHLO
+        Thu, 25 Jun 2020 13:05:29 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:51071 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404524AbgFYRFN (ORCPT
+        with ESMTP id S2404376AbgFYRFN (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 13:05:13 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05PH4apJ005239;
-        Fri, 26 Jun 2020 02:04:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05PH4apJ005239
+        by conuserg-11.nifty.com with ESMTP id 05PH4apH005239;
+        Fri, 26 Jun 2020 02:04:38 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05PH4apH005239
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593104680;
-        bh=hsy2jEcguFBbAwWPOzrHlA0rVfoIakAEVTOhQL5WWjE=;
+        s=dec2015msa; t=1593104678;
+        bh=kyXyOZ5U8Hs6howxGxcv+iEKeZZiTyjbIeEnk633oyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WbHigNnte5CSbikVGUFPeliUyTPT3GRCm5FsAIbbeR39Z9izKsKAEnEGdE5iBevgc
-         IBemTKdtJf1dC1X8WYluHt26gBZHzP1Y8t+QNr6v6RTsKcISkOLy6h8ThC5IdyinIX
-         fdO6ylOehgLhyHBswZo3ni7WuqVoAo1iXNmPzH+X7LUF05P2nvHJHU6yokUfen4UHB
-         lNJj5F9+g5gHgDvtAUgZeQMxsZ5Xsa9BYF5+aN1YTlttvO9ZBZ52Tmr3d4J+6RhUBx
-         PRH43Ng1ZY9f6gJj5VGW1OTs9i+g3Pa1pg6bStdefJKIG3NZt7WSTb3248vI/MRSvq
-         bwiRu7iGWU4uQ==
+        b=FEFVeaYJ9UAliTtB3rq8v27VAdbMFXTWV4iLqtXO/rfl8r7U93GlYMB+IQ/4YmYjQ
+         BAE3FwqLpoXEmJkak0nb/XxHQgUQJphlI66x+6Gkgpq66utHEyuuFGl3p6fymnstwL
+         kxxJcXJsoBDgov5xAFFxmf3NM0fHIHDxUHVhVmQQLZYnMJoxahSagKu6Z/i61mh8TU
+         Yd4CJNJmpDLQW2BrejLB+xpZxMbZFmZ1ZmImiQlQbsFFN5GJeWF6TTFjnlVxcYxIEK
+         j9yhH2oh1Gx8ZFlve1isqtFblmJL5xBXYGMJo9YMccOndcqJac/NPzwhIwMDcSEeEY
+         C/sP3xTvwaSlA==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 Cc:     Frank Rowand <frowand.list@gmail.com>,
         linux-kbuild@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] dt-bindings: split DT schema check rules
-Date:   Fri, 26 Jun 2020 02:04:34 +0900
-Message-Id: <20200625170434.635114-5-masahiroy@kernel.org>
+Subject: [PATCH 2/4] dt-bindings: do not build processed-schema.yaml for 'make dt_binding_check'
+Date:   Fri, 26 Jun 2020 02:04:32 +0900
+Message-Id: <20200625170434.635114-3-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200625170434.635114-1-masahiroy@kernel.org>
 References: <20200625170434.635114-1-masahiroy@kernel.org>
@@ -62,141 +61,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When building %.dt.yaml from %.dts, two things happen in a row:
+Currently, processed-schema.yaml is always built, but it is actually
+used only for 'make dtbs_check'.
 
- [1] Run DTC to convert %.dts into %.dt.yaml
+'make dt_binding_check' uses processed-schema-example.yaml instead.
 
- [2] Run dt-validate against %.dt.yaml
-
-Currently, when any .yaml schema file is updated, processed-schema.yaml
-is regenerated, then both [1] and [2] are rerun for all .dts files.
-
-Actually, we do not need to rerun [1] since the original .dts is not
-updated.
-
-Split the rule to avoid unneeded .dts/.dt.yaml conversion.
+Build processed-schema.yaml only for 'make dtbs_check'.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- .gitignore                                 |  1 +
- Documentation/devicetree/bindings/Makefile |  4 ++--
- Makefile                                   |  2 +-
- scripts/Makefile.build                     |  2 ++
- scripts/Makefile.lib                       | 24 ++++++++++------------
- 5 files changed, 17 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/.gitignore b/.gitignore
-index 87b9dd8a163b..a1941faf7233 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -16,6 +16,7 @@
- *.bin
- *.bz2
- *.c.[012]*.*
-+*.dt.checked
- *.dt.yaml
- *.dtb
- *.dtb.S
 diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 6aac57588e66..b46910eb7cf4 100644
+index f20d234aec46..aa243328ed43 100644
 --- a/Documentation/devicetree/bindings/Makefile
 +++ b/Documentation/devicetree/bindings/Makefile
-@@ -62,11 +62,11 @@ $(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) check_dtschema_version FORCE
- endif
+@@ -52,7 +52,7 @@ $(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := $(DT_MK_SCHEMA_USERONLY_FLAG
+ $(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) check_dtschema_version FORCE
+ 	$(call if_changed,mk_schema)
  
- extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
--extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-+extra-$(CHECK_DT_BINDING) += $(patsubst $(src)/%.yaml,%.example.dt.checked, $(DT_SCHEMA_FILES))
- extra-$(CHECK_DT_BINDING) += processed-schema-examples.yaml
- extra-$(CHECK_DTBS) += processed-schema.yaml
+-extra-y += processed-schema.yaml
++extra-$(CHECK_DTBS) += processed-schema.yaml
  
  # Hack: avoid 'Argument list too long' error for 'make clean'. Remove most of
  # build artifacts here before they are processed by scripts/Makefile.clean
- clean-files = $(shell find $(obj) \( -name '*.example.dts' -o \
--			-name '*.example.dt.yaml' \) -delete 2>/dev/null)
-+			-name '*.example.dt.checked' \) -delete 2>/dev/null)
-diff --git a/Makefile b/Makefile
-index ac2c61c37a73..0fc778b656d1 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1774,7 +1774,7 @@ clean: $(clean-dirs)
- 		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
- 		-o -name '*.asn1.[ch]' \
- 		-o -name '*.symtypes' -o -name 'modules.order' \
--		-o -name '.tmp_*.o.*' \
-+		-o -name '.tmp_*.o.*' -o -name '*.dt.checked' \
- 		-o -name '*.c.[012]*.*' \
- 		-o -name '*.ll' \
- 		-o -name '*.gcno' \) -type f -print | xargs rm -f
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 2e8810b7e5ed..ca24c3077fef 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -442,10 +442,12 @@ intermediate_targets = $(foreach sfx, $(2), \
- 					$(filter %$(strip $(1)), $(targets))))
- # %.asn1.o <- %.asn1.[ch] <- %.asn1
- # %.dtb.o <- %.dtb.S <- %.dtb <- %.dts
-+# %.dt.checked <- %.dt.yaml <- %.dts
- # %.lex.o <- %.lex.c <- %.l
- # %.tab.o <- %.tab.[ch] <- %.y
- targets += $(call intermediate_targets, .asn1.o, .asn1.c .asn1.h) \
- 	   $(call intermediate_targets, .dtb.o, .dtb.S .dtb) \
-+	   $(call intermediate_targets, .dt.checked, .dt.yaml) \
- 	   $(call intermediate_targets, .lex.o, .lex.c) \
- 	   $(call intermediate_targets, .tab.o, .tab.c .tab.h)
- 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index fa5022133a25..d72a7cf79f63 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -74,8 +74,8 @@ extra-y				+= $(dtb-y)
- extra-$(CONFIG_OF_ALL_DTBS)	+= $(dtb-)
- 
- ifneq ($(CHECK_DTBS),)
--extra-y += $(patsubst %.dtb,%.dt.yaml, $(dtb-y))
--extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
-+extra-y += $(patsubst %.dtb,%.dt.checked, $(dtb-y))
-+extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.checked, $(dtb-))
- endif
- 
- # Add subdir path
-@@ -308,26 +308,24 @@ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
- 
-+dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
-+
- $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
- 	$(call if_changed_dep,dtc)
- 
-+$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) FORCE
-+	$(call if_changed_dep,dtc)
-+
- DT_CHECKER ?= dt-validate
- DT_BINDING_DIR := Documentation/devicetree/bindings
- # DT_TMP_SCHEMA may be overridden from Documentation/devicetree/bindings/Makefile
- DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
--quiet_cmd_dtb_check =	CHECK   $@
--      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
-+quiet_cmd_dt_check = CHECK   $<
-+      cmd_dt_check = $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $<; touch $@
- 
--define rule_dtc
--	$(call cmd_and_fixdep,dtc)
--	$(call cmd,dtb_check)
--endef
--
--$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
--	$(call if_changed_rule,dtc,yaml)
--
--dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
-+$(obj)/%.dt.checked: $(obj)/%.dt.yaml $(DT_TMP_SCHEMA) FORCE
-+	$(call if_changed,dt_check)
- 
- # Bzip2
- # ---------------------------------------------------------------------------
 -- 
 2.25.1
 
