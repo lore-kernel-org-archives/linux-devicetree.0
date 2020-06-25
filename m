@@ -2,175 +2,140 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9C6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0084C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 06:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDCB820789
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79387206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 06:13:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSqndLJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389918AbgFYF62 (ORCPT
+        id S2389665AbgFYGNJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
+        Thu, 25 Jun 2020 02:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389600AbgFYF61 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 01:58:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98662C061573
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:58:27 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1joKtw-0001Jj-LO; Thu, 25 Jun 2020 07:58:20 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1joKtu-0000Qp-T7; Thu, 25 Jun 2020 07:58:18 +0200
-Date:   Thu, 25 Jun 2020 07:58:18 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
- <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
- <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+        with ESMTP id S1727800AbgFYGNI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 02:13:08 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC253C061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 23:13:06 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h15so4526470wrq.8
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 23:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=iA2LoEFl42PAfMHt6BhD+YKFpB/tKVOEuCLtgIdaUcg=;
+        b=iSqndLJ9qLVyw7p18ZTcH6bXibo55m/izg5YbG0MwtaVDbnfdmaUgYZF5S/7GFi/vt
+         5J+ZrctuzeZm4BNxufro5YRuDWIV2ZwNqpzDvJyC/hnMMeYG/Ml6HWwPLwFic4SzFOdP
+         f/lRvuYn4Tl3ZtUnGVVXMfZJSCHj1b3emgXbCmHO4o3MR3i1O/8hzxeJ+fqjvkOtpF/c
+         ul7g6TM1aAgS1z3hNo3TbqBmJ596IWY4D4OtKItMlAan8x5doJNvOd0X4KUK0BkTV8rf
+         txQlU9JpqItgodRxWijXUBNAVRfCTAw7GLCjRh5Xvt9QCr1/75F2R0f7ld5hWzR3QsBv
+         Ot8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=iA2LoEFl42PAfMHt6BhD+YKFpB/tKVOEuCLtgIdaUcg=;
+        b=SYXM1k95/j+R0Y5rCo3oCH7bYt8G5NLx547J7VJB2/CBGOp6sJm/tuzMxwabkZGbXu
+         ZgJRL6F5IaSncG9VmVm1ljd0XleSFM0WY762hiCCs9BUJhKckJF3eX/WG1xyLFdujsi3
+         1vKvr6G0lqqwJX0ODj1Re/YEv8wRdWY75nXEhtnuoZKRPpSS+au8xko2FBBPBhYo6CxP
+         DYciCljqpnnf/TTWf21v1UoFNT41vWYd8zJp8zGTu/a+kkvAQ6BvtsyzYVRdJ/o79BK+
+         TjwwQOPpW+C0vFCato6ZhVB4MXa+hzQiAoNbbHWXrA6SB7la5JYbpcptNf99qOm51ca6
+         ctsA==
+X-Gm-Message-State: AOAM530azSh6WCawa0dWC0OO8xuo0BaULv1XImG3rkJ9EXmRq76G3gW0
+        mzP0dRc1FZvavnG4bs+QaaiHQQ==
+X-Google-Smtp-Source: ABdhPJwq2swoxVQwWpcIMTGj0ih5YY/4JmDKH2eqYJuaBV/SepD18Aj4As76aHk2nf7cBTjKdyLEWQ==
+X-Received: by 2002:a5d:62cc:: with SMTP id o12mr27479942wrv.365.1593065585521;
+        Wed, 24 Jun 2020 23:13:05 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id j24sm28793190wrd.43.2020.06.24.23.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 23:13:04 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 07:13:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC] MFD's relationship with Device Tree (OF)
+Message-ID: <20200625061302.GK954398@dell>
+References: <20200609110136.GJ4106@dell>
+ <CAL_JsqK1BfYa2WfHFUwm9MB+aZVF5zehDSTZj0MhjuhJyYXdTA@mail.gmail.com>
+ <0709f20bc61afb6656bc57312eb69f56@walle.cc>
+ <970bf15b1106df3355b13e06e8dc6f01@walle.cc>
+ <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xfbgim4wbqyditz2"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e9e25cc-b3f2-926a-31dd-c6fafa7d581b@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---xfbgim4wbqyditz2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 25, 2020 at 12:23:54PM +0800, Tanwar, Rahul wrote:
->=20
-> Hi Philipp,
->=20
-> On 18/6/2020 8:25 pm, Philipp Zabel wrote:
-> > Hi Rahul,
-> >
-> > On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
-> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-> >> This PWM controller does not have any other consumer, it is a
-> >> dedicated PWM controller for fan attached to the system. Add
-> >> driver for this PWM fan controller.
+On Wed, 24 Jun 2020, Frank Rowand wrote:
+> On 2020-06-22 16:03, Michael Walle wrote:
+> > Am 2020-06-14 12:26, schrieb Michael Walle:
+> >> Hi Rob,
 > >>
-> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> >> ---
-> >>  drivers/pwm/Kconfig         |   9 +
-> >>  drivers/pwm/Makefile        |   1 +
-> >>  drivers/pwm/pwm-intel-lgm.c | 400 +++++++++++++++++++++++++++++++++++=
-+++++++++
-> >>  3 files changed, 410 insertions(+)
-> >>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+> >> Am 2020-06-10 00:03, schrieb Rob Herring:
+> >> [..]
+> >>> Yes, we should use 'reg' whenever possible. If we don't have 'reg',
+> >>> then you shouldn't have a unit-address either and you can simply match
+> >>> on the node name (standard DT driver matching is with compatible,
+> >>> device_type, and node name (w/o unit-address)). We've generally been
+> >>> doing 'classname-N' when there's no 'reg' to do 'classname@N'.
+> >>> Matching on 'classname-N' would work with node name matching as only
+> >>> unit-addresses are stripped.
 > >>
-> > [...]
-> >> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-> >> new file mode 100644
-> >> index 000000000000..3c7077acb161
-> >> --- /dev/null
-> >> +++ b/drivers/pwm/pwm-intel-lgm.c
-> >> @@ -0,0 +1,400 @@
-> > [...]
-> >> +static int lgm_pwm_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct lgm_pwm_chip *pc;
-> >> +	struct device *dev =3D &pdev->dev;
-> >> +	void __iomem *io_base;
-> >> +	int ret;
-> >> +
-> >> +	pc =3D devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-> >> +	if (!pc)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	io_base =3D devm_platform_ioremap_resource(pdev, 0);
-> >> +	if (IS_ERR(io_base))
-> >> +		return PTR_ERR(io_base);
-> >> +
-> >> +	pc->regmap =3D devm_regmap_init_mmio(dev, io_base, &pwm_regmap_confi=
-g);
-> >> +	if (IS_ERR(pc->regmap)) {
-> >> +		ret =3D PTR_ERR(pc->regmap);
-> >> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	pc->clk =3D devm_clk_get(dev, NULL);
-> >> +	if (IS_ERR(pc->clk)) {
-> >> +		ret =3D PTR_ERR(pc->clk);
-> >> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	pc->rst =3D devm_reset_control_get(dev, NULL);
-> >> +	if (IS_ERR(pc->rst)) {
-> >> +		ret =3D PTR_ERR(pc->rst);
-> >> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
-> >> +		return ret;
-> >> +	}
-> > Please use devm_reset_control_get_exclusive() to make it explicit an
-> > that exclusive reset control is requested. Given how the reset control
-> > is used, I think this driver could also use
-> > devm_reset_control_get_shared() to potentially allow sharing a reset
-> > line with other devices.
->=20
-> devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusiv=
-e().
-> Code as below:
-> static inline struct reset_control *devm_reset_control_get(
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 struct device *dev, const char *id)
-> {
-> =A0=A0=A0=A0=A0=A0=A0 return devm_reset_control_get_exclusive(dev, id);
-> }
-> Am i missing something else?
+> >> This still keeps me thinking. Shouldn't we allow the (MFD!) device
+> >> driver creator to choose between "classname@N" and "classname-N".
+> >> In most cases N might not be made up, but it is arbitrarily chosen;
+> >> for example you've chosen the bank for the ab8500 reg. It is not
+> >> a defined entity, like an I2C address if your parent is an I2C bus,
+> >> or a SPI chip select, or the memory address in case of MMIO. Instead
+> >> the device driver creator just chooses some "random" property from
+> >> the datasheet; another device creator might have chosen another
+> >> property. Wouldn't it make more sense, to just say this MFD provides
+> >> N pwm devices and the subnodes are matching based on pwm-{0,1..N-1}?
+> >> That would also be the logical consequence of the current MFD sub
+> >> device to OF node matching code, which just supports N=1.
 
-Obviously you're missing the comment above of_reset_control_get about
-some functions being compatibility wrappers.
+It's funny.  You reiterate things like "arbitrarily chosen" and
+"randomly chosen from the datasheet" but yet your suggestion is just
+that.  The only difference is that you wish to place the numerical
+differentiator in the node name, rather than the reg property.  Worse
+still, you are suggesting that you wish to just enumerate them off
+sequentially from some arbitrary base (likely 0).
 
-Best regards
-Uwe
+I don't know of many cases off, the top of my head at least, where
+this is a problem.  As you've mentioned, in the case of the AB8500,
+the bank is used which is semantically how the devices are actually
+addressed.  It's not random, it's physical.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+How are the identical devices addressed/identified/differentiated
+from each other on your H/W?  You must have a way of saying "I want
+PWM X to act in a different way from PWM Y".  What is 'X' and 'Y' in
+your datasheet?
 
---xfbgim4wbqyditz2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl70PPcACgkQwfwUeK3K
-7AkhKQf+O1Q3b69RDRigsJQ6oPI7YpwFFFIk6H9cC3YPWKTX1Fc/3BGAL2kPX0om
-ASGuU6fBKG1EXvSLQjcQcY03Q2I3B+uCjbH4KpiGlbNeOJ0iYgKNc0OQJ3qDUqJZ
-PqTLKAB1RWap9qT5URgQ/gCI8bkzGgmdamsCWVSRmCn3Sbw/vVybx2SsvOYUk2QJ
-94wrsYQeUi8+FoyF6xE6MT6oOJ8ospIAFekBNZnFHIeGXlcPNqNLH1Djg517SJyE
-mbHmTn7kWKbRV4BiOWIufF5PCyo5Ep0GPK4+nUHTr8mzsfd6ucH46hZVnoeeYfpY
-kwm2SvOhRB6/L3ZiqUL/sg1gO9w48A==
-=I8HR
------END PGP SIGNATURE-----
-
---xfbgim4wbqyditz2--
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
