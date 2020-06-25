@@ -2,133 +2,324 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8543C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 02:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B0DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 03:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80901207E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 02:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1444820656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 03:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="XjIWpPe+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i00CCZjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbgFYCJX (ORCPT
+        id S2388470AbgFYDff (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 22:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        Wed, 24 Jun 2020 23:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389070AbgFYCJW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 22:09:22 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6789AC061573;
-        Wed, 24 Jun 2020 19:09:22 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 49sk3N4z3cz9sSt; Thu, 25 Jun 2020 12:09:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1593050960;
-        bh=Vo8FKJOqnaD6OEhhmrq5Gc+Uc/50NDamteK/u807kDA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XjIWpPe+VR+f1/K308p56hJB/A9WvAfGKMsQ2KQDU7oaHpsAT/UKKEtVnOJjFdkr6
-         o5yXY+iKtPFsyGD//xlztR4ZAawOvO9BPzUNIjdYtPCfiK94tO7SzIAMg0bF//uylg
-         ufc+azGlElKHHsZc9P3irB4ZTLETjeVkp1E3fwcE=
-Date:   Thu, 25 Jun 2020 11:42:46 +1000
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jon Loeliger <jdl@jdl.com>, devicetree-compiler@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dtc: Consider one-character strings as strings
-Message-ID: <20200625014246.GD69292@umbus.fritz.box>
-References: <20200623094343.26010-1-geert+renesas@glider.be>
+        with ESMTP id S2389663AbgFYDfe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 23:35:34 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC66C0613ED
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 20:35:33 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id t23so1080161vkt.5
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 20:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zt5YvFe/0F+bWJgTS3kII0SGfZuZaLK6nHaXi0WGsWM=;
+        b=i00CCZjmDKwYuQM+UKH0th2PYsJzYpCI3wpvtwLt0Tt9OYWvWAntwVBLeZ6x7AY3ic
+         f5RUb7l7DAjCwgbPXYqffaL+hZkRg3TTfqd22Ja7UWuHwacMErgsCczKs3H6fbHtNy1u
+         N8aAnNBLzPktP3hBHOY7gPnq/Z8w2LfsCKK/s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zt5YvFe/0F+bWJgTS3kII0SGfZuZaLK6nHaXi0WGsWM=;
+        b=WL4LY/ItawcziVeRxK/iFQMJnMPW7ZWGT+F7iRtMJ2rE/qShABYoNdU012HwQjpZdR
+         o1+Gj+709wucDKvSZU856hpozRP/7/Fq10BsmFTDdEuwjKNtnz8Lt4lZunOnPeyuRwLc
+         R/SAuPLLF3u8T+xumL0koNdp89CYRlOHmI9APfG/U9jAyYdeVO3qeEbog2DOb7GHDvSu
+         GDgoaZAmumw/lH7TxCbeuSTh0NRCMUgUFfQtBSCyhduDPns82khA+qq/e8SXE79SYlGx
+         U5MYt93VvhKO8LsVaZ1cALQjsq3iPWIwcebVARkSAWTcqHAmYNFZf5r3liuoebTOaNPr
+         pWVg==
+X-Gm-Message-State: AOAM533g9Yj4hRYSYaJmlftDqRInmgOfOguAhOQq+0LnvnJakvTKRa4Z
+        PoI4xfaPUQc7Nx7ly7DH0cMDRJ0u+OU=
+X-Google-Smtp-Source: ABdhPJy0zDgPci8D5X2fQDe0mfOh07RXOK2WQF9a5+SOreXI7kWEca261x5K+zfrGN88rli3LByA1Q==
+X-Received: by 2002:a1f:1a04:: with SMTP id a4mr16011114vka.94.1593056131894;
+        Wed, 24 Jun 2020 20:35:31 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id q200sm491514vke.53.2020.06.24.20.35.30
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2020 20:35:31 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id 190so2751684vsr.9
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 20:35:30 -0700 (PDT)
+X-Received: by 2002:a67:2fc6:: with SMTP id v189mr9563477vsv.198.1593056130302;
+ Wed, 24 Jun 2020 20:35:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="llIrKcgUOe3dCx0c"
-Content-Disposition: inline
-In-Reply-To: <20200623094343.26010-1-geert+renesas@glider.be>
+References: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
+ <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
+In-Reply-To: <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 24 Jun 2020 20:35:16 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X=hbrT4o-PDs70zodAMUKEyLty7L92GtkyYBKQX_tt+w@mail.gmail.com>
+Message-ID: <CAD=FV=X=hbrT4o-PDs70zodAMUKEyLty7L92GtkyYBKQX_tt+w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Switch SPI to use GPIO for CS
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---llIrKcgUOe3dCx0c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 24, 2020 at 6:25 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Douglas Anderson (2020-06-24 17:08:04)
+> > The geni SPI protocol appears to have been designed without taking
+> > Linux needs into account.  In all the normal flows it takes care of
+> > setting chip select itself.  However, Linux likes to manage the chip
+> > select so it can do fancy things.
+> >
+> > Back when we first landed the geni SPI driver we worked around this
+> > by:
+> > - Always setting the FRAGMENTATION bit in transfers, which (I believe)
+> >   tells the SPI controller not to mess with the chip select during
+> >   transfers.
+> > - Controlling the chip select manually by sending the SPI controller
+> >   commands to assert or deassert the chip select.
+> >
+> > Our workaround was fine and it's been working OK, but it's really
+> > quite inefficient.  A normal SPI transaction now needs to do:
+> > 1. Start a command to set the chip select.
+> > 2. Wait for an interrupt from controller saying chip select done.
+> > 3. Do a transfer.
+> > 4. Start a command to unset the chip select.
+> > 5. Wait for an interrupt from controller saying chip select done.
+>
+> I thought the GENI hardware was supposed to be able to queue commands up
+> and then plow through them to interrupt the CPU when it finished. If
+> that was supported would there be any problems? I assume we could remove
+> the wait for CS disable and interrupt on step 5 and also the wait for
+> CS/interrupt on step 2 because it is bundled with the transfer in step
+> 3.
 
-On Tue, Jun 23, 2020 at 11:43:43AM +0200, Geert Uytterhoeven wrote:
-> When using overlays, a target-path property pointing to the root node is
-> quite common.  However, "dtc -O dts" prints it as a byte array:
->=20
->     target-path =3D [2f 00];
->=20
-> instead of a string:
->=20
->     target-path =3D "/";
->=20
-> For guess_value_type() to consider a value to be a string, it must
-> contain less nul bytes than non-nul bytes, thus ruling out strings
-> containing only a single character.  Allow printing such strings by
-> relaxing the condition slightly.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Do you have any details or pointers to documentation on said ability
+to queue commands?  I don't think I've ever heard of it.
 
-Makes sense.  Applied, thanks.
+How exactly would it work, anyway?  There's no sequence number or
+anything in GENI and there's a single "DONE" interrupt that signals
+both "CS Done" and "Transfer Done", so without some really good docs
+I'd have a really hard time figuring out how this is supposed to work.
 
-> ---
-> Alternatively, guess_value_type() could check explicitly for "/",
-> reducing the number of false positives.
->=20
-> However, there seem to be plenty of other uses of one-character strings
-> in DTS files.  The most common one is 'type =3D "a"' for HDMI connectors.
-> ---
->  treesource.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/treesource.c b/treesource.c
-> index 2acb920d77752410..061ba8c9c5e83265 100644
-> --- a/treesource.c
-> +++ b/treesource.c
-> @@ -183,7 +183,7 @@ static enum markertype guess_value_type(struct proper=
-ty *prop)
->  			nnotcelllbl++;
->  	}
-> =20
-> -	if ((p[len-1] =3D=3D '\0') && (nnotstring =3D=3D 0) && (nnul < (len-nnu=
-l))
-> +	if ((p[len-1] =3D=3D '\0') && (nnotstring =3D=3D 0) && (nnul <=3D (len-=
-nnul))
->  	    && (nnotstringlbl =3D=3D 0)) {
->  		return TYPE_STRING;
->  	} else if (((len % sizeof(cell_t)) =3D=3D 0) && (nnotcelllbl =3D=3D 0))=
- {
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> Where is the delay? On step 2 where we wait to transfer or at step 5
+> when we wait for CS to be dropped, or both?
 
---llIrKcgUOe3dCx0c
-Content-Type: application/pgp-signature; name="signature.asc"
+Presumably every CS change takes the same amount of time?  ...so I'd
+say "both".  If it really matters I can try to measure.
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl70ARYACgkQbDjKyiDZ
-s5J5bQ//eb8xTYzTNrwsMhjp590rDLH8q0S+0vh3wbWvxoR3E4YVcIyVJtpPhyX7
-2n8DMdNnoN83yfwvQOj8h/VVO8BRY157v0RvU5VK+vKT6my3skqFccGQxg0wS3/v
-+vEa9gapGQUKnKeE+xKEGvBrOivMqgI6o5vs1DWzsV+NHmVRy8PCTBMx3BlxOhO3
-Z0opCrv+TSlm/dRpBLAUr3nSKWKmw+SpBIcYnLeyxmEoXwWNIzJF+ZDGLqIYEl6e
-JsqWlEN++dIdPx0RW1pRCAKMmnoMMUdChPEwbWRruRtkpP3G63q6WwMw0uyKz0vi
-tTAalO3gZjkT7HW5t1o0TfQvx1lrH4WcWm1bExUqUvmnPn5uco06+A9dGv6idt93
-OUdHl5q+PtvXpQAW0c8QRjLVrhJTmcJaJ7SXHPatLSCtWFW/5ARASKlZs7hhyVh+
-3H/hCPJDZNbqykZBAxHD+OSfyfoXCcZCR1ytb48DIlfyhWsYCNIjgv3t360dyErr
-kxvIP2I+sI8qr0lYwiOfXfpKU+bvUkgRSsSAJL43h1Nf00T3wyeLzsIj5TTqAiMh
-lG+aydMx7Y6Pfsx+5h07TQj2UTuTNJb9PjJUtx+Gf9wCvArdIwTf7/WnNUFuGFk9
-s9psyVWlDzO24UIFUE57hoIYatfOgI7PIVKcxyV6X/RZWLdCnYM=
-=KO1b
------END PGP SIGNATURE-----
+> > Things are made a bit worse because the Linux GPIO framework assumes
+> > that setting a chip select is quick.  Thus the SPI core can be seen to
+> > tell us to set our chip select even when it's already in the right
+> > state and we were dutifully kicking off commands and waiting for
+> > interrupts.  While we could optimize that particular case, we'd still
+> > be left with the slowness when we actually needed to toggle the chip
+> > select.
+>
+> One thing to note is that the GPIO driver doesn't tell us that it has
+> actually asserted/deasserted the GPIO. It writes to the controller and
+> moves on so we don't know when it has actually gone into effect.
+> Hopefully moving to GPIO mode doesn't mean we get weird problems where
+> CS isn't asserted yet and a transfer starts wiggling the lines.
 
---llIrKcgUOe3dCx0c--
+cs-gpios is a pretty normal Linux concept and not something I
+invented.  It's documented to work just fine and I can't see this as
+being a real problem.
+
+
+> > All the chip select lines can actually be muxed to be GPIOs and
+> > there's really no downside in doing so.  Now Linux can assert and
+> > deassert the chip select at will with a simple MMIO write.
+> >
+> > The SPI driver will still have the ability to set the chip select, but
+> > not we just won't use it.
+>
+> s/not/now/?
+
+Sigh.  I always make that typo.  I can spin if need be to fix.
+
+
+> > With this change I tested reading the firmware off the EC connected to
+> > a ChromeOS device (flashrom -p ec -r ...).  I saw about a 25% speedup
+> > in total runtime of the command and a 30% reduction in interrupts
+> > generated (measured by /proc/interrupts).
+>
+> I see nothing wrong with specifying the CS gpios in DT. Seems like that
+> should always be there and then the driver should decide to use GPIO
+> mode or not. So
+>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>
+> for that part.
+
+I appreciate the tag, but I'm not sure it's working the way you're
+thinking it does?  See:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/spi/spi-controller.yaml
+
+From there, when you specify spi-gpios it's saying: definitely use
+this GPIO as the chip select, don't use your native one.  The bindings
+explicitly show how you would specify the native GPIO.
+
+If we wanted the SPI controller to decide one way or the other on its
+own, I guess we'd need an entirely new property saying that if it
+wanted to control its chip select with GPIO then here's the GPIO and
+then we'd need to provide a pinmux config for that.  That feels
+overkill to me since I really see no reason not to use it as a GPIO.
+
+It's kinda like saying: if an SoC provided two different ways to set a
+pin, one of which always delayed 50 us to assert and one that asserted
+instantly, do we really need to write drivers to support both modes?
+No.  The mode which delays 50 us is useless and there was no good
+reason for the SoC to invent that mode and no reason to try to support
+it in software.
+
+
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 ++++++++++++++++++++++++----
+> >  1 file changed, 49 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 3a8076c8bdbf..74c8503b560e 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -1204,65 +1213,97 @@ pinmux {
+> >                         qup_spi0_default: qup-spi0-default {
+> >                                 pinmux {
+> >                                         pins = "gpio34", "gpio35",
+> > -                                              "gpio36", "gpio37";
+> > +                                              "gpio36";
+> >                                         function = "qup00";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio37";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi1_default: qup-spi1-default {
+> >                                 pinmux {
+> >                                         pins = "gpio0", "gpio1",
+> > -                                              "gpio2", "gpio3";
+> > +                                              "gpio2";
+> >                                         function = "qup01";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio3";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi3_default: qup-spi3-default {
+> >                                 pinmux {
+> >                                         pins = "gpio38", "gpio39",
+> > -                                              "gpio40", "gpio41";
+> > +                                              "gpio40";
+> >                                         function = "qup03";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio41";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi5_default: qup-spi5-default {
+> >                                 pinmux {
+> >                                         pins = "gpio25", "gpio26",
+> > -                                              "gpio27", "gpio28";
+> > +                                              "gpio27";
+> >                                         function = "qup05";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio28";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi6_default: qup-spi6-default {
+> >                                 pinmux {
+> >                                         pins = "gpio59", "gpio60",
+> > -                                              "gpio61", "gpio62";
+> > +                                              "gpio61";
+> >                                         function = "qup10";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio62";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi8_default: qup-spi8-default {
+> >                                 pinmux {
+> >                                         pins = "gpio42", "gpio43",
+> > -                                              "gpio44", "gpio45";
+> > +                                              "gpio44";
+> >                                         function = "qup12";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio45";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi10_default: qup-spi10-default {
+> >                                 pinmux {
+> >                                         pins = "gpio86", "gpio87",
+> > -                                              "gpio88", "gpio89";
+> > +                                              "gpio88";
+> >                                         function = "qup14";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio89";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+> >
+> >                         qup_spi11_default: qup-spi11-default {
+> >                                 pinmux {
+> >                                         pins = "gpio53", "gpio54",
+> > -                                              "gpio55", "gpio56";
+> > +                                              "gpio55";
+> >                                         function = "qup15";
+> >                                 };
+> > +                               pinmux-cs {
+> > +                                       pins = "gpio56";
+> > +                                       function = "gpio";
+> > +                               };
+> >                         };
+>
+> Perhaps we should have qup-spiN-default and qup-spiN-cs-gpio though?
+> That way the driver can properly mux the pin to be gpio mode if it wants
+> to. I don't see a way to mux the pin to be "qup" until the driver
+> decides it doesn't want that.
+
+This seems like extra complexity.  Why would the SPI controller ever
+need to control the GPIO itself.  If we ever do come up with a reason
+we can solve it then?
+
+-Doug
