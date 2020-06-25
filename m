@@ -2,196 +2,396 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390FCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8851C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 15:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1119F20768
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8712420781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 15:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRA7a7WN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MaHYka52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405599AbgFYO5d (ORCPT
+        id S2405647AbgFYPRS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
+        Thu, 25 Jun 2020 11:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405502AbgFYO5c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 10:57:32 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB07C08C5C1
-        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 07:57:31 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g75so5858144wme.5
-        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 07:57:31 -0700 (PDT)
+        with ESMTP id S2405309AbgFYPRR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 11:17:17 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 213DEC08C5C1
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 08:17:17 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cm23so3363158pjb.5
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 08:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+7QpQs6FhlpOXE9FQrO8BUOl2ttFaq7mxuLw6M5Nym0=;
-        b=xRA7a7WNemF2+ECa311QCcaUwE+ZUu/cj6cIbIvkYviFl2sMvfHdyFQCKmzZaJj+eF
-         1y6apB3UH2ZKIk+pPcgF+3VuQ5kQAV/ef8ebI/c/UG64L+oWxN7a5hostGrpYOAIUGNw
-         KgNhlasIT2fYmlWzk37PWUYkW5yhZpOx4G0kLwbNn8bFB/lnbabAT8F5usCe9SmQtbKj
-         aaZcDurCTDnB2KpfqoV1ydaJCYASOICfY7fvLQgIqT+743VBmlnjoE2DRPdKk3rL2tm6
-         wnsoMvlLuITZH9lO8zx3xnUyyqMrODMB+j++YhH7p0BtK4Viv52CaeuXw/D3m3jv6eZB
-         AkHQ==
+         :content-disposition:in-reply-to;
+        bh=rH3zkglepBahSd9IX1c75pcis6Uc/eb/JPbk2O7tSmk=;
+        b=MaHYka52QScOhrdXtHQC1gIcx4Dyvz26if9PDHp1EVLPiMmBQPeQwEF6pnjVHBvInK
+         weoFFjzpWeqxRVgi7QRvLgcKq+W6NcqAcGzqEGBUHYq6KbPnyfvyxtwlHEoMY2XqT+SC
+         cTS6qpbgW04cLrorTlXutjhq72Hk3WqNCJVks=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+7QpQs6FhlpOXE9FQrO8BUOl2ttFaq7mxuLw6M5Nym0=;
-        b=st5N7C+r1LOOHAQjjToxx28NVns14LJ77BSEdMh1nFqCObq4csVfkebLOL3l449aXw
-         mM6Z9TKszxK3fzL8vENs2pkt9jDwDEKquZ8emhQGbQdZ7rYDZutoMAqRMZvgcEQ/82Se
-         tCZnpq53jkdF60h0sLeOL8ME1/FPdVsl5mMrDzz84w7LBGas7HlM8d5qEXpsfWnzdbTU
-         XJrbt3OjDELo6SrKFz+FKa4Fft91SJc/eWxgWTSHfsugwKBHZbp0+3cBKQzdZcBjr0RG
-         SfdflK28j8/qJ4b48Zhn3dXRUXk8N+1r6DpA7nlZ6L/6a5pgzr+udxLU8aBgvsn09Lup
-         NMpA==
-X-Gm-Message-State: AOAM532Pl3WkdPkqs+ZvTIILOvPVfhcomd6wQ9eHakhC+V2kTFiqjmiO
-        Ps7JCU4Wxo5hj1fa/y8CJpUcOw==
-X-Google-Smtp-Source: ABdhPJyFueEyfmUNkHi9WsjhYIRl9UwJEKZQIopHogN7onsTa92/7L3ToUPhcpZZZf5KJVaVQ4gBtg==
-X-Received: by 2002:a1c:1946:: with SMTP id 67mr3982816wmz.59.1593097050635;
-        Thu, 25 Jun 2020 07:57:30 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id z1sm18241248wrh.14.2020.06.25.07.57.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 07:57:29 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 15:57:26 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to
- simple-mfd from simple-bus
-Message-ID: <20200625145726.GT954398@dell>
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com>
- <20200623122413.GA954398@dell>
- <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
- <20200624181605.GJ954398@dell>
- <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=rH3zkglepBahSd9IX1c75pcis6Uc/eb/JPbk2O7tSmk=;
+        b=CX0Q3A/VUJYNI7P2MeCGGQ9Sj9fP/6k/vqw4EfaRsW00wRigr9t0XPr6+lbHwPHrgH
+         1ngSdUkgQkKDjqtP6vmOCavYGHcvmZzna3zIkdcY/uzRrAm0HR7shu8JpjoAT1j13pLD
+         HWnkVBqvnA29odfUB2npL/CZfQDbP6RaYxVU4Iyc4RiIeSMYq8W43L7/qNTUVTXlQZPK
+         p/6e7f5swtl6pCWRESt5goADQTDEwHTIHGg6U4VUwMfYxoV/BCtTiRslpDx6uHPUkOk9
+         fkhroiWEbFp8kD95/ZUzTvkGxk1eQTf9psCuyGDtBQ92BB7EKYpHDH9DRQ8Hz8m7SAcG
+         2ymg==
+X-Gm-Message-State: AOAM533FQfjXGqPYeFrKtiEFQmORVTQVC3BBMUmFb0vXoRmyo/i0C9Gf
+        yZ5zxIUarw+Qo5s3OIN1aALdRw==
+X-Google-Smtp-Source: ABdhPJyUX+tn/N6OlkqVwlbjw4CKCpKjnFXHqmfwRQv9TkChDD6Yx9e+Ac4EStM+cmhIIN9n0/oCIA==
+X-Received: by 2002:a17:902:d352:: with SMTP id l18mr33405732plk.68.1593098236608;
+        Thu, 25 Jun 2020 08:17:16 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x29sm5953573pfj.190.2020.06.25.08.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jun 2020 08:17:14 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 08:17:13 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/17] arm64: dts: sc7180: Add OPP table for all qup
+ devices
+Message-ID: <20200625151713.GF39073@google.com>
+References: <1588080785-6812-1-git-send-email-rnayak@codeaurora.org>
+ <1588080785-6812-5-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
+In-Reply-To: <1588080785-6812-5-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 25 Jun 2020, Masahiro Yamada wrote:
+Hi Rajendra,
 
-> On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Thu, 25 Jun 2020, Masahiro Yamada wrote:
-> >
-> > > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > >
-> > > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
-> > > >
-> > > > > 'make ARCH=arm dtbs_check' emits the following warning:
-> > > > >
-> > > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> > > > >
-> > > > > Maybe, simple-mfd could be a better fit for this device.
-> > > >
-> > > > The two should be equivalent.
-> > >
-> > > Yes, I know.
-> > > That's why I can change "simple-bus" to "simple-mfd"
-> > > with no risk.
-> > >
-> > > The difference is schema-check.
-> > >
-> > > The node name for "simple-bus" is checked by 'make dtbs_check'.
-> > >
-> > > See this code:
-> > > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
-> > >
-> > > Even if I rename the node, it does not accept the
-> > > unit name '1,1f00000'
-> > >
-> > > > What do you mean by "maybe"?  Does this squash the warning?
-> > >
-> > > "maybe" means I am not quite sure
-> > > which compatible is a better fit
-> > > to describe this device.
-> > >
-> > > As mentioned above, simple-bus and simple-mfd
-> > > are interchangeable from a driver point of view.
-> > >
-> > > This add-on board is integrated with various peripherals
-> > > such as 16550a serial, smsc9115 ether etc.
-> > > The address-decode is implemented in a CPLD device.
-> > > It has chip selects and local addresses, which are mapped to
-> > > the parent.
-> > >
-> > > It can be either simple-bus or simple-mfd, I think.
-> > >
-> > >
-> > > dt-schema checks the node name of simple-bus.
-> > > Currently, there is no check for simple-mfd.
-> > >
-> > > So, I think this patch is an easy solution
-> > > to fix the warning.
-> >
-> > Yes, looking at the documentation it seems as though 'simple-mfd'
-> > would be a better fit.  Is the device a single IP with various
-> > different functions?
+On Tue, Apr 28, 2020 at 07:02:52PM +0530, Rajendra Nayak wrote:
+> qup has a requirement to vote on the performance state of the CX domain
+> in sc7180 devices. Add OPP tables for these and also add power-domains
+> property for all qup instances.
 > 
-> Not an IP.
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 79 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
 > 
-> This is a small board that consists of
-> a CPLD + ethernet controller + serial controller + LED, etc.
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 998f101..efba600 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -417,6 +417,25 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		qup_opp_table: qup-opp-table {
+> +			compatible = "operating-points-v2";
+> +
+> +			opp-75000000 {
+> +				opp-hz = /bits/ 64 <75000000>;
+> +				required-opps = <&rpmhpd_opp_low_svs>;
+> +			};
+> +
+> +			opp-100000000 {
+> +				opp-hz = /bits/ 64 <100000000>;
+> +				required-opps = <&rpmhpd_opp_svs>;
+> +			};
+> +
+> +			opp-128000000 {
+> +				opp-hz = /bits/ 64 <128000000>;
+> +				required-opps = <&rpmhpd_opp_nom>;
+> +			};
+> +		};
+> +
+>  		qupv3_id_0: geniqup@8c0000 {
+>  			compatible = "qcom,geni-se-qup";
+>  			reg = <0 0x008c0000 0 0x6000>;
 
-Then simple MFD does not seem like a good fit.
 
-Neither does 'simple-bus'.
+no entries for i2c0?
 
-What is it you're trying to describe in the device hierarchy?
+> @@ -452,6 +471,8 @@
+>  				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -463,6 +484,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart0_default>;
+>  				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -476,6 +499,8 @@
+>  				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -489,6 +514,8 @@
+>  				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -500,6 +527,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart1_default>;
+>  				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -513,6 +542,8 @@
+>  				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -524,6 +555,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart2_default>;
+>  				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -537,6 +570,8 @@
+>  				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -550,6 +585,8 @@
+>  				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -561,6 +598,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart3_default>;
+>  				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -574,6 +613,8 @@
+>  				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -585,6 +626,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart4_default>;
+>  				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -598,6 +641,8 @@
+>  				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -611,6 +656,8 @@
+>  				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -622,6 +669,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart5_default>;
+>  				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  		};
 
-> > > Rob is in Cc. Please add comments if any.
-> > >
-> > > > Isn't the issue caused by the ','?
-> > >
-> > > Right.
-> > >
-> > > The node name of simple-bus
-> > > must meet the regular expression:
-> > > "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
-> > >
-> > >
-> > > Even if I rename the node
-> > > "support-card@1,1f00000"
-> > > to "bus@1,1f00000", the warning is still
-> > > displayed due to ','
-> > >
-> > > "1,1f00000" means
-> > > the address 0x01f00000 of chip select 1.
-> >
-> > Is this an officially accepted format?
-> 
-> I am not sure if it is official.
-> 
-> Rob said the data fields should be separated by commas.
-> https://www.spinics.net/lists/devicetree/msg201565.html
+no entries for i2c6?
 
-Are you sure he doesn't mean in the 'reg' property.
-
-Rather than the node-name@NNNNNNNN syntax.
-
-BTW, I think the error you link to above is related to the
-node-name@NNNNNNNN not matching the value listed in the 'reg'
-property.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> @@ -661,6 +710,8 @@
+>  				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -672,6 +723,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart6_default>;
+>  				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -685,6 +738,8 @@
+>  				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -696,6 +751,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart7_default>;
+>  				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -709,6 +766,8 @@
+>  				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -722,6 +781,8 @@
+>  				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -733,6 +794,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart8_default>;
+>  				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -746,6 +809,8 @@
+>  				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -757,6 +822,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart9_default>;
+>  				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -770,6 +837,8 @@
+>  				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -783,6 +852,8 @@
+>  				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -794,6 +865,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart10_default>;
+>  				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -807,6 +880,8 @@
+>  				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -820,6 +895,8 @@
+>  				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -831,6 +908,8 @@
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&qup_uart11_default>;
+>  				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+> +				power-domains = <&rpmhpd SC7180_CX>;
+> +				operating-points-v2 = <&qup_opp_table>;
+>  				status = "disabled";
+>  			};
+>  		}
