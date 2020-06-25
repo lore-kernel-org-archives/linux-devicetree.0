@@ -2,99 +2,171 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8DFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 13:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62A9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13161206A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 13:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pP1WEOgH"
+	by mail.kernel.org (Postfix) with ESMTP id 537D12076E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593095930;
+	bh=zxWp8BmWa920a0+o2fBQiG+V+AqjY0vOBj+m52+jqV4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1ICs2qVLeoIzO6We5oFBlwLniup5HSWrOMsFuKUICwjyz90VWCJAZzmK+murpnZyT
+	 5w0flavlFMchs/BqeHiCl3NrvEuCdjAfoXygzGz8I+r6JdniWvR0kjQ2I+8X/dtAdR
+	 fz09OuaJ7nSyyhDkxxSCiPzq/cgSemWcxBsTv4rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405136AbgFYNwJ (ORCPT
+        id S2405415AbgFYOiu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 09:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404803AbgFYNwJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 09:52:09 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3567C08C5C1;
-        Thu, 25 Jun 2020 06:52:09 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id j12so3035219pfn.10;
-        Thu, 25 Jun 2020 06:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VVgPOn7O5vygXaZOP7HGpuix5zgjHnM6UUWBPzwUJ4Y=;
-        b=pP1WEOgH0SEEmJb/UaXkuHK8Ba1Lo+wY9744VI3i5PvvVw3f14edV98Su6rFk0TffM
-         39QOnrE1vsNyNrCyaZu6hrVqpZWLrrmIhrbkLqPJHe9VWecJFY47fOiGjTotFobWEFpB
-         7UR0tPFQ+BuEp0dSpMIiNiWReCQcqOue/O5TTcNULoVAzeWopoBhnwqRb42OfCuTJJ5/
-         srmKTnltLi166dCLavXwivp/cK36NW6vWSHY0qdV0B1Y34wpkLtFKjXBEPpb5vl27Wrj
-         uGAAY+sZVO/F8IMY36PmThIgUibhIXrbi7bLzID9+gaYf2zU5rSg0ZHbBq6bN3Uuneed
-         5MKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VVgPOn7O5vygXaZOP7HGpuix5zgjHnM6UUWBPzwUJ4Y=;
-        b=ORf5npVqTwsqnPLviyQNl8NxvnL0hAeCsGlJJIRJPbZjlhuN//ADX0JzYYCWcrG/q7
-         ry/sFfv0WfOwNz7YUYD8CIoKB94m7l9EE//vU281aILlTRsRmaWriUYAWIJUtCcFQ7Bn
-         icuL7xN+0PRRTIwgUKvmyes0yx4xUd1Omfsm35Eb2Q/e9ZKNMbJTmrPpHnc9s7M/wA6u
-         rDFd03Dhk42knBHPd3oYxAA+SA6X9i9sk+XHv24EdCT9BNXz+iHIVuhLo/exZ0XXgIy9
-         887Qbwl04cb6M4RXnDizJCKTVP41CyjdHoZ1EF2kkkuylWmUF/vJFxIuWbCioBLNKbeS
-         Ezbw==
-X-Gm-Message-State: AOAM531yVsFAjpYUsqRAg7rM9V7PJSUJ40nGSd/tLqcNuDoxNFknlDDJ
-        mNKiOXTh1ezmJZWHxkM6vuqI9a8ySg4=
-X-Google-Smtp-Source: ABdhPJzOP7qmFQ1KGxAuZ/+8XuJATbuzZcIQCdCTGN0QnWrO6svd6TuLiv567ICpzriO7hC9QGM98Q==
-X-Received: by 2002:a63:9e02:: with SMTP id s2mr25764690pgd.170.1593093129146;
-        Thu, 25 Jun 2020 06:52:09 -0700 (PDT)
-Received: from localhost.localdomain ([1.240.193.107])
-        by smtp.googlemail.com with ESMTPSA id f15sm4587309pfk.58.2020.06.25.06.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 06:52:08 -0700 (PDT)
-From:   Kangmin Park <l4stpr0gr4m@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mailbox: zynqmp_ipi: fix unit address
-Date:   Thu, 25 Jun 2020 22:51:58 +0900
-Message-Id: <20200625135158.5861-1-l4stpr0gr4m@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 25 Jun 2020 10:38:50 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:45184 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405411AbgFYOiu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 10:38:50 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05PEcQAX008959;
+        Thu, 25 Jun 2020 23:38:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05PEcQAX008959
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593095907;
+        bh=ijPZb1cfulvfr7nl4mn4pmwbl3GKFLftlqTTQQ9OMEc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OznUSqNEqRwb9eSqLiT0Q6D+ovJNlmwc02GFYtezeKuLjq3Zl4BfDOXROeFx9tON1
+         iqmr3lKpeEos+rVdZDVXay4TD4UVgiNzFvAUTs1BGs8Rz3IYk46DXgzcqynWLhwOSZ
+         OrsNx0HahNWTZTy9eSXlZbad+a/RXhmssSP9eHOlh0+R8A2NVdFwqhXIgjDcquRXd6
+         09DKR5pTWf+f3pDkm4PIxV4IlNruY0BhnF3Q+W+R6U7C1dNB3jC7ChnBoV+XlJlxwF
+         JJYeXuVH82yC1cfbXnxlJqEOdmSrh6SLm8j+G3jEn0fZl6qc1VO2F2hstm/1U5M4P+
+         TIP02jpz6v7ug==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id m25so3668741vsp.8;
+        Thu, 25 Jun 2020 07:38:27 -0700 (PDT)
+X-Gm-Message-State: AOAM5307P+XvSxbN/q+ZzGCSLLPCo+tIIvB1VgWhqsvu/GVxq5azQBsX
+        TnPnx+lPRG7zRasNs/Lw+ztxxEqah60AVWaWlHM=
+X-Google-Smtp-Source: ABdhPJyvOYDrxR1TD/0As+dJtiC0TVMxIpD2R/NeE0UMXfGRlubszQEpcdvJygsMSzOaXDMnb7MTpA0vPI/hmyAnMhA=
+X-Received: by 2002:a67:2d42:: with SMTP id t63mr26451715vst.181.1593095906216;
+ Thu, 25 Jun 2020 07:38:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
+ <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
+ <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com> <20200624181605.GJ954398@dell>
+In-Reply-To: <20200624181605.GJ954398@dell>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 25 Jun 2020 23:37:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
+Message-ID: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
+ from simple-bus
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix unit address to match the first address specified in the reg
-property of the node in example.
+On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Thu, 25 Jun 2020, Masahiro Yamada wrote:
+>
+> > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > >
+> > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
+> > >
+> > > > 'make ARCH=arm dtbs_check' emits the following warning:
+> > > >
+> > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> > > >
+> > > > Maybe, simple-mfd could be a better fit for this device.
+> > >
+> > > The two should be equivalent.
+> >
+> > Yes, I know.
+> > That's why I can change "simple-bus" to "simple-mfd"
+> > with no risk.
+> >
+> > The difference is schema-check.
+> >
+> > The node name for "simple-bus" is checked by 'make dtbs_check'.
+> >
+> > See this code:
+> > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
+> >
+> > Even if I rename the node, it does not accept the
+> > unit name '1,1f00000'
+> >
+> > > What do you mean by "maybe"?  Does this squash the warning?
+> >
+> > "maybe" means I am not quite sure
+> > which compatible is a better fit
+> > to describe this device.
+> >
+> > As mentioned above, simple-bus and simple-mfd
+> > are interchangeable from a driver point of view.
+> >
+> > This add-on board is integrated with various peripherals
+> > such as 16550a serial, smsc9115 ether etc.
+> > The address-decode is implemented in a CPLD device.
+> > It has chip selects and local addresses, which are mapped to
+> > the parent.
+> >
+> > It can be either simple-bus or simple-mfd, I think.
+> >
+> >
+> > dt-schema checks the node name of simple-bus.
+> > Currently, there is no check for simple-mfd.
+> >
+> > So, I think this patch is an easy solution
+> > to fix the warning.
+>
+> Yes, looking at the documentation it seems as though 'simple-mfd'
+> would be a better fit.  Is the device a single IP with various
+> different functions?
 
-Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
----
- .../devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt     | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-index 4438432bfe9b..ad76edccf881 100644
---- a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-+++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-@@ -87,7 +87,7 @@ Example:
- 		ranges;
- 
- 		/* APU<->RPU0 IPI mailbox controller */
--		ipi_mailbox_rpu0: mailbox@ff90400 {
-+		ipi_mailbox_rpu0: mailbox@ff990400 {
- 			reg = <0xff990400 0x20>,
- 			      <0xff990420 0x20>,
- 			      <0xff990080 0x20>,
+Not an IP.
+
+This is a small board that consists of
+a CPLD + ethernet controller + serial controller + LED, etc.
+
+
+>
+> > Rob is in Cc. Please add comments if any.
+> >
+> > > Isn't the issue caused by the ','?
+> >
+> > Right.
+> >
+> > The node name of simple-bus
+> > must meet the regular expression:
+> > "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
+> >
+> >
+> > Even if I rename the node
+> > "support-card@1,1f00000"
+> > to "bus@1,1f00000", the warning is still
+> > displayed due to ','
+> >
+> > "1,1f00000" means
+> > the address 0x01f00000 of chip select 1.
+>
+> Is this an officially accepted format?
+
+
+I am not sure if it is official.
+
+Rob said the data fields should be separated by commas.
+https://www.spinics.net/lists/devicetree/msg201565.html
+
+
+
+
 -- 
-2.26.2
-
+Best Regards
+Masahiro Yamada
