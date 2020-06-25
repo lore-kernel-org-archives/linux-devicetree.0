@@ -2,130 +2,62 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16932C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EF1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60CF20FC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="kgJJLWN0"
+	by mail.kernel.org (Postfix) with ESMTP id 5716920720
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390492AbgFYIJb (ORCPT
+        id S2390651AbgFYIbP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390396AbgFYIJb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 04:09:31 -0400
-X-Greylist: delayed 530 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 Jun 2020 01:09:31 PDT
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1C5C061573
-        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 01:09:31 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 49ssrl45D3zKmhM;
-        Thu, 25 Jun 2020 10:00:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593072037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KsVtsKXWjb9tO8tIRJnY/G5IWD6O3/lf2qooOuvtG7M=;
-        b=kgJJLWN0GF7S7PuFJlCVsbUEp5UJOogFD1jrJnB+i72/fjMBAsDbhrjpYBiCQZubR0wVXN
-        xKIUEdWDdLdryqKCb/6yegwRCIaMXdN+crG4DIW1VcegRBsdx5MQkQAOw2atoWrXqwYb5N
-        VvPWHu2U49YKCmm0aUo2AnQhC8yoA6qL/batu+hb6c/sKakLy6XFXkgg3HJNgh/1TCM5UF
-        te8G4bGrLxSVQH+OxIXy0MghHpIDCZcgVWd0eCCgp7nAxiTJldJi0U1IlJOQ4nyrRm+gva
-        jhExuwlN4xJcm5FpSaFFzrFAVPXJUQj/YqzvMUHwtZo3LlOscjR/JD10vs58rw==
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id kSFI7Ov2nZua; Thu, 25 Jun 2020 10:00:35 +0200 (CEST)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH v2 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
-Date:   Thu, 25 Jun 2020 16:59:57 +0900
-Message-Id: <20200625075957.364273-1-mans0n@gorani.run>
+        Thu, 25 Jun 2020 04:31:15 -0400
+Received: from elvis.franken.de ([193.175.24.41]:36823 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389537AbgFYIbP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:31:15 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1joNHs-0001Gi-02; Thu, 25 Jun 2020 10:31:12 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 98D3FC06F9; Thu, 25 Jun 2020 10:23:11 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 10:23:11 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     =?iso-8859-1?Q?Jo=E3o_H=2E?= Spies <jhlspies@gmail.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] MIPS: ingenic: gcw0: Fix HP detection GPIO.
+Message-ID: <20200625082311.GA6319@alpha.franken.de>
+References: <20200623211945.823-1-jhlspies@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 6
-X-Rspamd-Score: 1.00 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 241F21793
-X-Rspamd-UID: a9cf0b
+In-Reply-To: <20200623211945.823-1-jhlspies@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds device tree bindings for the NXP PCA9570,
-a 4-bit I2C GPO expander.
+On Tue, Jun 23, 2020 at 06:19:45PM -0300, João H. Spies wrote:
+> Previously marked as active high, but is in reality active low.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b1bfdb660516 ("MIPS: ingenic: DTS: Update GCW0 support")
+> Signed-off-by: João H. Spies <jhlspies@gmail.com>
+> ---
+>  arch/mips/boot/dts/ingenic/gcw0.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
-I don't feel I can really maintain this driver, but it seems all yaml docs
-have a maintainers field so I just added it...
----
- .../bindings/gpio/gpio-pca9570.yaml           | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+applied to mips-fixes.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-new file mode 100644
-index 000000000000..996b0ed2f58f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-pca9570.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCA9570 I2C GPO expander
-+
-+maintainers:
-+  - Sungbo Eo <mans0n@gorani.run>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nxp,pca9570
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@24 {
-+        compatible = "nxp,pca9570";
-+        reg = <0x24>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+    };
-+
-+...
+Thomas.
+
 -- 
-2.27.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
