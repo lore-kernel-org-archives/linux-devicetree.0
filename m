@@ -2,110 +2,547 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586FBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 21:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 21:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321222076E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 21:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E3620789
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 21:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhvqaCc2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T/eqByt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405824AbgFYVSO (ORCPT
+        id S2407224AbgFYVeH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53882 "EHLO
+        Thu, 25 Jun 2020 17:34:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404016AbgFYVSM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 17:18:12 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFFB6C08C5C1;
-        Thu, 25 Jun 2020 14:18:11 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y18so3366241plr.4;
-        Thu, 25 Jun 2020 14:18:11 -0700 (PDT)
+        with ESMTP id S2406463AbgFYVeG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 17:34:06 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FF4C08C5C1
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 14:34:06 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l63so3915022pge.12
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 14:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ml0ZT7PzS1Kij+Cv5CAAQj/ZaDAV3sSYmcfaMZxaUMw=;
-        b=bhvqaCc2cTcis1QzUVntpKJ/7N7yQRCtXy76KJIrrkUvO75HpCSjA3POorsRqYgda6
-         RSQeMtSZbdid1VofDezQgA494f7/88dieNdvjIY6I9QXUqRyA1d+/b/A3HVrw41g9LJJ
-         PZkrXQWu7TdBeR3tT8EpHTZmIfY8BDUXnRM7lK71UMi+m4SCXZWWsoOE8AC0FaRo3DeS
-         OwA26bQ4BCQuWn1UNa65D5yudfFGE543miaynvU3ObB09/toLdKEcToTE36eRHz2y0OJ
-         NRf3NQItPWKJP2W9nGIF/YqcamIUda2EHHhvOC8VOKZhNmXOHt3TjZsemUewUb63fDrs
-         h1NA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8R6FNF1h74Vb/ls6lsSEXSrTBMPaBu6yE+2uLcqz4ho=;
+        b=T/eqByt76mjC+afEFMQGwWUl2TtQMqOoljpii1d4dsqijPN14ze61/LupqzZbamW0R
+         icwdwauH+aH+JT7mzVnXL4sEw2C1IFKlpTbYQG/7kiJe7fd/Zo8XQsgjX057W1ls6shi
+         h/DGBC7knmI9uTO1/+8TauZTMsuRfy2qVf5iE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ml0ZT7PzS1Kij+Cv5CAAQj/ZaDAV3sSYmcfaMZxaUMw=;
-        b=iTt2jcG9SmU6i0B70Ra03ovgwzDKDJu81rZRAulNve44lOn9o7pHYCauCT6zoBMU0T
-         +bFFVkgBXesT8beMrqerlNMPNIRcYCQA+g1Kd3nkumEni3YJrjgMmJ8Mv9iIpfubXUBw
-         40YH7jslBfiXu3/3+CPVCTLEo+n4bM5YEjYfYRrtBYgUkI5nrdsbkYaz5MvwrnV32Eqq
-         adWuMlsQk7vRxS9GOW9h7OpkJoBgf1Ursok5jo4W0139P/Llu/8WrEnW30hrcbwlQVNd
-         MBrV8M4gxdclfZ7cvx4MisaPwhvRN2be0n4ANyKDlm9GI28avvu9ZQ1EM0x0KU65f8Rz
-         tsLA==
-X-Gm-Message-State: AOAM532dWH8Zs7ZaPDBrzk79BY5PgGSuYGUkR7FxLoiaxh3eG3Xym1Qe
-        3ANxsxy1fuyolOWRog7/bpk=
-X-Google-Smtp-Source: ABdhPJwBDHD5iDgvxSTDTxa1YGry9WHhTtOhbcAmuwMxCTvF8qfwECcQrmnwFhDbZvIeONBdYLkXJA==
-X-Received: by 2002:a17:902:70ca:: with SMTP id l10mr31673217plt.31.1593119891399;
-        Thu, 25 Jun 2020 14:18:11 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x8sm9903077pff.54.2020.06.25.14.18.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jun 2020 14:18:10 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 14:18:09 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-Message-ID: <20200625211809.GA175066@roeck-us.net>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
- <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
- <20200621073320.GI128451@builder.lan>
- <ce4c2b44cb15af12b04c09f1786a6c1a@codeaurora.org>
- <20200625160042.GC149301@roeck-us.net>
- <3e3cf81452e33c9385900177d0630a11@codeaurora.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8R6FNF1h74Vb/ls6lsSEXSrTBMPaBu6yE+2uLcqz4ho=;
+        b=QYFWCbbloxmq8ufG2DvKUO2A3uBvDqIMmBhIFxWm7WpRXfFQq9Lw9uzOLIfJxoZrPL
+         FCm2CsqCoZDxiImD0cUzjMuqVKwEKgd5ErW/bE2W5gSGdsQ+oiCrm/RmI0wjLcH7rZMN
+         LXSvuxBB8MNFSGAnM00FWFdm8ThGfimomvjH9VhCaqh+bp8QXavGBXUOx/2qAXqqE6qA
+         hjxB1W1LVBbBXKzAASHnm7+rw0Tg5wdXkknEsUxP7+rQitwMLUzDigb9d0dMhjGLe+VT
+         dsc5qADHnxEbPRqI4SWBapIV7zVmcRp1B62eEQNTBmL3fvrs21zoHpgpPZK/+8f2mqK5
+         6hyA==
+X-Gm-Message-State: AOAM533Rd2Ic8ck1eqmRaRoS+qdeDMLch4MJy79r5e2PSqygewuwuV9z
+        ZN5NKSxYAFOHQJQtUkQ/OmAkHQ==
+X-Google-Smtp-Source: ABdhPJzTUfz+LY5UtdrCzGQL7PwpYyb5HxrXc3NtNyfL/UBgjkO2uBWo7hduVQIkVoqlIknqMxRkVg==
+X-Received: by 2002:aa7:94a9:: with SMTP id a9mr35835843pfl.191.1593120845845;
+        Thu, 25 Jun 2020 14:34:05 -0700 (PDT)
+Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:4bb2:fb06:d31f:eb48])
+        by smtp.gmail.com with ESMTPSA id w1sm4107424pfq.53.2020.06.25.14.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 14:34:05 -0700 (PDT)
+From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, "Lee Jones )" <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Duncan Laurie <dlaurie@google.com>,
+        Eric Peers <epeers@google.com>, devicetree@vger.kernel.org,
+        Bhanu Prakash Maiya <bhanumaiya@google.com>
+Subject: [PATCH 1/2] cros: platform/chrome: Add cros-ec-uart driver for uart support
+Date:   Thu, 25 Jun 2020 14:34:01 -0700
+Message-Id: <20200625131432.1.Icb23b633700f1ef4d123e3f21fd26fad21a3f207@changeid>
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e3cf81452e33c9385900177d0630a11@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:52:31AM +0530, Sai Prakash Ranjan wrote:
-> > > 
-> > I don't think the watchdog mailing list has been copied on this series,
-> > meaning I don't have a copy that I could apply if I wanted to.
-> 
-> I kept you in CC for all the revisions but missed adding watchdog list.
-> Will resend with the appropriate lists added.
-> 
+This patch enables uart transport layer for cros_ec framework.
+The cros-ec-uart binds with EC device working on uart transport to
+send request and receive response.
 
-I use patchwork to track patches, tags, and my responses. No patchwork,
-no patch, no tags, and no tracking.
+Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@google.com>
+---
 
-> > I also see
-> > no evidence for a Reviewed-by: tag from Rob or any other DT maintainer.
-> > 
-> 
-> Not sure why you think I would add reviewed-by tag from Rob without him
-> giving one.
+ MAINTAINERS                            |   1 +
+ drivers/platform/chrome/Kconfig        |  10 +
+ drivers/platform/chrome/Makefile       |   1 +
+ drivers/platform/chrome/cros_ec_uart.c | 399 +++++++++++++++++++++++++
+ 4 files changed, 411 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_ec_uart.c
 
-Same response as above.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7b5ffd646c6b9..d4a089673429a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4095,6 +4095,7 @@ F:	sound/soc/codecs/cros_ec_codec.*
+ CHROMEOS EC SUBDRIVERS
+ M:	Benson Leung <bleung@chromium.org>
+ M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
++M:	Bhanu Prakash Maiya <bhanumaiya@chromium.org>
+ R:	Guenter Roeck <groeck@chromium.org>
+ S:	Maintained
+ F:	drivers/power/supply/cros_usbpd-charger.c
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index cf072153bdc5d..88b1b7b277ba3 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -118,6 +118,16 @@ config CROS_EC_SPI
+ 	  response time cannot be guaranteed, we support ignoring
+ 	  'pre-amble' bytes before the response actually starts.
+ 
++config CROS_EC_UART
++	tristate "ChromeOS Embedded Controller (UART)"
++	depends on CROS_EC && ACPI && SERIAL_DEV_BUS
++	help
++	  If you say Y here, you get support for talking to the ChromeOS EC
++	  through a UART, using a byte-level protocol.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called cros_ec_uart.
++
+ config CROS_EC_LPC
+ 	tristate "ChromeOS Embedded Controller (LPC)"
+ 	depends on CROS_EC && ACPI && (X86 || COMPILE_TEST)
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index 41baccba033f7..47d8d0f890ca2 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
+ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
+ obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
+ obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
++obj-$(CONFIG_CROS_EC_UART)		+= cros_ec_uart.o
+ cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
+ obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
+ obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+diff --git a/drivers/platform/chrome/cros_ec_uart.c b/drivers/platform/chrome/cros_ec_uart.c
+new file mode 100644
+index 0000000000000..fe17c2a28b6ef
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_uart.c
+@@ -0,0 +1,399 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * UART interface for ChromeOS Embedded Controller
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/acpi.h>
++#include <linux/of.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_device.h>
++#include <linux/serdev.h>
++#include <linux/slab.h>
++#include <uapi/linux/sched/types.h>
++
++/*
++ * Allow for a long time for EC to respond.
++ */
++#define EC_MSG_DEADLINE_MS		200
++
++/**
++ * struct response_info - Encapsulate EC response related
++ *			information for passing between function
++ *			cros_ec_uart_pkt_xfer() and cros_ec_uart_rx_bytes()
++ *			callback.
++ * @data:		Copy the data received from EC here.
++ * @max_size:		Max size allocated for the @data buffer. If the
++ *			received data exceeds this value, we log an error.
++ * @size:		Actual size of data received from EC. This is also
++ *			used to accumulate byte count with response is received
++ *			in dma chunks.
++ * @exp_len:		Expected bytes of response from EC.
++ * @error:		0 for success, negative error code for a failure.
++ * @received:		Set to true on receiving a valid EC response.
++ * @wait_queue:		Wait queue EC response where the cros_ec sends request
++ *			to EC and waits
++ */
++struct response_info {
++	void *data;
++	size_t max_size;
++	size_t size;
++	int error;
++	size_t exp_len;
++	bool received;
++	wait_queue_head_t wait_queue;
++};
++
++/**
++ * struct cros_ec_uart - information about a uart-connected EC
++ *
++ * @serdev_device:	serdev uart device we are connected to.
++ * @baudrate:		UART baudrate of attached EC device.
++ * @flowcontrol:	UART flowcontrol of attached device.
++ * @irq:		Linux IRQ number of associated serial device.
++ * @response:		Response info passing between cros_ec_uart_pkt_xfer()
++ *			and cros_ec_uart_rx_bytes()
++ */
++struct cros_ec_uart {
++	struct serdev_device *serdev;
++	u32 baudrate;
++	u8  flowcontrol;
++	u32 irq;
++	struct response_info response;
++};
++
++static int cros_ec_uart_rx_bytes(struct serdev_device *serdev,
++				 const u8 *data,
++				 size_t count)
++{
++	struct ec_host_response *response;
++	struct cros_ec_device *ec_dev =   serdev_device_get_drvdata(serdev);
++	struct cros_ec_uart *ec_uart = ec_dev->priv;
++
++	/* Check if bytes were sent out of band */
++	if (!ec_uart->response.data) {
++		/* Discard all bytes */
++		return count;
++	}
++
++	/*
++	 * Check if incoming bytes + response.size are less than allocated
++	 * buffer in din by cros_ec. This will ensure that if EC sends more
++	 * bytes than max_size, waiting process will be notified with an error.
++	 */
++	if (ec_uart->response.size + count <= ec_uart->response.max_size) {
++		/* Copy bytes in data in buffer */
++		memcpy((void *)ec_uart->response.data + ec_uart->response.size,
++		       (void *)data, count);
++
++		/* Add incoming bytes in size */
++		ec_uart->response.size += count;
++
++		/*
++		 * Read data_len if we received response header and if exp_len
++		 * was not read before.
++		 */
++		if (ec_uart->response.size >= sizeof(*response) &&
++		    ec_uart->response.exp_len == 0) {
++			/* Get expected response length from response header */
++			response = (struct ec_host_response *)
++							ec_uart->response.data;
++
++			ec_uart->response.exp_len = response->data_len +
++				sizeof(*response);
++		}
++
++		/* Check if we received all response bytes from EC */
++		if (ec_uart->response.size >= ec_uart->response.exp_len) {
++			/* Set flag before waking up the caller */
++			ec_uart->response.received = true;
++
++			/* Wake the calling thread */
++			wake_up_interruptible(&ec_uart->response.wait_queue);
++		}
++	} else {
++		/* Received bytes are more the allocated buffer*/
++		ec_uart->response.error = -EMSGSIZE;
++
++		/* Wake the calling thread */
++		wake_up_interruptible(&ec_uart->response.wait_queue);
++	}
++
++	return count;
++}
++
++static int cros_ec_uart_pkt_xfer(struct cros_ec_device *ec_dev,
++				 struct cros_ec_command *ec_msg)
++{
++	struct cros_ec_uart *ec_uart = ec_dev->priv;
++	struct serdev_device *serdev = ec_uart->serdev;
++	struct ec_host_response *response;
++	unsigned int len;
++	int ret, i;
++	u8 sum = 0;
++
++	/* Prepare an outgoing message in the output buffer */
++	len = cros_ec_prepare_tx(ec_dev, ec_msg);
++	dev_dbg(ec_dev->dev, "Prepared len=%d\n", len);
++
++	/* Setup for incoming response */
++	ec_uart->response.data = ec_dev->din;
++	ec_uart->response.max_size = ec_dev->din_size;
++	ec_uart->response.size = 0;
++	ec_uart->response.error = 0;
++	ec_uart->response.exp_len = 0;
++	ec_uart->response.received = false;
++
++	/* Write serial device buffer */
++	ret = serdev_device_write_buf(serdev, ec_dev->dout, len);
++	if (ret < len) {
++		dev_err(&serdev->dev,
++			"Unable to write data to serial device %s",
++			dev_name(&serdev->dev));
++
++		/* Return EIO as controller had issues writing buffer */
++		ret = -EIO;
++		goto exit;
++	}
++
++	/* Once request is successfully sent to EC, wait to wait_queue */
++	wait_event_interruptible_timeout(ec_uart->response.wait_queue,
++					 ec_uart->response.received,
++					 msecs_to_jiffies(EC_MSG_DEADLINE_MS));
++
++	/* Check if wait_queue was interrupted due to an error */
++	if (ec_uart->response.error < 0) {
++		dev_warn(&serdev->dev, "Response error detected.\n");
++
++		ret = ec_uart->response.error;
++		goto exit;
++	}
++
++	/* Check if valid response was received or there was a timeout */
++	if (!ec_uart->response.received) {
++		dev_warn(&serdev->dev, "EC failed to respond in time.\n");
++
++		ret = -ETIMEDOUT;
++		goto exit;
++	}
++
++	/* Check response error code */
++	response = (struct ec_host_response *)ec_dev->din;
++	ec_msg->result = response->result;
++
++	/* Check if received response is longer than expected */
++	if (response->data_len > ec_msg->insize) {
++		dev_err(ec_dev->dev, "Resp too long (%d bytes, expected %d)",
++			response->data_len,
++			ec_msg->insize);
++		ret = -ENOSPC;
++		goto exit;
++	}
++
++	/* Copy response packet to ec_msg data buffer */
++	memcpy(ec_msg->data,
++	       ec_dev->din + sizeof(*response),
++	       response->data_len);
++
++	/* Add all response header bytes for checksum calculation */
++	for (i = 0; i < sizeof(*response); i++)
++		sum += ec_dev->din[i];
++
++	/* Copy response packet payload and compute checksum */
++	for (i = 0; i < response->data_len; i++)
++		sum += ec_msg->data[i];
++
++	if (sum) {
++		dev_err(ec_dev->dev,
++			"Bad packet checksum calculated %x\n",
++			sum);
++		ret = -EBADMSG;
++		goto exit;
++	}
++
++	/* Return data_len to cros_ec */
++	ret = response->data_len;
++
++exit:
++	/* Reset ec_uart */
++	ec_uart->response.data = NULL;
++	ec_uart->response.max_size = 0;
++	ec_uart->response.size = 0;
++	ec_uart->response.error = 0;
++	ec_uart->response.exp_len = 0;
++	ec_uart->response.received = false;
++
++	if (ec_msg->command == EC_CMD_REBOOT_EC)
++		msleep(EC_REBOOT_DELAY_MS);
++
++	return ret;
++}
++
++static int cros_ec_uart_resource(struct acpi_resource *ares, void *data)
++{
++	struct cros_ec_uart *ec_uart = data;
++	struct acpi_resource_uart_serialbus *sb;
++
++	switch (ares->type) {
++	case ACPI_RESOURCE_TYPE_SERIAL_BUS:
++		sb = &ares->data.uart_serial_bus;
++		if (sb->type == ACPI_RESOURCE_SERIAL_TYPE_UART) {
++			ec_uart->baudrate = sb->default_baud_rate;
++			dev_dbg(&ec_uart->serdev->dev, "Baudrate %d\n",
++				ec_uart->baudrate);
++
++			ec_uart->flowcontrol = sb->flow_control;
++			dev_dbg(&ec_uart->serdev->dev, "Flow control %d\n",
++				ec_uart->flowcontrol);
++		}
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static int cros_ec_uart_acpi_probe(struct cros_ec_uart *ec_uart)
++{
++	LIST_HEAD(resources);
++	struct acpi_device *adev = ACPI_COMPANION(&ec_uart->serdev->dev);
++	int ret;
++
++	/* Retrieve UART ACPI info */
++	ret = acpi_dev_get_resources(adev, &resources,
++				     cros_ec_uart_resource, ec_uart);
++	if (ret < 0)
++		return ret;
++
++	acpi_dev_free_resource_list(&resources);
++
++	/* Retrieve GpioInt and translate it to Linux IRQ number */
++	ret = acpi_dev_gpio_irq_get(adev, 0);
++	if (ret < 0)
++		return ret;
++
++	ec_uart->irq = ret;
++	dev_dbg(&ec_uart->serdev->dev, "IRQ number %d\n", ec_uart->irq);
++
++	return 0;
++}
++
++static const struct serdev_device_ops cros_ec_uart_client_ops = {
++	.receive_buf = cros_ec_uart_rx_bytes,
++};
++
++static int cros_ec_uart_probe(struct serdev_device *serdev)
++{
++	struct device *dev = &serdev->dev;
++	struct cros_ec_device *ec_dev;
++	struct cros_ec_uart *ec_uart;
++	int ret;
++
++	ec_uart = devm_kzalloc(dev, sizeof(*ec_uart), GFP_KERNEL);
++	if (!ec_uart)
++		return -ENOMEM;
++
++	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
++	if (!ec_dev)
++		return -ENOMEM;
++
++	ec_uart->serdev = serdev;
++
++	/* Open the serial device */
++	ret = devm_serdev_device_open(dev, ec_uart->serdev);
++	if (ret) {
++		dev_err(dev, "Unable to open UART device %s",
++			dev_name(&serdev->dev));
++		return ret;
++	}
++
++	serdev_device_set_drvdata(serdev, ec_dev);
++
++	serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
++
++	/* Initialize wait queue */
++	init_waitqueue_head(&ec_uart->response.wait_queue);
++
++	ret = cros_ec_uart_acpi_probe(ec_uart);
++	if (ret < 0) {
++		dev_err(dev, "Failed to get ACPI info (%d)", ret);
++		return ret;
++	}
++
++	/* Set baud rate of serial device */
++	ret = serdev_device_set_baudrate(serdev, ec_uart->baudrate);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set up host baud rate (%d)", ret);
++		return ret;
++	}
++
++	/* Set flow control of serial device */
++	serdev_device_set_flow_control(serdev, ec_uart->flowcontrol);
++
++	/* Initialize ec_dev for cros_ec  */
++	ec_dev->phys_name = dev_name(&ec_uart->serdev->dev);
++	ec_dev->dev = dev;
++	ec_dev->priv = ec_uart;
++	ec_dev->irq = ec_uart->irq;
++	ec_dev->cmd_xfer = NULL;
++	ec_dev->pkt_xfer = cros_ec_uart_pkt_xfer;
++	ec_dev->din_size = sizeof(struct ec_host_response) +
++			   sizeof(struct ec_response_get_protocol_info);
++	ec_dev->dout_size = sizeof(struct ec_host_request);
++
++	/* Register a new cros_ec device */
++	return cros_ec_register(ec_dev);
++}
++
++static void cros_ec_uart_remove(struct serdev_device *serdev)
++{
++	struct cros_ec_device *ec_dev = serdev_device_get_drvdata(serdev);
++
++	cros_ec_unregister(ec_dev);
++};
++
++static int __maybe_unused cros_ec_uart_suspend(struct device *dev)
++{
++	struct cros_ec_device *ec_dev = dev_get_drvdata(dev);
++
++	return cros_ec_suspend(ec_dev);
++}
++
++static int __maybe_unused cros_ec_uart_resume(struct device *dev)
++{
++	struct cros_ec_device *ec_dev = dev_get_drvdata(dev);
++
++	return cros_ec_resume(ec_dev);
++}
++
++static SIMPLE_DEV_PM_OPS(cros_ec_uart_pm_ops, cros_ec_uart_suspend,
++			 cros_ec_uart_resume);
++
++static const struct of_device_id cros_ec_uart_of_match[] = {
++	{ .compatible = "google,cros-ec-uart" },
++	{}
++};
++
++static struct serdev_device_driver cros_ec_uart_driver = {
++	.driver	= {
++		.name	= "cros-ec-uart",
++		.of_match_table = cros_ec_uart_of_match,
++		.pm	= &cros_ec_uart_pm_ops,
++	},
++	.probe		= cros_ec_uart_probe,
++	.remove		= cros_ec_uart_remove,
++};
++
++module_serdev_device_driver(cros_ec_uart_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("UART interface for ChromeOS Embedded Controller");
++MODULE_AUTHOR("Bhanu Prakash Maiya <bhanumaiya@chromium.org>");
+-- 
+2.26.2
 
-Guenter
