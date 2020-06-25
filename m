@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5487BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 23:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF68BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 23:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3064620707
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 23:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941C020768
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 23:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsEcp4lh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXG9NNHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgFYXe6 (ORCPT
+        id S1725915AbgFYXfM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 19:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46726 "EHLO
+        Thu, 25 Jun 2020 19:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgFYXee (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 19:34:34 -0400
+        with ESMTP id S1725913AbgFYXed (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 19:34:33 -0400
 Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59493C08C5DE;
-        Thu, 25 Jun 2020 16:34:34 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id z17so5550828edr.9;
-        Thu, 25 Jun 2020 16:34:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8F3C08C5DC;
+        Thu, 25 Jun 2020 16:34:32 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id cy7so5555467edb.5;
+        Thu, 25 Jun 2020 16:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vKHBQB3/jo26y5/T/I0yc88OTlZYCgKjy3NBHl/V9tw=;
-        b=LsEcp4lhXTEnzdETIobnSRMHsm24mDS3VIMOZMC/8uJnxwIMITbOE2XdyblGvp8+gE
-         +HovlwNh1FCKi1Oanzk4/WwJsbI3FjLTTkSIE5+y5KDA0MmG8xh8aoHMdb52VO5bCnUy
-         nC9XcuxSq85AbHpzx9rYtcRqhnsKCHwLrKgyH5bnGjhZcR753Xi9KyoJZtmp0WOQ6YkB
-         /LMvg3ZsnPCqHuEPUINJdpZuqSTyirXGbfX9rH0vMB8HgpWVXnVXxMnuhyLyVNBats1U
-         aoLUX6Y9vmlflNwYFooN+CfxcYcFVOpubrCDPdBkpHj9uMO36rVaeN8HC28Jb7brwkOS
-         6axw==
+        bh=LofB2FAb1BCmJEIdnua6XnH33N6P1Z6/qz7coDIHQvs=;
+        b=lXG9NNHilSmllTINI5qo8pVawfpC6TwZPKA2kS5AYPKHZ4yEPvTMJYHHE6OCu5TG//
+         lxiwrI+Te1OV+1Ec4H8WNTvyg2RBjsTM+zz2clrxB0RNI4x2wf2YtluXe7avjwAfMUA1
+         B0kPL2IuT+XHsKil8cVVSNguCpDo6BSPn4Z3toDzfsL3TbZno8La0ciPY9IARbCLIAkd
+         UW0FX7Bq+RhViqeJg8bjeoWkWHC35fSXl301dXpYiOHKAXKtLMiCUe7ps9Ar3qmcAHMr
+         kZlUNKLLExKS/KHp0TuCk/7v/0sXx2ZhqFBjv+vCHD0frIjTMs2ZvsLUjZn+Bn1aZCeb
+         S+Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vKHBQB3/jo26y5/T/I0yc88OTlZYCgKjy3NBHl/V9tw=;
-        b=FXS4Rwzv/7LWN/YMyZU2ZUVAOmsfKwE8fqZomrxg1brwFIlo/VueZdXySmWjDA6Glc
-         G3kpB9R7B/S8Vp7OdBTuOP3jvVhCCZqDAp67LoUa+1M6fnsBpzVkxpdO1nQnf3iIoRfj
-         L2VI/iVwNGzPBNnZYlb8c+nTHLTwuWumwJrD6pX8BT+3NgVssVnwxEsrzTmIbdKyggBB
-         mFUe3YE11YhxYkaYwHmfiU4AucsCjFw6NeSZ5qTxjBAeyQBSXikcmM0uNvH6oyOHMODs
-         wbYu0lNS7VFdFUshTm98vzWzUPvHCY+qpZVTFVn+fSBOsSHhNUfnXlpUADmUywCB2LQ1
-         DgDA==
-X-Gm-Message-State: AOAM5328KQcWjrhdpjDBHV+1YB+XqtudIngOEXl6OFTrZQO+FiSmfZtx
-        pumJ4/7kfa22/quWZmHP3Qv/EAvzO6o=
-X-Google-Smtp-Source: ABdhPJzQ4NhltLSCtwQR4pKlfKRWu2vGwjE43Utf+zo4JjW7Zi5dPste6QsnY5EWhVYnwe3OyTbCBQ==
-X-Received: by 2002:a05:6402:1c8b:: with SMTP id cy11mr664932edb.122.1593128073102;
-        Thu, 25 Jun 2020 16:34:33 -0700 (PDT)
+        bh=LofB2FAb1BCmJEIdnua6XnH33N6P1Z6/qz7coDIHQvs=;
+        b=R0u7uAHSLCQ/GLdNYNQ6bsLLr5t+0TdmD4PhpyxWw2+aXvE0SVbE32e6A0+2HVZSZD
+         1c49MkFxZxJ2KxBxcRqD2hDGTOaxq/3YUPhHMw6OH/GU6Ihrd45qX/RXjggmQkD4hujE
+         yD1iWjVohtjv/BTZXnjYPBOhI4QuQ/NflkIp4y4qrBV4G6xmECuLncqSvNAXBYYai2vm
+         WLkTFgA632Hr1LouXPmAbUmUzZYoMurqM56gfSUkAnV5B8Fp9YBljcsDa5kxTeRd/o0H
+         A9VIqi14V9D3a1miVaEYwUMkdfeZOqy+18absEnC0S2ddRJMaaZC3t+Ry81/giM39LJP
+         k8kw==
+X-Gm-Message-State: AOAM532a2mDphI9zp7ZF77PAPzkd/mbk66k/rufV4WFlZZ+9UwGB5pMx
+        BmjpYZg2RI2GtMlQ7i3iquY=
+X-Google-Smtp-Source: ABdhPJyNtNfC+ltkZdd/rPlX4llvGHORBcgRuLpGvioqcef6WQm8BPNGk0zVNKzn9xzPaSRVVvybqQ==
+X-Received: by 2002:a05:6402:c09:: with SMTP id co9mr663015edb.238.1593128070835;
+        Thu, 25 Jun 2020 16:34:30 -0700 (PDT)
 Received: from localhost.localdomain ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id u2sm13699184edq.29.2020.06.25.16.34.32
+        by smtp.gmail.com with ESMTPSA id u2sm13699184edq.29.2020.06.25.16.34.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 16:34:32 -0700 (PDT)
+        Thu, 25 Jun 2020 16:34:30 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: [PATCH 07/10] arm: dts: owl-s500: Add I2C nodes
-Date:   Fri, 26 Jun 2020 02:34:19 +0300
-Message-Id: <50b4780dfcef8d5e2bf0f4f32f6ccf36c9acc782.1593124368.git.cristian.ciocaltea@gmail.com>
+Subject: [PATCH 05/10] arm: dts: owl-s500: Add pinctrl node
+Date:   Fri, 26 Jun 2020 02:34:17 +0300
+Message-Id: <b43c9d1a1ef689403bc17b2474aff20629b58263.1593124368.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1593124368.git.cristian.ciocaltea@gmail.com>
 References: <cover.1593124368.git.cristian.ciocaltea@gmail.com>
@@ -78,69 +78,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add I2C controller nodes for Actions Semi S500 SoC.
-
-Note the Actions Semi Owl SoC's I2C driver seems to be fully compatible
-with the Actions Semi S500 SoC, even though this is not explicitly
-mentioned in the source code. Hence, for the moment, enable the I2C
-controller node via the "actions,s900-i2c" compatible string.
+Add pinctrl node for Actions Semi S500 SoC.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 ---
- arch/arm/boot/dts/owl-s500.dtsi | 40 +++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ arch/arm/boot/dts/owl-s500.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
-index 778775ac42f7..15c11af530ea 100644
+index 0b7ba2926f0e..3b625358d786 100644
 --- a/arch/arm/boot/dts/owl-s500.dtsi
 +++ b/arch/arm/boot/dts/owl-s500.dtsi
-@@ -193,6 +193,46 @@ cmu: clock-controller@b0160000 {
- 			#reset-cells = <1>;
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <dt-bindings/clock/actions,s500-cmu.h>
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/power/owl-s500-powergate.h>
+ #include <dt-bindings/reset/actions,s500-reset.h>
+@@ -208,6 +209,25 @@ sps: power-controller@b01b0100 {
+ 			#power-domain-cells = <1>;
  		};
  
-+		i2c0: i2c@b0170000 {
-+			compatible = "actions,s900-i2c";
-+			reg = <0xb0170000 0x4000>;
-+			clocks = <&cmu CLK_I2C0>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
++		pinctrl: pinctrl@b01b0000 {
++			compatible = "actions,s500-pinctrl";
++			reg = <0xb01b0000 0x40>, /* GPIO */
++			      <0xb01b0040 0x10>,
++			      <0xb01b0060 0x18>,
++			      <0xb01b0080 0xc>;
++			clocks = <&cmu CLK_GPIO>;
++			gpio-controller;
++			gpio-ranges = <&pinctrl 0 0 132>;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>, /* GPIOA */
++				     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>, /* GPIOB */
++				     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>, /* GPIOC */
++				     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>, /* GPIOD */
++				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>; /* GPIOE */
 +		};
 +
-+		i2c1: i2c@b0174000 {
-+			compatible = "actions,s900-i2c";
-+			reg = <0xb0174000 0x4000>;
-+			clocks = <&cmu CLK_I2C1>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@b0178000 {
-+			compatible = "actions,s900-i2c";
-+			reg = <0xb0178000 0x4000>;
-+			clocks = <&cmu CLK_I2C2>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@b017c000 {
-+			compatible = "actions,s900-i2c";
-+			reg = <0xb017c000 0x4000>;
-+			clocks = <&cmu CLK_I2C3>;
-+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		timer: timer@b0168000 {
- 			compatible = "actions,s500-timer";
- 			reg = <0xb0168000 0x8000>;
+ 		dma: dma-controller@b0260000 {
+ 			compatible = "actions,s900-dma";
+ 			reg = <0xb0260000 0xd00>;
 -- 
 2.27.0
 
