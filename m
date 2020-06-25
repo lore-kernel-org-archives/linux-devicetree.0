@@ -2,233 +2,179 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF01C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56582C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 01:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 645FC20781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1815C20706
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 01:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jHXXxjot"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0UbnxIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388665AbgFYAtr (ORCPT
+        id S2388817AbgFYBHV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 20:49:47 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:54577 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388685AbgFYAtr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 20:49:47 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200625004944epoutp047e11a54c2f56b698b562e65640165249~boxCIcAVQ1564115641epoutp04C
-        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 00:49:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200625004944epoutp047e11a54c2f56b698b562e65640165249~boxCIcAVQ1564115641epoutp04C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593046184;
-        bh=Eds3BGSYDjL1I5LrtCqGZDPZaGJ30g3XqixJ3NbRXxE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=jHXXxjotIl7OmsdMxwBfu6aPbByy8W+WdY8DNgPwKMqaM7BS7sElvMnANGGF91QcF
-         7QaReLrarpqzNZbc1h8Qkk/VEi7PNEq9yuUrLbB6aobthKmfmkdW+qjMXq55RHftL7
-         DcFBpUJ1jnji0zH5og6QvD5YDhhWc/4yB9LZYbZM=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200625004943epcas5p348d85321de5b65ae60e24b50c6f82e11~boxA33NSh0109901099epcas5p3u;
-        Thu, 25 Jun 2020 00:49:43 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D6.8E.09467.7A4F3FE5; Thu, 25 Jun 2020 09:49:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200625004942epcas5p13b2b4303e42bdd00f203419cbf883177~boxAWD5Jy0190701907epcas5p1O;
-        Thu, 25 Jun 2020 00:49:42 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200625004942epsmtrp16c64aedb0adb8820ca6758fee3e679f7~boxAVV4X52883928839epsmtrp1E;
-        Thu, 25 Jun 2020 00:49:42 +0000 (GMT)
-X-AuditID: b6c32a49-a29ff700000024fb-a1-5ef3f4a72cf6
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BE.7B.08382.6A4F3FE5; Thu, 25 Jun 2020 09:49:42 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200625004941epsmtip2803d568a082e823207b9f42a2f2b1aad~bow-OcBS_3239932399epsmtip2c;
-        Thu, 25 Jun 2020 00:49:41 +0000 (GMT)
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-To:     robh+dt@kernel.org
-Cc:     krzk@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [RESEND PATCH v10] dt-bindings: ufs: Add bindings for Samsung ufs
- host
-Date:   Thu, 25 Jun 2020 06:00:25 +0530
-Message-Id: <20200625003025.11656-1-alim.akhtar@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCmhu7yL5/jDN72c1k8mLeNzWL+kXOs
-        FufPb2C32PT4GqvF5V1z2CxmnN/HZNG69wi7A7vHplWdbB6bl9R79G1ZxejxeZNcAEsUl01K
-        ak5mWWqRvl0CV8bdbR3MBV2yFb8XLWZuYFwq3sXIySEhYCJxePcv9i5GLg4hgd2MEp++X2WC
-        cD4xSsw4+5URwvnGKPF1yk62LkYOsJY5zeUQ8b2MEtf3bGSGcFqYJA79fcgEMpdNQFvi7vQt
-        TCANIgJiEnvXioLUMAscZJS4sf4/M0iNsECgxIPtJ8HqWQRUJc6dXMIIYvMK2Eg8/tTJAnGf
-        vMTqDQfAFkgIrGKXmHz6FhNEwkWiq/cvVJGwxKvjW9ghbCmJl/1t7BCXZkv07DKGCNdILJ13
-        DKrcXuLAlTksICXMApoS63fpg4SZBfgken8/YYLo5JXoaBOCqFaVaH53FapTWmJidzcrhO0h
-        sWXdazBbSCBW4tb25ywTGGVmIQxdwMi4ilEytaA4Nz212LTAMC+1XK84Mbe4NC9dLzk/dxMj
-        OKK1PHcw3n3wQe8QIxMH4yFGCQ5mJRHeELdPcUK8KYmVValF+fFFpTmpxYcYpTlYlMR5lX6c
-        iRMSSE8sSc1OTS1ILYLJMnFwSjUwsWkf3n5Kj1cz6YlsTvhvsavsLWyJi+Ie7o099SNuq1bV
-        PX5jBU7nz3a2p85+Epp4zY3rv2585coYlodRfFtOPQtS5z37wHbGrMaDe7yWt8W33Dljse7T
-        yxOdnDNk7Y8nLgx7MvOQXcFlwdfvP8ccntT3aRmTyyWWvS/T9bWj7u+6scrupNKfA3vuv5o2
-        4eDPHbUl9em9u3wCHPas2y/MsMrniM+FdS9Kt3Szn+eKjleJuKM46caSrcfNa0S+P+n4ybv0
-        jgavxFvRQq3dIcKxq7VsWtZcYcrY5J5v9ERoP191OWts+0qRg+ann8Te2m0prOBl4+XGsSxg
-        zdYqRnfhuwq57Zs41zkeEdu5xUmnUomlOCPRUIu5qDgRAOauKkZXAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBJMWRmVeSWpSXmKPExsWy7bCSvO6yL5/jDGb1K1s8mLeNzWL+kXOs
-        FufPb2C32PT4GqvF5V1z2CxmnN/HZNG69wi7A7vHplWdbB6bl9R79G1ZxejxeZNcAEsUl01K
-        ak5mWWqRvl0CV8bdbR3MBV2yFb8XLWZuYFwq3sXIwSEhYCIxp7m8i5GLQ0hgN6PEwV9TGLsY
-        OYHi0hLXN05gh7CFJVb+e84OUdTEJHHow3qwIjYBbYm707cwgQwSERCT2LtWFKSGWeA4o8Tt
-        7nZWkBphAX+JTb/ugg1iEVCVOHdyCVgvr4CNxONPnSwQC+QlVm84wDyBkWcBI8MqRsnUguLc
-        9NxiwwLDvNRyveLE3OLSvHS95PzcTYzgwNHS3MG4fdUHvUOMTByMhxglOJiVRHhD3D7FCfGm
-        JFZWpRblxxeV5qQWH2KU5mBREue9UbgwTkggPbEkNTs1tSC1CCbLxMEp1cAkaJARx2rQ3/tp
-        UcWvp6xaVz7+bQ1YmSU8ZWHe7YbcM2fbdDZYpAVeOVP0K/n60f+91jI1HUc+OFQxJ+j9/xXw
-        RmN3eEvRPNatU+UDj/htsDs2meWb/NeXK17oGvkvbeD6/fq3mWVM648pM8KW/fp9feulO8HW
-        1QxHLi48EOb/zle4qHmOMNc9oU/3BKQUkvQ0ZZjOqm76s7Bv4qe33YscNM3fcz96sucxu8+i
-        hrlyep+2zRS6q1TJGX9qRpHcPLXvHwSZAxXuz2W33bL30Iq1scmvf5pnuIj8s/v1Ujgv/3e1
-        /3vV067KpYevl4itk97k77hq38SUw2tfRjqWl3x3ji6c7HOPc1WNnMOHOeycSizFGYmGWsxF
-        xYkAOendCosCAAA=
-X-CMS-MailID: 20200625004942epcas5p13b2b4303e42bdd00f203419cbf883177
-X-Msg-Generator: CA
+        Wed, 24 Jun 2020 21:07:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388679AbgFYBHU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 21:07:20 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83CDC061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 18:07:20 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id k1so2007719pls.2
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 18:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=DQNqb/XiJnv5S5KAYc7VnMgjA/JQZWT3OBZtTbZloYs=;
+        b=H0UbnxIw9yihnQXV7n5Vs/S+wHPE+4oI5wiVf1L0FkydepByp7tukHVSsmBjKzLtYX
+         yAcpeRrcRzj/Azf+tWW5QrIcwBLUlca1JeCMlp5VQ7O8QXhFKfAz6YcmO5rVSxdRxFr1
+         wb59f68RnJCNYPRZVH9RkF3A//MIGZ1RhhQZo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=DQNqb/XiJnv5S5KAYc7VnMgjA/JQZWT3OBZtTbZloYs=;
+        b=LftAZ/9tU/6DBHnNp1GIncMU/lBmU6Cxz/fviSeFF2/tEMN02IL5k4cVjsWuGqsjRa
+         OzKZCZf8lO/XirSjcX7tejtU7eGS/8aDzUXPAPGVds+M3qZD52lGrzV1PXYaxsiyo+8k
+         UVKuUeeXQaz9qoPoaHudY3ezX7XqjMOcEo/hSGe/87XtHX35/qzpYugUjkfVHcSsNmvM
+         I6394ARx1YuS/UcHa1Mi958a84e3LYmzpWAv3KoIjwyyQaLFSArvuKxBokesgYeNSnpe
+         C/E9nvVlUPt2jiIuonhLmlY2+PZnZE38gVn6vJa22BRjio0PiIUOEIc1dYcKZSSZTyCH
+         o96Q==
+X-Gm-Message-State: AOAM530aPHBt8mCgn22R/2A5pfhiDJo5kxguhya8pV+SpVUzkcExtezT
+        ztDOG5IMue0/4frbRG9K3NwPsg==
+X-Google-Smtp-Source: ABdhPJwwcQxMpk75imsoh0sM8lNh+D5onW70er8+RgLQLUV8Zlj+nifCh0lPXsEWgtHbcZypSU21dQ==
+X-Received: by 2002:a17:90a:22ab:: with SMTP id s40mr501452pjc.27.1593047240035;
+        Wed, 24 Jun 2020 18:07:20 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u8sm20760732pfh.215.2020.06.24.18.07.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 18:07:19 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200625004942epcas5p13b2b4303e42bdd00f203419cbf883177
-References: <CGME20200625004942epcas5p13b2b4303e42bdd00f203419cbf883177@epcas5p1.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200217085842.28333-1-harigovi@codeaurora.org>
+References: <20200217085842.28333-1-harigovi@codeaurora.org>
+Subject: Re: [v3] arm64: dts: sc7180: add nodes for idp display
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+To:     Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+Date:   Wed, 24 Jun 2020 18:07:18 -0700
+Message-ID: <159304723830.62212.5069780400830519255@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds DT bindings for Samsung ufs hci
+Quoting Harigovindan P (2020-02-17 00:58:42)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dt=
+s/qcom/sc7180-idp.dts
+> index 388f50ad4fde..349db8fe78a5 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -232,6 +233,57 @@ vreg_bob: bob {
+>         };
+>  };
+> =20
+> +&dsi0 {
+> +       status =3D "okay";
+> +
+> +       vdda-supply =3D <&vreg_l3c_1p2>;
+> +
+> +       panel@0 {
+> +               compatible =3D "visionox,rm69299-1080p-display";
+> +               reg =3D <0>;
+> +
+> +               vdda-supply =3D <&vreg_l8c_1p8>;
+> +               vdd3p3-supply =3D <&vreg_l18a_2p8>;
+> +
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&disp_pins>;
+> +
+> +               reset-gpios =3D <&pm6150l_gpio 3 GPIO_ACTIVE_HIGH>;
+> +
+> +               ports {
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <0>;
+> +                       port@0 {
+> +                               reg =3D <0>;
+> +                               panel0_in: endpoint {
+> +                                       remote-endpoint =3D <&dsi0_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       ports {
+> +               port@1 {
+> +                       endpoint {
+> +                               remote-endpoint =3D <&panel0_in>;
+> +                               data-lanes =3D <0 1 2 3>;
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
+Is this property needed? If it's the default assumption it would be nice
+to omit it so that we don't have to think about it.
 
-Hi Rob
-This is just a rebase on your's dt/next
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&dsi_phy {
+> +       status =3D "okay";
+> +};
+> +
+> +&mdp {
+> +       status =3D "okay";
+> +};
+> +
+> +&mdss {
+> +       status =3D "okay";
+> +};
+> +
+>  &qspi {
+>         status =3D "okay";
+>         pinctrl-names =3D "default";
+> @@ -289,6 +341,17 @@ &usb_1_qmpphy {
+> =20
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> =20
+> +&pm6150l_gpio {
+> +       disp_pins: disp-pins {
 
-This patch was part of [1]
-[1] https://lkml.org/lkml/2020/5/27/1697
+Curious how this works. It looks like PMIC GPIOS are expecting the node
+to look like:
 
- .../bindings/ufs/samsung,exynos-ufs.yaml      | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+	disp_pins: disp-pins {
+		pinconf {
+			pins =3D "gpio3";
+			function =3D PMIC_GPIO_FUNC_FUNC1;
+			qcom,drive-strength =3D <PMIC_GPIO_STRENGTH_MED>;
+			power-source =3D <PM6150_GPIO_VPH>;
+			bias-disable;
+			output-low;
+		};
 
-diff --git a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-new file mode 100644
-index 000000000000..38193975c9f1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ufs/samsung,exynos-ufs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC series UFS host controller Device Tree Bindings
-+
-+maintainers:
-+  - Alim Akhtar <alim.akhtar@samsung.com>
-+
-+description: |
-+  Each Samsung UFS host controller instance should have its own node.
-+  This binding define Samsung specific binding other then what is used
-+  in the common ufshcd bindings
-+  [1] Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+
-+properties:
-+
-+  compatible:
-+    enum:
-+      - samsung,exynos7-ufs
-+
-+  reg:
-+    items:
-+     - description: HCI register
-+     - description: vendor specific register
-+     - description: unipro register
-+     - description: UFS protector register
-+
-+  reg-names:
-+    items:
-+      - const: hci
-+      - const: vs_hci
-+      - const: unipro
-+      - const: ufsp
-+
-+  clocks:
-+    items:
-+      - description: ufs link core clock
-+      - description: unipro main clock
-+
-+  clock-names:
-+    items:
-+      - const: core_clk
-+      - const: sclk_unipro_main
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: ufs-phy
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - phys
-+  - phy-names
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/exynos7-clk.h>
-+
-+    ufs: ufs@15570000 {
-+       compatible = "samsung,exynos7-ufs";
-+       reg = <0x15570000 0x100>,
-+             <0x15570100 0x100>,
-+             <0x15571000 0x200>,
-+             <0x15572000 0x300>;
-+       reg-names = "hci", "vs_hci", "unipro", "ufsp";
-+       interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
-+       clocks = <&clock_fsys1 ACLK_UFS20_LINK>,
-+                <&clock_fsys1 SCLK_UFSUNIPRO20_USER>;
-+       clock-names = "core_clk", "sclk_unipro_main";
-+       pinctrl-names = "default";
-+       pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
-+       phys = <&ufs_phy>;
-+       phy-names = "ufs-phy";
-+    };
-+...
+but this doesn't use the macros or the subnode for pinconf. Why? Also,
+the PM6150_GPIO_VPH macro doesn't exist.
 
-base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
-prerequisite-patch-id: e0425bbe8f2aff3882b728a0caf0218b6b3e9b6e
-prerequisite-patch-id: c8c8502c512f9d6fdaf7d30e54dde3e68c3d855b
-prerequisite-patch-id: 8505df2fd70632150b50543cadc6fd7dd42d191c
-prerequisite-patch-id: 1a9701ab83425940c8aacb76737edb57ab815e47
-prerequisite-patch-id: 7881e0b87f1f04f657d9e6d450fb5231ad6ffa1a
-prerequisite-patch-id: 01dbc0e550e3fcad6e525e7e3183f9f0312e8496
-prerequisite-patch-id: ad801812fff960abab3f27d2c7383be9fd9aa439
-prerequisite-patch-id: 65474c9540e6dc749d30223897de1f486d6b3843
-prerequisite-patch-id: 64b58cd4c5ecfacf28fc20c31a6617092a1e1931
-prerequisite-patch-id: 9bcdd2995fd3f6361f8d5e89c56645058ac9ff96
--- 
-2.17.1
-
+> +               pins =3D "gpio3";
+> +               function =3D "func1";
+> +               qcom,drive-strength =3D <2>;
+> +               power-source =3D <0>;
+> +               bias-disable;
+> +               output-low;
+> +       };
+> +};
+> +
