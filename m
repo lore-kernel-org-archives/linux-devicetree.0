@@ -1,128 +1,307 @@
-Return-Path: <SRS0=ldLf=AF=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BE0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B54C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4638207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 24 Jun 2020 23:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E2A207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 00:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1wwfU36"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jOTatsuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389035AbgFXXXT (ORCPT
+        id S2387828AbgFYAIP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 19:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48730 "EHLO
+        Wed, 24 Jun 2020 20:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728791AbgFXXXR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 19:23:17 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C99C0613ED
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:23:17 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id a3so3364797oid.4
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 16:23:17 -0700 (PDT)
+        with ESMTP id S2387843AbgFYAIO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 20:08:14 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC5AC061795
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 17:08:14 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id jz3so2039196pjb.0
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 17:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dGipXZ9X17I+u12oD4DZ2rzNuQVhucODHVNdBawnSmI=;
-        b=M1wwfU36UoerE5HtEt7AEffn18uiUdtoM8XXl0AWGojXJGk3IpAdJ2M0usNyP93xIJ
-         C4K+tOo4fi/6g4LDkLfnGygf2naXQEjHsl+hfIdob42HpSMDH+RoiClBIpgTZBx++Gwz
-         F071ruwPJDr/lHuDqNMAs+amwuavPxIJt1JaWWxFc3xFISohL1QELXY5uKA9Dywb7DaN
-         A20RNPw7+ZloQGbS1jfx4jB/8WXiwu33UjOTyKHHu0VlWpJLIrtQtLaEzmdXeT9EE5GB
-         owoWOoO1ON0J7TmZDzZtNI5C/NRXNrd0BXcvAjC8iei4HAH1VMd+PspPMOJfibAazSDi
-         2QXw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDQmr4M7f0b4vct3QfFl9IqKo/J7WcBaHfYFiG0iFP4=;
+        b=jOTatsuvSAFGuC1zfOvuK87RmUepW0cCS/gKGHr6z7GtyB/DNCfzkpjiv0eSlqkgL7
+         4W0gMsAciQDh2x2Q/um5d43SuKEDH5Ob15/3R7ktlgpz4GsoUjf32Cv3X6u2JHbwHrPn
+         jJ8YOn8/Bsk/1M+Z7fDSUlWLidg9db+SwOZaM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dGipXZ9X17I+u12oD4DZ2rzNuQVhucODHVNdBawnSmI=;
-        b=Gpp2xak9voq0mWqK/nhDZquopVmGr2Dj+YP28KWuTj0SjAS9PGJrEwLVWyylB7yf9p
-         N9WfnTyi2hF/Ichx3A0bypvUpivQjFhzBV6SLyhaw4X30QqFA+rzXxcwd4UNeJZYcO1O
-         rVS62scM89GwZcbBinU6gpNladZ28+1Sgd4CAPP2EWGtUGtUnBT5xEaRe70VztNiLYFh
-         Hcpihy2RZl6Ws5kBcdkoPldWI5Ty2XNI4lQ2IgMmvY23NkKu3aFo4G/+K9oRvpnpdK5Z
-         bPiZnMoAHif22uWY80xxuDCT5xuYfMNn+nPOUq4eO++0kEQ7OWb8FNtyhC2WgYdQC4PV
-         d8/w==
-X-Gm-Message-State: AOAM533a97rOMiD0MiWVeMio944qYXIANkBbuW/olTdtbc3uR9C1qV+e
-        4hlJPoahzNZtmBoXA5h/CnwYgs8TLoKvhA8b5i5LMw==
-X-Google-Smtp-Source: ABdhPJx5V5Rup3zninLm3/4nlfZ5WpzvvNUIwQf1nRP1tGt6s55UEoBgS6WnEaNkB6yHnFN0OU4E08/nB8eF6a04daw=
-X-Received: by 2002:aca:6208:: with SMTP id w8mr126619oib.69.1593040996906;
- Wed, 24 Jun 2020 16:23:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDQmr4M7f0b4vct3QfFl9IqKo/J7WcBaHfYFiG0iFP4=;
+        b=V4GLrJio0KRHiCf/uvWl4+BQmcbBt/sT5lfrDgyvf0+fcfaTxLvMd0ig7Q7hEczmzH
+         P9spWUgw5K5A0wyvfObKKASQfGSoA1cLGbTOAfyTxX2llH1CDzzX2urBooUZSs5nrcQR
+         YYOrrldaSM24OrDxHWuXquKpV4GTf9+DVXqbXjtTmqRT1tUIDMsdIqdHlvh32pFPtiSL
+         A1DgYVOo8C9ofa7iCZfjI+tEVbwFYPlulvznFpr2yzJLYYi5quROv4vJuI4vupirRx4I
+         2V3oqHhUthOc6/+D+0I5GskVt9VZajfDl5A70zru9B8MlHgEuZwFyrOom+wioYexasnI
+         GhYw==
+X-Gm-Message-State: AOAM532y11RQWxFdAZvhk0jDmzXCxs3LZV51XiVKjAMljp5tCy4Hubwm
+        rDN7IZYkUlx5/aLYoDz7osRC9Q==
+X-Google-Smtp-Source: ABdhPJwmmHgiFaWnjRljKgSdj7Q1Wrf7FJQbi5FMZjnUD3Vm8dho6daBPalirc/2BVyVB2AViDwBZA==
+X-Received: by 2002:a17:902:326:: with SMTP id 35mr30625569pld.301.1593043693448;
+        Wed, 24 Jun 2020 17:08:13 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id dw17sm5905866pjb.40.2020.06.24.17.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 17:08:12 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: qcom: sc7180: Switch SPI to use GPIO for CS
+Date:   Wed, 24 Jun 2020 17:08:04 -0700
+Message-Id: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
- <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
- <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
- <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
- <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
- <CAMuHMdXW0jM-A5cvYtFVcgc1Gm3tKkvr0+kWpeJqpJDzNOuYeA@mail.gmail.com>
- <CAGETcx8W96KAw-d_siTX4qHB_-7ddk0miYRDQeHE6E0_8qx-6Q@mail.gmail.com>
- <CAGETcx87JNfKEu4brQ3S-9wObv=OwXkAoDBSREQH5dAD68TPsA@mail.gmail.com> <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUsWAQ3XUGh1Jg_Y3LWz4G5aaZfHqL8JjNZv3DrW3TjvQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 24 Jun 2020 16:22:40 -0700
-Message-ID: <CAGETcx_gOQWbxUAS6joxEgLDx_wuXwn3AFqDuio_42XeeG++PQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
- top level devices
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 8:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Saravana,
->
-> On Sat, Jun 20, 2020 at 4:33 AM Saravana Kannan <saravanak@google.com> wrote:
-> > On Fri, Jun 19, 2020 at 1:07 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > I think instead of deferred_probe_work_func() moving the device to the
-> > > end of the dpm_list, I think the device probing successfully is what
-> > > should move it to the end of the dpm_list. That way, the dpm_list is
-> > > actually ordered by when the devices become functional and not the
-> > > random order in DT or random probe order which can get pretty
-> > > convoluted with multiple deferred probes. This feels right and will
-> > > make suspend/resume more robust against DT ordering -- but I'm not
-> > > sure what other wide ranging impact this has for other platforms.
-> >
-> > If you want to play around with a potential fix to test my hypothesis,
-> > I think it's just adding this one line to driver_bound():
-> > ============
-> > klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
-> > device_links_driver_bound(dev);
-> > +device_pm_move_to_tail(dev);
-> >
-> > device_pm_check_callbacks(dev);
-> > ============
->
-> Thanks, that seems to fix the issue for me, on both affected systems!
-> Note that this has quite some impact on the order devices are suspended,
-> but this seems harmless.
->
-> Will try on more systems later...
+The geni SPI protocol appears to have been designed without taking
+Linux needs into account.  In all the normal flows it takes care of
+setting chip select itself.  However, Linux likes to manage the chip
+select so it can do fancy things.
 
-Thanks for testing. Maybe I should just send that change as a patch
-and see what Greg/Rafael have to say to that.
+Back when we first landed the geni SPI driver we worked around this
+by:
+- Always setting the FRAGMENTATION bit in transfers, which (I believe)
+  tells the SPI controller not to mess with the chip select during
+  transfers.
+- Controlling the chip select manually by sending the SPI controller
+  commands to assert or deassert the chip select.
 
-It's a general fix anyway. So, might as well send it out.
+Our workaround was fine and it's been working OK, but it's really
+quite inefficient.  A normal SPI transaction now needs to do:
+1. Start a command to set the chip select.
+2. Wait for an interrupt from controller saying chip select done.
+3. Do a transfer.
+4. Start a command to unset the chip select.
+5. Wait for an interrupt from controller saying chip select done.
 
--Saravana
+Things are made a bit worse because the Linux GPIO framework assumes
+that setting a chip select is quick.  Thus the SPI core can be seen to
+tell us to set our chip select even when it's already in the right
+state and we were dutifully kicking off commands and waiting for
+interrupts.  While we could optimize that particular case, we'd still
+be left with the slowness when we actually needed to toggle the chip
+select.
+
+All the chip select lines can actually be muxed to be GPIOs and
+there's really no downside in doing so.  Now Linux can assert and
+deassert the chip select at will with a simple MMIO write.
+
+The SPI driver will still have the ability to set the chip select, but
+not we just won't use it.
+
+With this change I tested reading the firmware off the EC connected to
+a ChromeOS device (flashrom -p ec -r ...).  I saw about a 25% speedup
+in total runtime of the command and a 30% reduction in interrupts
+generated (measured by /proc/interrupts).
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 ++++++++++++++++++++++++----
+ 1 file changed, 49 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3a8076c8bdbf..74c8503b560e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,videocc-sc7180.h>
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interconnect/qcom,sc7180.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
+@@ -570,6 +571,7 @@ spi0: spi@880000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi0_default>;
+ 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 37 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -607,6 +609,7 @@ spi1: spi@884000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi1_default>;
+ 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 3 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -668,6 +671,7 @@ spi3: spi@88c000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi3_default>;
+ 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 41 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -729,6 +733,7 @@ spi5: spi@894000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi5_default>;
+ 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 28 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -779,6 +784,7 @@ spi6: spi@a80000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi6_default>;
+ 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -840,6 +846,7 @@ spi8: spi@a88000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi8_default>;
+ 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 45 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -901,6 +908,7 @@ spi10: spi@a90000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi10_default>;
+ 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 89 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -938,6 +946,7 @@ spi11: spi@a94000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&qup_spi11_default>;
+ 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				cs-gpios = <&tlmm 56 GPIO_ACTIVE_LOW>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -1204,65 +1213,97 @@ pinmux {
+ 			qup_spi0_default: qup-spi0-default {
+ 				pinmux {
+ 					pins = "gpio34", "gpio35",
+-					       "gpio36", "gpio37";
++					       "gpio36";
+ 					function = "qup00";
+ 				};
++				pinmux-cs {
++					pins = "gpio37";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi1_default: qup-spi1-default {
+ 				pinmux {
+ 					pins = "gpio0", "gpio1",
+-					       "gpio2", "gpio3";
++					       "gpio2";
+ 					function = "qup01";
+ 				};
++				pinmux-cs {
++					pins = "gpio3";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi3_default: qup-spi3-default {
+ 				pinmux {
+ 					pins = "gpio38", "gpio39",
+-					       "gpio40", "gpio41";
++					       "gpio40";
+ 					function = "qup03";
+ 				};
++				pinmux-cs {
++					pins = "gpio41";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi5_default: qup-spi5-default {
+ 				pinmux {
+ 					pins = "gpio25", "gpio26",
+-					       "gpio27", "gpio28";
++					       "gpio27";
+ 					function = "qup05";
+ 				};
++				pinmux-cs {
++					pins = "gpio28";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi6_default: qup-spi6-default {
+ 				pinmux {
+ 					pins = "gpio59", "gpio60",
+-					       "gpio61", "gpio62";
++					       "gpio61";
+ 					function = "qup10";
+ 				};
++				pinmux-cs {
++					pins = "gpio62";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi8_default: qup-spi8-default {
+ 				pinmux {
+ 					pins = "gpio42", "gpio43",
+-					       "gpio44", "gpio45";
++					       "gpio44";
+ 					function = "qup12";
+ 				};
++				pinmux-cs {
++					pins = "gpio45";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi10_default: qup-spi10-default {
+ 				pinmux {
+ 					pins = "gpio86", "gpio87",
+-					       "gpio88", "gpio89";
++					       "gpio88";
+ 					function = "qup14";
+ 				};
++				pinmux-cs {
++					pins = "gpio89";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_spi11_default: qup-spi11-default {
+ 				pinmux {
+ 					pins = "gpio53", "gpio54",
+-					       "gpio55", "gpio56";
++					       "gpio55";
+ 					function = "qup15";
+ 				};
++				pinmux-cs {
++					pins = "gpio56";
++					function = "gpio";
++				};
+ 			};
+ 
+ 			qup_uart0_default: qup-uart0-default {
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
