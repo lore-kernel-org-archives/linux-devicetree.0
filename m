@@ -2,153 +2,118 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29ABC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CEFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 09:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F4F2076E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3EA20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 09:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="iB+W7Xiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390804AbgFYI75 (ORCPT
+        id S2390012AbgFYJQP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:59:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28658 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390799AbgFYI75 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 04:59:57 -0400
-IronPort-SDR: NzKpja60UmIFCrSIA6TVNe6bP9JnZriKccdvruaxk90GAzwt3Gl5S7aKj3bh9kH7s0yyS3WJKJ
- rJP4U2tQvHOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="143908210"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="143908210"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 01:59:56 -0700
-IronPort-SDR: NI7sm4ZOpFRULsttxgjrTh7px59jtpVeir7TfQNWM97K7HnZ9T+6/EiB+tB9T76FT7Za3RiUKw
- 5vPOEJ1DbDyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="275960986"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 25 Jun 2020 01:59:56 -0700
-Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
-        by linux.intel.com (Postfix) with ESMTP id 04F895805B5;
-        Thu, 25 Jun 2020 01:59:52 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
- <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
- <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
- <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <9a8f4a3e-c94a-b5bf-2715-03b0439f9fe7@linux.intel.com>
-Date:   Thu, 25 Jun 2020 16:59:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 05:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389659AbgFYJQP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 05:16:15 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25B4C061795
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 02:16:14 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q8so5271585iow.7
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 02:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XiSuE1sOXIBipbRmQaXWKIM5hIBA/1GaMgH8/QBx+Fg=;
+        b=iB+W7XizU/ZyE68RYq0Wy4WGwaVug8o35XV3WoVujzhd4fj/jviokDCLfKsAQNC/CD
+         MyjHMfGahHsCmh+oNfL4i4fg/Hb/6rvxRKd7w2PvYmqMcysZPcQJBmTMsBPhx+WOoEsx
+         sYURxtLFEFzEW28VjADaxTZh/LDWcFA4+Q7lAQjdn+vsj3IgSUam5KQTIduedT/ZowyW
+         BerGQgVSZmKKMJoRZikaa7enYMqpZrY1zQ9+Qw8deZc/FMtg+PJ/JBKKtQRGBgloKC7o
+         MRB8xVCpEPuusL9dD5xscCw3iNFGIq00p9DefAs9DqKlrMYOfvBO4YsPKk+Q8tJ/ZxEN
+         w2CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XiSuE1sOXIBipbRmQaXWKIM5hIBA/1GaMgH8/QBx+Fg=;
+        b=PEb98p7ydrTuvOLM+HKYKWcnKYqp35vJe2PMRvpCXvsJry6kPY7+LNf3vEi2BOhuz8
+         tVN0DjDwFR8wO5XgxYEyC0ZPvCmNifdOP4qrVp1nzbUC1+HjmKRrgSl184USehpXSnJg
+         yyNoc5P72TXvnJ/EHvaC/+AtqwCtEhmUO7ylO0jKZ24Jt9jeUWCe+OMaABN1Pr1ve229
+         0WqGo83e1SjXua9D1jQkRG6T1oC6tMrrcYRUot+M1+tMD9WhK+nOdmEAau6wyQpssCGc
+         6m/GW2nKp4qMjCdazm/LKk7UUqr13y4staT7OcMaaB1Pzz4z+Yi8vHZlmIMsZDMPBqkf
+         OuHQ==
+X-Gm-Message-State: AOAM531NHjJSKybziNkD10hp5NVS1rUvXF30YamhyhIMmhZ5L75OP/Gs
+        FoCWh1I9sII7xgm06vk3BW42wcwSynEntJ065MNxug==
+X-Google-Smtp-Source: ABdhPJxfpwzz3MthY2lWlmiAjEp1yFspUytO7/QblbPNv/YGcRZeoCZxvPdkVQWmmMe0TIcWMFI5nbF4CoLcMrctrC0=
+X-Received: by 2002:a02:ac8e:: with SMTP id x14mr71189jan.57.1593076573834;
+ Thu, 25 Jun 2020 02:16:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200622100056.10151-1-brgl@bgdev.pl> <20200622100056.10151-7-brgl@bgdev.pl>
+ <39e761f3-6607-d209-61df-535330f50db3@gmail.com>
+In-Reply-To: <39e761f3-6607-d209-61df-535330f50db3@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 25 Jun 2020 11:16:02 +0200
+Message-ID: <CAMRc=MfE9JjNiZr9_nL37Zbgz_OpKXW1sbdWvbTeq2_orOBKAw@mail.gmail.com>
+Subject: Re: [PATCH 06/11] phy: un-inline devm_mdiobus_register()
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jun 23, 2020 at 1:55 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 6/22/20 3:00 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Functions should only be static inline if they're very short. This
+> > devres helper is already over 10 lines and it will grow soon as we'll
+> > be improving upon its approach. Pull it into mdio_devres.c.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  drivers/net/phy/Makefile      |  2 +-
+> >  drivers/net/phy/mdio_devres.c | 18 ++++++++++++++++++
+> >  include/linux/phy.h           | 15 ++-------------
+> >  3 files changed, 21 insertions(+), 14 deletions(-)
+> >  create mode 100644 drivers/net/phy/mdio_devres.c
+>
+> This would likely require an update to the MAINTAINERS file for this new
+> file to be picked up by the correct entry.
 
+It's already included in drivers/net/phy/ in the ETHERNET PHY LIBRARY entry.
 
-On 25/6/2020 1:58 pm, Uwe Kleine-König wrote:
-> On Thu, Jun 25, 2020 at 12:23:54PM +0800, Tanwar, Rahul wrote:
->> Hi Philipp,
->>
->> On 18/6/2020 8:25 pm, Philipp Zabel wrote:
->>> Hi Rahul,
->>>
->>> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
->>>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
->>>> This PWM controller does not have any other consumer, it is a
->>>> dedicated PWM controller for fan attached to the system. Add
->>>> driver for this PWM fan controller.
->>>>
->>>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->>>> ---
->>>>  drivers/pwm/Kconfig         |   9 +
->>>>  drivers/pwm/Makefile        |   1 +
->>>>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 410 insertions(+)
->>>>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
->>>>
->>> [...]
->>>> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
->>>> new file mode 100644
->>>> index 000000000000..3c7077acb161
->>>> --- /dev/null
->>>> +++ b/drivers/pwm/pwm-intel-lgm.c
->>>> @@ -0,0 +1,400 @@
->>> [...]
->>>> +static int lgm_pwm_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct lgm_pwm_chip *pc;
->>>> +	struct device *dev = &pdev->dev;
->>>> +	void __iomem *io_base;
->>>> +	int ret;
->>>> +
->>>> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
->>>> +	if (!pc)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	io_base = devm_platform_ioremap_resource(pdev, 0);
->>>> +	if (IS_ERR(io_base))
->>>> +		return PTR_ERR(io_base);
->>>> +
->>>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
->>>> +	if (IS_ERR(pc->regmap)) {
->>>> +		ret = PTR_ERR(pc->regmap);
->>>> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	pc->clk = devm_clk_get(dev, NULL);
->>>> +	if (IS_ERR(pc->clk)) {
->>>> +		ret = PTR_ERR(pc->clk);
->>>> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	pc->rst = devm_reset_control_get(dev, NULL);
->>>> +	if (IS_ERR(pc->rst)) {
->>>> +		ret = PTR_ERR(pc->rst);
->>>> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
->>>> +		return ret;
->>>> +	}
->>> Please use devm_reset_control_get_exclusive() to make it explicit an
->>> that exclusive reset control is requested. Given how the reset control
->>> is used, I think this driver could also use
->>> devm_reset_control_get_shared() to potentially allow sharing a reset
->>> line with other devices.
->> devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
->> Code as below:
->> static inline struct reset_control *devm_reset_control_get(
->>                                 struct device *dev, const char *id)
->> {
->>         return devm_reset_control_get_exclusive(dev, id);
->> }
->> Am i missing something else?
-> Obviously you're missing the comment above of_reset_control_get about
-> some functions being compatibility wrappers.
-
-Oops, so sorry totally missed/overlooked that. Will update in v3. Thanks.
-
-Regards,
-Rahul
+Bartosz
