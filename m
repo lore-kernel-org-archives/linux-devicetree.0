@@ -2,122 +2,196 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8C4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390FCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6592320768
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1119F20768
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRA7a7WN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405463AbgFYOwh (ORCPT
+        id S2405599AbgFYO5d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:52:37 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:51475 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405525AbgFYOwh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 10:52:37 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 05PElmIh015285;
-        Thu, 25 Jun 2020 17:47:49 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id F26EC639BE; Thu, 25 Jun 2020 17:47:48 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org,
-        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: [PATCH v12 4/9] tpm: tpm_tis: Add verify_data_integrity handle to tpm_tis_phy_ops
-Date:   Thu, 25 Jun 2020 17:46:44 +0300
-Message-Id: <20200625144650.269719-5-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200625144650.269719-1-amirmizi6@gmail.com>
-References: <20200625144650.269719-1-amirmizi6@gmail.com>
+        Thu, 25 Jun 2020 10:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405502AbgFYO5c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 10:57:32 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB07C08C5C1
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 07:57:31 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so5858144wme.5
+        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 07:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+7QpQs6FhlpOXE9FQrO8BUOl2ttFaq7mxuLw6M5Nym0=;
+        b=xRA7a7WNemF2+ECa311QCcaUwE+ZUu/cj6cIbIvkYviFl2sMvfHdyFQCKmzZaJj+eF
+         1y6apB3UH2ZKIk+pPcgF+3VuQ5kQAV/ef8ebI/c/UG64L+oWxN7a5hostGrpYOAIUGNw
+         KgNhlasIT2fYmlWzk37PWUYkW5yhZpOx4G0kLwbNn8bFB/lnbabAT8F5usCe9SmQtbKj
+         aaZcDurCTDnB2KpfqoV1ydaJCYASOICfY7fvLQgIqT+743VBmlnjoE2DRPdKk3rL2tm6
+         wnsoMvlLuITZH9lO8zx3xnUyyqMrODMB+j++YhH7p0BtK4Viv52CaeuXw/D3m3jv6eZB
+         AkHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+7QpQs6FhlpOXE9FQrO8BUOl2ttFaq7mxuLw6M5Nym0=;
+        b=st5N7C+r1LOOHAQjjToxx28NVns14LJ77BSEdMh1nFqCObq4csVfkebLOL3l449aXw
+         mM6Z9TKszxK3fzL8vENs2pkt9jDwDEKquZ8emhQGbQdZ7rYDZutoMAqRMZvgcEQ/82Se
+         tCZnpq53jkdF60h0sLeOL8ME1/FPdVsl5mMrDzz84w7LBGas7HlM8d5qEXpsfWnzdbTU
+         XJrbt3OjDELo6SrKFz+FKa4Fft91SJc/eWxgWTSHfsugwKBHZbp0+3cBKQzdZcBjr0RG
+         SfdflK28j8/qJ4b48Zhn3dXRUXk8N+1r6DpA7nlZ6L/6a5pgzr+udxLU8aBgvsn09Lup
+         NMpA==
+X-Gm-Message-State: AOAM532Pl3WkdPkqs+ZvTIILOvPVfhcomd6wQ9eHakhC+V2kTFiqjmiO
+        Ps7JCU4Wxo5hj1fa/y8CJpUcOw==
+X-Google-Smtp-Source: ABdhPJyFueEyfmUNkHi9WsjhYIRl9UwJEKZQIopHogN7onsTa92/7L3ToUPhcpZZZf5KJVaVQ4gBtg==
+X-Received: by 2002:a1c:1946:: with SMTP id 67mr3982816wmz.59.1593097050635;
+        Thu, 25 Jun 2020 07:57:30 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id z1sm18241248wrh.14.2020.06.25.07.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2020 07:57:29 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 15:57:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to
+ simple-mfd from simple-bus
+Message-ID: <20200625145726.GT954398@dell>
+References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
+ <20200623114614.792648-4-yamada.masahiro@socionext.com>
+ <20200623122413.GA954398@dell>
+ <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
+ <20200624181605.GJ954398@dell>
+ <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+On Thu, 25 Jun 2020, Masahiro Yamada wrote:
 
-When using I2C bus protocol, the TPM has the ability to report data
-integrity on incoming or outgoing command parameter bytes.
-According to the TCG specs, if this data validation functionality is
-enabled via the TPM_DATA_CSUM_ENABLE register, the TPM will update the
-TPM_DATA_CSUM register after reception of the last command byte and after
-the last response byte has been read.
+> On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Thu, 25 Jun 2020, Masahiro Yamada wrote:
+> >
+> > > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
+> > > >
+> > > > > 'make ARCH=arm dtbs_check' emits the following warning:
+> > > > >
+> > > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> > > > >
+> > > > > Maybe, simple-mfd could be a better fit for this device.
+> > > >
+> > > > The two should be equivalent.
+> > >
+> > > Yes, I know.
+> > > That's why I can change "simple-bus" to "simple-mfd"
+> > > with no risk.
+> > >
+> > > The difference is schema-check.
+> > >
+> > > The node name for "simple-bus" is checked by 'make dtbs_check'.
+> > >
+> > > See this code:
+> > > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
+> > >
+> > > Even if I rename the node, it does not accept the
+> > > unit name '1,1f00000'
+> > >
+> > > > What do you mean by "maybe"?  Does this squash the warning?
+> > >
+> > > "maybe" means I am not quite sure
+> > > which compatible is a better fit
+> > > to describe this device.
+> > >
+> > > As mentioned above, simple-bus and simple-mfd
+> > > are interchangeable from a driver point of view.
+> > >
+> > > This add-on board is integrated with various peripherals
+> > > such as 16550a serial, smsc9115 ether etc.
+> > > The address-decode is implemented in a CPLD device.
+> > > It has chip selects and local addresses, which are mapped to
+> > > the parent.
+> > >
+> > > It can be either simple-bus or simple-mfd, I think.
+> > >
+> > >
+> > > dt-schema checks the node name of simple-bus.
+> > > Currently, there is no check for simple-mfd.
+> > >
+> > > So, I think this patch is an easy solution
+> > > to fix the warning.
+> >
+> > Yes, looking at the documentation it seems as though 'simple-mfd'
+> > would be a better fit.  Is the device a single IP with various
+> > different functions?
+> 
+> Not an IP.
+> 
+> This is a small board that consists of
+> a CPLD + ethernet controller + serial controller + LED, etc.
 
-Data integrity is checked if a "verify_data_integrity" handle is defined in
-"tpm_tis_phy_ops".
+Then simple MFD does not seem like a good fit.
 
-Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_core.c | 14 ++++++++++++++
- drivers/char/tpm/tpm_tis_core.h |  2 ++
- 2 files changed, 16 insertions(+)
+Neither does 'simple-bus'.
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index e136467..347c020 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -347,6 +347,13 @@ static int __tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- 		return size;
- 	}
- 
-+	if (priv->phy_ops->verify_data_integrity)
-+		if (!priv->phy_ops->verify_data_integrity(priv, buf,
-+							  size)) {
-+			size = -EIO;
-+			return size;
-+		}
-+
- 	return size;
- }
- 
-@@ -419,6 +426,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
- 		return rc;
- 	}
- 
-+	if (priv->phy_ops->verify_data_integrity) {
-+		if (!priv->phy_ops->verify_data_integrity(priv, buf, len)) {
-+			rc = -EIO;
-+			return rc;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index 6cc6b76..cd97c01 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -107,6 +107,8 @@ struct tpm_tis_phy_ops {
- 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
- 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
- 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
-+	bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
-+				      size_t len);
- };
- 
- static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
+What is it you're trying to describe in the device hierarchy?
+
+> > > Rob is in Cc. Please add comments if any.
+> > >
+> > > > Isn't the issue caused by the ','?
+> > >
+> > > Right.
+> > >
+> > > The node name of simple-bus
+> > > must meet the regular expression:
+> > > "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
+> > >
+> > >
+> > > Even if I rename the node
+> > > "support-card@1,1f00000"
+> > > to "bus@1,1f00000", the warning is still
+> > > displayed due to ','
+> > >
+> > > "1,1f00000" means
+> > > the address 0x01f00000 of chip select 1.
+> >
+> > Is this an officially accepted format?
+> 
+> I am not sure if it is official.
+> 
+> Rob said the data fields should be separated by commas.
+> https://www.spinics.net/lists/devicetree/msg201565.html
+
+Are you sure he doesn't mean in the 'reg' property.
+
+Rather than the node-name@NNNNNNNN syntax.
+
+BTW, I think the error you link to above is related to the
+node-name@NNNNNNNN not matching the value listed in the 'reg'
+property.
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
