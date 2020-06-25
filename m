@@ -2,91 +2,71 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784CAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2572AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 462D720707
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593104730;
-	bh=4zsOT8dFCda+/kC/Af0lQAAJytwJ/ToTgr8jJJp9nEk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sda5/MxAyfN2GbufKy4Ajnqrei7Q7vV2yOs5+O1uK8p8NlKK4RsR0INT/FSQTQdE2
-	 qwvaFi+fI7lFrijQRTHaKYZZqezmzjpTPMky7vWru11ME7EozmbUjX8Je+Sziq7RQQ
-	 6v1WabKUSIvF6YwNytjsR0xBk/4ehd2kHjmJKohc=
+	by mail.kernel.org (Postfix) with ESMTP id 049E7206BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406620AbgFYRF3 (ORCPT
+        id S2406821AbgFYRhv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 13:05:29 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:51071 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404376AbgFYRFN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 13:05:13 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 05PH4apH005239;
-        Fri, 26 Jun 2020 02:04:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05PH4apH005239
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593104678;
-        bh=kyXyOZ5U8Hs6howxGxcv+iEKeZZiTyjbIeEnk633oyA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEFVeaYJ9UAliTtB3rq8v27VAdbMFXTWV4iLqtXO/rfl8r7U93GlYMB+IQ/4YmYjQ
-         BAE3FwqLpoXEmJkak0nb/XxHQgUQJphlI66x+6Gkgpq66utHEyuuFGl3p6fymnstwL
-         kxxJcXJsoBDgov5xAFFxmf3NM0fHIHDxUHVhVmQQLZYnMJoxahSagKu6Z/i61mh8TU
-         Yd4CJNJmpDLQW2BrejLB+xpZxMbZFmZ1ZmImiQlQbsFFN5GJeWF6TTFjnlVxcYxIEK
-         j9yhH2oh1Gx8ZFlve1isqtFblmJL5xBXYGMJo9YMccOndcqJac/NPzwhIwMDcSEeEY
-         C/sP3xTvwaSlA==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] dt-bindings: do not build processed-schema.yaml for 'make dt_binding_check'
-Date:   Fri, 26 Jun 2020 02:04:32 +0900
-Message-Id: <20200625170434.635114-3-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200625170434.635114-1-masahiroy@kernel.org>
-References: <20200625170434.635114-1-masahiroy@kernel.org>
+        Thu, 25 Jun 2020 13:37:51 -0400
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:40688 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728181AbgFYRhv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 13:37:51 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1705442|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00394338-0.000234983-0.995822;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.HsRfZK5_1593106660;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HsRfZK5_1593106660)
+          by smtp.aliyun-inc.com(10.147.41.231);
+          Fri, 26 Jun 2020 01:37:45 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        paul.burton@mips.com, paul@crapouillou.net, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, ak@linux.intel.com,
+        ebiederm@xmission.com, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: [PATCH v2 0/3] Add support for Ingenic X1830 SoC and Y&A CU1830-Neo board.
+Date:   Fri, 26 Jun 2020 01:37:13 +0800
+Message-Id: <20200625173716.56146-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, processed-schema.yaml is always built, but it is actually
-used only for 'make dtbs_check'.
+v1->v2:
+1.Add DT node for LED.
+2.Update defconfig for LED.
 
-'make dt_binding_check' uses processed-schema-example.yaml instead.
+周琰杰 (Zhou Yanjie) (3):
+  MIPS: Ingenic: Add Ingenic X1830 support.
+  dt-bindings: MIPS: Add Ingenic X1830 based boards.
+  MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
 
-Build processed-schema.yaml only for 'make dtbs_check'.
+ .../devicetree/bindings/mips/ingenic/devices.yaml  |  12 +-
+ arch/mips/boot/dts/ingenic/Makefile                |   1 +
+ arch/mips/boot/dts/ingenic/cu1830-neo.dts          | 168 ++++++++++++
+ arch/mips/boot/dts/ingenic/x1830.dtsi              | 300 +++++++++++++++++++++
+ arch/mips/configs/cu1830-neo_defconfig             | 123 +++++++++
+ arch/mips/jz4740/Kconfig                           |  10 +
+ 6 files changed, 611 insertions(+), 3 deletions(-)
+ create mode 100644 arch/mips/boot/dts/ingenic/cu1830-neo.dts
+ create mode 100755 arch/mips/boot/dts/ingenic/x1830.dtsi
+ create mode 100644 arch/mips/configs/cu1830-neo_defconfig
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- Documentation/devicetree/bindings/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index f20d234aec46..aa243328ed43 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -52,7 +52,7 @@ $(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := $(DT_MK_SCHEMA_USERONLY_FLAG
- $(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) check_dtschema_version FORCE
- 	$(call if_changed,mk_schema)
- 
--extra-y += processed-schema.yaml
-+extra-$(CHECK_DTBS) += processed-schema.yaml
- 
- # Hack: avoid 'Argument list too long' error for 'make clean'. Remove most of
- # build artifacts here before they are processed by scripts/Makefile.clean
 -- 
-2.25.1
+2.11.0
+
+
 
