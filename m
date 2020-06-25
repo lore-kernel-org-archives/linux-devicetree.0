@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6F2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 18:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 18:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4A720789
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 18:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C872620789
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 18:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mv3THLIp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKNbPpYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407038AbgFYSNY (ORCPT
+        id S2436525AbgFYSOL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
+        Thu, 25 Jun 2020 14:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407035AbgFYSNV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 14:13:21 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F170CC08C5C1;
-        Thu, 25 Jun 2020 11:13:20 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id a1so6830094ejg.12;
-        Thu, 25 Jun 2020 11:13:20 -0700 (PDT)
+        with ESMTP id S2407020AbgFYSNQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 14:13:16 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB3EC08C5C1;
+        Thu, 25 Jun 2020 11:13:15 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id w6so6865104ejq.6;
+        Thu, 25 Jun 2020 11:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E1zhLYEqArTvX5TyY6+f2Fc5O6tcITlmkaFCap3K1yg=;
-        b=mv3THLIpoLjF534rSmDf3PLVaLQ+6vAoGKPBvZA10jyckTqZBeKIJxau/fLRkQLwdW
-         APdyFjre0dkJTQvR0a0vXd5k8j9DshkZvsIGQZYyZUt8d7apQe6EHRzFqtbP519UyrNc
-         pfuMoKYLR39KSRpyzdf8BZoMbjM6Vw3DqsuVMWkQ0jwpOLB82zSb8d7qWp0RiIREBwqX
-         rQ4gEKsJi2VEXxNcbszMqfXC7PVsIwTtSHRiADXNZjWSe6Fxpx+xTTB3SULnzAKv87pU
-         7SRt6B1CnrgYqnN/CPokF6/wdyfE44EWBuSyw0wdWz0z0gcWlcarEdTuFtcLGANqroiu
-         McoQ==
+        bh=wyyTfoYKUal+Im2XFp9aLfEoAp0H4cTyYoV6q1T4GSs=;
+        b=cKNbPpYZkMPGKNjYYC/5Wr0d5HgXe9m0rOfLOWuQtlbUbx6x5A3BjgnCoP9VC2GfCH
+         56Z32Zv3lT8II6SvnLv5PtHwYmx3X5rKRBC35oSvivonP3oFT8/3WOxrk47380nhKzdx
+         NZ1Qeg90WSpl9lQOHj9SharKmnym8eUsGZWdiKrRSOtoQDp+B/YkmlCRqcYQu2+XPW89
+         b+sUF6yv0vzYOz8Y0oa0iPpR6A/eDWOAWlIUnJLE6PfA7s7RXDyU1qHxeYGpgzsifm6Q
+         C+zSHXfcKOF8TkonNwS9utmkpcY6/vfWL8SYXDlqHZdq0cdQIdcHEe0ewUG7Z1S3crJ8
+         LneA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E1zhLYEqArTvX5TyY6+f2Fc5O6tcITlmkaFCap3K1yg=;
-        b=Cz5Btegv5y7j29yGkU1fix4Hv/Z0SGXmoQ1G1bbrok38BpP1BDj/CNPFLA+/Vawt7a
-         /cggrisTULW7A6yqmy/ioJQCHq2kEvk+iquR2jcohrRNG+65HNEhHmuDXfnmW5e2uyKi
-         vJz1FqjORaYLKuy7EAI/xpTtcfF54zxEZEjGero4Ig0ygOVwg1L3k4w+u5JpNteas8c7
-         5J7z9qlhreT4LuHPAWRQtWoLADFOcaMxi39DdOg6BnLXzkTRmF4dm6cQAEEPC7uEYCfG
-         3w/OPoz6ojksQSUui/yMXx4PRp6uSw/uuwriMdwEf/hCzaDoUo+IDO0U62OWA71e1TzQ
-         z2gA==
-X-Gm-Message-State: AOAM531nXfmQWCEFxzzbKhrE6k2SsGvDXuAqjMEOt6pCw+7yk+mmEaf0
-        gbi1cLXyzRGTPMcrUmEtuX0=
-X-Google-Smtp-Source: ABdhPJwJb2OnAYejiFiv9dYpyhSph1WjI4pyVnwa3WCqDawP7+aJO1qJU0cDZ7SBYdBqFS7a7zrpGg==
-X-Received: by 2002:a17:906:7693:: with SMTP id o19mr29262515ejm.295.1593108799745;
-        Thu, 25 Jun 2020 11:13:19 -0700 (PDT)
+        bh=wyyTfoYKUal+Im2XFp9aLfEoAp0H4cTyYoV6q1T4GSs=;
+        b=XqHjchvK4SpBKUqAfckizsuE+F/CCz1yJWUSyVvxicNCcthexTm21cS249YMlTCe5T
+         FDb6o+KKd2B9hz5UGxvxrYaDZLem4SnF2CkDOB7TeeUmdaNGs0xCd2YiHDinUP2c+fbm
+         8aiSvMNlXVDzOXvolFb5XsVWIpg8oqPnwIr3iQhXCMBMuPbSkW4LLoslow0DgmgLEyE2
+         3hbMQ2j5VgalOiHbgCmpnzhWik07SsOzT9tI8CUlGYZDDFGhrrEeyy+tYiOzdIAwGrYc
+         hyxonFMrWfP+iABAmGMXuQxqRUdlWPBhWmazElxtF0J/vbPmJhJeduwTCZf8Ktbahdzu
+         WIAg==
+X-Gm-Message-State: AOAM5304KtBUUgOppEHPGCiglTETp3WG4M+sLYHg8XsRnmI5ahU2tc2K
+        MW+Fz6/8mw682VM6uvEc19Q=
+X-Google-Smtp-Source: ABdhPJyFL0qB4dqYmzJYms3J9dUCA7vTO3T6chZCbVWy26cw2gNhuRmNhDwxXstpLxPNuMObkM+Twg==
+X-Received: by 2002:a17:906:3b4b:: with SMTP id h11mr6346796ejf.433.1593108794646;
+        Thu, 25 Jun 2020 11:13:14 -0700 (PDT)
 Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.18
+        by smtp.googlemail.com with ESMTPSA id p4sm19511112edj.64.2020.06.25.11.13.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:13:19 -0700 (PDT)
+        Thu, 25 Jun 2020 11:13:14 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     skrzynka@konradybcio.pl
 Cc:     Konrad Dybcio <konradybcio@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Konrad Dybcio <konradybcio@gmail.com>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 05/13] arm64: dts: Add a proper CPU map for MSM8992
-Date:   Thu, 25 Jun 2020 20:12:53 +0200
-Message-Id: <20200625181303.129874-6-konradybcio@gmail.com>
+Subject: [PATCH v2 03/13] arm64: dts: qcom: bullhead: Add qcom,msm-id
+Date:   Thu, 25 Jun 2020 20:12:51 +0200
+Message-Id: <20200625181303.129874-4-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625181303.129874-1-konradybcio@gmail.com>
 References: <20200625181303.129874-1-konradybcio@gmail.com>
@@ -83,118 +83,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds cpu nodes for all 6 cores
-present on this SoC and the cpu-map.
+Add the property required for the bootloader to select
+the correct device tree blob. It has been removed from
+the SoC device tree as it should be set on a per-device
+basis.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 82 ++++++++++++++++++++++++---
- 1 file changed, 75 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index 8ef1cb8ba8ef..f780cd39ded6 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -16,24 +16,92 @@ / {
- 	cpus {
- 		#address-cells = <2>;
- 		#size-cells = <0>;
--		cpu-map {
--			cluster0 {
--				core0 {
--					cpu = <&CPU0>;
--				};
--			};
--		};
+diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+index 1061fd5404aa..4f70681e730d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
++++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+@@ -11,6 +11,7 @@ / {
+ 	model = "LG Nexus 5X";
+ 	compatible = "lg,bullhead", "qcom,msm8992";
+ 	/* required for bootloader to select correct board */
++	qcom,msm-id = <251 0>, <252 0>;
+ 	qcom,board-id = <0xb64 0>;
+ 	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
  
- 		CPU0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53";
- 			reg = <0x0 0x0>;
- 			next-level-cache = <&L2_0>;
-+			enable-method = "psci";
- 			L2_0: l2-cache {
- 				compatible = "cache";
- 				cache-level = <2>;
- 			};
- 		};
-+
-+		CPU1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x1>;
-+			next-level-cache = <&L2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		CPU2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x2>;
-+			next-level-cache = <&L2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		CPU3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x3>;
-+			next-level-cache = <&L2_0>;
-+			enable-method = "psci";
-+		};
-+
-+		CPU4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x100>;
-+			next-level-cache = <&L2_1>;
-+			enable-method = "psci";
-+			L2_1: l2-cache {
-+				compatible = "cache";
-+				cache-level = <2>;
-+			};
-+		};
-+
-+		CPU5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x0 0x101>;
-+			next-level-cache = <&L2_1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&CPU0>;
-+				};
-+
-+				core1 {
-+					cpu = <&CPU1>;
-+				};
-+
-+				core2 {
-+					cpu = <&CPU2>;
-+				};
-+
-+				core3 {
-+					cpu = <&CPU3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&CPU4>;
-+				};
-+
-+				core1 {
-+					cpu = <&CPU5>;
-+				};
-+			};
-+		};
- 	};
- 
- 	clocks {
 -- 
 2.27.0
 
