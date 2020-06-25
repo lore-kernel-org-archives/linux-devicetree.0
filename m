@@ -4,140 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D523BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29ABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD81A2082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F4F2076E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 08:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390171AbgFYIkp (ORCPT
+        id S2390804AbgFYI75 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 04:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728725AbgFYIkp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 04:40:45 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D44C2C061573;
-        Thu, 25 Jun 2020 01:40:44 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E8EE32A0267
-Subject: Re: [PATCH 7/7] arm64: dts: mt8183: Add krane-sku176 board
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Ben Ho <Ben.Ho@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200619102757.1358675-1-enric.balletbo@collabora.com>
- <20200619102757.1358675-8-enric.balletbo@collabora.com>
- <fe814ab3-c237-da9c-d391-cbd0cdbe29bf@gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <3700a9b7-195b-f8d6-de03-fc5a77beffee@collabora.com>
-Date:   Thu, 25 Jun 2020 10:40:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 25 Jun 2020 04:59:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:28658 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390799AbgFYI75 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 04:59:57 -0400
+IronPort-SDR: NzKpja60UmIFCrSIA6TVNe6bP9JnZriKccdvruaxk90GAzwt3Gl5S7aKj3bh9kH7s0yyS3WJKJ
+ rJP4U2tQvHOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="143908210"
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="143908210"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 01:59:56 -0700
+IronPort-SDR: NI7sm4ZOpFRULsttxgjrTh7px59jtpVeir7TfQNWM97K7HnZ9T+6/EiB+tB9T76FT7Za3RiUKw
+ 5vPOEJ1DbDyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
+   d="scan'208";a="275960986"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 25 Jun 2020 01:59:56 -0700
+Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
+        by linux.intel.com (Postfix) with ESMTP id 04F895805B5;
+        Thu, 25 Jun 2020 01:59:52 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+ <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+ <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+ <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <9a8f4a3e-c94a-b5bf-2715-03b0439f9fe7@linux.intel.com>
+Date:   Thu, 25 Jun 2020 16:59:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <fe814ab3-c237-da9c-d391-cbd0cdbe29bf@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
 
-Thank you for your review.
 
-On 22/6/20 12:33, Matthias Brugger wrote:
-> 
-> 
-> On 19/06/2020 12:27, Enric Balletbo i Serra wrote:
->> Also known as the Lenovo IdeaPad Duet Chromebook.
+On 25/6/2020 1:58 pm, Uwe Kleine-König wrote:
+> On Thu, Jun 25, 2020 at 12:23:54PM +0800, Tanwar, Rahul wrote:
+>> Hi Philipp,
 >>
->> There are different krane boards with shared resources, hence a
->> mt8183-kukui-krane.dtsi was created for easily introduce future new
->> boards. The same happens with the baseboard codenamed kukui where
->> different variants, apart from kukui variant can take advantage of the
->> shared resources.
->>
->> Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
->> [originally created by Ben Ho but adapted and ported to mainline]
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->>  arch/arm64/boot/dts/mediatek/Makefile         |   1 +
->>  .../mediatek/mt8183-kukui-krane-sku176.dts    |  18 +
->>  .../boot/dts/mediatek/mt8183-kukui-krane.dtsi | 343 ++++++++
->>  .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 788 ++++++++++++++++++
->>  arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   1 +
->>  5 files changed, 1151 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dts
->>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
->>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
->>
-> [...]
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
->> new file mode 100644
->> index 0000000000000..f0a070535b340
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> [...]
->> +
->> +	max98357a: codec0 {
->> +		compatible = "maxim,max98357a";
->> +		sdmode-gpios = <&pio 175 0>;
->> +	};
->> +
->> +	btsco: codec1 {
-> 
-> bt_sco_codec:
-> is more clear, I think.
-> 
+>> On 18/6/2020 8:25 pm, Philipp Zabel wrote:
+>>> Hi Rahul,
+>>>
+>>> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
+>>>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>>>> This PWM controller does not have any other consumer, it is a
+>>>> dedicated PWM controller for fan attached to the system. Add
+>>>> driver for this PWM fan controller.
+>>>>
+>>>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>>>> ---
+>>>>  drivers/pwm/Kconfig         |   9 +
+>>>>  drivers/pwm/Makefile        |   1 +
+>>>>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 410 insertions(+)
+>>>>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+>>>>
+>>> [...]
+>>>> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+>>>> new file mode 100644
+>>>> index 000000000000..3c7077acb161
+>>>> --- /dev/null
+>>>> +++ b/drivers/pwm/pwm-intel-lgm.c
+>>>> @@ -0,0 +1,400 @@
+>>> [...]
+>>>> +static int lgm_pwm_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct lgm_pwm_chip *pc;
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	void __iomem *io_base;
+>>>> +	int ret;
+>>>> +
+>>>> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+>>>> +	if (!pc)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	io_base = devm_platform_ioremap_resource(pdev, 0);
+>>>> +	if (IS_ERR(io_base))
+>>>> +		return PTR_ERR(io_base);
+>>>> +
+>>>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
+>>>> +	if (IS_ERR(pc->regmap)) {
+>>>> +		ret = PTR_ERR(pc->regmap);
+>>>> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	pc->clk = devm_clk_get(dev, NULL);
+>>>> +	if (IS_ERR(pc->clk)) {
+>>>> +		ret = PTR_ERR(pc->clk);
+>>>> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	pc->rst = devm_reset_control_get(dev, NULL);
+>>>> +	if (IS_ERR(pc->rst)) {
+>>>> +		ret = PTR_ERR(pc->rst);
+>>>> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+>>>> +		return ret;
+>>>> +	}
+>>> Please use devm_reset_control_get_exclusive() to make it explicit an
+>>> that exclusive reset control is requested. Given how the reset control
+>>> is used, I think this driver could also use
+>>> devm_reset_control_get_shared() to potentially allow sharing a reset
+>>> line with other devices.
+>> devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
+>> Code as below:
+>> static inline struct reset_control *devm_reset_control_get(
+>>                                 struct device *dev, const char *id)
+>> {
+>>         return devm_reset_control_get_exclusive(dev, id);
+>> }
+>> Am i missing something else?
+> Obviously you're missing the comment above of_reset_control_get about
+> some functions being compatibility wrappers.
 
-Ok. I'll change that in next version.
+Oops, so sorry totally missed/overlooked that. Will update in v3. Thanks.
 
->> +		compatible = "linux,bt-sco";
->> +	};
->> +
->> +	wifi_pwrseq: wifi-pwrseq {
->> +		compatible = "mmc-pwrseq-simple";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&wifi_pins_pwrseq>;
->> +
->> +		/* Toggle WIFI_ENABLE to reset the chip. */
->> +		reset-gpios = <&pio 119 1>;
->> +	};
->> +
-> [...]> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
->> index a1576f1b5a447..689bce13e0165 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
->> @@ -719,6 +719,7 @@ u3phy: usb-phy@11f40000 {
->>  			compatible = "mediatek,mt8183-tphy",
->>  				     "mediatek,generic-tphy-v2";
->>  			#address-cells = <1>;
->> +			#phy-cells = <1>;
-> 
-> Wrong patch?
-> 
-
-Oh yes, this should go with the USB one. Thank you to catch this, I'll fix in
-next version.
-
->>  			#size-cells = <1>;
->>  			ranges = <0 0 0x11f40000 0x1000>;
->>  			status = "okay";
->>
-> 
-> Regards,
-> Matthias
-> 
+Regards,
+Rahul
