@@ -2,157 +2,101 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D091AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34123C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 19:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC140207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 18:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lw/G9AZ0"
+	by mail.kernel.org (Postfix) with ESMTP id 084AE20781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 19:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593112321;
+	bh=Wq5qLv42hAbYbM3KVFBmYg7DH+Sc+FTD5uuJlgNEbE0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=Z50itsK5nAg7UWyDeAJVAx+Tk1l7WrNzeJpf0xaZ53iMFKR+nkInxgWQnkE4EXhwz
+	 AVL7OE6dODYXa2lXDSAQcpZLry1reM85Vd5eknrqF8Sv5bIL/LzJx8KAuj/+4u0iSq
+	 0YFaBdQb2Go0ikIJHl13Rd5PLFZt1x6+6IzGOsQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406150AbgFYSWq (ORCPT
+        id S2390652AbgFYTMA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 14:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390556AbgFYSV3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 14:21:29 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8479C08C5C1;
-        Thu, 25 Jun 2020 11:21:28 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id w6so6888024ejq.6;
-        Thu, 25 Jun 2020 11:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
-        b=lw/G9AZ0JhLp6mKFGbUXgOhKEJq6WIJ7cIQOw5MJE0Yux3vjHzXe8U0oR1NAWc0cLy
-         La6AtEa19/sN5MXoc8F06zOdtlkueZ1HPwZiMD1IZ7WGO4X85dOvDSfc9cKkm+XjyQA6
-         cwGTTnYWb3gvJkKgCCLpHpU2LNuKmOLac9/FW30w9TRTUP9FqQJMOcNva+kyU1R6vVAo
-         B2+c2BEdIusCEVNGCdCJ/n9yP/LOkb/pjTXkh/9KYYCtJ3F2ppyZPc6p/8HLjj7xCoGf
-         dfYoaV1xG/2/hRXH6FFX/BgM5EbFodVsVdE4abAdYm0Qh1Ujw/CKfPIoV6M56ENb3oOS
-         zb/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+puFNw9Af4Mq8TedQJihgmoj5SF8nSnYlnfkgvsEedk=;
-        b=XjZqrUiFSrJtk5XBtNFjYNAaTIKBqMlOLYOpUwmNrjNhOkz85yRqAq7QVRktXd351p
-         NQ+xYIc3hriLLOMFqVZoh4ECEuNA9Zf3khe9ekyVG+joKFRX1nlHegm8TkFMGZYHQR2a
-         UawdaeZeFxk11Aix5OWG2bLDFFlpFJjfGBQ+RYD8H+jdG5UE1vipz7vPYIGZajQK5+CH
-         ebQ/EgLWtoriS6o762VO694pqsTD3sEZ11I3I01KcreSaIQd32hLPVFmdAU2W/aWzf8/
-         ME4qcvseDN/xGv4x33pmKI6hgn9IBMjISEwZs4j1jJJejN09EPNewDRUh/DpFebwZtpI
-         9l7w==
-X-Gm-Message-State: AOAM5329FJHIBCk9iM5M/MS2yIZN5xszhiVSLE/PRTNg29cP5Uu5uV6W
-        NqbRUZU8aI7TYHNWYjS/LHA=
-X-Google-Smtp-Source: ABdhPJwYbZsIVqcWEZ6FdDlOUbZjB+V3Gp3dC4XjE1TgMUPnOnF6TRL429WIWYcwe8CIBGAOyCkohA==
-X-Received: by 2002:a17:906:3042:: with SMTP id d2mr9618978ejd.420.1593109287647;
-        Thu, 25 Jun 2020 11:21:27 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id lm22sm1523448ejb.109.2020.06.25.11.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 11:21:27 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/13] arm64: dts: qcom: msm8992: Fix SDHCI1
-Date:   Thu, 25 Jun 2020 20:21:06 +0200
-Message-Id: <20200625182118.131476-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
-References: <20200625182118.131476-1-konradybcio@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 25 Jun 2020 15:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390330AbgFYTMA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 15:12:00 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 438472075A;
+        Thu, 25 Jun 2020 19:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593112319;
+        bh=Wq5qLv42hAbYbM3KVFBmYg7DH+Sc+FTD5uuJlgNEbE0=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=kOv4k4cKrUDBv/davGtLqjHBm3p2BBy/BHnIsQdY+11N5h47jw4atb66G8jlsFiSG
+         MUkjX8FFFZAq1wLlUkvsBPuaPb/2RmauGuNroLw8sQZQgCzNqWZxkqI9VsAT7toY9O
+         +dcZKwpnIt1OWSCgC6KXUQHQGwUjdoi7pNbT9odI=
+Date:   Thu, 25 Jun 2020 20:11:57 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     tiwai@suse.com, perex@perex.cz, Dan Murphy <dmurphy@ti.com>,
+        lgirdwood@gmail.com
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200624174932.9604-1-dmurphy@ti.com>
+References: <20200624174932.9604-1-dmurphy@ti.com>
+Subject: Re: [PATCH v6 0/7] TAS2562 issue fixes and slot programming
+Message-Id: <159311231750.10637.10437779790730548951.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit ensures the correct IRQ type is set
-and disables the device by default.
-The mmc-hs400-1_8v property is also moved to
-Bullhead as it might not be present on all boards.
+On Wed, 24 Jun 2020 12:49:25 -0500, Dan Murphy wrote:
+> This series fixes issues tih the shut-down gpio device tree allocation and a
+> code format issue found.
+> 
+> While working on a project slot programming for the tx and rx paths needed to be
+> enabled.  In addition the vsense slot programming needed to be configurable and
+> not directly a simpler adder to the isense slot.
+> 
+> [...]
 
-The node has been renamed to sdhci@ instead of mmc@
-and the phandle was changed to sdhc_1 to comply with
-the newer DTS style.
+Applied to
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../boot/dts/qcom/msm8992-bullhead-rev-101.dts   |  6 ++++++
- arch/arm64/boot/dts/qcom/msm8992.dtsi            | 16 +++++++++-------
- 2 files changed, 15 insertions(+), 7 deletions(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-index a2de69292d28..1061fd5404aa 100644
---- a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-@@ -271,3 +271,9 @@ pm8994_l32: l32 {
- 		};
- 	};
- };
-+
-+&sdhc_1 {
-+	status = "okay";
-+
-+	mmc-hs400-1_8v;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index 43b2e4cd26f0..8ef1cb8ba8ef 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -158,18 +158,19 @@ frame@f9028000 {
- 			};
- 		};
- 
--		sdhci1: mmc@f9824900 {
-+		sdhc_1: sdhci@f9824900 {
- 			compatible = "qcom,sdhci-msm-v4";
- 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
- 			reg-names = "hc_mem", "core_mem";
- 
--			interrupts = <GIC_SPI 123 IRQ_TYPE_NONE>,
--					<GIC_SPI 138 IRQ_TYPE_NONE>;
-+			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "hc_irq", "pwr_irq";
- 
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
--				<&gcc GCC_SDCC1_AHB_CLK>;
--			clock-names = "core", "iface";
-+				<&gcc GCC_SDCC1_AHB_CLK>,
-+				<&xo_board>;
-+			clock-names = "core", "iface", "xo";
- 
- 			pinctrl-names = "default", "sleep";
- 			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on
-@@ -179,8 +180,9 @@ sdhci1: mmc@f9824900 {
- 
- 			regulator-always-on;
- 			bus-width = <8>;
--			mmc-hs400-1_8v;
--			status = "okay";
-+			non-removable;
-+
-+			status = "disabled";
- 		};
- 
- 		blsp1_uart2: serial@f991e000 {
--- 
-2.27.0
+Thanks!
 
+[1/6] ASoC: tas2562: Fix shut-down gpio property
+      commit: 6f81e520b2906258a063f09b8d1dd9d0cc6a3172
+[2/6] ASoC: tas2562: Update shutdown GPIO property
+      commit: bc07b54459cbb3a572a78b5c200ff79ef11b8158
+[3/6] ASoC: tas2562: Fix format issue for extra space before a comma
+      commit: c8294da2ed0be726bb87019eba3a6367c7f1c922
+[4/6] ASoC: tas2562: Add rx and tx slot programming
+      (no commit info)
+[5/6] dt-bindings: tas2562: Add voltage sense slot property
+      (no commit info)
+[6/6] ASoC: tas2562: Add voltage sense slot configuration
+      (no commit info)
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
