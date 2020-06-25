@@ -2,171 +2,98 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62A9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16325C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537D12076E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593095930;
-	bh=zxWp8BmWa920a0+o2fBQiG+V+AqjY0vOBj+m52+jqV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1ICs2qVLeoIzO6We5oFBlwLniup5HSWrOMsFuKUICwjyz90VWCJAZzmK+murpnZyT
-	 5w0flavlFMchs/BqeHiCl3NrvEuCdjAfoXygzGz8I+r6JdniWvR0kjQ2I+8X/dtAdR
-	 fz09OuaJ7nSyyhDkxxSCiPzq/cgSemWcxBsTv4rE=
+	by mail.kernel.org (Postfix) with ESMTP id E4514207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 14:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405415AbgFYOiu (ORCPT
+        id S2405443AbgFYOrE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 10:38:50 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:45184 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405411AbgFYOiu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 10:38:50 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05PEcQAX008959;
-        Thu, 25 Jun 2020 23:38:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05PEcQAX008959
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593095907;
-        bh=ijPZb1cfulvfr7nl4mn4pmwbl3GKFLftlqTTQQ9OMEc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OznUSqNEqRwb9eSqLiT0Q6D+ovJNlmwc02GFYtezeKuLjq3Zl4BfDOXROeFx9tON1
-         iqmr3lKpeEos+rVdZDVXay4TD4UVgiNzFvAUTs1BGs8Rz3IYk46DXgzcqynWLhwOSZ
-         OrsNx0HahNWTZTy9eSXlZbad+a/RXhmssSP9eHOlh0+R8A2NVdFwqhXIgjDcquRXd6
-         09DKR5pTWf+f3pDkm4PIxV4IlNruY0BhnF3Q+W+R6U7C1dNB3jC7ChnBoV+XlJlxwF
-         JJYeXuVH82yC1cfbXnxlJqEOdmSrh6SLm8j+G3jEn0fZl6qc1VO2F2hstm/1U5M4P+
-         TIP02jpz6v7ug==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id m25so3668741vsp.8;
-        Thu, 25 Jun 2020 07:38:27 -0700 (PDT)
-X-Gm-Message-State: AOAM5307P+XvSxbN/q+ZzGCSLLPCo+tIIvB1VgWhqsvu/GVxq5azQBsX
-        TnPnx+lPRG7zRasNs/Lw+ztxxEqah60AVWaWlHM=
-X-Google-Smtp-Source: ABdhPJyvOYDrxR1TD/0As+dJtiC0TVMxIpD2R/NeE0UMXfGRlubszQEpcdvJygsMSzOaXDMnb7MTpA0vPI/hmyAnMhA=
-X-Received: by 2002:a67:2d42:: with SMTP id t63mr26451715vst.181.1593095906216;
- Thu, 25 Jun 2020 07:38:26 -0700 (PDT)
+        Thu, 25 Jun 2020 10:47:04 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38242 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405367AbgFYOrE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 10:47:04 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C1011A04B0;
+        Thu, 25 Jun 2020 16:47:01 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E8581A0489;
+        Thu, 25 Jun 2020 16:47:01 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7943F205A3;
+        Thu, 25 Jun 2020 16:47:01 +0200 (CEST)
+Date:   Thu, 25 Jun 2020 17:47:01 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Leonard Crestez <cdleonard@gmail.com>, leonard.crestez@nxp.com,
+        Anson.Huang@nxp.com, a.swigon@partner.samsung.com,
+        abailon@baylibre.com, aisheng.dong@nxp.com, angus@akkea.ca,
+        cw00.choi@samsung.com, devicetree@vger.kernel.org,
+        fabio.estevam@nxp.com, georgi.djakov@linaro.org,
+        kernel@pengutronix.de, krzk@kernel.org, kyungmin.park@samsung.com,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-imx@nxp.com, linux-pm@vger.kernel.org, mark.rutland@arm.com,
+        martink@posteo.de, mka@chromium.org, mturquette@baylibre.com,
+        myungjoo.ham@samsung.com, ping.bai@nxp.com, rjw@rjwysocki.net,
+        robh@kernel.org, saravanak@google.com, sboyd@kernel.org,
+        shawnguo@kernel.org, viresh.kumar@linaro.org
+Subject: Re: [PATCH v4 0/6] PM / devfreq: Add dynamic scaling for imx8m ddr
+ controller
+Message-ID: <20200625144701.6xa7sdlm5llr5z3p@fsr-ub1664-175>
+References: <cover.1573252696.git.leonard.crestez@nxp.com>
+ <20200622135858.15891-1-martin.kepplinger@puri.sm>
+ <e8440abf-e51f-9846-f2af-a1a44a7fd89a@gmail.com>
+ <b0f712d0-ea83-f073-f987-7bb33150f25d@puri.sm>
 MIME-Version: 1.0
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
- <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com> <20200624181605.GJ954398@dell>
-In-Reply-To: <20200624181605.GJ954398@dell>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 25 Jun 2020 23:37:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
-Message-ID: <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
- from simple-bus
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b0f712d0-ea83-f073-f987-7bb33150f25d@puri.sm>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 25 Jun 2020, Masahiro Yamada wrote:
->
-> > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
-> > >
-> > > > 'make ARCH=arm dtbs_check' emits the following warning:
-> > > >
-> > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> > > >
-> > > > Maybe, simple-mfd could be a better fit for this device.
-> > >
-> > > The two should be equivalent.
-> >
-> > Yes, I know.
-> > That's why I can change "simple-bus" to "simple-mfd"
-> > with no risk.
-> >
-> > The difference is schema-check.
-> >
-> > The node name for "simple-bus" is checked by 'make dtbs_check'.
-> >
-> > See this code:
-> > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simple-bus.yaml#L17
-> >
-> > Even if I rename the node, it does not accept the
-> > unit name '1,1f00000'
-> >
-> > > What do you mean by "maybe"?  Does this squash the warning?
-> >
-> > "maybe" means I am not quite sure
-> > which compatible is a better fit
-> > to describe this device.
-> >
-> > As mentioned above, simple-bus and simple-mfd
-> > are interchangeable from a driver point of view.
-> >
-> > This add-on board is integrated with various peripherals
-> > such as 16550a serial, smsc9115 ether etc.
-> > The address-decode is implemented in a CPLD device.
-> > It has chip selects and local addresses, which are mapped to
-> > the parent.
-> >
-> > It can be either simple-bus or simple-mfd, I think.
-> >
-> >
-> > dt-schema checks the node name of simple-bus.
-> > Currently, there is no check for simple-mfd.
-> >
-> > So, I think this patch is an easy solution
-> > to fix the warning.
->
-> Yes, looking at the documentation it seems as though 'simple-mfd'
-> would be a better fit.  Is the device a single IP with various
-> different functions?
+On 20-06-25 08:57:52, Martin Kepplinger wrote:
+> hi Leonard,
+> 
+> On 24.06.20 08:08, Leonard Crestez wrote:
+> > On 6/22/20 4:58 PM, Martin Kepplinger wrote:
+> >> hi Leondard,
+> >>
+> >> before using this patchset I'd like to ask: Do you have plans to create
+> >> an update and push this forward? It is useful.
+> > 
+> > Hello.
+> > 
+> > I am no longer with NXP and don't have access to imx hardware right now.
+> 
+> I guess it'll get even harder to get the ATF part for devfreq
+> implemented now :) Thanks for the update and all the best for your new
+> stuff.
+> 
+> > 
+> > However the series that you replied to is very old and was accepted many
+> > months ago. You shouldn't have to apply out-of-tree kernel patches.
+> > 
+> 
+> that particular series doesn't seem to be in mainline, see
+> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Felixir.bootlin.com%2Flinux%2Flatest%2Fsource%2Fdrivers%2Fdevfreq%2Fimx8m-ddrc.c%23L283&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7Cb00f437e756d4850238f08d818d51b59%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637286650857331523&amp;sdata=S7%2BN3%2BiTFkUW5YnmVzl36wEBlr%2BkTatGoDDrvY9XfTk%3D&amp;reserved=0
+> or do I miss something?
+> 
+> do you know who at nxp would be likely actively working on devfreq?
 
+Hi Martin,
 
-Not an IP.
+I will be working on this in the following weeks.
 
-This is a small board that consists of
-a CPLD + ethernet controller + serial controller + LED, etc.
-
-
->
-> > Rob is in Cc. Please add comments if any.
-> >
-> > > Isn't the issue caused by the ','?
-> >
-> > Right.
-> >
-> > The node name of simple-bus
-> > must meet the regular expression:
-> > "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
-> >
-> >
-> > Even if I rename the node
-> > "support-card@1,1f00000"
-> > to "bus@1,1f00000", the warning is still
-> > displayed due to ','
-> >
-> > "1,1f00000" means
-> > the address 0x01f00000 of chip select 1.
->
-> Is this an officially accepted format?
-
-
-I am not sure if it is official.
-
-Rob said the data fields should be separated by commas.
-https://www.spinics.net/lists/devicetree/msg201565.html
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> thanks,
+>                            martin
