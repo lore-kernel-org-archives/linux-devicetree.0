@@ -2,93 +2,175 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B783C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9C6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 176B520720
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:47:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLPjaUmV"
+	by mail.kernel.org (Postfix) with ESMTP id BDCB820789
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389749AbgFYFrj (ORCPT
+        id S2389918AbgFYF62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
+        Thu, 25 Jun 2020 01:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389549AbgFYFrb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 01:47:31 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EF3C061795
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:47:31 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id q69so1122795vkq.10
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Pyf0GGvFVlXsdDyV6XIIzdPqN+R0eNNqJvFwUcTnuQ=;
-        b=NLPjaUmVWEdwr3ufy0pJAdyTKWHhcA1I+POUG5D6lz7Y0eAuoVUFJuP4weZ7N3WzeN
-         /yMrWQVRvJ0+rlA33aFwLrpB6T9yHLqO4XbTVCGg3WUEOEsLpT6L/uw0j/K8gSfEDnn8
-         ECvwrH3hOzi4tUJGMu2axZLXlpxBvo44/cGf+qh1p7SWDj3GdGe8NvlWunaErT+TpKeA
-         BaasQKGPxAW3VzxEtaKA9unVB7PFKUmlBqRM7M4qvPwLC3AKzrXan6a1OunMe3nZC96w
-         rUL+XgxmyOnm3aHp48j4SZlESnDm+LttG+OSry6PTWJAjvIn2R8/6PPYvGFMCseYF0yk
-         WLag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Pyf0GGvFVlXsdDyV6XIIzdPqN+R0eNNqJvFwUcTnuQ=;
-        b=UcaSG5RBH/Ih7ZpMVg/pMEGvtRkSX9JetXKAHkftq73f0vW6ZlLVqqVB+Il3VAVKtC
-         1TGDJKeJKshzUZfKwZgme/Z0P5kBJ3PaxbYBMgVs+srFGcNiBysD/92Dj86ubrYl+Chu
-         vqqd6pfW/C9FpaiOAF9Wr9qAWpcjBEMwGoeN+4id0GwCWzS7ap6OKkzvSbEi+gzHPOU5
-         zh0vpM6HFgJrAahKnlUQ95I7XfRMNUMu1aIw2z9x2Tro4NsqWOYb+9hAJn8NerQISIZt
-         4BxJPgE90i6RErZCps0fmJS2sgIx2hwixQmGgo0kfJI0JedxOfZWARPU1d1n1S1h4nme
-         sDIQ==
-X-Gm-Message-State: AOAM5308+gSPMnryKLcnG8F0/ueNCtFQXGW94s3Ljr6nqOOPD2QXJy9o
-        8WI1jYXPdM5TWo6s/Ed756qPLJk2JB2l7Jmb1ZOKmg==
-X-Google-Smtp-Source: ABdhPJz29/gwxTOnUa+6XWgaPKMFCENul0uiekbDYgqPdKvRSaVgk4wq5FPQsyia16fNAO7d1Z4wSbTgFy8RGO5Xeqc=
-X-Received: by 2002:a1f:d783:: with SMTP id o125mr26144467vkg.46.1593064050335;
- Wed, 24 Jun 2020 22:47:30 -0700 (PDT)
+        with ESMTP id S2389600AbgFYF61 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 01:58:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98662C061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:58:27 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1joKtw-0001Jj-LO; Thu, 25 Jun 2020 07:58:20 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1joKtu-0000Qp-T7; Thu, 25 Jun 2020 07:58:18 +0200
+Date:   Thu, 25 Jun 2020 07:58:18 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200625055818.nv5snblkm4nwvxw2@taurus.defre.kleine-koenig.org>
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+ <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+ <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
 MIME-Version: 1.0
-References: <20200623180832.254163-1-konradybcio@gmail.com>
- <20200623180832.254163-4-konradybcio@gmail.com> <CAHLCerOAM5j+gZWP9MUuGZ+TQfBg4Z=GoEdUfxBTwtEs5TqUuw@mail.gmail.com>
- <CAMS8qEUT+Kdq-gqZn25X7W2V8HacuXFbeoTDz=N7C7MNpSfOHA@mail.gmail.com>
-In-Reply-To: <CAMS8qEUT+Kdq-gqZn25X7W2V8HacuXFbeoTDz=N7C7MNpSfOHA@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 25 Jun 2020 11:17:19 +0530
-Message-ID: <CAHLCerPOwO1JHUtb33fFkBH9wAT6Ty4E4GxbHNvbEkwr2SOvuw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] arm64: dts: qcom: sdm630: Add tsens node
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xfbgim4wbqyditz2"
+Content-Disposition: inline
+In-Reply-To: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 8:32 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
->
-> Interesting, the downstream DTS only mentions the 0x010AD one..
-> Are you sure you're not looking at 636/660?
->
 
-I looked a bit closer. So there are two instances of the controller
-but the platform doesn't have as many sensors. So using just one
-controller is fine. I suspect the other controller might be disabled
-in firmware.
+--xfbgim4wbqyditz2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Amit
+On Thu, Jun 25, 2020 at 12:23:54PM +0800, Tanwar, Rahul wrote:
+>=20
+> Hi Philipp,
+>=20
+> On 18/6/2020 8:25 pm, Philipp Zabel wrote:
+> > Hi Rahul,
+> >
+> > On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
+> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> >> This PWM controller does not have any other consumer, it is a
+> >> dedicated PWM controller for fan attached to the system. Add
+> >> driver for this PWM fan controller.
+> >>
+> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> >> ---
+> >>  drivers/pwm/Kconfig         |   9 +
+> >>  drivers/pwm/Makefile        |   1 +
+> >>  drivers/pwm/pwm-intel-lgm.c | 400 +++++++++++++++++++++++++++++++++++=
++++++++++
+> >>  3 files changed, 410 insertions(+)
+> >>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+> >>
+> > [...]
+> >> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+> >> new file mode 100644
+> >> index 000000000000..3c7077acb161
+> >> --- /dev/null
+> >> +++ b/drivers/pwm/pwm-intel-lgm.c
+> >> @@ -0,0 +1,400 @@
+> > [...]
+> >> +static int lgm_pwm_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct lgm_pwm_chip *pc;
+> >> +	struct device *dev =3D &pdev->dev;
+> >> +	void __iomem *io_base;
+> >> +	int ret;
+> >> +
+> >> +	pc =3D devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+> >> +	if (!pc)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	io_base =3D devm_platform_ioremap_resource(pdev, 0);
+> >> +	if (IS_ERR(io_base))
+> >> +		return PTR_ERR(io_base);
+> >> +
+> >> +	pc->regmap =3D devm_regmap_init_mmio(dev, io_base, &pwm_regmap_confi=
+g);
+> >> +	if (IS_ERR(pc->regmap)) {
+> >> +		ret =3D PTR_ERR(pc->regmap);
+> >> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	pc->clk =3D devm_clk_get(dev, NULL);
+> >> +	if (IS_ERR(pc->clk)) {
+> >> +		ret =3D PTR_ERR(pc->clk);
+> >> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	pc->rst =3D devm_reset_control_get(dev, NULL);
+> >> +	if (IS_ERR(pc->rst)) {
+> >> +		ret =3D PTR_ERR(pc->rst);
+> >> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+> >> +		return ret;
+> >> +	}
+> > Please use devm_reset_control_get_exclusive() to make it explicit an
+> > that exclusive reset control is requested. Given how the reset control
+> > is used, I think this driver could also use
+> > devm_reset_control_get_shared() to potentially allow sharing a reset
+> > line with other devices.
+>=20
+> devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusiv=
+e().
+> Code as below:
+> static inline struct reset_control *devm_reset_control_get(
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0 struct device *dev, const char *id)
+> {
+> =A0=A0=A0=A0=A0=A0=A0 return devm_reset_control_get_exclusive(dev, id);
+> }
+> Am i missing something else?
+
+Obviously you're missing the comment above of_reset_control_get about
+some functions being compatibility wrappers.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xfbgim4wbqyditz2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl70PPcACgkQwfwUeK3K
+7AkhKQf+O1Q3b69RDRigsJQ6oPI7YpwFFFIk6H9cC3YPWKTX1Fc/3BGAL2kPX0om
+ASGuU6fBKG1EXvSLQjcQcY03Q2I3B+uCjbH4KpiGlbNeOJ0iYgKNc0OQJ3qDUqJZ
+PqTLKAB1RWap9qT5URgQ/gCI8bkzGgmdamsCWVSRmCn3Sbw/vVybx2SsvOYUk2QJ
+94wrsYQeUi8+FoyF6xE6MT6oOJ8ospIAFekBNZnFHIeGXlcPNqNLH1Djg517SJyE
+mbHmTn7kWKbRV4BiOWIufF5PCyo5Ep0GPK4+nUHTr8mzsfd6ucH46hZVnoeeYfpY
+kwm2SvOhRB6/L3ZiqUL/sg1gO9w48A==
+=I8HR
+-----END PGP SIGNATURE-----
+
+--xfbgim4wbqyditz2--
