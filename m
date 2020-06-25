@@ -2,141 +2,80 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECBEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 16:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AB2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC342088E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 16:00:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqHfCRSx"
+	by mail.kernel.org (Postfix) with ESMTP id AB22320767
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 17:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593104713;
+	bh=FuIrMaNLOL3cUBGG11kfx2VjDq55+oGZQx5P+LqMPOY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Z7LD5Wt/rLQnTUjkj2MvgXFrDzZqeva/9nnlppsiwVuFUMVOfK6o+c0rdhVRwddDH
+	 BH5OWrPl71wE7QotqTFHvmtcSWmdcKk4KHAhwRp0n9rVNvWsuKZsYAvR8aWsf8vGDR
+	 w2hT/A0RmAT416qSRSrPgIRczPHbpRigNHPi9KLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390176AbgFYQAr (ORCPT
+        id S2406577AbgFYRFN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 12:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389860AbgFYQAr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 12:00:47 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29181C08C5C1;
-        Thu, 25 Jun 2020 09:00:47 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh7so2964179plb.11;
-        Thu, 25 Jun 2020 09:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5w59ck/cH1FAJZ42RivxaXn688BtBAJs6J4Ya3HN1Qw=;
-        b=PqHfCRSxDkaRCbGBtGLdnvIolCsibOKD7MY6DVgeSvng1V2WrWUTDbkHujzdi5qgy4
-         ml73r78cp015/2xMJwf1ZNja0q07upDyxHMQBctGxwl6l6M81Xamxo6ofZad/IG2jHp/
-         yS0fpWzpqmQbg8VX4Xnk2ZvBkus4F98I8g5a7d9HcbbWcUaJAAUTadG51gVuQU7dX0eE
-         4E6U2nbDwlQT7S+/3PZyBx4phuRMrRhdA0xEAT1WpJWYWatqHfuMMGXiZIWoEiliBCEV
-         L7DtfrEuQ9eJYNbeUJdOWof6CVrsHcozsz4wHmcOs/DXXFuWLk6HBTa44d/H991f2yyK
-         eZ6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5w59ck/cH1FAJZ42RivxaXn688BtBAJs6J4Ya3HN1Qw=;
-        b=T1v50GwCL67jm/mBKIW9yspRZpN3985+2OYjpmyELDMOt0BzMuqm0etZk/xttYnSs4
-         +dKRSV5i2avhNSyTdZe6pFB9TGv+10F7fN01N2D7XMd6VGcEEheTYuIzFDnZ5CqBAc4p
-         1WlK8p18M48pcQY5cX4iMIoAT+6ktISq+0s1Ir9ThsbxHLPwxxeLy/Anu+Ke9uyznJox
-         n0e11O7ZlNWFrkWSNtMPo+CE6d8GtTsR3rgIqoBEXT+zDPwk9FkVR3dtsTy2TdSWBcFn
-         wuEedL86A5Iwp/PRRYWOZCiVbp57tQ41cJfNJI71M8SjVW/D0lTivwhRpRbiHw58ACLy
-         wWZg==
-X-Gm-Message-State: AOAM531bIkCU96yVpCXwHUWtl+CTmI012Sh4WB4SqHLTZ4X3Vxu4bbqA
-        PnoOOVi0QwMC8LAfMa2w3c0=
-X-Google-Smtp-Source: ABdhPJxAWCmsiR3RKb80608NUxeQICNr5EwYEHeNdxUY/50Z0PPLb4tDNhiIyH2+/kThehS6leprLw==
-X-Received: by 2002:a17:902:b60c:: with SMTP id b12mr6609567pls.96.1593100846414;
-        Thu, 25 Jun 2020 09:00:46 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u23sm14286077pgn.26.2020.06.25.09.00.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 25 Jun 2020 09:00:44 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 09:00:42 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-Message-ID: <20200625160042.GC149301@roeck-us.net>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
- <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
- <20200621073320.GI128451@builder.lan>
- <ce4c2b44cb15af12b04c09f1786a6c1a@codeaurora.org>
+        Thu, 25 Jun 2020 13:05:13 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:51072 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406413AbgFYRFM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 13:05:12 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 05PH4apF005239;
+        Fri, 26 Jun 2020 02:04:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 05PH4apF005239
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593104677;
+        bh=nRGp11E9+TGPA/vFfv5nOdt3IyfYXfdO0vNH3A47FpM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NkAI115ErUxhGKy2OjZpq/dlWccsA+60/iifHUCZl42BKKUsU6g29pLdvnLSUOa8/
+         OjAGdFs4jsqU2ZkTRhEH4jFnR06QrKnkInpx3Xyt0HU3uNlMOr7m2I59oSvbbWssnI
+         exPWKYCVu5evhG58Iex0P3xfT6QH+yFrDm10KnzzcW8Oqrwk7DMZyamhi7nJPi8Qam
+         7j8MYm14pvsVZ4lL7P9QjcwrB+SOv+FUaEdpTcOGBy9S0KOY5WvAus3EYhXjj5X6cr
+         XcCX35YftpCkAlmSJ2rZRiIQB+MbIFnMBnoa/fTESZzTJ7kPpVBRxMHQLFVTm+vhiV
+         5ArZhCynh8HYw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        linux-kbuild@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] dt-bindings: fix 'make clean' and improve dt-schema check rules
+Date:   Fri, 26 Jun 2020 02:04:30 +0900
+Message-Id: <20200625170434.635114-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce4c2b44cb15af12b04c09f1786a6c1a@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:50:52AM +0530, Sai Prakash Ranjan wrote:
-> On 2020-06-21 13:03, Bjorn Andersson wrote:
-> > On Tue 16 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
-> > 
-> > > Hi Bjorn,
-> > > 
-> > 
-> > Hi Sai,
-> > 
-> > > On 2020-02-12 03:54, Sai Prakash Ranjan wrote:
-> > > > This series converts QCOM watchdog timer bindings to YAML. Also
-> > > > it adds the missing SoC-specific compatible for QCS404, SC7180,
-> > > > SDM845 and SM8150 SoCs.
-> > > >
-> > > > v1:
-> > > > https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
-> > > > v2:
-> > > > https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
-> > > >
-> > > > Changes since v2:
-> > > >  * Add missing compatibles to enum.
-> > > >
-> > > > Changes since v1:
-> > > >  As per Rob's suggestion:
-> > > >   * Replaced oneOf+const with enum.
-> > > >   * Removed timeout-sec and included watchdog.yaml.
-> > > >   * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
-> > > >
-> > > > Sai Prakash Ranjan (2):
-> > > >   dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
-> > > >   dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
-> > > >     SM8150
-> > > >
-> > > >  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
-> > > >  .../bindings/watchdog/qcom-wdt.yaml           | 48 +++++++++++++++++++
-> > > >  2 files changed, 48 insertions(+), 28 deletions(-)
-> > > >  delete mode 100644
-> > > > Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
-> > > 
-> > > 
-> > > Gentle ping!
-> > > 
-> > 
-> > This should better go through the watchdog tree, so I believe Guenter
-> > would be the one to pick this up.
-> > 
-> 
-> Ah right, then a gentle ping for Guenter.
-> 
-I don't think the watchdog mailing list has been copied on this series,
-meaning I don't have a copy that I could apply if I wanted to. I also see
-no evidence for a Reviewed-by: tag from Rob or any other DT maintainer.
 
-Guenter
+
+
+Masahiro Yamada (4):
+  dt-bindings: fix error in 'make clean' after 'make dt_binding_check'
+  dt-bindings: do not build processed-schema.yaml for 'make
+    dt_binding_check'
+  dt-bindings: copy process-schema-examples.yaml to process-schema.yaml
+  dt-bindings: split DT schema check rules
+
+ .gitignore                                 |  1 +
+ Documentation/devicetree/bindings/Makefile | 35 ++++++++++++++++------
+ Makefile                                   |  2 +-
+ scripts/Makefile.build                     |  2 ++
+ scripts/Makefile.lib                       | 27 +++++++++--------
+ 5 files changed, 44 insertions(+), 23 deletions(-)
+
+-- 
+2.25.1
+
