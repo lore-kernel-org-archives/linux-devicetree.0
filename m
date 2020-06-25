@@ -7,37 +7,35 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D7AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84B0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDD62076E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59C420773
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 10:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389773AbgFYKSK (ORCPT
+        id S2403910AbgFYKSN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 06:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36174 "EHLO
+        Thu, 25 Jun 2020 06:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403811AbgFYKSI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 06:18:08 -0400
+        with ESMTP id S2403899AbgFYKSN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 06:18:13 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F8BC061573;
-        Thu, 25 Jun 2020 03:18:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D5AC061573;
+        Thu, 25 Jun 2020 03:18:12 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 069C32A39A0
+        with ESMTPSA id A1FB92A39E3
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, erwanaliasr1@gmail.com,
         matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 1/7] dt-bindings: arm64: dts: mediatek: Add mt8183-kukui-krane-sku176
-Date:   Thu, 25 Jun 2020 12:17:51 +0200
-Message-Id: <20200625101757.101775-2-enric.balletbo@collabora.com>
+Subject: [PATCH v2 4/7] arm64: dts: mt8183: Fix unit name warnings
+Date:   Thu, 25 Jun 2020 12:17:54 +0200
+Message-Id: <20200625101757.101775-5-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200625101757.101775-1-enric.balletbo@collabora.com>
 References: <20200625101757.101775-1-enric.balletbo@collabora.com>
@@ -48,31 +46,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The krane-sku176 is the Lenovo IdeaPad Duet Chromebook. A 2-in-1
-detachable device using the MediaTek MT8183 SoC.
+Remove the unit address from the DT nodes that doesn't have a reg
+property. This fixes the following unit name warnings:
+
+  Warning (unit_address_vs_reg): /cpus/idle-states/cluster-sleep@0: node has a unit name, but no reg or ranges property
+  Warning (unit_address_vs_reg): /cpus/idle-states/cluster-sleep@1: node has a unit name, but no reg or ranges property
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
-Changes in v2: None
+Changes in v2:
+- Replace cluster-sleepX for cluster-sleep-x (Matthias Brugger)
 
- Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index abc544dde6920..30908963ae261 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -114,4 +114,9 @@ properties:
-           - enum:
-               - mediatek,mt8183-evb
-           - const: mediatek,mt8183
-+      - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
-+        items:
-+          - const: google,krane-sku176
-+          - const: google,krane
-+          - const: mediatek,mt8183
- ...
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 00137ec61164d..6c00ffa275202 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -168,7 +168,7 @@ CPU_SLEEP: cpu-sleep {
+ 				min-residency-us = <800>;
+ 			};
+ 
+-			CLUSTER_SLEEP0: cluster-sleep@0 {
++			CLUSTER_SLEEP0: cluster-sleep-0 {
+ 				compatible = "arm,idle-state";
+ 				local-timer-stop;
+ 				arm,psci-suspend-param = <0x01010001>;
+@@ -176,7 +176,7 @@ CLUSTER_SLEEP0: cluster-sleep@0 {
+ 				exit-latency-us = <400>;
+ 				min-residency-us = <1000>;
+ 			};
+-			CLUSTER_SLEEP1: cluster-sleep@1 {
++			CLUSTER_SLEEP1: cluster-sleep-1 {
+ 				compatible = "arm,idle-state";
+ 				local-timer-stop;
+ 				arm,psci-suspend-param = <0x01010001>;
 -- 
 2.27.0
 
