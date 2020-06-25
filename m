@@ -2,126 +2,258 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBD4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 21:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAC1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 22:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06EBB20789
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 21:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ba9e1OEf"
+	by mail.kernel.org (Postfix) with ESMTP id 59F4F20672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 22:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407234AbgFYVeO (ORCPT
+        id S2391302AbgFYWAk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 17:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407233AbgFYVeK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 17:34:10 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB7BC08C5DB
-        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 14:34:10 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k71so493903pje.0
-        for <devicetree@vger.kernel.org>; Thu, 25 Jun 2020 14:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sQiwKhrspW+Ux+XDva4IeowK1f21GzmRdKw3zd5GzAw=;
-        b=ba9e1OEfbD0rbFOzKrl8oFxsCSmfFk0POlzXr8MadFEOOiGd3iPLmZawoaZMWAZ3xO
-         ZsfUJoOMv+1q49KTSKWtEFsTPxfucLRWOiAExjugwrdL1gkGmBOwRjvTeEd3py0SCGwJ
-         VxQ6XIE39180xlW0zfe0rSj8E2BXXYF28OGqk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sQiwKhrspW+Ux+XDva4IeowK1f21GzmRdKw3zd5GzAw=;
-        b=eAVjKuZrl9hEqX0WTs43YJLO6OhLJmsaHZd3Vyl3KLgQhH3Q3D41sTP/7L3LtJuQGJ
-         0YMSE3n/e26irrE0v6FlyjIrIHLv4/I/fhdk+OkUni1R8KfF+VtLrKewBU6PNHD2ios5
-         kFcCnRQBJ0wZOiTGATL0jgmKzCjDuyvi/arl7G/nNUbNKZwQ/ZH+f2rtAEqFI9VBGpON
-         zuyRmlsRInzN39ksm8ygWMZXy+X/JkpLqblCQoq6fM0GCxu16q0OmoqP4WpKjVck6P0a
-         4J3VVfio0f7zCLl5E1EiKbmMzSfMZtWexKdzG8yZQUnt9FPwrkYzm1ethKVGZ2vTE3pH
-         TecA==
-X-Gm-Message-State: AOAM530jTZg28hxQiKglqm/jgVSqR3Gq5KgY+8RzsNLfticakBFq7xgv
-        M1b+G9Kt9lKLAc+f7uXP0/D7+w==
-X-Google-Smtp-Source: ABdhPJywQrZzxvwKBSS4y4n/VAY56tmZjwm+0Lm7F3sGKp2WXLBhTh65IyUl4RamSElbp0FbYNn+kw==
-X-Received: by 2002:a17:902:a982:: with SMTP id bh2mr34861515plb.2.1593120850338;
-        Thu, 25 Jun 2020 14:34:10 -0700 (PDT)
-Received: from bhanumaiya-glaptop.hsd1.ca.comcast.net ([2601:646:9500:590:4bb2:fb06:d31f:eb48])
-        by smtp.gmail.com with ESMTPSA id w1sm4107424pfq.53.2020.06.25.14.34.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2020 14:34:09 -0700 (PDT)
-From:   Bhanu Prakash Maiya <bhanumaiya@chromium.org>
-X-Google-Original-From: Bhanu Prakash Maiya <bhanumaiya@google.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, "Lee Jones )" <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Duncan Laurie <dlaurie@google.com>,
-        Eric Peers <epeers@google.com>, devicetree@vger.kernel.org,
-        Bhanu Prakash Maiya <bhanumaiya@google.com>
-Subject: [PATCH 2/2] dt-bindings: mfd: Add DT compatible string "google,cros_ec_uart"
-Date:   Thu, 25 Jun 2020 14:34:02 -0700
-Message-Id: <20200625131432.2.Icfeab15fa04daaffc61280faf5a75cd9b23ee822@changeid>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-In-Reply-To: <20200625131432.1.Icb23b633700f1ef4d123e3f21fd26fad21a3f207@changeid>
-References: <20200625131432.1.Icb23b633700f1ef4d123e3f21fd26fad21a3f207@changeid>
+        Thu, 25 Jun 2020 18:00:40 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59727 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390621AbgFYWAj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 18:00:39 -0400
+IronPort-SDR: AiVQ02Ei4UOsl6ECosMiHVydwCJnm8cnUlnx2ZSUlLsLasoN0mU8qdBR67SBljjAMY2rNcC132
+ 5jXVJ7RfaX6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="206618487"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="206618487"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 15:00:35 -0700
+IronPort-SDR: yCzSdiiLKPj8zl4rdaFKRBUkeCfWTbaRJqt88Q2Y7mnE9nDCCD8VSkLl4xoagm1OzW3Znar/l6
+ TMvZJbUWf19g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="299062276"
+Received: from jproldan-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.123])
+  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 15:00:25 -0700
+Date:   Fri, 26 Jun 2020 01:00:23 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Christophe Ricard <christophe-h.ricard@st.com>
+Subject: Re: [PATCH v12 3/9] tpm: tpm_tis: Add retry in case of protocol
+ failure.
+Message-ID: <20200625220023.GI20341@linux.intel.com>
+References: <20200625144650.269719-1-amirmizi6@gmail.com>
+ <20200625144650.269719-4-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625144650.269719-4-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT compatible string in
-Documentation/devicetree/bindings/mfd/cros_ec.txt
+On Thu, Jun 25, 2020 at 05:46:43PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Added a retry mechanism on any protocol error when sending a command or
+> receiving a response. This was changed to comply with
+> the TCG PC Client Device Driver Design Principles for TPM 2.0.
 
-Signed-off-by: Bhanu Prakash Maiya <bhanumaiya@google.com>
----
+We don't have to comply with this.
 
- Documentation/devicetree/bindings/mfd/cros-ec.txt | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+> When sending a command, a loop is added in "tpm_tis_send_main()" that calls
+> "tpm_tis_send_data()" and then issues a retry attempt if any error occurs.
+> When receiving a response, the following new function derived from
+> "tpm_tis_recv()" is added: "__tpm_tis_recv()". "tpm_tis_recv()" is modified
+> to call "__tpm_tis_recv()" in a loop. If any error occurs, a retry is
+> initiated by setting TPM_STS.responseRetry and "__tpm_tis_recv()" is
+> called again.
+> In both cases a retry is attempted up to "TPM_RETRY" times.
+> 
+> Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
+> Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> ---
+>  drivers/char/tpm/tpm_tis_core.c | 62 ++++++++++++++++++++++++++---------------
+>  drivers/char/tpm/tpm_tis_core.h |  1 +
+>  2 files changed, 41 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index 6b33620..e136467 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -305,29 +305,24 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
+>  	return size;
+>  }
+>  
+> -static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +static int __tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>  {
+>  	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>  	int size = 0;
+>  	int status;
+>  	u32 expected;
+>  
+> -	if (count < TPM_HEADER_SIZE) {
+> -		size = -EIO;
+> -		goto out;
+> -	}
+> -
+>  	size = recv_data(chip, buf, TPM_HEADER_SIZE);
+>  	/* read first 10 bytes, including tag, paramsize, and result */
+>  	if (size < TPM_HEADER_SIZE) {
+>  		dev_err(&chip->dev, "Unable to read header\n");
+> -		goto out;
+> +		return size;
+>  	}
+>  
+>  	expected = be32_to_cpu(*(__be32 *) (buf + 2));
+>  	if (expected > count || expected < TPM_HEADER_SIZE) {
+>  		size = -EIO;
+> -		goto out;
+> +		return size;
+>  	}
+>  
+>  	size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+> @@ -335,22 +330,45 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>  	if (size < expected) {
+>  		dev_err(&chip->dev, "Unable to read remainder of result\n");
+>  		size = -ETIME;
+> -		goto out;
+> +		return size;
+>  	}
+>  
+>  	if (tpm_tis_wait_for_stat(chip, TPM_STS_VALID, TPM_STS_VALID,
+>  				  chip->timeout_c, &priv->int_queue,
+>  				  false) < 0) {
+>  		size = -ETIME;
+> -		goto out;
+> +		return size;
+>  	}
+> +
+>  	status = tpm_tis_status(chip);
+>  	if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
+>  		dev_err(&chip->dev, "Error left over data\n");
+>  		size = -EIO;
+> +		return size;
+> +	}
+> +
+> +	return size;
+> +}
+> +
+> +static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> +{
+> +	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+> +	int size;
+> +	int i;
+> +
+> +	if (count < TPM_HEADER_SIZE) {
+> +		size = -EIO;
+>  		goto out;
+>  	}
+>  
+> +	for (i = 0; i < TPM_RETRY; i++) {
+> +		size = __tpm_tis_recv(chip, buf, count);
+> +		if (size <= 0)
+> +			tpm_tis_write8(priv, TPM_STS(priv->locality),
+> +				       TPM_STS_RESPONSE_RETRY);
+> +		else
+> +			goto out;
+> +	}
+>  out:
+>  	tpm_tis_ready(chip);
+>  	return size;
+> @@ -375,7 +393,7 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  					  chip->timeout_b, &priv->int_queue,
+>  					  false) < 0) {
+>  			rc = -ETIME;
+> -			goto out_err;
+> +			return rc;
+>  		}
+>  	}
+>  
+> @@ -384,13 +402,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  		if (burstcnt < 0) {
+>  			dev_err(&chip->dev, "Unable to read burstcount\n");
+>  			rc = burstcnt;
+> -			goto out_err;
+> +			return rc;
+>  		}
+>  		burstcnt = min_t(int, burstcnt, len - count);
+>  		rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
+>  					 burstcnt, buf + count);
+>  		if (rc < 0)
+> -			goto out_err;
+> +			return rc;
+>  
+>  		count += burstcnt;
+>  	}
+> @@ -398,14 +416,10 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  				  TPM_STS_VALID, chip->timeout_a,
+>  				  &priv->int_queue, false) < 0) {
+>  		rc = -ETIME;
+> -		goto out_err;
+> +		return rc;
+>  	}
+>  
+>  	return 0;
+> -
+> -out_err:
+> -	tpm_tis_ready(chip);
+> -	return rc;
+>  }
+>  
+>  static void disable_interrupts(struct tpm_chip *chip)
+> @@ -434,13 +448,17 @@ static void disable_interrupts(struct tpm_chip *chip)
+>  static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+>  {
+>  	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+> -	int rc;
+> +	int rc, i;
+>  	u32 ordinal;
+>  	unsigned long dur;
+>  
+> -	rc = tpm_tis_send_data(chip, buf, len);
+> -	if (rc < 0)
+> -		return rc;
+> +	for (i = 0; i < TPM_RETRY; i++) {
+> +		rc = tpm_tis_send_data(chip, buf, len);
+> +		if (rc >= 0)
+> +			break;
+> +	}
+> +	if (i == TPM_RETRY)
+> +		goto out_err;
+>  
+>  	/* go and do it */
+>  	rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
+> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> index d06c65b..6cc6b76 100644
+> --- a/drivers/char/tpm/tpm_tis_core.h
+> +++ b/drivers/char/tpm/tpm_tis_core.h
+> @@ -34,6 +34,7 @@ enum tis_status {
+>  	TPM_STS_GO = 0x20,
+>  	TPM_STS_DATA_AVAIL = 0x10,
+>  	TPM_STS_DATA_EXPECT = 0x08,
+> +	TPM_STS_RESPONSE_RETRY = 0x02,
+>  };
+>  
+>  enum tis_int_flags {
+> -- 
+> 2.7.4
+> 
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-index 4860eabd0f729..ec8c5d7ecc266 100644
---- a/Documentation/devicetree/bindings/mfd/cros-ec.txt
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -3,7 +3,7 @@ ChromeOS Embedded Controller
- Google's ChromeOS EC is a Cortex-M device which talks to the AP and
- implements various function such as keyboard and battery charging.
- 
--The EC can be connect through various means (I2C, SPI, LPC, RPMSG) and the
-+The EC can be connect through various means (I2C, SPI, UART, LPC, RPMSG) and the
- compatible string used depends on the interface. Each connection method has
- its own driver which connects to the top level interface-agnostic EC driver.
- Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-@@ -17,6 +17,10 @@ Required properties (SPI):
- - compatible: "google,cros-ec-spi"
- - reg: SPI chip select
- 
-+Required properties (UART):
-+- compatible: "google,cros-ec-uart"
-+- reg: UART baudrate, flowcontrol
-+
- Required properties (RPMSG):
- - compatible: "google,cros-ec-rpmsg"
- 
-@@ -72,5 +76,6 @@ spi@131b0000 {
- 	};
- };
- 
--
- Example for LPC is not supplied as it is not yet implemented.
-+
-+Example for UART is not supplied as it is not yet implemented.
--- 
-2.26.2
+Just based on the explanation this looks like a bunch of unconsidered
+changes. You have explain yourself better.
 
+/Jarkko
