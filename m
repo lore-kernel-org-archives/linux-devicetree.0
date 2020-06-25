@@ -2,166 +2,277 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32E3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 11:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3211C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C80E120781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 11:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954E1206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 12:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404340AbgFYL7o (ORCPT
+        id S2404579AbgFYMRb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 07:59:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36132 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404285AbgFYL7o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 07:59:44 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id B28902A50E8
-Subject: Re: [PATCH v3 2/2] platform/chrome: typec: Register Type C switches
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>
-References: <20200519214604.180036-1-pmalani@chromium.org>
- <20200519214604.180036-2-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <4a7507b2-ca2e-7a01-4abc-2a38d33a50ed@collabora.com>
-Date:   Thu, 25 Jun 2020 13:59:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200519214604.180036-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 25 Jun 2020 08:17:31 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:6814 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404343AbgFYMRb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 08:17:31 -0400
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 25 Jun 2020 05:17:30 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 25 Jun 2020 05:17:27 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 25 Jun 2020 17:47:02 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 47F504A5B; Thu, 25 Jun 2020 17:47:02 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+Subject: [v2] drm/msm/dpu: add support for dither block in display
+Date:   Thu, 25 Jun 2020 17:46:59 +0530
+Message-Id: <1593087419-903-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prashant,
+This change enables dither block for primary interface
+in display.
 
-On 19/5/20 23:46, Prashant Malani wrote:
-> Register Type C mux and switch handles, when provided via firmware
-> bindings. These will allow the cros-ec-typec driver, and also alternate
-> mode drivers to configure connected Muxes correctly, according to PD
-> information retrieved from the Chrome OS EC.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Enabled for 6bpc in the current version.
 
+Changes in v1:
+ - Remove redundant error checks (Rob).
 
-Applied this patch for 5.9 to support ACPI devices, as discussed, the first
-patch, the DT bindings, are still not ready.
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c     | 39 +++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c | 63 +++++++++++++++++++++----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h | 28 +++++++++++
+ 3 files changed, 121 insertions(+), 9 deletions(-)
 
-Thanks,
- Enric
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..14df5ac 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -208,6 +208,36 @@ struct dpu_encoder_virt {
+ 
+ #define to_dpu_encoder_virt(x) container_of(x, struct dpu_encoder_virt, base)
+ 
++static u32 dither_matrix[DITHER_MATRIX_SZ] = {
++	15, 7, 13, 5, 3, 11, 1, 9, 12, 4, 14, 6, 0, 8, 2, 10
++};
++
++static void _dpu_encoder_setup_dither(struct dpu_encoder_phys *phys)
++{
++	struct dpu_hw_dither_cfg dither_cfg = { 0 };
++
++	if (!phys->hw_pp || !phys->hw_pp->ops.setup_dither)
++		return;
++
++	switch (phys->connector->display_info.bpc) {
++	case 6:
++		dither_cfg.c0_bitdepth = 6;
++		dither_cfg.c1_bitdepth = 6;
++		dither_cfg.c2_bitdepth = 6;
++		dither_cfg.c3_bitdepth = 6;
++		dither_cfg.temporal_en = 0;
++		break;
++	default:
++		phys->hw_pp->ops.setup_dither(phys->hw_pp, NULL);
++		return;
++	}
++
++	memcpy(&dither_cfg.matrix, dither_matrix,
++			sizeof(u32) * DITHER_MATRIX_SZ);
++
++	phys->hw_pp->ops.setup_dither(phys->hw_pp, &dither_cfg);
++}
++
+ void dpu_encoder_helper_report_irq_timeout(struct dpu_encoder_phys *phys_enc,
+ 		enum dpu_intr_idx intr_idx)
+ {
+@@ -1082,6 +1112,7 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+ 	struct dpu_encoder_virt *dpu_enc = NULL;
+ 	struct msm_drm_private *priv;
+ 	struct dpu_kms *dpu_kms;
++	int i;
+ 
+ 	if (!drm_enc || !drm_enc->dev) {
+ 		DPU_ERROR("invalid parameters\n");
+@@ -1104,6 +1135,14 @@ static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
+ 				dpu_kms->catalog);
+ 
+ 	_dpu_encoder_update_vsync_source(dpu_enc, &dpu_enc->disp_info);
++
++	if (dpu_enc->disp_info.intf_type == DRM_MODE_ENCODER_DSI) {
++		for (i = 0; i < dpu_enc->num_phys_encs; i++) {
++			struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
++
++			_dpu_encoder_setup_dither(phys);
++		}
++	}
+ }
+ 
+ void dpu_encoder_virt_runtime_resume(struct drm_encoder *drm_enc)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+index d110a40..7411ab6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+@@ -28,6 +28,16 @@
+ #define PP_FBC_BUDGET_CTL               0x038
+ #define PP_FBC_LOSSY_MODE               0x03C
+ 
++#define PP_DITHER_EN			0x000
++#define PP_DITHER_BITDEPTH		0x004
++#define PP_DITHER_MATRIX		0x008
++
++#define DITHER_DEPTH_MAP_INDEX 9
++
++static u32 dither_depth_map[DITHER_DEPTH_MAP_INDEX] = {
++	0, 0, 0, 0, 0, 0, 0, 1, 2
++};
++
+ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
+ 		const struct dpu_mdss_cfg *m,
+ 		void __iomem *addr,
+@@ -49,6 +59,37 @@ static const struct dpu_pingpong_cfg *_pingpong_offset(enum dpu_pingpong pp,
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static void dpu_hw_pp_setup_dither(struct dpu_hw_pingpong *pp,
++				    struct dpu_hw_dither_cfg *cfg)
++{
++	struct dpu_hw_blk_reg_map *c;
++	u32 i, base, data = 0;
++
++	c = &pp->hw;
++	base = pp->caps->sblk->dither.base;
++	if (!cfg) {
++		DPU_REG_WRITE(c, base + PP_DITHER_EN, 0);
++		return;
++	}
++
++	data = dither_depth_map[cfg->c0_bitdepth] & REG_MASK(2);
++	data |= (dither_depth_map[cfg->c1_bitdepth] & REG_MASK(2)) << 2;
++	data |= (dither_depth_map[cfg->c2_bitdepth] & REG_MASK(2)) << 4;
++	data |= (dither_depth_map[cfg->c3_bitdepth] & REG_MASK(2)) << 6;
++	data |= (cfg->temporal_en) ? (1 << 8) : 0;
++
++	DPU_REG_WRITE(c, base + PP_DITHER_BITDEPTH, data);
++
++	for (i = 0; i < DITHER_MATRIX_SZ - 3; i += 4) {
++		data = (cfg->matrix[i] & REG_MASK(4)) |
++			((cfg->matrix[i + 1] & REG_MASK(4)) << 4) |
++			((cfg->matrix[i + 2] & REG_MASK(4)) << 8) |
++			((cfg->matrix[i + 3] & REG_MASK(4)) << 12);
++		DPU_REG_WRITE(c, base + PP_DITHER_MATRIX + i, data);
++	}
++	DPU_REG_WRITE(c, base + PP_DITHER_EN, 1);
++}
++
+ static int dpu_hw_pp_setup_te_config(struct dpu_hw_pingpong *pp,
+ 		struct dpu_hw_tear_check *te)
+ {
+@@ -180,15 +221,19 @@ static u32 dpu_hw_pp_get_line_count(struct dpu_hw_pingpong *pp)
+ 	return line;
+ }
+ 
+-static void _setup_pingpong_ops(struct dpu_hw_pingpong_ops *ops,
+-	const struct dpu_pingpong_cfg *hw_cap)
++static void _setup_pingpong_ops(struct dpu_hw_pingpong *c,
++				unsigned long features)
+ {
+-	ops->setup_tearcheck = dpu_hw_pp_setup_te_config;
+-	ops->enable_tearcheck = dpu_hw_pp_enable_te;
+-	ops->connect_external_te = dpu_hw_pp_connect_external_te;
+-	ops->get_vsync_info = dpu_hw_pp_get_vsync_info;
+-	ops->poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
+-	ops->get_line_count = dpu_hw_pp_get_line_count;
++	c->ops.setup_tearcheck = dpu_hw_pp_setup_te_config;
++	c->ops.enable_tearcheck = dpu_hw_pp_enable_te;
++	c->ops.connect_external_te = dpu_hw_pp_connect_external_te;
++	c->ops.get_vsync_info = dpu_hw_pp_get_vsync_info;
++	c->ops.poll_timeout_wr_ptr = dpu_hw_pp_poll_timeout_wr_ptr;
++	c->ops.get_line_count = dpu_hw_pp_get_line_count;
++
++	if (test_bit(DPU_PINGPONG_DITHER, &features) &&
++		IS_SC7180_TARGET(c->hw.hwversion))
++		c->ops.setup_dither = dpu_hw_pp_setup_dither;
+ };
+ 
+ static struct dpu_hw_blk_ops dpu_hw_ops;
+@@ -212,7 +257,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(enum dpu_pingpong idx,
+ 
+ 	c->idx = idx;
+ 	c->caps = cfg;
+-	_setup_pingpong_ops(&c->ops, c->caps);
++	_setup_pingpong_ops(c, c->caps->features);
+ 
+ 	dpu_hw_blk_init(&c->base, DPU_HW_BLK_PINGPONG, idx, &dpu_hw_ops);
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+index d73cb73..065996b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.h
+@@ -10,6 +10,8 @@
+ #include "dpu_hw_util.h"
+ #include "dpu_hw_blk.h"
+ 
++#define DITHER_MATRIX_SZ 16
++
+ struct dpu_hw_pingpong;
+ 
+ struct dpu_hw_tear_check {
+@@ -35,6 +37,26 @@ struct dpu_hw_pp_vsync_info {
+ };
+ 
+ /**
++ * struct dpu_hw_dither_cfg - dither feature structure
++ * @flags: for customizing operations
++ * @temporal_en: temperal dither enable
++ * @c0_bitdepth: c0 component bit depth
++ * @c1_bitdepth: c1 component bit depth
++ * @c2_bitdepth: c2 component bit depth
++ * @c3_bitdepth: c2 component bit depth
++ * @matrix: dither strength matrix
++ */
++struct dpu_hw_dither_cfg {
++	u64 flags;
++	u32 temporal_en;
++	u32 c0_bitdepth;
++	u32 c1_bitdepth;
++	u32 c2_bitdepth;
++	u32 c3_bitdepth;
++	u32 matrix[DITHER_MATRIX_SZ];
++};
++
++/**
+  *
+  * struct dpu_hw_pingpong_ops : Interface to the pingpong Hw driver functions
+  *  Assumption is these functions will be called after clocks are enabled
+@@ -82,6 +104,12 @@ struct dpu_hw_pingpong_ops {
+ 	 * Obtain current vertical line counter
+ 	 */
+ 	u32 (*get_line_count)(struct dpu_hw_pingpong *pp);
++
++	/**
++	 * Setup dither matix for pingpong block
++	 */
++	void (*setup_dither)(struct dpu_hw_pingpong *pp,
++			struct dpu_hw_dither_cfg *cfg);
+ };
+ 
+ struct dpu_hw_pingpong {
+-- 
+1.9.1
 
-> ---
-> 
-> Changes in v3:
-> - Added Acked-by tag.
-> - Fixed Heikki's email address in Reviewed-by tag.
-> 
-> Changes in v2:
-> - Changed dev_info prints to dev_dbg.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 66b8d21092af..6e79f917314b 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -14,6 +14,8 @@
->  #include <linux/platform_data/cros_usbpd_notify.h>
->  #include <linux/platform_device.h>
->  #include <linux/usb/typec.h>
-> +#include <linux/usb/typec_mux.h>
-> +#include <linux/usb/role.h>
->  
->  #define DRV_NAME "cros-ec-typec"
->  
-> @@ -25,6 +27,9 @@ struct cros_typec_port {
->  	struct typec_partner *partner;
->  	/* Port partner PD identity info. */
->  	struct usb_pd_identity p_identity;
-> +	struct typec_switch *ori_sw;
-> +	struct typec_mux *mux;
-> +	struct usb_role_switch *role_sw;
->  };
->  
->  /* Platform-specific data for the Chrome OS EC Type C controller. */
-> @@ -84,6 +89,40 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
->  	return 0;
->  }
->  
-> +static int cros_typec_get_switch_handles(struct cros_typec_port *port,
-> +					 struct fwnode_handle *fwnode,
-> +					 struct device *dev)
-> +{
-> +	port->mux = fwnode_typec_mux_get(fwnode, NULL);
-> +	if (IS_ERR(port->mux)) {
-> +		dev_dbg(dev, "Mux handle not found.\n");
-> +		goto mux_err;
-> +	}
-> +
-> +	port->ori_sw = fwnode_typec_switch_get(fwnode);
-> +	if (IS_ERR(port->ori_sw)) {
-> +		dev_dbg(dev, "Orientation switch handle not found.\n");
-> +		goto ori_sw_err;
-> +	}
-> +
-> +	port->role_sw = fwnode_usb_role_switch_get(fwnode);
-> +	if (IS_ERR(port->role_sw)) {
-> +		dev_dbg(dev, "USB role switch handle not found.\n");
-> +		goto role_sw_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +role_sw_err:
-> +	usb_role_switch_put(port->role_sw);
-> +ori_sw_err:
-> +	typec_switch_put(port->ori_sw);
-> +mux_err:
-> +	typec_mux_put(port->mux);
-> +
-> +	return -ENODEV;
-> +}
-> +
->  static void cros_unregister_ports(struct cros_typec_data *typec)
->  {
->  	int i;
-> @@ -91,6 +130,9 @@ static void cros_unregister_ports(struct cros_typec_data *typec)
->  	for (i = 0; i < typec->num_ports; i++) {
->  		if (!typec->ports[i])
->  			continue;
-> +		usb_role_switch_put(typec->ports[i]->role_sw);
-> +		typec_switch_put(typec->ports[i]->ori_sw);
-> +		typec_mux_put(typec->ports[i]->mux);
->  		typec_unregister_port(typec->ports[i]->port);
->  	}
->  }
-> @@ -153,6 +195,11 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
->  			ret = PTR_ERR(cros_port->port);
->  			goto unregister_ports;
->  		}
-> +
-> +		ret = cros_typec_get_switch_handles(cros_port, fwnode, dev);
-> +		if (ret)
-> +			dev_dbg(dev, "No switch control for port %d\n",
-> +				port_num);
->  	}
->  
->  	return 0;
-> 
