@@ -6,168 +6,89 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB548C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B783C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2F1E20644
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176B520720
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 05:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itDE7aS4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NLPjaUmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgFYFAH (ORCPT
+        id S2389749AbgFYFrj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 01:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
+        Thu, 25 Jun 2020 01:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389749AbgFYFAE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 01:00:04 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53ECAC061795
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:00:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id h185so2487416pfg.2
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:00:03 -0700 (PDT)
+        with ESMTP id S2389549AbgFYFrb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 25 Jun 2020 01:47:31 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EF3C061795
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:47:31 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id q69so1122795vkq.10
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 22:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gNtbIZ568VO1hTjCxcIyUTJVwIpNwttbY91p1QqsdC4=;
-        b=itDE7aS4I50IkCwOnZKTfUWfju44bYUDoiNCiZT06igwGbt4AypALVfBSnRQE+UE5O
-         MCGjc4V4zkDKnPLjgijrdHTJ1W9zHDPLWbfuOGJwzHDj8Cfc6Pg4ozFdmxpGNbxZbOaH
-         BepHUKCntSEv7ip2c/PQHxRoY4IBIyXZ7/wScKKy1i4F53C+nh5WGOX3P/mudcjMhiyF
-         Z4Ut03GDayTQfhXPOc73e/HyYxqIM0nWdhvySpMedRmW71CvTAc262gqR4SSd+TjboM2
-         FgYNrAJHFaYfO6aj6YB8MIY1vdSB3ZKXjqE4zMmztIgcWQIUE3JV5Ih17HAkWqLE8M9J
-         jzyA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Pyf0GGvFVlXsdDyV6XIIzdPqN+R0eNNqJvFwUcTnuQ=;
+        b=NLPjaUmVWEdwr3ufy0pJAdyTKWHhcA1I+POUG5D6lz7Y0eAuoVUFJuP4weZ7N3WzeN
+         /yMrWQVRvJ0+rlA33aFwLrpB6T9yHLqO4XbTVCGg3WUEOEsLpT6L/uw0j/K8gSfEDnn8
+         ECvwrH3hOzi4tUJGMu2axZLXlpxBvo44/cGf+qh1p7SWDj3GdGe8NvlWunaErT+TpKeA
+         BaasQKGPxAW3VzxEtaKA9unVB7PFKUmlBqRM7M4qvPwLC3AKzrXan6a1OunMe3nZC96w
+         rUL+XgxmyOnm3aHp48j4SZlESnDm+LttG+OSry6PTWJAjvIn2R8/6PPYvGFMCseYF0yk
+         WLag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gNtbIZ568VO1hTjCxcIyUTJVwIpNwttbY91p1QqsdC4=;
-        b=OE6v+M97ywjNqvMwjwsOWQoy5NI7KaSstaBTIvhmnr9en7JL2ToTONlFedMTy4TC+Q
-         ekLUu9lElJU7Qc3bazYxCE6TwqZ7CAwUu7sm/alhB0tSK3HlDeU1b3trjgXL89jPuroc
-         2hO2Df2UIz/A3sl1vH/T18Rwy4Muw4HgqFSFyrb+h/AOZFOl3jpbP3eDWi2jn+YVF1ll
-         +bKShUjAi38wpX4JdvNsQPfo7tNlnec1rnrvqsv5Ii0RLknrlO+xYl0VIpQizZuRQET0
-         XqS2dN5a6uEgN5I2sB7IVRI0n8B7oDbuU6UVVi5/158kggaSHRWyJWWkDRYTTmcOJ5W/
-         32qw==
-X-Gm-Message-State: AOAM530xWnqSQFHKtFtsZ/NAsWv0O4GSV8liKfhz3Zz7JiH7z7Bzkv1G
-        XbSj2Hcz474b/+9edO1CD2B2Vg==
-X-Google-Smtp-Source: ABdhPJwh9JC1nam0V/DJQyApj/Ye+dnlgpcjMSQVecblYDk0/KQNNSpYA3pCrHD9eiNJbOSmczVeQA==
-X-Received: by 2002:a62:3041:: with SMTP id w62mr31621996pfw.205.1593061202490;
-        Wed, 24 Jun 2020 22:00:02 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v9sm21531382pfe.198.2020.06.24.22.00.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 22:00:01 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 21:57:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
-        broonie@kernel.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        swboyd@chromium.org, mgautam@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        mka@chromium.org, dianders@chromium.org, evgreen@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 0/8] Add interconnect support to QSPI and QUP drivers
-Message-ID: <20200625045720.GV128451@builder.lan>
-References: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Pyf0GGvFVlXsdDyV6XIIzdPqN+R0eNNqJvFwUcTnuQ=;
+        b=UcaSG5RBH/Ih7ZpMVg/pMEGvtRkSX9JetXKAHkftq73f0vW6ZlLVqqVB+Il3VAVKtC
+         1TGDJKeJKshzUZfKwZgme/Z0P5kBJ3PaxbYBMgVs+srFGcNiBysD/92Dj86ubrYl+Chu
+         vqqd6pfW/C9FpaiOAF9Wr9qAWpcjBEMwGoeN+4id0GwCWzS7ap6OKkzvSbEi+gzHPOU5
+         zh0vpM6HFgJrAahKnlUQ95I7XfRMNUMu1aIw2z9x2Tro4NsqWOYb+9hAJn8NerQISIZt
+         4BxJPgE90i6RErZCps0fmJS2sgIx2hwixQmGgo0kfJI0JedxOfZWARPU1d1n1S1h4nme
+         sDIQ==
+X-Gm-Message-State: AOAM5308+gSPMnryKLcnG8F0/ueNCtFQXGW94s3Ljr6nqOOPD2QXJy9o
+        8WI1jYXPdM5TWo6s/Ed756qPLJk2JB2l7Jmb1ZOKmg==
+X-Google-Smtp-Source: ABdhPJz29/gwxTOnUa+6XWgaPKMFCENul0uiekbDYgqPdKvRSaVgk4wq5FPQsyia16fNAO7d1Z4wSbTgFy8RGO5Xeqc=
+X-Received: by 2002:a1f:d783:: with SMTP id o125mr26144467vkg.46.1593064050335;
+ Wed, 24 Jun 2020 22:47:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592908737-7068-1-git-send-email-akashast@codeaurora.org>
+References: <20200623180832.254163-1-konradybcio@gmail.com>
+ <20200623180832.254163-4-konradybcio@gmail.com> <CAHLCerOAM5j+gZWP9MUuGZ+TQfBg4Z=GoEdUfxBTwtEs5TqUuw@mail.gmail.com>
+ <CAMS8qEUT+Kdq-gqZn25X7W2V8HacuXFbeoTDz=N7C7MNpSfOHA@mail.gmail.com>
+In-Reply-To: <CAMS8qEUT+Kdq-gqZn25X7W2V8HacuXFbeoTDz=N7C7MNpSfOHA@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 25 Jun 2020 11:17:19 +0530
+Message-ID: <CAHLCerPOwO1JHUtb33fFkBH9wAT6Ty4E4GxbHNvbEkwr2SOvuw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] arm64: dts: qcom: sdm630: Add tsens node
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 23 Jun 03:38 PDT 2020, Akash Asthana wrote:
+On Wed, Jun 24, 2020 at 8:32 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
+>
+> Interesting, the downstream DTS only mentions the 0x010AD one..
+> Are you sure you're not looking at 636/660?
+>
 
-> This patch series is based on tag "next-20200622" of linux-next tree.
-> 
-
-Series applied to the qcom tree, thank you and thanks for the Acks.
+I looked a bit closer. So there are two instances of the controller
+but the platform doesn't have as many sensors. So using just one
+controller is fine. I suspect the other controller might be disabled
+in firmware.
 
 Regards,
-Bjorn
-
-> High level design:
->  - QUP wrapper/common driver.
->    Vote for QUP core on behalf of earlycon from probe.
->    Remove BW vote during earlycon exit call
-> 
->  - SERIAL driver.
->    Vote only for CPU/CORE path because driver is in FIFO mode only
->    Vote/unvote from qcom_geni_serial_pm func.
->    Bump up the CPU vote from set_termios call based on real time need
-> 
->  - I2C driver.
->    Vote for CORE/CPU/DDR path
->    Vote/unvote from runtime resume/suspend callback
->    As bus speed for I2C is fixed from probe itself no need for bump up.
-> 
->  - SPI QUP driver.
->    Vote only for CPU/CORE path because driver is in FIFO mode only
->    Vote/unvote from runtime resume/suspend callback
->    Bump up CPU vote based on real time need per transfer.
-> 
->  - QSPI driver.
->    Vote only for CPU path
->    Vote/unvote from runtime resume/suspend callback
->    Bump up CPU vote based on real time need per transfer.
-> 
-> Changes in V2:
->  - Add devm_of_icc_get() API interconnect core.
->  - Add ICC support to common driver to fix earlyconsole crash.
-> 
-> Changes in V3:
->  - Define common ICC APIs in geni-se driver and use it across geni based
->    I2C,SPI and UART driver.
-> 
-> Changes in V4:
->  - Add a patch to ICC core to scale peak requirement
->    as twice of average if it is not mentioned explicilty.
-> 
-> Changes in V5:
->  - As per Georgi's suggestion removed patch from ICC core for assuming
->    peak_bw as twice of average when it's not mentioned, instead assume it
->    equall to avg_bw and keep this assumption in ICC client itself.
->  - As per Matthias suggestion use enum for GENI QUP ICC paths.
-> 
-> Changes in V6:
->  - No Major change
-> 
-> Changes in V7:
->  - As per Matthias's comment removed usage of peak_bw variable because we don't
->    have explicit peak requirement, we were voting peak = avg and this can be
->    tracked using single variable for avg bw.
->  - As per Matthias's comment improved print log.
-> 
-> Changes in V8:
->  - Add [PATCH V8 5/8] to factor out common code for clock setting.
->  - Combine ICC voting and clock setting to single API. [PATCH V8 6/8]
->  - Add ICC voting per transfer because in case of multi message,
->    transfer frequency can vary for each message/transfer.[PATCH V8 6/8]
-> 
-> Akash Asthana (7):
->   soc: qcom: geni: Support for ICC voting
->   soc: qcom-geni-se: Add interconnect support to fix earlycon crash
->   i2c: i2c-qcom-geni: Add interconnect support
->   tty: serial: qcom_geni_serial: Add interconnect support
->   spi: spi-geni-qcom: Add interconnect support
->   spi: spi-qcom-qspi: Add interconnect support
->   arm64: dts: sc7180: Add interconnect for QUP and QSPI
-> 
-> Douglas Anderson (1):
->   spi: spi-geni-qcom: Combine the clock setting code
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi  | 127 ++++++++++++++++++++++++++++
->  drivers/i2c/busses/i2c-qcom-geni.c    |  26 +++++-
->  drivers/soc/qcom/qcom-geni-se.c       | 150 ++++++++++++++++++++++++++++++++++
->  drivers/spi/spi-geni-qcom.c           | 100 +++++++++++++++--------
->  drivers/spi/spi-qcom-qspi.c           |  56 ++++++++++++-
->  drivers/tty/serial/qcom_geni_serial.c |  38 ++++++++-
->  include/linux/qcom-geni-se.h          |  40 +++++++++
->  7 files changed, 496 insertions(+), 41 deletions(-)
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-> 
+Amit
