@@ -2,81 +2,271 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A19C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 01:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB33C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2B7207DD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 01:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593047735;
-	bh=slMjPRa67K16YFPswiAcJrSACF0ga1IiQ1WSlFEumHI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=acaAnDiq5/q1DtHp/4nIfKjp1hNpvbpH9pGjJIHPsOY7FDsTgNom9fEFRt2dK+NpI
-	 VDUNMg4JRxJsUhd7GjvKxFQdJ7OqQL7lD5bbVOS8uPAooW2ctI8zKTzyumlKyDzuoo
-	 3jETgJDQywPqm3k2Nv/KzyAHSoF0EW4+URgsxQq4=
+	by mail.kernel.org (Postfix) with ESMTP id E38A920789
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 01:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jjcJaC9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389189AbgFYBPe (ORCPT
+        id S2389037AbgFYBZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 21:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389183AbgFYBPd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 24 Jun 2020 21:15:33 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50ECC20578;
-        Thu, 25 Jun 2020 01:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593047733;
-        bh=slMjPRa67K16YFPswiAcJrSACF0ga1IiQ1WSlFEumHI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ORIO8EoynDIzF4ep5xBiRUWrGI7/V+pgBWZbrlds84dQKm6M3vZj0f4EOlqqGlH0L
-         2ujQ8VsK5WcOcMUV78XQJmb9MN1tWxUiMywbWmNuKJI/sEOPGCyKAGKXVBZEMsvTZS
-         syXLvmJpugcCfTidoJ4ym2XEkVcwxR64pLP5TMnE=
+        Wed, 24 Jun 2020 21:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388928AbgFYBZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 21:25:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B0EC061573
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 18:25:10 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id f3so2495569pgr.2
+        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 18:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=m3/wAfDopqLqGYnRmo8UqA/J5isUr1IvnmUUrUey3ng=;
+        b=jjcJaC9t2Zw//ZqFTxDolCBwP6t5Cul/FDBHEPhMcbtunRr788BYn41C5eb2wRAel1
+         CQPzpHLtZy/sWu7oLEVobefErbEKWbxZ7QCUnKz205KdbbCTKBFWk9Pffk3/mMzycwcu
+         ybP/e+kLOd6OQMHQEN/4dlBqR9yeQiGDSNK+g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=m3/wAfDopqLqGYnRmo8UqA/J5isUr1IvnmUUrUey3ng=;
+        b=LrdOZh1iVnTJdxA9qB1groPUN2Jru24V65rQEHGcbpXyyt1Lp2SV64//8Y3FEkUix8
+         5dLuzsoFOiq7kQR6OFQBUCGMvO6NPDYU7ViPkkgrDHywibxfZLTnfH8KwM4zSJwi6om+
+         9rDfg0Xv0ZR7x3fchLRKYHOC3E5Lpd41Z0jx2S0eo5SLxKdhw0age1GKj6aIKQr3WyMX
+         LPzwrp1JYW64ZCQHmh4vTt03X2hV+CBY0iq33PXyPhHe38uL/JaVqcc9y2v9jKG2xeRU
+         oi6kqh34eJM7S1/eWsrH6cyCx/PSwmLuGujmoAlp3eT+Yzzc2NM7tKg5K4bLShsxeWyp
+         Xupg==
+X-Gm-Message-State: AOAM531d1zNBZ2MsxMSlsV/qbsXZciEaCCOMY9PhVik+5ivGGHIm9aNa
+        hrTRHD1X084+K+KmgssmDNAaMw==
+X-Google-Smtp-Source: ABdhPJx1fCeBRUXodkZylAdXFohaDuXXT1rMom+9iZ4wqDv2csLv6+U6Xd4DxR+EHj+M2X14D4gfTA==
+X-Received: by 2002:a63:b30f:: with SMTP id i15mr24640936pgf.42.1593048309953;
+        Wed, 24 Jun 2020 18:25:09 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w30sm4481777pjj.3.2020.06.24.18.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 18:25:09 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
-References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH v5 00/27] clk: bcm: rpi: Add support for BCM2711 firmware clocks
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Wed, 24 Jun 2020 18:15:32 -0700
-Message-ID: <159304773261.62212.983376627029743900@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
+References: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Switch SPI to use GPIO for CS
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Date:   Wed, 24 Jun 2020 18:25:08 -0700
+Message-ID: <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2020-06-15 01:40:40)
-> Hi,
+Quoting Douglas Anderson (2020-06-24 17:08:04)
+> The geni SPI protocol appears to have been designed without taking
+> Linux needs into account.  In all the normal flows it takes care of
+> setting chip select itself.  However, Linux likes to manage the chip
+> select so it can do fancy things.
 >=20
-> Since the whole DRM/HDMI support began to grow fairly big, I've chosen
-> to split away the two discussions between the firmware clocks and the
-> HDMI support.
+> Back when we first landed the geni SPI driver we worked around this
+> by:
+> - Always setting the FRAGMENTATION bit in transfers, which (I believe)
+>   tells the SPI controller not to mess with the chip select during
+>   transfers.
+> - Controlling the chip select manually by sending the SPI controller
+>   commands to assert or deassert the chip select.
 >=20
+> Our workaround was fine and it's been working OK, but it's really
+> quite inefficient.  A normal SPI transaction now needs to do:
+> 1. Start a command to set the chip select.
+> 2. Wait for an interrupt from controller saying chip select done.
+> 3. Do a transfer.
+> 4. Start a command to unset the chip select.
+> 5. Wait for an interrupt from controller saying chip select done.
 
-I see one problem.
+I thought the GENI hardware was supposed to be able to queue commands up
+and then plow through them to interrupt the CPU when it finished. If
+that was supported would there be any problems? I assume we could remove
+the wait for CS disable and interrupt on step 5 and also the wait for
+CS/interrupt on step 2 because it is bundled with the transfer in step
+3.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/clk/bcm/clk-bcm2711-d=
-vp.o
+Where is the delay? On step 2 where we wait to transfer or at step 5
+when we wait for CS to be dropped, or both?
 
-Can you send a followup patch to fix this?
+>=20
+> Things are made a bit worse because the Linux GPIO framework assumes
+> that setting a chip select is quick.  Thus the SPI core can be seen to
+> tell us to set our chip select even when it's already in the right
+> state and we were dutifully kicking off commands and waiting for
+> interrupts.  While we could optimize that particular case, we'd still
+> be left with the slowness when we actually needed to toggle the chip
+> select.
+
+One thing to note is that the GPIO driver doesn't tell us that it has
+actually asserted/deasserted the GPIO. It writes to the controller and
+moves on so we don't know when it has actually gone into effect.
+Hopefully moving to GPIO mode doesn't mean we get weird problems where
+CS isn't asserted yet and a transfer starts wiggling the lines.
+
+>=20
+> All the chip select lines can actually be muxed to be GPIOs and
+> there's really no downside in doing so.  Now Linux can assert and
+> deassert the chip select at will with a simple MMIO write.
+>=20
+> The SPI driver will still have the ability to set the chip select, but
+> not we just won't use it.
+
+s/not/now/?
+
+>=20
+> With this change I tested reading the firmware off the EC connected to
+> a ChromeOS device (flashrom -p ec -r ...).  I saw about a 25% speedup
+> in total runtime of the command and a 30% reduction in interrupts
+> generated (measured by /proc/interrupts).
+
+I see nothing wrong with specifying the CS gpios in DT. Seems like that
+should always be there and then the driver should decide to use GPIO
+mode or not. So
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
+for that part.
+
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>=20
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 ++++++++++++++++++++++++----
+>  1 file changed, 49 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> index 3a8076c8bdbf..74c8503b560e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1204,65 +1213,97 @@ pinmux {
+>                         qup_spi0_default: qup-spi0-default {
+>                                 pinmux {
+>                                         pins =3D "gpio34", "gpio35",
+> -                                              "gpio36", "gpio37";
+> +                                              "gpio36";
+>                                         function =3D "qup00";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio37";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi1_default: qup-spi1-default {
+>                                 pinmux {
+>                                         pins =3D "gpio0", "gpio1",
+> -                                              "gpio2", "gpio3";
+> +                                              "gpio2";
+>                                         function =3D "qup01";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio3";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi3_default: qup-spi3-default {
+>                                 pinmux {
+>                                         pins =3D "gpio38", "gpio39",
+> -                                              "gpio40", "gpio41";
+> +                                              "gpio40";
+>                                         function =3D "qup03";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio41";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi5_default: qup-spi5-default {
+>                                 pinmux {
+>                                         pins =3D "gpio25", "gpio26",
+> -                                              "gpio27", "gpio28";
+> +                                              "gpio27";
+>                                         function =3D "qup05";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio28";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi6_default: qup-spi6-default {
+>                                 pinmux {
+>                                         pins =3D "gpio59", "gpio60",
+> -                                              "gpio61", "gpio62";
+> +                                              "gpio61";
+>                                         function =3D "qup10";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio62";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi8_default: qup-spi8-default {
+>                                 pinmux {
+>                                         pins =3D "gpio42", "gpio43",
+> -                                              "gpio44", "gpio45";
+> +                                              "gpio44";
+>                                         function =3D "qup12";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio45";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi10_default: qup-spi10-default {
+>                                 pinmux {
+>                                         pins =3D "gpio86", "gpio87",
+> -                                              "gpio88", "gpio89";
+> +                                              "gpio88";
+>                                         function =3D "qup14";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio89";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+> =20
+>                         qup_spi11_default: qup-spi11-default {
+>                                 pinmux {
+>                                         pins =3D "gpio53", "gpio54",
+> -                                              "gpio55", "gpio56";
+> +                                              "gpio55";
+>                                         function =3D "qup15";
+>                                 };
+> +                               pinmux-cs {
+> +                                       pins =3D "gpio56";
+> +                                       function =3D "gpio";
+> +                               };
+>                         };
+
+Perhaps we should have qup-spiN-default and qup-spiN-cs-gpio though?
+That way the driver can properly mux the pin to be gpio mode if it wants
+to. I don't see a way to mux the pin to be "qup" until the driver
+decides it doesn't want that.
