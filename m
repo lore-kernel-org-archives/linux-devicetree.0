@@ -2,324 +2,145 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B0DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 03:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B9AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1444820656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 03:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i00CCZjm"
+	by mail.kernel.org (Postfix) with ESMTP id 632682072E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 04:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388470AbgFYDff (ORCPT
+        id S1726528AbgFYEYA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 24 Jun 2020 23:35:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389663AbgFYDfe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 24 Jun 2020 23:35:34 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC66C0613ED
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 20:35:33 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id t23so1080161vkt.5
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 20:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zt5YvFe/0F+bWJgTS3kII0SGfZuZaLK6nHaXi0WGsWM=;
-        b=i00CCZjmDKwYuQM+UKH0th2PYsJzYpCI3wpvtwLt0Tt9OYWvWAntwVBLeZ6x7AY3ic
-         f5RUb7l7DAjCwgbPXYqffaL+hZkRg3TTfqd22Ja7UWuHwacMErgsCczKs3H6fbHtNy1u
-         N8aAnNBLzPktP3hBHOY7gPnq/Z8w2LfsCKK/s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zt5YvFe/0F+bWJgTS3kII0SGfZuZaLK6nHaXi0WGsWM=;
-        b=WL4LY/ItawcziVeRxK/iFQMJnMPW7ZWGT+F7iRtMJ2rE/qShABYoNdU012HwQjpZdR
-         o1+Gj+709wucDKvSZU856hpozRP/7/Fq10BsmFTDdEuwjKNtnz8Lt4lZunOnPeyuRwLc
-         R/SAuPLLF3u8T+xumL0koNdp89CYRlOHmI9APfG/U9jAyYdeVO3qeEbog2DOb7GHDvSu
-         GDgoaZAmumw/lH7TxCbeuSTh0NRCMUgUFfQtBSCyhduDPns82khA+qq/e8SXE79SYlGx
-         U5MYt93VvhKO8LsVaZ1cALQjsq3iPWIwcebVARkSAWTcqHAmYNFZf5r3liuoebTOaNPr
-         pWVg==
-X-Gm-Message-State: AOAM533g9Yj4hRYSYaJmlftDqRInmgOfOguAhOQq+0LnvnJakvTKRa4Z
-        PoI4xfaPUQc7Nx7ly7DH0cMDRJ0u+OU=
-X-Google-Smtp-Source: ABdhPJy0zDgPci8D5X2fQDe0mfOh07RXOK2WQF9a5+SOreXI7kWEca261x5K+zfrGN88rli3LByA1Q==
-X-Received: by 2002:a1f:1a04:: with SMTP id a4mr16011114vka.94.1593056131894;
-        Wed, 24 Jun 2020 20:35:31 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id q200sm491514vke.53.2020.06.24.20.35.30
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jun 2020 20:35:31 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id 190so2751684vsr.9
-        for <devicetree@vger.kernel.org>; Wed, 24 Jun 2020 20:35:30 -0700 (PDT)
-X-Received: by 2002:a67:2fc6:: with SMTP id v189mr9563477vsv.198.1593056130302;
- Wed, 24 Jun 2020 20:35:30 -0700 (PDT)
+        Thu, 25 Jun 2020 00:24:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:27978 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgFYEYA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 00:24:00 -0400
+IronPort-SDR: /VyxqyaFq++yxyl9zoqCLyvC9ViSbNY+nXnOlBoE17mLlnL0bv1+8BRnfOyeBVKiKtcszyOdcE
+ 9+wyU/UmkFGw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="146246035"
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="146246035"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 21:23:59 -0700
+IronPort-SDR: wn6pbKZSjt6KA7vrnM6zVRfPvdg0paanvOI94eMoZWfE9hNk658QDFgcn6iJhvoKuEXgsErZak
+ HRe+Idgq4U3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
+   d="scan'208";a="311863765"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jun 2020 21:23:58 -0700
+Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
+        by linux.intel.com (Postfix) with ESMTP id 95689580298;
+        Wed, 24 Jun 2020 21:23:55 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
+ <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
+ <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <25560ece-5d71-562d-359a-490d70cc5453@linux.intel.com>
+Date:   Thu, 25 Jun 2020 12:23:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200624170746.1.I997a428f58ef9d48b37a27a028360f34e66c00ec@changeid>
- <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
-In-Reply-To: <159304830840.62212.6716845486281369794@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 24 Jun 2020 20:35:16 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X=hbrT4o-PDs70zodAMUKEyLty7L92GtkyYBKQX_tt+w@mail.gmail.com>
-Message-ID: <CAD=FV=X=hbrT4o-PDs70zodAMUKEyLty7L92GtkyYBKQX_tt+w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Switch SPI to use GPIO for CS
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <41a3c509e8d72d1e1c45b6b87f52f0a75018e6b0.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On Wed, Jun 24, 2020 at 6:25 PM Stephen Boyd <swboyd@chromium.org> wrote:
+Hi Philipp,
+
+On 18/6/2020 8:25 pm, Philipp Zabel wrote:
+> Hi Rahul,
 >
-> Quoting Douglas Anderson (2020-06-24 17:08:04)
-> > The geni SPI protocol appears to have been designed without taking
-> > Linux needs into account.  In all the normal flows it takes care of
-> > setting chip select itself.  However, Linux likes to manage the chip
-> > select so it can do fancy things.
-> >
-> > Back when we first landed the geni SPI driver we worked around this
-> > by:
-> > - Always setting the FRAGMENTATION bit in transfers, which (I believe)
-> >   tells the SPI controller not to mess with the chip select during
-> >   transfers.
-> > - Controlling the chip select manually by sending the SPI controller
-> >   commands to assert or deassert the chip select.
-> >
-> > Our workaround was fine and it's been working OK, but it's really
-> > quite inefficient.  A normal SPI transaction now needs to do:
-> > 1. Start a command to set the chip select.
-> > 2. Wait for an interrupt from controller saying chip select done.
-> > 3. Do a transfer.
-> > 4. Start a command to unset the chip select.
-> > 5. Wait for an interrupt from controller saying chip select done.
->
-> I thought the GENI hardware was supposed to be able to queue commands up
-> and then plow through them to interrupt the CPU when it finished. If
-> that was supported would there be any problems? I assume we could remove
-> the wait for CS disable and interrupt on step 5 and also the wait for
-> CS/interrupt on step 2 because it is bundled with the transfer in step
-> 3.
+> On Thu, 2020-06-18 at 20:05 +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  drivers/pwm/Kconfig         |   9 +
+>>  drivers/pwm/Makefile        |   1 +
+>>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 410 insertions(+)
+>>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+>>
+> [...]
+>> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+>> new file mode 100644
+>> index 000000000000..3c7077acb161
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-intel-lgm.c
+>> @@ -0,0 +1,400 @@
+> [...]
+>> +static int lgm_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct lgm_pwm_chip *pc;
+>> +	struct device *dev = &pdev->dev;
+>> +	void __iomem *io_base;
+>> +	int ret;
+>> +
+>> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+>> +	if (!pc)
+>> +		return -ENOMEM;
+>> +
+>> +	io_base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(io_base))
+>> +		return PTR_ERR(io_base);
+>> +
+>> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
+>> +	if (IS_ERR(pc->regmap)) {
+>> +		ret = PTR_ERR(pc->regmap);
+>> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pc->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(pc->clk)) {
+>> +		ret = PTR_ERR(pc->clk);
+>> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pc->rst = devm_reset_control_get(dev, NULL);
+>> +	if (IS_ERR(pc->rst)) {
+>> +		ret = PTR_ERR(pc->rst);
+>> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
+>> +		return ret;
+>> +	}
+> Please use devm_reset_control_get_exclusive() to make it explicit an
+> that exclusive reset control is requested. Given how the reset control
+> is used, I think this driver could also use
+> devm_reset_control_get_shared() to potentially allow sharing a reset
+> line with other devices.
 
-Do you have any details or pointers to documentation on said ability
-to queue commands?  I don't think I've ever heard of it.
+devm_reset_control_get() is a wrapper for devm_reset_control_get_exclusive().
+Code as below:
+static inline struct reset_control *devm_reset_control_get(
+                                struct device *dev, const char *id)
+{
+        return devm_reset_control_get_exclusive(dev, id);
+}
+Am i missing something else?
 
-How exactly would it work, anyway?  There's no sequence number or
-anything in GENI and there's a single "DONE" interrupt that signals
-both "CS Done" and "Transfer Done", so without some really good docs
-I'd have a really hard time figuring out how this is supposed to work.
-
-
-> Where is the delay? On step 2 where we wait to transfer or at step 5
-> when we wait for CS to be dropped, or both?
-
-Presumably every CS change takes the same amount of time?  ...so I'd
-say "both".  If it really matters I can try to measure.
-
-
-> > Things are made a bit worse because the Linux GPIO framework assumes
-> > that setting a chip select is quick.  Thus the SPI core can be seen to
-> > tell us to set our chip select even when it's already in the right
-> > state and we were dutifully kicking off commands and waiting for
-> > interrupts.  While we could optimize that particular case, we'd still
-> > be left with the slowness when we actually needed to toggle the chip
-> > select.
->
-> One thing to note is that the GPIO driver doesn't tell us that it has
-> actually asserted/deasserted the GPIO. It writes to the controller and
-> moves on so we don't know when it has actually gone into effect.
-> Hopefully moving to GPIO mode doesn't mean we get weird problems where
-> CS isn't asserted yet and a transfer starts wiggling the lines.
-
-cs-gpios is a pretty normal Linux concept and not something I
-invented.  It's documented to work just fine and I can't see this as
-being a real problem.
-
-
-> > All the chip select lines can actually be muxed to be GPIOs and
-> > there's really no downside in doing so.  Now Linux can assert and
-> > deassert the chip select at will with a simple MMIO write.
-> >
-> > The SPI driver will still have the ability to set the chip select, but
-> > not we just won't use it.
->
-> s/not/now/?
-
-Sigh.  I always make that typo.  I can spin if need be to fix.
-
-
-> > With this change I tested reading the firmware off the EC connected to
-> > a ChromeOS device (flashrom -p ec -r ...).  I saw about a 25% speedup
-> > in total runtime of the command and a 30% reduction in interrupts
-> > generated (measured by /proc/interrupts).
->
-> I see nothing wrong with specifying the CS gpios in DT. Seems like that
-> should always be there and then the driver should decide to use GPIO
-> mode or not. So
->
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->
-> for that part.
-
-I appreciate the tag, but I'm not sure it's working the way you're
-thinking it does?  See:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/spi/spi-controller.yaml
-
-From there, when you specify spi-gpios it's saying: definitely use
-this GPIO as the chip select, don't use your native one.  The bindings
-explicitly show how you would specify the native GPIO.
-
-If we wanted the SPI controller to decide one way or the other on its
-own, I guess we'd need an entirely new property saying that if it
-wanted to control its chip select with GPIO then here's the GPIO and
-then we'd need to provide a pinmux config for that.  That feels
-overkill to me since I really see no reason not to use it as a GPIO.
-
-It's kinda like saying: if an SoC provided two different ways to set a
-pin, one of which always delayed 50 us to assert and one that asserted
-instantly, do we really need to write drivers to support both modes?
-No.  The mode which delays 50 us is useless and there was no good
-reason for the SoC to invent that mode and no reason to try to support
-it in software.
-
-
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 57 ++++++++++++++++++++++++----
-> >  1 file changed, 49 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > index 3a8076c8bdbf..74c8503b560e 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > @@ -1204,65 +1213,97 @@ pinmux {
-> >                         qup_spi0_default: qup-spi0-default {
-> >                                 pinmux {
-> >                                         pins = "gpio34", "gpio35",
-> > -                                              "gpio36", "gpio37";
-> > +                                              "gpio36";
-> >                                         function = "qup00";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio37";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi1_default: qup-spi1-default {
-> >                                 pinmux {
-> >                                         pins = "gpio0", "gpio1",
-> > -                                              "gpio2", "gpio3";
-> > +                                              "gpio2";
-> >                                         function = "qup01";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio3";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi3_default: qup-spi3-default {
-> >                                 pinmux {
-> >                                         pins = "gpio38", "gpio39",
-> > -                                              "gpio40", "gpio41";
-> > +                                              "gpio40";
-> >                                         function = "qup03";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio41";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi5_default: qup-spi5-default {
-> >                                 pinmux {
-> >                                         pins = "gpio25", "gpio26",
-> > -                                              "gpio27", "gpio28";
-> > +                                              "gpio27";
-> >                                         function = "qup05";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio28";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi6_default: qup-spi6-default {
-> >                                 pinmux {
-> >                                         pins = "gpio59", "gpio60",
-> > -                                              "gpio61", "gpio62";
-> > +                                              "gpio61";
-> >                                         function = "qup10";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio62";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi8_default: qup-spi8-default {
-> >                                 pinmux {
-> >                                         pins = "gpio42", "gpio43",
-> > -                                              "gpio44", "gpio45";
-> > +                                              "gpio44";
-> >                                         function = "qup12";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio45";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi10_default: qup-spi10-default {
-> >                                 pinmux {
-> >                                         pins = "gpio86", "gpio87",
-> > -                                              "gpio88", "gpio89";
-> > +                                              "gpio88";
-> >                                         function = "qup14";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio89";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
-> >
-> >                         qup_spi11_default: qup-spi11-default {
-> >                                 pinmux {
-> >                                         pins = "gpio53", "gpio54",
-> > -                                              "gpio55", "gpio56";
-> > +                                              "gpio55";
-> >                                         function = "qup15";
-> >                                 };
-> > +                               pinmux-cs {
-> > +                                       pins = "gpio56";
-> > +                                       function = "gpio";
-> > +                               };
-> >                         };
->
-> Perhaps we should have qup-spiN-default and qup-spiN-cs-gpio though?
-> That way the driver can properly mux the pin to be gpio mode if it wants
-> to. I don't see a way to mux the pin to be "qup" until the driver
-> decides it doesn't want that.
-
-This seems like extra complexity.  Why would the SPI controller ever
-need to control the GPIO itself.  If we ever do come up with a reason
-we can solve it then?
-
--Doug
+Regards,
+Rahul
