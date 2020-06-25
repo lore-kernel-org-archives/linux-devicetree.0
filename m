@@ -2,560 +2,163 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBFBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 07:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631E5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 07:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC903207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 07:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F83206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 07:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GXcV/xxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbgFYH2q (ORCPT
+        id S2390318AbgFYHkH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 03:28:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:29949 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390126AbgFYH2p (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 03:28:45 -0400
-IronPort-SDR: UlVklNWE5XVK01V4HzZmT2wvFGInNoRwefYL9ps+HCFGX3+NvCeXfFPpGaloccsf1jtIQ/xtTd
- 6nZMZtkme38g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="124446705"
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="124446705"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 00:28:43 -0700
-IronPort-SDR: LGrAD0tSEgkJBdeZ6/Kmc9+wsNWRRSUiogy21XjoFfYUrB7C4J5Zrtya6w6NIil1x+D09Zk9Bh
- AsTUhz0fw9Xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,278,1589266800"; 
-   d="scan'208";a="385393439"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Jun 2020 00:28:43 -0700
-Received: from [10.213.33.121] (rtanwar-MOBL.gar.corp.intel.com [10.213.33.121])
-        by linux.intel.com (Postfix) with ESMTP id B9E7E5805B5;
-        Thu, 25 Jun 2020 00:28:39 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] Add PWM fan controller driver for LGM SoC
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1592474693.git.rahul.tanwar@linux.intel.com>
- <79fefda4aad5ebeb368129375bf128b74ed12224.1592474693.git.rahul.tanwar@linux.intel.com>
- <20200619060213.ldvun5y4tgnz55hh@taurus.defre.kleine-koenig.org>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <97273851-dd58-ea02-2393-bdb1e77e1a50@linux.intel.com>
-Date:   Thu, 25 Jun 2020 15:28:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 25 Jun 2020 03:40:07 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44334 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390205AbgFYHkE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 03:40:04 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05P7djCN018742;
+        Thu, 25 Jun 2020 09:39:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=B7ajrBgreKK0clsVTdK1y2OSMqOBYMm31F6kF44CZ5o=;
+ b=GXcV/xxt2JzujKSKEJ0cvS4GVLXnValQ9eUM/YNJcX1/MIp2koy0Wy7ruATMxQX6VG+O
+ Qle7wIkSzPgyy37Sr23EKRV/jhCez4rEzgxjuwofIFa1+NkI8H/SATGI95nOqTwFhjlt
+ uz2aoBF362cXjfznk29L6ZdgOchNNP4b3lKYJZ2Fbfdx9ceQvHenhDMuFthP8awxCAjO
+ 0gY9YHotmS41uYxhJz+8LYHFSMQd7NJ8rdmvxmF/0kEQmJ91GA2SX0Z8lZrF9eKX9mx6
+ qDf2gSA7qK9qZRmjuJcuMe4u0gwqaEem5vgciyNMHENutrGob6IvS6vuwdka598oFlCj 8w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31uuumghkn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 25 Jun 2020 09:39:51 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 31E71100038;
+        Thu, 25 Jun 2020 09:39:51 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 267142A82E2;
+        Thu, 25 Jun 2020 09:39:51 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 25 Jun 2020 09:39:50
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH v2 2/4] i2c: addition of client hnotify reg/unreg callbacks
+Date:   Thu, 25 Jun 2020 09:39:27 +0200
+Message-ID: <1593070769-9106-3-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619060213.ldvun5y4tgnz55hh@taurus.defre.kleine-koenig.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-25_03:2020-06-25,2020-06-25 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Addition of two callbacks reg_hnotify_cli and unreg_hnotify_cli
+that can be implemented by adapter drivers in order to take action
+whenever a client with HOST_NOTIFY flag is being registered to it.
 
-Hi Uwe,
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+---
+v2: replace generic client reg/unreg callbacks with host-notify
+    client reg/unreg callbacks
 
-Thanks for your valuable feedback.
+ drivers/i2c/i2c-core-base.c | 18 ++++++++++++++++--
+ include/linux/i2c.h         |  8 ++++++++
+ 2 files changed, 24 insertions(+), 2 deletions(-)
 
-On 19/6/2020 2:02 pm, Uwe Kleine-König wrote:
-> Hello Rahul,
->
-> On Thu, Jun 18, 2020 at 08:05:13PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
->> This PWM controller does not have any other consumer, it is a
->> dedicated PWM controller for fan attached to the system. Add
->> driver for this PWM fan controller.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/pwm/Kconfig         |   9 +
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-intel-lgm.c | 400 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 410 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
->>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index cb8d739067d2..a3303e22d5fa 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -232,6 +232,15 @@ config PWM_IMX_TPM
->>  	  To compile this driver as a module, choose M here: the module
->>  	  will be called pwm-imx-tpm.
->>  
->> +config PWM_INTEL_LGM
->> +	tristate "Intel LGM PWM support"
->> +	depends on X86 || COMPILE_TEST
->> +	help
->> +	  Generic PWM fan controller driver for LGM SoC.
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called pwm-intel-lgm.
->> +
->>  config PWM_IQS620A
->>  	tristate "Azoteq IQS620A PWM support"
->>  	depends on MFD_IQS62X || COMPILE_TEST
->> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
->> index a59c710e98c7..db154a6b4f51 100644
->> --- a/drivers/pwm/Makefile
->> +++ b/drivers/pwm/Makefile
->> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->>  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->>  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
->>  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
->> +obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
->>  obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
->>  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->>  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
->> new file mode 100644
->> index 000000000000..3c7077acb161
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-intel-lgm.c
->> @@ -0,0 +1,400 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2020 Intel Corporation.
->> + *
->> + * Notes & Limitations:
->> + * - The hardware supports fixed period which is dependent on 2/3 or 4
->> + *   wire fan mode.
->> + * - Supports normal polarity. Does not support changing polarity.
->> + * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
->> + *   keep track of running period.
->> + * - When duty cycle is changed, PWM output may be a mix of previous setting
->> + *   and new setting for the first period. From second period, the output is
->> + *   based on new setting.
->> + * - Supports 100% duty cycle.
->> + * - It is a dedicated PWM fan controller. There are no other consumers for
->> + *   this PWM controller.
->> + */
->> +#include <linux/bitfield.h>
->> +#include <linux/clk.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/pwm.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset.h>
->> +
->> +#define PWM_FAN_CON0		0x0
->> +#define PWM_FAN_EN_EN		BIT(0)
->> +#define PWM_FAN_EN_DIS		0x0
->> +#define PWM_FAN_EN_MSK		BIT(0)
->> +#define PWM_FAN_MODE_2WIRE	0x0
->> +#define PWM_FAN_MODE_4WIRE	0x1
->> +#define PWM_FAN_MODE_MSK	BIT(1)
->> +#define PWM_FAN_PWM_DIS_DIS	0x0
->> +#define PWM_FAN_PWM_DIS_MSK	BIT(2)
->> +#define PWM_TACH_EN_EN		0x1
->> +#define PWM_TACH_EN_MSK		BIT(4)
->> +#define PWM_TACH_PLUS_2		0x0
->> +#define PWM_TACH_PLUS_4		0x1
->> +#define PWM_TACH_PLUS_MSK	BIT(5)
->> +#define PWM_FAN_DC_MSK		GENMASK(23, 16)
->> +
->> +#define PWM_FAN_CON1		0x4
->> +#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
->> +
->> +#define PWM_FAN_STAT		0x10
->> +#define PWM_FAN_TACH_MASK	GENMASK(15, 0)
->> +
->> +#define MAX_RPM			(BIT(16) - 1)
->> +#define DFAULT_RPM		4000
->> +#define MAX_DUTY_CYCLE		(BIT(8) - 1)
->> +
->> +#define FRAC_BITS		10
->> +#define DC_BITS			8
->> +#define TWO_TENTH		204
->> +
->> +#define PERIOD_2WIRE_NSECS	40000000
->> +#define PERIOD_4WIRE_NSECS	40000
->> +
->> +#define TWO_SECONDS		2000
->> +#define IGNORE_FIRST_ERR	1
->> +#define THIRTY_SECS_WINDOW	15
->> +#define ERR_CNT_THRESHOLD	6
->> +
->> +struct lgm_pwm_chip {
->> +	struct pwm_chip chip;
->> +	struct regmap *regmap;
->> +	struct clk *clk;
->> +	struct reset_control *rst;
->> +	u32 tach_en;
->> +	u32 max_rpm;
->> +	u32 set_rpm;
->> +	u32 set_dc;
->> +	u32 period;
->> +	struct delayed_work work;
->> +};
->> +
->> +static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
->> +{
->> +	return container_of(chip, struct lgm_pwm_chip, chip);
->> +}
->> +
->> +static int lgm_pwm_update_dc(struct lgm_pwm_chip *pc, u32 val)
->> +{
->> +	return regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
->> +				  FIELD_PREP(PWM_FAN_DC_MSK, val));
->> +}
->> +
->> +static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
->> +{
->> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
->> +	struct regmap *regmap = pc->regmap;
->> +
->> +	if (enable) {
->> +		regmap_update_bits(regmap, PWM_FAN_CON0,
->> +				   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
->> +		if (pc->tach_en)
->> +			schedule_delayed_work(&pc->work, msecs_to_jiffies(10000));
->> +	} else {
->> +		if (pc->tach_en)
->> +			cancel_delayed_work_sync(&pc->work);
->> +		regmap_update_bits(regmap, PWM_FAN_CON0,
->> +			   	   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			 const struct pwm_state *state)
->> +{
->> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
->> +	struct pwm_state cur_state;
->> +	u32 duty_cycle, duty, val;
->> +	int ret = 0;
->> +
->> +	if (state->polarity != PWM_POLARITY_NORMAL ||
->> +	    state->period != pc->period)
-> The period-check is too strict, please accept periods bigger than the
-> resulting value. This case however isn't handled correctly yet in the
-> following code and needs:
->
-> 	period = min(state->period, pc->period);
->
-> 	if (state->polarity != PWM_POLARITY_NORMAL ||
-> 	    period < pc->period)
-> 	    	return -EINVAL;
->
-> (and then use period instead of state->period in the following)
->
->> +		return -EINVAL;
->> +
->> +	cur_state = pwm->state;
->> +	duty_cycle = state->duty_cycle;
-> This would then be:
->
-> 	duty_cycle = min(state->duty_cycle, period);
->
->> +	if (!state->enabled)
->> +		duty_cycle = 0;
-> What happens if you don't set duty_cycle to 0? Is it just to prevent a
-> spike in lgm_pwm_update_dc before calling lgm_pwm_enable(.., false)? If
-> so, what about skipping writing (and calculating) the duty register
-> value at all?
-
-Thanks, will update. Agree that setting duty_cycle to 0 is redundant.
-Setting duty_cycle to 0 is equivalent to disabling PWM. Will remove it.
-
->> +	duty = duty_cycle * (1U << DC_BITS);
->> +	val = DIV_ROUND_CLOSEST(duty, state->period);
-> This is equivalent to:
->
-> 	val = DIV_ROUND_CLOSEST(duty_cycle << DC_BITS, state->period);
->
-> which doesn't need two variables with similar name but different
-> scaling. Having said that using closest rounding is wrong here, please
-> round down.
-
-Unable to find a 32 bit variant of DIV_ROUND_DOWN API unlike
-DIV_ROUND_UP. Do you have any suggestion for such a API? If not,
-i will add one new API for this purpose in the driver.
-
->> +	val = min_t(u32, val, MAX_DUTY_CYCLE);
-> Hmm, this looks suspicious. Does the hardware really produce 100% when
-> val = MAX_DUTY_CYCLE? Either it doesn't or there is a rounding error in
-> your algorithm. Does the PWM support 0%? It would help to mention the
-> formula from the reference manual to verify and understand your
-> algorithm. Please add a comment for that.
-
-Yes, hardware claims to produce 100% when val = 0xff for 8 bit duty cycle
-register field. But it doesn't support 0%. Minimum supported is 20%.
-Sorry i am unable to figure out your point here. Can you please elaborate
-more? I was just trying to ensure that reg value doesn't exceed max value
-of 0xff.
-
->> +	if (pc->tach_en) {
->> +		pc->set_dc = val;
->> +		pc->set_rpm = val * pc->max_rpm / MAX_DUTY_CYCLE;
->> +	}
->> +
->> +	ret = lgm_pwm_update_dc(pc, val);
->> +
->> +	if (state->enabled != cur_state.enabled)
->> +		lgm_pwm_enable(chip, state->enabled);
-> I would prefer if you would make this call conditional on the (cached)
-> state of the PWM_FAN_EN_MSK bit instead of pwm->state. This way the
-> driver is more independent from pwm API internals.
-
-Well noted.
-
->> +	return ret;
->> +}
->> +
->> +static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			      struct pwm_state *state)
->> +{
->> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
->> +	u32 duty, val;
->> +
->> +	state->enabled = regmap_test_bits(pc->regmap, PWM_FAN_CON0,
->> +					  PWM_FAN_EN_EN);
->> +	state->polarity = PWM_POLARITY_NORMAL;
->> +	state->period = pc->period; /* fixed period */
->> +
->> +	regmap_read(pc->regmap, PWM_FAN_CON0, &val);
->> +	duty = FIELD_GET(PWM_FAN_DC_MSK, val);
->> +	state->duty_cycle = duty * pc->period >> DC_BITS;
-> The rounding here must use the inverse rounding of .apply(). So please
-> round up here.
-
-Well noted.
-
->> +}
->> +
->> +static const struct pwm_ops lgm_pwm_ops = {
->> +	.get_state = lgm_pwm_get_state,
->> +	.apply = lgm_pwm_apply,
->> +	.owner = THIS_MODULE,
->> +};
->> +
->> +static void lgm_pwm_tach_work(struct work_struct *work)
->> +{
->> +	struct lgm_pwm_chip *pc = container_of(work, struct lgm_pwm_chip,
->> +						 work.work);
->> +	struct regmap *regmap = pc->regmap;
->> +	u32 fan_tach, fan_dc, val;
->> +	s32 diff;
->> +	static u32 fanspeed_err_cnt, time_window, delta_dc;
->> +
->> +	/*
->> +	 * Fan speed is tracked by reading the active duty cycle of PWM output
->> +	 * from the active duty cycle register. Some variance in the duty cycle
->> +	 * register value is expected. So we set a time window of 30 seconds and
->> +	 * if we detect inaccurate fan speed 6 times within 30 seconds then we
->> +	 * mark it as fan speed problem and fix it by readjusting the duty cycle.
->> +	 */
->> +
->> +	if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
->> +		/*
->> +		 * Ignore first time we detect inaccurate fan speed
->> +		 * because it is expected during bootup.
->> +		 */
->> +		time_window++;
->> +
->> +	if (time_window == THIRTY_SECS_WINDOW) {
->> +		/*
->> +		 * This work is scheduled every 2 seconds i.e. each time_window
->> +		 * counter step roughly mean 2 seconds. When the time window
->> +		 * reaches 30 seconds, reset all the counters/logic.
->> +		 */
->> +		fanspeed_err_cnt = 0;
->> +		delta_dc = 0;
->> +		time_window = 0;
->> +	}
->> +
->> +	regmap_read(regmap, PWM_FAN_STAT, &fan_tach);
->> +	fan_tach &= PWM_FAN_TACH_MASK;
->> +	if (!fan_tach)
->> +		goto restart_work;
->> +
->> +	val = DIV_ROUND_CLOSEST(pc->set_rpm << FRAC_BITS, fan_tach);
->> +	diff = val - BIT(FRAC_BITS);
->> +
->> +	if (abs(diff) > TWO_TENTH) {
->> +		/* if duty cycle diff is more than two tenth, detect it as error */
->> +		if (fanspeed_err_cnt > IGNORE_FIRST_ERR)
->> +			delta_dc += val;
->> +		fanspeed_err_cnt++;
->> +	}
->> +
->> +	if (fanspeed_err_cnt == ERR_CNT_THRESHOLD) {
->> +		/*
->> +		 * We detected fan speed errors 6 times with 30 seconds.
->> +		 * Fix the error by readjusting duty cycle and reset
->> +		 * our counters/logic.
->> +		 */
->> +		fan_dc = pc->set_dc * delta_dc >> (FRAC_BITS + 2);
->> +		fan_dc = min_t(u32, fan_dc, MAX_DUTY_CYCLE);
->> +		lgm_pwm_update_dc(pc, fan_dc);
->> +		fanspeed_err_cnt = 0;
->> +		delta_dc = 0;
->> +		time_window = 0;
->> +	}
->> +
->> +restart_work:
->> +	/*
->> +	 * Fan speed doesn't need continous tracking. Schedule this work
->> +	 * every two seconds so it doesn't steal too much cpu cycles.
->> +	 */
->> +	schedule_delayed_work(&pc->work, msecs_to_jiffies(TWO_SECONDS));
-> You had concerns about my review feedback that I don't like the fan
-> stuff in the PWM driver. I still think that the fan part doesn't belong
-> here.
-
-We have decided to remove this fan calibration task after concluding that
-the same can be achieved by a user space application using sysfs. Will remove
-it in v3.
-
->> +}
->> +
->> +static void lgm_pwm_init(struct lgm_pwm_chip *pc)
->> +{
->> +	struct device *dev = pc->chip.dev;
->> +	struct regmap *regmap = pc->regmap;
->> +	u32 max_rpm, fan_wire, tach_plus, con0_val, con0_mask;
->> +
->> +	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
->> +		fan_wire = 2; /* default is 2 wire mode */
->> +
->> +	con0_val = FIELD_PREP(PWM_FAN_PWM_DIS_MSK, PWM_FAN_PWM_DIS_DIS);
->> +	con0_mask = PWM_FAN_PWM_DIS_MSK | PWM_FAN_MODE_MSK;
-> Please don't disable the PWM in .probe()
-
-Well noted.
-
->> +
->> +	switch (fan_wire) {
->> +	case 4:
->> +		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE) |
->> +			    FIELD_PREP(PWM_TACH_EN_MSK, PWM_TACH_EN_EN);
->> +		con0_mask |= PWM_TACH_EN_MSK | PWM_TACH_PLUS_MSK;
->> +		pc->tach_en = 1;
->> +		pc->period = PERIOD_4WIRE_NSECS;
->> +		break;
->> +	default:
->> +		/* default is 2wire mode */
->> +		con0_val |= FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
->> +		pc->period = PERIOD_2WIRE_NSECS;
->> +		break;
->> +	}
->> +
->> +	if (pc->tach_en) {
->> +		if (device_property_read_u32(dev, "intel,tach-plus",
->> +					     &tach_plus))
->> +			tach_plus = 2;
->> +
->> +		switch (tach_plus) {
->> +		case 4:
->> +			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
->> +					       PWM_TACH_PLUS_4);
->> +			break;
->> +		default:
->> +			con0_val |= FIELD_PREP(PWM_TACH_PLUS_MSK,
->> +					       PWM_TACH_PLUS_2);
->> +			break;
->> +		}
->> +
->> +		if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
->> +			max_rpm = DFAULT_RPM;
->> +
->> +		max_rpm = min_t(u32, max_rpm, MAX_RPM);
->> +		if (max_rpm == 0)
->> +			max_rpm = DFAULT_RPM;
->> +
->> +		pc->max_rpm = max_rpm;
->> +		INIT_DEFERRABLE_WORK(&pc->work, lgm_pwm_tach_work);
->> +		regmap_update_bits(regmap, PWM_FAN_CON1,
->> +				   PWM_FAN_MAX_RPM_MSK, max_rpm);
->> +	}
->> +
->> +	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
->> +}
->> +
->> +static const struct regmap_config pwm_regmap_config = {
-> Here you missed to add the lgm_ prefix.
->
->> +	.reg_bits = 32,
->> +	.reg_stride = 4,
->> +	.val_bits = 32,
->> +};
->> +
->> +static int lgm_pwm_probe(struct platform_device *pdev)
->> +{
->> +	struct lgm_pwm_chip *pc;
->> +	struct device *dev = &pdev->dev;
->> +	void __iomem *io_base;
->> +	int ret;
->> +
->> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
->> +	if (!pc)
->> +		return -ENOMEM;
->> +
->> +	io_base = devm_platform_ioremap_resource(pdev, 0);
->> +	if (IS_ERR(io_base))
->> +		return PTR_ERR(io_base);
->> +
->> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &pwm_regmap_config);
->> +	if (IS_ERR(pc->regmap)) {
->> +		ret = PTR_ERR(pc->regmap);
->> +		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
->> +		return ret;
->> +	}
->> +
->> +	pc->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(pc->clk)) {
->> +		ret = PTR_ERR(pc->clk);
->> +		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
->> +		return ret;
->> +	}
->> +
->> +	pc->rst = devm_reset_control_get(dev, NULL);
->> +	if (IS_ERR(pc->rst)) {
->> +		ret = PTR_ERR(pc->rst);
->> +		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
->> +		return ret;
->> +	}
->> +
->> +	ret = reset_control_deassert(pc->rst);
->> +	if (ret) {
->> +		dev_err(dev, "cannot deassert reset control: %pe\n",
->> +			ERR_PTR(ret));
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(pc->clk);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable clock\n");
->> +		return ret;
->> +	}
->> +
->> +	pc->chip.dev = dev;
->> +	pc->chip.ops = &lgm_pwm_ops;
->> +	pc->chip.npwm = 1;
->> +
->> +	lgm_pwm_init(pc);
->> +
->> +	ret = pwmchip_add(&pc->chip);
->> +	if (ret < 0) {
->> +		dev_err(dev, "failed to add PWM chip: %d\n", ret);
-> %pe please.
-
-Well noted. Thanks.
-
-Regards,
-Rahul
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 26f03a14a478..46745e403e98 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -319,6 +319,14 @@ static int i2c_device_probe(struct device *dev)
+ 	if (!client)
+ 		return 0;
+ 
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
++		if (client->adapter->algo->reg_hnotify_cli) {
++			status = client->adapter->algo->reg_hnotify_cli(client);
++			if (status)
++				return status;
++		}
++	}
++
+ 	driver = to_i2c_driver(dev->driver);
+ 
+ 	client->irq = client->init_irq;
+@@ -415,8 +423,11 @@ static int i2c_device_probe(struct device *dev)
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+ put_sync_adapter:
+-	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+ 		pm_runtime_put_sync(&client->adapter->dev);
++		if (client->adapter->algo->unreg_hnotify_cli)
++			client->adapter->algo->unreg_hnotify_cli(client);
++	}
+ 
+ 	return status;
+ }
+@@ -442,8 +453,11 @@ static int i2c_device_remove(struct device *dev)
+ 	device_init_wakeup(&client->dev, false);
+ 
+ 	client->irq = 0;
+-	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+ 		pm_runtime_put(&client->adapter->dev);
++		if (client->adapter->algo->unreg_hnotify_cli)
++			client->adapter->algo->unreg_hnotify_cli(client);
++	}
+ 
+ 	return status;
+ }
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index b8b8963f8bb9..35ad108adc68 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -507,6 +507,10 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+  *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+  * @functionality: Return the flags that this algorithm/adapter pair supports
+  *   from the ``I2C_FUNC_*`` flags.
++ * @reg_hnotify_cli: Callback informing that a new client with HOST_NOTIFY flag
++ *   is being registered
++ * @unreg_hnotify_cli: Callback informing that a client with HOST_NOTIFY flag
++ *   is being removed
+  * @reg_slave: Register given client to I2C slave mode of this adapter
+  * @unreg_slave: Unregister given client from I2C slave mode of this adapter
+  *
+@@ -543,6 +547,10 @@ struct i2c_algorithm {
+ 	/* To determine what the adapter supports */
+ 	u32 (*functionality)(struct i2c_adapter *adap);
+ 
++	/* To inform the adapter of the probe/remove of a HOST_NOTIFY client */
++	int (*reg_hnotify_cli)(struct i2c_client *client);
++	void (*unreg_hnotify_cli)(struct i2c_client *client);
++
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	int (*reg_slave)(struct i2c_client *client);
+ 	int (*unreg_slave)(struct i2c_client *client);
+-- 
+2.7.4
 
