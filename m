@@ -2,101 +2,151 @@ Return-Path: <SRS0=bF7C=AG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34123C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 19:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D626C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 19:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084AE20781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 19:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593112321;
-	bh=Wq5qLv42hAbYbM3KVFBmYg7DH+Sc+FTD5uuJlgNEbE0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Z50itsK5nAg7UWyDeAJVAx+Tk1l7WrNzeJpf0xaZ53iMFKR+nkInxgWQnkE4EXhwz
-	 AVL7OE6dODYXa2lXDSAQcpZLry1reM85Vd5eknrqF8Sv5bIL/LzJx8KAuj/+4u0iSq
-	 0YFaBdQb2Go0ikIJHl13Rd5PLFZt1x6+6IzGOsQM=
+	by mail.kernel.org (Postfix) with ESMTP id 5AEB520789
+	for <linux-devicetree@archiver.kernel.org>; Thu, 25 Jun 2020 19:22:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VBGyuwLm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390652AbgFYTMA (ORCPT
+        id S2404326AbgFYTWp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 15:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        Thu, 25 Jun 2020 15:22:45 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34037 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390330AbgFYTMA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 15:12:00 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2406069AbgFYTWn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 15:22:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593112963; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=O0YcN5AuA42NSQG3m/WRAh4pR8AXXh5aSL0oaRcNrWk=;
+ b=VBGyuwLm/WefYwzOS92NrXth9i/kW7BaCJqMT+kgdsDjPBB1c1nA+duMh4rWU7BVYzCkaFQq
+ NpiNoyEmKX9Q/Ix8pvUy5ZHrRMpsxsGxX3cnPvlA3NrGtzHTw31qqgTIaCqbTmr7Hab0/Wuw
+ QUsJQ/tk/arNSw61VlQ8b15zbEI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5ef4f979567385e8e729638a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 25 Jun 2020 19:22:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF52AC433CA; Thu, 25 Jun 2020 19:22:32 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 438472075A;
-        Thu, 25 Jun 2020 19:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593112319;
-        bh=Wq5qLv42hAbYbM3KVFBmYg7DH+Sc+FTD5uuJlgNEbE0=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=kOv4k4cKrUDBv/davGtLqjHBm3p2BBy/BHnIsQdY+11N5h47jw4atb66G8jlsFiSG
-         MUkjX8FFFZAq1wLlUkvsBPuaPb/2RmauGuNroLw8sQZQgCzNqWZxkqI9VsAT7toY9O
-         +dcZKwpnIt1OWSCgC6KXUQHQGwUjdoi7pNbT9odI=
-Date:   Thu, 25 Jun 2020 20:11:57 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     tiwai@suse.com, perex@perex.cz, Dan Murphy <dmurphy@ti.com>,
-        lgirdwood@gmail.com
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200624174932.9604-1-dmurphy@ti.com>
-References: <20200624174932.9604-1-dmurphy@ti.com>
-Subject: Re: [PATCH v6 0/7] TAS2562 issue fixes and slot programming
-Message-Id: <159311231750.10637.10437779790730548951.b4-ty@kernel.org>
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0695FC433C8;
+        Thu, 25 Jun 2020 19:22:32 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 26 Jun 2020 00:52:31 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
+In-Reply-To: <20200625160042.GC149301@roeck-us.net>
+References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
+ <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
+ <20200621073320.GI128451@builder.lan>
+ <ce4c2b44cb15af12b04c09f1786a6c1a@codeaurora.org>
+ <20200625160042.GC149301@roeck-us.net>
+Message-ID: <3e3cf81452e33c9385900177d0630a11@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 24 Jun 2020 12:49:25 -0500, Dan Murphy wrote:
-> This series fixes issues tih the shut-down gpio device tree allocation and a
-> code format issue found.
+On 2020-06-25 21:30, Guenter Roeck wrote:
+> On Mon, Jun 22, 2020 at 11:50:52AM +0530, Sai Prakash Ranjan wrote:
+>> On 2020-06-21 13:03, Bjorn Andersson wrote:
+>> > On Tue 16 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
+>> >
+>> > > Hi Bjorn,
+>> > >
+>> >
+>> > Hi Sai,
+>> >
+>> > > On 2020-02-12 03:54, Sai Prakash Ranjan wrote:
+>> > > > This series converts QCOM watchdog timer bindings to YAML. Also
+>> > > > it adds the missing SoC-specific compatible for QCS404, SC7180,
+>> > > > SDM845 and SM8150 SoCs.
+>> > > >
+>> > > > v1:
+>> > > > https://lore.kernel.org/lkml/cover.1576211720.git.saiprakash.ranjan@codeaurora.org/
+>> > > > v2:
+>> > > > https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
+>> > > >
+>> > > > Changes since v2:
+>> > > >  * Add missing compatibles to enum.
+>> > > >
+>> > > > Changes since v1:
+>> > > >  As per Rob's suggestion:
+>> > > >   * Replaced oneOf+const with enum.
+>> > > >   * Removed timeout-sec and included watchdog.yaml.
+>> > > >   * Removed repeated use of const:qcom,kpss-wdt and made use of enum.
+>> > > >
+>> > > > Sai Prakash Ranjan (2):
+>> > > >   dt-bindings: watchdog: Convert QCOM watchdog timer bindings to YAML
+>> > > >   dt-bindings: watchdog: Add compatible for QCS404, SC7180, SDM845,
+>> > > >     SM8150
+>> > > >
+>> > > >  .../devicetree/bindings/watchdog/qcom-wdt.txt | 28 -----------
+>> > > >  .../bindings/watchdog/qcom-wdt.yaml           | 48 +++++++++++++++++++
+>> > > >  2 files changed, 48 insertions(+), 28 deletions(-)
+>> > > >  delete mode 100644
+>> > > > Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>> > > >  create mode 100644
+>> > > > Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+>> > >
+>> > >
+>> > > Gentle ping!
+>> > >
+>> >
+>> > This should better go through the watchdog tree, so I believe Guenter
+>> > would be the one to pick this up.
+>> >
+>> 
+>> Ah right, then a gentle ping for Guenter.
+>> 
+> I don't think the watchdog mailing list has been copied on this series,
+> meaning I don't have a copy that I could apply if I wanted to.
+
+I kept you in CC for all the revisions but missed adding watchdog list.
+Will resend with the appropriate lists added.
+
+> I also see
+> no evidence for a Reviewed-by: tag from Rob or any other DT maintainer.
 > 
-> While working on a project slot programming for the tx and rx paths needed to be
-> enabled.  In addition the vsense slot programming needed to be configurable and
-> not directly a simpler adder to the isense slot.
-> 
-> [...]
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/6] ASoC: tas2562: Fix shut-down gpio property
-      commit: 6f81e520b2906258a063f09b8d1dd9d0cc6a3172
-[2/6] ASoC: tas2562: Update shutdown GPIO property
-      commit: bc07b54459cbb3a572a78b5c200ff79ef11b8158
-[3/6] ASoC: tas2562: Fix format issue for extra space before a comma
-      commit: c8294da2ed0be726bb87019eba3a6367c7f1c922
-[4/6] ASoC: tas2562: Add rx and tx slot programming
-      (no commit info)
-[5/6] dt-bindings: tas2562: Add voltage sense slot property
-      (no commit info)
-[6/6] ASoC: tas2562: Add voltage sense slot configuration
-      (no commit info)
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Not sure why you think I would add reviewed-by tag from Rob without him 
+giving one.
+But here's the evidence - 
+https://lore.kernel.org/lkml/cover.1580570160.git.saiprakash.ranjan@codeaurora.org/
+This link is also given v3 cover letter.
 
 Thanks,
-Mark
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
