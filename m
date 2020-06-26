@@ -2,137 +2,156 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9DDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2735C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 961CB20702
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F3E2088E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxn6Zawd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KHUrbGo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgFZPSG (ORCPT
+        id S1726621AbgFZPet (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
+        Fri, 26 Jun 2020 11:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgFZPSF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:18:05 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199A0C03E97E
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 08:18:03 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q198so9092820qka.2
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 08:18:03 -0700 (PDT)
+        with ESMTP id S1726296AbgFZPet (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:34:49 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8411BC03E979
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 08:34:48 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z13so9930220wrw.5
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 08:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0S3+/lb8kTzTF7FG+GaZo7TfixBDNtLBveukGJJz1OA=;
-        b=pxn6ZawdwN+2yWmx04djJWqqXdCzmPwgL9uoMrdcjCFQHtH0kzj7+OCDwo0NOmsffI
-         9MOHjqXADtuM6Eonqp4mO8OVha8dQsqVFHr/fsbKSPzfb4VeCRa4Y/AvLZD/8V0uU5i/
-         rv7kDng9weKxmLnpPFfwzd+LfObFbsB8K1spR8cRZCUarMngFTeSX5Ld3FXEvhPHGkUk
-         LU2sSRqEKa84G2P38oJ3kPczTjj+h65ZLaeQKCHPmv2RIhcv8wLQ4cFpausDgh4rvWK3
-         Xu76inpSAyo5OgQIz5cRPF4yA2kxbxvNbAD9bugtRDyE8P2IpIUbA7E40aEAZewiExcE
-         yOzg==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=aAcfCgvKsfhT29xPLhnVNpyExCly3cUm2Peqoqgxmf0=;
+        b=KHUrbGo0dOOY8/YThmDbwKziPV5u3juGa1/NZs7GxPlI+Ky60oReECURQzxaIxKIPH
+         ybC5D38rG0u4HQBcc5+FyhyoWd7q9fFJbfAHIxwvyzYt4vxRUDqUXUJc1e6C35XKpMY1
+         JwkeivRV0+SR6hyxeZ7UsWCKI1v4jNX14qkrpwyXb1zThJMvLUVcu96NC8JD123zZJUc
+         7dcPzud94VOkiYt7v3SGzVWVl9ObxfuHX/nx7vex48z5cbRminHWdXtXdFxY/a6kWtoU
+         2ZnmY5/MWHvuI1f4LUCCbYZGRIc3biEgeMqUwKEufxecS7VxsywT3kusjLjoRkbsxtao
+         /+1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0S3+/lb8kTzTF7FG+GaZo7TfixBDNtLBveukGJJz1OA=;
-        b=TR9FLCb1//RStoPEIOj4nBWV8e8N2c2AWmpN57STbA7chDjWXDRLZJiDGXve/Hzl93
-         1mc14eqiMBU4JgyudsaqHvOL1w10RXnt4sx9cCs7Ti6CCnSV8yVqF7bJK7UNE0PmULRr
-         v4gAGv4oPyXNPQqasSrbi1vnmy0LoPRTrYc14ey4xCcQqMyjyXxSvldjv90NV3jWzWuB
-         fDMLNwJbCilthI5EcxTWVQuPE75P4wAA+MLUMM4DpJ9QripEQ9jm7r8gaA0J4JMrGWbv
-         RFXGxlDj17xFKfiJ4gdOCrbtQ+ObdjWjZOr8Tkf5MMG/yfG9SwiBWcRkx6eQ2YYcVHJX
-         Gbmg==
-X-Gm-Message-State: AOAM530mJDjpps+EBgRqtIFfnj+TwHp3Xk2IA3UD4urihXLLvqE1uSuq
-        tWUzRBEBZIRYgMkbR39p9vRLVA==
-X-Google-Smtp-Source: ABdhPJyxJJEEnnxsuDhIU/toh+dHV3q9cCmOXXFJqgFN0cKJYvcOuPUsKnfNvqaMB58IcRJE4TEmhg==
-X-Received: by 2002:a37:7683:: with SMTP id r125mr1013064qkc.39.1593184682285;
-        Fri, 26 Jun 2020 08:18:02 -0700 (PDT)
-Received: from localhost (rfs.netwinder.org. [206.248.184.2])
-        by smtp.gmail.com with ESMTPSA id 79sm173640qkd.134.2020.06.26.08.18.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 08:18:01 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 11:18:00 -0400
-From:   Ralph Siemsen <ralph.siemsen@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200626151800.GA22242@maple.netwinder.org>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
- <20200619210719.GB12233@amd>
- <20200622205121.4xuki7guyj6u5yul@mobilestation>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aAcfCgvKsfhT29xPLhnVNpyExCly3cUm2Peqoqgxmf0=;
+        b=nCgoggnJlOfzgrOjrKSCttWEaE9UTjXnPu2zZe6wG5WvlpVrK1zpT9X3ZXgBAmbavF
+         P4RUlM78dKPplPpTMs1Vb7xBS3++t3N/oZf6z6QdvGGlC5lxfcSuA+zqhAvQS7j4Phky
+         v6HT2IVpnpqDSqRCP7NZrH4cWc3RkWcE4d3kZOxDXPF2GAILoJKleWRkPcrdvEVY5bDZ
+         +PQUvhIWMpqEALfZVdD9A6YeKgZYMuNtUK/BsLnt3FwhCrjvwP6QOhjDLxug7g3Tk61K
+         ptYoQDUkAhTW97yaH23HvrGc4LevWcW2A7YROf56I91SW1V51cL5jcTiYubMhDocy/mN
+         CPpw==
+X-Gm-Message-State: AOAM533WxOoyIXm5QADpIU0GIp+1sDkB9ErChwkO/Ff2wMsNTaM1b/PA
+        U27etIhGiicbsVCD33tgdl1ggg==
+X-Google-Smtp-Source: ABdhPJzlwBw+/yQMNwLyasEb94h7nfE4+tQylcXHUSASL8mNdPqYJzqJsaJXHkxkzkGtzTNyYg5fPA==
+X-Received: by 2002:a5d:54c9:: with SMTP id x9mr4622718wrv.247.1593185687230;
+        Fri, 26 Jun 2020 08:34:47 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id 11sm17973885wmg.41.2020.06.26.08.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 08:34:46 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 16:34:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Ikjoon Jang <ikjn@chromium.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v7] dt-bindings: mfd: Convert ChromeOS EC bindings to
+ json-schema
+Message-ID: <20200626153444.GE177734@dell>
+References: <20200306085513.76024-1-ikjn@chromium.org>
+ <20200417101333.GA3737@dell>
+ <ab5adcd1-18f2-9b1c-8c5d-744f7a0e5579@collabora.com>
+ <20200625134620.GS954398@dell>
+ <b2f27cee-327e-c96c-aa12-5e1ef1f352aa@collabora.com>
+ <20200626094005.GA177734@dell>
+ <42f68bda-a152-9f21-ff72-a71a474a8c92@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200622205121.4xuki7guyj6u5yul@mobilestation>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <42f68bda-a152-9f21-ff72-a71a474a8c92@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Serge, Pavel, Greg,
+On Fri, 26 Jun 2020, Enric Balletbo i Serra wrote:
 
-On Mon, Jun 22, 2020 at 11:51:21PM +0300, Serge Semin wrote:
->Hello Pavel
->
->On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
->
->> Mainline patch simply changes return value, but code is different in
->> v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
->> that a problem?
->
->Actually no.) In that old 4.19 context it's even better to return straight away
->no matter what value is returned by the dma_transfer() callback.
+> Hi Lee,
+> 
+> On 26/6/20 11:40, Lee Jones wrote:
+> > On Fri, 26 Jun 2020, Enric Balletbo i Serra wrote:
+> > 
+> >> Hi Lee,
+> >>
+> >> On 25/6/20 15:46, Lee Jones wrote:
+> >>> On Thu, 25 Jun 2020, Enric Balletbo i Serra wrote:
+> >>>
+> >>>> Hi Lee,
+> >>>>
+> >>>> On 17/4/20 12:13, Lee Jones wrote:
+> >>>>> On Fri, 06 Mar 2020, Ikjoon Jang wrote:
+> >>>>>
+> >>>>>> Convert the ChromeOS EC bindings to json-schema.
+> >>>>>>
+> >>>>>> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> >>>>>> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>>>>> ---
+> >>>>>>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 -----------
+> >>>>>>  .../bindings/mfd/google,cros-ec.yaml          | 129 ++++++++++++++++++
+> >>>>>>  2 files changed, 129 insertions(+), 76 deletions(-)
+> >>>>>>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+> >>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
+> >>>>>
+> >>>>> Applied, thanks.
+> >>>>
+> >>>> I don't see this patch applied, I am missing something?
+> >>>
+> >>> It should be there.  Not sure when the MFD repo was last pushed.
+> >>>
+> >>> I'll try pushing it again (there are a couple of new patches from
+> >>> today).  Maybe that will spur a fetch from -next.  If it's still not
+> >>> there tomorrow, let me know and I'll investigate further.
+> >>>
+> >>
+> >> Still not there, just to make sure I am looking at the right branch, I am checking
+> >>
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=for-mfd-next
+> > 
+> > Oh, I see what's happened.
+> > 
+> > Looks like this patch wasn't sent to LKML, so my apply script failed.
+> > 
+> > Any reason not to send it to LKML?
+> > 
+> 
+> Ikjoon? I agree that is a good practice cc always the LKML, also I didn't know
+> you had a script looking at it to pick the patches, that's useful to know :-)
+> 
+> Do you want we resend the patch? In such case, Ikjoon, can you resend it?
 
-This patch changes the return dma_transfer return value from 0 to 1, 
-however it was only done in spi-dw-mid.c func mid_spi_dma_transfer().
+No it's okay.  I will apply it manually (probably on Monday).
 
-There is an identical function in spi-dw-mmio.c that needs the same 
-treatment, otherwise access to the SPI device becomes erratic and even 
-causes kernel to hang. Guess how I found this ;-)
-
-So the following patch is needed as well, at least in 4.9 and 4.19, I 
-did not check/test other versions. Mainline does not need this, since 
-the code seems to have been refactored to avoid the duplication.
-
-Regards,
--Ralph
-
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index c563c2815093..99641c485288 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -358,7 +358,7 @@ static int mmio_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 		dma_async_issue_pending(dws->txchan);
- 	}
- 
--	return 0;
-+	return 1;
- }
- 
- static void mmio_spi_dma_stop(struct dw_spi *dws)
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
