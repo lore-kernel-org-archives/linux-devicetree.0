@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B635C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D441DC433E2
 	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A18F20836
+	by mail.kernel.org (Postfix) with ESMTP id B2C4E20836
 	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593158825;
-	bh=On5Nw2JpCCwElO7JZNv53oCMoWWZnH7BsNSGYOYu//8=;
+	bh=bPwCaiRUHtIB4Vkkq8BcydU1A3dIjpEtHR80BgnI2mI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=g2yhesz3TR2fyBK8c9DvoHHndLnBKP1iAaNWZCM6FPhhFLrxKIlZuE4WnyyinQmOj
-	 pAwGV0rf0VJazg6j87KLvulpyA6X5BFOo8f6N3/maqWtUGCLBoaEWwGPMxW2ySXh3Y
-	 0ywYXrUmTHSAbOyk47Kk/TwgfcZ2VadzpwXvExus=
+	b=L9Sn1Q60Fg1KGzyfToaNknA77D7AsXEqW3YLo4kqGz36Y5pCgqOV8wVsoAwvkdByc
+	 VoAAtj5xHVzEtaO+n68t8ZDgvVVfdM1cHJ8HmF+1LD+4Leo0zZIVJYWlZhUzlBGoQH
+	 GSXjOlqOUDt54DndeyGajdaaieRN6QZEzwm94K1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgFZIG4 (ORCPT
+        id S1729357AbgFZIGz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:06:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 04:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbgFZIG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:06:26 -0400
+        id S1729115AbgFZIGz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:06:55 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC8220836;
-        Fri, 26 Jun 2020 08:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED82520836;
+        Fri, 26 Jun 2020 08:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593158786;
-        bh=On5Nw2JpCCwElO7JZNv53oCMoWWZnH7BsNSGYOYu//8=;
+        s=default; t=1593158815;
+        bh=bPwCaiRUHtIB4Vkkq8BcydU1A3dIjpEtHR80BgnI2mI=;
         h=From:To:Cc:Subject:Date:From;
-        b=JpwCgfBr0BUzGrw2TTqSO1RzFLaCntdG13YqXTvgy4qYnIPgIpe/Qas4JS2nqYXKt
-         m3ZlTSgd0KIbDMqZXTccbz0J9AA9TTvF/eIP7W9x6Sg0R+BW0sMWj6uT6rbaTuT4Q1
-         ZxiXaRJvaC4r5w/gF65OBSSSGZdIXCQH+8VQAyI4=
+        b=FRlwNmMDI/vIG0jsge053G/9EjuUAMRyoAyJcPFwn0la4LbHhSs/8AbiSPt4c5YHj
+         /NUbY4Om/u//SuVaCIi1ndX1c+K8U3qZv1DLGCm8QrljpaH7kzjF/MbSZQGpMD2xXU
+         d7kbpOcS3JYVNHf843o0T0cBij1L4FhVF4Jd896E=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH] ARM: dts: omap: Align L2 cache-controller nodename with dtschema
-Date:   Fri, 26 Jun 2020 10:06:19 +0200
-Message-Id: <20200626080619.4017-1-krzk@kernel.org>
+Subject: [PATCH] ARM: dts: am: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 10:06:51 +0200
+Message-Id: <20200626080651.4355-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -56,24 +56,24 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Fix dtschema validator warnings like:
-    l2-cache-controller@48242000: $nodename:0:
-        'l2-cache-controller@48242000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+    l2-cache-controller@48242000: $nodename:0: 'l2-cache-controller@48242000'
+        does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/omap4.dtsi | 2 +-
+ arch/arm/boot/dts/am4372.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 4400f5f8e099..3e1b393f58a7 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -71,7 +71,7 @@
- 		interrupt-parent = <&gic>;
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 51ad9e881a62..73737af49f48 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -153,7 +153,7 @@
+ 		clocks = <&mpu_periphclk>;
  	};
  
--	L2: l2-cache-controller@48242000 {
-+	L2: cache-controller@48242000 {
+-	l2-cache-controller@48242000 {
++	cache-controller@48242000 {
  		compatible = "arm,pl310-cache";
  		reg = <0x48242000 0x1000>;
  		cache-unified;
