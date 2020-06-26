@@ -2,283 +2,138 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E0FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 11:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BC3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 11:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4692082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 11:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F412078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 11:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yPARac3q"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="k4vnjeMY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sxV2YTMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgFZLlg (ORCPT
+        id S1727050AbgFZLyi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 07:41:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45386 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgFZLlf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 07:41:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QBcaLg154439;
-        Fri, 26 Jun 2020 11:41:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=PNI0Jua3x5q2I8Nlxm//VVHUGpNd4BRRAAm+pfIrA4c=;
- b=yPARac3qPia0iakKOb8Q+t8Smaf2bfuyV5Sy4XtC1c9rDmD5dUOca6eyqh9l5AU6XaOC
- vDZA1WKyCwOcLsCflUZQhbbZuQcHVfqcFWTb1fqE0jeS9kUeHT1cUmipz4nmNKaSEZd1
- uhFswiUJd7Hhs39GXgDcRuU/m85GuOuAtv2D9AitjiISQPHPgsx/p1jb7eX4j68bOcXO
- Xio+D9WGnNjUSi9wQYbwOg684Lda7n2Bqlo0iOo8BImjWiIoqxrBIaZ+abNy1byToqh7
- 20A+k8x5FmZwltj8juaoWphve9YYPNhPyMG52ed9In5l0aby+Pj83LYjcIoaYhhiYwzD 3g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31wg3bg1x3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 11:41:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QBcZvt037295;
-        Fri, 26 Jun 2020 11:41:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31uuraj4um-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Jun 2020 11:41:11 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05QBf7LN026222;
-        Fri, 26 Jun 2020 11:41:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 26 Jun 2020 11:41:06 +0000
-Date:   Fri, 26 Jun 2020 14:40:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        balbi@kernel.org, devicetree@vger.kernel.org,
-        ben.dooks@codethink.co.uk, colin.king@canonical.com, rogerq@ti.com,
-        peter.chen@nxp.com, weiyongjun1@huawei.com, jpawar@cadence.com,
-        kurahul@cadene.com, sparmar@cadence.com
-Subject: Re: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
-Message-ID: <20200626114057.GD2571@kadam>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <20200626045450.10205-3-pawell@cadence.com>
+        Fri, 26 Jun 2020 07:54:38 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33207 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726827AbgFZLyi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 07:54:38 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4CF7C5801B6;
+        Fri, 26 Jun 2020 07:54:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 26 Jun 2020 07:54:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=CkLtbfFWIfT0uZIIIKCd07Py1c
+        VQSEqZLsxH7fb1Qmk=; b=k4vnjeMYWR7vbNumRJnTd/Ovj+X0Q6lqrgPNM8AqL0
+        K87oJ9L0kWXL7J1kqyjBwHatrV8K6eKDnpg98rAoIkNbu+asHvGq56pPNF70Zepk
+        3RJ+lv+MQq8UtF1AEfFqGPduZ2F3KmGaoEsVbyBUZ5YQJHq0Fziz4E4p6dGzVbMR
+        FfeQnWapZMcPf7X1qWnRZo2Hh0X7h0QFM//Tp8P04FzOjYm03AIHTgKC37oNGHNE
+        BrDctaXAVBaI+JXjDkbMKp8MJSTI8S267E6ThMRxAD4UQYOpbjMqgDwV0Eit3Gy7
+        O6sXneICrLGFPiel+4tUlzK2rqE8EkHj7tJAHpKA8pow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=CkLtbfFWIfT0uZIII
+        KCd07Py1cVQSEqZLsxH7fb1Qmk=; b=sxV2YTMIwqleLcVjv2QqoFoHCvyCRoZpq
+        tHnSqJ1MoE9mC765tRgwsZXjU4tHBHAd38M/98g+v68i68CRuEAQVrZV9VgDH3Ej
+        GlyoEHW+dcFQ1VBq8mP/u2pPXvkkwFK5dEhUwROaZhPCiwFwYCQnGGulTdmPLt1x
+        V/G9UI/HpQ7m2TCpNuefP8VRTsSErXdw21QVZPI61Caco4vnAWZK7V3w1mQMX3ck
+        IHuHmhk/NhyvLmjq52TvtRU1ieScSL/X1DpDmy8H4zuBKYRSU26yi5hDTanDNm6p
+        pVTmZeZf2SE5PhduaCzwkpr1fnOLv+TBs7ppQhHC8a2ww066kGXrA==
+X-ME-Sender: <xms:_OH1XmLUgmRA1Xq6DoxrmlOByxzNEq3UBN7oMZ16FcpA3ZQV0PcKgA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeluddggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
+    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvg
+    hrnhepjeffheduvddvvdelhfegleelfffgieejvdehgfeijedtieeuteejteefueekjeeg
+    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:_OH1XuKV0mSX0BJlu-32CP0Soe9zFpnugVKqmTgdMzRHq_9w275AIQ>
+    <xmx:_OH1Xms1C0BmnVZ7T-S0WY2ezvk633o06bcCrtCNITvmT6e_wQ77ww>
+    <xmx:_OH1XrZMS6QC1YgYVMWNCtmHKyPbr0oZNnxYF3b-a9L4rbaiamb4SA>
+    <xmx:_eH1XrNObuWi9_dmVC7cV0ksB4fd3R1LxJcQQjkbPtg6C-Zd66pL9g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3BC25328005E;
+        Fri, 26 Jun 2020 07:54:36 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware binding
+Date:   Fri, 26 Jun 2020 13:54:33 +0200
+Message-Id: <20200626115433.125735-1-maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626045450.10205-3-pawell@cadence.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- suspectscore=2 mlxlogscore=858 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006260084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2 phishscore=0
- malwarescore=0 cotscore=-2147483648 adultscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1011 mlxscore=0 mlxlogscore=872 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006260084
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 06:54:47AM +0200, Pawel Laszczak wrote:
-> +static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
-> +{
-> +	struct pci_dev *func;
-> +
-> +	/*
-> +	 * Gets the second function.
-> +	 * It's little tricky, but this platform has two function.
-> +	 * The fist keeps resources for Host/Device while the second
-> +	 * keeps resources for DRD/OTG.
-> +	 */
-> +	func = pci_get_device(pdev->vendor, pdev->device, NULL);
-> +	if (unlikely(!func))
+The RaspberryPi firmware binding uses two compatible, include simple-bus.
+The select statement generated by default will thus select any node that
+has simple-bus, not all of them being the raspberrypi firmware node.
 
-Delete all likely/unlikely annotations.  Likely and unlikely annotations
-make the code less readable.  We are willing to sacrifice readability on
-fast paths.
+This results in warnings being wrongfully reported. Let's add a custom
+select statement to fix that.
 
-They're only supposed to be used where they're supported by benchmarking.
-Probably it's pretty tricky to benchmark probe.  The other rule of thumb
-is don't add them to drivers.  Another thing to consider is that this
-error path is probably obvious enough for the compiler to figure out
-without help.
+Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML")
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-> +		return NULL;
-> +
-> +	if (func->devfn == pdev->devfn) {
-> +		func = pci_get_device(pdev->vendor, pdev->device, func);
-> +		if (unlikely(!func))
-> +			return NULL;
-> +	}
-> +
-> +	return func;
-> +}
-> +
-> +static int cdnsp_pci_probe(struct pci_dev *pdev,
-> +			   const struct pci_device_id *id)
-> +{
-> +	struct platform_device_info plat_info;
-> +	struct cdnsp_wrap *wrap;
-> +	struct resource *res;
-> +	struct pci_dev *func;
-> +	int err;
-> +
-> +	/*
-> +	 * For GADGET/HOST PCI (devfn) function number is 0,
-> +	 * for OTG PCI (devfn) function number is 1.
-> +	 */
-> +	if (!id || (pdev->devfn != PCI_DEV_FN_HOST_DEVICE &&
-> +		    pdev->devfn != PCI_DEV_FN_OTG))
-> +		return -EINVAL;
-> +
-> +	func = cdnsp_get_second_fun(pdev);
-> +	if (unlikely(!func))
-> +		return -EINVAL;
-> +
-> +	if (func->class == PCI_CLASS_SERIAL_USB_XHCI ||
-> +	    pdev->class == PCI_CLASS_SERIAL_USB_XHCI)
-> +		return -EINVAL;
+---
 
+The original binding has been merged through the clock tree, so it should
+be merged there.
 
-Do we need call pci_put_device(func) before returning?
+Even though the original binding (and the DT) are using the simple-bus
+compatible, this creates some DTC warnings since the firmware really isn't
+a bus, so the node name doesn't match what a bus should have, none of the
+children have a reg property, #address-cells and #size-cells are missing,
+etc.
 
-		ret = -EINVAL;
-		goto put_pci;
+I can only guess that simple-bus was used to make the sub-devices probe,
+but maybe simple-mfd would be more appropriate here?
+---
+ .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml   | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> +
-> +	err = pcim_enable_device(pdev);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Enabling PCI device has failed %d\n", err);
-> +		return err;
-
-		goto put_pci;
-
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +
-> +	if (pci_is_enabled(func)) {
-> +		wrap = pci_get_drvdata(func);
-> +	} else {
-> +		wrap = kzalloc(sizeof(*wrap), GFP_KERNEL);
-> +		if (!wrap) {
-> +			pci_disable_device(pdev);
-> +			return -ENOMEM;
-
-goto disable_pci;
-
-> +		}
-> +	}
-> +
-> +	res = wrap->dev_res;
-> +
-> +	/* For GADGET device function number is 0. */
-> +	if (pdev->devfn == 0) {
-> +		/* Function 0: host(BAR_0) + device(BAR_1).*/
-> +		dev_dbg(&pdev->dev, "Initialize Device resources\n");
-> +		res[RES_DEV_ID].start = pci_resource_start(pdev, PCI_BAR_DEV);
-> +		res[RES_DEV_ID].end =   pci_resource_end(pdev, PCI_BAR_DEV);
-> +		res[RES_DEV_ID].name = "dev";
-> +		res[RES_DEV_ID].flags = IORESOURCE_MEM;
-> +		dev_dbg(&pdev->dev, "USBSS-DEV physical base addr: %pa\n",
-> +			&res[RES_DEV_ID].start);
-> +
-> +		res[RES_HOST_ID].start = pci_resource_start(pdev, PCI_BAR_HOST);
-> +		res[RES_HOST_ID].end = pci_resource_end(pdev, PCI_BAR_HOST);
-> +		res[RES_HOST_ID].name = "xhci";
-> +		res[RES_HOST_ID].flags = IORESOURCE_MEM;
-> +		dev_dbg(&pdev->dev, "USBSS-XHCI physical base addr: %pa\n",
-> +			&res[RES_HOST_ID].start);
-> +
-> +		/* Interrupt for XHCI, */
-> +		wrap->dev_res[RES_IRQ_HOST_ID].start = pdev->irq;
-> +		wrap->dev_res[RES_IRQ_HOST_ID].name = "host";
-> +		wrap->dev_res[RES_IRQ_HOST_ID].flags = IORESOURCE_IRQ;
-> +
-> +		/* Interrupt device. It's the same as for HOST. */
-> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].start = pdev->irq;
-> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].name = "peripheral";
-> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].flags = IORESOURCE_IRQ;
-> +	} else {
-> +		res[RES_DRD_ID].start = pci_resource_start(pdev, PCI_BAR_OTG);
-> +		res[RES_DRD_ID].end =   pci_resource_end(pdev, PCI_BAR_OTG);
-> +		res[RES_DRD_ID].name = "otg";
-> +		res[RES_DRD_ID].flags = IORESOURCE_MEM;
-> +		dev_dbg(&pdev->dev, "CDNSP-DRD physical base addr: %pa\n",
-> +			&res[RES_DRD_ID].start);
-> +
-> +		/* Interrupt for OTG/DRD. */
-> +		wrap->dev_res[RES_IRQ_OTG_ID].start = pdev->irq;
-> +		wrap->dev_res[RES_IRQ_OTG_ID].name = "otg";
-> +		wrap->dev_res[RES_IRQ_OTG_ID].flags = IORESOURCE_IRQ;
-> +	}
-> +
-> +	if (pci_is_enabled(func)) {
-> +		/* Set up platform device info. */
-> +		memset(&plat_info, 0, sizeof(plat_info));
-> +		plat_info.parent = &pdev->dev;
-> +		plat_info.fwnode = pdev->dev.fwnode;
-> +		plat_info.name = PLAT_DRIVER_NAME;
-> +		plat_info.id = pdev->devfn;
-> +		wrap->devfn  = pdev->devfn;
-> +		plat_info.res = wrap->dev_res;
-> +		plat_info.num_res = ARRAY_SIZE(wrap->dev_res);
-> +		plat_info.dma_mask = pdev->dma_mask;
-> +		/* Register platform device. */
-> +		wrap->plat_dev = platform_device_register_full(&plat_info);
-> +		if (IS_ERR(wrap->plat_dev)) {
-> +			pci_disable_device(pdev);
-> +			err = PTR_ERR(wrap->plat_dev);
-> +			kfree(wrap);
-
-		err = PTR_ERR(wrap->plat_dev);
-		goto free_wrap;
-
-Except, do we really want to kfree(wrap)?  It looks like it came from
-pci_get_drvdata().
-
-> +			return err;
-> +		}
-> +	}
-> +
-> +	pci_set_drvdata(pdev, wrap);
-> +	return err;
-
-free_wrap:
-	if (!pci_is_enabled(func))
-		kfree(wrap);
-disable_pci:
-	pci_disable_device(pdev);
-put_pci:
-	pci_put_device(func);
-
-> +}
-> +
-> +static void cdnsp_pci_remove(struct pci_dev *pdev)
-> +{
-> +	struct cdnsp_wrap *wrap;
-> +	struct pci_dev *func;
-> +
-> +	func = cdnsp_get_second_fun(pdev);
-> +
-> +	wrap = (struct cdnsp_wrap *)pci_get_drvdata(pdev);
-> +	if (wrap->devfn == pdev->devfn)
-> +		platform_device_unregister(wrap->plat_dev);
-> +
-> +	if (!pci_is_enabled(func))
-> +		kfree(wrap);
-
-pci_put_device(func);
-
-> +}
-> +
-
-regards,
-dan carpenter
+diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+index b48ed875eb8e..17e4f20c8d39 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
++++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+@@ -10,6 +10,15 @@ maintainers:
+   - Eric Anholt <eric@anholt.net>
+   - Stefan Wahren <wahrenst@gmx.net>
+ 
++select:
++  properties:
++    compatible:
++      contains:
++        const: raspberrypi,bcm2835-firmware
++
++  required:
++    - compatible
++
+ properties:
+   compatible:
+     items:
+-- 
+2.26.2
 
