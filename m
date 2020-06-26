@@ -2,101 +2,104 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54502C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71F0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349342075D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qctEqQmx"
+	by mail.kernel.org (Postfix) with ESMTP id 9ACB22075D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593202033;
+	bh=4oOD88XtGZC/uNbNT6wOOaDIgm3VB5umJpU7EFUTnZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SgZ81EO9H+K3eG7i+X4/Qtr6oZZcA1I+ZmQCi/uqk+IzafFuDDssMEDbwJUJc/Ibi
+	 eo3zKIu9sw3HO/I/hcnOWT6ezu4H85LIRWOYkbbcnCZmWKP0YpjQEot+q+d8OOXA3a
+	 rUGnxnZ70xv8MElfG+v81daCjXw9Karb0S1PvlWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgFZUBj (ORCPT
+        id S1725823AbgFZUHN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:01:39 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:46131 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725806AbgFZUBi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 16:01:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593201698; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=CCDJosHB5mbNTbda0xIOZV8MFSOhmNJXwZyaB7uwS4I=; b=qctEqQmxGsnPhz6rLJFL9AMh8F3fdHhTHJhacfFgJ4Q1xiVHzBFfpl21nwdTx9WOXr2tqVS5
- PYMEV/FPpFNGFr6cXK9omEPLq0VqiuUV1JRbNbQL788SKCk3h+9R9EdLqy6enNRCc4F8+4Vw
- hb8IDRCUxtANaOTOsOu1aSdCSGI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5ef653f56bebe35deb38d4f4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 20:00:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 21A3CC433A1; Fri, 26 Jun 2020 20:00:53 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 26 Jun 2020 16:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgFZUHM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 16:07:12 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16C2FC433CB;
-        Fri, 26 Jun 2020 20:00:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16C2FC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 3/7] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-Date:   Fri, 26 Jun 2020 14:00:37 -0600
-Message-Id: <20200626200042.13713-4-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200626200042.13713-1-jcrouse@codeaurora.org>
-References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 058C8206C3;
+        Fri, 26 Jun 2020 20:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593202032;
+        bh=4oOD88XtGZC/uNbNT6wOOaDIgm3VB5umJpU7EFUTnZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=obzLXtBTVJJGSeD0cbiCHxDtXmWB/hH2sZPMR14C2iGv+nabdMnUhC/p+gsX3vzpb
+         DRB7pEDj2buzXO6nXa8YiLcW4x6TMxuNaz7hDeb1bYxuyZ6m4QyyrLWFTEgVH8/cAk
+         1O3qQ4wXoWWBgv7oVCTJoTnL+YCkuF4EttpdzthU=
+Date:   Fri, 26 Jun 2020 16:07:10 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Pavel Machek <pavel@denx.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
+ the dma_transfer callback
+Message-ID: <20200626200710.GK1931@sasha-vm>
+References: <20200619141648.840376470@linuxfoundation.org>
+ <20200619141657.498868116@linuxfoundation.org>
+ <20200619210719.GB12233@amd>
+ <20200622205121.4xuki7guyj6u5yul@mobilestation>
+ <20200626151800.GA22242@maple.netwinder.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200626151800.GA22242@maple.netwinder.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-devices depend on unique features such as split pagetables,
-different stall/halt requirements and other settings. Identify them
-with a compatible string so that they can be identified in the
-arm-smmu implementation specific code.
+On Fri, Jun 26, 2020 at 11:18:00AM -0400, Ralph Siemsen wrote:
+>Hi Serge, Pavel, Greg,
+>
+>On Mon, Jun 22, 2020 at 11:51:21PM +0300, Serge Semin wrote:
+>>Hello Pavel
+>>
+>>On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
+>>
+>>>Mainline patch simply changes return value, but code is different in
+>>>v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
+>>>that a problem?
+>>
+>>Actually no.) In that old 4.19 context it's even better to return straight away
+>>no matter what value is returned by the dma_transfer() callback.
+>
+>This patch changes the return dma_transfer return value from 0 to 1, 
+>however it was only done in spi-dw-mid.c func mid_spi_dma_transfer().
+>
+>There is an identical function in spi-dw-mmio.c that needs the same 
+>treatment, otherwise access to the SPI device becomes erratic and even 
+>causes kernel to hang. Guess how I found this ;-)
+>
+>So the following patch is needed as well, at least in 4.9 and 4.19, I 
+>did not check/test other versions. Mainline does not need this, since 
+>the code seems to have been refactored to avoid the duplication.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Could you add your signed-off-by tag please? :)
 
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index d7ceb4c34423..e52a1b146c97 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -38,6 +38,10 @@ properties:
-               - qcom,sc7180-smmu-500
-               - qcom,sdm845-smmu-500
-           - const: arm,mmu-500
-+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-+        items:
-+          - const: qcom,adreno-smmu
-+          - const: qcom,smmu-v2
-       - items:
-           - const: arm,mmu-500
-           - const: arm,smmu-v2
 -- 
-2.17.1
-
+Thanks,
+Sasha
