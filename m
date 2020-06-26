@@ -2,346 +2,283 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 10:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E0FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 11:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6E02070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 10:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4692082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 11:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jWTANmmP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yPARac3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgFZKVw (ORCPT
+        id S1728812AbgFZLlg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 06:21:52 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6124 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFZKTq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 06:19:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef5cb630002>; Fri, 26 Jun 2020 03:18:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 26 Jun 2020 03:19:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 26 Jun 2020 03:19:46 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 26 Jun
- 2020 10:19:36 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 26 Jun 2020 10:19:36 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ef5cbb60000>; Fri, 26 Jun 2020 03:19:36 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V4 3/7] phy: tegra: xusb: Add USB2 pad power control support for Tegra210
-Date:   Fri, 26 Jun 2020 15:48:58 +0530
-Message-ID: <1593166742-23592-4-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593166742-23592-1-git-send-email-nkristam@nvidia.com>
-References: <1593166742-23592-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 26 Jun 2020 07:41:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45386 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgFZLlf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 07:41:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QBcaLg154439;
+        Fri, 26 Jun 2020 11:41:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=PNI0Jua3x5q2I8Nlxm//VVHUGpNd4BRRAAm+pfIrA4c=;
+ b=yPARac3qPia0iakKOb8Q+t8Smaf2bfuyV5Sy4XtC1c9rDmD5dUOca6eyqh9l5AU6XaOC
+ vDZA1WKyCwOcLsCflUZQhbbZuQcHVfqcFWTb1fqE0jeS9kUeHT1cUmipz4nmNKaSEZd1
+ uhFswiUJd7Hhs39GXgDcRuU/m85GuOuAtv2D9AitjiISQPHPgsx/p1jb7eX4j68bOcXO
+ Xio+D9WGnNjUSi9wQYbwOg684Lda7n2Bqlo0iOo8BImjWiIoqxrBIaZ+abNy1byToqh7
+ 20A+k8x5FmZwltj8juaoWphve9YYPNhPyMG52ed9In5l0aby+Pj83LYjcIoaYhhiYwzD 3g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31wg3bg1x3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 11:41:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05QBcZvt037295;
+        Fri, 26 Jun 2020 11:41:11 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31uuraj4um-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Jun 2020 11:41:11 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05QBf7LN026222;
+        Fri, 26 Jun 2020 11:41:08 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 26 Jun 2020 11:41:06 +0000
+Date:   Fri, 26 Jun 2020 14:40:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Pawel Laszczak <pawell@cadence.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        balbi@kernel.org, devicetree@vger.kernel.org,
+        ben.dooks@codethink.co.uk, colin.king@canonical.com, rogerq@ti.com,
+        peter.chen@nxp.com, weiyongjun1@huawei.com, jpawar@cadence.com,
+        kurahul@cadene.com, sparmar@cadence.com
+Subject: Re: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
+Message-ID: <20200626114057.GD2571@kadam>
+References: <20200626045450.10205-1-pawell@cadence.com>
+ <20200626045450.10205-3-pawell@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593166691; bh=qcYXDQGYx54p7RNlEV6UUzbaDOLFDKbvPvSX/KwCTfw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=jWTANmmPmzXYRkGpmq1jxgVyLsf42saSRsmudNst3Dtxp5wcJAJHMyopjL1LQxRz9
-         Q7s8csf5mTa8mM0Y89925Tr+UoAXek8NoNTqOM+AerLIse7jvxMIJJ/zTWEDk5vjsx
-         LPD06oIvlRKlNmnErAW6cTNvUefPRTVpEy8gIvy11NK1XW1Fd7mASFfP8Sxgm9LYjB
-         L8/54Io4yskI9Yyb2Gj6vEA9ZTqTGUl3rVZr720km/UI10nmmp9i2+et8+h/DjmtNL
-         vuB2DRb2A48YGqn9E2go0q1UIrzBJH4JOGy7CucNdPUfoifHgkeIWH1Mpjnb/Q6ZaG
-         /BzCx5CJLSS5g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626045450.10205-3-pawell@cadence.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=2 mlxlogscore=858 adultscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006260084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9663 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2 phishscore=0
+ malwarescore=0 cotscore=-2147483648 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1011 mlxscore=0 mlxlogscore=872 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006260084
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add USB2 pad power on and off API's for TEgra210 and provide its control
-via soc ops. It can be used by operations like charger detect to power on
-and off USB2 pad if needed.
+On Fri, Jun 26, 2020 at 06:54:47AM +0200, Pawel Laszczak wrote:
+> +static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *func;
+> +
+> +	/*
+> +	 * Gets the second function.
+> +	 * It's little tricky, but this platform has two function.
+> +	 * The fist keeps resources for Host/Device while the second
+> +	 * keeps resources for DRD/OTG.
+> +	 */
+> +	func = pci_get_device(pdev->vendor, pdev->device, NULL);
+> +	if (unlikely(!func))
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4:
- - No changes
----
-V3:
- - Added Acked-by updates to commit message.
----
-V2:
- - Patch re-based.
----
- drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------------
- 1 file changed, 133 insertions(+), 57 deletions(-)
+Delete all likely/unlikely annotations.  Likely and unlikely annotations
+make the code less readable.  We are willing to sacrifice readability on
+fast paths.
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 66bd461..caf0890 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -994,6 +994,128 @@ static int tegra210_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
- 	return 0;
- }
- 
-+static void tegra210_usb2_bias_pad_power_on(struct tegra_xusb_usb2_pad *pad)
-+{
-+	struct tegra_xusb_padctl *padctl = pad->base.padctl;
-+	u32 value;
-+
-+	if (pad->enable++ > 0)
-+		return;
-+
-+	dev_dbg(padctl->dev, "power on BIAS PAD & USB2 tracking\n");
-+
-+	if (clk_prepare_enable(pad->clk))
-+		dev_warn(padctl->dev, "failed to enable BIAS PAD & USB2 tracking\n");
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
-+		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
-+		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
-+		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
-+	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
-+		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
-+		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
-+		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+	udelay(1);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL1_PD_TRK;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+
-+	udelay(50);
-+}
-+
-+static void tegra210_usb2_bias_pad_power_off(struct tegra_xusb_usb2_pad *pad)
-+{
-+	struct tegra_xusb_padctl *padctl = pad->base.padctl;
-+	u32 value;
-+
-+	if (WARN_ON(pad->enable == 0))
-+		return;
-+
-+	if (--pad->enable > 0)
-+		return;
-+
-+	dev_dbg(padctl->dev, "power off USB2 tracking\n");
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+	clk_disable_unprepare(pad->clk);
-+}
-+
-+/* must be called under padctl->lock */
-+void tegra210_usb2_pad_power_on(struct phy *phy)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
-+	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	unsigned int index = lane->index;
-+	u32 value;
-+
-+	if (!phy)
-+		return;
-+
-+	if (usb2->powered_on)
-+		return;
-+
-+	dev_info(padctl->dev, "power on UTMI pads %d\n", index);
-+
-+	tegra210_usb2_bias_pad_power_on(pad);
-+
-+	udelay(2);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+	value &= ~XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+	value &= ~XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+
-+	usb2->powered_on = true;
-+}
-+
-+/* must be called under padctl->lock */
-+void tegra210_usb2_pad_power_down(struct phy *phy)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
-+	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	unsigned int index = lane->index;
-+	u32 value;
-+
-+	if (!phy)
-+		return;
-+
-+	if (!usb2->powered_on)
-+		return;
-+
-+	dev_info(padctl->dev, "power down UTMI pad %d\n", index);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+	value |= XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+	value |= XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+
-+	udelay(2);
-+
-+	tegra210_usb2_bias_pad_power_off(pad);
-+	usb2->powered_on = false;
-+}
-+
- static int tegra210_usb2_phy_set_mode(struct phy *phy, enum phy_mode mode,
- 				      int submode)
- {
-@@ -1037,7 +1159,6 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
- 	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
--	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
- 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
- 	struct tegra210_xusb_padctl *priv;
- 	struct tegra_xusb_usb2_port *port;
-@@ -1053,6 +1174,8 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	priv = to_tegra210_xusb_padctl(padctl);
- 
-+	mutex_lock(&padctl->lock);
-+
- 	if (port->usb3_port_fake != -1) {
- 		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP);
- 		value &= ~XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP_MASK(
-@@ -1148,62 +1271,21 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	if (port->supply && port->mode == USB_DR_MODE_HOST) {
- 		err = regulator_enable(port->supply);
--		if (err)
-+		if (err) {
-+			mutex_unlock(&padctl->lock);
- 			return err;
-+		}
- 	}
- 
--	mutex_lock(&padctl->lock);
--
--	if (pad->enable > 0) {
--		pad->enable++;
--		mutex_unlock(&padctl->lock);
--		return 0;
--	}
--
--	err = clk_prepare_enable(pad->clk);
--	if (err)
--		goto disable_regulator;
-+	tegra210_usb2_pad_power_on(phy);
- 
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
--		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
--		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
--		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
--	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
--		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
--		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
--		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--
--	udelay(1);
--
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL1_PD_TRK;
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--
--	udelay(50);
--
--	clk_disable_unprepare(pad->clk);
--
--	pad->enable++;
- 	mutex_unlock(&padctl->lock);
--
- 	return 0;
--
--disable_regulator:
--	regulator_disable(port->supply);
--	mutex_unlock(&padctl->lock);
--	return err;
- }
- 
- static int tegra210_usb2_phy_power_off(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
--	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
- 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
- 	struct tegra_xusb_usb2_port *port;
- 	u32 value;
-@@ -1217,6 +1299,8 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
- 
- 	mutex_lock(&padctl->lock);
- 
-+	tegra210_usb2_pad_power_down(phy);
-+
- 	if (port->usb3_port_fake != -1) {
- 		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
- 		value |= XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN_EARLY(
-@@ -1243,18 +1327,8 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
- 		padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_MAP);
- 	}
- 
--	if (WARN_ON(pad->enable == 0))
--		goto out;
--
--	if (--pad->enable > 0)
--		goto out;
--
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--
--out:
- 	regulator_disable(port->supply);
-+
- 	mutex_unlock(&padctl->lock);
- 	return 0;
- }
-@@ -2215,6 +2289,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
- 	.hsic_set_idle = tegra210_hsic_set_idle,
- 	.vbus_override = tegra210_xusb_padctl_vbus_override,
- 	.utmi_port_reset = tegra210_utmi_port_reset,
-+	.utmi_pad_power_on = tegra210_usb2_pad_power_on,
-+	.utmi_pad_power_down = tegra210_usb2_pad_power_down,
- };
- 
- static const char * const tegra210_xusb_padctl_supply_names[] = {
--- 
-2.7.4
+They're only supposed to be used where they're supported by benchmarking.
+Probably it's pretty tricky to benchmark probe.  The other rule of thumb
+is don't add them to drivers.  Another thing to consider is that this
+error path is probably obvious enough for the compiler to figure out
+without help.
+
+> +		return NULL;
+> +
+> +	if (func->devfn == pdev->devfn) {
+> +		func = pci_get_device(pdev->vendor, pdev->device, func);
+> +		if (unlikely(!func))
+> +			return NULL;
+> +	}
+> +
+> +	return func;
+> +}
+> +
+> +static int cdnsp_pci_probe(struct pci_dev *pdev,
+> +			   const struct pci_device_id *id)
+> +{
+> +	struct platform_device_info plat_info;
+> +	struct cdnsp_wrap *wrap;
+> +	struct resource *res;
+> +	struct pci_dev *func;
+> +	int err;
+> +
+> +	/*
+> +	 * For GADGET/HOST PCI (devfn) function number is 0,
+> +	 * for OTG PCI (devfn) function number is 1.
+> +	 */
+> +	if (!id || (pdev->devfn != PCI_DEV_FN_HOST_DEVICE &&
+> +		    pdev->devfn != PCI_DEV_FN_OTG))
+> +		return -EINVAL;
+> +
+> +	func = cdnsp_get_second_fun(pdev);
+> +	if (unlikely(!func))
+> +		return -EINVAL;
+> +
+> +	if (func->class == PCI_CLASS_SERIAL_USB_XHCI ||
+> +	    pdev->class == PCI_CLASS_SERIAL_USB_XHCI)
+> +		return -EINVAL;
+
+
+Do we need call pci_put_device(func) before returning?
+
+		ret = -EINVAL;
+		goto put_pci;
+
+> +
+> +	err = pcim_enable_device(pdev);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Enabling PCI device has failed %d\n", err);
+> +		return err;
+
+		goto put_pci;
+
+> +	}
+> +
+> +	pci_set_master(pdev);
+> +
+> +	if (pci_is_enabled(func)) {
+> +		wrap = pci_get_drvdata(func);
+> +	} else {
+> +		wrap = kzalloc(sizeof(*wrap), GFP_KERNEL);
+> +		if (!wrap) {
+> +			pci_disable_device(pdev);
+> +			return -ENOMEM;
+
+goto disable_pci;
+
+> +		}
+> +	}
+> +
+> +	res = wrap->dev_res;
+> +
+> +	/* For GADGET device function number is 0. */
+> +	if (pdev->devfn == 0) {
+> +		/* Function 0: host(BAR_0) + device(BAR_1).*/
+> +		dev_dbg(&pdev->dev, "Initialize Device resources\n");
+> +		res[RES_DEV_ID].start = pci_resource_start(pdev, PCI_BAR_DEV);
+> +		res[RES_DEV_ID].end =   pci_resource_end(pdev, PCI_BAR_DEV);
+> +		res[RES_DEV_ID].name = "dev";
+> +		res[RES_DEV_ID].flags = IORESOURCE_MEM;
+> +		dev_dbg(&pdev->dev, "USBSS-DEV physical base addr: %pa\n",
+> +			&res[RES_DEV_ID].start);
+> +
+> +		res[RES_HOST_ID].start = pci_resource_start(pdev, PCI_BAR_HOST);
+> +		res[RES_HOST_ID].end = pci_resource_end(pdev, PCI_BAR_HOST);
+> +		res[RES_HOST_ID].name = "xhci";
+> +		res[RES_HOST_ID].flags = IORESOURCE_MEM;
+> +		dev_dbg(&pdev->dev, "USBSS-XHCI physical base addr: %pa\n",
+> +			&res[RES_HOST_ID].start);
+> +
+> +		/* Interrupt for XHCI, */
+> +		wrap->dev_res[RES_IRQ_HOST_ID].start = pdev->irq;
+> +		wrap->dev_res[RES_IRQ_HOST_ID].name = "host";
+> +		wrap->dev_res[RES_IRQ_HOST_ID].flags = IORESOURCE_IRQ;
+> +
+> +		/* Interrupt device. It's the same as for HOST. */
+> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].start = pdev->irq;
+> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].name = "peripheral";
+> +		wrap->dev_res[RES_IRQ_PERIPHERAL_ID].flags = IORESOURCE_IRQ;
+> +	} else {
+> +		res[RES_DRD_ID].start = pci_resource_start(pdev, PCI_BAR_OTG);
+> +		res[RES_DRD_ID].end =   pci_resource_end(pdev, PCI_BAR_OTG);
+> +		res[RES_DRD_ID].name = "otg";
+> +		res[RES_DRD_ID].flags = IORESOURCE_MEM;
+> +		dev_dbg(&pdev->dev, "CDNSP-DRD physical base addr: %pa\n",
+> +			&res[RES_DRD_ID].start);
+> +
+> +		/* Interrupt for OTG/DRD. */
+> +		wrap->dev_res[RES_IRQ_OTG_ID].start = pdev->irq;
+> +		wrap->dev_res[RES_IRQ_OTG_ID].name = "otg";
+> +		wrap->dev_res[RES_IRQ_OTG_ID].flags = IORESOURCE_IRQ;
+> +	}
+> +
+> +	if (pci_is_enabled(func)) {
+> +		/* Set up platform device info. */
+> +		memset(&plat_info, 0, sizeof(plat_info));
+> +		plat_info.parent = &pdev->dev;
+> +		plat_info.fwnode = pdev->dev.fwnode;
+> +		plat_info.name = PLAT_DRIVER_NAME;
+> +		plat_info.id = pdev->devfn;
+> +		wrap->devfn  = pdev->devfn;
+> +		plat_info.res = wrap->dev_res;
+> +		plat_info.num_res = ARRAY_SIZE(wrap->dev_res);
+> +		plat_info.dma_mask = pdev->dma_mask;
+> +		/* Register platform device. */
+> +		wrap->plat_dev = platform_device_register_full(&plat_info);
+> +		if (IS_ERR(wrap->plat_dev)) {
+> +			pci_disable_device(pdev);
+> +			err = PTR_ERR(wrap->plat_dev);
+> +			kfree(wrap);
+
+		err = PTR_ERR(wrap->plat_dev);
+		goto free_wrap;
+
+Except, do we really want to kfree(wrap)?  It looks like it came from
+pci_get_drvdata().
+
+> +			return err;
+> +		}
+> +	}
+> +
+> +	pci_set_drvdata(pdev, wrap);
+> +	return err;
+
+free_wrap:
+	if (!pci_is_enabled(func))
+		kfree(wrap);
+disable_pci:
+	pci_disable_device(pdev);
+put_pci:
+	pci_put_device(func);
+
+> +}
+> +
+> +static void cdnsp_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct cdnsp_wrap *wrap;
+> +	struct pci_dev *func;
+> +
+> +	func = cdnsp_get_second_fun(pdev);
+> +
+> +	wrap = (struct cdnsp_wrap *)pci_get_drvdata(pdev);
+> +	if (wrap->devfn == pdev->devfn)
+> +		platform_device_unregister(wrap->plat_dev);
+> +
+> +	if (!pci_is_enabled(func))
+> +		kfree(wrap);
+
+pci_put_device(func);
+
+> +}
+> +
+
+regards,
+dan carpenter
 
