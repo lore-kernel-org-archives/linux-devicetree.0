@@ -8,173 +8,465 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7120AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3F5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0D8207E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACE5207E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 17:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHRpd4Mb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqoR27vq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgFZRLs (ORCPT
+        id S1728204AbgFZRLz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 13:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40220 "EHLO
+        Fri, 26 Jun 2020 13:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgFZRLr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 13:11:47 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C51C03E979;
-        Fri, 26 Jun 2020 10:11:46 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id mb16so10094426ejb.4;
-        Fri, 26 Jun 2020 10:11:46 -0700 (PDT)
+        with ESMTP id S1726703AbgFZRLy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 13:11:54 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0472C03E979;
+        Fri, 26 Jun 2020 10:11:53 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id mb16so10094717ejb.4;
+        Fri, 26 Jun 2020 10:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+40XDJbw+StGlJA1zNKKYqmZiKVm2eKwU1ONQSr4ocg=;
-        b=VHRpd4MbBiV7OHi5VN6L6EEXEdVd3CU9HuPEvDxJdobPfdNpJY9Cf//Uc1o9pxaVkU
-         R2i37ViygDoXUNMvLnIM+iweH+aHjFi/sCc7Mn5WzJxnyVVx1Uli1yNtFvT9hiGoLRB+
-         xBC7nrcHKXJpmQosHTf9ZiHjkHz1e4iz9QEs3pPmACaQMryrrOQfJiHt0JmcYAW/9xwn
-         d3QFk4qToTqQ3ixkl5GSFslHGCYJtDesxL9TKeBQriVWYPpa1Q0MjHtBpCyo48Vl3VeV
-         NmpwZfujleMt+lYl/8V+VLXdlFTiZULKEHXH5EJv4VFyPOvPokz1KLv+i8XeB1S/mdsC
-         Gs+A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=26eXBaPn8+CjtQ5/xYI/7W0zfmNG6Rv/dUzuyKJer74=;
+        b=eqoR27vq/5aFYykRjlMO/Wjw8VzfKSQlZUCIY00OcGKSa/OqbuiLI+gDtZBdjhP3jR
+         p4xnK4sR5dUnuAjO2hLv0M+OgGNRULr79q6O7eR4VlqXZudTtPK3jy0g/yA66Llvtxsz
+         oXzxSJ8Nv2z+RqNAqHkMGSJ2VAfNlHlgwTs5khoif2ekIOOsszN2Uh2y9vrurEDaFCsl
+         8NdPh89PcRzz4dRnxUMKR8xpklKWFbBdj+nMZTVjo/ZVZlkfBt4Iz/ewMOU5tXOUZBtM
+         5+kYN/YpWZdmI9L3Ac1FDyJ54WJ/xf1KM/j1CarMiviKsqn4keyQM3AsQ2z0iAoHJKwg
+         vBng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+40XDJbw+StGlJA1zNKKYqmZiKVm2eKwU1ONQSr4ocg=;
-        b=UtiTe4BnTx7y/zWrb72PcT+bUm2l0A8qXnvIWu6QX4+2XLWYc5frEDCMbqPus8FM91
-         wESEotXbxH6dN4vAi6lX9WgDa4+JoJe9xcBrWGzKle+FGyC7J1TnYsdkkHnLVjwmb2Cn
-         raFJmJA87UPPODigX1uAdW7ti3335RNuhOcEJmSLouUsSktXa0ek2tzVp99AvTwS5Jcf
-         ghDxlKI7EtZONAmGbPBo+wiQih/znwbwUvQKj3enUjHHlRXYapQc0dt4xXoQwm5kzHHu
-         GJteaXsjJSwl/pCNuN01eTiaTjNRMMhRyBHKvN3E5xQ5n9AIItDM43m91U+v/r2SOM2L
-         WW5g==
-X-Gm-Message-State: AOAM530rADY2XKPQtBWX4hAIFkd6MiFMhxQZxZoqU1YKPD5vt7/k9vW4
-        9OI1vTgzfxY2higoMGT9/Jo=
-X-Google-Smtp-Source: ABdhPJxI56uQp+gQHIH6y++59fDJ0DV8Nv3kMaRmkz0WKG6/Gz9IdA074FrG0pdwdx4AlR2HxWn3DQ==
-X-Received: by 2002:a17:906:2e4b:: with SMTP id r11mr3388429eji.227.1593191505671;
-        Fri, 26 Jun 2020 10:11:45 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id e3sm137418edm.14.2020.06.26.10.11.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 10:11:45 -0700 (PDT)
-Subject: Re: [RFC PATCH 9/9] dt-bindings: net: dsa: Add documentation for
- Hellcreek switches
-To:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-References: <20200618064029.32168-1-kurt@linutronix.de>
- <20200618064029.32168-10-kurt@linutronix.de>
- <e8085c6a-0b61-60f9-f411-2540dec80926@gmail.com> <87wo43phk0.fsf@kurt>
- <87ftantiex.fsf@kurt>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <449f0a03-a91d-ae82-b31f-59dfd1457ec5@gmail.com>
-Date:   Fri, 26 Jun 2020 10:11:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=26eXBaPn8+CjtQ5/xYI/7W0zfmNG6Rv/dUzuyKJer74=;
+        b=So/ghd3aR+E0nCzzlc4EZj81uRsgyBRjnbSlowePfuUFvZy5mQW+EkW4unyq6opI1X
+         fQlePVbj4BLeDA3nKsizbX0N7mNtQ74sv+v/98ziwSOZIS7SC0CgrHyb5ikxI7SUeqEO
+         GmWektc2ceCoHb2mIRrCYq+b9E206hUrowNoVSG1OBSiVthOA3ycE07cGBdop+iUjywb
+         a+jQhwCM2SIQzA59UWRYFH8OJUjNP2KwpRGJgnZ0gn6TG+V/N6u6VBKu4FtsRVLvmC/Y
+         UhXdpF4cCPkQXQV3rmHo+kYKUuRGCrCl7X2lW2DsKLN6KfKJP26tXEn5cpaTeUuOiolw
+         f8rQ==
+X-Gm-Message-State: AOAM53223+NF5iamWBgRbZuBctGKcMNJ4cweMq1nIgmQdvTrEyhCAMmO
+        5leyKx0WQgZji9XIoG/tXZQ=
+X-Google-Smtp-Source: ABdhPJxaA1u/dYKG+/IkKradjhnoaNBiAzELxQpPILdz8HUYR6MNxF1b8GD3/I3+eXhRI8Rn4pyWvw==
+X-Received: by 2002:a17:906:284e:: with SMTP id s14mr2265378ejc.498.1593191512303;
+        Fri, 26 Jun 2020 10:11:52 -0700 (PDT)
+Received: from BV030612LT ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id ay27sm816334edb.81.2020.06.26.10.11.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Jun 2020 10:11:51 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 20:11:48 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 2/3] pinctrl: actions: Add Actions S500 pinctrl driver
+Message-ID: <20200626171148.GD6611@BV030612LT>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+ <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
+ <20200626142941.GE8333@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <87ftantiex.fsf@kurt>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626142941.GE8333@Mani-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/22/20 5:05 AM, Kurt Kanzenbach wrote:
-> On Fri Jun 19 2020, Kurt Kanzenbach wrote:
->> On Thu Jun 18 2020, Florian Fainelli wrote:
->>> On 6/17/2020 11:40 PM, Kurt Kanzenbach wrote:
->>>> Add basic documentation and example.
->>>>
->>>> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
->>>> ---
->>>>  .../devicetree/bindings/net/dsa/hellcreek.txt | 72 +++++++++++++++++++
->>>>  1 file changed, 72 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.txt b/Documentation/devicetree/bindings/net/dsa/hellcreek.txt
->>>> new file mode 100644
->>>> index 000000000000..9ea6494dc554
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.txt
->>>
->>> This should be a YAML binding and we should also convert the DSA binding
->>> to YAML one day.
->>
->> OK.
+On Fri, Jun 26, 2020 at 07:59:41PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Jun 25, 2020 at 11:16:19PM +0300, Cristian Ciocaltea wrote:
+> > Add pinctrl and gpio driver for Actions Semi S500 SoC.
+> > 
+> > The driver supports pinctrl, pinmux, pinconf, gpio and interrupt
+> > functions using a set of registers shared between gpio and pinctrl.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > ---
+> >  drivers/pinctrl/actions/Kconfig        |    6 +
+> >  drivers/pinctrl/actions/Makefile       |    1 +
+> >  drivers/pinctrl/actions/pinctrl-s500.c | 1727 ++++++++++++++++++++++++
+> >  3 files changed, 1734 insertions(+)
+> >  create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
+> > 
+> > diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
+> > index 966f1c2c89d6..a1d16e8280e5 100644
+> > --- a/drivers/pinctrl/actions/Kconfig
+> > +++ b/drivers/pinctrl/actions/Kconfig
+> > @@ -10,6 +10,12 @@ config PINCTRL_OWL
+> >  	help
+> >  	  Say Y here to enable Actions Semi OWL pinctrl driver
+> >  
+> > +config PINCTRL_S500
+> > +	bool "Actions Semi S500 pinctrl driver"
+> > +	depends on PINCTRL_OWL
+> > +	help
+> > +	  Say Y here to enable Actions Semi S500 pinctrl driver
+> > +
+> >  config PINCTRL_S700
+> >  	bool "Actions Semi S700 pinctrl driver"
+> >  	depends on PINCTRL_OWL
+> > diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
+> > index 61aa9107a43a..b9e2c527c9d3 100644
+> > --- a/drivers/pinctrl/actions/Makefile
+> > +++ b/drivers/pinctrl/actions/Makefile
+> > @@ -1,4 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> >  obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
+> > +obj-$(CONFIG_PINCTRL_S500) 	+= pinctrl-s500.o
+> >  obj-$(CONFIG_PINCTRL_S700) 	+= pinctrl-s700.o
+> >  obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
+> > diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
+> > new file mode 100644
+> > index 000000000000..38e30914af6e
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/actions/pinctrl-s500.c
+> > @@ -0,0 +1,1727 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Actions Semi S500 SoC Pinctrl driver
+> > + *
+> > + * Copyright (c) 2014 Actions Semi Inc.
+> > + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pinctrl/pinconf-generic.h>
+> > +#include <linux/pinctrl/pinctrl.h>
+> > +#include "pinctrl-owl.h"
+> > +
+> > +/* Pinctrl registers offset */
+> > +#define MFCTL0			(0x0040)
+> > +#define MFCTL1			(0x0044)
+> > +#define MFCTL2			(0x0048)
+> > +#define MFCTL3			(0x004C)
+> > +#define PAD_PULLCTL0		(0x0060)
+> > +#define PAD_PULLCTL1		(0x0064)
+> > +#define PAD_PULLCTL2		(0x0068)
+> > +#define PAD_ST0			(0x006C)
+> > +#define PAD_ST1			(0x0070)
+> > +#define PAD_CTL			(0x0074)
+> > +#define PAD_DRV0		(0x0080)
+> > +#define PAD_DRV1		(0x0084)
+> > +#define PAD_DRV2		(0x0088)
+> > +
+> > +#define _GPIOA(offset)		(offset)
+> > +#define _GPIOB(offset)		(32 + (offset))
+> > +#define _GPIOC(offset)		(64 + (offset))
+> > +#define _GPIOD(offset)		(96 + (offset))
+> > +#define _GPIOE(offset)		(128 + (offset))
+> > +
+> > +#define NUM_GPIOS		(_GPIOE(3) + 1)
+> > +#define _PIN(offset)		(NUM_GPIOS + (offset))
+> > +
+> > +#define DNAND_DQS		_GPIOA(12)
+> > +#define DNAND_DQSN		_GPIOA(13)
+> > +#define ETH_TXD0		_GPIOA(14)
+> > +#define ETH_TXD1		_GPIOA(15)
+> > +#define ETH_TXEN		_GPIOA(16)
+> > +#define ETH_RXER		_GPIOA(17)
+> > +#define ETH_CRS_DV		_GPIOA(18)
+> > +#define ETH_RXD1		_GPIOA(19)
+> > +#define ETH_RXD0		_GPIOA(20)
+> > +#define ETH_REF_CLK		_GPIOA(21)
+> > +#define ETH_MDC			_GPIOA(22)
+> > +#define ETH_MDIO		_GPIOA(23)
+> > +#define SIRQ0			_GPIOA(24)
+> > +#define SIRQ1			_GPIOA(25)
+> > +#define SIRQ2			_GPIOA(26)
+> > +#define I2S_D0			_GPIOA(27)
+> > +#define I2S_BCLK0		_GPIOA(28)
+> > +#define I2S_LRCLK0		_GPIOA(29)
+> > +#define I2S_MCLK0		_GPIOA(30)
+> > +#define I2S_D1			_GPIOA(31)
+> > +
+> > +#define I2S_BCLK1		_GPIOB(0)
+> > +#define I2S_LRCLK1		_GPIOB(1)
+> > +#define I2S_MCLK1		_GPIOB(2)
+> > +#define KS_IN0			_GPIOB(3)
+> > +#define KS_IN1			_GPIOB(4)
+> > +#define KS_IN2			_GPIOB(5)
+> > +#define KS_IN3			_GPIOB(6)
+> > +#define KS_OUT0			_GPIOB(7)
+> > +#define KS_OUT1			_GPIOB(8)
+> > +#define KS_OUT2			_GPIOB(9)
+> > +#define LVDS_OEP		_GPIOB(10)
+> > +#define LVDS_OEN		_GPIOB(11)
+> > +#define LVDS_ODP		_GPIOB(12)
+> > +#define LVDS_ODN		_GPIOB(13)
+> > +#define LVDS_OCP		_GPIOB(14)
+> > +#define LVDS_OCN		_GPIOB(15)
+> > +#define LVDS_OBP		_GPIOB(16)
+> > +#define LVDS_OBN		_GPIOB(17)
+> > +#define LVDS_OAP		_GPIOB(18)
+> > +#define LVDS_OAN		_GPIOB(19)
+> > +#define LVDS_EEP		_GPIOB(20)
+> > +#define LVDS_EEN		_GPIOB(21)
+> > +#define LVDS_EDP		_GPIOB(22)
+> > +#define LVDS_EDN		_GPIOB(23)
+> > +#define LVDS_ECP		_GPIOB(24)
+> > +#define LVDS_ECN		_GPIOB(25)
+> > +#define LVDS_EBP		_GPIOB(26)
+> > +#define LVDS_EBN		_GPIOB(27)
+> > +#define LVDS_EAP		_GPIOB(28)
+> > +#define LVDS_EAN		_GPIOB(29)
+> > +#define LCD0_D18		_GPIOB(30)
+> > +#define LCD0_D17		_GPIOB(31)
+> > +
+> > +#define DSI_DP3			_GPIOC(0)
+> > +#define DSI_DN3			_GPIOC(1)
+> > +#define DSI_DP1			_GPIOC(2)
+> > +#define DSI_DN1			_GPIOC(3)
+> > +#define DSI_CP			_GPIOC(4)
+> > +#define DSI_CN			_GPIOC(5)
+> > +#define DSI_DP0			_GPIOC(6)
+> > +#define DSI_DN0			_GPIOC(7)
+> > +#define DSI_DP2			_GPIOC(8)
+> > +#define DSI_DN2			_GPIOC(9)
+> > +#define SD0_D0			_GPIOC(10)
+> > +#define SD0_D1			_GPIOC(11)
+> > +#define SD0_D2			_GPIOC(12)
+> > +#define SD0_D3			_GPIOC(13)
+> > +#define SD1_D0			_GPIOC(14) /* SD0_D4 */
+> > +#define SD1_D1			_GPIOC(15) /* SD0_D5 */
+> > +#define SD1_D2			_GPIOC(16) /* SD0_D6 */
+> > +#define SD1_D3			_GPIOC(17) /* SD0_D7 */
+> > +#define SD0_CMD			_GPIOC(18)
+> > +#define SD0_CLK			_GPIOC(19)
+> > +#define SD1_CMD			_GPIOC(20)
+> > +#define SD1_CLK			_GPIOC(21)
+> > +#define SPI0_SCLK		_GPIOC(22)
+> > +#define SPI0_SS			_GPIOC(23)
+> > +#define SPI0_MISO		_GPIOC(24)
+> > +#define SPI0_MOSI		_GPIOC(25)
+> > +#define UART0_RX		_GPIOC(26)
+> > +#define UART0_TX		_GPIOC(27)
+> > +#define I2C0_SCLK		_GPIOC(28)
+> > +#define I2C0_SDATA		_GPIOC(29)
+> > +#define SENSOR0_PCLK		_GPIOC(31)
+> > +
+> > +#define SENSOR0_CKOUT		_GPIOD(10)
+> > +#define DNAND_ALE		_GPIOD(12)
+> > +#define DNAND_CLE		_GPIOD(13)
+> > +#define DNAND_CEB0		_GPIOD(14)
+> > +#define DNAND_CEB1		_GPIOD(15)
+> > +#define DNAND_CEB2		_GPIOD(16)
+> > +#define DNAND_CEB3		_GPIOD(17)
+> > +#define UART2_RX		_GPIOD(18)
+> > +#define UART2_TX		_GPIOD(19)
+> > +#define UART2_RTSB		_GPIOD(20)
+> > +#define UART2_CTSB		_GPIOD(21)
+> > +#define UART3_RX		_GPIOD(22)
+> > +#define UART3_TX		_GPIOD(23)
+> > +#define UART3_RTSB		_GPIOD(24)
+> > +#define UART3_CTSB		_GPIOD(25)
+> > +#define PCM1_IN			_GPIOD(28)
+> > +#define PCM1_CLK		_GPIOD(29)
+> > +#define PCM1_SYNC		_GPIOD(30)
+> > +#define PCM1_OUT		_GPIOD(31)
+> > +
+> > +#define I2C1_SCLK		_GPIOE(0)
+> > +#define I2C1_SDATA		_GPIOE(1)
+> > +#define I2C2_SCLK		_GPIOE(2)
+> > +#define I2C2_SDATA		_GPIOE(3)
+> > +
+> > +#define CSI_DN0			_PIN(0)
+> > +#define CSI_DP0			_PIN(1)
+> > +#define CSI_DN1			_PIN(2)
+> > +#define CSI_DP1			_PIN(3)
+> > +#define CSI_CN			_PIN(4)
+> > +#define CSI_CP			_PIN(5)
+> > +#define CSI_DN2			_PIN(6)
+> > +#define CSI_DP2			_PIN(7)
+> > +#define CSI_DN3			_PIN(8)
+> > +#define CSI_DP3			_PIN(9)
+> > +
+> > +#define DNAND_D0		_PIN(10)
+> > +#define DNAND_D1		_PIN(11)
+> > +#define DNAND_D2		_PIN(12)
+> > +#define DNAND_D3		_PIN(13)
+> > +#define DNAND_D4		_PIN(14)
+> > +#define DNAND_D5		_PIN(15)
+> > +#define DNAND_D6		_PIN(16)
+> > +#define DNAND_D7		_PIN(17)
+> > +#define DNAND_WRB		_PIN(18)
+> > +#define DNAND_RDB		_PIN(19)
+> > +#define DNAND_RDBN		_PIN(20)
+> > +#define DNAND_RB		_PIN(21)
+> > +
+> > +#define PORB			_PIN(22)
+> > +#define CLKO_25M		_PIN(23)
+> > +#define BSEL			_PIN(24)
+> > +#define PKG0			_PIN(25)
+> > +#define PKG1			_PIN(26)
+> > +#define PKG2			_PIN(27)
+> > +#define PKG3			_PIN(28)
+> > +
+> > +#define _FIRSTPAD		_GPIOA(0)
+> > +#define _LASTPAD		PKG3
+> > +#define NUM_PADS		(_PIN(28) + 1)
+> > +
 > 
-> I converted it into a YAML binding. Should I provide the dsa.yaml as
-> well? Otherwise I have to define the DSA properties such as dsa,member
-> in the hellcreek.yaml file.
+> [...]
+> 
+> > +static const struct owl_gpio_port s500_gpio_ports[] = {
+> > +	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x230, 0),
+> > +	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x1F8, 0x204, 0x208, 0x22C, 1),
+> > +	OWL_GPIO_PORT(C, 0x0018, 32, 0x0, 0x4, 0x8, 0x1EC, 0x200, 0x204, 0x228, 2),
+> > +	OWL_GPIO_PORT(D, 0x0024, 32, 0x0, 0x4, 0x8, 0x1E0, 0x1FC, 0x200, 0x224, 3),
+> > +	OWL_GPIO_PORT(E, 0x0030,  4, 0x0, 0x4, 0x8, 0x1D4, 0x1F8, 0x1FC, 0x220, 4),
+> 
+> Except PORT-A, rest of the offsets for ports seems to be wrong. From where did
+> you get these?
+> 
+> Thanks,
+> Mani
 
-If you have the generic DSA binding converted as YAML that would be
-highly welcome you can submit that separately from your patch series.
+I computed the offsets using the S500 Datasheet, v1.6 (2016-03-07).
 
-There are quite a few Device Tree sources in tree that can be used as a
-validation vector for dsa.yaml.
--- 
-Florian
+Below is an excerpt from chapter '30.4 Register List':
+
+-------+--------------
+Offset | Register Name
+-------+--------------
+0x000C | GPIO_BOUTEN
+0x0010 | GPIO_BINEN
+0x0014 | GPIO_BDAT
+...
+0x0204 | INTC_GPIOCTL
+0x0210 | INTC_GPIOB_PD
+0x0214 | INTC_GPIOB_MSK
+...
+0x0238 | INTC_GPIOB_TYPE0
+-------+--------------
+
+Hence, for PORT-B, I got the following values:
+
+OWL_GPIO_PORT(B,
+  0x000C, /* base = GPIO_BOUTEN = 0x000C */
+  32,
+  0x0,    /* GPIO_BOUTEN - base */
+  0x4,    /* GPIO_BINEN - base */
+  0x8,    /* GPIO_BDAT - base */
+  0x1F8,  /* INTC_GPIOCTL - base */
+  0x204,  /* INTC_GPIOB_PD - base */
+  0x208,  /* INTC_GPIOB_MSK - base */
+  0x22C,  /* INTC_GPIOB_TYPE0 - base */
+  1),
+
+Did I miss something?
+
+Thanks,
+Cristi
+
+> 
+> > +};
+> > +
+> > +enum s500_pinconf_pull {
+> > +	OWL_PINCONF_PULL_DOWN,
+> > +	OWL_PINCONF_PULL_UP,
+> > +};
+> > +
+> > +static int s500_pad_pinconf_arg2val(const struct owl_padinfo *info,
+> > +				    unsigned int param, u32 *arg)
+> > +{
+> > +	switch (param) {
+> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +		*arg = OWL_PINCONF_PULL_DOWN;
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_UP:
+> > +		*arg = OWL_PINCONF_PULL_UP;
+> > +		break;
+> > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> > +		*arg = (*arg >= 1 ? 1 : 0);
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int s500_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
+> > +				    unsigned int param, u32 *arg)
+> > +{
+> > +	switch (param) {
+> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_UP:
+> > +		*arg = *arg == OWL_PINCONF_PULL_UP;
+> > +		break;
+> > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> > +		*arg = *arg == 1;
+> > +		break;
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct owl_pinctrl_soc_data s500_pinctrl_data = {
+> > +	.padinfo = s500_padinfo,
+> > +	.pins = (const struct pinctrl_pin_desc *)s500_pads,
+> > +	.npins = ARRAY_SIZE(s500_pads),
+> > +	.functions = s500_functions,
+> > +	.nfunctions = ARRAY_SIZE(s500_functions),
+> > +	.groups = s500_groups,
+> > +	.ngroups = ARRAY_SIZE(s500_groups),
+> > +	.ngpios = NUM_GPIOS,
+> > +	.ports = s500_gpio_ports,
+> > +	.nports = ARRAY_SIZE(s500_gpio_ports),
+> > +	.padctl_arg2val = s500_pad_pinconf_arg2val,
+> > +	.padctl_val2arg = s500_pad_pinconf_val2arg,
+> > +};
+> > +
+> > +static int s500_pinctrl_probe(struct platform_device *pdev)
+> > +{
+> > +	return owl_pinctrl_probe(pdev, &s500_pinctrl_data);
+> > +}
+> > +
+> > +static const struct of_device_id s500_pinctrl_of_match[] = {
+> > +	{ .compatible = "actions,s500-pinctrl", },
+> > +	{ }
+> > +};
+> > +
+> > +static struct platform_driver s500_pinctrl_driver = {
+> > +	.driver = {
+> > +		.name = "pinctrl-s500",
+> > +		.of_match_table = of_match_ptr(s500_pinctrl_of_match),
+> > +	},
+> > +	.probe = s500_pinctrl_probe,
+> > +};
+> > +
+> > +static int __init s500_pinctrl_init(void)
+> > +{
+> > +	return platform_driver_register(&s500_pinctrl_driver);
+> > +}
+> > +arch_initcall(s500_pinctrl_init);
+> > +
+> > +static void __exit s500_pinctrl_exit(void)
+> > +{
+> > +	platform_driver_unregister(&s500_pinctrl_driver);
+> > +}
+> > +module_exit(s500_pinctrl_exit);
+> > +
+> > +MODULE_AUTHOR("Actions Semi Inc.");
+> > +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
+> > +MODULE_DESCRIPTION("Actions Semi S500 SoC Pinctrl Driver");
+> > +MODULE_LICENSE("GPL");
+> > -- 
+> > 2.27.0
+> > 
