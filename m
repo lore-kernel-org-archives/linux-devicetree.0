@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAABC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E320C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE98A2076E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6DF2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593158906;
-	bh=1fZMJ3y3iXanBoUJxpiehdkGjNQckPHcelxa/DFVciM=;
+	s=default; t=1593158946;
+	bh=Z7q74NuEg6nB5QogV/A6u8EleRsTeIsfiwDh1MnapBo=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wm9OINZi24k1ejVpydUcNayENhnSX1MGB0ob/PdyVLBh42SohBV7i+C+3bb874sau
-	 JTHdb9qHQAdZOi6yEgmTjIfn0bNnNAhjE5N4QKcAaqmBOwGTNI5SPyMq7k3A20bEs+
-	 y+t4xDT6AMvtVuFy1Ro+airOPZ8C5nLgCFcQIN5g=
+	b=UOBOM81aHHIJNCnD0xithkZLky0tgTtJsrgIZq/2vYFt31HXtFgetZ7HQ3zt0v2jf
+	 A3/ckjS1U2zGQd4ZItLQ4c3aDWbm2pXnghVgmSD+7FOoAEcxLBwdvhNa7YoDxe0nhu
+	 a0rvug88t/94PGMWMjQY08SzpSpP3G5X/UUMKf4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgFZIFw (ORCPT
+        id S1729295AbgFZIJE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:05:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 04:09:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbgFZIFw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:05:52 -0400
+        id S1728988AbgFZIFj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:05:39 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5151208C7;
-        Fri, 26 Jun 2020 08:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 822F82076E;
+        Fri, 26 Jun 2020 08:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593158752;
-        bh=1fZMJ3y3iXanBoUJxpiehdkGjNQckPHcelxa/DFVciM=;
+        s=default; t=1593158738;
+        bh=Z7q74NuEg6nB5QogV/A6u8EleRsTeIsfiwDh1MnapBo=;
         h=From:To:Cc:Subject:Date:From;
-        b=LI4nHCU9gWKR3R6AgIuCPrfqdNwDLAgeVWqMVwMUxZqJLdnfCRcRrCIbgpkALwjjn
-         ZCznLqwAMZdi+GaN8wTlaGARr1fbUeZ6S4ckwdYsmhhqD7easK7HHHfiVv0vaHPS0Y
-         x8Wo2agJ9JFMCBNaVnE8d1MmAJD6N/f5RuDctf2w=
+        b=Z7T8/W+7jmcl7OD7rBOY93skqQN2HWJoYlIbL9hHSMTStui+d0wxKqY7menS6jlD4
+         62amiFzRxaxh5o7ag+IhUO5/xam1oCDUmvWIQqxU38/PFkhIrNZZPKm6ha+6sMtv+7
+         mN2qqcav/YDBHhBSd+/JUfCXokahevctoKIAHiuk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH] ARM: dts: vf610: Align L2 cache-controller nodename with dtschema
-Date:   Fri, 26 Jun 2020 10:05:47 +0200
-Message-Id: <20200626080547.3569-1-krzk@kernel.org>
+Subject: [PATCH] ARM: dts: arm-realview: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 10:05:34 +0200
+Message-Id: <20200626080534.3400-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -58,26 +55,67 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Fix dtschema validator warnings like:
-    l2-cache@40006000: $nodename:0:
-        'l2-cache@40006000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+    l2-cache: $nodename:0: 'l2-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/vf610.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/arm-realview-eb-mp.dtsi | 2 +-
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pbx-a9.dts | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index 7fd39817f8ab..956182d08e74 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -10,7 +10,7 @@
- };
+diff --git a/arch/arm/boot/dts/arm-realview-eb-mp.dtsi b/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
+index 29b636fce23f..26783d053ac7 100644
+--- a/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
++++ b/arch/arm/boot/dts/arm-realview-eb-mp.dtsi
+@@ -59,7 +59,7 @@
+ 			interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
- &aips0 {
--	L2: l2-cache@40006000 {
-+	L2: cache-controller@40006000 {
+-		L2: l2-cache {
++		L2: cache-controller {
+ 			compatible = "arm,l220-cache";
+ 			reg = <0x1f002000 0x1000>;
+ 			interrupt-parent = <&intc>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index 2625ce66f8e7..f925782f8560 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -323,7 +323,7 @@
+ 			      <0x10120000 0x100>;
+ 		};
+ 
+-		L2: l2-cache {
++		L2: cache-controller {
+ 			compatible = "arm,l220-cache";
+ 			reg = <0x10110000 0x1000>;
+ 			interrupt-parent = <&intc_dc1176>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index c69cf7ddbe61..9748e0fe800f 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -92,7 +92,7 @@
+ 		      <0x1f000100 0x100>;
+ 	};
+ 
+-	L2: l2-cache {
++	L2: cache-controller {
+ 		compatible = "arm,l220-cache";
+ 		reg = <0x1f002000 0x1000>;
+ 		interrupt-parent = <&intc_tc11mp>;
+diff --git a/arch/arm/boot/dts/arm-realview-pbx-a9.dts b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+index 90d00b407f85..85d3968fbb91 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx-a9.dts
++++ b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+@@ -60,7 +60,7 @@
+ 		};
+ 	};
+ 
+-	L2: l2-cache {
++	L2: cache-controller {
  		compatible = "arm,pl310-cache";
- 		reg = <0x40006000 0x1000>;
+ 		reg = <0x1f002000 0x1000>;
  		cache-unified;
 -- 
 2.17.1
