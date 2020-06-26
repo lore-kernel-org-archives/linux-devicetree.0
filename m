@@ -2,197 +2,87 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71092C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5290BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4112070A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593205357;
-	bh=HEZBVtlHQxGYn7Bipu7rRk1VvjlZFYk1uNRxz+AhoJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c1qaXmFZeICDAPC49czc1gHhRArP/1yxRfwVbHEWVSqSXqehGC7csebZ48ZUTORmM
-	 eWfCfR+qh0SP2BWKHD/UIYeyDUzkbkAG8sipCVGLXfMAVOMXYHaTiV+CwwVo9VMQ/d
-	 NZXj/4yQg65Dwnu8Tf52XeTZ7fGDgf5hp6iK0XMI=
+	by mail.kernel.org (Postfix) with ESMTP id 1FEC8206C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:21:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSRN2jOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgFZVCg (ORCPT
+        id S1725832AbgFZVVy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:02:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44038 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgFZVCg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 17:02:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r18so5446699pgk.11;
-        Fri, 26 Jun 2020 14:02:36 -0700 (PDT)
+        Fri, 26 Jun 2020 17:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFZVVy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 17:21:54 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30E2C03E979;
+        Fri, 26 Jun 2020 14:21:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so5485200pgc.5;
+        Fri, 26 Jun 2020 14:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zKO0HF618ZHvLKGIwJNOq5Dl9WwME35XliCSQ1Uc5Ro=;
+        b=CSRN2jOn4g0YRarsVgt4RWGUl40iKy1BDylDXh4amhYCihwzANY+M48aV0pvxFyxzV
+         miyKNHZq60jSOZkqHqVLq6iMFA4OCmu/yVAZ/TpQ0FK5rN2/ynnbumNicgcaRK7G6gpM
+         KXxkiTa+WKx7CGdncYX+VbFJ3z68SDQKaV4WMBUeittBAYlPN+YOPPPugDXYN5IEzBe4
+         pIfSjBHFZpOIRr0QBa44b8ytsvht7FPoqNIik5Sb7/Y6gN01lpIceUbP4+vP5pC6KY/y
+         Lh9OH+pZAGSxeQaI848EYTmKO7fIaByOyMrPWkO5ddxYzHA8VqHysNJiLeekZUy+q8pQ
+         WO8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FPqpR3Q9MP7aTmsoIH+Dq2vjzFrcdsAUpPCgSp+MH9A=;
-        b=gqqlT2rumbSHxaO9ekHmOluqCZYFhxaTl0wMUpoucL32CNh3Q+9pWNNTY82lANUV5M
-         Y2nADrgkYmu6eNcuUJizVV+79r4yy3PiECiUyEajVdwAFJ4/UCujbze8f0cONOwjdbbp
-         wdnGC5WFpzUmnTi2ec027FIzJC6vk5A48qzEekx0dEmKqoyVnF0zykvfU8NkR8LfCOCh
-         caregKBa5EGk8TkkGNDsGvsiBoRKed+EB550ZArGT7PRja/SoKcNXuklTOCjk2JsGqzb
-         2JfLpoeTVAyvAigdKutLggLaoTokKfF059DZ3Ntu5etHe21ujSpG/Vv3Uu+/U0DX1O5d
-         xKNQ==
-X-Gm-Message-State: AOAM532Fit9/Eo8KG44vMZUPgGJmZtq0TMfLXhhnzvh7IF59jhEtWxOu
-        m+x4OpacU6RRlPgATCKnbVA=
-X-Google-Smtp-Source: ABdhPJzh5+RYjdzUEqWl80n7fPSBxcIVBClfzU74lEzoscgoLKgVGqc8PLvRupo60RCLYxaSwe31AA==
-X-Received: by 2002:a63:5a54:: with SMTP id k20mr568669pgm.226.1593205355679;
-        Fri, 26 Jun 2020 14:02:35 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id m20sm28646641pfk.52.2020.06.26.14.02.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zKO0HF618ZHvLKGIwJNOq5Dl9WwME35XliCSQ1Uc5Ro=;
+        b=V4vA6MhEFypRwycFj31nDg8lwv2MxuRjtWADymGhnwgYzFYqlV2BZNRKPDMmMNqPgC
+         LrOreLGklT4sBwV5RXvcRX5+Wb6nzrzP5lNYh7kZAee6merBS01JkNndhu2Z23hGSvjB
+         T098odmcXvLkGf38GxHZ3dYV/R7KTwg4IKgxRKZDe/uTzoz4l8Fd9iiKRvdAPiXVphO1
+         ZDwcHJicVSXBluKxHsL6tWhPV30tRHTloYsn1fjc+VSfxM1p9un5f+0R6sm7nGJCTJo3
+         +VSEMQS54xsZy+iRev2TX/0ETfvg57dlq/XdjA/pxKjNvRgrS/5ruaD7awhUTgwi056X
+         EZEw==
+X-Gm-Message-State: AOAM5332dCAvJbceS7oGqOo+yTGGazh0qSwgSHte5kPkO22yBbSa4l3y
+        HNdxURDPE7U4MGgdOckRX5E=
+X-Google-Smtp-Source: ABdhPJzixwu5xAFDCZEZc11/c1jGK/QvttplfhOdsg6t+UXwn5MqDPN+ctnD9WJO0MAdiMSX5vS0CA==
+X-Received: by 2002:a63:5d04:: with SMTP id r4mr636309pgb.15.1593206513519;
+        Fri, 26 Jun 2020 14:21:53 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id oc6sm13741216pjb.43.2020.06.26.14.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 14:02:35 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 14:02:34 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v2 2/2] fpga manager: xilinx-spi: check INIT_B pin during
- write_init
-Message-ID: <20200626210234.GB2259@epycbox.lan>
-References: <20200622133723.23326-1-luca@lucaceresoli.net>
- <20200622133723.23326-2-luca@lucaceresoli.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200622133723.23326-2-luca@lucaceresoli.net>
+        Fri, 26 Jun 2020 14:21:52 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: bcm: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 14:21:51 -0700
+Message-Id: <20200626212151.12654-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200626080646.4300-1-krzk@kernel.org>
+References: <20200626080646.4300-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 03:37:23PM +0200, Luca Ceresoli wrote:
-> The INIT_B pin reports the status during startup and after the end of the
-> programming process. However the current driver completely ignores it.
+On Fri, 26 Jun 2020 10:06:46 +0200, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache@22000: $nodename:0:
+>         'l2-cache@22000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 > 
-> Check the pin status during startup to make sure programming is never
-> started too early and also to detect any hardware issues in the FPGA
-> connection.
-> 
-> This is optional for backward compatibility. If INIT_B is not passed by
-> device tree, just fallback to the old udelays.
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
-> 
-> Changes in v2:
->  - rename DT property init_b-gpios to init-b-gpios (Rob Herring suggested to
->    not use '_' in property names)
->  - improve wait_for_init_b() documentation and variable naming
-> ---
->  drivers/fpga/xilinx-spi.c | 55 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> index 799ae04301be..2967aa2a74e2 100644
-> --- a/drivers/fpga/xilinx-spi.c
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -23,6 +23,7 @@
->  struct xilinx_spi_conf {
->  	struct spi_device *spi;
->  	struct gpio_desc *prog_b;
-> +	struct gpio_desc *init_b;
->  	struct gpio_desc *done;
->  };
->  
-> @@ -36,11 +37,45 @@ static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
->  	return FPGA_MGR_STATE_UNKNOWN;
->  }
->  
-> +/**
-> + * wait_for_init_b - wait for the INIT_B pin to have a given state, or wait
-> + * a given delay if the pin is unavailable
-> + *
-> + * @mgr:        The FPGA manager object
-> + * @value:      Value INIT_B to wait for (1 = asserted = low)
-> + * @alt_udelay: Delay to wait if the INIT_B GPIO is not available
-> + *
-> + * Returns 0 when the INIT_B GPIO reached the given state or -ETIMEDOUT if
-> + * too much time passed waiting for that. If no INIT_B GPIO is available
-> + * then always return 0.
-> + */
-> +static int wait_for_init_b(struct fpga_manager *mgr, int value,
-> +			   unsigned long alt_udelay)
-> +{
-> +	struct xilinx_spi_conf *conf = mgr->priv;
-> +	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-> +
-> +	if (conf->init_b) {
-> +		while (time_before(jiffies, timeout)) {
-> +			/* dump_state(conf, "wait for init_d .."); */
-> +			if (gpiod_get_value(conf->init_b) == value)
-> +				return 0;
-> +			usleep_range(100, 400);
-> +		}
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	udelay(alt_udelay);
-> +
-> +	return 0;
-> +}
-> +
->  static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  				 struct fpga_image_info *info,
->  				 const char *buf, size_t count)
->  {
->  	struct xilinx_spi_conf *conf = mgr->priv;
-> +	int err;
->  
->  	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->  		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> @@ -49,10 +84,21 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  
->  	gpiod_set_value(conf->prog_b, 1);
->  
-> -	udelay(1); /* min is 500 ns */
-> +	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
-> +		gpiod_set_value(conf->prog_b, 0);
-> +		return err;
-> +	}
->  
->  	gpiod_set_value(conf->prog_b, 0);
->  
-> +	err = wait_for_init_b(mgr, 0, 0);
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-> +		return err;
-> +	}
-> +
->  	if (gpiod_get_value(conf->done)) {
->  		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
->  		return -EIO;
-> @@ -154,6 +200,13 @@ static int xilinx_spi_probe(struct spi_device *spi)
->  		return PTR_ERR(conf->prog_b);
->  	}
->  
-> +	conf->init_b = devm_gpiod_get_optional(&spi->dev, "init-b", GPIOD_IN);
-> +	if (IS_ERR(conf->init_b)) {
-> +		dev_err(&spi->dev, "Failed to get INIT_B gpio: %ld\n",
-> +			PTR_ERR(conf->init_b));
-> +		return PTR_ERR(conf->init_b);
-> +	}
-> +
->  	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
->  	if (IS_ERR(conf->done)) {
->  		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
-> -- 
-> 2.27.0
-> 
 
-Will apply to for-next,
-
-Thanks!
+Applied to devicetree/next, thanks!
+--
+Florian
