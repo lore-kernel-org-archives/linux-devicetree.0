@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6232C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7455AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953A72084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536FA2081A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lhSGIvlF"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="N5xMbVdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgFZA4d (ORCPT
+        id S1726706AbgFZA4L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:56:33 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45400 "EHLO vps.xff.cz"
+        Thu, 25 Jun 2020 20:56:11 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45332 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbgFZA4M (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:56:12 -0400
+        id S1725834AbgFZA4L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:56:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593132969; bh=KzfpMNtW3y5p91+Te+S/UaRtGnueNT8aRYpe1i9+jq4=;
+        t=1593132968; bh=wLBTfvkPXA92DN0aPa1jL4zdt1fxD/3SPQM5mOVPwyY=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=lhSGIvlFDTMrykauS2HhpKQ0XgBth/QfcgKFOa59t6HB0asHV3Dj+stn6cF16Qm5q
-         80+hDWBCj/8wfu8/H4aH1At4bAd8Shom5hzNQP7o2KjamVoJLZFgTWg+aUajy99feZ
-         4F1OxkRbb21t4gS+3FqSXyn++VP7ZIdqnwfMJMLY=
+        b=N5xMbVdHFKknjrdhPvC1BjB/SvOiGaLTR4EHg08ifBzEVjzR69mq2shPd/w1iLpiO
+         wJB/7mrATY4n9vjxHgjwPtL1lTSZb6hJ8J0aO6JDi1XY9WwU/lTbz8EHr6D8MtFHFv
+         weI+7Vz9h5WiixgyAaXayROEQW+UndJXFLJPqZyY=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,14 +41,15 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v5 12/13] arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-Date:   Fri, 26 Jun 2020 02:56:00 +0200
-Message-Id: <20200626005601.241022-13-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v5 10/13] drm/panel: st7703: Enter sleep after display off
+Date:   Fri, 26 Jun 2020 02:55:58 +0200
+Message-Id: <20200626005601.241022-11-megous@megous.com>
 In-Reply-To: <20200626005601.241022-1-megous@megous.com>
 References: <20200626005601.241022-1-megous@megous.com>
 MIME-Version: 1.0
@@ -58,111 +59,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+The datasheet suggests to issue sleep in after display off
+as a part of the panel's shutdown sequence.
 
-PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-display.
-
-Backlight levels curve was optimized by Martijn Braam using a
-lux meter.
-
-Add its device nodes.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Martijn Braam <martijn@brixit.nl>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-index 06a775c41664..3e99a87e9ce5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-@@ -9,3 +9,22 @@ / {
- 	model = "Pine64 PinePhone Braveheart (1.1)";
- 	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
- };
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+index 33611419059a..e771281eb547 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+@@ -394,8 +394,19 @@ static int st7703_disable(struct drm_panel *panel)
+ {
+ 	struct st7703 *ctx = panel_to_st7703(panel);
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
++	int ret;
 +
-+&backlight {
-+	power-supply = <&reg_ldo_io0>;
-+	/*
-+	 * PWM backlight circuit on this PinePhone revision was changed since
-+	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
-+	 * being off is around 20%. Duty cycle for the lowest brightness level
-+	 * also varries quite a bit between individual boards, so the lowest
-+	 * value here was chosen as a safe default.
-+	 */
-+	brightness-levels = <
-+		774  793  814  842
-+		882  935  1003 1088
-+		1192 1316 1462 1633
-+		1830 2054 2309 2596
-+		2916 3271 3664 4096>;
-+	num-interpolated-steps = <50>;
-+	default-brightness-level = <400>;
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index cefda145c3c9..85a7aa5efd32 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -16,6 +16,13 @@ aliases {
- 		serial0 = &uart0;
- 	};
++	ret = mipi_dsi_dcs_set_display_off(dsi);
++	if (ret < 0)
++		DRM_DEV_ERROR(ctx->dev,
++			      "Failed to turn off the display: %d\n", ret);
  
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+		/* Backlight configuration differs per PinePhone revision. */
-+	};
+-	return mipi_dsi_dcs_set_display_off(dsi);
++	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
++	if (ret < 0)
++		DRM_DEV_ERROR(ctx->dev,
++			      "Failed to enter sleep mode: %d\n", ret);
 +
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -84,6 +91,30 @@ &dai {
- 	status = "okay";
- };
++	return 0;
+ }
  
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "xingbangda,xbd599";
-+		reg = <0>;
-+		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
-+		iovcc-supply = <&reg_dldo2>;
-+		vcc-supply = <&reg_ldo_io0>;
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -188,6 +219,10 @@ &r_pio {
- 	 */
- };
- 
-+&r_pwm {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
+ static int st7703_unprepare(struct drm_panel *panel)
 -- 
 2.27.0
 
