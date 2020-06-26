@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B58C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FCFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B8420773
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262102075D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZcFAslD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L758zaU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgFZPtq (ORCPT
+        id S1726002AbgFZP67 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:49:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55708 "EHLO
+        Fri, 26 Jun 2020 11:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZPtq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:49:46 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB22C03E979;
-        Fri, 26 Jun 2020 08:49:46 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id rk21so9860969ejb.2;
-        Fri, 26 Jun 2020 08:49:46 -0700 (PDT)
+        with ESMTP id S1725958AbgFZP67 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:58:59 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A33C03E979;
+        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id dg28so7318735edb.3;
+        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=mcSloTrT0dn3NloF0dVlYj3JBYhcEl7CXsI9M6agrbs=;
-        b=WZcFAslDpTr+doRqig/AdGBayLSS4vp2ooeqch7l287YzEUIBdXdX135jBobDGx3wK
-         2mXoFjH8QNtWG6BwyDTtXQPtLCBjjs1nO/l+IOJNdLiUtblQVSsy6cYW1XYq6cLL9aN4
-         X/ufDJRHn8a9mzRf9ooa1y5n4Vlqpehs3mzlocH5Bz+b7kYxyJLL4wdtRXVfxTKrtsac
-         U1//4TnpqfQRwjrxCNOF4g5o1P2Zgd6Jfw1Grjm/BR9AMOSSm7/n439tYUc/NXQhhYw9
-         +krrEzQCQ/MDiLYIeOSM/kCXYJjHDxtCycGYy/W6Q6aP7SomSgtPaK5SlCGyLoSQxgdu
-         oWUQ==
+        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
+        b=L758zaU6Q5soAykwZ2Cj4fZCxEiq0bK5AbIT76HtieRMWdp0AKiaw2I0bPdddlx3JP
+         uQf+XHrpnMqigdETNytKi8CDGYjZFLa0zC2gijvdyXgO1LLhgW9J9X1Eh12kBtIyTSQM
+         8Ib2PegUFK28yRiGYXIfPy1cM7F1oT1g06o/jeWuDF7KehSatUXzGf7x32g/6CYIxS8y
+         IfTYQx2jRY70LvRk1CZVL1vLMdWeIOLDUA3e9dUiIrQcsnunAZa0T5X3VtzPAUXiAYcF
+         L6wBXc1PZ+SRpVhgww8sS5zoClBFUWiy3h9qEWcPMkVrGJnpg20wSEseQdj8FpsumCcz
+         HhTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mcSloTrT0dn3NloF0dVlYj3JBYhcEl7CXsI9M6agrbs=;
-        b=LfOEDB+mVrVSHaL9FkNkPyO4IPJB+ELR7BlYTonJmCLUxRwcRarnqKLDZ9Az5U9PpT
-         pRpSn1EMt22NWgdU41ZTXFJ9X8yHlIBDxx6aEe6yITFirU/DP0kC8wk9LNpOdFXhngTf
-         ku1Bm3offP0a4PsCpBCJeMWbr6GaLlN7hsIyje25Y8bltv+gLXO41Ov7xz+yLnNbeczI
-         nCNwZKDxXvgFMsqZD55W2MLEYCQivcvDaF78aDES4uru8nG9EZ9jguztJyIOi8tlsKK8
-         oRcIyTbql3suVwdJcN4EpVs308/Je3FRR64+adXRcy9DsTITPiWJn7GTriZyvX9Ihbh7
-         2LCQ==
-X-Gm-Message-State: AOAM530A3QS1g7NonLwbLAz9yMKQFJQsYfwuNV9vPhVZlM+BX80Vx5Ib
-        746/BTH9M7AN8K3qUB2BjOE=
-X-Google-Smtp-Source: ABdhPJywFGzATWjQKSS5GJx1j3mwes43kbYokvck3/iyiewhxZmRJVdvD2yUb5mPXE7FbD5kRTfDtQ==
-X-Received: by 2002:a17:906:ecb6:: with SMTP id qh22mr2918270ejb.230.1593186585360;
-        Fri, 26 Jun 2020 08:49:45 -0700 (PDT)
+        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
+        b=qnlQFXzVyhJnv+gX/41B7UMJy4jTPE0SJCWgtAMEt3YcIT73+p0TXpv7JPYc5iibtj
+         3XoXnszxZJZ33W4Wkjas3ZdRuy4dE59dYbKwSXqeqCkF7QU3xfiZ+/tvfFrbJ4/xyFlz
+         rZ0Rnj8iCDk7UQZPzLK3tJPq2qPUoNVLloUg41m2LFuq9zENWyxGum51LTDVj7iDtSpw
+         o/w16nc+WTEiv1ljHC9qZQIQwlqkhX3zXZEmGG2MRPzKRQa3uP9+9vor3MFAN69zdMsa
+         M57KdKzUGlzRRss8xwGnPY77/Zq+Xe9cebX92d7ct96YkYJg2+rc9bvTCqaibXQS+FPN
+         Fiog==
+X-Gm-Message-State: AOAM532QpXVZoqvnquxHDha7ZL7+glePoy3GwxeDsYTx5Zv9In72rbo7
+        iou1rU6qkz6oSEkb9GE9jqM=
+X-Google-Smtp-Source: ABdhPJyoCTdM4ZvkweJXXQubH3n4cD7yadzdQkILMeSfZTtDa9VjctDnNDOsHdf8HzPbB8IhwNCiCQ==
+X-Received: by 2002:a50:fa0c:: with SMTP id b12mr4178260edq.226.1593187137753;
+        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
 Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id a2sm9584834ejg.76.2020.06.26.08.49.43
+        by smtp.gmail.com with ESMTPSA id s2sm21132439edu.39.2020.06.26.08.58.56
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 08:49:44 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 18:49:41 +0300
+        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 18:58:54 +0300
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Stephen Boyd <sboyd@kernel.org>,
@@ -70,60 +70,52 @@ Cc:     Stephen Boyd <sboyd@kernel.org>,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] clk: actions: Fix h_clk for Actions S500 SoC
-Message-ID: <20200626154941.GA6611@BV030612LT>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add reset binding entry for Actions
+ Semi Owl SoCs
+Message-ID: <20200626155854.GB6611@BV030612LT>
 References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
- <58c4bddaf178cb85d9930064af342190f6010e6e.1592941257.git.cristian.ciocaltea@gmail.com>
- <20200626134541.GB8333@Mani-XPS-13-9360>
+ <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
+ <20200626135415.GD8333@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626134541.GB8333@Mani-XPS-13-9360>
+In-Reply-To: <20200626135415.GD8333@Mani-XPS-13-9360>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 07:15:41PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jun 24, 2020 at 08:47:52PM +0300, Cristian Ciocaltea wrote:
-> > The h_clk clock in the Actions Semi S500 SoC clock driver has an
-> > invalid parent. Replace with the correct one.
+On Fri, Jun 26, 2020 at 07:24:16PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jun 24, 2020 at 08:47:57PM +0300, Cristian Ciocaltea wrote:
+> > Add a reset binding entry to match all members of Actions Semi Owl SoCs.
 > > 
 > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 7b5ffd646c6b..e6285c13bab0 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
+> >  F:	drivers/pinctrl/actions/*
+> >  F:	drivers/soc/actions/
+> >  F:	include/dt-bindings/power/owl-*
+> > +F:	include/dt-bindings/reset/actions,*-reset.h
 > 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> You should add fixes tag for this patch and it needs to be backported as well.
+> You can just use, reset/actions,*
 > 
 > Thanks,
 > Mani
 
-Right, I added the tag:
-
-Fixes: ed6b4795ece4 ("clk: actions: Add clock driver for S500 SoC")
-
-Thanks,
-Cristi
+Done, thanks!
 
 > 
-> > ---
-> >  drivers/clk/actions/owl-s500.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-> > index e2007ac4d235..0eb83a0b70bc 100644
-> > --- a/drivers/clk/actions/owl-s500.c
-> > +++ b/drivers/clk/actions/owl-s500.c
-> > @@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
-> >  static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
+> >  F:	include/linux/soc/actions/
+> >  N:	owl
 > >  
-> >  /* divider clocks */
-> > -static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-> > +static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-> >  static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
-> >  
-> >  /* factor clocks */
 > > -- 
 > > 2.27.0
 > > 
