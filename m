@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0184C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94260C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E335207D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A09207D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="azRibTE8"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="HFGpdmRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgFZA4k (ORCPT
+        id S1726696AbgFZA4k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 25 Jun 2020 20:56:40 -0400
-Received: from vps.xff.cz ([195.181.215.36]:45188 "EHLO vps.xff.cz"
+Received: from vps.xff.cz ([195.181.215.36]:45176 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgFZA4K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:56:10 -0400
+        id S1726653AbgFZA4L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:56:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593132967; bh=SlEXwD28ceW0ryWeI1DcRtKQ+o2CROCThO4n27xkfJs=;
+        t=1593132966; bh=9nC15xo+CPESdjpdIyybaGwU2PhmaJZzcbPRCaKJEbk=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=azRibTE85Omgyx2gilsCaphOn8gj/YoMM104MUtLqqpqEGOBeQZkuqF9/cr7PFxhr
-         gkNQHen+k4nO99SySFM5I5KJbYZr3YhzucevBiKbyWimik5KxdixC0MPULVn6RXwHi
-         wvUZNB4LaWBiqz8uAn+9bY2yoJxWwzmLiAdPk/JE=
+        b=HFGpdmRZGfZ60iWH0mbulxJo375sOnHF7MNQQGApsL+gBns5QOho0rLbZ4Z77dLjE
+         P2KTEkU2dyN7xu7m+WLER0AlVOnu2HmuYc3JpU+9Mi3/7agcQRPwiYzTHh5z0W7QP7
+         9Xah0GMizkGELkbUgpQhpV3Azmr94WF5Z59WhCsA=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -47,93 +47,275 @@ Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
         Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v5 08/13] drm/panel: st7703: Move generic part of init sequence to enable callback
-Date:   Fri, 26 Jun 2020 02:55:56 +0200
-Message-Id: <20200626005601.241022-9-megous@megous.com>
+Subject: [PATCH v5 05/13] drm/panel: st7703: Rename functions from jh057n prefix to st7703
+Date:   Fri, 26 Jun 2020 02:55:53 +0200
+Message-Id: <20200626005601.241022-6-megous@megous.com>
 In-Reply-To: <20200626005601.241022-1-megous@megous.com>
 References: <20200626005601.241022-1-megous@megous.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Calling sleep out and display on is a controller specific part
-of the initialization process. Move it out of the panel specific
-initialization function to the enable callback.
+This is done so that code that's not specific to a particular
+jh057n panel is named after the controller. Functions specific
+to the panel are kept named after the panel.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 33 ++++++++++---------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 90 ++++++++++---------
+ 1 file changed, 46 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-index d03aab10cfef..cdbf7dfb4dd4 100644
+index 38ff742bc120..511af659f273 100644
 --- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
 +++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
-@@ -84,8 +84,6 @@ static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
- static int jh057n_init_sequence(struct st7703 *ctx)
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
++ * Driver for panels based on Sitronix ST7703 controller, souch as:
++ *
++ * - Rocktech jh057n00900 5.5" MIPI-DSI panel
+  *
+  * Copyright (C) Purism SPC 2019
+  */
+@@ -21,7 +23,7 @@
+ #include <drm/drm_panel.h>
+ #include <drm/drm_print.h>
+ 
+-#define DRV_NAME "panel-rocktech-jh057n00900"
++#define DRV_NAME "panel-sitronix-st7703"
+ 
+ /* Manufacturer specific Commands send via DSI */
+ #define ST7703_CMD_ALL_PIXEL_OFF 0x22
+@@ -45,7 +47,7 @@
+ #define ST7703_CMD_SETGIP1	 0xE9
+ #define ST7703_CMD_SETGIP2	 0xEA
+ 
+-struct jh057n {
++struct st7703 {
+ 	struct device *dev;
+ 	struct drm_panel panel;
+ 	struct gpio_desc *reset_gpio;
+@@ -56,9 +58,9 @@ struct jh057n {
+ 	struct dentry *debugfs;
+ };
+ 
+-static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
++static inline struct st7703 *panel_to_st7703(struct drm_panel *panel)
+ {
+-	return container_of(panel, struct jh057n, panel);
++	return container_of(panel, struct st7703, panel);
+ }
+ 
+ #define dsi_generic_write_seq(dsi, seq...) do {				\
+@@ -69,7 +71,7 @@ static inline struct jh057n *panel_to_jh057n(struct drm_panel *panel)
+ 			return ret;					\
+ 	} while (0)
+ 
+-static int jh057n_init_sequence(struct jh057n *ctx)
++static int jh057n_init_sequence(struct st7703 *ctx)
  {
  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
--	struct device *dev = ctx->dev;
--	int ret;
- 
- 	/*
- 	 * Init sequence was supplied by the panel vendor. Most of the commands
-@@ -136,20 +134,7 @@ static int jh057n_init_sequence(struct st7703 *ctx)
- 			      0x18, 0x00, 0x09, 0x0E, 0x29, 0x2D, 0x3C, 0x41,
- 			      0x37, 0x07, 0x0B, 0x0D, 0x10, 0x11, 0x0F, 0x10,
- 			      0x11, 0x18);
--	msleep(20);
--
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		DRM_DEV_ERROR(dev, "Failed to exit sleep mode: %d\n", ret);
--		return ret;
--	}
--	/* Panel is operational 120 msec after reset */
--	msleep(60);
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret)
--		return ret;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+ 	struct device *dev = ctx->dev;
+@@ -141,9 +143,9 @@ static int jh057n_init_sequence(struct jh057n *ctx)
  	return 0;
  }
  
-@@ -181,6 +166,7 @@ struct st7703_panel_desc jh057n00900_panel_desc = {
- static int st7703_enable(struct drm_panel *panel)
+-static int jh057n_enable(struct drm_panel *panel)
++static int st7703_enable(struct drm_panel *panel)
  {
- 	struct st7703 *ctx = panel_to_st7703(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
  	int ret;
  
- 	ret = ctx->desc->init_sequence(ctx);
-@@ -190,6 +176,23 @@ static int st7703_enable(struct drm_panel *panel)
+ 	ret = jh057n_init_sequence(ctx);
+@@ -156,17 +158,17 @@ static int jh057n_enable(struct drm_panel *panel)
+ 	return 0;
+ }
+ 
+-static int jh057n_disable(struct drm_panel *panel)
++static int st7703_disable(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 
+ 	return mipi_dsi_dcs_set_display_off(dsi);
+ }
+ 
+-static int jh057n_unprepare(struct drm_panel *panel)
++static int st7703_unprepare(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 
+ 	if (!ctx->prepared)
+ 		return 0;
+@@ -178,9 +180,9 @@ static int jh057n_unprepare(struct drm_panel *panel)
+ 	return 0;
+ }
+ 
+-static int jh057n_prepare(struct drm_panel *panel)
++static int st7703_prepare(struct drm_panel *panel)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	int ret;
+ 
+ 	if (ctx->prepared)
+@@ -230,10 +232,10 @@ static const struct drm_display_mode default_mode = {
+ 	.height_mm   = 130,
+ };
+ 
+-static int jh057n_get_modes(struct drm_panel *panel,
++static int st7703_get_modes(struct drm_panel *panel,
+ 			    struct drm_connector *connector)
+ {
+-	struct jh057n *ctx = panel_to_jh057n(panel);
++	struct st7703 *ctx = panel_to_st7703(panel);
+ 	struct drm_display_mode *mode;
+ 
+ 	mode = drm_mode_duplicate(connector->dev, &default_mode);
+@@ -254,17 +256,17 @@ static int jh057n_get_modes(struct drm_panel *panel,
+ 	return 1;
+ }
+ 
+-static const struct drm_panel_funcs jh057n_drm_funcs = {
+-	.disable   = jh057n_disable,
+-	.unprepare = jh057n_unprepare,
+-	.prepare   = jh057n_prepare,
+-	.enable	   = jh057n_enable,
+-	.get_modes = jh057n_get_modes,
++static const struct drm_panel_funcs st7703_drm_funcs = {
++	.disable   = st7703_disable,
++	.unprepare = st7703_unprepare,
++	.prepare   = st7703_prepare,
++	.enable	   = st7703_enable,
++	.get_modes = st7703_get_modes,
+ };
+ 
+ static int allpixelson_set(void *data, u64 val)
+ {
+-	struct jh057n *ctx = data;
++	struct st7703 *ctx = data;
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+ 
+ 	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
+@@ -282,7 +284,7 @@ static int allpixelson_set(void *data, u64 val)
+ DEFINE_SIMPLE_ATTRIBUTE(allpixelson_fops, NULL,
+ 			allpixelson_set, "%llu\n");
+ 
+-static void jh057n_debugfs_init(struct jh057n *ctx)
++static void st7703_debugfs_init(struct st7703 *ctx)
+ {
+ 	ctx->debugfs = debugfs_create_dir(DRV_NAME, NULL);
+ 
+@@ -290,16 +292,16 @@ static void jh057n_debugfs_init(struct jh057n *ctx)
+ 			    &allpixelson_fops);
+ }
+ 
+-static void jh057n_debugfs_remove(struct jh057n *ctx)
++static void st7703_debugfs_remove(struct st7703 *ctx)
+ {
+ 	debugfs_remove_recursive(ctx->debugfs);
+ 	ctx->debugfs = NULL;
+ }
+ 
+-static int jh057n_probe(struct mipi_dsi_device *dsi)
++static int st7703_probe(struct mipi_dsi_device *dsi)
+ {
+ 	struct device *dev = &dsi->dev;
+-	struct jh057n *ctx;
++	struct st7703 *ctx;
+ 	int ret;
+ 
+ 	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+@@ -340,7 +342,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
  		return ret;
  	}
  
-+	msleep(20);
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Panel is operational 120 msec after reset */
-+	msleep(60);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret)
-+		return ret;
-+
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Panel init sequence done\n");
-+
+-	drm_panel_init(&ctx->panel, dev, &jh057n_drm_funcs,
++	drm_panel_init(&ctx->panel, dev, &st7703_drm_funcs,
+ 		       DRM_MODE_CONNECTOR_DSI);
+ 
+ 	ret = drm_panel_of_backlight(&ctx->panel);
+@@ -363,13 +365,13 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+ 		     default_mode.vrefresh,
+ 		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+ 
+-	jh057n_debugfs_init(ctx);
++	st7703_debugfs_init(ctx);
  	return 0;
  }
  
+-static void jh057n_shutdown(struct mipi_dsi_device *dsi)
++static void st7703_shutdown(struct mipi_dsi_device *dsi)
+ {
+-	struct jh057n *ctx = mipi_dsi_get_drvdata(dsi);
++	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
+ 	int ret;
+ 
+ 	ret = drm_panel_unprepare(&ctx->panel);
+@@ -383,12 +385,12 @@ static void jh057n_shutdown(struct mipi_dsi_device *dsi)
+ 			      ret);
+ }
+ 
+-static int jh057n_remove(struct mipi_dsi_device *dsi)
++static int st7703_remove(struct mipi_dsi_device *dsi)
+ {
+-	struct jh057n *ctx = mipi_dsi_get_drvdata(dsi);
++	struct st7703 *ctx = mipi_dsi_get_drvdata(dsi);
+ 	int ret;
+ 
+-	jh057n_shutdown(dsi);
++	st7703_shutdown(dsi);
+ 
+ 	ret = mipi_dsi_detach(dsi);
+ 	if (ret < 0)
+@@ -397,28 +399,28 @@ static int jh057n_remove(struct mipi_dsi_device *dsi)
+ 
+ 	drm_panel_remove(&ctx->panel);
+ 
+-	jh057n_debugfs_remove(ctx);
++	st7703_debugfs_remove(ctx);
+ 
+ 	return 0;
+ }
+ 
+-static const struct of_device_id jh057n_of_match[] = {
++static const struct of_device_id st7703_of_match[] = {
+ 	{ .compatible = "rocktech,jh057n00900" },
+ 	{ /* sentinel */ }
+ };
+-MODULE_DEVICE_TABLE(of, jh057n_of_match);
++MODULE_DEVICE_TABLE(of, st7703_of_match);
+ 
+-static struct mipi_dsi_driver jh057n_driver = {
+-	.probe	= jh057n_probe,
+-	.remove = jh057n_remove,
+-	.shutdown = jh057n_shutdown,
++static struct mipi_dsi_driver st7703_driver = {
++	.probe	= st7703_probe,
++	.remove = st7703_remove,
++	.shutdown = st7703_shutdown,
+ 	.driver = {
+ 		.name = DRV_NAME,
+-		.of_match_table = jh057n_of_match,
++		.of_match_table = st7703_of_match,
+ 	},
+ };
+-module_mipi_dsi_driver(jh057n_driver);
++module_mipi_dsi_driver(st7703_driver);
+ 
+ MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
+-MODULE_DESCRIPTION("DRM driver for Rocktech JH057N00900 MIPI DSI panel");
++MODULE_DESCRIPTION("DRM driver for Sitronix ST7703 based MIPI DSI panels");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.27.0
 
