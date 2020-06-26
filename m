@@ -2,120 +2,107 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FCFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDCDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262102075D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5D92075D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L758zaU6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWmgsVPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgFZP67 (ORCPT
+        id S1726408AbgFZQEB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:58:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57196 "EHLO
+        Fri, 26 Jun 2020 12:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgFZP67 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:58:59 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A33C03E979;
-        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id dg28so7318735edb.3;
-        Fri, 26 Jun 2020 08:58:58 -0700 (PDT)
+        with ESMTP id S1725807AbgFZQEB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 12:04:01 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2142C03E979;
+        Fri, 26 Jun 2020 09:04:00 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h5so10001161wrc.7;
+        Fri, 26 Jun 2020 09:04:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
-        b=L758zaU6Q5soAykwZ2Cj4fZCxEiq0bK5AbIT76HtieRMWdp0AKiaw2I0bPdddlx3JP
-         uQf+XHrpnMqigdETNytKi8CDGYjZFLa0zC2gijvdyXgO1LLhgW9J9X1Eh12kBtIyTSQM
-         8Ib2PegUFK28yRiGYXIfPy1cM7F1oT1g06o/jeWuDF7KehSatUXzGf7x32g/6CYIxS8y
-         IfTYQx2jRY70LvRk1CZVL1vLMdWeIOLDUA3e9dUiIrQcsnunAZa0T5X3VtzPAUXiAYcF
-         L6wBXc1PZ+SRpVhgww8sS5zoClBFUWiy3h9qEWcPMkVrGJnpg20wSEseQdj8FpsumCcz
-         HhTA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ldOu+GBWkRUkKh/sbBFvoMeVdq/bBluTg0VXKcUZyJE=;
+        b=gWmgsVPjwvPb4wUvvt+CPJBQprsWz3CZNv5pJ2Or1vsCO38BJlvVEcno2wcKrr4O4u
+         34FpRlP39oCIBmP/f+3a6gdn+YFFSofU27B5zv+gIKOEfbNROIZGdql4CM88hV6KGbDD
+         eg+KA6YAvgqYLXkaoQ0bqPA12JMsZvApWCakIgc/+hmKkmnLf+Ulnc9YZ7RzntSl2ErX
+         PbtwdhRPWvh4iz4GU+i78/HYJUBDpxUc1p+uE4/IMEzvrDPO76+/OYxhDINX0YC6u4fu
+         k61KgsHsOcP/3WGA+CHfHxaKXzyFJIRwLkbYptJUsi6iP0f9FpPiQVF3cyRZc+BR7fKx
+         LzeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Cz0LL2XZk3y/0batObSdPZVErezhlLZ1JCOZ/N0G1k=;
-        b=qnlQFXzVyhJnv+gX/41B7UMJy4jTPE0SJCWgtAMEt3YcIT73+p0TXpv7JPYc5iibtj
-         3XoXnszxZJZ33W4Wkjas3ZdRuy4dE59dYbKwSXqeqCkF7QU3xfiZ+/tvfFrbJ4/xyFlz
-         rZ0Rnj8iCDk7UQZPzLK3tJPq2qPUoNVLloUg41m2LFuq9zENWyxGum51LTDVj7iDtSpw
-         o/w16nc+WTEiv1ljHC9qZQIQwlqkhX3zXZEmGG2MRPzKRQa3uP9+9vor3MFAN69zdMsa
-         M57KdKzUGlzRRss8xwGnPY77/Zq+Xe9cebX92d7ct96YkYJg2+rc9bvTCqaibXQS+FPN
-         Fiog==
-X-Gm-Message-State: AOAM532QpXVZoqvnquxHDha7ZL7+glePoy3GwxeDsYTx5Zv9In72rbo7
-        iou1rU6qkz6oSEkb9GE9jqM=
-X-Google-Smtp-Source: ABdhPJyoCTdM4ZvkweJXXQubH3n4cD7yadzdQkILMeSfZTtDa9VjctDnNDOsHdf8HzPbB8IhwNCiCQ==
-X-Received: by 2002:a50:fa0c:: with SMTP id b12mr4178260edq.226.1593187137753;
-        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
-Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id s2sm21132439edu.39.2020.06.26.08.58.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 08:58:57 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 18:58:54 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ldOu+GBWkRUkKh/sbBFvoMeVdq/bBluTg0VXKcUZyJE=;
+        b=bGc4rEhL4Cbq5MFgcuYm7FEJn04yQeobsaJmUo4PlSHjPMKESdgxOR2QpeRVcJ3jox
+         GlWvPR7AMcSSQ4x1W6ApOj+iQqqfEg0vKF8JeJqIO2ItT9CQHfLi6lKuYy3uH72YNXqp
+         UFjKsYwmyqZEVLeX1X0/1ClxrBW1aaeStnekccxWvzfsLR3ng0KI40GOC9SWFFahA7mF
+         E12RntwCwyjUg2j8yjdqYD7dcw9vHC3EFEcnd0j+yHxFpAaszJpFJhi3RGkcxFJdtC2k
+         5Dohk05kG5SqnuCDgN1uLgNsRZ4bnyVZnBxxqQwqhwPjmcHHzNhN9Fo1PCPlAeCb7f2n
+         g4aA==
+X-Gm-Message-State: AOAM533oFB5In1HO93TtUQpdNdRUOPrQ7J2Xr3BNvSdO6ADfeiBDF6ap
+        bVf3RTjUsz1ATPzWrrhnAX5J3I4d
+X-Google-Smtp-Source: ABdhPJyYFmssCU32/GBiykg1dcLN2/6jwQ9h5b6xQfOSvjH5diH7cq9mNIupawxGi1YWQZ8h6WQo/g==
+X-Received: by 2002:a5d:55c9:: with SMTP id i9mr4440636wrw.404.1593187439226;
+        Fri, 26 Jun 2020 09:03:59 -0700 (PDT)
+Received: from [10.230.189.192] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 207sm20205463wme.13.2020.06.26.09.03.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 09:03:58 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware
+ binding
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add reset binding entry for Actions
- Semi Owl SoCs
-Message-ID: <20200626155854.GB6611@BV030612LT>
-References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
- <c7db5abf78656af8d5a4ff8d677a08e03713c1f3.1592941257.git.cristian.ciocaltea@gmail.com>
- <20200626135415.GD8333@Mani-XPS-13-9360>
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+References: <20200626115433.125735-1-maxime@cerno.tech>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <db449a41-8256-e1b3-abb6-d8835901edc8@gmail.com>
+Date:   Fri, 26 Jun 2020 09:03:55 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626135415.GD8333@Mani-XPS-13-9360>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200626115433.125735-1-maxime@cerno.tech>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 07:24:16PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Jun 24, 2020 at 08:47:57PM +0300, Cristian Ciocaltea wrote:
-> > Add a reset binding entry to match all members of Actions Semi Owl SoCs.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 7b5ffd646c6b..e6285c13bab0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1533,6 +1533,7 @@ F:	drivers/mmc/host/owl-mmc.c
-> >  F:	drivers/pinctrl/actions/*
-> >  F:	drivers/soc/actions/
-> >  F:	include/dt-bindings/power/owl-*
-> > +F:	include/dt-bindings/reset/actions,*-reset.h
-> 
-> You can just use, reset/actions,*
-> 
-> Thanks,
-> Mani
 
-Done, thanks!
 
+On 6/26/2020 4:54 AM, Maxime Ripard wrote:
+> The RaspberryPi firmware binding uses two compatible, include simple-bus.
+> The select statement generated by default will thus select any node that
+> has simple-bus, not all of them being the raspberrypi firmware node.
 > 
-> >  F:	include/linux/soc/actions/
-> >  N:	owl
-> >  
-> > -- 
-> > 2.27.0
-> > 
+> This results in warnings being wrongfully reported. Let's add a custom
+> select statement to fix that.
+> 
+> Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML")
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks Maxime!
+-- 
+Florian
