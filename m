@@ -2,104 +2,153 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D74C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 06:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE957C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 06:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A3620775
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 06:07:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PZhzPi6t"
+	by mail.kernel.org (Postfix) with ESMTP id A7F8820775
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 06:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593154336;
+	bh=JH0EwifEFWJK0ZGDKqPuMsUuzx3DE/iNpg21kqYUz64=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=iktT7zzs4ezB7ksAsbW3gR2BqMTfpzwhxoDtwqQxd4cl9zvAVQRT4WvtWLM6lG3sJ
+	 tOWJp8LIpy3UCfrODfiq+D0z3Suy4ia4W5HwluPhseY1ZRrcFzCeWQ6X4tPBWq6mqD
+	 m1vnB5Tq0ebdGX+aSmUeC833wY/XXtT8/vhtYp/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgFZGHN (ORCPT
+        id S1728504AbgFZGwQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 02:07:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:54383 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725801AbgFZGHM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:07:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593151632; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=kpNpS5FXksDhKX01QPjtTgzG0vgpwu5AuVAt8JX2QKM=;
- b=PZhzPi6t05f0u9Gj1IoefxvyY3ekCM0t0bCpapxjFa3mDH4vc97UgBhR6cmZveImbdYfWP/X
- z/+6PMFZtBBzZ7PbgsQEktTnNEDm2FBHwgVtFzxmsEO5hixOT84GXH4t9BTUCwZJUpX781lf
- 3CIjfj2ZoPN020sWawUnUZfXHzQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5ef590890206ad41d1ec1721 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Jun 2020 06:07:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0233FC43395; Fri, 26 Jun 2020 06:07:05 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D55DAC433C8;
-        Fri, 26 Jun 2020 06:07:03 +0000 (UTC)
+        Fri, 26 Jun 2020 02:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726311AbgFZGwP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 02:52:15 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BAAAC08C5C1;
+        Thu, 25 Jun 2020 23:52:15 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h22so2006880lji.9;
+        Thu, 25 Jun 2020 23:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=nFM3kop9ktvhCUlgVduYIaa6zuTPi9zx4zThaiWVhw4=;
+        b=IHfRxkbi+UPUJ5N40VXH4vaoWL9sjWCW9SvCSr79xo4P5MZjTEDcIJ9sSKXrzp/N2+
+         emFRcVbz+jVBa+awDJlc9nWSXvnKmBaZUWjXIRhx7+S+IDFO6rp4LNqKQFnwFv2oqwdl
+         vOR6dWa6+Gbb8ySKmMpqAHI7llo/PUd25iwNxsyIDqSkMMUF3xf3lzyKjBdBUZh0u8m5
+         xmOoO4hjc0KB1d9K34yehIbMZv8/iaQsjlGhCIwGHEOcfqY0+TATlSyYRCqBhLbLteBV
+         agITCK1Ef0jsGz0K7fEm4+e+EWcLqLnzNP7hQTq30pWfjcMiy5FXuYEsHPH7gvYFQEIA
+         pkUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=nFM3kop9ktvhCUlgVduYIaa6zuTPi9zx4zThaiWVhw4=;
+        b=mDxQ64yqe9QkZ8rMGU83ZPgj0ORAvVh70KCwtiZWeIdNPeGwfWIlnc1ORDYmdYs4GC
+         scaRbR7yTGwuKo3dg28v5xOO3tedZnDgbwupQCmpnDIAQ3NpCIYJBofP8Zr48y4Xg0gr
+         0fOTCCUKU/RrVC5y+y2tg2Ud9kS3edGLHThNQU7R942XEDKvvFNSLHntRoQ7cwtDiB2k
+         MR5vyE9NXGMai3pp/kjUaUrwiytlPAJklkwcGieUAoCe/f4CGpxYXYo/BUnmXIwU0J00
+         BI7hJ7RLCnKd/ti5ndsQH2hdX8RNZSZ72nlEDS1s2QI4fYS6P41rvbtgdEsdUTPceTrH
+         JkSw==
+X-Gm-Message-State: AOAM5303lZTY7m6EWrXaGOmA8cGDwf8sQAAei4j15+aX7TBKGl+nCUTL
+        Tn3+Jsck8q4Ye+oXudw3C+U=
+X-Google-Smtp-Source: ABdhPJwtp1ZLwujD1qZAwEUI67yGIAEejThjkqWU9ZqERY6mYmJv4ZrW1uPxE64uAOUIjduvvUjWnQ==
+X-Received: by 2002:a2e:9141:: with SMTP id q1mr682251ljg.196.1593154333942;
+        Thu, 25 Jun 2020 23:52:13 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id r11sm6559950lfc.29.2020.06.25.23.52.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Jun 2020 23:52:13 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Pawel Laszczak <pawell@cadence.com>, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, ben.dooks@codethink.co.uk,
+        colin.king@canonical.com, rogerq@ti.com, peter.chen@nxp.com,
+        weiyongjun1@huawei.com, jpawar@cadence.com, kurahul@cadene.com,
+        sparmar@cadence.com, Pawel Laszczak <pawell@cadence.com>
+Subject: Re: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
+In-Reply-To: <20200626045450.10205-1-pawell@cadence.com>
+References: <20200626045450.10205-1-pawell@cadence.com>
+Date:   Fri, 26 Jun 2020 09:52:08 +0300
+Message-ID: <878sga5nfr.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 26 Jun 2020 11:37:03 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCHv3 0/2] Convert QCOM watchdog timer bindings to YAML
-In-Reply-To: <20200625211809.GA175066@roeck-us.net>
-References: <cover.1581459151.git.saiprakash.ranjan@codeaurora.org>
- <c2b8fabcf82b27c7334482bd53ebba62@codeaurora.org>
- <20200621073320.GI128451@builder.lan>
- <ce4c2b44cb15af12b04c09f1786a6c1a@codeaurora.org>
- <20200625160042.GC149301@roeck-us.net>
- <3e3cf81452e33c9385900177d0630a11@codeaurora.org>
- <20200625211809.GA175066@roeck-us.net>
-Message-ID: <055b46ca29e4d54981116f2a55ed0b77@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-06-26 02:48, Guenter Roeck wrote:
-> On Fri, Jun 26, 2020 at 12:52:31AM +0530, Sai Prakash Ranjan wrote:
->> > >
->> > I don't think the watchdog mailing list has been copied on this series,
->> > meaning I don't have a copy that I could apply if I wanted to.
->> 
->> I kept you in CC for all the revisions but missed adding watchdog 
->> list.
->> Will resend with the appropriate lists added.
->> 
-> 
-> I use patchwork to track patches, tags, and my responses. No patchwork,
-> no patch, no tags, and no tracking.
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Now resent with watchdog list added - 
-https://lore.kernel.org/patchwork/cover/1263944/
 
-Thanks,
-Sai
+Hi,
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Pawel Laszczak <pawell@cadence.com> writes:
+> This patch introduce new Cadence USBSS DRD driver to linux kernel.
+>
+> The Cadence USBSS DRD Controller is a highly configurable IP Core which
+> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
+> Host Only (XHCI)configurations.
+>
+> The current driver has been validated with FPGA burned. We have support
+> for PCIe bus, which is used on FPGA prototyping.
+>
+> The host side of USBSS-DRD controller is compliance with XHCI
+> specification, so it works with standard XHCI Linux driver.
+>
+> The host side of USBSS DRD controller is compliant with XHCI.
+> The architecture for device side is almost the same as for host side,
+> and most of the XHCI specification can be used to understand how
+> this controller operates.
+>
+> This controller and driver support Full Speed, Hight Speed, Supper Speed
+> and Supper Speed Plus USB protocol.
+>
+> The prefix cdnsp used in driver has chosen by analogy to cdn3 driver.
+> The last letter of this acronym means PLUS. The formal name of controller
+> is USBSSP but it's to generic so I've decided to use CDNSP.
+>
+> The patch 1: adds DT binding.
+> The patch 2: adds PCI to platform wrapper used on Cadnece testing
+>              platform. It is FPGA based on platform.
+> The patches 3-5: add the main part of driver and has been intentionally
+>              split into 3 part. In my opinion such division should not
+>              affect understanding and reviewing the driver, and cause that
+>              main patch (4/5) is little smaller. Patch 3 introduces main
+>              header file for driver, 4 is the main part that implements a=
+ll
+>              functionality of driver and 5 introduces tracepoints.
+
+I'm more interested in how is this different from CDNS3. Aren't they SW com=
+patible?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl71mxgACgkQzL64meEa
+mQaiPQ//a7Zb3mi4EERXBszW7rCLKyFOdQYjy83WFHOxrAV/iXqGsx6KARPngoDg
+1u8cCOef0xdHjXt8aP9BhD9n2yvSb0oIMZFcyw/BOPADEUN9OBqCVxWSLDTZ1YuX
+O6n61nGDVkC/WWqwoiE/+yXV1MvEPV1nH/RQlh8aJa5WXe2CglkmKEJJC/Wo83BO
+Q+tsXgN1BCUAGl8TILSlrWjaP9jSQINFuzyU+fqJs6nzI/vnxMSvCk00UEwOQVMa
+HXLftoVdg9q9i4fphnW0hAj80bSG4i6U9r7cH2Ne+0QZzkSv4FFaKs3AutA9il1Z
+tL88XIvUx5fXy7vfBJL+P4HY5IfbP42jVKvMrjA+A2wdI0IRhGAvZKFnuZV2B2Ad
+FswDnFwUXvY8PmWS9/JFKC/Xqharmo6+9ozS9KZpzFMgDJtWA31fRwrSrxFx56Lo
+JhJfzy5awku/qNSQgh48tfyaat28Ubj3PjHe6UDe6PCq4zcrwOfobdCb0CNroWoQ
+gG94c2i4cGbHRKSWhBYGkz11U5TN5KfArKR/oPiCc3O8BPoOj9nru+j559cHr34J
+Gt2ToK0H/ICL+OLyqkuEMu0CERM9JpDzYhytaC+VxJbvYBDV9GzO//nqNnJyLFNm
+gQzfbcNSALJJGNIB7grpjCMeqOYT588o0rF79MitN94HpHYFWuk=
+=ZsUv
+-----END PGP SIGNATURE-----
+--=-=-=--
