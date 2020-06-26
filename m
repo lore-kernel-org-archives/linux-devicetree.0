@@ -2,94 +2,128 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE80C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B58C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3AB620773
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B8420773
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 15:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFHTsIfp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZcFAslD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgFZPsd (ORCPT
+        id S1727796AbgFZPtq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 11:48:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        Fri, 26 Jun 2020 11:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgFZPsd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:48:33 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC57C03E979;
-        Fri, 26 Jun 2020 08:48:33 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t9so5410272lfl.5;
-        Fri, 26 Jun 2020 08:48:32 -0700 (PDT)
+        with ESMTP id S1726013AbgFZPtq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 11:49:46 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB22C03E979;
+        Fri, 26 Jun 2020 08:49:46 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id rk21so9860969ejb.2;
+        Fri, 26 Jun 2020 08:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1go9gTeNkzcp6wQgoMl3JBGyFoxtum7G6W5ccT4ChgU=;
-        b=jFHTsIfpHCkFW7ktHRSc5xD5/1Wl1pdZ2ho0kG9586G37qcNfbz62vcshRhpABE1Bh
-         gssdWlK1xhz4VPmNQdT0xFvCANzldpP4RYKt8h8J9TcZcMH0lxnNwgkdBKCoFEkZ5z0O
-         sLddbsk/qU0nTtvSqO0qLmMbxfmZGH7ewczTKTS9+2fLqeOEB/49xN75tciCYU/IlAD8
-         Bguvmxo+IpqGtnXwx6O/iM09pL6JVCLwFhCYatiwcGSwQoFXkGUvqUWyBlmo547g303v
-         uDflF3WgyAj6Z/AD32Roq42ZrtnAo9LOQzRIlaa/WG7oz2Ih7dlHZV+cWeMl/z6nVSk0
-         onUA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mcSloTrT0dn3NloF0dVlYj3JBYhcEl7CXsI9M6agrbs=;
+        b=WZcFAslDpTr+doRqig/AdGBayLSS4vp2ooeqch7l287YzEUIBdXdX135jBobDGx3wK
+         2mXoFjH8QNtWG6BwyDTtXQPtLCBjjs1nO/l+IOJNdLiUtblQVSsy6cYW1XYq6cLL9aN4
+         X/ufDJRHn8a9mzRf9ooa1y5n4Vlqpehs3mzlocH5Bz+b7kYxyJLL4wdtRXVfxTKrtsac
+         U1//4TnpqfQRwjrxCNOF4g5o1P2Zgd6Jfw1Grjm/BR9AMOSSm7/n439tYUc/NXQhhYw9
+         +krrEzQCQ/MDiLYIeOSM/kCXYJjHDxtCycGYy/W6Q6aP7SomSgtPaK5SlCGyLoSQxgdu
+         oWUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1go9gTeNkzcp6wQgoMl3JBGyFoxtum7G6W5ccT4ChgU=;
-        b=LQo1NFH0GCHmtoYb9QMh40z6bHpj2ajwqRkgAsP2+Vn3Tf1x4aLo4qzQc1lVhY5DFL
-         UnV9PMqOXVCVhj+fDhwM0EFw/idABZ08Y3E3It64i2jeZtxmZlkIZrt5fdnGg9XQk8Ii
-         fWT/FfzrrG5sqkVgEC0Q3sJJ+C4NRPxYvPIwNNfNX5RsKwGkuDs61CkvISIu3GUtvlyy
-         fmakbHLGwlx/jahD6/kixgJR+oWE/fq0eSB3gtqRU2Cw9NouCl9tU+jd0SSpU9ifQjdJ
-         Hr6ZtdGNPOBG92Fdwxwi59DMN4UQrvzCnQZE3DQsglM8MUYvXAaV0L1rGfVv86pb8iiT
-         VKHA==
-X-Gm-Message-State: AOAM532u0ouF/S3kjTaIwxL54KgpPV4D7GLJQ+5VYwhKUqXcfHUSjk+7
-        351aptiqgdBJIAwR8CR8aNl9o4xnZCatfUR6Sol1gL163bU4cw==
-X-Google-Smtp-Source: ABdhPJxilQxR1MaNe3ZEOGBRsalVgzi1it09jwDjJkA5kV/h2MumLQpv701P2RRWj6LtJVpPyV/zqHzt+QB6iffvHhs=
-X-Received: by 2002:a05:6512:31d1:: with SMTP id j17mr2068193lfe.148.1593186511374;
- Fri, 26 Jun 2020 08:48:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622192558.152828-1-konradybcio@gmail.com>
- <20200622192558.152828-8-konradybcio@gmail.com> <20200623072535.GX128451@builder.lan>
-In-Reply-To: <20200623072535.GX128451@builder.lan>
-From:   Alexey Minnekhanov <alexey.min@gmail.com>
-Date:   Fri, 26 Jun 2020 18:48:20 +0300
-Message-ID: <CANi4RBQY8dXU=74JfB3hHZYMqMgVwtHoQsLZXV7CpwZ8ue2icw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] mailbox: qcom: Add sdm660 hmss compatible
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl,
-        Andy Gross <agross@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mcSloTrT0dn3NloF0dVlYj3JBYhcEl7CXsI9M6agrbs=;
+        b=LfOEDB+mVrVSHaL9FkNkPyO4IPJB+ELR7BlYTonJmCLUxRwcRarnqKLDZ9Az5U9PpT
+         pRpSn1EMt22NWgdU41ZTXFJ9X8yHlIBDxx6aEe6yITFirU/DP0kC8wk9LNpOdFXhngTf
+         ku1Bm3offP0a4PsCpBCJeMWbr6GaLlN7hsIyje25Y8bltv+gLXO41Ov7xz+yLnNbeczI
+         nCNwZKDxXvgFMsqZD55W2MLEYCQivcvDaF78aDES4uru8nG9EZ9jguztJyIOi8tlsKK8
+         oRcIyTbql3suVwdJcN4EpVs308/Je3FRR64+adXRcy9DsTITPiWJn7GTriZyvX9Ihbh7
+         2LCQ==
+X-Gm-Message-State: AOAM530A3QS1g7NonLwbLAz9yMKQFJQsYfwuNV9vPhVZlM+BX80Vx5Ib
+        746/BTH9M7AN8K3qUB2BjOE=
+X-Google-Smtp-Source: ABdhPJywFGzATWjQKSS5GJx1j3mwes43kbYokvck3/iyiewhxZmRJVdvD2yUb5mPXE7FbD5kRTfDtQ==
+X-Received: by 2002:a17:906:ecb6:: with SMTP id qh22mr2918270ejb.230.1593186585360;
+        Fri, 26 Jun 2020 08:49:45 -0700 (PDT)
+Received: from BV030612LT ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id a2sm9584834ejg.76.2020.06.26.08.49.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 26 Jun 2020 08:49:44 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 18:49:41 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v2 1/6] clk: actions: Fix h_clk for Actions S500 SoC
+Message-ID: <20200626154941.GA6611@BV030612LT>
+References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
+ <58c4bddaf178cb85d9930064af342190f6010e6e.1592941257.git.cristian.ciocaltea@gmail.com>
+ <20200626134541.GB8333@Mani-XPS-13-9360>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626134541.GB8333@Mani-XPS-13-9360>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tue, 23 Jun. 2020. 10:29, Bjorn Andersson <bjorn.andersson@linaro.org>:
->
-> On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
->
-> > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
+On Fri, Jun 26, 2020 at 07:15:41PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jun 24, 2020 at 08:47:52PM +0300, Cristian Ciocaltea wrote:
+> > The h_clk clock in the Actions Semi S500 SoC clock driver has an
+> > invalid parent. Replace with the correct one.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> You should add fixes tag for this patch and it needs to be backported as well.
+> 
+> Thanks,
+> Mani
 
-Hi, I can see dts file in linux-next using compatible
-"qcom,sdm660-apcs-hmss-global",
-but not this patch that adds it into the driver?
+Right, I added the tag:
+
+Fixes: ed6b4795ece4 ("clk: actions: Add clock driver for S500 SoC")
+
+Thanks,
+Cristi
+
+> 
+> > ---
+> >  drivers/clk/actions/owl-s500.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
+> > index e2007ac4d235..0eb83a0b70bc 100644
+> > --- a/drivers/clk/actions/owl-s500.c
+> > +++ b/drivers/clk/actions/owl-s500.c
+> > @@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
+> >  static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
+> >  
+> >  /* divider clocks */
+> > -static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
+> > +static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
+> >  static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
+> >  
+> >  /* factor clocks */
+> > -- 
+> > 2.27.0
+> > 
