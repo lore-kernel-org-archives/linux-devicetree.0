@@ -5,78 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A45C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59096C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294E7208C7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B3C20B80
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aW00ncwV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4KyRcxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgFZVrL (ORCPT
+        id S1725906AbgFZVwD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 17:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
+        Fri, 26 Jun 2020 17:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZVrK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 17:47:10 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D63C03E97A
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 14:47:10 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id l4so194591vsn.5
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 14:47:10 -0700 (PDT)
+        with ESMTP id S1725897AbgFZVwD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 17:52:03 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D215C03E97A
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 14:52:03 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id f24so6278199vsg.1
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 14:52:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BsR9lAG+ZKuy6S8tfE5+62W+cUzuqeg+ojLakVbeNYo=;
-        b=aW00ncwVrcFV+2yTbdUmjoHXoVq4ATu+p9+xi+f1wlmnSA3NL8Ks8YkMfmRkVBWGLZ
-         02PcNswuAkpSMd44gS8TChs3zBAVbgAFB6uEGkbIUu3+G5AAlccy/7OvRLdg8NSfD9N3
-         sC4WFjH+XU40hw38qYpX+hFt0NnxA4nNWRHYI=
+        bh=riZ5KZW8CnykJm5xJns3L+VFLhknSVFyzPeTPn61H9E=;
+        b=c4KyRcxKQ8HHOw9yC6I3ScWIYuHciIrlf0+XT0VzOXz6siBITRjttc97VYU4pGtrcW
+         QpZj0LQbq2BKoMXRc5i/2YcGBxHA9sydrxQMLbqm6/eU15jtxLRkteDj9x6Bi1nlvOrK
+         YApd5NYLX10WeZu/BvqXLcywGJnEOZovFjXMQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BsR9lAG+ZKuy6S8tfE5+62W+cUzuqeg+ojLakVbeNYo=;
-        b=t60M1Z0xSNXfdHBSOtdMWOLyU0mEsOCEpJx21HQgPmw6AesnRXfW82w8GFzQ+dZQ+8
-         /Dh3G0xAFtiVJySM7IJuh8qD8DYroUwIsWOTpcJpCzfWe1uPx+E2FY3s78jgtrxiYUKP
-         lGXh8ABAvkoxVu5UjjCdGleheirRPlicJKjc1xhAZinVD68DSC9sDZHC5WOcY+UlJ6D+
-         goZKWbgNY0njSDu/0Z1rcV6sp0qpweKRXOaS0af+3UcaNryvsW0R1O/Cl7YUJzPawV2E
-         7XyyUgUc3Hfce5qLJv8XuBRTatGIlI0Gdkq+pDaapbH3XGI6XxDgeunsszoiEfQyvu8D
-         XBiQ==
-X-Gm-Message-State: AOAM533/Ek0Bk7j6w/Nh+sLn3AvswcEn3UHeIZ4SE8mz7ZuZARum5pOB
-        IspnO7Rj9FyYqHyComS/PzYrFm1N3c4=
-X-Google-Smtp-Source: ABdhPJwqHlY89VwgDStfzLP2cU31Neq7JOKVEcdYCEw1QtkZtOgsfMQOuW9XRenfgCDNJkd79n9nfA==
-X-Received: by 2002:a67:8e02:: with SMTP id q2mr4250597vsd.108.1593208029535;
-        Fri, 26 Jun 2020 14:47:09 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id d200sm2858266vkd.16.2020.06.26.14.47.08
+        bh=riZ5KZW8CnykJm5xJns3L+VFLhknSVFyzPeTPn61H9E=;
+        b=QBnLYbj2FhTE+qh9B+9vQDCE0zyvW4QShqmYIrsqkFLIYT/m3MB8gHVnvQM2mZViop
+         BeD+Us7UHZjrdLR6ilNeoOCA7U4BoqJi+GWdnEI+1pvSDsyFbeJMgsE+8JCHYIeZlsLy
+         eloJRjKYo4QjJZIa3oSTm1fMgg7OThHTQuVBWjt4QwgIRjAhdGOgFRSCdwE/6UPmFImx
+         JU18EUxUXHVPEJHQtdUrCkjT1CQhixaRXf7blYSQv3UXeT6TTAKcwx0tYqcRldStAeo0
+         iH+xlTPEybyu7SLks+GjDgwD+nQbS90oovVZy+HZrH9LUDWwj60xsFgrl2raSYRofDFP
+         eXkg==
+X-Gm-Message-State: AOAM530OzpzsIUrnElISegRwYSBW18qXdWADU7nh4XJQnQtFOxnAi2z9
+        XMdKQia4l2nRfucBs26kN0TBdQIJlpQ=
+X-Google-Smtp-Source: ABdhPJzzxzfnyPEy66wmLGTziiNvM6J5ln+NHliMtQg4eeUV0AAJyHb12xc7usvF5VvLsCdZZdd+XQ==
+X-Received: by 2002:a05:6102:38c:: with SMTP id m12mr4024848vsq.31.1593208322026;
+        Fri, 26 Jun 2020 14:52:02 -0700 (PDT)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
+        by smtp.gmail.com with ESMTPSA id d20sm4277530vkf.25.2020.06.26.14.52.00
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 14:47:08 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id i15so3491625uah.13
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 14:47:08 -0700 (PDT)
-X-Received: by 2002:ab0:29c1:: with SMTP id i1mr4041837uaq.120.1593208028348;
- Fri, 26 Jun 2020 14:47:08 -0700 (PDT)
+        Fri, 26 Jun 2020 14:52:01 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id s192so2534011vkh.3
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 14:52:00 -0700 (PDT)
+X-Received: by 2002:a1f:eec1:: with SMTP id m184mr3812706vkh.34.1593208320514;
+ Fri, 26 Jun 2020 14:52:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org> <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1593194502-13164-2-git-send-email-pillair@codeaurora.org>
+References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org> <1593194502-13164-3-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1593194502-13164-3-git-send-email-pillair@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 26 Jun 2020 14:46:57 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X+v1TpZQPBZNV_Azt8J=0ZJw+XGJhLbnBxaZJGCCPwVg@mail.gmail.com>
-Message-ID: <CAD=FV=X+v1TpZQPBZNV_Azt8J=0ZJw+XGJhLbnBxaZJGCCPwVg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt: bindings: Add new regulator as optional property
- for WCN3990
+Date:   Fri, 26 Jun 2020 14:51:49 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V1C2Lu31n8xQ8HPf21fNo_Da2SLtZAeStFBEou9+geEA@mail.gmail.com>
+Message-ID: <CAD=FV=V1C2Lu31n8xQ8HPf21fNo_Da2SLtZAeStFBEou9+geEA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ath10k: Add support for chain1 regulator supply voting
 To:     Rakesh Pillai <pillair@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>
 Cc:     ath10k@lists.infradead.org,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         linux-wireless <linux-wireless@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -87,41 +85,30 @@ Hi,
 
 On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
 >
-> Add an additional regulator supply as an optional
-> property for WCN3990.
+> Add support to vote for chain-1 voltage regulator
+> in WCN3990.
 >
 > Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
 >
 > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-
-Overall though: aren't you missing a whole lot of CCs?  Have you tried
-using get_maintainer?
-
-
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 65ee68e..b7188d3 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -65,7 +65,8 @@ Optional properties:
->                                      the length can vary between hw versions.
->  - <supply-name>-supply: handle to the regulator device tree node
->                            optional "supply-name" are "vdd-0.8-cx-mx",
-> -                          "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
-> +                          "vdd-1.8-xo", "vdd-1.3-rfa", "vdd-3.3-ch0"
-> +                          and "vdd-3.3-ch1".
-
-nit that could probably be fixed by maintainer when applying: missing
-comma at the end of "vdd-3.3-ch0"
-
-I will also note that this file is in dire need of being converted to
-yaml.  Pretty soon I think people are going to start disallowing
-changes to the bindings that haven't been converted to yaml so you
-probably want to get a jump start on it so future patches aren't
-stalled.
-
-In any case:
+>  drivers/net/wireless/ath/ath10k/snoc.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+> index 645ed5f..407a074 100644
+> --- a/drivers/net/wireless/ath/ath10k/snoc.c
+> +++ b/drivers/net/wireless/ath/ath10k/snoc.c
+> @@ -45,6 +45,7 @@ static const char * const ath10k_regulators[] = {
+>         "vdd-1.8-xo",
+>         "vdd-1.3-rfa",
+>         "vdd-3.3-ch0",
+> +       "vdd-3.3-ch1",
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+...with the slight nit that ${SUBJECT} and description should probably
+call it "chan1" and not "chain1".  Presumably the maintainer can fix
+when applying.
+
+-Doug
