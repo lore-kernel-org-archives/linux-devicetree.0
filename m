@@ -2,81 +2,66 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ABCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 13:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267C5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 13:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC7B20679
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 13:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B922089D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 13:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593179030;
-	bh=gaVWyq4+IVSLWllMUFqnDbLAUXdRuZKIN4lmZPsTZgw=;
+	s=default; t=1593179142;
+	bh=iE3tzCAvbGL1rbktPt6yEr1J1jW46XJSCh5A37dUpCQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zDuO1O2Xqr/IQ8VNUeHXb5W8YYoxpNZbuzDAcCsZPAd+hIa/ae2M0XHR8HEFgrc0h
-	 2Hrmti+J8llJkn88OBDox9+aknpy4RoduLhOCO2DdEaAheh81a3O6vFMTHcBrwMFJ/
-	 C3wyDn+RFaSWco+rAxxMGzh3KncPU5d2YniOLee4=
+	b=cOuMlHo2kGRIhALC/3b6oFiIMclOwCDLwGh09rGJZMMiwnJwEqY3Z/NkjW5PTAsuN
+	 BFr2eQI5k31/nYZ1MDecT6xVHAcM4qhlnR8kdUY/rbLlE/W1UEdl0pkUms8lRepREo
+	 GlB6tQfaX5bpVtPR+5N3XNcwqnDYFMSzQ4BPE5Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgFZNnt (ORCPT
+        id S1728866AbgFZNpi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 09:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39982 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 09:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgFZNnt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:43:49 -0400
+        id S1725864AbgFZNph (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:45:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA69B20656;
-        Fri, 26 Jun 2020 13:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087CB207D8;
+        Fri, 26 Jun 2020 13:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593179029;
-        bh=gaVWyq4+IVSLWllMUFqnDbLAUXdRuZKIN4lmZPsTZgw=;
+        s=default; t=1593179137;
+        bh=iE3tzCAvbGL1rbktPt6yEr1J1jW46XJSCh5A37dUpCQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rrLUh2Ym53eHVizZ0IDbQM/gCch3S7adJ8rKLLF1XNvslldix/AH6OmUpjU3Biqts
-         6eqg0o4NUrVLKj+DhTI0hl66ajOcfEOlakGPUZGtSf55r9EZgyC6CIGAcco58IzT+e
-         0LMTmznNhBeQBKWfrHns88X3u9jYZR+DwjErCBa4=
-Date:   Fri, 26 Jun 2020 15:43:44 +0200
+        b=tjaOP2S48N4PiUtwTGuhQhSBT2SRLmd2NQBOGgleCQdl6+zShGXD9byTyziBJC/PR
+         FUhDK1WY01BmAh1vNQr3bRVRZjeE2CwH3G9RROahCxUpk07Yqjm6uLex+r2YMf95mb
+         J1Cnh579al409RgfizJSvV9RBEauGw4JCP6OMCgo=
+Date:   Fri, 26 Jun 2020 15:45:32 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     robh+dt@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, balbi@kernel.org,
-        devicetree@vger.kernel.org, dan.carpenter@oracle.com,
-        ben.dooks@codethink.co.uk, colin.king@canonical.com, rogerq@ti.com,
-        peter.chen@nxp.com, weiyongjun1@huawei.com, jpawar@cadence.com,
-        kurahul@cadene.com, sparmar@cadence.com
-Subject: Re: [PATCH RFC 2/5] usb:cdns3: Add pci to platform driver wrapper
-Message-ID: <20200626134344.GA4030531@kroah.com>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <20200626045450.10205-3-pawell@cadence.com>
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc:     linux-clk@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
+        shubhrajyoti.datta@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, michals@xilinx.com
+Subject: Re: [PATCH v4 8/8] staging: clocking-wizard: Delete the driver from
+ the staging
+Message-ID: <20200626134532.GA4095392@kroah.com>
+References: <1593175304-4876-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <1593175304-4876-9-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200626045450.10205-3-pawell@cadence.com>
+In-Reply-To: <1593175304-4876-9-git-send-email-shubhrajyoti.datta@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 06:54:47AM +0200, Pawel Laszczak wrote:
-> Patch adds PCI specific glue driver that creates and registers in-system
-> cdns-usbssp platform device.
+On Fri, Jun 26, 2020 at 06:11:44PM +0530, Shubhrajyoti Datta wrote:
+> Delete the driver from the staging as it is in drivers/clk.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Ick, no.
-
-Platform devices are ONLY to be used for when you have a real platform
-device.  If your device is a PCI device, use that.  Don't try to be cute
-and make a platform device when you don't have one please.
-
-> Thanks to that we will be able to use
-> the cdns-usbssp platform driver for USBSS-DEV controller
-> build on PCI board.
-
-No, fix up that driver to not care about it being a platform device,
-make it just accept any type of 'struct device'.
-
-thanks,
-
-greg k-h
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
