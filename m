@@ -2,86 +2,75 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03408C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 19:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C778C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 19:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08A22053B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 19:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E538C2053B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 19:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afLbQh7m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qesXiOQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgFZTFT (ORCPT
+        id S1725867AbgFZTIO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 15:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57650 "EHLO
+        Fri, 26 Jun 2020 15:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgFZTFR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 15:05:17 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474C5C03E979;
-        Fri, 26 Jun 2020 12:05:17 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id h4so10932336ior.5;
-        Fri, 26 Jun 2020 12:05:17 -0700 (PDT)
+        with ESMTP id S1725768AbgFZTIN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 15:08:13 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44650C03E979;
+        Fri, 26 Jun 2020 12:08:12 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i4so10926797iov.11;
+        Fri, 26 Jun 2020 12:08:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=liMltOM0SM3D6vl3HMgptm6OHlaJ5OZbEc9z9zCU6s8=;
-        b=afLbQh7mGvHfjLQ1zpg9eY/B+M/3Og37b/DXOBVRfhlL2i2IMZ/2OKknw6moyXQmue
-         PYw+s5Utc/Uxz0ojI2WxBbMyNIMBwSMOOW0JiwlKAgBRW7eJORKDeA55ABzPDuhuwZkt
-         mHHWTkegig7EO+y9yMcXDLc2eJWE8JDZYsEVWpc3Ln5tdQzN4ZbeouxFiLqEUU1vwZ8K
-         zvVpHH+Q8RXwQXxs4hJiUuoIBBYx3tlo9DtFrwC76gMkwuwSokMrhIxwgNxpbHUHQ5h4
-         kb1O/7EG/cha03X1dM+6IhBXI9brfX7xuchmJ5c56AVuSmmz1FPbHXRXwK5ylugUBuzP
-         yO2A==
+        bh=B7noQD9pDuF/3eYS3qXwRb5wpQUSmZhmVcsIHVQB+vU=;
+        b=qesXiOQdLKxsuCnivXLwRA/WGZcTNeHan6OPHEICni4giGJrc074nf0EGppvn3mNxO
+         CdJV9imMs0qSY3BlmtLzvAeOu+ovEvZWCzeBaGOaF2oC+htTM9Ratkb0qY2ww+3a9hJx
+         ag5vuCmN+IUcNARUkI7DYfLZwSUtOoJntXtX3dyziT7CySGwWsRyGSbzG9Bkooi3rgCf
+         JnZNMSx8o0DMlH3Hb0W5qiRUPgBB3ycK85oD44mcAZ3fzPCPauy0eruudIu6Ig3vcSsV
+         AlIikR3kxpmp4+UJjPagHP6A6mJqIyBipUhwASw7Gn3YwpEIgJol1ESXyaSSbYVP069s
+         3YBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=liMltOM0SM3D6vl3HMgptm6OHlaJ5OZbEc9z9zCU6s8=;
-        b=tIMuMq1dzcRwOlXaSCMeAVGLluHsaIa/5EXjcud5eZAZTCRScfY/qlUH8nLSAunoyt
-         OhL/cPNxWw0wpNE16LShe7MR+urkHtotAMo49m6qelfEM/Z60wPScAu9lM+gKitcdXIF
-         Aa6bo+sbQgeTdyg3LhRgGEJzMuxFxduAKKljTjWAvR7zbOgYGRkeIPZJYOgX7v/p9cjj
-         Rf35tOs+KT1lz5FvPppY5Gu6KMLIO5Tplx1crpUia3Fj5V5x6EIQ4y+07f8kMasp2OZe
-         3/9wuya2w88PV5BhSYIR8GhdM+sd3u6kQ0T29exdZLKygoe4TwIu8WJtQzbK6O2rjI5V
-         MnIQ==
-X-Gm-Message-State: AOAM533Cxy3+9Lw3Qfi24ugVpgUxjLeqtCGkiR0n/AoHUgpDUnLwqp0n
-        GOYi8fxdG2J/CQyaIx87LKBfWt3E
-X-Google-Smtp-Source: ABdhPJyw1AUnf5mM3AmYeEE8DUABbkwxMno1ViJ5f4iHtxw5v/sPSYpz0yjx2iNQP22uFQlZRKe9Kw==
-X-Received: by 2002:a5d:8f04:: with SMTP id f4mr4919337iof.33.1593198316353;
-        Fri, 26 Jun 2020 12:05:16 -0700 (PDT)
+        bh=B7noQD9pDuF/3eYS3qXwRb5wpQUSmZhmVcsIHVQB+vU=;
+        b=Ap7/9JMpIb7ss8GU8nrJPy9pZWd72qougZVhIHvzgCAkMcElpT8F8Sg252qBNIz51S
+         W3MuoUFCBKe2fWI8eLaKeuVxyhY7fRLl04v7YVuIAfG+AUgGVlOh51PLxjuiKMLWL6X1
+         nrwBUACNoh7IPT7ortZnvsZTK//i+SOAnuyFFFlvXao/Gvr8MlD/tXMKBIEIe951/r8v
+         1WlYIhMMzD4shkEqScZW0YmKZ89t3ogE9tJtC6/PVPecY1ioMh/NookxtdvEe4XVRRNI
+         5HYNLigMkhLaMaMvZzB2dEOmFfrf4ZExy0GTxPRDUiOGb17zEFh/Nx8ATmbZZtiEAQXy
+         EOqA==
+X-Gm-Message-State: AOAM532cCbaNz2B0VGBQbdcf4vfXPyj5pAGmhQUcglh1EjDe7ggWlJuQ
+        aI4r3+jOWrjgyCA0vMecUu+UbF+1
+X-Google-Smtp-Source: ABdhPJwPiahDeyCR4qcB+lP+VikKKuFj3taN0SKzAiKx+1uo7zlJ6/MW1rdd2cVO+jASvq7LHW/uwg==
+X-Received: by 2002:a6b:f40a:: with SMTP id i10mr4937587iog.155.1593198491310;
+        Fri, 26 Jun 2020 12:08:11 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k3sm11502176iot.42.2020.06.26.12.05.13
+        by smtp.googlemail.com with ESMTPSA id i9sm3423736ile.48.2020.06.26.12.08.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jun 2020 12:05:15 -0700 (PDT)
-Subject: Re: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr
- driver support
-To:     Florinel Iordache <florinel.iordache@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Fri, 26 Jun 2020 12:08:10 -0700 (PDT)
+Subject: Re: [PATCH net-next v3 7/7] arm64: dts: add serdes and mdio
+ description
+To:     florinel.iordache@nxp.com, davem@davemloft.net,
+        netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux@armlinux.org.uk
+Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
 References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
- <20200622142430.GP279339@lunn.ch>
- <AM0PR04MB5443DAF865284ADE78423C64FB970@AM0PR04MB5443.eurprd04.prod.outlook.com>
+ <1592832924-31733-8-git-send-email-florinel.iordache@nxp.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -137,66 +126,51 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <83ff6b40-157e-3f1c-7370-29a0681dfad2@gmail.com>
-Date:   Fri, 26 Jun 2020 12:05:11 -0700
+Message-ID: <10dc033c-1a1c-9eb3-f27b-c0ea279e5169@gmail.com>
+Date:   Fri, 26 Jun 2020 12:08:07 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR04MB5443DAF865284ADE78423C64FB970@AM0PR04MB5443.eurprd04.prod.outlook.com>
+In-Reply-To: <1592832924-31733-8-git-send-email-florinel.iordache@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/22/20 7:39 AM, Florinel Iordache wrote:
->> -----Original Message-----
->> From: Andrew Lunn <andrew@lunn.ch>
->> Sent: Monday, June 22, 2020 5:25 PM
->> To: Florinel Iordache <florinel.iordache@nxp.com>
->> Cc: davem@davemloft.net; netdev@vger.kernel.org; f.fainelli@gmail.com;
->> hkallweit1@gmail.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
->> linux-doc@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
->> kuba@kernel.org; corbet@lwn.net; shawnguo@kernel.org; Leo Li
->> <leoyang.li@nxp.com>; Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
->> Ioana Ciornei <ioana.ciornei@nxp.com>; linux-kernel@vger.kernel.org
->> Subject: [EXT] Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver
->> support
->>
->> Caution: EXT Email
->>
->> On Mon, Jun 22, 2020 at 04:35:21PM +0300, Florinel Iordache wrote:
->>> Add support for backplane kr generic driver including link training
->>> (ieee802.3ap/ba) and fixed equalization algorithm
->>
->> Hi Florinel
->>
->> This is still a PHY device. I don't remember any discussions which resolved the
->> issues of if at the end of the backplane there is another PHY.
->>
->> It makes little sense to repost this code until we have this problem discussed and
->> a way forward decided on. It fits into the discussion Russell and Ioana are having
->> about representing PCS drivers. Please contribute to that.
->>
->>         Andrew
+On 6/22/20 6:35 AM, Florinel Iordache wrote:
+> Add dt nodes with serdes, lanes, mdio generic description for supported
+> platform: ls1046. This is a prerequisite to enable backplane on device
+> tree for these platforms.
 > 
-> Hi Andrew,
-> 
-> Yes, you are right: we decided to send only support for DPAA1 using current approach as a PHY device
-> (as mentioned in cover-letter), until PCS representation will be fully clarified.
-> The entire DPAA2 support was removed for now, together with phylink changes.
-> DPAA1 maintainer (Madalin Bucur) agrees with current representation as a PHY device for DPAA1.
-> So we would like to have some discussions around this approach for DPAA1 only, as it seems suitable for us.
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> ---
 
-The question is really whether it is suitable for others beyond NXP, the
-drivers are certainly organized in such a way that there is little NXP
-specifics in them so the intent is clearly there.
+[snip]
 
-We will probably not know, either because vendors have decided to hide
-all of this stuff under firmware, or they do not use Linux or they just
-are not following what is going on upstream and have no desire to
-participate.
+> @@ -21,7 +22,7 @@ fman@1a00000 {
+>  		fsl,fman-10g-port;
+>  	};
+>  
+> -	ethernet@f2000 {
+> +	mac10: ethernet@f2000 {
+>  		cell-index = <0x9>;
+>  		compatible = "fsl,fman-memac";
+>  		reg = <0xf2000 0x1000>;
+> @@ -29,7 +30,7 @@ fman@1a00000 {
+>  		pcsphy-handle = <&pcsphy7>;
+>  	};
+>  
+> -	mdio@f3000 {
+> +	mdio10: mdio@f3000 {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+
+That part of the patch does not seem to have any users, there is nothing
+in your patch series that references mac9, mdio9 or mac10, mdio10
+AFAICT. Maybe you can split it up and send it aside from this series?
 -- 
 Florian
