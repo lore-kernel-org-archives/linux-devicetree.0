@@ -2,95 +2,80 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A77C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 07:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F308DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86ADC2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 07:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA122076E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593158745;
+	bh=oxZuekvIPEtXM6zB/IiVbn+wXbPMFca/PZzTAFdxW30=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gvLird9Ms51o7E+NOs+Ra+JUf//Rd4bpgt9FxPWIfte5Sp6GuDXSzhO6hSbmFlb77
+	 0odQ0NmlkAm992PjeBJHLTPmbS3A2A5HoW0vDIPyKWN2rPVVjmQSsISzwjIgCcWTKN
+	 IXC2SX/7HsS7U3smJtVS5myufyBac1PId5n0rstE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgFZH47 (ORCPT
+        id S1729022AbgFZIFo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:56:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45922 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728687AbgFZH46 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 03:56:58 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id A533B2A58EC
-Subject: Re: [PATCH v7] dt-bindings: mfd: Convert ChromeOS EC bindings to
- json-schema
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Ikjoon Jang <ikjn@chromium.org>, devicetree@vger.kernel.org,
+        Fri, 26 Jun 2020 04:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729082AbgFZIFm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:05:42 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E1820857;
+        Fri, 26 Jun 2020 08:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593158742;
+        bh=oxZuekvIPEtXM6zB/IiVbn+wXbPMFca/PZzTAFdxW30=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sXRXnyjYIlPCcgYot6AonrBd7xik/cOcpHH2VwHbdmahhAt4LUD/SpWYkuF+3jDev
+         k2bmuddg2HJ9ME+0uXJa8XWQGdymFjs5BZEvYKxVt+sGH0Yrd/+I99SmK681v11dIh
+         7jkhIFO/+aX43apwegX3TWjZZKTl/g2lUcbVn8P0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org
-References: <20200306085513.76024-1-ikjn@chromium.org>
- <20200417101333.GA3737@dell>
- <ab5adcd1-18f2-9b1c-8c5d-744f7a0e5579@collabora.com>
- <20200625134620.GS954398@dell>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b2f27cee-327e-c96c-aa12-5e1ef1f352aa@collabora.com>
-Date:   Fri, 26 Jun 2020 09:56:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200625134620.GS954398@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH] ARM: dts: zx: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 10:05:38 +0200
+Message-Id: <20200626080538.3454-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+Fix dtschema validator warnings like:
+    l2-cache-controller@c00000: $nodename:0:
+        'l2-cache-controller@c00000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-On 25/6/20 15:46, Lee Jones wrote:
-> On Thu, 25 Jun 2020, Enric Balletbo i Serra wrote:
-> 
->> Hi Lee,
->>
->> On 17/4/20 12:13, Lee Jones wrote:
->>> On Fri, 06 Mar 2020, Ikjoon Jang wrote:
->>>
->>>> Convert the ChromeOS EC bindings to json-schema.
->>>>
->>>> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
->>>> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>> ---
->>>>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 -----------
->>>>  .../bindings/mfd/google,cros-ec.yaml          | 129 ++++++++++++++++++
->>>>  2 files changed, 129 insertions(+), 76 deletions(-)
->>>>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
->>>>  create mode 100644 Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
->>>
->>> Applied, thanks.
->>
->> I don't see this patch applied, I am missing something?
-> 
-> It should be there.  Not sure when the MFD repo was last pushed.
-> 
-> I'll try pushing it again (there are a couple of new patches from
-> today).  Maybe that will spur a fetch from -next.  If it's still not
-> there tomorrow, let me know and I'll investigate further.
-> 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/zx296702.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Still not there, just to make sure I am looking at the right branch, I am checking
+diff --git a/arch/arm/boot/dts/zx296702.dtsi b/arch/arm/boot/dts/zx296702.dtsi
+index afd98de029be..f378c661b3bf 100644
+--- a/arch/arm/boot/dts/zx296702.dtsi
++++ b/arch/arm/boot/dts/zx296702.dtsi
+@@ -58,7 +58,7 @@
+ 			clocks = <&topclk ZX296702_A9_PERIPHCLK>;
+ 		};
+ 
+-		l2cc: l2-cache-controller@c00000 {
++		l2cc: cache-controller@c00000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x00c00000 0x1000>;
+ 			cache-unified;
+-- 
+2.17.1
 
-https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=for-mfd-next
-
-Thanks,
- Enric
