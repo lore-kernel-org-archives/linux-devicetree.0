@@ -2,186 +2,150 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7784C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123E0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A911B207E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC03207FC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MtdrETYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgFZQfQ (ORCPT
+        id S1727104AbgFZQl1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:35:16 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51686 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgFZQfP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 12:35:15 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id C09CC2A5D7A
-Received: by earth.universe (Postfix, from userid 1000)
-        id 4FBEE3C08CD; Fri, 26 Jun 2020 18:35:11 +0200 (CEST)
-Date:   Fri, 26 Jun 2020 18:35:11 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
-Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
-Message-ID: <20200626163511.ecblnjw6ckh77kog@earth.universe>
-References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
+        Fri, 26 Jun 2020 12:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbgFZQl1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 12:41:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D012C03E97A
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 09:41:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j1so4872605pfe.4
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 09:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=hFXLpE7iZLR8mWC/BJB98odAF50dNLGX6HXgsEqe10Y=;
+        b=MtdrETYCbYAe5Wae4JiMSgT8v/aaQbhefe1TDDgDkX0rdv2qi/wS1bKp3aLWHiVvC3
+         g09w57rMUfItPUBoMQ7xCj8Baw039IEF/l5NIDuUvp1NW3FkyTGxDvYlLT7zJcpfjXKo
+         XZw5t9jYxBZVDrcQRZQtVfV/abVPMpuabhbcE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=hFXLpE7iZLR8mWC/BJB98odAF50dNLGX6HXgsEqe10Y=;
+        b=nWL19xQDXmJkKhG8Gpm3iqPL8bmcYYSDGVmmNe41m63R/wo4IW3U6NqSC54GLub8zH
+         wdcQavH8iMNeNHL39ehd5HcR3O2va9wdh9S/stXP4b8LfD4QSdNgDrkUmt1I6om86kIo
+         AT3icF1orbF9f/plavUBeVSjvdcGfqHVKCpDHAKAPpHRdS5CoPUyJ8ndPAniuXJ7U5Xd
+         5MzmyABUOtELuGKZNp+YsCs4+KMpOJOBZpliVRpARhSfl7z8Rf35qcECclPtwQyTlFZO
+         H2IUGU1IyEvpSEiT2XRjZzA2qk3EFAKLdWixnqfHJRCGMQHgq/DLzr2lemgbm3Uo55h9
+         tVGw==
+X-Gm-Message-State: AOAM532Q1nnDBvFVIqIZdQrOiiyjxWupdgKD7BHqXfMUSM0aulMrYSwc
+        yG2nADvsb+1OudjLXr1CVQHh3Q==
+X-Google-Smtp-Source: ABdhPJxhdS9f8NXQEcBXWWzG7fn0fIgKDq2TpotTVnV0cuajw0/vGlhj1yQXPXDBJVMrNPPQmwDUJw==
+X-Received: by 2002:a62:1a0f:: with SMTP id a15mr3787231pfa.177.1593189686532;
+        Fri, 26 Jun 2020 09:41:26 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 125sm20738580pff.130.2020.06.26.09.41.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jun 2020 09:41:25 -0700 (PDT)
+Subject: Re: [PATCH] ARM: dts: bcm: Align L2 cache-controller nodename with
+ dtschema
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200626080646.4300-1-krzk@kernel.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <5a8802f2-d9bf-6a64-1a04-b490bbeb0475@broadcom.com>
+Date:   Fri, 26 Jun 2020 09:41:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5m6ldzthn5ejezqb"
-Content-Disposition: inline
-In-Reply-To: <20200416145123.73039-1-sebastian.reichel@collabora.com>
+In-Reply-To: <20200626080646.4300-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Thanks for cleanup.
 
---5m6ldzthn5ejezqb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-Can this be applied please? There were no changes in 5.8 cycle to
-PPD's DT file, so it still applies.
-
-Thanks,
-
--- Sebastian
-
-On Thu, Apr 16, 2020 at 04:51:23PM +0200, Sebastian Reichel wrote:
-> From: Ian Ray <ian.ray@ge.com>
->=20
-> Use kernel LED interface for the alarm LEDs.
->=20
-> Signed-off-by: Ian Ray <ian.ray@ge.com>
-> [Rebased]
-> Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
-> [Rebased]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+On 2020-06-26 1:06 a.m., Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>      l2-cache@22000: $nodename:0:
+>          'l2-cache@22000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 > ---
->  arch/arm/boot/dts/imx53-ppd.dts | 49 +++++++++++++++++++++++++++------
->  1 file changed, 40 insertions(+), 9 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-pp=
-d.dts
-> index 5ff9a179c83c..34ce41600098 100644
-> --- a/arch/arm/boot/dts/imx53-ppd.dts
-> +++ b/arch/arm/boot/dts/imx53-ppd.dts
-> @@ -176,7 +176,7 @@ pwm_bl: backlight {
->  		power-supply =3D <&reg_3v3_lcd>;
->  	};
-> =20
-> -	leds {
-> +	leds-brightness {
->  		compatible =3D "pwm-leds";
-> =20
->  		alarm-brightness {
-> @@ -185,6 +185,32 @@ alarm-brightness {
->  		};
->  	};
-> =20
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_alarmled_pins>;
-> +
-> +		alarm1 {
-> +			label =3D "alarm:red";
-> +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		alarm2 {
-> +			label =3D "alarm:yellow";
-> +			gpios =3D <&gpio7 7 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		alarm3 {
-> +			label =3D "alarm:blue";
-> +			gpios =3D <&gpio7 8 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		alarm4 {
-> +			label =3D "alarm:silenced";
-> +			gpios =3D <&gpio7 13 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
->  	gpio-poweroff {
->  		compatible =3D "gpio-poweroff";
->  		gpios =3D <&gpio3 9 GPIO_ACTIVE_HIGH>;
-> @@ -909,18 +935,10 @@ MX53_PAD_NANDF_CS2__GPIO6_15		0x0
->  			MX53_PAD_NANDF_CS3__GPIO6_16		0x0
->  			/* POWER_AND_BOOT_STATUS_INDICATOR */
->  			MX53_PAD_PATA_INTRQ__GPIO7_2		0x1e4
-> -			/* ACTIVATE_ALARM_LIGHT_RED */
-> -			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
-> -			/* ACTIVATE_ALARM_LIGHT_YELLOW */
-> -			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
-> -			/* ACTIVATE_ALARM_LIGHT_CYAN */
-> -			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
->  			/* RUNNING_ON_BATTERY_INDICATOR_GREEN */
->  			MX53_PAD_GPIO_16__GPIO7_11		0x0
->  			/* BATTERY_STATUS_INDICATOR_AMBER */
->  			MX53_PAD_GPIO_17__GPIO7_12		0x0
-> -			/* AUDIO_ALARMS_SILENCED_INDICATOR */
-> -			MX53_PAD_GPIO_18__GPIO7_13		0x0
->  		>;
->  	};
-> =20
-> @@ -1080,4 +1098,17 @@ pinctrl_usb_otg: usbotggrp {
->  			MX53_PAD_KEY_COL4__USBOH3_USBOTG_OC	0x180
->  		>;
->  	};
-> +
-> +	pinctrl_alarmled_pins: qmx6alarmledgrp {
-> +		fsl,pins =3D <
-> +			/* ACTIVATE_ALARM_LIGHT_RED */
-> +			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
-> +			/* ACTIVATE_ALARM_LIGHT_YELLOW */
-> +			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
-> +			/* ACTIVATE_ALARM_LIGHT_CYAN */
-> +			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
-> +			/* AUDIO_ALARMS_SILENCED_INDICATOR */
-> +			MX53_PAD_GPIO_18__GPIO7_13		0x0
-> +		>;
-> +	};
->  };
-> --=20
-> 2.25.1
->=20
+>   arch/arm/boot/dts/bcm-cygnus.dtsi | 2 +-
+>   arch/arm/boot/dts/bcm-hr2.dtsi    | 2 +-
+>   arch/arm/boot/dts/bcm-nsp.dtsi    | 2 +-
+>   arch/arm/boot/dts/bcm21664.dtsi   | 2 +-
+>   4 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 1bc45cfd5453..35bdd0969f0a 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -91,7 +91,7 @@
+>   			      <0x20100 0x100>;
+>   		};
+>   
+> -		L2: l2-cache@22000 {
+> +		L2: cache-controller@22000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0x22000 0x1000>;
+>   			cache-unified;
+> diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
+> index 5e5f5ca3c86f..cbebed5f050e 100644
+> --- a/arch/arm/boot/dts/bcm-hr2.dtsi
+> +++ b/arch/arm/boot/dts/bcm-hr2.dtsi
+> @@ -104,7 +104,7 @@
+>   			      <0x20100 0x100>;
+>   		};
+>   
+> -		L2: l2-cache@22000 {
+> +		L2: cache-controller@22000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0x22000 0x1000>;
+>   			cache-unified;
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index da6d70f09ef1..1c4a46e350e3 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -122,7 +122,7 @@
+>   			      <0x20100 0x100>;
+>   		};
+>   
+> -		L2: l2-cache@22000 {
+> +		L2: cache-controller@22000 {
+>   			compatible = "arm,pl310-cache";
+>   			reg = <0x22000 0x1000>;
+>   			cache-unified;
+> diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
+> index 3cf66faf3b56..58ec1b2f8ef6 100644
+> --- a/arch/arm/boot/dts/bcm21664.dtsi
+> +++ b/arch/arm/boot/dts/bcm21664.dtsi
+> @@ -90,7 +90,7 @@
+>   		reg-io-width = <4>;
+>   	};
+>   
+> -	L2: l2-cache@3ff20000 {
+> +	L2: cache-controller@3ff20000 {
+>   		compatible = "arm,pl310-cache";
+>   		reg = <0x3ff20000 0x1000>;
+>   		cache-unified;
 
---5m6ldzthn5ejezqb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl72I6sACgkQ2O7X88g7
-+prlww//X/bBvm2laqBr3zVAZ/6mUh8OcKpesdRnIXJoRZ10f7lcj0sLJWxHmHia
-PY0/OeaIuCek6sUgC28KgnUThe4SBsBQCMefODeAwLb0l1vJJF/qCOX7rdN0uKVu
-9zKuIGY5tWM9GllWMEBZfENIVmctqt0egCg+Pi2XLN+En5CpwOOS01rl6tIYXgwk
-a1YaveHdSCMe9WO2UNV/RpxZBGSaiBHeFbBPuOhbJSZJh5CuhhYIlxw0szB1cIln
-OKp3S9wXjx9u5nDxHwxJ8WUSjWWUFdcXxh9i89/gCAMrXj3kYtWWlRvfJAzoJKTU
-4Y8qTdlKLNUuSyLTLctMXpZ9cIIJnxFQoSGuRoCruXZmVV9WdpVBm5yaPgpRchCd
-vfLXjaBVEmUSnWMPEjBTMD9aJlrhbf+i6JiY/tgGWSKBopyKIbyF77DhW7zJPeUe
-WrBvckFQQgtdR8S680Qyo4Yw2R714QAjCi7cb/HRkVe6/3NnO+HAU7t58bBlUAJH
-MwxmK9cqOm+llQKwzRYHzko4vI7Lm2D9Ze14tzcA10McCoAZsQrI8+0H+FhaN/xs
-iASm21gq/5lZXsUw++kWuvhuNThU9BxaaQ3AXK1ZgGgBYVxCVOlinKXjBqLzy9sU
-On28G29Tt9tqlAN4HXXDakc9cWeBf8VD4B9QzLohXI9vH4TR0W0=
-=ga+g
------END PGP SIGNATURE-----
-
---5m6ldzthn5ejezqb--
