@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1286CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EE6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C7E207D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7BA2084D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 00:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="bSmun+ES"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="YU+RBJh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgFZA4H (ORCPT
+        id S1726737AbgFZA4O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 25 Jun 2020 20:56:07 -0400
-Received: from vps.xff.cz ([195.181.215.36]:44928 "EHLO vps.xff.cz"
+        Thu, 25 Jun 2020 20:56:14 -0400
+Received: from vps.xff.cz ([195.181.215.36]:45366 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgFZA4F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 25 Jun 2020 20:56:05 -0400
+        id S1726682AbgFZA4M (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 25 Jun 2020 20:56:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1593132964; bh=V8lg3QrmlL/+ORB8+T8iagnNb4aO75aHpHs9Ov8wOuQ=;
+        t=1593132969; bh=N2+51FLSxUgYRTfkXppkmskKeBdxuh3L5G/ggCgw7IU=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=bSmun+ESjXhcDEqOkhLNm1NAZ++s5RpXAHg8rTW4A40AhIaqSjzpfzK0URfP7B+RT
-         CMQAQ4rl0aOcy+oOwAcjw0ghRJNBZFPCNfVN6CWU1G9nBWsWQh94u/e07W6zdavgFJ
-         BiElb3ruXWfyLdTrd96NEk+CxebeepNO/oes36TQ=
+        b=YU+RBJh1BuD/O0pZTuUclupCY0WwQbwCu7LwnIsZ9fPLnfxBKXxeNefY3Ju6DjE1f
+         +oomT5n3OGj1k/gML4Nobh8D0ib0BdJVSzYpLTkzf1P39N/lftJ5Kvy1VLx73X0paN
+         QohLdX6hy/qdRtXWDCD20Wew0lgTsbDK4+8s/zGA=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -41,16 +41,15 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 01/13] dt-bindings: vendor-prefixes: Add Xingbangda
-Date:   Fri, 26 Jun 2020 02:55:49 +0200
-Message-Id: <20200626005601.241022-2-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>
+Subject: [PATCH v5 11/13] drm/panel: st7703: Assert reset prior to powering down the regulators
+Date:   Fri, 26 Jun 2020 02:55:59 +0200
+Message-Id: <20200626005601.241022-12-megous@megous.com>
 In-Reply-To: <20200626005601.241022-1-megous@megous.com>
 References: <20200626005601.241022-1-megous@megous.com>
 MIME-Version: 1.0
@@ -60,33 +59,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+The reset pin is inverted, so if we don't assert reset, the actual gpio
+will be high and may keep driving the IO port of the panel.
 
-Shenzhen Xingbangda Display Technology Co., Ltd is a company which
-produces LCD modules. It supplies the LCD panels for the PinePhone.
-
-Add the vendor prefix of it.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/panel/panel-sitronix-st7703.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9aeab66be85f..740b116b179f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1157,6 +1157,8 @@ patternProperties:
-     description: Xiaomi Technology Co., Ltd.
-   "^xillybus,.*":
-     description: Xillybus Ltd.
-+  "^xingbangda,.*":
-+    description: Shenzhen Xingbangda Display Technology Co., Ltd
-   "^xinpeng,.*":
-     description: Shenzhen Xinpeng Technology Co., Ltd
-   "^xlnx,.*":
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7703.c b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+index e771281eb547..92930e127559 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7703.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7703.c
+@@ -416,6 +416,7 @@ static int st7703_unprepare(struct drm_panel *panel)
+ 	if (!ctx->prepared)
+ 		return 0;
+ 
++	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+ 	regulator_disable(ctx->iovcc);
+ 	regulator_disable(ctx->vcc);
+ 	ctx->prepared = false;
 -- 
 2.27.0
 
