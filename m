@@ -2,207 +2,400 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8B8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 07:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38A5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 07:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8EB20836
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 07:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEA52076E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 07:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ElSHiA4H";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="wSwSejXZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EaSaX8BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgFZHUa (ORCPT
+        id S1728557AbgFZHUy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 03:20:30 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:7672 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726206AbgFZHU3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 03:20:29 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05Q7EiDZ022164;
-        Fri, 26 Jun 2020 00:19:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=Jq6QQDNx3ZxJUqpMx+z4ckvyd10f/D2LRYbApjxgKUY=;
- b=ElSHiA4HzR1ETyEQwHq9781WX/iU23+kQtyAByU247qCjx9QKUA4ggibhC9rIM1X9E1A
- O7QTrSZNyHu6ALB72tT/WHPkirdGjZTRc84RIXBJObxxzu4zaCuKFbrvr0rb+l8zLuSX
- 6xtOzhf12niyUJ9WwV80rY12S1Tbbmo/FSAXgnAMu4GS+whIVrrz99B2PPE0Zie0emwY
- ijgkn5RqQ9iSxkO8rEivflkvsXnx5AzDaXLqq0iG4zsWeUSpJjFYXmqT//TCUwbnm9is
- mfUgc0bt83EuHWWh1hDZGfT8MeQMqi+eLskyGZK7c1aefdySsQhphynVE3UU5Em1DItv DA== 
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 31uuqbhyxt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 26 Jun 2020 00:19:58 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H209k++9Wv53y65JRSnTA68EDedMfIjmlyW54bBjEOjzRK2AfE4twhiU76W5KoPYQkhc2IO7xz8vmHxS6yzqKrFkZyF/jvjvac5PjsNrccz5Ju6EYEY4gteRpcFxlybstiJ5UVIivtvzgQ/KNf9b6mw6VF/uuzax6WBzBSM71qlav899sBK8D/BZx8DdU4Lvzk94JjP25mhFLFjWKx/7atS4W7kev00tMbRTBh/iyF6RojzY3U20W5e10OiZ1tOS4Iqf1ITSwqfTc0vBUNXTsDP3Xw5ojDKqOz93Mn08Y8qpAT38FLI/1o1u/Nthg9e8RMv2vHu0oY22FDl/LAH/NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jq6QQDNx3ZxJUqpMx+z4ckvyd10f/D2LRYbApjxgKUY=;
- b=digM0a32OnQ+67L1BqRC1ADCppcOAYyzYWxVb/RJfn0KqS4iL2OP5D8qDD47WPDvR8O8AWOJz4si8oYH7zyn4hohO9vVfqaR/eN5FvQa75EdO2hGRvv1nv6Lmr8zEGhMujiUTsLr1sCbYPx1aAVxxf93vFs5pTYiYKoptdZzMiaykMyXm5ghkzfQ5fSrGs37yehViFpVCKgX0uPa0jEWaXkrcIdVP0fhZmO6OQNiH+YteI5NB72VZI1d7N/DDxJP21V1vj4YXmtBAVL2Pf8LU5JLdpUxEVH5udaGoDFeOj+08MrSC0dUsPR78cJ1hRf/mdHoqrkjULvsT0SUsbElhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jq6QQDNx3ZxJUqpMx+z4ckvyd10f/D2LRYbApjxgKUY=;
- b=wSwSejXZ8FxFoKBY+JTzckd2QrhLVM2riaXzZrDa4m+TPlulRPzRFjhRWu+VZgjnf+B0o3HOndvh4SXKX9U43O6L6GbmpoB1X8fyEHY7c/oL618bYY49kdCf8uOj/car0W8BdPkmFvR06DKzKA34AhPyyVHuZIAYo4c9Av6lB8g=
-Received: from BL0PR07MB5522.namprd07.prod.outlook.com (2603:10b6:208:37::25)
- by BL0PR07MB5763.namprd07.prod.outlook.com (2603:10b6:208:8f::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Fri, 26 Jun
- 2020 07:19:56 +0000
-Received: from BL0PR07MB5522.namprd07.prod.outlook.com
- ([fe80::e08e:810f:d1d7:e98]) by BL0PR07MB5522.namprd07.prod.outlook.com
- ([fe80::e08e:810f:d1d7:e98%7]) with mapi id 15.20.3131.023; Fri, 26 Jun 2020
- 07:19:56 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        "weiyongjun1@huawei.com" <weiyongjun1@huawei.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        Sanket Parmar <sparmar@cadence.com>
-Subject: RE: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
-Thread-Topic: [PATCH RFC 0/5] Introduced new Cadence USBSSP DRD Driver.
-Thread-Index: AQHWS3YSDa4tJNrkMUOR89XcmNbpYKjqdbIAgAABeQA=
-Date:   Fri, 26 Jun 2020 07:19:56 +0000
-Message-ID: <BL0PR07MB5522A8796EE7BFB5062A8E76DD930@BL0PR07MB5522.namprd07.prod.outlook.com>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <878sga5nfr.fsf@kernel.org>
-In-Reply-To: <878sga5nfr.fsf@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNmMxNDNkNGItYjc3ZC0xMWVhLTg3NjctMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDZjMTQzZDRjLWI3N2QtMTFlYS04NzY3LTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMjc5MSIgdD0iMTMyMzc2Mjk1OTEwODkwNTQ0IiBoPSJIWGRWRE5VV2cxUmNZNTRuNUxnbFRHcG9jNmc9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=cadence.com;
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 59818699-ce2b-4bf3-8845-08d819a1543b
-x-ms-traffictypediagnostic: BL0PR07MB5763:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR07MB576352F4B05B133049CFFA58DD930@BL0PR07MB5763.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0446F0FCE1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r4ZzbR7u2oQH21gnseYWo0gnIa+RqF9pI9b25vy0wSov19t1G9iTiv3w/Sp0hLjdu2UxQO37L/0aaNM74TWzK2RfFWRsGGSUdyAiuZfnkWqUQMFkhpOhcRDv4AVkfmYPlxr/s4lxGMLZHy72lPZ+wvGt9B3XBfICI7N8nMZE9vfCgvF+S8rVDpcHAg0b/oRyQyYDblutz3IBeyMFiqCkNlMWMJw4xwano3fd8slJMb2bJvPXWXZuPuYaR6Og0W1EcjwasHdWThpYfDcC498zlUIix8kMVAVAqRZHZoIAariE5AjrnjG6FkItQ56lBRsHDtHeUmWjPOAVmXTLpJbUIcb/EADsBJMU/QuABmTBgFdWJB1g9p6+xNbeEyJeZly7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR07MB5522.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(36092001)(26005)(55016002)(107886003)(8936002)(316002)(33656002)(66946007)(110136005)(54906003)(52536014)(5660300002)(66556008)(66476007)(4326008)(66446008)(76116006)(71200400001)(6506007)(7416002)(83380400001)(478600001)(86362001)(9686003)(64756008)(2906002)(8676002)(186003)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: UXWXl1JPjPP9jXKnmioEXf9joVRVrP9p2a3e4ZxbTxw6ocLNoTGl+UubjnuB7UFJiNGAsqpBH1yckKrv1wOS4K4Q2zI1auTKv+/QrMOXdXz/sUJqJW3o7WmZfKSCeNcW8hm9/0rTliQf6lzqhHDg3Z3rC1PThxoNjwcoDCIGRKZQTN2oguXdi+L0+CFcmGUEFJKTA7wCkxMP0p17fnJFxYiA2pSDpO1lj98cPiYcMMs5grbSE3q8m3233LIzobrT9UAiKSGYGN0lXU4QLMKtei/PiFxg459E55Jul8N3UdteuCVhW3LL7JrQ4gZC3PjFx8wFyR6Xl8FpsXmwV0N4dkrRIkmSZWzDFv9DPwtD3Pi5V4h5yI3sI6dWwozMDicZWdoaXI9K1N5RgX1t6fQtSt9q0lbVAEwmDQe6LoGBRpaUV7Ep6+BmfWmYviuH/5jUbDPP2Ve1PgAvHKSR2hrSi2xP0zaEpT1khNEyyUmdc8eU9bLifXoQpihuWl2kWcSD
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 26 Jun 2020 03:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbgFZHUx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 03:20:53 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D391C08C5C1
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 00:20:53 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b92so4574216pjc.4
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 00:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=4C0lujFRmWBeseksoVTiCQffRV1QqfNJE+9Of8mBNbM=;
+        b=EaSaX8BW1+9fhDEGP3nqbG2TwSRXrLAdDp7jgY7DrfppO6z5Ro3RPrGC+pnUSj6XAh
+         u5K7cDlFj36M4lnharzjIBiPUZsYOPhcRCwCsNpGN/UeAvpA1prGPL7PUVbDMxI8Xseu
+         g5/AMn6ofc0fuKPSca3l1/UNseJUVeMIGRdNfA+usBeNWXZdzQYuLiULAyAQaWGkY10T
+         JMJCMpvq3RKtlwI7FxxuPwYMISfXZpZcufiMHnb3KrFeXXflwOHuwOQyJldKDKvmsAg+
+         9PVJOn9seMWCI7UCP8Sr2JKOFxVbjxzVUPX4BGwxUWJ81jiZN51ES8zoXHnIWDVB3ybn
+         rx4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=4C0lujFRmWBeseksoVTiCQffRV1QqfNJE+9Of8mBNbM=;
+        b=Hl+k/BvMP0ZYi/XfTsAiYq5kAJtBjkspAFdPSjIkZOPgCgXdDcmQpEWOWZfL0U/i4I
+         YC+LVmEH/d1MOubVHc96eXUaFu2Fe7SbYgbiOhkdMM0rNouA5gNUA3XgVeMPbsV/Pd1P
+         6YWMtTvtE0eaTErCUVtAlOas+GiFj5D+Hwo8hm2/IFthgNn5+EIObf65HuK/r0r/a+9Y
+         6ZWtBEvRlcw/cDgz6oBbJpG+AXoMQFVnCCBbEvzYHLNdLXdRx2wDw/rodkBuS07o9VH4
+         iaEUmncjmByoBC32/sMDUg7hN1B0CfmYe0XR8aGzJaQqzJawcU/ViCI8mANoqKr+G/eb
+         FCkw==
+X-Gm-Message-State: AOAM533JD2ws8fh2XbBHZVUtfATZyrvMuUEpLKyuOIiYVmOeZjkm2fpP
+        tTqmCyjrl9cIdc+dUTbW08XSlVVTmA==
+X-Google-Smtp-Source: ABdhPJwnPlznA2XN8MT4pd0zHmBQpHo79RM3TCYf9B5s+9Gpb1hzUWATjrwfH65faK0DyLRhr8iWPQ==
+X-Received: by 2002:a17:90a:c985:: with SMTP id w5mr2064226pjt.154.1593156052924;
+        Fri, 26 Jun 2020 00:20:52 -0700 (PDT)
+Received: from ?IPv6:2409:4072:8f:e5bc:398d:eac0:43d5:2c47? ([2409:4072:8f:e5bc:398d:eac0:43d5:2c47])
+        by smtp.gmail.com with ESMTPSA id u8sm24605056pfh.215.2020.06.26.00.20.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jun 2020 00:20:52 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 12:50:46 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com> <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR07MB5522.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59818699-ce2b-4bf3-8845-08d819a1543b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2020 07:19:56.5172
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QVzQ0OAMtSrEzHMAeJZBdyvtctcnG6qCuuuJiE/rk0dz0SLboD8VG+MAzbMcPQ2vxDBw774uKgMuMBmEK3TTqDLDCzv7yk7ijkdbJxdqKno=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5763
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-26_04:2020-06-26,2020-06-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 impostorscore=0
- phishscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=480 adultscore=0
- clxscore=1015 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006260052
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500 SoC
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
+        =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <B6ED9520-2945-4181-8C3D-A1AA519248D9@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Felipe,
 
+
+On 26 June 2020 1:46:18 AM IST, Cristian Ciocaltea <cristian=2Eciocaltea@g=
+mail=2Ecom> wrote:
+>Add pinctrl and gpio bindings for Actions Semi S500 SoC=2E
 >
->Hi,
+>Signed-off-by: Cristian Ciocaltea <cristian=2Eciocaltea@gmail=2Ecom>
+>---
+> =2E=2E=2E/pinctrl/actions,s500-pinctrl=2Eyaml         | 228 ++++++++++++=
+++++++
+> 1 file changed, 228 insertions(+)
+>create mode 100644
+>Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl=2Eyaml
 >
->Pawel Laszczak <pawell@cadence.com> writes:
->> This patch introduce new Cadence USBSS DRD driver to linux kernel.
->>
->> The Cadence USBSS DRD Controller is a highly configurable IP Core which
->> can be instantiated as Dual-Role Device (DRD), Peripheral Only and
->> Host Only (XHCI)configurations.
->>
->> The current driver has been validated with FPGA burned. We have support
->> for PCIe bus, which is used on FPGA prototyping.
->>
->> The host side of USBSS-DRD controller is compliance with XHCI
->> specification, so it works with standard XHCI Linux driver.
->>
->> The host side of USBSS DRD controller is compliant with XHCI.
->> The architecture for device side is almost the same as for host side,
->> and most of the XHCI specification can be used to understand how
->> this controller operates.
->>
->> This controller and driver support Full Speed, Hight Speed, Supper Speed
->> and Supper Speed Plus USB protocol.
->>
->> The prefix cdnsp used in driver has chosen by analogy to cdn3 driver.
->> The last letter of this acronym means PLUS. The formal name of controlle=
-r
->> is USBSSP but it's to generic so I've decided to use CDNSP.
->>
->> The patch 1: adds DT binding.
->> The patch 2: adds PCI to platform wrapper used on Cadnece testing
->>              platform. It is FPGA based on platform.
->> The patches 3-5: add the main part of driver and has been intentionally
->>              split into 3 part. In my opinion such division should not
->>              affect understanding and reviewing the driver, and cause th=
-at
->>              main patch (4/5) is little smaller. Patch 3 introduces main
->>              header file for driver, 4 is the main part that implements =
-all
->>              functionality of driver and 5 introduces tracepoints.
->
->I'm more interested in how is this different from CDNS3. Aren't they SW co=
-mpatible?
+>diff --git
+>a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl=2Eyaml
+>b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl=2Eyaml
+>new file mode 100644
+>index 000000000000=2E=2E856947c70844
+>--- /dev/null
+>+++
+>b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl=2Eyaml
+>@@ -0,0 +1,228 @@
+>+# SPDX-License-Identifier: (GPL-2=2E0-only OR BSD-2-Clause)
+>+%YAML 1=2E2
+>+---
+>+$id: http://devicetree=2Eorg/schemas/pinctrl/actions,s500-pinctrl=2Eyaml=
+#
+>+$schema: http://devicetree=2Eorg/meta-schemas/core=2Eyaml#
+>+
+>+title: Actions Semi S500 SoC pinmux & GPIO controller
+>+
+>+maintainers:
+>+  - Manivannan Sadhasivam <manivannan=2Esadhasivam@linaro=2Eorg>
 
-In general, the controller can be split into 2 part- DRD part and the rest =
-UDC.=20
+Feel free to add yourself as co-maintainer since you are the one contribut=
+ing S500 support=2E=20
 
-The second part UDC which consist gadget.c, ring.c and mem.c file is comple=
-tely different.=20
+>+
+>+description: |
+>+  Pinmux & GPIO controller manages pin multiplexing & configuration
+>including
+>+  GPIO function selection & GPIO attributes configuration=2E Please
+>refer to
+>+  pinctrl-bindings=2Etxt in this directory for common binding part and
+>usage=2E
+>+
+>+properties:
+>+  compatible:
+>+    const: actions,s500-pinctrl
+>+
+>+  reg:
+>+    minItems: 1
+>+    maxItems: 4
 
-The DRD part contains drd.c and core.c.=20
-cdnsp drd.c is similar to cdns3 drd.c but it's little different. CDNSP has =
-similar, but has different register space.
-Some register was moved, some was removed and some was added. =20
+4?
 
-core.c is very similar and eventually could be common for both drivers.  I =
-thought about this but
-I wanted to avoid interfering with cdns3 driver at this point CDNSP is stil=
-l under testing and=20
-CDNS3 is used by some products on the market.=20
+Thanks,=20
+Mani
 
-I thought about merging cdnsp core.c  with cdns3 core.c but after upstreami=
-ng over, but=20
-I'm not sure if it's a good idea.
+>+
+>+  clocks:
+>+    maxItems: 1
+>+
+>+  gpio-controller: true
+>+
+>+  gpio-ranges:
+>+    maxItems: 1
+>+
+>+  '#gpio-cells':
+>+    description:
+>+      Specifies the pin number and flags, as defined in
+>+      include/dt-bindings/gpio/gpio=2Eh
+>+    const: 2
+>+
+>+  interrupt-controller: true
+>+
+>+  '#interrupt-cells':
+>+    description:
+>+      Specifies the pin number and flags, as defined in
+>+      include/dt-bindings/interrupt-controller/irq=2Eh
+>+    const: 2
+>+
+>+  interrupts:
+>+    description:
+>+      One interrupt per each of the 5 GPIO ports supported by the
+>controller,
+>+      sorted by port number ascending order=2E
+>+    minItems: 5
+>+    maxItems: 5
+>+
+>+patternProperties:
+>+  '^=2E*$':
+>+    if:
+>+      type: object
+>+    then:
+>+      patternProperties:
+>+        'pinmux$':
+>+          type: object
+>+          description:
+>+            Pinctrl node's client devices specify pin muxes using
+>subnodes,
+>+            which in turn use the standard properties below=2E
+>+          $ref: pinmux-node=2Eyaml#
+>+
+>+          properties:
+>+            groups:
+>+              description:
+>+                List of gpio pin groups affected by the functions
+>specified in
+>+                this subnode=2E
+>+              items:
+>+                oneOf:
+>+                  - enum: [lcd0_d18_mfp, rmii_crs_dv_mfp,
+>rmii_txd0_mfp,
+>+                      rmii_txd1_mfp, rmii_txen_mfp, rmii_rxen_mfp,
+>+                      rmii_rxd1_mfp, rmii_rxd0_mfp, rmii_ref_clk_mfp,
+>+                      i2s_d0_mfp, i2s_pcm1_mfp, i2s0_pcm0_mfp,
+>i2s1_pcm0_mfp,
+>+                      i2s_d1_mfp, ks_in2_mfp, ks_in1_mfp, ks_in0_mfp,
+>+                      ks_in3_mfp, ks_out0_mfp, ks_out1_mfp,
+>ks_out2_mfp,
+>+                      lvds_o_pn_mfp, dsi_dn0_mfp, dsi_dp2_mfp,
+>lcd0_d17_mfp,
+>+                      dsi_dp3_mfp, dsi_dn3_mfp, dsi_dp0_mfp,
+>lvds_ee_pn_mfp,
+>+                      spi0_i2c_pcm_mfp, spi0_i2s_pcm_mfp,
+>dsi_dnp1_cp_mfp,
+>+                      lvds_e_pn_mfp, dsi_dn2_mfp, uart2_rtsb_mfp,
+>+                      uart2_ctsb_mfp, uart3_rtsb_mfp, uart3_ctsb_mfp,
+>+                      sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp,
+>sd1_d0_d3_mfp,
+>+                      sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_mfp,
+>uart0_rx_mfp,
+>+                      clko_25m_mfp, csi_cn_cp_mfp, sens0_ckout_mfp,
+>+                      uart0_tx_mfp, i2c0_mfp, csi_dn_dp_mfp,
+>sen0_pclk_mfp,
+>+                      pcm1_in_mfp, pcm1_clk_mfp, pcm1_sync_mfp,
+>pcm1_out_mfp,
+>+                      dnand_data_wr_mfp, dnand_acle_ce0_mfp,
+>nand_ceb2_mfp,
+>+                      nand_ceb3_mfp]
+>+              minItems: 1
+>+              maxItems: 32
+>+
+>+            function:
+>+              description:
+>+                Specify the alternative function to be configured for
+>the
+>+                given gpio pin groups=2E
+>+              enum: [nor, eth_rmii, eth_smii, spi0, spi1, spi2, spi3,
+>sens0,
+>+                sens1, uart0, uart1, uart2, uart3, uart4, uart5,
+>uart6, i2s0,
+>+                i2s1, pcm1, pcm0, ks, jtag, pwm0, pwm1, pwm2, pwm3,
+>pwm4, pwm5,
+>+                p0, sd0, sd1, sd2, i2c0, i2c1, i2c3, dsi, lvds, usb30,
+>clko_25m,
+>+                mipi_csi, nand, spdif, ts, lcd0]
+>+
+>+          required:
+>+            - groups
+>+            - function
+>+
+>+          additionalProperties: false
+>+
+>+        'pinconf$':
+>+          type: object
+>+          description:
+>+            Pinctrl node's client devices specify pin configurations
+>using
+>+            subnodes, which in turn use the standard properties below=2E
+>+          $ref: pincfg-node=2Eyaml#
+>+
+>+          properties:
+>+            groups:
+>+              description:
+>+                List of gpio pin groups affected by the drive-strength
+>property
+>+                specified in this subnode=2E
+>+              items:
+>+                oneOf:
+>+                  - enum: [sirq_drv, rmii_txd01_txen_drv,
+>rmii_rxer_drv,
+>+                      rmii_crs_drv, rmii_rxd10_drv, rmii_ref_clk_drv,
+>+                      smi_mdc_mdio_drv, i2s_d0_drv, i2s_bclk0_drv,
+>i2s3_drv,
+>+                      i2s13_drv, pcm1_drv, ks_in_drv, ks_out_drv,
+>lvds_all_drv,
+>+                      lcd_dsi_drv, dsi_drv, sd0_d0_d3_drv,
+>sd1_d0_d3_drv,
+>+                      sd0_cmd_drv, sd0_clk_drv, sd1_cmd_drv,
+>sd1_clk_drv,
+>+                      spi0_all_drv, uart0_rx_drv, uart0_tx_drv,
+>uart2_all_drv,
+>+                      i2c0_all_drv, i2c12_all_drv, sens0_pclk_drv,
+>+                      sens0_ckout_drv, uart3_all_drv]
+>+              minItems: 1
+>+              maxItems: 32
+>+
+>+            pins:
+>+              description:
+>+                List of gpio pins affected by the bias-pull-* and
+>+                input-schmitt-* properties specified in this subnode=2E
+>+              items:
+>+                oneOf:
+>+                  - enum: [dnand_dqs, dnand_dqsn, eth_txd0, eth_txd1,
+>eth_txen,
+>+                      eth_rxer, eth_crs_dv, eth_rxd1, eth_rxd0,
+>eth_ref_clk,
+>+                      eth_mdc, eth_mdio, sirq0, sirq1, sirq2, i2s_d0,
+>i2s_bclk0,
+>+                      i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1,
+>i2s_lrclk1,
+>+                      i2s_mclk1, ks_in0, ks_in1, ks_in2, ks_in3,
+>ks_out0,
+>+                      ks_out1, ks_out2, lvds_oep, lvds_oen, lvds_odp,
+>lvds_odn,
+>+                      lvds_ocp, lvds_ocn, lvds_obp, lvds_obn,
+>lvds_oap,
+>+                      lvds_oan, lvds_eep, lvds_een, lvds_edp,
+>lvds_edn,
+>+                      lvds_ecp, lvds_ecn, lvds_ebp, lvds_ebn,
+>lvds_eap,
+>+                      lvds_ean, lcd0_d18, lcd0_d17, dsi_dp3, dsi_dn3,
+>dsi_dp1,
+>+                      dsi_dn1, dsi_cp, dsi_cn, dsi_dp0, dsi_dn0,
+>dsi_dp2,
+>+                      dsi_dn2, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0,
+>sd1_d1,
+>+                      sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd,
+>sd1_clk,
+>+                      spi0_sclk, spi0_ss, spi0_miso, spi0_mosi,
+>uart0_rx,
+>+                      uart0_tx, i2c0_sclk, i2c0_sdata, sensor0_pclk,
+>+                      sensor0_ckout, dnand_ale, dnand_cle, dnand_ceb0,
+>+                      dnand_ceb1, dnand_ceb2, dnand_ceb3, uart2_rx,
+>uart2_tx,
+>+                      uart2_rtsb, uart2_ctsb, uart3_rx, uart3_tx,
+>uart3_rtsb,
+>+                      uart3_ctsb, pcm1_in, pcm1_clk, pcm1_sync,
+>pcm1_out,
+>+                      i2c1_sclk, i2c1_sdata, i2c2_sclk, i2c2_sdata,
+>csi_dn0,
+>+                      csi_dp0, csi_dn1, csi_dp1, csi_dn2, csi_dp2,
+>csi_dn3,
+>+                      csi_dp3, csi_cn, csi_cp, dnand_d0, dnand_d1,
+>dnand_d2,
+>+                      dnand_d3, dnand_d4, dnand_d5, dnand_d6,
+>dnand_d7,
+>+                      dnand_rb, dnand_rdb, dnand_rdbn, dnand_wrb,
+>porb,
+>+                      clko_25m, bsel, pkg0, pkg1, pkg2, pkg3]
+>+              minItems: 1
+>+              maxItems: 64
+>+
+>+            bias-pull-up: true
+>+            bias-pull-down: true
+>+
+>+            drive-strength:
+>+              description:
+>+                Selects the drive strength for the specified pins, in
+>mA=2E
+>+              enum: [2, 4, 8, 12]
+>+
+>+            input-schmitt-enable: true
+>+            input-schmitt-disable: true
+>+
+>+          additionalProperties: false
+>+
+>+required:
+>+  - compatible
+>+  - reg
+>+  - clocks
+>+  - gpio-controller
+>+  - gpio-ranges
+>+  - '#gpio-cells'
+>+  - interrupt-controller
+>+  - '#interrupt-cells'
+>+  - interrupts
+>+
+>+additionalProperties: false
+>+
+>+examples:
+>+  - |
+>+    #include <dt-bindings/interrupt-controller/arm-gic=2Eh>
+>+    pinctrl: pinctrl@b01b0000 {
+>+        compatible =3D "actions,s500-pinctrl";
+>+        reg =3D <0xe01b0000 0x1000>;
+>+        clocks =3D <&cmu 20>;
+>+        gpio-controller;
+>+        gpio-ranges =3D <&pinctrl 0 0 132>;
+>+        #gpio-cells =3D <2>;
+>+        interrupt-controller;
+>+        #interrupt-cells =3D <2>;
+>+        interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+>+                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+>+                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+>+                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+>+                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+>+
+>+        i2c0_default: i2c0_default {
+>+            pinmux {
+>+                groups =3D "i2c0_mfp";
+>+                function =3D "i2c0";
+>+            };
+>+
+>+            pinconf {
+>+                pins =3D "i2c0_sclk", "i2c0_sdata";
+>+                bias-pull-up;
+>+            };
+>+        };
+>+    };
+>+
+>+=2E=2E=2E
 
->
->--
->balbi
-
-pawel
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
