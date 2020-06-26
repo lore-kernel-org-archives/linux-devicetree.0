@@ -2,57 +2,118 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFDFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CE2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4639120675
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9BD20B80
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 21:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593205328;
+	bh=3ubtQE80mbjSi783WHUFSz89WDbnGL6+7o6MCAD7A/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TVsX2uq5r8fsO1EwoahBlb62CjYHQioAXNJPoZXrSCaL5E33YvYsU9v1qsjGbSgOl
+	 iGgvsxVMm+VfRlTrHCN0qfGrPcwX6r3JM7FbCa/mmI10T1ssBSVuyDHEQH6kkvZJWs
+	 sMScXwAM1DV9jweAEk3FoWQf0kZg3cxaJfnwJRN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgFZUsT (ORCPT
+        id S1725803AbgFZVCD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:48:19 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55411 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgFZUsT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 16:48:19 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 6049D20002;
-        Fri, 26 Jun 2020 20:48:17 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        robh+dt@kernel.org, ludovic.desroches@microchip.com
-Subject: Re: [PATCH v2] ARM: dts: at91: sama5d2_xplained: Remove pdmic node
-Date:   Fri, 26 Jun 2020 22:48:16 +0200
-Message-Id: <159320449048.1519242.4348779875317362688.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200618152845.682723-1-codrin.ciubotariu@microchip.com>
-References: <20200618152845.682723-1-codrin.ciubotariu@microchip.com>
+        Fri, 26 Jun 2020 17:02:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45423 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgFZVCC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 17:02:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g17so4682029plq.12;
+        Fri, 26 Jun 2020 14:02:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fu/Z3h59Qi11bfBtgTVUekaF3cv+TaA41WG230vnSZM=;
+        b=cPgyXwz4Lc5QnKe8kKUyKHQVylOl8PPRNCgupmuItsPlhw+gFvP7t/iyJ3eOl1JwIL
+         s4nfD/sBxtyvatCDGK8JTb+xKPZoFxqW5RXU1xLRMqJeKwBpz9r5hoJL2HweDY3YNb+U
+         YTnTde4/u8LSox+VRRdHgwLeOi9axRD4hZ/H/wGjwGMkNWybJTea6Ea8vUqF0Q9xeq5P
+         woV64QGwziL7WaIzFUL+FdC+2QNnjteHA2XJXMLep3Ag0gL3bVWH3zIyt8PqQktDivC8
+         wlvFKXIXCnuPEWUyTkV2wKRf73mS/0rx6jsqmWgfwSu/PQY+uKeLN+jqg8G4TvPgFXi+
+         Q3cw==
+X-Gm-Message-State: AOAM532SvzP8iG214yl8cNzYtQ6L4XAwZcwh/R1sJQCiRahKlqfGb+o1
+        TVcDFAQ2QIunzcd6rj2/GoA=
+X-Google-Smtp-Source: ABdhPJzcFUMrDK3UVS4LX1RK8H1O402fwEur56/ry3N6LwS/XKqtOSsHTKCSV0iIMplRjOlZMiqIxA==
+X-Received: by 2002:a17:90a:e2c7:: with SMTP id fr7mr1713020pjb.103.1593205321604;
+        Fri, 26 Jun 2020 14:02:01 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id w15sm12325067pjb.44.2020.06.26.14.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 14:02:01 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:02:00 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: fpga: xilinx-slave-serial: add
+ optional INIT_B GPIO
+Message-ID: <20200626210200.GA2259@epycbox.lan>
+References: <20200622133723.23326-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622133723.23326-1-luca@lucaceresoli.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 18 Jun 2020 18:28:45 +0300, Codrin Ciubotariu wrote:
-> The PDMIC needs PDM microphones to work. sama5d2 xplained doesn't have
-> such microphones, so there is no reason to enable PDMIC and take the
-> pins since there is no-one using them.
+On Mon, Jun 22, 2020 at 03:37:22PM +0200, Luca Ceresoli wrote:
+> The INIT_B is used by the 6 and 7 series to report the programming status,
+> providing more control and information about programming errors.
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> 
+> ---
+> 
+> Changes in v2:
+>  - rename init_b-gpios to init-b-gpios (Rob Herring suggested to not use '_'
+>    in property names)
+> ---
+>  .../devicetree/bindings/fpga/xilinx-slave-serial.txt       | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> index 9f103f3872e8..5ef659c1394d 100644
+> --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> @@ -16,6 +16,10 @@ Required properties:
+>  - prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
+>  - done-gpios: config status pin (referred to as DONE in the manual)
+>  
+> +Optional properties:
+> +- init-b-gpios: initialization status and configuration error pin
+> +                (referred to as INIT_B in the manual)
+> +
+>  Example for full FPGA configuration:
+>  
+>  	fpga-region0 {
+> @@ -40,7 +44,8 @@ Example for full FPGA configuration:
+>  			spi-max-frequency = <60000000>;
+>  			spi-cpha;
+>  			reg = <0>;
+> -			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+>  			prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+> +			init-b-gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
+> +			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+>  		};
+>  	};
+> -- 
+> 2.27.0
+> 
 
-Applied, thanks!
+Will apply to for-next,
 
-[1/1] ARM: dts: at91: sama5d2_xplained: Remove pdmic node
-      commit: 51139cc82c8d6edec034a6c2401090070195fa13
-
-Best regards,
--- 
-Alexandre Belloni <alexandre.belloni@bootlin.com>
+Thanks!
