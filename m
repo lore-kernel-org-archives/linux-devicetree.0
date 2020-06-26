@@ -2,123 +2,186 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935CEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7784C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FCC20791
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ek1n0mIj"
+	by mail.kernel.org (Postfix) with ESMTP id A911B207E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgFZQZ6 (ORCPT
+        id S1726725AbgFZQfQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgFZQZ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 12:25:58 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C104C03E979;
-        Fri, 26 Jun 2020 09:25:58 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id rk21so9966949ejb.2;
-        Fri, 26 Jun 2020 09:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MPO7rvkWKnvxq0BW/sOq27JB7Uw7g3nGxOsI1D2HaaM=;
-        b=ek1n0mIjZqnzR/Lt0U5ndwPl4IvZwOOPBM+PVmwWbgb9FTw8sAc+mDdNz/FUgjLTz6
-         +UJt00/97ldk+Nkg37lLujn9722CSbM/Wp2Sh7qM5JYQKc5bdehvRsVy0kDbMYMJVf0s
-         Yvre+V2tluUbF7+fcFproCrZevtfsONs+P5y3bxvLUArUAe8W1MRHo9hxkY/VhVry4jb
-         9yQ78uBXiiZAXDtRkQITzWtvn1Ci8b2siINtCBDlBvcjLE+TaFE+w6zan/OffgBbhLfg
-         S8ZdNNg43xFMf3H3FfG0uOLz7AOxzhnTLfHg1/MKM9FQ5t4a6IT1QndN3mRasJ0cljdZ
-         pMWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MPO7rvkWKnvxq0BW/sOq27JB7Uw7g3nGxOsI1D2HaaM=;
-        b=KGPZbAh0mKEkGM2nftNucG+dV2/LSFqbvkJujYmTRZE37mb3+3ogaQey7FAuk1rdyD
-         eQ7/aGj3NOzgqfUMzV0jJtKGM/y7//2pfAHRxxGkwBVXwhjuYJtDfprAhhgYfGWzJeK+
-         VX6efS6YXiw4aHRnWOD2n38PrBj8eZp7Sqd+Dja9fEI3P0Xm42QcF333jt04Rme/+/7U
-         RTA+5eJn2A6wrJyvKjPrQUvkxNWkyeLWXZ1Dt0OmVaRjDqxnOJhAs7qFse34Z3OfV6kP
-         yk1HhsCDy7V2M87dK6oKKuUKSStkXk2i0LBTbfO1VkkY4TrmY6YV3VpDFWaUrS/G53xy
-         D0NA==
-X-Gm-Message-State: AOAM533b3qI7hkr/gxjXdLHTDewgQQZmuju1BMMWKl4dwJa3P4EK4Wwf
-        qkDZs26/e0XhH9Q7QyCwJiI=
-X-Google-Smtp-Source: ABdhPJyxqwp+qrJqIXb5iXeRvVG6QmrdYqppmPzFFwLQ815uwVeqbSRGPZdfOpb+lYp2Zi0S10C9Yw==
-X-Received: by 2002:a17:906:840a:: with SMTP id n10mr3152639ejx.453.1593188756720;
-        Fri, 26 Jun 2020 09:25:56 -0700 (PDT)
-Received: from BV030612LT ([188.24.137.55])
-        by smtp.gmail.com with ESMTPSA id w8sm21193158eds.41.2020.06.26.09.25.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 09:25:56 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 19:25:53 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add pinctrl binding entry for Actions
- Semi S500
-Message-ID: <20200626162553.GC6611@BV030612LT>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <d54d1fe9d8378e7c44d19e7b366b909bf5dbb7dc.1593112402.git.cristian.ciocaltea@gmail.com>
- <EDE29F4D-CB0B-4A24-B7B4-01E2C11179A3@linaro.org>
+        Fri, 26 Jun 2020 12:35:16 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51686 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgFZQfP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 12:35:15 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id C09CC2A5D7A
+Received: by earth.universe (Postfix, from userid 1000)
+        id 4FBEE3C08CD; Fri, 26 Jun 2020 18:35:11 +0200 (CEST)
+Date:   Fri, 26 Jun 2020 18:35:11 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
+Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
+Message-ID: <20200626163511.ecblnjw6ckh77kog@earth.universe>
+References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5m6ldzthn5ejezqb"
 Content-Disposition: inline
-In-Reply-To: <EDE29F4D-CB0B-4A24-B7B4-01E2C11179A3@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200416145123.73039-1-sebastian.reichel@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 12:57:15PM +0530, Manivannan Sadhasivam wrote:
-> 
-> 
-> On 26 June 2020 1:46:20 AM IST, Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
-> >Add a pinctrl binding entry for Actions Semi S500.
-> >
-> >Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> >---
-> > MAINTAINERS | 1 +
-> > 1 file changed, 1 insertion(+)
-> >
-> >diff --git a/MAINTAINERS b/MAINTAINERS
-> >index e6285c13bab0..4b9eec04c937 100644
-> >--- a/MAINTAINERS
-> >+++ b/MAINTAINERS
-> >@@ -1519,6 +1519,7 @@
-> >F:	Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
-> > F:	Documentation/devicetree/bindings/dma/owl-dma.txt
-> > F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
-> > F:	Documentation/devicetree/bindings/mmc/owl-mmc.yaml
-> >+F:	Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> 
-> I think we can use wildcard now.
-> 
-> pinctrl/actions,*
-> 
-> Thanks, 
-> Mani
 
-Done, thanks!
+--5m6ldzthn5ejezqb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
-> > F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
-> > F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
-> 
-> -- 
-> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Hi,
+
+Can this be applied please? There were no changes in 5.8 cycle to
+PPD's DT file, so it still applies.
+
+Thanks,
+
+-- Sebastian
+
+On Thu, Apr 16, 2020 at 04:51:23PM +0200, Sebastian Reichel wrote:
+> From: Ian Ray <ian.ray@ge.com>
+>=20
+> Use kernel LED interface for the alarm LEDs.
+>=20
+> Signed-off-by: Ian Ray <ian.ray@ge.com>
+> [Rebased]
+> Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
+> [Rebased]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  arch/arm/boot/dts/imx53-ppd.dts | 49 +++++++++++++++++++++++++++------
+>  1 file changed, 40 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-pp=
+d.dts
+> index 5ff9a179c83c..34ce41600098 100644
+> --- a/arch/arm/boot/dts/imx53-ppd.dts
+> +++ b/arch/arm/boot/dts/imx53-ppd.dts
+> @@ -176,7 +176,7 @@ pwm_bl: backlight {
+>  		power-supply =3D <&reg_3v3_lcd>;
+>  	};
+> =20
+> -	leds {
+> +	leds-brightness {
+>  		compatible =3D "pwm-leds";
+> =20
+>  		alarm-brightness {
+> @@ -185,6 +185,32 @@ alarm-brightness {
+>  		};
+>  	};
+> =20
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_alarmled_pins>;
+> +
+> +		alarm1 {
+> +			label =3D "alarm:red";
+> +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		alarm2 {
+> +			label =3D "alarm:yellow";
+> +			gpios =3D <&gpio7 7 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		alarm3 {
+> +			label =3D "alarm:blue";
+> +			gpios =3D <&gpio7 8 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		alarm4 {
+> +			label =3D "alarm:silenced";
+> +			gpios =3D <&gpio7 13 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+>  	gpio-poweroff {
+>  		compatible =3D "gpio-poweroff";
+>  		gpios =3D <&gpio3 9 GPIO_ACTIVE_HIGH>;
+> @@ -909,18 +935,10 @@ MX53_PAD_NANDF_CS2__GPIO6_15		0x0
+>  			MX53_PAD_NANDF_CS3__GPIO6_16		0x0
+>  			/* POWER_AND_BOOT_STATUS_INDICATOR */
+>  			MX53_PAD_PATA_INTRQ__GPIO7_2		0x1e4
+> -			/* ACTIVATE_ALARM_LIGHT_RED */
+> -			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
+> -			/* ACTIVATE_ALARM_LIGHT_YELLOW */
+> -			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
+> -			/* ACTIVATE_ALARM_LIGHT_CYAN */
+> -			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
+>  			/* RUNNING_ON_BATTERY_INDICATOR_GREEN */
+>  			MX53_PAD_GPIO_16__GPIO7_11		0x0
+>  			/* BATTERY_STATUS_INDICATOR_AMBER */
+>  			MX53_PAD_GPIO_17__GPIO7_12		0x0
+> -			/* AUDIO_ALARMS_SILENCED_INDICATOR */
+> -			MX53_PAD_GPIO_18__GPIO7_13		0x0
+>  		>;
+>  	};
+> =20
+> @@ -1080,4 +1098,17 @@ pinctrl_usb_otg: usbotggrp {
+>  			MX53_PAD_KEY_COL4__USBOH3_USBOTG_OC	0x180
+>  		>;
+>  	};
+> +
+> +	pinctrl_alarmled_pins: qmx6alarmledgrp {
+> +		fsl,pins =3D <
+> +			/* ACTIVATE_ALARM_LIGHT_RED */
+> +			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
+> +			/* ACTIVATE_ALARM_LIGHT_YELLOW */
+> +			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
+> +			/* ACTIVATE_ALARM_LIGHT_CYAN */
+> +			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
+> +			/* AUDIO_ALARMS_SILENCED_INDICATOR */
+> +			MX53_PAD_GPIO_18__GPIO7_13		0x0
+> +		>;
+> +	};
+>  };
+> --=20
+> 2.25.1
+>=20
+
+--5m6ldzthn5ejezqb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl72I6sACgkQ2O7X88g7
++prlww//X/bBvm2laqBr3zVAZ/6mUh8OcKpesdRnIXJoRZ10f7lcj0sLJWxHmHia
+PY0/OeaIuCek6sUgC28KgnUThe4SBsBQCMefODeAwLb0l1vJJF/qCOX7rdN0uKVu
+9zKuIGY5tWM9GllWMEBZfENIVmctqt0egCg+Pi2XLN+En5CpwOOS01rl6tIYXgwk
+a1YaveHdSCMe9WO2UNV/RpxZBGSaiBHeFbBPuOhbJSZJh5CuhhYIlxw0szB1cIln
+OKp3S9wXjx9u5nDxHwxJ8WUSjWWUFdcXxh9i89/gCAMrXj3kYtWWlRvfJAzoJKTU
+4Y8qTdlKLNUuSyLTLctMXpZ9cIIJnxFQoSGuRoCruXZmVV9WdpVBm5yaPgpRchCd
+vfLXjaBVEmUSnWMPEjBTMD9aJlrhbf+i6JiY/tgGWSKBopyKIbyF77DhW7zJPeUe
+WrBvckFQQgtdR8S680Qyo4Yw2R714QAjCi7cb/HRkVe6/3NnO+HAU7t58bBlUAJH
+MwxmK9cqOm+llQKwzRYHzko4vI7Lm2D9Ze14tzcA10McCoAZsQrI8+0H+FhaN/xs
+iASm21gq/5lZXsUw++kWuvhuNThU9BxaaQ3AXK1ZgGgBYVxCVOlinKXjBqLzy9sU
+On28G29Tt9tqlAN4HXXDakc9cWeBf8VD4B9QzLohXI9vH4TR0W0=
+=ga+g
+-----END PGP SIGNATURE-----
+
+--5m6ldzthn5ejezqb--
