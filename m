@@ -6,38 +6,36 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFDFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9B5204EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4639120675
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 20:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725803AbgFZUoI (ORCPT
+        id S1725832AbgFZUsT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 16:44:08 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:52375 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgFZUoI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 16:44:08 -0400
+        Fri, 26 Jun 2020 16:48:19 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55411 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgFZUsT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 16:48:19 -0400
 X-Originating-IP: 86.202.110.81
 Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id F23A3E0005;
-        Fri, 26 Jun 2020 20:44:02 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 6049D20002;
+        Fri, 26 Jun 2020 20:48:17 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     a.zummo@towertech.it, ludovic.desroches@microchip.com,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        nicolas.ferre@microchip.com, robh+dt@kernel.org,
-        jason@lakedaemon.net, maz@kernel.org, tglx@linutronix.de
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] add RTT support for SAM9X60
-Date:   Fri, 26 Jun 2020 22:44:01 +0200
-Message-Id: <159320404890.1517140.1473221944024605941.b4-ty@bootlin.com>
+        robh+dt@kernel.org, ludovic.desroches@microchip.com
+Subject: Re: [PATCH v2] ARM: dts: at91: sama5d2_xplained: Remove pdmic node
+Date:   Fri, 26 Jun 2020 22:48:16 +0200
+Message-Id: <159320449048.1519242.4348779875317362688.b4-ty@bootlin.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20200618152845.682723-1-codrin.ciubotariu@microchip.com>
+References: <20200618152845.682723-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -45,30 +43,16 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 10 Jun 2020 12:05:33 +0300, Claudiu Beznea wrote:
-> This series adds RTT support for SAM9X60.
-> 
-> Changes in v2:
-> - use "atmel,at91sam9260-rtt" as fallback for compatible
-> - in patch 1 keep only the addition of sam9x60_aic_irq_fixup
-> - get rid of patches 2/5 from v1
-> - squash patches 4/5, 5/5 from v1
-> - change commit title for patch "rtc: at91sam9: add microchip,sam9x60-rtt"
->   from v1 into "dt-bindings: rtc: add microchip,sam9x60-rtt" and
->   place it before device tree patch
-> 
-> [...]
+On Thu, 18 Jun 2020 18:28:45 +0300, Codrin Ciubotariu wrote:
+> The PDMIC needs PDM microphones to work. sama5d2 xplained doesn't have
+> such microphones, so there is no reason to enable PDMIC and take the
+> pins since there is no-one using them.
 
-Applied 2 and 3, thanks!
+Applied, thanks!
 
-[2/3] dt-bindings: rtc: add microchip,sam9x60-rtt
-      commit: 73554069ded8fc6fa747423522c4295d5bbf6f52
-[3/3] ARM: dts: sam9x60: add rtt
-      commit: 5f6b33f463468b9595eebfed142756ba13ea2b60
+[1/1] ARM: dts: at91: sama5d2_xplained: Remove pdmic node
+      commit: 51139cc82c8d6edec034a6c2401090070195fa13
 
 Best regards,
-
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Alexandre Belloni <alexandre.belloni@bootlin.com>
