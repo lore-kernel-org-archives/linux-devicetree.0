@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2E9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E67CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD8D2076E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CB82076E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 08:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593158850;
-	bh=XDjdr5MiK7GXK9xIxnBBov3CQznIvioVNLtmyltdqQE=;
+	s=default; t=1593158902;
+	bh=gmkim/r0nxh4WfZmg5wugI0xjsg1UmiR9dvIH/UOImU=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=w6cegkuQm3P+3jfs/kGvYACiT/zSaeS2Ehg6wQC7jKkR3G6NKB3asZ/qfUt4/xA7s
-	 1/1xFUvX63mz/DMw5P2XX78JNIm4OJ8vceqgGSXomK6EKof6QV9arfWK1XaAWeo/C+
-	 3Gk5tv324bwgXmQnCJXrpvLYCen7JXpWI7qtdods=
+	b=utApciTT7nGzAmbNCL4ObUT++tHLCQmU4jF81sTIqRLNZZ1Uj5IyQGHMFX/+R1uBK
+	 uwyQNaXPLXaVi1JmB5TNrIgz6RAw1wurt4bw0bqUeiNN9J3GsFYv3mGNQiRYe7ZX2P
+	 jPyWS2xPKkkpLWDUYYY4T6iNwQxRejYFy3VIjOk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgFZIH2 (ORCPT
+        id S1729177AbgFZIF5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 04:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Fri, 26 Jun 2020 04:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729198AbgFZIGB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 04:06:01 -0400
+        id S1729174AbgFZIF4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 26 Jun 2020 04:05:56 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF15220857;
-        Fri, 26 Jun 2020 08:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A83E2082E;
+        Fri, 26 Jun 2020 08:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593158761;
-        bh=XDjdr5MiK7GXK9xIxnBBov3CQznIvioVNLtmyltdqQE=;
+        s=default; t=1593158756;
+        bh=gmkim/r0nxh4WfZmg5wugI0xjsg1UmiR9dvIH/UOImU=;
         h=From:To:Cc:Subject:Date:From;
-        b=FOwqoErMfSOylfvwmOJnt2/tTtHsMJsp8ycHEGenkJbYVGePynmSCsUX7eTbJvhQ9
-         Trk7hvbON4Uvi30vgEOgtA3EclA1m0Dz+da+mTrj3sgJRM+wuxfyRZvKL3LFAHe0Oo
-         3XA1bHk4dlVzmkA7IRlQquydD2c8CKkVV4/7cyAQ=
+        b=ytbmvAwBpwC7IDmgiTxkutp4QIl0DH5YUlHkFvjkpd8WtYGVNTs/vnSYOtvaX3DpD
+         d+ODcLAvwbVqiF04gG+hPACWkp4w4k7LbxNe+RyBLVJUBfDTOemAhFBLdUeD8dOcjk
+         vQKfiCiZ5oUCRed8jPYL0JBaPt1Yw2sCY1UVwGzM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH] ARM: dts: spear: Align L2 cache-controller nodename with dtschema
-Date:   Fri, 26 Jun 2020 10:05:57 +0200
-Message-Id: <20200626080557.3680-1-krzk@kernel.org>
+Subject: [PATCH] ARM: dts: ste: Align L2 cache-controller nodename with dtschema
+Date:   Fri, 26 Jun 2020 10:05:52 +0200
+Message-Id: <20200626080552.3627-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -60,22 +59,36 @@ Fix dtschema validator warnings like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/spear13xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/ste-dbx5x0.dtsi          | 2 +-
+ arch/arm/boot/dts/ste-nomadik-stn8815.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index f187da4485f4..c87b881b2c8b 100644
---- a/arch/arm/boot/dts/spear13xx.dtsi
-+++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -43,7 +43,7 @@
- 			      0 7 0x04>;
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 3e10da3f8fd3..05fd544b06c1 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -260,7 +260,7 @@
+ 			reg = <0x80150000 0x2000>;
+ 		};
+ 
+-		L2: l2-cache {
++		L2: cache-controller {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xa0412000 0x1000>;
+ 			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
+index f78b4eabd68c..4f38aeecadb3 100644
+--- a/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
++++ b/arch/arm/boot/dts/ste-nomadik-stn8815.dtsi
+@@ -15,7 +15,7 @@
+ 		    <0x08000000 0x04000000>;
  	};
  
 -	L2: l2-cache {
 +	L2: cache-controller {
- 		    compatible = "arm,pl310-cache";
- 		    reg = <0xed000000 0x1000>;
- 		    cache-unified;
+ 		compatible = "arm,l210-cache";
+ 		reg = <0x10210000 0x1000>;
+ 		interrupt-parent = <&vica>;
 -- 
 2.17.1
 
