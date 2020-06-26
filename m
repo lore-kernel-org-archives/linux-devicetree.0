@@ -2,123 +2,153 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30FCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 12:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC29C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 12:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE45320775
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 12:11:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gHdSO0x3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jMV835Dt"
+	by mail.kernel.org (Postfix) with ESMTP id 24CEA207D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 12:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgFZMLj (ORCPT
+        id S1728198AbgFZMOh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 08:11:39 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:56087 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727977AbgFZMLj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 08:11:39 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 02C7D5C009E;
-        Fri, 26 Jun 2020 08:11:38 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 26 Jun 2020 08:11:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=00SNO/wD0CWDmhJki0nu6Z9nf1
-        ZxH0I2QGAEfWPDokc=; b=gHdSO0x3fpqbUlDf0nm4WaNYPBVThArTFMp3MHKmDl
-        SpVVWFtTqdaSDxN7utnS8GKMoJF39WJuAf+g4sCKzRsFI56qG7j54rXbucNs0Kwn
-        BvDNj0w6heUMOa9E84zGQuArbgfqoX0lYvfQCToYINersYp0raHsak88yhk4u4wO
-        M8s8iWOd8ij6EWvrtwQ1kEwBRn/2qtuZmoYPe7TEixoyPlRxgloKTRMEZolgfH33
-        fgDW1mw1kzsDyJcypk2A/yWydWYmX9HMyoLnbuyFWu8pcYgqr5lvEPNdzigdUE/D
-        6Z3q3fXG3TWpQ4OoLjCjQ/c8pQNw85T6RKVqTEuUyOsA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=00SNO/wD0CWDmhJki
-        0nu6Z9nf1ZxH0I2QGAEfWPDokc=; b=jMV835Dt/zrJ17lU0kwT6WcDk36tEKNAk
-        Iji5ayH3acPz91jjFQwrCXGp86C6i0MWOzHBm0EA5HDXkCUhnjxqmbjsbRktZlHw
-        wa2WYXYsha6rlo1iUlvzy4eBYEuBDgQC30rWYhATtWy4yzLriyWY5auq/vdiOq0O
-        Z1eTE7oIfzpOkpSIpeG8nzu/o3eJGGeYL4BNCHfAhX1rFdmI6kevctgO66gXFM2G
-        DC8k58oOGetx+xgbSxo5GZFL8WXeVR6Ejx4p6Sa9ZyJbVRIlyEhjQRtjsCePq6dX
-        SJGxhHIbfTubkoavoFQC8I+B2NoeOktPGnWzV80CdifgC+2xJA1Ug==
-X-ME-Sender: <xms:-eX1Xqdn2NL1yBmXoetqw6d84Bwdbk02gLiOI-a3IDtHuICwf098Tw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeluddgheduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcu
-    tfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvg
-    hrnhepjeffheduvddvvdelhfegleelfffgieejvdehgfeijedtieeuteejteefueekjeeg
-    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:-eX1XkNILtv6qeN463fad4ev5rxCm5whK_3wcCloBa4YsLwmnSB8rA>
-    <xmx:-eX1XrhOxZYQqAXPYLUZ7WuONWanqzOYJ7HTeKh4rP-Dg18bWz7Sgw>
-    <xmx:-eX1Xn9AP92zHPJASyfT4gwiSMmS99RD2zW3u02DIWCGMSJug5CorQ>
-    <xmx:-eX1XqgE23waE9dZmnXJMQ-PyP8bzibI2KBMHhkZLhZNJYWmpWbhFA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 09114328005A;
-        Fri, 26 Jun 2020 08:11:36 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        dri-devel@lists.freedesktop.org,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 26 Jun 2020 08:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727977AbgFZMOf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 08:14:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C32EC08C5DB
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 05:14:35 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jonFV-0002V8-Fz; Fri, 26 Jun 2020 14:14:29 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jonFU-0007ub-Ah; Fri, 26 Jun 2020 14:14:28 +0200
+Message-ID: <485fda739c9ebd157b1552ac3d114f38b702328e.camel@pengutronix.de>
+Subject: Re: [PATCH v2 4/6] dt-bindings: reset: Add binding constants for
+ Actions S500 RMU
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: display: vc4: dpi: Fix panel warning
-Date:   Fri, 26 Jun 2020 14:11:31 +0200
-Message-Id: <20200626121131.127192-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Date:   Fri, 26 Jun 2020 14:14:28 +0200
+In-Reply-To: <924885629e2797e332ae8ff9c077937d44379722.1592941257.git.cristian.ciocaltea@gmail.com>
+References: <cover.1592941257.git.cristian.ciocaltea@gmail.com>
+         <924885629e2797e332ae8ff9c077937d44379722.1592941257.git.cristian.ciocaltea@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The example used in the DPI binding before the conversion to YAML had a
-simple-panel example that got carried over to the YAML binding.
+On Wed, 2020-06-24 at 20:47 +0300, Cristian Ciocaltea wrote:
+> Add device tree binding constants for Actions Semi S500 SoC Reset
+> Management Unit (RMU).
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 
-However, that example doesn't match the simple-panel binding and results in
-validation errors. Since it's only marginally helpful, let's remove that
-part of the example entirely.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Fixes: 094536003e06 ("dt-bindings: display: Convert VC4 bindings to schemas")
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- .../devicetree/bindings/display/brcm,bcm2835-dpi.yaml  | 10 ----------
- 1 file changed, 10 deletions(-)
+to be merged through the clock tree, required by the following patch:
+"clk: actions: Add Actions S500 SoC Reset Management Unit support".
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-index 58213c564e03..5c1024bbc1b3 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
-@@ -45,16 +45,6 @@ examples:
-   - |
-     #include <dt-bindings/clock/bcm2835.h>
- 
--    panel: panel {
--        compatible = "ontat,yx700wv03", "simple-panel";
--
--        port {
--            panel_in: endpoint {
--                remote-endpoint = <&dpi_out>;
--            };
--        };
--    };
--
-     dpi: dpi@7e208000 {
-         compatible = "brcm,bcm2835-dpi";
-         reg = <0x7e208000 0x8c>;
--- 
-2.26.2
+regards
+Philipp
 
+> ---
+>  .../dt-bindings/reset/actions,s500-reset.h    | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/actions,s500-reset.h
+> 
+> diff --git a/include/dt-bindings/reset/actions,s500-reset.h b/include/dt-bindings/reset/actions,s500-reset.h
+> new file mode 100644
+> index 000000000000..f5d94176d10b
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/actions,s500-reset.h
+> @@ -0,0 +1,67 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Device Tree binding constants for Actions Semi S500 Reset Management Unit
+> + *
+> + * Copyright (c) 2014 Actions Semi Inc.
+> + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_ACTIONS_S500_RESET_H
+> +#define __DT_BINDINGS_ACTIONS_S500_RESET_H
+> +
+> +#define RESET_DMAC				0
+> +#define RESET_NORIF				1
+> +#define RESET_DDR				2
+> +#define RESET_NANDC				3
+> +#define RESET_SD0				4
+> +#define RESET_SD1				5
+> +#define RESET_PCM1				6
+> +#define RESET_DE				7
+> +#define RESET_LCD				8
+> +#define RESET_SD2				9
+> +#define RESET_DSI				10
+> +#define RESET_CSI				11
+> +#define RESET_BISP				12
+> +#define RESET_KEY				13
+> +#define RESET_GPIO				14
+> +#define RESET_AUDIO				15
+> +#define RESET_PCM0				16
+> +#define RESET_VDE				17
+> +#define RESET_VCE				18
+> +#define RESET_GPU3D				19
+> +#define RESET_NIC301				20
+> +#define RESET_LENS				21
+> +#define RESET_PERIPHRESET			22
+> +#define RESET_USB2_0				23
+> +#define RESET_TVOUT				24
+> +#define RESET_HDMI				25
+> +#define RESET_HDCP2TX				26
+> +#define RESET_UART6				27
+> +#define RESET_UART0				28
+> +#define RESET_UART1				29
+> +#define RESET_UART2				30
+> +#define RESET_SPI0				31
+> +#define RESET_SPI1				32
+> +#define RESET_SPI2				33
+> +#define RESET_SPI3				34
+> +#define RESET_I2C0				35
+> +#define RESET_I2C1				36
+> +#define RESET_USB3				37
+> +#define RESET_UART3				38
+> +#define RESET_UART4				39
+> +#define RESET_UART5				40
+> +#define RESET_I2C2				41
+> +#define RESET_I2C3				42
+> +#define RESET_ETHERNET				43
+> +#define RESET_CHIPID				44
+> +#define RESET_USB2_1				45
+> +#define RESET_WD0RESET				46
+> +#define RESET_WD1RESET				47
+> +#define RESET_WD2RESET				48
+> +#define RESET_WD3RESET				49
+> +#define RESET_DBG0RESET				50
+> +#define RESET_DBG1RESET				51
+> +#define RESET_DBG2RESET				52
+> +#define RESET_DBG3RESET				53
+> +
+> +#endif /* __DT_BINDINGS_ACTIONS_S500_RESET_H */
