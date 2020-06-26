@@ -2,109 +2,92 @@ Return-Path: <SRS0=dlvX=AH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1B6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30EAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 597952053B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="kf4kOiJY"
+	by mail.kernel.org (Postfix) with ESMTP id CAAB320791
+	for <linux-devicetree@archiver.kernel.org>; Fri, 26 Jun 2020 16:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgFZQEe (ORCPT
+        id S1726837AbgFZQXl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 12:04:34 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:3260 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgFZQEe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 12:04:34 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49thXR6fSNz8k;
-        Fri, 26 Jun 2020 18:04:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1593187471; bh=dRgqe4wiOWYz7rwvRwaf+FBl8AmPXPxGIWeTwHg9vd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kf4kOiJY2yMhVY3ZjN968hGBCaGmdNZCB69H58CTeQV8L+hdWjkhUDo1rUqEVetUh
-         rBYW5eKriEG1Hm5yFUT0H9XBHWndtFMukzgWxLUY3EdmL5EWFn9YyFUMpbymGSJcBC
-         tnKdm8MkdrXklEZfClJmT8yAhBxQK71RzUcqzNg0aMYihysNO3zI/m6lK6tYiIeo76
-         2Exqy8Lbl++kvojlQhe+pub53UiPU2Xemdif0kIAWnDnU8brV24xLY/W74ikj5igP4
-         SlRfgs3QQ0HAW9DStLd78/L+OlHB6xBDxPP6t/FVemPOYm5LjxQZsEO04HL4to6j3X
-         fyEAaaGAT+BWg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.3 at mail
-Date:   Fri, 26 Jun 2020 18:04:19 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        jonathanh@nvidia.com, talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v4 1/4] dt-bindings: arm: Add t194
- ccplex compatible and bpmp property
-Message-ID: <20200626160419.GA9302@qmqm.qmqm.pl>
-References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
- <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
+        Fri, 26 Jun 2020 12:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgFZQXl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 12:23:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BEFC03E979
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 09:23:41 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jor8a-0004qp-H9; Fri, 26 Jun 2020 18:23:36 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jor8Z-0005kS-Jq; Fri, 26 Jun 2020 18:23:35 +0200
+Date:   Fri, 26 Jun 2020 18:23:35 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>, linux-clk@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Remove redundant 'maxItems'
+Message-ID: <20200626162335.ddfc23czvknblmqx@pengutronix.de>
+References: <20200611194738.1480393-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gcokhkvcs44oti6s"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200611194738.1480393-1-robh@kernel.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 09:13:53PM +0530, Sumit Gupta wrote:
-> To do frequency scaling on all CPUs within T194 CPU Complex, we need
-> to query BPMP for data on valid operating points. Document a compatible
-> string under 'cpus' node to represent the CPU Complex for binding drivers
-> like cpufreq which don't have their node or CPU Complex node to bind to.
-> Also, document a property to point to the BPMP device that can be queried
-> for all CPUs.
-> 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index a018147..737b55e 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -162,6 +162,7 @@ properties:
->        - nvidia,tegra132-denver
->        - nvidia,tegra186-denver
->        - nvidia,tegra194-carmel
-> +      - nvidia,tegra194-ccplex
->        - qcom,krait
->        - qcom,kryo
->        - qcom,kryo260
-> @@ -255,6 +256,14 @@ properties:
->  
->        where voltage is in V, frequency is in MHz.
->  
-> +  nvidia,bpmp:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    descrption: |
-> +      Specifies the bpmp node that needs to be queried to get
-> +      operating point data for all CPUs.
-> +
-> +      Optional for NVIDIA Tegra194 Carmel CPUs
 
-Hi,
+--gcokhkvcs44oti6s
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The code (next patches) suggests, that the property is relevant for Tegra194
-only. If it is required for compatible=tegra194-ccplex, then maybe you can
-mark it so (there is already similar constraint described in the file, just
-before the example section).
+On Thu, Jun 11, 2020 at 01:47:38PM -0600, Rob Herring wrote:
+> There's no need to specify 'maxItems' with the same value as the number
+> of entries in 'items'. A meta-schema update will catch future cases.
 
-Best Regards,
-Micha³ Miros³aw
+Sounds reasonable,
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--gcokhkvcs44oti6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl72IQQACgkQwfwUeK3K
+7AkkTAf+P/Ix8I1Qk1/xQYx03skU0vfyzMw0MExu5t68JfypxlbIJ5xAmxuc6iUC
+85scAvE5q44rK35snt5WmCMjWf5F/afqu/ZOAY4XTp/M3Eb2S0vt9eMJ77myyRrQ
+re3PzISpIlToIUpR1370R5KoQoSDcmKrUHE7vo8Op72CilADbLlitOOp0DVNl+kU
+3q32VL9eUCLbSHTv528iAbzVr/OYNn1Hmq6jHVZBN3Y/kSY2ayep1jguHHtjv7Mi
+WcnKEkNgtQMJTcNQuhIqmfXLjjlN3kBy8taEKkuGsobWq1E2yFQUiBboD1poMXXe
+WlcAYJ4803KbT1JSUf/h1JAXT8Qbmw==
+=laHj
+-----END PGP SIGNATURE-----
+
+--gcokhkvcs44oti6s--
