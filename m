@@ -2,214 +2,141 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA49C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 18:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9878EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 18:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 109DC20724
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 18:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8226320857
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 18:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r9vMSwUo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gy42z+6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgF0SC3 (ORCPT
+        id S1726703AbgF0SWd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 14:02:29 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:20742 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbgF0SC2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 27 Jun 2020 14:02:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593280947; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Date: Message-ID: From: References: Cc: To: Subject:
- Sender; bh=rh/RzCkxDxGOtEhur6n0ua62CiLZl8TIulvjxC0+MdQ=; b=r9vMSwUoQwxvd1ZLgYrAWB/DgmasVib+jICARr/GUCvihK5zYn8fQwugdr2Ba57s/P7khfz9
- 6W8JLo3Ni3r4utqG/t1jqD9e12NKUp5FevFyYZnrY2mSC51rhiNwtogb6Nc1cIla3dTciUGk
- X+R/3qGWH7UCWlIRI/Rf7umK8D8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5ef789a98fe116ddd9a82030 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 27 Jun 2020 18:02:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 136C0C433CB; Sat, 27 Jun 2020 18:02:16 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B766C433C8;
-        Sat, 27 Jun 2020 18:02:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B766C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v2 4/7] ASoC: qcom: lpass: Use regmap_field for i2sctl and
- dmactl registers
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Ajit Pandey <ajitp@codeaurora.org>, broonie@kernel.org,
-        plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: =?UTF-8?Q?=3c=1c1586592171-31644-1-git-send-email-ajitp=40codeau?=
- =?UTF-8?Q?rora=2eorg=1d=3e_=3c1589474298-29437-1-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e_=3c1589474298-29437-5-git-send-email-ajitp=40cod?=
- =?UTF-8?Q?eaurora=2eorg=3e_=3ca3527251-cafd-6d8f-3f96-0549b220af09=40linaro?=
- =?UTF-8?B?Lm9yZz4=?=
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <3c4093c5-d538-8508-ae98-c313ffdea250@codeaurora.org>
-Date:   Sat, 27 Jun 2020 23:32:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sat, 27 Jun 2020 14:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgF0SWb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 14:22:31 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CE6C03E97A
+        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 11:22:30 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c139so11800827qkg.12
+        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 11:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wknXL/NZZBsk//od0+ACYvlDvjjEXtFODMTp/oomwis=;
+        b=gy42z+6cy8ul5JraOk9jo44rONTJWYOz8zCY+b1cDGhklC9x1j9JQleDZ+cDg9XKIz
+         kOLCc87SIQaieB795ZhReKG4MCPphuoFynjteK/os1Ff9I7E33uDizZD3UmQB4rk8vUB
+         p3ucSkV7E4bPsKeajNlQ/T66NtHKQKCePNhLfDa4jkTinDcvVk41/7hnQ/gwwBftf8At
+         MhFNLNGvzZHPnvwyUdzdhwDbJKblAAu5vuTFlx2ogyCElXnHjMiePc2f4fe6GwVYCcDv
+         OCn1r4Gm1EIpUvW1CXvE3DEhKg7ed6aif/tw1n8Bh1mITbsMrH8uvDMQb8KDCPJk+H93
+         Scsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wknXL/NZZBsk//od0+ACYvlDvjjEXtFODMTp/oomwis=;
+        b=F6n8AfhquzODI/0iTWUDJ++N9BeYhOHeBNA+dxK8QghJNoH77wqfDPAVgTkO9rx+mD
+         tIX3YrK4qVcdDBWuazUxo3YUDUMFGKOvs0YClRgp0lAd/+/UtFpHvLd74sgGQkPjOijp
+         ARGxEG4dUO+xCzm+7q8/O2vhTMsxnBSU2zjuanSQhx30L9L9MflTND0yDESwF+TobOVb
+         s3ssOiCziQxsRDVYcNctyw0Ro9ffnCoEv+z0sDIm1QDnuIvW4gJbQwFqATHBySHaP5lM
+         po/o+DrtcWGa7SP0CMCGzL24Llgm+h8hkrhZXsZfapw6w+8fTeD0KDn1XlnazpXNkQ3K
+         /EBw==
+X-Gm-Message-State: AOAM531HIHlQ5uouz7/6CLg+npSscio1hXeuosfX+101Rf/5q4armk2f
+        cKp60Fl395InYUlanQ3fxfw1Lw==
+X-Google-Smtp-Source: ABdhPJyMXt2Ydo4dC6F+leoChRx/t4i2wi/giZ/uvjrThjMGzcC5n4fP3Y0B6gfrNjz/A5fawt1+lQ==
+X-Received: by 2002:a05:620a:1275:: with SMTP id b21mr8233352qkl.4.1593282149751;
+        Sat, 27 Jun 2020 11:22:29 -0700 (PDT)
+Received: from localhost (rfs.netwinder.org. [206.248.184.2])
+        by smtp.gmail.com with ESMTPSA id q5sm10310519qtf.12.2020.06.27.11.22.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 27 Jun 2020 11:22:29 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 14:22:28 -0400
+From:   Ralph Siemsen <ralph.siemsen@linaro.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Pavel Machek <pavel@denx.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
+ the dma_transfer callback
+Message-ID: <20200627182228.GA23327@maple.netwinder.org>
+References: <20200619141648.840376470@linuxfoundation.org>
+ <20200619141657.498868116@linuxfoundation.org>
+ <20200619210719.GB12233@amd>
+ <20200622205121.4xuki7guyj6u5yul@mobilestation>
+ <20200626151800.GA22242@maple.netwinder.org>
+ <20200626200710.GK1931@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200626200710.GK1931@sasha-vm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks Srini for reviewing the change.
+Hi Sasha,
 
-
-On 5/18/2020 3:19 PM, Srinivas Kandagatla wrote:
->
->
-> On 14/05/2020 17:38, Ajit Pandey wrote:
->> I2SCTL and DMACTL registers has different bits alignment for newer
->> LPASS variants of SC7180 soc. Instead of adding extra overhead for
->> calculating masks and shifts for newer variants registers layout we
->> changed the approach to use regmap_field_write() API to update bit.
->> Such API's will internally do the required bit shift and mask based
->> on reg_field struct defined for bit fields. We'll define REG_FIELD()
->> macros with bit layout for both lpass variants and use such macros
->> to initialize register fields in variant specific driver callbacks.
->> Also added new bitfieds values for I2SCTL and DMACTL registers and
->> removed shifts and mask macros for such registers from header file.
+On Fri, Jun 26, 2020 at 04:07:10PM -0400, Sasha Levin wrote:
+>On Fri, Jun 26, 2020 at 11:18:00AM -0400, Ralph Siemsen wrote:
 >>
->> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
->> ---
->>   sound/soc/qcom/lpass-apq8016.c   |  61 ++++++++++++
->>   sound/soc/qcom/lpass-cpu.c       | 114 +++++++++++++---------
->>   sound/soc/qcom/lpass-lpaif-reg.h | 203 
->> ++++++++++++++++++++++++---------------
->>   sound/soc/qcom/lpass-platform.c  |  86 +++++++++++------
->>   sound/soc/qcom/lpass.h           |  30 ++++++
->>   5 files changed, 340 insertions(+), 154 deletions(-)
->>
+>>So the following patch is needed as well, at least in 4.9 and 4.19, 
+>>I did not check/test other versions. Mainline does not need this, 
+>>since the code seems to have been refactored to avoid the 
+>>duplication.
 >
-> Thanks for moving this to regmap fields, looks clean!
-> However this patch just removed support to lpass-ipq806x.c variant, 
-> which should to be taken care of while doing patches that apply to all 
-> variants.
->
-Right. I will make the change as part of next patchset.
->
->> diff --git a/sound/soc/qcom/lpass-apq8016.c 
->> b/sound/soc/qcom/lpass-apq8016.c
->> index 8210e37..3149645 100644
->> --- a/sound/soc/qcom/lpass-apq8016.c
->> +++ b/sound/soc/qcom/lpass-apq8016.c
->> @@ -124,6 +124,32 @@
->>       },
->>   };
->>   +static int apq8016_init_dmactl_bitfields(struct lpaif_dmactl *dmactl,
->> +                     struct regmap *map,
->> +                     unsigned int reg)
->> +{
->> +    struct reg_field bursten = DMACTL_BURSTEN_FLD(reg);
->> +    struct reg_field wpscnt = DMACTL_WPSCNT_FLD(reg);
->> +    struct reg_field fifowm = DMACTL_FIFOWM_FLD(reg);
->> +    struct reg_field intf = DMACTL_AUDINTF_FLD(reg);
->> +    struct reg_field enable = DMACTL_ENABLE_FLD(reg);
->> +    struct reg_field dyncclk = DMACTL_DYNCLK_FLD(reg);
->> +
->> +    dmactl->bursten = regmap_field_alloc(map, bursten);
->> +    dmactl->wpscnt = regmap_field_alloc(map, wpscnt);
->> +    dmactl->fifowm = regmap_field_alloc(map, fifowm);
->> +    dmactl->intf = regmap_field_alloc(map, intf);
->> +    dmactl->enable = regmap_field_alloc(map, enable);
->> +    dmactl->dyncclk = regmap_field_alloc(map, dyncclk);
->
-> My idea was to move this all regmap fields to variant structure and 
-> common code will do the regmap_filed_alloc rather than each variant 
-> duplicating the same code for each variant, also am guessing some of 
-> the members in the lpass_variant structure tp become redundant due to 
-> regmap field which can be removed as well.
->
-> ex :
->
-> struct lpass_variant {
->     ...
->     struct reg_field bursten
->     ...
-> };
->
-> in lpass-apq8016.c
->
-> we do
-> static struct lpass_variant apq8016_data = {
->
->     .bursten = REG_FIELD(reg, 11, 11),
->     ...
-> }
->
-We can keep reg_field in lpass_variant, but assignment in the struct 
-will be a problem as
+>Could you add your signed-off-by tag please? :)
 
-reg is variable here. So, we need to expose an API in lpass_variant to 
-assign reg_field.
+Whoops, for some reason I snipped it out... sorry about that!
+Here it is again, with the commit message tweaked for clarity.
 
-regmap_field will still be in dmactl/i2sctl structs as it differs for 
-different dma channel/i2s port
+Subject: [PATCH] spi: dw: Fix return value of dma_transfer callback
 
-respectively. Please share your thoughts.
+Earlier commit "spi: dw: Return any value retrieved from the
+dma_transfer callback" changed the return code of mid_spi_dma_transfer()
+from 0 to 1 in drivers/spi/spi-dw-mid.c.
 
-> in lpass-cpu.c we can do the real regmap_field_alloc
-> asoc_qcom_lpass_cpu_platform_probe
->
-Yes, I will move regmap_field_alloc to lpass_cpu.c in next patchset.
->
->
->> +
->> +    if (IS_ERR(dmactl->bursten) || IS_ERR(dmactl->wpscnt) ||
->> +        IS_ERR(dmactl->fifowm) || IS_ERR(dmactl->intf) ||
->> +        IS_ERR(dmactl->enable) || IS_ERR(dmactl->dyncclk))
->> +        return -EINVAL;
->> +
->> +    return 0;
->> +}
->> +
->>   static int apq8016_lpass_alloc_dma_channel(struct lpass_data *drvdata,
->>                          int direction)
->>   {
->> @@ -158,6 +184,39 @@ static int apq8016_lpass_free_dma_channel(struct 
->> lpass_data *drvdata, int chan)
->>       return 0;
->>   }
->>   +static int sc7180_init_i2sctl_bitfields(struct lpaif_i2sctl *i2sctl,
->> +                    struct regmap *map, unsigned int reg)
->> +{
-> Should this be apq8016_init_i2sctl_bitfields
->
-> Please make sure that you compile the code before sending it out!
->
-Will take care in next patchset.
+A similar change is needed spi-dw-mmio.c for mmio_spi_dma_transfer()
+function. Note this only applies to older branches, as mainline has
+refactored the code to avoid duplication.
 
->
-> --srini
->
->>
-Thanks,
+Signed-off-by: Ralph Siemsen <ralph.siemsen@linaro.org>
+---
+ drivers/spi/spi-dw-mmio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rohit
-
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index c563c2815093..99641c485288 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -358,7 +358,7 @@ static int mmio_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
+ 		dma_async_issue_pending(dws->txchan);
+ 	}
+ 
+-	return 0;
++	return 1;
+ }
+ 
+ static void mmio_spi_dma_stop(struct dw_spi *dws)
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+2.17.1
 
