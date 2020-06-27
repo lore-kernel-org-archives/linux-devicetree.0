@@ -2,200 +2,489 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F23EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 03:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B1FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 04:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670DD20857
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 03:57:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBlJLbf3"
+	by mail.kernel.org (Postfix) with ESMTP id C787E2089D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 04:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgF0D54 (ORCPT
+        id S1725770AbgF0EIa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 23:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgF0D54 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 23:57:56 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF12C03E979
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 20:57:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e9so5844655pgo.9
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 20:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q6S07lknU7tVOiUs6tLtw9iT9ItDXgopWOouw+Pos+4=;
-        b=vBlJLbf3UYvxdTkXW6YlyOUbYdRYgxQkpMwuCjRw4pMABlX3+KD/WmMBNWazr3cmYw
-         UJLkQ22erWbGX54jZ3hhRrkUdhRL5mMV8ZigIRMtp8AGvXCtVPyeskMYdtkd++tHN0jC
-         UfkfTLx8LIzasz2pnDNO4rVQmJyuL1AVDlWRbmnS9fqNJtwIEmYJBt6kq4KlhnyttMva
-         0QGFv83Axet8SghixCzri+/HRoM1aDZPeAeXQZEQVMt6r+R7jCyW2uw9nafc/TWL45cq
-         urlQsgLhWgS2VkN5mFy5+iKpFPyJQYhqAK+BGB55pbtb69q1oc6I62hWKgwGEiqrt8vO
-         n3Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q6S07lknU7tVOiUs6tLtw9iT9ItDXgopWOouw+Pos+4=;
-        b=bv0Y4C1/J6umwemPl1M0skP8mop8FxvJxtzzSmhKfyz/FoQGwzkmtKtpYSveKRQ7u2
-         ANkLcoLQmf8mRUCp+3VtMenFECpLNDkZyJ4GmgWMXVhdPAy6ssmt8cGW9sPpowAugaei
-         cXA8hN9dIKBeIlRr4RfAYIeDMLYgE+GiPto+RrBlJ3zt96zCxqsMktg2XYM2mAmusQyl
-         49p+9DDnTJ3ktFwp5tUWWTD1pqvjucvM8IAn1NB3rgXzGxry3c/SHf2xYyVrIRoBJ5ha
-         ErgQqjVrXaOT8XNempOSGbTH1hNsijhy8BfZKhCDelk5JGvPsUEUUgZUGl3Bjm2FS9S4
-         pB8A==
-X-Gm-Message-State: AOAM531hRLoAn+567B1DoU1y6m8NPdvPQvz/RF2oZN9NjSabhEkj7N6D
-        /Ns0MjrTQApeP7F1IN78yy8AXY5U
-X-Google-Smtp-Source: ABdhPJxMaDFOyYs60EAMEfareyw9q2q6FuSlcQIrD7rKTXfCXayxRJ1xX7WEftHehGGTLfzRHCY50Q==
-X-Received: by 2002:a63:d958:: with SMTP id e24mr1782622pgj.348.1593230275289;
-        Fri, 26 Jun 2020 20:57:55 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z1sm23602080pgk.89.2020.06.26.20.57.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 20:57:54 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 20:57:53 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 04/20] arm64: dts: arm: vexpress: Move fixed devices
- out of bus node
-Message-ID: <20200627035753.GA63049@roeck-us.net>
-References: <20200513103016.130417-1-andre.przywara@arm.com>
- <20200513103016.130417-5-andre.przywara@arm.com>
- <20200528024810.GA232303@roeck-us.net>
- <20200528025552.GA232631@roeck-us.net>
+        Sat, 27 Jun 2020 00:08:30 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24646 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbgF0EIa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 27 Jun 2020 00:08:30 -0400
+IronPort-SDR: ydXxz/7mHlCsN4aOnI5fVS4iB1ZAATVVb2QweOePRlG4xZS2yegnVEATM03ifs0XWVJh/OtWcr
+ an+ljAhBy2+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="143070484"
+X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
+   d="scan'208";a="143070484"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 21:06:27 -0700
+IronPort-SDR: w1ZJFkVvk9R2HCifKgzL4v9EbZXvSlbA2IYEJne9iebMY3ivAyIWoliJdZmbzgy/9M9bUF8Swo
+ fcRSHKHkdKQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,286,1589266800"; 
+   d="scan'208";a="453577327"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2020 21:06:26 -0700
+Received: from [10.215.241.131] (vramuthx-MOBL1.gar.corp.intel.com [10.215.241.131])
+        by linux.intel.com (Postfix) with ESMTP id E9E6A58027C;
+        Fri, 26 Jun 2020 21:06:21 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [RESEND, v11 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+References: <20200616093332.53927-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200616093332.53927-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200626090940.4d55bf9d@xps13>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <8e2551f5-b69d-ce51-8cbd-3a44ae63ea42@linux.intel.com>
+Date:   Sat, 27 Jun 2020 12:06:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528025552.GA232631@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200626090940.4d55bf9d@xps13>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, May 27, 2020 at 07:55:52PM -0700, Guenter Roeck wrote:
-> On Wed, May 27, 2020 at 07:48:10PM -0700, Guenter Roeck wrote:
-> > On Wed, May 13, 2020 at 11:30:00AM +0100, Andre Przywara wrote:
-> > > The devicetree compiler complains when DT nodes without a reg property
-> > > live inside a (simple) bus node:
-> > > Warning (simple_bus_reg): Node /bus@8000000/motherboard-bus/refclk32khz
-> > >                           missing or empty reg/ranges property
-> > > 
-> > > Move the fixed clocks, the fixed regulator, the leds and the config bus
-> > > subtree to the root node, since they do not depend on any busses.
-> > > 
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > 
-> > This patch results in tracebacks when booting the vexpress-a15 machine
-> > with vexpress-v2p-ca15-tc1 devicetree file in qemu. Reverting it as well
-> > as the subsequent patches affecting the same file (to avoid revert
-> > conflicts) fixes the problem.
-> > 
-> 
-> On top of that, there is this message:
-> 
-> [   19.817986] vexpress-reset mcc:reboot: Unable to restart (-14)
-> [   20.818315] Reboot failed -- System halted
-> 
-> which also disappears after the patches have been reverted.
-> 
+Hi Miquel,
 
-The problem reported below is still seen in the mainline kernel.
+Thank you very much for the review comments and your time...
 
-> Here is my list of reverts on top of next-20200526:
+On 26/6/2020 3:09 pm, Miquel Raynal wrote:
+> Hello,
 > 
-> bdc8a817612b (HEAD -> master) Revert "arm64: dts: vexpress: Move fixed devices out of bus node"
-> 9a1f85df9e1a Revert "arm64: dts: fvp/juno: Fix serial node names"
-> 381e0bbe8c00 Revert "arm64: dts: fvp/juno: Fix bus node names"
-> 63723f67bf4b Revert "arm64: dts: vexpress: Fix VExpress LED names"
+> "Ramuthevar,Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote on Tue, 16 Jun 2020
+> 17:33:32 +0800:
 > 
-
-Maybe all those patches should be reverted if no fix is in sight ?
-
-Guenter
-
-> Guenter
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>> on Intel's Lightning Mountain(LGM) SoC.
+>>
+>> DMA is used for burst data transfer operation, also DMA HW supports
+>> aligned 32bit memory address and aligned data access by default.
+>> DMA burst of 8 supported. Data register used to support the read/write
+>> operation from/to device.
+>>
+>> NAND controller driver implements ->exec_op() to replace legacy hooks,
+>> these specific call-back method to execute NAND operations.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
 > 
-> > Guenter
-> > 
-> > ---
-> > [   12.744248] ------------[ cut here ]------------
-> > [   12.744562] WARNING: CPU: 0 PID: 20 at drivers/tty/serial/serial_core.c:471 uart_get_baud_rate+0x100/0x154
-> > [   12.744607] Modules linked in:
-> > [   12.744785] CPU: 0 PID: 20 Comm: kworker/0:1 Not tainted 5.7.0-rc7-next-20200526 #1
-> > [   12.744818] Hardware name: ARM-Versatile Express
-> > [   12.745021] Workqueue: events amba_deferred_retry_func
-> > [   12.745155] [<c0312484>] (unwind_backtrace) from [<c030c490>] (show_stack+0x10/0x14)
-> > [   12.745206] [<c030c490>] (show_stack) from [<c0880f04>] (dump_stack+0xc8/0xdc)
-> > [   12.745239] [<c0880f04>] (dump_stack) from [<c0346e44>] (__warn+0xdc/0xf4)
-> > [   12.745270] [<c0346e44>] (__warn) from [<c0346f0c>] (warn_slowpath_fmt+0xb0/0xb8)
-> > [   12.745302] [<c0346f0c>] (warn_slowpath_fmt) from [<c0a6b16c>] (uart_get_baud_rate+0x100/0x154)
-> > [   12.745336] [<c0a6b16c>] (uart_get_baud_rate) from [<c0a7f5ac>] (pl011_set_termios+0x48/0x32c)
-> > [   12.745367] [<c0a7f5ac>] (pl011_set_termios) from [<c0a6bbbc>] (uart_set_options+0x124/0x164)
-> > [   12.745404] [<c0a6bbbc>] (uart_set_options) from [<c1b8c804>] (pl011_console_setup+0x214/0x230)
-> > [   12.745438] [<c1b8c804>] (pl011_console_setup) from [<c03ab0d8>] (try_enable_new_console+0x98/0x138)
-> > [   12.745469] [<c03ab0d8>] (try_enable_new_console) from [<c03acc64>] (register_console+0xe8/0x304)
-> > [   12.745499] [<c03acc64>] (register_console) from [<c0a6c88c>] (uart_add_one_port+0x4c0/0x504)
-> > [   12.745529] [<c0a6c88c>] (uart_add_one_port) from [<c0a80404>] (pl011_register_port+0x5c/0xac)
-> > [   12.745568] [<c0a80404>] (pl011_register_port) from [<c097f5a0>] (amba_probe+0x9c/0x110)
-> > [   12.745602] [<c097f5a0>] (amba_probe) from [<c0b57e84>] (really_probe+0x218/0x348)
-> > [   12.745632] [<c0b57e84>] (really_probe) from [<c0b580c0>] (driver_probe_device+0x5c/0xb4)
-> > [   12.745662] [<c0b580c0>] (driver_probe_device) from [<c0b55ff4>] (bus_for_each_drv+0x58/0xb8)
-> > [   12.745692] [<c0b55ff4>] (bus_for_each_drv) from [<c0b57bf8>] (__device_attach+0xd4/0x140)
-> > [   12.745721] [<c0b57bf8>] (__device_attach) from [<c0b56eb0>] (bus_probe_device+0x88/0x90)
-> > [   12.745751] [<c0b56eb0>] (bus_probe_device) from [<c0b53234>] (device_add+0x3d4/0x6e8)
-> > [   12.745782] [<c0b53234>] (device_add) from [<c097f664>] (amba_device_try_add+0x50/0x2d4)
-> > [   12.745812] [<c097f664>] (amba_device_try_add) from [<c097f924>] (amba_deferred_retry+0x3c/0x98)
-> > [   12.745847] [<c097f924>] (amba_deferred_retry) from [<c097f988>] (amba_deferred_retry_func+0x8/0x40)
-> > [   12.745881] [<c097f988>] (amba_deferred_retry_func) from [<c0365b6c>] (process_one_work+0x2b8/0x6e8)
-> > [   12.745912] [<c0365b6c>] (process_one_work) from [<c0365fe0>] (worker_thread+0x44/0x540)
-> > [   12.745942] [<c0365fe0>] (worker_thread) from [<c036d810>] (kthread+0x16c/0x178)
-> > [   12.745973] [<c036d810>] (kthread) from [<c03001a8>] (ret_from_fork+0x14/0x2c)
-> > [   12.746041] Exception stack(0xc73abfb0 to 0xc73abff8)
-> > [   12.746181] bfa0:                                     00000000 00000000 00000000 00000000
-> > [   12.746302] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > [   12.746397] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > [   12.746651] ---[ end trace 2a3f61da56bd8a49 ]---
-> > 
-> > ---
-> > # bad: [b0523c7b1c9d0edcd6c0fe6d2cb558a9ad5c60a8] Add linux-next specific files for 20200526
-> > # good: [9cb1fd0efd195590b828b9b865421ad345a4a145] Linux 5.7-rc7
-> > git bisect start 'next-20200526' 'v5.7-rc7'
-> > # bad: [0c7351ad83670964e48cb9a098ad732c1ecbf804] Merge remote-tracking branch 'crypto/master'
-> > git bisect bad 0c7351ad83670964e48cb9a098ad732c1ecbf804
-> > # bad: [42e11d9b4682229fa7187d129758b8c382f8cd5d] Merge remote-tracking branch 'jc_docs/docs-next'
-> > git bisect bad 42e11d9b4682229fa7187d129758b8c382f8cd5d
-> > # bad: [ab6f501559e9efa687c711a781243cf6651a82d3] Merge remote-tracking branch 'm68k/for-next'
-> > git bisect bad ab6f501559e9efa687c711a781243cf6651a82d3
-> > # bad: [44aaa516ca63b3ab2da8ae81e9c6a58656e6acb5] Merge branch 'arm/drivers' into for-next
-> > git bisect bad 44aaa516ca63b3ab2da8ae81e9c6a58656e6acb5
-> > # good: [1cb00f8c3b36e6ae026fb58d1cd2ccd78b81aa9f] Merge tag 'qcom-arm64-for-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into arm/dt
-> > git bisect good 1cb00f8c3b36e6ae026fb58d1cd2ccd78b81aa9f
-> > # bad: [ed0c25932fbfafdfe37e9633dee21770d3c5a306] Merge branch 'arm/defconfig' into for-next
-> > git bisect bad ed0c25932fbfafdfe37e9633dee21770d3c5a306
-> > # bad: [9eddc06a3bc79402f50176703237ed045ae77b16] Merge branch 'mmp/fixes' into arm/dt
-> > git bisect bad 9eddc06a3bc79402f50176703237ed045ae77b16
-> > # bad: [87b990ab62722a8a3cb0691107971ab1bd7bddb5] Merge tag 'mvebu-dt64-5.8-1' of git://git.infradead.org/linux-mvebu into arm/dt
-> > git bisect bad 87b990ab62722a8a3cb0691107971ab1bd7bddb5
-> > # bad: [94cc3f1baabac5e5c4dcc6c2f070353f8315d0ee] arm64: dts: juno: Fix SCPI shared mem node name
-> > git bisect bad 94cc3f1baabac5e5c4dcc6c2f070353f8315d0ee
-> > # bad: [a78aee9e434932a500db36cc6d88daeff3745e9f] arm64: dts: juno: Fix GIC child nodes
-> > git bisect bad a78aee9e434932a500db36cc6d88daeff3745e9f
-> > # bad: [feebdc3f7950d7e44e914e821f6c04e58e292c74] arm64: dts: fvp: Move fixed clocks out of bus node
-> > git bisect bad feebdc3f7950d7e44e914e821f6c04e58e292c74
-> > # good: [849bfc3dfc13cde6ec04fbcf32af553ded9f7ec3] arm64: dts: fvp: Move fixed devices out of bus node
-> > git bisect good 849bfc3dfc13cde6ec04fbcf32af553ded9f7ec3
-> > # bad: [d9258898ad49cbb46caffe23af0d4f0b766e67a2] arm64: dts: vexpress: Move fixed devices out of bus node
-> > git bisect bad d9258898ad49cbb46caffe23af0d4f0b766e67a2
-> > # first bad commit: [d9258898ad49cbb46caffe23af0d4f0b766e67a2] arm64: dts: vexpress: Move fixed devices out of bus node
-> > 
+> [...]
+> 
+>> +static int ebu_nand_write_page_hwecc(struct nand_chip *chip, const u8 *buf,
+>> +				     int oob_required, int page)
+>> +{
+>> +	struct mtd_info *mtd = nand_to_mtd(chip);
+>> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
+>> +	void __iomem *int_sta = ebu_host->hsnand + HSNAND_INT_STA;
+>> +	int ret, val, x;
+>> +	u32 reg;
+>> +
+>> +	ebu_nand_trigger(ebu_host, page, NAND_CMD_SEQIN);
+>> +
+>> +	ret = ebu_dma_start(ebu_host, DMA_MEM_TO_DEV, buf, mtd->writesize);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (oob_required) {
+>> +		reg = (chip->oob_poi[3] << 24) | (chip->oob_poi[2] << 16) |
+>> +			(chip->oob_poi[1] << 8) | chip->oob_poi[0];
+>> +
+>> +		writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
+>> +
+>> +		reg = (chip->oob_poi[7] << 24) | (chip->oob_poi[6] << 16) |
+>> +			(chip->oob_poi[5] << 8) | chip->oob_poi[4];
+>> +
+>> +		writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
+>> +	}
+>> +
+>> +	ret = readl_poll_timeout_atomic(int_sta, val,
+>> +					!(val & HSNAND_INT_STA_WR_C), 10, 1000);
+>> +	if (ret)
+>> +		return -EIO;
+>> +
+>> +	x = readl(ebu_host->hsnand + HSNAND_CTL);
+>> +	x &= ~HSNAND_CTL_GO;
+>> +	writel(x, ebu_host->hsnand + HSNAND_CTL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const u8 ecc_strength[] = { 1, 1, 4, 8, 24, 32, 40, 60, };
+>> +
+>> +static int ebu_nand_attach_chip(struct nand_chip *chip)
+>> +{
+>> +	struct mtd_info *mtd = nand_to_mtd(chip);
+>> +	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
+>> +	u32 eccsize, eccsteps, eccbytes, ecctotal, pagesize, pg_per_blk;
+>> +	u32 eccstrength = chip->ecc.strength;
+>> +	u32 writesize = mtd->writesize;
+>> +	u32 blocksize = mtd->erasesize;
+>> +	int start, val, i;
+>> +
+>> +	if (chip->ecc.mode != NAND_ECC_HW)
+>> +		return 0;
+>> +
+>> +	/* Check whether eccsize is 0x0 or wrong. assign eccsize = 512 if YES */
+> 
+> 	/* Default to an ECC size of 512 */
+> 
+>> +	if (!chip->ecc.size)
+>> +		chip->ecc.size = 512;
+>> +	eccsize = chip->ecc.size;
+>> +
+>> +	switch (eccsize) {
+>> +	case 512:
+>> +		start = 1;
+>> +		if (!eccstrength)
+>> +			eccstrength = 4;
+>> +		break;
+>> +	case 1024:
+>> +		start = 4;
+>> +		if (!eccstrength)
+> 
+> You might want to look at other drivers and check the ecc_strength_ds
+> property.
+
+Sure, I will look and update accordingly.
+
+> 
+>> +			eccstrength = 32;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	i = round_up(start + 1, 4);
+>> +	for (val = start; val < i; val++) {
+>> +		if (eccstrength == ecc_strength[val])
+>> +			break;
+>> +	}
+> 
+> A comment to explain what is this would be nice.
+> 
+> Also "i" is not meaningful at all.
+
+Well, Noted.
+
+> 
+>> +	if (val == i)
+>> +		return -EINVAL;
+>> +
+>> +	if (eccstrength == 8)
+>> +		eccbytes = 14;
+>> +	else
+>> +		eccbytes = DIV_ROUND_UP(eccstrength * fls(8 * eccsize), 8);
+> 
+> Does this formula works for eccstrength == 8 too?
+
+Yes, it is working.
+
+> 
+>> +
+>> +	eccsteps = writesize / eccsize;
+>> +	ecctotal = eccsteps * eccbytes;
+>> +	if ((ecctotal + 8) > mtd->oobsize)
+>> +		return -ERANGE;
+>> +
+>> +	chip->ecc.total = ecctotal;
+>> +	pagesize = fls(writesize >> 11);
+>> +	if (pagesize > HSNAND_PARA0_PAGE_V8192)
+>> +		return -ERANGE;
+>> +
+>> +	pg_per_blk = fls((blocksize / writesize) >> 6) << 4;
+>> +	if (pg_per_blk > HSNAND_PARA0_PIB_V256)
+>> +		return -ERANGE;
+>> +
+>> +	ebu_host->nd_para0 = pagesize | pg_per_blk | HSNAND_PARA0_BYP_EN_NP |
+>> +			     HSNAND_PARA0_BYP_DEC_NP | HSNAND_PARA0_ADEP_EN |
+>> +			     HSNAND_PARA0_TYPE_ONFI | (val << 29);
+>> +
+>> +	mtd_set_ooblayout(mtd, &ebu_nand_ooblayout_ops);
+>> +	chip->ecc.read_page = ebu_nand_read_page_hwecc;
+>> +	chip->ecc.write_page = ebu_nand_write_page_hwecc;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ebu_nand_exec_op(struct nand_chip *chip,
+>> +			    const struct nand_operation *op, bool check_only)
+> 
+> You don't handle the check_only parameter. This will fail with recent
+> versions of the core.
+
+Thanks for the latest information, will update.
+
+> 
+>> +{
+>> +	struct ebu_nand_controller *ctrl = nand_to_ebu(chip);
+>> +	const struct nand_op_instr *instr = NULL;
+>> +	unsigned int op_id;
+>> +	int i, time_out, ret = 0;
+>> +	u32 stat;
+>> +
+>> +	ebu_select_chip(chip);
+>> +
+>> +	for (op_id = 0; op_id < op->ninstrs; op_id++) {
+>> +		instr = &op->instrs[op_id];
+>> +
+>> +		switch (instr->type) {
+>> +		case NAND_OP_CMD_INSTR:
+>> +			ebu_nand_writeb(chip, HSNAND_CLE_OFFS | HSNAND_CS_OFFS,
+>> +					instr->ctx.cmd.opcode);
+>> +			break;
+>> +
+>> +		case NAND_OP_ADDR_INSTR:
+>> +			for (i = 0; i < instr->ctx.addr.naddrs; i++)
+>> +				ebu_nand_writeb(chip,
+>> +						HSNAND_ALE_OFFS | HSNAND_CS_OFFS,
+>> +						instr->ctx.addr.addrs[i]);
+>> +			break;
+>> +
+>> +		case NAND_OP_DATA_IN_INSTR:
+>> +			ebu_read_buf(chip, instr->ctx.data.buf.in,
+>> +				     instr->ctx.data.len);
+>> +			break;
+>> +
+>> +		case NAND_OP_DATA_OUT_INSTR:
+>> +			ebu_write_buf(chip, instr->ctx.data.buf.out,
+>> +				      instr->ctx.data.len);
+>> +			break;
+>> +
+>> +		case NAND_OP_WAITRDY_INSTR:
+>> +			time_out = instr->ctx.waitrdy.timeout_ms * 1000;
+>> +			ret = readl_poll_timeout(ctrl->ebu + EBU_WAIT,
+>> +						 stat, stat & EBU_WAIT_RDBY,
+>> +						 20, time_out);
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct nand_controller_ops ebu_nand_controller_ops = {
+>> +	.attach_chip = ebu_nand_attach_chip,
+>> +	.exec_op = ebu_nand_exec_op,
+>> +	.setup_data_interface = ebu_nand_setup_data_interface,
+>> +};
+>> +
+>> +static void ebu_dma_cleanup(struct ebu_nand_controller *ebu_host)
+>> +{
+>> +	if (ebu_host->dma_rx)
+>> +		dma_release_channel(ebu_host->dma_rx);
+>> +
+>> +	if (ebu_host->dma_tx)
+>> +		dma_release_channel(ebu_host->dma_tx);
+>> +}
+>> +
+>> +static int ebu_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct ebu_nand_controller *ebu_host;
+>> +	struct nand_chip *nand;
+>> +	struct mtd_info *mtd;
+>> +	struct resource *res;
+>> +	char *resname;
+>> +	int ret, i;
+>> +	u32 reg;
+>> +
+>> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+>> +	if (!ebu_host)
+>> +		return -ENOMEM;
+>> +
+>> +	ebu_host->dev = dev;
+>> +	nand_controller_init(&ebu_host->controller);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+>> +	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(ebu_host->ebu))
+>> +		return PTR_ERR(ebu_host->ebu);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+>> +	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(ebu_host->hsnand))
+>> +		return PTR_ERR(ebu_host->hsnand);
+>> +
+>> +	ret = device_property_read_u32(dev, "nand,cs", &reg);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	ebu_host->cs_num = reg;
+>> +
+>> +	for (i = 0; i < MAX_CS; i++) {
+>> +		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   resname);
+>> +		if (!res)
+>> +			return -EINVAL;
+>> +		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
+>> +		ebu_host->cs[i].nand_pa = res->start;
+>> +		if (IS_ERR(ebu_host->cs[i].chipaddr))
+>> +			return PTR_ERR(ebu_host->cs[i].chipaddr);
+>> +	}
+>> +
+>> +	ebu_host->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(ebu_host->clk)) {
+>> +		ret = PTR_ERR(ebu_host->clk);
+>> +		dev_err(dev, "failed to get clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(ebu_host->clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	ebu_host->clk_rate = clk_get_rate(ebu_host->clk);
+>> +
+>> +	ebu_host->dma_tx = dma_request_chan(dev, "tx");
+>> +	if (IS_ERR(ebu_host->dma_tx)) {
+>> +		ret = PTR_ERR(ebu_host->dma_tx);
+>> +		dev_err(dev, "DMA tx channel request fail!.\n");
+>> +		goto err_cleanup_dma;
+>> +	}
+>> +
+>> +	ebu_host->dma_rx = dma_request_chan(dev, "rx");
+>> +	if (IS_ERR(ebu_host->dma_rx)) {
+>> +		ret = PTR_ERR(ebu_host->dma_rx);
+>> +		dev_err(dev, "DMA rx channel request fail!.\n");
+>> +		goto err_cleanup_dma;
+>> +	}
+>> +
+>> +	for (i = 0; i < MAX_CS; i++) {
+>> +		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   resname);
+>> +		if (!res)
+>> +			return -EINVAL;
+> 
+> New line
+Noted.
+> 
+>> +		ebu_host->cs[i].addr_sel = res->start;
+>> +		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
+>> +		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
+>> +	}
+>> +
+>> +	nand_set_flash_node(&ebu_host->chip, dev->of_node);
+> 
+> You probably want to verify that mtd->name is set after
+> nand_set_flash_node, to validate the presence of the mandatory 'label'
+> DT property.
+
+Sure, Noted
+
+> 
+>> +	mtd = nand_to_mtd(&ebu_host->chip);
+>> +	mtd->dev.parent = dev;
+>> +	ebu_host->dev = dev;
+>> +
+>> +	platform_set_drvdata(pdev, ebu_host);
+>> +	nand_set_controller_data(&ebu_host->chip, ebu_host);
+>> +
+>> +	nand = &ebu_host->chip;
+>> +	nand->controller = &ebu_host->controller;
+>> +	nand->controller->ops = &ebu_nand_controller_ops;
+>> +
+>> +	/* Scan to find existence of the device */
+>> +	ret = nand_scan(&ebu_host->chip, 1);
+>> +	if (ret)
+>> +		goto err_cleanup_dma;
+>> +
+>> +	ret = mtd_device_register(mtd, NULL, 0);
+>> +	if (ret)
+>> +		goto err_clean_nand;
+>> +
+>> +	return 0;
+>> +
+>> +err_clean_nand:
+>> +	nand_cleanup(&ebu_host->chip);
+>> +err_cleanup_dma:
+>> +	ebu_dma_cleanup(ebu_host);
+>> +	clk_disable_unprepare(ebu_host->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int ebu_nand_remove(struct platform_device *pdev)
+>> +{
+>> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
+>> +
+>> +	mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
+> 
+> ret = mtd_device...
+> WARN_ON(ret);
+
+Well, Noted.
+
+> 
+>> +	nand_cleanup(&ebu_host->chip);
+>> +	ebu_nand_disable(&ebu_host->chip);
+>> +	ebu_dma_cleanup(ebu_host);
+>> +	clk_disable_unprepare(ebu_host->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id ebu_nand_match[] = {
+>> +	{ .compatible = "intel,nand-controller", },
+> 
+> Any version to append to the compatible?
+
+.compatible = "lantiq,nand-xway" may be appended in the future.
+
+Regards
+Vadivel
+> 
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ebu_nand_match);
+>> +
+>> +static struct platform_driver ebu_nand_driver = {
+>> +	.probe = ebu_nand_probe,
+>> +	.remove = ebu_nand_remove,
+>> +	.driver = {
+>> +		.name = "intel-nand-controller",
+>> +		.of_match_table = ebu_nand_match,
+>> +	},
+>> +
+>> +};
+>> +module_platform_driver(ebu_nand_driver);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
+>> +MODULE_DESCRIPTION("Intel's LGM External Bus NAND Controller driver");
+> 
+> 
+> Thanks,
+> Miquèl
+> 
