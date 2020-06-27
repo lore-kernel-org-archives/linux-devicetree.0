@@ -2,153 +2,132 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C669C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 13:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E0EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 14:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB5F2168B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 13:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339A621852
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 14:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593266201;
-	bh=xZGOp7W+Rxc8KS1cQqM7lW8Lq0l2uWFV+KPhgQ12fxc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cqXZtShvUy7cnsk30PE1YwWFq3IhHLRWf6k9iBdt6fblqBWp34k5Uh0jwfPXizGgj
-	 DOqOA3w/FmqHJn4UsVHEHOT7AJLXoqhIrDZWer7VDQNkI+YdKRr4fhAU+2RmMSEyPn
-	 38ASlZITOvMAygTlBh4tK3O6rT/i+LrCfg5+hbzc=
+	s=default; t=1593267151;
+	bh=Mm9Jr0Y6Toy3xKZiWCZpBQOjWvs88DP6/BkXW7NSloI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WowDLJiDHmB5s1LseD9jKUI4TOgn+UqtOOG3fH4L6UTlY72awdtkhfBzkcbTa336t
+	 9LHVuGsmnkB+B9+5ij4oIBFGJSkngrFrFo807jGxxuwIL5vN3/INjMwolhhflIz6oA
+	 ISimdHSQ9PSBFn5KEI+ogU219S1bGPrpmXFP9pag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgF0N4i (ORCPT
+        id S1725850AbgF0OMa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 09:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56046 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 10:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgF0N4h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 27 Jun 2020 09:56:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1725798AbgF0OMa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 27 Jun 2020 10:12:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE852158C;
-        Sat, 27 Jun 2020 13:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB4C2184D;
+        Sat, 27 Jun 2020 14:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593266196;
-        bh=xZGOp7W+Rxc8KS1cQqM7lW8Lq0l2uWFV+KPhgQ12fxc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nz3+TyqlyEsmkYUn7YJn+qS8TVFDPdAFklQjKKItZs4XI6kRkoDgYsaj9x4AlMx9Z
-         eZtE3EtY3ZIKaFQG9kbsUgt7LX0mOwMEQFvvt9grynyvxrEKlT8BjjLRs/9fsSW4Ti
-         X9H2K6sxF0MbJWntoRWQmEUJBYmBl2x22mxTVebI=
-Date:   Sat, 27 Jun 2020 14:56:33 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v6 0/4] Add support for SCD30 sensor
-Message-ID: <20200627145633.6be4c956@archlinux>
-In-Reply-To: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
-References: <20200621195701.97227-1-tomasz.duszynski@octakon.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1593267149;
+        bh=Mm9Jr0Y6Toy3xKZiWCZpBQOjWvs88DP6/BkXW7NSloI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TfrrfsmELqDgVdyohdtQg5RGnq/X72CkFtYXD+vVAHqE8bU22zy+qL2STz3ewIsSp
+         a82+ne6RpaLkVeJ5rbGMc/Yhr/6tyXaN6oAKecHhJLWOK+X4sw/UL9jgy/NSwDNSEn
+         EEzmq/TNa+IF7b03gev789SKgOHxnvk12u9q00r8=
+Date:   Sat, 27 Jun 2020 16:12:22 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     sean.wang@mediatek.com
+Cc:     robh+dt@kernel.org, jslaby@suse.com,
+        andriy.shevchenko@linux.intel.com, robert.jarzmik@free.fr,
+        arnd@arndb.de, p.zabel@pengutronix.de, joel@jms.id.au,
+        david@lechnology.com, jan.kiszka@siemens.com,
+        heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com,
+        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v4] tty: serial: don't do termios for BTIF
+Message-ID: <20200627141222.GC1901451@kroah.com>
+References: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 21 Jun 2020 21:56:57 +0200
-Tomasz Duszynski <tomasz.duszynski@octakon.com> wrote:
-
-> Following series adds support for Sensirion SCD30 sensor module capable of
-> measuring carbon dioxide, temperature and relative humidity. CO2 measurements
-> base on NDIR principle while temperature and relative humidity are measured by
-> the on board SHT31. As for sensor communication, both I2C and serial interfaces
-> are supported.
-
-Series applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+On Sat, Jun 20, 2020 at 03:59:14AM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> v6:
-> * fix warnings produced by C=2 build option
-> * fix 0-day warning 'Clarify calculation precedence for '&' and '?''
+> Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
+> BT in order to be instead of the UART interface between BT module and Host
+> CPU, and not exported to user space to access.
 > 
-> v5:
-> * set pressure calibration via output channel
-> * use kstrtobool() to read value into _enabled attribute
-> * drop explicit parent asignment as the default one is good enough
->   (seems 'iio: core: pass parent device as parameter during allocation'
->    series was accepted)
+> As the UART design, BTIF will be an APB slave and can transmit or receive
+> data by MCU access, but doesn't provide termios function like baudrate and
+> flow control setup.
 > 
-> v4:
-> * improve formatting
-> * improve error handling readability
-> * fix message validity check on serial write
+> Even LCR on offset 0xC that is just a FAKELCR
+> a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
+>    will not be readable/writable.
 > 
-> v3:
-> * simplify code by scaling temperature & humidity in _read_meas()
-> * update realbits in scan types
-> * s/adjecent/adjacent
-> * drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
->   output channel
-> * rework locking in _read_raw
-> * fix endianess problem on BE machine
-> * align timestamp properly before pushing to buffers
-> * explain why interrupt gets disabled after registration
-> * add trigger validation
-> * drop SCALE for temperature and humidity channel as they are processed
-> * register action which stops measuring after starting measurements
-> * spit generic calibration attr into two doing specific things
-> * add comment explaining why priv in struct scd30_state is for
-> * rename node in binding example to co2-sensor
+> b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
+>    IIR(0x08), and LSR(0x14) will not be readable/writable.
 > 
-> v2:
-> * move asm/byteorder.h towards the bottom of include list
-> * make channel address names in enum more specific
-> * add postfixes to defines and extra comments
-> * drop unneeded i2c include from scd30 header
-> * break generic command sending function into specialized options
-> * expose automatic calibration and forced calibration via the same attr
-> * use SAMP_FREQ to set frequency instead of meas_interval attr
-> * use CALISCALE to set pressure compensation instead of pressure_comp attr
-> * use CALIBBIAS to set temperature offset instead of temp_offset attr
-> * fix order in MAINTAINERS
-> * drop attribute allowing one to reset sensor
-> * as we have dt probing drop board file based probing (i2c_device_id)
-> * merge patches touching related files
-> * use fwnode API to retrieve interrupt from dt
-> * fix interrupt-parent spelling
-> * change binding license
-> * drop supply from required property
+> So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
+> case.
 > 
-> Tomasz Duszynski (4):
->   iio: chemical: scd30: add core driver
->   iio: chemical: scd30: add I2C interface driver
->   iio: chemical: scd30: add serial interface driver
->   dt-bindings: iio: scd30: add device binding file
+> The bluetooth driver would use BTIF device as a serdev. So the termios
+> still function would be called in kernelspace from ttyport_open in
+> drivers/tty/serdev/serdev-ttyprt.c.
 > 
->  Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
->  .../iio/chemical/sensirion,scd30.yaml         |  68 ++
->  MAINTAINERS                                   |   9 +
->  drivers/iio/chemical/Kconfig                  |  33 +
->  drivers/iio/chemical/Makefile                 |   3 +
->  drivers/iio/chemical/scd30.h                  |  78 ++
->  drivers/iio/chemical/scd30_core.c             | 771 ++++++++++++++++++
->  drivers/iio/chemical/scd30_i2c.c              | 139 ++++
->  drivers/iio/chemical/scd30_serial.c           | 263 ++++++
->  9 files changed, 1398 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
->  create mode 100644 drivers/iio/chemical/scd30.h
->  create mode 100644 drivers/iio/chemical/scd30_core.c
->  create mode 100644 drivers/iio/chemical/scd30_i2c.c
->  create mode 100644 drivers/iio/chemical/scd30_serial.c
+> Fixes: 1c16ae65e250 ("serial: 8250: of: Add new port type for MediaTek BTIF controller on MT7622/23 SoC")
+> Cc: Steven Liu <steven.liu@mediatek.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > 
 > --
-> 2.27.0
+> v1->v2:
+> no change on termios->c_cflag and refine commit message
 > 
+> v2->v3:
+> change the naming from NMOD to NTIO as TIO is a well established prefix
+> for termios IOCTLs.
+> 
+> v3->v4:
+> 1. remove appropriate tag
+> 2. add the explanation why the termios is required even when the connection
+>    isn't exported to userspace.
+> ---
+>  drivers/tty/serial/8250/8250.h      | 1 +
+>  drivers/tty/serial/8250/8250_port.c | 5 ++++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+> index 52bb21205bb6..0d9d3bfe48af 100644
+> --- a/drivers/tty/serial/8250/8250.h
+> +++ b/drivers/tty/serial/8250/8250.h
+> @@ -82,6 +82,7 @@ struct serial8250_config {
+>  #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
+>  					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
+>  					 */
+> +#define UART_CAP_NTIO	(1 << 18)	/* UART doesn't do termios */
 
+Naming is hard.  I will never remember what "NTIO" is, how about we make
+it explicit:
+	define UART_CAP_IGNORE_TERMIOS
+
+And the _CAP_ name is getting out of hand, this isn't a "capability",
+it's a "quirk for this port" but that's a battle to worry about later...
+
+thanks,
+
+greg k-h
