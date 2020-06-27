@@ -2,323 +2,183 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F61CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 08:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABC3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 09:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 136052080C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 08:18:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CdYOFiAm"
+	by mail.kernel.org (Postfix) with ESMTP id 6E6C1208C7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 09:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593251311;
+	bh=IxnkrHLXk/gcwa3WhvrkauHPx68lmhRoHCUjT2rX01A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cqnpM/YT4O46cu4h9koacDvo1LEW25y2IQmDfuPapbyOAA0p7zn6w3seHMk5nKVUT
+	 q+xnGbuVXgkyW7U9zdxD6WFQrssHgfLjCvQ7hfEHojcH99jg19b8SK4wzEr0dlD49h
+	 QJ4KmdyXslFad38EpS897MwdOPab+fXNY27U2oKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgF0ISQ (ORCPT
+        id S1726356AbgF0Jsa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 04:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgF0ISQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 04:18:16 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0CBC03E979;
-        Sat, 27 Jun 2020 01:18:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4UusXWVmeZslLL0YrXwQifqLxTB7fqL/8w++bVpT1Ek=; b=CdYOFiAmCvnKTyLHBvYOAYYd2F
-        uF2ipBdlMVzJkU/F9iSYsdZ0gtf75hcaUruY15yoJC0DSXLa1aIvjbQ2xUMIKrQB7x3JJ0O3fUqzT
-        rRQTziuSZ7Wc5h91mcUSS9Shp8uDaPOQYAzzCCFemo2attCrUfXoqe7vfD0bdh7wO7Mo=;
-Received: from p5dcc3098.dip0.t-ipconnect.de ([93.204.48.152] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jp61s-0007Tj-7u; Sat, 27 Jun 2020 10:17:44 +0200
-Date:   Sat, 27 Jun 2020 10:17:38 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Sat, 27 Jun 2020 05:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbgF0Jsa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 27 Jun 2020 05:48:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0C4208B6;
+        Sat, 27 Jun 2020 09:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593251309;
+        bh=IxnkrHLXk/gcwa3WhvrkauHPx68lmhRoHCUjT2rX01A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yhIM2WgfX21AVxbsstEDDdV+xyzyzQQ1uA94R7Z9HqiL/Mq+cqs3pG8l5PyjLgw0e
+         s3Eicip9RTI66nQwr0Cv17QDEBxrTfiK22DtEbnswv0mxa6AEudlrWnvGe5ij3Mlb1
+         I0mZxXLRSo8jeSeChtbkoNx4ZDHxDUIw3S5Gxetk=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jp7Rj-006rKU-PG; Sat, 27 Jun 2020 10:48:27 +0100
+Date:   Sat, 27 Jun 2020 10:48:26 +0100
+Message-ID: <87v9jcet5h.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 04/10] mfd: Add base driver for Netronix embedded
- controller
-Message-ID: <20200627101738.2fe4abc3@aktux>
-In-Reply-To: <20200620224222.1312520-3-j.neuschaefer@gmx.net>
-References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
-        <20200620224222.1312520-3-j.neuschaefer@gmx.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+In-Reply-To: <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+        <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 21 Jun 2020 00:42:15 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
-
-> Third-party hardware documentation is available at
-> https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-contro=
-ller
->=20
-> The EC supports interrupts, but the driver doesn't make use of them so
-> far.
->=20
-> Known problems:
-> - The reboot handler is installed in such a way that it directly calls
->   into the i2c subsystem to send the reboot command to the EC. This
->   means that the reboot handler may sleep, which is not allowed.
->=20
-see
-https://patchwork.ozlabs.org/project/linux-i2c/patch/20190415213432.8972-3-=
-contact@stefanchrist.eu/
-
-for a fix of such problems.=20
-
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+On Thu, 18 Jun 2020 09:38:09 +0100,
+Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+> 
+> The misc interrupts consisting of PME, AER, and Link event, is handled
+> by INTx handler, however, these interrupts should be also handled by
+> MSI handler.
+> 
+> This adds the function uniphier_pcie_misc_isr() that handles misc
+> interrupts, which is called from both INTx and MSI handlers.
+> This function detects PME and AER interrupts with the status register,
+> and invoke PME and AER drivers related to MSI.
+> 
+> And this sets the mask for misc interrupts from INTx if MSI is enabled
+> and sets the mask for misc interrupts from MSI if MSI is disabled.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  drivers/mfd/Kconfig       |   7 ++
->  drivers/mfd/Makefile      |   1 +
->  drivers/mfd/ntxec.c       | 188 ++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/ntxec.h |  30 ++++++
->  4 files changed, 226 insertions(+)
->  create mode 100644 drivers/mfd/ntxec.c
->  create mode 100644 include/linux/mfd/ntxec.h
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index a37d7d1713820..78410b928648e 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -978,6 +978,13 @@ config MFD_VIPERBOARD
->  	  You need to select the mfd cell drivers separately.
->  	  The drivers do not support all features the board exposes.
->=20
-> +config MFD_NTXEC
-> +	bool "Netronix Embedded Controller"
-> +	depends on I2C && OF
-> +	help
-> +	  Say yes here if you want to support the embedded controller of
-> +	  certain e-book readers designed by the ODM Netronix.
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>  1 file changed, 46 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index a5401a0..5ce2479 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -44,7 +44,9 @@
+>  #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>  
+>  #define PCL_RCV_INT			0x8108
+> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>  #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>  #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>  #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>  #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>  
+>  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  {
+> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+> +	u32 val;
 > +
->  config MFD_RETU
->  	tristate "Nokia Retu and Tahvo multi-function device"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a6..19d9391ed6f32 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -218,6 +218,7 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
->  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+=3D intel_pmc_bxt.o
->  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
-> +obj-$(CONFIG_MFD_NTXEC)		+=3D ntxec.o
->  obj-$(CONFIG_MFD_RC5T583)	+=3D rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_RK808)		+=3D rk808.o
->  obj-$(CONFIG_MFD_RN5T618)	+=3D rn5t618.o
-> diff --git a/drivers/mfd/ntxec.c b/drivers/mfd/ntxec.c
-> new file mode 100644
-> index 0000000000000..82adea34ea746
-> --- /dev/null
-> +++ b/drivers/mfd/ntxec.c
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright 2020 Jonathan Neusch=C3=A4fer
-> +//
-> +// MFD driver for the usually MSP430-based embedded controller used in c=
-ertain
-> +// Netronix ebook reader board designs
+> +	val = PCL_RCV_INT_ALL_ENABLE;
+> +	if (pci_msi_enabled())
+> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+> +	else
+> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+
+Does this affect endpoints? Or just the RC itself?
+
 > +
-> +#include <asm/unaligned.h>
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/ntxec.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pm.h>
-> +#include <linux/reboot.h>
-> +#include <linux/types.h>
+> +	writel(val, priv->base + PCL_RCV_INT);
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>  }
+>  
+> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>  	.map = uniphier_pcie_intx_map,
+>  };
+>  
+> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>  {
+> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+> -	unsigned long reg;
+> -	u32 val, bit, virq;
+> +	u32 val, virq;
+>  
+> -	/* INT for debug */
+>  	val = readl(priv->base + PCL_RCV_INT);
+>  
+>  	if (val & PCL_CFG_BW_MGT_STATUS)
+>  		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
 > +
+>  	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>  		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> -		dev_dbg(pci->dev, "Root Error\n");
+> -	if (val & PCL_CFG_PME_MSI_STATUS)
+> -		dev_dbg(pci->dev, "PME Interrupt\n");
 > +
-> +#define NTXEC_VERSION		0x00
-> +#define NTXEC_POWEROFF		0x50
-> +#define NTXEC_POWERKEEP		0x70
-> +#define NTXEC_RESET		0x90
+> +	if (is_msi) {
+> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> +			dev_dbg(pci->dev, "Root Error Status\n");
 > +
+> +		if (val & PCL_CFG_PME_MSI_STATUS)
+> +			dev_dbg(pci->dev, "PME Interrupt\n");
 > +
-> +/* Register access */
-> +
-> +int ntxec_read16(struct ntxec *ec, u8 addr)
-> +{
-> +	u8 request[1] =3D { addr };
-> +	u8 response[2];
-> +	int res;
-> +
-> +	struct i2c_msg msgs[] =3D {
-> +		{
-> +			.addr =3D ec->client->addr,
-> +			.flags =3D ec->client->flags,
-> +			.len =3D sizeof(request),
-> +			.buf =3D request
-> +		}, {
-> +			.addr =3D ec->client->addr,
-> +			.flags =3D ec->client->flags | I2C_M_RD,
-> +			.len =3D sizeof(response),
-> +			.buf =3D response
+> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+> +			   PCL_CFG_PME_MSI_STATUS)) {
+> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+> +			generic_handle_irq(virq);
 > +		}
-> +	};
-> +
-> +	res =3D i2c_transfer(ec->client->adapter, msgs, ARRAY_SIZE(msgs));
-> +	if (res < 0)
-> +		return res;
-> +	if (res !=3D ARRAY_SIZE(msgs))
-> +		return -EIO;
-> +
-> +	return get_unaligned_be16(response);
-> +}
-> +EXPORT_SYMBOL(ntxec_read16);
-> +
-> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value)
-> +{
-> +	u8 request[3] =3D { addr, };
-> +	int res;
-> +
-> +	put_unaligned_be16(value, request + 1);
-> +
-> +	res =3D i2c_transfer_buffer_flags(ec->client, request, sizeof(request),
-> +					ec->client->flags);
-> +	if (res < 0)
-> +		return res;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(ntxec_write16);
-> +
-> +int ntxec_read8(struct ntxec *ec, u8 addr)
-> +{
-> +	int res =3D ntxec_read16(ec, addr);
-> +
-> +	if (res < 0)
-> +		return res;
-> +
-> +	return (res >> 8) & 0xff;
-> +}
-> +EXPORT_SYMBOL(ntxec_read8);
-> +
-> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value)
-> +{
-> +	return ntxec_write16(ec, addr, value << 8);
-> +}
-> +EXPORT_SYMBOL(ntxec_write8);
-> +
-
-do we really need both 16bit and 8bit accessors? If not,
-then simply use regmap_i2c_init and set val_bits accordingly.
-Maybe just doing the << 8 in the constants?
-
-> +
-> +/* Reboot/poweroff handling */
-> +
-> +static struct ntxec *poweroff_restart_instance;
-> +
-> +static void ntxec_poweroff(void)
-> +{
-> +	ntxec_write8(poweroff_restart_instance, NTXEC_POWEROFF, 0x01);
-> +	msleep(5000);
-> +}
-> +
-> +static int ntxec_restart(struct notifier_block *nb,
-> +		unsigned long action, void *data)
-> +{
-> +	/* FIXME: The I2C driver sleeps, but restart handlers may not sleep */
-> +	ntxec_write8(poweroff_restart_instance, NTXEC_RESET, 0xff);
-> +	/* TODO: delay? */
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block ntxec_restart_handler =3D {
-> +	.notifier_call =3D ntxec_restart,
-> +	.priority =3D 128
-> +};
-> +
-> +
-> +/* Driver setup */
-> +
-> +static int ntxec_probe(struct i2c_client *client,
-> +			    const struct i2c_device_id *ids)
-> +{
-> +	struct ntxec *ec;
-> +	int res;
-> +
-> +	ec =3D devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
-> +		return -ENOMEM;
-> +
-> +	ec->dev =3D &client->dev;
-> +	ec->client =3D client;
-> +
-> +	/* Determine the firmware version */
-> +	res =3D ntxec_read16(ec, NTXEC_VERSION);
-> +	if (res < 0) {
-> +		dev_dbg(ec->dev, "Failed to read firmware version number\n");
-> +		return res;
 > +	}
-> +	ec->version =3D res;
-> +
-> +	dev_info(ec->dev,
-> +		 "Netronix embedded controller version %04x detected.\n",
-> +		 ec->version);
-> +
-> +	/* For now, we don't support the new register layout. */
-> +	if (ntxec_has_new_layout(ec))
-> +		return -EOPNOTSUPP;
-> +
-> +	if (of_device_is_system_power_controller(ec->dev->of_node)) {
-> +		/*
-> +		 * Set the 'powerkeep' bit. This is necessary on some boards
-> +		 * in order to keep the system running.
-> +		 */
-> +		res =3D ntxec_write8(ec, NTXEC_POWERKEEP, 0x08);
-> +		if (res < 0)
-> +			return res;
-> +
-> +		/* Install poweroff handler */
-> +		WARN_ON(poweroff_restart_instance);
-> +		poweroff_restart_instance =3D ec;
-> +		if (pm_power_off !=3D NULL)
-> +			/* TODO: Refactor among all poweroff drivers */
-> +			dev_err(ec->dev, "pm_power_off already assigned\n");
-> +		else
-> +			pm_power_off =3D ntxec_poweroff;
-> +
-common pattern, across drivers, so I think doing something else would
-be a separate cleanup issue.
 
-Regards,
-Andreas
+Please have two handlers: one for interrupts that are from the RC,
+another for interrupts coming from the endpoints.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
