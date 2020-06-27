@@ -2,147 +2,174 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57730C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 00:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4584C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 03:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A0920B1F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 00:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD8120857
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 03:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HTaDkR4T"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="THoSiAlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgF0AIz (ORCPT
+        id S1725867AbgF0Don (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 26 Jun 2020 20:08:55 -0400
-Received: from mout.gmx.net ([212.227.15.15]:50603 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgF0AIz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 26 Jun 2020 20:08:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1593216484;
-        bh=4otcmsUcuNIHrWB18fGLT23iJsc5+XpSSQ0JeZZP6Zg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=HTaDkR4TLueDwQwa+k8Nk8k2q0pKnY4Ma1CAZEE4qmOb/zK1GqpD4bD9XyaLRiBct
-         ZyGQ2mM84Qge+E5mhQrGU//SK2gpdIp/BuedMicYSqbSkEI3T6wnxTNHWr0IAlJizT
-         YapRz4BwOu/GQNecTMjc2C/RGQI3470aMre54r8g=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.186]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmGZ-1jZuLV2EH3-00K8kO; Sat, 27
- Jun 2020 02:08:04 +0200
-Date:   Sat, 27 Jun 2020 02:07:57 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [RFC PATCH 01/10] DT bindings in plain text format
-Message-ID: <20200627000757.GA2699@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
- <20200620223915.1311485-2-j.neuschaefer@gmx.net>
- <20200622103243.GT954398@dell>
+        Fri, 26 Jun 2020 23:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgF0Dom (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jun 2020 23:44:42 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42577C03E97B
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 20:44:41 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f8so76927ljc.2
+        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 20:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1ipeOLnzim9RHH3BR3oeo43dwwGRCZWcLxW7Zyfmk7Y=;
+        b=THoSiAlK5eFDbai50iadIqNqkP44jtQtez7MXzb9hWGyhDNZCBAuC+9jtQXhs3RNik
+         PG1MbrFl5veM1OIWiwYJhz0jmCHRKAn12MZlX6Pcb1+hNX30AEq9wDsw0vmQMxSZr6eQ
+         20Wn/p3XYvpGrb18SYdnR2CioNhuFYRwAQs8yGPIPQpLFaxwTvWm78qKuISjsRFOTFRP
+         JxhMKrdb8JGHkZWhoW31tfMxk/wLnkT881LDDOaIQ+obXEY66/EZK5CokutetPJrLkLH
+         97NREqKjCk6CAwlMUR6qO+IhmsIySrSHRXy7UL7eFGc8w4RB8WKExHNcz8A6ZuA9EvIH
+         gN0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1ipeOLnzim9RHH3BR3oeo43dwwGRCZWcLxW7Zyfmk7Y=;
+        b=n4b2GA5KW/6A9Qo+568RXY7w8XN8ui/8MAPA2suJfycwzVOcxHO+9viNhsIu71Q6CM
+         rTacFZQEsF7HX+mHoE0MnNmQME5tCYt9ppu4T//AdDKnPKh4f8iMUCAN0WZ3e5VbM2SJ
+         5opkY8nVfecvlz/hcyV8f+0Bz9cq1MNxophKCW8Oz+gV7nOH2OmBQVwBAlC5cOTKJahD
+         VibH8w64o/t7kmXu0CxOfpb3b4LlQArdcb2lQFFr3LO0o+pHDrTqboXtwtcvemoasZ9F
+         /YJuPGMNzGlcCjgqwSy+Fh9C07se4HunAi4diOVuvnZtAHU9MDKGZ9YKkm31jvTWO4pJ
+         GjZw==
+X-Gm-Message-State: AOAM530AUF8D5uheXzrPmxAde3bNEaTPyliLm5pC8t8HxuzQOz9P6ZMk
+        rT94en0rAOBQRasrzBL7w9j8cg==
+X-Google-Smtp-Source: ABdhPJwDH6i2sGxqmAkQdk5LPxNBL+PLHXK7LTjxbbqZwgwZZ5LuW2NANlXVYdsHGx6CpKtKt3Tmxg==
+X-Received: by 2002:a2e:6f08:: with SMTP id k8mr2520189ljc.384.1593229479463;
+        Fri, 26 Jun 2020 20:44:39 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id j4sm4925954lfb.94.2020.06.26.20.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 20:44:38 -0700 (PDT)
+Date:   Sat, 27 Jun 2020 05:44:38 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: thermal: rcar-thermal: Improve schema
+ validation
+Message-ID: <20200627034438.GA911447@oden.dyn.berto.se>
+References: <20200619151541.15069-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200622103243.GT954398@dell>
-X-Provags-ID: V03:K1:eMxhCUYGNR4xIz4Sxup0XWxxmE2BA6MUjV6y9nWg0dsf9ecoPNS
- lxhlxzKJ91a38+Xstg0rmg0QvGMBTMUXw7+mODQZa5hsY7rXVAnTegVmqFI+h+0KRtOjzDK
- RdXYKyjLsp2kNP5li/2ImKjJfU3KC38/6bL6iF1vJ3brlZjGrkDn+R/s3onxLSykyGlvCXQ
- PvLh7ovJrIPGhWLzr12Zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yTY0aGX6+xA=:n1YGoNm1wZM8bRWdZQ5KWN
- 2vmVtaa84gmspzZFGB6cgGfbHXkhUNaOwk49+bz1FSFH0O32RzLEEdFui+wxIW+L7mkxAtUyv
- stazEJyrBs5tBZ5HaPnZ0JvKs6GDDl7gDjglrRJXYBm/TxkSGsLJd/ycvDwek/Q1eN9NbA5YR
- 7HsgO52xG3Wo44jiTR4T2wjiPlwNNgpC1ibiSakBCTdCrip2V41okqzfib9BajOx8hR/XsAnh
- O+2bFYWTmThzt1MFHSEbB/a1B+rBO7g7EF6tLMMxoAVpe4VVDzDfQKKOeKRzi+i4YCrHuJltD
- POAVNOVlJE1oWwEanBJacXd5DmHOe+oK5VzqfMYne9fBEI7auOe6J8B0Og6hlcn/GHX3UKUaG
- W1XAKN7JX/otVDpnxzv2WhgCFI09zlu7RNlPT0VgrJa35Hg6DSgF9Lp176YPixBEy32205WQx
- 9HKpJ8ZBEz0/6K8/A+Xi3R24PXkLKtxT+LPyhmU1plVmdnnJPlynCCBQUJBLG/8RLk+0CCOCz
- qz9uYqqS7iLs1NR7djVDjR7TLTa3PvnheSsPZT1v3dcUGJFY081UzWHGgT6uM6d+rLKXKvKTX
- 3vkiwfs87Zpxu7t2K+ChPapBrG+8oCxPtFKODAaNTNW50RYQU5lrjWoTLplLJMvWSZwuGnz2E
- Cl+s99vWylMu7bJOVreGeVZRXgKiAUXM8pTdUhYJWQoDdVgSSnl2x34jYqdSw7XGc4eSgMqYq
- OqLOnfPqgZcksh64OEU9sk18lRdhd9UAvqYjjZavW4wxkGLq7kLQ4fg74EvIqhZQV+FuMCVT3
- 3UG6otqEnhOk3R0sXsqjbMJtVzGuw+msuLfixtoiiXyyZw8Wyz0ZNx2Gozh0c7+EoTiIAtlFg
- XS/y4CD/6HI5MkmjLSaN6ElotLylvrAmIQlQn/hHjNj42nQOp4DFw2UGIC+W7BxxT9nICBBso
- h9Kp+bikfQ2XILGPiRUUEnrL4+qBavuspMeTtBrCDkIr80QxqghF/ldNbnDTLDhPUfxg7F9mM
- Bsdmi5UGKQR2QCTtKxh36M4n6E8F3xUS+6IbQRph4Xe2DVpXJcoje3YnZWg0jbu7rfDspp4B4
- CYhmP6wN+GfhP4lThpzR2Ld6dESwNzKmMz0es6Z5yS9p0h4mC463elpnYg37G4Typv85Zr0CA
- NkTt9Bmmx2ThMbLqeAFkCWHx3utn01TSkShVZYWstL7lY3RUpxGvO5b+3aB76dNnBG8cMtHJA
- VLEmYDbiP22ZpOXaU
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200619151541.15069-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Geert,
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your work.
 
-On Mon, Jun 22, 2020 at 11:32:43AM +0100, Lee Jones wrote:
-> On Sun, 21 Jun 2020, Jonathan Neusch=C3=A4fer wrote:
->=20
-> > For reference, here are the devicetree bindings in plaintext format.
-> > (Not for merge.)
->=20
-> This would be better placed inside the relevant patch(es), rather than
-> in a separate non-mergeable extra/superfluous patch.
+On 2020-06-19 17:15:41 +0200, Geert Uytterhoeven wrote:
+>   - Document missing "#thermal-sensor-cells",
+>   - Factor out common required properties,
+>   - "interrupts", "clocks", and "power-domains" are required on R-Mobile
+>     APE6, too,
+>   - Invert logic to simplify descriptions,
+>   - Add "additionalProperties: false".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Ok, I'll put it in the patch descriptions (as long as the plaintext DT
-bindings are relevant for review).
+Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+> ---
+>  .../bindings/thermal/rcar-thermal.yaml        | 53 ++++++++++++-------
+>  1 file changed, 34 insertions(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+> index 0994693d240f9ff4..88787b98992fe7c9 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+> @@ -59,25 +59,40 @@ properties:
+>    resets:
+>      maxItems: 1
+>  
+> -if:
+> -  properties:
+> -    compatible:
+> -      contains:
+> -        enum:
+> -          - renesas,thermal-r8a73a4 # R-Mobile APE6
+> -          - renesas,thermal-r8a7779 # R-Car H1
+> -then:
+> -  required:
+> -    - compatible
+> -    - reg
+> -else:
+> -  required:
+> -    - compatible
+> -    - reg
+> -    - interrupts
+> -    - clocks
+> -    - power-domains
+> -    - resets
+> +  '#thermal-sensor-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              enum:
+> +                - renesas,thermal-r8a73a4 # R-Mobile APE6
+> +                - renesas,thermal-r8a7779 # R-Car H1
+> +    then:
+> +      required:
+> +        - resets
+> +        - '#thermal-sensor-cells'
+> +
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              const: renesas,thermal-r8a7779 # R-Car H1
+> +    then:
+> +      required:
+> +        - interrupts
+> +        - clocks
+> +        - power-domains
+> +
+> +additionalProperties: false
+>  
+>  examples:
+>    # Example (non interrupt support)
+> -- 
+> 2.17.1
+> 
 
-
-> >  .../bindings/mfd/netronix,ntxec.txt           | 58 +++++++++++++++++++
-> >  .../bindings/pwm/netronix,ntxec-pwm.txt       | 27 +++++++++
-> >  .../bindings/rtc/netronix,ntxec-rtc.txt       | 17 ++++++
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl72jdUACgkQCDBEmo7z
-X9sVSQ//dO2mmSQ8irQcGq+ghniFyM5T/oE/AuJByz+DeR8rIh6vaaPtz9ECq8If
-BKOOwgL5IBJE2dUEYXjVwFy+jvW7dMUvPkOm7WOuzjGj1Rs3I4QvzcyhrPyeKinE
-CAi8mxQsggvq0ntaevbtvbgOBU/FQVmv58DKpkUOW0JIMpplDyne2tSUCSYjjZro
-czdeMhbA6Sd2UzK/2tuxgmF6n05KqgObgVQKUG7tiToAj9IuoS8OPn62MD9xm8Vv
-M4EO57heoLmtUDQl08ObZJ0esnsC5RyjcZgNruEKXta8f6BSik25/Z7w9aZcVybm
-8QqcX13GsM5DYJpmNZ6I/56BuxderNnrBsuLjaqnmBbXUgCugl6PYEAPPZ0MJKBK
-GFFimgrzG/H8p3Cy/Vp6yY5d9+Yb0DGhpl+XQnZRzwabKV18LwCmlgeb/m0fm/aB
-G09odAz3tZbMdeaU7aBRVIHctK/CAQb1O6LH/7IKLQNT0Lus+55amD4Fm6+gx+O4
-g0U74dcxrm3dAGD+bp3IVjPV09ZoNm0l+1Vl+83Qq6P0NE+y0lXnoRAUM5xSHaye
-srcAe6UJglI4qqu22unvkzv+uhMcZ0AqY65wGBA+LKazcCmZ6UnpwhcWdWrI5pva
-PWf8gqk3BXCySDeN+fVpPDidwrYr/r9DI4MGxZf/dnWJStmbgl4=
-=h4Re
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
+-- 
+Regards,
+Niklas Söderlund
