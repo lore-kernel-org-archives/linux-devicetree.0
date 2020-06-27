@@ -2,104 +2,175 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BADC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 11:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AEBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 13:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E91421556
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 11:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F4521548
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 13:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593256125;
-	bh=TjTMGf71hRc8OW24VbETXWEqOz6ytX6pTBkxNEYJXSQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dX3T+Vzb2CAF2GpaCrXRn0CZu0ox8rb0Ro+yTp9Gdh4+I9begWW6rQ3/ilyLjgrCw
-	 6h32vADYVL11bI7oKMl9rD46tTt/UTLXGxxGBuC/Nsx3a6AjqSUlC30lh0Wt9lLIfj
-	 PAyYEu5mfLwblb4dJ7Y5+sUY13ehCtQ1Y+Pp/W44=
+	s=default; t=1593263486;
+	bh=TcBMrqRjXWcw8ga4N0865jJrdI0oTOwN6bqoO7ZV6/A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=W+r0s886WF8rLcX3pSJA8J1Waz8A0Vemu8x3+UutaFpO4QvdXpKczxIo5KuL/1T9G
+	 NeG1OEOsDwpzSPfZ5+tlhsQ0SDakKknUQ+ZiC1qr1j7922t98y0ecgFeaRkEdaas3m
+	 V64oQLsRVhIVwe9P+S+xAp272QrXw5yWPWefh+hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgF0LIX (ORCPT
+        id S1726576AbgF0NLZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 07:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49286 "EHLO mail.kernel.org"
+        Sat, 27 Jun 2020 09:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgF0LIW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 27 Jun 2020 07:08:22 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726439AbgF0NLY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 27 Jun 2020 09:11:24 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 489A1214D8;
-        Sat, 27 Jun 2020 11:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEF33207E8;
+        Sat, 27 Jun 2020 13:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593256102;
-        bh=TjTMGf71hRc8OW24VbETXWEqOz6ytX6pTBkxNEYJXSQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMod9uFRT5S5G394Uk/gQtwKaJBrMvgPD8/h2wUf6diETm8vcdWgw14jYTyk18SAG
-         oghpm2a1hJ1Di9KQdah2OKLR11J7iY1i8nTHzUOLBdQ0YOCYthv2QZQEkAaPZpl1zZ
-         OpMrO9IwOBmiB1EgQycRtL1MrU07V3PXAOxC2VeM=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jp8h2-006s0z-MO; Sat, 27 Jun 2020 12:08:20 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        nicolas.ferre@microchip.com, robh+dt@kernel.org,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com
-Cc:     Andrew Perepech <andrew.perepech@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] add RTT support for SAM9X60
-Date:   Sat, 27 Jun 2020 12:08:02 +0100
-Message-Id: <159325548742.93134.14743817102464415551.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1591779936-18577-1-git-send-email-claudiu.beznea@microchip.com>
+        s=default; t=1593263483;
+        bh=TcBMrqRjXWcw8ga4N0865jJrdI0oTOwN6bqoO7ZV6/A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n31t26JPZtZBQNfnzcI3/CfV9K1FLVi2uruQunOCF99BrU5NXTM5o3hz75vkuTAuT
+         TT8qTVUhKj82n1CxK6HN53AaW9bFp4P2SsGZuJjKKkwjoC/+xgo/X7OInnKGMBQag9
+         ROj/I/rZ4tKoUkQdCXsH45gHz0afoL2Z0GAcR45Y=
+Date:   Sat, 27 Jun 2020 14:11:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
+        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V7 7/7] iio: adc: Combine read functions for PMIC5 and
+ PMIC7
+Message-ID: <20200627141117.4f4593d3@archlinux>
+In-Reply-To: <1592897399-24089-8-git-send-email-jprakash@codeaurora.org>
+References: <1592897399-24089-1-git-send-email-jprakash@codeaurora.org>
+        <1592897399-24089-8-git-send-email-jprakash@codeaurora.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jason@lakedaemon.net, matthias.bgg@gmail.com, brgl@bgdev.pl, tglx@linutronix.de, claudiu.beznea@microchip.com, nicolas.ferre@microchip.com, robh+dt@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com, andrew.perepech@mediatek.com, linux-mediatek@lists.infradead.org, stephane.leprovost@mediatek.com, linux-arm-kernel@lists.infradead.org, pedro.tsai@mediatek.com, bgolaszewski@baylibre.com, fparent@baylibre.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-rtc@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 10 Jun 2020 12:05:33 +0300, Claudiu Beznea wrote:
-> This series adds RTT support for SAM9X60.
-> 
-> Changes in v2:
-> - use "atmel,at91sam9260-rtt" as fallback for compatible
-> - in patch 1 keep only the addition of sam9x60_aic_irq_fixup
-> - get rid of patches 2/5 from v1
-> - squash patches 4/5, 5/5 from v1
-> - change commit title for patch "rtc: at91sam9: add microchip,sam9x60-rtt"
->   from v1 into "dt-bindings: rtc: add microchip,sam9x60-rtt" and
->   place it before device tree patch
-> 
-> [...]
+On Tue, 23 Jun 2020 12:59:59 +0530
+Jishnu Prakash <jprakash@codeaurora.org> wrote:
 
-Applied to irq/irqchip-5.9:
+> Add a common function used for read_raw callback for both PMIC5
+> and PMIC7 ADCs.
+> 
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
 
-[1/3] irqchip/atmel-aic5: Add support for sam9x60 rtt fixup
-      commit: 293953d60e214aa44b3261f5350b83f285a95eb4
+Looks good. Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to poke at it.
 
 Thanks,
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+Jonathan
+
+> ---
+>  drivers/iio/adc/qcom-spmi-adc5.c | 49 ++++++++++++++++------------------------
+>  1 file changed, 19 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
+> index 0f9af66..88efadb 100644
+> --- a/drivers/iio/adc/qcom-spmi-adc5.c
+> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
+> @@ -449,6 +449,11 @@ static int adc7_do_conversion(struct adc5_chip *adc,
+>  	return ret;
+>  }
+>  
+> +typedef int (*adc_do_conversion)(struct adc5_chip *adc,
+> +			struct adc5_channel_prop *prop,
+> +			struct iio_chan_spec const *chan,
+> +			u16 *data_volt, u16 *data_cur);
+> +
+>  static irqreturn_t adc5_isr(int irq, void *dev_id)
+>  {
+>  	struct adc5_chip *adc = dev_id;
+> @@ -487,9 +492,9 @@ static int adc7_of_xlate(struct iio_dev *indio_dev,
+>  	return -EINVAL;
+>  }
+>  
+> -static int adc5_read_raw(struct iio_dev *indio_dev,
+> +static int adc_read_raw_common(struct iio_dev *indio_dev,
+>  			 struct iio_chan_spec const *chan, int *val, int *val2,
+> -			 long mask)
+> +			 long mask, adc_do_conversion do_conv)
+>  {
+>  	struct adc5_chip *adc = iio_priv(indio_dev);
+>  	struct adc5_channel_prop *prop;
+> @@ -500,8 +505,8 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>  
+>  	switch (mask) {
+>  	case IIO_CHAN_INFO_PROCESSED:
+> -		ret = adc5_do_conversion(adc, prop, chan,
+> -				&adc_code_volt, &adc_code_cur);
+> +		ret = do_conv(adc, prop, chan,
+> +					&adc_code_volt, &adc_code_cur);
+>  		if (ret)
+>  			return ret;
+>  
+> @@ -518,36 +523,20 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> -static int adc7_read_raw(struct iio_dev *indio_dev,
+> +static int adc5_read_raw(struct iio_dev *indio_dev,
+>  			 struct iio_chan_spec const *chan, int *val, int *val2,
+>  			 long mask)
+>  {
+> -	struct adc5_chip *adc = iio_priv(indio_dev);
+> -	struct adc5_channel_prop *prop;
+> -	u16 adc_code_volt, adc_code_cur;
+> -	int ret;
+> -
+> -	prop = &adc->chan_props[chan->address];
+> -
+> -	switch (mask) {
+> -	case IIO_CHAN_INFO_PROCESSED:
+> -		ret = adc7_do_conversion(adc, prop, chan,
+> -					&adc_code_volt, &adc_code_cur);
+> -		if (ret)
+> -			return ret;
+> -
+> -		ret = qcom_adc5_hw_scale(prop->scale_fn_type,
+> -			&adc5_prescale_ratios[prop->prescale],
+> -			adc->data,
+> -			adc_code_volt, val);
+> -
+> -		if (ret)
+> -			return ret;
+> +	return adc_read_raw_common(indio_dev, chan, val, val2,
+> +				mask, adc5_do_conversion);
+> +}
+>  
+> -		return IIO_VAL_INT;
+> -	default:
+> -		return -EINVAL;
+> -	}
+> +static int adc7_read_raw(struct iio_dev *indio_dev,
+> +			 struct iio_chan_spec const *chan, int *val, int *val2,
+> +			 long mask)
+> +{
+> +	return adc_read_raw_common(indio_dev, chan, val, val2,
+> +				mask, adc7_do_conversion);
+>  }
+>  
+>  static const struct iio_info adc5_info = {
 
