@@ -2,156 +2,120 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4120FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 05:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5C0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 06:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1D62067D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 05:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="RnnpAQbj"
+	by mail.kernel.org (Postfix) with ESMTP id 4A9C22088E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 06:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725885AbgF0Fkf (ORCPT
+        id S1726032AbgF0GnU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 01:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgF0Fkf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 01:40:35 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0748CC03E979
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 22:40:34 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z15so186298wrl.8
-        for <devicetree@vger.kernel.org>; Fri, 26 Jun 2020 22:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D9XiOO31QvLzfIBv/Y4Ns3UZXurh+wrRF7dvs/mssCg=;
-        b=RnnpAQbj/Mpa/ox57F0grfeSmok55pNA2xC/1/gJORl72A9n5GDziltMR52wjxYXdf
-         IntKHqqXLfIyuYX02vi2sUF4nnG5wUtxdg3OimEd8NhsHKip4774WSvRxG+bM833SZc3
-         Lto8nKIIzMSDd9aRMXsvHsFNvhUXh2LBDR9bKlcZJjQkBuW8t2JZYVqmA0U/wXutH9Ug
-         Owk+UUc39vLakId+0ZWtKfaBTJK7sOkvU/6c4kBXFhGf3iMgRZ6QyIyxaxzctT5kOclF
-         Sj7MWi1KuNE7PQ74RXJT6ffRTqvjm/7kYcDuceYnVep5rXc9TqOSZFyi5S54+KLGy5fx
-         DCzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D9XiOO31QvLzfIBv/Y4Ns3UZXurh+wrRF7dvs/mssCg=;
-        b=sUsFeXJLfjcyqP0joBEaI+JCLH7GhkrWb9V+983oxNvXsQfRxehjuPnM+Zh++QnFIc
-         dNOSXTePqCd3d7lg9FdHk+X+og3xKzFy/PedCSPmardK93FgwqIdYTFB98fFp2/PqXQx
-         8XxfA2gVKX1Vu2p46cv2K7CmvZA6WNIyLU2s/l24phu3K65fDoqErI+X/muu4n9/YxwQ
-         j07f9aBMrGPw7+wA1kQSGYIp08r4Tlmh9ql6xXd9tKD6t9wCYLh+hzcxgtsFaf3spOSL
-         O7COA0yNJBu8J1XftMM17n/tzDVwf7qA97ZtnSIOqxv+NaJXgf56YjCybu5F3osX2Q6X
-         prFg==
-X-Gm-Message-State: AOAM531Wo/N8J1rk8fIPfHBiPNqyOlmd2aqQKaaIbSoM/vlw4B80r8yL
-        hPb/v6OtNC/hWp5cgA9ydqQLimqySOUc2hC3EoHJXUzW
-X-Google-Smtp-Source: ABdhPJzYGaVMDSBVDkfEsq5XfhXWrNh+9mApzjZGgFy0P1MaF5t8wOkck1pjn1v/fDwwrTxADnPKO0fcea9ka2nhC6c=
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr6887951wrr.325.1593236433382;
- Fri, 26 Jun 2020 22:40:33 -0700 (PDT)
+        Sat, 27 Jun 2020 02:43:20 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:46987 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgF0GnU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 02:43:20 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 05R6gFBw9013410, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 05R6gFBw9013410
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 27 Jun 2020 14:42:15 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 27 Jun 2020 14:42:15 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 27 Jun 2020 14:42:14 +0800
+Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
+ ([fe80::405f:7a59:7271:e52d%7]) with mapi id 15.01.1779.005; Sat, 27 Jun 2020
+ 14:42:14 +0800
+From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to descriptions
+Thread-Topic: [PATCH v4 1/3] dt-bindings: arm: realtek: Convert comments to
+ descriptions
+Thread-Index: AQHWSQtjze542LDDpkSfnQJKXDbezajsCdrA
+Date:   Sat, 27 Jun 2020 06:42:14 +0000
+Message-ID: <f213468d0e2945d2af9f18b618afbc0c@realtek.com>
+References: <20200620233227.31585-1-afaerber@suse.de>
+ <20200620233227.31585-2-afaerber@suse.de>
+In-Reply-To: <20200620233227.31585-2-afaerber@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [101.15.193.107]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <c0e9e625-daf8-b72f-2237-06018ff5d8a0@gmail.com>
- <mhng-0995a264-b39c-4790-9aa5-b8c598b43ffd@palmerdabbelt-glaptop1> <20200528231803.GA847232@bogus>
-In-Reply-To: <20200528231803.GA847232@bogus>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sat, 27 Jun 2020 11:10:21 +0530
-Message-ID: <CAAhSdy0J2MKR+WMp=sXJ6TaWd2TLLQoKJ5kr_XWUV6UowyJM8w@mail.gmail.com>
-Subject: Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Sean Anderson <seanga2@gmail.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, May 29, 2020 at 4:48 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, May 26, 2020 at 05:32:30PM -0700, Palmer Dabbelt wrote:
-> > On Thu, 21 May 2020 23:29:36 PDT (-0700), seanga2@gmail.com wrote:
-> > > On 5/22/20 1:54 AM, Anup Patel wrote:
-> > > > On Fri, May 22, 2020 at 1:35 AM Sean Anderson <seanga2@gmail.com> wrote:
-> > > > >
-> > > > > On 5/21/20 9:45 AM, Anup Patel wrote:
-> > > > > > +Required properties:
-> > > > > > +- compatible : "sifive,clint-1.0.0" and a string identifying the actual
-> > > > > > +  detailed implementation in case that specific bugs need to be worked around.
-> > > > >
-> > > > > Should the "riscv,clint0" compatible string be documented here? This
-> > > >
-> > > > Yes, I forgot to add this compatible string. I will add in v2.
-> > > >
-> > > > > peripheral is not really specific to sifive, as it is present in most
-> > > > > rocket-chip cores.
-> > > >
-> > > > I agree that CLINT is present in a lot of non-SiFive RISC-V SOCs and
-> > > > FPGAs but this IP is only documented as part of SiFive FU540 SOC.
-> > > > (Refer, https://static.dev.sifive.com/FU540-C000-v1.0.pdf)
-> > > >
-> > > > The RISC-V foundation should host the CLINT spec independently
-> > > > under https://github.com/riscv and make CLINT spec totally open.
-> > > >
-> > > > For now, I have documented it just like PLIC DT bindings found at:
-> > > > Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
-> > >
-> > > The PLIC seems to have its own RISC-V-sponsored documentation [1] which
-> > > was split off from the older privileged specs. By your logic above,
-> > > should it be renamed to riscv,plic0.txt (with a corresponding change in
-> > > the documented compatible strings)?
-> > >
-> > > [1] https://github.com/riscv/riscv-plic-spec
-> >
-> > Let's propose tagging that PLIC spec as v1.0.0 in the platform spec group, but
-> > I don't see a reason why that wouldn't be viable.  Assuming that's all OK, we
-> > can start calling this a RISC-V PLIC (in addition to a SiFive PLIC, as they'll
-> > be compatible).
-> >
-> > > >
-> > > > If RISC-V maintainers agree then I will document it as "RISC-V CLINT".
-> > > >
-> > > > @Palmer ?? @Paul ??
-> >
-> > The CLINT is a SiFive spec.  It has open source RTL so it's been implemented in
-> > other designs, but it's not a RISC-V spec.  The CLIC, which is a superset of
-> > the CLINT, is a RISC-V spec.  IIRC it's not finished yet (it's the fast
-> > interrupts task group), but presumably we should have a "riscv,clic-2.0.0" (or
-> > whatever it ends up being called) compat string to go along with the
-> > specification.
->
-> Whatever you all decide on, note that "sifive,<block><num>" is a SiFive
-> thing (as it is documented) and <num> corresponds to tag of the IP
-> implmentation (at least it is supposed to). So you can't just copy that
-> with 'riscv,<block><num>' unless you have the same IP versioning
-> and update the documentation.
-
-I agree that "sifive,<block><num>" is a SiFive thingy. Unfortunately,
-lot of RISC-V implementations (SiFive and non-SiFive) have DTS
-generated from RTL (not part of Linux sources) where most of them
-use "riscv,clint0" as compatible string for CLINT.
-
->
-> Using a spec version is fine, but not standalone. You need
-> implementation specific compatible too because no one perfectly
-> implements any spec and/or there details a spec may not cover.
-
-Sure, a generic compatible string "riscv,clint0" OR "sifive,clint-1.0.0"
-along with an implementation specific compatible string sounds
-good to me.
-
-Regards,
-Anup
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1yZWFsdGVrLXNvYyA8
+bGludXgtcmVhbHRlay1zb2MtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnPiBPbg0KPiBCZWhh
+bGYgT2YgQW5kcmVhcyBGYXJiZXINCj4gU2VudDogU3VuZGF5LCBKdW5lIDIxLCAyMDIwIDc6MzIg
+QU0NCj4gVG86IGxpbnV4LXJlYWx0ZWstc29jQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3Jn
+PjsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBBbmRyZWFzDQo+IEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+DQo+
+IFN1YmplY3Q6IFtQQVRDSCB2NCAxLzNdIGR0LWJpbmRpbmdzOiBhcm06IHJlYWx0ZWs6IENvbnZl
+cnQgY29tbWVudHMgdG8NCj4gZGVzY3JpcHRpb25zDQo+IA0KPiBUdXJuIHRoZSBTb0MtbGV2ZWwg
+Y29tbWVudHMgaW50byBkZXNjcmlwdGlvbiBwcm9wZXJ0aWVzLg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiAtLS0NCj4gIHY0OiBOZXcN
+Cj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVhbHRlay55YW1sICAgICAgfCAy
+NCArKysrKysrKystLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygr
+KSwgMTIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvYXJtL3JlYWx0ZWsueWFtbA0KPiBpbmRleCA4NDVmOWM3NmQ2ZjcuLjBi
+Mzg4MDE2YmJjZCAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gQEAgLTE0LDIxICsxNCwyMSBAQCBwcm9wZXJ0aWVz
+Og0KPiAgICAgIGNvbnN0OiAnLycNCj4gICAgY29tcGF0aWJsZToNCj4gICAgICBvbmVPZjoNCj4g
+LSAgICAgICMgUlREMTE5NSBTb0MgYmFzZWQgYm9hcmRzDQo+IC0gICAgICAtIGl0ZW1zOg0KPiAr
+ICAgICAgLSBkZXNjcmlwdGlvbjogUlREMTE5NSBTb0MgYmFzZWQgYm9hcmRzDQo+ICsgICAgICAg
+IGl0ZW1zOg0KPiAgICAgICAgICAgIC0gZW51bToNCj4gICAgICAgICAgICAgICAgLSBtZWxlLHgx
+MDAwICMgTWVMRSBYMTAwMA0KPiAgICAgICAgICAgICAgICAtIHJlYWx0ZWssaG9yc2VyYWRpc2gg
+IyBSZWFsdGVrIEhvcnNlcmFkaXNoIEVWQg0KPiAgICAgICAgICAgIC0gY29uc3Q6IHJlYWx0ZWss
+cnRkMTE5NQ0KPiANCj4gLSAgICAgICMgUlREMTI5MyBTb0MgYmFzZWQgYm9hcmRzDQo+IC0gICAg
+ICAtIGl0ZW1zOg0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogUlREMTI5MyBTb0MgYmFzZWQgYm9h
+cmRzDQo+ICsgICAgICAgIGl0ZW1zOg0KPiAgICAgICAgICAgIC0gZW51bToNCj4gICAgICAgICAg
+ICAgICAgLSBzeW5vbG9neSxkczQxOGogIyBTeW5vbG9neSBEaXNrU3RhdGlvbiBEUzQxOGoNCj4g
+ICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEyOTMNCj4gDQo+IC0gICAgICAjIFJURDEy
+OTUgU29DIGJhc2VkIGJvYXJkcw0KPiAtICAgICAgLSBpdGVtczoNCj4gKyAgICAgIC0gZGVzY3Jp
+cHRpb246IFJURDEyOTUgU29DIGJhc2VkIGJvYXJkcw0KPiArICAgICAgICBpdGVtczoNCj4gICAg
+ICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgIC0gbWVsZSx2OSAjIE1lTEUgVjkNCj4g
+ICAgICAgICAgICAgICAgLSBwcm9ib3gyLGF2YSAjIFByb0JveDIgQVZBIEBAIC0zNiwyMSArMzYs
+MjEgQEANCj4gcHJvcGVydGllczoNCj4gICAgICAgICAgICAgICAgLSB6aWRvbyx4OXMgIyBaaWRv
+byBYOVMNCj4gICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEyOTUNCj4gDQo+IC0gICAg
+ICAjIFJURDEyOTYgU29DIGJhc2VkIGJvYXJkcw0KPiAtICAgICAgLSBpdGVtczoNCj4gKyAgICAg
+IC0gZGVzY3JpcHRpb246IFJURDEyOTYgU29DIGJhc2VkIGJvYXJkcw0KPiArICAgICAgICBpdGVt
+czoNCj4gICAgICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgIC0gc3lub2xvZ3ksZHM0
+MTggIyBTeW5vbG9neSBEaXNrU3RhdGlvbiBEUzQxOA0KPiAgICAgICAgICAgIC0gY29uc3Q6IHJl
+YWx0ZWsscnRkMTI5Ng0KPiANCj4gLSAgICAgICMgUlREMTM5NSBTb0MgYmFzZWQgYm9hcmRzDQo+
+IC0gICAgICAtIGl0ZW1zOg0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogUlREMTM5NSBTb0MgYmFz
+ZWQgYm9hcmRzDQo+ICsgICAgICAgIGl0ZW1zOg0KPiAgICAgICAgICAgIC0gZW51bToNCj4gICAg
+ICAgICAgICAgICAgLSBiYW5hbmFwaSxicGktbTQgIyBCYW5hbmEgUGkgQlBJLU00DQo+ICAgICAg
+ICAgICAgICAgIC0gcmVhbHRlayxsaW9uLXNraW4gIyBSZWFsdGVrIExpb24gU2tpbiBFVkINCj4g
+ICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEzOTUNCj4gDQo+IC0gICAgICAjIFJURDE2
+MTkgU29DIGJhc2VkIGJvYXJkcw0KPiAtICAgICAgLSBpdGVtczoNCj4gKyAgICAgIC0gZGVzY3Jp
+cHRpb246IFJURDE2MTkgU29DIGJhc2VkIGJvYXJkcw0KPiArICAgICAgICBpdGVtczoNCj4gICAg
+ICAgICAgICAtIGVudW06DQo+ICAgICAgICAgICAgICAgIC0gcmVhbHRlayxtam9sbmlyICMgUmVh
+bHRlayBNam9sbmlyIEVWQg0KPiAgICAgICAgICAgIC0gY29uc3Q6IHJlYWx0ZWsscnRkMTYxOQ0K
+PiAtLQ0KPiAyLjI2LjINCkFja2VkLWJ5OiBKYW1lcyBUYWkgPGphbWVzLnRhaUByZWFsdGVrLmNv
+bT4NCg0K
