@@ -2,141 +2,228 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9878EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 18:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D52C433E2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 19:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8226320857
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 18:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABCA214F1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 19:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gy42z+6c"
+	dkim=pass (2048-bit key) header.d=snejp.pl header.i=@snejp.pl header.b="gsl6mzit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgF0SWd (ORCPT
+        id S1726666AbgF0TeS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 14:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45322 "EHLO
+        Sat, 27 Jun 2020 15:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgF0SWb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 14:22:31 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CE6C03E97A
-        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 11:22:30 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c139so11800827qkg.12
-        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 11:22:30 -0700 (PDT)
+        with ESMTP id S1726525AbgF0TeR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 15:34:17 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CC4C03E979
+        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 12:34:16 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id s16so1436306lfp.12
+        for <devicetree@vger.kernel.org>; Sat, 27 Jun 2020 12:34:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wknXL/NZZBsk//od0+ACYvlDvjjEXtFODMTp/oomwis=;
-        b=gy42z+6cy8ul5JraOk9jo44rONTJWYOz8zCY+b1cDGhklC9x1j9JQleDZ+cDg9XKIz
-         kOLCc87SIQaieB795ZhReKG4MCPphuoFynjteK/os1Ff9I7E33uDizZD3UmQB4rk8vUB
-         p3ucSkV7E4bPsKeajNlQ/T66NtHKQKCePNhLfDa4jkTinDcvVk41/7hnQ/gwwBftf8At
-         MhFNLNGvzZHPnvwyUdzdhwDbJKblAAu5vuTFlx2ogyCElXnHjMiePc2f4fe6GwVYCcDv
-         OCn1r4Gm1EIpUvW1CXvE3DEhKg7ed6aif/tw1n8Bh1mITbsMrH8uvDMQb8KDCPJk+H93
-         Scsg==
+        d=snejp.pl; s=gmail;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OS0tuEEIRcucIT5KRfm48sO0MnOkhCN4BN78atXUZJM=;
+        b=gsl6mzitEbwXjvrN1B3Ur3us6C+omy7IVxnu7879t+fu4oCG77fK52kG9IuAjVJJHm
+         IBGx7BUbrYnLCWvjUsl26A4QgX9iF2UExte4/bCx32pEidze4SFfzuLIHUtI6guaHFPc
+         01wUAiccO1akgglVH83h8CXdoW1miiqm8Wmuf1o7lo+AeFOnAv65OuSMjJ+PJrmgPJEN
+         JvOFxUTbLr0LgHaXh9ZmaQMRuLU48gsNgyJwWZaDI7bNk0ZGci3glAyDnp7KqMfrM75i
+         x4PyEqGpRVGWN/4gUCQlJbPVomYjCvOukraEYOqjUukUdgd2v+BiZz3DZuvK6VCkry8v
+         qTvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wknXL/NZZBsk//od0+ACYvlDvjjEXtFODMTp/oomwis=;
-        b=F6n8AfhquzODI/0iTWUDJ++N9BeYhOHeBNA+dxK8QghJNoH77wqfDPAVgTkO9rx+mD
-         tIX3YrK4qVcdDBWuazUxo3YUDUMFGKOvs0YClRgp0lAd/+/UtFpHvLd74sgGQkPjOijp
-         ARGxEG4dUO+xCzm+7q8/O2vhTMsxnBSU2zjuanSQhx30L9L9MflTND0yDESwF+TobOVb
-         s3ssOiCziQxsRDVYcNctyw0Ro9ffnCoEv+z0sDIm1QDnuIvW4gJbQwFqATHBySHaP5lM
-         po/o+DrtcWGa7SP0CMCGzL24Llgm+h8hkrhZXsZfapw6w+8fTeD0KDn1XlnazpXNkQ3K
-         /EBw==
-X-Gm-Message-State: AOAM531HIHlQ5uouz7/6CLg+npSscio1hXeuosfX+101Rf/5q4armk2f
-        cKp60Fl395InYUlanQ3fxfw1Lw==
-X-Google-Smtp-Source: ABdhPJyMXt2Ydo4dC6F+leoChRx/t4i2wi/giZ/uvjrThjMGzcC5n4fP3Y0B6gfrNjz/A5fawt1+lQ==
-X-Received: by 2002:a05:620a:1275:: with SMTP id b21mr8233352qkl.4.1593282149751;
-        Sat, 27 Jun 2020 11:22:29 -0700 (PDT)
-Received: from localhost (rfs.netwinder.org. [206.248.184.2])
-        by smtp.gmail.com with ESMTPSA id q5sm10310519qtf.12.2020.06.27.11.22.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 27 Jun 2020 11:22:29 -0700 (PDT)
-Date:   Sat, 27 Jun 2020 14:22:28 -0400
-From:   Ralph Siemsen <ralph.siemsen@linaro.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Pavel Machek <pavel@denx.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
- the dma_transfer callback
-Message-ID: <20200627182228.GA23327@maple.netwinder.org>
-References: <20200619141648.840376470@linuxfoundation.org>
- <20200619141657.498868116@linuxfoundation.org>
- <20200619210719.GB12233@amd>
- <20200622205121.4xuki7guyj6u5yul@mobilestation>
- <20200626151800.GA22242@maple.netwinder.org>
- <20200626200710.GK1931@sasha-vm>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OS0tuEEIRcucIT5KRfm48sO0MnOkhCN4BN78atXUZJM=;
+        b=avA0MndztAikEfuooo6WKEK+RAGE/b3gjF9JYZb8oIJ9+uPpTFkaS0oALVmMvLNntV
+         1iNXu9EitwSScBhGdwHdZi7iMZ/zdZo1Thp2XGWeuXAIrKgkdyUvLKqK4XTsVGWuzt30
+         49EyT5Q8NQP4j/B9zlXp/crHCuw3aq8zFw14mADKb86h6VkV4d2V8XDssWxtkbdl2i9H
+         Y1tPJofnnoS21VxADJGfUeomLG/Tf48UNlxRwHsCKf727u+tnnjJZI71HECyDb+bxfPk
+         2pXt6wVfilUdmucIAp51tSoWSbEHXl4hQTm3OdKvaoaaqCs8CcPa3sUBtNF6/5hkoF2w
+         MI2g==
+X-Gm-Message-State: AOAM531q6kbXwzEgJBJUHADDjqPrIsyd1MWdg9GCa/gxxBBON0o94Yst
+        sCuzS7vXLOwgN4nGoGMh+r6ziw==
+X-Google-Smtp-Source: ABdhPJz1sUmoW6q/FFxMkoywl+2L6RPbXOU/Zg0KC3kPOxMbo1ax14q0qVoKPrHtmsxFC6AWLEOg6Q==
+X-Received: by 2002:ac2:5a50:: with SMTP id r16mr5423236lfn.170.1593286455052;
+        Sat, 27 Jun 2020 12:34:15 -0700 (PDT)
+Received: from PackardBell ([82.160.139.10])
+        by smtp.gmail.com with ESMTPSA id a21sm991063ljn.2.2020.06.27.12.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2020 12:34:14 -0700 (PDT)
+Received: from localhost (PackardBell [local])
+        by PackardBell (OpenSMTPD) with ESMTPA id 7c251c35;
+        Sat, 27 Jun 2020 19:34:13 +0000 (UTC)
+From:   Bartosz Dudziak <bartosz.dudziak@snejp.pl>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Bartosz Dudziak <bartosz.dudziak@snejp.pl>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add msm8226 pinctrl bindings
+Date:   Sat, 27 Jun 2020 21:28:30 +0200
+Message-Id: <20200627192833.217531-2-bartosz.dudziak@snejp.pl>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200627192833.217531-1-bartosz.dudziak@snejp.pl>
+References: <20200627192833.217531-1-bartosz.dudziak@snejp.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200626200710.GK1931@sasha-vm>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sasha,
+Add device tree binding Documentation details for Qualcomm msm8226
+pinctrl driver.
 
-On Fri, Jun 26, 2020 at 04:07:10PM -0400, Sasha Levin wrote:
->On Fri, Jun 26, 2020 at 11:18:00AM -0400, Ralph Siemsen wrote:
->>
->>So the following patch is needed as well, at least in 4.9 and 4.19, 
->>I did not check/test other versions. Mainline does not need this, 
->>since the code seems to have been refactored to avoid the 
->>duplication.
->
->Could you add your signed-off-by tag please? :)
+- Bindings documentation was based on qcom,sm8250-pinctrl.yaml by
+  Bjorn Andersson <bjorn.andersson@linaro.org> and then modified for
+  msm8226 content
 
-Whoops, for some reason I snipped it out... sorry about that!
-Here it is again, with the commit message tweaked for clarity.
-
-Subject: [PATCH] spi: dw: Fix return value of dma_transfer callback
-
-Earlier commit "spi: dw: Return any value retrieved from the
-dma_transfer callback" changed the return code of mid_spi_dma_transfer()
-from 0 to 1 in drivers/spi/spi-dw-mid.c.
-
-A similar change is needed spi-dw-mmio.c for mmio_spi_dma_transfer()
-function. Note this only applies to older branches, as mainline has
-refactored the code to avoid duplication.
-
-Signed-off-by: Ralph Siemsen <ralph.siemsen@linaro.org>
+Signed-off-by: Bartosz Dudziak <bartosz.dudziak@snejp.pl>
 ---
- drivers/spi/spi-dw-mmio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../pinctrl/qcom,msm8226-pinctrl.yaml         | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index c563c2815093..99641c485288 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -358,7 +358,7 @@ static int mmio_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
- 		dma_async_issue_pending(dws->txchan);
- 	}
- 
--	return 0;
-+	return 1;
- }
- 
- static void mmio_spi_dma_stop(struct dw_spi *dws)
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+new file mode 100644
+index 0000000000..8d8dc15718
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,msm8226-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. MSM8226 TLMM block
++
++maintainers:
++  - Bjorn Andersson <bjorn.andersson@linaro.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer block found in the
++  MSM8226 platform.
++
++properties:
++  compatible:
++    const: qcom,msm8226-pinctrl
++
++  reg:
++    description: Specifies the base address and size of the TLMM register space
++    maxItems: 1
++
++  interrupts:
++    description: Specifies the TLMM summary IRQ
++    maxItems: 1
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    description: Specifies the PIN numbers and Flags, as defined in
++      include/dt-bindings/interrupt-controller/irq.h
++    const: 2
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    description: Specifying the pin number and flags, as defined in
++      include/dt-bindings/gpio/gpio.h
++    const: 2
++
++  gpio-ranges:
++    maxItems: 1
++
++  gpio-reserved-ranges:
++    maxItems: 1
++
++#PIN CONFIGURATION NODES
++patternProperties:
++  '^.*$':
++    if:
++      type: object
++    then:
++      properties:
++        pins:
++          description:
++            List of gpio pins affected by the properties specified in this
++            subnode.
++          items:
++            oneOf:
++              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-1][0-6])$"
++              - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data ]
++          minItems: 1
++          maxItems: 36
++
++        function:
++          description:
++            Specify the alternative function to be configured for the specified
++            pins. Functions are only valid for gpio pins.
++
++          enum: [ gpio, cci_i2c0, blsp_uim1, blsp_uim2, blsp_uim3, blsp_uim5,
++            blsp_i2c1, blsp_i2c2, blsp_i2c3, blsp_i2c5, blsp_spi1,
++            blsp_spi2, blsp_spi3, blsp_spi5, blsp_uart1, blsp_uart2,
++            blsp_uart3, blsp_uart5, cam_mclk0, cam_mclk1, wlan ]
++
++        drive-strength:
++          enum: [2, 4, 6, 8, 10, 12, 14, 16]
++          default: 2
++          description:
++            Selects the drive strength for the specified pins, in mA.
++
++        bias-pull-down: true
++
++        bias-pull-up: true
++
++        bias-disable: true
++
++        output-high: true
++
++        output-low: true
++
++      required:
++        - pins
++        - function
++
++      additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
++
++additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        msmgpio: pinctrl@fd510000 {
++                compatible = "qcom,msm8226-pinctrl";
++                reg = <0xfd510000 0x4000>;
++
++                gpio-controller;
++                #gpio-cells = <2>;
++                gpio-ranges = <&msmgpio 0 0 117>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++        };
 -- 
-2.17.1
+2.25.1
 
