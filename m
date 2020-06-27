@@ -2,101 +2,323 @@ Return-Path: <SRS0=4wOv=AI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFB7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 06:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F61CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 08:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5A920885
-	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 06:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136052080C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 27 Jun 2020 08:18:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CdYOFiAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725924AbgF0GrP (ORCPT
+        id S1726335AbgF0ISQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 27 Jun 2020 02:47:15 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:47092 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgF0GrP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 02:47:15 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 05R6kobO7013708, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 05R6kobO7013708
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 27 Jun 2020 14:46:50 +0800
-Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 27 Jun 2020 14:46:50 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sat, 27 Jun 2020 14:46:49 +0800
-Received: from RTEXMB03.realtek.com.tw ([::1]) by RTEXMB03.realtek.com.tw
- ([fe80::405f:7a59:7271:e52d%7]) with mapi id 15.01.1779.005; Sat, 27 Jun 2020
- 14:46:49 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sat, 27 Jun 2020 04:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgF0ISQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 27 Jun 2020 04:18:16 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0CBC03E979;
+        Sat, 27 Jun 2020 01:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4UusXWVmeZslLL0YrXwQifqLxTB7fqL/8w++bVpT1Ek=; b=CdYOFiAmCvnKTyLHBvYOAYYd2F
+        uF2ipBdlMVzJkU/F9iSYsdZ0gtf75hcaUruY15yoJC0DSXLa1aIvjbQ2xUMIKrQB7x3JJ0O3fUqzT
+        rRQTziuSZ7Wc5h91mcUSS9Shp8uDaPOQYAzzCCFemo2attCrUfXoqe7vfD0bdh7wO7Mo=;
+Received: from p5dcc3098.dip0.t-ipconnect.de ([93.204.48.152] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jp61s-0007Tj-7u; Sat, 27 Jun 2020 10:17:44 +0200
+Date:   Sat, 27 Jun 2020 10:17:38 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and Realtek Pym Particles EVB
-Thread-Topic: [PATCH v4 2/3] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek Pym Particles EVB
-Thread-Index: AQHWSKEtUDDycWRqfEyx8O87Osz8dajsC/ww
-Date:   Sat, 27 Jun 2020 06:46:49 +0000
-Message-ID: <cf0d2c34ca22455d846a81745b481abc@realtek.com>
-References: <20200620233227.31585-1-afaerber@suse.de>
- <20200620233227.31585-3-afaerber@suse.de>
-In-Reply-To: <20200620233227.31585-3-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [101.15.193.107]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 04/10] mfd: Add base driver for Netronix embedded
+ controller
+Message-ID: <20200627101738.2fe4abc3@aktux>
+In-Reply-To: <20200620224222.1312520-3-j.neuschaefer@gmx.net>
+References: <20200620224222.1312520-1-j.neuschaefer@gmx.net>
+        <20200620224222.1312520-3-j.neuschaefer@gmx.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmRyZWFzIEbDpHJiZXIgPGFm
-YWVyYmVyQHN1c2UuZGU+DQo+IFNlbnQ6IFN1bmRheSwgSnVuZSAyMSwgMjAyMCA3OjMyIEFNDQo+
-IFRvOiBsaW51eC1yZWFsdGVrLXNvY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IENjOiBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IEphbWVzDQo+IFRhaSBb5oi05b+X5bOwXSA8amFtZXMudGFpQHJlYWx0ZWsuY29tPjsgQW5k
-cmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPjsNCj4gUm9iIEhlcnJpbmcgPHJvYmgrZHRA
-a2VybmVsLm9yZz47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRD
-SCB2NCAyLzNdIGR0LWJpbmRpbmdzOiBhcm06IHJlYWx0ZWs6IERvY3VtZW50IFJURDEzMTkgYW5k
-DQo+IFJlYWx0ZWsgUHltIFBhcnRpY2xlcyBFVkINCj4gDQo+IEZyb206IEphbWVzIFRhaSA8amFt
-ZXMudGFpQHJlYWx0ZWsuY29tPg0KPiANCj4gRGVmaW5lIGNvbXBhdGlibGUgc3RyaW5ncyBmb3Ig
-UmVhbHRlayBSVEQxMzE5IFNvQyBhbmQgUmVhbHRlayBQeW0gUGFydGljbGVzDQo+IEVWQi4NCj4g
-DQo+IFNpZ25lZC1vZmYtYnk6IEphbWVzIFRhaSA8amFtZXMudGFpQHJlYWx0ZWsuY29tPg0KPiBT
-aWduZWQtb2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+DQo+IC0tLQ0K
-PiAgdjMgLT4gdjQ6DQo+ICAqIFJlbmFtZWQgY29tcGF0aWJsZSBmcm9tIHB5bXBhcnRpY2xlIHRv
-IHB5bS1wYXJ0aWNsZXMNCj4gICogVHVybmVkIFNvQyBjb21tZW50IGludG8gZGVzY3JpcHRpb24N
-Cj4gDQo+ICB2MiAtPiB2MzogVW5jaGFuZ2VkDQo+IA0KPiAgdjEgLT4gdjI6DQo+ICAqIFB1dCBz
-dHJpbmcgaW4gYWxwaGFiZXRpY2FsIG9yZGVyDQo+IA0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9yZWFsdGVrLnlhbWwgfCA2ICsrKysrKw0KPiAgMSBmaWxlIGNoYW5n
-ZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVhbHRlay55YW1sDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2FybS9yZWFsdGVrLnlhbWwNCj4gaW5kZXggMGIzODgwMTZiYmNkLi5l
-MzZlODdkZjM1MjEgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9hcm0vcmVhbHRlay55YW1sDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vcmVhbHRlay55YW1sDQo+IEBAIC00Miw2ICs0MiwxMiBAQCBwcm9wZXJ0aWVz
-Og0KPiAgICAgICAgICAgICAgICAtIHN5bm9sb2d5LGRzNDE4ICMgU3lub2xvZ3kgRGlza1N0YXRp
-b24gRFM0MTgNCj4gICAgICAgICAgICAtIGNvbnN0OiByZWFsdGVrLHJ0ZDEyOTYNCj4gDQo+ICsg
-ICAgICAtIGRlc2NyaXB0aW9uOiBSVEQxMzE5IFNvQyBiYXNlZCBib2FyZHMNCj4gKyAgICAgICAg
-aXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAgICAgICAgICAgICAtIHJlYWx0ZWss
-cHltLXBhcnRpY2xlcyAjIFJlYWx0ZWsgUHltIFBhcnRpY2xlcyBFVkINCj4gKyAgICAgICAgICAt
-IGNvbnN0OiByZWFsdGVrLHJ0ZDEzMTkNCj4gKw0KPiAgICAgICAgLSBkZXNjcmlwdGlvbjogUlRE
-MTM5NSBTb0MgYmFzZWQgYm9hcmRzDQo+ICAgICAgICAgIGl0ZW1zOg0KPiAgICAgICAgICAgIC0g
-ZW51bToNCj4gLS0NCj4gMi4yNi4yDQoNCkFja2VkLWJ5OiBKYW1lcyBUYWkgPGphbWVzLnRhaUBy
-ZWFsdGVrLmNvbT4NCg0K
+On Sun, 21 Jun 2020 00:42:15 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+
+> Third-party hardware documentation is available at
+> https://github.com/neuschaefer/linux/wiki/Netronix-MSP430-embedded-contro=
+ller
+>=20
+> The EC supports interrupts, but the driver doesn't make use of them so
+> far.
+>=20
+> Known problems:
+> - The reboot handler is installed in such a way that it directly calls
+>   into the i2c subsystem to send the reboot command to the EC. This
+>   means that the reboot handler may sleep, which is not allowed.
+>=20
+see
+https://patchwork.ozlabs.org/project/linux-i2c/patch/20190415213432.8972-3-=
+contact@stefanchrist.eu/
+
+for a fix of such problems.=20
+
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> ---
+>  drivers/mfd/Kconfig       |   7 ++
+>  drivers/mfd/Makefile      |   1 +
+>  drivers/mfd/ntxec.c       | 188 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/ntxec.h |  30 ++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 drivers/mfd/ntxec.c
+>  create mode 100644 include/linux/mfd/ntxec.h
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index a37d7d1713820..78410b928648e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -978,6 +978,13 @@ config MFD_VIPERBOARD
+>  	  You need to select the mfd cell drivers separately.
+>  	  The drivers do not support all features the board exposes.
+>=20
+> +config MFD_NTXEC
+> +	bool "Netronix Embedded Controller"
+> +	depends on I2C && OF
+> +	help
+> +	  Say yes here if you want to support the embedded controller of
+> +	  certain e-book readers designed by the ODM Netronix.
+> +
+>  config MFD_RETU
+>  	tristate "Nokia Retu and Tahvo multi-function device"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 9367a92f795a6..19d9391ed6f32 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -218,6 +218,7 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
+>  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+=3D intel_pmc_bxt.o
+>  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
+>  obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
+> +obj-$(CONFIG_MFD_NTXEC)		+=3D ntxec.o
+>  obj-$(CONFIG_MFD_RC5T583)	+=3D rc5t583.o rc5t583-irq.o
+>  obj-$(CONFIG_MFD_RK808)		+=3D rk808.o
+>  obj-$(CONFIG_MFD_RN5T618)	+=3D rn5t618.o
+> diff --git a/drivers/mfd/ntxec.c b/drivers/mfd/ntxec.c
+> new file mode 100644
+> index 0000000000000..82adea34ea746
+> --- /dev/null
+> +++ b/drivers/mfd/ntxec.c
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright 2020 Jonathan Neusch=C3=A4fer
+> +//
+> +// MFD driver for the usually MSP430-based embedded controller used in c=
+ertain
+> +// Netronix ebook reader board designs
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mfd/ntxec.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm.h>
+> +#include <linux/reboot.h>
+> +#include <linux/types.h>
+> +
+> +
+> +#define NTXEC_VERSION		0x00
+> +#define NTXEC_POWEROFF		0x50
+> +#define NTXEC_POWERKEEP		0x70
+> +#define NTXEC_RESET		0x90
+> +
+> +
+> +/* Register access */
+> +
+> +int ntxec_read16(struct ntxec *ec, u8 addr)
+> +{
+> +	u8 request[1] =3D { addr };
+> +	u8 response[2];
+> +	int res;
+> +
+> +	struct i2c_msg msgs[] =3D {
+> +		{
+> +			.addr =3D ec->client->addr,
+> +			.flags =3D ec->client->flags,
+> +			.len =3D sizeof(request),
+> +			.buf =3D request
+> +		}, {
+> +			.addr =3D ec->client->addr,
+> +			.flags =3D ec->client->flags | I2C_M_RD,
+> +			.len =3D sizeof(response),
+> +			.buf =3D response
+> +		}
+> +	};
+> +
+> +	res =3D i2c_transfer(ec->client->adapter, msgs, ARRAY_SIZE(msgs));
+> +	if (res < 0)
+> +		return res;
+> +	if (res !=3D ARRAY_SIZE(msgs))
+> +		return -EIO;
+> +
+> +	return get_unaligned_be16(response);
+> +}
+> +EXPORT_SYMBOL(ntxec_read16);
+> +
+> +int ntxec_write16(struct ntxec *ec, u8 addr, u16 value)
+> +{
+> +	u8 request[3] =3D { addr, };
+> +	int res;
+> +
+> +	put_unaligned_be16(value, request + 1);
+> +
+> +	res =3D i2c_transfer_buffer_flags(ec->client, request, sizeof(request),
+> +					ec->client->flags);
+> +	if (res < 0)
+> +		return res;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(ntxec_write16);
+> +
+> +int ntxec_read8(struct ntxec *ec, u8 addr)
+> +{
+> +	int res =3D ntxec_read16(ec, addr);
+> +
+> +	if (res < 0)
+> +		return res;
+> +
+> +	return (res >> 8) & 0xff;
+> +}
+> +EXPORT_SYMBOL(ntxec_read8);
+> +
+> +int ntxec_write8(struct ntxec *ec, u8 addr, u8 value)
+> +{
+> +	return ntxec_write16(ec, addr, value << 8);
+> +}
+> +EXPORT_SYMBOL(ntxec_write8);
+> +
+
+do we really need both 16bit and 8bit accessors? If not,
+then simply use regmap_i2c_init and set val_bits accordingly.
+Maybe just doing the << 8 in the constants?
+
+> +
+> +/* Reboot/poweroff handling */
+> +
+> +static struct ntxec *poweroff_restart_instance;
+> +
+> +static void ntxec_poweroff(void)
+> +{
+> +	ntxec_write8(poweroff_restart_instance, NTXEC_POWEROFF, 0x01);
+> +	msleep(5000);
+> +}
+> +
+> +static int ntxec_restart(struct notifier_block *nb,
+> +		unsigned long action, void *data)
+> +{
+> +	/* FIXME: The I2C driver sleeps, but restart handlers may not sleep */
+> +	ntxec_write8(poweroff_restart_instance, NTXEC_RESET, 0xff);
+> +	/* TODO: delay? */
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block ntxec_restart_handler =3D {
+> +	.notifier_call =3D ntxec_restart,
+> +	.priority =3D 128
+> +};
+> +
+> +
+> +/* Driver setup */
+> +
+> +static int ntxec_probe(struct i2c_client *client,
+> +			    const struct i2c_device_id *ids)
+> +{
+> +	struct ntxec *ec;
+> +	int res;
+> +
+> +	ec =3D devm_kmalloc(&client->dev, sizeof(*ec), GFP_KERNEL);
+> +	if (!ec)
+> +		return -ENOMEM;
+> +
+> +	ec->dev =3D &client->dev;
+> +	ec->client =3D client;
+> +
+> +	/* Determine the firmware version */
+> +	res =3D ntxec_read16(ec, NTXEC_VERSION);
+> +	if (res < 0) {
+> +		dev_dbg(ec->dev, "Failed to read firmware version number\n");
+> +		return res;
+> +	}
+> +	ec->version =3D res;
+> +
+> +	dev_info(ec->dev,
+> +		 "Netronix embedded controller version %04x detected.\n",
+> +		 ec->version);
+> +
+> +	/* For now, we don't support the new register layout. */
+> +	if (ntxec_has_new_layout(ec))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (of_device_is_system_power_controller(ec->dev->of_node)) {
+> +		/*
+> +		 * Set the 'powerkeep' bit. This is necessary on some boards
+> +		 * in order to keep the system running.
+> +		 */
+> +		res =3D ntxec_write8(ec, NTXEC_POWERKEEP, 0x08);
+> +		if (res < 0)
+> +			return res;
+> +
+> +		/* Install poweroff handler */
+> +		WARN_ON(poweroff_restart_instance);
+> +		poweroff_restart_instance =3D ec;
+> +		if (pm_power_off !=3D NULL)
+> +			/* TODO: Refactor among all poweroff drivers */
+> +			dev_err(ec->dev, "pm_power_off already assigned\n");
+> +		else
+> +			pm_power_off =3D ntxec_poweroff;
+> +
+common pattern, across drivers, so I think doing something else would
+be a separate cleanup issue.
+
+Regards,
+Andreas
