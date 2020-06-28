@@ -2,141 +2,376 @@ Return-Path: <SRS0=6oDv=AJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8407BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A60C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D57720768
-	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1CD2088E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 28 Jun 2020 07:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uOXm1rRx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhjAkbPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgF1H2X (ORCPT
+        id S1726055AbgF1Hj3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 28 Jun 2020 03:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
+        Sun, 28 Jun 2020 03:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgF1H2X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 03:28:23 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850F0C061794;
-        Sun, 28 Jun 2020 00:28:23 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C030C4FB;
-        Sun, 28 Jun 2020 09:28:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593329301;
-        bh=ck+LjAkxjFbi+T46BUzZf+XpAk4V6f33vhP8DfWZQHI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uOXm1rRxayXR+zKQy3KRDZgAUKQTQRWl8eKer9/zKORUNd5yFoInZcCU7aBUs+y6Y
-         YOr58xIXYiNhUT0myqyZxMLrTlYE7PeBX/ITh9unu3mm08hj0KPhRkuDwGD1NnIT71
-         ZdSA1chOyEZIx1s1yK9BircekQKa03LFbtHav0iw=
-Date:   Sun, 28 Jun 2020 10:28:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/5] drm: panel: Add Starry KR070PE2T
-Message-ID: <20200628072819.GB8391@pendragon.ideasonboard.com>
-References: <20200320112205.7100-1-dev@pascalroeleven.nl>
- <20200320112205.7100-3-dev@pascalroeleven.nl>
+        with ESMTP id S1725958AbgF1Hj2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 28 Jun 2020 03:39:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C12C061794
+        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 00:39:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id t11so1693843pfq.11
+        for <devicetree@vger.kernel.org>; Sun, 28 Jun 2020 00:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2gZ3Ey9dnbKR3FNjM+7Zu1K55QA2gC3RfP+X2lu2GFQ=;
+        b=hhjAkbPSZ2G+Ia6oYpc5FoYYq6gkyk5Rue08XBpliLylXFVSW8p9WbIy1C+KbV7v6h
+         DEkqJIFeAZxe+ofRlnt4zIOP+16UQ9T8qAVTu4zMSHJMpyxt0oTPKxrUrS4EKtLD7TAu
+         A8uHfZ6m08ZFxYtRUPaNAjS+b+rdKeFkaoxhCV/HK3sjD4MBtQ/BxT7lPcp0RhpUM2Q4
+         JHx0HOFESIzGij43bWhP+///OE2770rvnSEj+w+/Lw0thN9yya1+FCAB5oVhteDR4t66
+         FTBGyqVkcnbLIWc7UHHfKmtbHB8QbQ+W1e1kul6nK/D5ptuPCiHU4jRqRPQMjYbBFeuR
+         mdyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2gZ3Ey9dnbKR3FNjM+7Zu1K55QA2gC3RfP+X2lu2GFQ=;
+        b=SSbTEn55vdXO5V8vOINyVbRLJf1kbHud+7xpakv0pVwAyQw3HHzzT60pPxXAo+QNC3
+         mVOAfFZT4WQ3S4nyiO3arhzDfQoaACj/qk+6T4wfBtte8M4DSURQRQKT3K+WBQlB0oRa
+         ajlkKnYDKDveTYqPWWPgwBGCH+HvB9fufB2U6qirYJfInLZ77+Ppbr+sNDIe8fxbAGVK
+         7Zn/lwz/E+PMZedl/wrUmcEmaR7O+aBBZVKo/2B8/rIWJNp9zYNSWQ/ty1gKG+5oF1j1
+         CCAzfO7OEzOQi47d7uqrbhq6DHCZ8ljBkprDWvc5GvVITHb8+xmGX7oYgNsMRb3lGHsP
+         ekVw==
+X-Gm-Message-State: AOAM532Kgd+be+94sumnS78uBkzqYcAbpkx/w5UoBN2cT7zXowXxUO9o
+        hjn5ZBajPsQGFylf2anoGFD5pg==
+X-Google-Smtp-Source: ABdhPJyNaNhRqXdYQuKqkGHdNgpMFBF+e1dVuTwmHqBNi7WGek/K3vOZ0bjJq47xGjSCePRC2HITWw==
+X-Received: by 2002:a63:af01:: with SMTP id w1mr5908957pge.23.1593329967820;
+        Sun, 28 Jun 2020 00:39:27 -0700 (PDT)
+Received: from dragon ([80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id f29sm24451394pga.59.2020.06.28.00.39.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 28 Jun 2020 00:39:27 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 15:39:10 +0800
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] thermal: qcom: tsens-v0_1: Add support for MSM8939
+Message-ID: <20200628073908.GA8343@dragon>
+References: <20200501203311.143934-1-konradybcio@gmail.com>
+ <20200501203311.143934-2-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320112205.7100-3-dev@pascalroeleven.nl>
+In-Reply-To: <20200501203311.143934-2-konradybcio@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Pascal,
+On Fri, May 01, 2020 at 10:33:10PM +0200, Konrad Dybcio wrote:
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-On Fri, Mar 20, 2020 at 12:21:33PM +0100, Pascal Roeleven wrote:
-> The KR070PE2T is a 7" panel with a resolution of 800x480.
-> 
-> KR070PE2T is the marking present on the ribbon cable. As this panel is
-> probably available under different brands, this marking will catch
-> most devices.
-> 
-> As I can't find a datasheet for this panel, the bus_flags are instead
-> from trial-and-error. The flags seem to be common for these kind of
-> panels as well.
-> 
-> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+For the record, I'm working my version of msm8939 tsens driver support,
+and I would highlight the things that differ from this patch.
+
 > ---
->  drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+>  drivers/thermal/qcom/tsens-v0_1.c | 142 +++++++++++++++++++++++++++++-
+>  drivers/thermal/qcom/tsens.c      |   3 +
+>  drivers/thermal/qcom/tsens.h      |   2 +-
+>  3 files changed, 145 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index e14c14ac6..b3d257257 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2842,6 +2842,32 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
->  	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+> index 959a9371d205c..29b95886273b7 100644
+> --- a/drivers/thermal/qcom/tsens-v0_1.c
+> +++ b/drivers/thermal/qcom/tsens-v0_1.c
+> @@ -48,6 +48,64 @@
+>  #define MSM8916_CAL_SEL_MASK	0xe0000000
+>  #define MSM8916_CAL_SEL_SHIFT	29
+>  
+> +/* eeprom layout data for 8939 */
+> +#define MSM8939_BASE0_MASK           0x000000ff
+
+Tabs rather than spaces are used for indentation.
+
+> +#define MSM8939_BASE1_MASK           0xff000000
+> +#define MSM8939_BASE0_SHIFT
+
+This shift is 0.
+
+> +#define MSM8939_BASE1_SHIFT          24
+> +
+> +#define MSM8939_S0_P1_MASK         0x000001f8
+> +#define MSM8939_S1_P1_MASK         0x001f8000
+> +#define MSM8939_S2_P1_MASK_0_4     0xf8000000
+> +#define MSM8939_S2_P1_MASK_5       0x00000001
+
+This mask define is contradicting to MSM8939_S2_P1_SHIFT_5, and needs to
+be confirmed.
+
+> +#define MSM8939_S3_P1_MASK         0x00001f80
+> +#define MSM8939_S4_P1_MASK         0x01f80000
+> +#define MSM8939_S5_P1_MASK         0x00003f00
+> +#define MSM8939_S6_P1_MASK         0x03f00000
+> +#define MSM8939_S7_P1_MASK         0x0000003f
+> +#define MSM8939_S8_P1_MASK         0x0003f000
+> +#define MSM8939_S9_P1_MASK         0x07e00000
+> +
+> +#define MSM8939_S0_P2_MASK         0x00007e00
+> +#define MSM8939_S1_P2_MASK         0x07e00000
+> +#define MSM8939_S2_P2_MASK         0x0000007e
+> +#define MSM8939_S3_P2_MASK         0x0007e000
+> +#define MSM8939_S4_P2_MASK         0x7e000000
+> +#define MSM8939_S5_P2_MASK         0x000fc000
+> +#define MSM8939_S6_P2_MASK         0xfc000000
+> +#define MSM8939_S7_P2_MASK         0x00000fc0
+> +#define MSM8939_S8_P2_MASK         0x00fc0000
+> +#define MSM8939_S9_P2_MASK_0_4     0xf8000000
+> +#define MSM8939_S9_P2_MASK_5       0x00002000
+
+It's contradicting to MSM8939_S9_P2_SHIFT_5, and needs to be confirmed.
+
+> +
+> +#define MSM8939_CAL_SEL_MASK	0xc0000000
+
+Per downstream kernel, this mask is 0x7.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n370
+
+> +#define MSM8939_CAL_SEL_SHIFT	0
+> +
+> +
+> +#define MSM8939_S0_P1_SHIFT        3
+> +#define MSM8939_S1_P1_SHIFT        15
+> +#define MSM8939_S2_P1_SHIFT_0_4    27
+> +#define MSM8939_S2_P1_SHIFT_5      5
+> +#define MSM8939_S3_P1_SHIFT        7
+> +#define MSM8939_S4_P1_SHIFT        19
+> +#define MSM8939_S5_P1_SHIFT        8
+> +#define MSM8939_S6_P1_SHIFT        20
+> +//yes, 7 is missing in downstream
+
+The shift is not missing but just 0.
+
+> +#define MSM8939_S8_P1_SHIFT        12
+> +#define MSM8939_S9_P1_SHIFT        21
+> +
+> +#define MSM8939_S0_P2_SHIFT        9
+> +#define MSM8939_S1_P2_SHIFT        21
+> +#define MSM8939_S2_P2_SHIFT        1
+> +#define MSM8939_S3_P2_SHIFT        13
+> +#define MSM8939_S4_P2_SHIFT        25
+> +#define MSM8939_S5_P2_SHIFT        14
+> +#define MSM8939_S6_P2_SHIFT        26
+> +#define MSM8939_S7_P2_SHIFT        6
+> +#define MSM8939_S8_P2_SHIFT        18
+> +#define MSM8939_S9_P2_SHIFT_0_4    27
+> +#define MSM8939_S9_P2_SHIFT_5      8
+> +
+>  /* eeprom layout data for 8974 */
+>  #define BASE1_MASK		0xff
+>  #define S0_P1_MASK		0x3f00
+> @@ -189,6 +247,73 @@ static int calibrate_8916(struct tsens_priv *priv)
+>  	return 0;
+>  }
+>  
+> +static int calibrate_8939(struct tsens_priv *priv)
+> +{
+> +	int base0 = 0, base1 = 0, i;
+> +	u32 p1[11], p2[11];
+
+MSM8939 gets 10 sensors, so the arrays should be [10].
+
+> +	int mode = 0;
+> +	u32 *qfprom_cdata, *qfprom_csel;
+> +
+> +	qfprom_cdata = (u32 *)qfprom_read(priv->dev, "calib");
+> +	if (IS_ERR(qfprom_cdata))
+> +		return PTR_ERR(qfprom_cdata);
+> +
+> +	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+> +	if (IS_ERR(qfprom_csel)) {
+> +		kfree(qfprom_cdata);
+> +		return PTR_ERR(qfprom_csel);
+> +	}
+
+'calib_sel' is not separate from 'calib' bits on MSM8939.  I chose to
+read nvmem out as one go and map them to calibration data as below, per
+downstream kernel.
+
+	/* Mapping between qfprom nvmem and calibration data */
+	cdata[0] = qfprom_cdata[12];
+	cdata[1] = qfprom_cdata[13];
+	cdata[2] = qfprom_cdata[0];
+	cdata[3] = qfprom_cdata[1];
+	cdata[4] = qfprom_cdata[22];
+	cdata[5] = qfprom_cdata[21];
+
+	mode = (cdata[0] & MSM8939_CAL_SEL_MASK) >> MSM8939_CAL_SEL_SHIFT;
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n1286
+
+We should support MSM8939 v3, as that's the mass production revision.
+
+> +
+> +	mode = (qfprom_csel[0] & MSM8939_CAL_SEL_MASK) >> MSM8939_CAL_SEL_SHIFT;
+> +	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+> +	switch (mode) {
+> +	case TWO_PT_CALIB:
+> +		base1 = (qfprom_cdata[1] & MSM8939_BASE1_MASK) >> MSM8939_BASE1_SHIFT;
+> +		p2[0] = (qfprom_cdata[0] & MSM8939_S0_P2_MASK) >> MSM8939_S0_P2_SHIFT;
+> +		p2[1] = (qfprom_cdata[0] & MSM8939_S1_P2_MASK) >> MSM8939_S1_P2_SHIFT;
+> +		p2[2] = (qfprom_cdata[1] & MSM8939_S2_P2_MASK) >> MSM8939_S2_P2_SHIFT;
+> +		p2[3] = (qfprom_cdata[1] & MSM8939_S3_P2_MASK) >> MSM8939_S3_P2_SHIFT;
+> +		p2[4] = (qfprom_cdata[1] & MSM8939_S4_P2_MASK) >> MSM8939_S4_P2_SHIFT;
+> +		p2[5] = (qfprom_cdata[1] & MSM8939_S5_P2_MASK) >> MSM8939_S5_P2_SHIFT;
+> +		p2[6] = (qfprom_cdata[1] & MSM8939_S6_P2_MASK) >> MSM8939_S6_P2_SHIFT;
+> +		p2[7] = (qfprom_cdata[1] & MSM8939_S7_P2_MASK) >> MSM8939_S7_P2_SHIFT;
+> +		p2[8] = (qfprom_cdata[1] & MSM8939_S8_P2_MASK) >> MSM8939_S8_P2_SHIFT;
+> +		p2[9] = (qfprom_cdata[1] & MSM8939_S9_P2_MASK_0_4) >> MSM8939_S9_P2_SHIFT_0_4;
+> +		p2[10] = (qfprom_cdata[1] & MSM8939_S9_P2_MASK_5) >> MSM8939_S9_P2_SHIFT_5;
+
+These do not really match downstream kernel.  My version look like:
+
+		base1 = (cdata[3] & MSM8939_BASE1_MASK) >> MSM8939_BASE1_SHIFT;
+		p2[0] = (cdata[0] & MSM8939_S0_P2_MASK) >> MSM8939_S0_P2_SHIFT;
+		p2[1] = (cdata[0] & MSM8939_S1_P2_MASK) >> MSM8939_S1_P2_SHIFT;
+		p2[2] = (cdata[1] & MSM8939_S2_P2_MASK) >> MSM8939_S2_P2_SHIFT;
+		p2[3] = (cdata[1] & MSM8939_S3_P2_MASK) >> MSM8939_S3_P2_SHIFT;
+		p2[4] = (cdata[1] & MSM8939_S4_P2_MASK) >> MSM8939_S4_P2_SHIFT;
+		p2[5] = (cdata[2] & MSM8939_S5_P2_MASK) >> MSM8939_S5_P2_SHIFT;
+		p2[6] = (cdata[2] & MSM8939_S6_P2_MASK) >> MSM8939_S6_P2_SHIFT;
+		p2[7] = (cdata[3] & MSM8939_S7_P2_MASK) >> MSM8939_S7_P2_SHIFT;
+		p2[8] = (cdata[3] & MSM8939_S8_P2_MASK) >> MSM8939_S8_P2_SHIFT;
+		p2[9] = (cdata[4] & MSM8939_S9_P2_MASK_0_4) >> MSM8939_S9_P2_SHIFT_0_4;
+		p2[9] |= (cdata[5] & MSM8939_S9_P2_MASK_5) >> MSM8939_S9_P2_SHIFT_5;
+
+> +		for (i = 0; i < priv->num_sensors; i++)
+> +			p2[i] = ((base1 + p2[i]) << 3);
+
+The left shift should be 2 per downstream kernel.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n1407
+
+> +		/* Fall through */
+> +	case ONE_PT_CALIB2:
+> +		base0 = (qfprom_cdata[0] & MSM8939_BASE0_MASK);
+> +		p1[0] = (qfprom_cdata[0] & MSM8939_S0_P1_MASK) >> MSM8939_S0_P1_SHIFT;
+> +		p1[1] = (qfprom_cdata[0] & MSM8939_S1_P1_MASK) >> MSM8939_S1_P1_SHIFT;
+> +		p1[2] = (qfprom_cdata[0] & MSM8939_S2_P1_MASK_0_4) >> MSM8939_S2_P1_SHIFT_0_4;
+> +		p1[3] = (qfprom_cdata[0] & MSM8939_S2_P1_MASK_5) >> MSM8939_S2_P1_SHIFT_5;
+> +		p1[4] = (qfprom_cdata[1] & MSM8939_S3_P1_MASK) >> MSM8939_S3_P1_SHIFT;
+> +		p1[5] = (qfprom_cdata[1] & MSM8939_S4_P1_MASK) >> MSM8939_S4_P1_SHIFT;
+> +		p1[6] = (qfprom_cdata[1] & MSM8939_S5_P1_MASK) >> MSM8939_S5_P1_SHIFT;
+> +		p1[7] = (qfprom_cdata[1] & MSM8939_S6_P1_MASK) >> MSM8939_S6_P1_SHIFT;
+> +		//yes, 7 is missing in downstream
+
+Not really.
+
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/thermal/msm8974-tsens.c?h=LA.BR.1.2.9.1_rb1.5#n1331
+
+> +		p1[8] = (qfprom_cdata[1] & MSM8939_S8_P1_MASK) >> MSM8939_S8_P1_SHIFT;
+> +		p1[9] = (qfprom_cdata[1] & MSM8939_S9_P1_MASK) >> MSM8939_S9_P1_SHIFT;
+> +		for (i = 0; i < priv->num_sensors; i++)
+> +			p1[i] = (((base0) + p1[i]) << 3);
+> +		break;
+> +	default:
+> +		for (i = 0; i < priv->num_sensors; i++) {
+> +			p1[i] = 500;
+> +			p2[i] = 780;
+> +		}
+> +		break;
+> +	}
+> +
+> +	compute_intercept_slope(priv, p1, p2, mode);
+> +	kfree(qfprom_cdata);
+> +	kfree(qfprom_csel);
+> +
+> +	return 0;
+> +}
+> +
+>  static int calibrate_8974(struct tsens_priv *priv)
+>  {
+>  	int base1 = 0, base2 = 0, i;
+> @@ -325,7 +450,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+>  	return 0;
+>  }
+>  
+> -/* v0.1: 8916, 8974 */
+> +/* v0.1: 8916, 8939, 8974 */
+>  
+>  static struct tsens_features tsens_v0_1_feat = {
+>  	.ver_major	= VER_0_1,
+> @@ -386,6 +511,21 @@ struct tsens_plat_data data_8916 = {
+>  	.fields	= tsens_v0_1_regfields,
 >  };
 >  
-> +static const struct drm_display_mode starry_kr070pe2t_mode = {
-> +	.clock = 33000,
-> +	.hdisplay = 800,
-> +	.hsync_start = 800 + 209,
-> +	.hsync_end = 800 + 209 + 1,
-> +	.htotal = 800 + 209 + 1 + 45,
-> +	.vdisplay = 480,
-> +	.vsync_start = 480 + 22,
-> +	.vsync_end = 480 + 22 + 1,
-> +	.vtotal = 480 + 22 + 1 + 22,
-> +	.vrefresh = 60,
+> +static const struct tsens_ops ops_8939 = {
+> +	.init		= init_common,
+> +	.calibrate	= calibrate_8939,
+> +	.get_temp	= get_temp_common,
 > +};
 > +
-> +static const struct panel_desc starry_kr070pe2t = {
-> +	.modes = &starry_kr070pe2t_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 152,
-> +		.height = 86,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+> +struct tsens_plat_data data_8939 = {
+> +	.num_sensors	= 10,
+> +	.ops		= &ops_8939,
+> +	.hw_ids		= (unsigned int []){0, 1, 2, 4, 5, 6, 7, 8, 9 },
 
-I'm trying to fix inconsistencies in the panel-simple driver, and this
-caught my eyes. MEDIA_BUS_FMT_RGB888_1X24 isn't a correct format for
-LVDS panels. MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-MEDIA_BUS_FMT_RGB888_1X7X4_SPWG or MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA
-should be used instead. As I couldn't find documentation for the panel,
-I can't tell which format is correct. Could you please help ?
+Should be { 0, 1, 2, 4, 5, 6, 7, 8, 9, 10 }.
 
+https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm/boot/dts/qcom/msm8939-v3.0.dtsi?h=LA.BR.1.2.9.1_rb1.5#n670
+
+Shawn
+
+> +
+> +	.feat		= &tsens_v0_1_feat,
+> +	.fields	= tsens_v0_1_regfields,
 > +};
 > +
->  static const struct drm_display_mode starry_kr122ea0sra_mode = {
->  	.clock = 147000,
->  	.hdisplay = 1920,
-> @@ -3474,6 +3500,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "shelly,sca07010-bfn-lnn",
->  		.data = &shelly_sca07010_bfn_lnn,
+>  static const struct tsens_ops ops_8974 = {
+>  	.init		= init_common,
+>  	.calibrate	= calibrate_8974,
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 2f77d235cf735..f654057e96ae1 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -59,6 +59,9 @@ static const struct of_device_id tsens_table[] = {
+>  	{
+>  		.compatible = "qcom,msm8916-tsens",
+>  		.data = &data_8916,
 > +	}, {
-> +		.compatible = "starry,kr070pe2t",
-> +		.data = &starry_kr070pe2t,
+> +		.compatible = "qcom,msm8939-tsens",
+> +		.data = &data_8939,
 >  	}, {
->  		.compatible = "starry,kr122ea0sra",
->  		.data = &starry_kr122ea0sra,
-
--- 
-Regards,
-
-Laurent Pinchart
+>  		.compatible = "qcom,msm8974-tsens",
+>  		.data = &data_8974,
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 502acf0e68285..403b15546f648 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -590,7 +590,7 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data);
+>  extern struct tsens_plat_data data_8960;
+>  
+>  /* TSENS v0.1 targets */
+> -extern struct tsens_plat_data data_8916, data_8974;
+> +extern struct tsens_plat_data data_8916, data_8939, data_8974;
+>  
+>  /* TSENS v1 targets */
+>  extern struct tsens_plat_data data_tsens_v1, data_8976;
+> -- 
+> 2.26.1
+> 
